@@ -2,7 +2,7 @@ import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-route
 import { useLiveQuery } from "dexie-react-hooks";
 import { ChevronLeft, Download, Ellipsis } from "lucide-react";
 import { db } from "@/db/database";
-import { episodeLabel } from "@/domain/types";
+import { episodeLabel, normalizeProjectMode } from "@/domain/types";
 import { downloadBlob, exportProjectZip } from "@/lib/projectPackage";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -32,7 +32,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
     async () => (await db.projects.get(projectId)) ?? null,
     [projectId],
   );
-  const episode = useLiveQuery(
+  const currentEpisode = useLiveQuery(
     async () => {
       if (!episodeId) return undefined;
       const row = await db.episodes.get(episodeId);
@@ -40,8 +40,16 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
     },
     [episodeId, projectId],
   );
+  const firstProjectEpisode = useLiveQuery(async () => {
+    const rows = await db.episodes.where("projectId").equals(projectId).sortBy("order");
+    return rows[0] ?? null;
+  }, [projectId]);
 
-  if (project === undefined || (episodeId && episode === undefined)) {
+  if (
+    project === undefined ||
+    (episodeId && currentEpisode === undefined) ||
+    (project && normalizeProjectMode(project.mode) === "film" && firstProjectEpisode === undefined)
+  ) {
     return <div className="text-muted-foreground p-10 text-sm">加载项目…</div>;
   }
 
@@ -54,23 +62,39 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
     );
   }
 
-  if (episodeId && episode === null) {
+  const mode = normalizeProjectMode(project.mode);
+  const projectHome = pathname === `/p/${projectId}` || pathname === `/p/${projectId}/`;
+
+  if (episodeId && currentEpisode === null) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-3">
         <p>找不到这一集</p>
         <Button onClick={() => void navigate({ to: "/p/$projectId", params: { projectId } })}>
-          返回集列表
+          返回项目
         </Button>
       </div>
     );
   }
 
-  const title = episode ? episodeLabel(episode) : project.name;
-  const backToStudio = !episode;
+  if (mode === "film" && firstProjectEpisode === null && !projectHome) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-3">
+        <p>这个单片项目缺少内部集</p>
+        <Button onClick={() => void navigate({ to: "/p/$projectId", params: { projectId } })}>
+          修复项目
+        </Button>
+      </div>
+    );
+  }
+
+  const episode = currentEpisode || undefined;
+  const filmEpisode = mode === "film" ? firstProjectEpisode || undefined : undefined;
+  const title = mode === "film" ? project.name : episode ? episodeLabel(episode) : project.name;
+  const backToStudio = mode === "film" || !episode;
 
   return (
-    <div className="bg-background flex h-screen flex-col">
-      <header className="grid h-14 shrink-0 grid-cols-[1fr_auto_1fr] items-center border-b px-4">
+    <div className="workspace-shell bg-background flex h-screen flex-col">
+      <header className="workspace-header grid h-14 shrink-0 grid-cols-[1fr_auto_1fr] items-center border-b px-4">
         <div className="flex min-w-0 items-center gap-1">
           {backToStudio ? (
             <Button variant="ghost" size="icon-sm" asChild>
@@ -88,7 +112,58 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
           <span className="truncate text-[15px] font-medium">{title}</span>
         </div>
         <nav className="text-muted-foreground flex items-center gap-6 text-[13px]">
-          {episode ? (
+          {filmEpisode ? (
+            <>
+              <Link
+                to="/p/$projectId/e/$episodeId"
+                params={{ projectId, episodeId: filmEpisode.id }}
+                activeOptions={{ exact: true }}
+                className={cn(
+                  "hover:text-foreground",
+                  (pathname === `/p/${projectId}/e/${filmEpisode.id}` ||
+                    pathname === `/p/${projectId}/e/${filmEpisode.id}/`) &&
+                    "text-foreground font-medium",
+                )}
+              >
+                故事
+              </Link>
+              <Link
+                to="/p/$projectId/world"
+                params={{ projectId }}
+                className={cn(
+                  "hover:text-foreground",
+                  (pathname.startsWith(`/p/${projectId}/world`) ||
+                    pathname.startsWith(`/p/${projectId}/assets`)) &&
+                    "text-foreground font-medium",
+                )}
+              >
+                世界
+              </Link>
+              <Link
+                to="/p/$projectId/e/$episodeId/shots"
+                params={{ projectId, episodeId: filmEpisode.id }}
+                search={{ shot: undefined }}
+                className={cn(
+                  "hover:text-foreground",
+                  pathname.startsWith(`/p/${projectId}/e/${filmEpisode.id}/shots`) &&
+                    "text-foreground font-medium",
+                )}
+              >
+                分镜
+              </Link>
+              <Link
+                to="/p/$projectId/e/$episodeId/produce"
+                params={{ projectId, episodeId: filmEpisode.id }}
+                className={cn(
+                  "hover:text-foreground",
+                  pathname.startsWith(`/p/${projectId}/e/${filmEpisode.id}/produce`) &&
+                    "text-foreground font-medium",
+                )}
+              >
+                制作
+              </Link>
+            </>
+          ) : mode === "film" ? null : episode ? (
             <>
               {EPISODE_STEPS.map((step) => {
                 const href = step.to
@@ -102,6 +177,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
                     key={step.id}
                     to={step.to}
                     params={{ projectId, episodeId: episode.id }}
+                    search={step.id === "shots" ? { shot: undefined } : undefined}
                     activeOptions={{ exact: step.exact }}
                     className={cn("hover:text-foreground", active && "text-foreground font-medium")}
                   >
@@ -147,7 +223,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
             }}
           >
             <Download />
-            导出
+            备份项目
           </Button>
         </div>
       </header>

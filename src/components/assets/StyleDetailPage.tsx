@@ -10,19 +10,34 @@ import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-export function StyleDetailPage({ styleId }: { styleId: string }) {
+export function StyleDetailPage({
+  styleId,
+  back = { kind: "studio" },
+}: {
+  styleId: string;
+  back?: { kind: "studio" } | { kind: "project"; projectId: string };
+}) {
   const navigate = useNavigate();
   const style = useLiveQuery(async () => (await db.styles.get(styleId)) ?? null, [styleId]);
 
   if (style === undefined) {
     return <div className="text-muted-foreground p-8 text-sm">加载中…</div>;
   }
-  if (style === null) {
+  const missing =
+    style === null || (back.kind === "project" && style.projectId !== back.projectId);
+  if (missing) {
     return (
       <div className="p-8">
         <p>找不到这个风格</p>
-        <Button className="mt-3" onClick={() => void navigate({ to: "/styles" })}>
-          返回风格库
+        <Button
+          className="mt-3"
+          onClick={() =>
+            void (back.kind === "studio"
+              ? navigate({ to: "/styles" })
+              : navigate({ to: "/p/$projectId/world", params: { projectId: back.projectId } }))
+          }
+        >
+          {back.kind === "studio" ? "返回风格库" : "返回世界"}
         </Button>
       </div>
     );
@@ -31,12 +46,22 @@ export function StyleDetailPage({ styleId }: { styleId: string }) {
   return (
     <div className="h-full overflow-auto">
       <div className="mx-auto max-w-5xl px-8 py-6">
-        <Link
-          to="/styles"
-          className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
-        >
-          <ChevronLeft className="size-4" /> 视觉风格
-        </Link>
+        {back.kind === "studio" ? (
+          <Link
+            to="/styles"
+            className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
+          >
+            <ChevronLeft className="size-4" /> 视觉风格
+          </Link>
+        ) : (
+          <Link
+            to="/p/$projectId/world"
+            params={{ projectId: back.projectId }}
+            className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
+          >
+            <ChevronLeft className="size-4" /> 世界
+          </Link>
+        )}
         <h1 className="mt-3 text-lg font-semibold">风格</h1>
         <div className="mt-6 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="grid grid-cols-2 gap-4">

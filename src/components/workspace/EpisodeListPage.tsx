@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { CoverCard, CreateTile, LibraryGrid } from "@/components/studio/CoverCard";
 import {
@@ -15,10 +15,19 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DraftStatus } from "@/components/ui/draft-status";
 import { db } from "@/db/database";
-import { addEpisode, deleteEpisode, updateProject } from "@/db/repo";
+import {
+  addEpisode,
+  deleteEpisode,
+  reorderEpisodes,
+  restoreEpisode,
+  updateSeriesLogline,
+} from "@/db/repo";
 import { episodeLabel, normalizeSeriesStory, type Shot } from "@/domain/types";
+import { useDebouncedDraft } from "@/lib/debouncedDraft";
 import { formatUpdatedAt } from "@/lib/format";
+import { useUndo } from "@/lib/undo";
 
 function coverOfEpisode(shots: Shot[], episodeId: string): string | undefined {
   return shots
@@ -40,41 +49,8 @@ export function EpisodeListPage({ projectId }: { projectId: string }) {
     ) ?? [];
   const shots =
     useLiveQuery(() => db.shots.where("projectId").equals(projectId).toArray(), [projectId]) ?? [];
-  const [logline, setLogline] = useState("");
-  const [saved, setSaved] = useState(true);
-  const loadedFor = useRef<string | undefined>(undefined);
-  const draftRef = useRef({ logline, saved });
-  const revision = useRef(0);
   const [deleteId, setDeleteId] = useState<string>();
-  draftRef.current = { logline, saved };
-
-  useEffect(() => {
-    if (!project || loadedFor.current === project.id) return;
-    loadedFor.current = project.id;
-    setLogline(normalizeSeriesStory(project.story).logline);
-    setSaved(true);
-  }, [project]);
-
-  useEffect(() => {
-    if (!project || loadedFor.current !== project.id || saved) return;
-    const savingRevision = revision.current;
-    const handle = window.setTimeout(() => {
-      void updateProject(projectId, { story: { logline } }).then(() => {
-        if (revision.current === savingRevision) setSaved(true);
-      });
-    }, 400);
-    return () => window.clearTimeout(handle);
-  }, [logline, project, projectId, saved]);
-
-  useEffect(
-    () => () => {
-      const draft = draftRef.current;
-      if (!draft.saved) {
-        void updateProject(projectId, { story: { logline: draft.logline } });
-      }
-    },
-    [projectId],
-  );
+  const { registerUndo } = useUndo();
 
   if (project === undefined) {
     return <div className="text-muted-foreground p-8 text-sm">加载集列表…</div>;
@@ -84,6 +60,29 @@ export function EpisodeListPage({ projectId }: { projectId: string }) {
   }
 
   const canDelete = episodes.length > 1;
+
+  async function moveEpisode(index: number, offset: -1 | 1) {
+    const target = index + offset;
+    if (target < 0 || target >= episodes.length) return;
+    const previous = episodes.map((episode) => episode.id);
+    const next = [...previous];
+    [next[index], next[target]] = [next[target]!, next[index]!];
+    await reorderEpisodes(projectId, next);
+    registerUndo({
+      label: "已调整分集顺序",
+      restore: () => reorderEpisodes(projectId, previous),
+    });
+  }
+
+  async function removeEpisode(id: string) {
+    const snapshot = await deleteEpisode(id);
+    if (snapshot) {
+      registerUndo({
+        label: "已删除分集",
+        restore: () => restoreEpisode(snapshot),
+      });
+    }
+  }
 
   return (
     <div className="app-scroll h-full overflow-auto">
@@ -95,19 +94,12 @@ export function EpisodeListPage({ projectId }: { projectId: string }) {
               一部戏先分集。点进某一集再写本集故事和分镜。世界在系列层，各集共用。
             </p>
           </div>
-          <p className="text-muted-foreground text-[11px]">{saved ? "已保存" : "保存中…"}</p>
         </div>
 
-        <Label className="mt-6">整部戏一句话</Label>
-        <Input
-          className="mt-2"
-          value={logline}
-          placeholder="这部戏，用一句话说完（可选）"
-          onChange={(event) => {
-            setLogline(event.target.value);
-            revision.current += 1;
-            setSaved(false);
-          }}
+        <SeriesLoglineEditor
+          key={project.id}
+          projectId={project.id}
+          initialValue={normalizeSeriesStory(project.story).logline}
         />
 
         <div className="mt-8">
@@ -121,7 +113,7 @@ export function EpisodeListPage({ projectId }: { projectId: string }) {
                 );
               }}
             />
-            {episodes.map((episode) => (
+            {episodes.map((episode, index) => (
               <CoverCard
                 key={episode.id}
                 title={episodeLabel(episode)}
@@ -133,17 +125,21 @@ export function EpisodeListPage({ projectId }: { projectId: string }) {
                     params: { projectId, episodeId: episode.id },
                   })
                 }
-                actions={
-                  canDelete
-                    ? [
-                        {
-                          label: "删除",
-                          tone: "danger",
-                          onSelect: () => setDeleteId(episode.id),
-                        },
-                      ]
-                    : undefined
-                }
+                actions={[
+                  ...(index > 0
+                    ? [{ label: "上移", onSelect: () => void moveEpisode(index, -1) }]
+                    : []),
+                  ...(index < episodes.length - 1
+                    ? [{ label: "下移", onSelect: () => void moveEpisode(index, 1) }]
+                    : []),
+                  ...(canDelete
+                    ? [{
+                        label: "删除",
+                        tone: "danger" as const,
+                        onSelect: () => setDeleteId(episode.id),
+                      }]
+                    : []),
+                ]}
               />
             ))}
           </LibraryGrid>
@@ -164,7 +160,7 @@ export function EpisodeListPage({ projectId }: { projectId: string }) {
               className="bg-destructive hover:bg-destructive/90"
               onClick={() => {
                 if (!deleteId) return;
-                void deleteEpisode(deleteId).catch((err) =>
+                void removeEpisode(deleteId).catch((err) =>
                   toast.error(err instanceof Error ? err.message : "删除失败"),
                 );
                 setDeleteId(undefined);
@@ -176,5 +172,32 @@ export function EpisodeListPage({ projectId }: { projectId: string }) {
         </AlertDialogContent>
       </AlertDialog>
     </div>
+  );
+}
+
+function SeriesLoglineEditor({
+  projectId,
+  initialValue,
+}: {
+  projectId: string;
+  initialValue: string;
+}) {
+  const { draft, setDraft, status, error, retry } = useDebouncedDraft({
+    initialValue,
+    persist: (value) => updateSeriesLogline(projectId, value),
+  });
+  return (
+    <>
+      <div className="mt-6 flex items-end justify-between gap-4">
+        <Label>整部戏一句话</Label>
+        <DraftStatus status={status} error={error} onRetry={() => void retry()} />
+      </div>
+      <Input
+        className="mt-2"
+        value={draft}
+        placeholder="这部戏，用一句话说完（可选）"
+        onChange={(event) => setDraft(event.target.value)}
+      />
+    </>
   );
 }

@@ -43,7 +43,7 @@ Creating a studio asset must navigate to the **studio** `$id` route, not `p.$pro
 
 Series shell owns `/p/$projectId` (episode list) and `/p/$projectId/world`. Episode shell owns `/p/$projectId/e/$episodeId` (story), `/shots`, `/produce`. Old `/p/$projectId/shots` redirects to the first episode.
 
-Project world still owns project-scoped character/scene detail. Props/styles have no project-world editor in this slice.
+Project world owns project-scoped character, scene, prop, and style detail routes under `/p/$projectId/assets/*/$id`. Every shared detail editor must verify that the loaded asset belongs to the route project before rendering mutations.
 
 ---
 

@@ -1,0 +1,33 @@
+{
+  "id": "creator-workflow-p0",
+  "name": "creator-workflow-p0",
+  "title": "创作工作流 P0",
+  "description": "",
+  "status": "in_progress",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-09-18",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [
+    "09-18-reliable-editing",
+    "09-18-project-modes",
+    "09-18-script-scene-order",
+    "09-18-shot-workspace",
+    "09-18-asset-snapshots",
+    "09-18-delivery-center"
+  ],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "",
+  "meta": {}
+}

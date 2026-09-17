@@ -5,6 +5,8 @@ import { collectMediaIds } from "@/db/repo";
 import {
   DEFAULT_VISIBLE_COLUMNS,
   normalizeEpisodeStory,
+  normalizeProjectMode,
+  normalizeShotSettings,
   normalizeSeriesStory,
   normalizeSetting,
   PACKAGE_FORMAT,
@@ -100,6 +102,7 @@ function mimeForFilename(filename: string): string {
 const PROJECT_KEYS = [
   "id",
   "name",
+  "mode",
   "createdAt",
   "updatedAt",
   "columnSettings",
@@ -112,11 +115,11 @@ const PROJECT_KEYS = [
 function parseProject(raw: Record<string, unknown>, fallbackName: string): Project {
   const visible = (raw.columnSettings as { visible?: ShotColumnId[] } | undefined)
     ?.visible;
-  const shotSettings = raw.shotSettings as Project["shotSettings"] | undefined;
   const at = nowIso();
   return {
     id: String(raw.id ?? createId("prj")),
     name: String(raw.name ?? fallbackName),
+    mode: normalizeProjectMode(raw.mode),
     createdAt: String(raw.createdAt ?? at),
     updatedAt: String(raw.updatedAt ?? at),
     columnSettings: {
@@ -125,10 +128,7 @@ function parseProject(raw: Record<string, unknown>, fallbackName: string): Proje
           ? (visible as ShotColumnId[])
           : [...DEFAULT_VISIBLE_COLUMNS],
     },
-    shotSettings: {
-      defaultDurationSec: Number(shotSettings?.defaultDurationSec ?? 0) || 0,
-      autoIncrementShotNumber: shotSettings?.autoIncrementShotNumber !== false,
-    },
+    shotSettings: normalizeShotSettings(raw.shotSettings),
     story: normalizeSeriesStory(raw.story),
     setting: normalizeSetting(raw.setting),
     extra: pickExtra(raw, PROJECT_KEYS),
@@ -468,7 +468,7 @@ export async function importProjectZip(file: Blob): Promise<Project> {
   const propMap = new Map<string, string>();
   const styleMap = new Map<string, string>();
   const episodeMap = new Map<string, string>();
-  const beatMap = new Map<string, string>();
+  const beatMaps = new Map<string, Map<string, string>>();
   const shotMap = new Map<string, string>();
 
   const mediaRecords: MediaRecord[] = [];
@@ -547,7 +547,10 @@ export async function importProjectZip(file: Blob): Promise<Project> {
     : [synthesizeFirstEpisode(project, projectRaw)];
 
   const episodes = parsedEpisodes.map((episode) => {
-    const newId = remapId(episodeMap, episode.id, "ep")!;
+    const oldEpisodeId = episode.id;
+    const newId = remapId(episodeMap, oldEpisodeId, "ep")!;
+    const beatMap = new Map<string, string>();
+    beatMaps.set(oldEpisodeId, beatMap);
     episode.id = newId;
     episode.projectId = projectId;
     episode.story = {
@@ -571,9 +574,10 @@ export async function importProjectZip(file: Blob): Promise<Project> {
 
   const shots = shotsRaw.map((raw, index) => {
     const shot = parseShot(raw, projectId, fallbackEpisodeId, index);
+    const oldEpisodeId = shot.episodeId;
     shot.id = remapId(shotMap, shot.id, "sht")!;
     shot.projectId = projectId;
-    shot.episodeId = episodeMap.get(shot.episodeId) ?? fallbackEpisodeId;
+    shot.episodeId = episodeMap.get(oldEpisodeId) ?? fallbackEpisodeId;
     shot.firstFrame = remapSlot(shot.firstFrame, mapMedia);
     shot.lastFrame = remapSlot(shot.lastFrame, mapMedia);
     shot.clip = remapSlot(shot.clip, mapMedia);
@@ -581,7 +585,8 @@ export async function importProjectZip(file: Blob): Promise<Project> {
       .map((id) => characterMap.get(id))
       .filter((id): id is string => Boolean(id));
     shot.sceneId = shot.sceneId ? sceneMap.get(shot.sceneId) : undefined;
-    shot.beatId = shot.beatId ? beatMap.get(shot.beatId) : undefined;
+    const beatMap = beatMaps.get(oldEpisodeId) ?? beatMaps.values().next().value;
+    shot.beatId = shot.beatId ? beatMap?.get(shot.beatId) : undefined;
     return shot;
   });
 

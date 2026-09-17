@@ -7,13 +7,17 @@ import {
   emptySetting,
   isStudioLibrary,
   normalizeEpisodeStory,
+  normalizeShotSettings,
+  normalizeSeriesStory,
   type Character,
   type CharacterImageSlot,
   type Episode,
+  type EpisodeStory,
   type GenerationSlot,
   type Id,
   type MediaRecord,
   type Project,
+  type ProjectMode,
   type Prop,
   type PropImageSlot,
   type Scene,
@@ -21,9 +25,11 @@ import {
   type Shot,
   type ShotColumnId,
   type ShotPictureField,
+  type ShotSettings,
   type StoryBeat,
   type StyleImageSlot,
   type VisualStyle,
+  type WorldSetting,
 } from "@/domain/types";
 import { collectSlotsMedia, emptySlot, SHOT_PICTURE_FIELDS, slotMediaIds } from "@/domain/slot";
 import { createId, nowIso } from "@/lib/ids";
@@ -39,11 +45,12 @@ export async function touchProject(projectId: Id): Promise<void> {
   await db.projects.put(touch(project));
 }
 
-export function emptyProject(name: string): Project {
+export function emptyProject(name: string, mode: ProjectMode = "film"): Project {
   const at = nowIso();
   return {
     id: createId("prj"),
     name: name.trim() || "未命名项目",
+    mode,
     createdAt: at,
     updatedAt: at,
     columnSettings: { visible: [...DEFAULT_VISIBLE_COLUMNS] },
@@ -161,8 +168,11 @@ export async function listProjects(): Promise<Project[]> {
   return rows.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
-export async function createProject(name: string): Promise<Project> {
-  const project = emptyProject(name);
+export async function createProject(
+  name: string,
+  mode: ProjectMode = "film",
+): Promise<Project> {
+  const project = emptyProject(name, mode);
   const episode = emptyEpisode(project.id, 0);
   await db.transaction("rw", db.projects, db.episodes, async () => {
     await db.projects.add(project);
@@ -205,11 +215,55 @@ export async function deleteProject(id: Id): Promise<void> {
 
 export async function updateProject(
   id: Id,
-  patch: Partial<Pick<Project, "name" | "columnSettings" | "shotSettings" | "story" | "setting">>,
+  patch: Partial<
+    Pick<Project, "name" | "mode" | "columnSettings" | "shotSettings" | "story" | "setting">
+  >,
 ): Promise<void> {
   const project = await db.projects.get(id);
   if (!project) return;
   await db.projects.put(touch({ ...project, ...patch }));
+}
+
+export async function updateShotSettings(
+  id: Id,
+  patch: Partial<ShotSettings>,
+): Promise<void> {
+  await db.transaction("rw", db.projects, async () => {
+    const project = await db.projects.get(id);
+    if (!project) return;
+    const definedPatch = Object.fromEntries(
+      Object.entries(patch).filter(([, value]) => value !== undefined),
+    ) as Partial<ShotSettings>;
+    await db.projects.put(touch({
+      ...project,
+      shotSettings: { ...normalizeShotSettings(project.shotSettings), ...definedPatch },
+    }));
+  });
+}
+
+export async function updateSeriesLogline(id: Id, logline: string): Promise<void> {
+  await db.transaction("rw", db.projects, async () => {
+    const project = await db.projects.get(id);
+    if (!project) return;
+    await db.projects.put(touch({
+      ...project,
+      story: { ...normalizeSeriesStory(project.story), logline },
+    }));
+  });
+}
+
+export async function updateWorldSetting(
+  id: Id,
+  patch: Partial<WorldSetting>,
+): Promise<void> {
+  await db.transaction("rw", db.projects, async () => {
+    const project = await db.projects.get(id);
+    if (!project) return;
+    await db.projects.put(touch({
+      ...project,
+      setting: { ...emptySetting(), ...project.setting, ...patch },
+    }));
+  });
 }
 
 export async function listEpisodes(projectId: Id): Promise<Episode[]> {
@@ -220,6 +274,19 @@ export async function listEpisodes(projectId: Id): Promise<Episode[]> {
 export async function firstEpisode(projectId: Id): Promise<Episode | undefined> {
   const episodes = await listEpisodes(projectId);
   return episodes[0];
+}
+
+export async function ensureFirstEpisode(projectId: Id): Promise<Episode> {
+  return db.transaction("rw", db.projects, db.episodes, async () => {
+    const project = await db.projects.get(projectId);
+    if (!project) throw new Error("项目不存在");
+    const existing = await firstEpisode(projectId);
+    if (existing) return existing;
+    const episode = emptyEpisode(projectId, 0);
+    await db.episodes.add(episode);
+    await db.projects.put(touch(project));
+    return episode;
+  });
 }
 
 export async function addEpisode(projectId: Id): Promise<Episode> {
@@ -243,14 +310,44 @@ export async function updateEpisode(
   await touchProject(episode.projectId);
 }
 
-export async function deleteEpisode(id: Id): Promise<void> {
+export async function updateEpisodeDraft(
+  id: Id,
+  patch: { title?: string; logline?: string; script?: string },
+): Promise<void> {
+  await db.transaction("rw", db.episodes, db.projects, async () => {
+    const episode = await db.episodes.get(id);
+    if (!episode) return;
+    const story = normalizeEpisodeStory(episode.story);
+    const storyPatch: Partial<Pick<EpisodeStory, "logline" | "script">> = {};
+    if (patch.logline !== undefined) storyPatch.logline = patch.logline;
+    if (patch.script !== undefined) storyPatch.script = patch.script;
+    const nextStory = normalizeEpisodeStory({ ...story, ...storyPatch });
+    await db.episodes.put(touch({
+      ...episode,
+      ...(patch.title === undefined ? {} : { title: patch.title }),
+      story: nextStory,
+    }));
+    await touchProject(episode.projectId);
+  });
+}
+
+export interface DeletedEpisodeSnapshot {
+  episode: Episode;
+  shots: Shot[];
+  media: MediaRecord[];
+}
+
+export async function deleteEpisode(id: Id): Promise<DeletedEpisodeSnapshot | undefined> {
   const episode = await db.episodes.get(id);
-  if (!episode) return;
+  if (!episode) return undefined;
   const siblings = await listEpisodes(episode.projectId);
   if (siblings.length <= 1) throw new Error("不能删除最后一集");
   const shots = await db.shots.where("episodeId").equals(id).toArray();
   const mediaIds = shots.flatMap((shot) =>
     slotMediaIds(shot.firstFrame).concat(slotMediaIds(shot.lastFrame), slotMediaIds(shot.clip)),
+  );
+  const media = (await db.media.bulkGet([...new Set(mediaIds)])).filter(
+    (record): record is MediaRecord => record !== undefined,
   );
   await db.transaction("rw", db.episodes, db.shots, db.projects, async () => {
     await db.shots.where("episodeId").equals(id).delete();
@@ -262,6 +359,54 @@ export async function deleteEpisode(id: Id): Promise<void> {
     await touchProject(episode.projectId);
   });
   for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
+  return { episode, shots, media };
+}
+
+export async function restoreEpisode(snapshot: DeletedEpisodeSnapshot): Promise<void> {
+  const { episode, shots, media } = snapshot;
+  await db.transaction(
+    "rw",
+    db.episodes,
+    db.shots,
+    db.media,
+    db.projects,
+    async () => {
+      if (await db.episodes.get(episode.id)) return;
+      const siblings = await db.episodes.where("projectId").equals(episode.projectId).toArray();
+      for (const sibling of siblings) {
+        if (sibling.order >= episode.order) {
+          await db.episodes.put({ ...sibling, order: sibling.order + 1 });
+        }
+      }
+      await db.episodes.add(episode);
+      if (shots.length > 0) await db.shots.bulkPut(shots);
+      if (media.length > 0) await db.media.bulkPut(media);
+      await touchProject(episode.projectId);
+    },
+  );
+}
+
+function assertCompleteOrder(actualIds: Id[], orderedIds: Id[]): void {
+  if (
+    orderedIds.length !== actualIds.length ||
+    new Set(orderedIds).size !== orderedIds.length ||
+    actualIds.some((id) => !orderedIds.includes(id))
+  ) {
+    throw new Error("排序列表必须包含同一范围内的全部且唯一记录");
+  }
+}
+
+export async function reorderEpisodes(projectId: Id, orderedIds: Id[]): Promise<void> {
+  await db.transaction("rw", db.episodes, db.projects, async () => {
+    if (!(await db.projects.get(projectId))) throw new Error("项目不存在");
+    const episodes = await db.episodes.where("projectId").equals(projectId).toArray();
+    assertCompleteOrder(episodes.map((episode) => episode.id), orderedIds);
+    const byId = new Map(episodes.map((episode) => [episode.id, episode]));
+    await Promise.all(
+      orderedIds.map((id, order) => db.episodes.put(touch({ ...byId.get(id)!, order }))),
+    );
+    await touchProject(projectId);
+  });
 }
 
 export async function collectMediaIds(projectId: Id): Promise<Set<Id>> {
@@ -309,6 +454,128 @@ export async function deleteMediaIfOrphan(mediaId: Id | undefined): Promise<void
   if (!used.has(mediaId)) {
     await db.media.delete(mediaId);
   }
+}
+
+type SnapshotAsset = Character | Scene | Prop | VisualStyle;
+type SnapshotKind = "character" | "scene" | "prop" | "style";
+
+const SNAPSHOT_PREFIX: Record<SnapshotKind, string> = {
+  character: "chr",
+  scene: "scn",
+  prop: "prp",
+  style: "sty",
+};
+
+async function copyStudioSnapshot<T extends SnapshotAsset>(
+  projectId: Id,
+  kind: SnapshotKind,
+  sourceId: Id,
+): Promise<T> {
+  if (isStudioLibrary(projectId)) throw new Error("目标必须是项目");
+  return db.transaction(
+    "rw",
+    [db.projects, db.characters, db.scenes, db.props, db.styles, db.media],
+    async () => {
+      const project = await db.projects.get(projectId);
+      if (!project) throw new Error("项目不存在");
+
+      const source =
+        kind === "character"
+          ? await db.characters.get(sourceId)
+          : kind === "scene"
+            ? await db.scenes.get(sourceId)
+            : kind === "prop"
+              ? await db.props.get(sourceId)
+              : await db.styles.get(sourceId);
+      if (!source || !isStudioLibrary(source.projectId)) {
+        throw new Error("工作室资产不存在");
+      }
+
+      const destinationAssets =
+        kind === "character"
+          ? await db.characters.where("projectId").equals(projectId).toArray()
+          : kind === "scene"
+            ? await db.scenes.where("projectId").equals(projectId).toArray()
+            : kind === "prop"
+              ? await db.props.where("projectId").equals(projectId).toArray()
+              : await db.styles.where("projectId").equals(projectId).toArray();
+      if (destinationAssets.some((asset) => asset.extra?.sourceAssetId === sourceId)) {
+        throw new Error("该工作室资产已添加到项目");
+      }
+
+      const mediaMap = new Map<Id, Id>();
+      const slots: Record<string, GenerationSlot> = {};
+      for (const [slotKey, slot] of Object.entries(source.slots ?? {})) {
+        if (!slot) continue;
+        for (const oldMediaId of new Set(slotMediaIds(slot))) {
+          if (mediaMap.has(oldMediaId)) continue;
+          const media = await db.media.get(oldMediaId);
+          if (!media) continue;
+          const newMediaId = createId("med");
+          mediaMap.set(oldMediaId, newMediaId);
+          await db.media.add({
+            ...media,
+            id: newMediaId,
+            projectId,
+          });
+        }
+        const mapMedia = (id?: Id) => (id ? mediaMap.get(id) : undefined);
+        slots[slotKey] = {
+          prompt: slot.prompt,
+          referenceImageIds: slot.referenceImageIds
+            .map(mapMedia)
+            .filter((id): id is Id => Boolean(id)),
+          referenceVideoIds: slot.referenceVideoIds
+            .map(mapMedia)
+            .filter((id): id is Id => Boolean(id)),
+          result:
+            slot.result && mapMedia(slot.result.mediaId)
+              ? {
+                  ...slot.result,
+                  mediaId: mapMedia(slot.result.mediaId)!,
+                }
+              : undefined,
+        };
+      }
+
+      const at = nowIso();
+      const copy = {
+        ...structuredClone(source),
+        id: createId(SNAPSHOT_PREFIX[kind]),
+        projectId,
+        slots,
+        createdAt: at,
+        updatedAt: at,
+        extra: {
+          ...(source.extra ?? {}),
+          sourceAssetId: source.id,
+        },
+      } as unknown as T;
+
+      if (kind === "character") await db.characters.add(copy as Character);
+      else if (kind === "scene") await db.scenes.add(copy as Scene);
+      else if (kind === "prop") await db.props.add(copy as Prop);
+      else await db.styles.add(copy as VisualStyle);
+      await db.projects.put(touch(project));
+      return copy;
+    },
+  );
+}
+
+export function copyStudioCharacter(projectId: Id, sourceId: Id): Promise<Character> {
+  return copyStudioSnapshot<Character>(projectId, "character", sourceId);
+}
+
+export function copyStudioScene(projectId: Id, sourceId: Id): Promise<Scene> {
+  return copyStudioSnapshot<Scene>(projectId, "scene", sourceId);
+}
+
+export function copyStudioProp(projectId: Id, sourceId: Id): Promise<Prop> {
+  return copyStudioSnapshot<Prop>(projectId, "prop", sourceId);
+}
+
+export function copyStudioStyle(projectId: Id, sourceId: Id): Promise<VisualStyle> {
+  return copyStudioSnapshot<VisualStyle>(projectId, "style", sourceId);
 }
 
 export async function addCharacter(projectId: Id): Promise<Character> {
@@ -541,34 +808,166 @@ function insertOrderForBeat(beats: StoryBeat[], shots: Shot[], beatId?: Id): num
   return lastLeq + 1;
 }
 
-export async function addStoryBeat(episodeId: Id): Promise<StoryBeat> {
-  const episode = await db.episodes.get(episodeId);
-  if (!episode) throw new Error("集不存在");
-  const story = normalizeEpisodeStory(episode.story);
-  const beat: StoryBeat = {
-    id: createId("beat"),
-    title: `场 ${story.beats.length + 1}`,
-    content: "",
-    characterIds: [],
-    timeOfDay: "",
-  };
-  await updateEpisode(episodeId, { story: { ...story, beats: [...story.beats, beat] } });
-  return beat;
+export async function addStoryBeat(
+  episodeId: Id,
+  options?: { scriptRange?: StoryBeat["scriptRange"] },
+): Promise<StoryBeat> {
+  return db.transaction("rw", db.episodes, db.projects, async () => {
+    const episode = await db.episodes.get(episodeId);
+    if (!episode) throw new Error("集不存在");
+    const story = normalizeEpisodeStory(episode.story);
+    const requestedRange = options?.scriptRange;
+    const validRange =
+      requestedRange &&
+      Number.isInteger(requestedRange.start) &&
+      Number.isInteger(requestedRange.end) &&
+      requestedRange.start >= 0 &&
+      requestedRange.end > requestedRange.start &&
+      story.script.slice(requestedRange.start, requestedRange.end) === requestedRange.excerpt
+        ? requestedRange
+        : undefined;
+    const beat: StoryBeat = {
+      id: createId("beat"),
+      title: `场 ${story.beats.length + 1}`,
+      content: requestedRange?.excerpt ?? "",
+      characterIds: [],
+      timeOfDay: "",
+      ...(validRange ? { scriptRange: validRange } : {}),
+    };
+    await db.episodes.put(touch({
+      ...episode,
+      story: { ...story, beats: [...story.beats, beat] },
+    }));
+    await touchProject(episode.projectId);
+    return beat;
+  });
 }
 
 export async function patchStoryBeat(
   episodeId: Id,
   beatId: Id,
-  patch: Partial<Pick<StoryBeat, "title" | "content" | "characterIds" | "sceneId" | "timeOfDay">>,
+  patch: Partial<
+    Pick<
+      StoryBeat,
+      "title" | "content" | "characterIds" | "sceneId" | "timeOfDay" | "scriptRange"
+    >
+  >,
 ): Promise<void> {
-  const episode = await db.episodes.get(episodeId);
-  if (!episode) return;
-  const story = normalizeEpisodeStory(episode.story);
-  await updateEpisode(episodeId, {
-    story: {
-      ...story,
-      beats: story.beats.map((beat) => (beat.id === beatId ? { ...beat, ...patch } : beat)),
-    },
+  await db.transaction("rw", db.episodes, db.projects, async () => {
+    const episode = await db.episodes.get(episodeId);
+    if (!episode) return;
+    const story = normalizeEpisodeStory(episode.story);
+    await db.episodes.put(touch({
+      ...episode,
+      story: {
+        ...story,
+        beats: story.beats.map((beat) => (beat.id === beatId ? { ...beat, ...patch } : beat)),
+      },
+    }));
+    await touchProject(episode.projectId);
+  });
+}
+
+export async function reorderBeats(episodeId: Id, orderedIds: Id[]): Promise<void> {
+  await db.transaction("rw", db.episodes, db.shots, db.projects, async () => {
+    const episode = await db.episodes.get(episodeId);
+    if (!episode) throw new Error("集不存在");
+    const story = normalizeEpisodeStory(episode.story);
+    assertCompleteOrder(story.beats.map((beat) => beat.id), orderedIds);
+    const byId = new Map(story.beats.map((beat) => [beat.id, beat]));
+    const shots = await db.shots.where("episodeId").equals(episodeId).toArray();
+    if (shots.some((shot) => shot.projectId !== episode.projectId)) {
+      throw new Error("镜头与集不属于同一项目");
+    }
+    const rank = new Map(orderedIds.map((id, index) => [id, index]));
+    shots.sort(
+      (left, right) =>
+        (rank.get(left.beatId ?? "") ?? Number.POSITIVE_INFINITY) -
+          (rank.get(right.beatId ?? "") ?? Number.POSITIVE_INFINITY) ||
+        left.order - right.order,
+    );
+    await db.episodes.put(touch({
+      ...episode,
+      story: { ...story, beats: orderedIds.map((id) => byId.get(id)!) },
+    }));
+    await Promise.all(
+      shots.map((shot, index) => db.shots.put({ ...shot, order: index + 1 })),
+    );
+    await touchProject(episode.projectId);
+  });
+}
+
+export async function duplicateBeat(
+  episodeId: Id,
+  beatId: Id,
+  options?: { includeShots?: boolean },
+): Promise<{ beat: StoryBeat; shots: Shot[] }> {
+  return db.transaction("rw", db.episodes, db.shots, db.projects, async () => {
+    const episode = await db.episodes.get(episodeId);
+    if (!episode) throw new Error("集不存在");
+    const story = normalizeEpisodeStory(episode.story);
+    const sourceIndex = story.beats.findIndex((beat) => beat.id === beatId);
+    if (sourceIndex < 0) throw new Error("场次不存在");
+    const source = story.beats[sourceIndex]!;
+    const beat: StoryBeat = structuredClone({
+      ...source,
+      id: createId("beat"),
+      title: `${source.title} 副本`,
+    });
+    story.beats.splice(sourceIndex + 1, 0, beat);
+
+    const created: Shot[] = [];
+    if (options?.includeShots) {
+      const shots = (await db.shots.where("episodeId").equals(episodeId).toArray()).sort(
+        (left, right) => left.order - right.order,
+      );
+      if (shots.some((shot) => shot.projectId !== episode.projectId)) {
+        throw new Error("镜头与集不属于同一项目");
+      }
+      const sourceShots = shots.filter((shot) => shot.beatId === beatId);
+      const lastSourceOrder = sourceShots.at(-1)?.order ?? shots.length;
+      for (const shot of shots) {
+        if (shot.order > lastSourceOrder) {
+          await db.shots.put({ ...shot, order: shot.order + sourceShots.length });
+        }
+      }
+      for (const [index, sourceShot] of sourceShots.entries()) {
+        const copy = structuredClone({
+          ...sourceShot,
+          id: createId("sht"),
+          beatId: beat.id,
+          order: lastSourceOrder + index + 1,
+        });
+        await db.shots.add(copy);
+        created.push(copy);
+      }
+    }
+
+    await db.episodes.put(touch({ ...episode, story }));
+    await touchProject(episode.projectId);
+    return { beat, shots: created };
+  });
+}
+
+export async function restoreStoryBeat(
+  episodeId: Id,
+  beat: StoryBeat,
+  index: number,
+  shotIds: Id[] = [],
+): Promise<void> {
+  await db.transaction("rw", db.episodes, db.shots, db.projects, async () => {
+    const episode = await db.episodes.get(episodeId);
+    if (!episode) throw new Error("集不存在");
+    const story = normalizeEpisodeStory(episode.story);
+    if (story.beats.some((item) => item.id === beat.id)) return;
+    const beats = [...story.beats];
+    beats.splice(Math.max(0, Math.min(index, beats.length)), 0, beat);
+    await db.episodes.put(touch({ ...episode, story: { ...story, beats } }));
+    for (const shotId of shotIds) {
+      const shot = await db.shots.get(shotId);
+      if (shot?.episodeId === episodeId) await db.shots.put({ ...shot, beatId: beat.id });
+    }
+    await touchProject(episode.projectId);
   });
 }
 
@@ -599,41 +998,44 @@ export async function addShots(
   options?: { atOrder?: number; beatId?: Id },
 ): Promise<Shot[]> {
   if (count <= 0) return [];
-  const episode = await db.episodes.get(episodeId);
-  if (!episode || episode.projectId !== projectId) return [];
-  const project = await db.projects.get(projectId);
-  if (!project) return [];
-  const beats = normalizeEpisodeStory(episode.story).beats;
-  const shots = (await db.shots.where("episodeId").equals(episodeId).toArray()).sort(
-    (a, b) => a.order - b.order,
-  );
-  const insertAt = options?.atOrder ?? insertOrderForBeat(beats, shots, options?.beatId);
-  for (const shot of shots) {
-    if (shot.order >= insertAt) {
-      await db.shots.put({ ...shot, order: shot.order + count });
-    }
-  }
-  const created: Shot[] = [];
-  let nextNumber = project.shotSettings.autoIncrementShotNumber
-    ? Number.parseInt(await nextShotNumber(episodeId), 10) || shots.length + 1
-    : insertAt;
-  for (let index = 0; index < count; index += 1) {
-    const shotNumber = project.shotSettings.autoIncrementShotNumber
-      ? String(nextNumber + index)
-      : String(insertAt + index);
-    const shot = emptyShot(
-      projectId,
-      episodeId,
-      insertAt + index,
-      shotNumber,
-      project.shotSettings.defaultDurationSec ?? 0,
-      options?.beatId,
+  return db.transaction("rw", db.episodes, db.projects, db.shots, async () => {
+    const episode = await db.episodes.get(episodeId);
+    if (!episode || episode.projectId !== projectId) return [];
+    const project = await db.projects.get(projectId);
+    if (!project) return [];
+    const beats = normalizeEpisodeStory(episode.story).beats;
+    const shots = (await db.shots.where("episodeId").equals(episodeId).toArray()).sort(
+      (a, b) => a.order - b.order,
     );
-    await db.shots.add(shot);
-    created.push(shot);
-  }
-  await touchProject(projectId);
-  return created;
+    const insertAt = options?.atOrder ?? insertOrderForBeat(beats, shots, options?.beatId);
+    for (const shot of shots) {
+      if (shot.order >= insertAt) {
+        await db.shots.put({ ...shot, order: shot.order + count });
+      }
+    }
+    const created: Shot[] = [];
+    const shotSettings = normalizeShotSettings(project.shotSettings);
+    const nextNumber = shotSettings.autoIncrementShotNumber
+      ? Number.parseInt(await nextShotNumber(episodeId), 10) || shots.length + 1
+      : insertAt;
+    for (let index = 0; index < count; index += 1) {
+      const shotNumber = shotSettings.autoIncrementShotNumber
+        ? String(nextNumber + index)
+        : String(insertAt + index);
+      const shot = emptyShot(
+        projectId,
+        episodeId,
+        insertAt + index,
+        shotNumber,
+        shotSettings.defaultDurationSec,
+        options?.beatId,
+      );
+      await db.shots.add(shot);
+      created.push(shot);
+    }
+    await touchProject(projectId);
+    return created;
+  });
 }
 
 export async function addShot(
@@ -654,6 +1056,109 @@ export async function patchShot(
   if (!shot) return;
   await db.shots.put({ ...shot, ...patch });
   await touchProject(shot.projectId);
+}
+
+export async function patchEpisodeShots(
+  episodeId: Id,
+  ids: Id[],
+  patch: Partial<Pick<Shot, "beatId" | "durationSec">>,
+): Promise<void> {
+  if (ids.length === 0) return;
+  await db.transaction("rw", db.shots, db.episodes, db.projects, async () => {
+    const episode = await db.episodes.get(episodeId);
+    if (!episode) throw new Error("集不存在");
+    if (new Set(ids).size !== ids.length) throw new Error("镜头列表包含重复记录");
+    const shots = await db.shots.bulkGet(ids);
+    if (
+      shots.some(
+        (shot) =>
+          !shot || shot.episodeId !== episodeId || shot.projectId !== episode.projectId,
+      )
+    ) {
+      throw new Error("所选镜头不属于当前集");
+    }
+    if (
+      patch.beatId !== undefined &&
+      !normalizeEpisodeStory(episode.story).beats.some((beat) => beat.id === patch.beatId)
+    ) {
+      throw new Error("场次不属于当前集");
+    }
+    await Promise.all(shots.map((shot) => db.shots.put({ ...shot!, ...patch })));
+    await touchProject(episode.projectId);
+  });
+}
+
+export async function reorderShots(episodeId: Id, orderedIds: Id[]): Promise<void> {
+  await db.transaction("rw", db.shots, db.episodes, db.projects, async () => {
+    const episode = await db.episodes.get(episodeId);
+    if (!episode) throw new Error("集不存在");
+    const shots = await db.shots.where("episodeId").equals(episodeId).toArray();
+    if (shots.some((shot) => shot.projectId !== episode.projectId)) {
+      throw new Error("镜头与集不属于同一项目");
+    }
+    assertCompleteOrder(shots.map((shot) => shot.id), orderedIds);
+    const byId = new Map(shots.map((shot) => [shot.id, shot]));
+    await Promise.all(
+      orderedIds.map((id, index) => db.shots.put({ ...byId.get(id)!, order: index + 1 })),
+    );
+    await touchProject(episode.projectId);
+  });
+}
+
+export async function duplicateShot(id: Id): Promise<Shot> {
+  return db.transaction("rw", db.shots, db.episodes, db.projects, async () => {
+    const source = await db.shots.get(id);
+    if (!source) throw new Error("镜头不存在");
+    const episode = await db.episodes.get(source.episodeId);
+    if (!episode || episode.projectId !== source.projectId) {
+      throw new Error("镜头与集不属于同一项目");
+    }
+    const siblings = await db.shots.where("episodeId").equals(source.episodeId).toArray();
+    if (siblings.some((shot) => shot.projectId !== episode.projectId)) {
+      throw new Error("镜头与集不属于同一项目");
+    }
+    for (const shot of siblings) {
+      if (shot.order > source.order) {
+        await db.shots.put({ ...shot, order: shot.order + 1 });
+      }
+    }
+    const copy = structuredClone({
+      ...source,
+      id: createId("sht"),
+      order: source.order + 1,
+    });
+    await db.shots.add(copy);
+    await touchProject(source.projectId);
+    return copy;
+  });
+}
+
+export async function restoreShots(shots: Shot[], media: MediaRecord[] = []): Promise<void> {
+  if (shots.length === 0) return;
+  await db.transaction("rw", db.shots, db.episodes, db.projects, db.media, async () => {
+    if (media.length > 0) await db.media.bulkPut(media);
+    const episodeIds = new Set(shots.map((shot) => shot.episodeId));
+    for (const episodeId of episodeIds) {
+      const episode = await db.episodes.get(episodeId);
+      if (!episode) throw new Error("集不存在");
+      const scoped = shots
+        .filter((shot) => shot.episodeId === episodeId)
+        .sort((left, right) => left.order - right.order);
+      if (scoped.some((shot) => shot.projectId !== episode.projectId)) {
+        throw new Error("镜头与集不属于同一项目");
+      }
+      const all = (await db.shots.where("episodeId").equals(episodeId).toArray()).sort(
+        (left, right) => left.order - right.order,
+      );
+      for (const shot of scoped) {
+        all.splice(Math.max(0, Math.min(shot.order - 1, all.length)), 0, shot);
+      }
+      await Promise.all(
+        all.map((shot, index) => db.shots.put({ ...shot, order: index + 1 })),
+      );
+      await touchProject(episode.projectId);
+    }
+  });
 }
 
 export async function setShotSlot(
@@ -689,6 +1194,23 @@ export async function deleteShots(ids: Id[]): Promise<void> {
     await touchProject(projectId);
   }
   for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
+}
+
+export async function deleteEpisodeShots(episodeId: Id, ids: Id[]): Promise<void> {
+  if (ids.length === 0) return;
+  const episode = await db.episodes.get(episodeId);
+  if (!episode) throw new Error("集不存在");
+  if (new Set(ids).size !== ids.length) throw new Error("镜头列表包含重复记录");
+  const shots = await db.shots.bulkGet(ids);
+  if (
+    shots.some(
+      (shot) =>
+        !shot || shot.episodeId !== episodeId || shot.projectId !== episode.projectId,
+    )
+  ) {
+    throw new Error("所选镜头不属于当前集");
+  }
+  await deleteShots(ids);
 }
 
 export async function setVisibleColumns(

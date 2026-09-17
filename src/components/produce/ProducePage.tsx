@@ -1,8 +1,21 @@
 import { Link } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
+import { AlertTriangle, CheckCircle2, Download, Printer } from "lucide-react";
 import { db } from "@/db/database";
+import { Button } from "@/components/ui/button";
 import { formatDuration } from "@/lib/format";
-import { slotHasBody } from "@/domain/slot";
+import {
+  deriveEpisodeDelivery,
+  downloadEpisodeDeliveryCsv,
+} from "@/lib/episodeDelivery";
+
+const MISSING_LABELS = {
+  content: "内容",
+  duration: "时长",
+  scene: "场景",
+  firstFrame: "首帧",
+  clip: "成片",
+} as const;
 
 export function ProducePage({
   projectId,
@@ -11,80 +24,160 @@ export function ProducePage({
   projectId: string;
   episodeId: string;
 }) {
-  const shots =
-    useLiveQuery(
-      () => db.shots.where("episodeId").equals(episodeId).sortBy("order"),
-      [episodeId],
-    ) ?? [];
-  const characters =
-    useLiveQuery(() => db.characters.where("projectId").equals(projectId).toArray(), [projectId]) ??
-    [];
-  const scenes =
-    useLiveQuery(() => db.scenes.where("projectId").equals(projectId).toArray(), [projectId]) ?? [];
-
-  const missingClip = shots.filter((shot) => !shot.clip.result?.mediaId);
-  const drafted = shots.filter(
-    (shot) =>
-      slotHasBody(shot.firstFrame) || slotHasBody(shot.lastFrame) || slotHasBody(shot.clip),
+  const project = useLiveQuery(
+    async () => (await db.projects.get(projectId)) ?? null,
+    [projectId],
   );
-  const totalDuration = shots.reduce((sum, shot) => sum + (Number(shot.durationSec) || 0), 0);
+  const episode = useLiveQuery(
+    async () => (await db.episodes.get(episodeId)) ?? null,
+    [episodeId],
+  );
+  const shots = useLiveQuery(
+    () => db.shots.where("episodeId").equals(episodeId).sortBy("order"),
+    [episodeId],
+  );
+  const characters = useLiveQuery(
+    () => db.characters.where("projectId").equals(projectId).toArray(),
+    [projectId],
+  );
+  const scenes = useLiveQuery(
+    () => db.scenes.where("projectId").equals(projectId).toArray(),
+    [projectId],
+  );
+
+  if (
+    project === undefined ||
+    episode === undefined ||
+    shots === undefined ||
+    characters === undefined ||
+    scenes === undefined
+  ) {
+    return <div className="text-muted-foreground p-8 text-sm">加载制作信息…</div>;
+  }
+  if (project === null) {
+    return <div className="text-muted-foreground p-8 text-sm">找不到这个项目</div>;
+  }
+  if (episode === null || episode.projectId !== projectId) {
+    return <div className="text-muted-foreground p-8 text-sm">找不到这一集</div>;
+  }
+
+  const delivery = deriveEpisodeDelivery({
+    project,
+    episode,
+    shots,
+    characters,
+    scenes,
+  });
+  const incompleteRows = delivery.rows.filter((row) => row.missing.length > 0);
+  const missingCount = delivery.rows.reduce((sum, row) => sum + row.missing.length, 0);
 
   return (
     <div className="app-scroll h-full overflow-auto">
-      <div className="mx-auto max-w-5xl px-8 py-8">
-        <h1 className="text-[17px] font-semibold">制作</h1>
-        <p className="text-muted-foreground mt-1 max-w-xl text-xs leading-5">
-          这一集的制作还是占位。先看覆盖：哪些镜头还没有成片，世界里有没有人。
-        </p>
-
-        <dl className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4">
-          <Stat label="镜头" value={String(shots.length)} />
-          <Stat label="已写提示" value={String(drafted.length)} />
-          <Stat label="还缺成片" value={String(missingClip.length)} />
-          <Stat label="总时长" value={formatDuration(totalDuration)} />
-        </dl>
-
-        <div className="mt-8 grid gap-4 md:grid-cols-2">
-          <div className="bg-card rounded-2xl border p-5">
-            <p className="text-sm font-medium">世界</p>
-            <p className="text-muted-foreground mt-2 text-sm">
-              角色 {characters.length} · 场景 {scenes.length}。设定在系列层的世界页里，各集共用。
+      <div className="mx-auto max-w-6xl px-8 py-8">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h1 className="text-[17px] font-semibold">制作与交付</h1>
+            <p className="text-muted-foreground mt-1 max-w-xl text-xs leading-5">
+              检查当前集的分镜完整性，并导出按当前顺序整理的交付物。
             </p>
-            <Link
-              to="/p/$projectId/world"
-              params={{ projectId }}
-              className="text-brand mt-4 inline-flex text-sm hover:underline"
-            >
-              去世界
-            </Link>
           </div>
-          <div className="bg-card rounded-2xl border p-5">
-            <p className="text-sm font-medium">本集分镜</p>
-            <p className="text-muted-foreground mt-2 text-sm">
-              {missingClip.length === 0
-                ? "成片槽都有结果，或还没有镜头。"
-                : `${missingClip.length} 个镜头还没有成片。`}
-            </p>
-            <Link
-              to="/p/$projectId/e/$episodeId/shots"
-              params={{ projectId, episodeId }}
-              className="text-brand mt-4 inline-flex text-sm hover:underline"
-            >
-              去分镜
-            </Link>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={() => downloadEpisodeDeliveryCsv(delivery)}>
+              <Download />
+              导出 CSV
+            </Button>
+            <Button variant="outline" asChild>
+              <Link
+                to="/p/$projectId/e/$episodeId/storyboard"
+                params={{ projectId, episodeId }}
+                target="_blank"
+              >
+                <Printer />
+                打印故事板
+              </Link>
+            </Button>
           </div>
         </div>
 
-        {missingClip.length > 0 ? (
-          <ul className="mt-8 divide-y rounded-2xl border">
-            {missingClip.slice(0, 12).map((shot) => (
-              <li key={shot.id} className="flex items-center justify-between px-4 py-3 text-sm">
-                <span className="text-muted-foreground w-16">镜 {shot.shotNumber || "—"}</span>
-                <span className="min-w-0 flex-1 truncate">{shot.content || "未写内容"}</span>
-              </li>
-            ))}
-          </ul>
-        ) : null}
+        <dl className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4">
+          <Stat label="镜头" value={String(delivery.rows.length)} />
+          <Stat label="场次" value={String(delivery.beatCount)} />
+          <Stat label="缺失项" value={String(missingCount)} />
+          <Stat label="总时长" value={formatDuration(delivery.totalDurationSec)} />
+        </dl>
+
+        <div className="mt-8 flex items-center gap-3 rounded-2xl border p-5">
+          {incompleteRows.length === 0 ? (
+            <CheckCircle2 className="text-brand size-5" />
+          ) : (
+            <AlertTriangle className="text-amber-400 size-5" />
+          )}
+          <div>
+            <p className="text-sm font-medium">
+              {delivery.rows.length === 0
+                ? "当前集还没有镜头"
+                : incompleteRows.length === 0
+                  ? "当前集检查通过"
+                  : `${incompleteRows.length} 个镜头需要补充`}
+            </p>
+            <p className="text-muted-foreground mt-1 text-xs">
+              检查内容、时长、场景、首帧和成片；CSV 和故事板只包含当前集。
+            </p>
+          </div>
+        </div>
+
+        {incompleteRows.length > 0 ? (
+          <div className="mt-8 overflow-hidden rounded-2xl border">
+            <div className="bg-muted/60 grid grid-cols-[80px_1fr_1fr_auto] gap-3 px-4 py-3 text-xs">
+              <span>镜号</span>
+              <span>场次 / 内容</span>
+              <span>缺失</span>
+              <span>操作</span>
+            </div>
+            <ul className="divide-y">
+              {incompleteRows.map((row) => (
+                <li
+                  key={row.shot.id}
+                  className="grid grid-cols-[80px_1fr_1fr_auto] items-center gap-3 px-4 py-3 text-sm"
+                >
+                  <span className="text-muted-foreground">{row.shotNumber || "—"}</span>
+                  <span className="min-w-0">
+                    <span className="block truncate text-xs">{row.beat}</span>
+                    <span className="text-muted-foreground mt-0.5 block truncate text-xs">
+                      {row.content || "未写内容"}
+                    </span>
+                  </span>
+                  <span className="text-muted-foreground text-xs">
+                    {row.missing.map((item) => MISSING_LABELS[item]).join("、")}
+                  </span>
+                  <Link
+                    to="/p/$projectId/e/$episodeId/shots"
+                    params={{ projectId, episodeId }}
+                    search={{ shot: row.shot.id }}
+                    className="text-brand text-xs hover:underline"
+                  >
+                    定位镜头
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <div className="text-muted-foreground mt-8 rounded-2xl border border-dashed px-5 py-8 text-center text-sm">
+            {delivery.rows.length === 0 ? (
+              <Link
+                to="/p/$projectId/e/$episodeId/shots"
+                params={{ projectId, episodeId }}
+                search={{ shot: undefined }}
+                className="text-brand hover:underline"
+              >
+                去分镜创建第一条镜头
+              </Link>
+            ) : (
+              "没有发现缺失项，可以导出交付物。"
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

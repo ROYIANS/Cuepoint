@@ -49,9 +49,16 @@ export type ShotColumnId =
   | "characters"
   | "scene";
 
+export type ShotWorkspaceView = "design" | "media";
+
+export function normalizeShotWorkspaceView(raw: unknown): ShotWorkspaceView {
+  return raw === "media" ? "media" : "design";
+}
+
 export interface ShotSettings {
   defaultDurationSec: number;
   autoIncrementShotNumber: boolean;
+  workspaceView: ShotWorkspaceView;
 }
 
 export interface ColumnSettings {
@@ -65,6 +72,11 @@ export interface StoryBeat {
   characterIds: Id[];
   sceneId?: Id;
   timeOfDay: string;
+  scriptRange?: {
+    start: number;
+    end: number;
+    excerpt: string;
+  };
 }
 
 export interface ProjectStory {
@@ -94,9 +106,16 @@ export interface WorldSetting {
   rules: string;
 }
 
+export type ProjectMode = "film" | "series";
+
+export function normalizeProjectMode(raw: unknown): ProjectMode {
+  return raw === "film" ? "film" : "series";
+}
+
 export interface Project {
   id: Id;
   name: string;
+  mode: ProjectMode;
   createdAt: string;
   updatedAt: string;
   columnSettings: ColumnSettings;
@@ -220,7 +239,18 @@ export const STYLE_SLOTS: { id: StyleImageSlot; label: string }[] = [
 export const DEFAULT_SHOT_SETTINGS: ShotSettings = {
   defaultDurationSec: 0,
   autoIncrementShotNumber: true,
+  workspaceView: "design",
 };
+
+export function normalizeShotSettings(raw: unknown): ShotSettings {
+  const record =
+    raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
+  return {
+    defaultDurationSec: Math.max(0, Number(record.defaultDurationSec) || 0),
+    autoIncrementShotNumber: record.autoIncrementShotNumber !== false,
+    workspaceView: normalizeShotWorkspaceView(record.workspaceView),
+  };
+}
 
 export function emptySeriesStory(): ProjectStory {
   return { logline: "" };
@@ -241,7 +271,7 @@ export function emptyEpisodeStory(): EpisodeStory {
 export function normalizeStoryBeat(raw: unknown, index: number): StoryBeat {
   const beat =
     raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
-  return {
+  const normalized: StoryBeat = {
     id: String(beat.id ?? `beat_${index}`),
     title: String(beat.title ?? ""),
     content: String(beat.content ?? ""),
@@ -251,6 +281,22 @@ export function normalizeStoryBeat(raw: unknown, index: number): StoryBeat {
     sceneId: beat.sceneId ? String(beat.sceneId) : undefined,
     timeOfDay: String(beat.timeOfDay ?? ""),
   };
+  if (beat.scriptRange && typeof beat.scriptRange === "object") {
+    const range = beat.scriptRange as Record<string, unknown>;
+    const start = Number(range.start);
+    const end = Number(range.end);
+    const excerpt = String(range.excerpt ?? "");
+    if (
+      Number.isInteger(start) &&
+      Number.isInteger(end) &&
+      start >= 0 &&
+      end > start &&
+      excerpt.length === end - start
+    ) {
+      normalized.scriptRange = { start, end, excerpt };
+    }
+  }
+  return normalized;
 }
 
 export function normalizeEpisodeStory(raw: unknown): EpisodeStory {
@@ -260,7 +306,17 @@ export function normalizeEpisodeStory(raw: unknown): EpisodeStory {
   story.logline = String(record.logline ?? "");
   story.script = String(record.script ?? "");
   story.beats = Array.isArray(record.beats)
-    ? record.beats.map((beat, index) => normalizeStoryBeat(beat, index))
+    ? record.beats.map((beat, index) => {
+        const normalized = normalizeStoryBeat(beat, index);
+        if (
+          normalized.scriptRange &&
+          story.script.slice(normalized.scriptRange.start, normalized.scriptRange.end) !==
+            normalized.scriptRange.excerpt
+        ) {
+          delete normalized.scriptRange;
+        }
+        return normalized;
+      })
     : [];
   return story;
 }

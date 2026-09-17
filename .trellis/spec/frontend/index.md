@@ -18,6 +18,7 @@ This directory contains guidelines for frontend development. Fill in each file w
 | [Component Guidelines](./component-guidelines.md) | Component patterns, props, composition | To fill |
 | [Hook Guidelines](./hook-guidelines.md) | Dexie liveQuery loading vs missing | Filled |
 | [State Management](./state-management.md) | IndexedDB owner id, episodes, STUDIO_LIBRARY_ID | Filled |
+| [Delivery Export](./delivery-export.md) | Episode-scoped CSV and printable storyboard contracts | Filled |
 | [Quality Guidelines](./quality-guidelines.md) | Code standards, forbidden patterns | To fill |
 | [Type Safety](./type-safety.md) | Type patterns, validation | To fill |
 
@@ -38,6 +39,7 @@ This directory contains guidelines for frontend development. Fill in each file w
 - [ ] Dexie v2 `props` / `styles` tables stay in `collectMediaIds` / delete cascade
 - [ ] `/p/$projectId` is the episode list; story/shots/produce live under `/p/$projectId/e/$episodeId`
 - [ ] Shot queries and create/delete use `episodeId`, not the whole project table
+- [ ] Delivery exports filter by both project and episode and wait for live queries to load
 
 ---
 

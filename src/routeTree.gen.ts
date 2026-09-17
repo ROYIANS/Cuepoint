@@ -35,10 +35,13 @@ import { Route as PProjectIdWorldRouteImport } from './routes/p.$projectId.world
 import { Route as PProjectIdAssetsIndexRouteImport } from './routes/p.$projectId.assets.index'
 import { Route as PProjectIdEEpisodeIdRouteImport } from './routes/p.$projectId.e.$episodeId'
 import { Route as PProjectIdAssetsCharactersCharacterIdRouteImport } from './routes/p.$projectId.assets.characters.$characterId'
+import { Route as PProjectIdAssetsPropsPropIdRouteImport } from './routes/p.$projectId.assets.props.$propId'
 import { Route as PProjectIdAssetsScenesSceneIdRouteImport } from './routes/p.$projectId.assets.scenes.$sceneId'
+import { Route as PProjectIdAssetsStylesStyleIdRouteImport } from './routes/p.$projectId.assets.styles.$styleId'
 import { Route as PProjectIdEEpisodeIdIndexRouteImport } from './routes/p.$projectId.e.$episodeId.index'
 import { Route as PProjectIdEEpisodeIdProduceRouteImport } from './routes/p.$projectId.e.$episodeId.produce'
 import { Route as PProjectIdEEpisodeIdShotsRouteImport } from './routes/p.$projectId.e.$episodeId.shots'
+import { Route as PProjectIdEEpisodeIdStoryboardRouteImport } from './routes/p.$projectId.e.$episodeId.storyboard'
 
 const StudioRoute = StudioRouteImport.update({
   id: '/_studio',
@@ -171,10 +174,22 @@ const PProjectIdAssetsCharactersCharacterIdRoute =
     path: '/characters/$characterId',
     getParentRoute: () => PProjectIdAssetsRoute,
   } as any)
+const PProjectIdAssetsPropsPropIdRoute =
+  PProjectIdAssetsPropsPropIdRouteImport.update({
+    id: '/props/$propId',
+    path: '/props/$propId',
+    getParentRoute: () => PProjectIdAssetsRoute,
+  } as any)
 const PProjectIdAssetsScenesSceneIdRoute =
   PProjectIdAssetsScenesSceneIdRouteImport.update({
     id: '/scenes/$sceneId',
     path: '/scenes/$sceneId',
+    getParentRoute: () => PProjectIdAssetsRoute,
+  } as any)
+const PProjectIdAssetsStylesStyleIdRoute =
+  PProjectIdAssetsStylesStyleIdRouteImport.update({
+    id: '/styles/$styleId',
+    path: '/styles/$styleId',
     getParentRoute: () => PProjectIdAssetsRoute,
   } as any)
 const PProjectIdEEpisodeIdIndexRoute =
@@ -193,6 +208,12 @@ const PProjectIdEEpisodeIdShotsRoute =
   PProjectIdEEpisodeIdShotsRouteImport.update({
     id: '/shots',
     path: '/shots',
+    getParentRoute: () => PProjectIdEEpisodeIdRoute,
+  } as any)
+const PProjectIdEEpisodeIdStoryboardRoute =
+  PProjectIdEEpisodeIdStoryboardRouteImport.update({
+    id: '/storyboard',
+    path: '/storyboard',
     getParentRoute: () => PProjectIdEEpisodeIdRoute,
   } as any)
 
@@ -222,9 +243,12 @@ export interface FileRoutesByFullPath {
   '/p/$projectId/e/$episodeId': typeof PProjectIdEEpisodeIdRouteWithChildren
   '/p/$projectId/assets/': typeof PProjectIdAssetsIndexRoute
   '/p/$projectId/assets/characters/$characterId': typeof PProjectIdAssetsCharactersCharacterIdRoute
+  '/p/$projectId/assets/props/$propId': typeof PProjectIdAssetsPropsPropIdRoute
   '/p/$projectId/assets/scenes/$sceneId': typeof PProjectIdAssetsScenesSceneIdRoute
+  '/p/$projectId/assets/styles/$styleId': typeof PProjectIdAssetsStylesStyleIdRoute
   '/p/$projectId/e/$episodeId/produce': typeof PProjectIdEEpisodeIdProduceRoute
   '/p/$projectId/e/$episodeId/shots': typeof PProjectIdEEpisodeIdShotsRoute
+  '/p/$projectId/e/$episodeId/storyboard': typeof PProjectIdEEpisodeIdStoryboardRoute
   '/p/$projectId/e/$episodeId/': typeof PProjectIdEEpisodeIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -246,9 +270,12 @@ export interface FileRoutesByTo {
   '/p/$projectId': typeof PProjectIdIndexRoute
   '/p/$projectId/assets': typeof PProjectIdAssetsIndexRoute
   '/p/$projectId/assets/characters/$characterId': typeof PProjectIdAssetsCharactersCharacterIdRoute
+  '/p/$projectId/assets/props/$propId': typeof PProjectIdAssetsPropsPropIdRoute
   '/p/$projectId/assets/scenes/$sceneId': typeof PProjectIdAssetsScenesSceneIdRoute
+  '/p/$projectId/assets/styles/$styleId': typeof PProjectIdAssetsStylesStyleIdRoute
   '/p/$projectId/e/$episodeId/produce': typeof PProjectIdEEpisodeIdProduceRoute
   '/p/$projectId/e/$episodeId/shots': typeof PProjectIdEEpisodeIdShotsRoute
+  '/p/$projectId/e/$episodeId/storyboard': typeof PProjectIdEEpisodeIdStoryboardRoute
   '/p/$projectId/e/$episodeId': typeof PProjectIdEEpisodeIdIndexRoute
 }
 export interface FileRoutesById {
@@ -279,9 +306,12 @@ export interface FileRoutesById {
   '/p/$projectId/e/$episodeId': typeof PProjectIdEEpisodeIdRouteWithChildren
   '/p/$projectId/assets/': typeof PProjectIdAssetsIndexRoute
   '/p/$projectId/assets/characters/$characterId': typeof PProjectIdAssetsCharactersCharacterIdRoute
+  '/p/$projectId/assets/props/$propId': typeof PProjectIdAssetsPropsPropIdRoute
   '/p/$projectId/assets/scenes/$sceneId': typeof PProjectIdAssetsScenesSceneIdRoute
+  '/p/$projectId/assets/styles/$styleId': typeof PProjectIdAssetsStylesStyleIdRoute
   '/p/$projectId/e/$episodeId/produce': typeof PProjectIdEEpisodeIdProduceRoute
   '/p/$projectId/e/$episodeId/shots': typeof PProjectIdEEpisodeIdShotsRoute
+  '/p/$projectId/e/$episodeId/storyboard': typeof PProjectIdEEpisodeIdStoryboardRoute
   '/p/$projectId/e/$episodeId/': typeof PProjectIdEEpisodeIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -312,9 +342,12 @@ export interface FileRouteTypes {
     | '/p/$projectId/e/$episodeId'
     | '/p/$projectId/assets/'
     | '/p/$projectId/assets/characters/$characterId'
+    | '/p/$projectId/assets/props/$propId'
     | '/p/$projectId/assets/scenes/$sceneId'
+    | '/p/$projectId/assets/styles/$styleId'
     | '/p/$projectId/e/$episodeId/produce'
     | '/p/$projectId/e/$episodeId/shots'
+    | '/p/$projectId/e/$episodeId/storyboard'
     | '/p/$projectId/e/$episodeId/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -336,9 +369,12 @@ export interface FileRouteTypes {
     | '/p/$projectId'
     | '/p/$projectId/assets'
     | '/p/$projectId/assets/characters/$characterId'
+    | '/p/$projectId/assets/props/$propId'
     | '/p/$projectId/assets/scenes/$sceneId'
+    | '/p/$projectId/assets/styles/$styleId'
     | '/p/$projectId/e/$episodeId/produce'
     | '/p/$projectId/e/$episodeId/shots'
+    | '/p/$projectId/e/$episodeId/storyboard'
     | '/p/$projectId/e/$episodeId'
   id:
     | '__root__'
@@ -368,9 +404,12 @@ export interface FileRouteTypes {
     | '/p/$projectId/e/$episodeId'
     | '/p/$projectId/assets/'
     | '/p/$projectId/assets/characters/$characterId'
+    | '/p/$projectId/assets/props/$propId'
     | '/p/$projectId/assets/scenes/$sceneId'
+    | '/p/$projectId/assets/styles/$styleId'
     | '/p/$projectId/e/$episodeId/produce'
     | '/p/$projectId/e/$episodeId/shots'
+    | '/p/$projectId/e/$episodeId/storyboard'
     | '/p/$projectId/e/$episodeId/'
   fileRoutesById: FileRoutesById
 }
@@ -563,11 +602,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PProjectIdAssetsCharactersCharacterIdRouteImport
       parentRoute: typeof PProjectIdAssetsRoute
     }
+    '/p/$projectId/assets/props/$propId': {
+      id: '/p/$projectId/assets/props/$propId'
+      path: '/props/$propId'
+      fullPath: '/p/$projectId/assets/props/$propId'
+      preLoaderRoute: typeof PProjectIdAssetsPropsPropIdRouteImport
+      parentRoute: typeof PProjectIdAssetsRoute
+    }
     '/p/$projectId/assets/scenes/$sceneId': {
       id: '/p/$projectId/assets/scenes/$sceneId'
       path: '/scenes/$sceneId'
       fullPath: '/p/$projectId/assets/scenes/$sceneId'
       preLoaderRoute: typeof PProjectIdAssetsScenesSceneIdRouteImport
+      parentRoute: typeof PProjectIdAssetsRoute
+    }
+    '/p/$projectId/assets/styles/$styleId': {
+      id: '/p/$projectId/assets/styles/$styleId'
+      path: '/styles/$styleId'
+      fullPath: '/p/$projectId/assets/styles/$styleId'
+      preLoaderRoute: typeof PProjectIdAssetsStylesStyleIdRouteImport
       parentRoute: typeof PProjectIdAssetsRoute
     }
     '/p/$projectId/e/$episodeId/': {
@@ -589,6 +642,13 @@ declare module '@tanstack/react-router' {
       path: '/shots'
       fullPath: '/p/$projectId/e/$episodeId/shots'
       preLoaderRoute: typeof PProjectIdEEpisodeIdShotsRouteImport
+      parentRoute: typeof PProjectIdEEpisodeIdRoute
+    }
+    '/p/$projectId/e/$episodeId/storyboard': {
+      id: '/p/$projectId/e/$episodeId/storyboard'
+      path: '/storyboard'
+      fullPath: '/p/$projectId/e/$episodeId/storyboard'
+      preLoaderRoute: typeof PProjectIdEEpisodeIdStoryboardRouteImport
       parentRoute: typeof PProjectIdEEpisodeIdRoute
     }
   }
@@ -671,14 +731,18 @@ const StudioRouteWithChildren =
 interface PProjectIdAssetsRouteChildren {
   PProjectIdAssetsIndexRoute: typeof PProjectIdAssetsIndexRoute
   PProjectIdAssetsCharactersCharacterIdRoute: typeof PProjectIdAssetsCharactersCharacterIdRoute
+  PProjectIdAssetsPropsPropIdRoute: typeof PProjectIdAssetsPropsPropIdRoute
   PProjectIdAssetsScenesSceneIdRoute: typeof PProjectIdAssetsScenesSceneIdRoute
+  PProjectIdAssetsStylesStyleIdRoute: typeof PProjectIdAssetsStylesStyleIdRoute
 }
 
 const PProjectIdAssetsRouteChildren: PProjectIdAssetsRouteChildren = {
   PProjectIdAssetsIndexRoute: PProjectIdAssetsIndexRoute,
   PProjectIdAssetsCharactersCharacterIdRoute:
     PProjectIdAssetsCharactersCharacterIdRoute,
+  PProjectIdAssetsPropsPropIdRoute: PProjectIdAssetsPropsPropIdRoute,
   PProjectIdAssetsScenesSceneIdRoute: PProjectIdAssetsScenesSceneIdRoute,
+  PProjectIdAssetsStylesStyleIdRoute: PProjectIdAssetsStylesStyleIdRoute,
 }
 
 const PProjectIdAssetsRouteWithChildren =
@@ -687,12 +751,14 @@ const PProjectIdAssetsRouteWithChildren =
 interface PProjectIdEEpisodeIdRouteChildren {
   PProjectIdEEpisodeIdProduceRoute: typeof PProjectIdEEpisodeIdProduceRoute
   PProjectIdEEpisodeIdShotsRoute: typeof PProjectIdEEpisodeIdShotsRoute
+  PProjectIdEEpisodeIdStoryboardRoute: typeof PProjectIdEEpisodeIdStoryboardRoute
   PProjectIdEEpisodeIdIndexRoute: typeof PProjectIdEEpisodeIdIndexRoute
 }
 
 const PProjectIdEEpisodeIdRouteChildren: PProjectIdEEpisodeIdRouteChildren = {
   PProjectIdEEpisodeIdProduceRoute: PProjectIdEEpisodeIdProduceRoute,
   PProjectIdEEpisodeIdShotsRoute: PProjectIdEEpisodeIdShotsRoute,
+  PProjectIdEEpisodeIdStoryboardRoute: PProjectIdEEpisodeIdStoryboardRoute,
   PProjectIdEEpisodeIdIndexRoute: PProjectIdEEpisodeIdIndexRoute,
 }
 

@@ -172,3 +172,49 @@
     filter: none;
   }
 }
+
+@page {
+  size: A4 landscape;
+  margin: 10mm;
+}
+
+@media print {
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+
+  .workspace-shell {
+    display: block;
+    height: auto;
+  }
+
+  .workspace-header,
+  .print-toolbar,
+  [data-sonner-toaster] {
+    display: none !important;
+  }
+
+  .storyboard-print {
+    min-height: 0;
+    padding: 0;
+  }
+
+  .storyboard-heading {
+    max-width: none;
+  }
+
+  .storyboard-grid {
+    max-width: none;
+    gap: 4mm;
+  }
+
+  .storyboard-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

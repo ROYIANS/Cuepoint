@@ -10,19 +10,34 @@ import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-export function PropDetailPage({ propId }: { propId: string }) {
+export function PropDetailPage({
+  propId,
+  back = { kind: "studio" },
+}: {
+  propId: string;
+  back?: { kind: "studio" } | { kind: "project"; projectId: string };
+}) {
   const navigate = useNavigate();
   const prop = useLiveQuery(async () => (await db.props.get(propId)) ?? null, [propId]);
 
   if (prop === undefined) {
     return <div className="text-muted-foreground p-8 text-sm">加载中…</div>;
   }
-  if (prop === null) {
+  const missing =
+    prop === null || (back.kind === "project" && prop.projectId !== back.projectId);
+  if (missing) {
     return (
       <div className="p-8">
         <p>找不到这个道具</p>
-        <Button className="mt-3" onClick={() => void navigate({ to: "/props" })}>
-          返回道具库
+        <Button
+          className="mt-3"
+          onClick={() =>
+            void (back.kind === "studio"
+              ? navigate({ to: "/props" })
+              : navigate({ to: "/p/$projectId/world", params: { projectId: back.projectId } }))
+          }
+        >
+          {back.kind === "studio" ? "返回道具库" : "返回世界"}
         </Button>
       </div>
     );
@@ -31,12 +46,22 @@ export function PropDetailPage({ propId }: { propId: string }) {
   return (
     <div className="h-full overflow-auto">
       <div className="mx-auto max-w-5xl px-8 py-6">
-        <Link
-          to="/props"
-          className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
-        >
-          <ChevronLeft className="size-4" /> 道具
-        </Link>
+        {back.kind === "studio" ? (
+          <Link
+            to="/props"
+            className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
+          >
+            <ChevronLeft className="size-4" /> 道具
+          </Link>
+        ) : (
+          <Link
+            to="/p/$projectId/world"
+            params={{ projectId: back.projectId }}
+            className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
+          >
+            <ChevronLeft className="size-4" /> 世界
+          </Link>
+        )}
         <h1 className="mt-3 text-lg font-semibold">道具</h1>
         <div className="mt-6 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="grid grid-cols-2 gap-4">

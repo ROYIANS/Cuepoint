@@ -30,11 +30,13 @@ export function GenerationSlotTile({
   slot,
   variant,
   label,
+  ariaLabel,
   onOpen,
 }: {
   slot: GenerationSlot;
   variant: TileVariant;
   label?: string;
+  ariaLabel?: string;
   onOpen: () => void;
 }) {
   const hasResult = Boolean(slot.result?.mediaId);
@@ -46,6 +48,7 @@ export function GenerationSlotTile({
       {label ? <div className="text-muted-foreground mb-1.5 text-xs">{label}</div> : null}
       <button
         type="button"
+        aria-label={ariaLabel}
         onClick={onOpen}
         className={cn(
           "relative flex flex-col overflow-hidden text-left",
@@ -286,6 +289,7 @@ export function EditableGenerationSlot({
         slot={value}
         variant={variant}
         label={label}
+        ariaLabel={title}
         onOpen={() => setOpen(true)}
       />
       {open ? (

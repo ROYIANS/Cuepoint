@@ -1,10 +1,11 @@
 import { useLiveQuery } from "dexie-react-hooks";
-import { useEffect, useRef, useState } from "react";
 import { db } from "@/db/database";
-import { updateProject } from "@/db/repo";
+import { updateWorldSetting } from "@/db/repo";
 import { emptySetting, normalizeSetting, type WorldSetting } from "@/domain/types";
+import { DraftStatus } from "@/components/ui/draft-status";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useDebouncedDraft } from "@/lib/debouncedDraft";
 
 const FIELDS: { key: keyof WorldSetting; label: string; hint: string; placeholder: string }[] = [
   {
@@ -28,29 +29,38 @@ const FIELDS: { key: keyof WorldSetting; label: string; hint: string; placeholde
 ];
 
 export function WorldSettingPanel({ projectId }: { projectId: string }) {
-  const project = useLiveQuery(() => db.projects.get(projectId), [projectId]);
-  const [setting, setSetting] = useState<WorldSetting>(emptySetting());
-  const [saved, setSaved] = useState(true);
-  const loadedFor = useRef<string | undefined>(undefined);
+  const project = useLiveQuery(
+    async () => (await db.projects.get(projectId)) ?? null,
+    [projectId],
+  );
 
-  useEffect(() => {
-    if (!project || loadedFor.current === project.id) return;
-    loadedFor.current = project.id;
-    setSetting(normalizeSetting(project.setting));
-    setSaved(true);
-  }, [project]);
-
-  useEffect(() => {
-    if (!project || loadedFor.current !== project.id || saved) return;
-    const handle = window.setTimeout(() => {
-      void updateProject(projectId, { setting }).then(() => setSaved(true));
-    }, 400);
-    return () => window.clearTimeout(handle);
-  }, [project, projectId, saved, setting]);
-
-  if (!project) {
+  if (project === undefined) {
     return <p className="text-muted-foreground mt-6 text-sm">加载设定…</p>;
   }
+  if (project === null) {
+    return <p className="text-muted-foreground mt-6 text-sm">找不到这个项目</p>;
+  }
+
+  return (
+    <WorldSettingEditor
+      key={project.id}
+      projectId={project.id}
+      initialValue={normalizeSetting(project.setting)}
+    />
+  );
+}
+
+function WorldSettingEditor({
+  projectId,
+  initialValue,
+}: {
+  projectId: string;
+  initialValue: WorldSetting;
+}) {
+  const { draft, setDraft, status, error, retry } = useDebouncedDraft({
+    initialValue: { ...emptySetting(), ...initialValue },
+    persist: (value) => updateWorldSetting(projectId, value),
+  });
 
   return (
     <div className="mt-6 max-w-3xl">
@@ -58,7 +68,7 @@ export function WorldSettingPanel({ projectId }: { projectId: string }) {
         <p className="text-muted-foreground text-xs leading-5">
           设定是这部戏一直为真的东西，不跟某一集走。
         </p>
-        <p className="text-muted-foreground text-[11px]">{saved ? "已保存" : "保存中…"}</p>
+        <DraftStatus status={status} error={error} onRetry={() => void retry()} />
       </div>
       <div className="mt-5 space-y-6">
         {FIELDS.map((field) => (
@@ -67,11 +77,10 @@ export function WorldSettingPanel({ projectId }: { projectId: string }) {
             <p className="text-muted-foreground mt-1 text-[11px] leading-5">{field.hint}</p>
             <Textarea
               className="mt-2 min-h-36 resize-y bg-card/60"
-              value={setting[field.key]}
+              value={draft[field.key]}
               placeholder={field.placeholder}
               onChange={(event) => {
-                setSetting({ ...setting, [field.key]: event.target.value });
-                setSaved(false);
+                setDraft((current) => ({ ...current, [field.key]: event.target.value }));
               }}
             />
           </div>

@@ -1,16 +1,21 @@
 import { useLiveQuery } from "dexie-react-hooks";
-import { Plus, Trash2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { ArrowDown, ArrowUp, Copy, CopyPlus, Plus, Trash2 } from "lucide-react";
+import { useRef, useState } from "react";
 import { db } from "@/db/database";
-import { addStoryBeat, deleteStoryBeat, updateEpisode } from "@/db/repo";
 import {
-  emptyEpisodeStory,
-  normalizeEpisodeStory,
-  type EpisodeStory,
-  type StoryBeat,
-} from "@/domain/types";
+  addStoryBeat,
+  deleteShots,
+  deleteStoryBeat,
+  duplicateBeat,
+  patchStoryBeat,
+  reorderBeats,
+  restoreStoryBeat,
+  updateEpisodeDraft,
+} from "@/db/repo";
+import { normalizeEpisodeStory, type Episode, type StoryBeat } from "@/domain/types";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DraftStatus } from "@/components/ui/draft-status";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -21,6 +26,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useDebouncedDraft } from "@/lib/debouncedDraft";
+import { useUndo } from "@/lib/undo";
 import { cn } from "@/lib/utils";
 
 function isScriptFile(file: File): boolean {
@@ -41,85 +48,100 @@ export function StoryPage({ projectId, episodeId }: { projectId: string; episode
     ) ?? [];
   const scenes =
     useLiveQuery(() => db.scenes.where("projectId").equals(projectId).toArray(), [projectId]) ?? [];
-  const [title, setTitle] = useState("");
-  const [story, setStory] = useState<EpisodeStory>(emptyEpisodeStory());
-  const [saved, setSaved] = useState(true);
-  const [dragging, setDragging] = useState(false);
-  const loadedFor = useRef<string | undefined>(undefined);
-  const draftRef = useRef({ title, story, saved });
-  const revision = useRef(0);
-  draftRef.current = { title, story, saved };
+  if (episode === undefined) {
+    return <div className="text-muted-foreground p-8 text-sm">加载故事…</div>;
+  }
+  if (episode === null || episode.projectId !== projectId) {
+    return <div className="text-muted-foreground p-8 text-sm">找不到这一集</div>;
+  }
 
-  useEffect(() => {
-    if (!episode || loadedFor.current === episode.id) return;
-    loadedFor.current = episode.id;
-    setTitle(episode.title);
-    setStory(normalizeEpisodeStory(episode.story));
-    setSaved(true);
-  }, [episode]);
-
-  useEffect(() => {
-    if (!episode || loadedFor.current !== episode.id || saved) return;
-    const savingRevision = revision.current;
-    const handle = window.setTimeout(() => {
-      void updateEpisode(episodeId, { title, story }).then(() => {
-        if (revision.current === savingRevision) setSaved(true);
-      });
-    }, 400);
-    return () => window.clearTimeout(handle);
-  }, [episode, episodeId, saved, story, title]);
-
-  useEffect(
-    () => () => {
-      const draft = draftRef.current;
-      if (!draft.saved) {
-        void updateEpisode(episodeId, {
-          title: draft.title,
-          story: draft.story,
-        });
-      }
-    },
-    [episodeId],
+  return (
+    <StoryEditor
+      key={episode.id}
+      episode={episode}
+      characters={characters}
+      scenes={scenes}
+    />
   );
+}
 
-  function patch(next: EpisodeStory) {
-    setStory(next);
-    revision.current += 1;
-    setSaved(false);
-  }
-
-  async function addBeat() {
-    const beat = await addStoryBeat(episodeId);
-    revision.current += 1;
-    setStory((current) => ({ ...current, beats: [...current.beats, beat] }));
-  }
+function StoryEditor({
+  episode,
+  characters,
+  scenes,
+}: {
+  episode: Episode;
+  characters: { id: string; name: string }[];
+  scenes: { id: string; name: string }[];
+}) {
+  const initialStory = normalizeEpisodeStory(episode.story);
+  const { draft, setDraft, status, error, retry, flush } = useDebouncedDraft({
+    initialValue: {
+      title: episode.title,
+      logline: initialStory.logline,
+      script: initialStory.script,
+    },
+    persist: (value) => updateEpisodeDraft(episode.id, value),
+  });
+  const [dragging, setDragging] = useState(false);
+  const scriptRef = useRef<HTMLTextAreaElement>(null);
+  const { registerUndo } = useUndo();
+  const beats = normalizeEpisodeStory(episode.story).beats;
 
   function updateBeat(id: string, change: Partial<StoryBeat>) {
-    setStory((current) => ({
-      ...current,
-      beats: current.beats.map((beat) => (beat.id === id ? { ...beat, ...change } : beat)),
-    }));
-    revision.current += 1;
-    setSaved(false);
-  }
-
-  async function removeBeat(id: string) {
-    await deleteStoryBeat(episodeId, id);
-    revision.current += 1;
-    setStory((current) => ({ ...current, beats: current.beats.filter((beat) => beat.id !== id) }));
+    void patchStoryBeat(episode.id, id, change);
   }
 
   async function applyScriptFile(file: File) {
     if (!isScriptFile(file)) return;
     const text = await file.text();
-    patch({ ...story, script: text });
+    setDraft((current) => ({ ...current, script: text }));
   }
 
-  if (episode === undefined) {
-    return <div className="text-muted-foreground p-8 text-sm">加载故事…</div>;
+  async function addBeatFromSelection() {
+    const textarea = scriptRef.current;
+    if (!textarea || textarea.selectionStart === textarea.selectionEnd) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const excerpt = draft.script.slice(start, end);
+    if (!excerpt) return;
+    await flush();
+    await addStoryBeat(episode.id, { scriptRange: { start, end, excerpt } });
   }
-  if (episode === null) {
-    return <div className="text-muted-foreground p-8 text-sm">找不到这一集</div>;
+
+  async function moveBeat(index: number, offset: -1 | 1) {
+    const target = index + offset;
+    if (target < 0 || target >= beats.length) return;
+    const previous = beats.map((beat) => beat.id);
+    const next = [...previous];
+    [next[index], next[target]] = [next[target]!, next[index]!];
+    await reorderBeats(episode.id, next);
+    registerUndo({
+      label: "已调整场次顺序",
+      restore: () => reorderBeats(episode.id, previous),
+    });
+  }
+
+  async function removeBeat(beat: StoryBeat, index: number) {
+    const shotIds = (await db.shots.where("episodeId").equals(episode.id).toArray())
+      .filter((shot) => shot.beatId === beat.id)
+      .map((shot) => shot.id);
+    await deleteStoryBeat(episode.id, beat.id);
+    registerUndo({
+      label: "已删除场次",
+      restore: () => restoreStoryBeat(episode.id, beat, index, shotIds),
+    });
+  }
+
+  async function copyBeat(beatId: string, copyShots: boolean) {
+    const copy = await duplicateBeat(episode.id, beatId, { includeShots: copyShots });
+    registerUndo({
+      label: copyShots ? "已复制场次及镜头" : "已复制场次",
+      restore: async () => {
+        await deleteShots(copy.shots.map((shot) => shot.id));
+        await deleteStoryBeat(episode.id, copy.beat.id);
+      },
+    });
   }
 
   return (
@@ -133,25 +155,25 @@ export function StoryPage({ projectId, episodeId }: { projectId: string; episode
                 先写这一集要讲什么。场次可以后补，分镜会从这里长出来。
               </p>
             </div>
-            <p className="text-muted-foreground text-[11px]">{saved ? "已保存" : "保存中…"}</p>
+            <DraftStatus status={status} error={error} onRetry={() => void retry()} />
           </div>
           <Label className="mt-6">集标题（可选）</Label>
           <Input
             className="mt-2"
-            value={title}
+            value={draft.title}
             placeholder="不填就显示第几集"
             onChange={(event) => {
-              setTitle(event.target.value);
-              revision.current += 1;
-              setSaved(false);
+              setDraft((current) => ({ ...current, title: event.target.value }));
             }}
           />
           <Label className="mt-6">本集一句话</Label>
           <Input
             className="mt-2"
-            value={story.logline}
+            value={draft.logline}
             placeholder="这一集，用一句话说完"
-            onChange={(event) => patch({ ...story, logline: event.target.value })}
+            onChange={(event) =>
+              setDraft((current) => ({ ...current, logline: event.target.value }))
+            }
           />
           <Label className="mt-6">剧本</Label>
           <p className="text-muted-foreground mt-1 text-[11px]">可拖入 .txt / .md，写入正文，不会自动拆场。</p>
@@ -174,31 +196,39 @@ export function StoryPage({ projectId, episodeId }: { projectId: string; episode
             }}
           >
             <Textarea
+              ref={scriptRef}
               className="min-h-[28rem] resize-y bg-card/60 text-[14px] leading-7"
-              value={story.script}
+              value={draft.script}
               placeholder="直接贴剧本，或把 txt / md 拖进来。"
-              onChange={(event) => patch({ ...story, script: event.target.value })}
+              onChange={(event) =>
+                setDraft((current) => ({ ...current, script: event.target.value }))
+              }
             />
           </div>
         </section>
         <aside className="min-w-0">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-medium">场次</h2>
-            <Button size="sm" variant="outline" onClick={() => void addBeat()}>
-              <Plus />
-              加一场
-            </Button>
+            <div className="flex gap-2">
+              <Button size="sm" variant="outline" onClick={() => void addBeatFromSelection()}>
+                从选中内容建场
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => void addStoryBeat(episode.id)}>
+                <Plus />
+                加一场
+              </Button>
+            </div>
           </div>
           <p className="text-muted-foreground mt-1 text-[11px] leading-5">
             加一场，分镜里就会出现对应的空场。出场角色和地点从本戏世界选。
           </p>
           <ul className="mt-4 space-y-3">
-            {story.beats.length === 0 ? (
+            {beats.length === 0 ? (
               <li className="text-muted-foreground rounded-2xl border border-dashed px-4 py-8 text-center text-xs">
                 还没有场次
               </li>
             ) : (
-              story.beats.map((beat, index) => (
+              beats.map((beat, index) => (
                 <li key={beat.id} className="bg-card rounded-2xl border p-3">
                   <div className="flex items-center gap-2">
                     <span className="text-muted-foreground w-6 text-xs">{index + 1}</span>
@@ -210,8 +240,42 @@ export function StoryPage({ projectId, episodeId }: { projectId: string; episode
                     <Button
                       size="icon-sm"
                       variant="ghost"
+                      aria-label="上移场次"
+                      disabled={index === 0}
+                      onClick={() => void moveBeat(index, -1)}
+                    >
+                      <ArrowUp />
+                    </Button>
+                    <Button
+                      size="icon-sm"
+                      variant="ghost"
+                      aria-label="下移场次"
+                      disabled={index === beats.length - 1}
+                      onClick={() => void moveBeat(index, 1)}
+                    >
+                      <ArrowDown />
+                    </Button>
+                    <Button
+                      size="icon-sm"
+                      variant="ghost"
+                      aria-label="复制场次"
+                      onClick={() => void copyBeat(beat.id, false)}
+                    >
+                      <Copy />
+                    </Button>
+                    <Button
+                      size="icon-sm"
+                      variant="ghost"
+                      aria-label="复制场次及其镜头"
+                      onClick={() => void copyBeat(beat.id, true)}
+                    >
+                      <CopyPlus />
+                    </Button>
+                    <Button
+                      size="icon-sm"
+                      variant="ghost"
                       aria-label="删除场次"
-                      onClick={() => void removeBeat(beat.id)}
+                      onClick={() => void removeBeat(beat, index)}
                     >
                       <Trash2 />
                     </Button>

@@ -10,6 +10,7 @@ export const Route = createFileRoute("/p/$projectId/shots")({
     throw redirect({
       to: "/p/$projectId/e/$episodeId/shots",
       params: { projectId: params.projectId, episodeId: episode.id },
+      search: { shot: undefined },
     });
   },
 });

@@ -33,7 +33,8 @@ import {
   importProjectZip,
   PackageError,
 } from "@/lib/projectPackage";
-import type { Id, Shot } from "@/domain/types";
+import type { Id, ProjectMode, Shot } from "@/domain/types";
+import { cn } from "@/lib/utils";
 
 function coverOfProject(shots: Shot[], projectId: Id): Id | undefined {
   return shots
@@ -50,6 +51,7 @@ export function ProjectGalleryPage() {
   const [sort, setSort] = useState<LibrarySort>("updated");
   const [creating, setCreating] = useState(false);
   const [name, setName] = useState("未命名项目");
+  const [mode, setMode] = useState<ProjectMode>("film");
   const [renameId, setRenameId] = useState<string>();
   const [renameValue, setRenameValue] = useState("");
   const [deleteId, setDeleteId] = useState<string>();
@@ -61,9 +63,10 @@ export function ProjectGalleryPage() {
 
   async function handleCreate() {
     try {
-      const project = await createProject(name);
+      const project = await createProject(name, mode);
       setCreating(false);
       setName("未命名项目");
+      setMode("film");
       await navigate({ to: "/p/$projectId", params: { projectId: project.id } });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "创建失败");
@@ -94,7 +97,7 @@ export function ProjectGalleryPage() {
                   },
                 },
                 {
-                  label: "导出 zip",
+                  label: "备份项目（zip）",
                   onSelect: () => {
                     void exportProjectZip(project.id).then((blob) =>
                       downloadBlob(blob, `${project.name}.zip`),
@@ -123,6 +126,33 @@ export function ProjectGalleryPage() {
             onChange={(event) => setName(event.target.value)}
             placeholder="项目名称"
           />
+          <fieldset>
+            <legend className="text-sm font-medium">项目类型</legend>
+            <div className="mt-2 grid grid-cols-2 gap-3">
+              {([
+                { value: "film", title: "单片", hint: "直接进入故事，适合短片和电影" },
+                { value: "series", title: "连载", hint: "按集管理故事、分镜和制作" },
+              ] satisfies { value: ProjectMode; title: string; hint: string }[]).map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  aria-pressed={mode === option.value}
+                  className={cn(
+                    "rounded-xl border p-4 text-left transition-colors",
+                    mode === option.value
+                      ? "border-brand bg-brand/5"
+                      : "hover:bg-muted/50",
+                  )}
+                  onClick={() => setMode(option.value)}
+                >
+                  <span className="block text-sm font-medium">{option.title}</span>
+                  <span className="text-muted-foreground mt-1 block text-xs leading-5">
+                    {option.hint}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </fieldset>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCreating(false)}>
               取消
@@ -165,7 +195,7 @@ export function ProjectGalleryPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>删除项目</AlertDialogTitle>
             <AlertDialogDescription>
-              删除后无法恢复（除非你已经导出过 zip）。
+              删除后无法恢复（除非你已经备份过项目）。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

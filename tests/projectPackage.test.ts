@@ -1,0 +1,180 @@
+import JSZip from "jszip";
+import { describe, expect, it } from "vitest";
+import { db } from "@/db/database";
+import {
+  addCharacter,
+  addProp,
+  addScene,
+  addStyle,
+  copyStudioCharacter,
+  copyStudioProp,
+  copyStudioScene,
+  copyStudioStyle,
+  createProject,
+  patchCharacter,
+  patchProp,
+  patchStyle,
+  putMedia,
+  updateProject,
+} from "@/db/repo";
+import { emptySlot } from "@/domain/slot";
+import { PACKAGE_FORMAT, STUDIO_LIBRARY_ID } from "@/domain/types";
+import { exportProjectZip, importProjectZip, PackageError } from "@/lib/projectPackage";
+
+describe("project packages", () => {
+  it("round-trips props, styles, nested extra data, and inferred media MIME", async () => {
+    const project = await createProject("package");
+    const prop = await addProp(project.id);
+    const style = await addStyle(project.id);
+    const mediaId = "med_package";
+    await putMedia({
+      id: mediaId,
+      projectId: project.id,
+      mimeType: "image/png",
+      filename: "reference.png",
+      blob: new Blob(["image"]),
+    });
+    await patchProp(prop.id, {
+      extra: { nested: { retained: true } },
+      slots: { hero: { ...emptySlot(), result: { mediaId, kind: "image" } } },
+    });
+    await patchStyle(style.id, { extra: { palette: ["red", "blue"] } });
+
+    const imported = await importProjectZip(await exportProjectZip(project.id));
+    const importedProp = await db.props.where("projectId").equals(imported.id).first();
+    const importedStyle = await db.styles.where("projectId").equals(imported.id).first();
+    const importedMediaId = importedProp?.slots.hero?.result?.mediaId;
+    const importedMedia = importedMediaId ? await db.media.get(importedMediaId) : undefined;
+
+    expect(importedProp?.extra).toEqual({ nested: { retained: true } });
+    expect(importedStyle?.extra).toEqual({ palette: ["red", "blue"] });
+    expect(importedMedia?.mimeType).toBe("image/png");
+    expect(imported.mode).toBe("film");
+  });
+
+  it("round-trips all four snapshot types with source metadata", async () => {
+    const project = await createProject("snapshot package");
+    const studioCharacter = await addCharacter(STUDIO_LIBRARY_ID);
+    const studioScene = await addScene(STUDIO_LIBRARY_ID);
+    const studioProp = await addProp(STUDIO_LIBRARY_ID);
+    const studioStyle = await addStyle(STUDIO_LIBRARY_ID);
+    const mediaId = "med_studio_package";
+    await putMedia({
+      id: mediaId,
+      projectId: STUDIO_LIBRARY_ID,
+      mimeType: "video/mp4",
+      filename: "reference.mp4",
+      blob: new Blob(["video"], { type: "video/mp4" }),
+    });
+    await patchCharacter(studioCharacter.id, {
+      slots: {
+        front: {
+          ...emptySlot(),
+          referenceVideoIds: [mediaId],
+          result: { mediaId, kind: "video" },
+        },
+      },
+    });
+
+    await Promise.all([
+      copyStudioCharacter(project.id, studioCharacter.id),
+      copyStudioScene(project.id, studioScene.id),
+      copyStudioProp(project.id, studioProp.id),
+      copyStudioStyle(project.id, studioStyle.id),
+    ]);
+    const imported = await importProjectZip(await exportProjectZip(project.id));
+    const [characters, scenes, props, styles] = await Promise.all([
+      db.characters.where("projectId").equals(imported.id).toArray(),
+      db.scenes.where("projectId").equals(imported.id).toArray(),
+      db.props.where("projectId").equals(imported.id).toArray(),
+      db.styles.where("projectId").equals(imported.id).toArray(),
+    ]);
+    const importedMediaId = characters[0]?.slots.front?.result?.mediaId;
+
+    expect([characters.length, scenes.length, props.length, styles.length]).toEqual([
+      1, 1, 1, 1,
+    ]);
+    expect([
+      characters[0]?.extra?.sourceAssetId,
+      scenes[0]?.extra?.sourceAssetId,
+      props[0]?.extra?.sourceAssetId,
+      styles[0]?.extra?.sourceAssetId,
+    ]).toEqual([studioCharacter.id, studioScene.id, studioProp.id, studioStyle.id]);
+    expect((await db.media.get(importedMediaId!))?.projectId).toBe(imported.id);
+  });
+
+  it("round-trips series mode and treats a missing legacy mode as series", async () => {
+    const series = await createProject("series", "series");
+    const importedSeries = await importProjectZip(await exportProjectZip(series.id));
+    expect(importedSeries.mode).toBe("series");
+
+    const legacyZip = new JSZip();
+    legacyZip.file("manifest.json", JSON.stringify({ format: PACKAGE_FORMAT }));
+    legacyZip.file("project.json", JSON.stringify({ name: "legacy" }));
+    const importedLegacy = await importProjectZip(
+      await legacyZip.generateAsync({ type: "blob" }),
+    );
+    expect(importedLegacy.mode).toBe("series");
+    expect(importedLegacy.shotSettings.workspaceView).toBe("design");
+  });
+
+  it("round-trips the shot workspace preference", async () => {
+    const project = await createProject("media workspace");
+    await updateProject(project.id, {
+      shotSettings: { ...project.shotSettings, workspaceView: "media" },
+    });
+
+    const imported = await importProjectZip(await exportProjectZip(project.id));
+    expect(imported.shotSettings.workspaceView).toBe("media");
+  });
+
+  it("remaps legacy beat ids within each episode scope", async () => {
+    const zip = new JSZip();
+    zip.file("manifest.json", JSON.stringify({ format: PACKAGE_FORMAT }));
+    zip.file("project.json", JSON.stringify({ name: "scoped beats", mode: "series" }));
+    zip.file("episodes.json", JSON.stringify([
+      {
+        id: "episode-1",
+        order: 0,
+        story: {
+          beats: [{ id: "beat_0", title: "第一集场次", characterIds: [], timeOfDay: "" }],
+        },
+      },
+      {
+        id: "episode-2",
+        order: 1,
+        story: {
+          beats: [{ id: "beat_0", title: "第二集场次", characterIds: [], timeOfDay: "" }],
+        },
+      },
+    ]));
+    zip.file("shots.json", JSON.stringify([
+      { id: "shot-1", episodeId: "episode-1", beatId: "beat_0", order: 1 },
+      { id: "shot-2", episodeId: "episode-2", beatId: "beat_0", order: 1 },
+    ]));
+
+    const imported = await importProjectZip(await zip.generateAsync({ type: "blob" }));
+    const episodes = await db.episodes.where("projectId").equals(imported.id).sortBy("order");
+    const shots = await db.shots.where("projectId").equals(imported.id).toArray();
+    const firstBeatId = episodes[0]?.story.beats[0]?.id;
+    const secondBeatId = episodes[1]?.story.beats[0]?.id;
+
+    expect(firstBeatId).toBeDefined();
+    expect(secondBeatId).toBeDefined();
+    expect(firstBeatId).not.toBe(secondBeatId);
+    expect(shots.find((shot) => shot.episodeId === episodes[0]?.id)?.beatId).toBe(firstBeatId);
+    expect(shots.find((shot) => shot.episodeId === episodes[1]?.id)?.beatId).toBe(secondBeatId);
+  });
+
+  it("rejects invalid optional JSON before writing any records", async () => {
+    const before = await db.projects.count();
+    const zip = new JSZip();
+    zip.file("manifest.json", JSON.stringify({ format: PACKAGE_FORMAT }));
+    zip.file("project.json", JSON.stringify({ name: "broken" }));
+    zip.file("characters.json", "{");
+    const blob = await zip.generateAsync({ type: "blob" });
+
+    await expect(importProjectZip(blob)).rejects.toBeInstanceOf(PackageError);
+    expect(await db.projects.count()).toBe(before);
+  });
+});

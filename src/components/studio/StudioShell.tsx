@@ -64,7 +64,7 @@ export function StudioShell({
               <Upload className="size-4" />
             </button>
           </TooltipTrigger>
-          <TooltipContent side="right">导入项目 zip</TooltipContent>
+          <TooltipContent side="right">从备份导入项目</TooltipContent>
         </Tooltip>
       </aside>
       <div className="relative min-w-0 flex-1 overflow-hidden">
