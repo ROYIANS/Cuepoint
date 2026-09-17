@@ -26,3 +26,24 @@ Verified and hardened episode ownership, autosave, multi-episode deletion, and c
 ### Status
 
 [OK] **Completed**
+
+
+## Session 2: Complete creator workflow P0
+
+**Date**: 2026-09-18
+**Task**: Complete creator workflow P0
+**Branch**: `main`
+
+### Summary
+
+Delivered reliable local editing, film and series modes, script-to-scene ordering, dual shot views, studio asset snapshots, complete project backups, and CSV/print delivery with 33 passing tests.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `8cc99ae` | (see git log) |
+
+### Status
+
+[OK] **Completed**
