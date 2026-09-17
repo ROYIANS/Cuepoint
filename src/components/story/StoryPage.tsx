@@ -2,58 +2,101 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { Plus, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { db } from "@/db/database";
-import { addStoryBeat, deleteStoryBeat, updateProject } from "@/db/repo";
-import { emptyStory, normalizeStory, type ProjectStory, type StoryBeat } from "@/domain/types";
+import { addStoryBeat, deleteStoryBeat, updateEpisode } from "@/db/repo";
+import {
+  emptyEpisodeStory,
+  normalizeEpisodeStory,
+  type EpisodeStory,
+  type StoryBeat,
+} from "@/domain/types";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 
-export function StoryPage({ projectId }: { projectId: string }) {
-  const project = useLiveQuery(() => db.projects.get(projectId), [projectId]);
-  const [story, setStory] = useState<ProjectStory>(emptyStory());
+function isScriptFile(file: File): boolean {
+  const name = file.name.toLowerCase();
+  if (name.endsWith(".txt") || name.endsWith(".md") || name.endsWith(".markdown")) return true;
+  return file.type === "text/plain" || file.type === "text/markdown" || file.type === "text/x-markdown";
+}
+
+export function StoryPage({ projectId, episodeId }: { projectId: string; episodeId: string }) {
+  const episode = useLiveQuery(
+    async () => (await db.episodes.get(episodeId)) ?? null,
+    [episodeId],
+  );
+  const characters =
+    useLiveQuery(
+      () => db.characters.where("projectId").equals(projectId).toArray(),
+      [projectId],
+    ) ?? [];
+  const scenes =
+    useLiveQuery(() => db.scenes.where("projectId").equals(projectId).toArray(), [projectId]) ?? [];
+  const [title, setTitle] = useState("");
+  const [story, setStory] = useState<EpisodeStory>(emptyEpisodeStory());
   const [saved, setSaved] = useState(true);
+  const [dragging, setDragging] = useState(false);
   const loadedFor = useRef<string | undefined>(undefined);
 
   useEffect(() => {
-    if (!project || loadedFor.current === project.id) return;
-    loadedFor.current = project.id;
-    setStory(normalizeStory(project.story));
+    if (!episode || loadedFor.current === episode.id) return;
+    loadedFor.current = episode.id;
+    setTitle(episode.title);
+    setStory(normalizeEpisodeStory(episode.story));
     setSaved(true);
-  }, [project]);
+  }, [episode]);
 
   useEffect(() => {
-    if (!project || loadedFor.current !== project.id || saved) return;
+    if (!episode || loadedFor.current !== episode.id || saved) return;
     const handle = window.setTimeout(() => {
-      void updateProject(projectId, { story }).then(() => setSaved(true));
+      void updateEpisode(episodeId, { title, story }).then(() => setSaved(true));
     }, 400);
     return () => window.clearTimeout(handle);
-  }, [project, projectId, saved, story]);
+  }, [episode, episodeId, saved, story, title]);
 
-  function patch(next: ProjectStory) {
+  function patch(next: EpisodeStory) {
     setStory(next);
     setSaved(false);
   }
 
   async function addBeat() {
-    const beat = await addStoryBeat(projectId);
+    const beat = await addStoryBeat(episodeId);
     setStory((current) => ({ ...current, beats: [...current.beats, beat] }));
   }
 
   function updateBeat(id: string, change: Partial<StoryBeat>) {
-    patch({
-      ...story,
-      beats: story.beats.map((beat) => (beat.id === id ? { ...beat, ...change } : beat)),
-    });
+    setStory((current) => ({
+      ...current,
+      beats: current.beats.map((beat) => (beat.id === id ? { ...beat, ...change } : beat)),
+    }));
+    setSaved(false);
   }
 
   async function removeBeat(id: string) {
-    await deleteStoryBeat(projectId, id);
+    await deleteStoryBeat(episodeId, id);
     setStory((current) => ({ ...current, beats: current.beats.filter((beat) => beat.id !== id) }));
   }
 
-  if (!project) {
+  async function applyScriptFile(file: File) {
+    if (!isScriptFile(file)) return;
+    const text = await file.text();
+    patch({ ...story, script: text });
+  }
+
+  if (episode === undefined) {
     return <div className="text-muted-foreground p-8 text-sm">加载故事…</div>;
+  }
+  if (episode === null) {
+    return <div className="text-muted-foreground p-8 text-sm">找不到这一集</div>;
   }
 
   return (
@@ -62,25 +105,57 @@ export function StoryPage({ projectId }: { projectId: string }) {
         <section className="min-w-0">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <h1 className="text-[17px] font-semibold">故事</h1>
-              <p className="text-muted-foreground mt-1 text-xs">先写清楚这部戏要讲什么。场次可以后补，分镜会从这里长出来。</p>
+              <h1 className="text-[17px] font-semibold">本集故事</h1>
+              <p className="text-muted-foreground mt-1 text-xs">
+                先写这一集要讲什么。场次可以后补，分镜会从这里长出来。
+              </p>
             </div>
             <p className="text-muted-foreground text-[11px]">{saved ? "已保存" : "保存中…"}</p>
           </div>
-          <Label className="mt-6">一句话</Label>
+          <Label className="mt-6">集标题（可选）</Label>
+          <Input
+            className="mt-2"
+            value={title}
+            placeholder="不填就显示第几集"
+            onChange={(event) => {
+              setTitle(event.target.value);
+              setSaved(false);
+            }}
+          />
+          <Label className="mt-6">本集一句话</Label>
           <Input
             className="mt-2"
             value={story.logline}
-            placeholder="这部戏，用一句话说完"
+            placeholder="这一集，用一句话说完"
             onChange={(event) => patch({ ...story, logline: event.target.value })}
           />
           <Label className="mt-6">剧本</Label>
-          <Textarea
-            className="mt-2 min-h-[28rem] resize-y bg-card/60 text-[14px] leading-7"
-            value={story.script}
-            placeholder="直接贴剧本，或按场写下发生了什么、谁在场、对白。"
-            onChange={(event) => patch({ ...story, script: event.target.value })}
-          />
+          <p className="text-muted-foreground mt-1 text-[11px]">可拖入 .txt / .md，写入正文，不会自动拆场。</p>
+          <div
+            className={cn("mt-2 rounded-xl", dragging && "ring-brand ring-2")}
+            onDragEnter={(event) => {
+              event.preventDefault();
+              setDragging(true);
+            }}
+            onDragOver={(event) => {
+              event.preventDefault();
+              setDragging(true);
+            }}
+            onDragLeave={() => setDragging(false)}
+            onDrop={(event) => {
+              event.preventDefault();
+              setDragging(false);
+              const file = event.dataTransfer.files[0];
+              if (file) void applyScriptFile(file);
+            }}
+          >
+            <Textarea
+              className="min-h-[28rem] resize-y bg-card/60 text-[14px] leading-7"
+              value={story.script}
+              placeholder="直接贴剧本，或把 txt / md 拖进来。"
+              onChange={(event) => patch({ ...story, script: event.target.value })}
+            />
+          </div>
         </section>
         <aside className="min-w-0">
           <div className="flex items-center justify-between">
@@ -91,7 +166,7 @@ export function StoryPage({ projectId }: { projectId: string }) {
             </Button>
           </div>
           <p className="text-muted-foreground mt-1 text-[11px] leading-5">
-            场次是故事和分镜之间的桥。细节后面再定，现在先用来拆块。
+            加一场，分镜里就会出现对应的空场。出场角色和地点从本戏世界选。
           </p>
           <ul className="mt-4 space-y-3">
             {story.beats.length === 0 ? (
@@ -118,11 +193,64 @@ export function StoryPage({ projectId }: { projectId: string }) {
                     </Button>
                   </div>
                   <Textarea
-                    className="mt-2 min-h-24 resize-none"
+                    className="mt-2 min-h-20 resize-none"
                     value={beat.content}
                     placeholder="这场发生什么"
                     onChange={(event) => updateBeat(beat.id, { content: event.target.value })}
                   />
+                  <Label className="mt-3 text-[11px]">出场角色</Label>
+                  <div className="mt-1 max-h-28 space-y-1 overflow-auto rounded-lg border px-2 py-1.5">
+                    {characters.length === 0 ? (
+                      <p className="text-muted-foreground text-[11px]">世界里还没有角色</p>
+                    ) : (
+                      characters.map((character) => (
+                        <label key={character.id} className="flex items-center gap-2 text-xs">
+                          <Checkbox
+                            checked={beat.characterIds.includes(character.id)}
+                            onCheckedChange={(checked) => {
+                              const ids = checked
+                                ? [...beat.characterIds, character.id]
+                                : beat.characterIds.filter((item) => item !== character.id);
+                              updateBeat(beat.id, { characterIds: ids });
+                            }}
+                          />
+                          {character.name}
+                        </label>
+                      ))
+                    )}
+                  </div>
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    <div>
+                      <Label className="text-[11px]">地点</Label>
+                      <Select
+                        value={beat.sceneId ?? "none"}
+                        onValueChange={(value) =>
+                          updateBeat(beat.id, { sceneId: value === "none" ? undefined : value })
+                        }
+                      >
+                        <SelectTrigger className="mt-1 h-8 w-full">
+                          <SelectValue placeholder="未选择" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">未选择</SelectItem>
+                          {scenes.map((scene) => (
+                            <SelectItem key={scene.id} value={scene.id}>
+                              {scene.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label className="text-[11px]">时段</Label>
+                      <Input
+                        className="mt-1 h-8"
+                        value={beat.timeOfDay}
+                        placeholder="日 / 夜"
+                        onChange={(event) => updateBeat(beat.id, { timeOfDay: event.target.value })}
+                      />
+                    </div>
+                  </div>
                 </li>
               ))
             )}

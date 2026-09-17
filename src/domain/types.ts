@@ -1,6 +1,12 @@
 export const PACKAGE_FORMAT = "aifenjing-project-v1" as const;
 
+export const STUDIO_LIBRARY_ID = "studio" as const;
+
 export type Id = string;
+
+export function isStudioLibrary(ownerId: Id): boolean {
+  return ownerId === STUDIO_LIBRARY_ID;
+}
 
 export type MediaKind = "image" | "video";
 
@@ -24,6 +30,10 @@ export type CharacterImageSlot =
   | "costume";
 
 export type SceneImageSlot = "wide" | "medium" | "detail";
+
+export type PropImageSlot = "hero" | "detail" | "worn";
+
+export type StyleImageSlot = "look" | "light" | "lens";
 
 export type ShotColumnId =
   | "category"
@@ -52,12 +62,30 @@ export interface StoryBeat {
   id: Id;
   title: string;
   content: string;
+  characterIds: Id[];
+  sceneId?: Id;
+  timeOfDay: string;
 }
 
 export interface ProjectStory {
   logline: string;
+}
+
+export interface EpisodeStory {
+  logline: string;
   script: string;
   beats: StoryBeat[];
+}
+
+export interface Episode {
+  id: Id;
+  projectId: Id;
+  order: number;
+  title: string;
+  story: EpisodeStory;
+  createdAt: string;
+  updatedAt: string;
+  extra?: Record<string, unknown>;
 }
 
 export interface WorldSetting {
@@ -105,13 +133,40 @@ export interface Scene {
   extra?: Record<string, unknown>;
 }
 
+export interface Prop {
+  id: Id;
+  projectId: Id;
+  name: string;
+  kind: string;
+  notes: string;
+  slots: Partial<Record<PropImageSlot, GenerationSlot>>;
+  createdAt: string;
+  updatedAt: string;
+  extra?: Record<string, unknown>;
+}
+
+export interface VisualStyle {
+  id: Id;
+  projectId: Id;
+  name: string;
+  notes: string;
+  slots: Partial<Record<StyleImageSlot, GenerationSlot>>;
+  createdAt: string;
+  updatedAt: string;
+  extra?: Record<string, unknown>;
+}
+
+export type ShotPictureField = "firstFrame" | "lastFrame" | "clip";
+
 export interface Shot {
   id: Id;
   projectId: Id;
+  episodeId: Id;
   order: number;
   shotNumber: string;
-  frame: GenerationSlot;
-  reference: GenerationSlot;
+  firstFrame: GenerationSlot;
+  lastFrame: GenerationSlot;
+  clip: GenerationSlot;
   category: string;
   durationSec: number;
   content: string;
@@ -150,31 +205,70 @@ export const SCENE_SLOTS: { id: SceneImageSlot; label: string }[] = [
   { id: "detail", label: "细节" },
 ];
 
+export const PROP_SLOTS: { id: PropImageSlot; label: string }[] = [
+  { id: "hero", label: "主图" },
+  { id: "detail", label: "细节" },
+  { id: "worn", label: "使用" },
+];
+
+export const STYLE_SLOTS: { id: StyleImageSlot; label: string }[] = [
+  { id: "look", label: "画面" },
+  { id: "light", label: "光色" },
+  { id: "lens", label: "镜头气质" },
+];
+
 export const DEFAULT_SHOT_SETTINGS: ShotSettings = {
   defaultDurationSec: 0,
   autoIncrementShotNumber: true,
 };
 
-export function emptyStory(): ProjectStory {
+export function emptySeriesStory(): ProjectStory {
+  return { logline: "" };
+}
+
+export function normalizeSeriesStory(raw: unknown): ProjectStory {
+  const story = emptySeriesStory();
+  if (!raw || typeof raw !== "object") return story;
+  const record = raw as Record<string, unknown>;
+  story.logline = String(record.logline ?? "");
+  return story;
+}
+
+export function emptyEpisodeStory(): EpisodeStory {
   return { logline: "", script: "", beats: [] };
 }
 
-export function normalizeStory(raw: unknown): ProjectStory {
-  const story = emptyStory();
+export function normalizeStoryBeat(raw: unknown, index: number): StoryBeat {
+  const beat =
+    raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
+  return {
+    id: String(beat.id ?? `beat_${index}`),
+    title: String(beat.title ?? ""),
+    content: String(beat.content ?? ""),
+    characterIds: Array.isArray(beat.characterIds)
+      ? beat.characterIds.map((id) => String(id))
+      : [],
+    sceneId: beat.sceneId ? String(beat.sceneId) : undefined,
+    timeOfDay: String(beat.timeOfDay ?? ""),
+  };
+}
+
+export function normalizeEpisodeStory(raw: unknown): EpisodeStory {
+  const story = emptyEpisodeStory();
   if (!raw || typeof raw !== "object") return story;
   const record = raw as Record<string, unknown>;
   story.logline = String(record.logline ?? "");
   story.script = String(record.script ?? "");
   story.beats = Array.isArray(record.beats)
-    ? record.beats
-        .filter((beat): beat is Record<string, unknown> => Boolean(beat) && typeof beat === "object")
-        .map((beat, index) => ({
-          id: String(beat.id ?? `beat_${index}`),
-          title: String(beat.title ?? ""),
-          content: String(beat.content ?? ""),
-        }))
+    ? record.beats.map((beat, index) => normalizeStoryBeat(beat, index))
     : [];
   return story;
+}
+
+export function episodeLabel(episode: Pick<Episode, "order" | "title">): string {
+  const heading = `第${episode.order + 1}集`;
+  const title = episode.title.trim();
+  return title ? `${heading} · ${title}` : heading;
 }
 
 export function emptySetting(): WorldSetting {
@@ -192,9 +286,9 @@ export function normalizeSetting(raw: unknown): WorldSetting {
 }
 
 export const DEFAULT_VISIBLE_COLUMNS: ShotColumnId[] = [
-  "category",
   "durationSec",
   "content",
+  "characters",
+  "scene",
   "notes",
-  "sceneCloseup",
 ];

@@ -16,6 +16,14 @@ import { Route as StudioPropsRouteImport } from './routes/_studio.props'
 import { Route as StudioScenesRouteImport } from './routes/_studio.scenes'
 import { Route as StudioStylesRouteImport } from './routes/_studio.styles'
 import { Route as PProjectIdRouteImport } from './routes/p.$projectId'
+import { Route as StudioCharactersIndexRouteImport } from './routes/_studio.characters.index'
+import { Route as StudioCharactersCharacterIdRouteImport } from './routes/_studio.characters.$characterId'
+import { Route as StudioPropsIndexRouteImport } from './routes/_studio.props.index'
+import { Route as StudioPropsPropIdRouteImport } from './routes/_studio.props.$propId'
+import { Route as StudioScenesIndexRouteImport } from './routes/_studio.scenes.index'
+import { Route as StudioScenesSceneIdRouteImport } from './routes/_studio.scenes.$sceneId'
+import { Route as StudioStylesIndexRouteImport } from './routes/_studio.styles.index'
+import { Route as StudioStylesStyleIdRouteImport } from './routes/_studio.styles.$styleId'
 import { Route as PProjectIdIndexRouteImport } from './routes/p.$projectId.index'
 import { Route as PProjectIdAssetsRouteImport } from './routes/p.$projectId.assets'
 import { Route as PProjectIdPlanRouteImport } from './routes/p.$projectId.plan'
@@ -25,8 +33,12 @@ import { Route as PProjectIdShotsRouteImport } from './routes/p.$projectId.shots
 import { Route as PProjectIdStoryboardRouteImport } from './routes/p.$projectId.storyboard'
 import { Route as PProjectIdWorldRouteImport } from './routes/p.$projectId.world'
 import { Route as PProjectIdAssetsIndexRouteImport } from './routes/p.$projectId.assets.index'
+import { Route as PProjectIdEEpisodeIdRouteImport } from './routes/p.$projectId.e.$episodeId'
 import { Route as PProjectIdAssetsCharactersCharacterIdRouteImport } from './routes/p.$projectId.assets.characters.$characterId'
 import { Route as PProjectIdAssetsScenesSceneIdRouteImport } from './routes/p.$projectId.assets.scenes.$sceneId'
+import { Route as PProjectIdEEpisodeIdIndexRouteImport } from './routes/p.$projectId.e.$episodeId.index'
+import { Route as PProjectIdEEpisodeIdProduceRouteImport } from './routes/p.$projectId.e.$episodeId.produce'
+import { Route as PProjectIdEEpisodeIdShotsRouteImport } from './routes/p.$projectId.e.$episodeId.shots'
 
 const StudioRoute = StudioRouteImport.update({
   id: '/_studio',
@@ -61,6 +73,47 @@ const PProjectIdRoute = PProjectIdRouteImport.update({
   id: '/p/$projectId',
   path: '/p/$projectId',
   getParentRoute: () => rootRouteImport,
+} as any)
+const StudioCharactersIndexRoute = StudioCharactersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => StudioCharactersRoute,
+} as any)
+const StudioCharactersCharacterIdRoute =
+  StudioCharactersCharacterIdRouteImport.update({
+    id: '/$characterId',
+    path: '/$characterId',
+    getParentRoute: () => StudioCharactersRoute,
+  } as any)
+const StudioPropsIndexRoute = StudioPropsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => StudioPropsRoute,
+} as any)
+const StudioPropsPropIdRoute = StudioPropsPropIdRouteImport.update({
+  id: '/$propId',
+  path: '/$propId',
+  getParentRoute: () => StudioPropsRoute,
+} as any)
+const StudioScenesIndexRoute = StudioScenesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => StudioScenesRoute,
+} as any)
+const StudioScenesSceneIdRoute = StudioScenesSceneIdRouteImport.update({
+  id: '/$sceneId',
+  path: '/$sceneId',
+  getParentRoute: () => StudioScenesRoute,
+} as any)
+const StudioStylesIndexRoute = StudioStylesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => StudioStylesRoute,
+} as any)
+const StudioStylesStyleIdRoute = StudioStylesStyleIdRouteImport.update({
+  id: '/$styleId',
+  path: '/$styleId',
+  getParentRoute: () => StudioStylesRoute,
 } as any)
 const PProjectIdIndexRoute = PProjectIdIndexRouteImport.update({
   id: '/',
@@ -107,6 +160,11 @@ const PProjectIdAssetsIndexRoute = PProjectIdAssetsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => PProjectIdAssetsRoute,
 } as any)
+const PProjectIdEEpisodeIdRoute = PProjectIdEEpisodeIdRouteImport.update({
+  id: '/e/$episodeId',
+  path: '/e/$episodeId',
+  getParentRoute: () => PProjectIdRoute,
+} as any)
 const PProjectIdAssetsCharactersCharacterIdRoute =
   PProjectIdAssetsCharactersCharacterIdRouteImport.update({
     id: '/characters/$characterId',
@@ -119,14 +177,36 @@ const PProjectIdAssetsScenesSceneIdRoute =
     path: '/scenes/$sceneId',
     getParentRoute: () => PProjectIdAssetsRoute,
   } as any)
+const PProjectIdEEpisodeIdIndexRoute =
+  PProjectIdEEpisodeIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => PProjectIdEEpisodeIdRoute,
+  } as any)
+const PProjectIdEEpisodeIdProduceRoute =
+  PProjectIdEEpisodeIdProduceRouteImport.update({
+    id: '/produce',
+    path: '/produce',
+    getParentRoute: () => PProjectIdEEpisodeIdRoute,
+  } as any)
+const PProjectIdEEpisodeIdShotsRoute =
+  PProjectIdEEpisodeIdShotsRouteImport.update({
+    id: '/shots',
+    path: '/shots',
+    getParentRoute: () => PProjectIdEEpisodeIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof StudioIndexRoute
-  '/characters': typeof StudioCharactersRoute
-  '/props': typeof StudioPropsRoute
-  '/scenes': typeof StudioScenesRoute
-  '/styles': typeof StudioStylesRoute
+  '/characters': typeof StudioCharactersRouteWithChildren
+  '/props': typeof StudioPropsRouteWithChildren
+  '/scenes': typeof StudioScenesRouteWithChildren
+  '/styles': typeof StudioStylesRouteWithChildren
   '/p/$projectId': typeof PProjectIdRouteWithChildren
+  '/characters/$characterId': typeof StudioCharactersCharacterIdRoute
+  '/props/$propId': typeof StudioPropsPropIdRoute
+  '/scenes/$sceneId': typeof StudioScenesSceneIdRoute
+  '/styles/$styleId': typeof StudioStylesStyleIdRoute
   '/p/$projectId/assets': typeof PProjectIdAssetsRouteWithChildren
   '/p/$projectId/plan': typeof PProjectIdPlanRoute
   '/p/$projectId/produce': typeof PProjectIdProduceRoute
@@ -134,37 +214,56 @@ export interface FileRoutesByFullPath {
   '/p/$projectId/shots': typeof PProjectIdShotsRoute
   '/p/$projectId/storyboard': typeof PProjectIdStoryboardRoute
   '/p/$projectId/world': typeof PProjectIdWorldRoute
+  '/characters/': typeof StudioCharactersIndexRoute
+  '/props/': typeof StudioPropsIndexRoute
+  '/scenes/': typeof StudioScenesIndexRoute
+  '/styles/': typeof StudioStylesIndexRoute
   '/p/$projectId/': typeof PProjectIdIndexRoute
+  '/p/$projectId/e/$episodeId': typeof PProjectIdEEpisodeIdRouteWithChildren
   '/p/$projectId/assets/': typeof PProjectIdAssetsIndexRoute
   '/p/$projectId/assets/characters/$characterId': typeof PProjectIdAssetsCharactersCharacterIdRoute
   '/p/$projectId/assets/scenes/$sceneId': typeof PProjectIdAssetsScenesSceneIdRoute
+  '/p/$projectId/e/$episodeId/produce': typeof PProjectIdEEpisodeIdProduceRoute
+  '/p/$projectId/e/$episodeId/shots': typeof PProjectIdEEpisodeIdShotsRoute
+  '/p/$projectId/e/$episodeId/': typeof PProjectIdEEpisodeIdIndexRoute
 }
 export interface FileRoutesByTo {
-  '/characters': typeof StudioCharactersRoute
-  '/props': typeof StudioPropsRoute
-  '/scenes': typeof StudioScenesRoute
-  '/styles': typeof StudioStylesRoute
   '/': typeof StudioIndexRoute
+  '/characters/$characterId': typeof StudioCharactersCharacterIdRoute
+  '/props/$propId': typeof StudioPropsPropIdRoute
+  '/scenes/$sceneId': typeof StudioScenesSceneIdRoute
+  '/styles/$styleId': typeof StudioStylesStyleIdRoute
   '/p/$projectId/plan': typeof PProjectIdPlanRoute
   '/p/$projectId/produce': typeof PProjectIdProduceRoute
   '/p/$projectId/report': typeof PProjectIdReportRoute
   '/p/$projectId/shots': typeof PProjectIdShotsRoute
   '/p/$projectId/storyboard': typeof PProjectIdStoryboardRoute
   '/p/$projectId/world': typeof PProjectIdWorldRoute
+  '/characters': typeof StudioCharactersIndexRoute
+  '/props': typeof StudioPropsIndexRoute
+  '/scenes': typeof StudioScenesIndexRoute
+  '/styles': typeof StudioStylesIndexRoute
   '/p/$projectId': typeof PProjectIdIndexRoute
   '/p/$projectId/assets': typeof PProjectIdAssetsIndexRoute
   '/p/$projectId/assets/characters/$characterId': typeof PProjectIdAssetsCharactersCharacterIdRoute
   '/p/$projectId/assets/scenes/$sceneId': typeof PProjectIdAssetsScenesSceneIdRoute
+  '/p/$projectId/e/$episodeId/produce': typeof PProjectIdEEpisodeIdProduceRoute
+  '/p/$projectId/e/$episodeId/shots': typeof PProjectIdEEpisodeIdShotsRoute
+  '/p/$projectId/e/$episodeId': typeof PProjectIdEEpisodeIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_studio': typeof StudioRouteWithChildren
-  '/_studio/characters': typeof StudioCharactersRoute
-  '/_studio/props': typeof StudioPropsRoute
-  '/_studio/scenes': typeof StudioScenesRoute
-  '/_studio/styles': typeof StudioStylesRoute
+  '/_studio/characters': typeof StudioCharactersRouteWithChildren
+  '/_studio/props': typeof StudioPropsRouteWithChildren
+  '/_studio/scenes': typeof StudioScenesRouteWithChildren
+  '/_studio/styles': typeof StudioStylesRouteWithChildren
   '/p/$projectId': typeof PProjectIdRouteWithChildren
   '/_studio/': typeof StudioIndexRoute
+  '/_studio/characters/$characterId': typeof StudioCharactersCharacterIdRoute
+  '/_studio/props/$propId': typeof StudioPropsPropIdRoute
+  '/_studio/scenes/$sceneId': typeof StudioScenesSceneIdRoute
+  '/_studio/styles/$styleId': typeof StudioStylesStyleIdRoute
   '/p/$projectId/assets': typeof PProjectIdAssetsRouteWithChildren
   '/p/$projectId/plan': typeof PProjectIdPlanRoute
   '/p/$projectId/produce': typeof PProjectIdProduceRoute
@@ -172,10 +271,18 @@ export interface FileRoutesById {
   '/p/$projectId/shots': typeof PProjectIdShotsRoute
   '/p/$projectId/storyboard': typeof PProjectIdStoryboardRoute
   '/p/$projectId/world': typeof PProjectIdWorldRoute
+  '/_studio/characters/': typeof StudioCharactersIndexRoute
+  '/_studio/props/': typeof StudioPropsIndexRoute
+  '/_studio/scenes/': typeof StudioScenesIndexRoute
+  '/_studio/styles/': typeof StudioStylesIndexRoute
   '/p/$projectId/': typeof PProjectIdIndexRoute
+  '/p/$projectId/e/$episodeId': typeof PProjectIdEEpisodeIdRouteWithChildren
   '/p/$projectId/assets/': typeof PProjectIdAssetsIndexRoute
   '/p/$projectId/assets/characters/$characterId': typeof PProjectIdAssetsCharactersCharacterIdRoute
   '/p/$projectId/assets/scenes/$sceneId': typeof PProjectIdAssetsScenesSceneIdRoute
+  '/p/$projectId/e/$episodeId/produce': typeof PProjectIdEEpisodeIdProduceRoute
+  '/p/$projectId/e/$episodeId/shots': typeof PProjectIdEEpisodeIdShotsRoute
+  '/p/$projectId/e/$episodeId/': typeof PProjectIdEEpisodeIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -186,6 +293,10 @@ export interface FileRouteTypes {
     | '/scenes'
     | '/styles'
     | '/p/$projectId'
+    | '/characters/$characterId'
+    | '/props/$propId'
+    | '/scenes/$sceneId'
+    | '/styles/$styleId'
     | '/p/$projectId/assets'
     | '/p/$projectId/plan'
     | '/p/$projectId/produce'
@@ -193,27 +304,42 @@ export interface FileRouteTypes {
     | '/p/$projectId/shots'
     | '/p/$projectId/storyboard'
     | '/p/$projectId/world'
+    | '/characters/'
+    | '/props/'
+    | '/scenes/'
+    | '/styles/'
     | '/p/$projectId/'
+    | '/p/$projectId/e/$episodeId'
     | '/p/$projectId/assets/'
     | '/p/$projectId/assets/characters/$characterId'
     | '/p/$projectId/assets/scenes/$sceneId'
+    | '/p/$projectId/e/$episodeId/produce'
+    | '/p/$projectId/e/$episodeId/shots'
+    | '/p/$projectId/e/$episodeId/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
+    | '/characters/$characterId'
+    | '/props/$propId'
+    | '/scenes/$sceneId'
+    | '/styles/$styleId'
+    | '/p/$projectId/plan'
+    | '/p/$projectId/produce'
+    | '/p/$projectId/report'
+    | '/p/$projectId/shots'
+    | '/p/$projectId/storyboard'
+    | '/p/$projectId/world'
     | '/characters'
     | '/props'
     | '/scenes'
     | '/styles'
-    | '/'
-    | '/p/$projectId/plan'
-    | '/p/$projectId/produce'
-    | '/p/$projectId/report'
-    | '/p/$projectId/shots'
-    | '/p/$projectId/storyboard'
-    | '/p/$projectId/world'
     | '/p/$projectId'
     | '/p/$projectId/assets'
     | '/p/$projectId/assets/characters/$characterId'
     | '/p/$projectId/assets/scenes/$sceneId'
+    | '/p/$projectId/e/$episodeId/produce'
+    | '/p/$projectId/e/$episodeId/shots'
+    | '/p/$projectId/e/$episodeId'
   id:
     | '__root__'
     | '/_studio'
@@ -223,6 +349,10 @@ export interface FileRouteTypes {
     | '/_studio/styles'
     | '/p/$projectId'
     | '/_studio/'
+    | '/_studio/characters/$characterId'
+    | '/_studio/props/$propId'
+    | '/_studio/scenes/$sceneId'
+    | '/_studio/styles/$styleId'
     | '/p/$projectId/assets'
     | '/p/$projectId/plan'
     | '/p/$projectId/produce'
@@ -230,10 +360,18 @@ export interface FileRouteTypes {
     | '/p/$projectId/shots'
     | '/p/$projectId/storyboard'
     | '/p/$projectId/world'
+    | '/_studio/characters/'
+    | '/_studio/props/'
+    | '/_studio/scenes/'
+    | '/_studio/styles/'
     | '/p/$projectId/'
+    | '/p/$projectId/e/$episodeId'
     | '/p/$projectId/assets/'
     | '/p/$projectId/assets/characters/$characterId'
     | '/p/$projectId/assets/scenes/$sceneId'
+    | '/p/$projectId/e/$episodeId/produce'
+    | '/p/$projectId/e/$episodeId/shots'
+    | '/p/$projectId/e/$episodeId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -291,6 +429,62 @@ declare module '@tanstack/react-router' {
       fullPath: '/p/$projectId'
       preLoaderRoute: typeof PProjectIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_studio/characters/': {
+      id: '/_studio/characters/'
+      path: '/'
+      fullPath: '/characters/'
+      preLoaderRoute: typeof StudioCharactersIndexRouteImport
+      parentRoute: typeof StudioCharactersRoute
+    }
+    '/_studio/characters/$characterId': {
+      id: '/_studio/characters/$characterId'
+      path: '/$characterId'
+      fullPath: '/characters/$characterId'
+      preLoaderRoute: typeof StudioCharactersCharacterIdRouteImport
+      parentRoute: typeof StudioCharactersRoute
+    }
+    '/_studio/props/': {
+      id: '/_studio/props/'
+      path: '/'
+      fullPath: '/props/'
+      preLoaderRoute: typeof StudioPropsIndexRouteImport
+      parentRoute: typeof StudioPropsRoute
+    }
+    '/_studio/props/$propId': {
+      id: '/_studio/props/$propId'
+      path: '/$propId'
+      fullPath: '/props/$propId'
+      preLoaderRoute: typeof StudioPropsPropIdRouteImport
+      parentRoute: typeof StudioPropsRoute
+    }
+    '/_studio/scenes/': {
+      id: '/_studio/scenes/'
+      path: '/'
+      fullPath: '/scenes/'
+      preLoaderRoute: typeof StudioScenesIndexRouteImport
+      parentRoute: typeof StudioScenesRoute
+    }
+    '/_studio/scenes/$sceneId': {
+      id: '/_studio/scenes/$sceneId'
+      path: '/$sceneId'
+      fullPath: '/scenes/$sceneId'
+      preLoaderRoute: typeof StudioScenesSceneIdRouteImport
+      parentRoute: typeof StudioScenesRoute
+    }
+    '/_studio/styles/': {
+      id: '/_studio/styles/'
+      path: '/'
+      fullPath: '/styles/'
+      preLoaderRoute: typeof StudioStylesIndexRouteImport
+      parentRoute: typeof StudioStylesRoute
+    }
+    '/_studio/styles/$styleId': {
+      id: '/_studio/styles/$styleId'
+      path: '/$styleId'
+      fullPath: '/styles/$styleId'
+      preLoaderRoute: typeof StudioStylesStyleIdRouteImport
+      parentRoute: typeof StudioStylesRoute
     }
     '/p/$projectId/': {
       id: '/p/$projectId/'
@@ -355,6 +549,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PProjectIdAssetsIndexRouteImport
       parentRoute: typeof PProjectIdAssetsRoute
     }
+    '/p/$projectId/e/$episodeId': {
+      id: '/p/$projectId/e/$episodeId'
+      path: '/e/$episodeId'
+      fullPath: '/p/$projectId/e/$episodeId'
+      preLoaderRoute: typeof PProjectIdEEpisodeIdRouteImport
+      parentRoute: typeof PProjectIdRoute
+    }
     '/p/$projectId/assets/characters/$characterId': {
       id: '/p/$projectId/assets/characters/$characterId'
       path: '/characters/$characterId'
@@ -369,22 +570,98 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PProjectIdAssetsScenesSceneIdRouteImport
       parentRoute: typeof PProjectIdAssetsRoute
     }
+    '/p/$projectId/e/$episodeId/': {
+      id: '/p/$projectId/e/$episodeId/'
+      path: '/'
+      fullPath: '/p/$projectId/e/$episodeId/'
+      preLoaderRoute: typeof PProjectIdEEpisodeIdIndexRouteImport
+      parentRoute: typeof PProjectIdEEpisodeIdRoute
+    }
+    '/p/$projectId/e/$episodeId/produce': {
+      id: '/p/$projectId/e/$episodeId/produce'
+      path: '/produce'
+      fullPath: '/p/$projectId/e/$episodeId/produce'
+      preLoaderRoute: typeof PProjectIdEEpisodeIdProduceRouteImport
+      parentRoute: typeof PProjectIdEEpisodeIdRoute
+    }
+    '/p/$projectId/e/$episodeId/shots': {
+      id: '/p/$projectId/e/$episodeId/shots'
+      path: '/shots'
+      fullPath: '/p/$projectId/e/$episodeId/shots'
+      preLoaderRoute: typeof PProjectIdEEpisodeIdShotsRouteImport
+      parentRoute: typeof PProjectIdEEpisodeIdRoute
+    }
   }
 }
 
+interface StudioCharactersRouteChildren {
+  StudioCharactersCharacterIdRoute: typeof StudioCharactersCharacterIdRoute
+  StudioCharactersIndexRoute: typeof StudioCharactersIndexRoute
+}
+
+const StudioCharactersRouteChildren: StudioCharactersRouteChildren = {
+  StudioCharactersCharacterIdRoute: StudioCharactersCharacterIdRoute,
+  StudioCharactersIndexRoute: StudioCharactersIndexRoute,
+}
+
+const StudioCharactersRouteWithChildren =
+  StudioCharactersRoute._addFileChildren(StudioCharactersRouteChildren)
+
+interface StudioPropsRouteChildren {
+  StudioPropsPropIdRoute: typeof StudioPropsPropIdRoute
+  StudioPropsIndexRoute: typeof StudioPropsIndexRoute
+}
+
+const StudioPropsRouteChildren: StudioPropsRouteChildren = {
+  StudioPropsPropIdRoute: StudioPropsPropIdRoute,
+  StudioPropsIndexRoute: StudioPropsIndexRoute,
+}
+
+const StudioPropsRouteWithChildren = StudioPropsRoute._addFileChildren(
+  StudioPropsRouteChildren,
+)
+
+interface StudioScenesRouteChildren {
+  StudioScenesSceneIdRoute: typeof StudioScenesSceneIdRoute
+  StudioScenesIndexRoute: typeof StudioScenesIndexRoute
+}
+
+const StudioScenesRouteChildren: StudioScenesRouteChildren = {
+  StudioScenesSceneIdRoute: StudioScenesSceneIdRoute,
+  StudioScenesIndexRoute: StudioScenesIndexRoute,
+}
+
+const StudioScenesRouteWithChildren = StudioScenesRoute._addFileChildren(
+  StudioScenesRouteChildren,
+)
+
+interface StudioStylesRouteChildren {
+  StudioStylesStyleIdRoute: typeof StudioStylesStyleIdRoute
+  StudioStylesIndexRoute: typeof StudioStylesIndexRoute
+}
+
+const StudioStylesRouteChildren: StudioStylesRouteChildren = {
+  StudioStylesStyleIdRoute: StudioStylesStyleIdRoute,
+  StudioStylesIndexRoute: StudioStylesIndexRoute,
+}
+
+const StudioStylesRouteWithChildren = StudioStylesRoute._addFileChildren(
+  StudioStylesRouteChildren,
+)
+
 interface StudioRouteChildren {
-  StudioCharactersRoute: typeof StudioCharactersRoute
-  StudioPropsRoute: typeof StudioPropsRoute
-  StudioScenesRoute: typeof StudioScenesRoute
-  StudioStylesRoute: typeof StudioStylesRoute
+  StudioCharactersRoute: typeof StudioCharactersRouteWithChildren
+  StudioPropsRoute: typeof StudioPropsRouteWithChildren
+  StudioScenesRoute: typeof StudioScenesRouteWithChildren
+  StudioStylesRoute: typeof StudioStylesRouteWithChildren
   StudioIndexRoute: typeof StudioIndexRoute
 }
 
 const StudioRouteChildren: StudioRouteChildren = {
-  StudioCharactersRoute: StudioCharactersRoute,
-  StudioPropsRoute: StudioPropsRoute,
-  StudioScenesRoute: StudioScenesRoute,
-  StudioStylesRoute: StudioStylesRoute,
+  StudioCharactersRoute: StudioCharactersRouteWithChildren,
+  StudioPropsRoute: StudioPropsRouteWithChildren,
+  StudioScenesRoute: StudioScenesRouteWithChildren,
+  StudioStylesRoute: StudioStylesRouteWithChildren,
   StudioIndexRoute: StudioIndexRoute,
 }
 
@@ -407,6 +684,21 @@ const PProjectIdAssetsRouteChildren: PProjectIdAssetsRouteChildren = {
 const PProjectIdAssetsRouteWithChildren =
   PProjectIdAssetsRoute._addFileChildren(PProjectIdAssetsRouteChildren)
 
+interface PProjectIdEEpisodeIdRouteChildren {
+  PProjectIdEEpisodeIdProduceRoute: typeof PProjectIdEEpisodeIdProduceRoute
+  PProjectIdEEpisodeIdShotsRoute: typeof PProjectIdEEpisodeIdShotsRoute
+  PProjectIdEEpisodeIdIndexRoute: typeof PProjectIdEEpisodeIdIndexRoute
+}
+
+const PProjectIdEEpisodeIdRouteChildren: PProjectIdEEpisodeIdRouteChildren = {
+  PProjectIdEEpisodeIdProduceRoute: PProjectIdEEpisodeIdProduceRoute,
+  PProjectIdEEpisodeIdShotsRoute: PProjectIdEEpisodeIdShotsRoute,
+  PProjectIdEEpisodeIdIndexRoute: PProjectIdEEpisodeIdIndexRoute,
+}
+
+const PProjectIdEEpisodeIdRouteWithChildren =
+  PProjectIdEEpisodeIdRoute._addFileChildren(PProjectIdEEpisodeIdRouteChildren)
+
 interface PProjectIdRouteChildren {
   PProjectIdAssetsRoute: typeof PProjectIdAssetsRouteWithChildren
   PProjectIdPlanRoute: typeof PProjectIdPlanRoute
@@ -416,6 +708,7 @@ interface PProjectIdRouteChildren {
   PProjectIdStoryboardRoute: typeof PProjectIdStoryboardRoute
   PProjectIdWorldRoute: typeof PProjectIdWorldRoute
   PProjectIdIndexRoute: typeof PProjectIdIndexRoute
+  PProjectIdEEpisodeIdRoute: typeof PProjectIdEEpisodeIdRouteWithChildren
 }
 
 const PProjectIdRouteChildren: PProjectIdRouteChildren = {
@@ -427,6 +720,7 @@ const PProjectIdRouteChildren: PProjectIdRouteChildren = {
   PProjectIdStoryboardRoute: PProjectIdStoryboardRoute,
   PProjectIdWorldRoute: PProjectIdWorldRoute,
   PProjectIdIndexRoute: PProjectIdIndexRoute,
+  PProjectIdEEpisodeIdRoute: PProjectIdEEpisodeIdRouteWithChildren,
 }
 
 const PProjectIdRouteWithChildren = PProjectIdRoute._addFileChildren(

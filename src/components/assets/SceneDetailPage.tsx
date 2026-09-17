@@ -11,27 +11,33 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 export function SceneDetailPage({
-  projectId,
   sceneId,
+  back,
 }: {
-  projectId: string;
   sceneId: string;
+  back: { kind: "studio" } | { kind: "project"; projectId: string };
 }) {
   const navigate = useNavigate();
-  const scene = useLiveQuery(() => db.scenes.get(sceneId), [sceneId]);
+  const scene = useLiveQuery(async () => (await db.scenes.get(sceneId)) ?? null, [sceneId]);
 
   if (scene === undefined) {
     return <div className="text-muted-foreground p-8 text-sm">加载中…</div>;
   }
-  if (!scene || scene.projectId !== projectId) {
+  const missing =
+    scene === null || (back.kind === "project" && scene.projectId !== back.projectId);
+  if (missing) {
     return (
       <div className="p-8">
         <p>找不到这个场景</p>
         <Button
           className="mt-3"
-          onClick={() => void navigate({ to: "/p/$projectId/world", params: { projectId } })}
+          onClick={() =>
+            void (back.kind === "studio"
+              ? navigate({ to: "/scenes" })
+              : navigate({ to: "/p/$projectId/world", params: { projectId: back.projectId } }))
+          }
         >
-          返回世界
+          {back.kind === "studio" ? "返回场景库" : "返回世界"}
         </Button>
       </div>
     );
@@ -40,20 +46,29 @@ export function SceneDetailPage({
   return (
     <div className="h-full overflow-auto">
       <div className="mx-auto max-w-5xl px-8 py-6">
-        <Link
-          to="/p/$projectId/world"
-          params={{ projectId }}
-          className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
-        >
-          <ChevronLeft className="size-4" /> 世界
-        </Link>
+        {back.kind === "studio" ? (
+          <Link
+            to="/scenes"
+            className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
+          >
+            <ChevronLeft className="size-4" /> 常用场景
+          </Link>
+        ) : (
+          <Link
+            to="/p/$projectId/world"
+            params={{ projectId: back.projectId }}
+            className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
+          >
+            <ChevronLeft className="size-4" /> 世界
+          </Link>
+        )}
         <h1 className="mt-3 text-lg font-semibold">场景</h1>
         <div className="mt-6 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="grid grid-cols-2 gap-4">
             {SCENE_SLOTS.map((slot) => (
               <EditableGenerationSlot
                 key={slot.id}
-                projectId={projectId}
+                projectId={scene.projectId}
                 label={slot.label}
                 title={`场景 · ${slot.label}`}
                 variant="asset"

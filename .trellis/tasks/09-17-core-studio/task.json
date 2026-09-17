@@ -21,7 +21,8 @@
   "children": [
     "09-17-app-foundation",
     "09-17-asset-library",
-    "09-17-shot-editor"
+    "09-17-shot-editor",
+    "09-17-episode-workflow"
   ],
   "parent": null,
   "relatedFiles": [],

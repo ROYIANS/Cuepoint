@@ -1,11 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { ShotEditorPage } from "@/components/shots/ShotEditorPage";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { firstEpisode } from "@/db/repo";
 
 export const Route = createFileRoute("/p/$projectId/shots")({
-  component: ShotsRoute,
+  beforeLoad: async ({ params }) => {
+    const episode = await firstEpisode(params.projectId);
+    if (!episode) {
+      throw redirect({ to: "/p/$projectId", params });
+    }
+    throw redirect({
+      to: "/p/$projectId/e/$episodeId/shots",
+      params: { projectId: params.projectId, episodeId: episode.id },
+    });
+  },
 });
-
-function ShotsRoute() {
-  const { projectId } = Route.useParams();
-  return <ShotEditorPage projectId={projectId} />;
-}

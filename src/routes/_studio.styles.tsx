@@ -1,6 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { StyleLibraryPage } from "@/components/studio/StyleLibraryPage";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_studio/styles")({
-  component: StyleLibraryPage,
+  component: () => <Outlet />,
 });

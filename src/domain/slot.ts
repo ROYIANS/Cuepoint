@@ -1,4 +1,4 @@
-import type { GenerationSlot, Id, MediaKind } from "./types";
+import type { GenerationSlot, Id, MediaKind, ShotPictureField } from "./types";
 
 export function emptySlot(): GenerationSlot {
   return {
@@ -88,4 +88,63 @@ export function firstResultId(
   slots: Array<GenerationSlot | undefined>,
 ): Id | undefined {
   return slots.find((slot) => slot?.result?.mediaId)?.result?.mediaId;
+}
+
+export const SHOT_PICTURE_FIELDS: ShotPictureField[] = [
+  "firstFrame",
+  "lastFrame",
+  "clip",
+];
+
+function uniqueIds(ids: Id[]): Id[] {
+  return [...new Set(ids)];
+}
+
+export function mergeLegacyReferenceIntoFirstFrame(
+  firstFrame: GenerationSlot,
+  legacyReference: GenerationSlot,
+): GenerationSlot {
+  const extraImage =
+    legacyReference.result?.mediaId && legacyReference.result.kind !== "video"
+      ? [legacyReference.result.mediaId]
+      : [];
+  const extraVideo =
+    legacyReference.result?.mediaId && legacyReference.result.kind === "video"
+      ? [legacyReference.result.mediaId]
+      : [];
+  return {
+    prompt: firstFrame.prompt || legacyReference.prompt,
+    referenceImageIds: uniqueIds([
+      ...firstFrame.referenceImageIds,
+      ...legacyReference.referenceImageIds,
+      ...extraImage,
+    ]),
+    referenceVideoIds: uniqueIds([
+      ...firstFrame.referenceVideoIds,
+      ...legacyReference.referenceVideoIds,
+      ...extraVideo,
+    ]),
+    result: firstFrame.result,
+  };
+}
+
+export function parseShotPictureSlots(raw: Record<string, unknown>): {
+  firstFrame: GenerationSlot;
+  lastFrame: GenerationSlot;
+  clip: GenerationSlot;
+} {
+  const firstFrame = parseGenerationSlot(raw.firstFrame ?? raw.frame, raw.frameMediaId);
+  const lastFrame = parseGenerationSlot(raw.lastFrame);
+  const clip = parseGenerationSlot(raw.clip);
+  if (raw.reference == null && raw.referenceMediaId == null) {
+    return { firstFrame, lastFrame, clip };
+  }
+  return {
+    firstFrame: mergeLegacyReferenceIntoFirstFrame(
+      firstFrame,
+      parseGenerationSlot(raw.reference, raw.referenceMediaId),
+    ),
+    lastFrame,
+    clip,
+  };
 }

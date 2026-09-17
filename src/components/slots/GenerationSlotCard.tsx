@@ -24,7 +24,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-type TileVariant = "frame" | "reference" | "asset";
+type TileVariant = "frame" | "reference" | "asset" | "clip";
 
 export function GenerationSlotTile({
   slot,
@@ -39,7 +39,7 @@ export function GenerationSlotTile({
 }) {
   const hasResult = Boolean(slot.result?.mediaId);
   const hasBody = slotHasBody(slot);
-  const dashed = variant === "reference" && !hasResult;
+  const dashed = (variant === "reference" || variant === "clip") && !hasResult;
 
   return (
     <div className={variant === "asset" ? "w-full" : "relative mx-auto h-[124px] w-[220px]"}>
@@ -65,6 +65,10 @@ export function GenerationSlotTile({
               {slot.prompt || "已填写参考，待生成"}
             </p>
           </div>
+        ) : variant === "clip" ? (
+          <span className="text-muted-foreground m-auto px-4 text-center text-[11px] leading-5">
+            成片，可先挂图
+          </span>
         ) : variant === "frame" ? (
           <span className="text-muted-foreground m-auto">
             <Plus className="size-5" />

@@ -29,7 +29,7 @@ import {
 } from "@/db/repo";
 import { SHOT_COLUMNS, normalizeVisibleColumns, type ColumnDef } from "@/domain/columns";
 import { emptySlot } from "@/domain/slot";
-import { normalizeStory, type Shot, type ShotColumnId, type StoryBeat } from "@/domain/types";
+import { normalizeEpisodeStory, type Shot, type ShotColumnId, type StoryBeat } from "@/domain/types";
 import { formatDuration } from "@/lib/format";
 import { EditableGenerationSlot } from "@/components/slots/GenerationSlotCard";
 import {
@@ -85,12 +85,25 @@ function PlainCell({
   );
 }
 
-export function ShotEditorPage({ projectId }: { projectId: string }) {
-  const project = useLiveQuery(() => db.projects.get(projectId), [projectId]);
+export function ShotEditorPage({
+  projectId,
+  episodeId,
+}: {
+  projectId: string;
+  episodeId: string;
+}) {
+  const project = useLiveQuery(
+    async () => (await db.projects.get(projectId)) ?? null,
+    [projectId],
+  );
+  const episode = useLiveQuery(
+    async () => (await db.episodes.get(episodeId)) ?? null,
+    [episodeId],
+  );
   const shots =
     useLiveQuery(
-      () => db.shots.where("projectId").equals(projectId).sortBy("order"),
-      [projectId],
+      () => db.shots.where("episodeId").equals(episodeId).sortBy("order"),
+      [episodeId],
     ) ?? [];
   const characters =
     useLiveQuery(
@@ -110,7 +123,7 @@ export function ShotEditorPage({ projectId }: { projectId: string }) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [pendingBeatId, setPendingBeatId] = useState<string>();
 
-  const beats = normalizeStory(project?.story).beats;
+  const beats = normalizeEpisodeStory(episode?.story).beats;
   const grouped = beats.map((beat) => ({
     beat,
     shots: shots.filter((shot) => shot.beatId === beat.id),
@@ -125,8 +138,14 @@ export function ShotEditorPage({ projectId }: { projectId: string }) {
     [shots],
   );
 
-  if (!project) {
+  if (project === undefined || episode === undefined) {
     return <div className="text-muted-foreground p-8 text-sm">加载分镜…</div>;
+  }
+  if (project === null) {
+    return <div className="text-muted-foreground p-8 text-sm">找不到这个项目</div>;
+  }
+  if (episode === null) {
+    return <div className="text-muted-foreground p-8 text-sm">找不到这一集</div>;
   }
 
   async function toggleColumn(id: ShotColumnId, next: boolean) {
@@ -152,20 +171,20 @@ export function ShotEditorPage({ projectId }: { projectId: string }) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-48">
-              <DropdownMenuItem onClick={() => void addShot(projectId)}>
+              <DropdownMenuItem onClick={() => void addShot(episodeId)}>
                 <Plus />
                 创建分镜
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => void addShots(projectId, 5)}>
+              <DropdownMenuItem onClick={() => void addShots(episodeId, 5)}>
                 <CopyPlus />
                 创建5个分镜
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => void addShots(projectId, 10)}>
+              <DropdownMenuItem onClick={() => void addShots(episodeId, 10)}>
                 <CopyPlus />
                 创建10个分镜
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => void addStoryBeat(projectId)}>
+              <DropdownMenuItem onClick={() => void addStoryBeat(episodeId)}>
                 <SquareStack />
                 创建场
               </DropdownMenuItem>
@@ -285,12 +304,12 @@ export function ShotEditorPage({ projectId }: { projectId: string }) {
             <div
               className="bg-muted text-muted-foreground grid items-stretch border-y text-xs"
               style={{
-                gridTemplateColumns: `52px 64px 248px 248px ${visibleDefs
+                gridTemplateColumns: `52px 64px 248px 248px 248px ${visibleDefs
                   .map((column) => `${column.width}px`)
                   .join(" ")}`,
               }}
             >
-              {["顺序", "镜号", "画面", "参考", ...visibleDefs.map((column) => column.label)].map(
+              {["顺序", "镜号", "首帧", "尾帧", "成片", ...visibleDefs.map((column) => column.label)].map(
                 (label) => (
                   <div key={label} className="px-3 py-2.5">
                     {label}
@@ -311,6 +330,7 @@ export function ShotEditorPage({ projectId }: { projectId: string }) {
                 beat={beat}
                 shots={beatShots}
                 projectId={projectId}
+                episodeId={episodeId}
                 selecting={selecting}
                 selected={selected}
                 setSelected={setSelected}
@@ -323,9 +343,10 @@ export function ShotEditorPage({ projectId }: { projectId: string }) {
 
             {ungrouped.length > 0 ? (
               <BeatBlock
-                beat={{ id: "", title: "未分场", content: "" }}
+                beat={{ id: "", title: "未分场", content: "", characterIds: [], timeOfDay: "" }}
                 shots={ungrouped}
                 projectId={projectId}
+                episodeId={episodeId}
                 selecting={selecting}
                 selected={selected}
                 setSelected={setSelected}
@@ -382,7 +403,7 @@ export function ShotEditorPage({ projectId }: { projectId: string }) {
               className="bg-destructive hover:bg-destructive/90"
               onClick={() => {
                 if (!pendingBeatId) return;
-                void deleteStoryBeat(projectId, pendingBeatId);
+                void deleteStoryBeat(episodeId, pendingBeatId);
                 setPendingBeatId(undefined);
               }}
             >
@@ -396,13 +417,14 @@ export function ShotEditorPage({ projectId }: { projectId: string }) {
 }
 
 function gridColumns(visibleDefs: ColumnDef[]) {
-  return `52px 64px 248px 248px ${visibleDefs.map((column) => `${column.width}px`).join(" ")}`;
+  return `52px 64px 248px 248px 248px ${visibleDefs.map((column) => `${column.width}px`).join(" ")}`;
 }
 
 function BeatBlock({
   beat,
   shots,
   projectId,
+  episodeId,
   selecting,
   selected,
   setSelected,
@@ -416,6 +438,7 @@ function BeatBlock({
   beat: StoryBeat;
   shots: Shot[];
   projectId: string;
+  episodeId: string;
   selecting: boolean;
   selected: Set<string>;
   setSelected: (next: Set<string>) => void;
@@ -439,7 +462,7 @@ function BeatBlock({
             <Input
               value={beat.title}
               onChange={(event) =>
-                void patchStoryBeat(projectId, beat.id, { title: event.target.value })
+                void patchStoryBeat(episodeId, beat.id, { title: event.target.value })
               }
               className="h-8 max-w-xs"
             />
@@ -463,7 +486,7 @@ function BeatBlock({
       {shots.length === 0 ? (
         <div className="text-muted-foreground flex items-center gap-3 border-b px-4 py-6 text-xs">
           这场还没有镜头
-          <Button size="sm" variant="outline" onClick={() => void addShot(projectId, { beatId: beat.id })}>
+          <Button size="sm" variant="outline" onClick={() => void addShot(episodeId, { beatId: beat.id })}>
             <Plus />
             添加镜头
           </Button>
@@ -475,6 +498,7 @@ function BeatBlock({
             shot={shot}
             striped={index % 2 === 1}
             projectId={projectId}
+            episodeId={episodeId}
             selecting={selecting}
             selected={selected}
             setSelected={setSelected}
@@ -494,6 +518,7 @@ function ShotRow({
   shot,
   striped,
   projectId,
+  episodeId,
   selecting,
   selected,
   setSelected,
@@ -506,6 +531,7 @@ function ShotRow({
   shot: Shot;
   striped: boolean;
   projectId: string;
+  episodeId: string;
   selecting: boolean;
   selected: Set<string>;
   setSelected: (next: Set<string>) => void;
@@ -523,7 +549,7 @@ function ShotRow({
         size="icon-sm"
         className="absolute z-10 size-6 rounded-full"
         style={{ left: 14, top: -12 }}
-        onClick={() => void addShot(projectId, { atOrder: shot.order, beatId: beatId ?? shot.beatId })}
+        onClick={() => void addShot(episodeId, { atOrder: shot.order, beatId: beatId ?? shot.beatId })}
         aria-label="在上方插入镜头"
       >
         <Plus />
@@ -558,19 +584,28 @@ function ShotRow({
         <div className="flex items-center py-3">
           <EditableGenerationSlot
             projectId={projectId}
-            slot={shot.frame ?? emptySlot()}
+            slot={shot.firstFrame ?? emptySlot()}
             variant="frame"
-            title={`镜头 ${shot.shotNumber} · 画面`}
-            onSave={(slot) => void setShotSlot(shot.id, "frame", slot)}
+            title={`镜头 ${shot.shotNumber} · 首帧`}
+            onSave={(slot) => void setShotSlot(shot.id, "firstFrame", slot)}
           />
         </div>
         <div className="flex items-center py-3">
           <EditableGenerationSlot
             projectId={projectId}
-            slot={shot.reference ?? emptySlot()}
-            variant="reference"
-            title={`镜头 ${shot.shotNumber} · 参考`}
-            onSave={(slot) => void setShotSlot(shot.id, "reference", slot)}
+            slot={shot.lastFrame ?? emptySlot()}
+            variant="frame"
+            title={`镜头 ${shot.shotNumber} · 尾帧`}
+            onSave={(slot) => void setShotSlot(shot.id, "lastFrame", slot)}
+          />
+        </div>
+        <div className="flex items-center py-3">
+          <EditableGenerationSlot
+            projectId={projectId}
+            slot={shot.clip ?? emptySlot()}
+            variant="clip"
+            title={`镜头 ${shot.shotNumber} · 成片`}
+            onSave={(slot) => void setShotSlot(shot.id, "clip", slot)}
           />
         </div>
         {visibleDefs.map((column) => (
@@ -642,7 +677,7 @@ function ShotRow({
           size="icon-sm"
           className="absolute z-10 size-6 rounded-full"
           style={{ left: 14, bottom: -12 }}
-          onClick={() => void addShot(projectId, { beatId })}
+          onClick={() => void addShot(episodeId, { beatId })}
           aria-label="在末尾添加镜头"
         >
           <Plus />

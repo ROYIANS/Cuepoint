@@ -7,5 +7,5 @@ export const Route = createFileRoute("/p/$projectId/assets/characters/$character
 
 function CharacterRoute() {
   const { projectId, characterId } = Route.useParams();
-  return <CharacterDetailPage projectId={projectId} characterId={characterId} />;
+  return <CharacterDetailPage characterId={characterId} back={{ kind: "project", projectId }} />;
 }

@@ -4,11 +4,13 @@ import { db } from "@/db/database";
 import { collectMediaIds } from "@/db/repo";
 import {
   DEFAULT_VISIBLE_COLUMNS,
+  normalizeEpisodeStory,
+  normalizeSeriesStory,
   normalizeSetting,
-  normalizeStory,
   PACKAGE_FORMAT,
   type Character,
   type CharacterImageSlot,
+  type Episode,
   type GenerationSlot,
   type Id,
   type MediaRecord,
@@ -18,7 +20,7 @@ import {
   type Shot,
   type ShotColumnId,
 } from "@/domain/types";
-import { parseGenerationSlot, remapSlot } from "@/domain/slot";
+import { parseGenerationSlot, parseShotPictureSlots, remapSlot } from "@/domain/slot";
 import { createId, nowIso } from "./ids";
 
 const recordSchema = z.object({}).passthrough();
@@ -104,7 +106,7 @@ function parseProject(raw: Record<string, unknown>, fallbackName: string): Proje
       defaultDurationSec: Number(shotSettings?.defaultDurationSec ?? 0) || 0,
       autoIncrementShotNumber: shotSettings?.autoIncrementShotNumber !== false,
     },
-    story: normalizeStory(raw.story),
+    story: normalizeSeriesStory(raw.story),
     setting: normalizeSetting(raw.setting),
     extra: pickExtra(raw, PROJECT_KEYS),
   };
@@ -190,11 +192,55 @@ function parseScene(raw: Record<string, unknown>, projectId: Id): Scene {
   };
 }
 
-const SHOT_KEYS = [
+const EPISODE_KEYS = [
   "id",
   "projectId",
   "order",
+  "title",
+  "story",
+  "createdAt",
+  "updatedAt",
+  "extra",
+];
+
+function parseEpisode(raw: Record<string, unknown>, projectId: Id, index: number): Episode {
+  const at = nowIso();
+  return {
+    id: String(raw.id ?? createId("ep")),
+    projectId,
+    order: Number.isFinite(Number(raw.order)) ? Number(raw.order) : index,
+    title: String(raw.title ?? ""),
+    story: normalizeEpisodeStory(raw.story),
+    createdAt: String(raw.createdAt ?? at),
+    updatedAt: String(raw.updatedAt ?? at),
+    extra: pickExtra(raw, EPISODE_KEYS),
+  };
+}
+
+function synthesizeFirstEpisode(
+  project: Project,
+  projectRaw: Record<string, unknown>,
+): Episode {
+  return {
+    id: createId("ep"),
+    projectId: project.id,
+    order: 0,
+    title: "",
+    story: normalizeEpisodeStory(projectRaw.story),
+    createdAt: project.createdAt,
+    updatedAt: project.updatedAt,
+  };
+}
+
+const SHOT_KEYS = [
+  "id",
+  "projectId",
+  "episodeId",
+  "order",
   "shotNumber",
+  "firstFrame",
+  "lastFrame",
+  "clip",
   "frame",
   "reference",
   "frameMediaId",
@@ -215,14 +261,22 @@ const SHOT_KEYS = [
   "extra",
 ];
 
-function parseShot(raw: Record<string, unknown>, projectId: Id, index: number): Shot {
+function parseShot(
+  raw: Record<string, unknown>,
+  projectId: Id,
+  episodeId: Id,
+  index: number,
+): Shot {
+  const slots = parseShotPictureSlots(raw);
   return {
     id: String(raw.id ?? createId("sht")),
     projectId,
+    episodeId: String(raw.episodeId ?? episodeId),
     order: Number(raw.order ?? index + 1) || index + 1,
     shotNumber: String(raw.shotNumber ?? index + 1),
-    frame: parseGenerationSlot(raw.frame, raw.frameMediaId),
-    reference: parseGenerationSlot(raw.reference, raw.referenceMediaId),
+    firstFrame: slots.firstFrame,
+    lastFrame: slots.lastFrame,
+    clip: slots.clip,
     category: String(raw.category ?? ""),
     durationSec: Number(raw.durationSec ?? 0) || 0,
     content: String(raw.content ?? ""),
@@ -254,9 +308,10 @@ function remapId(map: Map<string, string>, oldId: string | undefined, prefix: st
 export async function exportProjectZip(projectId: Id): Promise<Blob> {
   const project = await db.projects.get(projectId);
   if (!project) throw new PackageError("项目不存在");
-  const [characters, scenes, shots] = await Promise.all([
+  const [characters, scenes, episodes, shots] = await Promise.all([
     db.characters.where("projectId").equals(projectId).toArray(),
     db.scenes.where("projectId").equals(projectId).toArray(),
+    db.episodes.where("projectId").equals(projectId).sortBy("order"),
     db.shots.where("projectId").equals(projectId).sortBy("order"),
   ]);
   const mediaIds = await collectMediaIds(projectId);
@@ -272,6 +327,7 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
   zip.file("project.json", JSON.stringify(project, null, 2));
   zip.file("characters.json", JSON.stringify(characters, null, 2));
   zip.file("scenes.json", JSON.stringify(scenes, null, 2));
+  zip.file("episodes.json", JSON.stringify(episodes, null, 2));
   zip.file("shots.json", JSON.stringify(shots, null, 2));
   for (const mediaId of mediaIds) {
     const media = await db.media.get(mediaId);
@@ -310,7 +366,10 @@ export async function importProjectZip(file: Blob): Promise<Project> {
   const projectRaw = asRecord(await readJson("project.json", true), "project.json");
   const charactersRaw = asArray(await readJson("characters.json"), "characters.json");
   const scenesRaw = asArray(await readJson("scenes.json"), "scenes.json");
+  const episodesFile = await readJson("episodes.json");
+  const episodesRaw = episodesFile == null ? [] : asArray(episodesFile, "episodes.json");
   const shotsRaw = asArray(await readJson("shots.json"), "shots.json");
+  const hasEpisodes = episodesRaw.length > 0;
 
   const project = parseProject(projectRaw, "导入的项目");
   const projectId = createId("prj");
@@ -318,10 +377,15 @@ export async function importProjectZip(file: Blob): Promise<Project> {
   project.id = projectId;
   project.createdAt = at;
   project.updatedAt = at;
+  if (!hasEpisodes) {
+    project.columnSettings = { visible: [...DEFAULT_VISIBLE_COLUMNS] };
+  }
 
   const mediaMap = new Map<string, string>();
   const characterMap = new Map<string, string>();
   const sceneMap = new Map<string, string>();
+  const episodeMap = new Map<string, string>();
+  const beatMap = new Map<string, string>();
   const shotMap = new Map<string, string>();
 
   const mediaRecords: MediaRecord[] = [];
@@ -351,6 +415,7 @@ export async function importProjectZip(file: Blob): Promise<Project> {
     character.projectId = projectId;
     const images: Character["slots"] = {};
     for (const [slot, value] of Object.entries(character.slots)) {
+      if (!value) continue;
       images[slot as keyof Character["slots"]] = remapSlot(value, mapMedia);
     }
     character.slots = images;
@@ -363,37 +428,65 @@ export async function importProjectZip(file: Blob): Promise<Project> {
     scene.projectId = projectId;
     const images: Scene["slots"] = {};
     for (const [slot, value] of Object.entries(scene.slots)) {
+      if (!value) continue;
       images[slot as keyof Scene["slots"]] = remapSlot(value, mapMedia);
     }
     scene.slots = images;
     return scene;
   });
 
+  const parsedEpisodes = hasEpisodes
+    ? episodesRaw.map((raw, index) => parseEpisode(raw, projectId, index))
+    : [synthesizeFirstEpisode(project, projectRaw)];
+
+  const episodes = parsedEpisodes.map((episode) => {
+    const newId = remapId(episodeMap, episode.id, "ep")!;
+    episode.id = newId;
+    episode.projectId = projectId;
+    episode.story = {
+      ...episode.story,
+      beats: episode.story.beats.map((beat) => {
+        const newBeatId = remapId(beatMap, beat.id, "beat")!;
+        return {
+          ...beat,
+          id: newBeatId,
+          characterIds: beat.characterIds
+            .map((id) => characterMap.get(id))
+            .filter((id): id is string => Boolean(id)),
+          sceneId: beat.sceneId ? sceneMap.get(beat.sceneId) : undefined,
+        };
+      }),
+    };
+    return episode;
+  });
+
+  const fallbackEpisodeId = episodes[0]?.id ?? createId("ep");
+
   const shots = shotsRaw.map((raw, index) => {
-    const shot = parseShot(raw, projectId, index);
+    const shot = parseShot(raw, projectId, fallbackEpisodeId, index);
     shot.id = remapId(shotMap, shot.id, "sht")!;
     shot.projectId = projectId;
-    shot.frame = remapSlot(shot.frame, mapMedia);
-    shot.reference = remapSlot(shot.reference, mapMedia);
+    shot.episodeId = episodeMap.get(shot.episodeId) ?? fallbackEpisodeId;
+    shot.firstFrame = remapSlot(shot.firstFrame, mapMedia);
+    shot.lastFrame = remapSlot(shot.lastFrame, mapMedia);
+    shot.clip = remapSlot(shot.clip, mapMedia);
     shot.characterIds = shot.characterIds
       .map((id) => characterMap.get(id))
       .filter((id): id is string => Boolean(id));
     shot.sceneId = shot.sceneId ? sceneMap.get(shot.sceneId) : undefined;
+    shot.beatId = shot.beatId ? beatMap.get(shot.beatId) : undefined;
     return shot;
   });
 
   try {
     await db.transaction(
       "rw",
-      db.projects,
-      db.characters,
-      db.scenes,
-      db.shots,
-      db.media,
+      [db.projects, db.characters, db.scenes, db.episodes, db.shots, db.media],
       async () => {
         await db.projects.add(project);
         if (characters.length) await db.characters.bulkAdd(characters);
         if (scenes.length) await db.scenes.bulkAdd(scenes);
+        if (episodes.length) await db.episodes.bulkAdd(episodes);
         if (shots.length) await db.shots.bulkAdd(shots);
         if (mediaRecords.length) await db.media.bulkAdd(mediaRecords);
       },

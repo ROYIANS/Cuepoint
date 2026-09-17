@@ -1,0 +1,5 @@
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "IndexedDB owner id and Dexie contracts"}
+{"file": ".trellis/spec/frontend/directory-structure.md", "reason": "Studio vs project route layout"}
+{"file": ".trellis/spec/frontend/hook-guidelines.md", "reason": "liveQuery get() loading vs missing"}
+{"file": ".trellis/tasks/09-17-core-studio/design.md", "reason": "Package contract, slots, zip layout"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "IndexedDB vs zip vs UI"}

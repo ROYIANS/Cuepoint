@@ -39,7 +39,7 @@ function coverOfProject(shots: Shot[], projectId: Id): Id | undefined {
   return shots
     .filter((shot) => shot.projectId === projectId)
     .sort((left, right) => left.order - right.order)
-    .find((shot) => shot.frame.result?.mediaId)?.frame.result?.mediaId;
+    .find((shot) => shot.firstFrame.result?.mediaId)?.firstFrame.result?.mediaId;
 }
 
 export function ProjectGalleryPage() {

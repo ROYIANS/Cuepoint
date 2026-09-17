@@ -71,7 +71,7 @@
 
 ## Deferred
 
-- 集列表 UI，以及镜头从 `projectId` 改挂到集上。
+- 集列表 UI、镜头挂到集上 → 子任务 `09-17-episode-workflow`（规划中）。
 
 ## Open questions
 
