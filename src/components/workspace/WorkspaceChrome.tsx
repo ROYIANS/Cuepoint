@@ -37,7 +37,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
       <header className="grid h-14 shrink-0 grid-cols-[1fr_auto_1fr] items-center border-b px-4">
         <div className="flex min-w-0 items-center gap-1">
           <Button variant="ghost" size="icon-sm" asChild>
-            <Link to="/" aria-label="返回项目列表">
+            <Link to="/" aria-label="返回工作室">
               <ChevronLeft />
             </Link>
           </Button>

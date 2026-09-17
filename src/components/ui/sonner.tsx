@@ -4,7 +4,7 @@ import type { CSSProperties } from "react";
 function Toaster(props: ToasterProps) {
   return (
     <Sonner
-      theme="light"
+      theme="dark"
       className="toaster group"
       style={
         {

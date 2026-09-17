@@ -8,6 +8,7 @@
   --color-foreground: var(--foreground);
   --font-sans: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Source Han Sans SC",
     "Segoe UI", sans-serif;
+  --font-display: "Noto Serif SC", "Songti SC", "STSong", serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -42,36 +43,36 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.205 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.205 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.205 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --brand: #f0b429;
-  --brand-foreground: #3b2d00;
-  --dashed: #e0c36b;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --radius: 0.75rem;
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.97 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.97 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.97 0 0);
+  --primary: oklch(0.86 0.15 168);
+  --primary-foreground: oklch(0.18 0 0);
+  --secondary: oklch(0.255 0 0);
+  --secondary-foreground: oklch(0.97 0 0);
+  --muted: oklch(0.24 0 0);
+  --muted-foreground: oklch(0.7 0 0);
+  --accent: oklch(0.255 0 0);
+  --accent-foreground: oklch(0.97 0 0);
+  --destructive: oklch(0.68 0.19 22);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.86 0.15 168 / 55%);
+  --brand: oklch(0.86 0.15 168);
+  --brand-foreground: oklch(0.18 0 0);
+  --dashed: oklch(0.86 0.15 168 / 45%);
+  --sidebar: oklch(0.125 0 0);
+  --sidebar-foreground: oklch(0.97 0 0);
+  --sidebar-primary: oklch(0.86 0.15 168);
+  --sidebar-primary-foreground: oklch(0.18 0 0);
+  --sidebar-accent: oklch(0.22 0 0);
+  --sidebar-accent-foreground: oklch(0.97 0 0);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.86 0.15 168 / 55%);
 }
 
 @layer base {
@@ -83,6 +84,9 @@
   #root {
     min-height: 100%;
     margin: 0;
+  }
+  html {
+    color-scheme: dark;
   }
   body {
     @apply bg-background text-foreground;
@@ -98,6 +102,73 @@
 }
 
 .app-scroll::-webkit-scrollbar-thumb {
-  background: var(--border);
+  background: oklch(1 0 0 / 14%);
   border-radius: 99px;
+}
+
+.studio-floor {
+  background-color: oklch(0.145 0 0);
+}
+
+.studio-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .studio-grain {
+    animation: studio-grain-shift 0.9s steps(2) infinite;
+  }
+
+  .studio-enter > * {
+    animation: studio-in 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .studio-enter > *:nth-child(1) {
+    animation-delay: 0ms;
+  }
+  .studio-enter > *:nth-child(2) {
+    animation-delay: 45ms;
+  }
+  .studio-enter > *:nth-child(3) {
+    animation-delay: 90ms;
+  }
+  .studio-enter > *:nth-child(4) {
+    animation-delay: 135ms;
+  }
+  .studio-enter > *:nth-child(5) {
+    animation-delay: 180ms;
+  }
+  .studio-enter > *:nth-child(6) {
+    animation-delay: 225ms;
+  }
+  .studio-enter > *:nth-child(7) {
+    animation-delay: 270ms;
+  }
+  .studio-enter > *:nth-child(8) {
+    animation-delay: 315ms;
+  }
+}
+
+@keyframes studio-grain-shift {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-8%, 6%);
+  }
+}
+
+@keyframes studio-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
 }

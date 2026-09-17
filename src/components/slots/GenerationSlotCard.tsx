@@ -52,7 +52,7 @@ export function GenerationSlotTile({
           variant === "asset"
             ? "bg-muted h-36 w-full rounded-xl border"
               : dashed
-              ? "h-full w-full rounded-md border border-dashed bg-[#fffdf7]"
+              ? "bg-muted/40 h-full w-full rounded-md border border-dashed"
               : "bg-background h-full w-full rounded-md border",
         )}
       >

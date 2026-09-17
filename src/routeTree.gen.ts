@@ -9,7 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as StudioRouteImport } from './routes/_studio'
+import { Route as StudioIndexRouteImport } from './routes/_studio.index'
+import { Route as StudioCharactersRouteImport } from './routes/_studio.characters'
+import { Route as StudioScenesRouteImport } from './routes/_studio.scenes'
+import { Route as StudioStylesRouteImport } from './routes/_studio.styles'
 import { Route as PProjectIdRouteImport } from './routes/p.$projectId'
 import { Route as PProjectIdIndexRouteImport } from './routes/p.$projectId.index'
 import { Route as PProjectIdAssetsRouteImport } from './routes/p.$projectId.assets'
@@ -20,10 +24,29 @@ import { Route as PProjectIdAssetsIndexRouteImport } from './routes/p.$projectId
 import { Route as PProjectIdAssetsCharactersCharacterIdRouteImport } from './routes/p.$projectId.assets.characters.$characterId'
 import { Route as PProjectIdAssetsScenesSceneIdRouteImport } from './routes/p.$projectId.assets.scenes.$sceneId'
 
-const IndexRoute = IndexRouteImport.update({
+const StudioRoute = StudioRouteImport.update({
+  id: '/_studio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudioIndexRoute = StudioIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => StudioRoute,
+} as any)
+const StudioCharactersRoute = StudioCharactersRouteImport.update({
+  id: '/characters',
+  path: '/characters',
+  getParentRoute: () => StudioRoute,
+} as any)
+const StudioScenesRoute = StudioScenesRouteImport.update({
+  id: '/scenes',
+  path: '/scenes',
+  getParentRoute: () => StudioRoute,
+} as any)
+const StudioStylesRoute = StudioStylesRouteImport.update({
+  id: '/styles',
+  path: '/styles',
+  getParentRoute: () => StudioRoute,
 } as any)
 const PProjectIdRoute = PProjectIdRouteImport.update({
   id: '/p/$projectId',
@@ -74,7 +97,10 @@ const PProjectIdAssetsScenesSceneIdRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof StudioIndexRoute
+  '/characters': typeof StudioCharactersRoute
+  '/scenes': typeof StudioScenesRoute
+  '/styles': typeof StudioStylesRoute
   '/p/$projectId': typeof PProjectIdRouteWithChildren
   '/p/$projectId/assets': typeof PProjectIdAssetsRouteWithChildren
   '/p/$projectId/plan': typeof PProjectIdPlanRoute
@@ -86,7 +112,10 @@ export interface FileRoutesByFullPath {
   '/p/$projectId/assets/scenes/$sceneId': typeof PProjectIdAssetsScenesSceneIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/characters': typeof StudioCharactersRoute
+  '/scenes': typeof StudioScenesRoute
+  '/styles': typeof StudioStylesRoute
+  '/': typeof StudioIndexRoute
   '/p/$projectId/plan': typeof PProjectIdPlanRoute
   '/p/$projectId/report': typeof PProjectIdReportRoute
   '/p/$projectId/storyboard': typeof PProjectIdStoryboardRoute
@@ -97,8 +126,12 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_studio': typeof StudioRouteWithChildren
+  '/_studio/characters': typeof StudioCharactersRoute
+  '/_studio/scenes': typeof StudioScenesRoute
+  '/_studio/styles': typeof StudioStylesRoute
   '/p/$projectId': typeof PProjectIdRouteWithChildren
+  '/_studio/': typeof StudioIndexRoute
   '/p/$projectId/assets': typeof PProjectIdAssetsRouteWithChildren
   '/p/$projectId/plan': typeof PProjectIdPlanRoute
   '/p/$projectId/report': typeof PProjectIdReportRoute
@@ -112,6 +145,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/characters'
+    | '/scenes'
+    | '/styles'
     | '/p/$projectId'
     | '/p/$projectId/assets'
     | '/p/$projectId/plan'
@@ -123,6 +159,9 @@ export interface FileRouteTypes {
     | '/p/$projectId/assets/scenes/$sceneId'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/characters'
+    | '/scenes'
+    | '/styles'
     | '/'
     | '/p/$projectId/plan'
     | '/p/$projectId/report'
@@ -133,8 +172,12 @@ export interface FileRouteTypes {
     | '/p/$projectId/assets/scenes/$sceneId'
   id:
     | '__root__'
-    | '/'
+    | '/_studio'
+    | '/_studio/characters'
+    | '/_studio/scenes'
+    | '/_studio/styles'
     | '/p/$projectId'
+    | '/_studio/'
     | '/p/$projectId/assets'
     | '/p/$projectId/plan'
     | '/p/$projectId/report'
@@ -146,18 +189,46 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  StudioRoute: typeof StudioRouteWithChildren
   PProjectIdRoute: typeof PProjectIdRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_studio': {
+      id: '/_studio'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof StudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_studio/': {
+      id: '/_studio/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof StudioIndexRouteImport
+      parentRoute: typeof StudioRoute
+    }
+    '/_studio/characters': {
+      id: '/_studio/characters'
+      path: '/characters'
+      fullPath: '/characters'
+      preLoaderRoute: typeof StudioCharactersRouteImport
+      parentRoute: typeof StudioRoute
+    }
+    '/_studio/scenes': {
+      id: '/_studio/scenes'
+      path: '/scenes'
+      fullPath: '/scenes'
+      preLoaderRoute: typeof StudioScenesRouteImport
+      parentRoute: typeof StudioRoute
+    }
+    '/_studio/styles': {
+      id: '/_studio/styles'
+      path: '/styles'
+      fullPath: '/styles'
+      preLoaderRoute: typeof StudioStylesRouteImport
+      parentRoute: typeof StudioRoute
     }
     '/p/$projectId': {
       id: '/p/$projectId'
@@ -225,6 +296,23 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface StudioRouteChildren {
+  StudioCharactersRoute: typeof StudioCharactersRoute
+  StudioScenesRoute: typeof StudioScenesRoute
+  StudioStylesRoute: typeof StudioStylesRoute
+  StudioIndexRoute: typeof StudioIndexRoute
+}
+
+const StudioRouteChildren: StudioRouteChildren = {
+  StudioCharactersRoute: StudioCharactersRoute,
+  StudioScenesRoute: StudioScenesRoute,
+  StudioStylesRoute: StudioStylesRoute,
+  StudioIndexRoute: StudioIndexRoute,
+}
+
+const StudioRouteWithChildren =
+  StudioRoute._addFileChildren(StudioRouteChildren)
+
 interface PProjectIdAssetsRouteChildren {
   PProjectIdAssetsIndexRoute: typeof PProjectIdAssetsIndexRoute
   PProjectIdAssetsCharactersCharacterIdRoute: typeof PProjectIdAssetsCharactersCharacterIdRoute
@@ -262,7 +350,7 @@ const PProjectIdRouteWithChildren = PProjectIdRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  StudioRoute: StudioRouteWithChildren,
   PProjectIdRoute: PProjectIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
