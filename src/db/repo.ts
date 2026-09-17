@@ -2,6 +2,9 @@ import { db } from "./database";
 import {
   DEFAULT_SHOT_SETTINGS,
   DEFAULT_VISIBLE_COLUMNS,
+  emptySetting,
+  emptyStory,
+  normalizeStory,
   type Character,
   type CharacterImageSlot,
   type GenerationSlot,
@@ -12,6 +15,7 @@ import {
   type SceneImageSlot,
   type Shot,
   type ShotColumnId,
+  type StoryBeat,
 } from "@/domain/types";
 import { collectSlotsMedia, emptySlot, slotMediaIds } from "@/domain/slot";
 import { createId, nowIso } from "@/lib/ids";
@@ -35,6 +39,8 @@ export function emptyProject(name: string): Project {
     updatedAt: at,
     columnSettings: { visible: [...DEFAULT_VISIBLE_COLUMNS] },
     shotSettings: { ...DEFAULT_SHOT_SETTINGS },
+    story: emptyStory(),
+    setting: emptySetting(),
   };
 }
 
@@ -74,6 +80,7 @@ export function emptyShot(
   order: number,
   shotNumber: string,
   durationSec: number,
+  beatId?: Id,
 ): Shot {
   return {
     id: createId("sht"),
@@ -93,6 +100,7 @@ export function emptyShot(
     cameraGear: "",
     focalLength: "",
     characterIds: [],
+    ...(beatId ? { beatId } : {}),
   };
 }
 
@@ -133,7 +141,7 @@ export async function deleteProject(id: Id): Promise<void> {
 
 export async function updateProject(
   id: Id,
-  patch: Partial<Pick<Project, "name" | "columnSettings" | "shotSettings">>,
+  patch: Partial<Pick<Project, "name" | "columnSettings" | "shotSettings" | "story" | "setting">>,
 ): Promise<void> {
   const project = await db.projects.get(id);
   if (!project) return;
@@ -296,28 +304,121 @@ async function reindexShots(projectId: Id): Promise<void> {
   );
 }
 
-export async function addShot(projectId: Id, atOrder?: number): Promise<Shot> {
+function beatRank(beats: StoryBeat[], beatId: Id | undefined): number {
+  if (!beatId) return Number.POSITIVE_INFINITY;
+  const index = beats.findIndex((beat) => beat.id === beatId);
+  return index === -1 ? Number.POSITIVE_INFINITY : index;
+}
+
+function insertOrderForBeat(beats: StoryBeat[], shots: Shot[], beatId?: Id): number {
+  const sorted = [...shots].sort((a, b) => a.order - b.order);
+  if (sorted.length === 0) return 1;
+  const target = beatRank(beats, beatId);
+  let lastLeq = 0;
+  for (const shot of sorted) {
+    if (beatRank(beats, shot.beatId) <= target) lastLeq = shot.order;
+  }
+  if (lastLeq === 0) return sorted[0]?.order ?? 1;
+  return lastLeq + 1;
+}
+
+export async function addStoryBeat(projectId: Id): Promise<StoryBeat> {
   const project = await db.projects.get(projectId);
+  if (!project) throw new Error("项目不存在");
+  const story = normalizeStory(project.story);
+  const beat: StoryBeat = {
+    id: createId("beat"),
+    title: `场 ${story.beats.length + 1}`,
+    content: "",
+  };
+  await updateProject(projectId, { story: { ...story, beats: [...story.beats, beat] } });
+  return beat;
+}
+
+export async function patchStoryBeat(
+  projectId: Id,
+  beatId: Id,
+  patch: Partial<Pick<StoryBeat, "title" | "content">>,
+): Promise<void> {
+  const project = await db.projects.get(projectId);
+  if (!project) return;
+  const story = normalizeStory(project.story);
+  await updateProject(projectId, {
+    story: {
+      ...story,
+      beats: story.beats.map((beat) => (beat.id === beatId ? { ...beat, ...patch } : beat)),
+    },
+  });
+}
+
+export async function deleteStoryBeat(projectId: Id, beatId: Id): Promise<void> {
+  const project = await db.projects.get(projectId);
+  if (!project) return;
+  const shots = await db.shots.where("projectId").equals(projectId).toArray();
+  await db.transaction("rw", db.projects, db.shots, async () => {
+    for (const shot of shots) {
+      if (shot.beatId !== beatId) continue;
+      const next = { ...shot };
+      delete next.beatId;
+      await db.shots.put(next);
+    }
+    const latest = await db.projects.get(projectId);
+    if (!latest) return;
+    const current = normalizeStory(latest.story);
+    await updateProject(projectId, {
+      story: { ...current, beats: current.beats.filter((beat) => beat.id !== beatId) },
+    });
+  });
+}
+
+export async function addShots(
+  projectId: Id,
+  count: number,
+  options?: { atOrder?: number; beatId?: Id },
+): Promise<Shot[]> {
+  if (count <= 0) return [];
+  const project = await db.projects.get(projectId);
+  if (!project) return [];
+  const beats = normalizeStory(project.story).beats;
   const shots = (await db.shots.where("projectId").equals(projectId).toArray()).sort(
     (a, b) => a.order - b.order,
   );
-  const insertAt = atOrder ?? shots.length + 1;
+  const insertAt = options?.atOrder ?? insertOrderForBeat(beats, shots, options?.beatId);
   for (const shot of shots) {
     if (shot.order >= insertAt) {
-      await db.shots.put({ ...shot, order: shot.order + 1 });
+      await db.shots.put({ ...shot, order: shot.order + count });
     }
   }
-  const shotNumber = project?.shotSettings.autoIncrementShotNumber
-    ? await nextShotNumber(projectId)
-    : String(insertAt);
-  const shot = emptyShot(
-    projectId,
-    insertAt,
-    shotNumber,
-    project?.shotSettings.defaultDurationSec ?? 0,
-  );
-  await db.shots.add(shot);
+  const created: Shot[] = [];
+  let nextNumber = project.shotSettings.autoIncrementShotNumber
+    ? Number.parseInt(await nextShotNumber(projectId), 10) || shots.length + 1
+    : insertAt;
+  for (let index = 0; index < count; index += 1) {
+    const shotNumber = project.shotSettings.autoIncrementShotNumber
+      ? String(nextNumber + index)
+      : String(insertAt + index);
+    const shot = emptyShot(
+      projectId,
+      insertAt + index,
+      shotNumber,
+      project.shotSettings.defaultDurationSec ?? 0,
+      options?.beatId,
+    );
+    await db.shots.add(shot);
+    created.push(shot);
+  }
   await touchProject(projectId);
+  return created;
+}
+
+export async function addShot(
+  projectId: Id,
+  options?: number | { atOrder?: number; beatId?: Id },
+): Promise<Shot> {
+  const normalized =
+    typeof options === "number" ? { atOrder: options } : (options ?? {});
+  const [shot] = await addShots(projectId, 1, normalized);
+  if (!shot) throw new Error("项目不存在");
   return shot;
 }
 

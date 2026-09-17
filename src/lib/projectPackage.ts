@@ -4,6 +4,8 @@ import { db } from "@/db/database";
 import { collectMediaIds } from "@/db/repo";
 import {
   DEFAULT_VISIBLE_COLUMNS,
+  normalizeSetting,
+  normalizeStory,
   PACKAGE_FORMAT,
   type Character,
   type CharacterImageSlot,
@@ -77,6 +79,8 @@ const PROJECT_KEYS = [
   "updatedAt",
   "columnSettings",
   "shotSettings",
+  "story",
+  "setting",
   "extra",
 ];
 
@@ -100,6 +104,8 @@ function parseProject(raw: Record<string, unknown>, fallbackName: string): Proje
       defaultDurationSec: Number(shotSettings?.defaultDurationSec ?? 0) || 0,
       autoIncrementShotNumber: shotSettings?.autoIncrementShotNumber !== false,
     },
+    story: normalizeStory(raw.story),
+    setting: normalizeSetting(raw.setting),
     extra: pickExtra(raw, PROJECT_KEYS),
   };
 }
@@ -205,6 +211,7 @@ const SHOT_KEYS = [
   "focalLength",
   "characterIds",
   "sceneId",
+  "beatId",
   "extra",
 ];
 
@@ -230,6 +237,7 @@ function parseShot(raw: Record<string, unknown>, projectId: Id, index: number): 
       ? raw.characterIds.map((id) => String(id))
       : [],
     sceneId: raw.sceneId ? String(raw.sceneId) : undefined,
+    beatId: raw.beatId ? String(raw.beatId) : undefined,
     extra: pickExtra(raw, SHOT_KEYS),
   };
 }

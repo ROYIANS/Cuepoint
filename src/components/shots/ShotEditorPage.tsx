@@ -3,10 +3,13 @@ import {
   CheckSquare,
   ChevronDown,
   Columns3,
+  CopyPlus,
   GripVertical,
   Hash,
   Plus,
   Settings2,
+  SquareStack,
+  Trash2,
   Type,
   Users,
 } from "lucide-react";
@@ -14,15 +17,19 @@ import { useMemo, useState } from "react";
 import { db } from "@/db/database";
 import {
   addShot,
+  addShots,
+  addStoryBeat,
   deleteShots,
+  deleteStoryBeat,
   patchShot,
+  patchStoryBeat,
   setShotSlot,
   setVisibleColumns,
   updateProject,
 } from "@/db/repo";
-import { SHOT_COLUMNS, normalizeVisibleColumns } from "@/domain/columns";
+import { SHOT_COLUMNS, normalizeVisibleColumns, type ColumnDef } from "@/domain/columns";
 import { emptySlot } from "@/domain/slot";
-import type { Shot, ShotColumnId } from "@/domain/types";
+import { normalizeStory, type Shot, type ShotColumnId, type StoryBeat } from "@/domain/types";
 import { formatDuration } from "@/lib/format";
 import { EditableGenerationSlot } from "@/components/slots/GenerationSlotCard";
 import {
@@ -101,6 +108,17 @@ export function ShotEditorPage({ projectId }: { projectId: string }) {
   const [selecting, setSelecting] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [pendingBeatId, setPendingBeatId] = useState<string>();
+
+  const beats = normalizeStory(project?.story).beats;
+  const grouped = beats.map((beat) => ({
+    beat,
+    shots: shots.filter((shot) => shot.beatId === beat.id),
+  }));
+  const ungrouped = shots.filter(
+    (shot) => !shot.beatId || !beats.some((beat) => beat.id === shot.beatId),
+  );
+  const empty = shots.length === 0 && beats.length === 0;
 
   const totalDuration = useMemo(
     () => shots.reduce((sum, shot) => sum + (Number(shot.durationSec) || 0), 0),
@@ -133,8 +151,24 @@ export function ShotEditorPage({ projectId }: { projectId: string }) {
                 <ChevronDown />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuItem onClick={() => void addShot(projectId)}>添加镜头</DropdownMenuItem>
+            <DropdownMenuContent align="start" className="w-48">
+              <DropdownMenuItem onClick={() => void addShot(projectId)}>
+                <Plus />
+                创建分镜
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => void addShots(projectId, 5)}>
+                <CopyPlus />
+                创建5个分镜
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => void addShots(projectId, 10)}>
+                <CopyPlus />
+                创建10个分镜
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => void addStoryBeat(projectId)}>
+                <SquareStack />
+                创建场
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -265,153 +299,43 @@ export function ShotEditorPage({ projectId }: { projectId: string }) {
               )}
             </div>
 
-            {shots.length === 0 ? (
+            {empty ? (
               <div className="text-muted-foreground flex h-52 flex-col items-center justify-center text-sm">
                 还没有镜头，点击「新建」添加第一条
               </div>
             ) : null}
 
-            {shots.map((shot, index) => (
-              <div key={shot.id} className="relative">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon-sm"
-                  className="absolute z-10 size-6 rounded-full"
-                  style={{ left: 14, top: -12 }}
-                  onClick={() => void addShot(projectId, shot.order)}
-                  aria-label="在上方插入镜头"
-                >
-                  <Plus />
-                </Button>
-                <div
-                  className={`grid items-stretch border-b ${index % 2 === 1 ? "bg-muted/40" : "bg-background"}`}
-                  style={{
-                    gridTemplateColumns: `52px 64px 248px 248px ${visibleDefs
-                      .map((column) => `${column.width}px`)
-                      .join(" ")}`,
-                  }}
-                >
-                  <div className="flex flex-col items-center justify-center gap-2 py-4">
-                    {selecting ? (
-                      <Checkbox
-                        checked={selected.has(shot.id)}
-                        onCheckedChange={(checked) => {
-                          const next = new Set(selected);
-                          if (checked) next.add(shot.id);
-                          else next.delete(shot.id);
-                          setSelected(next);
-                        }}
-                      />
-                    ) : (
-                      <GripVertical className="text-muted-foreground size-3.5" />
-                    )}
-                    <span className="text-muted-foreground text-xs">{shot.order}</span>
-                  </div>
-                  <div className="flex items-center justify-center">
-                    <Input
-                      value={shot.shotNumber}
-                      onChange={(event) =>
-                        void patchShot(shot.id, { shotNumber: event.target.value })
-                      }
-                      className="h-8 w-10 border-0 bg-transparent text-center shadow-none focus-visible:ring-0"
-                    />
-                  </div>
-                  <div className="flex items-center py-3">
-                    <EditableGenerationSlot
-                      projectId={projectId}
-                      slot={shot.frame ?? emptySlot()}
-                      variant="frame"
-                      title={`镜头 ${shot.shotNumber} · 画面`}
-                      onSave={(slot) => void setShotSlot(shot.id, "frame", slot)}
-                    />
-                  </div>
-                  <div className="flex items-center py-3">
-                    <EditableGenerationSlot
-                      projectId={projectId}
-                      slot={shot.reference ?? emptySlot()}
-                      variant="reference"
-                      title={`镜头 ${shot.shotNumber} · 参考`}
-                      onSave={(slot) => void setShotSlot(shot.id, "reference", slot)}
-                    />
-                  </div>
-                  {visibleDefs.map((column) => (
-                    <div key={column.id} className="border-l">
-                      {column.id === "durationSec" ? (
-                        <PlainCell
-                          value={String(shot.durationSec || "")}
-                          onCommit={(value) =>
-                            void patchShot(shot.id, {
-                              durationSec: Math.max(0, Number(value) || 0),
-                            })
-                          }
-                        />
-                      ) : column.id === "characters" ? (
-                        <div className="flex h-[124px] flex-col gap-1 overflow-auto p-2">
-                          {characters.map((character) => (
-                            <label key={character.id} className="flex items-center gap-2 text-sm">
-                              <Checkbox
-                                checked={shot.characterIds.includes(character.id)}
-                                onCheckedChange={(checked) => {
-                                  const ids = checked
-                                    ? [...shot.characterIds, character.id]
-                                    : shot.characterIds.filter((id) => id !== character.id);
-                                  void patchShot(shot.id, { characterIds: ids });
-                                }}
-                              />
-                              {character.name}
-                            </label>
-                          ))}
-                        </div>
-                      ) : column.id === "scene" ? (
-                        <div className="p-2">
-                          <Select
-                            value={shot.sceneId ?? "none"}
-                            onValueChange={(value) =>
-                              void patchShot(shot.id, {
-                                sceneId: value === "none" ? undefined : value,
-                              })
-                            }
-                          >
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="未选择" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="none">未选择</SelectItem>
-                              {scenes.map((scene) => (
-                                <SelectItem key={scene.id} value={scene.id}>
-                                  {scene.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      ) : (
-                        <PlainCell
-                          value={String(shot[column.id as keyof Shot] ?? "")}
-                          onCommit={(value) =>
-                            void patchShot(shot.id, { [column.id]: value } as Partial<Shot>)
-                          }
-                        />
-                      )}
-                    </div>
-                  ))}
-                </div>
-                {index === shots.length - 1 ? (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon-sm"
-                    className="absolute z-10 size-6 rounded-full"
-                    style={{ left: 14, bottom: -12 }}
-                    onClick={() => void addShot(projectId)}
-                    aria-label="在末尾添加镜头"
-                  >
-                    <Plus />
-                  </Button>
-                ) : null}
-              </div>
+            {grouped.map(({ beat, shots: beatShots }) => (
+              <BeatBlock
+                key={beat.id}
+                beat={beat}
+                shots={beatShots}
+                projectId={projectId}
+                selecting={selecting}
+                selected={selected}
+                setSelected={setSelected}
+                visibleDefs={visibleDefs}
+                characters={characters}
+                scenes={scenes}
+                onDeleteBeat={() => setPendingBeatId(beat.id)}
+              />
             ))}
+
+            {ungrouped.length > 0 ? (
+              <BeatBlock
+                beat={{ id: "", title: "未分场", content: "" }}
+                shots={ungrouped}
+                projectId={projectId}
+                selecting={selecting}
+                selected={selected}
+                setSelected={setSelected}
+                visibleDefs={visibleDefs}
+                characters={characters}
+                scenes={scenes}
+                loose
+                hideHeader={beats.length === 0}
+              />
+            ) : null}
           </div>
         </div>
 
@@ -441,6 +365,289 @@ export function ShotEditorPage({ projectId }: { projectId: string }) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <AlertDialog
+        open={Boolean(pendingBeatId)}
+        onOpenChange={(open) => !open && setPendingBeatId(undefined)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>删除这场</AlertDialogTitle>
+            <AlertDialogDescription>
+              场会去掉，镜头还在，变成未分场。
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>取消</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive hover:bg-destructive/90"
+              onClick={() => {
+                if (!pendingBeatId) return;
+                void deleteStoryBeat(projectId, pendingBeatId);
+                setPendingBeatId(undefined);
+              }}
+            >
+              删除场
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}
+
+function gridColumns(visibleDefs: ColumnDef[]) {
+  return `52px 64px 248px 248px ${visibleDefs.map((column) => `${column.width}px`).join(" ")}`;
+}
+
+function BeatBlock({
+  beat,
+  shots,
+  projectId,
+  selecting,
+  selected,
+  setSelected,
+  visibleDefs,
+  characters,
+  scenes,
+  loose,
+  hideHeader,
+  onDeleteBeat,
+}: {
+  beat: StoryBeat;
+  shots: Shot[];
+  projectId: string;
+  selecting: boolean;
+  selected: Set<string>;
+  setSelected: (next: Set<string>) => void;
+  visibleDefs: ColumnDef[];
+  characters: { id: string; name: string }[];
+  scenes: { id: string; name: string }[];
+  loose?: boolean;
+  hideHeader?: boolean;
+  onDeleteBeat?: () => void;
+}) {
+  const duration = shots.reduce((sum, shot) => sum + (Number(shot.durationSec) || 0), 0);
+
+  return (
+    <section>
+      {hideHeader ? null : (
+        <div className="bg-muted/70 flex min-w-max items-center gap-2 border-b px-3 py-2">
+          <SquareStack className="text-muted-foreground size-3.5 shrink-0" />
+          {loose ? (
+            <p className="text-sm font-medium">未分场</p>
+          ) : (
+            <Input
+              value={beat.title}
+              onChange={(event) =>
+                void patchStoryBeat(projectId, beat.id, { title: event.target.value })
+              }
+              className="h-8 max-w-xs"
+            />
+          )}
+          <p className="text-muted-foreground text-xs">
+            {shots.length} 镜 · {formatDuration(duration)}
+          </p>
+          {loose ? null : (
+            <Button
+              size="icon-sm"
+              variant="ghost"
+              className="ml-auto"
+              aria-label="删除场"
+              onClick={onDeleteBeat}
+            >
+              <Trash2 />
+            </Button>
+          )}
+        </div>
+      )}
+      {shots.length === 0 ? (
+        <div className="text-muted-foreground flex items-center gap-3 border-b px-4 py-6 text-xs">
+          这场还没有镜头
+          <Button size="sm" variant="outline" onClick={() => void addShot(projectId, { beatId: beat.id })}>
+            <Plus />
+            添加镜头
+          </Button>
+        </div>
+      ) : (
+        shots.map((shot, index) => (
+          <ShotRow
+            key={shot.id}
+            shot={shot}
+            striped={index % 2 === 1}
+            projectId={projectId}
+            selecting={selecting}
+            selected={selected}
+            setSelected={setSelected}
+            visibleDefs={visibleDefs}
+            characters={characters}
+            scenes={scenes}
+            beatId={loose ? undefined : beat.id}
+            showBelow={index === shots.length - 1}
+          />
+        ))
+      )}
+    </section>
+  );
+}
+
+function ShotRow({
+  shot,
+  striped,
+  projectId,
+  selecting,
+  selected,
+  setSelected,
+  visibleDefs,
+  characters,
+  scenes,
+  beatId,
+  showBelow,
+}: {
+  shot: Shot;
+  striped: boolean;
+  projectId: string;
+  selecting: boolean;
+  selected: Set<string>;
+  setSelected: (next: Set<string>) => void;
+  visibleDefs: ColumnDef[];
+  characters: { id: string; name: string }[];
+  scenes: { id: string; name: string }[];
+  beatId?: string;
+  showBelow?: boolean;
+}) {
+  return (
+    <div className="relative">
+      <Button
+        type="button"
+        variant="outline"
+        size="icon-sm"
+        className="absolute z-10 size-6 rounded-full"
+        style={{ left: 14, top: -12 }}
+        onClick={() => void addShot(projectId, { atOrder: shot.order, beatId: beatId ?? shot.beatId })}
+        aria-label="在上方插入镜头"
+      >
+        <Plus />
+      </Button>
+      <div
+        className={`grid items-stretch border-b ${striped ? "bg-muted/40" : "bg-background"}`}
+        style={{ gridTemplateColumns: gridColumns(visibleDefs) }}
+      >
+        <div className="flex flex-col items-center justify-center gap-2 py-4">
+          {selecting ? (
+            <Checkbox
+              checked={selected.has(shot.id)}
+              onCheckedChange={(checked) => {
+                const next = new Set(selected);
+                if (checked) next.add(shot.id);
+                else next.delete(shot.id);
+                setSelected(next);
+              }}
+            />
+          ) : (
+            <GripVertical className="text-muted-foreground size-3.5" />
+          )}
+          <span className="text-muted-foreground text-xs">{shot.order}</span>
+        </div>
+        <div className="flex items-center justify-center">
+          <Input
+            value={shot.shotNumber}
+            onChange={(event) => void patchShot(shot.id, { shotNumber: event.target.value })}
+            className="h-8 w-10 border-0 bg-transparent text-center shadow-none focus-visible:ring-0"
+          />
+        </div>
+        <div className="flex items-center py-3">
+          <EditableGenerationSlot
+            projectId={projectId}
+            slot={shot.frame ?? emptySlot()}
+            variant="frame"
+            title={`镜头 ${shot.shotNumber} · 画面`}
+            onSave={(slot) => void setShotSlot(shot.id, "frame", slot)}
+          />
+        </div>
+        <div className="flex items-center py-3">
+          <EditableGenerationSlot
+            projectId={projectId}
+            slot={shot.reference ?? emptySlot()}
+            variant="reference"
+            title={`镜头 ${shot.shotNumber} · 参考`}
+            onSave={(slot) => void setShotSlot(shot.id, "reference", slot)}
+          />
+        </div>
+        {visibleDefs.map((column) => (
+          <div key={column.id} className="border-l">
+            {column.id === "durationSec" ? (
+              <PlainCell
+                value={String(shot.durationSec || "")}
+                onCommit={(value) =>
+                  void patchShot(shot.id, {
+                    durationSec: Math.max(0, Number(value) || 0),
+                  })
+                }
+              />
+            ) : column.id === "characters" ? (
+              <div className="flex h-[124px] flex-col gap-1 overflow-auto p-2">
+                {characters.map((character) => (
+                  <label key={character.id} className="flex items-center gap-2 text-sm">
+                    <Checkbox
+                      checked={shot.characterIds.includes(character.id)}
+                      onCheckedChange={(checked) => {
+                        const ids = checked
+                          ? [...shot.characterIds, character.id]
+                          : shot.characterIds.filter((id) => id !== character.id);
+                        void patchShot(shot.id, { characterIds: ids });
+                      }}
+                    />
+                    {character.name}
+                  </label>
+                ))}
+              </div>
+            ) : column.id === "scene" ? (
+              <div className="p-2">
+                <Select
+                  value={shot.sceneId ?? "none"}
+                  onValueChange={(value) =>
+                    void patchShot(shot.id, {
+                      sceneId: value === "none" ? undefined : value,
+                    })
+                  }
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="未选择" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">未选择</SelectItem>
+                    {scenes.map((scene) => (
+                      <SelectItem key={scene.id} value={scene.id}>
+                        {scene.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            ) : (
+              <PlainCell
+                value={String(shot[column.id as keyof Shot] ?? "")}
+                onCommit={(value) =>
+                  void patchShot(shot.id, { [column.id]: value } as Partial<Shot>)
+                }
+              />
+            )}
+          </div>
+        ))}
+      </div>
+      {showBelow ? (
+        <Button
+          type="button"
+          variant="outline"
+          size="icon-sm"
+          className="absolute z-10 size-6 rounded-full"
+          style={{ left: 14, bottom: -12 }}
+          onClick={() => void addShot(projectId, { beatId })}
+          aria-label="在末尾添加镜头"
+        >
+          <Plus />
+        </Button>
+      ) : null}
     </div>
   );
 }

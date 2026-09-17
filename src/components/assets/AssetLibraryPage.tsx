@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { WorldSettingPanel } from "@/components/assets/WorldSettingPanel";
 
 function coverOfCharacter(character: Character): Id | undefined {
   return firstResultId(CHARACTER_SLOTS.map((slot) => character.slots?.[slot.id]));
@@ -28,8 +29,10 @@ function coverOfScene(scene: Scene): Id | undefined {
   return firstResultId(SCENE_SLOTS.map((slot) => scene.slots?.[slot.id]));
 }
 
+type WorldTab = "setting" | "characters" | "scenes" | "props" | "styles";
+
 export function AssetLibraryPage({ projectId }: { projectId: string }) {
-  const [tab, setTab] = useState<"characters" | "scenes">("characters");
+  const [tab, setTab] = useState<WorldTab>("setting");
   const characters =
     useLiveQuery(
       () => db.characters.where("projectId").equals(projectId).reverse().sortBy("updatedAt"),
@@ -49,36 +52,54 @@ export function AssetLibraryPage({ projectId }: { projectId: string }) {
       <div className="mx-auto max-w-6xl px-8 py-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-semibold">资产库</h1>
+            <h1 className="text-lg font-semibold">世界</h1>
             <p className="text-muted-foreground mt-1 text-xs">
-              完整角色与场景参考，槽位主体是提示词和参考素材
+              设定是这部戏一直为真的东西。角色、场景、道具、风格是能被点名的名册。
             </p>
           </div>
-          <Button
-            size="sm"
-            variant="brand"
-            onClick={() => {
-              if (tab === "characters") void addCharacter(projectId);
-              else void addScene(projectId);
-            }}
-          >
-            <Plus />
-            {tab === "characters" ? "新建角色" : "新建场景"}
-          </Button>
+          {tab === "characters" || tab === "scenes" ? (
+            <Button
+              size="sm"
+              variant="brand"
+              onClick={() => {
+                if (tab === "characters") void addCharacter(projectId);
+                else void addScene(projectId);
+              }}
+            >
+              <Plus />
+              {tab === "characters" ? "新建角色" : "新建场景"}
+            </Button>
+          ) : null}
         </div>
 
         <Tabs
           value={tab}
-          onValueChange={(value) => setTab(value as "characters" | "scenes")}
+          onValueChange={(value) => setTab(value as WorldTab)}
           className="mt-5"
         >
           <TabsList>
+            <TabsTrigger value="setting">设定</TabsTrigger>
             <TabsTrigger value="characters">角色 {characters.length}</TabsTrigger>
             <TabsTrigger value="scenes">场景 {scenes.length}</TabsTrigger>
+            <TabsTrigger value="props">道具</TabsTrigger>
+            <TabsTrigger value="styles">风格</TabsTrigger>
           </TabsList>
         </Tabs>
 
-        <ul className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+        {tab === "setting" ? (
+          <WorldSettingPanel projectId={projectId} />
+        ) : tab === "props" ? (
+          <EmptyWorldTab
+            title="还没有道具"
+            detail="衣服、物件、关键道具以后会做成可被项目引用的资产。现在先占位。"
+          />
+        ) : tab === "styles" ? (
+          <EmptyWorldTab
+            title="还没有风格"
+            detail="画风和光色以后可以从工作室风格库引用进来，避免每部片子重新发明。现在先占位。"
+          />
+        ) : (
+          <ul className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
           {tab === "characters"
             ? characters.map((character) => (
                 <li key={character.id} className="group relative">
@@ -155,7 +176,8 @@ export function AssetLibraryPage({ projectId }: { projectId: string }) {
                   </Button>
                 </li>
               ))}
-        </ul>
+          </ul>
+        )}
       </div>
 
       <AlertDialog
@@ -186,6 +208,15 @@ export function AssetLibraryPage({ projectId }: { projectId: string }) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+    </div>
+  );
+}
+
+function EmptyWorldTab({ title, detail }: { title: string; detail: string }) {
+  return (
+    <div className="bg-card mt-6 max-w-xl rounded-2xl border border-dashed px-5 py-8">
+      <p className="text-sm font-medium">{title}</p>
+      <p className="text-muted-foreground mt-2 text-xs leading-5">{detail}</p>
     </div>
   );
 }

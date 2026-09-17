@@ -48,6 +48,24 @@ export interface ColumnSettings {
   visible: ShotColumnId[];
 }
 
+export interface StoryBeat {
+  id: Id;
+  title: string;
+  content: string;
+}
+
+export interface ProjectStory {
+  logline: string;
+  script: string;
+  beats: StoryBeat[];
+}
+
+export interface WorldSetting {
+  worldview: string;
+  background: string;
+  rules: string;
+}
+
 export interface Project {
   id: Id;
   name: string;
@@ -55,6 +73,8 @@ export interface Project {
   updatedAt: string;
   columnSettings: ColumnSettings;
   shotSettings: ShotSettings;
+  story: ProjectStory;
+  setting: WorldSetting;
   extra?: Record<string, unknown>;
 }
 
@@ -104,6 +124,7 @@ export interface Shot {
   focalLength: string;
   characterIds: Id[];
   sceneId?: Id;
+  beatId?: Id;
   extra?: Record<string, unknown>;
 }
 
@@ -133,6 +154,42 @@ export const DEFAULT_SHOT_SETTINGS: ShotSettings = {
   defaultDurationSec: 0,
   autoIncrementShotNumber: true,
 };
+
+export function emptyStory(): ProjectStory {
+  return { logline: "", script: "", beats: [] };
+}
+
+export function normalizeStory(raw: unknown): ProjectStory {
+  const story = emptyStory();
+  if (!raw || typeof raw !== "object") return story;
+  const record = raw as Record<string, unknown>;
+  story.logline = String(record.logline ?? "");
+  story.script = String(record.script ?? "");
+  story.beats = Array.isArray(record.beats)
+    ? record.beats
+        .filter((beat): beat is Record<string, unknown> => Boolean(beat) && typeof beat === "object")
+        .map((beat, index) => ({
+          id: String(beat.id ?? `beat_${index}`),
+          title: String(beat.title ?? ""),
+          content: String(beat.content ?? ""),
+        }))
+    : [];
+  return story;
+}
+
+export function emptySetting(): WorldSetting {
+  return { worldview: "", background: "", rules: "" };
+}
+
+export function normalizeSetting(raw: unknown): WorldSetting {
+  const setting = emptySetting();
+  if (!raw || typeof raw !== "object") return setting;
+  const record = raw as Record<string, unknown>;
+  setting.worldview = String(record.worldview ?? "");
+  setting.background = String(record.background ?? "");
+  setting.rules = String(record.rules ?? "");
+  return setting;
+}
 
 export const DEFAULT_VISIBLE_COLUMNS: ShotColumnId[] = [
   "category",

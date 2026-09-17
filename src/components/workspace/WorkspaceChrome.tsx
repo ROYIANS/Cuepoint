@@ -1,17 +1,16 @@
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Bell, ChevronLeft, Download, Ellipsis, Images, Users } from "lucide-react";
+import { ChevronLeft, Download, Ellipsis } from "lucide-react";
 import { db } from "@/db/database";
 import { downloadBlob, exportProjectZip } from "@/lib/projectPackage";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 const STEPS = [
-  { id: "shots", label: "分镜制作", to: "/p/$projectId" as const },
-  { id: "storyboard", label: "故事板", to: "/p/$projectId/storyboard" as const },
-  { id: "plan", label: "拍摄计划", to: "/p/$projectId/plan" as const },
-  { id: "report", label: "拍摄报告", to: "/p/$projectId/report" as const },
+  { id: "story", label: "故事", to: "/p/$projectId" as const },
+  { id: "world", label: "世界", to: "/p/$projectId/world" as const },
+  { id: "shots", label: "分镜", to: "/p/$projectId/shots" as const },
+  { id: "produce", label: "制作", to: "/p/$projectId/produce" as const },
 ];
 
 export function WorkspaceChrome({ projectId }: { projectId: string }) {
@@ -27,7 +26,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-3">
         <p>找不到这个项目</p>
-        <Button onClick={() => void navigate({ to: "/" })}>返回列表</Button>
+        <Button onClick={() => void navigate({ to: "/" })}>返回工作室</Button>
       </div>
     );
   }
@@ -47,14 +46,18 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
           {STEPS.map((step) => {
             const href = step.to.replace("$projectId", projectId);
             const active =
-              step.id === "shots"
+              step.id === "story"
                 ? pathname === `/p/${projectId}` || pathname === `/p/${projectId}/`
-                : pathname.startsWith(href);
+                : step.id === "world"
+                  ? pathname.startsWith(`/p/${projectId}/world`) ||
+                    pathname.startsWith(`/p/${projectId}/assets`)
+                  : pathname.startsWith(href);
             return (
               <Link
                 key={step.id}
                 to={step.to}
                 params={{ projectId }}
+                activeOptions={{ exact: step.id === "story" }}
                 className={cn("hover:text-foreground", active && "text-foreground font-medium")}
               >
                 {step.label}
@@ -63,29 +66,9 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
           })}
         </nav>
         <div className="flex items-center justify-end gap-1">
-          <Button variant="ghost" size="sm" asChild>
-            <Link to="/p/$projectId/assets" params={{ projectId }}>
-              <Images />
-              资产
-            </Link>
-          </Button>
-          <Button variant="ghost" size="icon-sm" disabled>
-            <Bell />
-          </Button>
           <Button variant="ghost" size="icon-sm" disabled>
             <Ellipsis />
           </Button>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span>
-                <Button variant="outline" size="sm" disabled>
-                  <Users />
-                  协作
-                </Button>
-              </span>
-            </TooltipTrigger>
-            <TooltipContent>本地版本暂不支持协作</TooltipContent>
-          </Tooltip>
           <Button
             variant="outline"
             size="sm"
@@ -103,15 +86,6 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
       <div className="min-h-0 flex-1">
         <Outlet />
       </div>
-    </div>
-  );
-}
-
-export function PlaceholderPage({ title, detail }: { title: string; detail: string }) {
-  return (
-    <div className="flex h-full flex-col items-center justify-center text-center">
-      <p className="text-lg font-medium">{title}</p>
-      <p className="text-muted-foreground mt-2 max-w-md text-sm">{detail}</p>
     </div>
   );
 }

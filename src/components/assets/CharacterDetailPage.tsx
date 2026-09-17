@@ -29,9 +29,9 @@ export function CharacterDetailPage({
         <p>找不到这个角色</p>
         <Button
           className="mt-3"
-          onClick={() => void navigate({ to: "/p/$projectId/assets", params: { projectId } })}
+          onClick={() => void navigate({ to: "/p/$projectId/world", params: { projectId } })}
         >
-          返回资产库
+          返回世界
         </Button>
       </div>
     );
@@ -41,11 +41,11 @@ export function CharacterDetailPage({
     <div className="h-full overflow-auto">
       <div className="mx-auto max-w-5xl px-8 py-6">
         <Link
-          to="/p/$projectId/assets"
+          to="/p/$projectId/world"
           params={{ projectId }}
           className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
         >
-          <ChevronLeft className="size-4" /> 资产库
+          <ChevronLeft className="size-4" /> 世界
         </Link>
         <h1 className="mt-3 text-lg font-semibold">角色</h1>
         <div className="mt-6 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">

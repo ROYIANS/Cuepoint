@@ -1,11 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { AssetLibraryPage } from "@/components/assets/AssetLibraryPage";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/p/$projectId/assets/")({
-  component: AssetsIndexRoute,
+  beforeLoad: ({ params }) => {
+    throw redirect({ to: "/p/$projectId/world", params });
+  },
 });
-
-function AssetsIndexRoute() {
-  const { projectId } = Route.useParams();
-  return <AssetLibraryPage projectId={projectId} />;
-}

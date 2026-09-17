@@ -1,11 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { PlaceholderPage } from "@/components/workspace/WorkspaceChrome";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/p/$projectId/report")({
-  component: () => (
-    <PlaceholderPage
-      title="拍摄报告"
-      detail="拍摄报告尚未设计，先作为流程示意占位。"
-    />
-  ),
+  beforeLoad: ({ params }) => {
+    throw redirect({ to: "/p/$projectId/produce", params });
+  },
 });
