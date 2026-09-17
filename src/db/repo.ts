@@ -593,14 +593,15 @@ export async function deleteStoryBeat(episodeId: Id, beatId: Id): Promise<void> 
 }
 
 export async function addShots(
+  projectId: Id,
   episodeId: Id,
   count: number,
   options?: { atOrder?: number; beatId?: Id },
 ): Promise<Shot[]> {
   if (count <= 0) return [];
   const episode = await db.episodes.get(episodeId);
-  if (!episode) return [];
-  const project = await db.projects.get(episode.projectId);
+  if (!episode || episode.projectId !== projectId) return [];
+  const project = await db.projects.get(projectId);
   if (!project) return [];
   const beats = normalizeEpisodeStory(episode.story).beats;
   const shots = (await db.shots.where("episodeId").equals(episodeId).toArray()).sort(
@@ -621,7 +622,7 @@ export async function addShots(
       ? String(nextNumber + index)
       : String(insertAt + index);
     const shot = emptyShot(
-      episode.projectId,
+      projectId,
       episodeId,
       insertAt + index,
       shotNumber,
@@ -631,18 +632,17 @@ export async function addShots(
     await db.shots.add(shot);
     created.push(shot);
   }
-  await touchProject(episode.projectId);
+  await touchProject(projectId);
   return created;
 }
 
 export async function addShot(
+  projectId: Id,
   episodeId: Id,
-  options?: number | { atOrder?: number; beatId?: Id },
+  options?: { atOrder?: number; beatId?: Id },
 ): Promise<Shot> {
-  const normalized =
-    typeof options === "number" ? { atOrder: options } : (options ?? {});
-  const [shot] = await addShots(episodeId, 1, normalized);
-  if (!shot) throw new Error("集不存在");
+  const [shot] = await addShots(projectId, episodeId, 1, options);
+  if (!shot) throw new Error("项目或集不存在");
   return shot;
 }
 
@@ -671,11 +671,12 @@ export async function setShotSlot(
 
 export async function deleteShots(ids: Id[]): Promise<void> {
   if (ids.length === 0) return;
-  const first = await db.shots.get(ids[0]);
+  const affected = new Map<Id, Id>();
   const mediaIds: Id[] = [];
   for (const id of ids) {
     const shot = await db.shots.get(id);
     if (!shot) continue;
+    affected.set(shot.episodeId, shot.projectId);
     mediaIds.push(
       ...slotMediaIds(shot.firstFrame),
       ...slotMediaIds(shot.lastFrame),
@@ -683,9 +684,9 @@ export async function deleteShots(ids: Id[]): Promise<void> {
     );
     await db.shots.delete(id);
   }
-  if (first) {
-    await reindexShots(first.episodeId);
-    await touchProject(first.projectId);
+  for (const [episodeId, projectId] of affected) {
+    await reindexShots(episodeId);
+    await touchProject(projectId);
   }
   for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
 }

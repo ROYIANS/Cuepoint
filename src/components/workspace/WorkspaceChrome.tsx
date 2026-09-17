@@ -35,9 +35,10 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
   const episode = useLiveQuery(
     async () => {
       if (!episodeId) return undefined;
-      return (await db.episodes.get(episodeId)) ?? null;
+      const row = await db.episodes.get(episodeId);
+      return row?.projectId === projectId ? row : null;
     },
-    [episodeId],
+    [episodeId, projectId],
   );
 
   if (project === undefined || (episodeId && episode === undefined)) {

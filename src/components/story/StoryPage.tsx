@@ -46,6 +46,9 @@ export function StoryPage({ projectId, episodeId }: { projectId: string; episode
   const [saved, setSaved] = useState(true);
   const [dragging, setDragging] = useState(false);
   const loadedFor = useRef<string | undefined>(undefined);
+  const draftRef = useRef({ title, story, saved });
+  const revision = useRef(0);
+  draftRef.current = { title, story, saved };
 
   useEffect(() => {
     if (!episode || loadedFor.current === episode.id) return;
@@ -57,19 +60,37 @@ export function StoryPage({ projectId, episodeId }: { projectId: string; episode
 
   useEffect(() => {
     if (!episode || loadedFor.current !== episode.id || saved) return;
+    const savingRevision = revision.current;
     const handle = window.setTimeout(() => {
-      void updateEpisode(episodeId, { title, story }).then(() => setSaved(true));
+      void updateEpisode(episodeId, { title, story }).then(() => {
+        if (revision.current === savingRevision) setSaved(true);
+      });
     }, 400);
     return () => window.clearTimeout(handle);
   }, [episode, episodeId, saved, story, title]);
 
+  useEffect(
+    () => () => {
+      const draft = draftRef.current;
+      if (!draft.saved) {
+        void updateEpisode(episodeId, {
+          title: draft.title,
+          story: draft.story,
+        });
+      }
+    },
+    [episodeId],
+  );
+
   function patch(next: EpisodeStory) {
     setStory(next);
+    revision.current += 1;
     setSaved(false);
   }
 
   async function addBeat() {
     const beat = await addStoryBeat(episodeId);
+    revision.current += 1;
     setStory((current) => ({ ...current, beats: [...current.beats, beat] }));
   }
 
@@ -78,11 +99,13 @@ export function StoryPage({ projectId, episodeId }: { projectId: string; episode
       ...current,
       beats: current.beats.map((beat) => (beat.id === id ? { ...beat, ...change } : beat)),
     }));
+    revision.current += 1;
     setSaved(false);
   }
 
   async function removeBeat(id: string) {
     await deleteStoryBeat(episodeId, id);
+    revision.current += 1;
     setStory((current) => ({ ...current, beats: current.beats.filter((beat) => beat.id !== id) }));
   }
 
@@ -119,6 +142,7 @@ export function StoryPage({ projectId, episodeId }: { projectId: string; episode
             placeholder="不填就显示第几集"
             onChange={(event) => {
               setTitle(event.target.value);
+              revision.current += 1;
               setSaved(false);
             }}
           />

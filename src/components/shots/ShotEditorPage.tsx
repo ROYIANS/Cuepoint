@@ -171,15 +171,15 @@ export function ShotEditorPage({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-48">
-              <DropdownMenuItem onClick={() => void addShot(episodeId)}>
+              <DropdownMenuItem onClick={() => void addShot(projectId, episodeId)}>
                 <Plus />
                 创建分镜
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => void addShots(episodeId, 5)}>
+              <DropdownMenuItem onClick={() => void addShots(projectId, episodeId, 5)}>
                 <CopyPlus />
                 创建5个分镜
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => void addShots(episodeId, 10)}>
+              <DropdownMenuItem onClick={() => void addShots(projectId, episodeId, 10)}>
                 <CopyPlus />
                 创建10个分镜
               </DropdownMenuItem>
@@ -486,7 +486,11 @@ function BeatBlock({
       {shots.length === 0 ? (
         <div className="text-muted-foreground flex items-center gap-3 border-b px-4 py-6 text-xs">
           这场还没有镜头
-          <Button size="sm" variant="outline" onClick={() => void addShot(episodeId, { beatId: beat.id })}>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => void addShot(projectId, episodeId, { beatId: beat.id })}
+          >
             <Plus />
             添加镜头
           </Button>
@@ -549,7 +553,12 @@ function ShotRow({
         size="icon-sm"
         className="absolute z-10 size-6 rounded-full"
         style={{ left: 14, top: -12 }}
-        onClick={() => void addShot(episodeId, { atOrder: shot.order, beatId: beatId ?? shot.beatId })}
+        onClick={() =>
+          void addShot(projectId, episodeId, {
+            atOrder: shot.order,
+            beatId: beatId ?? shot.beatId,
+          })
+        }
         aria-label="在上方插入镜头"
       >
         <Plus />
@@ -677,7 +686,7 @@ function ShotRow({
           size="icon-sm"
           className="absolute z-10 size-6 rounded-full"
           style={{ left: 14, bottom: -12 }}
-          onClick={() => void addShot(episodeId, { beatId })}
+          onClick={() => void addShot(projectId, episodeId, { beatId })}
           aria-label="在末尾添加镜头"
         >
           <Plus />

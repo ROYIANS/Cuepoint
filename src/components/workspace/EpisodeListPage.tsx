@@ -43,7 +43,10 @@ export function EpisodeListPage({ projectId }: { projectId: string }) {
   const [logline, setLogline] = useState("");
   const [saved, setSaved] = useState(true);
   const loadedFor = useRef<string | undefined>(undefined);
+  const draftRef = useRef({ logline, saved });
+  const revision = useRef(0);
   const [deleteId, setDeleteId] = useState<string>();
+  draftRef.current = { logline, saved };
 
   useEffect(() => {
     if (!project || loadedFor.current === project.id) return;
@@ -54,11 +57,24 @@ export function EpisodeListPage({ projectId }: { projectId: string }) {
 
   useEffect(() => {
     if (!project || loadedFor.current !== project.id || saved) return;
+    const savingRevision = revision.current;
     const handle = window.setTimeout(() => {
-      void updateProject(projectId, { story: { logline } }).then(() => setSaved(true));
+      void updateProject(projectId, { story: { logline } }).then(() => {
+        if (revision.current === savingRevision) setSaved(true);
+      });
     }, 400);
     return () => window.clearTimeout(handle);
   }, [logline, project, projectId, saved]);
+
+  useEffect(
+    () => () => {
+      const draft = draftRef.current;
+      if (!draft.saved) {
+        void updateProject(projectId, { story: { logline: draft.logline } });
+      }
+    },
+    [projectId],
+  );
 
   if (project === undefined) {
     return <div className="text-muted-foreground p-8 text-sm">加载集列表…</div>;
@@ -89,6 +105,7 @@ export function EpisodeListPage({ projectId }: { projectId: string }) {
           placeholder="这部戏，用一句话说完（可选）"
           onChange={(event) => {
             setLogline(event.target.value);
+            revision.current += 1;
             setSaved(false);
           }}
         />

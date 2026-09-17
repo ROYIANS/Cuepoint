@@ -15,10 +15,14 @@ import {
   type Id,
   type MediaRecord,
   type Project,
+  type Prop,
+  type PropImageSlot,
   type Scene,
   type SceneImageSlot,
   type Shot,
   type ShotColumnId,
+  type StyleImageSlot,
+  type VisualStyle,
 } from "@/domain/types";
 import { parseGenerationSlot, parseShotPictureSlots, remapSlot } from "@/domain/slot";
 import { createId, nowIso } from "./ids";
@@ -53,10 +57,14 @@ function pickExtra(
   raw: Record<string, unknown>,
   known: string[],
 ): Record<string, unknown> | undefined {
-  const extra: Record<string, unknown> = {};
+  const nested = raw.extra;
+  const extra: Record<string, unknown> =
+    nested && typeof nested === "object" && !Array.isArray(nested)
+      ? { ...(nested as Record<string, unknown>) }
+      : {};
   const knownSet = new Set(known);
   for (const [key, value] of Object.entries(raw)) {
-    if (!knownSet.has(key)) extra[key] = value;
+    if (key !== "extra" && !knownSet.has(key)) extra[key] = value;
   }
   return Object.keys(extra).length > 0 ? extra : undefined;
 }
@@ -72,6 +80,21 @@ function extFor(mimeType: string, filename: string): string {
   if (mimeType.includes("quicktime")) return "mov";
   if (mimeType.startsWith("video/")) return "mp4";
   return "jpg";
+}
+
+function mimeForFilename(filename: string): string {
+  const extension = filename.split(".").pop()?.toLowerCase();
+  const known: Record<string, string> = {
+    png: "image/png",
+    jpg: "image/jpeg",
+    jpeg: "image/jpeg",
+    webp: "image/webp",
+    gif: "image/gif",
+    mp4: "video/mp4",
+    webm: "video/webm",
+    mov: "video/quicktime",
+  };
+  return (extension && known[extension]) || "application/octet-stream";
 }
 
 const PROJECT_KEYS = [
@@ -192,6 +215,58 @@ function parseScene(raw: Record<string, unknown>, projectId: Id): Scene {
   };
 }
 
+const PROP_KEYS = [
+  "id",
+  "projectId",
+  "name",
+  "kind",
+  "notes",
+  "slots",
+  "createdAt",
+  "updatedAt",
+  "extra",
+];
+
+function parseProp(raw: Record<string, unknown>, projectId: Id): Prop {
+  const at = nowIso();
+  return {
+    id: String(raw.id ?? createId("prp")),
+    projectId,
+    name: String(raw.name ?? "未命名道具"),
+    kind: String(raw.kind ?? ""),
+    notes: String(raw.notes ?? ""),
+    slots: parseNamedSlots<PropImageSlot>(raw.slots, undefined),
+    createdAt: String(raw.createdAt ?? at),
+    updatedAt: String(raw.updatedAt ?? at),
+    extra: pickExtra(raw, PROP_KEYS),
+  };
+}
+
+const STYLE_KEYS = [
+  "id",
+  "projectId",
+  "name",
+  "notes",
+  "slots",
+  "createdAt",
+  "updatedAt",
+  "extra",
+];
+
+function parseStyle(raw: Record<string, unknown>, projectId: Id): VisualStyle {
+  const at = nowIso();
+  return {
+    id: String(raw.id ?? createId("sty")),
+    projectId,
+    name: String(raw.name ?? "未命名风格"),
+    notes: String(raw.notes ?? ""),
+    slots: parseNamedSlots<StyleImageSlot>(raw.slots, undefined),
+    createdAt: String(raw.createdAt ?? at),
+    updatedAt: String(raw.updatedAt ?? at),
+    extra: pickExtra(raw, STYLE_KEYS),
+  };
+}
+
 const EPISODE_KEYS = [
   "id",
   "projectId",
@@ -308,9 +383,11 @@ function remapId(map: Map<string, string>, oldId: string | undefined, prefix: st
 export async function exportProjectZip(projectId: Id): Promise<Blob> {
   const project = await db.projects.get(projectId);
   if (!project) throw new PackageError("项目不存在");
-  const [characters, scenes, episodes, shots] = await Promise.all([
+  const [characters, scenes, props, styles, episodes, shots] = await Promise.all([
     db.characters.where("projectId").equals(projectId).toArray(),
     db.scenes.where("projectId").equals(projectId).toArray(),
+    db.props.where("projectId").equals(projectId).toArray(),
+    db.styles.where("projectId").equals(projectId).toArray(),
     db.episodes.where("projectId").equals(projectId).sortBy("order"),
     db.shots.where("projectId").equals(projectId).sortBy("order"),
   ]);
@@ -327,6 +404,8 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
   zip.file("project.json", JSON.stringify(project, null, 2));
   zip.file("characters.json", JSON.stringify(characters, null, 2));
   zip.file("scenes.json", JSON.stringify(scenes, null, 2));
+  zip.file("props.json", JSON.stringify(props, null, 2));
+  zip.file("styles.json", JSON.stringify(styles, null, 2));
   zip.file("episodes.json", JSON.stringify(episodes, null, 2));
   zip.file("shots.json", JSON.stringify(shots, null, 2));
   for (const mediaId of mediaIds) {
@@ -366,6 +445,8 @@ export async function importProjectZip(file: Blob): Promise<Project> {
   const projectRaw = asRecord(await readJson("project.json", true), "project.json");
   const charactersRaw = asArray(await readJson("characters.json"), "characters.json");
   const scenesRaw = asArray(await readJson("scenes.json"), "scenes.json");
+  const propsRaw = asArray(await readJson("props.json"), "props.json");
+  const stylesRaw = asArray(await readJson("styles.json"), "styles.json");
   const episodesFile = await readJson("episodes.json");
   const episodesRaw = episodesFile == null ? [] : asArray(episodesFile, "episodes.json");
   const shotsRaw = asArray(await readJson("shots.json"), "shots.json");
@@ -384,6 +465,8 @@ export async function importProjectZip(file: Blob): Promise<Project> {
   const mediaMap = new Map<string, string>();
   const characterMap = new Map<string, string>();
   const sceneMap = new Map<string, string>();
+  const propMap = new Map<string, string>();
+  const styleMap = new Map<string, string>();
   const episodeMap = new Map<string, string>();
   const beatMap = new Map<string, string>();
   const shotMap = new Map<string, string>();
@@ -396,7 +479,7 @@ export async function importProjectZip(file: Blob): Promise<Project> {
     const oldId = base.replace(/\.[^.]+$/, "");
     const newId = remapId(mediaMap, oldId, "med")!;
     const blob = await entry.async("blob");
-    const mimeType = blob.type || "application/octet-stream";
+    const mimeType = blob.type || mimeForFilename(base);
     mediaRecords.push({
       id: newId,
       projectId,
@@ -433,6 +516,30 @@ export async function importProjectZip(file: Blob): Promise<Project> {
     }
     scene.slots = images;
     return scene;
+  });
+
+  const props = propsRaw.map((raw) => {
+    const prop = parseProp(raw, projectId);
+    prop.id = remapId(propMap, prop.id, "prp")!;
+    prop.slots = Object.fromEntries(
+      Object.entries(prop.slots).map(([slot, value]) => [
+        slot,
+        value ? remapSlot(value, mapMedia) : value,
+      ]),
+    ) as Prop["slots"];
+    return prop;
+  });
+
+  const styles = stylesRaw.map((raw) => {
+    const style = parseStyle(raw, projectId);
+    style.id = remapId(styleMap, style.id, "sty")!;
+    style.slots = Object.fromEntries(
+      Object.entries(style.slots).map(([slot, value]) => [
+        slot,
+        value ? remapSlot(value, mapMedia) : value,
+      ]),
+    ) as VisualStyle["slots"];
+    return style;
   });
 
   const parsedEpisodes = hasEpisodes
@@ -481,11 +588,22 @@ export async function importProjectZip(file: Blob): Promise<Project> {
   try {
     await db.transaction(
       "rw",
-      [db.projects, db.characters, db.scenes, db.episodes, db.shots, db.media],
+      [
+        db.projects,
+        db.characters,
+        db.scenes,
+        db.props,
+        db.styles,
+        db.episodes,
+        db.shots,
+        db.media,
+      ],
       async () => {
         await db.projects.add(project);
         if (characters.length) await db.characters.bulkAdd(characters);
         if (scenes.length) await db.scenes.bulkAdd(scenes);
+        if (props.length) await db.props.bulkAdd(props);
+        if (styles.length) await db.styles.bulkAdd(styles);
         if (episodes.length) await db.episodes.bulkAdd(episodes);
         if (shots.length) await db.shots.bulkAdd(shots);
         if (mediaRecords.length) await db.media.bulkAdd(mediaRecords);
