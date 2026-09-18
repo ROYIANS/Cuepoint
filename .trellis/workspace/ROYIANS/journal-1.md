@@ -320,3 +320,24 @@ Mobile hamburger + topic Sheet, title search, chrome cleanup; fixed overlay clic
 ### Status
 
 [OK] **Completed**
+
+
+## Session 15: APIMart connector, media adapters and chat model compatibility
+
+**Date**: 2026-09-18
+**Task**: APIMart connector, media adapters and chat model compatibility
+**Branch**: `main`
+
+### Summary
+
+Added APIMart connector and abortable image/video API adapters; restricted chat choices and guarded sends using provider metadata. Lint, 187 tests and production build passed. No live paid generation exercised. User authorized commit; pre-existing .tanstack remains excluded.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `e908475` | (see git log) |
+
+### Status
+
+[OK] **Completed**
