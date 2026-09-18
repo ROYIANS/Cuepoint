@@ -1,0 +1,5 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Frontend Quality Check checklist for episode-scoped shots UI"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "tsc/lint/Vitest and forbidden patterns for verification"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Feature page + ui primitive (Popover/Select) usage conventions"}
+{"file": ".trellis/tasks/09-18-shot-row-align/prd.md", "reason": "Acceptance criteria for alignment, highlight, character/scene pickers"}
+{"file": ".trellis/tasks/09-18-shot-row-align/implement.md", "reason": "Execution plan for DESIGN_CELL_FRAME, Popover chips, overflow-visible"}
