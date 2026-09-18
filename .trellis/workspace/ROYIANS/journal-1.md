@@ -152,3 +152,24 @@ Flushed shot-table cells, column placeholders, row focus highlight, and visual c
 ### Status
 
 [OK] **Completed**
+
+
+## Session 7: Shot row align and pickers
+
+**Date**: 2026-09-18
+**Task**: Shot row align and pickers
+**Branch**: `main`
+
+### Summary
+
+Centered capped shot rows; scene-style multi character picker; left control padding; row highlight on grid.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `58bb1b6` | (see git log) |
+
+### Status
+
+[OK] **Completed**
