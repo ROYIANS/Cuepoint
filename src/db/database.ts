@@ -1,3 +1,4 @@
+import type { AgentGenerationJob } from "@/domain/agentGeneration";
 import type { ContextCompaction } from "@/domain/context";
 import type { AgentConfig, AgentRun, AgentToolCall, AgentTask } from "@/domain/agent";
 import type { ProductionProposal } from "@/domain/production";
@@ -20,6 +21,7 @@ import { parseShotPictureSlots } from "@/domain/slot";
 import { createId, nowIso } from "@/lib/ids";
 
 export class AifenjingDB extends Dexie {
+  agentGenerationJobs!: Table<AgentGenerationJob, string>;
   contextCompactions!: Table<ContextCompaction, string>;
   agentTasks!: Table<AgentTask, string>;
   agentToolCalls!: Table<AgentToolCall, string>;
@@ -167,6 +169,7 @@ export class AifenjingDB extends Dexie {
     this.version(9).stores({ agentToolCalls: "id, runId, threadId, &[runId+providerCallId], status" });
     this.version(10).stores({ agentTasks: "id, &threadId, lifecycle, updatedAt", agentRuns: "id, threadId, taskId, status, createdAt" });
     this.version(11).stores({ contextCompactions: "id, threadId, runId, status, createdAt" });
+    this.version(12).stores({ agentGenerationJobs: "id, &callId, runId, threadId, projectId, status, fingerprint, updatedAt" });
   }
 }
 

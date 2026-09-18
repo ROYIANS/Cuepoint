@@ -1,7 +1,7 @@
 # Production Handoff and Reviewed Changes
 
 ## 1. Scope / Trigger
-Use for production ZIP delivery, scoped AI context, generation preparation, or reviewed writes to shot/asset data. This layer does not submit remote requests or poll providers. A provider response is never authorization to overwrite business data.
+Use for production ZIP delivery, scoped AI context, generation preparation, or reviewed writes to shot/asset data. These helpers do not submit remote requests or poll providers; the separate [creative skills executor](./agent-creative-skills.md) now does. A provider response is never authorization to overwrite business data.
 
 ## 2. Signatures
 - `exportProductionHandoff(projectId, episodeId, onProgress?) -> Promise<{blob, filename, shotCount, missingCount}>` in `lib/productionHandoff.ts`.
@@ -62,4 +62,4 @@ Wrong: undo by writing the cached full shot regardless of changes.
 Correct: compare current target with appliedRevision, restore only fields included in the proposal, and reject if the user has edited since apply.
 
 ## Current limits
-ZIP generation uses browser memory (STORE for media); no streaming archive or timeline renderer. Intent state is a typed local contract without durable remote execution/resume. Source dependencies are recorded; only target revision is enforced for apply. Actual image dimensions/video duration/codecs/upload limits require preflight in future executor integration. Current verified intent profiles are APIMart GPT Image 2 / MiniMax H3; connector support for other models does not automatically extend these profiles.
+ZIP generation uses browser memory (STORE for media); no streaming archive or timeline renderer. Legacy intent state remains a typed local contract; durable Agent execution/resume lives in agentGenerationJobs and the creative-skills executor. Source dependencies are recorded; only target revision is enforced for apply. The Agent executor validates adapter upload limits, input-byte revisions, result signatures and H3 image dimensions; full video codec/duration validation remains outside that executor. Current verified intent profiles are APIMart GPT Image 2 / MiniMax H3; connector support for other models does not automatically extend these profiles.

@@ -1,6 +1,10 @@
+import { generationSubmitSchema } from "@/lib/agent/generationProfiles";
+import { targetRevision } from "@/lib/productionRevision";
+import { interruptedToolState } from "./agentToolRecovery";
 import { validateTaskPlan } from "@/lib/agent/taskState";
 import { db } from "@/db/database";
-import type { AgentPlanItem, AgentResponseItem, AgentRun, AgentToolCall, AgentWireToolCall } from "@/domain/agent";
+import { MODEL_STEPS_PER_SEGMENT } from "@/domain/agent";
+import type { AgentPlanItem, AgentResponseItem, AgentRun, AgentToolCall, AgentWireToolCall, AgentToolPreview } from "@/domain/agent";
 import { toResponseInput } from "@/lib/ai/responsesStream";
 import { createId, nowIso } from "@/lib/ids";
 
@@ -14,23 +18,38 @@ async function requireRun(runId: string): Promise<AgentRun> {
   if (!message || message.threadId !== run.threadId || message.runId !== run.id) throw new Error("执行消息归属不匹配");
   return run;
 }
-const tables = () => [db.agentRuns, db.agentToolCalls, db.chatThreads, db.chatMessages, db.agentTasks];
+const tables = () => [db.agentRuns, db.agentToolCalls, db.chatThreads, db.chatMessages, db.agentTasks, db.agentGenerationJobs];
 async function requireLatestRun(run: AgentRun): Promise<void> {
   const siblings = await db.agentRuns.where("threadId").equals(run.threadId).toArray();
   const history = await db.chatMessages.where("threadId").equals(run.threadId).toArray();
   if (siblings.some((other) => other.id !== run.id && other.createdAt >= run.createdAt) || history.some((message) => message.role === "user" && message.createdAt > run.createdAt)) throw new Error("只能继续当前最后一次执行");
 }
+/** Park at a model boundary, before context preparation can issue another request. */
+export async function pauseAtModelStepLimit(runId: string): Promise<boolean> {
+  return db.transaction("rw", tables(), async () => {
+    const run = await requireRun(runId);
+    if (run.status !== "running") throw new Error("执行已停止");
+    if ((run.modelStep ?? 0) - (run.modelStepSegmentStart ?? 0) < MODEL_STEPS_PER_SEGMENT) return false;
+    const calls = await db.agentToolCalls.where("runId").equals(runId).toArray();
+    if (calls.some((call) => !["completed", "failed", "rejected"].includes(call.status))) throw new Error("请先处理尚未完成的工具步骤");
+    const at = nowIso();
+    const notice = `本段已达到 ${MODEL_STEPS_PER_SEGMENT} 轮模型请求，进度已保存。可继续执行下一段，或结束本次执行。`;
+    await db.agentRuns.update(runId, { status: "interrupted", pauseReason: "model_step_limit", error: undefined, endedAt: undefined, updatedAt: at });
+    await db.chatMessages.update(run.assistantMessageId, { status: "interrupted", error: notice });
+    return true;
+  });
+}
 export async function startModelStep(runId: string, limit: number): Promise<AgentRun> {
   return db.transaction("rw", tables(), async () => {
     const run = await requireRun(runId);
     if (run.status !== "running") throw new Error("执行已停止");
-    if ((run.modelStep ?? 0) >= limit) throw new Error("已达到本次执行的模型步骤上限，请结束本次执行后调整任务");
+    if ((run.modelStep ?? 0) - (run.modelStepSegmentStart ?? 0) >= limit) throw new Error("本段模型请求额度已用完，请继续下一段执行");
     const next = { ...run, modelStep: (run.modelStep ?? 0) + 1, usage: undefined, outputTokensPerSecond: undefined, updatedAt: nowIso() };
     await db.agentRuns.put(next);
     return next;
   });
 }
-export async function saveToolRound(runId: string, content: string, wireCalls: AgentWireToolCall[], details: Pick<AgentToolCall, "title" | "effect" | "highRisk">[], responseOutput?: AgentResponseItem[]): Promise<void> {
+export async function saveToolRound(runId: string, content: string, wireCalls: AgentWireToolCall[], details: Pick<AgentToolCall, "title" | "effect" | "highRisk" | "atomic" | "recovery" | "requiresConfirmation">[], responseOutput?: AgentResponseItem[]): Promise<void> {
   await db.transaction("rw", tables(), async () => {
     const run = await requireRun(runId);
     if (run.status !== "running") throw new Error("执行已停止");
@@ -90,7 +109,7 @@ export async function resumeAgentRun(runId: string): Promise<AgentRun> {
     const calls = await db.agentToolCalls.where("runId").equals(runId).toArray();
     if (calls.some((call) => call.status === "running" || call.status === "unknown")) throw new Error("有操作结果尚不确定，请先核实，不能自动继续或重跑");
     if (calls.some((call) => call.status === "awaiting_approval")) throw new Error("请先批准或拒绝待处理的操作");
-    const next = { ...run, status: "running" as const, error: undefined, endedAt: undefined, updatedAt: nowIso() };
+    const next = { ...run, ...(run.pauseReason === "model_step_limit" ? { modelStepSegmentStart: run.modelStep ?? 0 } : {}), pauseReason: undefined, status: "running" as const, error: undefined, endedAt: undefined, updatedAt: nowIso() };
     await db.agentRuns.put(next);
     await db.chatMessages.update(run.assistantMessageId, { status: "streaming", error: undefined });
     return next;
@@ -142,7 +161,7 @@ export async function cancelAgentRun(runId: string): Promise<void> {
     if (run.status === "running") throw new Error("请先停止正在运行的执行");
     const at = nowIso();
     await db.agentToolCalls.where("runId").equals(runId).filter((call) => ["pending", "awaiting_approval", "approved"].includes(call.status)).modify({ status: "rejected", result: JSON.stringify({ error: "本次执行已取消" }), updatedAt: at });
-    await db.agentRuns.update(runId, { status: "cancelled", updatedAt: at, endedAt: at, error: "本次执行已结束，已完成的步骤保留。" });
+    await db.agentRuns.update(runId, { status: "cancelled", pauseReason: undefined, updatedAt: at, endedAt: at, error: "本次执行已结束，已完成的步骤保留。" });
     await db.chatMessages.update(run.assistantMessageId, { status: "aborted", error: "本次执行已结束，已完成的步骤保留。" });
   });
 }
@@ -150,6 +169,82 @@ export async function cancelAgentRun(runId: string): Promise<void> {
 export async function markRunningToolsUnknown(runId: string): Promise<void> {
   await db.transaction("rw", tables(), async () => {
     if (!(await db.agentRuns.get(runId))) return;
-    await db.agentToolCalls.where("runId").equals(runId).filter((call) => call.status === "running").modify({ status: "unknown", error: "操作结果尚不确定，不能自动重跑。", updatedAt: nowIso() });
+    const running = await db.agentToolCalls.where("runId").equals(runId).filter((call) => call.status === "running").toArray();
+    for (const call of running) await db.agentToolCalls.update(call.id, await interruptedToolState(call));
+  });
+}
+
+
+/** A local transaction rolled back: unlike a lost network reply, it had no effect. */
+export class AtomicToolRollbackError extends Error {}
+
+export async function saveToolPreview(runId: string, callId: string, preview: AgentToolPreview): Promise<void> {
+  if (!preview.summary.trim() || preview.summary.length > 1000 || preview.changes.length > 100 || preview.changes.some((item) => item.length > 2000) || JSON.stringify(preview).length > 32768) throw new Error("操作预览超出限制");
+  await db.transaction("rw", tables(), async () => {
+    const run = await requireRun(runId);
+    const call = await db.agentToolCalls.get(callId);
+    if (run.status !== "running" || !call || call.runId !== runId || call.threadId !== run.threadId || call.status !== "pending") throw new Error("操作预览状态已变化");
+    if (call.preview) throw new Error("不能替换已保存的操作预览");
+    await db.agentToolCalls.update(callId, { preview, updatedAt: nowIso() });
+  });
+}
+
+/** Business mutations and their tool result either commit together or both roll back.
+ * Callbacks must only perform local database work, never fetch or other external effects.
+ */
+export async function executeAtomicTool(
+  context: { runId: string; threadId: string; callId: string; signal: AbortSignal },
+  execute: () => Promise<unknown>,
+): Promise<unknown> {
+  try {
+    return await db.transaction("rw", db.tables, async () => {
+      context.signal.throwIfAborted();
+      const run = await requireRun(context.runId);
+      const call = await db.agentToolCalls.get(context.callId);
+      if (run.status !== "running" || run.threadId !== context.threadId || !call || call.runId !== run.id || call.threadId !== run.threadId) throw new Error("操作归属或执行状态不匹配");
+      if (call.status === "completed" && call.result) return JSON.parse(call.result);
+      if (call.status !== "running") throw new Error("工具尚未开始执行");
+      const value = await execute();
+      context.signal.throwIfAborted();
+      const result = JSON.stringify(value);
+      if (result === undefined || result.length > 65536) throw new Error("工具结果超过大小限制");
+      await db.agentToolCalls.update(call.id, { status: "completed", result, updatedAt: nowIso() });
+      return value;
+    });
+  } catch (error) {
+    throw new AtomicToolRollbackError(error instanceof Error ? error.message : "本地操作已回滚");
+  }
+}
+
+export interface GenerationReviewExpected { arguments: string; revision: string }
+async function requireGenerationReviewCall(runId: string, callId: string, expected: GenerationReviewExpected): Promise<AgentToolCall> {
+  const run=await requireRun(runId);
+  const call=await db.agentToolCalls.get(callId);
+  if (!canResumeAgentRun(run) || !call || call.runId!==runId || call.threadId!==run.threadId || call.name!=="submit_generation" ||
+    call.status!=="awaiting_approval" || !call.requiresConfirmation || call.decision || call.generationOverride) throw new Error("生成确认已处理或执行归属不匹配");
+  if (run.interactionMode === "conversation" || !run.enabledToolNames?.includes("submit_generation")) throw new Error("当前执行未启用生成工具");
+  if (!expected.revision || expected.arguments!==call.arguments || expected.revision!==call.preview?.revision) throw new Error("生成预览已经变化，请重新查看后确认");
+  await requireLatestRun(run);
+  const calls=await db.agentToolCalls.where("runId").equals(runId).toArray();
+  if (calls.some((item)=>item.status === "unknown" || item.status === "running")) throw new Error("有操作结果尚不确定，不能确认新的生成请求");
+  if (await db.agentGenerationJobs.where("callId").equals(callId).first()) throw new Error("此生成请求已有任务记录，不能修改或重复提交");
+  return call;
+}
+export async function readGenerationReviewCall(runId: string,callId: string,expected: GenerationReviewExpected): Promise<AgentToolCall> {
+  return db.transaction("r",tables(),()=>requireGenerationReviewCall(runId,callId,expected));
+}
+/** Final CAS commits the reviewed request, preview and approval together. */
+export async function commitGenerationReview(
+  runId:string,callId:string,override:{arguments:string;preview:AgentToolPreview},expected:GenerationReviewExpected,
+):Promise<void> {
+  if (override.arguments.length>32768 || !override.preview.revision || !override.preview.summary.trim() || override.preview.summary.length>1000 ||
+      override.preview.changes.length>100 || override.preview.changes.some((item)=>item.length>2000) || JSON.stringify(override.preview).length>32768) throw new Error("生成确认参数或预览超出限制");
+  await db.transaction("rw",tables(),async()=>{
+    const call=await requireGenerationReviewCall(runId,callId,expected);
+    const original=generationSubmitSchema.parse(JSON.parse(call.arguments));
+    const reviewed=generationSubmitSchema.parse(JSON.parse(override.arguments));
+    if (targetRevision({target:original.target,inputs:original.inputs})!==targetRevision({target:reviewed.target,inputs:reviewed.inputs})) throw new Error("确认时不能变更生成目标或输入素材，请重新发起任务");
+    const at=nowIso();
+    await db.agentToolCalls.update(callId,{generationOverride:{arguments:JSON.stringify(reviewed),preview:override.preview},status:"approved",decision:"approve",decidedAt:at,updatedAt:at});
   });
 }

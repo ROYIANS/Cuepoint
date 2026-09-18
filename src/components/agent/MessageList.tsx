@@ -139,7 +139,7 @@ const AgentChatMessageItem = memo(
       : message.content ||
         (message.status === "aborted" ? "（已停止）" : "");
 
-    const statusLabel = message.status === "error" ? "生成失败" : message.status === "interrupted" ? "生成中断" : message.status === "aborted" ? "已停止" : undefined;
+    const statusLabel = message.status === "error" ? "生成失败" : message.status === "interrupted" ? run?.pauseReason === "model_step_limit" ? "执行已暂停" : "生成中断" : message.status === "aborted" ? "已停止" : undefined;
     return (
       <ChatItem
         className="agent-transcript-item"
@@ -178,6 +178,7 @@ const AgentChatMessageItem = memo(
     prev.run?.id === next.run?.id &&
     prev.run?.updatedAt === next.run?.updatedAt &&
     prev.run?.status === next.run?.status &&
+    prev.run?.pauseReason === next.run?.pauseReason &&
     prev.run?.usage?.totalTokens === next.run?.usage?.totalTokens &&
     prev.run?.usage?.inputTokens === next.run?.usage?.inputTokens &&
     prev.run?.usage?.outputTokens === next.run?.usage?.outputTokens &&

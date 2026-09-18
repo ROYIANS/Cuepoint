@@ -402,9 +402,9 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
           if (controller.signal.aborted) return;
           await resolveAgentToolApproval(run.id, callId, action);
         });
-        const outstanding = await db.agentToolCalls.where("runId").equals(run.id).filter((call) => call.status === "awaiting_approval").count();
-        if (outstanding > 0) return;
       }
+      const outstanding = await db.agentToolCalls.where("runId").equals(run.id).filter((call) => call.status === "awaiting_approval").count();
+      if (outstanding > 0) return;
       if (controller.signal.aborted) return;
       const connector = await db.connectors.get(run.connector.id);
       if (!connector) throw new Error("决定已保存。原连接不存在，请恢复连接后继续或结束执行。");
@@ -501,7 +501,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
       </div>}
       {showRunStatus ? (
       <div className="agent-composer-run-status" role="status">
-        <span><i />{currentRun.status === "running" ? compactions?.at(-1)?.status === "running" ? "正在整理较早的对话…" : "正在执行" : currentRun.status === "waiting_approval" ? "等待你批准操作" : currentRun.status === "interrupted" ? "执行已中断，进度已保存" : "执行未完成"}</span>
+        <span><i />{currentRun.status === "running" ? compactions?.at(-1)?.status === "running" ? "正在整理较早的对话…" : "正在执行" : currentRun.status === "waiting_approval" ? "等待你批准操作" : currentRun.status === "interrupted" ? currentRun.pauseReason === "model_step_limit" ? "执行已暂停，可继续下一段" : "执行已中断，进度已保存" : "执行未完成"}</span>
         {currentRun.status === "running" && <button type="button" onClick={handleStop} disabled={!sending}>停止</button>}
       </div>
     ) : null}</> : undefined,

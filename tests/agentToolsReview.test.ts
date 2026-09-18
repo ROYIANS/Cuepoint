@@ -16,6 +16,7 @@ const toolResponse = (ids = ["call-1"]) => Response.json({ choices: [{ message: 
 const answer = () => Response.json({ choices: [{ message: { content: "已完成" }, finish_reason: "stop" }] });
 const writeTool = (): AgentToolDefinition => ({ ...BUILTIN_TOOLS[0], effect: "write", execute: vi.fn(async () => ({ saved: true })) });
 async function begin() {
+  await updateGeneralAgentConfig({ enabledSkillIds: ["workspace", "planning"] });
   const thread = await createChatThread();
   return beginAgentRun({ threadId: thread.id, connector, model: "fixture", content: "检查执行恢复" });
 }

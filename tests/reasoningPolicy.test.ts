@@ -1,3 +1,4 @@
+import { updateGeneralAgentConfig } from "@/db/agentSettings";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
@@ -81,6 +82,7 @@ describe("durable reasoning configuration", () => {
     expect(await db.agentRuns.count()).toBe(0);
   });
   it("keeps frozen effort through tool rounds and approval resume", async () => {
+    await updateGeneralAgentConfig({ enabledSkillIds: ["workspace", "planning"] });
     const thread = await createChatThread();
     const run = await beginAgentRun({ threadId: thread.id, connector, model: "gpt-5", content: "hi", reasoningEffort: "high" });
     const controlled: AgentToolDefinition = { ...BUILTIN_TOOLS[0], effect: "write", execute: vi.fn(async () => ({ ok: true })) };

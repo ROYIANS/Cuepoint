@@ -1,4 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
+import { updateGeneralAgentConfig } from "@/db/agentSettings";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { streamResponses, toResponseInput } from "@/lib/ai/responsesStream";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
 import { appendToolResults, resolveAgentToolApproval } from "@/db/agentTools";
@@ -104,6 +105,25 @@ describe("Responses transport", () => {
 });
 
 describe("durable Responses tool loop", () => {
+  beforeEach(async () => { await updateGeneralAgentConfig({ enabledSkillIds: ["workspace", "planning"] }); });
+  it("keeps encrypted state and paired results across a model-budget pause", async () => {
+    const thread = await createChatThread();
+    const run = await beginAgentRun({ threadId: thread.id, connector, model: input.model, content: "hi" });
+    const tool: AgentToolDefinition = { ...BUILTIN_TOOLS[0], execute: vi.fn(async () => ({ ok: true })) };
+    await db.agentRuns.update(run.id, { modelStep: 31 });
+    const firstFetch = vi.fn(async () => Response.json(response([reasoning, call])));
+    await executeChatRun(run, connector.apiKey, new AbortController(), firstFetch, [tool, BUILTIN_TOOLS[1]]);
+    expect(firstFetch).toHaveBeenCalledTimes(1);
+    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "interrupted", pauseReason: "model_step_limit", modelStep: 32 });
+    db.close(); await db.open();
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), vi.fn(async (_url, init) => {
+      const body = JSON.parse(String(init?.body));
+      expect(body.input.slice(-3)).toEqual([reasoning, call, { type: "function_call_output", call_id: "call-1", output: '{"ok":true}' }]);
+      return Response.json(response());
+    }), [tool, BUILTIN_TOOLS[1]]);
+    expect(tool.execute).toHaveBeenCalledTimes(1);
+    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "completed", modelStep: 33, modelStepSegmentStart: 32 });
+  });
   it("selects before request, migrates legacy text retries but freezes explicit protocols", async () => {
     expect(selectAgentProtocol(connector, "gpt-5.6-luna", undefined, true)).toBe("responses");
     expect(selectAgentProtocol(connector, "gpt-5.6-luna", "none", true)).toBe("chat-completions");

@@ -1,7 +1,9 @@
+import type { GenerationPreferences } from "./generationPreferences";
 import type { ContextPolicy, ContextSnapshot } from "./context";
 import type { ConnectorConfig, Id } from "@/domain/types";
 
 export interface AgentConfig {
+  generationPreferences?: GenerationPreferences;
   contextPolicy?: ContextPolicy;
   id: Id;
   name: string;
@@ -9,6 +11,7 @@ export interface AgentConfig {
   updatedAt: string;
   permissionMode?: AgentPermissionMode;
   enabledSkillIds?: string[];
+  skillDefaultsVersion?: number;
 }
 
 export type AgentReasoningEffort = "none" | "minimal" | "low" | "medium" | "high" | "xhigh" | "max";
@@ -25,7 +28,19 @@ export type AgentRequestMessage =
 export interface AgentPlanItem { id: string; title: string; status: "pending" | "in_progress" | "completed" }
 export type AgentToolCallStatus = "pending" | "awaiting_approval" | "approved" | "running" | "completed" | "failed" | "rejected" | "unknown";
 export type AgentToolEffect = "read" | "write" | "network" | "bookkeeping";
+export interface AgentToolPreview {
+  summary: string;
+  changes: string[];
+  revision?: string;
+  target?: { label: string; href: string };
+}
 export interface AgentToolCall {
+  /** Explicit user-reviewed request; original provider arguments/envelopes stay immutable. */
+  generationOverride?: { arguments: string; preview: AgentToolPreview };
+  requiresConfirmation?: boolean;
+  preview?: AgentToolPreview;
+  atomic?: boolean;
+  recovery?: "generation" | "repeatable";
   id: string;
   runId: string;
   threadId: string;
@@ -92,6 +107,9 @@ export interface AgentRun {
   skillInstructions?: string;
   continuationMessages?: AgentRequestMessage[];
   modelStep?: number;
+  /** Cumulative step at the last explicit budget continuation; legacy runs start at zero. */
+  modelStepSegmentStart?: number;
+  pauseReason?: "model_step_limit";
   hasToolCalls?: boolean;
   plan?: AgentPlanItem[];
   checkpoint: number;
@@ -109,6 +127,7 @@ export interface AgentRunOutput {
 }
 
 export const GENERAL_AGENT_ID = "agent_general";
+export const MODEL_STEPS_PER_SEGMENT = 32;
 
 export interface AgentTask {
   id: Id;

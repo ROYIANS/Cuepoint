@@ -104,7 +104,7 @@ await listConnectorModels(apimartConnector, "chat");
 ## AIHubMix contracts
 
 ### 1. Scope / Trigger
-Use for AIHubMix discovery, credential tests, native media requests and protected content reads. The approved task adds a provider client, not a generation runtime or UI.
+Use for AIHubMix discovery, credential tests, native media requests and protected content reads. This module is the provider client. Durable Agent generation now wraps it in lib/agent/generationRuntime.ts; see agent-creative-skills.md for verified profiles and recovery contracts.
 
 ### 2. Signatures
 `src/lib/ai/aihubmix.ts`: `listAIHubMixModels`, `testAIHubMixConnection`, `getAIHubMixModelSchema`, `submitAIHubMixImageGeneration`, `submitAIHubMixVideoGeneration`, `getAIHubMixImageTask`, `getAIHubMixVideoTask`, `downloadAIHubMixResult`. Requests accept passed credentials plus optional `signal`/`fetchImpl`; explicit downloads return Blob without repository mutation. Provider dispatch returns `via: "authenticated-read"` for a successful AIHubMix connection probe.

@@ -1,10 +1,12 @@
+import { ToolPendingError } from "./toolErrors";
 import { prepareRunContext } from "./contextCompaction";
 import { streamResponses, type ResponsesResult } from "@/lib/ai/responsesStream";
 import { db } from "@/db/database";
-import { appendToolResults, markRunningToolsUnknown, pauseForApproval, resumeAgentRun, saveToolRound, startModelStep, transitionToolCall } from "@/db/agentTools";
+import { AtomicToolRollbackError, saveToolPreview, appendToolResults, markRunningToolsUnknown, pauseForApproval, pauseAtModelStepLimit, resumeAgentRun, saveToolRound, startModelStep, transitionToolCall } from "@/db/agentTools";
+import { MODEL_STEPS_PER_SEGMENT } from "@/domain/agent";
 import { BUILTIN_TOOLS, requiresToolApproval, toolSchemas, validateToolCall, type AgentToolDefinition } from "@/lib/agent/tools";
 import { checkpointAgentRun, finishAgentRun, recordAgentModelMetrics } from "@/db/agentRuns";
-import type { AgentRun, AgentRunOutput } from "@/domain/agent";
+import type { AgentRun, AgentRunOutput, AgentToolCall } from "@/domain/agent";
 import { accumulateStreamDelta, createReasoningAccum, finalizeReasoningAccum, streamChatCompletions, type StreamDelta, type ReasoningAccum } from "@/lib/ai/chatStream";
 
 /** Coalesce bursts and serialize writes. A failed write stops further streaming. */
@@ -31,7 +33,14 @@ export function createRunWriter(persist: (sequence: number, output: AgentRunOutp
   return { push, async flush() { while (draining) await draining; if (failure) throw failure; } };
 }
 
-export const MAX_MODEL_STEPS = 8;
+export const MAX_MODEL_STEPS = MODEL_STEPS_PER_SEGMENT;
+
+/** Only user review may supply an execution override; wire arguments remain untouched. */
+function effectiveToolInput(call: AgentToolCall) {
+  if (!call.generationOverride) return { arguments: call.arguments, preview: call.preview };
+  if (call.name !== "submit_generation" || !call.requiresConfirmation || call.decision !== "approve") throw new Error("工具覆盖参数没有有效的用户确认");
+  return call.generationOverride;
+}
 
 /** Pending calls are immutable. Only code-owned definitions decide their effect and risk. */
 async function executePendingTools(run: AgentRun, controller: AbortController, registry: readonly AgentToolDefinition[]): Promise<boolean> {
@@ -47,14 +56,26 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
     if (call.status === "unknown" || call.status === "running") throw new Error("有工具结果不确定，不能重跑");
     if (call.status === "awaiting_approval") { waiting = true; continue; }
     let validated: ReturnType<typeof validateToolCall>;
-    try { validated = validateToolCall(call.name, call.arguments, run.enabledToolNames ?? [], registry); }
+    try { validated = validateToolCall(call.name, effectiveToolInput(call).arguments, run.enabledToolNames ?? [], registry); }
     catch (error) {
       const message = error instanceof Error ? error.message : "工具参数无效";
       await transitionToolCall(run.id, call.id, ["pending", "approved"], "failed", { error: message, result: JSON.stringify({ error: message }) });
       continue;
     }
     const { tool, args } = validated;
-    if (tool.effect !== call.effect || tool.highRisk(args) !== call.highRisk) throw new Error("工具定义已变化，请结束本次执行后重新发起任务");
+    if (tool.effect !== call.effect || tool.highRisk(args) !== call.highRisk || Boolean(tool.atomic) !== Boolean(call.atomic) || tool.recovery !== call.recovery || Boolean(tool.requiresConfirmation) !== Boolean(call.requiresConfirmation)) throw new Error("工具定义已变化，请结束本次执行后重新发起任务");
+    if (tool.prepare && !call.preview) {
+      try {
+        if (call.status !== "pending") throw new Error("操作缺少批准前预览，请重新发起");
+        const preview = await tool.prepare(args, { runId: run.id, threadId: run.threadId, callId: call.id, signal: controller.signal });
+        await saveToolPreview(run.id, call.id, preview);
+      } catch (error) {
+        controller.signal.throwIfAborted();
+        const message = error instanceof Error ? error.message : "无法准备操作预览";
+        await transitionToolCall(run.id, call.id, ["pending", "approved"], "failed", { error: message, result: JSON.stringify({ error: message }) });
+        continue;
+      }
+    }
     if (call.status !== "approved" && requiresToolApproval(run.permissionMode ?? "ask", tool, args)) {
       await transitionToolCall(run.id, call.id, ["pending"], "awaiting_approval");
       waiting = true;
@@ -65,22 +86,29 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
     controller.signal.throwIfAborted();
     const call = await db.agentToolCalls.get(saved.id);
     if (!call || ["completed", "failed", "rejected"].includes(call.status)) continue;
-    const { tool, args } = validateToolCall(call.name, call.arguments, run.enabledToolNames ?? [], registry);
-    if (tool.effect !== call.effect || tool.highRisk(args) !== call.highRisk) throw new Error("工具定义已变化，请结束本次执行后重新发起任务");
+    const { tool, args } = validateToolCall(call.name, effectiveToolInput(call).arguments, run.enabledToolNames ?? [], registry);
+    if (tool.effect !== call.effect || tool.highRisk(args) !== call.highRisk || Boolean(tool.atomic) !== Boolean(call.atomic) || tool.recovery !== call.recovery || Boolean(tool.requiresConfirmation) !== Boolean(call.requiresConfirmation)) throw new Error("工具定义已变化，请结束本次执行后重新发起任务");
     // Recheck permission immediately before the claim. A global setting cannot change this run's mode.
     if (requiresToolApproval(run.permissionMode ?? "ask", tool, args) && call.status !== "approved") throw new Error("工具尚未获得批准");
     if (!await transitionToolCall(run.id, call.id, ["pending", "approved"], "running")) throw new Error("工具已被其他执行领取");
     controller.signal.throwIfAborted();
     try {
-      const value = await tool.execute(args, { runId: run.id, threadId: run.threadId, callId: call.id, signal: controller.signal });
+      const value = await tool.execute(args, { runId: run.id, threadId: run.threadId, callId: call.id, signal: controller.signal, preview: effectiveToolInput(call).preview });
       const result = JSON.stringify(value);
       if (result === undefined || result.length > 65_536) throw new Error("工具结果无效或超过大小限制");
       // Save a known completed result even if Stop was clicked while the operation settled.
       await transitionToolCall(run.id, call.id, ["running"], "completed", { result });
-    } catch {
+    } catch (cause) {
+      // An atomic tool may already have committed its result before a later failure.
+      const persisted = await db.agentToolCalls.get(call.id);
+      if (persisted?.status === "completed") continue;
+      if (cause instanceof ToolPendingError || controller.signal.aborted && call.recovery) {
+        await markRunningToolsUnknown(run.id);
+        throw cause instanceof ToolPendingError ? cause : new ToolPendingError("生成任务已保存，请继续查询已有任务。");
+      }
       // Exceptions from side effects cannot certify that nothing happened.
-      const ambiguous = tool.effect === "write" || tool.effect === "network" || tool.effect === "bookkeeping";
-      const error = ambiguous ? "操作结果尚不确定，请先核实，不能自动重跑。" : "工具读取失败。";
+      const ambiguous = !(cause instanceof AtomicToolRollbackError) && (tool.effect === "write" || tool.effect === "network" || tool.effect === "bookkeeping");
+      const error = ambiguous ? "操作结果尚不确定，请先核实，不能自动重跑。" : cause instanceof Error ? cause.message : "工具执行失败。";
       await transitionToolCall(run.id, call.id, ["running"], ambiguous ? "unknown" : "failed", { error, ...(!ambiguous ? { result: JSON.stringify({ error }) } : {}) });
       if (ambiguous) throw new Error(error);
     }
@@ -110,6 +138,7 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
     if (run.hasToolCalls && !await executePendingTools(run, controller, registry)) return;
     while (true) {
       controller.signal.throwIfAborted();
+      if (await pauseAtModelStepLimit(run.id)) return;
       run = await prepareRunContext(run.id, toolSchemas(run.enabledToolNames ?? [], registry), apiKey, controller.signal, fetchImpl);
       run = await startModelStep(run.id, MAX_MODEL_STEPS);
       controller.signal.throwIfAborted();
@@ -139,7 +168,7 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
         if (!tool) throw new Error("未知工具");
         let highRisk = true;
         try { highRisk = tool.highRisk(tool.parseArguments(JSON.parse(call.function.arguments))); } catch { /* Invalid arguments are recorded then rejected before execution. */ }
-        return { title: tool.title, effect: tool.effect, highRisk };
+        return { title: tool.title, effect: tool.effect, highRisk, ...(tool.atomic ? { atomic: true } : {}), ...(tool.recovery ? { recovery: tool.recovery } : {}), ...(tool.requiresConfirmation ? { requiresConfirmation: true } : {}) };
       });
       await saveToolRound(run.id, result.content, result.toolCalls, details, result.responseOutput);
       run = (await db.agentRuns.get(run.id))!;
@@ -154,7 +183,7 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
     await markRunningToolsUnknown(run.id);
     const message = error instanceof Error ? error.message.split(apiKey).join("[已隐藏]").slice(0, 300) : "执行或本地保存失败";
     const latest = await db.agentRuns.get(run.id);
-    await finishAgentRun(run.id, saveFailed ? "failed" : aborted ? (latest?.hasToolCalls ? "interrupted" : "cancelled") : "failed", output(), saveFailed ? "执行或本地保存失败，最后一段内容可能尚未保存。" : aborted ? "已停止，已完成的步骤保留。" : message);
+    await finishAgentRun(run.id, saveFailed ? "failed" : error instanceof ToolPendingError ? "interrupted" : aborted ? (latest?.hasToolCalls ? "interrupted" : "cancelled") : "failed", output(), saveFailed ? "执行或本地保存失败，最后一段内容可能尚未保存。" : aborted ? "已停止，已完成的步骤保留。" : message);
     if (saveFailed) throw new Error("执行或本地保存失败，最后一段内容可能尚未保存");
   }
 }

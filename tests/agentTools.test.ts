@@ -1,17 +1,18 @@
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { beginAgentRun, canRetryRun, interruptThreadRuns } from "@/db/agentRuns";
-import { cancelAgentRun, resolveAgentToolApproval, resumeAgentRun } from "@/db/agentTools";
+import { cancelAgentRun, pauseAtModelStepLimit, resolveAgentToolApproval, resumeAgentRun } from "@/db/agentTools";
 import { getGeneralAgentConfig, updateGeneralAgentConfig } from "@/db/agentSettings";
 import { createChatThread, deleteChatThread } from "@/db/repo";
 import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
 import { BUILTIN_TOOLS, requiresToolApproval, validateToolCall, type AgentToolDefinition } from "@/lib/agent/tools";
+import { MODEL_STEPS_PER_SEGMENT } from "@/domain/agent";
 import type { AgentPermissionMode, AgentToolEffect } from "@/domain/agent";
 import type { ConnectorConfig } from "@/domain/types";
 
 const connector: ConnectorConfig = { id: "cx", name: "test", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "secret", updatedAt: "2026-01-01" };
 async function begin(mode: AgentPermissionMode = "ask") {
-  await updateGeneralAgentConfig({ permissionMode: mode });
+  await updateGeneralAgentConfig({ permissionMode: mode, enabledSkillIds: ["workspace", "planning"] });
   const thread = await createChatThread();
   return beginAgentRun({ threadId: thread.id, connector, model: "model", content: "制作计划" });
 }
@@ -132,15 +133,91 @@ describe("durable bounded tool loop", () => {
     expect((await db.agentToolCalls.toArray())[0].status).toBe("failed");
     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
   });
-  it("bounds model steps and cannot bypass budget by resume", async () => {
+  it("pauses each 32-request segment and resumes without replay or resetting cumulative steps", async () => {
     const run = await begin("full"); const tool = controlled(); let requests = 0;
     const fetcher = vi.fn(async () => toolResponse(tool.name, "{}", `call-${++requests}`));
     await executeChatRun(run, connector.apiKey, new AbortController(), fetcher, [tool, BUILTIN_TOOLS[1]]);
-    expect(fetcher).toHaveBeenCalledTimes(8);
-    expect((await db.agentRuns.get(run.id))?.error).toContain("上限");
+    expect(fetcher).toHaveBeenCalledTimes(32);
+    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "interrupted", pauseReason: "model_step_limit", modelStep: 32 });
+    expect((await db.agentRuns.get(run.id))?.error).toBeUndefined();
+    expect(await db.chatMessages.get(run.assistantMessageId)).toMatchObject({ status: "interrupted", error: expect.stringContaining("进度已保存") });
+    const firstCalls = await db.agentToolCalls.where("runId").equals(run.id).toArray();
+    db.close(); await db.open();
+    await interruptThreadRuns(run.threadId);
+    expect((await db.agentRuns.get(run.id))?.pauseReason).toBe("model_step_limit");
+    expect(fetcher).toHaveBeenCalledTimes(32);
     await resumeChatRun(run.id, connector.apiKey, new AbortController(), fetcher, [tool, BUILTIN_TOOLS[1]]);
-    expect(fetcher).toHaveBeenCalledTimes(8);
-    expect(tool.execute).toHaveBeenCalledTimes(8);
+    expect(fetcher).toHaveBeenCalledTimes(64);
+    expect(tool.execute).toHaveBeenCalledTimes(64);
+    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "interrupted", pauseReason: "model_step_limit", modelStep: 64, modelStepSegmentStart: 32 });
+    for (const call of firstCalls) expect(await db.agentToolCalls.get(call.id)).toEqual(call);
+    const finalFetch = vi.fn(async () => answer());
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), finalFetch, [tool, BUILTIN_TOOLS[1]]);
+    expect(finalFetch).toHaveBeenCalledTimes(1);
+    expect(tool.execute).toHaveBeenCalledTimes(64);
+    const complete = await db.agentRuns.get(run.id);
+    expect(complete).toMatchObject({ status: "completed", modelStep: 65, modelStepSegmentStart: 64 });
+    expect(complete?.pauseReason).toBeUndefined();
+    expect(complete?.continuationMessages?.filter((m) => m.role === "tool")).toHaveLength(64);
+  });
+  it("does not replenish the segment on approval or ordinary interruption", async () => {
+    const run = await begin(); const tool = controlled();
+    await db.agentRuns.update(run.id, { modelStep: MODEL_STEPS_PER_SEGMENT - 1 });
+    const request = vi.fn(async () => toolResponse(tool.name));
+    await executeChatRun(run, connector.apiKey, new AbortController(), request, [tool, BUILTIN_TOOLS[1]]);
+    const call = (await db.agentToolCalls.toArray())[0];
+    await interruptThreadRuns(run.threadId);
+    await resolveAgentToolApproval(run.id, call.id, "approve");
+    const nextRequest = vi.fn(async () => answer());
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), nextRequest, [tool, BUILTIN_TOOLS[1]]);
+    expect(tool.execute).toHaveBeenCalledTimes(1);
+    expect(nextRequest).not.toHaveBeenCalled();
+    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "interrupted", pauseReason: "model_step_limit", modelStep: 32 });
+    // Explicit budget continuation grants allowance once, but a later ordinary stop does not.
+    const resumed = await resumeAgentRun(run.id);
+    expect(resumed.modelStepSegmentStart).toBe(32);
+    await db.agentRuns.update(run.id, { modelStep: 40 });
+    await interruptThreadRuns(run.threadId);
+    expect((await resumeAgentRun(run.id)).modelStepSegmentStart).toBe(32);
+    await expect(resumeAgentRun(run.id)).rejects.toThrow("不能继续");
+  });
+  it("preserves final-step text when pausing and permits ending without any replay", async () => {
+    const run = await begin("full"); const tool = controlled();
+    await db.agentRuns.update(run.id, { modelStep: 31 });
+    const fetcher = vi.fn(async () => Response.json({ choices: [{ message: { content: "角色已创建，下一步处理场景。", tool_calls: [{ id: "last-call", type: "function", function: { name: tool.name, arguments: "{}" } }] }, finish_reason: "tool_calls" }] }));
+    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher, [tool, BUILTIN_TOOLS[1]]);
+    expect((await db.chatMessages.get(run.assistantMessageId))?.content).toBe("角色已创建，下一步处理场景。");
+    await cancelAgentRun(run.id);
+    expect((await db.agentRuns.get(run.id))?.pauseReason).toBeUndefined();
+    await expect(resumeAgentRun(run.id)).rejects.toThrow("不能继续");
+    expect(tool.execute).toHaveBeenCalledTimes(1);
+  });
+  it("allows a final answer on the last model request instead of unnecessarily pausing", async () => {
+    const run = await begin("full");
+    await db.agentRuns.update(run.id, { modelStep: 31 });
+    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => answer()));
+    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "completed", modelStep: 32 });
+    expect((await db.agentRuns.get(run.id))?.pauseReason).toBeUndefined();
+  });
+  it("lets a legacy eight-step failure continue using the larger first segment", async () => {
+    const run = await begin("full"); const tool = controlled();
+    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => toolResponse(tool.name)), [tool, BUILTIN_TOOLS[1]]);
+    await db.agentRuns.update(run.id, { status: "failed", modelStep: 8, error: "已达到本次执行的模型步骤上限，请结束本次执行后调整任务" });
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), vi.fn(async () => answer()), [tool, BUILTIN_TOOLS[1]]);
+    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "completed", modelStep: 9 });
+    expect(tool.execute).toHaveBeenCalledTimes(1);
+  });
+  it("will not pause or replenish around unresolved side effects", async () => {
+    const run = await begin(); const tool = controlled();
+    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => toolResponse(tool.name)), [tool, BUILTIN_TOOLS[1]]);
+    const call = (await db.agentToolCalls.toArray())[0];
+    await db.agentRuns.update(run.id, { status: "running", modelStep: 32 });
+    await expect(pauseAtModelStepLimit(run.id)).rejects.toThrow("尚未完成");
+    await db.agentRuns.update(run.id, { status: "interrupted", pauseReason: "model_step_limit" });
+    await expect(resumeAgentRun(run.id)).rejects.toThrow("批准");
+    await db.agentToolCalls.update(call.id, { status: "unknown" });
+    await expect(resumeAgentRun(run.id)).rejects.toThrow("不确定");
+    expect((await db.agentRuns.get(run.id))?.modelStepSegmentStart).toBeUndefined();
   });
   it("blocks reuse of provider call IDs and preserves the first result", async () => {
     const run = await begin("full"); const tool = controlled();

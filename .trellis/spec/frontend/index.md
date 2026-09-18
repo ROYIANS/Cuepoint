@@ -17,6 +17,7 @@
 | [Directory Structure](./directory-structure.md) | Studio layout+index+$id vs project workspace | Filled |
 | [Component Guidelines](./component-guidelines.md) | Thin routes, feature pages, ui primitives, slots | Filled |
 | [Agent Tools](./agent-tools.md) | Strict tools, permission snapshots, approval ledger and continuation | Filled |
+| [Creative Skills](./agent-creative-skills.md) | Business CRUD, frozen previews, atomic writes and durable media generation | Filled |
 | [Agent Tasks](./agent-tasks.md) | Shared task/chat identity, plan ownership, artifacts and explicit completion | Filled |
 | [Agent Context](./agent-context.md) | History policy, shared budgets and durable compaction | Filled |
 | [Agent Execution](./agent-execution.md) | Durable runs, ordered checkpoints, explicit retry and cross-tab recovery | Filled |

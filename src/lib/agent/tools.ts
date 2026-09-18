@@ -1,18 +1,25 @@
+import { GENERATION_TOOLS } from "./generationTools";
+import { BUSINESS_TOOLS } from "./businessTools";
 import { z } from "zod";
 import { db } from "@/db/database";
 import { updateRunPlanAndComplete } from "@/db/agentTools";
-import type { AgentPermissionMode, AgentPlanItem, AgentToolEffect, AgentToolSchema } from "@/domain/agent";
+import type { AgentPermissionMode, AgentPlanItem, AgentToolEffect, AgentToolSchema, AgentToolPreview } from "@/domain/agent";
 
-export interface AgentToolContext { runId: string; threadId: string; callId: string; signal: AbortSignal }
+export interface AgentToolContext { runId: string; threadId: string; callId: string; signal: AbortSignal; preview?: AgentToolPreview }
 export interface AgentToolDefinition {
   name: string; title: string; description: string; parameters: Record<string, unknown>;
   effect: AgentToolEffect;
   parseArguments(raw: unknown): unknown;
   highRisk(args: unknown): boolean;
+  atomic?: boolean;
+  requiresConfirmation?: boolean;
+  recovery?: "generation" | "repeatable";
+  prepare?(args: unknown, context: AgentToolContext): Promise<AgentToolPreview>;
   execute(args: unknown, context: AgentToolContext): Promise<unknown>;
 }
-export function requiresToolApproval(mode: AgentPermissionMode, tool: Pick<AgentToolDefinition, "effect" | "highRisk">, args: unknown): boolean {
+export function requiresToolApproval(mode: AgentPermissionMode, tool: Pick<AgentToolDefinition, "effect" | "highRisk" | "requiresConfirmation">, args: unknown): boolean {
   if (!["ask", "assist", "full"].includes(mode)) throw new Error("未知授权模式");
+  if (tool.requiresConfirmation) return true;
   if (mode === "full") return false;
   if (tool.highRisk(args)) return true;
   return mode === "ask" && (tool.effect === "write" || tool.effect === "network");
@@ -35,6 +42,8 @@ export const BUILTIN_TOOLS: readonly AgentToolDefinition[] = [
     effect: "bookkeeping", highRisk: () => false, parseArguments: (raw) => planSchema.parse(raw),
     async execute(args, { runId, callId, signal }) { signal.throwIfAborted(); return JSON.parse(await updateRunPlanAndComplete(runId, callId, (args as { steps: AgentPlanItem[] }).steps)); },
   },
+  ...BUSINESS_TOOLS,
+  ...GENERATION_TOOLS,
 ];
 export function toolSchemas(names: readonly string[], registry: readonly AgentToolDefinition[] = BUILTIN_TOOLS): AgentToolSchema[] {
   return names.map((name) => {

@@ -54,7 +54,7 @@ import { createId, nowIso } from "@/lib/ids";
 // Media recycling must hold the same lock as every committed slot/cover writer.
 export const PRODUCTION_TABLES = [
   db.projects, db.episodes, db.characters, db.scenes,
-  db.props, db.styles, db.shots, db.media, db.productionProposals,
+  db.props, db.styles, db.shots, db.media, db.productionProposals, db.agentGenerationJobs,
 ];
 
 function pickPatch<T extends object>(patch: T, keys: readonly (keyof T)[]): Partial<T> {
@@ -273,8 +273,10 @@ export async function deleteProject(id: Id): Promise<void> {
       db.shots,
       db.media,
       db.productionProposals,
+      db.agentGenerationJobs,
     ],
     async () => {
+      await db.agentGenerationJobs.where("projectId").equals(id).delete();
       await db.productionProposals.where("projectId").equals(id).delete();
       await db.characters.where("projectId").equals(id).delete();
       await db.scenes.where("projectId").equals(id).delete();
@@ -572,7 +574,8 @@ async function recycleSlotMedia(
 
 export async function putMedia(record: MediaRecord): Promise<Id> {
   return db.transaction("rw", db.media, db.projects, async () => {
-    await db.media.put(record);
+    // Physical replacement is a new record; immutable IDs keep pending previews valid.
+    await db.media.add(record);
     await touchProject(record.projectId);
     return record.id;
   });
@@ -588,7 +591,9 @@ export async function deleteMediaIfOrphan(mediaId: Id | undefined): Promise<void
     const proposals = await db.productionProposals.where("projectId").equals(record.projectId).toArray();
     const retained = proposals.some((proposal) => proposal.before.result?.mediaId === mediaId ||
       (proposal.change.kind === "slot-result" && proposal.change.result.mediaId === mediaId));
-    if (!used.has(mediaId) && !retained) {
+    const jobs = await db.agentGenerationJobs.where("projectId").equals(record.projectId).toArray();
+    const jobRetained = jobs.some((job) => job.result?.mediaId === mediaId || job.inputs.some((input) => input.mediaId === mediaId));
+    if (!used.has(mediaId) && !retained && !jobRetained) {
       await db.media.delete(mediaId);
     }
   });
@@ -645,10 +650,11 @@ async function copyStudioSnapshot<T extends SnapshotAsset>(
       const slots: Record<string, GenerationSlot> = {};
       for (const [slotKey, slot] of Object.entries(source.slots ?? {})) {
         if (!slot) continue;
+        await assertSlotMedia(source.projectId, slot);
         for (const oldMediaId of new Set(slotMediaIds(slot))) {
           if (mediaMap.has(oldMediaId)) continue;
           const media = await db.media.get(oldMediaId);
-          if (!media) continue;
+          if (!media) throw new Error("来源素材已失效，请重新选择");
           const newMediaId = createId("med");
           mediaMap.set(oldMediaId, newMediaId);
           await db.media.add({
@@ -1599,13 +1605,17 @@ export async function updateChatThread(
 }
 
 export async function deleteChatThread(id: Id): Promise<void> {
-  await db.transaction("rw", [db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, db.agentTasks, db.contextCompactions], async () => {
+  await db.transaction("rw", [...PRODUCTION_TABLES, db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, db.agentTasks, db.contextCompactions], async () => {
+    const jobs = await db.agentGenerationJobs.where("threadId").equals(id).toArray();
+    const jobMedia = new Set(jobs.flatMap((job) => [...job.inputs.map((input) => input.mediaId), ...(job.result ? [job.result.mediaId] : [])]));
+    await db.agentGenerationJobs.where("threadId").equals(id).delete();
     await db.contextCompactions.where("threadId").equals(id).delete();
     await db.agentTasks.where("threadId").equals(id).delete();
     await db.agentToolCalls.where("threadId").equals(id).delete();
     await db.agentRuns.where("threadId").equals(id).delete();
     await db.chatMessages.where("threadId").equals(id).delete();
     await db.chatThreads.delete(id);
+    for (const mediaId of jobMedia) await deleteMediaIfOrphan(mediaId);
   });
 }
 

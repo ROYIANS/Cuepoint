@@ -1,3 +1,4 @@
+import { interruptedToolState } from "./agentToolRecovery";
 import { createAgentTaskForThread } from "@/db/agentTasks";
 import { buildTaskInstructions } from "@/lib/agent/taskState";
 import { db } from "@/db/database";
@@ -141,14 +142,13 @@ export async function finishAgentRun(runId: string, status: Exclude<AgentRunStat
 
 /** Caller must own the thread's Web Lock; elapsed wall time is not proof of abandonment. */
 export async function interruptThreadRuns(threadId: string): Promise<void> {
-  await db.transaction("rw", db.agentRuns, db.agentToolCalls, db.chatMessages, db.contextCompactions, async () => {
+  await db.transaction("rw", db.agentRuns, db.agentToolCalls, db.chatMessages, db.contextCompactions, db.agentGenerationJobs, async () => {
     const runs = await db.agentRuns.where("threadId").equals(threadId).toArray();
     for (const run of runs) {
       if (run.status !== "running") continue;
       await db.contextCompactions.where("runId").equals(run.id).filter((record) => record.status === "running").modify({ status: "interrupted", error: "整理已中断，未启用未完成的摘要。请手动继续或重新生成。", updatedAt: nowIso() });
-      await db.agentToolCalls.where("runId").equals(run.id).filter((call) => call.status === "running").modify({
-        status: "unknown", error: "执行中断，结果尚不确定，不能自动重跑。", updatedAt: nowIso(),
-      });
+      const running = await db.agentToolCalls.where("runId").equals(run.id).filter((call) => call.status === "running").toArray();
+      for (const call of running) await db.agentToolCalls.update(call.id, await interruptedToolState(call));
       const calls = await db.agentToolCalls.where("runId").equals(run.id).toArray();
       // A crash may fall between persisting an approval request and parking the
       // run. Restore its actionable waiting state instead of stranding the call

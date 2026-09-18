@@ -11,8 +11,8 @@ import { AGENT_SKILLS } from "@/lib/agent/skills";
 
 const PERMISSIONS = [
   { id: "ask", title: "请求批准", description: "编辑业务数据或使用互联网工具前询问", icon: Hand },
-  { id: "assist", title: "帮我批准", description: "常规操作自动执行，高风险操作询问", icon: ShieldCheck },
-  { id: "full", title: "完全访问", description: "自主执行已启用工具，不请求批准", icon: ShieldAlert },
+  { id: "assist", title: "帮我批准", description: "常规操作自动执行，高风险操作和付费生成询问", icon: ShieldCheck },
+  { id: "full", title: "完全访问", description: "自主执行已启用工具，付费生成仍需确认配置", icon: ShieldAlert },
 ] satisfies Array<{ id: AgentPermissionMode; title: string; description: string; icon: typeof Hand }>;
 
 function popupRoot(): HTMLElement {
