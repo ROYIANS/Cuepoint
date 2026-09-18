@@ -1,6 +1,8 @@
+import type { ContextPolicy, ContextSnapshot } from "./context";
 import type { ConnectorConfig, Id } from "@/domain/types";
 
 export interface AgentConfig {
+  contextPolicy?: ContextPolicy;
   id: Id;
   name: string;
   instructions: string;
@@ -64,6 +66,7 @@ export interface AgentModelMetrics {
 
 /** Frozen execution inputs. Credentials are resolved from the connector at dispatch. */
 export interface AgentRun {
+  context?: ContextSnapshot;
   id: Id;
   threadId: Id;
   taskId?: Id;

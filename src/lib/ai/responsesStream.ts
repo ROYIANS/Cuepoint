@@ -117,7 +117,7 @@ export async function streamResponses(input: StreamChatInput & { responseItems?:
     assertReasoningEffort({ definitionId: input.connectorDefinitionId, baseUrl: base }, model, input.reasoningEffort);
     const res = await (handlers.fetchImpl ?? fetch)(`${base}/responses`, {
       method: "POST", headers: authHeaders(apiKey), signal,
-      body: JSON.stringify({ model, input: input.responseItems ?? toResponseInput(input.messages), stream: true, store: false, include: ["reasoning.encrypted_content"],
+      body: JSON.stringify({ model, ...(input.maxOutputTokens ? { max_output_tokens: input.maxOutputTokens } : {}), input: input.responseItems ?? toResponseInput(input.messages), stream: true, store: false, include: ["reasoning.encrypted_content"],
         ...(input.reasoningEffort !== undefined ? { reasoning: { effort: input.reasoningEffort, summary: "auto" } } : { reasoning: { summary: "auto" } }),
         ...(input.tools?.length ? { tools: input.tools.map((tool) => ({ type: "function", ...tool.function, strict: false })) } : {}),
       }),

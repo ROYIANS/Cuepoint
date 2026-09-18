@@ -1,3 +1,5 @@
+import { getGeneralAgentConfig } from "./agentSettings";
+import { normalizeContextPolicy } from "@/lib/agent/contextPolicy";
 import { validateGenerationDefaults } from "@/domain/output";
 import { db } from "./database";
 import {
@@ -1556,6 +1558,7 @@ export async function createChatThread(options?: {
 }): Promise<ChatThread> {
   const at = nowIso();
   const thread: ChatThread = {
+    contextPolicy: normalizeContextPolicy((await getGeneralAgentConfig()).contextPolicy),
     id: createId("cth"),
     title: options?.title?.trim() || "新对话",
     connectorId: options?.connectorId,
@@ -1596,7 +1599,8 @@ export async function updateChatThread(
 }
 
 export async function deleteChatThread(id: Id): Promise<void> {
-  await db.transaction("rw", db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, db.agentTasks, async () => {
+  await db.transaction("rw", [db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, db.agentTasks, db.contextCompactions], async () => {
+    await db.contextCompactions.where("threadId").equals(id).delete();
     await db.agentTasks.where("threadId").equals(id).delete();
     await db.agentToolCalls.where("threadId").equals(id).delete();
     await db.agentRuns.where("threadId").equals(id).delete();

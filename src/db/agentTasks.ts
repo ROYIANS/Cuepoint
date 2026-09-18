@@ -1,3 +1,5 @@
+import { getGeneralAgentConfig } from "./agentSettings";
+import { normalizeContextPolicy } from "@/lib/agent/contextPolicy";
 import { db } from "@/db/database";
 import { GENERAL_AGENT_ID, type AgentTask, type AgentPlanItem } from "@/domain/agent";
 import { createId, nowIso } from "@/lib/ids";
@@ -5,7 +7,7 @@ import { deriveChatTitle } from "@/lib/chatTitle";
 import { isTaskBusy, validateTaskPlan } from "@/lib/agent/taskState";
 
 type TaskInput = { title: string; goal: string; plan?: AgentPlanItem[] };
-const tables = () => [db.agentTasks, db.chatThreads, db.agentRuns, db.chatMessages];
+const tables = () => [db.agents, db.agentTasks, db.chatThreads, db.agentRuns, db.chatMessages];
 function fields(input: TaskInput) {
   const title = input.title.trim();
   const goal = input.goal.trim();
@@ -41,7 +43,7 @@ export async function createAgentTask(input: TaskInput): Promise<AgentTask> {
   return db.transaction("rw", tables(), async () => {
     const at = nowIso();
     const threadId = createId("cth");
-    await db.chatThreads.add({ id: threadId, title: deriveChatTitle(clean.title), createdAt: at, updatedAt: at });
+    await db.chatThreads.add({ contextPolicy: normalizeContextPolicy((await getGeneralAgentConfig()).contextPolicy), id: threadId, title: deriveChatTitle(clean.title), createdAt: at, updatedAt: at });
     return createAgentTaskForThread(threadId, clean);
   });
 }

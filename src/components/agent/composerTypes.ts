@@ -8,6 +8,7 @@ export type ChatSurfaceMode = "agent" | "task";
 export type { AgentInteractionMode } from "@/domain/agent";
 
 export type ComposerProps = {
+  threadId?: string;
   value: string;
   sending: boolean;
   blocked?: boolean;

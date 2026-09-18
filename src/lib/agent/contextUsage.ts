@@ -1,15 +1,4 @@
 import type { AgentRequestMessage, AgentToolSchema } from "@/domain/agent";
-import type { ChatMessage } from "@/domain/types";
-
-/** Shared with beginAgentRun so the preview includes exactly the eligible history. */
-export function buildAgentRequestMessages(instructions: string, skillInstructions: string, history: readonly ChatMessage[], draft: string): AgentRequestMessage[] {
-  return [
-    { role: "system", content: [instructions, skillInstructions].filter(Boolean).join("\n") },
-    ...history.filter((message) => !message.status || message.status === "complete").map((message) => ({ role: message.role, content: message.content })),
-    ...(draft.trim() ? [{ role: "user" as const, content: draft.trim() }] : []),
-  ];
-}
-
 /** Lightweight character heuristic, NOT a provider tokenizer or billing measurement. */
 export function estimateTokens(text: string): number {
   let weight = 0;
@@ -32,6 +21,7 @@ export function estimateContextUsage(input: {
     { id: "assistant", label: "助手指令", tokens: 0, color: "#dc62b6" },
     { id: "skills", label: "技能与工具", tokens: estimateTokens(input.skillInstructions) + (input.tools.length ? estimateTokens(JSON.stringify(input.tools)) : 0), color: "#5899f5" },
     { id: "messages", label: "会话消息", tokens: 0, color: "#edb44d" },
+    { id: "summary", label: "历史摘要", tokens: 0, color: "#ce9763" },
     { id: "results", label: "工具结果", tokens: 0, color: "#a2c96a" },
   ];
   const system = [input.instructions, input.skillInstructions].filter(Boolean).join("\n");
@@ -41,7 +31,7 @@ export function estimateContextUsage(input: {
       categories[0].tokens += estimateTokens(input.instructions) + 4;
       return;
     }
-    const category = message.role === "tool" ? categories[3] : message.role === "system" ? categories[0] : categories[2];
+    const category = message.role === "tool" ? categories[4] : message.role === "assistant" && message.content.startsWith("[历史摘要 ·") ? categories[3] : message.role === "system" ? categories[0] : categories[2];
     category.tokens += estimateTokens(message.content) + 4;
     if (message.role === "assistant" && message.tool_calls) category.tokens += estimateTokens(JSON.stringify(message.tool_calls));
     if (message.role === "tool") category.tokens += estimateTokens(message.tool_call_id);

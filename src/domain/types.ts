@@ -1,3 +1,4 @@
+import type { ContextPolicy } from "./context";
 import type { ProjectGenerationDefaults } from "@/domain/output";
 
 export const PACKAGE_FORMAT = "aifenjing-project-v1" as const;
@@ -518,6 +519,7 @@ export type ChatMessageRole = "user" | "assistant" | "system";
 export type ChatMessageStatus = "pending" | "streaming" | "complete" | "error" | "aborted" | "interrupted";
 
 export interface ChatThread {
+  contextPolicy?: ContextPolicy;
   interactionMode?: import("./agent").AgentInteractionMode;
   reasoningSelection?: { connectorId: Id; baseUrl: string; model: string; value?: import("./agent").AgentReasoningEffort };
   id: Id;

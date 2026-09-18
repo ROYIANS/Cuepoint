@@ -5,7 +5,9 @@ import type { AgentInteractionMode, AgentModelMetrics, AgentTokenUsage, AgentRea
 import type { ChatMessage, ConnectorConfig } from "@/domain/types";
 import { createId, nowIso } from "@/lib/ids";
 import { getGeneralAgentConfig } from "@/db/agentSettings";
-import { buildAgentRequestMessages } from "@/lib/agent/contextUsage";
+import { normalizeContextPolicy, resolveContextCapacity } from "@/lib/agent/contextPolicy";
+import { buildContextMessages, findApplicableSummary, selectContextHistory } from "@/lib/agent/contextPlanner";
+import type { ChatModelMetadata } from "@/lib/ai/modelMetadata";
 import { assembleSkills } from "@/lib/agent/skills";
 import { assertReasoningEffort, selectAgentProtocol } from "@/lib/ai/reasoningPolicy";
 import { deriveChatTitle } from "@/lib/chatTitle";
@@ -42,10 +44,11 @@ export async function beginAgentRun(input: {
   reasoningEffort?: AgentReasoningEffort;
   interactionMode?: AgentInteractionMode;
   createTask?: boolean;
+  modelMetadata?: ChatModelMetadata;
 }): Promise<AgentRun> {
   const identity = connectorRunIdentity(input.connector);
   if (!input.model.trim() || !input.connector.apiKey.trim()) throw new Error("请选择模型并配置 API Key");
-  return db.transaction("rw", [db.chatThreads, db.chatMessages, db.agentRuns, db.agents, db.agentTasks], async () => {
+  return db.transaction("rw", [db.chatThreads, db.chatMessages, db.agentRuns, db.agents, db.agentTasks, db.contextCompactions], async () => {
     const thread = await db.chatThreads.get(input.threadId);
     if (!thread) throw new Error("对话不存在");
     const runs = await db.agentRuns.where("threadId").equals(thread.id).toArray();
@@ -78,8 +81,14 @@ export async function beginAgentRun(input: {
     const skills = assembleSkills(agent.enabledSkillIds ?? []);
     const enabledToolNames = interactionMode === "conversation" ? [] : (previous ? previous.enabledToolNames ?? [] : skills.enabledToolNames);
     const skillInstructions = interactionMode === "conversation" ? "" : (previous ? previous.skillInstructions ?? "" : skills.skillInstructions);
-    const requestMessages = previous?.requestMessages ?? buildAgentRequestMessages(instructions, skillInstructions, history, content);
+    const policy = normalizeContextPolicy(thread.contextPolicy);
+    const selectedHistory = selectContextHistory(history, policy);
+    const summary = policy.autoCompress ? findApplicableSummary(selectedHistory, await db.contextCompactions.where("threadId").equals(thread.id).toArray()) : undefined;
+    const baseMessages = buildContextMessages(instructions, skillInstructions, selectedHistory, content, summary);
+    const requestMessages = previous?.context?.baseMessages ?? previous?.requestMessages ?? baseMessages;
+    const context = previous ? previous.context : { policy, history: selectedHistory, baseMessages, draft: content, summaryId: summary?.id, ...resolveContextCapacity(input.model, input.modelMetadata, identity.definitionId, policy) };
     const run: AgentRun = {
+      context,
       id: runId, threadId: thread.id, taskId: previous?.taskId ?? task?.id, plan: previous?.plan ?? task?.plan, agentId: previous?.agentId ?? agent.id,
       agentSnapshot: previous?.agentSnapshot ?? { name: agent.name, instructions },
       userMessageId, assistantMessageId, retryOfRunId: previous?.id,
@@ -132,10 +141,11 @@ export async function finishAgentRun(runId: string, status: Exclude<AgentRunStat
 
 /** Caller must own the thread's Web Lock; elapsed wall time is not proof of abandonment. */
 export async function interruptThreadRuns(threadId: string): Promise<void> {
-  await db.transaction("rw", db.agentRuns, db.agentToolCalls, db.chatMessages, async () => {
+  await db.transaction("rw", db.agentRuns, db.agentToolCalls, db.chatMessages, db.contextCompactions, async () => {
     const runs = await db.agentRuns.where("threadId").equals(threadId).toArray();
     for (const run of runs) {
       if (run.status !== "running") continue;
+      await db.contextCompactions.where("runId").equals(run.id).filter((record) => record.status === "running").modify({ status: "interrupted", error: "整理已中断，未启用未完成的摘要。请手动继续或重新生成。", updatedAt: nowIso() });
       await db.agentToolCalls.where("runId").equals(run.id).filter((call) => call.status === "running").modify({
         status: "unknown", error: "执行中断，结果尚不确定，不能自动重跑。", updatedAt: nowIso(),
       });

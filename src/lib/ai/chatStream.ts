@@ -10,6 +10,7 @@ import type { AgentModelMetrics, AgentTokenUsage, AgentReasoningEffort, AgentReq
 export type ChatCompletionMessage = AgentRequestMessage;
 
 export type StreamChatInput = {
+  maxOutputTokens?: number;
   baseUrl: string;
   apiKey: string;
   model: string;
@@ -349,7 +350,7 @@ export async function streamChatCompletions(
       method: "POST",
       headers: authHeaders(apiKey),
       signal,
-      body: JSON.stringify({ model, messages: input.messages, stream: true, ...(input.reasoningEffort !== undefined ? { reasoning_effort: input.reasoningEffort } : {}), ...(input.tools?.length ? { tools: input.tools } : {}) }),
+      body: JSON.stringify({ model, ...(input.maxOutputTokens ? (/^(gpt-|o[1-9])/.test(model) ? { max_completion_tokens: input.maxOutputTokens } : { max_tokens: input.maxOutputTokens }) : {}), messages: input.messages, stream: true, ...(input.reasoningEffort !== undefined ? { reasoning_effort: input.reasoningEffort } : {}), ...(input.tools?.length ? { tools: input.tools } : {}) }),
     });
     signal?.throwIfAborted();
     if (!res.ok) {

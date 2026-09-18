@@ -1,0 +1,7 @@
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Frozen requests and recovery"}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Tool ledger and protocol chains"}
+{"file": ".trellis/spec/frontend/agent-tasks.md", "reason": "Goals and shared plans"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "UI conventions"}
+{"file": "docs/agent-workflow-direction.md", "reason": "Trellis and future memory boundary"}
+{"file": ".trellis/tasks/09-19-agent-context-management/research/lobehub-context.md", "reason": "Local source reference findings"}
+{"file": ".trellis/spec/frontend/agent-context.md", "reason": "Shared context policy, budgeting, compaction and recovery contracts"}

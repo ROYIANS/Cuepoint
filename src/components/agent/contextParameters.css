@@ -1,0 +1,29 @@
+.agent-chat-root .agent-control-panel.agent-parameters { width: min(368px, calc(100vw - 64px)); max-height: min(650px, 75dvh); overflow-y: auto; }
+.agent-parameter-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 17px 16px; }
+.agent-parameter-row label { display: flex; flex-direction: column; gap: 6px; cursor: pointer; }
+.agent-parameter-row strong { font-size: 13px; font-weight: 500; color: var(--foreground); }
+.agent-parameter-row small, .agent-parameter-detail p, .agent-parameter-advanced p, .agent-parameter-note { font-size: 11px; line-height: 1.65; color: var(--muted-foreground); margin: 0; }
+.agent-parameter-detail { padding: 0 16px 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 12px; }
+.agent-parameter-detail p { flex: 0 0 100%; }
+.agent-parameter-detail .ant-input-number { margin-left: auto; width: 90px; }
+.agent-parameter-advanced { border-top: 1px solid var(--border); margin: 0 16px; padding: 14px 0; font-size: 12px; }
+.agent-parameter-advanced summary { color: var(--muted-foreground); cursor: pointer; }
+.agent-parameter-advanced label { display: block; margin: 16px 0 8px; }
+.agent-parameter-advanced label span { color: var(--muted-foreground); margin-left: 8px; }
+.agent-parameter-advanced .ant-input-number { width: 100%; margin-bottom: 8px; }
+.agent-parameter-note { padding: 0 16px 12px; }
+.agent-parameter-actions { display: flex; justify-content: space-between; gap: 12px; padding: 10px 16px 0; border-top: 1px solid var(--border); }
+.agent-parameter-actions button { display: inline-flex; gap: 6px; align-items: center; font-size: 11px; color: var(--muted-foreground); background: none; border: 0; padding: 6px 0; cursor: pointer; }
+.agent-parameter-actions button:hover { color: var(--foreground); }
+.agent-parameter-actions button:disabled { opacity: .5; cursor: default; }
+.agent-parameter-save { display: block; text-align: right; font-size: 10px; color: var(--muted-foreground); padding: 6px 16px 10px; }
+.agent-compaction { padding: 8px 0; color: var(--muted-foreground); font-size: 12px; }
+.agent-compaction summary { display: flex; align-items: center; gap: 8px; cursor: pointer; list-style: none; }
+.agent-compaction summary::-webkit-details-marker { display: none; }
+.agent-compaction summary span { margin-left: auto; font-variant-numeric: tabular-nums; font-size: 11px; }
+.agent-compaction-body { margin: 12px 0 2px 22px; max-height: 260px; overflow: auto; }
+.agent-compaction-body p { font-size: 11px; line-height: 1.65; }
+.agent-compaction-body pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; line-height: 1.8; color: var(--foreground); }
+.agent-compaction-source { border-top: 1px solid var(--border); padding-top: 8px; }
+.agent-compaction-source summary { font-size: 11px; }
+.agent-context-budget { margin: 12px 0; padding-top: 10px; border-top: 1px solid var(--border); font-size: 11px; line-height: 1.8; color: var(--muted-foreground); }

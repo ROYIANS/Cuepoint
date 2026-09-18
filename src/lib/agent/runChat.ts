@@ -1,3 +1,4 @@
+import { prepareRunContext } from "./contextCompaction";
 import { streamResponses, type ResponsesResult } from "@/lib/ai/responsesStream";
 import { db } from "@/db/database";
 import { appendToolResults, markRunningToolsUnknown, pauseForApproval, resumeAgentRun, saveToolRound, startModelStep, transitionToolCall } from "@/db/agentTools";
@@ -109,6 +110,7 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
     if (run.hasToolCalls && !await executePendingTools(run, controller, registry)) return;
     while (true) {
       controller.signal.throwIfAborted();
+      run = await prepareRunContext(run.id, toolSchemas(run.enabledToolNames ?? [], registry), apiKey, controller.signal, fetchImpl);
       run = await startModelStep(run.id, MAX_MODEL_STEPS);
       controller.signal.throwIfAborted();
       accum = createReasoningAccum();

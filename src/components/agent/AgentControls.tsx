@@ -1,7 +1,8 @@
+import { ContextParameters } from "./ContextParameters";
 import { useEffect, useRef, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Dropdown, Input, Switch, Tooltip } from "antd";
-import { ArrowLeft, Boxes, Check, ChevronDown, ChevronRight, Hand, Plus, Search, ShieldAlert, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Boxes, Check, ChevronDown, ChevronRight, Hand, Plus, Search, SlidersHorizontal, ShieldAlert, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { db } from "@/db/database";
 import { GENERAL_AGENT_ID, type AgentPermissionMode } from "@/domain/agent";
@@ -92,12 +93,26 @@ export function AgentControls() {
   );
 }
 
-export function ComposerPlusMenu() {
+export function ComposerPlusMenu({ threadId }: { threadId?: string }) {
   const { config, saving, save, enabledSkills } = useAgentSettings();
   const [open, setOpen] = useState(false);
-  const [view, setView] = useState<"home" | "skills">("home");
+  const [view, setView] = useState<"home" | "skills" | "parameters">("home");
   const [search, setSearch] = useState("");
   const searchInput = useRef<import("antd").InputRef>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const dismiss = (event: PointerEvent) => {
+      if (event.target instanceof Node && !panelRef.current?.contains(event.target) && !triggerRef.current?.contains(event.target)) setOpen(false);
+    };
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); setOpen(false); triggerRef.current?.focus(); }
+    };
+    document.addEventListener("pointerdown", dismiss, true);
+    document.addEventListener("keydown", escape, true);
+    return () => { document.removeEventListener("pointerdown", dismiss, true); document.removeEventListener("keydown", escape, true); };
+  }, [open]);
   useEffect(() => { if (open) searchInput.current?.focus(); }, [open, view]);
   const skills = AGENT_SKILLS.filter((skill) => `${skill.name} ${skill.description}`.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()));
   const toggleSkill = (key: string) => void save(async () => {
@@ -120,17 +135,18 @@ export function ComposerPlusMenu() {
     menu={{
       className: "agent-composer-menu",
       items: view === "home" ? [
+        { key: "parameters", icon: <SlidersHorizontal size={16} />, label: <span className="agent-plus-row">对话参数<span>历史与压缩<ChevronRight size={14} /></span></span> },
         { key: "skills", icon: <Boxes size={16} />, label: <span className="agent-plus-row">技能<span>{enabledSkills.length} 项已启用<ChevronRight size={14} /></span></span> },
       ] : [],
       onClick: ({ key }) => {
-        if (key === "skills") { setView("skills"); return; }
+        if (key === "skills" || key === "parameters") { setView(key); return; }
         setOpen(false);
       },
     }}
-    popupRender={(menu) => view === "home" ? <div className="agent-control-panel">
+    popupRender={(menu) => <div ref={panelRef}>{view === "parameters" ? <ContextParameters threadId={threadId} onBack={() => { setView("home"); setSearch(""); }} /> : view === "home" ? <div className="agent-control-panel">
       <div className="agent-skill-search"><Input variant="borderless" ref={searchInput} prefix={<Search size={14} />} value={search} onChange={(event) => setSearch(event.target.value)} placeholder="搜索技能与操作…" aria-label="搜索技能与操作" allowClear /></div>
       <div className="agent-control-panel-heading">创作能力</div>
-      {search.trim() ? <div className="agent-skill-list">{skills.length ? skills.map((skill) => <button key={skill.id} type="button" className="agent-plus-search-result" onClick={() => setView("skills")}><Boxes size={16} /><span className="agent-control-option"><span>{skill.name}</span><small>{skill.description}</small></span><ChevronRight size={14} /></button>) : <p className="agent-control-panel-note">没有匹配的技能或操作</p>}</div> : menu}
+      {search.trim() ? <div className="agent-skill-list">{ /参数|历史|压缩|context|parameter/i.test(search) && <button type="button" className="agent-plus-search-result" onClick={() => setView("parameters")}><SlidersHorizontal size={16} />对话参数<ChevronRight size={14} /></button>}{skills.length ? skills.map((skill) => <button key={skill.id} type="button" className="agent-plus-search-result" onClick={() => setView("skills")}><Boxes size={16} /><span className="agent-control-option"><span>{skill.name}</span><small>{skill.description}</small></span><ChevronRight size={14} /></button>) : !/参数|历史|压缩|context|parameter/i.test(search) ? <p className="agent-control-panel-note">没有匹配的技能或操作</p> : null}</div> : menu}
     </div> : <div className="agent-control-panel agent-skill-panel">
       <div className="agent-skill-heading">
         <button type="button" className="agent-skill-back" aria-label="返回更多选项" onClick={() => setView("home")}><ArrowLeft size={16} />技能</button>
@@ -144,10 +160,10 @@ export function ComposerPlusMenu() {
         </div>) : <p className="agent-control-panel-note">没有匹配的技能</p>}
       </div>
       <p className="agent-control-panel-note" role="status">{saving ? "正在保存…" : "对新执行生效，已开始的执行保留原设置。"}</p>
-    </div>}
+    </div>}</div>}
   >
     <Tooltip title="更多选项" open={open ? false : undefined} placement="top" getPopupContainer={popupRoot} trigger={["hover", "focus"]}>
-      <button type="button" className="agent-chip agent-control agent-control-icon" aria-label="更多选项" aria-haspopup="menu" aria-expanded={open}><Plus size={18} aria-hidden /></button>
+      <button ref={triggerRef} type="button" className="agent-chip agent-control agent-control-icon" aria-label="更多选项" aria-haspopup="menu" aria-expanded={open}><Plus size={18} aria-hidden /></button>
     </Tooltip>
   </Dropdown>;
 }

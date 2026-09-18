@@ -90,6 +90,7 @@ function InteractionModeSwitch({ mode, onChange }: {
  * Floating composer — left Agent/任务, right model (with connector inside) + send.
  */
 export function FloatingComposer({
+  threadId,
   value,
   sending,
   blocked,
@@ -214,7 +215,7 @@ export function FloatingComposer({
       <div className="agent-composer-footer">
         <div className="agent-composer-cluster">
           {!detail && <ModeSwitch mode={chatMode} onChange={onChatModeChange} />}
-          <ComposerPlusMenu />
+          <ComposerPlusMenu threadId={threadId} />
           {detail ? <button type="button" className="agent-chip agent-control agent-control-icon" aria-label={expanded ? "退出全屏编辑" : "展开编辑器"} onClick={() => onExpandedChange?.(!expanded)}>
             {expanded ? <Minimize2 size={17} aria-hidden /> : <Expand size={17} aria-hidden />}
           </button> : null}

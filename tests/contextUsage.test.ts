@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { buildAgentRequestMessages, estimateContextUsage, estimateTokens } from "../src/lib/agent/contextUsage";
+import { estimateContextUsage, estimateTokens } from "../src/lib/agent/contextUsage";
+import { buildContextMessages, selectContextHistory } from "@/lib/agent/contextPlanner";
+import { DEFAULT_CONTEXT_POLICY } from "@/lib/agent/contextPolicy";
 import type { ChatMessage } from "../src/domain/types";
 
 describe("context preview", () => {
@@ -10,11 +12,11 @@ describe("context preview", () => {
       { id: "stream", role: "assistant", content: "live", status: "streaming" },
       { id: "legacy", role: "assistant", content: "old" },
     ].map((message) => ({ threadId: "t", createdAt: "2026-09-18", ...message })) as ChatMessage[];
-    expect(buildAgentRequestMessages("system", "skills", history, "  draft  ")).toEqual([
+    expect(buildContextMessages("system", "skills", selectContextHistory(history, DEFAULT_CONTEXT_POLICY), "  draft  ")).toEqual([
       { role: "system", content: "system\nskills" }, { role: "user", content: "question" },
       { role: "assistant", content: "old" }, { role: "user", content: "draft" },
     ]);
-    expect(buildAgentRequestMessages("", "", [], " ")).toEqual([{ role: "system", content: "" }]);
+    expect(buildContextMessages("", "", [], " ")).toEqual([{ role: "system", content: "" }]);
   });
 
   it("counts tool arguments, results and schemas once and splits system skills", () => {
@@ -29,7 +31,7 @@ describe("context preview", () => {
     expect(withTools.categories[0].tokens).toBe(base.categories[0].tokens);
     expect(withTools.categories[1].tokens).toBeGreaterThan(base.categories[1].tokens);
     expect(withTools.categories[2].tokens).toBeGreaterThan(4);
-    expect(withTools.categories[3].tokens).toBeGreaterThan(4);
+    expect(withTools.categories.find((item) => item.id === "results")!.tokens).toBeGreaterThan(4);
     expect(withTools.total).toBe(withTools.categories.reduce((sum, item) => sum + item.tokens, 0));
   });
 

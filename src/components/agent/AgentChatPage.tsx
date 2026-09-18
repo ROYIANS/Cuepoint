@@ -154,6 +154,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
     [activeThreadId],
   );
 
+  const compactions = useLiveQuery(() => activeThreadId ? db.contextCompactions.where("threadId").equals(activeThreadId).sortBy("createdAt") : [], [activeThreadId]);
   const runs = useLiveQuery(async () => {
     if (!activeThreadId) return [];
     return db.agentRuns.where("threadId").equals(activeThreadId).sortBy("createdAt");
@@ -326,7 +327,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
         await withThreadRunLock(targetThread.id, async () => {
           if (controller.signal.aborted) return;
           await updateChatThread(targetThread.id, { interactionMode: activeThreadId ? interactionMode : "smart", reasoningSelection: { connectorId: connector.id, baseUrl: connector.baseUrl, model, value: reasoningEffort } });
-          const run = await beginAgentRun({ threadId: targetThread.id, connector, model, content, reasoningEffort, interactionMode: activeThreadId ? interactionMode : "smart", createTask: !activeThreadId && chatMode === "task" });
+          const run = await beginAgentRun({ threadId: targetThread.id, connector, model, content, modelMetadata: catalogMatches ? modelCatalog?.metadata?.[model] : undefined, reasoningEffort, interactionMode: activeThreadId ? interactionMode : "smart", createTask: !activeThreadId && chatMode === "task" });
           setDraft((current) => current === draft ? "" : current);
           await executeChatRun(run, connector.apiKey, controller);
         });
@@ -488,6 +489,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
     } catch (error) { toast.error(error instanceof Error ? error.message : "关联任务失败"); }
   };
   const composerProps: ComposerProps = {
+    threadId: activeThreadId,
     blocked: Boolean(activeTask && activeTask.lifecycle !== "open"),
     status: activeTask || showRunStatus ? <>
       {activeTask && <div className="agent-composer-task-summary">
@@ -499,11 +501,11 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
       </div>}
       {showRunStatus ? (
       <div className="agent-composer-run-status" role="status">
-        <span><i />{currentRun.status === "running" ? "正在执行" : currentRun.status === "waiting_approval" ? "等待你批准操作" : currentRun.status === "interrupted" ? "执行已中断，进度已保存" : "执行未完成"}</span>
+        <span><i />{currentRun.status === "running" ? compactions?.at(-1)?.status === "running" ? "正在整理较早的对话…" : "正在执行" : currentRun.status === "waiting_approval" ? "等待你批准操作" : currentRun.status === "interrupted" ? "执行已中断，进度已保存" : "执行未完成"}</span>
         {currentRun.status === "running" && <button type="button" onClick={handleStop} disabled={!sending}>停止</button>}
       </div>
     ) : null}</> : undefined,
-    contextUsage: <ContextUsageTrigger task={activeTask} interactionMode={interactionMode} draft={draft} messages={messages?.filter((m) => m.threadId === activeThreadId) ?? []} runs={runs?.filter((r) => r.threadId === activeThreadId) ?? []} model={modelValue} connector={selectedConnector} modelMetadata={catalogMatches ? modelCatalog?.metadata : undefined} open={contextOpen} onOpenChange={setContextOpen} />,
+    contextUsage: <ContextUsageTrigger threadId={activeThreadId} task={activeTask} interactionMode={interactionMode} draft={draft} messages={messages?.filter((m) => m.threadId === activeThreadId) ?? []} runs={runs?.filter((r) => r.threadId === activeThreadId) ?? []} model={modelValue} connector={selectedConnector} modelMetadata={catalogMatches ? modelCatalog?.metadata : undefined} open={contextOpen} onOpenChange={setContextOpen} />,
 
     reasoningEffort,
     onReasoningEffortChange: (value) => {
