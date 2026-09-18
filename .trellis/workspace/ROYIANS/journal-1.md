@@ -384,3 +384,24 @@ Completed R1-R6 reliability repairs; 340 tests and lint/build pass, browser back
 ### Status
 
 [OK] **Completed**
+
+
+## Session 18: Asset relationships and model-aware project settings
+
+**Date**: 2026-09-18
+**Task**: Asset relationships and model-aware project settings
+**Branch**: `main`
+
+### Summary
+
+Completed optional asset/project metadata, prop/style relationships, scoped media reuse, verified APIMart image/video defaults. 386 tests and lint/build pass; browser model settings, relations, CSV and mobile verified.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `60a8bbe` | (see git log) |
+
+### Status
+
+[OK] **Completed**
