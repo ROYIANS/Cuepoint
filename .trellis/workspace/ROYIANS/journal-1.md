@@ -341,3 +341,24 @@ Added APIMart connector and abortable image/video API adapters; restricted chat 
 ### Status
 
 [OK] **Completed**
+
+
+## Session 16: AIHubMix connector and media adapters
+
+**Date**: 2026-09-18
+**Task**: AIHubMix connector and media adapters
+**Branch**: `main`
+
+### Summary
+
+Added AIHubMix public metadata discovery, authenticated read-only probe, chat compatibility filtering and native image/video adapters with protected result reads. 308 tests, lint and build passed; browser public discovery verified. No live paid generation. User approved commit and archive.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `6969415` | (see git log) |
+
+### Status
+
+[OK] **Completed**
