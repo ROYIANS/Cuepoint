@@ -176,8 +176,8 @@ shots: "id, projectId, episodeId, order"
 | Shot pictures | `firstFrame` / `lastFrame` / `clip`; old `frame` → `firstFrame`; old `reference` refs merge into `firstFrame` without replacing `result` |
 | Shot workspace | `design` prioritizes text/relationships; `media` shows first/last/clip. Both edit the same Shot rows. Missing preference defaults to `design` |
 | Shot status | New / missing / unknown → `draft`. Design and media views share status, filters, selection, and reorder |
-| Shot filters | Persist on `project.shotSettings.filters`. Empty arrays mean show all. Dimensions AND together; values within a dimension OR |
-| Zip | `episodes.json` optional; missing file synthesizes episode 1 from `project.story` + all shots. Project props/styles and their media round-trip with the same package. Missing shot `status` imports as `draft`; filters round-trip via `normalizeShotSettings` |
+| Shot filters | Persist on `Episode.shotFilters`; `getEpisodeShotFilters` normalizes and scopes beat IDs. Dexie v6 migrates legacy project filters to episodes. Empty arrays mean show all. Dimensions AND together; values within a dimension OR |
+| Zip | `episodes.json` optional; missing file synthesizes episode 1 from `project.story` + all shots. Project props/styles and their media round-trip with the same package. Missing shot `status` imports as `draft`; episode filters round-trip with remapped/scoped beat IDs; legacy project filters migrate on import |
 
 ### 4. Validation & Error Matrix
 
@@ -316,12 +316,15 @@ Use this contract whenever durable form state is debounced or a project crosses 
 
 ```ts
 updateEpisode(id: Id, patch: Partial<Pick<Episode, "title" | "story" | "order">>): Promise<void>
+flushPendingDrafts(projectId: Id): Promise<void> // rejects if any scoped draft fails
 exportProjectZip(projectId: Id): Promise<Blob>
 importProjectZip(file: Blob): Promise<Project>
 useDebouncedDraft<T>(options: {
   initialValue: T;
   persist: (value: T) => Promise<void>;
   delay?: number;
+  scope?: string;
+  draftKey?: string;
 }): {
   draft: T;
   setDraft: Dispatch<SetStateAction<T>>;
@@ -346,7 +349,10 @@ useDebouncedDraft<T>(options: {
 
 | Condition | Behavior |
 | --- | --- |
-| Navigate before debounce fires | Flush the latest draft once |
+| Navigate before debounce fires | Flush the latest draft once; keep failed keyed drafts recoverable on reopen |
+| Backup while a draft save fails | Reject; show failure and do not download a stale backup |
+| Concurrent independent fields/slots | Merge inside write transaction; retain both changes |
+| Concurrent last-episode deletion | At least one episode survives |
 | An older save resolves after a newer edit | Do not mark the newer draft saved |
 | Optional package JSON is absent | Import an empty collection for that entity |
 | Invalid manifest / JSON | Reject the whole package; no partial writes |
@@ -367,6 +373,10 @@ useDebouncedDraft<T>(options: {
 - Export/import props/styles with slot media; assert IDs and MIME types are remapped and restored
 - Import two episodes containing the same legacy beat ID; assert each shot maps to the beat in its own episode
 - Force an import error; assert no project-owned table was partially written
+- Concurrent field/slot patches, last-episode deletes, and slot cleanup failure rollback (`repoReliability.test.ts`)
+- Immediate backup drains newer draft revisions; failures reject and retain latest value (`debouncedDraft.test.ts`)
+- Legacy v5 filters migrate with own beat IDs; legacy/new ZIP remaps filters (`repoReliability.test.ts`, `projectPackage.test.ts`)
+- Concurrent modification during ZIP export yields a coherent JSON + Blob snapshot (`projectPackage.test.ts`)
 
 ### 7. Wrong vs Correct
 
@@ -468,3 +478,13 @@ registerUndo({ label: "已删除镜头", restore: async () => restoreDeletedShot
 **Cause**: `touchProject` upserted owner id `"studio"`.
 
 **Fix**: Guard with `isStudioLibrary`.
+
+
+## Reliability contract (2026-09-18)
+
+- Read/merge/write operations must read the current entity inside a Dexie write transaction. Independent field and nested slot updates cannot overwrite one another. Asset update timestamps use field updates, not a stale project snapshot.
+- Last-episode deletion count and delete share one transaction. Slot replacement and orphan checks operate on committed references across all owner types; cleanup never deletes shared media.
+- `updateEpisodeShotFilters` writes only that episode. Prune deleted beats, preserve the unassigned sentinel, remap IDs on package import, and reveal a deep-linked shot by clearing obstructing filters with feedback.
+- `useDebouncedDraft` accepts project `scope` and stable entity-field `draftKey`. Failed/unmounted drafts remain recoverable in the running app; reopening a key must resume it instead of creating an older competing writer. Active editors request browser beforeunload protection while dirty/in-flight/failed and attempt a best-effort flush; pagehide also flushes. Forced termination or confirming leave is not durable persistence. Detached failed drafts are protected by the in-app backup barrier, not a permanent browser unload handler.
+- Backup must await `flushPendingDrafts(projectId)` and abort visibly on errors. `exportProjectZip` reads project rows, referenced media records and Blobs in a single readonly transaction before ZIP compression.
+- Asset multi-copy removes each committed source from the retry selection immediately. Pending copy dialogs cannot close or change selection; failure retains only uncommitted items.

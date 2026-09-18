@@ -1,3 +1,4 @@
+import { copySelection } from "@/lib/copySelection";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Library, Plus, Trash2 } from "lucide-react";
@@ -319,7 +320,7 @@ function AssetCard({
         type="button"
         size="icon-sm"
         variant="secondary"
-        className="absolute top-2 right-2 hidden rounded-full group-hover:flex"
+        className="absolute top-2 right-2 flex rounded-full md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 focus-visible:opacity-100"
         onClick={onDelete}
         aria-label={`删除${TAB_COPY[tab].singular}`}
       >
@@ -369,13 +370,13 @@ function StudioAssetPicker({
   async function copySelected() {
     setCopying(true);
     try {
-      for (const sourceId of selected) {
+      const copied = await copySelection(selected, copiedSourceIds, async (sourceId) => {
         if (tab === "characters") await copyStudioCharacter(projectId, sourceId);
         else if (tab === "scenes") await copyStudioScene(projectId, sourceId);
         else if (tab === "props") await copyStudioProp(projectId, sourceId);
         else await copyStudioStyle(projectId, sourceId);
-      }
-      toast.success(`已添加 ${selected.size} 个${TAB_COPY[tab].singular}`);
+      }, (sourceId) => setSelected((current) => new Set([...current].filter((id) => id !== sourceId))));
+      toast.success(`已添加 ${copied} 个${TAB_COPY[tab].singular}`);
       closePicker();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "添加失败");
@@ -388,6 +389,7 @@ function StudioAssetPicker({
     <Dialog
       open={open}
       onOpenChange={(nextOpen) => {
+        if (copying) return;
         if (!nextOpen) setSelected(new Set());
         onOpenChange(nextOpen);
       }}
@@ -409,6 +411,7 @@ function StudioAssetPicker({
                 className="hover:bg-muted/50 flex cursor-pointer items-center gap-3 rounded-xl border p-3"
               >
                 <Checkbox
+                  disabled={copying}
                   checked={selected.has(asset.id)}
                   onCheckedChange={(checked) =>
                     setSelected((current) => {
@@ -435,7 +438,7 @@ function StudioAssetPicker({
           )}
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={closePicker}>
+          <Button variant="outline" disabled={copying} onClick={closePicker}>
             取消
           </Button>
           <Button

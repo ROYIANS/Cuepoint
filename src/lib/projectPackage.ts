@@ -6,6 +6,9 @@ import {
   DEFAULT_VISIBLE_COLUMNS,
   normalizeAspectPreset,
   normalizeEpisodeStory,
+  getEpisodeShotFilters,
+  normalizeShotFilters,
+  SHOT_UNASSIGNED_BEAT,
   normalizeProjectMode,
   normalizeShotSettings,
   normalizeShotStatus,
@@ -279,6 +282,7 @@ function parseStyle(raw: Record<string, unknown>, projectId: Id): VisualStyle {
 }
 
 const EPISODE_KEYS = [
+  "shotFilters",
   "id",
   "projectId",
   "order",
@@ -297,6 +301,7 @@ function parseEpisode(raw: Record<string, unknown>, projectId: Id, index: number
     order: Number.isFinite(Number(raw.order)) ? Number(raw.order) : index,
     title: String(raw.title ?? ""),
     story: normalizeEpisodeStory(raw.story),
+    ...(raw.shotFilters === undefined ? {} : { shotFilters: normalizeShotFilters(raw.shotFilters) }),
     createdAt: String(raw.createdAt ?? at),
     updatedAt: String(raw.updatedAt ?? at),
     extra: pickExtra(raw, EPISODE_KEYS),
@@ -394,17 +399,26 @@ function remapId(map: Map<string, string>, oldId: string | undefined, prefix: st
 }
 
 export async function exportProjectZip(projectId: Id): Promise<Blob> {
-  const project = await db.projects.get(projectId);
-  if (!project) throw new PackageError("项目不存在");
-  const [characters, scenes, props, styles, episodes, shots] = await Promise.all([
-    db.characters.where("projectId").equals(projectId).toArray(),
-    db.scenes.where("projectId").equals(projectId).toArray(),
-    db.props.where("projectId").equals(projectId).toArray(),
-    db.styles.where("projectId").equals(projectId).toArray(),
-    db.episodes.where("projectId").equals(projectId).sortBy("order"),
-    db.shots.where("projectId").equals(projectId).sortBy("order"),
-  ]);
-  const mediaIds = await collectMediaIds(projectId);
+  // Snapshot all JSON rows and referenced Blobs under one read transaction.
+  // Compression happens after the transaction closes; no external awaits hold it open.
+  const { project, characters, scenes, props, styles, episodes, shots, mediaRecords } =
+    await db.transaction("r", [db.projects, db.characters, db.scenes, db.props, db.styles, db.episodes, db.shots, db.media], async () => {
+      const project = await db.projects.get(projectId);
+      if (!project) throw new PackageError("项目不存在");
+      const [characters, scenes, props, styles, episodes, shots] = await Promise.all([
+        db.characters.where("projectId").equals(projectId).toArray(),
+        db.scenes.where("projectId").equals(projectId).toArray(),
+        db.props.where("projectId").equals(projectId).toArray(),
+        db.styles.where("projectId").equals(projectId).toArray(),
+        db.episodes.where("projectId").equals(projectId).sortBy("order"),
+        db.shots.where("projectId").equals(projectId).sortBy("order"),
+      ]);
+      const mediaIds = await collectMediaIds(projectId);
+      const mediaRecords = (await db.media.bulkGet([...mediaIds])).filter(
+        (media): media is MediaRecord => media !== undefined && media.projectId === projectId,
+      );
+      return { project, characters, scenes, props, styles, episodes, shots, mediaRecords };
+    });
   const zip = new JSZip();
   zip.file(
     "manifest.json",
@@ -421,9 +435,7 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
   zip.file("styles.json", JSON.stringify(styles, null, 2));
   zip.file("episodes.json", JSON.stringify(episodes, null, 2));
   zip.file("shots.json", JSON.stringify(shots, null, 2));
-  for (const mediaId of mediaIds) {
-    const media = await db.media.get(mediaId);
-    if (!media) continue;
+  for (const media of mediaRecords) {
     const filename = `media/${media.id}.${extFor(media.mimeType, media.filename)}`;
     zip.file(filename, media.blob);
   }
@@ -566,6 +578,7 @@ export async function importProjectZip(file: Blob): Promise<Project> {
     : [synthesizeFirstEpisode(project, projectRaw)];
 
   const episodes = parsedEpisodes.map((episode) => {
+    const filters = getEpisodeShotFilters(episode, project);
     const oldEpisodeId = episode.id;
     const newId = remapId(episodeMap, oldEpisodeId, "ep")!;
     const beatMap = new Map<string, string>();
@@ -586,8 +599,18 @@ export async function importProjectZip(file: Blob): Promise<Project> {
         };
       }),
     };
+    episode.shotFilters = {
+      ...filters,
+      beatIds: filters.beatIds.flatMap((id) => {
+        if (id === SHOT_UNASSIGNED_BEAT) return [id];
+        const mapped = beatMap.get(id);
+        return mapped ? [mapped] : [];
+      }),
+    };
     return episode;
   });
+  // Legacy filters have been migrated per episode; never retain obsolete beat IDs.
+  project.shotSettings.filters = normalizeShotFilters(undefined);
 
   const fallbackEpisodeId = episodes[0]?.id ?? createId("ep");
 

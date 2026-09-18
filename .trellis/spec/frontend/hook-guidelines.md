@@ -46,6 +46,10 @@ if (character === null) return <div>找不到这个角色</div>;
 
 This applies to `characters`, `scenes`, `props`, `styles`, `episodes`, `projects`, and any other `db.*.get` detail page.
 
+### Changed query dependencies
+
+`useLiveQuery` can retain its previous result while a new dependency set loads. If downstream actions rely on loading being complete, include the dependency identity in the query result and return `undefined` until it matches the current identity. `useShotMedia` keys its result by the sorted result-media IDs so gap filters and locate-shot navigation cannot treat the previous episode's media collection as loaded.
+
 ---
 
 ## Naming Conventions

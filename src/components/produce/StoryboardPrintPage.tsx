@@ -1,3 +1,4 @@
+import { useShotMedia } from "@/lib/useShotMedia";
 import { Link } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { ArrowLeft, Printer } from "lucide-react";
@@ -36,7 +37,10 @@ export function StoryboardPrintPage({
     [projectId],
   );
 
+  const media = useShotMedia(shots);
+
   if (
+    media === undefined ||
     project === undefined ||
     episode === undefined ||
     shots === undefined ||
@@ -55,6 +59,7 @@ export function StoryboardPrintPage({
     shots,
     characters,
     scenes,
+    media,
   });
 
   return (
@@ -94,7 +99,7 @@ export function StoryboardPrintPage({
           {delivery.rows.map((row) => (
             <article
               key={row.shot.id}
-              className="storyboard-card grid grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] overflow-hidden rounded-lg border border-black/20"
+              className="storyboard-card grid grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] rounded-lg border border-black/20"
             >
               <div className="aspect-video bg-neutral-100">
                 <MediaPreview
@@ -110,11 +115,11 @@ export function StoryboardPrintPage({
                     {row.statusLabel} · {formatDuration(row.durationSec)}
                   </span>
                 </div>
-                <p className="mt-1 truncate text-[11px] text-black/50">
+                <p className="mt-1 whitespace-pre-wrap break-words text-[11px] text-black/50">
                   {row.beat}
                   {row.scene ? ` · ${row.scene}` : ""}
                 </p>
-                <p className="mt-3 line-clamp-4 text-xs leading-5">
+                <p className="mt-3 whitespace-pre-wrap break-words text-xs leading-5">
                   {row.content || "未写内容"}
                 </p>
               </div>

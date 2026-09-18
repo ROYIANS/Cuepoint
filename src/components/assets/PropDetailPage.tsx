@@ -5,10 +5,8 @@ import { db } from "@/db/database";
 import { patchProp, setPropSlot } from "@/db/repo";
 import { PROP_SLOTS } from "@/domain/types";
 import { EditableGenerationSlot } from "@/components/slots/GenerationSlotCard";
+import { AssetTextField } from "./AssetTextField";
 import { Button } from "@/components/ui/button";
-import { Field } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 
 export function PropDetailPage({
   propId,
@@ -73,30 +71,37 @@ export function PropDetailPage({
                 title={`道具 · ${slot.label}`}
                 variant="asset"
                 slot={prop.slots?.[slot.id]}
-                onSave={(value) => void setPropSlot(prop.id, slot.id, value)}
+                onSave={(value) => setPropSlot(prop.id, slot.id, value)}
               />
             ))}
           </div>
           <div className="space-y-4">
-            <Field label="名称">
-              <Input
-                value={prop.name}
-                onChange={(event) => void patchProp(prop.id, { name: event.target.value })}
-              />
-            </Field>
-            <Field label="类型">
-              <Input
-                value={prop.kind}
-                placeholder="衣服、车、物件…"
-                onChange={(event) => void patchProp(prop.id, { kind: event.target.value })}
-              />
-            </Field>
-            <Field label="备注">
-              <Textarea
-                value={prop.notes}
-                onChange={(event) => void patchProp(prop.id, { notes: event.target.value })}
-              />
-            </Field>
+            <AssetTextField
+              key={`${prop.id}:name`}
+              draftKey={`${prop.id}:name`}
+              label="名称"
+              value={prop.name}
+              projectId={prop.projectId}
+              persist={(value) => patchProp(prop.id, { name: value })}
+            />
+            <AssetTextField
+              key={`${prop.id}:kind`}
+              draftKey={`${prop.id}:kind`}
+              label="类型"
+              value={prop.kind}
+              projectId={prop.projectId}
+              persist={(value) => patchProp(prop.id, { kind: value })}
+              placeholder="衣服、车、物件…"
+            />
+            <AssetTextField
+              key={`${prop.id}:notes`}
+              draftKey={`${prop.id}:notes`}
+              label="备注"
+              value={prop.notes}
+              projectId={prop.projectId}
+              persist={(value) => patchProp(prop.id, { notes: value })}
+              multiline
+            />
           </div>
         </div>
       </div>

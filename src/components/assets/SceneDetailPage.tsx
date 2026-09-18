@@ -5,10 +5,8 @@ import { db } from "@/db/database";
 import { patchScene, setSceneSlot } from "@/db/repo";
 import { SCENE_SLOTS } from "@/domain/types";
 import { EditableGenerationSlot } from "@/components/slots/GenerationSlotCard";
+import { AssetTextField } from "./AssetTextField";
 import { Button } from "@/components/ui/button";
-import { Field } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 
 export function SceneDetailPage({
   sceneId,
@@ -73,42 +71,53 @@ export function SceneDetailPage({
                 title={`场景 · ${slot.label}`}
                 variant="asset"
                 slot={scene.slots?.[slot.id]}
-                onSave={(value) => void setSceneSlot(scene.id, slot.id, value)}
+                onSave={(value) => setSceneSlot(scene.id, slot.id, value)}
               />
             ))}
           </div>
           <div className="space-y-4">
-            <Field label="名称">
-              <Input
-                value={scene.name}
-                onChange={(event) => void patchScene(scene.id, { name: event.target.value })}
-              />
-            </Field>
-            <Field label="地点">
-              <Input
-                value={scene.location}
-                onChange={(event) => void patchScene(scene.id, { location: event.target.value })}
-              />
-            </Field>
-            <Field label="时段">
-              <Input
-                value={scene.timeOfDay}
-                onChange={(event) => void patchScene(scene.id, { timeOfDay: event.target.value })}
-                placeholder="日 / 夜 / 黄昏"
-              />
-            </Field>
-            <Field label="氛围">
-              <Input
-                value={scene.atmosphere}
-                onChange={(event) => void patchScene(scene.id, { atmosphere: event.target.value })}
-              />
-            </Field>
-            <Field label="备注">
-              <Textarea
-                value={scene.notes}
-                onChange={(event) => void patchScene(scene.id, { notes: event.target.value })}
-              />
-            </Field>
+            <AssetTextField
+              key={`${scene.id}:name`}
+              draftKey={`${scene.id}:name`}
+              label="名称"
+              value={scene.name}
+              projectId={scene.projectId}
+              persist={(value) => patchScene(scene.id, { name: value })}
+            />
+            <AssetTextField
+              key={`${scene.id}:location`}
+              draftKey={`${scene.id}:location`}
+              label="地点"
+              value={scene.location}
+              projectId={scene.projectId}
+              persist={(value) => patchScene(scene.id, { location: value })}
+            />
+            <AssetTextField
+              key={`${scene.id}:timeOfDay`}
+              draftKey={`${scene.id}:timeOfDay`}
+              label="时段"
+              value={scene.timeOfDay}
+              projectId={scene.projectId}
+              persist={(value) => patchScene(scene.id, { timeOfDay: value })}
+              placeholder="日 / 夜 / 黄昏"
+            />
+            <AssetTextField
+              key={`${scene.id}:atmosphere`}
+              draftKey={`${scene.id}:atmosphere`}
+              label="氛围"
+              value={scene.atmosphere}
+              projectId={scene.projectId}
+              persist={(value) => patchScene(scene.id, { atmosphere: value })}
+            />
+            <AssetTextField
+              key={`${scene.id}:notes`}
+              draftKey={`${scene.id}:notes`}
+              label="备注"
+              value={scene.notes}
+              projectId={scene.projectId}
+              persist={(value) => patchScene(scene.id, { notes: value })}
+              multiline
+            />
           </div>
         </div>
       </div>

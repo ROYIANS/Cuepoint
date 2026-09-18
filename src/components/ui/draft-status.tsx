@@ -11,7 +11,7 @@ export function DraftStatus({
 }) {
   if (status === "error") {
     return (
-      <span className="text-destructive text-[11px]">
+      <span role="alert" className="text-destructive text-[11px]">
         {error instanceof Error ? error.message : "保存失败"}
         {" · "}
         <button type="button" className="underline" onClick={onRetry}>
@@ -21,7 +21,7 @@ export function DraftStatus({
     );
   }
   return (
-    <span className="text-muted-foreground text-[11px]">
+    <span role="status" className="text-muted-foreground text-[11px]">
       {status === "saved" ? "已保存" : "保存中…"}
     </span>
   );

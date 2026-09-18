@@ -183,6 +183,8 @@ function SeriesLoglineEditor({
   initialValue: string;
 }) {
   const { draft, setDraft, status, error, retry } = useDebouncedDraft({
+    draftKey: `project:${projectId}:logline`,
+    scope: projectId,
     initialValue,
     persist: (value) => updateSeriesLogline(projectId, value),
   });

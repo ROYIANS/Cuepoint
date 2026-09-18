@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
+import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/database";
 import { putMedia } from "@/db/repo";
 import { kindFromMime } from "@/domain/slot";
-import type { Id, MediaKind } from "@/domain/types";
+import type { Id, MediaKind, MediaRecord } from "@/domain/types";
 import { createId } from "./ids";
 
 export const IMAGE_ACCEPT = "image/png,image/jpeg,image/webp,image/gif";
@@ -16,31 +17,28 @@ export interface MediaView {
 }
 
 export function useMedia(mediaId: Id | undefined): MediaView | undefined {
-  const [view, setView] = useState<MediaView>();
+  const [view, setView] = useState<{ id: Id; record: MediaRecord; media: MediaView }>();
+  const record = useLiveQuery(async () => mediaId ? (await db.media.get(mediaId)) ?? null : null, [mediaId]);
 
   useEffect(() => {
-    if (!mediaId) {
+    if (!mediaId || !record || record.id !== mediaId) {
       setView(undefined);
       return;
     }
-    let revoked: string | undefined;
-    let cancelled = false;
-    void db.media.get(mediaId).then((record) => {
-      if (cancelled || !record) return;
-      revoked = URL.createObjectURL(record.blob);
-      setView({
-        url: revoked,
+    const url = URL.createObjectURL(record.blob);
+    setView({
+      id: mediaId,
+      record,
+      media: {
+        url,
         mimeType: record.mimeType,
         kind: kindFromMime(record.mimeType),
-      });
+      },
     });
-    return () => {
-      cancelled = true;
-      if (revoked) URL.revokeObjectURL(revoked);
-    };
-  }, [mediaId]);
+    return () => URL.revokeObjectURL(url);
+  }, [mediaId, record]);
 
-  return view;
+  return view && view.id === mediaId && view.record === record ? view.media : undefined;
 }
 
 export async function uploadMediaFile(projectId: Id, file: File): Promise<{
@@ -70,6 +68,7 @@ export function pickMediaFile(accept: string): Promise<File | null> {
     input.onchange = () => {
       resolve(input.files?.[0] ?? null);
     };
+    input.oncancel = () => resolve(null);
     input.click();
   });
 }

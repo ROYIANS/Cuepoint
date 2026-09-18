@@ -12,7 +12,7 @@ import type {
   Shot,
   VisualStyle,
 } from "@/domain/types";
-import { DEFAULT_VISIBLE_COLUMNS, normalizeEpisodeStory, normalizeSeriesStory } from "@/domain/types";
+import { DEFAULT_VISIBLE_COLUMNS, getEpisodeShotFilters, normalizeEpisodeStory, normalizeSeriesStory } from "@/domain/types";
 import { parseShotPictureSlots } from "@/domain/slot";
 import { createId, nowIso } from "@/lib/ids";
 
@@ -131,6 +131,17 @@ export class AifenjingDB extends Dexie {
       connectors: "id, definitionId, updatedAt",
       chatThreads: "id, updatedAt",
       chatMessages: "id, threadId, createdAt",
+    });
+    // Additive preference migration; existing indexes do not change.
+    this.version(6).stores({}).upgrade(async (tx) => {
+      const projects = await tx.table<Project>("projects").toArray();
+      const episodes = tx.table<Episode>("episodes");
+      for (const project of projects) {
+        const owned = await episodes.where("projectId").equals(project.id).toArray();
+        for (const episode of owned) {
+          await episodes.update(episode.id, { shotFilters: getEpisodeShotFilters(episode, project) });
+        }
+      }
     });
   }
 }

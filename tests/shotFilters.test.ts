@@ -7,6 +7,7 @@ import {
   normalizeShotStatus,
   type Shot,
   type ShotFilters,
+  type MediaRecord,
 } from "@/domain/types";
 import { filterShots, shotMatchesFilters } from "@/lib/shotFilters";
 
@@ -61,6 +62,7 @@ describe("normalizeShotFilters", () => {
 });
 
 describe("shot filter predicates", () => {
+  const media = new Map(["frame", "clip"].map((id) => [id, { id, projectId: "project", mimeType: id === "frame" ? "image/png" : "video/mp4", filename: id, blob: new Blob([id]) } satisfies MediaRecord]));
   const base: ShotFilters = { statuses: [], beatIds: [], gaps: [] };
 
   it("matches combined status, beat, and gap filters", () => {
@@ -87,27 +89,27 @@ describe("shot filter predicates", () => {
         statuses: ["draft"],
         beatIds: [SHOT_UNASSIGNED_BEAT],
         gaps: ["missingFirstFrame"],
-      }),
+      }, media),
     ).toBe(true);
     expect(
       shotMatchesFilters(readyBeat, {
         ...base,
         statuses: ["ready"],
         beatIds: ["beat"],
-      }),
+      }, media),
     ).toBe(true);
     expect(
       shotMatchesFilters(framedMissing, {
         ...base,
         gaps: ["missingFirstFrame"],
-      }),
+      }, media),
     ).toBe(false);
     expect(
       filterShots([draftLoose, readyBeat, framedMissing, clipped], {
         statuses: ["draft", "ready"],
         beatIds: [],
         gaps: ["missingClip"],
-      }).map((item) => item.id),
+      }, media).map((item) => item.id),
     ).toEqual(["a", "b"]);
     // Within a dimension, multi-select is OR (same as status/beat).
     const complete = shot({
@@ -122,8 +124,17 @@ describe("shot filter predicates", () => {
       filterShots([draftLoose, framedMissing, clipped, complete], {
         ...base,
         gaps: ["missingFirstFrame", "missingClip"],
-      }).map((item) => item.id),
+      }, media).map((item) => item.id),
     ).toEqual(["a", "c", "d"]);
+  });
+
+  it("counts missing, wrong-kind and image placeholder results as media gaps", () => {
+    const candidate = shot({ id: "placeholder", clip: { ...emptySlot(), result: { mediaId: "frame", kind: "image" } } });
+    expect(shotMatchesFilters(candidate, { ...base, gaps: ["missingClip"] }, media)).toBe(true);
+    candidate.clip.result = { mediaId: "absent", kind: "video" };
+    expect(shotMatchesFilters(candidate, { ...base, gaps: ["missingClip"] }, media)).toBe(true);
+    candidate.clip.result = { mediaId: "frame", kind: "video" };
+    expect(shotMatchesFilters(candidate, { ...base, gaps: ["missingClip"] }, media)).toBe(true);
   });
 
   it("treats missing status as draft when filtering", () => {

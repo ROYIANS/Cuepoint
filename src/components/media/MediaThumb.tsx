@@ -6,10 +6,15 @@ export function MediaPreview({
   mediaId,
   className = "",
   empty = "素材",
+  inspect = false,
+  label = "素材预览",
 }: {
   mediaId?: Id;
   className?: string;
   empty?: string;
+  /** Only enable outside buttons/links; video controls are interactive. */
+  inspect?: boolean;
+  label?: string;
 }) {
   const view = useMedia(mediaId);
   if (!view) {
@@ -20,12 +25,12 @@ export function MediaPreview({
           className,
         )}
       >
-        {empty}
+        {mediaId ? "素材加载中或已不可用" : empty}
       </div>
     );
   }
   if (view.kind === "video") {
-    return <video src={view.url} className={cn("object-cover", className)} muted playsInline />;
+    return <video src={view.url} aria-label={label} className={cn(inspect ? "object-contain" : "object-cover", className)} controls={inspect} muted={!inspect} playsInline preload="metadata" />;
   }
-  return <img src={view.url} alt="" className={cn("object-cover", className)} />;
+  return <img src={view.url} alt={inspect ? label : ""} className={cn(inspect ? "object-contain" : "object-cover", className)} />;
 }

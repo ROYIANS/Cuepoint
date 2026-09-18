@@ -1,3 +1,4 @@
+import { validShotMediaId, type ShotMediaIndex } from "@/lib/shotMedia";
 import {
   SHOT_UNASSIGNED_BEAT,
   normalizeShotStatus,
@@ -12,6 +13,7 @@ export function shotBeatFilterId(shot: Pick<Shot, "beatId">): string {
 export function shotMatchesFilters(
   shot: Shot,
   filters: ShotFilters,
+  media: ShotMediaIndex = new Map(),
 ): boolean {
   const status = normalizeShotStatus(shot.status);
   if (filters.statuses.length > 0 && !filters.statuses.includes(status)) {
@@ -24,8 +26,8 @@ export function shotMatchesFilters(
     return false;
   }
   if (filters.gaps.length > 0) {
-    const missingFirstFrame = !shot.firstFrame.result?.mediaId;
-    const missingClip = !shot.clip.result?.mediaId;
+    const missingFirstFrame = !validShotMediaId(shot.firstFrame.result, "image", shot.projectId, media);
+    const missingClip = !validShotMediaId(shot.clip.result, "video", shot.projectId, media);
     const matchesGap =
       (filters.gaps.includes("missingFirstFrame") && missingFirstFrame) ||
       (filters.gaps.includes("missingClip") && missingClip);
@@ -34,7 +36,7 @@ export function shotMatchesFilters(
   return true;
 }
 
-export function filterShots(shots: Shot[], filters: ShotFilters): Shot[] {
+export function filterShots(shots: Shot[], filters: ShotFilters, media: ShotMediaIndex = new Map()): Shot[] {
   if (
     filters.statuses.length === 0 &&
     filters.beatIds.length === 0 &&
@@ -42,5 +44,5 @@ export function filterShots(shots: Shot[], filters: ShotFilters): Shot[] {
   ) {
     return shots;
   }
-  return shots.filter((shot) => shotMatchesFilters(shot, filters));
+  return shots.filter((shot) => shotMatchesFilters(shot, filters, media));
 }

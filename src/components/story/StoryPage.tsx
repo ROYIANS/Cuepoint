@@ -76,6 +76,8 @@ function StoryEditor({
 }) {
   const initialStory = normalizeEpisodeStory(episode.story);
   const { draft, setDraft, status, error, retry, flush } = useDebouncedDraft({
+    draftKey: `episode:${episode.id}:story`,
+    scope: episode.projectId,
     initialValue: {
       title: episode.title,
       logline: initialStory.logline,

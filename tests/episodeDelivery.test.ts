@@ -8,6 +8,7 @@ import {
   type Episode,
   type Project,
   type Shot,
+  type MediaRecord,
 } from "@/domain/types";
 import {
   deriveEpisodeDelivery,
@@ -15,6 +16,8 @@ import {
   episodeDeliveryFilename,
   escapeCsvCell,
 } from "@/lib/episodeDelivery";
+
+const media = new Map(["first-frame", "last-frame"].map((id) => [id, { id, projectId: "project", mimeType: "image/png", filename: "frame.png", blob: new Blob(["image"]) } satisfies MediaRecord]));
 
 const project: Project = {
   id: "project",
@@ -82,6 +85,7 @@ describe("episode delivery", () => {
     const foreignProjectShot = shot("foreign-project", 0);
     foreignProjectShot.projectId = "other-project";
     const delivery = deriveEpisodeDelivery({
+      media,
       project,
       episode,
       shots: [
@@ -116,6 +120,7 @@ describe("episode delivery", () => {
     incomplete.lastFrame.result = { mediaId: "last-frame", kind: "image" };
 
     const delivery = deriveEpisodeDelivery({
+      media,
       project,
       episode,
       shots: [incomplete],
@@ -135,6 +140,7 @@ describe("episode delivery", () => {
     incomplete.firstFrame.result = { mediaId: "first-frame", kind: "image" };
     expect(
       deriveEpisodeDelivery({
+      media,
         project,
         episode,
         shots: [incomplete],
@@ -144,8 +150,31 @@ describe("episode delivery", () => {
     ).toBe("first-frame");
   });
 
+  it("requires valid local media and scene references without changing manual status", () => {
+    const row = shot("broken", 0);
+    row.status = "approved";
+    row.firstFrame.result = { mediaId: "absent", kind: "image" };
+    row.clip.result = { mediaId: "first-frame", kind: "image" };
+    const input = { project, episode, shots: [row], characters: [], scenes: [], media };
+    expect(deriveEpisodeDelivery(input).rows[0]).toMatchObject({
+      status: "approved", missing: ["scene", "firstFrame", "clip"], visualMediaId: undefined,
+    });
+    row.firstFrame.result = { mediaId: "first-frame", kind: "image" };
+    row.clip.result = { mediaId: "movie", kind: "video" };
+    const withMovie = new Map(media);
+    withMovie.set("movie", { id: "movie", projectId: project.id, mimeType: "video/mp4", filename: "movie.mp4", blob: new Blob(["video"]) });
+    expect(deriveEpisodeDelivery({ ...input, media: withMovie }).rows[0].missing).toEqual(["scene"]);
+    withMovie.set("movie", { ...withMovie.get("movie")!, projectId: "foreign" });
+    expect(deriveEpisodeDelivery({ ...input, media: withMovie }).rows[0].missing).toContain("clip");
+    withMovie.set("movie", { ...withMovie.get("movie")!, projectId: project.id, blob: new Blob([]) });
+    expect(deriveEpisodeDelivery({ ...input, media: withMovie }).rows[0].missing).toContain("clip");
+    withMovie.set("movie", { ...withMovie.get("movie")!, mimeType: "image/png", blob: new Blob(["image"]) });
+    expect(deriveEpisodeDelivery({ ...input, media: withMovie }).rows[0].missing).toContain("clip");
+  });
+
   it("writes BOM-prefixed RFC 4180 rows and a safe filename", () => {
     const delivery = deriveEpisodeDelivery({
+      media,
       project,
       episode,
       shots: [shot("001", 0)],
@@ -169,6 +198,7 @@ describe("episode delivery", () => {
     delete (legacy as { status?: string }).status;
 
     const delivery = deriveEpisodeDelivery({
+      media,
       project,
       episode,
       shots: [approved, legacy],

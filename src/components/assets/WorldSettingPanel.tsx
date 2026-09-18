@@ -58,6 +58,8 @@ function WorldSettingEditor({
   initialValue: WorldSetting;
 }) {
   const { draft, setDraft, status, error, retry } = useDebouncedDraft({
+    draftKey: `project:${projectId}:world`,
+    scope: projectId,
     initialValue: { ...emptySetting(), ...initialValue },
     persist: (value) => updateWorldSetting(projectId, value),
   });

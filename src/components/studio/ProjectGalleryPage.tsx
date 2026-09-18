@@ -1,3 +1,4 @@
+import { flushPendingDrafts } from "@/lib/debouncedDraft";
 import { useNavigate } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useMemo, useState } from "react";
@@ -117,9 +118,12 @@ export function ProjectGalleryPage() {
                 {
                   label: "备份项目（zip）",
                   onSelect: () => {
-                    void exportProjectZip(project.id).then((blob) =>
-                      downloadBlob(blob, `${project.name}.zip`),
-                    );
+                    void flushPendingDrafts(project.id)
+                      .then(() => exportProjectZip(project.id))
+                      .then((blob) => downloadBlob(blob, `${project.name}.zip`))
+                      .catch((error: unknown) => toast.error(
+                        error instanceof Error ? `备份失败：${error.message}` : "备份失败，请重试",
+                      ));
                   },
                 },
                 {

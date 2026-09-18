@@ -8,6 +8,8 @@ import {
   isStudioLibrary,
   normalizeAspectPreset,
   normalizeEpisodeStory,
+  getEpisodeShotFilters,
+  normalizeShotFilters,
   normalizeShotSettings,
   normalizeShotStatus,
   normalizeSeriesStory,
@@ -36,6 +38,7 @@ import {
   type ShotColumnId,
   type ShotPictureField,
   type ShotSettings,
+  type ShotFilters,
   type StoryBeat,
   type StyleImageSlot,
   type VisualStyle,
@@ -45,15 +48,19 @@ import { normalizeBaseUrl } from "@/lib/ai/openaiCompatible";
 import { collectSlotsMedia, emptySlot, SHOT_PICTURE_FIELDS, slotMediaIds } from "@/domain/slot";
 import { createId, nowIso } from "@/lib/ids";
 
+// Media recycling must hold the same lock as every committed slot/cover writer.
+const PRODUCTION_TABLES = [
+  db.projects, db.episodes, db.characters, db.scenes,
+  db.props, db.styles, db.shots, db.media,
+];
+
 function touch<T extends { updatedAt: string }>(record: T): T {
   return { ...record, updatedAt: nowIso() };
 }
 
 export async function touchProject(projectId: Id): Promise<void> {
   if (isStudioLibrary(projectId)) return;
-  const project = await db.projects.get(projectId);
-  if (!project) return;
-  await db.projects.put(touch(project));
+  await db.projects.update(projectId, { updatedAt: nowIso() });
 }
 
 export function emptyProject(
@@ -145,6 +152,7 @@ export function emptyEpisode(projectId: Id, order: number, title = ""): Episode 
     order,
     title,
     story: emptyEpisodeStory(),
+    shotFilters: normalizeShotFilters(undefined),
     createdAt: at,
     updatedAt: at,
   };
@@ -203,9 +211,11 @@ export async function createProject(
 }
 
 export async function renameProject(id: Id, name: string): Promise<void> {
-  const project = await db.projects.get(id);
-  if (!project) return;
-  await db.projects.put(touch({ ...project, name: name.trim() || project.name }));
+  await db.transaction("rw", db.projects, async () => {
+    const project = await db.projects.get(id);
+    if (!project) throw new Error("项目不存在，无法保存");
+    await db.projects.put(touch({ ...project, name: name.trim() || project.name }));
+  });
 }
 
 export async function deleteProject(id: Id): Promise<void> {
@@ -250,13 +260,15 @@ export async function updateProject(
     >
   >,
 ): Promise<void> {
-  const project = await db.projects.get(id);
-  if (!project) return;
-  const next = { ...project, ...patch };
-  if (patch.aspectPreset !== undefined) {
-    next.aspectPreset = normalizeAspectPreset(patch.aspectPreset);
-  }
-  await db.projects.put(touch(next));
+  await db.transaction("rw", db.projects, async () => {
+    const project = await db.projects.get(id);
+    if (!project) throw new Error("项目不存在，无法保存");
+    const next = { ...project, ...patch };
+    if (patch.aspectPreset !== undefined) {
+      next.aspectPreset = normalizeAspectPreset(patch.aspectPreset);
+    }
+    await db.projects.put(touch(next));
+  });
 }
 
 export async function patchProjectOutput(
@@ -267,25 +279,27 @@ export async function patchProjectOutput(
     coverMediaId?: Id | null;
   },
 ): Promise<void> {
-  const project = await db.projects.get(id);
-  if (!project) return;
-  const previousCover = project.coverMediaId;
-  const next: Project = {
-    ...project,
-    aspectPreset:
-      patch.aspectPreset !== undefined
-        ? normalizeAspectPreset(patch.aspectPreset)
-        : normalizeAspectPreset(project.aspectPreset),
-  };
-  if (patch.coverMediaId === null) {
-    delete next.coverMediaId;
-  } else if (patch.coverMediaId !== undefined) {
-    next.coverMediaId = patch.coverMediaId;
-  }
-  await db.projects.put(touch(next));
-  if (previousCover && previousCover !== next.coverMediaId) {
-    await deleteMediaIfOrphan(previousCover);
-  }
+  await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    const project = await db.projects.get(id);
+    if (!project) throw new Error("项目不存在，无法保存");
+    const previousCover = project.coverMediaId;
+    const next: Project = {
+      ...project,
+      aspectPreset:
+        patch.aspectPreset !== undefined
+          ? normalizeAspectPreset(patch.aspectPreset)
+          : normalizeAspectPreset(project.aspectPreset),
+    };
+    if (patch.coverMediaId === null) {
+      delete next.coverMediaId;
+    } else if (patch.coverMediaId !== undefined) {
+      next.coverMediaId = patch.coverMediaId;
+    }
+    await db.projects.put(touch(next));
+    if (previousCover && previousCover !== next.coverMediaId) {
+      await deleteMediaIfOrphan(previousCover);
+    }
+  });
 }
 
 export async function updateShotSettings(
@@ -294,7 +308,7 @@ export async function updateShotSettings(
 ): Promise<void> {
   await db.transaction("rw", db.projects, async () => {
     const project = await db.projects.get(id);
-    if (!project) return;
+    if (!project) throw new Error("项目不存在，无法保存");
     const definedPatch = Object.fromEntries(
       Object.entries(patch).filter(([, value]) => value !== undefined),
     ) as Partial<ShotSettings>;
@@ -308,7 +322,7 @@ export async function updateShotSettings(
 export async function updateSeriesLogline(id: Id, logline: string): Promise<void> {
   await db.transaction("rw", db.projects, async () => {
     const project = await db.projects.get(id);
-    if (!project) return;
+    if (!project) throw new Error("项目不存在，无法保存");
     await db.projects.put(touch({
       ...project,
       story: { ...normalizeSeriesStory(project.story), logline },
@@ -322,7 +336,7 @@ export async function updateWorldSetting(
 ): Promise<void> {
   await db.transaction("rw", db.projects, async () => {
     const project = await db.projects.get(id);
-    if (!project) return;
+    if (!project) throw new Error("项目不存在，无法保存");
     await db.projects.put(touch({
       ...project,
       setting: { ...emptySetting(), ...project.setting, ...patch },
@@ -354,24 +368,28 @@ export async function ensureFirstEpisode(projectId: Id): Promise<Episode> {
 }
 
 export async function addEpisode(projectId: Id): Promise<Episode> {
-  const project = await db.projects.get(projectId);
-  if (!project) throw new Error("项目不存在");
-  const existing = await listEpisodes(projectId);
-  const nextOrder = existing.reduce((max, episode) => Math.max(max, episode.order), -1) + 1;
-  const episode = emptyEpisode(projectId, nextOrder);
-  await db.episodes.add(episode);
-  await touchProject(projectId);
-  return episode;
+  return db.transaction("rw", db.projects, db.episodes, async () => {
+    const project = await db.projects.get(projectId);
+    if (!project) throw new Error("项目不存在");
+    const existing = await listEpisodes(projectId);
+    const nextOrder = existing.reduce((max, episode) => Math.max(max, episode.order), -1) + 1;
+    const episode = emptyEpisode(projectId, nextOrder);
+    await db.episodes.add(episode);
+    await touchProject(projectId);
+    return episode;
+  });
 }
 
 export async function updateEpisode(
   id: Id,
   patch: Partial<Pick<Episode, "title" | "story" | "order">>,
 ): Promise<void> {
-  const episode = await db.episodes.get(id);
-  if (!episode) return;
-  await db.episodes.put(touch({ ...episode, ...patch }));
-  await touchProject(episode.projectId);
+  await db.transaction("rw", db.projects, db.episodes, async () => {
+    const episode = await db.episodes.get(id);
+    if (!episode) throw new Error("集不存在，无法保存");
+    await db.episodes.put(touch({ ...episode, ...patch }));
+    await touchProject(episode.projectId);
+  });
 }
 
 export async function updateEpisodeDraft(
@@ -380,7 +398,7 @@ export async function updateEpisodeDraft(
 ): Promise<void> {
   await db.transaction("rw", db.episodes, db.projects, async () => {
     const episode = await db.episodes.get(id);
-    if (!episode) return;
+    if (!episode) throw new Error("集不存在，无法保存");
     const story = normalizeEpisodeStory(episode.story);
     const storyPatch: Partial<Pick<EpisodeStory, "logline" | "script">> = {};
     if (patch.logline !== undefined) storyPatch.logline = patch.logline;
@@ -402,28 +420,26 @@ export interface DeletedEpisodeSnapshot {
 }
 
 export async function deleteEpisode(id: Id): Promise<DeletedEpisodeSnapshot | undefined> {
-  const episode = await db.episodes.get(id);
-  if (!episode) return undefined;
-  const siblings = await listEpisodes(episode.projectId);
-  if (siblings.length <= 1) throw new Error("不能删除最后一集");
-  const shots = await db.shots.where("episodeId").equals(id).toArray();
-  const mediaIds = shots.flatMap((shot) =>
-    slotMediaIds(shot.firstFrame).concat(slotMediaIds(shot.lastFrame), slotMediaIds(shot.clip)),
-  );
-  const media = (await db.media.bulkGet([...new Set(mediaIds)])).filter(
-    (record): record is MediaRecord => record !== undefined,
-  );
-  await db.transaction("rw", db.episodes, db.shots, db.projects, async () => {
+  return db.transaction("rw", PRODUCTION_TABLES, async () => {
+    const episode = await db.episodes.get(id);
+    if (!episode) return undefined;
+    const siblings = await listEpisodes(episode.projectId);
+    if (siblings.length <= 1) throw new Error("不能删除最后一集");
+    const shots = await db.shots.where("episodeId").equals(id).toArray();
+    const mediaIds = [...new Set(shots.flatMap((shot) =>
+      slotMediaIds(shot.firstFrame).concat(slotMediaIds(shot.lastFrame), slotMediaIds(shot.clip)),
+    ))];
+    const media = (await db.media.bulkGet(mediaIds)).filter(
+      (record): record is MediaRecord => record !== undefined,
+    );
     await db.shots.where("episodeId").equals(id).delete();
     await db.episodes.delete(id);
-    const remaining = (await listEpisodes(episode.projectId)).sort((a, b) => a.order - b.order);
-    await Promise.all(
-      remaining.map((item, index) => db.episodes.put({ ...item, order: index })),
-    );
+    const remaining = await listEpisodes(episode.projectId);
+    await Promise.all(remaining.map((item, order) => db.episodes.update(item.id, { order })));
     await touchProject(episode.projectId);
+    for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
+    return { episode, shots, media };
   });
-  for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
-  return { episode, shots, media };
 }
 
 export async function restoreEpisode(snapshot: DeletedEpisodeSnapshot): Promise<void> {
@@ -473,17 +489,17 @@ export async function reorderEpisodes(projectId: Id, orderedIds: Id[]): Promise<
   });
 }
 
-export async function collectMediaIds(projectId: Id): Promise<Set<Id>> {
-  const [project, characters, scenes, props, styles, shots] = await Promise.all([
-    db.projects.get(projectId),
-    db.characters.where("projectId").equals(projectId).toArray(),
-    db.scenes.where("projectId").equals(projectId).toArray(),
-    db.props.where("projectId").equals(projectId).toArray(),
-    db.styles.where("projectId").equals(projectId).toArray(),
-    db.shots.where("projectId").equals(projectId).toArray(),
+export async function collectMediaIds(projectId?: Id): Promise<Set<Id>> {
+  const [projects, characters, scenes, props, styles, shots] = await Promise.all([
+    projectId === undefined ? db.projects.toArray() : db.projects.where("id").equals(projectId).toArray(),
+    (projectId === undefined ? db.characters : db.characters.where("projectId").equals(projectId)).toArray(),
+    (projectId === undefined ? db.scenes : db.scenes.where("projectId").equals(projectId)).toArray(),
+    (projectId === undefined ? db.props : db.props.where("projectId").equals(projectId)).toArray(),
+    (projectId === undefined ? db.styles : db.styles.where("projectId").equals(projectId)).toArray(),
+    (projectId === undefined ? db.shots : db.shots.where("projectId").equals(projectId)).toArray(),
   ]);
   const ids = new Set<Id>();
-  if (project?.coverMediaId) ids.add(project.coverMediaId);
+  for (const project of projects) if (project.coverMediaId) ids.add(project.coverMediaId);
   for (const mediaId of collectSlotsMedia([
     ...characters.flatMap((character) => Object.values(character.slots ?? {})),
     ...scenes.flatMap((scene) => Object.values(scene.slots ?? {})),
@@ -507,19 +523,23 @@ async function recycleSlotMedia(
 }
 
 export async function putMedia(record: MediaRecord): Promise<Id> {
-  await db.media.put(record);
-  await touchProject(record.projectId);
-  return record.id;
+  return db.transaction("rw", db.media, db.projects, async () => {
+    await db.media.put(record);
+    await touchProject(record.projectId);
+    return record.id;
+  });
 }
 
 export async function deleteMediaIfOrphan(mediaId: Id | undefined): Promise<void> {
-  if (!mediaId) return;
-  const record = await db.media.get(mediaId);
-  if (!record) return;
-  const used = await collectMediaIds(record.projectId);
-  if (!used.has(mediaId)) {
-    await db.media.delete(mediaId);
-  }
+  await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    if (!mediaId) return;
+    const record = await db.media.get(mediaId);
+    if (!record) return;
+    const used = await collectMediaIds();
+    if (!used.has(mediaId)) {
+      await db.media.delete(mediaId);
+    }
+  });
 }
 
 type SnapshotAsset = Character | Scene | Prop | VisualStyle;
@@ -655,10 +675,15 @@ export async function patchCharacter(
   id: Id,
   patch: Partial<Omit<Character, "id" | "projectId" | "createdAt">>,
 ): Promise<void> {
-  const character = await db.characters.get(id);
-  if (!character) return;
-  await db.characters.put(touch({ ...character, ...patch }));
-  await touchProject(character.projectId);
+  await db.transaction("rw", db.projects, db.characters, async () => {
+    const character = await db.characters.get(id);
+    if (!character) throw new Error("角色不存在，无法保存");
+    await db.characters.put(touch({
+      ...character, ...patch,
+      ...(patch.slots ? { slots: { ...character.slots, ...patch.slots } } : {}),
+    }));
+    await touchProject(character.projectId);
+  });
 }
 
 export async function setCharacterSlot(
@@ -666,43 +691,47 @@ export async function setCharacterSlot(
   slotKey: CharacterImageSlot,
   slot: GenerationSlot,
 ): Promise<void> {
-  const character = await db.characters.get(id);
-  if (!character) return;
-  const previous = character.slots[slotKey];
-  await db.characters.put(
-    touch({ ...character, slots: { ...character.slots, [slotKey]: slot } }),
-  );
-  await touchProject(character.projectId);
-  await recycleSlotMedia(previous, slot);
+  await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    const character = await db.characters.get(id);
+    if (!character) throw new Error("角色不存在，无法保存");
+    const previous = character.slots[slotKey];
+    await db.characters.put(
+      touch({ ...character, slots: { ...character.slots, [slotKey]: slot } }),
+    );
+    await touchProject(character.projectId);
+    await recycleSlotMedia(previous, slot);
+  });
 }
 
 export async function deleteCharacter(id: Id): Promise<void> {
-  const character = await db.characters.get(id);
-  if (!character) return;
-  const mediaIds = collectSlotsMedia(Object.values(character.slots));
-  await db.characters.delete(id);
-  const shots = await db.shots.where("projectId").equals(character.projectId).toArray();
-  for (const shot of shots) {
-    if (shot.characterIds.includes(id)) {
-      await db.shots.put({
-        ...shot,
-        characterIds: shot.characterIds.filter((item) => item !== id),
-      });
+  await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    const character = await db.characters.get(id);
+    if (!character) return;
+    const mediaIds = collectSlotsMedia(Object.values(character.slots));
+    await db.characters.delete(id);
+    const shots = await db.shots.where("projectId").equals(character.projectId).toArray();
+    for (const shot of shots) {
+      if (shot.characterIds.includes(id)) {
+        await db.shots.put({
+          ...shot,
+          characterIds: shot.characterIds.filter((item) => item !== id),
+        });
+      }
     }
-  }
-  const episodes = await db.episodes.where("projectId").equals(character.projectId).toArray();
-  for (const episode of episodes) {
-    const story = normalizeEpisodeStory(episode.story);
-    const beats = story.beats.map((beat) => ({
-      ...beat,
-      characterIds: beat.characterIds.filter((item) => item !== id),
-    }));
-    if (beats.some((beat, index) => beat.characterIds.length !== story.beats[index]?.characterIds.length)) {
-      await db.episodes.put(touch({ ...episode, story: { ...story, beats } }));
+    const episodes = await db.episodes.where("projectId").equals(character.projectId).toArray();
+    for (const episode of episodes) {
+      const story = normalizeEpisodeStory(episode.story);
+      const beats = story.beats.map((beat) => ({
+        ...beat,
+        characterIds: beat.characterIds.filter((item) => item !== id),
+      }));
+      if (beats.some((beat, index) => beat.characterIds.length !== story.beats[index]?.characterIds.length)) {
+        await db.episodes.put(touch({ ...episode, story: { ...story, beats } }));
+      }
     }
-  }
-  await touchProject(character.projectId);
-  for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
+    await touchProject(character.projectId);
+    for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
+  });
 }
 
 export async function addScene(projectId: Id): Promise<Scene> {
@@ -716,10 +745,15 @@ export async function patchScene(
   id: Id,
   patch: Partial<Omit<Scene, "id" | "projectId" | "createdAt">>,
 ): Promise<void> {
-  const scene = await db.scenes.get(id);
-  if (!scene) return;
-  await db.scenes.put(touch({ ...scene, ...patch }));
-  await touchProject(scene.projectId);
+  await db.transaction("rw", db.projects, db.scenes, async () => {
+    const scene = await db.scenes.get(id);
+    if (!scene) throw new Error("场景不存在，无法保存");
+    await db.scenes.put(touch({
+      ...scene, ...patch,
+      ...(patch.slots ? { slots: { ...scene.slots, ...patch.slots } } : {}),
+    }));
+    await touchProject(scene.projectId);
+  });
 }
 
 export async function setSceneSlot(
@@ -727,37 +761,41 @@ export async function setSceneSlot(
   slotKey: SceneImageSlot,
   slot: GenerationSlot,
 ): Promise<void> {
-  const scene = await db.scenes.get(id);
-  if (!scene) return;
-  const previous = scene.slots[slotKey];
-  await db.scenes.put(touch({ ...scene, slots: { ...scene.slots, [slotKey]: slot } }));
-  await touchProject(scene.projectId);
-  await recycleSlotMedia(previous, slot);
+  await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    const scene = await db.scenes.get(id);
+    if (!scene) throw new Error("场景不存在，无法保存");
+    const previous = scene.slots[slotKey];
+    await db.scenes.put(touch({ ...scene, slots: { ...scene.slots, [slotKey]: slot } }));
+    await touchProject(scene.projectId);
+    await recycleSlotMedia(previous, slot);
+  });
 }
 
 export async function deleteScene(id: Id): Promise<void> {
-  const scene = await db.scenes.get(id);
-  if (!scene) return;
-  const mediaIds = collectSlotsMedia(Object.values(scene.slots));
-  await db.scenes.delete(id);
-  const shots = await db.shots.where("projectId").equals(scene.projectId).toArray();
-  for (const shot of shots) {
-    if (shot.sceneId === id) {
-      await db.shots.put({ ...shot, sceneId: undefined });
+  await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    const scene = await db.scenes.get(id);
+    if (!scene) return;
+    const mediaIds = collectSlotsMedia(Object.values(scene.slots));
+    await db.scenes.delete(id);
+    const shots = await db.shots.where("projectId").equals(scene.projectId).toArray();
+    for (const shot of shots) {
+      if (shot.sceneId === id) {
+        await db.shots.put({ ...shot, sceneId: undefined });
+      }
     }
-  }
-  const episodes = await db.episodes.where("projectId").equals(scene.projectId).toArray();
-  for (const episode of episodes) {
-    const story = normalizeEpisodeStory(episode.story);
-    const beats = story.beats.map((beat) =>
-      beat.sceneId === id ? { ...beat, sceneId: undefined } : beat,
-    );
-    if (beats.some((beat, index) => beat.sceneId !== story.beats[index]?.sceneId)) {
-      await db.episodes.put(touch({ ...episode, story: { ...story, beats } }));
+    const episodes = await db.episodes.where("projectId").equals(scene.projectId).toArray();
+    for (const episode of episodes) {
+      const story = normalizeEpisodeStory(episode.story);
+      const beats = story.beats.map((beat) =>
+        beat.sceneId === id ? { ...beat, sceneId: undefined } : beat,
+      );
+      if (beats.some((beat, index) => beat.sceneId !== story.beats[index]?.sceneId)) {
+        await db.episodes.put(touch({ ...episode, story: { ...story, beats } }));
+      }
     }
-  }
-  await touchProject(scene.projectId);
-  for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
+    await touchProject(scene.projectId);
+    for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
+  });
 }
 
 export async function addProp(projectId: Id): Promise<Prop> {
@@ -771,10 +809,15 @@ export async function patchProp(
   id: Id,
   patch: Partial<Omit<Prop, "id" | "projectId" | "createdAt">>,
 ): Promise<void> {
-  const prop = await db.props.get(id);
-  if (!prop) return;
-  await db.props.put(touch({ ...prop, ...patch }));
-  await touchProject(prop.projectId);
+  await db.transaction("rw", db.projects, db.props, async () => {
+    const prop = await db.props.get(id);
+    if (!prop) throw new Error("道具不存在，无法保存");
+    await db.props.put(touch({
+      ...prop, ...patch,
+      ...(patch.slots ? { slots: { ...prop.slots, ...patch.slots } } : {}),
+    }));
+    await touchProject(prop.projectId);
+  });
 }
 
 export async function setPropSlot(
@@ -782,21 +825,25 @@ export async function setPropSlot(
   slotKey: PropImageSlot,
   slot: GenerationSlot,
 ): Promise<void> {
-  const prop = await db.props.get(id);
-  if (!prop) return;
-  const previous = prop.slots[slotKey];
-  await db.props.put(touch({ ...prop, slots: { ...prop.slots, [slotKey]: slot } }));
-  await touchProject(prop.projectId);
-  await recycleSlotMedia(previous, slot);
+  await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    const prop = await db.props.get(id);
+    if (!prop) throw new Error("道具不存在，无法保存");
+    const previous = prop.slots[slotKey];
+    await db.props.put(touch({ ...prop, slots: { ...prop.slots, [slotKey]: slot } }));
+    await touchProject(prop.projectId);
+    await recycleSlotMedia(previous, slot);
+  });
 }
 
 export async function deleteProp(id: Id): Promise<void> {
-  const prop = await db.props.get(id);
-  if (!prop) return;
-  const mediaIds = collectSlotsMedia(Object.values(prop.slots));
-  await db.props.delete(id);
-  await touchProject(prop.projectId);
-  for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
+  await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    const prop = await db.props.get(id);
+    if (!prop) return;
+    const mediaIds = collectSlotsMedia(Object.values(prop.slots));
+    await db.props.delete(id);
+    await touchProject(prop.projectId);
+    for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
+  });
 }
 
 export async function addStyle(projectId: Id): Promise<VisualStyle> {
@@ -810,10 +857,15 @@ export async function patchStyle(
   id: Id,
   patch: Partial<Omit<VisualStyle, "id" | "projectId" | "createdAt">>,
 ): Promise<void> {
-  const style = await db.styles.get(id);
-  if (!style) return;
-  await db.styles.put(touch({ ...style, ...patch }));
-  await touchProject(style.projectId);
+  await db.transaction("rw", db.projects, db.styles, async () => {
+    const style = await db.styles.get(id);
+    if (!style) throw new Error("风格不存在，无法保存");
+    await db.styles.put(touch({
+      ...style, ...patch,
+      ...(patch.slots ? { slots: { ...style.slots, ...patch.slots } } : {}),
+    }));
+    await touchProject(style.projectId);
+  });
 }
 
 export async function setStyleSlot(
@@ -821,21 +873,25 @@ export async function setStyleSlot(
   slotKey: StyleImageSlot,
   slot: GenerationSlot,
 ): Promise<void> {
-  const style = await db.styles.get(id);
-  if (!style) return;
-  const previous = style.slots[slotKey];
-  await db.styles.put(touch({ ...style, slots: { ...style.slots, [slotKey]: slot } }));
-  await touchProject(style.projectId);
-  await recycleSlotMedia(previous, slot);
+  await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    const style = await db.styles.get(id);
+    if (!style) throw new Error("风格不存在，无法保存");
+    const previous = style.slots[slotKey];
+    await db.styles.put(touch({ ...style, slots: { ...style.slots, [slotKey]: slot } }));
+    await touchProject(style.projectId);
+    await recycleSlotMedia(previous, slot);
+  });
 }
 
 export async function deleteStyle(id: Id): Promise<void> {
-  const style = await db.styles.get(id);
-  if (!style) return;
-  const mediaIds = collectSlotsMedia(Object.values(style.slots));
-  await db.styles.delete(id);
-  await touchProject(style.projectId);
-  for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
+  await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    const style = await db.styles.get(id);
+    if (!style) return;
+    const mediaIds = collectSlotsMedia(Object.values(style.slots));
+    await db.styles.delete(id);
+    await touchProject(style.projectId);
+    for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
+  });
 }
 
 async function nextShotNumber(episodeId: Id): Promise<string> {
@@ -1038,22 +1094,31 @@ export async function restoreStoryBeat(
 }
 
 export async function deleteStoryBeat(episodeId: Id, beatId: Id): Promise<void> {
-  const episode = await db.episodes.get(episodeId);
-  if (!episode) return;
-  const shots = await db.shots.where("episodeId").equals(episodeId).toArray();
   await db.transaction("rw", db.episodes, db.shots, db.projects, async () => {
-    for (const shot of shots) {
-      if (shot.beatId !== beatId) continue;
-      const next = { ...shot };
-      delete next.beatId;
-      await db.shots.put(next);
-    }
-    const latest = await db.episodes.get(episodeId);
-    if (!latest) return;
-    const current = normalizeEpisodeStory(latest.story);
-    await updateEpisode(episodeId, {
-      story: { ...current, beats: current.beats.filter((beat) => beat.id !== beatId) },
-    });
+    const episode = await db.episodes.get(episodeId);
+    if (!episode) return;
+    const project = await db.projects.get(episode.projectId);
+    const story = normalizeEpisodeStory(episode.story);
+    const next = { ...episode, story: { ...story, beats: story.beats.filter((beat) => beat.id !== beatId) } };
+    next.shotFilters = getEpisodeShotFilters({ ...next, shotFilters: getEpisodeShotFilters(episode, project) }, project);
+    await db.episodes.put(touch(next));
+    await db.shots.where("episodeId").equals(episodeId).filter((shot) => shot.beatId === beatId)
+      .modify((shot) => { delete shot.beatId; });
+    await touchProject(episode.projectId);
+  });
+}
+
+export async function updateEpisodeShotFilters(episodeId: Id, patch: Partial<ShotFilters>): Promise<void> {
+  await db.transaction("rw", db.episodes, db.projects, async () => {
+    const episode = await db.episodes.get(episodeId);
+    if (!episode) throw new Error("集不存在");
+    const project = await db.projects.get(episode.projectId);
+    const definedPatch = Object.fromEntries(Object.entries(patch).filter(([, value]) => value !== undefined));
+    const shotFilters = getEpisodeShotFilters({
+      ...episode, shotFilters: { ...getEpisodeShotFilters(episode, project), ...definedPatch },
+    }, project);
+    await db.episodes.update(episodeId, { shotFilters, updatedAt: nowIso() });
+    await touchProject(episode.projectId);
   });
 }
 
@@ -1118,10 +1183,12 @@ export async function patchShot(
   id: Id,
   patch: Partial<Omit<Shot, "id" | "projectId" | "episodeId">>,
 ): Promise<void> {
-  const shot = await db.shots.get(id);
-  if (!shot) return;
-  await db.shots.put({ ...shot, ...patch });
-  await touchProject(shot.projectId);
+  await db.transaction("rw", db.projects, db.shots, async () => {
+    const shot = await db.shots.get(id);
+    if (!shot) throw new Error("镜头不存在，无法保存");
+    await db.shots.put({ ...shot, ...patch });
+    await touchProject(shot.projectId);
+  });
 }
 
 export type EpisodeShotBulkPatch = Partial<
@@ -1245,51 +1312,57 @@ export async function setShotSlot(
   field: ShotPictureField,
   slot: GenerationSlot,
 ): Promise<void> {
-  const shot = await db.shots.get(id);
-  if (!shot) return;
-  const previous = shot[field];
-  await db.shots.put({ ...shot, [field]: slot });
-  await touchProject(shot.projectId);
-  await recycleSlotMedia(previous, slot);
+  await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    const shot = await db.shots.get(id);
+    if (!shot) throw new Error("镜头不存在，无法保存");
+    const previous = shot[field];
+    await db.shots.put({ ...shot, [field]: slot });
+    await touchProject(shot.projectId);
+    await recycleSlotMedia(previous, slot);
+  });
 }
 
 export async function deleteShots(ids: Id[]): Promise<void> {
-  if (ids.length === 0) return;
-  const affected = new Map<Id, Id>();
-  const mediaIds: Id[] = [];
-  for (const id of ids) {
-    const shot = await db.shots.get(id);
-    if (!shot) continue;
-    affected.set(shot.episodeId, shot.projectId);
-    mediaIds.push(
-      ...slotMediaIds(shot.firstFrame),
-      ...slotMediaIds(shot.lastFrame),
-      ...slotMediaIds(shot.clip),
-    );
-    await db.shots.delete(id);
-  }
-  for (const [episodeId, projectId] of affected) {
-    await reindexShots(episodeId);
-    await touchProject(projectId);
-  }
-  for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
+  await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    if (ids.length === 0) return;
+    const affected = new Map<Id, Id>();
+    const mediaIds: Id[] = [];
+    for (const id of ids) {
+      const shot = await db.shots.get(id);
+      if (!shot) continue;
+      affected.set(shot.episodeId, shot.projectId);
+      mediaIds.push(
+        ...slotMediaIds(shot.firstFrame),
+        ...slotMediaIds(shot.lastFrame),
+        ...slotMediaIds(shot.clip),
+      );
+      await db.shots.delete(id);
+    }
+    for (const [episodeId, projectId] of affected) {
+      await reindexShots(episodeId);
+      await touchProject(projectId);
+    }
+    for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
+  });
 }
 
 export async function deleteEpisodeShots(episodeId: Id, ids: Id[]): Promise<void> {
-  if (ids.length === 0) return;
-  const episode = await db.episodes.get(episodeId);
-  if (!episode) throw new Error("集不存在");
-  if (new Set(ids).size !== ids.length) throw new Error("镜头列表包含重复记录");
-  const shots = await db.shots.bulkGet(ids);
-  if (
-    shots.some(
-      (shot) =>
-        !shot || shot.episodeId !== episodeId || shot.projectId !== episode.projectId,
-    )
-  ) {
-    throw new Error("所选镜头不属于当前集");
-  }
-  await deleteShots(ids);
+  await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    if (ids.length === 0) return;
+    const episode = await db.episodes.get(episodeId);
+    if (!episode) throw new Error("集不存在");
+    if (new Set(ids).size !== ids.length) throw new Error("镜头列表包含重复记录");
+    const shots = await db.shots.bulkGet(ids);
+    if (
+      shots.some(
+        (shot) =>
+          !shot || shot.episodeId !== episodeId || shot.projectId !== episode.projectId,
+      )
+    ) {
+      throw new Error("所选镜头不属于当前集");
+    }
+    await deleteShots(ids);
+  });
 }
 
 export async function setVisibleColumns(

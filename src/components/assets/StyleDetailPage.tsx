@@ -5,10 +5,8 @@ import { db } from "@/db/database";
 import { patchStyle, setStyleSlot } from "@/db/repo";
 import { STYLE_SLOTS } from "@/domain/types";
 import { EditableGenerationSlot } from "@/components/slots/GenerationSlotCard";
+import { AssetTextField } from "./AssetTextField";
 import { Button } from "@/components/ui/button";
-import { Field } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 
 export function StyleDetailPage({
   styleId,
@@ -73,24 +71,29 @@ export function StyleDetailPage({
                 title={`风格 · ${slot.label}`}
                 variant="asset"
                 slot={style.slots?.[slot.id]}
-                onSave={(value) => void setStyleSlot(style.id, slot.id, value)}
+                onSave={(value) => setStyleSlot(style.id, slot.id, value)}
               />
             ))}
           </div>
           <div className="space-y-4">
-            <Field label="名称">
-              <Input
-                value={style.name}
-                onChange={(event) => void patchStyle(style.id, { name: event.target.value })}
-              />
-            </Field>
-            <Field label="备注">
-              <Textarea
-                value={style.notes}
-                placeholder="画风、光色、镜头气质"
-                onChange={(event) => void patchStyle(style.id, { notes: event.target.value })}
-              />
-            </Field>
+            <AssetTextField
+              key={`${style.id}:name`}
+              draftKey={`${style.id}:name`}
+              label="名称"
+              value={style.name}
+              projectId={style.projectId}
+              persist={(value) => patchStyle(style.id, { name: value })}
+            />
+            <AssetTextField
+              key={`${style.id}:notes`}
+              draftKey={`${style.id}:notes`}
+              label="备注"
+              value={style.notes}
+              projectId={style.projectId}
+              persist={(value) => patchStyle(style.id, { notes: value })}
+              multiline
+              placeholder="画风、光色、镜头气质"
+            />
           </div>
         </div>
       </div>

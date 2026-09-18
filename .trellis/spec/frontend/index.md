@@ -42,7 +42,7 @@
 - [ ] `/p/$projectId` is the episode list; story/shots/produce live under `/p/$projectId/e/$episodeId`
 - [ ] Shot queries and create/delete use `episodeId`, not the whole project table
 - [ ] Delivery exports filter by both project and episode and wait for live queries to load
-- [ ] Shot `status` defaults to draft; filters live on `shotSettings.filters` (empty arrays = all)
+- [ ] Shot `status` defaults to draft; filters live on `Episode.shotFilters` (v6 migrates legacy project filters) (empty arrays = all)
 - [ ] Agent stream does not `scrollIntoView({ behavior: "smooth" })` on a sentinel; history ChatItems memo by content/status/reasoning/reasoningDurationMs
 
 ---

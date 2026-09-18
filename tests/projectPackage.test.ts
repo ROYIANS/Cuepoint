@@ -1,3 +1,4 @@
+import Dexie from "dexie";
 import JSZip from "jszip";
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
@@ -20,7 +21,7 @@ import {
   patchStyle,
   putMedia,
   updateProject,
-  updateShotSettings,
+  updateEpisodeShotFilters,
   upsertConnector,
 } from "@/db/repo";
 import { emptySlot } from "@/domain/slot";
@@ -28,6 +29,80 @@ import { PACKAGE_FORMAT, STUDIO_LIBRARY_ID } from "@/domain/types";
 import { exportProjectZip, importProjectZip, PackageError } from "@/lib/projectPackage";
 
 describe("project packages", () => {
+  it.each([false, true])("remaps episode filter beats from %s legacy project preferences", async (legacy) => {
+    const filters = { statuses: ["ready"], gaps: ["missingClip"], beatIds: ["same-beat", "stale", "none"] };
+    const zip = new JSZip();
+    zip.file("manifest.json", JSON.stringify({ format: PACKAGE_FORMAT }));
+    zip.file("project.json", JSON.stringify({ name: "filters", shotSettings: { filters } }));
+    zip.file("episodes.json", JSON.stringify(["first", "second"].map((id, order) => ({
+      id, order, title: id, story: { beats: [{ id: "same-beat", title: id }] },
+      ...(legacy ? {} : { shotFilters: filters }),
+    }))));
+    zip.file("shots.json", JSON.stringify(["first", "second"].map((episodeId) => ({
+      id: `shot-${episodeId}`, episodeId, beatId: "same-beat",
+    }))));
+    const imported = await importProjectZip(await zip.generateAsync({ type: "blob" }));
+    const episodes = await db.episodes.where("projectId").equals(imported.id).sortBy("order");
+    const shots = await db.shots.where("projectId").equals(imported.id).toArray();
+    expect(episodes[0].story.beats[0].id).not.toBe(episodes[1].story.beats[0].id);
+    for (const episode of episodes) {
+      const beatId = episode.story.beats[0].id;
+      expect(episode.shotFilters).toEqual({ ...filters, beatIds: [beatId, "none"] });
+      expect(shots.find((shot) => shot.episodeId === episode.id)?.beatId).toBe(beatId);
+    }
+    expect(imported.shotSettings.filters.beatIds).toEqual([]);
+    const restored = await importProjectZip(await exportProjectZip(imported.id));
+    const restoredEpisodes = await db.episodes.where("projectId").equals(restored.id).toArray();
+    for (const episode of restoredEpisodes) {
+      expect(episode.shotFilters?.beatIds).toEqual([episode.story.beats[0].id, "none"]);
+    }
+  });
+
+  it("migrates project filters in a package predating episodes", async () => {
+    const zip = new JSZip();
+    zip.file("manifest.json", JSON.stringify({ format: PACKAGE_FORMAT }));
+    zip.file("project.json", JSON.stringify({ name: "old", story: { beats: [{ id: "beat" }] },
+      shotSettings: { filters: { beatIds: ["beat", "gone", "none"], statuses: ["approved"] } },
+    }));
+    const project = await importProjectZip(await zip.generateAsync({ type: "blob" }));
+    const episode = (await db.episodes.where("projectId").equals(project.id).first())!;
+    expect(episode.shotFilters).toEqual({ statuses: ["approved"], gaps: [], beatIds: [episode.story.beats[0].id, "none"] });
+  });
+
+  it("exports JSON and media from one snapshot while another transaction edits them", async () => {
+    const project = await createProject("before");
+    const episode = (await db.episodes.where("projectId").equals(project.id).first())!;
+    const shot = await addShot(project.id, episode.id);
+    await patchShot(shot.id, { content: "before" });
+    await db.media.add({ id: "snapshot-media", projectId: project.id, mimeType: "image/png", filename: "frame.png", blob: new Blob(["frame"]) });
+    await patchShot(shot.id, { firstFrame: { ...emptySlot(), result: { mediaId: "snapshot-media", kind: "image" } } });
+    let edit: Promise<unknown> | undefined;
+    const afterProjectRead = (value: typeof project) => {
+      if (value?.id === project.id && !edit) {
+        edit = Dexie.ignoreTransaction(() => db.transaction("rw", db.projects, db.shots, db.media, async () => {
+          await db.projects.update(project.id, { name: "after" });
+          await db.shots.update(shot.id, { content: "after", firstFrame: emptySlot() });
+          await db.media.delete("snapshot-media");
+        }));
+      }
+      return value;
+    };
+    db.projects.hook("reading", afterProjectRead);
+    let backup: Blob;
+    try {
+      backup = await exportProjectZip(project.id);
+    } finally {
+      db.projects.hook("reading").unsubscribe(afterProjectRead);
+    }
+    await edit;
+    const zip = await JSZip.loadAsync(backup);
+    expect(JSON.parse(await zip.file("project.json")!.async("string")).name).toBe("before");
+    expect(JSON.parse(await zip.file("shots.json")!.async("string"))[0].content).toBe("before");
+    expect((await db.shots.get(shot.id))?.content).toBe("after");
+    expect(zip.file("media/snapshot-media.png")).not.toBeNull();
+    expect(await db.media.get("snapshot-media")).toBeUndefined();
+  });
+
   it("round-trips props, styles, nested extra data, and inferred media MIME", async () => {
     const project = await createProject("package");
     const prop = await addProp(project.id);
@@ -163,18 +238,15 @@ describe("project packages", () => {
     const episode = (await db.episodes.where("projectId").equals(project.id).first())!;
     const shot = await addShot(project.id, episode.id);
     await patchShot(shot.id, { status: "framed" });
-    await updateShotSettings(project.id, {
-      filters: {
-        statuses: ["framed"],
-        beatIds: [],
-        gaps: ["missingClip"],
-      },
+    await updateEpisodeShotFilters(episode.id, {
+      statuses: ["framed"], beatIds: [], gaps: ["missingClip"],
     });
 
     const imported = await importProjectZip(await exportProjectZip(project.id));
     const importedShot = (await db.shots.where("projectId").equals(imported.id).first())!;
     expect(importedShot.status).toBe("framed");
-    expect(imported.shotSettings.filters).toEqual({
+    const importedEpisode = (await db.episodes.where("projectId").equals(imported.id).first())!;
+    expect(importedEpisode.shotFilters).toEqual({
       statuses: ["framed"],
       beatIds: [],
       gaps: ["missingClip"],

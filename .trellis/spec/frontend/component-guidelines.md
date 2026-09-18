@@ -57,7 +57,7 @@ Primitives export named functions (not default exports): `Button`, `Field`, `but
 
 - Prefer inline prop types on the function signature for page/widget props (as in `CharacterDetailPage`, `EditableGenerationSlot`).
 - Discriminated unions for context: `back: { kind: "studio" } | { kind: "project"; projectId: string }`.
-- Callbacks that persist: `onSave: (slot: GenerationSlot) => void` — callers wrap with `void setCharacterSlot(...)`.
+- Callbacks that persist: `onSave: (slot: GenerationSlot) => Promise<void>` — return the repo promise. Await success before close; keep failed drafts open for retry.
 - UI primitives extend host element props: `React.ComponentProps<"button"> & VariantProps<typeof buttonVariants> & { asChild?: boolean }` (`button.tsx`).
 - Use `asChild` + Radix `Slot` when a primitive should render as another element.
 
@@ -66,17 +66,9 @@ Primitives export named functions (not default exports): `Button`, `Field`, `but
 ## Forms and Generation Slots
 
 - Label + control: wrap with `Field` from `src/components/ui/field.tsx` (`label` + `children`).
-- Controlled inputs bind Dexie row fields and patch on every change:
-
-```tsx
-<Field label="名称">
-  <Input
-    value={character.name}
-    onChange={(event) => void patchCharacter(character.id, { name: event.target.value })}
-  />
-</Field>
-```
-
+- Asset text uses `AssetTextField` with a scoped keyed `useDebouncedDraft`, saving/error/retry feedback, and field-only repo patches. Do not bind an actively edited input directly to a live database row. `Field` associates label and child control IDs.
+- Slot dialogs track only uploads they created; cancellation/replacement cleans orphan uploads, including late completion after unmount. Disable overlapping save/upload/close while a commit is pending. Never delete shared committed media.
+- Preview tiles remain buttons; inspection inside dialogs uses full-image `object-contain` or video controls outside clickable tile buttons. Removal controls must remain keyboard-focusable and visible on touch devices.
 - Image/video generation tiles use `EditableGenerationSlot` (`projectId`, `slot`, `variant`, `title`, `onSave`). Do not fork a second slot editor for assets/shots.
 
 ---

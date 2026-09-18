@@ -5,10 +5,8 @@ import { db } from "@/db/database";
 import { patchCharacter, setCharacterSlot } from "@/db/repo";
 import { CHARACTER_SLOTS } from "@/domain/types";
 import { EditableGenerationSlot } from "@/components/slots/GenerationSlotCard";
+import { AssetTextField } from "./AssetTextField";
 import { Button } from "@/components/ui/button";
-import { Field } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 
 export function CharacterDetailPage({
   characterId,
@@ -69,37 +67,46 @@ export function CharacterDetailPage({
                 title={`角色 · ${slot.label}`}
                 variant="asset"
                 slot={character.slots?.[slot.id]}
-                onSave={(value) => void setCharacterSlot(character.id, slot.id, value)}
+                onSave={(value) => setCharacterSlot(character.id, slot.id, value)}
               />
             ))}
           </div>
           <div className="space-y-4">
-            <Field label="名称">
-              <Input
-                value={character.name}
-                onChange={(event) => void patchCharacter(character.id, { name: event.target.value })}
-              />
-            </Field>
-            <Field label="简介">
-              <Textarea
-                value={character.bio}
-                onChange={(event) => void patchCharacter(character.id, { bio: event.target.value })}
-              />
-            </Field>
-            <Field label="外观说明">
-              <Textarea
-                value={character.appearance}
-                onChange={(event) =>
-                  void patchCharacter(character.id, { appearance: event.target.value })
-                }
-              />
-            </Field>
-            <Field label="备注">
-              <Textarea
-                value={character.notes}
-                onChange={(event) => void patchCharacter(character.id, { notes: event.target.value })}
-              />
-            </Field>
+            <AssetTextField
+              key={`${character.id}:name`}
+              draftKey={`${character.id}:name`}
+              label="名称"
+              value={character.name}
+              projectId={character.projectId}
+              persist={(value) => patchCharacter(character.id, { name: value })}
+            />
+            <AssetTextField
+              key={`${character.id}:bio`}
+              draftKey={`${character.id}:bio`}
+              label="简介"
+              value={character.bio}
+              projectId={character.projectId}
+              persist={(value) => patchCharacter(character.id, { bio: value })}
+              multiline
+            />
+            <AssetTextField
+              key={`${character.id}:appearance`}
+              draftKey={`${character.id}:appearance`}
+              label="外观说明"
+              value={character.appearance}
+              projectId={character.projectId}
+              persist={(value) => patchCharacter(character.id, { appearance: value })}
+              multiline
+            />
+            <AssetTextField
+              key={`${character.id}:notes`}
+              draftKey={`${character.id}:notes`}
+              label="备注"
+              value={character.notes}
+              projectId={character.projectId}
+              persist={(value) => patchCharacter(character.id, { notes: value })}
+              multiline
+            />
           </div>
         </div>
       </div>

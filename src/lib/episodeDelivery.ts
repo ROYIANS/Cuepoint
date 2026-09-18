@@ -1,3 +1,4 @@
+import { validShotMediaId, type ShotMediaIndex } from "@/lib/shotMedia";
 import { SHOT_COLUMNS, normalizeVisibleColumns } from "@/domain/columns";
 import {
   SHOT_STATUS_LABELS,
@@ -61,6 +62,7 @@ export function deriveEpisodeDelivery(input: {
   shots: Shot[];
   characters: Character[];
   scenes: Scene[];
+  media: ShotMediaIndex;
 }): EpisodeDelivery {
   const { project, episode } = input;
   const characterNames = new Map(input.characters.map((item) => [item.id, item.name]));
@@ -83,9 +85,9 @@ export function deriveEpisodeDelivery(input: {
       const missing: EpisodeDeliveryRow["missing"] = [];
       if (!shot.content.trim()) missing.push("content");
       if (!(Number(shot.durationSec) > 0)) missing.push("duration");
-      if (!shot.sceneId) missing.push("scene");
-      if (!shot.firstFrame.result?.mediaId) missing.push("firstFrame");
-      if (!shot.clip.result?.mediaId) missing.push("clip");
+      if (!shot.sceneId || !sceneNames.has(shot.sceneId)) missing.push("scene");
+      if (!validShotMediaId(shot.firstFrame.result, "image", project.id, input.media)) missing.push("firstFrame");
+      if (!validShotMediaId(shot.clip.result, "video", project.id, input.media)) missing.push("clip");
       const status = normalizeShotStatus(shot.status);
 
       return {
@@ -103,7 +105,8 @@ export function deriveEpisodeDelivery(input: {
         scene: shot.sceneId ? (sceneNames.get(shot.sceneId) ?? `未知场景(${shot.sceneId})`) : "",
         notes: shot.notes,
         visualMediaId:
-          shot.firstFrame.result?.mediaId ?? shot.lastFrame.result?.mediaId,
+          validShotMediaId(shot.firstFrame.result, "image", project.id, input.media) ??
+          validShotMediaId(shot.lastFrame.result, "image", project.id, input.media),
         values,
         missing,
       };

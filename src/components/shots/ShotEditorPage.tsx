@@ -1,3 +1,5 @@
+import { toast } from "sonner";
+import { useShotMedia } from "@/lib/useShotMedia";
 import {
   DndContext,
   KeyboardSensor,
@@ -62,11 +64,13 @@ import {
   setShotSlot,
   setVisibleColumns,
   updateShotSettings,
+  updateEpisodeShotFilters,
   type EpisodeShotBulkPatch,
 } from "@/db/repo";
 import { SHOT_COLUMNS, normalizeVisibleColumns, type ColumnDef } from "@/domain/columns";
 import { emptySlot, slotMediaIds } from "@/domain/slot";
 import {
+  getEpisodeShotFilters,
   SHOT_STATUSES,
   SHOT_STATUS_LABELS,
   SHOT_UNASSIGNED_BEAT,
@@ -268,9 +272,10 @@ export function ShotEditorPage({
   const visibleDefs = SHOT_COLUMNS.filter((column) => visible.includes(column.id));
   const shotSettings = normalizeShotSettings(project?.shotSettings);
   const workspaceView = shotSettings.workspaceView;
-  const filters = shotSettings.filters;
+  const filters = getEpisodeShotFilters(episode ?? { story: normalizeEpisodeStory(undefined) }, project ?? undefined);
+  const media = useShotMedia(shots);
   const filtersOn = shotFiltersActive(filters);
-  const visibleShots = useMemo(() => filterShots(shots, filters), [shots, filters]);
+  const visibleShots = useMemo(() => filterShots(shots, filters, media), [shots, filters, media]);
   const [selecting, setSelecting] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -329,8 +334,23 @@ export function ShotEditorPage({
     setHighlightedShotId(undefined);
   }, [episodeId]);
 
+  const focusExists = shots.some((shot) => shot.id === focusShotId);
+  const focusVisible = Boolean(focusShotId && visibleShotIds.includes(focusShotId));
+  const mediaLoaded = media !== undefined;
+  const focusContextLoaded = project?.id === projectId && episode?.id === episodeId && episode?.projectId === projectId;
+  const revealedFocus = useRef<string | undefined>(undefined);
   useEffect(() => {
-    if (!focusShotId || !shots.some((shot) => shot.id === focusShotId)) return;
+    if (!focusShotId) { revealedFocus.current = undefined; return; }
+    const focusKey = `${episodeId}:${focusShotId}`;
+    if (revealedFocus.current === focusKey || !mediaLoaded || !focusContextLoaded) return;
+    if (!focusExists) return;
+    if (!focusVisible) {
+      void updateEpisodeShotFilters(episodeId, { statuses: [], beatIds: [], gaps: [] })
+        .then(() => toast.info("已清除当前集筛选，显示定位镜头"))
+        .catch(() => toast.error("无法显示定位镜头，请重试"));
+      return;
+    }
+    revealedFocus.current = focusKey;
     setHighlightedShotId(focusShotId);
     setActiveShotId(focusShotId);
     const frame = window.requestAnimationFrame(() => {
@@ -343,7 +363,7 @@ export function ShotEditorPage({
       window.cancelAnimationFrame(frame);
       window.clearTimeout(timeout);
     };
-  }, [focusShotId, shots]);
+  }, [focusShotId, episodeId, focusExists, focusVisible, mediaLoaded, focusContextLoaded]);
 
   useEffect(() => {
     if (activeShotId && !visibleShotIds.includes(activeShotId)) {
@@ -490,7 +510,9 @@ export function ShotEditorPage({
   }, []);
 
   async function persistFilters(next: ShotFilters) {
-    await updateShotSettings(projectId, { filters: next });
+    await updateEpisodeShotFilters(episodeId, next).catch((error: unknown) => {
+      toast.error(error instanceof Error ? error.message : "筛选保存失败");
+    });
   }
 
   function toggleFilterStatus(status: ShotStatus) {
@@ -1610,7 +1632,7 @@ function ShotRow({
                 variant="frame"
                 size="row"
                 title={`镜头 ${shot.shotNumber} · 首帧`}
-                onSave={(slot) => void setShotSlot(shot.id, "firstFrame", slot)}
+                onSave={(slot) => setShotSlot(shot.id, "firstFrame", slot)}
               />
             </div>
             <div className={cn(DESIGN_CELL_CHROME, "w-full border-l")}>
@@ -1620,7 +1642,7 @@ function ShotRow({
                 variant="frame"
                 size="row"
                 title={`镜头 ${shot.shotNumber} · 尾帧`}
-                onSave={(slot) => void setShotSlot(shot.id, "lastFrame", slot)}
+                onSave={(slot) => setShotSlot(shot.id, "lastFrame", slot)}
               />
             </div>
             <div className={cn(DESIGN_CELL_CHROME, "w-full border-l")}>
@@ -1630,7 +1652,7 @@ function ShotRow({
                 variant="clip"
                 size="row"
                 title={`镜头 ${shot.shotNumber} · 成片`}
-                onSave={(slot) => void setShotSlot(shot.id, "clip", slot)}
+                onSave={(slot) => setShotSlot(shot.id, "clip", slot)}
               />
             </div>
             <div className="flex h-full min-w-0 border-l">

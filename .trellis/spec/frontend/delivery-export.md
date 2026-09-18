@@ -15,6 +15,7 @@ deriveEpisodeDelivery(input: {
   shots: Shot[];
   characters: Character[];
   scenes: Scene[];
+  media: ShotMediaIndex;
 }): EpisodeDelivery
 
 episodeDeliveryCsv(delivery: EpisodeDelivery): string
@@ -34,7 +35,10 @@ Print route:
 - CSV starts with a UTF-8 BOM, uses comma delimiters, CRLF rows, and doubles quotes inside quoted cells.
 - Delivery includes base columns plus currently visible optional shot columns.
 - Shot `status` is always exported (Chinese label in CSV / print). Missing or unknown values normalize to `draft` / 草稿.
-- Printable visual fallback is first-frame result, then last-frame result, then an empty placeholder.
+- Readiness and gap filters use `validShotMediaId`: same project, existing nonempty Blob, matching declared result kind and stored MIME. A clip still image remains an allowed planning placeholder but is not video-ready. Missing scene records count as gaps. Manual status is never changed by these checks.
+- Load only referenced result media with `useShotMedia`, and wait for this query before showing delivery checks/actions.
+- Printed content is full text with preserved line breaks; do not use line-clamp, truncate or overflow clipping for authored prose.
+- Printable visual fallback is valid first-frame image, then valid last-frame image, then an empty placeholder.
 - Print CSS uses A4 landscape and removes application chrome.
 
 ### 4. Validation & Error Matrix

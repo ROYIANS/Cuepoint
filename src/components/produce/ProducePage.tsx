@@ -1,3 +1,4 @@
+import { useShotMedia } from "@/lib/useShotMedia";
 import { Link } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { AlertTriangle, CheckCircle2, Download, Printer } from "lucide-react";
@@ -45,7 +46,10 @@ export function ProducePage({
     [projectId],
   );
 
+  const media = useShotMedia(shots);
+
   if (
+    media === undefined ||
     project === undefined ||
     episode === undefined ||
     shots === undefined ||
@@ -67,6 +71,7 @@ export function ProducePage({
     shots,
     characters,
     scenes,
+    media,
   });
   const incompleteRows = delivery.rows.filter((row) => row.missing.length > 0);
   const missingCount = delivery.rows.reduce((sum, row) => sum + row.missing.length, 0);
@@ -121,7 +126,7 @@ export function ProducePage({
                   : `${incompleteRows.length} 个镜头需要补充`}
             </p>
             <p className="text-muted-foreground mt-1 text-xs">
-              检查内容、时长、场景、首帧和成片；CSV 和故事板只包含当前集。
+              检查内容、时长、场景和有效素材；成片必须是视频，图片占位仍需补充视频。镜头状态由你手动确认。
             </p>
           </div>
         </div>

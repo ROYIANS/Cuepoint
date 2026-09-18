@@ -1,3 +1,4 @@
+import { flushPendingDrafts } from "@/lib/debouncedDraft";
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { ChevronLeft, Download, Ellipsis } from "lucide-react";
@@ -70,6 +71,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
     const rows = await db.episodes.where("projectId").equals(projectId).sortBy("order");
     return rows[0] ?? null;
   }, [projectId]);
+  const [backingUp, setBackingUp] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   if (
@@ -280,14 +282,23 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
           <Button
             variant="outline"
             size="sm"
+            disabled={backingUp}
             onClick={() => {
-              void exportProjectZip(projectId).then((blob) =>
-                downloadBlob(blob, `${project.name}.zip`),
-              );
+              setBackingUp(true);
+              void flushPendingDrafts(projectId)
+                .then(() => exportProjectZip(projectId))
+                .then((blob) => {
+                  downloadBlob(blob, `${project.name}.zip`);
+                  toast.success("项目备份已下载");
+                })
+                .catch((error: unknown) => toast.error(
+                  error instanceof Error ? `备份失败：${error.message}` : "备份失败，请重试",
+                ))
+                .finally(() => setBackingUp(false));
             }}
           >
             <Download />
-            备份项目
+            {backingUp ? "正在保存并备份…" : "备份项目"}
           </Button>
         </div>
       </header>

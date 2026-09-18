@@ -1,5 +1,8 @@
 import { Plus, Trash2, Type } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import { toast } from "sonner";
+import { deleteMediaIfOrphan } from "@/db/repo";
+import { DraftMediaSession } from "@/lib/draftMedia";
 import { emptySlot, slotHasBody } from "@/domain/slot";
 import type { GenerationSlot, Id } from "@/domain/types";
 import {
@@ -27,6 +30,15 @@ import { Textarea } from "@/components/ui/textarea";
 type TileVariant = "frame" | "reference" | "asset" | "clip";
 /** `row`: fit capped media/design shot cells; `default`: fixed library/detail tiles. */
 type TileSize = "default" | "row";
+
+function reportCleanupFailure(session: DraftMediaSession) {
+  toast.error("未保存素材清理失败", {
+    action: {
+      label: "重试清理",
+      onClick: () => { void session.cancel().catch(() => reportCleanupFailure(session)); },
+    },
+  });
+}
 
 export function GenerationSlotTile({
   slot,
@@ -109,24 +121,29 @@ function RefStrip({
   onRemove,
   onAdd,
   addLabel,
+  disabled,
+  labelledBy,
 }: {
   ids: Id[];
   onRemove: (id: Id) => void;
   onAdd: () => void;
   addLabel: string;
+  disabled?: boolean;
+  labelledBy: string;
 }) {
   return (
-    <div className="flex flex-wrap gap-2">
-      {ids.map((id) => (
-        <div key={id} className="group relative h-20 w-28 overflow-hidden rounded-lg border">
-          <MediaPreview mediaId={id} className="h-full w-full" />
+    <div role="group" aria-labelledby={labelledBy} className="flex flex-wrap gap-2">
+      {ids.map((id, index) => (
+        <div key={id} className="relative w-48 space-y-1 overflow-hidden rounded-lg border p-1">
+          <MediaPreview mediaId={id} className="h-28 w-full" inspect />
           <Button
             type="button"
             size="icon-sm"
             variant="secondary"
-            className="absolute top-1 right-1 hidden size-6 rounded-full group-hover:flex"
+            className="ml-auto flex size-6 rounded-full"
+            disabled={disabled}
             onClick={() => onRemove(id)}
-            aria-label="移除参考"
+            aria-label={`移除第 ${index + 1} 项参考`}
           >
             <Trash2 />
           </Button>
@@ -135,6 +152,7 @@ function RefStrip({
       <button
         type="button"
         onClick={onAdd}
+        disabled={disabled}
         className="text-muted-foreground hover:text-foreground hover:border-brand flex h-20 w-28 flex-col items-center justify-center gap-1 rounded-lg border border-dashed text-xs"
       >
         <Plus className="size-3.5" />
@@ -157,55 +175,125 @@ export function GenerationSlotEditor({
   projectId: Id;
   value: GenerationSlot;
   onClose: () => void;
-  onSave: (slot: GenerationSlot) => void;
+  onSave: (slot: GenerationSlot) => Promise<void>;
 }) {
   const [draft, setDraft] = useState(value);
+  const [pending, setPending] = useState<"upload" | "save" | "close" | null>(null);
+  const [error, setError] = useState<string>();
+  const [cancelled, setCancelled] = useState(false);
+  const [session] = useState(() => new DraftMediaSession(deleteMediaIfOrphan));
+  const busy = useRef(false);
+  const failedUpload = useRef<{ kind: "image" | "video" | "result"; file: File } | null>(null);
+  const mounted = useRef(true);
+  const promptId = useId();
+  const refImageId = useId();
+  const refVideoId = useId();
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      // StrictMode replays effects; only dispose if this editor really unmounted.
+      queueMicrotask(() => {
+        if (!mounted.current) void session.cancel().catch(() => reportCleanupFailure(session));
+      });
+    };
+  }, [session]);
 
-  async function addRef(kind: "image" | "video") {
-    const file = await pickMediaFile(kind === "video" ? VIDEO_ACCEPT : IMAGE_ACCEPT);
-    if (!file) return;
-    const uploaded = await uploadMediaFile(projectId, file);
-    setDraft((current) =>
-      kind === "video"
-        ? { ...current, referenceVideoIds: [...current.referenceVideoIds, uploaded.id] }
-        : { ...current, referenceImageIds: [...current.referenceImageIds, uploaded.id] },
-    );
+  const mediaIds = (slot: GenerationSlot) => [
+    ...slot.referenceImageIds, ...slot.referenceVideoIds,
+    ...(slot.result ? [slot.result.mediaId] : []),
+  ];
+  const fail = (reason: unknown) => {
+    if (mounted.current) setError(reason instanceof Error ? reason.message : "操作失败，请重试");
+  };
+
+  async function upload(kind: "image" | "video" | "result", retryFile?: File) {
+    if (busy.current || cancelled) return;
+    busy.current = true;
+    setPending("upload");
+    setError(undefined);
+    try {
+      const uploaded = await session.upload(async () => {
+        const file = retryFile ?? await pickMediaFile(kind === "result" ? MEDIA_ACCEPT : kind === "video" ? VIDEO_ACCEPT : IMAGE_ACCEPT);
+        if (!file) throw new Error("未选择文件");
+        failedUpload.current = { kind, file };
+        return uploadMediaFile(projectId, file);
+      });
+      if (!uploaded || !mounted.current) return;
+      failedUpload.current = null;
+      const next = kind === "result"
+        ? { ...draft, result: { mediaId: uploaded.id, kind: uploaded.kind } }
+        : kind === "video"
+          ? { ...draft, referenceVideoIds: [...draft.referenceVideoIds, uploaded.id] }
+          : { ...draft, referenceImageIds: [...draft.referenceImageIds, uploaded.id] };
+      setDraft(next);
+      await session.discardExcept(mediaIds(next));
+    } catch (reason) {
+      if (!(reason instanceof Error && reason.message === "未选择文件")) fail(reason);
+    } finally {
+      busy.current = false;
+      if (mounted.current) setPending((current) => current === "close" ? current : null);
+    }
   }
 
-  async function setResult() {
-    const file = await pickMediaFile(MEDIA_ACCEPT);
-    if (!file) return;
-    const uploaded = await uploadMediaFile(projectId, file);
-    setDraft((current) => ({
-      ...current,
-      result: { mediaId: uploaded.id, kind: uploaded.kind },
-    }));
+  async function close() {
+    if (pending === "save" || pending === "close") return;
+    busy.current = true;
+    setCancelled(true);
+    setPending("close");
+    try {
+      await session.cancel();
+      onClose();
+    } catch (reason) {
+      fail(reason);
+      setPending(null);
+    }
+  }
+
+  async function save() {
+    if (busy.current || cancelled) return;
+    busy.current = true;
+    setPending("save");
+    setError(undefined);
+    try {
+      await session.save(mediaIds(draft), () => onSave(draft));
+      onClose();
+    } catch (reason) {
+      fail(reason);
+    } finally {
+      busy.current = false;
+      if (mounted.current) setPending(null);
+    }
   }
 
   return (
-    <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
+    <Dialog open={open} onOpenChange={(next) => !next && void close()}>
       <DialogContent className="flex max-h-[90vh] max-w-2xl flex-col overflow-hidden sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>槽位主体是提示词和参考，外面的画面只是生成结果</DialogDescription>
+          <DialogDescription>填写画面描述、添加参考，或直接上传已有素材。保存后可用于分镜和交付。</DialogDescription>
         </DialogHeader>
         <div className="app-scroll space-y-5 overflow-auto pr-1">
           <div className="grid gap-2">
-            <Label>提示词</Label>
+            <Label htmlFor={promptId}>画面描述 / 提示词</Label>
             <Textarea
               autoFocus
+              id={promptId}
+              disabled={pending !== null || cancelled}
               value={draft.prompt}
               onChange={(event) => setDraft({ ...draft, prompt: event.target.value })}
-              placeholder="描述要生成的画面或镜头…"
+              placeholder="描述画面内容、动作、光线或镜头…"
               className="min-h-32"
             />
           </div>
           <div className="grid gap-2">
-            <Label>参考图</Label>
+            <div id={refImageId} className="text-sm font-medium">参考图</div>
             <RefStrip
+              disabled={pending !== null || cancelled}
+              labelledBy={refImageId}
               ids={draft.referenceImageIds}
               addLabel="添加图片"
-              onAdd={() => void addRef("image")}
+              onAdd={() => void upload("image")}
               onRemove={(id) =>
                 setDraft({
                   ...draft,
@@ -215,11 +303,13 @@ export function GenerationSlotEditor({
             />
           </div>
           <div className="grid gap-2">
-            <Label>参考视频</Label>
+            <div id={refVideoId} className="text-sm font-medium">参考视频</div>
             <RefStrip
+              disabled={pending !== null || cancelled}
+              labelledBy={refVideoId}
               ids={draft.referenceVideoIds}
               addLabel="添加视频"
-              onAdd={() => void addRef("video")}
+              onAdd={() => void upload("video")}
               onRemove={(id) =>
                 setDraft({
                   ...draft,
@@ -231,19 +321,20 @@ export function GenerationSlotEditor({
           <div className="bg-muted space-y-3 rounded-xl p-4">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm font-medium">最终生成素材</div>
+                <div className="text-sm font-medium">成片 / 画面素材</div>
                 <div className="text-muted-foreground text-[11px]">
-                  仅用于预览和导出，不是这个槽位的主体
+                  支持已有图片或视频，视频可直接播放检查
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button size="sm" variant="outline" onClick={() => void setResult()}>
-                  上传结果
+                <Button size="sm" variant="outline" disabled={pending !== null || cancelled} onClick={() => void upload("result")}>
+                  上传素材
                 </Button>
                 {draft.result ? (
                   <Button
                     size="sm"
                     variant="ghost"
+                    disabled={pending !== null || cancelled}
                     onClick={() => setDraft({ ...draft, result: undefined })}
                   >
                     清除
@@ -251,27 +342,37 @@ export function GenerationSlotEditor({
                 ) : null}
               </div>
             </div>
-            <div className="bg-background h-36 overflow-hidden rounded-lg border">
+            <div className="bg-background h-64 overflow-hidden rounded-lg border">
               <MediaPreview
                 mediaId={draft.result?.mediaId}
                 className="h-full w-full"
-                empty="还没有生成结果"
+                empty="尚未添加素材"
+                inspect
               />
             </div>
           </div>
         </div>
+        {error ? (
+          <div role="alert" className="text-destructive text-sm">
+            <p>{error}。{cancelled ? "请再次取消以重试清理。" : "内容已保留，可重试或取消。"}</p>
+            {failedUpload.current && !cancelled ? (
+              <Button variant="outline" size="sm" disabled={pending !== null} onClick={() => {
+                const retry = failedUpload.current;
+                if (retry) void upload(retry.kind, retry.file);
+              }}>重试上传</Button>
+            ) : null}
+          </div>
+        ) : null}
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
-            取消
+          <Button variant="outline" disabled={pending === "save" || pending === "close"} onClick={() => void close()}>
+            {pending === "close" ? "正在清理…" : "取消"}
           </Button>
           <Button
             variant="brand"
-            onClick={() => {
-              onSave(draft);
-              onClose();
-            }}
+            disabled={pending !== null || cancelled}
+            onClick={() => void save()}
           >
-            完成
+            {pending === "save" ? "保存中…" : pending === "upload" ? "上传中…" : error && !failedUpload.current ? "重试保存" : "保存"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -293,7 +394,7 @@ export function EditableGenerationSlot({
   variant: TileVariant;
   label?: string;
   title: string;
-  onSave: (slot: GenerationSlot) => void;
+  onSave: (slot: GenerationSlot) => Promise<void>;
   size?: TileSize;
 }) {
   const value = slot ?? emptySlot();
