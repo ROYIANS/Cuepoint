@@ -362,3 +362,25 @@ Added AIHubMix public metadata discovery, authenticated read-only probe, chat co
 ### Status
 
 [OK] **Completed**
+
+
+## Session 17: Manual foundation reliability batch
+
+**Date**: 2026-09-18
+**Task**: Manual foundation reliability batch
+**Branch**: `main`
+
+### Summary
+
+Completed R1-R6 reliability repairs; 340 tests and lint/build pass, browser backup/locate/asset navigation verified. Recorded next two tasks and verified APIMart GPT Image 2 and MiniMax H3 constraints.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `08d04b7` | (see git log) |
+| `0020f07` | (see git log) |
+
+### Status
+
+[OK] **Completed**
