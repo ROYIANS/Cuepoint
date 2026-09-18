@@ -1,0 +1,5 @@
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "lint/test gate, repo mutations, Vitest patterns"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "Dexie tables via repo; durable vs local UI; ZIP ownership"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "thin routes, feature pages under components/studio"}
+{"file": ".trellis/spec/frontend/directory-structure.md", "reason": "studio route /connectors under _studio"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "domain ConnectorConfig types"}
