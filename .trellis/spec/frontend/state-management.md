@@ -134,6 +134,15 @@ type ProjectMode = "film" | "series";
 normalizeProjectMode(raw: unknown): ProjectMode; // missing/unknown -> "series"
 createProject(name: string, mode?: ProjectMode): Promise<Project> // default mode -> "film"
 type ShotWorkspaceView = "design" | "media";
+type ShotStatus = "draft" | "ready" | "framed" | "clipped" | "approved";
+// UI labels: 草稿 / 可生成 / 已出图 / 已成片 / 通过
+normalizeShotStatus(raw: unknown): ShotStatus; // missing/unknown -> "draft"
+interface ShotFilters {
+  statuses: ShotStatus[]; // empty = all
+  beatIds: string[]; // includes SHOT_UNASSIGNED_BEAT ("none"); empty = all
+  gaps: Array<"missingFirstFrame" | "missingClip">; // OR within dimension; empty = all
+}
+normalizeShotFilters(raw: unknown): ShotFilters;
 updateShotSettings(projectId: Id, patch: Partial<ShotSettings>): Promise<void>
 addEpisode(projectId: Id): Promise<Episode>
 deleteEpisode(id: Id): Promise<void>  // refuse if it is the last episode
@@ -153,7 +162,7 @@ episodes: "id, projectId, order, updatedAt"
 shots: "id, projectId, episodeId, order"
 ```
 
-`Project.story` is only the series logline. Script and beats live on `Episode.story`. Shots must have `episodeId`.
+`Project.story` is only the series logline. Script and beats live on `Episode.story`. Shots must have `episodeId`. `Shot.status` is manual (never auto-derived from media). Gap filters are derived at read time from first-frame / clip slots.
 
 ### 3. Contracts
 
@@ -166,7 +175,9 @@ shots: "id, projectId, episodeId, order"
 | Nested route ownership | The route's episode must belong to the route's project before rendering or mutating |
 | Shot pictures | `firstFrame` / `lastFrame` / `clip`; old `frame` → `firstFrame`; old `reference` refs merge into `firstFrame` without replacing `result` |
 | Shot workspace | `design` prioritizes text/relationships; `media` shows first/last/clip. Both edit the same Shot rows. Missing preference defaults to `design` |
-| Zip | `episodes.json` optional; missing file synthesizes episode 1 from `project.story` + all shots. Project props/styles and their media round-trip with the same package |
+| Shot status | New / missing / unknown → `draft`. Design and media views share status, filters, selection, and reorder |
+| Shot filters | Persist on `project.shotSettings.filters`. Empty arrays mean show all. Dimensions AND together; values within a dimension OR |
+| Zip | `episodes.json` optional; missing file synthesizes episode 1 from `project.story` + all shots. Project props/styles and their media round-trip with the same package. Missing shot `status` imports as `draft`; filters round-trip via `normalizeShotSettings` |
 
 ### 4. Validation & Error Matrix
 
@@ -180,6 +191,8 @@ shots: "id, projectId, episodeId, order"
 | Project mode missing from old record/zip | Normalize to `series` so existing navigation does not change |
 | New project mode omitted | Default to `film` |
 | Partial shot settings update | Merge with normalized stored settings; never replace unrelated settings with `undefined` |
+| Missing / unknown shot status | Treat as `draft` for UI, filters, CSV/print, and package import |
+| Empty filter arrays | Show all shots; do not invent a sentinel `"all"` value |
 
 ### 5. Good/Base/Bad Cases
 
@@ -192,12 +205,13 @@ shots: "id, projectId, episodeId, order"
 - New project opens with 第1集; 新建第2集 increments
 - New default film skips the episode list; an explicitly created series opens the episode list
 - Missing mode remains series, while package round-trip preserves an explicit mode
-- Workspace view and existing shot settings survive partial updates and package round-trip
+- Workspace view, status, filters, and existing shot settings survive partial updates and package round-trip
 - Shot isolation per `episodeId`
 - Route and repo reject a mismatched `projectId` + `episodeId`
 - Deleting a mixed set reindexes every affected episode
 - `parseShotPictureSlots`: `frame.result` kept on `firstFrame`; `reference` ids appended to first-frame refs
-- Zip round-trip preserves nested `extra`, props, styles, and imported media MIME types
+- Zip round-trip preserves nested `extra`, props, styles, imported media MIME types, and shot `status`
+- Combined status / beat / gap filters match; missing status counts as draft
 
 ### 7. Wrong vs Correct
 
@@ -245,6 +259,10 @@ interface StoryBeat {
 - Episode and shot orders become contiguous after mutation. Beat order is the `story.beats` array order.
 - Moving a beat also moves its shots as one visible group; shot move controls operate within the current beat group.
 - Duplication creates new entity IDs. Undo restores exact previous positions.
+- Drag-and-drop reorder must call the same `reorderBeats` / `reorderShots` APIs as arrow moves. Shot drag stays within a beat group and must not change `beatId`. Selection mode disables drag activators.
+- Shot editor document shortcuts (j/k/arrows, Space/x, Cmd/Ctrl+A, n, Backspace, Alt+↑/↓) must no-op when focus is in a form field, Radix overlay content, or checkbox/option/menu control (`isFormFieldTarget`).
+- Cmd/Ctrl+A and toolbar「全选可见」select only the current filtered visible shot ids. When filters change, drop selected ids that are no longer visible before any bulk write.
+- Bulk character edits replace the entire `characterIds` array; each bulk write registers one short-lived undo snapshot of the previous field values.
 
 ### 4. Validation & Error Matrix
 
@@ -254,6 +272,9 @@ interface StoryBeat {
 | Ordered IDs contain duplicates/missing/foreign IDs | Reject without partial writes |
 | Duplicate beat with shots | Clone beat and its shots with new IDs under the same episode |
 | Restore deleted shots | Restore captured media and exact orders, then normalize safely |
+| Drag end yields an identical ordered ID list | Do not write or register undo |
+| Focus inside input/select/overlay/checkbox | Shot shortcuts do not preventDefault or mutate selection |
+| Select-all while filters are active | Hidden shots stay unselected; bulk patches cannot reach them |
 
 ### 5. Good/Base/Bad Cases
 

@@ -34,9 +34,10 @@ import {
   touchProject,
   updateEpisodeDraft,
   updateShotSettings,
+  patchShot,
 } from "@/db/repo";
 import { emptySlot } from "@/domain/slot";
-import { normalizeEpisodeStory, STUDIO_LIBRARY_ID } from "@/domain/types";
+import { normalizeEpisodeStory, normalizeShotSettings, STUDIO_LIBRARY_ID } from "@/domain/types";
 
 describe("repository invariants", () => {
   it("creates film projects by default and preserves an explicit series mode", async () => {
@@ -69,6 +70,7 @@ describe("repository invariants", () => {
       autoIncrementShotNumber: true,
       defaultDurationSec: 4,
       workspaceView: "media",
+      filters: { statuses: [], beatIds: [], gaps: [] },
     });
   });
 
@@ -229,9 +231,34 @@ describe("repository invariants", () => {
 
     const one = await addShot(project.id, first.id);
     const two = await addShot(project.id, first.id);
+    expect(one.status).toBe("draft");
+    expect(two.status).toBe("draft");
     await reorderShots(first.id, [two.id, one.id]);
     expect((await db.shots.get(two.id))?.order).toBe(1);
     await expect(reorderShots(first.id, [two.id, "foreign"])).rejects.toThrow("排序列表");
+  });
+
+  it("persists shot status and filter preferences", async () => {
+    const project = await createProject("status filters");
+    const episode = (await db.episodes.where("projectId").equals(project.id).first())!;
+    const shot = await addShot(project.id, episode.id);
+    expect(shot.status).toBe("draft");
+
+    await patchShot(shot.id, { status: "approved" });
+    expect((await db.shots.get(shot.id))?.status).toBe("approved");
+
+    await updateShotSettings(project.id, {
+      filters: {
+        statuses: ["ready", "approved"],
+        beatIds: ["none"],
+        gaps: ["missingFirstFrame"],
+      },
+    });
+    expect(normalizeShotSettings((await db.projects.get(project.id))?.shotSettings).filters).toEqual({
+      statuses: ["ready", "approved"],
+      beatIds: ["none"],
+      gaps: ["missingFirstFrame"],
+    });
   });
 
   it("rejects reorder and copy when a shot owner disagrees with its episode", async () => {
@@ -282,6 +309,44 @@ describe("repository invariants", () => {
     await deleteEpisodeShots(first.id, selected.map((shot) => shot.id));
     expect(await db.shots.get(selected[0]!.id)).toBeUndefined();
     expect(await db.shots.get(foreign.id)).toBeDefined();
+  });
+
+  it("bulk-replaces status, characters, scene, and notes on selected shots", async () => {
+    const project = await createProject("bulk replace");
+    const episode = (await db.episodes.where("projectId").equals(project.id).first())!;
+    const characterA = await addCharacter(project.id);
+    const characterB = await addCharacter(project.id);
+    const scene = await addScene(project.id);
+    const first = await addShot(project.id, episode.id);
+    const second = await addShot(project.id, episode.id);
+    await patchShot(first.id, { characterIds: [characterA.id], notes: "old" });
+    await patchShot(second.id, { characterIds: [characterA.id, characterB.id], notes: "keep?" });
+
+    await patchEpisodeShots(episode.id, [first.id, second.id], {
+      status: "ready",
+      characterIds: [characterB.id],
+      sceneId: scene.id,
+      notes: "batch note",
+    });
+
+    const updated = await db.shots.bulkGet([first.id, second.id]);
+    expect(updated.map((shot) => shot?.status)).toEqual(["ready", "ready"]);
+    expect(updated.map((shot) => shot?.characterIds)).toEqual([
+      [characterB.id],
+      [characterB.id],
+    ]);
+    expect(updated.map((shot) => shot?.sceneId)).toEqual([scene.id, scene.id]);
+    expect(updated.map((shot) => shot?.notes)).toEqual(["batch note", "batch note"]);
+
+    await patchEpisodeShots(episode.id, [first.id], {
+      characterIds: [],
+      sceneId: undefined,
+      notes: "",
+    });
+    const cleared = await db.shots.get(first.id);
+    expect(cleared?.characterIds).toEqual([]);
+    expect(cleared?.sceneId).toBeUndefined();
+    expect(cleared?.notes).toBe("");
   });
 
   it("moves a beat's shots with it when beats are reordered", async () => {

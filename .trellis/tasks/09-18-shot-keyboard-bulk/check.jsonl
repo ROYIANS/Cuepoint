@@ -1,0 +1,2 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Frontend quality gate"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "Persistence, ordering, keyboard/bulk selection contracts"}

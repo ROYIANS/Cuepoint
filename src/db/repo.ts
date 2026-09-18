@@ -8,6 +8,7 @@ import {
   isStudioLibrary,
   normalizeEpisodeStory,
   normalizeShotSettings,
+  normalizeShotStatus,
   normalizeSeriesStory,
   type Character,
   type CharacterImageSlot,
@@ -54,7 +55,10 @@ export function emptyProject(name: string, mode: ProjectMode = "film"): Project 
     createdAt: at,
     updatedAt: at,
     columnSettings: { visible: [...DEFAULT_VISIBLE_COLUMNS] },
-    shotSettings: { ...DEFAULT_SHOT_SETTINGS },
+    shotSettings: {
+      ...DEFAULT_SHOT_SETTINGS,
+      filters: { statuses: [], beatIds: [], gaps: [] },
+    },
     story: emptySeriesStory(),
     setting: emptySetting(),
   };
@@ -145,6 +149,7 @@ export function emptyShot(
     episodeId,
     order,
     shotNumber,
+    status: "draft",
     firstFrame: emptySlot(),
     lastFrame: emptySlot(),
     clip: emptySlot(),
@@ -1058,10 +1063,14 @@ export async function patchShot(
   await touchProject(shot.projectId);
 }
 
+export type EpisodeShotBulkPatch = Partial<
+  Pick<Shot, "beatId" | "durationSec" | "status" | "characterIds" | "sceneId" | "notes">
+>;
+
 export async function patchEpisodeShots(
   episodeId: Id,
   ids: Id[],
-  patch: Partial<Pick<Shot, "beatId" | "durationSec">>,
+  patch: EpisodeShotBulkPatch,
 ): Promise<void> {
   if (ids.length === 0) return;
   await db.transaction("rw", db.shots, db.episodes, db.projects, async () => {
@@ -1083,7 +1092,16 @@ export async function patchEpisodeShots(
     ) {
       throw new Error("场次不属于当前集");
     }
-    await Promise.all(shots.map((shot) => db.shots.put({ ...shot!, ...patch })));
+    const nextPatch: EpisodeShotBulkPatch = { ...patch };
+    if ("status" in patch) {
+      nextPatch.status = normalizeShotStatus(patch.status);
+    }
+    if ("characterIds" in patch) {
+      nextPatch.characterIds = Array.isArray(patch.characterIds)
+        ? [...patch.characterIds]
+        : [];
+    }
+    await Promise.all(shots.map((shot) => db.shots.put({ ...shot!, ...nextPatch })));
     await touchProject(episode.projectId);
   });
 }

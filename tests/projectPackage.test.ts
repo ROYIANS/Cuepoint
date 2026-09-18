@@ -5,6 +5,7 @@ import {
   addCharacter,
   addProp,
   addScene,
+  addShot,
   addStyle,
   copyStudioCharacter,
   copyStudioProp,
@@ -13,9 +14,11 @@ import {
   createProject,
   patchCharacter,
   patchProp,
+  patchShot,
   patchStyle,
   putMedia,
   updateProject,
+  updateShotSettings,
 } from "@/db/repo";
 import { emptySlot } from "@/domain/slot";
 import { PACKAGE_FORMAT, STUDIO_LIBRARY_ID } from "@/domain/types";
@@ -126,6 +129,45 @@ describe("project packages", () => {
 
     const imported = await importProjectZip(await exportProjectZip(project.id));
     expect(imported.shotSettings.workspaceView).toBe("media");
+  });
+
+  it("round-trips shot status and defaults missing status to draft", async () => {
+    const project = await createProject("shot status");
+    const episode = (await db.episodes.where("projectId").equals(project.id).first())!;
+    const shot = await addShot(project.id, episode.id);
+    await patchShot(shot.id, { status: "framed" });
+    await updateShotSettings(project.id, {
+      filters: {
+        statuses: ["framed"],
+        beatIds: [],
+        gaps: ["missingClip"],
+      },
+    });
+
+    const imported = await importProjectZip(await exportProjectZip(project.id));
+    const importedShot = (await db.shots.where("projectId").equals(imported.id).first())!;
+    expect(importedShot.status).toBe("framed");
+    expect(imported.shotSettings.filters).toEqual({
+      statuses: ["framed"],
+      beatIds: [],
+      gaps: ["missingClip"],
+    });
+
+    const legacyZip = new JSZip();
+    legacyZip.file("manifest.json", JSON.stringify({ format: PACKAGE_FORMAT }));
+    legacyZip.file("project.json", JSON.stringify({ name: "legacy status" }));
+    legacyZip.file(
+      "shots.json",
+      JSON.stringify([{ id: "legacy-shot", order: 1, shotNumber: "1" }]),
+    );
+    const legacy = await importProjectZip(await legacyZip.generateAsync({ type: "blob" }));
+    const legacyShot = (await db.shots.where("projectId").equals(legacy.id).first())!;
+    expect(legacyShot.status).toBe("draft");
+    expect(legacy.shotSettings.filters).toEqual({
+      statuses: [],
+      beatIds: [],
+      gaps: [],
+    });
   });
 
   it("remaps legacy beat ids within each episode scope", async () => {

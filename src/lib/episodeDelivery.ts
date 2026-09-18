@@ -1,5 +1,10 @@
 import { SHOT_COLUMNS, normalizeVisibleColumns } from "@/domain/columns";
-import { episodeLabel, normalizeEpisodeStory } from "@/domain/types";
+import {
+  SHOT_STATUS_LABELS,
+  episodeLabel,
+  normalizeEpisodeStory,
+  normalizeShotStatus,
+} from "@/domain/types";
 import type {
   Character,
   Episode,
@@ -8,6 +13,7 @@ import type {
   Scene,
   Shot,
   ShotColumnId,
+  ShotStatus,
 } from "@/domain/types";
 
 const BASE_COLUMNS = new Set<ShotColumnId>([
@@ -27,6 +33,8 @@ export interface EpisodeDeliveryRow {
   shot: Shot;
   order: number;
   shotNumber: string;
+  status: ShotStatus;
+  statusLabel: string;
   beat: string;
   content: string;
   durationSec: number;
@@ -78,11 +86,14 @@ export function deriveEpisodeDelivery(input: {
       if (!shot.sceneId) missing.push("scene");
       if (!shot.firstFrame.result?.mediaId) missing.push("firstFrame");
       if (!shot.clip.result?.mediaId) missing.push("clip");
+      const status = normalizeShotStatus(shot.status);
 
       return {
         shot,
         order: index + 1,
         shotNumber: shot.shotNumber,
+        status,
+        statusLabel: SHOT_STATUS_LABELS[status],
         beat: shot.beatId ? (beatNames.get(shot.beatId) ?? "未分场") : "未分场",
         content: shot.content,
         durationSec: Math.max(0, Number(shot.durationSec) || 0),
@@ -117,6 +128,7 @@ export function episodeDeliveryCsv(delivery: EpisodeDelivery): string {
   const headers = [
     "顺序",
     "镜号",
+    "状态",
     "场次",
     "内容",
     "时长(秒)",
@@ -128,6 +140,7 @@ export function episodeDeliveryCsv(delivery: EpisodeDelivery): string {
   const records = delivery.rows.map((row) => [
     row.order,
     row.shotNumber,
+    row.statusLabel,
     row.beat,
     row.content,
     row.durationSec,

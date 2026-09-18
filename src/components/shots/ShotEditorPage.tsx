@@ -1,3 +1,19 @@
+import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { useLiveQuery } from "dexie-react-hooks";
 import {
   ArrowDown,
@@ -6,6 +22,7 @@ import {
   ChevronDown,
   Columns3,
   CopyPlus,
+  Filter,
   GripVertical,
   Hash,
   Images,
@@ -20,7 +37,9 @@ import {
 import {
   useEffect,
   useMemo,
+  useRef,
   useState,
+  type CSSProperties,
   type Dispatch,
   type SetStateAction,
 } from "react";
@@ -36,24 +55,46 @@ import {
   patchEpisodeShots,
   patchShot,
   patchStoryBeat,
+  reorderBeats,
   reorderShots,
   restoreShots,
   restoreStoryBeat,
   setShotSlot,
   setVisibleColumns,
   updateShotSettings,
+  type EpisodeShotBulkPatch,
 } from "@/db/repo";
 import { SHOT_COLUMNS, normalizeVisibleColumns, type ColumnDef } from "@/domain/columns";
 import { emptySlot, slotMediaIds } from "@/domain/slot";
 import {
+  SHOT_STATUSES,
+  SHOT_STATUS_LABELS,
+  SHOT_UNASSIGNED_BEAT,
   normalizeEpisodeStory,
   normalizeShotSettings,
+  normalizeShotStatus,
+  shotFiltersActive,
   type Shot,
   type ShotColumnId,
+  type ShotFilters,
+  type ShotGapFilter,
+  type ShotStatus,
   type ShotWorkspaceView,
   type StoryBeat,
 } from "@/domain/types";
+import { isFormFieldTarget } from "@/lib/formFieldFocus";
 import { formatDuration } from "@/lib/format";
+import {
+  moveIdToPosition,
+  reorderGroupInFullOrder,
+  sameIdOrder,
+} from "@/lib/reorderIds";
+import { filterShots } from "@/lib/shotFilters";
+import {
+  beatGroupIds,
+  retainVisibleSelectedIds,
+  stepActiveShotId,
+} from "@/lib/shotKeyboard";
 import { useUndo } from "@/lib/undo";
 import { EditableGenerationSlot } from "@/components/slots/GenerationSlotCard";
 import {
@@ -146,14 +187,52 @@ export function ShotEditorPage({
   const visibleDefs = SHOT_COLUMNS.filter((column) => visible.includes(column.id));
   const shotSettings = normalizeShotSettings(project?.shotSettings);
   const workspaceView = shotSettings.workspaceView;
+  const filters = shotSettings.filters;
+  const filtersOn = shotFiltersActive(filters);
+  const visibleShots = useMemo(() => filterShots(shots, filters), [shots, filters]);
   const [selecting, setSelecting] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [pendingBeatId, setPendingBeatId] = useState<string>();
   const [bulkBeatValue, setBulkBeatValue] = useState<string>();
   const [bulkDuration, setBulkDuration] = useState("");
+  const [bulkStatus, setBulkStatus] = useState<string>();
+  const [bulkSceneValue, setBulkSceneValue] = useState<string>();
+  const [bulkNotes, setBulkNotes] = useState("");
+  const [bulkCharacterIds, setBulkCharacterIds] = useState<string[]>([]);
+  const [activeShotId, setActiveShotId] = useState<string>();
   const [highlightedShotId, setHighlightedShotId] = useState<string>();
   const { registerUndo } = useUndo();
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  const beats = normalizeEpisodeStory(episode?.story).beats;
+  const beatIdList = beats.map((beat) => beat.id);
+  const grouped = beats.map((beat) => ({
+    beat,
+    shots: visibleShots.filter((shot) => shot.beatId === beat.id),
+  }));
+  // Keep SortableContext items in sync with mounted beat blocks; filtered-out
+  // empty groups must not remain in the sortable id list.
+  const visibleGrouped = grouped.filter(
+    ({ shots: beatShots }) => !(filtersOn && beatShots.length === 0),
+  );
+  const ungrouped = visibleShots.filter(
+    (shot) => !shot.beatId || !beats.some((beat) => beat.id === shot.beatId),
+  );
+  const empty = shots.length === 0 && beats.length === 0;
+  const filterEmpty = !empty && filtersOn && visibleShots.length === 0;
+  const visibleShotIds = useMemo(
+    () => visibleShots.map((shot) => shot.id),
+    [visibleShots],
+  );
+
+  const totalDuration = useMemo(
+    () => visibleShots.reduce((sum, shot) => sum + (Number(shot.durationSec) || 0), 0),
+    [visibleShots],
+  );
 
   useEffect(() => {
     setSelecting(false);
@@ -161,12 +240,18 @@ export function ShotEditorPage({
     setConfirmDelete(false);
     setBulkBeatValue(undefined);
     setBulkDuration("");
+    setBulkStatus(undefined);
+    setBulkSceneValue(undefined);
+    setBulkNotes("");
+    setBulkCharacterIds([]);
+    setActiveShotId(undefined);
     setHighlightedShotId(undefined);
   }, [episodeId]);
 
   useEffect(() => {
     if (!focusShotId || !shots.some((shot) => shot.id === focusShotId)) return;
     setHighlightedShotId(focusShotId);
+    setActiveShotId(focusShotId);
     const frame = window.requestAnimationFrame(() => {
       document
         .getElementById(`shot-${focusShotId}`)
@@ -179,20 +264,174 @@ export function ShotEditorPage({
     };
   }, [focusShotId, shots]);
 
-  const beats = normalizeEpisodeStory(episode?.story).beats;
-  const grouped = beats.map((beat) => ({
-    beat,
-    shots: shots.filter((shot) => shot.beatId === beat.id),
-  }));
-  const ungrouped = shots.filter(
-    (shot) => !shot.beatId || !beats.some((beat) => beat.id === shot.beatId),
-  );
-  const empty = shots.length === 0 && beats.length === 0;
+  useEffect(() => {
+    if (activeShotId && !visibleShotIds.includes(activeShotId)) {
+      setActiveShotId(undefined);
+    }
+  }, [activeShotId, visibleShotIds]);
 
-  const totalDuration = useMemo(
-    () => shots.reduce((sum, shot) => sum + (Number(shot.durationSec) || 0), 0),
-    [shots],
-  );
+  useEffect(() => {
+    setSelected((current) => {
+      if (current.size === 0) return current;
+      const next = retainVisibleSelectedIds(current, visibleShotIds);
+      return next.size === current.size ? current : next;
+    });
+  }, [visibleShotIds]);
+
+  useEffect(() => {
+    if (!activeShotId) return;
+    document
+      .getElementById(`shot-${activeShotId}`)
+      ?.scrollIntoView({ block: "nearest" });
+  }, [activeShotId]);
+
+  const keyboardRef = useRef({
+    visibleShotIds,
+    visibleShots,
+    shots,
+    beatIdList,
+    selected,
+    activeShotId,
+    projectId,
+    episodeId,
+    setSelecting,
+    setSelected,
+    setActiveShotId,
+    setConfirmDelete,
+    moveShotByOffset: (_shotId: string, _offset: -1 | 1) => {},
+  });
+
+  async function commitShotReorder(groupIds: string[], activeId: string, overId: string) {
+    const previous = shots.map((shot) => shot.id);
+    const next = reorderGroupInFullOrder(previous, groupIds, activeId, overId);
+    if (!next || sameIdOrder(previous, next)) return;
+    await reorderShots(episodeId, next);
+    registerUndo({
+      label: "已调整镜头顺序",
+      restore: () => reorderShots(episodeId, previous),
+    });
+  }
+
+  function moveShotByOffset(shotId: string, offset: -1 | 1) {
+    const group = beatGroupIds(visibleShots, shotId, beatIdList);
+    const index = group.indexOf(shotId);
+    const targetId = group[index + offset];
+    if (!targetId) return;
+    void commitShotReorder(group, shotId, targetId);
+  }
+
+  keyboardRef.current = {
+    visibleShotIds,
+    visibleShots,
+    shots,
+    beatIdList,
+    selected,
+    activeShotId,
+    projectId,
+    episodeId,
+    setSelecting,
+    setSelected,
+    setActiveShotId,
+    setConfirmDelete,
+    moveShotByOffset,
+  };
+
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (isFormFieldTarget(event.target)) return;
+      const ctx = keyboardRef.current;
+      const meta = event.metaKey || event.ctrlKey;
+      const key = event.key;
+
+      if (meta && (key === "a" || key === "A")) {
+        event.preventDefault();
+        event.stopPropagation();
+        ctx.setSelecting(true);
+        ctx.setSelected(new Set(ctx.visibleShotIds));
+        return;
+      }
+
+      if (event.altKey && (key === "ArrowUp" || key === "ArrowDown")) {
+        event.preventDefault();
+        event.stopPropagation();
+        const shotId = ctx.activeShotId;
+        if (!shotId) return;
+        ctx.moveShotByOffset(shotId, key === "ArrowUp" ? -1 : 1);
+        return;
+      }
+
+      if (meta || event.altKey) return;
+
+      if (key === "j" || key === "ArrowDown" || key === "k" || key === "ArrowUp") {
+        event.preventDefault();
+        event.stopPropagation();
+        const direction: -1 | 1 = key === "j" || key === "ArrowDown" ? 1 : -1;
+        const next = stepActiveShotId(ctx.visibleShotIds, ctx.activeShotId, direction);
+        ctx.setActiveShotId(next);
+        return;
+      }
+
+      if (key === " " || key === "x" || key === "X") {
+        event.preventDefault();
+        event.stopPropagation();
+        const shotId = ctx.activeShotId;
+        if (!shotId || !ctx.visibleShotIds.includes(shotId)) return;
+        ctx.setSelecting(true);
+        ctx.setSelected((current) => {
+          const next = new Set(current);
+          if (next.has(shotId)) next.delete(shotId);
+          else next.add(shotId);
+          return next;
+        });
+        return;
+      }
+
+      if (key === "n" || key === "N") {
+        event.preventDefault();
+        event.stopPropagation();
+        const active = ctx.shots.find((shot) => shot.id === ctx.activeShotId);
+        void addShot(ctx.projectId, ctx.episodeId, {
+          beatId: active?.beatId,
+        });
+        return;
+      }
+
+      if (key === "Backspace") {
+        if (ctx.selected.size === 0) return;
+        event.preventDefault();
+        event.stopPropagation();
+        ctx.setConfirmDelete(true);
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown, true);
+    return () => window.removeEventListener("keydown", onKeyDown, true);
+  }, []);
+
+  async function persistFilters(next: ShotFilters) {
+    await updateShotSettings(projectId, { filters: next });
+  }
+
+  function toggleFilterStatus(status: ShotStatus) {
+    const statuses = filters.statuses.includes(status)
+      ? filters.statuses.filter((item) => item !== status)
+      : [...filters.statuses, status];
+    void persistFilters({ ...filters, statuses });
+  }
+
+  function toggleFilterBeat(beatId: string) {
+    const beatIds = filters.beatIds.includes(beatId)
+      ? filters.beatIds.filter((item) => item !== beatId)
+      : [...filters.beatIds, beatId];
+    void persistFilters({ ...filters, beatIds });
+  }
+
+  function toggleFilterGap(gap: ShotGapFilter) {
+    const gaps = filters.gaps.includes(gap)
+      ? filters.gaps.filter((item) => item !== gap)
+      : [...filters.gaps, gap];
+    void persistFilters({ ...filters, gaps });
+  }
 
   if (project === undefined || episode === undefined) {
     return <div className="text-muted-foreground p-8 text-sm">加载分镜…</div>;
@@ -213,17 +452,16 @@ export function ShotEditorPage({
     );
   }
 
-  async function moveShot(shotId: string, targetShotId: string) {
-    const index = shots.findIndex((shot) => shot.id === shotId);
-    const target = shots.findIndex((shot) => shot.id === targetShotId);
-    if (index < 0 || target < 0) return;
-    const previous = shots.map((shot) => shot.id);
-    const next = [...previous];
-    [next[index], next[target]] = [next[target]!, next[index]!];
-    await reorderShots(episodeId, next);
+  async function onBeatDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const previous = beats.map((beat) => beat.id);
+    const next = moveIdToPosition(previous, String(active.id), String(over.id));
+    if (!next || sameIdOrder(previous, next)) return;
+    await reorderBeats(episodeId, next);
     registerUndo({
-      label: "已调整镜头顺序",
-      restore: () => reorderShots(episodeId, previous),
+      label: "已调整场次顺序",
+      restore: () => reorderBeats(episodeId, previous),
     });
   }
 
@@ -245,20 +483,38 @@ export function ShotEditorPage({
     setSelected(new Set());
   }
 
-  async function assignSelectedBeat(beatId: string | undefined) {
+  async function applyBulkPatch(label: string, patch: EpisodeShotBulkPatch) {
     const snapshot = shots.filter((shot) => selected.has(shot.id));
+    if (snapshot.length === 0) return;
+    await patchEpisodeShots(
+      episodeId,
+      snapshot.map((shot) => shot.id),
+      patch,
+    );
+    registerUndo({
+      label,
+      restore: async () => {
+        await Promise.all(
+          snapshot.map((shot) => {
+            const previous: EpisodeShotBulkPatch = {};
+            if ("beatId" in patch) previous.beatId = shot.beatId;
+            if ("durationSec" in patch) previous.durationSec = shot.durationSec;
+            if ("status" in patch) previous.status = normalizeShotStatus(shot.status);
+            if ("characterIds" in patch) {
+              previous.characterIds = [...(shot.characterIds ?? [])];
+            }
+            if ("sceneId" in patch) previous.sceneId = shot.sceneId;
+            if ("notes" in patch) previous.notes = shot.notes;
+            return patchShot(shot.id, previous);
+          }),
+        );
+      },
+    });
+  }
+
+  async function assignSelectedBeat(beatId: string | undefined) {
     try {
-      await patchEpisodeShots(
-        episodeId,
-        snapshot.map((shot) => shot.id),
-        { beatId },
-      );
-      registerUndo({
-        label: `已调整 ${snapshot.length} 个镜头的场次`,
-        restore: async () => {
-          await Promise.all(snapshot.map((shot) => patchShot(shot.id, { beatId: shot.beatId })));
-        },
-      });
+      await applyBulkPatch(`已调整 ${selected.size} 个镜头的场次`, { beatId });
     } finally {
       setBulkBeatValue(undefined);
     }
@@ -266,21 +522,40 @@ export function ShotEditorPage({
 
   async function setSelectedDuration() {
     const durationSec = Math.max(0, Number(bulkDuration) || 0);
-    const snapshot = shots.filter((shot) => selected.has(shot.id));
-    await patchEpisodeShots(
-      episodeId,
-      snapshot.map((shot) => shot.id),
-      { durationSec },
-    );
-    registerUndo({
-      label: `已调整 ${snapshot.length} 个镜头的时长`,
-      restore: async () => {
-        await Promise.all(
-          snapshot.map((shot) => patchShot(shot.id, { durationSec: shot.durationSec })),
-        );
-      },
-    });
+    await applyBulkPatch(`已调整 ${selected.size} 个镜头的时长`, { durationSec });
     setBulkDuration("");
+  }
+
+  async function assignSelectedStatus(status: ShotStatus) {
+    try {
+      await applyBulkPatch(`已调整 ${selected.size} 个镜头的状态`, { status });
+    } finally {
+      setBulkStatus(undefined);
+    }
+  }
+
+  async function assignSelectedScene(sceneId: string | undefined) {
+    try {
+      await applyBulkPatch(`已调整 ${selected.size} 个镜头的场景`, { sceneId });
+    } finally {
+      setBulkSceneValue(undefined);
+    }
+  }
+
+  async function assignSelectedNotes() {
+    await applyBulkPatch(`已调整 ${selected.size} 个镜头的备注`, { notes: bulkNotes });
+    setBulkNotes("");
+  }
+
+  async function assignSelectedCharacters() {
+    await applyBulkPatch(`已调整 ${selected.size} 个镜头的角色`, {
+      characterIds: [...bulkCharacterIds],
+    });
+  }
+
+  function selectAllVisible() {
+    setSelecting(true);
+    setSelected(new Set(visibleShotIds));
   }
 
   async function setWorkspaceView(next: ShotWorkspaceView) {
@@ -367,6 +642,107 @@ export function ShotEditorPage({
               素材
             </Button>
           </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" variant={filtersOn ? "secondary" : "ghost"}>
+                <Filter />
+                筛选
+                {filtersOn ? (
+                  <span className="text-muted-foreground text-xs">
+                    {visibleShots.length}/{shots.length}
+                  </span>
+                ) : null}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel className="flex items-center justify-between">
+                状态
+                {filters.statuses.length > 0 ? (
+                  <button
+                    type="button"
+                    className="text-muted-foreground hover:text-foreground text-xs font-normal"
+                    onClick={() => void persistFilters({ ...filters, statuses: [] })}
+                  >
+                    清除
+                  </button>
+                ) : null}
+              </DropdownMenuLabel>
+              {SHOT_STATUSES.map((status) => (
+                <DropdownMenuCheckboxItem
+                  key={status}
+                  checked={filters.statuses.includes(status)}
+                  onCheckedChange={() => toggleFilterStatus(status)}
+                >
+                  {SHOT_STATUS_LABELS[status]}
+                </DropdownMenuCheckboxItem>
+              ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuLabel className="flex items-center justify-between">
+                场次
+                {filters.beatIds.length > 0 ? (
+                  <button
+                    type="button"
+                    className="text-muted-foreground hover:text-foreground text-xs font-normal"
+                    onClick={() => void persistFilters({ ...filters, beatIds: [] })}
+                  >
+                    清除
+                  </button>
+                ) : null}
+              </DropdownMenuLabel>
+              <DropdownMenuCheckboxItem
+                checked={filters.beatIds.includes(SHOT_UNASSIGNED_BEAT)}
+                onCheckedChange={() => toggleFilterBeat(SHOT_UNASSIGNED_BEAT)}
+              >
+                未分场
+              </DropdownMenuCheckboxItem>
+              {beats.map((beat) => (
+                <DropdownMenuCheckboxItem
+                  key={beat.id}
+                  checked={filters.beatIds.includes(beat.id)}
+                  onCheckedChange={() => toggleFilterBeat(beat.id)}
+                >
+                  {beat.title || "未命名场"}
+                </DropdownMenuCheckboxItem>
+              ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuLabel className="flex items-center justify-between">
+                缺口
+                {filters.gaps.length > 0 ? (
+                  <button
+                    type="button"
+                    className="text-muted-foreground hover:text-foreground text-xs font-normal"
+                    onClick={() => void persistFilters({ ...filters, gaps: [] })}
+                  >
+                    清除
+                  </button>
+                ) : null}
+              </DropdownMenuLabel>
+              <DropdownMenuCheckboxItem
+                checked={filters.gaps.includes("missingFirstFrame")}
+                onCheckedChange={() => toggleFilterGap("missingFirstFrame")}
+              >
+                缺首帧
+              </DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem
+                checked={filters.gaps.includes("missingClip")}
+                onCheckedChange={() => toggleFilterGap("missingClip")}
+              >
+                缺成片
+              </DropdownMenuCheckboxItem>
+              {filtersOn ? (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() =>
+                      void persistFilters({ statuses: [], beatIds: [], gaps: [] })
+                    }
+                  >
+                    清除全部筛选
+                  </DropdownMenuItem>
+                </>
+              ) : null}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button
             size="sm"
             variant={selecting ? "secondary" : "ghost"}
@@ -469,8 +845,35 @@ export function ShotEditorPage({
       </div>
 
       {selecting ? (
-        <div className="bg-muted/60 flex min-h-12 shrink-0 items-center gap-3 border-y px-5">
+        <div className="bg-muted/60 flex min-h-12 shrink-0 flex-wrap items-center gap-3 border-y px-5 py-2">
           <span className="text-sm font-medium">已选 {selected.size} 个镜头</span>
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={visibleShotIds.length === 0}
+            onClick={selectAllVisible}
+          >
+            全选可见
+          </Button>
+          <Select
+            disabled={selected.size === 0}
+            value={bulkStatus}
+            onValueChange={(value) => {
+              setBulkStatus(value);
+              void assignSelectedStatus(normalizeShotStatus(value));
+            }}
+          >
+            <SelectTrigger className="h-8 w-32 bg-background">
+              <SelectValue placeholder="批量状态" />
+            </SelectTrigger>
+            <SelectContent>
+              {SHOT_STATUSES.map((status) => (
+                <SelectItem key={status} value={status}>
+                  {SHOT_STATUS_LABELS[status]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Select
             disabled={selected.size === 0}
             value={bulkBeatValue}
@@ -491,6 +894,66 @@ export function ShotEditorPage({
               ))}
             </SelectContent>
           </Select>
+          <Select
+            disabled={selected.size === 0}
+            value={bulkSceneValue}
+            onValueChange={(value) => {
+              setBulkSceneValue(value);
+              void assignSelectedScene(value === "none" ? undefined : value);
+            }}
+          >
+            <SelectTrigger className="h-8 w-40 bg-background">
+              <SelectValue placeholder="批量场景" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">未选择</SelectItem>
+              {scenes.map((scene) => (
+                <SelectItem key={scene.id} value={scene.id}>
+                  {scene.name || "未命名场景"}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button size="sm" variant="outline" disabled={selected.size === 0}>
+                <Users />
+                批量角色
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="start" className="w-64 space-y-3">
+              <p className="text-sm font-medium">替换所选镜头的角色</p>
+              <div className="flex max-h-48 flex-col gap-1 overflow-auto">
+                {characters.length === 0 ? (
+                  <p className="text-muted-foreground text-xs">项目里还没有角色</p>
+                ) : (
+                  characters.map((character) => (
+                    <label key={character.id} className="flex items-center gap-2 text-sm">
+                      <Checkbox
+                        checked={bulkCharacterIds.includes(character.id)}
+                        onCheckedChange={(checked) => {
+                          setBulkCharacterIds((current) =>
+                            checked
+                              ? [...current, character.id]
+                              : current.filter((id) => id !== character.id),
+                          );
+                        }}
+                      />
+                      {character.name || "未命名角色"}
+                    </label>
+                  ))
+                )}
+              </div>
+              <Button
+                size="sm"
+                className="w-full"
+                disabled={selected.size === 0}
+                onClick={() => void assignSelectedCharacters()}
+              >
+                应用角色
+              </Button>
+            </PopoverContent>
+          </Popover>
           <Input
             type="number"
             min={0}
@@ -512,6 +975,25 @@ export function ShotEditorPage({
           >
             应用时长
           </Button>
+          <Input
+            aria-label="批量设置备注"
+            className="h-8 w-40 bg-background"
+            value={bulkNotes}
+            placeholder="备注"
+            disabled={selected.size === 0}
+            onChange={(event) => setBulkNotes(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") void assignSelectedNotes();
+            }}
+          />
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={selected.size === 0}
+            onClick={() => void assignSelectedNotes()}
+          >
+            应用备注
+          </Button>
         </div>
       ) : null}
 
@@ -525,8 +1007,8 @@ export function ShotEditorPage({
               }}
             >
               {(workspaceView === "media"
-                ? ["顺序", "镜号", "首帧", "尾帧", "成片", "内容"]
-                : ["顺序", "镜号", ...visibleDefs.map((column) => column.label)]
+                ? ["顺序", "镜号", "状态", "首帧", "尾帧", "成片", "内容"]
+                : ["顺序", "镜号", "状态", ...visibleDefs.map((column) => column.label)]
               ).map(
                 (label) => (
                   <div key={label} className="px-3 py-2.5">
@@ -542,28 +1024,58 @@ export function ShotEditorPage({
               </div>
             ) : null}
 
-            {grouped.map(({ beat, shots: beatShots }) => (
-              <BeatBlock
-                key={beat.id}
-                beat={beat}
-                shots={beatShots}
-                projectId={projectId}
-                episodeId={episodeId}
-                selecting={selecting}
-                selected={selected}
-                setSelected={setSelected}
-                workspaceView={workspaceView}
-                visibleDefs={visibleDefs}
-                characters={characters}
-                scenes={scenes}
-                highlightedShotId={highlightedShotId}
-                onDeleteBeat={() => setPendingBeatId(beat.id)}
-                onMoveShot={moveShot}
-                onDuplicateShot={(shotId) => void copyShot(shotId)}
-              />
-            ))}
+            {filterEmpty ? (
+              <div className="text-muted-foreground flex h-52 flex-col items-center justify-center gap-3 text-sm">
+                没有符合当前筛选的镜头
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() =>
+                    void persistFilters({ statuses: [], beatIds: [], gaps: [] })
+                  }
+                >
+                  清除筛选
+                </Button>
+              </div>
+            ) : null}
 
-            {ungrouped.length > 0 ? (
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={(event) => void onBeatDragEnd(event)}
+            >
+              <SortableContext
+                items={visibleGrouped.map(({ beat }) => beat.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                {visibleGrouped.map(({ beat, shots: beatShots }) => (
+                  <BeatBlock
+                    key={beat.id}
+                    beat={beat}
+                    shots={beatShots}
+                    projectId={projectId}
+                    episodeId={episodeId}
+                    selecting={selecting}
+                    selected={selected}
+                    setSelected={setSelected}
+                    activeShotId={activeShotId}
+                    setActiveShotId={setActiveShotId}
+                    workspaceView={workspaceView}
+                    visibleDefs={visibleDefs}
+                    characters={characters}
+                    scenes={scenes}
+                    highlightedShotId={highlightedShotId}
+                    sortable
+                    sensors={sensors}
+                    onDeleteBeat={() => setPendingBeatId(beat.id)}
+                    onReorderShots={commitShotReorder}
+                    onDuplicateShot={(shotId) => void copyShot(shotId)}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
+
+            {!filterEmpty && ungrouped.length > 0 ? (
               <BeatBlock
                 beat={{ id: "", title: "未分场", content: "", characterIds: [], timeOfDay: "" }}
                 shots={ungrouped}
@@ -572,6 +1084,8 @@ export function ShotEditorPage({
                 selecting={selecting}
                 selected={selected}
                 setSelected={setSelected}
+                activeShotId={activeShotId}
+                setActiveShotId={setActiveShotId}
                 workspaceView={workspaceView}
                 visibleDefs={visibleDefs}
                 characters={characters}
@@ -579,7 +1093,8 @@ export function ShotEditorPage({
                 highlightedShotId={highlightedShotId}
                 loose
                 hideHeader={beats.length === 0}
-                onMoveShot={moveShot}
+                sensors={sensors}
+                onReorderShots={commitShotReorder}
                 onDuplicateShot={(shotId) => void copyShot(shotId)}
               />
             ) : null}
@@ -587,7 +1102,7 @@ export function ShotEditorPage({
         </div>
 
         <div className="text-muted-foreground pointer-events-none absolute bottom-3 left-4 text-xs">
-          镜头总数 {shots.length}
+          镜头总数 {filtersOn ? `${visibleShots.length}/${shots.length}` : shots.length}
           <span className="mx-3">总时长 {formatDuration(totalDuration)}</span>
         </div>
       </div>
@@ -641,29 +1156,11 @@ export function ShotEditorPage({
 }
 
 function gridColumns(workspaceView: ShotWorkspaceView, visibleDefs: ColumnDef[]) {
-  if (workspaceView === "media") return "52px 64px 248px 248px 248px 220px";
-  return `52px 64px ${visibleDefs.map((column) => `${column.width}px`).join(" ")}`;
+  if (workspaceView === "media") return "52px 64px 108px 248px 248px 248px 220px";
+  return `52px 64px 108px ${visibleDefs.map((column) => `${column.width}px`).join(" ")}`;
 }
 
-function BeatBlock({
-  beat,
-  shots,
-  projectId,
-  episodeId,
-  selecting,
-  selected,
-  setSelected,
-  workspaceView,
-  visibleDefs,
-  characters,
-  scenes,
-  highlightedShotId,
-  loose,
-  hideHeader,
-  onDeleteBeat,
-  onMoveShot,
-  onDuplicateShot,
-}: {
+type BeatBlockProps = {
   beat: StoryBeat;
   shots: Shot[];
   projectId: string;
@@ -671,6 +1168,8 @@ function BeatBlock({
   selecting: boolean;
   selected: Set<string>;
   setSelected: Dispatch<SetStateAction<Set<string>>>;
+  activeShotId?: string;
+  setActiveShotId: Dispatch<SetStateAction<string | undefined>>;
   workspaceView: ShotWorkspaceView;
   visibleDefs: ColumnDef[];
   characters: { id: string; name: string }[];
@@ -678,17 +1177,83 @@ function BeatBlock({
   highlightedShotId?: string;
   loose?: boolean;
   hideHeader?: boolean;
+  sortable?: boolean;
+  sensors: ReturnType<typeof useSensors>;
   onDeleteBeat?: () => void;
-  onMoveShot: (shotId: string, targetShotId: string) => void;
+  onReorderShots: (groupIds: string[], activeId: string, overId: string) => Promise<void>;
   onDuplicateShot: (shotId: string) => void;
+};
+
+function BeatBlock(props: BeatBlockProps) {
+  if (props.sortable) return <SortableBeatBlock {...props} />;
+  return <BeatBlockView {...props} />;
+}
+
+function SortableBeatBlock(props: BeatBlockProps) {
+  const sortable = useSortable({ id: props.beat.id, disabled: props.selecting });
+  return <BeatBlockView {...props} sortableState={sortable} />;
+}
+
+function BeatBlockView({
+  beat,
+  shots,
+  projectId,
+  episodeId,
+  selecting,
+  selected,
+  setSelected,
+  activeShotId,
+  setActiveShotId,
+  workspaceView,
+  visibleDefs,
+  characters,
+  scenes,
+  highlightedShotId,
+  loose,
+  hideHeader,
+  sensors,
+  onDeleteBeat,
+  onReorderShots,
+  onDuplicateShot,
+  sortableState,
+}: BeatBlockProps & {
+  sortableState?: ReturnType<typeof useSortable>;
 }) {
   const duration = shots.reduce((sum, shot) => sum + (Number(shot.durationSec) || 0), 0);
+  const shotIds = shots.map((shot) => shot.id);
+  const style: CSSProperties | undefined = sortableState
+    ? {
+        transform: CSS.Transform.toString(sortableState.transform),
+        transition: sortableState.transition,
+        opacity: sortableState.isDragging ? 0.72 : undefined,
+        position: sortableState.isDragging ? "relative" : undefined,
+        zIndex: sortableState.isDragging ? 20 : undefined,
+      }
+    : undefined;
+
+  async function onShotDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    await onReorderShots(shotIds, String(active.id), String(over.id));
+  }
 
   return (
-    <section>
+    <section ref={sortableState?.setNodeRef} style={style}>
       {hideHeader ? null : (
         <div className="bg-muted/70 flex min-w-max items-center gap-2 border-b px-3 py-2">
-          <SquareStack className="text-muted-foreground size-3.5 shrink-0" />
+          {sortableState && !selecting ? (
+            <button
+              type="button"
+              className="text-muted-foreground hover:text-foreground inline-flex size-7 shrink-0 cursor-grab items-center justify-center rounded-md active:cursor-grabbing"
+              aria-label="拖拽调整场次顺序"
+              {...sortableState.attributes}
+              {...sortableState.listeners}
+            >
+              <GripVertical className="size-3.5" />
+            </button>
+          ) : (
+            <SquareStack className="text-muted-foreground size-3.5 shrink-0" />
+          )}
           {loose ? (
             <p className="text-sm font-medium">未分场</p>
           ) : (
@@ -729,32 +1294,41 @@ function BeatBlock({
           </Button>
         </div>
       ) : (
-        shots.map((shot, index) => (
-          <ShotRow
-            key={shot.id}
-            shot={shot}
-            striped={index % 2 === 1}
-            projectId={projectId}
-            episodeId={episodeId}
-            selecting={selecting}
-            selected={selected}
-            setSelected={setSelected}
-            workspaceView={workspaceView}
-            visibleDefs={visibleDefs}
-            characters={characters}
-            scenes={scenes}
-            highlighted={highlightedShotId === shot.id}
-            beatId={loose ? undefined : beat.id}
-            showBelow={index === shots.length - 1}
-            canMoveUp={index > 0}
-            canMoveDown={index < shots.length - 1}
-            onMove={(offset) => {
-              const target = shots[index + offset];
-              if (target) onMoveShot(shot.id, target.id);
-            }}
-            onDuplicate={() => onDuplicateShot(shot.id)}
-          />
-        ))
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={(event) => void onShotDragEnd(event)}
+        >
+          <SortableContext items={shotIds} strategy={verticalListSortingStrategy}>
+            {shots.map((shot, index) => (
+              <ShotRow
+                key={shot.id}
+                shot={shot}
+                striped={index % 2 === 1}
+                projectId={projectId}
+                episodeId={episodeId}
+                selecting={selecting}
+                selected={selected}
+                setSelected={setSelected}
+                active={activeShotId === shot.id || highlightedShotId === shot.id}
+                onActivate={() => setActiveShotId(shot.id)}
+                workspaceView={workspaceView}
+                visibleDefs={visibleDefs}
+                characters={characters}
+                scenes={scenes}
+                beatId={loose ? undefined : beat.id}
+                showBelow={index === shots.length - 1}
+                canMoveUp={index > 0}
+                canMoveDown={index < shots.length - 1}
+                onMove={(offset) => {
+                  const target = shots[index + offset];
+                  if (target) void onReorderShots(shotIds, shot.id, target.id);
+                }}
+                onDuplicate={() => onDuplicateShot(shot.id)}
+              />
+            ))}
+          </SortableContext>
+        </DndContext>
       )}
     </section>
   );
@@ -768,11 +1342,12 @@ function ShotRow({
   selecting,
   selected,
   setSelected,
+  active,
+  onActivate,
   workspaceView,
   visibleDefs,
   characters,
   scenes,
-  highlighted,
   beatId,
   showBelow,
   canMoveUp,
@@ -787,11 +1362,12 @@ function ShotRow({
   selecting: boolean;
   selected: Set<string>;
   setSelected: Dispatch<SetStateAction<Set<string>>>;
+  active?: boolean;
+  onActivate: () => void;
   workspaceView: ShotWorkspaceView;
   visibleDefs: ColumnDef[];
   characters: { id: string; name: string }[];
   scenes: { id: string; name: string }[];
-  highlighted?: boolean;
   beatId?: string;
   showBelow?: boolean;
   canMoveUp: boolean;
@@ -799,12 +1375,30 @@ function ShotRow({
   onMove: (offset: -1 | 1) => void;
   onDuplicate: () => void;
 }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: shot.id, disabled: selecting });
+  const style: CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.72 : undefined,
+    zIndex: isDragging ? 10 : undefined,
+  };
+
   return (
     <div
       id={`shot-${shot.id}`}
+      ref={setNodeRef}
+      style={style}
       className={`relative scroll-m-20 transition-shadow duration-300 ${
-        highlighted ? "z-10 ring-2 ring-inset ring-brand" : ""
+        active ? "z-10 ring-2 ring-inset ring-brand" : ""
       }`}
+      onMouseDown={onActivate}
     >
       <Button
         type="button"
@@ -851,7 +1445,15 @@ function ShotRow({
               >
                 <ArrowUp />
               </Button>
-              <GripVertical className="text-muted-foreground size-3.5" />
+              <button
+                type="button"
+                className="text-muted-foreground hover:text-foreground inline-flex size-7 cursor-grab items-center justify-center rounded-md active:cursor-grabbing"
+                aria-label="拖拽调整镜头顺序"
+                {...attributes}
+                {...listeners}
+              >
+                <GripVertical className="size-3.5" />
+              </button>
               <Button
                 size="icon-sm"
                 variant="ghost"
@@ -879,6 +1481,25 @@ function ShotRow({
             onChange={(event) => void patchShot(shot.id, { shotNumber: event.target.value })}
             className="h-8 w-10 border-0 bg-transparent text-center shadow-none focus-visible:ring-0"
           />
+        </div>
+        <div className="flex items-center justify-center border-l px-2">
+          <Select
+            value={normalizeShotStatus(shot.status)}
+            onValueChange={(value) =>
+              void patchShot(shot.id, { status: normalizeShotStatus(value) })
+            }
+          >
+            <SelectTrigger className="h-8 w-full border-0 bg-transparent shadow-none focus:ring-0">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {SHOT_STATUSES.map((status) => (
+                <SelectItem key={status} value={status}>
+                  {SHOT_STATUS_LABELS[status]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         {workspaceView === "media" ? (
           <>

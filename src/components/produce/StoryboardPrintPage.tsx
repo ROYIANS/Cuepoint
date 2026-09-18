@@ -107,7 +107,7 @@ export function StoryboardPrintPage({
                 <div className="flex items-baseline justify-between gap-2">
                   <strong className="text-sm">镜 {row.shotNumber || row.order}</strong>
                   <span className="text-xs text-black/55">
-                    {formatDuration(row.durationSec)}
+                    {row.statusLabel} · {formatDuration(row.durationSec)}
                   </span>
                 </div>
                 <p className="mt-1 truncate text-[11px] text-black/50">

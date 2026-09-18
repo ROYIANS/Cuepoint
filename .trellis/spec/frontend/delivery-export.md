@@ -33,6 +33,7 @@ Print route:
 - Do not enable export until shots and referenced assets have finished loading.
 - CSV starts with a UTF-8 BOM, uses comma delimiters, CRLF rows, and doubles quotes inside quoted cells.
 - Delivery includes base columns plus currently visible optional shot columns.
+- Shot `status` is always exported (Chinese label in CSV / print). Missing or unknown values normalize to `draft` / 草稿.
 - Printable visual fallback is first-frame result, then last-frame result, then an empty placeholder.
 - Print CSS uses A4 landscape and removes application chrome.
 

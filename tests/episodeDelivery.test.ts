@@ -56,6 +56,7 @@ function shot(id: string, order: number, episodeId = episode.id): Shot {
     episodeId,
     order,
     shotNumber: id,
+    status: "draft",
     firstFrame: emptySlot(),
     lastFrame: emptySlot(),
     clip: emptySlot(),
@@ -98,6 +99,8 @@ describe("episode delivery", () => {
       beat: "室内",
       characters: "阿青",
       scene: "厨房",
+      status: "draft",
+      statusLabel: "草稿",
     });
     expect(delivery.beatCount).toBe(1);
     expect(delivery.totalDurationSec).toBe(5);
@@ -150,10 +153,31 @@ describe("episode delivery", () => {
     });
     const csv = episodeDeliveryCsv(delivery);
 
-    expect(csv.startsWith("\uFEFF顺序,镜号")).toBe(true);
+    expect(csv.startsWith("\uFEFF顺序,镜号,状态,场次")).toBe(true);
+    expect(csv).toContain("草稿");
     expect(csv).toContain('"他说，""你好""\n再见"');
     expect(csv).toContain("\r\n");
     expect(episodeDeliveryFilename(delivery)).toBe("测试-项目-第2集 · 下雨-分镜.csv");
     expect(escapeCsvCell("a,b")).toBe('"a,b"');
+  });
+
+  it("exports Chinese status labels and defaults missing status to draft", () => {
+    const approved = shot("001", 0);
+    approved.status = "approved";
+    const legacy = shot("002", 1);
+    delete (legacy as { status?: string }).status;
+
+    const delivery = deriveEpisodeDelivery({
+      project,
+      episode,
+      shots: [approved, legacy],
+      characters: [{ id: "character", name: "阿青" } as never],
+      scenes: [{ id: "scene", name: "厨房" } as never],
+    });
+    const csv = episodeDeliveryCsv(delivery);
+
+    expect(delivery.rows.map((row) => row.statusLabel)).toEqual(["通过", "草稿"]);
+    expect(csv).toContain("通过");
+    expect(csv).toContain("草稿");
   });
 });

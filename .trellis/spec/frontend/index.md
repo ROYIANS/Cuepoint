@@ -40,6 +40,8 @@ This directory contains guidelines for frontend development. Fill in each file w
 - [ ] `/p/$projectId` is the episode list; story/shots/produce live under `/p/$projectId/e/$episodeId`
 - [ ] Shot queries and create/delete use `episodeId`, not the whole project table
 - [ ] Delivery exports filter by both project and episode and wait for live queries to load
+- [ ] Shot `status` defaults to draft; filters live on `shotSettings.filters` (empty arrays = all)
+- [ ] Drag/arrow/keyboard reorder share `reorderBeats` / `reorderShots`; select-all stays visible-only
 
 ---
 
