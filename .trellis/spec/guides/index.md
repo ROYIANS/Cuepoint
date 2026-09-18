@@ -48,6 +48,7 @@ These guides help you **ask the right questions before coding**.
 - [ ] **You're creating a new utility/helper function** ← Search first!
 - [ ] Two files read the same untyped payload field with local casts
 - [ ] Multiple branches update the same derived state from `kind` / `action`
+- [ ] Agent chat streaming / scroll / ChatItem list (read [Chat Performance](../frontend/chat-performance.md) before adding virtua, smooth scroll, or per-tick `markdownProps` objects)
 
 → Read [Code Reuse Thinking Guide](./code-reuse-thinking-guide.md)
 

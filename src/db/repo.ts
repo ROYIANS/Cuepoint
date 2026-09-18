@@ -14,6 +14,10 @@ import {
   type AspectPresetId,
   type Character,
   type CharacterImageSlot,
+  type ChatMessage,
+  type ChatMessageRole,
+  type ChatMessageStatus,
+  type ChatThread,
   type ConnectorConfig,
   type ConnectorDefinitionId,
   type ConnectorProtocol,
@@ -1337,4 +1341,101 @@ export async function upsertConnector(input: UpsertConnectorInput): Promise<Conn
 
 export async function deleteConnector(id: Id): Promise<void> {
   await db.connectors.delete(id);
+}
+
+export async function listChatThreads(): Promise<ChatThread[]> {
+  return db.chatThreads.orderBy("updatedAt").reverse().toArray();
+}
+
+export async function getChatThread(id: Id): Promise<ChatThread | undefined> {
+  return db.chatThreads.get(id);
+}
+
+export async function createChatThread(options?: {
+  title?: string;
+  connectorId?: Id;
+  model?: string;
+}): Promise<ChatThread> {
+  const at = nowIso();
+  const thread: ChatThread = {
+    id: createId("cth"),
+    title: options?.title?.trim() || "新对话",
+    connectorId: options?.connectorId,
+    model: options?.model?.trim() || undefined,
+    createdAt: at,
+    updatedAt: at,
+  };
+  await db.chatThreads.put(thread);
+  return thread;
+}
+
+export async function updateChatThread(
+  id: Id,
+  patch: Partial<Pick<ChatThread, "title" | "connectorId" | "model">>,
+): Promise<void> {
+  const existing = await db.chatThreads.get(id);
+  if (!existing) return;
+  const next: ChatThread = {
+    ...existing,
+    updatedAt: nowIso(),
+  };
+  if (patch.title !== undefined) {
+    const title = patch.title.trim();
+    next.title = title || existing.title;
+  }
+  if (patch.connectorId !== undefined) {
+    next.connectorId = patch.connectorId || undefined;
+  }
+  if (patch.model !== undefined) {
+    const model = patch.model.trim();
+    next.model = model || undefined;
+  }
+  await db.chatThreads.put(next);
+}
+
+export async function deleteChatThread(id: Id): Promise<void> {
+  await db.transaction("rw", db.chatThreads, db.chatMessages, async () => {
+    await db.chatMessages.where("threadId").equals(id).delete();
+    await db.chatThreads.delete(id);
+  });
+}
+
+export async function listChatMessages(threadId: Id): Promise<ChatMessage[]> {
+  return db.chatMessages.where("threadId").equals(threadId).sortBy("createdAt");
+}
+
+export async function appendChatMessage(input: {
+  threadId: Id;
+  role: ChatMessageRole;
+  content?: string;
+  status?: ChatMessageStatus;
+}): Promise<ChatMessage> {
+  const at = nowIso();
+  const message: ChatMessage = {
+    id: createId("cmsg"),
+    threadId: input.threadId,
+    role: input.role,
+    content: input.content ?? "",
+    createdAt: at,
+    status: input.status,
+  };
+  await db.transaction("rw", db.chatThreads, db.chatMessages, async () => {
+    const thread = await db.chatThreads.get(input.threadId);
+    if (!thread) throw new Error("对话不存在");
+    await db.chatMessages.put(message);
+    await db.chatThreads.put({ ...thread, updatedAt: at });
+  });
+  return message;
+}
+
+export async function updateChatMessage(
+  id: Id,
+  patch: Partial<Pick<ChatMessage, "content" | "status">>,
+): Promise<void> {
+  const existing = await db.chatMessages.get(id);
+  if (!existing) return;
+  await db.chatMessages.put({
+    ...existing,
+    ...patch,
+  });
 }

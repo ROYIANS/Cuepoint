@@ -470,3 +470,26 @@ export interface ConnectorConfig {
   defaultModel?: string;
   updatedAt: string;
 }
+
+/** Studio-global Agent chat (not part of project ZIP). */
+export type ChatMessageRole = "user" | "assistant" | "system";
+
+export type ChatMessageStatus = "pending" | "streaming" | "complete" | "error" | "aborted";
+
+export interface ChatThread {
+  id: Id;
+  title: string;
+  connectorId?: Id;
+  model?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ChatMessage {
+  id: Id;
+  threadId: Id;
+  role: ChatMessageRole;
+  content: string;
+  createdAt: string;
+  status?: ChatMessageStatus;
+}

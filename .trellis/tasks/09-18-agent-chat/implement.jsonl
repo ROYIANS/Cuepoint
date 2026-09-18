@@ -1,0 +1,5 @@
+{"file": ".trellis/spec/frontend/directory-structure.md", "reason": "Studio route layout for /agent under _studio"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Thin routes + feature page pattern for AgentChatPage"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "Dexie ownership for new chat tables; studio-global vs project"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Domain types for threads/messages"}
+{"file": "docs/product/ai-connectors.md", "reason": "BYOK connectors contract; model pick in chat"}

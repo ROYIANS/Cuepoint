@@ -1,0 +1,533 @@
+/* Composer chrome must not use .lobe-flex padding vars — Tailwind preflight
+   `* { padding: 0 }` and `:where(.lobe-flex) { padding: var(--lobe-flex-padding) }`
+   both have zero specificity, so the send control can sit flush on the card. */
+
+.agent-chat-root .agent-composer {
+  box-sizing: border-box;
+  overflow: visible;
+  padding: 16px 16px 12px !important;
+  border: 1px solid #202020;
+  border-radius: 12px;
+  background: #0d0d0d;
+}
+
+.agent-chat-root .agent-composer-input,
+.agent-chat-root .agent-composer .ant-input,
+.agent-chat-root .agent-composer textarea {
+  display: block;
+  width: 100%;
+  min-height: 0 !important;
+  height: auto !important;
+  margin: 0;
+  padding: 0 0 8px !important;
+  border: none !important;
+  outline: none;
+  resize: none;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.agent-chat-root .agent-composer-footer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  margin: 0;
+  padding: 4px 0 0 !important;
+}
+
+.agent-chat-root .agent-composer-cluster {
+  display: flex;
+  flex: none;
+  gap: 4px;
+  align-items: center;
+  min-width: 0;
+}
+
+.agent-chat-root .agent-composer-cluster-right {
+  flex: 0 1 auto;
+  gap: 8px;
+}
+
+.agent-chat-root .agent-composer-send {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none;
+  border-radius: 999px;
+}
+
+.agent-chat-root .agent-chip {
+  display: inline-flex;
+  flex: 0 1 auto;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+  max-width: 220px;
+  height: 28px;
+  padding: 0 8px !important;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #aaa;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.agent-chat-root .agent-chip:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.agent-chat-root .agent-model-panel {
+  display: flex;
+  overflow: hidden;
+  width: min(640px, calc(100vw - 48px));
+  max-height: min(420px, 70vh);
+  border: 1px solid #202020;
+  border-radius: 12px;
+  background: #0d0d0d;
+  box-shadow: 0 12px 40px rgb(0 0 0 / 45%);
+}
+
+.agent-chat-root .agent-model-list {
+  display: flex;
+  flex: 1 1 320px;
+  flex-direction: column;
+  min-width: 0;
+  border-inline-end: 1px solid #202020;
+}
+
+.agent-chat-root .agent-model-search {
+  width: 100%;
+  height: 36px;
+  padding: 0 12px !important;
+  border: none;
+  border-block-end: 1px solid #202020;
+  outline: none;
+  background: transparent;
+  color: #fff;
+  font-size: 12px;
+}
+
+.agent-chat-root .agent-model-rows {
+  overflow: auto;
+  flex: 1;
+  min-height: 0;
+  padding: 4px 0 8px;
+}
+
+.agent-chat-root .agent-model-group {
+  padding: 12px 12px 4px;
+  color: #aaa;
+  font-size: 12px;
+}
+
+.agent-chat-root .agent-model-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: calc(100% - 8px);
+  margin: 1px 4px;
+  padding: 8px !important;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #fff;
+  font-size: 12px;
+  text-align: start;
+  cursor: pointer;
+}
+
+.agent-chat-root .agent-model-row:hover,
+.agent-chat-root .agent-model-row.is-active {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.agent-chat-root .agent-model-detail {
+  display: flex;
+  flex: 0 0 260px;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px !important;
+  overflow: auto;
+}
+
+.agent-chat-root .agent-model-detail dt {
+  margin: 0;
+  color: #aaa;
+  font-size: 12px;
+}
+
+.agent-chat-root .agent-model-detail dd {
+  margin: 4px 0 0;
+  color: #fff;
+  font-size: 12px;
+}
+
+.agent-chat-root .agent-plus-panel {
+  min-width: 240px;
+  padding: 6px !important;
+  border: 1px solid #202020;
+  border-radius: 12px;
+  background: #0d0d0d;
+  box-shadow: 0 12px 40px rgb(0 0 0 / 45%);
+}
+
+.agent-chat-root .agent-plus-item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  padding: 8px 10px !important;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #fff;
+  font-size: 12px;
+  text-align: start;
+  cursor: pointer;
+}
+
+.agent-chat-root .agent-plus-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.agent-chat-root .agent-plus-sep {
+  height: 1px;
+  margin: 4px 8px;
+  background: #202020;
+}
+
+.agent-chat-root .agent-home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  height: 100%;
+  overflow-y: auto;
+  padding: 32px 24px;
+  background: transparent;
+}
+
+.agent-chat-root .agent-home-inner {
+  width: 100%;
+  max-width: 720px;
+  margin: auto;
+}
+
+.agent-chat-root .agent-home-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.agent-chat-root .agent-mode-chip {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #aaa;
+}
+
+.agent-chat-root .agent-mode-chip:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.agent-chat-root .agent-mode-panel {
+  min-width: 240px;
+  padding: 6px !important;
+  border: 1px solid #202020;
+  border-radius: 12px;
+  background: #0d0d0d;
+  box-shadow: 0 12px 40px rgb(0 0 0 / 45%);
+}
+
+.agent-chat-root .agent-mode-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  width: 100%;
+  padding: 8px 10px !important;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #fff;
+  text-align: start;
+  cursor: pointer;
+}
+
+.agent-chat-root .agent-mode-item:hover,
+.agent-chat-root .agent-mode-item.is-active {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.agent-chat-root .agent-mode-item-title {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.agent-chat-root .agent-mode-item-desc {
+  margin-top: 2px;
+  color: #6f6f6f;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.agent-chat-root .agent-model-providers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px;
+  border-block-end: 1px solid #202020;
+}
+
+.agent-chat-root .agent-model-provider {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  height: 28px;
+  padding: 0 8px !important;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #aaa;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.agent-chat-root .agent-model-provider:hover,
+.agent-chat-root .agent-model-provider.is-active {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+/* Conversation detail — ChatHeader is position:absolute; height: 52px.
+   Messages and composer must reserve that header + bottom dock as safe area. */
+
+.agent-chat-root .agent-conversation {
+  height: 100%;
+}
+
+.agent-chat-root .agent-topic-sidebar {
+  flex-shrink: 0;
+  height: 100%;
+  min-height: 0;
+  background: #0d0d0d;
+  border-inline-end: 1px solid #202020;
+}
+
+.agent-chat-root .agent-sidebar-nav {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  height: 36px;
+  padding: 0 10px !important;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #aaa;
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: start;
+  cursor: pointer;
+}
+
+.agent-chat-root .agent-sidebar-nav:hover,
+.agent-chat-root .agent-sidebar-nav.is-active {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.agent-chat-root .agent-sidebar-nav:focus-visible,
+.agent-chat-root .agent-sidebar-section:focus-visible,
+.agent-chat-root .agent-sidebar-group:focus-visible,
+.agent-chat-root .agent-topic-row:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 55%);
+}
+
+.agent-chat-root .agent-sidebar-section,
+.agent-chat-root .agent-sidebar-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 10px 4px !important;
+  border: none;
+  background: transparent;
+  color: #aaa;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: start;
+  cursor: pointer;
+}
+
+.agent-chat-root .agent-sidebar-group {
+  padding: 6px 10px 4px !important;
+  color: #6f6f6f;
+}
+
+.agent-chat-root .agent-sidebar-chevron {
+  flex: none;
+  color: #6f6f6f;
+  transition: transform 0.15s ease;
+}
+
+.agent-chat-root .agent-sidebar-chevron.is-closed {
+  transform: rotate(-90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agent-chat-root .agent-sidebar-chevron {
+    transition: none;
+  }
+}
+
+.agent-chat-root .agent-topic-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 10px;
+  overflow: hidden;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.agent-chat-root .agent-topic-row:hover,
+.agent-chat-root .agent-topic-row.is-active {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.agent-chat-root .agent-topic-row-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: rgb(255 255 255 / 78%);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.agent-chat-root .agent-topic-row.is-active .agent-topic-row-title {
+  color: #fff;
+  font-weight: 600;
+}
+
+.agent-chat-root .agent-topic-row-actions {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+}
+
+.agent-chat-root .agent-chat-column {
+  position: relative;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+}
+
+.agent-chat-root .agent-chat-header {
+  position: absolute !important;
+  top: 0;
+  z-index: 10;
+  height: var(--agent-chat-header-height, 52px) !important;
+  background: #0d0d0d !important;
+}
+
+.agent-chat-root .agent-message-list {
+  flex: 1;
+  min-height: 0;
+  padding: calc(var(--agent-chat-header-height, 52px) + var(--agent-chat-safe-x, 16px))
+    var(--agent-chat-safe-x, 16px) var(--agent-chat-composer-safe, 168px);
+  overflow-y: auto;
+  overflow-anchor: none;
+  background: transparent;
+}
+
+.agent-chat-root .agent-content {
+  width: 100%;
+  max-width: var(--agent-content-max, 800px);
+  margin-inline: auto;
+}
+
+.agent-chat-root .agent-message-list .agent-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.agent-chat-root .agent-composer-dock {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 11;
+  padding: 12px var(--agent-chat-safe-x, 16px) 16px;
+  pointer-events: none;
+  background: linear-gradient(transparent, rgb(0 0 0 / 35%) 55%);
+}
+
+.agent-chat-root .agent-composer-dock .agent-content {
+  pointer-events: auto;
+}
+
+/* Empty-streaming thinking: 3×3 square cells (~70% of prior 4×4 size). */
+.agent-chat-root .agent-thinking-matrix {
+  display: inline-flex;
+  align-items: center;
+  min-height: 11px;
+  padding-block: 1px;
+}
+
+.agent-chat-root .agent-thinking-matrix-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 3px);
+  grid-template-rows: repeat(3, 3px);
+  gap: 2px;
+}
+
+.agent-chat-root .agent-thinking-matrix-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 0;
+  background: transparent;
+}
+
+.agent-chat-root .agent-thinking-matrix-dot--on {
+  background: rgb(200 200 200 / 90%);
+}
+
+/*
+ * ChatItem loading badge uses colorPrimary as a solid fill. Our primary is
+ * near-white, so the disc reads filled — keep only the Loader2 ring.
+ */
+.agent-chat-root [style*="--chat-item-avatar-size"] > *:last-child {
+  background: transparent !important;
+  color: rgb(238 238 238) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agent-chat-root .agent-thinking-matrix-dot {
+    transition: none;
+  }
+}

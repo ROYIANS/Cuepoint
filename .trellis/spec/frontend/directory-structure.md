@@ -16,7 +16,11 @@ File routes under `src/routes/`. Feature UI under `src/components/`. Domain type
 src/
 ├── routes/
 │   ├── _studio.tsx                  # StudioShell
-│   ├── _studio.index.tsx            # 项目 library
+│   ├── _studio.index.tsx            # redirect → /agent
+│   ├── _studio.agent.tsx            # 对话 layout (owns AgentChatPage + LobeChatTheme)
+│   ├── _studio.agent.index.tsx      # /agent URL match (no remount)
+│   ├── _studio.agent.$threadId.tsx  # /agent/$threadId URL match (no remount)
+│   ├── _studio.projects.tsx         # 项目 library
 │   ├── _studio.characters.tsx       # layout Outlet
 │   ├── _studio.characters.index.tsx
 │   ├── _studio.characters.$characterId.tsx
@@ -26,6 +30,7 @@ src/
 │   └── p.$projectId.*               # 一部戏：系列集列表/世界，集内故事/分镜/制作
 ├── components/
 │   ├── studio/AssetLibraryPages.tsx # studio 角色/场景/道具/风格 grids
+│   ├── agent/                       # /agent chat (LobeHub-inspired, chat-only @lobehub/ui)
 │   ├── assets/*DetailPage.tsx       # shared detail editors
 │   └── workspace/                   # in-project chrome
 ├── db/

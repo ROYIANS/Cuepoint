@@ -87,14 +87,18 @@ Primitives export named functions (not default exports): `Button`, `Field`, `but
 - Variants via `cva` on primitives (`buttonVariants` in `button.tsx`). Pass `className` through `cn(buttonVariants({ variant, size, className }))`.
 - Icons: `lucide-react` (e.g. `ChevronLeft` on detail back links).
 - shadcn config: `components.json` (style `new-york`, `cssVariables: true`, alias `@/components/ui`).
-- Decorative motion respects reduced motion (`StudioField` + `@media (prefers-reduced-motion: …)` in `styles.css`).
+- Decorative motion respects reduced motion (`StudioField`, `ClickSpark` in `StudioShell`, `@media (prefers-reduced-motion: …)` in `styles.css`).
+- Agent chat (`src/components/agent/`) is the only place that uses `@lobehub/ui` + antd ThemeProvider. Do not wrap StudioShell. Spacing there uses the 4px scale in `agentTheme.ts` (`SPACE`: 4 / 8 / 12 / 16 / 24 / 32). Body text is 12 / 14 / 16 — do not introduce 13px. Model chips in the composer use `@lobehub/icons` `ModelIcon`. Chat canvas is **transparent** so `StudioField` + `.studio-grain` show through; do not paint opaque `#000` over the shell. Studio highlight tokens (`--brand` / `--primary` / `--ring`) are white, not teal.
+- Composer inset lives on native `.agent-composer` in `agentChat.css` (`padding: … !important`). Do **not** put that inset on `--lobe-flex-padding` / `.lobe-flex`: Tailwind v4 `* { padding: 0 }` and `:where(.lobe-flex) { padding: var(--lobe-flex-padding) }` both have zero specificity, so they cancel and the send control sits flush on the card. `ChatInputArea.Inner` also used `padding-block: 0` + `height: 100%` and made it worse. Host antd/lobe dropdowns with `getPopupContainer` → `.agent-chat-root` (theme CSS + ChatWorkspace `pointer-events: none` overlay).
+- Conversation detail (`ChatWorkspace`): `@lobehub/ui/chat` `ChatHeader` is `position: absolute; height: 52px` with opaque `#0d0d0d` (not transparent over grain). Message list and `.agent-composer-dock` share `.agent-content` (`max-width: 800px`, centered) as the safe-width column — do not let the composer go full-bleed. Topic sidebar is collapsible (`sessionStorage` `cuepoint.agent.topicSidebarCollapsed`); 「开启新话题」is a ghost nav row, not a primary block button. Header actions are title `…` (rename/delete) + share/columns placeholders + panel toggle. Active thread is the route `/agent/$threadId` (home is `/agent`); do not keep the open thread only in React state. Missing `$threadId` uses liveQuery `get() ?? null` then `navigate({ to: "/agent", replace: true })` only when that result is for **this** route id — ignore a stale null left over from a previous `/agent` home query so create+navigate is not bounced back. Empty streaming assistant rows use `ThinkingMatrix` (3×3 column snakes) via `renderMessage` (`message=""`) plus ChatItem avatar `loading` — never static `"…"` or a React node as `message`. Transcript scroll, row memo, and avatars: [Chat Performance](./chat-performance.md).
+- Model dropdown groups by vendor via `groupModelsByVendor` in `src/lib/ai/modelVendors.ts`. Catalog ids are often `cc-gpt-4o` / `cc-gemini-…` — do **not** `^`-anchor `gpt-` / `gemini`. Keep o-series on a word boundary (`/\bo[1-9]/`) so `photo1` stays 其他. Connector chips (not a footer Select) switch the BYOK connector inside that same panel.
 
 ---
 
 ## Accessibility
 
 - Interactive primitives keep `focus-visible` ring tokens (`focus-visible:ring-ring/50 focus-visible:ring-[3px]` on `Button`, `Input`, `Select`, etc.).
-- Decorative canvases / icons that must not be announced: `aria-hidden` (`StudioField` canvas; shell SVG in `StudioShell`).
+- Decorative canvases / icons that must not be announced: `aria-hidden` (`StudioField` canvas; `ClickSpark` canvas; shell SVG in `StudioShell`).
 - Slot tiles expose an accessible name via `ariaLabel` / `title` into `GenerationSlotTile`.
 - Keyboard shortcuts in shot UI must yield when focus is in a form/overlay: gate with `isFormFieldTarget` from `src/lib/formFieldFocus.ts` (see `ShotEditorPage`).
 
@@ -116,8 +120,14 @@ Primitives export named functions (not default exports): `Button`, `Field`, `but
 - Studio create that opens a project picker or navigates to `/p/$projectId/...` (see state-management).
 - New global form library or Zod schemas for every input — forms patch repo directly.
 - Duplicating generation-slot dialogs instead of `EditableGenerationSlot`.
+- Importing `antd/dist/reset.css` from Agent chat (leaks into studio `html`).
+- Passing a React node as `@lobehub/ui/chat` `ChatItem.message` (it `String()`s to `[object Object]` — pass a string + `markdownProps`; for empty streaming use `renderMessage` → `ThinkingMatrix`).
+- Putting model shortcut chips inside the composer box; the toolbar is left Agent/任务 + `+`, right ModelIcon trigger + send. Connector/vendor switching belongs inside the model dropdown.
+- Putting composer inset on `.lobe-flex` padding vars (or `ChatInputArea` inner `padding-block: 0`) — send sits flush. Use `.agent-composer` native chrome.
 - English-only loading/empty strings when neighboring copy is Chinese.
 - Ignoring `isFormFieldTarget` when adding shot keyboard shortcuts.
+- `window.prompt` / `window.alert` / `window.confirm` (native browser chrome titled like “localhost:5173 显示”). Use `Dialog` for rename/input and `AlertDialog` for destructive confirm — same pattern as `ProjectGalleryPage`.
+- Wrapping `@lobehub/ui` `ActionIcon` in `Link` / `<a>` (it always renders a `button`). Navigate from `onClick` instead.
 
 ---
 

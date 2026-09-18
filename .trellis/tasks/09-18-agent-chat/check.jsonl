@@ -1,0 +1,7 @@
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "lint/test gates and forbidden patterns"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "chat tables must not enter project ZIP"}
+{"file": ".trellis/spec/frontend/directory-structure.md", "reason": "nav + /agent route placement"}
+{"file": "docs/product/ai-connectors.md", "reason": "no default model on connector; keys stay local"}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "reuse openaiCompatible helpers vs duplicating fetch"}
+{"file": ".trellis/spec/frontend/chat-performance.md", "reason": "agent transcript scroll/memo vs virtua"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "agent chrome + chat-performance pointer"}

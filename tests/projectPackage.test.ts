@@ -7,10 +7,12 @@ import {
   addScene,
   addShot,
   addStyle,
+  appendChatMessage,
   copyStudioCharacter,
   copyStudioProp,
   copyStudioScene,
   copyStudioStyle,
+  createChatThread,
   createProject,
   patchCharacter,
   patchProp,
@@ -265,5 +267,31 @@ describe("project packages", () => {
     );
     expect(texts.join("\n")).not.toContain("sk-secret-should-not-export");
     expect(await db.connectors.count()).toBe(1);
+  });
+
+  it("does not include agent chat threads or messages in project ZIP export", async () => {
+    const project = await createProject("chat stays local");
+    const thread = await createChatThread({ title: "secret-chat-thread-title" });
+    await appendChatMessage({
+      threadId: thread.id,
+      role: "user",
+      content: "chat-secret-should-not-export",
+      status: "complete",
+    });
+
+    const zip = await JSZip.loadAsync(await exportProjectZip(project.id));
+    const names = Object.keys(zip.files);
+    expect(names.some((name) => name.toLowerCase().includes("chat"))).toBe(false);
+
+    const texts = await Promise.all(
+      names
+        .filter((name) => name.endsWith(".json"))
+        .map(async (name) => zip.file(name)!.async("string")),
+    );
+    const joined = texts.join("\n");
+    expect(joined).not.toContain("secret-chat-thread-title");
+    expect(joined).not.toContain("chat-secret-should-not-export");
+    expect(await db.chatThreads.count()).toBe(1);
+    expect(await db.chatMessages.count()).toBe(1);
   });
 });

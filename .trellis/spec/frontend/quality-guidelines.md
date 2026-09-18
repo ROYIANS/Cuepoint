@@ -47,6 +47,8 @@ Vitest setup: `vitest.config.ts` aliases `@` → `src`; `tests/setup.ts` resets 
 | Enabling export before live queries finish | Disable CSV/print until loaded (delivery-export) |
 | Component RTL / Playwright as the default new test | Prefer `tests/*.test.ts` on lib + repo |
 | Adding ESLint-only “fixes” without satisfying `tsc` | `pnpm lint` is the lint gate |
+| `window.prompt` / `alert` / `confirm` | In-app `Dialog` (input) / `AlertDialog` (destructive) from `src/components/ui/` |
+| `scrollIntoView({ behavior: "smooth" })` on Agent messages | `snapChatToBottom` on `.agent-message-list` (see chat-performance) |
 
 ---
 
@@ -55,7 +57,7 @@ Vitest setup: `vitest.config.ts` aliases `@` → `src`; `tests/setup.ts` resets 
 - Place tests under `tests/` as `*.test.ts`.
 - Repo / IndexedDB behavior: use the shared setup that deletes and reopens `db` (`tests/setup.ts`, see `tests/repo.test.ts`).
 - Pure helpers: unit-test without mounting React (`tests/undo.test.ts`, `debouncedDraft.test.ts`, `shotFilters.test.ts`, `formFieldFocus.test.ts`, `reorderIds.test.ts`, `episodeDelivery.test.ts`, `projectPackage.test.ts`).
-- Cover invariants called out in other specs when touching those areas: studio `touchProject`, snapshot copy reject-on-duplicate, episode-scoped reorder ownership, delivery CSV quoting, form-field shortcut gating.
+- Cover invariants called out in other specs when touching those areas: studio `touchProject`, snapshot copy reject-on-duplicate, episode-scoped reorder ownership, delivery CSV quoting, form-field shortcut gating, agent chat `snapChatToBottom` / `CHAT_AT_BOTTOM_PX`.
 - Do not require new component snapshot/RTL tests unless the change is untestable at the lib/repo layer.
 
 ---
@@ -63,9 +65,9 @@ Vitest setup: `vitest.config.ts` aliases `@` → `src`; `tests/setup.ts` resets 
 ## Accessibility and UX quality
 
 - Keep focus-visible rings on interactive primitives (`src/components/ui/*`).
-- Mark decorative motion/graphics `aria-hidden` (`StudioField`).
+- Mark decorative motion/graphics `aria-hidden` (`StudioField`, `ClickSpark`).
 - Prefer Chinese user-facing strings consistent with existing pages (加载中…, 找不到…).
-- Honor `prefers-reduced-motion` for decorative animation (`StudioField`, `src/styles.css`).
+- Honor `prefers-reduced-motion` for decorative animation (`StudioField`, `ClickSpark`, `src/styles.css`).
 
 ---
 

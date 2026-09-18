@@ -16,6 +16,7 @@
 | --- | --- | --- |
 | [Directory Structure](./directory-structure.md) | Studio layout+index+$id vs project workspace | Filled |
 | [Component Guidelines](./component-guidelines.md) | Thin routes, feature pages, ui primitives, slots | Filled |
+| [Chat Performance](./chat-performance.md) | Agent transcript scroll + memo vs LobeHub virtua | Filled |
 | [Hook Guidelines](./hook-guidelines.md) | Dexie liveQuery loading vs missing | Filled |
 | [State Management](./state-management.md) | IndexedDB owner id, episodes, STUDIO_LIBRARY_ID | Filled |
 | [Delivery Export](./delivery-export.md) | Episode-scoped CSV and printable storyboard contracts | Filled |
@@ -30,7 +31,7 @@
 - [ ] Detail `useLiveQuery` uses `get(id) ?? null` so missing ids are not stuck on 加载中
 - [ ] `touchProject` no-ops for `isStudioLibrary`
 - [ ] Project landing is the episode list; story/shots/produce take `episodeId`
-- [ ] Shot picture slots go through `parseShotPictureSlots` (old `frame`/`reference` included)
+- [ ] Agent list scroll uses `snapChatToBottom` / `isChatNearBottom` (`src/lib/chatScroll.ts`), not `scrollIntoView` smooth
 
 ## Quality Check
 
@@ -41,7 +42,7 @@
 - [ ] Shot queries and create/delete use `episodeId`, not the whole project table
 - [ ] Delivery exports filter by both project and episode and wait for live queries to load
 - [ ] Shot `status` defaults to draft; filters live on `shotSettings.filters` (empty arrays = all)
-- [ ] Drag/arrow/keyboard reorder share `reorderBeats` / `reorderShots`; select-all stays visible-only
+- [ ] Agent stream does not `scrollIntoView({ behavior: "smooth" })` on a sentinel; history ChatItems memo by content/status
 
 ---
 

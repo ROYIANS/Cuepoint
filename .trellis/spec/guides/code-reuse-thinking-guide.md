@@ -81,6 +81,12 @@ if (isThreadEvent(ev)) {
 **Rule**: If the same untyped payload field is read in 2+ places, create a
 shared type guard / normalizer / projection before adding a third reader.
 
+### Pattern 5: Vendor Chat Scroll / Virtualization
+
+**Bad**: Copying LobeHub `virtua` + zustand Conversation store, or `scrollIntoView({ behavior: "smooth" })` on every SSE token.
+
+**Good**: Cuepoint helpers in `src/lib/chatScroll.ts` + memo rows. Read [Chat Performance](../frontend/chat-performance.md) before adding a list library.
+
 ---
 
 ## When to Abstract

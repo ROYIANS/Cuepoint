@@ -5,12 +5,14 @@ import {
   Clapperboard,
   Info,
   MapPinned,
+  MessageSquare,
   Palette,
   Upload,
   UserRound,
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { StudioField } from "@/components/studio/StudioField";
+import { ClickSpark } from "@/components/ui/click-spark";
 import { LOGO_SRC, PRODUCT_NAME_ZH } from "@/lib/brand";
 import { cn } from "@/lib/utils";
 import {
@@ -20,7 +22,8 @@ import {
 } from "@/components/ui/tooltip";
 
 const NAV = [
-  { to: "/", label: "项目", icon: Clapperboard, exact: true },
+  { to: "/agent", label: "对话", icon: MessageSquare, exact: false },
+  { to: "/projects", label: "项目", icon: Clapperboard, exact: true },
   { to: "/characters", label: "角色", icon: UserRound, exact: false },
   { to: "/scenes", label: "场景", icon: MapPinned, exact: false },
   { to: "/props", label: "道具", icon: Box, exact: false },
@@ -39,7 +42,14 @@ export function StudioShell({
   const pathname = useRouterState({ select: (state) => state.location.pathname });
 
   return (
-    <div className="studio-floor flex min-h-screen">
+    <ClickSpark
+      className="studio-floor flex min-h-screen"
+      sparkColor="#fff"
+      sparkSize={10}
+      sparkRadius={15}
+      sparkCount={8}
+      duration={400}
+    >
       <aside className="bg-sidebar sticky top-0 flex h-screen w-[76px] shrink-0 flex-col items-center border-r py-4">
         <Link
           to="/about"
@@ -51,7 +61,7 @@ export function StudioShell({
         </Link>
         <nav className="flex flex-1 flex-col gap-1">
           {NAV.map((item) => {
-            const active = item.exact ? pathname === "/" : pathname.startsWith(item.to);
+            const active = item.exact ? pathname === item.to : pathname.startsWith(item.to);
             const Icon = item.icon;
             return (
               <Link
@@ -89,6 +99,6 @@ export function StudioShell({
         <div className="studio-grain pointer-events-none absolute -inset-[18%]" />
         <div className="app-scroll relative h-screen overflow-auto">{children}</div>
       </div>
-    </div>
+    </ClickSpark>
   );
 }

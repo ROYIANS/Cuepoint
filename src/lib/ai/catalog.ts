@@ -36,3 +36,15 @@ export function getConnectorDefinition(
 ): ConnectorDefinition | undefined {
   return CONNECTOR_CATALOG.find((item) => item.id === id);
 }
+
+export function connectorDisplayName(connector: {
+  definitionId: ConnectorDefinitionId;
+  label?: string;
+}): string {
+  if (connector.label?.trim()) return connector.label.trim();
+  return getConnectorDefinition(connector.definitionId)?.title ?? connector.definitionId;
+}
+
+export function connectorProviderKey(definitionId: ConnectorDefinitionId): string {
+  return definitionId === "deepseek" ? "deepseek" : "openai";
+}

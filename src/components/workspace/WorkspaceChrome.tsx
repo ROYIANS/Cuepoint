@@ -84,7 +84,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-3">
         <p>找不到这个项目</p>
-        <Button onClick={() => void navigate({ to: "/" })}>返回工作室</Button>
+        <Button onClick={() => void navigate({ to: "/projects" })}>返回工作室</Button>
       </div>
     );
   }
@@ -155,7 +155,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
         <div className="flex min-w-0 items-center gap-1">
           {backToStudio ? (
             <Button variant="ghost" size="icon-sm" asChild>
-              <Link to="/" aria-label="返回工作室">
+              <Link to="/projects" aria-label="返回工作室">
                 <ChevronLeft />
               </Link>
             </Button>

@@ -1,6 +1,8 @@
 import Dexie, { type Table } from "dexie";
 import type {
   Character,
+  ChatMessage,
+  ChatThread,
   ConnectorConfig,
   Episode,
   MediaRecord,
@@ -25,6 +27,10 @@ export class AifenjingDB extends Dexie {
   media!: Table<MediaRecord, string>;
   /** Studio-global AI connectors — never included in project ZIP export. */
   connectors!: Table<ConnectorConfig, string>;
+  /** Studio-global Agent chat threads — never included in project ZIP export. */
+  chatThreads!: Table<ChatThread, string>;
+  /** Studio-global Agent chat messages — never included in project ZIP export. */
+  chatMessages!: Table<ChatMessage, string>;
 
   constructor() {
     super("aifenjing");
@@ -112,6 +118,19 @@ export class AifenjingDB extends Dexie {
       shots: "id, projectId, episodeId, order",
       media: "id, projectId",
       connectors: "id, definitionId, updatedAt",
+    });
+    this.version(5).stores({
+      projects: "id, updatedAt",
+      characters: "id, projectId, updatedAt",
+      scenes: "id, projectId, updatedAt",
+      props: "id, projectId, updatedAt",
+      styles: "id, projectId, updatedAt",
+      episodes: "id, projectId, order, updatedAt",
+      shots: "id, projectId, episodeId, order",
+      media: "id, projectId",
+      connectors: "id, definitionId, updatedAt",
+      chatThreads: "id, updatedAt",
+      chatMessages: "id, threadId, createdAt",
     });
   }
 }
