@@ -74,6 +74,10 @@ import {
   normalizeShotSettings,
   normalizeShotStatus,
   shotFiltersActive,
+  type Character,
+  type GenerationSlot,
+  type Id,
+  type Scene,
   type Shot,
   type ShotColumnId,
   type ShotFilters,
@@ -96,7 +100,9 @@ import {
   stepActiveShotId,
 } from "@/lib/shotKeyboard";
 import { useUndo } from "@/lib/undo";
+import { cn } from "@/lib/utils";
 import { EditableGenerationSlot } from "@/components/slots/GenerationSlotCard";
+import { Still } from "@/components/studio/Still";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -130,13 +136,59 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
+function columnPlaceholder(id: ShotColumnId): string {
+  switch (id) {
+    case "content":
+      return "镜头内容";
+    case "durationSec":
+      return "秒";
+    case "notes":
+      return "备注";
+    case "scene":
+      return "未选择";
+    default:
+      return SHOT_COLUMNS.find((column) => column.id === id)?.label ?? "";
+  }
+}
+
+function coverMediaId(
+  slots: Partial<Record<string, GenerationSlot>> | undefined,
+  preferredKeys: string[],
+): Id | undefined {
+  if (!slots) return undefined;
+  for (const key of preferredKeys) {
+    const mediaId = slots[key]?.result?.mediaId;
+    if (mediaId) return mediaId;
+  }
+  return undefined;
+}
+
+function AssetStill({
+  mediaId,
+  title,
+  className,
+}: {
+  mediaId?: Id;
+  title: string;
+  className?: string;
+}) {
+  return (
+    <div className={cn("size-10 shrink-0 overflow-hidden rounded-md", className)}>
+      <Still mediaId={mediaId} title={title} className="p-1.5 [&_span]:text-base" />
+    </div>
+  );
+}
+
+const FLUSH_SELECT_TRIGGER =
+  "h-full min-h-[124px] w-full rounded-none border-0 bg-transparent px-2 shadow-none focus:ring-0 focus-visible:ring-0 data-[size=default]:h-full dark:bg-transparent dark:hover:bg-transparent";
+
 function PlainCell({
   value,
-  placeholder = "插入内容",
+  placeholder,
   onCommit,
 }: {
   value: string;
-  placeholder?: string;
+  placeholder: string;
   onCommit: (value: string) => void;
 }) {
   return (
@@ -145,7 +197,7 @@ function PlainCell({
       rows={4}
       placeholder={placeholder}
       onChange={(event) => onCommit(event.target.value)}
-      className="h-[124px] resize-none rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0"
+      className="h-full min-h-[124px] w-full resize-none rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent"
     />
   );
 }
@@ -1172,8 +1224,8 @@ type BeatBlockProps = {
   setActiveShotId: Dispatch<SetStateAction<string | undefined>>;
   workspaceView: ShotWorkspaceView;
   visibleDefs: ColumnDef[];
-  characters: { id: string; name: string }[];
-  scenes: { id: string; name: string }[];
+  characters: Character[];
+  scenes: Scene[];
   highlightedShotId?: string;
   loose?: boolean;
   hideHeader?: boolean;
@@ -1366,8 +1418,8 @@ function ShotRow({
   onActivate: () => void;
   workspaceView: ShotWorkspaceView;
   visibleDefs: ColumnDef[];
-  characters: { id: string; name: string }[];
-  scenes: { id: string; name: string }[];
+  characters: Character[];
+  scenes: Scene[];
   beatId?: string;
   showBelow?: boolean;
   canMoveUp: boolean;
@@ -1389,6 +1441,7 @@ function ShotRow({
     opacity: isDragging ? 0.72 : undefined,
     zIndex: isDragging ? 10 : undefined,
   };
+  const selectedScene = scenes.find((scene) => scene.id === shot.sceneId);
 
   return (
     <div
@@ -1399,6 +1452,7 @@ function ShotRow({
         active ? "z-10 ring-2 ring-inset ring-brand" : ""
       }`}
       onMouseDown={onActivate}
+      onFocusCapture={onActivate}
     >
       <Button
         type="button"
@@ -1489,7 +1543,7 @@ function ShotRow({
               void patchShot(shot.id, { status: normalizeShotStatus(value) })
             }
           >
-            <SelectTrigger className="h-8 w-full border-0 bg-transparent shadow-none focus:ring-0">
+            <SelectTrigger className="h-8 w-full border-0 bg-transparent shadow-none focus:ring-0 focus-visible:ring-0 dark:bg-transparent dark:hover:bg-transparent">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -1533,6 +1587,7 @@ function ShotRow({
             <div className="border-l">
               <PlainCell
                 value={shot.content}
+                placeholder={columnPlaceholder("content")}
                 onCommit={(content) => void patchShot(shot.id, { content })}
               />
             </div>
@@ -1540,57 +1595,101 @@ function ShotRow({
         ) : visibleDefs.map((column) => (
           <div key={column.id} className="border-l">
             {column.id === "durationSec" ? (
-              <PlainCell
+              <Input
                 value={String(shot.durationSec || "")}
-                onCommit={(value) =>
+                placeholder={columnPlaceholder("durationSec")}
+                onChange={(event) =>
                   void patchShot(shot.id, {
-                    durationSec: Math.max(0, Number(value) || 0),
+                    durationSec: Math.max(0, Number(event.target.value) || 0),
                   })
                 }
+                className="h-full min-h-[124px] w-full rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent"
               />
             ) : column.id === "characters" ? (
-              <div className="flex h-[124px] flex-col gap-1 overflow-auto p-2">
-                {characters.map((character) => (
-                  <label key={character.id} className="flex items-center gap-2 text-sm">
-                    <Checkbox
-                      checked={shot.characterIds.includes(character.id)}
-                      onCheckedChange={(checked) => {
-                        const ids = checked
-                          ? [...shot.characterIds, character.id]
-                          : shot.characterIds.filter((id) => id !== character.id);
-                        void patchShot(shot.id, { characterIds: ids });
-                      }}
-                    />
-                    {character.name}
-                  </label>
-                ))}
+              <div className="h-full min-h-[124px] overflow-auto p-1.5">
+                {characters.length === 0 ? (
+                  <p className="text-muted-foreground px-1 py-2 text-sm">先在世界里添加角色</p>
+                ) : (
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {characters.map((character) => {
+                      const selectedChar = shot.characterIds.includes(character.id);
+                      return (
+                        <button
+                          key={character.id}
+                          type="button"
+                          aria-pressed={selectedChar}
+                          title={character.name}
+                          onClick={() => {
+                            const ids = selectedChar
+                              ? shot.characterIds.filter((id) => id !== character.id)
+                              : [...shot.characterIds, character.id];
+                            void patchShot(shot.id, { characterIds: ids });
+                          }}
+                          className={cn(
+                            "flex flex-col items-center gap-1 rounded-md p-1.5 text-center transition-colors",
+                            selectedChar
+                              ? "bg-brand/10 ring-brand ring-2"
+                              : "hover:bg-muted/60",
+                          )}
+                        >
+                          <AssetStill
+                            mediaId={coverMediaId(character.slots, ["front"])}
+                            title={character.name}
+                          />
+                          <span className="w-full truncate text-[11px] leading-tight">
+                            {character.name}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             ) : column.id === "scene" ? (
-              <div className="p-2">
-                <Select
-                  value={shot.sceneId ?? "none"}
-                  onValueChange={(value) =>
-                    void patchShot(shot.id, {
-                      sceneId: value === "none" ? undefined : value,
-                    })
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="未选择" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">未选择</SelectItem>
-                    {scenes.map((scene) => (
-                      <SelectItem key={scene.id} value={scene.id}>
-                        {scene.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <Select
+                value={shot.sceneId ?? "none"}
+                onValueChange={(value) =>
+                  void patchShot(shot.id, {
+                    sceneId: value === "none" ? undefined : value,
+                  })
+                }
+              >
+                <SelectTrigger className={FLUSH_SELECT_TRIGGER}>
+                  <span className="flex min-w-0 flex-1 items-center gap-2">
+                    {selectedScene ? (
+                      <>
+                        <AssetStill
+                          mediaId={coverMediaId(selectedScene.slots, ["wide"])}
+                          title={selectedScene.name}
+                          className="size-9"
+                        />
+                        <span className="truncate">{selectedScene.name}</span>
+                      </>
+                    ) : (
+                      <span className="text-muted-foreground">
+                        {columnPlaceholder("scene")}
+                      </span>
+                    )}
+                  </span>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">未选择</SelectItem>
+                  {scenes.map((scene) => (
+                    <SelectItem key={scene.id} value={scene.id}>
+                      <AssetStill
+                        mediaId={coverMediaId(scene.slots, ["wide"])}
+                        title={scene.name}
+                        className="size-8"
+                      />
+                      <span className="truncate">{scene.name}</span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             ) : (
               <PlainCell
                 value={String(shot[column.id as keyof Shot] ?? "")}
+                placeholder={columnPlaceholder(column.id)}
                 onCommit={(value) =>
                   void patchShot(shot.id, { [column.id]: value } as Partial<Shot>)
                 }

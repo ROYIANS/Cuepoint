@@ -11,8 +11,8 @@ export interface ColumnDef {
 export const SHOT_COLUMNS: ColumnDef[] = [
   { id: "content", label: "内容", kind: "text", width: 220 },
   { id: "durationSec", label: "时长 (秒)", kind: "number", width: 108 },
-  { id: "characters", label: "角色", kind: "select", width: 180 },
-  { id: "scene", label: "场景", kind: "select", width: 160 },
+  { id: "characters", label: "角色", kind: "select", width: 220 },
+  { id: "scene", label: "场景", kind: "select", width: 200 },
   { id: "notes", label: "备注", kind: "text", width: 180 },
   { id: "category", label: "类别", kind: "text", width: 140 },
   { id: "sound", label: "声音", kind: "text", width: 160 },
