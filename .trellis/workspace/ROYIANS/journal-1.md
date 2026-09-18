@@ -257,3 +257,24 @@ Shipped /about with Cuepoint brand mark (webp logo, privacy, GitHub), studio chr
 ### Status
 
 [OK] **Completed**
+
+
+## Session 12: Studio Agent chat MVP
+
+**Date**: 2026-09-18
+**Task**: Studio Agent chat MVP
+**Branch**: `main`
+
+### Summary
+
+Shipped /agent chat: Dexie threads, lobe-scoped UI, streaming BYOK, scroll/memo + ThinkingMatrix. Next: reasoning/thinking field from LobeHub.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `becba17` | (see git log) |
+
+### Status
+
+[OK] **Completed**
