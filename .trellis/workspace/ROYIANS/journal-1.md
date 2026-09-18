@@ -215,3 +215,24 @@ Aspect presets with resolution, optional cover, 2:3 poster project gallery, in-p
 ### Status
 
 [OK] **Completed**
+
+
+## Session 10: AI connectors
+
+**Date**: 2026-09-18
+**Task**: AI connectors
+**Branch**: `main`
+
+### Summary
+
+Studio /connectors BYOK page; OpenAI-compatible client; keys local-only; docs for agent/runtime planning.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `29b928f` | (see git log) |
+
+### Status
+
+[OK] **Completed**
