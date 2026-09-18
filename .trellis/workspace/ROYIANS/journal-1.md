@@ -194,3 +194,24 @@ Media shot rows share design max-height/centering; content column flexes; frame 
 ### Status
 
 [OK] **Completed**
+
+
+## Session 9: Project output settings
+
+**Date**: 2026-09-18
+**Task**: Project output settings
+**Branch**: `main`
+
+### Summary
+
+Aspect presets with resolution, optional cover, 2:3 poster project gallery, in-project settings dialog.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `cff0d50` | (see git log) |
+
+### Status
+
+[OK] **Completed**
