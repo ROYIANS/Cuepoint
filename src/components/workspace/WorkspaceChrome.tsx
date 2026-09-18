@@ -141,8 +141,8 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
 
   return (
     <div className="workspace-shell bg-background flex h-screen flex-col">
-      <header className="workspace-header grid min-h-14 shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-2 border-b px-3 py-2 sm:grid-cols-[1fr_auto_1fr] sm:px-4">
-        <div className="flex min-w-0 items-center gap-1">
+      <header className="workspace-header grid min-h-14 shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-2 border-b px-3 py-2 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4">
+        <div className="col-start-1 row-start-1 flex min-w-0 items-center gap-1">
           {backToStudio ? (
             <Button variant="ghost" size="icon-sm" asChild>
               <Link to="/projects" aria-label="返回工作室">
@@ -158,7 +158,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
           )}
           <span className="truncate text-[15px] font-medium">{title}</span>
         </div>
-        <nav className="text-muted-foreground col-span-2 row-start-2 flex items-center justify-center gap-6 text-[13px] sm:col-span-1 sm:row-start-auto">
+        <nav className="text-muted-foreground col-span-2 row-start-2 flex items-center justify-center gap-6 text-[13px] sm:col-span-1 sm:col-start-2 sm:row-start-1">
           {filmEpisode ? (
             <>
               <Link
@@ -256,7 +256,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
             </>
           )}
         </nav>
-        <div className="col-start-2 row-start-1 flex items-center justify-end gap-1 sm:col-start-auto">
+        <div className="col-start-2 row-start-1 flex items-center justify-end gap-1 sm:col-start-3">
           <Button variant="ghost" size="sm" onClick={() => changeSettingsOpen(true)} aria-label="项目设定">
             <Settings2 /><span className="hidden sm:inline">项目设定</span>
           </Button>
