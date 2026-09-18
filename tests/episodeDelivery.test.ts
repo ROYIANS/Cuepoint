@@ -20,6 +20,7 @@ const project: Project = {
   id: "project",
   name: "测试/项目",
   mode: "series",
+  aspectPreset: "16:9",
   createdAt: "",
   updatedAt: "",
   columnSettings: { visible: ["content", "category", "notes"] },

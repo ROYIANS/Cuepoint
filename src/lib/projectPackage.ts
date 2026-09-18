@@ -4,6 +4,7 @@ import { db } from "@/db/database";
 import { collectMediaIds } from "@/db/repo";
 import {
   DEFAULT_VISIBLE_COLUMNS,
+  normalizeAspectPreset,
   normalizeEpisodeStory,
   normalizeProjectMode,
   normalizeShotSettings,
@@ -104,6 +105,8 @@ const PROJECT_KEYS = [
   "id",
   "name",
   "mode",
+  "aspectPreset",
+  "coverMediaId",
   "createdAt",
   "updatedAt",
   "columnSettings",
@@ -117,10 +120,15 @@ function parseProject(raw: Record<string, unknown>, fallbackName: string): Proje
   const visible = (raw.columnSettings as { visible?: ShotColumnId[] } | undefined)
     ?.visible;
   const at = nowIso();
-  return {
+  const coverMediaId =
+    raw.coverMediaId != null && String(raw.coverMediaId).trim()
+      ? String(raw.coverMediaId)
+      : undefined;
+  const project: Project = {
     id: String(raw.id ?? createId("prj")),
     name: String(raw.name ?? fallbackName),
     mode: normalizeProjectMode(raw.mode),
+    aspectPreset: normalizeAspectPreset(raw.aspectPreset),
     createdAt: String(raw.createdAt ?? at),
     updatedAt: String(raw.updatedAt ?? at),
     columnSettings: {
@@ -134,6 +142,8 @@ function parseProject(raw: Record<string, unknown>, fallbackName: string): Proje
     setting: normalizeSetting(raw.setting),
     extra: pickExtra(raw, PROJECT_KEYS),
   };
+  if (coverMediaId) project.coverMediaId = coverMediaId;
+  return project;
 }
 
 const CHARACTER_KEYS = [
@@ -493,6 +503,12 @@ export async function importProjectZip(file: Blob): Promise<Project> {
   }
 
   const mapMedia = (id?: string) => (id ? mediaMap.get(id) : undefined);
+
+  if (project.coverMediaId) {
+    const mappedCover = mapMedia(project.coverMediaId);
+    if (mappedCover) project.coverMediaId = mappedCover;
+    else delete project.coverMediaId;
+  }
 
   const characters = charactersRaw.map((raw) => {
     const character = parseCharacter(raw, projectId);

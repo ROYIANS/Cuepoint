@@ -118,7 +118,31 @@ describe("project packages", () => {
       await legacyZip.generateAsync({ type: "blob" }),
     );
     expect(importedLegacy.mode).toBe("series");
+    expect(importedLegacy.aspectPreset).toBe("16:9");
+    expect(importedLegacy.coverMediaId).toBeUndefined();
     expect(importedLegacy.shotSettings.workspaceView).toBe("design");
+  });
+
+  it("round-trips aspect preset and cover media that is only referenced by the project", async () => {
+    const project = await createProject("output package", "film", "9:16");
+    const mediaId = "med_project_cover";
+    await putMedia({
+      id: mediaId,
+      projectId: project.id,
+      mimeType: "image/png",
+      filename: "cover.png",
+      blob: new Blob(["cover-bytes"]),
+    });
+    await updateProject(project.id, { coverMediaId: mediaId });
+
+    const imported = await importProjectZip(await exportProjectZip(project.id));
+    expect(imported.aspectPreset).toBe("9:16");
+    expect(imported.coverMediaId).toBeDefined();
+    expect(imported.coverMediaId).not.toBe(mediaId);
+    const cover = await db.media.get(imported.coverMediaId!);
+    expect(cover?.projectId).toBe(imported.id);
+    expect(cover?.mimeType).toBe("image/png");
+    expect(await cover?.blob.text()).toBe("cover-bytes");
   });
 
   it("round-trips the shot workspace preference", async () => {

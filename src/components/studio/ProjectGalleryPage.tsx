@@ -33,7 +33,15 @@ import {
   importProjectZip,
   PackageError,
 } from "@/lib/projectPackage";
-import type { Id, ProjectMode, Shot } from "@/domain/types";
+import {
+  ASPECT_PRESET_IDS,
+  ASPECT_PRESETS,
+  resolutionForAspect,
+  type AspectPresetId,
+  type Id,
+  type ProjectMode,
+  type Shot,
+} from "@/domain/types";
 import { cn } from "@/lib/utils";
 
 function coverOfProject(shots: Shot[], projectId: Id): Id | undefined {
@@ -52,6 +60,7 @@ export function ProjectGalleryPage() {
   const [creating, setCreating] = useState(false);
   const [name, setName] = useState("未命名项目");
   const [mode, setMode] = useState<ProjectMode>("film");
+  const [aspectPreset, setAspectPreset] = useState<AspectPresetId>("16:9");
   const [renameId, setRenameId] = useState<string>();
   const [renameValue, setRenameValue] = useState("");
   const [deleteId, setDeleteId] = useState<string>();
@@ -61,12 +70,15 @@ export function ProjectGalleryPage() {
     [projects, query, sort],
   );
 
+  const aspectResolution = resolutionForAspect(aspectPreset);
+
   async function handleCreate() {
     try {
-      const project = await createProject(name, mode);
+      const project = await createProject(name, mode, aspectPreset);
       setCreating(false);
       setName("未命名项目");
       setMode("film");
+      setAspectPreset("16:9");
       await navigate({ to: "/p/$projectId", params: { projectId: project.id } });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "创建失败");
@@ -78,13 +90,19 @@ export function ProjectGalleryPage() {
       <LibraryHeader title="我的项目" query={query} onQuery={setQuery} sort={sort} onSort={setSort} />
       <div className="mt-8">
         <LibraryGrid>
-          <CreateTile label="创建新项目" hint="本地项目" onClick={() => setCreating(true)} />
+          <CreateTile
+            frame="poster"
+            label="创建新项目"
+            hint="本地项目"
+            onClick={() => setCreating(true)}
+          />
           {visible.map((project) => (
             <CoverCard
               key={project.id}
+              frame="poster"
               title={project.name}
               subtitle={`更新 ${formatUpdatedAt(project.updatedAt)}`}
-              mediaId={coverOfProject(shots, project.id)}
+              mediaId={project.coverMediaId ?? coverOfProject(shots, project.id)}
               onOpen={() =>
                 void navigate({ to: "/p/$projectId", params: { projectId: project.id } })
               }
@@ -129,10 +147,12 @@ export function ProjectGalleryPage() {
           <fieldset>
             <legend className="text-sm font-medium">项目类型</legend>
             <div className="mt-2 grid grid-cols-2 gap-3">
-              {([
-                { value: "film", title: "单片", hint: "直接进入故事，适合短片和电影" },
-                { value: "series", title: "连载", hint: "按集管理故事、分镜和制作" },
-              ] satisfies { value: ProjectMode; title: string; hint: string }[]).map((option) => (
+              {(
+                [
+                  { value: "film", title: "单片", hint: "直接进入故事，适合短片和电影" },
+                  { value: "series", title: "连载", hint: "按集管理故事、分镜和制作" },
+                ] satisfies { value: ProjectMode; title: string; hint: string }[]
+              ).map((option) => (
                 <button
                   key={option.value}
                   type="button"
@@ -152,6 +172,30 @@ export function ProjectGalleryPage() {
                 </button>
               ))}
             </div>
+          </fieldset>
+          <fieldset>
+            <legend className="text-sm font-medium">画幅比例</legend>
+            <div className="mt-2 grid grid-cols-3 gap-2">
+              {ASPECT_PRESET_IDS.map((preset) => (
+                <button
+                  key={preset}
+                  type="button"
+                  aria-pressed={aspectPreset === preset}
+                  className={cn(
+                    "rounded-xl border px-3 py-2.5 text-center text-sm font-medium transition-colors",
+                    aspectPreset === preset
+                      ? "border-brand bg-brand/5"
+                      : "hover:bg-muted/50",
+                  )}
+                  onClick={() => setAspectPreset(preset)}
+                >
+                  {ASPECT_PRESETS[preset].label}
+                </button>
+              ))}
+            </div>
+            <p className="text-muted-foreground mt-2 text-xs">
+              默认分辨率 {aspectResolution.width}×{aspectResolution.height}
+            </p>
           </fieldset>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCreating(false)}>

@@ -6,10 +6,12 @@ import {
   emptySeriesStory,
   emptySetting,
   isStudioLibrary,
+  normalizeAspectPreset,
   normalizeEpisodeStory,
   normalizeShotSettings,
   normalizeShotStatus,
   normalizeSeriesStory,
+  type AspectPresetId,
   type Character,
   type CharacterImageSlot,
   type Episode,
@@ -46,12 +48,17 @@ export async function touchProject(projectId: Id): Promise<void> {
   await db.projects.put(touch(project));
 }
 
-export function emptyProject(name: string, mode: ProjectMode = "film"): Project {
+export function emptyProject(
+  name: string,
+  mode: ProjectMode = "film",
+  aspectPreset: AspectPresetId = "16:9",
+): Project {
   const at = nowIso();
   return {
     id: createId("prj"),
     name: name.trim() || "未命名项目",
     mode,
+    aspectPreset: normalizeAspectPreset(aspectPreset),
     createdAt: at,
     updatedAt: at,
     columnSettings: { visible: [...DEFAULT_VISIBLE_COLUMNS] },
@@ -176,8 +183,9 @@ export async function listProjects(): Promise<Project[]> {
 export async function createProject(
   name: string,
   mode: ProjectMode = "film",
+  aspectPreset: AspectPresetId = "16:9",
 ): Promise<Project> {
-  const project = emptyProject(name, mode);
+  const project = emptyProject(name, mode, aspectPreset);
   const episode = emptyEpisode(project.id, 0);
   await db.transaction("rw", db.projects, db.episodes, async () => {
     await db.projects.add(project);
@@ -221,12 +229,55 @@ export async function deleteProject(id: Id): Promise<void> {
 export async function updateProject(
   id: Id,
   patch: Partial<
-    Pick<Project, "name" | "mode" | "columnSettings" | "shotSettings" | "story" | "setting">
+    Pick<
+      Project,
+      | "name"
+      | "mode"
+      | "aspectPreset"
+      | "coverMediaId"
+      | "columnSettings"
+      | "shotSettings"
+      | "story"
+      | "setting"
+    >
   >,
 ): Promise<void> {
   const project = await db.projects.get(id);
   if (!project) return;
-  await db.projects.put(touch({ ...project, ...patch }));
+  const next = { ...project, ...patch };
+  if (patch.aspectPreset !== undefined) {
+    next.aspectPreset = normalizeAspectPreset(patch.aspectPreset);
+  }
+  await db.projects.put(touch(next));
+}
+
+export async function patchProjectOutput(
+  id: Id,
+  patch: {
+    aspectPreset?: AspectPresetId;
+    /** Pass `null` to clear the cover. */
+    coverMediaId?: Id | null;
+  },
+): Promise<void> {
+  const project = await db.projects.get(id);
+  if (!project) return;
+  const previousCover = project.coverMediaId;
+  const next: Project = {
+    ...project,
+    aspectPreset:
+      patch.aspectPreset !== undefined
+        ? normalizeAspectPreset(patch.aspectPreset)
+        : normalizeAspectPreset(project.aspectPreset),
+  };
+  if (patch.coverMediaId === null) {
+    delete next.coverMediaId;
+  } else if (patch.coverMediaId !== undefined) {
+    next.coverMediaId = patch.coverMediaId;
+  }
+  await db.projects.put(touch(next));
+  if (previousCover && previousCover !== next.coverMediaId) {
+    await deleteMediaIfOrphan(previousCover);
+  }
 }
 
 export async function updateShotSettings(
@@ -415,7 +466,8 @@ export async function reorderEpisodes(projectId: Id, orderedIds: Id[]): Promise<
 }
 
 export async function collectMediaIds(projectId: Id): Promise<Set<Id>> {
-  const [characters, scenes, props, styles, shots] = await Promise.all([
+  const [project, characters, scenes, props, styles, shots] = await Promise.all([
+    db.projects.get(projectId),
     db.characters.where("projectId").equals(projectId).toArray(),
     db.scenes.where("projectId").equals(projectId).toArray(),
     db.props.where("projectId").equals(projectId).toArray(),
@@ -423,6 +475,7 @@ export async function collectMediaIds(projectId: Id): Promise<Set<Id>> {
     db.shots.where("projectId").equals(projectId).toArray(),
   ]);
   const ids = new Set<Id>();
+  if (project?.coverMediaId) ids.add(project.coverMediaId);
   for (const mediaId of collectSlotsMedia([
     ...characters.flatMap((character) => Object.values(character.slots ?? {})),
     ...scenes.flatMap((scene) => Object.values(scene.slots ?? {})),

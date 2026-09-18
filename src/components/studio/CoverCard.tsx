@@ -11,8 +11,18 @@ import {
 import { cn } from "@/lib/utils";
 import type { Id } from "@/domain/types";
 
-const COVER = "aspect-[16/10] w-full overflow-hidden rounded-2xl";
+export type CoverFrame = "wide" | "poster";
+
+const COVER_FRAME: Record<CoverFrame, string> = {
+  wide: "aspect-[16/10]",
+  poster: "aspect-[2/3]",
+};
+
 const CAPTION = "mt-2.5 h-[42px] px-0.5";
+
+function coverShell(frame: CoverFrame) {
+  return cn(COVER_FRAME[frame], "w-full overflow-hidden rounded-2xl");
+}
 
 export function CoverCard({
   title,
@@ -20,19 +30,21 @@ export function CoverCard({
   mediaId,
   onOpen,
   actions,
+  frame = "wide",
 }: {
   title: string;
   subtitle: string;
   mediaId?: Id;
   onOpen: () => void;
   actions?: Array<{ label: string; tone?: "danger"; onSelect: () => void }>;
+  frame?: CoverFrame;
 }) {
   return (
     <div className="group relative">
       <button type="button" onClick={onOpen} aria-label={title} className="block w-full text-left">
         <div
           className={cn(
-            COVER,
+            coverShell(frame),
             "bg-card ring-foreground/8 ring-1 transition-[transform,box-shadow,ring-color] duration-200",
             "group-hover:-translate-y-0.5 group-hover:ring-brand/40 group-hover:shadow-[0_16px_36px_-22px_rgb(0_0_0_/_0.7)]",
           )}
@@ -79,16 +91,18 @@ export function CreateTile({
   label,
   hint,
   onClick,
+  frame = "wide",
 }: {
   label: string;
   hint?: string;
   onClick: () => void;
+  frame?: CoverFrame;
 }) {
   return (
     <button type="button" onClick={onClick} className="group block w-full text-left">
       <div
         className={cn(
-          COVER,
+          coverShell(frame),
           "text-muted-foreground flex flex-col items-center justify-center border border-dashed border-white/12 bg-white/3",
           "transition-colors group-hover:border-brand/50 group-hover:bg-brand/8 group-hover:text-brand",
         )}

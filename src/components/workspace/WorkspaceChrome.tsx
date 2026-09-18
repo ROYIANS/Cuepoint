@@ -1,10 +1,36 @@
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { ChevronLeft, Download, Ellipsis } from "lucide-react";
-import { db } from "@/db/database";
-import { episodeLabel, normalizeProjectMode } from "@/domain/types";
-import { downloadBlob, exportProjectZip } from "@/lib/projectPackage";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Still } from "@/components/studio/Still";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { db } from "@/db/database";
+import { patchProjectOutput } from "@/db/repo";
+import {
+  ASPECT_PRESET_IDS,
+  ASPECT_PRESETS,
+  episodeLabel,
+  normalizeAspectPreset,
+  normalizeProjectMode,
+  resolutionForAspect,
+  type AspectPresetId,
+} from "@/domain/types";
+import { IMAGE_ACCEPT, pickMediaFile, uploadMediaFile } from "@/lib/media";
+import { downloadBlob, exportProjectZip } from "@/lib/projectPackage";
 import { cn } from "@/lib/utils";
 
 const SERIES_STEPS = [
@@ -44,6 +70,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
     const rows = await db.episodes.where("projectId").equals(projectId).sortBy("order");
     return rows[0] ?? null;
   }, [projectId]);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   if (
     project === undefined ||
@@ -63,6 +90,8 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
   }
 
   const mode = normalizeProjectMode(project.mode);
+  const aspectPreset = normalizeAspectPreset(project.aspectPreset);
+  const aspectResolution = resolutionForAspect(aspectPreset);
   const projectHome = pathname === `/p/${projectId}` || pathname === `/p/${projectId}/`;
 
   if (episodeId && currentEpisode === null) {
@@ -91,6 +120,34 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
   const filmEpisode = mode === "film" ? firstProjectEpisode || undefined : undefined;
   const title = mode === "film" ? project.name : episode ? episodeLabel(episode) : project.name;
   const backToStudio = mode === "film" || !episode;
+
+  async function setAspect(preset: AspectPresetId) {
+    if (normalizeAspectPreset(project!.aspectPreset) === preset) return;
+    try {
+      await patchProjectOutput(projectId, { aspectPreset: preset });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "保存失败");
+    }
+  }
+
+  async function uploadCover() {
+    try {
+      const file = await pickMediaFile(IMAGE_ACCEPT);
+      if (!file) return;
+      const uploaded = await uploadMediaFile(projectId, file);
+      await patchProjectOutput(projectId, { coverMediaId: uploaded.id });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "上传封面失败");
+    }
+  }
+
+  async function clearCover() {
+    try {
+      await patchProjectOutput(projectId, { coverMediaId: null });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "清除封面失败");
+    }
+  }
 
   return (
     <div className="workspace-shell bg-background flex h-screen flex-col">
@@ -210,9 +267,16 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
           )}
         </nav>
         <div className="flex items-center justify-end gap-1">
-          <Button variant="ghost" size="icon-sm" disabled>
-            <Ellipsis />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon-sm" aria-label="更多">
+                <Ellipsis />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onSelect={() => setSettingsOpen(true)}>项目设定</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button
             variant="outline"
             size="sm"
@@ -230,6 +294,65 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
       <div className="min-h-0 flex-1">
         <Outlet />
       </div>
+
+      <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>项目设定</DialogTitle>
+          </DialogHeader>
+          <fieldset>
+            <legend className="text-sm font-medium">画幅比例</legend>
+            <div className="mt-2 grid grid-cols-3 gap-2">
+              {ASPECT_PRESET_IDS.map((preset) => (
+                <button
+                  key={preset}
+                  type="button"
+                  aria-pressed={aspectPreset === preset}
+                  className={cn(
+                    "rounded-xl border px-3 py-2.5 text-center text-sm font-medium transition-colors",
+                    aspectPreset === preset
+                      ? "border-brand bg-brand/5"
+                      : "hover:bg-muted/50",
+                  )}
+                  onClick={() => void setAspect(preset)}
+                >
+                  {ASPECT_PRESETS[preset].label}
+                </button>
+              ))}
+            </div>
+            <p className="text-muted-foreground mt-2 text-xs">
+              默认分辨率 {aspectResolution.width}×{aspectResolution.height}
+            </p>
+          </fieldset>
+          <div>
+            <p className="text-sm font-medium">项目封面</p>
+            <div className="mt-2 flex items-start gap-4">
+              <div className="aspect-[2/3] w-28 overflow-hidden rounded-xl bg-card ring-foreground/8 ring-1">
+                <Still mediaId={project.coverMediaId} title={project.name} />
+              </div>
+              <div className="flex flex-col gap-2">
+                <Button variant="outline" size="sm" onClick={() => void uploadCover()}>
+                  {project.coverMediaId ? "更换封面" : "上传封面"}
+                </Button>
+                {project.coverMediaId ? (
+                  <Button variant="ghost" size="sm" onClick={() => void clearCover()}>
+                    清除封面
+                  </Button>
+                ) : (
+                  <p className="text-muted-foreground text-xs leading-5">
+                    未设置时，项目库会用最早镜头的首帧作封面。
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setSettingsOpen(false)}>
+              完成
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

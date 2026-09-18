@@ -19,6 +19,7 @@ import {
   deleteShots,
   duplicateBeat,
   duplicateShot,
+  patchProjectOutput,
   patchStoryBeat,
   patchCharacter,
   patchProp,
@@ -37,7 +38,13 @@ import {
   patchShot,
 } from "@/db/repo";
 import { emptySlot } from "@/domain/slot";
-import { normalizeEpisodeStory, normalizeShotSettings, STUDIO_LIBRARY_ID } from "@/domain/types";
+import {
+  normalizeAspectPreset,
+  normalizeEpisodeStory,
+  normalizeShotSettings,
+  resolutionForAspect,
+  STUDIO_LIBRARY_ID,
+} from "@/domain/types";
 
 describe("repository invariants", () => {
   it("creates film projects by default and preserves an explicit series mode", async () => {
@@ -46,10 +53,37 @@ describe("repository invariants", () => {
 
     expect(film.mode).toBe("film");
     expect(series.mode).toBe("series");
+    expect(film.aspectPreset).toBe("16:9");
+    expect(resolutionForAspect(film.aspectPreset)).toEqual({ width: 1920, height: 1080 });
     expect(await db.episodes.where("projectId").equals(film.id).count()).toBe(1);
     expect(await db.episodes.where("projectId").equals(series.id).count()).toBe(1);
   });
 
+  it("stores an explicit aspect preset and cover, and clears cover media when unused", async () => {
+    const project = await createProject("output", "film", "9:16");
+    expect(project.aspectPreset).toBe("9:16");
+    expect(resolutionForAspect(project.aspectPreset)).toEqual({ width: 1080, height: 1920 });
+    expect(normalizeAspectPreset(undefined)).toBe("16:9");
+
+    const mediaId = "med_cover";
+    await putMedia({
+      id: mediaId,
+      projectId: project.id,
+      mimeType: "image/png",
+      filename: "cover.png",
+      blob: new Blob(["cover"]),
+    });
+    await patchProjectOutput(project.id, { coverMediaId: mediaId, aspectPreset: "1:1" });
+
+    const updated = await db.projects.get(project.id);
+    expect(updated?.aspectPreset).toBe("1:1");
+    expect(updated?.coverMediaId).toBe(mediaId);
+    expect(resolutionForAspect(updated!.aspectPreset)).toEqual({ width: 1080, height: 1080 });
+
+    await patchProjectOutput(project.id, { coverMediaId: null });
+    expect((await db.projects.get(project.id))?.coverMediaId).toBeUndefined();
+    expect(await db.media.get(mediaId)).toBeUndefined();
+  });
   it("persists the shot workspace view on the project", async () => {
     const project = await createProject("workspace");
     expect(project.shotSettings.workspaceView).toBe("design");
