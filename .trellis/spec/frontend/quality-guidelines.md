@@ -25,7 +25,7 @@ Vitest setup: `vitest.config.ts` aliases `@` → `src`; `tests/setup.ts` resets 
 
 ## Required Patterns
 
-- Durable mutations only through `src/db/repo.ts` (`add*` / `patch*` / `delete*` / `set*Slot` / reorder helpers).
+- Durable mutations only through repository modules `src/db/repo.ts` and `src/db/productionProposals.ts` (`add*` / `patch*` / `delete*` / `set*Slot` / reorder helpers).
 - Live reads with `useLiveQuery`; detail `get` queries use `?? null` (see hook-guidelines).
 - Shot picture / generation data through `parseShotPictureSlots` / `parseGenerationSlot` so legacy fields stay readable.
 - Filter, reorder, undo, draft, delivery, and shortcut-gating logic live in `src/lib/` and are shared — UI calls helpers, does not reimplement:

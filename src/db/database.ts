@@ -1,3 +1,4 @@
+import type { ProductionProposal } from "@/domain/production";
 import Dexie, { type Table } from "dexie";
 import type {
   Character,
@@ -17,6 +18,7 @@ import { parseShotPictureSlots } from "@/domain/slot";
 import { createId, nowIso } from "@/lib/ids";
 
 export class AifenjingDB extends Dexie {
+  productionProposals!: Table<ProductionProposal, string>;
   projects!: Table<Project, string>;
   characters!: Table<Character, string>;
   scenes!: Table<Scene, string>;
@@ -143,6 +145,7 @@ export class AifenjingDB extends Dexie {
         }
       }
     });
+    this.version(7).stores({ productionProposals: "id, projectId, episodeId, status, createdAt" });
   }
 }
 

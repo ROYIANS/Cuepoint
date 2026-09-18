@@ -1,3 +1,8 @@
+import { useState } from "react";
+import { toast } from "sonner";
+import { exportProductionHandoff } from "@/lib/productionHandoff";
+import { downloadBlob } from "@/lib/projectPackage";
+import { ProductionProposalsPanel } from "./ProductionProposalsPanel";
 import { useShotMedia } from "@/lib/useShotMedia";
 import { Link } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
@@ -26,6 +31,31 @@ export function ProducePage({
   projectId: string;
   episodeId: string;
 }) {
+  // Route parameter changes must not carry an earlier episode's query results,
+  // proposal targets, progress, or completion messages into the next episode.
+  return <ScopedProducePage key={`${projectId}:${episodeId}`} projectId={projectId} episodeId={episodeId} />;
+}
+
+function ScopedProducePage({
+  projectId,
+  episodeId,
+}: {
+  projectId: string;
+  episodeId: string;
+}) {
+  const [exportProgress, setExportProgress] = useState<number>();
+  const [exportError, setExportError] = useState("");
+  const [exportSummary, setExportSummary] = useState("");
+  async function exportHandoff() {
+    setExportProgress(0); setExportError(""); setExportSummary("");
+    try {
+      const result = await exportProductionHandoff(projectId, episodeId, setExportProgress);
+      downloadBlob(result.blob, result.filename);
+      setExportSummary(`已整理 ${result.shotCount} 个镜头，${result.missingCount} 个镜头有待确认项，详见包内 missing.md。`);
+      toast.success("素材交付包已生成");
+    } catch (error) { setExportError(error instanceof Error ? error.message : "导出失败，请重试"); }
+    finally { setExportProgress(undefined); }
+  }
   const project = useLiveQuery(
     async () => (await db.projects.get(projectId)) ?? null,
     [projectId],
@@ -101,6 +131,9 @@ export function ProducePage({
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
+            <Button disabled={exportProgress !== undefined || delivery.rows.length === 0} onClick={() => void exportHandoff()}>
+              <Download />{exportProgress !== undefined ? `正在整理 ${Math.round(exportProgress)}%` : "导出素材交付包"}
+            </Button>
             <Button variant="outline" onClick={() => downloadEpisodeDeliveryCsv(delivery)}>
               <Download />
               导出 CSV
@@ -118,6 +151,9 @@ export function ProducePage({
           </div>
         </div>
 
+        <p className="text-muted-foreground mt-3 text-xs leading-5">素材交付包包含逐镜头清单与首帧、尾帧、成片原文件，可交给剪辑继续制作。需要恢复整个项目时，请使用顶部「备份项目」。</p>
+        {exportSummary ? <p className="mt-2 text-xs" role="status">{exportSummary}</p> : null}
+        {exportError ? <p className="text-destructive mt-2 text-sm" role="alert">导出失败：{exportError}。可以重新点击导出重试。</p> : null}
         <dl className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4">
           <Stat label="镜头" value={String(delivery.rows.length)} />
           <Stat label="场次" value={String(delivery.beatCount)} />
@@ -197,6 +233,7 @@ export function ProducePage({
             )}
           </div>
         )}
+        <ProductionProposalsPanel key={`${projectId}:${episodeId}`} projectId={projectId} episodeId={episodeId} shots={shots.filter((shot) => shot.projectId === projectId && shot.episodeId === episodeId)} />
       </div>
     </div>
   );

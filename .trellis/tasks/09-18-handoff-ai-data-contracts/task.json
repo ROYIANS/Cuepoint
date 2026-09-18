@@ -3,7 +3,7 @@
   "name": "handoff-ai-data-contracts",
   "title": "Manual media handoff and safe AI data contracts",
   "description": "Third batch: shot-organized media delivery and typed context/target/revision/provenance contracts before connecting AI execution.",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": null,
@@ -21,6 +21,6 @@
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "",
+  "notes": "User approved both batch-three commits. All acceptance criteria, independent reviews and browser checks complete. Three-batch foundation scope is complete; actual AI execution remains the next phase.",
   "meta": {}
 }

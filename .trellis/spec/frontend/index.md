@@ -21,6 +21,7 @@
 | [Hook Guidelines](./hook-guidelines.md) | Dexie liveQuery loading vs missing | Filled |
 | [State Management](./state-management.md) | IndexedDB owner id, episodes, STUDIO_LIBRARY_ID | Filled |
 | [Asset / Output Foundation](./asset-output-foundation.md) | Optional metadata, prop/style relationships, media reuse and APIMart output profiles | Filled |
+| [Production Contracts](./production-contracts.md) | Handoff ZIP, scoped context, reviewed proposals and Dexie v7 | Filled |
 | [Delivery Export](./delivery-export.md) | Episode-scoped CSV and printable storyboard contracts | Filled |
 | [Quality Guidelines](./quality-guidelines.md) | tsc lint, Vitest lib/repo tests, forbidden patterns | Filled |
 | [Type Safety](./type-safety.md) | Domain types, normalizers, Zod package boundary | Filled |

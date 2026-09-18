@@ -50,9 +50,9 @@ import { collectSlotsMedia, emptySlot, SHOT_PICTURE_FIELDS, slotMediaIds } from 
 import { createId, nowIso } from "@/lib/ids";
 
 // Media recycling must hold the same lock as every committed slot/cover writer.
-const PRODUCTION_TABLES = [
+export const PRODUCTION_TABLES = [
   db.projects, db.episodes, db.characters, db.scenes,
-  db.props, db.styles, db.shots, db.media,
+  db.props, db.styles, db.shots, db.media, db.productionProposals,
 ];
 
 function pickPatch<T extends object>(patch: T, keys: readonly (keyof T)[]): Partial<T> {
@@ -270,8 +270,10 @@ export async function deleteProject(id: Id): Promise<void> {
       db.episodes,
       db.shots,
       db.media,
+      db.productionProposals,
     ],
     async () => {
+      await db.productionProposals.where("projectId").equals(id).delete();
       await db.characters.where("projectId").equals(id).delete();
       await db.scenes.where("projectId").equals(id).delete();
       await db.props.where("projectId").equals(id).delete();
@@ -580,7 +582,11 @@ export async function deleteMediaIfOrphan(mediaId: Id | undefined): Promise<void
     const record = await db.media.get(mediaId);
     if (!record) return;
     const used = await collectMediaIds();
-    if (!used.has(mediaId)) {
+    // Local proposal history retains both results so guarded undo remains possible.
+    const proposals = await db.productionProposals.where("projectId").equals(record.projectId).toArray();
+    const retained = proposals.some((proposal) => proposal.before.result?.mediaId === mediaId ||
+      (proposal.change.kind === "slot-result" && proposal.change.result.mediaId === mediaId));
+    if (!used.has(mediaId) && !retained) {
       await db.media.delete(mediaId);
     }
   });
