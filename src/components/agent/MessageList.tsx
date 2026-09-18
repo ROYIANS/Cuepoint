@@ -6,6 +6,7 @@ import type { ChatMessage } from "@/domain/types";
 import { LOGO_SRC, PRODUCT_NAME_EN, PRODUCT_NAME_ZH } from "@/lib/brand";
 import { isChatNearBottom, snapChatToBottom } from "@/lib/chatScroll";
 import { ThinkingMatrix } from "./ThinkingMatrix";
+import { ThinkingPanel } from "./ThinkingPanel";
 
 const MARKDOWN_PROPS = { variant: "chat" } as const;
 
@@ -95,10 +96,20 @@ const AgentChatMessageItem = memo(
     userMeta: { avatar: ReactNode; backgroundColor: string; title: string };
   }) {
     const isUser = message.role === "user";
-    const showThinking =
-      !isUser && message.status === "streaming" && !message.content;
+    const reasoningText = message.reasoning?.trim() ?? "";
+    const hasReasoning = reasoningText.length > 0;
+    const reasoningActive =
+      !isUser &&
+      message.status === "streaming" &&
+      hasReasoning &&
+      !message.content;
+    const showMatrix =
+      !isUser &&
+      message.status === "streaming" &&
+      !message.content &&
+      !hasReasoning;
     const showCopy = !isUser && Boolean(message.content) && message.status !== "streaming";
-    const text = showThinking
+    const text = showMatrix
       ? ""
       : message.content ||
         (message.status === "aborted" ? "（已停止）" : "");
@@ -114,11 +125,21 @@ const AgentChatMessageItem = memo(
         avatar={isUser ? userMeta : ASSISTANT_AVATAR}
         avatarProps={{ shape: isUser ? "circle" : "square" }}
         markdownProps={MARKDOWN_PROPS}
+        placeholderMessage=""
+        aboveMessage={
+          !isUser && hasReasoning ? (
+            <ThinkingPanel
+              reasoning={message.reasoning ?? ""}
+              active={reasoningActive}
+              durationMs={message.reasoningDurationMs}
+            />
+          ) : undefined
+        }
         actions={
           showCopy ? <CopyButton content={message.content} title="复制" size="small" /> : undefined
         }
         message={text}
-        renderMessage={showThinking ? renderThinkingMessage : undefined}
+        renderMessage={showMatrix ? renderThinkingMessage : undefined}
       />
     );
   },
@@ -128,5 +149,7 @@ const AgentChatMessageItem = memo(
     prev.message.content === next.message.content &&
     prev.message.status === next.message.status &&
     prev.message.role === next.message.role &&
-    prev.message.createdAt === next.message.createdAt,
+    prev.message.createdAt === next.message.createdAt &&
+    prev.message.reasoning === next.message.reasoning &&
+    prev.message.reasoningDurationMs === next.message.reasoningDurationMs,
 );

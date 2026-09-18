@@ -1,0 +1,5 @@
+{"file": ".trellis/spec/frontend/chat-performance.md", "reason": "memo/scroll rules while streaming reasoning"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "agent ThinkingPanel + matrix gate"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "tests for stream parse"}
+{"file": ".trellis/tasks/archive/2026-09/09-18-agent-chat/design.md", "reason": "prior chat architecture"}
+{"file": "src/lib/ai/chatStream.ts", "reason": "extend SSE parse for reasoning"}

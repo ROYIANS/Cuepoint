@@ -531,3 +531,61 @@
     transition: none;
   }
 }
+
+/* Reasoning / Thinking panel above assistant answer */
+.agent-chat-root .agent-thinking-panel {
+  width: 100%;
+  margin: 0 0 8px;
+}
+
+.agent-chat-root .agent-thinking-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  color: #aaaaaa;
+  cursor: pointer;
+  font: inherit;
+  text-align: start;
+}
+
+.agent-chat-root .agent-thinking-header:hover .agent-thinking-title {
+  color: #cccccc;
+}
+
+.agent-chat-root .agent-thinking-title {
+  color: #aaaaaa;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.agent-chat-root .agent-thinking-chevron {
+  flex: none;
+  opacity: 0.7;
+  transition: transform 160ms ease;
+}
+
+.agent-chat-root .agent-thinking-chevron--open {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agent-chat-root .agent-thinking-chevron {
+    transition: none;
+  }
+}
+
+.agent-chat-root .agent-thinking-content {
+  padding: 4px 0 8px;
+}
+
+.agent-chat-root .agent-thinking-body {
+  color: #aaaaaa;
+  font-size: 12px;
+  line-height: 1.55;
+  opacity: 0.92;
+}
+

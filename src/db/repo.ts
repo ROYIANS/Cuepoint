@@ -1430,7 +1430,7 @@ export async function appendChatMessage(input: {
 
 export async function updateChatMessage(
   id: Id,
-  patch: Partial<Pick<ChatMessage, "content" | "status">>,
+  patch: Partial<Pick<ChatMessage, "content" | "status" | "reasoning" | "reasoningDurationMs">>,
 ): Promise<void> {
   const existing = await db.chatMessages.get(id);
   if (!existing) return;

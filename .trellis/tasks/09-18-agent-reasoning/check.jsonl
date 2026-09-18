@@ -1,0 +1,5 @@
+{"file": ".trellis/spec/frontend/chat-performance.md", "reason": "history memo includes reasoning fields"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "ThinkingPanel collapse contract"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "lint/test gates"}
+{"file": "tests/chatStream.test.ts", "reason": "reasoning vs content SSE fixtures"}
+{"file": ".trellis/tasks/09-18-agent-reasoning/prd.md", "reason": "acceptance: LobeHub collapse timing"}

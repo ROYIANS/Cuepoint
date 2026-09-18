@@ -492,4 +492,8 @@ export interface ChatMessage {
   content: string;
   createdAt: string;
   status?: ChatMessageStatus;
+  /** Model chain-of-thought / reasoning text (not re-sent on follow-ups). */
+  reasoning?: string;
+  /** Wall time from first reasoning delta to first answer content delta. */
+  reasoningDurationMs?: number;
 }

@@ -41,6 +41,9 @@ import {
 } from "@/db/repo";
 import type { ChatThread, Id } from "@/domain/types";
 import {
+  accumulateStreamDelta,
+  createReasoningAccum,
+  finalizeReasoningAccum,
   streamChatCompletions,
   type ChatCompletionMessage,
 } from "@/lib/ai/chatStream";
@@ -311,7 +314,18 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
 
     const controller = new AbortController();
     abortRef.current = controller;
-    let assembled = "";
+    let accum = createReasoningAccum();
+
+    const persistStreaming = (next: typeof accum) => {
+      void updateChatMessage(assistantMessage.id, {
+        content: next.content,
+        status: "streaming",
+        ...(next.reasoning ? { reasoning: next.reasoning } : {}),
+        ...(next.reasoningDurationMs != null
+          ? { reasoningDurationMs: next.reasoningDurationMs }
+          : {}),
+      });
+    };
 
     try {
       const result = await streamChatCompletions(
@@ -323,31 +337,47 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
         },
         {
           signal: controller.signal,
+          onReasoning: (piece) => {
+            accum = accumulateStreamDelta(accum, { reasoning: piece }, Date.now());
+            persistStreaming(accum);
+          },
           onDelta: (piece) => {
-            assembled += piece;
-            void updateChatMessage(assistantMessage.id, {
-              content: assembled,
-              status: "streaming",
-            });
+            accum = accumulateStreamDelta(accum, { content: piece }, Date.now());
+            persistStreaming(accum);
           },
         },
       );
 
+      accum = finalizeReasoningAccum(accum, Date.now());
+      const reasoningPatch = {
+        ...(accum.reasoning ? { reasoning: accum.reasoning } : {}),
+        ...(accum.reasoningDurationMs != null
+          ? { reasoningDurationMs: accum.reasoningDurationMs }
+          : {}),
+      };
+
       if (result.ok) {
-        const finalContent = result.content || assembled;
+        const finalContent = result.content || accum.content;
+        const finalReasoning = result.reasoning || accum.reasoning;
         await updateChatMessage(assistantMessage.id, {
           content: finalContent,
           status: "complete",
+          ...(finalReasoning ? { reasoning: finalReasoning } : {}),
+          ...(accum.reasoningDurationMs != null
+            ? { reasoningDurationMs: accum.reasoningDurationMs }
+            : {}),
         });
       } else if (result.aborted) {
         await updateChatMessage(assistantMessage.id, {
-          content: assembled || "（已停止）",
+          content: accum.content || "（已停止）",
           status: "aborted",
+          ...reasoningPatch,
         });
       } else {
         await updateChatMessage(assistantMessage.id, {
-          content: assembled || result.message,
+          content: accum.content || result.message,
           status: "error",
+          ...reasoningPatch,
         });
         toast.error(result.message);
       }
