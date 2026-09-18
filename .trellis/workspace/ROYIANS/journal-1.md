@@ -484,3 +484,24 @@ Completed tools and permissions, Responses and reasoning support, home/detail co
 ### Next Steps
 
 - Continue Unified chat and task workspace (third child); Agent core parent remains open.
+
+
+## Session 22: Complete unified Agent task workspace and foundation round
+
+**Date**: 2026-09-19
+**Task**: Complete unified Agent task workspace and foundation round
+**Branch**: `main`
+
+### Summary
+
+Implemented durable shared task/chat identity, manual goals and checklists, task board and inspector, atomic tool-plan synchronization, result references, explicit completion/archive/reopen, and empty composer status fix. Verified 558 tests, typecheck/build, and isolated desktop/mobile browser flows with fixture providers. Archived task workspace and completed core foundation parent. Preserved Trellis goal-plan-execute-verify-summarize-archive-memory direction in docs/agent-workflow-direction.md; summary extraction and long-term memory remain deferred.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `a62bd36` | (see git log) |
+
+### Status
+
+[OK] **Completed**
