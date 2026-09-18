@@ -448,3 +448,39 @@ Created Agent core parent and three sequential children. Implemented durable Age
 ### Status
 
 [OK] **Completed**
+
+
+## Session 21: Complete Agent batch 2, full Model Bank and licensing
+
+**Date**: 2026-09-19
+**Task**: Complete Agent batch 2, full Model Bank and licensing
+**Branch**: `main`
+
+### Summary
+
+Completed tools and permissions, Responses and reasoning support, home/detail composer and context UI, full byte-verified LobeHub Model Bank; added original-code MIT license, third-party notices and acknowledgments; archived batch 2.
+
+### Main Changes
+
+- Durable tool calls and approvals; per-thread reasoning and interaction modes; Responses continuation.
+- Full LobeHub snapshot: 197 unchanged files, 85 catalogs, 1855 model records; manual synchronization and provenance.
+- MIT license for original code, preserved vendor licensing, README acknowledgments with verified official links.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `3c76a36` | (see git log) |
+
+### Testing
+
+- [OK] 548 tests across 44 files passed; typecheck and production build passed; existing large-bundle warning remains.
+- [OK] Full source hashes and generated model data match local upstream; composer browser checks recorded in archived verification.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Continue Unified chat and task workspace (third child); Agent core parent remains open.
