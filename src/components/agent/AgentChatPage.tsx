@@ -33,20 +33,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { db } from "@/db/database";
 import {
-  appendChatMessage,
   createChatThread,
   deleteChatThread,
-  updateChatMessage,
   updateChatThread,
 } from "@/db/repo";
 import type { ChatThread, Id } from "@/domain/types";
-import {
-  accumulateStreamDelta,
-  createReasoningAccum,
-  finalizeReasoningAccum,
-  streamChatCompletions,
-  type ChatCompletionMessage,
-} from "@/lib/ai/chatStream";
+import { assertRetryConnector, beginAgentRun, canRetryRun } from "@/db/agentRuns";
+import { executeChatRun } from "@/lib/agent/runChat";
+import { recoverAbandonedRuns, withThreadRunLock } from "@/lib/agent/runOwnership";
+import { deriveChatTitle } from "@/lib/chatTitle";
 import { discoverConnectorChatModels, runWithCompatibleChatModel } from "@/lib/ai/connectors";
 import {
   buildChatModelOptions,
@@ -55,12 +50,6 @@ import {
   sameChatModelConnector,
   type ChatModelCatalog,
 } from "@/lib/ai/chatModelPolicy";
-
-function deriveTitle(content: string): string {
-  const trimmed = content.trim().replace(/\s+/g, " ");
-  if (!trimmed) return "新话题";
-  return trimmed.length > 24 ? `${trimmed.slice(0, 24)}…` : trimmed;
-}
 
 export function AgentChatPage({ threadId }: { threadId?: Id }) {
   return <AgentChatInner threadId={threadId} />;
@@ -81,10 +70,17 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
   const [renameValue, setRenameValue] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<ChatThread>();
   const abortRef = useRef<AbortController | null>(null);
+  const executionThreadRef = useRef<Id | undefined>(undefined);
   const sendLockRef = useRef(false);
   const selectionRevisionRef = useRef(0);
 
   useEffect(() => () => abortRef.current?.abort(), []);
+
+  useEffect(() => {
+    // Covers browser back/forward as well as links. New-thread sends assign their
+    // destination before navigating, so that navigation does not cancel itself.
+    if (executionThreadRef.current !== activeThreadId) abortRef.current?.abort();
+  }, [activeThreadId]);
 
   const loaded = threads !== undefined && connectors !== undefined;
   const threadList = threads ?? [];
@@ -92,6 +88,7 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
 
   const openThread = useCallback(
     (id: Id) => {
+      if (executionThreadRef.current !== id) abortRef.current?.abort();
       void navigate({ to: "/agent/$threadId", params: { threadId: id } });
     },
     [navigate],
@@ -139,6 +136,20 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
     },
     [activeThreadId],
   );
+
+  const runs = useLiveQuery(async () => {
+    if (!activeThreadId) return [];
+    return db.agentRuns.where("threadId").equals(activeThreadId).sortBy("createdAt");
+  }, [activeThreadId]);
+
+  useEffect(() => {
+    const recover = () => void recoverAbandonedRuns().catch((error: unknown) => {
+      toast.error(error instanceof Error ? error.message : "恢复执行状态失败");
+    });
+    recover();
+    window.addEventListener("focus", recover);
+    return () => window.removeEventListener("focus", recover);
+  }, []);
 
   useEffect(() => {
     if (!loaded) return;
@@ -196,8 +207,6 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
   const handleNewTopic = useCallback(() => {
     if (abortRef.current) {
       abortRef.current.abort();
-      abortRef.current = null;
-      setSending(false);
     }
     setDraft("");
     void (async () => {
@@ -228,10 +237,8 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
 
   const commitDelete = useCallback(async () => {
     if (!deleteTarget) return;
-    if (abortRef.current && activeThreadId === deleteTarget.id) {
+    if (abortRef.current && executionThreadRef.current === deleteTarget.id) {
       abortRef.current.abort();
-      abortRef.current = null;
-      setSending(false);
     }
     await deleteChatThread(deleteTarget.id);
     if (activeThreadId === deleteTarget.id) {
@@ -282,115 +289,25 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
     const controller = new AbortController();
     sendLockRef.current = true;
     abortRef.current = controller;
+    executionThreadRef.current = activeThreadId;
     setSending(true);
     try {
       const checked = await runWithCompatibleChatModel(connector, model, async () => {
         let thread = activeThread;
         if (!thread) {
-          thread = await createChatThread({ connectorId: connector.id, model, title: deriveTitle(content) });
+          thread = await createChatThread({ connectorId: connector.id, model, title: deriveChatTitle(content) });
+          if (controller.signal.aborted) return;
+          executionThreadRef.current = thread.id;
           await navigate({ to: "/agent/$threadId", params: { threadId: thread.id } });
         }
-        if (!thread.connectorId || thread.connectorId !== connector.id) {
-          await updateChatThread(thread.id, { connectorId: connector.id });
-        }
-        if (!thread.model || thread.model !== model) {
-          await updateChatThread(thread.id, { model });
-        }
-        if (thread.title === "新对话" || thread.title === "新话题") {
-          await updateChatThread(thread.id, { title: deriveTitle(content) });
-        }
-
-        const history = (messages ?? []).filter(
-          (m) => m.role === "user" || m.role === "assistant" || m.role === "system",
-        );
-        const userMessage = await appendChatMessage({
-          threadId: thread.id,
-          role: "user",
-          content,
-          status: "complete",
-        });
-        const assistantMessage = await appendChatMessage({
-          threadId: thread.id,
-          role: "assistant",
-          content: "",
-          status: "streaming",
+        const targetThread = thread;
+        await withThreadRunLock(targetThread.id, async () => {
+          if (controller.signal.aborted) return;
+          const run = await beginAgentRun({ threadId: targetThread.id, connector, model, content });
+          setDraft((current) => current === draft ? "" : current);
+          await executeChatRun(run, connector.apiKey, controller);
         });
 
-        const payload: ChatCompletionMessage[] = [
-          ...history.map((m) => ({
-            role: m.role as ChatCompletionMessage["role"],
-            content: m.content,
-          })),
-          { role: "user", content: userMessage.content },
-        ];
-
-        setDraft((current) => current === draft ? "" : current);
-        let accum = createReasoningAccum();
-
-        const persistStreaming = (next: typeof accum) => {
-          void updateChatMessage(assistantMessage.id, {
-            content: next.content,
-            status: "streaming",
-            ...(next.reasoning ? { reasoning: next.reasoning } : {}),
-            ...(next.reasoningDurationMs != null
-              ? { reasoningDurationMs: next.reasoningDurationMs }
-              : {}),
-          });
-        };
-
-        const result = await streamChatCompletions(
-          {
-            baseUrl: connector.baseUrl,
-            apiKey: connector.apiKey,
-            model,
-            messages: payload,
-          },
-          {
-            signal: controller.signal,
-            onReasoning: (piece) => {
-              accum = accumulateStreamDelta(accum, { reasoning: piece }, Date.now());
-              persistStreaming(accum);
-            },
-            onDelta: (piece) => {
-              accum = accumulateStreamDelta(accum, { content: piece }, Date.now());
-              persistStreaming(accum);
-            },
-          },
-        );
-
-        accum = finalizeReasoningAccum(accum, Date.now());
-        const reasoningPatch = {
-          ...(accum.reasoning ? { reasoning: accum.reasoning } : {}),
-          ...(accum.reasoningDurationMs != null
-            ? { reasoningDurationMs: accum.reasoningDurationMs }
-            : {}),
-        };
-
-        if (result.ok) {
-          const finalContent = result.content || accum.content;
-          const finalReasoning = result.reasoning || accum.reasoning;
-          await updateChatMessage(assistantMessage.id, {
-            content: finalContent,
-            status: "complete",
-            ...(finalReasoning ? { reasoning: finalReasoning } : {}),
-            ...(accum.reasoningDurationMs != null
-              ? { reasoningDurationMs: accum.reasoningDurationMs }
-              : {}),
-          });
-        } else if (result.aborted) {
-          await updateChatMessage(assistantMessage.id, {
-            content: accum.content || "（已停止）",
-            status: "aborted",
-            ...reasoningPatch,
-          });
-        } else {
-          await updateChatMessage(assistantMessage.id, {
-            content: accum.content || result.message,
-            status: "error",
-            ...reasoningPatch,
-          });
-          toast.error(result.message);
-        }
       }, {
         signal: controller.signal,
         isCurrent: () => selectionRevisionRef.current === selectionRevision &&
@@ -398,8 +315,8 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
           selectionRef.current.model === model && selectionRef.current.threadId === activeThreadId,
       });
       if (!checked.ok && !checked.aborted) toast.error(checked.message);
-    } catch {
-      toast.error("发送失败，请重试");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "发送失败，请重试");
     } finally {
       sendLockRef.current = false;
       if (abortRef.current === controller) {
@@ -407,7 +324,44 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
         setSending(false);
       }
     }
-  }, [navigate, draft, activeThread, activeThreadId, selectedConnector, modelValue, messages]);
+  }, [navigate, draft, activeThread, activeThreadId, selectedConnector, modelValue]);
+
+  const handleRetry = useCallback(async (runId: string) => {
+    if (sendLockRef.current) return;
+    const controller = new AbortController();
+    sendLockRef.current = true;
+    abortRef.current = controller;
+    executionThreadRef.current = activeThreadId;
+    setSending(true);
+    try {
+      const previous = await db.agentRuns.get(runId);
+      if (!previous || previous.threadId !== activeThreadId) throw new Error("执行不存在");
+      const connector = await db.connectors.get(previous.connector.id);
+      if (!connector) throw new Error("原连接已删除，请重新配置后发送新消息");
+      assertRetryConnector(previous, connector);
+      const checked = await runWithCompatibleChatModel(connector, previous.model, () =>
+        withThreadRunLock(previous.threadId, async () => {
+          if (controller.signal.aborted) return;
+          const run = await beginAgentRun({ threadId: previous.threadId, connector, model: previous.model, retryOfRunId: previous.id });
+          await executeChatRun(run, connector.apiKey, controller);
+        }), {
+        signal: controller.signal,
+        isCurrent: () => selectionRef.current.threadId === previous.threadId,
+      });
+      if (!checked.ok && !checked.aborted) toast.error(checked.message);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "重新生成失败");
+    } finally {
+      sendLockRef.current = false;
+      if (abortRef.current === controller) { abortRef.current = null; setSending(false); }
+    }
+  }, [activeThreadId]);
+
+  const retryableRunId = useMemo(() => {
+    const latest = runs?.at(-1);
+    return latest && canRetryRun(latest, runs ?? [], messages ?? []) ? latest.id : undefined;
+  }, [runs, messages]);
+  const onRetryRun = useCallback((id: string) => { void handleRetry(id); }, [handleRetry]);
 
   const selectModelOptions = useMemo(() => buildChatModelOptions(
     catalogMatches ? modelCatalog?.models ?? [] : [], modelValue, "", modelPolicy,
@@ -486,7 +440,10 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
           threads={threadList}
           activeThreadId={activeThreadId}
           activeThread={activeThread}
-          messages={messages}
+          messages={messages?.filter((message) => message.threadId === activeThreadId)}
+          runs={runs?.filter((run) => run.threadId === activeThreadId)}
+          retryableRunId={sending ? undefined : retryableRunId}
+          onRetryRun={onRetryRun}
           composer={composerProps}
           onSelectThread={openThread}
           onNewTopic={handleNewTopic}

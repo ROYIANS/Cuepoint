@@ -1,3 +1,4 @@
+import type { AgentRun } from "@/domain/agent";
 import { ActionIcon, Flexbox } from "@lobehub/ui";
 import { ChatHeader, ChatHeaderTitle } from "@lobehub/ui/chat";
 import { Dropdown } from "antd";
@@ -58,6 +59,9 @@ export function ChatWorkspace({
   activeThreadId,
   activeThread,
   messages,
+  runs,
+  retryableRunId,
+  onRetryRun,
   composer,
   onSelectThread,
   onNewTopic,
@@ -68,6 +72,9 @@ export function ChatWorkspace({
   activeThreadId?: Id;
   activeThread?: ChatThread;
   messages: ChatMessage[] | undefined;
+  runs?: AgentRun[];
+  retryableRunId?: string;
+  onRetryRun: (id: string) => void;
   composer: ComposerProps;
   onSelectThread: (id: Id) => void;
   onNewTopic: () => void;
@@ -213,7 +220,7 @@ export function ChatWorkspace({
             </Flexbox>
           }
         />
-        <MessageList messages={messages} />
+        <MessageList messages={messages} runs={runs} retryableRunId={retryableRunId} onRetryRun={onRetryRun} />
         <div className="agent-composer-dock">
           <div className="agent-content">
             <FloatingComposer {...composer} />

@@ -1,3 +1,4 @@
+import type { AgentConfig, AgentRun } from "@/domain/agent";
 import type { ProductionProposal } from "@/domain/production";
 import Dexie, { type Table } from "dexie";
 import type {
@@ -18,6 +19,8 @@ import { parseShotPictureSlots } from "@/domain/slot";
 import { createId, nowIso } from "@/lib/ids";
 
 export class AifenjingDB extends Dexie {
+  agents!: Table<AgentConfig, string>;
+  agentRuns!: Table<AgentRun, string>;
   productionProposals!: Table<ProductionProposal, string>;
   projects!: Table<Project, string>;
   characters!: Table<Character, string>;
@@ -146,6 +149,17 @@ export class AifenjingDB extends Dexie {
       }
     });
     this.version(7).stores({ productionProposals: "id, projectId, episodeId, status, createdAt" });
+    this.version(8).stores({
+      agents: "id",
+      agentRuns: "id, threadId, status, createdAt",
+    }).upgrade(async (tx) => {
+      await tx.table<ChatMessage>("chatMessages").filter((message) =>
+        message.status === "streaming" || message.status === "pending",
+      ).modify((message) => {
+        message.status = "interrupted";
+        message.error = "上次生成已中断，已保留收到的内容。可重新发送问题。";
+      });
+    });
   }
 }
 

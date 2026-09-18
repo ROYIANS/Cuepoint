@@ -1,3 +1,5 @@
+import type { AgentRun } from "@/domain/agent";
+import { Button } from "@/components/ui/button";
 import { CopyButton, Text } from "@lobehub/ui";
 import { ChatItem } from "@lobehub/ui/chat";
 import Avatar from "boring-avatars";
@@ -26,7 +28,12 @@ const ASSISTANT_AVATAR = {
  * Stick with `scrollTop` on this element (not `scrollIntoView` smooth).
  * History rows are memoized so Dexie liveQuery ticks only paint the streaming item.
  */
-export function MessageList({ messages }: { messages: ChatMessage[] | undefined }) {
+export function MessageList({ messages, runs, retryableRunId, onRetryRun }: {
+  messages: ChatMessage[] | undefined;
+  runs?: AgentRun[];
+  retryableRunId?: string;
+  onRetryRun: (id: string) => void;
+}) {
   const listRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
   const stickToBottom = useRef(true);
@@ -78,7 +85,9 @@ export function MessageList({ messages }: { messages: ChatMessage[] | undefined 
           list.map((message) => {
             if (message.role === "system") return null;
             return (
-              <AgentChatMessageItem key={message.id} message={message} userMeta={userMeta} />
+              <AgentChatMessageItem key={message.id} message={message} userMeta={userMeta}
+                runLabel={runs?.find((run) => run.id === message.runId)?.model}
+                retryable={Boolean(message.runId && message.runId === retryableRunId)} onRetryRun={onRetryRun} />
             );
           })
         )}
@@ -91,8 +100,14 @@ const AgentChatMessageItem = memo(
   function AgentChatMessageItem({
     message,
     userMeta,
+    runLabel,
+    retryable,
+    onRetryRun,
   }: {
     message: ChatMessage;
+    runLabel?: string;
+    retryable: boolean;
+    onRetryRun: (id: string) => void;
     userMeta: { avatar: ReactNode; backgroundColor: string; title: string };
   }) {
     const isUser = message.role === "user";
@@ -114,7 +129,9 @@ const AgentChatMessageItem = memo(
       : message.content ||
         (message.status === "aborted" ? "（已停止）" : "");
 
+    const statusLabel = message.status === "error" ? "生成失败" : message.status === "interrupted" ? "生成中断" : message.status === "aborted" ? "已停止" : undefined;
     return (
+      <div>
       <ChatItem
         placement={isUser ? "right" : "left"}
         primary={isUser}
@@ -141,10 +158,25 @@ const AgentChatMessageItem = memo(
         message={text}
         renderMessage={showMatrix ? renderThinkingMessage : undefined}
       />
+      {!isUser && (statusLabel || runLabel) && (
+        <div className="mb-5 ml-14 flex flex-col items-start gap-2 text-xs text-muted-foreground">
+          {runLabel && <span>模型：{runLabel}</span>}
+          {statusLabel && <div role="status">{statusLabel} · {message.error || "已保留收到的内容"}</div>}
+          {retryable && message.runId && (
+            <Button size="sm" variant="outline" onClick={() => onRetryRun(message.runId!)}>重新生成</Button>
+          )}
+        </div>
+      )}
+      </div>
     );
   },
   (prev, next) =>
     prev.userMeta === next.userMeta &&
+    prev.runLabel === next.runLabel &&
+    prev.retryable === next.retryable &&
+    prev.onRetryRun === next.onRetryRun &&
+    prev.message.error === next.message.error &&
+    prev.message.runId === next.message.runId &&
     prev.message.id === next.message.id &&
     prev.message.content === next.message.content &&
     prev.message.status === next.message.status &&

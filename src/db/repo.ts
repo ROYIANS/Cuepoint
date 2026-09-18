@@ -1571,6 +1571,7 @@ export async function updateChatThread(
   id: Id,
   patch: Partial<Pick<ChatThread, "title" | "connectorId" | "model">>,
 ): Promise<void> {
+  await db.transaction("rw", db.chatThreads, async () => {
   const existing = await db.chatThreads.get(id);
   if (!existing) return;
   const next: ChatThread = {
@@ -1589,10 +1590,12 @@ export async function updateChatThread(
     next.model = model || undefined;
   }
   await db.chatThreads.put(next);
+  });
 }
 
 export async function deleteChatThread(id: Id): Promise<void> {
-  await db.transaction("rw", db.chatThreads, db.chatMessages, async () => {
+  await db.transaction("rw", db.chatThreads, db.chatMessages, db.agentRuns, async () => {
+    await db.agentRuns.where("threadId").equals(id).delete();
     await db.chatMessages.where("threadId").equals(id).delete();
     await db.chatThreads.delete(id);
   });
@@ -1630,10 +1633,9 @@ export async function updateChatMessage(
   id: Id,
   patch: Partial<Pick<ChatMessage, "content" | "status" | "reasoning" | "reasoningDurationMs">>,
 ): Promise<void> {
-  const existing = await db.chatMessages.get(id);
-  if (!existing) return;
-  await db.chatMessages.put({
-    ...existing,
-    ...patch,
+  await db.transaction("rw", db.chatMessages, async () => {
+    const existing = await db.chatMessages.get(id);
+    if (!existing || existing.runId) return;
+    await db.chatMessages.update(id, patch);
   });
 }

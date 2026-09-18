@@ -30,8 +30,8 @@ export type StreamChatHandlers = {
 };
 
 export type StreamChatResult =
-  | { ok: true; content: string; reasoning: string; via: "stream" | "json" }
-  | { ok: false; message: string; aborted?: boolean };
+  | { ok: true; content: string; reasoning: string; via: "stream" | "json"; finishReason?: string }
+  | { ok: false; message: string; aborted?: boolean; finishReason?: string };
 
 /**
  * Accumulate reasoning/content deltas and close reasoning on first answer token
@@ -132,19 +132,7 @@ export function parseSseDataPayload(data: string): StreamDelta | null {
   const trimmed = data.trim();
   if (!trimmed || trimmed === "[DONE]") return null;
   try {
-    const json = JSON.parse(trimmed) as {
-      choices?: Array<{
-        delta?: { content?: unknown; reasoning_content?: unknown; reasoning?: unknown };
-        message?: { content?: unknown; reasoning_content?: unknown; reasoning?: unknown };
-      }>;
-    };
-    const choice = json.choices?.[0];
-    const delta = choice?.delta;
-    const message = choice?.message;
-
-    const content = pickContentText(delta) ?? pickContentText(message);
-    const reasoning = pickReasoningText(delta) ?? pickReasoningText(message);
-
+    const { content, reasoning } = decodeCompletion(JSON.parse(trimmed), true).delta;
     if (!content && !reasoning) return null;
     const out: StreamDelta = {};
     if (content) out.content = content;
@@ -180,55 +168,70 @@ function formatHttpError(status: number, body: string): string {
   return trimmed ? `请求失败（${status}）：${trimmed}` : `请求失败（${status}）`;
 }
 
-function extractJsonCompletion(data: unknown): { content: string; reasoning: string } {
-  const record = data as {
-    choices?: Array<{
-      message?: {
-        content?: unknown;
-        reasoning_content?: unknown;
-        reasoning?: unknown;
-      };
-    }>;
-  } | null;
-  const message = record?.choices?.[0]?.message;
-  const content = pickContentText(message) ?? "";
-  const reasoning = pickReasoningText(message) ?? "";
-  return { content, reasoning };
+function record(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-function emitCompletion(
-  handlers: StreamChatHandlers,
+function redactError(message: string, apiKey: string): string {
+  // Redact before truncating, including provider errors that echo authorization.
+  return message.split(apiKey).join("[已隐藏]")
+    .replace(/Bearer\s+[^\s"',;]+/gi, "Bearer [已隐藏]").slice(0, 300);
+}
+
+function decodeCompletion(data: unknown, stream: boolean): {
+  delta: StreamDelta;
+  finishReason?: string;
+} {
+  if (!record(data)) throw new Error("模型返回了无效的响应格式");
+  if (data.error != null) {
+    const error = data.error;
+    throw new Error(record(error) && typeof error.message === "string"
+      ? error.message : typeof error === "string" ? error : "模型服务返回错误");
+  }
+  if (!Array.isArray(data.choices)) throw new Error("模型响应缺少 choices");
+  if (stream && data.choices.length === 0 && record(data.usage)) return { delta: {} };
+  const choice = data.choices[0];
+  if (!record(choice)) throw new Error("模型响应缺少有效的回复");
+  const source = stream ? (choice.delta ?? choice.message) : choice.message;
+  if (!record(source)) throw new Error("模型回复格式无效");
+  for (const name of ["content", "reasoning_content", "reasoning"]) {
+    if (source[name] != null && typeof source[name] !== "string") {
+      throw new Error("当前聊天仅支持文本回复");
+    }
+  }
+  if ((Array.isArray(source.tool_calls) && source.tool_calls.length > 0) || source.function_call != null) {
+    throw new Error("模型请求了工具调用，当前执行尚未启用工具能力");
+  }
+  const finishReason = choice.finish_reason;
+  if (finishReason != null && (typeof finishReason !== "string" || !finishReason)) {
+    throw new Error("模型返回了无效的结束状态");
+  }
+  return {
+    delta: {
+      ...(pickContentText(source) ? { content: pickContentText(source) } : {}),
+      ...(pickReasoningText(source) ? { reasoning: pickReasoningText(source) } : {}),
+    },
+    ...(typeof finishReason === "string" ? { finishReason } : {}),
+  };
+}
+
+function completionResult(
   content: string,
   reasoning: string,
-): void {
-  if (reasoning) handlers.onReasoning?.(reasoning);
-  if (content) handlers.onDelta?.(content);
-}
-
-async function chatCompletionsJson(
-  input: StreamChatInput,
-  signal: AbortSignal | undefined,
-  fetchImpl: typeof fetch,
-  handlers: StreamChatHandlers = {},
-): Promise<StreamChatResult> {
-  const res = await fetchImpl(chatCompletionsUrl(input.baseUrl), {
-    method: "POST",
-    headers: authHeaders(input.apiKey),
-    signal,
-    body: JSON.stringify({
-      model: input.model.trim(),
-      messages: input.messages,
-      stream: false,
-    }),
-  });
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    return { ok: false, message: formatHttpError(res.status, text) };
+  via: "stream" | "json",
+  finishReason?: string,
+): StreamChatResult {
+  const metadata = finishReason ? { finishReason } : {};
+  if (finishReason && finishReason !== "stop") {
+    const message = finishReason === "length" ? "回复达到模型长度上限，内容未完成"
+      : finishReason === "content_filter" ? "回复被模型内容过滤中断"
+        : finishReason === "tool_calls" || finishReason === "function_call"
+          ? "模型请求了工具调用，当前执行尚未启用工具能力"
+          : "模型返回了未支持的结束状态";
+    return { ok: false, message, ...metadata };
   }
-  const data = await res.json().catch(() => null);
-  const { content, reasoning } = extractJsonCompletion(data);
-  emitCompletion(handlers, content, reasoning);
-  return { ok: true, content, reasoning, via: "json" };
+  if (!content.trim()) return { ok: false, message: "模型未返回有效的回答内容", ...metadata };
+  return { ok: true, content, reasoning, via, ...metadata };
 }
 
 function applyDeltaHandlers(
@@ -236,20 +239,19 @@ function applyDeltaHandlers(
   delta: StreamDelta,
   acc: { content: string; reasoning: string },
 ): void {
+  handlers.signal?.throwIfAborted();
   if (delta.reasoning) {
     acc.reasoning += delta.reasoning;
     handlers.onReasoning?.(delta.reasoning);
   }
+  handlers.signal?.throwIfAborted();
   if (delta.content) {
     acc.content += delta.content;
     handlers.onDelta?.(delta.content);
   }
 }
 
-/**
- * Stream OpenAI-compatible chat/completions. Falls back to non-stream JSON
- * when the server rejects streaming or returns a non-SSE body.
- */
+/** One POST per attempt. A JSON response to that same request is supported. */
 export async function streamChatCompletions(
   input: StreamChatInput,
   handlers: StreamChatHandlers = {},
@@ -266,79 +268,117 @@ export async function streamChatCompletions(
   const signal = handlers.signal;
 
   try {
+    signal?.throwIfAborted();
     const res = await fetchImpl(chatCompletionsUrl(base), {
       method: "POST",
       headers: authHeaders(apiKey),
       signal,
-      body: JSON.stringify({
-        model,
-        messages: input.messages,
-        stream: true,
-      }),
+      body: JSON.stringify({ model, messages: input.messages, stream: true }),
     });
-
+    signal?.throwIfAborted();
     if (!res.ok) {
-      // Some proxies reject stream=true — retry once without streaming.
-      if (res.status === 400 || res.status === 422 || res.status === 404 || res.status === 405) {
-        return chatCompletionsJson(
-          { ...input, baseUrl: base, apiKey, model },
-          signal,
-          fetchImpl,
-          handlers,
-        );
-      }
-      const text = await res.text().catch(() => "");
-      return { ok: false, message: formatHttpError(res.status, text) };
+      const body = await res.text().catch(() => "");
+      signal?.throwIfAborted();
+      return { ok: false, message: formatHttpError(res.status, redactError(body, apiKey)) };
     }
 
     const contentType = res.headers.get("content-type") ?? "";
-    if (!res.body || !contentType.includes("text/event-stream")) {
-      // Non-SSE success body — parse as JSON completion.
-      const data = await res.json().catch(() => null);
-      if (data) {
-        const { content, reasoning } = extractJsonCompletion(data);
-        emitCompletion(handlers, content, reasoning);
-        return { ok: true, content, reasoning, via: "json" };
-      }
-      return chatCompletionsJson(
-        { ...input, baseUrl: base, apiKey, model },
-        signal,
-        fetchImpl,
-        handlers,
-      );
+    if (!contentType.toLowerCase().includes("text/event-stream")) {
+      const data: unknown = await res.json().catch(() => null);
+      signal?.throwIfAborted();
+      const { delta, finishReason } = decodeCompletion(data, false);
+      const acc = { content: "", reasoning: "" };
+      applyDeltaHandlers(handlers, delta, acc);
+      signal?.throwIfAborted();
+      return completionResult(acc.content, acc.reasoning, "json", finishReason ? redactError(finishReason, apiKey) : undefined);
     }
+    if (!res.body) throw new Error("模型返回了空的响应流");
 
     const reader = res.body.getReader();
-    const decoder = new TextDecoder();
+    const decoder = new TextDecoder("utf-8", { fatal: true });
     let buffer = "";
+    let eventData: string[] = [];
+    let eventType = "";
+    let completed = false;
+    let finishReason: string | undefined;
     const acc = { content: "", reasoning: "" };
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      buffer += decoder.decode(value, { stream: true });
-      const { chunks, rest } = consumeSseBuffer(buffer);
-      buffer = rest;
-      for (const chunk of chunks) {
-        applyDeltaHandlers(handlers, chunk, acc);
+    const dispatchEvent = () => {
+      if (eventData.length === 0 && eventType !== "error") { eventType = ""; return; }
+      const data = eventData.join("\n");
+      eventData = [];
+      const type = eventType;
+      eventType = "";
+      if (type === "error") {
+        let detail = data;
+        try {
+          const value: unknown = JSON.parse(data);
+          if (record(value)) {
+            const error = record(value.error) ? value.error : value;
+            if (typeof error.message === "string") detail = error.message;
+          }
+        } catch { /* Some providers use plain-text error events. */ }
+        throw new Error(detail || "模型服务返回错误");
       }
-    }
-
-    if (buffer.trim()) {
-      const { chunks } = consumeSseBuffer(`${buffer}\n`);
-      for (const chunk of chunks) {
-        applyDeltaHandlers(handlers, chunk, acc);
+      if (data.trim() === "[DONE]") { completed = true; return; }
+      let value: unknown;
+      try { value = JSON.parse(data); } catch { throw new Error("模型返回了无效的流事件"); }
+      const frame = decodeCompletion(value, true);
+      if (finishReason && (frame.delta.content || frame.delta.reasoning || frame.finishReason)) {
+        throw new Error("模型在结束状态后继续返回内容");
       }
+      applyDeltaHandlers(handlers, frame.delta, acc);
+      if (frame.finishReason) finishReason = redactError(frame.finishReason, apiKey);
+    };
+    const consumeLine = (line: string) => {
+      if (line === "") { dispatchEvent(); return; }
+      if (line.startsWith(":")) return;
+      const colon = line.indexOf(":");
+      const field = colon < 0 ? line : line.slice(0, colon);
+      const value = colon < 0 ? "" : line.slice(colon + 1).replace(/^ /, "");
+      if (field === "data") eventData.push(value);
+      if (field === "event") eventType = value;
+    };
+    const consumeBuffer = (eof = false) => {
+      // Preserve a trailing CR between reads so a split CRLF remains one newline.
+      while (!completed) {
+        const match = /[\r\n]/.exec(buffer);
+        if (!match) break;
+        const index = match.index;
+        if (!eof && buffer[index] === "\r" && index === buffer.length - 1) break;
+        const length = buffer[index] === "\r" && buffer[index + 1] === "\n" ? 2 : 1;
+        const line = buffer.slice(0, index);
+        buffer = buffer.slice(index + length);
+        signal?.throwIfAborted();
+        consumeLine(line);
+      }
+    };
+    const onAbort = () => { void reader.cancel().catch(() => undefined); };
+    signal?.addEventListener("abort", onAbort, { once: true });
+    try {
+      while (!completed) {
+        signal?.throwIfAborted();
+        const { done, value } = await reader.read();
+        signal?.throwIfAborted();
+        buffer += done ? decoder.decode() : decoder.decode(value, { stream: true });
+        consumeBuffer(done);
+        if (done) break;
+      }
+      signal?.throwIfAborted();
+      // Undelimited trailing events cannot certify completion; SSE dispatch requires a blank line.
+      if (!completed && (buffer.trim() || eventData.length || eventType)) {
+        throw new Error("回复流意外中断，已保留收到的内容");
+      }
+      if (!completed && !finishReason) throw new Error("回复流意外中断，已保留收到的内容");
+      return completionResult(acc.content, acc.reasoning, "stream", finishReason);
+    } finally {
+      signal?.removeEventListener("abort", onAbort);
+      void reader.cancel().catch(() => undefined);
+      reader.releaseLock();
     }
-
-    return { ok: true, content: acc.content, reasoning: acc.reasoning, via: "stream" };
   } catch (err) {
     if (signal?.aborted || (err instanceof DOMException && err.name === "AbortError")) {
       return { ok: false, message: "已停止", aborted: true };
     }
-    return {
-      ok: false,
-      message: err instanceof Error ? err.message : "网络错误",
-    };
+    return { ok: false, message: redactError(err instanceof Error ? err.message : "网络错误", apiKey) };
   }
 }

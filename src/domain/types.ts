@@ -515,7 +515,7 @@ export interface ConnectorConfig {
 /** Studio-global Agent chat (not part of project ZIP). */
 export type ChatMessageRole = "user" | "assistant" | "system";
 
-export type ChatMessageStatus = "pending" | "streaming" | "complete" | "error" | "aborted";
+export type ChatMessageStatus = "pending" | "streaming" | "complete" | "error" | "aborted" | "interrupted";
 
 export interface ChatThread {
   id: Id;
@@ -527,6 +527,9 @@ export interface ChatThread {
 }
 
 export interface ChatMessage {
+  runId?: Id;
+  /** Execution notices are separate from answer content and never sent as history. */
+  error?: string;
   id: Id;
   threadId: Id;
   role: ChatMessageRole;
