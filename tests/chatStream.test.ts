@@ -131,7 +131,7 @@ describe("streamChatCompletions", () => {
       },
     );
 
-    expect(result).toEqual({ ok: true, content: "一二", reasoning: "", via: "stream" });
+    expect(result).toMatchObject({ ok: true, content: "一二", reasoning: "", via: "stream" });
     expect(deltas).toEqual(["一", "二"]);
     expect(JSON.parse(String(fetchMock.mock.calls[0]?.[1]?.body))).toMatchObject({
       stream: true,
@@ -182,7 +182,7 @@ describe("streamChatCompletions", () => {
       },
     );
 
-    expect(result).toEqual({
+    expect(result).toMatchObject({
       ok: true,
       content: "答",
       reasoning: "想法",
@@ -216,7 +216,7 @@ describe("streamChatCompletions", () => {
       },
     );
 
-    expect(result).toEqual({ ok: false, message: "已停止", aborted: true });
+    expect(result).toMatchObject({ ok: false, message: "已停止", aborted: true });
   });
 
   it.each([400, 404, 405, 422, 500])("does not retry rejected requests (%s)", async (status) => {
@@ -257,7 +257,7 @@ describe("streamChatCompletions", () => {
       },
     );
 
-    expect(result).toEqual({
+    expect(result).toMatchObject({
       ok: true,
       content: "答案",
       reasoning: "内心独白",
@@ -311,7 +311,7 @@ const stop = 'data: {"choices":[{"delta":{},"finish_reason":"stop"}]}\n\n';
 describe("chat completion protocol boundaries", () => {
   it("retains finish metadata and accepts a complete stop at EOF", async () => {
     const fetchMock = vi.fn(async () => sse(answer + stop));
-    expect(await streamChatCompletions(input, { fetchImpl: fetchMock })).toEqual({
+    expect(await streamChatCompletions(input, { fetchImpl: fetchMock })).toMatchObject({
       ok: true, content: "部分答案", reasoning: "", via: "stream", finishReason: "stop",
     });
     expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -381,7 +381,7 @@ describe("chat completion protocol boundaries", () => {
     const controller = new AbortController();
     controller.abort();
     const fetchMock = vi.fn();
-    expect(await streamChatCompletions(input, { signal: controller.signal, fetchImpl: fetchMock })).toEqual({ ok: false, message: "已停止", aborted: true });
+    expect(await streamChatCompletions(input, { signal: controller.signal, fetchImpl: fetchMock })).toMatchObject({ ok: false, message: "已停止", aborted: true });
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -430,4 +430,51 @@ describe("chat completion protocol boundaries", () => {
       expect(JSON.stringify(result)).not.toContain("different-token");
     }
   });
+});
+
+describe("bounded tool wire protocol", () => {
+  const input = { baseUrl: "https://example.test/v1", apiKey: "test-key", model: "model", messages: [{ role: "user" as const, content: "hello" }], tools: [{ type: "function" as const, function: { name: "lookup", description: "lookup", parameters: { type: "object" } } }] };
+  const frame = (tool_calls: unknown[], finish_reason?: string) => `data: ${JSON.stringify({ choices: [{ delta: { tool_calls }, finish_reason }] })}\n\n`;
+  const sse = (text: string) => new Response(text, { headers: { "content-type": "text/event-stream" } });
+  it("assembles fragmented parallel calls and includes tool schemas in exactly one POST", async () => {
+    const fetcher = vi.fn(async (_url, init) => {
+      expect(JSON.parse(String(init?.body)).tools).toEqual(input.tools);
+      return sse(frame([{ index: 0, id: "a", type: "function", function: { name: "look", arguments: '{"text":' } }, { index: 1, id: "b", function: { name: "lookup", arguments: '{}' } }]) + frame([{ index: 0, function: { name: "up", arguments: '"你"}' } }], "tool_calls") + "data: [DONE]\n\n");
+    });
+    const result = await streamChatCompletions(input, { fetchImpl: fetcher });
+    expect(result).toMatchObject({ ok: true, finishReason: "tool_calls", toolCalls: [{ id: "a", function: { name: "lookup", arguments: '{"text":"你"}' } }, { id: "b", function: { name: "lookup", arguments: '{}' } }] });
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+  it("accepts tool-only JSON and keeps assistant/tool request linkage", async () => {
+    const call = { id: "a", type: "function", function: { name: "lookup", arguments: "{}" } };
+    const fetcher = vi.fn(async () => Response.json({ choices: [{ message: { content: null, tool_calls: [call] }, finish_reason: "tool_calls" }] }));
+    expect(await streamChatCompletions(input, { fetchImpl: fetcher })).toMatchObject({ ok: true, content: "", toolCalls: [call] });
+  });
+  it.each([
+    [{ index: 0, id: "a", function: { name: "lookup", arguments: "{" } }],
+    [{ index: 0, id: "a", function: { name: "unknown", arguments: "{}" } }],
+    [{ index: 1, id: "a", function: { name: "lookup", arguments: "{}" } }],
+    [{ index: 16, id: "a", function: { name: "lookup", arguments: "{}" } }],
+    [{ index: 0, function: { name: "lookup", arguments: "{}" } }],
+    [{ index: 0, id: "a", function: { name: "lookup", arguments: "[]" } }],
+    [{ index: 0, id: "a", function: { name: "lookup", arguments: "{}" } }, { index: 1, id: "a", function: { name: "lookup", arguments: "{}" } }],
+    [{ index: 0, id: "a", function: { name: "lookup", arguments: "x".repeat(32769) } }],
+  ])("rejects incomplete, unknown, duplicate and oversized tool frames %#", async (...calls) => {
+    const fetcher = vi.fn(async () => sse(frame(calls, "tool_calls") + "data: [DONE]\n\n"));
+    expect(await streamChatCompletions(input, { fetchImpl: fetcher })).toMatchObject({ ok: false });
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+  it("requires tool_calls completion and rejects tools when disabled", async () => {
+    const payload = frame([{ index: 0, id: "a", function: { name: "lookup", arguments: "{}" } }]) + "data: [DONE]\n\n";
+    expect(await streamChatCompletions(input, { fetchImpl: vi.fn(async () => sse(payload)) })).toMatchObject({ ok: false });
+    expect(await streamChatCompletions({ ...input, tools: [] }, { fetchImpl: vi.fn(async () => sse(payload)) })).toMatchObject({ ok: false });
+  });
+  it("rejects tool fragments after a finish frame", async () => {
+    const payload = frame([{ index: 0, id: "a", function: { name: "lookup", arguments: "{}" } }], "tool_calls")
+      + frame([{ index: 0, function: { arguments: " " } }]) + "data: [DONE]\n\n";
+    const fetcher = vi.fn(async () => sse(payload));
+    expect(await streamChatCompletions(input, { fetchImpl: fetcher })).toMatchObject({ ok: false, message: "模型在结束状态后继续返回内容" });
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
 });

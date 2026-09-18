@@ -1,0 +1,372 @@
+/* Compact toolbar; native composer inset remains owned by agentChat.css. */
+.agent-chat-root .agent-composer-refined .agent-composer-footer {
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+
+.agent-chat-root .agent-composer-refined .agent-composer-cluster {
+  flex-wrap: nowrap;
+  gap: 4px;
+}
+
+.agent-chat-root .agent-composer-stack .agent-chip {
+  height: 32px;
+  border-radius: 8px;
+  background: transparent;
+}
+
+.agent-chat-root .agent-composer-stack .agent-chip:hover,
+.agent-chat-root .agent-composer-stack .agent-chip[aria-expanded="true"] {
+  background: rgb(255 255 255 / 7%);
+  color: #eee;
+}
+
+.agent-chat-root .agent-composer-stack .agent-control-icon {
+  flex: none;
+  justify-content: center;
+  width: 32px;
+  padding: 0 !important;
+}
+
+.agent-chat-root .agent-composer-stack .agent-chip:focus-visible {
+  outline: 2px solid var(--ring, #aaa);
+  outline-offset: 2px;
+}
+
+.agent-chat-root .agent-composer-stack .agent-permission-full,
+.agent-chat-root .agent-composer-menu .agent-permission-full {
+  color: #e0b878;
+}
+
+.agent-chat-root .agent-control-panel,
+.agent-chat-root .agent-composer-menu {
+  width: min(320px, calc(100vw - 32px));
+  max-height: min(440px, calc(100dvh - 32px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.agent-chat-root .agent-control-panel {
+  padding: 4px !important;
+  border: 1px solid #292929;
+  border-radius: 12px;
+  background: #171717;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 35%);
+}
+
+.agent-chat-root .agent-control-panel .agent-composer-menu {
+  width: 100%;
+  max-height: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.agent-chat-root .agent-composer-menu .ant-dropdown-menu-item {
+  gap: 8px;
+  align-items: flex-start;
+  padding: 10px 12px !important;
+  border-radius: 8px;
+  white-space: normal;
+}
+
+.agent-chat-root .agent-composer-menu .ant-dropdown-menu-item-icon {
+  margin-top: 2px;
+}
+
+.agent-chat-root .agent-composer-menu .ant-dropdown-menu-item-selected {
+  background: rgb(255 255 255 / 5%);
+  color: #eee;
+}
+
+.agent-chat-root .agent-control-option {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.agent-chat-root .agent-control-option > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.agent-chat-root .agent-control-option small,
+.agent-chat-root .agent-control-panel-note {
+  color: #a0a0a0;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.agent-chat-root .agent-control-panel-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px !important;
+  color: #ddd;
+  font-size: 12px;
+}
+
+.agent-chat-root .agent-control-panel-heading > span {
+  color: #a0a0a0;
+}
+
+.agent-chat-root .agent-control-panel-note {
+  margin: 4px 0 0;
+  padding: 8px 12px !important;
+  border-top: 1px solid #292929;
+}
+
+@media (max-width: 480px) {
+  .agent-chat-root .agent-composer-refined .agent-composer-footer {
+    gap: 4px;
+  }
+
+  .agent-chat-root .agent-composer-refined .agent-composer-cluster-right {
+    flex: 1 1 0;
+    justify-content: flex-end;
+  }
+
+  .agent-chat-root .agent-composer-refined .agent-composer-cluster-right .agent-chip {
+    max-width: 100%;
+    padding-inline: 4px !important;
+  }
+}
+
+.agent-chat-root .agent-composer-menu .agent-permission-full.ant-dropdown-menu-item-selected {
+  color: #e0b878;
+}
+
+
+.agent-chat-root .agent-composer-stack {
+  min-width: 0;
+}
+
+.agent-chat-root .agent-composer-status {
+  margin: 0 8px -8px;
+  padding: 8px 12px 16px !important;
+  border: 1px solid #252525;
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+  background: #141414;
+  color: #aaa;
+  font-size: 12px;
+}
+
+.agent-chat-root .agent-composer-controlbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  padding: 6px 0 0 !important;
+}
+
+.agent-chat-root .agent-composer-homebar {
+  display: flex;
+  align-items: center;
+  min-height: 28px;
+  padding-top: 6px !important;
+}
+
+.agent-chat-root .agent-composer-send-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.agent-chat-root .agent-send-menu-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 28px;
+  padding: 0 !important;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #999;
+  cursor: pointer;
+}
+
+.agent-chat-root .agent-send-menu-trigger:hover,
+.agent-chat-root .agent-send-menu-trigger:focus-visible {
+  background: rgba(255, 255, 255, .06);
+  color: #fff;
+}
+
+.agent-chat-root .agent-voice-button:disabled {
+  color: #666;
+  cursor: not-allowed;
+}
+
+.agent-chat-root .agent-voice-button.is-active {
+  color: #f08a65;
+  background: rgba(240, 138, 101, .12);
+}
+
+/* Expanded editor occupies the conversation column; the sidebar stays available. */
+.agent-chat-root .agent-composer-dock.is-expanded {
+  inset: 0;
+  z-index: 20;
+  padding: 0 !important;
+  background: #1a1a1a;
+}
+.agent-chat-root .agent-composer-dock.is-expanded .agent-content {
+  max-width: none;
+  height: 100%;
+}
+.agent-chat-root .agent-composer-stack.is-expanded {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #1a1a1a;
+}
+.agent-chat-root .agent-composer-stack.is-expanded .agent-composer {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 16px 12px !important;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.agent-chat-root .agent-composer-stack.is-expanded textarea.agent-composer-input {
+  flex: 1;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+}
+.agent-chat-root .agent-composer-stack.is-expanded .agent-composer-footer {
+  flex: none;
+}
+.agent-chat-root .agent-composer-stack.is-expanded .agent-composer-controlbar {
+  flex: none;
+  padding: 8px 12px !important;
+  background: #0d0d0d;
+}
+.agent-chat-root .agent-composer-permissions { margin-left: auto; }
+.agent-chat-root .agent-transcript-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.agent-chat-root .agent-composer-controlbar .agent-composer-cluster {
+  flex-wrap: nowrap;
+}
+
+.agent-chat-root .agent-composer-context {
+  flex: none;
+  margin-left: auto;
+}
+
+.agent-chat-root .agent-plus-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 20px;
+}
+
+.agent-chat-root .agent-plus-row > span {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: #999;
+  font-size: 12px;
+}
+
+.agent-chat-root .agent-skill-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px !important;
+  color: #aaa;
+  font-size: 12px;
+}
+
+.agent-chat-root .agent-skill-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px !important;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #eee;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.agent-chat-root .agent-skill-back:focus-visible {
+  outline: 2px solid var(--ring, #aaa);
+}
+
+.agent-chat-root .agent-skill-search {
+  padding: 4px 8px 8px !important;
+}
+
+.agent-chat-root .agent-skill-list {
+  max-height: min(260px, 45dvh);
+  overflow-y: auto;
+}
+
+.agent-chat-root .agent-skill-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 10px 12px !important;
+}
+
+.agent-chat-root .agent-skill-row .ant-switch {
+  flex: none;
+  margin-top: 2px;
+}
+
+@media (max-width: 380px) {
+  .agent-chat-root .agent-composer-controlbar .agent-chip {
+    padding-inline: 4px !important;
+    gap: 4px;
+  }
+}
+.agent-chat-root .agent-model-settings-anchor { min-width: 0; display: inline-flex; }
+.agent-chat-root .agent-model-setting-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.agent-chat-root .agent-model-effort-label { flex: none; font-size: 12px; opacity: .7; }
+/* One surface per popup: search and menu rows remain flat inside it. */
+.agent-chat-root .agent-control-panel .ant-dropdown-menu.agent-composer-menu {
+  border: 0 !important;
+  border-radius: 0;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+.agent-chat-root .agent-control-panel .ant-dropdown-menu-item,
+.agent-chat-root .agent-control-panel .agent-skill-row,
+.agent-chat-root .agent-control-panel .agent-plus-search-result {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.agent-chat-root .agent-skill-search .ant-input-affix-wrapper,
+.agent-chat-root .agent-skill-search .ant-input {
+  border: 0 !important;
+  border-radius: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.agent-chat-root .agent-skill-search .ant-input-affix-wrapper {
+  padding: 8px 4px !important;
+}
+
+/* The mobile shell menu overlays the normal chat header; hide it while editing. */
+.studio-floor:has(.agent-composer-dock.is-expanded) .studio-mobile-header {
+  visibility: hidden;
+}

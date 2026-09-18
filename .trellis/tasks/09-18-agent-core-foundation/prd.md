@@ -17,7 +17,7 @@ Build one general creative assistant with durable execution, validated tools and
 - Preserve provenance, user control and honest failure states. Never automatically re-submit ambiguous paid operations.
 
 ## Deferred
-Real business CRUD tools, image/video task execution, search integration, attachments, long-term memory, specialist delegation. Model-aware reasoning control will be a separate configuration increment (independent composer entry, defaults plus conversation override).
+Real business CRUD tools, image/video task execution, search integration, attachments, long-term memory, specialist delegation. User expanded child 2 on 2026-09-19 to include model-aware reasoning control inside model settings, conversation persistence, usage/context inspection and Responses compatibility for Luna reasoning with tools.
 
 ## Cross-child acceptance
 A user can follow one goal across conversation, execution and board; stop/reload/failure never produces false completion or duplicate actions. Permission decisions remain auditable across interruptions. Existing project workflows and provider adapters remain intact.

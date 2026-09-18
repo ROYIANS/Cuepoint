@@ -6,7 +6,7 @@
 
 ## Overview
 
-Strict TypeScript (`tsconfig.app.json`: `strict`, `verbatimModuleSyntax`, `noUnusedLocals`, `noUnusedParameters`). Domain types and normalizers live under `src/domain/`. Path alias `@/*` → `src/*`. Zod is reserved for project-package import boundaries, not forms.
+Strict TypeScript (`tsconfig.app.json`: `strict`, `verbatimModuleSyntax`, `noUnusedLocals`, `noUnusedParameters`). Domain types and normalizers live under `src/domain/`. Path alias `@/*` → `src/*`. Zod is used for project-package imports and model tool argument boundaries, not forms.
 
 ---
 
@@ -64,9 +64,9 @@ Runtime shape repair uses hand-written normalizers and parsers, not Zod:
 
 Unknown or missing shot status becomes `"draft"`. Empty filter arrays mean “all”.
 
-### Package import only
+### External input boundaries
 
-Zod schemas live in `src/lib/projectPackage.ts` (`manifestSchema`, passthrough record schemas) to validate zip/manifest boundaries (`PACKAGE_FORMAT`). Do not add Zod for `Field` / `Input` form validation.
+Zod schemas live in `src/lib/projectPackage.ts` (`manifestSchema`, passthrough record schemas) to validate zip/manifest boundaries (`PACKAGE_FORMAT`). `src/lib/agent/tools.ts` also uses strict Zod schemas for model-supplied tool arguments before any execution or approval; unknown properties are rejected. Do not add Zod for `Field` / `Input` form validation.
 
 ---
 

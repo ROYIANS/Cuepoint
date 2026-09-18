@@ -1,3 +1,4 @@
+import type { ChatModelMetadata } from "./modelMetadata";
 import type { ConnectorConfig } from "@/domain/types";
 
 export type ChatModelConnector = Pick<ConnectorConfig, "definitionId" | "baseUrl" | "apiKey"> & { id?: string };
@@ -5,6 +6,7 @@ export type ChatModelCatalog = {
   connector: ChatModelConnector;
   status: "loading" | "ready" | "error";
   models: string[];
+  metadata?: Record<string, ChatModelMetadata>;
   incompatibleModels: string[];
 };
 export type ChatModelPolicy = {

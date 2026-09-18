@@ -1,8 +1,11 @@
+import type { ChatModelMetadata } from "@/lib/ai/modelMetadata";
+import { resolveModelMetadata } from "@/lib/ai/modelMetadata";
+import { formatTokenCount } from "@/lib/agent/contextUsage";
 import { ModelIcon, ProviderIcon } from "@lobehub/icons";
 import { ActionIcon } from "@lobehub/ui";
-import { Dropdown } from "antd";
+import * as Popover from "@radix-ui/react-popover";
 import { ArrowUp, Check, ChevronDown, Eye, Plug, Square, Wrench } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef, type ReactNode } from "react";
 import { SURFACE_ELEVATED, TEXT, TEXT_TERTIARY } from "@/components/agent/agentTheme";
 import type { ConnectorConfig, Id } from "@/domain/types";
 import { buildChatModelOptions, type ChatModelPolicy } from "@/lib/ai/chatModelPolicy";
@@ -21,7 +24,9 @@ function popupRoot(): HTMLElement {
   return document.querySelector<HTMLElement>(".agent-chat-root") ?? document.body;
 }
 
-function ModelDetail({ modelId }: { modelId: string }) {
+function ModelDetail({ modelId, metadata, providerId }: { modelId: string; metadata?: ChatModelMetadata; providerId?: string }) {
+  const resolved = resolveModelMetadata(modelId, metadata, providerId);
+  const contextWindow = resolved.contextWindow?.tokens;
   const vendor = lookupVendor(modelId);
   const hints = inferModelHints(modelId);
   const abilities = [
@@ -43,9 +48,10 @@ function ModelDetail({ modelId }: { modelId: string }) {
       </div>
       <dl style={{ margin: 0, display: "grid", gap: 12 }}>
         <div>
-          <dt>上下文长度</dt>
-          <dd>即将开放</dd>
+          <dt>上下文上限{contextWindow ? resolved.contextWindow?.source === "provider" ? " · 供应商" : " · Model Bank" : ""}</dt>
+          <dd title={resolved.contextWindow?.sourceUrl}>{contextWindow ? `${formatTokenCount(contextWindow)} tokens` : "供应商未提供"}</dd>
         </div>
+        {resolved.maxOutputTokens && <div><dt>最大输出 · {resolved.maxOutputTokens.source === "provider" ? "供应商" : "Model Bank"}</dt><dd title={resolved.maxOutputTokens.sourceUrl}>{formatTokenCount(resolved.maxOutputTokens.tokens)} tokens</dd></div>}
         <div>
           <dt>能力</dt>
           <dd>
@@ -57,10 +63,7 @@ function ModelDetail({ modelId }: { modelId: string }) {
             </div>
           </dd>
         </div>
-        <div>
-          <dt>价格</dt>
-          <dd>即将开放</dd>
-        </div>
+
       </dl>
     </aside>
   );
@@ -72,15 +75,21 @@ function ModelDetail({ modelId }: { modelId: string }) {
  */
 export function ModelSelectTrigger({
   model,
+  trigger,
   modelOptions,
+  modelMetadata,
   probingModels,
   modelPolicy,
   connectors,
   selectedConnectorId,
   onConnectorChange,
   onModelChange,
+  open: controlledOpen,
+  onOpenChange,
 }: {
   model: string;
+  trigger?: ReactNode;
+  modelMetadata?: Record<string, ChatModelMetadata>;
   modelOptions: Array<{ label: string; value: string }>;
   probingModels: boolean;
   modelPolicy: ChatModelPolicy;
@@ -88,10 +97,19 @@ export function ModelSelectTrigger({
   selectedConnectorId?: Id;
   onConnectorChange: (id: string) => void;
   onModelChange: (model: string) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const [localOpen, setLocalOpen] = useState(false);
+  const open = controlledOpen ?? localOpen;
+  const setOpen = (next: boolean) => { setLocalOpen(next); onOpenChange?.(next); };
+  const searchRef = useRef<HTMLInputElement>(null);
   const [search, setSearch] = useState("");
   const [preview, setPreview] = useState(model);
+  useEffect(() => {
+    if (open) requestAnimationFrame(() => searchRef.current?.focus({ preventScroll: true }));
+    if (open) { setPreview(model); setSearch(""); }
+  }, [open, model]);
 
   const ids = useMemo(() => buildChatModelOptions(
     modelOptions.map((opt) => opt.value), model, search, modelPolicy,
@@ -114,13 +132,17 @@ export function ModelSelectTrigger({
   const panel = (
     <div
       className="agent-model-panel"
+      role="dialog"
+      aria-label="选择模型"
       onMouseDown={(event) => event.stopPropagation()}
     >
       <div className="agent-model-list">
         <input
+          ref={searchRef}
           className="agent-model-search"
           value={search}
           placeholder="搜索模型…"
+          aria-label="搜索模型"
           onChange={(event) => setSearch(event.target.value)}
         />
         {connectors.length > 0 ? (
@@ -188,27 +210,13 @@ export function ModelSelectTrigger({
           )}
         </div>
       </div>
-      {previewId ? <ModelDetail modelId={previewId} /> : null}
+      {previewId ? <ModelDetail modelId={previewId} metadata={modelMetadata?.[previewId]} providerId={connectors.find((item) => item.id === selectedConnectorId)?.definitionId} /> : null}
     </div>
   );
 
   return (
-    <Dropdown
-      trigger={["click"]}
-      placement="topRight"
-      open={open}
-      onOpenChange={(next) => {
-        setOpen(next);
-        if (next) {
-          setPreview(model);
-          setSearch("");
-        }
-      }}
-      getPopupContainer={popupRoot}
-      menu={{ items: [] }}
-      popupRender={() => panel}
-    >
-      <button type="button" className="agent-chip" aria-label={model || "选择模型"}>
+    <Popover.Root open={open} onOpenChange={setOpen}>
+      {trigger ? <Popover.Anchor asChild><span className="agent-model-settings-anchor">{trigger}</span></Popover.Anchor> : <Popover.Trigger asChild><button type="button" className="agent-chip" aria-label={model || "选择模型"} aria-haspopup="dialog" aria-expanded={open}>
         {model ? <ModelIcon model={model} size={16} type="color" /> : null}
         <span
           style={{
@@ -220,8 +228,13 @@ export function ModelSelectTrigger({
           {model ? modelDisplayName(model) : probingModels ? "拉取模型中…" : "选择模型"}
         </span>
         <ChevronDown size={12} style={{ flexShrink: 0, opacity: 0.7 }} />
-      </button>
-    </Dropdown>
+      </button></Popover.Trigger>}
+      <Popover.Portal container={popupRoot()}>
+        <Popover.Content side="top" align="end" sideOffset={10} collisionPadding={16} className="agent-model-popover" onOpenAutoFocus={(event) => { event.preventDefault(); searchRef.current?.focus({ preventScroll: true }); }} onCloseAutoFocus={(event) => { if (trigger) { event.preventDefault(); document.querySelector<HTMLButtonElement>(".agent-model-settings-anchor button" )?.focus({ preventScroll: true }); } }}>
+          {panel}
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
   );
 }
 

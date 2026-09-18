@@ -1,3 +1,4 @@
+import { collectModelMetadata, parseModelMetadata, type ChatModelMetadata } from "@/lib/ai/modelMetadata";
 export function normalizeBaseUrl(baseUrl: string): string {
   return baseUrl.trim().replace(/\/+$/, "");
 }
@@ -43,7 +44,7 @@ function formatHttpError(status: number, body: string): string {
 }
 
 export type ListModelsResult =
-  | { ok: true; models: string[] }
+  | { ok: true; models: string[]; metadata?: Record<string, ChatModelMetadata> }
   | { ok: false; message: string };
 
 /**
@@ -77,7 +78,11 @@ export async function listModels(
           .filter((id, index, list) => list.indexOf(id) === index)
           .sort((left, right) => left.localeCompare(right))
       : [];
-    return { ok: true, models };
+    const entries = (Array.isArray(data?.data) ? data.data : []).flatMap((row) => {
+      const metadata = parseModelMetadata(row);
+      return typeof row?.id === "string" && row.id.trim() && metadata ? [[row.id.trim(), metadata] as const] : [];
+    });
+    return { ok: true, models, ...(entries.length ? { metadata: collectModelMetadata(entries) } : {}) };
   } catch (err) {
     return {
       ok: false,

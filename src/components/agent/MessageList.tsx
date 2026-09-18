@@ -1,3 +1,7 @@
+import { ModelIcon } from "@lobehub/icons";
+import { Coins, Gauge } from "lucide-react";
+import { formatTokenCount } from "@/lib/agent/contextUsage";
+import { AgentRunDetails, type RunAction } from "./AgentRunDetails";
 import type { AgentRun } from "@/domain/agent";
 import { Button } from "@/components/ui/button";
 import { CopyButton, Text } from "@lobehub/ui";
@@ -28,9 +32,11 @@ const ASSISTANT_AVATAR = {
  * Stick with `scrollTop` on this element (not `scrollIntoView` smooth).
  * History rows are memoized so Dexie liveQuery ticks only paint the streaming item.
  */
-export function MessageList({ messages, runs, retryableRunId, onRetryRun }: {
+export function MessageList({ messages, runs, retryableRunId, onRetryRun, busy, onRunAction }: {
   messages: ChatMessage[] | undefined;
   runs?: AgentRun[];
+  busy: boolean;
+  onRunAction: (runId: string, action: RunAction, callId?: string) => void;
   retryableRunId?: string;
   onRetryRun: (id: string) => void;
 }) {
@@ -86,7 +92,7 @@ export function MessageList({ messages, runs, retryableRunId, onRetryRun }: {
             if (message.role === "system") return null;
             return (
               <AgentChatMessageItem key={message.id} message={message} userMeta={userMeta}
-                runLabel={runs?.find((run) => run.id === message.runId)?.model}
+                run={runs?.find((run) => run.id === message.runId)} busy={busy} onRunAction={onRunAction}
                 retryable={Boolean(message.runId && message.runId === retryableRunId)} onRetryRun={onRetryRun} />
             );
           })
@@ -100,12 +106,16 @@ const AgentChatMessageItem = memo(
   function AgentChatMessageItem({
     message,
     userMeta,
-    runLabel,
+    run,
+    busy,
+    onRunAction,
     retryable,
     onRetryRun,
   }: {
     message: ChatMessage;
-    runLabel?: string;
+    run?: AgentRun;
+    busy: boolean;
+    onRunAction: (runId: string, action: RunAction, callId?: string) => void;
     retryable: boolean;
     onRetryRun: (id: string) => void;
     userMeta: { avatar: ReactNode; backgroundColor: string; title: string };
@@ -131,8 +141,8 @@ const AgentChatMessageItem = memo(
 
     const statusLabel = message.status === "error" ? "生成失败" : message.status === "interrupted" ? "生成中断" : message.status === "aborted" ? "已停止" : undefined;
     return (
-      <div>
       <ChatItem
+        className="agent-transcript-item"
         placement={isUser ? "right" : "left"}
         primary={isUser}
         variant={isUser ? "bubble" : "docs"}
@@ -143,36 +153,37 @@ const AgentChatMessageItem = memo(
         avatarProps={{ shape: isUser ? "circle" : "square" }}
         markdownProps={MARKDOWN_PROPS}
         placeholderMessage=""
-        aboveMessage={
-          !isUser && hasReasoning ? (
-            <ThinkingPanel
-              reasoning={message.reasoning ?? ""}
-              active={reasoningActive}
-              durationMs={message.reasoningDurationMs}
-            />
-          ) : undefined
-        }
-        actions={
-          showCopy ? <CopyButton content={message.content} title="复制" size="small" /> : undefined
-        }
+        aboveMessage={!isUser ? <>
+          {run && <AgentRunDetails run={run} busy={busy} onAction={onRunAction} />}
+          {hasReasoning && <ThinkingPanel reasoning={message.reasoning ?? ""} active={reasoningActive} durationMs={message.reasoningDurationMs} />}
+        </> : undefined}
+        belowMessage={!isUser ? <div className="agent-message-footer">
+          <div className="agent-message-meta">
+            {run?.model && <span className="agent-model-attribution" title={run.model}><ModelIcon model={run.model} size={14} />{run.model}</span>}
+            {run?.outputTokensPerSecond !== undefined && <span className="agent-model-attribution" title="生成速度：供应商返回的输出 token ÷ 流式生成耗时（不含工具和审批等待）"><Gauge size={12} />{run.outputTokensPerSecond.toFixed(1)} tok/s</span>}
+            {run?.usage?.totalTokens !== undefined && <span className="agent-model-attribution" title={`本次执行累计 ${run.usage.totalTokens.toLocaleString()} tokens；输入 ${run.usage.inputTokens?.toLocaleString() ?? "未知"}，输出 ${run.usage.outputTokens?.toLocaleString() ?? "未知"}`}><Coins size={12} />{formatTokenCount(run.usage.totalTokens)}</span>}
+            {showCopy && <CopyButton content={message.content} title="复制" size="small" />}
+          </div>
+          {statusLabel && <div role="status">{statusLabel} · {message.error || "已保留收到的内容"}</div>}
+          {retryable && message.runId && <Button size="sm" variant="outline" onClick={() => onRetryRun(message.runId!)}>重新生成</Button>}
+        </div> : undefined}
         message={text}
         renderMessage={showMatrix ? renderThinkingMessage : undefined}
       />
-      {!isUser && (statusLabel || runLabel) && (
-        <div className="mb-5 ml-14 flex flex-col items-start gap-2 text-xs text-muted-foreground">
-          {runLabel && <span>模型：{runLabel}</span>}
-          {statusLabel && <div role="status">{statusLabel} · {message.error || "已保留收到的内容"}</div>}
-          {retryable && message.runId && (
-            <Button size="sm" variant="outline" onClick={() => onRetryRun(message.runId!)}>重新生成</Button>
-          )}
-        </div>
-      )}
-      </div>
+
     );
   },
   (prev, next) =>
     prev.userMeta === next.userMeta &&
-    prev.runLabel === next.runLabel &&
+    prev.run?.id === next.run?.id &&
+    prev.run?.updatedAt === next.run?.updatedAt &&
+    prev.run?.status === next.run?.status &&
+    prev.run?.usage?.totalTokens === next.run?.usage?.totalTokens &&
+    prev.run?.usage?.inputTokens === next.run?.usage?.inputTokens &&
+    prev.run?.usage?.outputTokens === next.run?.usage?.outputTokens &&
+    prev.run?.outputTokensPerSecond === next.run?.outputTokensPerSecond &&
+    prev.busy === next.busy &&
+    prev.onRunAction === next.onRunAction &&
     prev.retryable === next.retryable &&
     prev.onRetryRun === next.onRetryRun &&
     prev.message.error === next.message.error &&

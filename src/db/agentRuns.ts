@@ -1,7 +1,11 @@
 import { db } from "@/db/database";
-import { GENERAL_AGENT_ID, type AgentConfig, type AgentRun, type AgentRunOutput, type AgentRunStatus } from "@/domain/agent";
+import type { AgentInteractionMode, AgentModelMetrics, AgentTokenUsage, AgentReasoningEffort, AgentRun, AgentRunOutput, AgentRunStatus } from "@/domain/agent";
 import type { ChatMessage, ConnectorConfig } from "@/domain/types";
 import { createId, nowIso } from "@/lib/ids";
+import { getGeneralAgentConfig } from "@/db/agentSettings";
+import { buildAgentRequestMessages } from "@/lib/agent/contextUsage";
+import { assembleSkills } from "@/lib/agent/skills";
+import { assertReasoningEffort, selectAgentProtocol } from "@/lib/ai/reasoningPolicy";
 import { deriveChatTitle } from "@/lib/chatTitle";
 
 export function connectorRunIdentity(connector: ConnectorConfig): AgentRun["connector"] {
@@ -19,21 +23,8 @@ export function assertRetryConnector(run: AgentRun, connector: ConnectorConfig):
   }
 }
 
-/** Called inside the same transaction that creates a run. */
-async function getGeneralAgent(): Promise<AgentConfig> {
-  const existing = await db.agents.get(GENERAL_AGENT_ID);
-  if (existing) return existing;
-  const agent: AgentConfig = {
-    id: GENERAL_AGENT_ID, name: "创作助手",
-    instructions: "你是小光点的通用创作助手，帮助用户梳理创意、剧本和制作计划。准确说明已完成的工作，不要声称执行了没有实际调用的工具或修改了系统数据。",
-    updatedAt: nowIso(),
-  };
-  await db.agents.add(agent);
-  return agent;
-}
-
 export function canRetryRun(run: AgentRun, runs: AgentRun[], messages: ChatMessage[]): boolean {
-  if (run.status === "running" || run.status === "completed") return false;
+  if (run.status === "running" || run.status === "waiting_approval" || run.status === "completed" || run.hasToolCalls) return false;
   const latest = [...runs].sort((a, b) => a.createdAt.localeCompare(b.createdAt)).at(-1);
   if (latest?.id !== run.id) return false;
   const lastUser = [...messages].filter((m) => m.role === "user").sort((a, b) => a.createdAt.localeCompare(b.createdAt)).at(-1);
@@ -46,6 +37,8 @@ export async function beginAgentRun(input: {
   model: string;
   content?: string;
   retryOfRunId?: string;
+  reasoningEffort?: AgentReasoningEffort;
+  interactionMode?: AgentInteractionMode;
 }): Promise<AgentRun> {
   const identity = connectorRunIdentity(input.connector);
   if (!input.model.trim() || !input.connector.apiKey.trim()) throw new Error("请选择模型并配置 API Key");
@@ -53,11 +46,11 @@ export async function beginAgentRun(input: {
     const thread = await db.chatThreads.get(input.threadId);
     if (!thread) throw new Error("对话不存在");
     const runs = await db.agentRuns.where("threadId").equals(thread.id).toArray();
-    if (runs.some((run) => run.status === "running")) throw new Error("此对话已有执行，请等待完成或恢复中断状态");
+    if (runs.some((run) => run.status === "running" || run.status === "waiting_approval" || (run.hasToolCalls && (run.status === "interrupted" || run.status === "failed")))) throw new Error("此对话已有执行，请等待完成或恢复中断状态");
     const history = await db.chatMessages.where("threadId").equals(thread.id).sortBy("createdAt");
     // Keep order deterministic even when several IndexedDB writes share a millisecond.
     const at = new Date(Math.max(Date.now(), ...history.map((m) => Date.parse(m.createdAt) + 1).filter(Number.isFinite))).toISOString();
-    const agent = await getGeneralAgent();
+    const agent = await getGeneralAgentConfig();
     const previous = input.retryOfRunId ? runs.find((run) => run.id === input.retryOfRunId) : undefined;
     if (input.retryOfRunId && (!previous || !canRetryRun(previous, runs, history))) {
       throw new Error("只能重新生成当前最后一次未完成的回复；后续已有消息时请发送新问题");
@@ -66,21 +59,29 @@ export async function beginAgentRun(input: {
       assertRetryConnector(previous, input.connector);
       if (previous.model !== input.model.trim()) throw new Error("重新生成必须使用原模型");
     }
+    const reasoningEffort = previous ? previous.reasoningEffort : input.reasoningEffort;
+    assertReasoningEffort(identity, input.model, reasoningEffort);
     const content = input.content?.trim() ?? "";
     if (!previous && !content) throw new Error("消息不能为空");
     const userMessageId = previous?.userMessageId ?? createId("cmsg");
     const runId = createId("run");
     const assistantMessageId = createId("cmsg");
-    const requestMessages = previous?.requestMessages ?? [
-      { role: "system" as const, content: agent.instructions },
-      ...history.filter((m) => !m.status || m.status === "complete").map((m) => ({ role: m.role, content: m.content })),
-      { role: "user" as const, content },
-    ];
+    const interactionMode = previous ? previous.interactionMode ?? "smart" : input.interactionMode ?? thread.interactionMode ?? "smart";
+    const skills = assembleSkills(agent.enabledSkillIds ?? []);
+    const enabledToolNames = interactionMode === "conversation" ? [] : (previous ? previous.enabledToolNames ?? [] : skills.enabledToolNames);
+    const skillInstructions = interactionMode === "conversation" ? "" : (previous ? previous.skillInstructions ?? "" : skills.skillInstructions);
+    const requestMessages = previous?.requestMessages ?? buildAgentRequestMessages(agent.instructions, skillInstructions, history, content);
     const run: AgentRun = {
       id: runId, threadId: thread.id, agentId: previous?.agentId ?? agent.id,
       agentSnapshot: previous?.agentSnapshot ?? { name: agent.name, instructions: agent.instructions },
       userMessageId, assistantMessageId, retryOfRunId: previous?.id,
       model: input.model.trim(), connector: identity, requestMessages,
+      protocol: previous?.protocol ?? (previous?.hasToolCalls ? "chat-completions" : selectAgentProtocol(identity, input.model, reasoningEffort, enabledToolNames.length > 0)),
+      ...(reasoningEffort !== undefined ? { reasoningEffort } : {}),
+      permissionMode: previous ? previous.permissionMode ?? "ask" : agent.permissionMode ?? "ask",
+      interactionMode,
+      enabledToolNames,
+      skillInstructions,
       status: "running", checkpoint: 0, createdAt: at, updatedAt: at,
     };
     if (!previous) await db.chatMessages.add({ id: userMessageId, threadId: thread.id, role: "user", content, createdAt: at, status: "complete" });
@@ -107,10 +108,10 @@ export async function checkpointAgentRun(runId: string, sequence: number, output
   });
 }
 
-export async function finishAgentRun(runId: string, status: Exclude<AgentRunStatus, "running">, output?: AgentRunOutput, error?: string, finishReason?: string): Promise<void> {
+export async function finishAgentRun(runId: string, status: Exclude<AgentRunStatus, "running" | "waiting_approval">, output?: AgentRunOutput, error?: string, finishReason?: string): Promise<void> {
   await db.transaction("rw", db.agentRuns, db.chatMessages, async () => {
     const run = await db.agentRuns.get(runId);
-    if (!run || run.status !== "running") return;
+    if (!run || (run.status !== "running" && run.status !== "waiting_approval")) return;
     const message = await db.chatMessages.get(run.assistantMessageId);
     if (!message || message.runId !== run.id) throw new Error("执行消息不存在");
     const at = nowIso();
@@ -122,8 +123,51 @@ export async function finishAgentRun(runId: string, status: Exclude<AgentRunStat
 
 /** Caller must own the thread's Web Lock; elapsed wall time is not proof of abandonment. */
 export async function interruptThreadRuns(threadId: string): Promise<void> {
-  const runs = await db.agentRuns.where("threadId").equals(threadId).toArray();
-  for (const run of runs) {
-    if (run.status === "running") await finishAgentRun(run.id, "interrupted", undefined, "上次生成已中断，已保留收到的内容。重新生成会创建一次新的请求。");
-  }
+  await db.transaction("rw", db.agentRuns, db.agentToolCalls, db.chatMessages, async () => {
+    const runs = await db.agentRuns.where("threadId").equals(threadId).toArray();
+    for (const run of runs) {
+      if (run.status !== "running") continue;
+      await db.agentToolCalls.where("runId").equals(run.id).filter((call) => call.status === "running").modify({
+        status: "unknown", error: "执行中断，结果尚不确定，不能自动重跑。", updatedAt: nowIso(),
+      });
+      const calls = await db.agentToolCalls.where("runId").equals(run.id).toArray();
+      // A crash may fall between persisting an approval request and parking the
+      // run. Restore its actionable waiting state instead of stranding the call
+      // behind an interrupted run that cannot accept an approval or resume.
+      if (calls.some((call) => call.status === "awaiting_approval") && !calls.some((call) => call.status === "unknown")) {
+        await db.agentRuns.update(run.id, { status: "waiting_approval", updatedAt: nowIso() });
+        await db.chatMessages.update(run.assistantMessageId, { status: "pending", error: undefined });
+        continue;
+      }
+      await finishAgentRun(run.id, "interrupted", undefined, run.hasToolCalls
+        ? "执行已中断。继续时将使用已保存的步骤与结果；结果不确定的操作需要先核实。"
+        : "上次生成已中断，已保留收到的内容。重新生成会创建一次新的请求。");
+    }
+  });
+}
+
+
+/** One immutable metrics record per model step, safe to replay after local recovery. */
+export async function recordAgentModelMetrics(runId: string, metrics: AgentModelMetrics): Promise<void> {
+  await db.transaction("rw", db.agentRuns, async () => {
+    const run = await db.agentRuns.get(runId);
+    if (!run || run.status !== "running") return;
+    if (!Number.isSafeInteger(metrics.step) || metrics.step < 1 || metrics.step !== run.modelStep) throw new Error("模型用量所属步骤无效");
+    if (run.modelMetrics?.some((item) => item.step === metrics.step)) return;
+    const modelMetrics = [...(run.modelMetrics ?? []), metrics].sort((a, b) => a.step - b.step);
+    const usage: AgentTokenUsage = {};
+    const completeSteps = modelMetrics.length === run.modelStep;
+    for (const name of ["inputTokens", "outputTokens", "totalTokens"] as const) {
+      if (completeSteps && modelMetrics.every((item) => item.usage?.[name] !== undefined)) {
+        const sum = modelMetrics.reduce((total, item) => total + item.usage![name]!, 0);
+        if (Number.isSafeInteger(sum)) usage[name] = sum;
+      }
+    }
+    // Streaming generation speed excludes first-token latency, tool execution and
+    // approval waits. JSON responses cannot reveal a first-token timestamp.
+    const duration = modelMetrics.reduce((total, item) => total + (item.firstTokenAt === undefined ? 0 : item.endedAt - item.firstTokenAt), 0);
+    const measurable = completeSteps && modelMetrics.every((item) => item.firstTokenAt !== undefined && item.endedAt > item.firstTokenAt);
+    const outputTokensPerSecond = measurable && duration > 0 && usage.outputTokens !== undefined ? usage.outputTokens * 1000 / duration : undefined;
+    await db.agentRuns.update(runId, { modelMetrics, usage: Object.keys(usage).length ? usage : undefined, outputTokensPerSecond });
+  });
 }

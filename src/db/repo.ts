@@ -1569,7 +1569,7 @@ export async function createChatThread(options?: {
 
 export async function updateChatThread(
   id: Id,
-  patch: Partial<Pick<ChatThread, "title" | "connectorId" | "model">>,
+  patch: Partial<Pick<ChatThread, "title" | "connectorId" | "model" | "reasoningSelection" | "interactionMode">>,
 ): Promise<void> {
   await db.transaction("rw", db.chatThreads, async () => {
   const existing = await db.chatThreads.get(id);
@@ -1589,12 +1589,15 @@ export async function updateChatThread(
     const model = patch.model.trim();
     next.model = model || undefined;
   }
+  if (patch.interactionMode !== undefined) next.interactionMode = patch.interactionMode;
+  if (patch.reasoningSelection !== undefined) next.reasoningSelection = patch.reasoningSelection;
   await db.chatThreads.put(next);
   });
 }
 
 export async function deleteChatThread(id: Id): Promise<void> {
-  await db.transaction("rw", db.chatThreads, db.chatMessages, db.agentRuns, async () => {
+  await db.transaction("rw", db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, async () => {
+    await db.agentToolCalls.where("threadId").equals(id).delete();
     await db.agentRuns.where("threadId").equals(id).delete();
     await db.chatMessages.where("threadId").equals(id).delete();
     await db.chatThreads.delete(id);

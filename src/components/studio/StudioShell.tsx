@@ -106,10 +106,10 @@ export function StudioShell({
         </Tooltip>
       </aside>
 
-      <div className="relative flex min-w-0 flex-1 flex-col overflow-hidden">
+      <div className={cn("relative flex min-w-0 flex-1 flex-col", onAgent ? "overflow-clip" : "overflow-hidden")}>
         <header
           className={cn(
-            "bg-sidebar/80 sticky top-0 z-20 flex h-12 shrink-0 items-center gap-3 border-b px-3 backdrop-blur-md md:hidden",
+            "studio-mobile-header bg-sidebar/80 sticky top-0 z-20 flex h-12 shrink-0 items-center gap-3 border-b px-3 backdrop-blur-md md:hidden",
             // On /agent the bar overlays ChatHeader. Keep it full-width for layout
             // but pass clicks through except the menu button — otherwise the topic
             // control on the chat header right side never receives input.

@@ -1,5 +1,19 @@
 # AI connector and generation boundaries
 
+## Complete Model Bank snapshot
+`vendor/lobehub/model-bank` is the full unmodified upstream package, with its root
+license and a per-file SHA-256 manifest. Never hand-edit upstream data. The full
+runtime model dataset and a compact limit index are derived outside that directory.
+`loadModelBank` lazily returns every raw provider/model record, including prices and
+media schemas. `getModelBankEntry` selects exact provider+ID before original-vendor
+fallback; conflicting fallback limits stay unknown. No guessed aliases or invented
+records. `resolveModelMetadata` overlays valid live provider limits per field and
+returns source provenance. Copied date is not independent factual verification.
+Model data does not authorize new gateway wire parameters; transport policy remains
+in reasoningPolicy. Manual `model-bank:sync` copies from a trusted local checkout;
+`model-bank:verify` checks every source hash and re-derives exact outputs. No scheduled
+sync. Upstream tests remain unmodified vendor source, excluded from our Vitest roots.
+
 ## 1. Scope / Trigger
 
 Read before changing provider discovery/probes or adding consumers of the APIMart/AIHubMix image/video clients. Catalog capabilities are separate from chat wire protocol. Keys belong to the existing studio-global Dexie connector table and never to project ZIPs.

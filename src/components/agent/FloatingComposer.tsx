@@ -1,126 +1,86 @@
-import { ActionIcon } from "@lobehub/ui";
-import { Dropdown, Input, Switch, Tag } from "antd";
-import {
-  Brain,
-  Check,
-  ChevronDown,
-  ChevronRight,
-  Cloud,
-  FileUp,
-  Globe,
-  Infinity as InfinityIcon,
-  LayoutList,
-  Plus,
-  Settings2,
-  Type,
-} from "lucide-react";
-import { useRef } from "react";
+import { ModelSettingsMenu } from "./ModelSettingsMenu";
+import { AgentControls, ComposerPlusMenu } from "@/components/agent/AgentControls";
+import { Dropdown, Input } from "antd";
+import { Check, ChevronDown, Expand, Infinity as InfinityIcon, LayoutList, MessagesSquare, Mic, Minimize2, Sparkles } from "lucide-react";
+import { useEffect, useRef, useState, type ComponentRef } from "react";
 import { toast } from "sonner";
 import type { ChatSurfaceMode, ComposerProps } from "@/components/agent/composerTypes";
 import { ModelSelectTrigger, SendCircleButton } from "@/components/agent/ModelSelectTrigger";
-
-function soon(label: string) {
-  toast.info(`${label}：即将支持`);
-}
+import "./composerControls.css";
 
 function popupRoot(): HTMLElement {
   return document.querySelector<HTMLElement>(".agent-chat-root") ?? document.body;
 }
 
-function PlusMenu() {
-  return (
-    <div className="agent-plus-panel" onMouseDown={(event) => event.stopPropagation()}>
-      <button type="button" className="agent-plus-item" onClick={() => soon("附件")}>
-        <FileUp size={16} />
-        <span style={{ flex: 1 }}>附件</span>
-        <ChevronRight size={14} color="#6f6f6f" />
-      </button>
-      <div className="agent-plus-sep" />
-      <button type="button" className="agent-plus-item" onClick={() => soon("记忆")}>
-        <Brain size={16} />
-        <span style={{ flex: 1 }}>记忆</span>
-        <Switch disabled size="small" />
-      </button>
-      <button type="button" className="agent-plus-item" onClick={() => soon("联网搜索")}>
-        <Globe size={16} />
-        <span style={{ flex: 1 }}>联网搜索</span>
-        <Switch disabled size="small" />
-      </button>
-      <button type="button" className="agent-plus-item" onClick={() => soon("技能")}>
-        <Settings2 size={16} />
-        <span style={{ flex: 1 }}>技能</span>
-        <Tag style={{ marginInlineEnd: 0 }}>自动</Tag>
-        <ChevronRight size={14} color="#6f6f6f" />
-      </button>
-      <div className="agent-plus-sep" />
-      <button type="button" className="agent-plus-item" onClick={() => soon("格式工具")}>
-        <Type size={16} />
-        <span style={{ flex: 1 }}>格式工具</span>
-        <Switch disabled size="small" />
-      </button>
-      <button type="button" className="agent-plus-item" onClick={() => soon("Agent Gateway")}>
-        <Cloud size={16} />
-        <span style={{ flex: 1 }}>Agent Gateway</span>
-        <Tag color="blue" style={{ marginInlineEnd: 4 }}>
-          Beta
-        </Tag>
-        <Switch disabled size="small" />
-      </button>
-      <button type="button" className="agent-plus-item" onClick={() => soon("高级参数")}>
-        <Settings2 size={16} />
-        <span style={{ flex: 1 }}>高级参数</span>
-      </button>
-    </div>
-  );
+type SpeechRecognitionLike = {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start: () => void;
+  stop: () => void;
+  onresult: ((event: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
+  onend: (() => void) | null;
+  onerror: (() => void) | null;
+};
+
+function speechRecognitionConstructor(): (new () => SpeechRecognitionLike) | undefined {
+  const browser = window as unknown as { SpeechRecognition?: new () => SpeechRecognitionLike; webkitSpeechRecognition?: new () => SpeechRecognitionLike };
+  return browser.SpeechRecognition ?? browser.webkitSpeechRecognition;
 }
 
-function ModeSwitch({
-  mode,
-  onChange,
-}: {
+function ModeSwitch({ mode, onChange }: {
   mode: ChatSurfaceMode;
   onChange: (mode: ChatSurfaceMode) => void;
 }) {
+  const [open, setOpen] = useState(false);
   return (
     <Dropdown
       trigger={["click"]}
       placement="topLeft"
       getPopupContainer={popupRoot}
-      menu={{ items: [] }}
-      popupRender={() => (
-        <div className="agent-mode-panel" onMouseDown={(event) => event.stopPropagation()}>
-          <button
-            type="button"
-            className={`agent-mode-item${mode === "agent" ? " is-active" : ""}`}
-            onClick={() => onChange("agent")}
-          >
-            <InfinityIcon size={16} style={{ marginTop: 2 }} />
-            <span>
-              <div className="agent-mode-item-title">
-                Agent
-                {mode === "agent" ? <Check size={12} style={{ marginLeft: 8, display: "inline" }} /> : null}
-              </div>
-              <div className="agent-mode-item-desc">自由聊天，后续可接入操作</div>
-            </span>
-          </button>
-          <button
-            type="button"
-            className={`agent-mode-item${mode === "task" ? " is-active" : ""}`}
-            onClick={() => onChange("task")}
-          >
-            <LayoutList size={16} style={{ marginTop: 2 }} />
-            <span>
-              <div className="agent-mode-item-title">任务</div>
-              <div className="agent-mode-item-desc">按任务管理，看板稍后设计</div>
-            </span>
-          </button>
-        </div>
-      )}
+      open={open}
+      onOpenChange={setOpen}
+      autoFocus
+      menu={{
+        className: "agent-composer-menu",
+        selectedKeys: [mode],
+        items: [
+          { key: "agent", icon: <InfinityIcon size={16} />, label: <span className="agent-control-option"><span>Agent {mode === "agent" && <Check size={14} />}</span><small>聊天并调用已启用的工具</small></span> },
+          { key: "task", icon: <LayoutList size={16} />, label: <span className="agent-control-option"><span>任务 {mode === "task" && <Check size={14} />}</span><small>任务看板即将开放</small></span> },
+        ],
+        onClick: ({ key }) => { onChange(key as ChatSurfaceMode); setOpen(false); },
+      }}
     >
-      <button type="button" className="agent-chip agent-mode-chip" aria-label={mode === "task" ? "任务模式" : "Agent 模式"}>
-        {mode === "task" ? <LayoutList size={14} /> : <InfinityIcon size={14} />}
+      <button type="button" className="agent-chip agent-control" aria-label={mode === "task" ? "任务模式" : "Agent 模式"} aria-haspopup="menu" aria-expanded={open}>
+        {mode === "task" ? <LayoutList size={16} aria-hidden /> : <InfinityIcon size={16} aria-hidden />}
         <span>{mode === "task" ? "任务" : "Agent"}</span>
-        <ChevronDown size={12} style={{ flexShrink: 0, opacity: 0.7 }} />
+        <ChevronDown size={12} aria-hidden />
+      </button>
+    </Dropdown>
+  );
+}
+
+function InteractionModeSwitch({ mode, onChange }: {
+  mode: ComposerProps["interactionMode"];
+  onChange: ComposerProps["onInteractionModeChange"];
+}) {
+  const [open, setOpen] = useState(false);
+  const smart = mode === "smart";
+  return (
+    <Dropdown trigger={["click"]} placement="topLeft" getPopupContainer={popupRoot} open={open} onOpenChange={setOpen}
+      menu={{
+        className: "agent-composer-menu",
+        selectedKeys: [mode],
+        items: [
+          { key: "smart", icon: <Sparkles size={16} />, label: <span className="agent-control-option"><span>智能模式 {smart && <Check size={14} />}</span><small>可调用已启用的工具和技能</small></span> },
+          { key: "conversation", icon: <MessagesSquare size={16} />, label: <span className="agent-control-option"><span>对话模式 {!smart && <Check size={14} />}</span><small>仅进行普通对话，不调用工具</small></span> },
+        ],
+        onClick: ({ key }) => { onChange(key as ComposerProps["interactionMode"]); setOpen(false); },
+      }}
+    >
+      <button type="button" className="agent-chip agent-control" aria-label={smart ? "智能模式" : "对话模式"} aria-haspopup="menu" aria-expanded={open}>
+        {smart ? <Sparkles size={16} aria-hidden /> : <MessagesSquare size={16} aria-hidden />}
+        <span>{smart ? "智能" : "对话"}</span><ChevronDown size={12} aria-hidden />
       </button>
     </Dropdown>
   );
@@ -135,33 +95,100 @@ export function FloatingComposer({
   connectors,
   selectedConnectorId,
   model,
+  reasoningEffort,
+  onReasoningEffortChange,
   modelOptions,
+  modelMetadata,
   probingModels,
   modelPolicy,
   modelWarning,
   chatMode,
+  interactionMode,
   onChange,
   onSend,
   onStop,
   onConnectorChange,
   onModelChange,
   onChatModeChange,
+  onInteractionModeChange,
   large,
-}: ComposerProps) {
+  contextUsage,
+  status,
+  surface = "home",
+  expanded = false,
+  onExpandedChange,
+}: ComposerProps & { surface?: "home" | "detail"; expanded?: boolean; onExpandedChange?: (expanded: boolean) => void }) {
   const canSend = Boolean(value.trim()) && !sending && !modelPolicy.incompatibleModels.includes(model.trim());
   const composing = useRef(false);
+  const inputRef = useRef<ComponentRef<typeof Input.TextArea>>(null);
+  useEffect(() => { inputRef.current?.focus({ preventScroll: true }); }, [expanded]);
+  const [modelOpen, setModelOpen] = useState(false);
+
+  const [sendShortcut, setSendShortcut] = useState<"enter" | "mod-enter">(() => { try { return localStorage.getItem("cuepoint.agent.sendShortcut") === "mod-enter" ? "mod-enter" : "enter"; } catch { return "enter"; } });
+  const [listening, setListening] = useState(false);
+  const speechRef = useRef<SpeechRecognitionLike | null>(null);
+  const speechBaseRef = useRef("");
+  const detail = surface === "detail";
+
+  useEffect(() => {
+    if (!expanded) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && !event.defaultPrevented && event.target instanceof Element && event.target.closest(".agent-composer-stack")) onExpandedChange?.(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [expanded, onExpandedChange]);
+
+  useEffect(() => () => {
+    const speech = speechRef.current;
+    if (speech) { speech.onresult = null; speech.onend = null; speech.onerror = null; speech.stop(); }
+  }, []);
+
+  const toggleVoiceInput = () => {
+    if (listening) {
+      speechRef.current?.stop();
+      return;
+    }
+    const Recognition = speechRecognitionConstructor();
+    if (!Recognition) {
+      toast.info("当前浏览器不支持语音输入");
+      return;
+    }
+    const recognition = new Recognition();
+    speechBaseRef.current = value.trimEnd();
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.lang = "zh-CN";
+    recognition.onresult = (event) => {
+      const transcript = Array.from({ length: event.results.length }, (_, index) => event.results[index]?.[0]?.transcript ?? "").join("").trim();
+      onChange([speechBaseRef.current, transcript].filter(Boolean).join(" "));
+    };
+    recognition.onend = () => { setListening(false); speechRef.current = null; };
+    recognition.onerror = () => { setListening(false); speechRef.current = null; toast.error("语音输入失败，请重试"); };
+    speechRef.current = recognition;
+    setListening(true);
+    try { recognition.start(); } catch {
+      speechRef.current = null;
+      setListening(false);
+      toast.error("无法启动语音输入，请检查浏览器的麦克风权限");
+    }
+  };
 
   const trySend = () => {
-    if (canSend) onSend();
+    if (canSend && !listening) onSend();
   };
 
   return (
-    <div className="agent-composer">
+    <div className={`agent-composer-stack${expanded ? " is-expanded" : ""}`}>
+      {status && !expanded ? <div className="agent-composer-status">{status}</div> : null}
+    <div className="agent-composer agent-composer-refined">
       <Input.TextArea
+        ref={inputRef}
+        readOnly={listening}
         value={value}
         variant="borderless"
         placeholder="提问、创建内容或启动任务"
-        autoSize={{ minRows: large ? 3 : 2, maxRows: 10 }}
+        autoSize={expanded ? false : { minRows: large ? 3 : 2, maxRows: 10 }}
         className="agent-composer-input"
         onChange={(event) => onChange(event.target.value)}
         onCompositionStart={() => {
@@ -171,7 +198,13 @@ export function FloatingComposer({
           composing.current = false;
         }}
         onPressEnter={(event) => {
-          if (composing.current || event.shiftKey) return;
+          if (composing.current || event.nativeEvent.isComposing || event.shiftKey || event.altKey) return;
+          if (expanded) {
+            if (event.metaKey || event.ctrlKey) { event.preventDefault(); trySend(); }
+            return;
+          }
+          if (detail && sendShortcut === "mod-enter" && !(event.metaKey || event.ctrlKey)) return;
+          if (detail && !expanded && sendShortcut === "enter" && (event.metaKey || event.ctrlKey)) return;
           event.preventDefault();
           trySend();
         }}
@@ -179,39 +212,21 @@ export function FloatingComposer({
       {modelWarning ? <div role="status" style={{ padding: "0 16px 8px", fontSize: 12, color: "#e0b878" }}>{modelWarning}</div> : null}
       <div className="agent-composer-footer">
         <div className="agent-composer-cluster">
-          <ModeSwitch mode={chatMode} onChange={onChatModeChange} />
-          <Dropdown
-            trigger={["click"]}
-            placement="topLeft"
-            getPopupContainer={popupRoot}
-            menu={{ items: [] }}
-            popupRender={() => <PlusMenu />}
-          >
-            <ActionIcon icon={Plus} title="更多" size="small" />
-          </Dropdown>
+          {!detail && <ModeSwitch mode={chatMode} onChange={onChatModeChange} />}
+          <ComposerPlusMenu />
+          {detail ? <button type="button" className="agent-chip agent-control agent-control-icon" aria-label={expanded ? "退出全屏编辑" : "展开编辑器"} onClick={() => onExpandedChange?.(!expanded)}>
+            {expanded ? <Minimize2 size={17} aria-hidden /> : <Expand size={17} aria-hidden />}
+          </button> : null}
         </div>
 
         <div className="agent-composer-cluster agent-composer-cluster-right">
-          <Dropdown
-            trigger={["click"]}
-            placement="topRight"
-            getPopupContainer={popupRoot}
-            menu={{
-              items: [
-                { key: "low", label: "推理强度 · 低", disabled: true },
-                { key: "medium", label: "推理强度 · 中", disabled: true },
-                { key: "high", label: "推理强度 · 高", disabled: true },
-                { key: "soon", label: "即将按模型能力开放", disabled: true },
-              ],
-            }}
-          >
-            <button type="button" className="agent-chip">
-              推理强度
-            </button>
-          </Dropdown>
           <ModelSelectTrigger
+            trigger={model ? <ModelSettingsMenu connector={connectors.find((c) => c.id === selectedConnectorId)} model={model} effort={reasoningEffort} onChange={onReasoningEffortChange} onChooseModel={() => setModelOpen(true)} /> : undefined}
+            open={modelOpen}
+            onOpenChange={setModelOpen}
             model={model}
             modelOptions={modelOptions}
+            modelMetadata={modelMetadata}
             probingModels={probingModels}
             modelPolicy={modelPolicy}
             connectors={connectors}
@@ -219,14 +234,33 @@ export function FloatingComposer({
             onConnectorChange={onConnectorChange}
             onModelChange={onModelChange}
           />
-          <SendCircleButton
-            sending={sending}
-            canSend={canSend}
-            onSend={trySend}
-            onStop={onStop}
-          />
+          {detail ? <button type="button" className={`agent-chip agent-control agent-control-icon agent-voice-button${listening ? " is-active" : ""}`} aria-label={listening ? "停止语音输入" : "语音输入"} onClick={toggleVoiceInput} disabled={sending} title={listening ? "停止语音输入" : "语音输入"}><Mic size={17} aria-hidden /></button> : null}
+          <div className="agent-composer-send-group">
+            <SendCircleButton sending={sending} canSend={canSend && !listening} onSend={trySend} onStop={onStop} />
+            {detail && !sending ? <Dropdown
+              trigger={["click"]}
+              placement="topRight"
+              getPopupContainer={popupRoot}
+              menu={{
+                className: "agent-composer-menu",
+                selectedKeys: [expanded ? "mod-enter" : sendShortcut],
+                items: [
+                  { key: "enter", disabled: expanded, label: <span className="agent-control-option"><span>按 Enter 发送 {!expanded && sendShortcut === "enter" && <Check size={14} />}</span><small>Shift + Enter 换行</small></span> },
+                  { key: "mod-enter", label: <span className="agent-control-option"><span>按 ⌘ / Ctrl + Enter 发送 {(expanded || sendShortcut === "mod-enter") && <Check size={14} />}</span><small>Enter 换行</small></span> },
+                ],
+                onClick: ({ key }) => { setSendShortcut(key as "enter" | "mod-enter"); try { localStorage.setItem("cuepoint.agent.sendShortcut", key); } catch { /* Current page still uses the selection. */ } },
+              }}
+            ><button type="button" className="agent-send-menu-trigger" aria-label="发送方式"><ChevronDown size={13} aria-hidden /></button></Dropdown> : null}
+          </div>
         </div>
       </div>
+    </div>
+    {detail ? <div className="agent-composer-controlbar">
+      <div className="agent-composer-cluster">
+        <InteractionModeSwitch mode={interactionMode} onChange={onInteractionModeChange} />
+      </div>
+      <div className="agent-composer-cluster agent-composer-permissions"><AgentControls />{contextUsage}</div>
+    </div> : null}
     </div>
   );
 }

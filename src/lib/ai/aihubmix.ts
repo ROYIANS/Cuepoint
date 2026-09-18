@@ -1,3 +1,4 @@
+import { parseModelMetadata, type ChatModelMetadata } from "@/lib/ai/modelMetadata";
 export type AIHubMixCredentials = { baseUrl: string; apiKey: string };
 export type AIHubMixRequestOptions = { signal?: AbortSignal; fetchImpl?: typeof fetch };
 export type AIHubMixJson = null | boolean | number | string | AIHubMixJson[] | { [key: string]: AIHubMixJson };
@@ -12,6 +13,7 @@ export type AIHubMixFailure = {
 };
 export type AIHubMixResult<T> = ({ ok: true } & T) | AIHubMixFailure;
 export type AIHubMixModel = {
+  metadata?: ChatModelMetadata;
   id: string;
   types: string[];
   endpoints: string[];
@@ -181,6 +183,7 @@ export async function listAIHubMixModels(credentials: AIHubMixCredentials, optio
     const types = tokens(row.types), endpoints = tokens(row.endpoints), input = tokens(row.input_modalities), output = tokens(row.output_modalities), features = tokens(row.features);
     const invalid = [types, endpoints, input, output, features].some((value) => value === undefined) || (row.schema_checked != null && typeof row.schema_checked !== "boolean");
     models.push({
+      ...(parseModelMetadata(row) ? { metadata: parseModelMetadata(row) } : {}),
       id: row.model_id.trim(), types: [...new Set((types ?? []).map((type) => Object.hasOwn(TYPE_ALIASES, type) ? TYPE_ALIASES[type]! : type))], endpoints: endpoints ?? [],
       inputModalities: input ?? [], outputModalities: output ?? [], features: features ?? [],
       schemaChecked: typeof row.schema_checked === "boolean" ? row.schema_checked : undefined,

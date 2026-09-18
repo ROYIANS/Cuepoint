@@ -44,7 +44,7 @@ export function HomeWelcome({
           </Text>
         </div>
 
-        <FloatingComposer {...composer} large />
+        <FloatingComposer {...composer} large surface="home" />
 
         {recent.length > 0 ? (
           <div style={{ marginTop: 24, textAlign: "start" }}>

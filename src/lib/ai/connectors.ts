@@ -1,3 +1,4 @@
+import { collectModelMetadata, type ChatModelMetadata } from "@/lib/ai/modelMetadata";
 import type { ConnectorConfig } from "@/domain/types";
 import { listApimartModels, testApimartConnection } from "@/lib/ai/apimart";
 import { listAIHubMixModels, testAIHubMixConnection } from "@/lib/ai/aihubmix";
@@ -13,7 +14,7 @@ import {
 type ConnectorAccess = Pick<ConnectorConfig, "definitionId" | "baseUrl" | "apiKey">;
 
 export type ChatModelDiscoveryResult =
-  | { ok: true; models: string[]; incompatibleModels: string[] }
+  | { ok: true; models: string[]; incompatibleModels: string[]; metadata?: Record<string, ChatModelMetadata> }
   | { ok: false; message: string };
 
 /** Keep media restrictions beside suggestions so manual/saved options cannot reinsert them. */
@@ -41,6 +42,7 @@ export async function discoverConnectorChatModels(
       ok: true,
       models: [...suggestions].filter((id) => !incompatibleModels.has(id) && !uncertainModels.has(id)).sort((a, b) => a.localeCompare(b)),
       incompatibleModels: [...incompatibleModels],
+      ...(result.models.some((m) => m.metadata) ? { metadata: collectModelMetadata(result.models.flatMap((m) => m.metadata ? [[m.id, m.metadata]] : [])) } : {}),
     };
   }
   if (connector.definitionId !== "apimart") {
@@ -57,6 +59,7 @@ export async function discoverConnectorChatModels(
     models: [...new Set(result.models.filter((model) => model.category === "chat")
       .map((model) => model.id))].filter((id) => !incompatibleModels.includes(id)).sort((a, b) => a.localeCompare(b)),
     incompatibleModels,
+    ...(result.models.some((m) => m.metadata) ? { metadata: collectModelMetadata(result.models.flatMap((m) => m.metadata ? [[m.id, m.metadata]] : [])) } : {}),
   };
 }
 

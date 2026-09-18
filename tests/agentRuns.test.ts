@@ -33,6 +33,38 @@ describe("durable Agent runs", () => {
     await expect(beginAgentRun({ threadId: "missing", connector, model: "test", content: "hi" })).rejects.toThrow("不存在");
     expect(await db.agentRuns.count()).toBe(1);
   });
+  it("freezes conversation mode without skills or tool schemas", async () => {
+    const thread = await createChatThread();
+    const run = await beginAgentRun({ threadId: thread.id, connector, model: "test", content: "只聊天", interactionMode: "conversation" });
+    expect(run.interactionMode).toBe("conversation");
+    expect(run.enabledToolNames).toEqual([]);
+    expect(run.skillInstructions).toBe("");
+    expect(run.requestMessages.some((message) => message.role === "system" && message.content.includes("workspace_overview"))).toBe(false);
+  });
+  it("keeps conversation mode across retry and sends no tool definitions", async () => {
+    const thread = await createChatThread();
+    const run = await beginAgentRun({ threadId: thread.id, connector, model: "test", content: "plain", interactionMode: "conversation" });
+    await finishAgentRun(run.id, "failed");
+    const retry = await beginAgentRun({ threadId: thread.id, connector, model: "test", retryOfRunId: run.id, interactionMode: "smart" });
+    expect(retry.interactionMode).toBe("conversation");
+    expect(retry.enabledToolNames).toEqual([]);
+    const requests: Record<string, unknown>[] = [];
+    await executeChatRun(retry, connector.apiKey, new AbortController(), (async (_url, init) => {
+      requests.push(JSON.parse(String(init?.body)));
+      return Response.json({ choices: [{ message: { content: "answer" }, finish_reason: "stop" }] });
+    }) as typeof fetch);
+    expect(requests).toHaveLength(1);
+    expect(requests[0].tools).toBeUndefined();
+    expect((await db.agentRuns.get(retry.id))?.status).toBe("completed");
+  });
+  it("does not enable today's skills on a legacy retry with no tool snapshot", async () => {
+    const run = await begin();
+    await finishAgentRun(run.id, "failed");
+    await db.agentRuns.update(run.id, { enabledToolNames: undefined, skillInstructions: undefined, interactionMode: undefined });
+    const retry = await beginAgentRun({ threadId: run.threadId, connector, model: "test", retryOfRunId: run.id, interactionMode: "conversation" });
+    expect(retry.enabledToolNames).toEqual([]);
+    expect(retry.skillInstructions).toBe("");
+  });
   it("rejects credentials in base URLs and competing begins", async () => {
     const run = await begin();
     await expect(beginAgentRun({ threadId: run.threadId, connector, model: "test", content: "second" })).rejects.toThrow("已有执行");

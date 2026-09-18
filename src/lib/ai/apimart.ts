@@ -1,3 +1,4 @@
+import { parseModelMetadata, type ChatModelMetadata } from "@/lib/ai/modelMetadata";
 import { normalizeBaseUrl } from "@/lib/ai/openaiCompatible";
 
 export type ApimartCredentials = { baseUrl: string; apiKey: string };
@@ -19,6 +20,7 @@ export type ApimartModelParameters = {
   input_schema: { [key: string]: ApimartJson } | boolean;
 };
 export type ApimartModel = {
+  metadata?: ChatModelMetadata;
   id: string;
   category: string;
   capabilityTags: string[];
@@ -209,6 +211,7 @@ export async function listApimartModels(
     if (!record(row) || !nonempty(row.id)) return protocol();
     const parameters = modelParameters(row.parameters);
     models.push({
+      ...(parseModelMetadata(row) ? { metadata: parseModelMetadata(row) } : {}),
       id: row.id.trim(),
       category: nonempty(row.category) ? row.category.trim() : "unknown",
       capabilityTags: Array.isArray(row.capability_tags) ? row.capability_tags.filter(nonempty) : [],

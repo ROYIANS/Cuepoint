@@ -4,16 +4,19 @@ import {
   normalizeBaseUrl,
 } from "@/lib/ai/openaiCompatible";
 
-export type ChatCompletionMessage = {
-  role: "system" | "user" | "assistant";
-  content: string;
-};
+import { assertReasoningEffort } from "@/lib/ai/reasoningPolicy";
+import type { ConnectorDefinitionId } from "@/domain/types";
+import type { AgentModelMetrics, AgentTokenUsage, AgentReasoningEffort, AgentRequestMessage, AgentToolSchema, AgentWireToolCall } from "@/domain/agent";
+export type ChatCompletionMessage = AgentRequestMessage;
 
 export type StreamChatInput = {
   baseUrl: string;
   apiKey: string;
   model: string;
+  connectorDefinitionId?: ConnectorDefinitionId;
+  reasoningEffort?: AgentReasoningEffort;
   messages: ChatCompletionMessage[];
+  tools?: AgentToolSchema[];
 };
 
 /** One SSE/JSON chunk may carry answer text, reasoning text, or both. */
@@ -29,9 +32,9 @@ export type StreamChatHandlers = {
   fetchImpl?: typeof fetch;
 };
 
-export type StreamChatResult =
-  | { ok: true; content: string; reasoning: string; via: "stream" | "json"; finishReason?: string }
-  | { ok: false; message: string; aborted?: boolean; finishReason?: string };
+export type StreamChatResult = ({ metrics?: Omit<AgentModelMetrics, "step">; usage?: AgentTokenUsage }) & (
+  | { ok: true; content: string; reasoning: string; via: "stream" | "json"; finishReason?: string; toolCalls?: AgentWireToolCall[] }
+  | { ok: false; message: string; aborted?: boolean; finishReason?: string });
 
 /**
  * Accumulate reasoning/content deltas and close reasoning on first answer token
@@ -178,9 +181,20 @@ function redactError(message: string, apiKey: string): string {
     .replace(/Bearer\s+[^\s"',;]+/gi, "Bearer [已隐藏]").slice(0, 300);
 }
 
+function readUsage(data: unknown): AgentTokenUsage | undefined {
+  if (!record(data) || !record(data.usage)) return undefined;
+  const usage: AgentTokenUsage = {};
+  for (const [wire, name] of [["prompt_tokens", "inputTokens"], ["completion_tokens", "outputTokens"], ["total_tokens", "totalTokens"]] as const) {
+    const value = data.usage[wire];
+    if (typeof value === "number" && Number.isSafeInteger(value) && value >= 0) usage[name] = value;
+  }
+  return Object.keys(usage).length ? usage : undefined;
+}
+
 function decodeCompletion(data: unknown, stream: boolean): {
   delta: StreamDelta;
   finishReason?: string;
+  toolFragments?: unknown[];
 } {
   if (!record(data)) throw new Error("模型返回了无效的响应格式");
   if (data.error != null) {
@@ -199,14 +213,16 @@ function decodeCompletion(data: unknown, stream: boolean): {
       throw new Error("当前聊天仅支持文本回复");
     }
   }
-  if ((Array.isArray(source.tool_calls) && source.tool_calls.length > 0) || source.function_call != null) {
+  if (source.function_call != null) {
     throw new Error("模型请求了工具调用，当前执行尚未启用工具能力");
   }
+  if (source.tool_calls != null && !Array.isArray(source.tool_calls)) throw new Error("工具调用格式无效");
   const finishReason = choice.finish_reason;
   if (finishReason != null && (typeof finishReason !== "string" || !finishReason)) {
     throw new Error("模型返回了无效的结束状态");
   }
   return {
+    ...(Array.isArray(source.tool_calls) ? { toolFragments: source.tool_calls } : {}),
     delta: {
       ...(pickContentText(source) ? { content: pickContentText(source) } : {}),
       ...(pickReasoningText(source) ? { reasoning: pickReasoningText(source) } : {}),
@@ -215,13 +231,62 @@ function decodeCompletion(data: unknown, stream: boolean): {
   };
 }
 
+/** Assemble bounded provider fragments; execution still validates strict tool arguments. */
+function createToolAccumulator(tools?: AgentToolSchema[]) {
+  const calls = new Map<number, { id: string; name: string; arguments: string }>();
+  return {
+    push(fragments: unknown[] | undefined, streaming: boolean) {
+      if (!fragments?.length) return;
+      if (!tools?.length) throw new Error("模型请求了工具调用，当前执行尚未启用工具能力");
+      for (const [position, fragment] of fragments.entries()) {
+        if (!record(fragment)) throw new Error("工具调用格式无效");
+        const index = streaming ? fragment.index : position;
+        if (typeof index !== "number" || !Number.isInteger(index) || index < 0 || index >= 16) throw new Error("工具调用索引无效或超过限制");
+        const call = calls.get(index) ?? { id: "", name: "", arguments: "" };
+        if (fragment.type != null && fragment.type !== "function") throw new Error("不支持的工具调用类型");
+        if (fragment.id != null) {
+          if (typeof fragment.id !== "string" || (call.id && call.id !== fragment.id)) throw new Error("工具调用标识冲突");
+          call.id = fragment.id;
+        }
+        if (fragment.function != null) {
+          if (!record(fragment.function)) throw new Error("工具调用函数格式无效");
+          for (const field of ["name", "arguments"] as const) {
+            const value = fragment.function[field];
+            if (value != null && typeof value !== "string") throw new Error("工具调用参数格式无效");
+            if (typeof value === "string") call[field] += value;
+          }
+        }
+        if (call.arguments.length > 32768 || call.name.length > 128 || call.id.length > 256) throw new Error("工具调用超过大小限制");
+        calls.set(index, call);
+      }
+    },
+    finish(): AgentWireToolCall[] | undefined {
+      if (!calls.size) return undefined;
+      const seen = new Set<string>();
+      return [...calls.entries()].sort(([a], [b]) => a - b).map(([index, call], position) => {
+        if (index !== position || !call.id || seen.has(call.id) || !tools?.some((tool) => tool.function.name === call.name)) throw new Error("工具调用缺少标识、重复或请求了未启用的工具");
+        seen.add(call.id);
+        let args: unknown;
+        try { args = JSON.parse(call.arguments); } catch { throw new Error("工具调用参数不是完整 JSON"); }
+        if (!record(args)) throw new Error("工具参数必须是对象");
+        return { id: call.id, type: "function", function: { name: call.name, arguments: call.arguments } };
+      });
+    },
+  };
+}
+
 function completionResult(
   content: string,
   reasoning: string,
   via: "stream" | "json",
   finishReason?: string,
+  toolCalls?: AgentWireToolCall[],
 ): StreamChatResult {
   const metadata = finishReason ? { finishReason } : {};
+  if (toolCalls?.length) {
+    if (finishReason !== "tool_calls") return { ok: false, message: "工具调用缺少完整结束状态", ...metadata };
+    return { ok: true, content, reasoning, via, toolCalls, ...metadata };
+  }
   if (finishReason && finishReason !== "stop") {
     const message = finishReason === "length" ? "回复达到模型长度上限，内容未完成"
       : finishReason === "content_filter" ? "回复被模型内容过滤中断"
@@ -266,36 +331,51 @@ export async function streamChatCompletions(
 
   const fetchImpl = handlers.fetchImpl ?? fetch;
   const signal = handlers.signal;
+  const startedAt = Date.now();
+  let firstTokenAt: number | undefined;
+  let usage: AgentTokenUsage | undefined;
+  const observe = (delta: StreamDelta, tools?: unknown[]) => {
+    if (firstTokenAt === undefined && (delta.content || delta.reasoning || tools?.length)) firstTokenAt = Date.now();
+  };
+  const withMetrics = (result: StreamChatResult): StreamChatResult => ({
+    ...result, ...(usage ? { usage } : {}),
+    metrics: { startedAt, ...(firstTokenAt !== undefined ? { firstTokenAt } : {}), endedAt: Date.now(), ...(usage ? { usage } : {}) },
+  });
 
   try {
     signal?.throwIfAborted();
+    assertReasoningEffort(input.connectorDefinitionId ? { definitionId: input.connectorDefinitionId, baseUrl: base } : undefined, model, input.reasoningEffort);
     const res = await fetchImpl(chatCompletionsUrl(base), {
       method: "POST",
       headers: authHeaders(apiKey),
       signal,
-      body: JSON.stringify({ model, messages: input.messages, stream: true }),
+      body: JSON.stringify({ model, messages: input.messages, stream: true, ...(input.reasoningEffort !== undefined ? { reasoning_effort: input.reasoningEffort } : {}), ...(input.tools?.length ? { tools: input.tools } : {}) }),
     });
     signal?.throwIfAborted();
     if (!res.ok) {
       const body = await res.text().catch(() => "");
       signal?.throwIfAborted();
-      return { ok: false, message: formatHttpError(res.status, redactError(body, apiKey)) };
+      return withMetrics({ ok: false, message: formatHttpError(res.status, redactError(body, apiKey)) });
     }
 
     const contentType = res.headers.get("content-type") ?? "";
     if (!contentType.toLowerCase().includes("text/event-stream")) {
       const data: unknown = await res.json().catch(() => null);
       signal?.throwIfAborted();
-      const { delta, finishReason } = decodeCompletion(data, false);
+      usage = readUsage(data);
+      const { delta, finishReason, toolFragments } = decodeCompletion(data, false);
+      const calls = createToolAccumulator(input.tools);
+      calls.push(toolFragments, false);
       const acc = { content: "", reasoning: "" };
       applyDeltaHandlers(handlers, delta, acc);
       signal?.throwIfAborted();
-      return completionResult(acc.content, acc.reasoning, "json", finishReason ? redactError(finishReason, apiKey) : undefined);
+      return withMetrics(completionResult(acc.content, acc.reasoning, "json", finishReason ? redactError(finishReason, apiKey) : undefined, calls.finish()));
     }
     if (!res.body) throw new Error("模型返回了空的响应流");
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder("utf-8", { fatal: true });
+    const calls = createToolAccumulator(input.tools);
     let buffer = "";
     let eventData: string[] = [];
     let eventType = "";
@@ -322,10 +402,13 @@ export async function streamChatCompletions(
       if (data.trim() === "[DONE]") { completed = true; return; }
       let value: unknown;
       try { value = JSON.parse(data); } catch { throw new Error("模型返回了无效的流事件"); }
+      usage = readUsage(value) ?? usage;
       const frame = decodeCompletion(value, true);
-      if (finishReason && (frame.delta.content || frame.delta.reasoning || frame.finishReason)) {
+      observe(frame.delta, frame.toolFragments);
+      if (finishReason && (frame.delta.content || frame.delta.reasoning || frame.finishReason || frame.toolFragments?.length)) {
         throw new Error("模型在结束状态后继续返回内容");
       }
+      calls.push(frame.toolFragments, true);
       applyDeltaHandlers(handlers, frame.delta, acc);
       if (frame.finishReason) finishReason = redactError(frame.finishReason, apiKey);
     };
@@ -369,7 +452,7 @@ export async function streamChatCompletions(
         throw new Error("回复流意外中断，已保留收到的内容");
       }
       if (!completed && !finishReason) throw new Error("回复流意外中断，已保留收到的内容");
-      return completionResult(acc.content, acc.reasoning, "stream", finishReason);
+      return withMetrics(completionResult(acc.content, acc.reasoning, "stream", finishReason, calls.finish()));
     } finally {
       signal?.removeEventListener("abort", onAbort);
       void reader.cancel().catch(() => undefined);
@@ -377,8 +460,8 @@ export async function streamChatCompletions(
     }
   } catch (err) {
     if (signal?.aborted || (err instanceof DOMException && err.name === "AbortError")) {
-      return { ok: false, message: "已停止", aborted: true };
+      return withMetrics({ ok: false, message: "已停止", aborted: true });
     }
-    return { ok: false, message: redactError(err instanceof Error ? err.message : "网络错误", apiKey) };
+    return withMetrics({ ok: false, message: redactError(err instanceof Error ? err.message : "网络错误", apiKey) });
   }
 }

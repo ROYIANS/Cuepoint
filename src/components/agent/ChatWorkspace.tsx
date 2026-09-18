@@ -1,3 +1,4 @@
+import type { RunAction } from "./AgentRunDetails";
 import type { AgentRun } from "@/domain/agent";
 import { ActionIcon, Flexbox } from "@lobehub/ui";
 import { ChatHeader, ChatHeaderTitle } from "@lobehub/ui/chat";
@@ -9,7 +10,7 @@ import {
   Pencil,
   Trash2,
 } from "lucide-react";
-import { useCallback, useState, type CSSProperties } from "react";
+import { useCallback, useState, useLayoutEffect, useRef, type CSSProperties } from "react";
 import { TopicListBody, TopicSidebar } from "@/components/agent/TopicSidebar";
 import type { ComposerProps } from "@/components/agent/composerTypes";
 import { FloatingComposer } from "@/components/agent/FloatingComposer";
@@ -62,6 +63,7 @@ export function ChatWorkspace({
   runs,
   retryableRunId,
   onRetryRun,
+  onRunAction,
   composer,
   onSelectThread,
   onNewTopic,
@@ -75,12 +77,26 @@ export function ChatWorkspace({
   runs?: AgentRun[];
   retryableRunId?: string;
   onRetryRun: (id: string) => void;
+  onRunAction: (runId: string, action: RunAction, callId?: string) => void;
   composer: ComposerProps;
   onSelectThread: (id: Id) => void;
   onNewTopic: () => void;
   onRenameThread: (thread: ChatThread) => void;
   onDeleteThread: (thread: ChatThread) => void;
 }) {
+  const [expanded, setExpanded] = useState(false);
+  const dockRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const dock = dockRef.current;
+    const column = dock?.parentElement;
+    if (!dock || !column) return;
+    const resize = new ResizeObserver(() => {
+      if (dock.classList.contains("is-expanded")) return;
+      column.style.setProperty("--agent-chat-composer-safe", `${dock.getBoundingClientRect().height + 16}px`);
+    });
+    resize.observe(dock);
+    return () => resize.disconnect();
+  }, []);
   const [collapsed, setCollapsed] = useState(readCollapsed);
   const [topicsOpen, setTopicsOpen] = useState(false);
 
@@ -166,7 +182,7 @@ export function ChatWorkspace({
 
       <Flexbox flex={1} height="100%" className="agent-chat-column min-w-0">
         <ChatHeader
-          className="agent-chat-header"
+          className="agent-chat-header" style={expanded ? { visibility: "hidden" } : undefined}
           left={
             <ChatHeaderTitle
               title={activeThread?.title ?? "对话"}
@@ -220,10 +236,10 @@ export function ChatWorkspace({
             </Flexbox>
           }
         />
-        <MessageList messages={messages} runs={runs} retryableRunId={retryableRunId} onRetryRun={onRetryRun} />
-        <div className="agent-composer-dock">
+        <div className="agent-transcript-container" inert={expanded} style={expanded ? { visibility: "hidden" } : undefined}><MessageList messages={messages} runs={runs} retryableRunId={retryableRunId} onRetryRun={onRetryRun} busy={composer.sending} onRunAction={onRunAction} /></div>
+        <div ref={dockRef} className={`agent-composer-dock${expanded ? " is-expanded" : ""}`}>
           <div className="agent-content">
-            <FloatingComposer {...composer} />
+            <FloatingComposer {...composer} surface="detail" expanded={expanded} onExpandedChange={setExpanded} />
           </div>
         </div>
       </Flexbox>

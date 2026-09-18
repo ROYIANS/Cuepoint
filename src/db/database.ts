@@ -1,4 +1,4 @@
-import type { AgentConfig, AgentRun } from "@/domain/agent";
+import type { AgentConfig, AgentRun, AgentToolCall } from "@/domain/agent";
 import type { ProductionProposal } from "@/domain/production";
 import Dexie, { type Table } from "dexie";
 import type {
@@ -19,6 +19,7 @@ import { parseShotPictureSlots } from "@/domain/slot";
 import { createId, nowIso } from "@/lib/ids";
 
 export class AifenjingDB extends Dexie {
+  agentToolCalls!: Table<AgentToolCall, string>;
   agents!: Table<AgentConfig, string>;
   agentRuns!: Table<AgentRun, string>;
   productionProposals!: Table<ProductionProposal, string>;
@@ -160,6 +161,7 @@ export class AifenjingDB extends Dexie {
         message.error = "上次生成已中断，已保留收到的内容。可重新发送问题。";
       });
     });
+    this.version(9).stores({ agentToolCalls: "id, runId, threadId, &[runId+providerCallId], status" });
   }
 }
 

@@ -1,3 +1,8 @@
+import type { AgentReasoningEffort } from "@/domain/agent";
+import { getReasoningPolicy } from "@/lib/ai/reasoningPolicy";
+import { ContextUsageTrigger } from "./ContextUsagePanel";
+import type { RunAction } from "./AgentRunDetails";
+import { cancelAgentRun, resolveAgentToolApproval } from "@/db/agentTools";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Button, Empty, Flexbox } from "@lobehub/ui";
@@ -10,7 +15,7 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { ChatWorkspace } from "@/components/agent/ChatWorkspace";
-import type { ChatSurfaceMode, ComposerProps } from "@/components/agent/composerTypes";
+import type { AgentInteractionMode, ChatSurfaceMode, ComposerProps } from "@/components/agent/composerTypes";
 import { HomeWelcome } from "@/components/agent/HomeWelcome";
 import {
   AlertDialog,
@@ -39,7 +44,7 @@ import {
 } from "@/db/repo";
 import type { ChatThread, Id } from "@/domain/types";
 import { assertRetryConnector, beginAgentRun, canRetryRun } from "@/db/agentRuns";
-import { executeChatRun } from "@/lib/agent/runChat";
+import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
 import { recoverAbandonedRuns, withThreadRunLock } from "@/lib/agent/runOwnership";
 import { deriveChatTitle } from "@/lib/chatTitle";
 import { discoverConnectorChatModels, runWithCompatibleChatModel } from "@/lib/ai/connectors";
@@ -61,10 +66,13 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
   const connectors = useLiveQuery(() => db.connectors.toArray(), []);
   const activeThreadId = threadId;
   const [draft, setDraft] = useState("");
+  const [contextOpen, setContextOpen] = useState(false);
   const [sessionConnectorId, setSessionConnectorId] = useState<Id | undefined>();
   const [sessionModel, setSessionModel] = useState("");
+  const [effortSelection, setEffortSelection] = useState<{ threadId?: Id; connectorId?: string; baseUrl?: string; model: string; value?: AgentReasoningEffort }>();
   const [modelCatalog, setModelCatalog] = useState<ChatModelCatalog>();
   const [chatMode, setChatMode] = useState<ChatSurfaceMode>("agent");
+  const [interactionSelection, setInteractionSelection] = useState<{ threadId?: Id; mode: AgentInteractionMode }>();
   const [sending, setSending] = useState(false);
   const [renameTarget, setRenameTarget] = useState<ChatThread>();
   const [renameValue, setRenameValue] = useState("");
@@ -170,6 +178,10 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
 
   const modelValue = sessionModel.trim();
   const showHome = !activeThreadId;
+  const interactionMode = interactionSelection?.threadId === activeThreadId ? interactionSelection?.mode ?? "smart" : activeThread?.interactionMode ?? "smart";
+  const effortPolicy = selectedConnector ? getReasoningPolicy(selectedConnector, modelValue) : undefined;
+  const effectiveEffort = effortSelection?.threadId === activeThreadId ? effortSelection : activeThread?.reasoningSelection;
+  const reasoningEffort = effectiveEffort?.connectorId === selectedConnector?.id && effectiveEffort?.baseUrl === selectedConnector?.baseUrl && effectiveEffort?.model === modelValue && effectiveEffort.value && effortPolicy?.levels.includes(effectiveEffort.value) ? effectiveEffort.value : undefined;
 
   const selectionRef = useRef({ connector: selectedConnector, model: modelValue, threadId: activeThreadId });
   selectionRef.current = { connector: selectedConnector, model: modelValue, threadId: activeThreadId };
@@ -195,6 +207,7 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
           connector: selectedConnector,
           status: result.ok ? "ready" : "error",
           models: result.ok ? result.models : [],
+          metadata: result.ok ? result.metadata : undefined,
           incompatibleModels: result.ok ? result.incompatibleModels : previous?.incompatibleModels ?? [],
         }));
       });
@@ -303,7 +316,8 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
         const targetThread = thread;
         await withThreadRunLock(targetThread.id, async () => {
           if (controller.signal.aborted) return;
-          const run = await beginAgentRun({ threadId: targetThread.id, connector, model, content });
+          await updateChatThread(targetThread.id, { interactionMode: activeThreadId ? interactionMode : "smart", reasoningSelection: { connectorId: connector.id, baseUrl: connector.baseUrl, model, value: reasoningEffort } });
+          const run = await beginAgentRun({ threadId: targetThread.id, connector, model, content, reasoningEffort, interactionMode: activeThreadId ? interactionMode : "smart" });
           setDraft((current) => current === draft ? "" : current);
           await executeChatRun(run, connector.apiKey, controller);
         });
@@ -324,7 +338,7 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
         setSending(false);
       }
     }
-  }, [navigate, draft, activeThread, activeThreadId, selectedConnector, modelValue]);
+  }, [navigate, draft, activeThread, activeThreadId, selectedConnector, modelValue, reasoningEffort, interactionMode]);
 
   const handleRetry = useCallback(async (runId: string) => {
     if (sendLockRef.current) return;
@@ -357,6 +371,54 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
     }
   }, [activeThreadId]);
 
+  const handleRunAction = useCallback(async (runId: string, action: RunAction, callId?: string) => {
+    if (sendLockRef.current) return;
+    const controller = new AbortController();
+    sendLockRef.current = true;
+    abortRef.current = controller;
+    executionThreadRef.current = activeThreadId;
+    setSending(true);
+    try {
+      const run = await db.agentRuns.get(runId);
+      if (!run || run.threadId !== activeThreadId) throw new Error("执行不存在");
+      if (action === "cancel") {
+        await withThreadRunLock(run.threadId, async () => { await cancelAgentRun(run.id); });
+        return;
+      }
+      // Persist the decision independently of connector availability, so refusal
+      // never requires sending another model request or having a working API key.
+      if ((action === "approve" || action === "reject") && callId) {
+        await withThreadRunLock(run.threadId, async () => {
+          if (controller.signal.aborted) return;
+          await resolveAgentToolApproval(run.id, callId, action);
+        });
+        const outstanding = await db.agentToolCalls.where("runId").equals(run.id).filter((call) => call.status === "awaiting_approval").count();
+        if (outstanding > 0) return;
+      }
+      if (controller.signal.aborted) return;
+      const connector = await db.connectors.get(run.connector.id);
+      if (!connector) throw new Error("决定已保存。原连接不存在，请恢复连接后继续或结束执行。");
+      assertRetryConnector(run, connector);
+      const checked = await runWithCompatibleChatModel(connector, run.model, () =>
+        withThreadRunLock(run.threadId, async () => {
+          if (controller.signal.aborted) return;
+          await resumeChatRun(run.id, connector.apiKey, controller);
+        }), {
+          signal: controller.signal,
+          isCurrent: () => selectionRef.current.threadId === run.threadId,
+        });
+      if (!checked.ok && !checked.aborted) toast.error(checked.message);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "处理执行失败");
+    } finally {
+      sendLockRef.current = false;
+      if (abortRef.current === controller) { abortRef.current = null; setSending(false); }
+    }
+  }, [activeThreadId]);
+  const onRunAction = useCallback((runId: string, action: RunAction, callId?: string) => {
+    void handleRunAction(runId, action, callId);
+  }, [handleRunAction]);
+
   const retryableRunId = useMemo(() => {
     const latest = runs?.at(-1);
     return latest && canRetryRun(latest, runs ?? [], messages ?? []) ? latest.id : undefined;
@@ -381,7 +443,7 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
     );
   }
 
-  if (connectorList.length === 0) {
+  if (connectorList.length === 0 && !activeThreadId) {
     return (
       <Flexbox
         align="center"
@@ -401,13 +463,31 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
     );
   }
 
+  const currentRun = runs?.filter((r) => r.threadId === activeThreadId).at(-1);
   const composerProps: ComposerProps = {
+    status: currentRun && (currentRun.status === "running" || currentRun.status === "waiting_approval" || currentRun.status === "interrupted" || currentRun.status === "failed") ? (
+      <div className="agent-composer-run-status" role="status">
+        <span><i />{currentRun.status === "running" ? "正在执行" : currentRun.status === "waiting_approval" ? "等待你批准操作" : currentRun.status === "interrupted" ? "执行已中断，进度已保存" : "执行未完成"}</span>
+        {currentRun.status === "running" && <button type="button" onClick={handleStop} disabled={!sending}>停止</button>}
+      </div>
+    ) : undefined,
+    contextUsage: <ContextUsageTrigger interactionMode={interactionMode} draft={draft} messages={messages?.filter((m) => m.threadId === activeThreadId) ?? []} runs={runs?.filter((r) => r.threadId === activeThreadId) ?? []} model={modelValue} connector={selectedConnector} modelMetadata={catalogMatches ? modelCatalog?.metadata : undefined} open={contextOpen} onOpenChange={setContextOpen} />,
+
+    reasoningEffort,
+    onReasoningEffortChange: (value) => {
+      if (!selectedConnector) return;
+      const selection = { connectorId: selectedConnector.id, baseUrl: selectedConnector.baseUrl, model: modelValue, value };
+      selectionRevisionRef.current += 1;
+      setEffortSelection({ ...selection, threadId: activeThreadId });
+      if (activeThreadId) void updateChatThread(activeThreadId, { reasoningSelection: selection }).catch(() => toast.error("推理设置保存失败，当前页面仍保留所选值"));
+    },
     value: draft,
     sending,
     connectors: connectorList,
     selectedConnectorId: selectedConnector?.id,
     model: modelValue,
     modelOptions: selectModelOptions,
+    modelMetadata: catalogMatches ? modelCatalog?.metadata : undefined,
     probingModels,
     modelPolicy,
     modelWarning: modelValue
@@ -416,6 +496,7 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
         : chatModelIssue(modelValue, modelPolicy)
       : undefined,
     chatMode,
+    interactionMode,
     onChange: setDraft,
     onSend: () => void handleSend(),
     onStop: handleStop,
@@ -424,6 +505,10 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
     onChatModeChange: (mode) => {
       setChatMode(mode);
       if (mode === "task") toast.info("任务看板即将开放");
+    },
+    onInteractionModeChange: (mode) => {
+      setInteractionSelection({ threadId: activeThreadId, mode });
+      if (activeThreadId) void updateChatThread(activeThreadId, { interactionMode: mode }).catch(() => toast.error("对话模式保存失败，请重试"));
     },
   };
 
@@ -437,6 +522,7 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
         />
       ) : (
         <ChatWorkspace
+          key={activeThreadId}
           threads={threadList}
           activeThreadId={activeThreadId}
           activeThread={activeThread}
@@ -444,6 +530,7 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
           runs={runs?.filter((run) => run.threadId === activeThreadId)}
           retryableRunId={sending ? undefined : retryableRunId}
           onRetryRun={onRetryRun}
+          onRunAction={onRunAction}
           composer={composerProps}
           onSelectThread={openThread}
           onNewTopic={handleNewTopic}
