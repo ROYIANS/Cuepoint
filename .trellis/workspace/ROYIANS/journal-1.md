@@ -236,3 +236,24 @@ Studio /connectors BYOK page; OpenAI-compatible client; keys local-only; docs fo
 ### Status
 
 [OK] **Completed**
+
+
+## Session 11: Brand About and prismatic logo
+
+**Date**: 2026-09-18
+**Task**: Brand About and prismatic logo
+**Branch**: `main`
+
+### Summary
+
+Shipped /about with Cuepoint brand mark (webp logo, privacy, GitHub), studio chrome logo link, then archived brand-about.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `abbd8c2` | (see git log) |
+
+### Status
+
+[OK] **Completed**
