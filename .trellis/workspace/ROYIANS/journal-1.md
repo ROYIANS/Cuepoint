@@ -47,3 +47,24 @@ Delivered reliable local editing, film and series modes, script-to-scene orderin
 ### Status
 
 [OK] **Completed**
+
+
+## Session 3: Complete shot efficiency P1
+
+**Date**: 2026-09-18
+**Task**: Complete shot efficiency P1
+**Branch**: `main`
+
+### Summary
+
+Shipped drag-and-drop reorder, manual shot status with filters, keyboard shortcuts, and stronger bulk edits; 55 tests green.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `14260cf` | (see git log) |
+
+### Status
+
+[OK] **Completed**
