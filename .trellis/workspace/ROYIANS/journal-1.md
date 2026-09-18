@@ -505,3 +505,39 @@ Implemented durable shared task/chat identity, manual goals and checklists, task
 ### Status
 
 [OK] **Completed**
+
+
+## Session 23: Conversation context settings and durable compaction
+
+**Date**: 2026-09-19
+**Task**: Conversation context settings and durable compaction
+**Branch**: `main`
+
+### Summary
+
+Implemented LobeHub-aligned context defaults, per-thread parameters, group-safe history selection and durable automatic summarization. Verified stop, explicit retry, reload and tool continuation. Archived the completed task.
+
+### Main Changes
+
+- Shared planner freezes policy and capacity per run; exact ordered source coverage prevents stale summaries leaking excluded history.
+- Compaction atomically replaces only base history and preserves all live tool calls, results and opaque Responses continuation; this remains working context rather than long-term memory.
+- Flat parameters submenu and summary/source inspection verified on desktop and 390px mobile; Escape and outside dismissal fixed.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `633a609` | (see git log) |
+
+### Testing
+
+- [OK] Full suite: 46 files / 576 tests passed; final focused rerun: 21 tests; lint, production build and diff checks passed.
+- [OK] Isolated Edge HTTP fixtures: summarize, stop, explicit regenerate, final answer and reload without new requests. No paid provider calls.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Review the next Agent capability with the user; keep task retrospectives and cross-task memory distinct from working-context compaction.
