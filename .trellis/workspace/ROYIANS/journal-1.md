@@ -562,3 +562,37 @@ Moved the rounded bordered surface to StudioShell, removed navigation rail backg
 ### Status
 
 [OK] **Completed**
+
+
+## Session 25: Creative skills, reviewed generation and resumable execution
+
+**Date**: 2026-09-19
+**Task**: Creative skills, reviewed generation and resumable execution
+**Branch**: `main`
+
+### Summary
+
+Delivered 40 tools in six default-enabled skills covering all creative business entities and durable image/video generation. Added AI-prepared editable provider/model/prompt/parameter confirmation, separate per-kind defaults, and explicit 32-request execution segments. Preserved immutable approval envelopes and no-replay recovery. Full 697-test gate, typecheck/build and isolated desktop/mobile browser flows passed; no live paid requests. Archived the completed task.
+
+### Main Changes
+
+- Captured business ownership, atomic ledger writes, generation submission uncertainty, user overrides and segment-budget contracts in frontend specs.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `d684534` | (see git log) |
+
+### Testing
+
+- [OK] 55 files / 697 tests; lint and build pass; large bundle advisory remains.
+- [OK] Browser fixtures verify business approval, result application, AIHubMix-to-APIMart review, mobile form sizing and pause/reload/continue without replay.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Recommended next: task verification and wrap-up summaries, then scoped editable memory with provenance and retrieval, following docs/agent-workflow-direction.md. Await user selection before creating the next task.
