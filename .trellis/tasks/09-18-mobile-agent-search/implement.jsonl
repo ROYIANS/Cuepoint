@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "studio + agent chrome conventions"}
+{"file": ".trellis/spec/frontend/directory-structure.md", "reason": "studio layout routes"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "lint/test gates"}
+{"file": "src/components/studio/StudioShell.tsx", "reason": "current rail to adapt"}
+{"file": "src/components/agent/TopicSidebar.tsx", "reason": "search placeholder + sidebar"}
+{"file": "src/components/agent/ChatWorkspace.tsx", "reason": "agent chrome / drawers"}

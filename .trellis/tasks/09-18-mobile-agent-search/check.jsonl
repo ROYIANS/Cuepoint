@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "mobile drawer contracts"}
+{"file": ".trellis/spec/frontend/directory-structure.md", "reason": "shell layout"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "lint/test"}
+{"file": ".trellis/tasks/09-18-mobile-agent-search/prd.md", "reason": "acceptance criteria"}
+{"file": "src/components/studio/StudioShell.tsx", "reason": "md rail vs hamburger"}
+{"file": "src/components/agent/TopicSidebar.tsx", "reason": "title search + mobile reuse"}

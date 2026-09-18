@@ -331,6 +331,11 @@
   border-inline-end: 1px solid #202020;
 }
 
+.agent-chat-root.agent-topic-sheet .agent-topic-sidebar {
+  border-inline-end: none;
+  border-inline-start: 1px solid #202020;
+}
+
 .agent-chat-root .agent-sidebar-nav {
   display: flex;
   gap: 10px;
@@ -436,6 +441,87 @@
   display: inline-flex;
   flex: none;
   align-items: center;
+}
+
+.agent-chat-root .agent-topic-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.agent-chat-root .agent-topic-search-icon {
+  flex: none;
+  color: #6f6f6f;
+}
+
+.agent-chat-root .agent-topic-search-input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+}
+
+.agent-chat-root .agent-topic-search-input::placeholder {
+  color: #6f6f6f;
+}
+
+.agent-chat-root .agent-topic-search-clear {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #aaa;
+  cursor: pointer;
+}
+
+.agent-chat-root .agent-topic-search-clear:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.agent-chat-root .agent-topic-sheet {
+  color: #fff;
+}
+
+@media (max-width: 767px) {
+  /* Room for StudioShell hamburger over ChatHeader. */
+  .agent-chat-root .agent-chat-header {
+    padding-inline-start: 44px !important;
+  }
+
+  .agent-chat-root .agent-conversation {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Edge-hugging content on phones — drop the desktop 800px column + 16px gutters. */
+  .agent-chat-root .agent-message-list {
+    padding-inline: 8px;
+  }
+
+  .agent-chat-root .agent-content {
+    max-width: none;
+    margin-inline: 0;
+  }
+
+  .agent-chat-root .agent-composer-dock {
+    padding-inline: 8px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+  }
 }
 
 .agent-chat-root .agent-chat-column {

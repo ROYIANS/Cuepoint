@@ -30,7 +30,9 @@ src/
 │   └── p.$projectId.*               # 一部戏：系列集列表/世界，集内故事/分镜/制作
 ├── components/
 │   ├── studio/AssetLibraryPages.tsx # studio 角色/场景/道具/风格 grids
+│   ├── studio/StudioShell.tsx       # md+ icon rail; <md hamburger + Sheet nav
 │   ├── agent/                       # /agent chat (LobeHub-inspired, chat-only @lobehub/ui)
+│   ├── ui/sheet.tsx                 # shadcn Sheet (studio + agent mobile drawers)
 │   ├── assets/*DetailPage.tsx       # shared detail editors
 │   └── workspace/                   # in-project chrome
 ├── db/

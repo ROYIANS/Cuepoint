@@ -2,19 +2,17 @@ import { ActionIcon, Flexbox } from "@lobehub/ui";
 import { ChatHeader, ChatHeaderTitle } from "@lobehub/ui/chat";
 import { Dropdown } from "antd";
 import {
-  Columns2,
   MoreHorizontal,
+  PanelLeft,
   PanelRight,
   Pencil,
-  Share2,
   Trash2,
 } from "lucide-react";
 import { useCallback, useState, type CSSProperties } from "react";
-import { toast } from "sonner";
+import { TopicListBody, TopicSidebar } from "@/components/agent/TopicSidebar";
 import type { ComposerProps } from "@/components/agent/composerTypes";
 import { FloatingComposer } from "@/components/agent/FloatingComposer";
 import { MessageList } from "@/components/agent/MessageList";
-import { TopicSidebar } from "@/components/agent/TopicSidebar";
 import {
   CHAT_COMPOSER_SAFE,
   CHAT_CONTENT_MAX,
@@ -22,6 +20,12 @@ import {
   CHAT_SAFE_X,
   SIDEBAR_COLLAPSED_KEY,
 } from "@/components/agent/agentTheme";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import type { ChatMessage, ChatThread, Id } from "@/domain/types";
 
 function readCollapsed(): boolean {
@@ -46,8 +50,8 @@ function popupRoot(): HTMLElement {
 
 /**
  * Chat workspace — lobehub Conversation layout:
- * collapsible TopicSidebar | ChatHeader (absolute 52px) + message stream +
- * floating composer in the bottom safe area.
+ * collapsible TopicSidebar (md+) | ChatHeader + message stream +
+ * floating composer. Below md, topics open in a left Sheet.
  */
 export function ChatWorkspace({
   threads,
@@ -71,6 +75,7 @@ export function ChatWorkspace({
   onDeleteThread: (thread: ChatThread) => void;
 }) {
   const [collapsed, setCollapsed] = useState(readCollapsed);
+  const [topicsOpen, setTopicsOpen] = useState(false);
 
   const toggleCollapsed = useCallback(() => {
     setCollapsed((prev) => {
@@ -79,6 +84,19 @@ export function ChatWorkspace({
       return next;
     });
   }, []);
+
+  const selectAndClose = useCallback(
+    (id: Id) => {
+      onSelectThread(id);
+      setTopicsOpen(false);
+    },
+    [onSelectThread],
+  );
+
+  const newTopicAndClose = useCallback(() => {
+    onNewTopic();
+    setTopicsOpen(false);
+  }, [onNewTopic]);
 
   return (
     <Flexbox
@@ -98,17 +116,48 @@ export function ChatWorkspace({
         } as CSSProperties
       }
     >
-      <TopicSidebar
-        threads={threads}
-        activeThreadId={activeThreadId}
-        collapsed={collapsed}
-        onToggleCollapsed={toggleCollapsed}
-        onSelect={onSelectThread}
-        onNewTopic={onNewTopic}
-        onRename={onRenameThread}
-        onDelete={onDeleteThread}
-      />
-      <Flexbox flex={1} height="100%" className="agent-chat-column">
+      <div className="hidden h-full min-h-0 shrink-0 md:flex">
+        <TopicSidebar
+          threads={threads}
+          activeThreadId={activeThreadId}
+          collapsed={collapsed}
+          onToggleCollapsed={toggleCollapsed}
+          onSelect={onSelectThread}
+          onNewTopic={onNewTopic}
+          onRename={onRenameThread}
+          onDelete={onDeleteThread}
+        />
+      </div>
+
+      <Sheet open={topicsOpen} onOpenChange={setTopicsOpen}>
+        <SheetContent
+          side="right"
+          showCloseButton={false}
+          className="agent-chat-root agent-topic-sheet flex h-full w-[min(280px,85vw)] flex-col gap-0 border-[#202020] bg-[#0d0d0d] p-0 text-white sm:max-w-[280px]"
+        >
+          <SheetHeader className="sr-only">
+            <SheetTitle>话题</SheetTitle>
+          </SheetHeader>
+          <Flexbox
+            direction="vertical"
+            height="100%"
+            width="100%"
+            className="agent-topic-sidebar"
+            style={{ minHeight: 0, borderInlineEnd: "none" }}
+          >
+            <TopicListBody
+              threads={threads}
+              activeThreadId={activeThreadId}
+              onSelect={selectAndClose}
+              onNewTopic={newTopicAndClose}
+              onRename={onRenameThread}
+              onDelete={onDeleteThread}
+            />
+          </Flexbox>
+        </SheetContent>
+      </Sheet>
+
+      <Flexbox flex={1} height="100%" className="agent-chat-column min-w-0">
         <ChatHeader
           className="agent-chat-header"
           left={
@@ -147,13 +196,20 @@ export function ChatWorkspace({
           }
           right={
             <Flexbox horizontal gap={4}>
-              <ActionIcon icon={Share2} title="分享" onClick={() => toast.info("分享即将开放")} />
-              <ActionIcon
-                icon={Columns2}
-                title="分栏"
-                onClick={() => toast.info("分栏布局即将开放")}
-              />
-              <ActionIcon icon={PanelRight} title="侧栏" onClick={toggleCollapsed} />
+              <span className="md:hidden">
+                <ActionIcon
+                  icon={PanelLeft}
+                  title="话题列表"
+                  onClick={() => setTopicsOpen(true)}
+                />
+              </span>
+              <span className="hidden md:inline-flex">
+                <ActionIcon
+                  icon={collapsed ? PanelRight : PanelLeft}
+                  title="侧栏"
+                  onClick={toggleCollapsed}
+                />
+              </span>
             </Flexbox>
           }
         />

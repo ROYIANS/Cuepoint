@@ -87,10 +87,6 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
     [navigate],
   );
 
-  const openHome = useCallback(() => {
-    void navigate({ to: "/agent" });
-  }, [navigate]);
-
   const routedThread = useLiveQuery(
     async () => {
       if (!activeThreadId) {
@@ -185,8 +181,14 @@ function AgentChatInner({ threadId }: { threadId?: Id }) {
       setSending(false);
     }
     setDraft("");
-    openHome();
-  }, [openHome]);
+    void (async () => {
+      const thread = await createChatThread({
+        connectorId: selectedConnector?.id,
+        model: modelValue || undefined,
+      });
+      openThread(thread.id);
+    })();
+  }, [openThread, selectedConnector?.id, modelValue]);
 
   const handleRenameThread = useCallback((thread: ChatThread) => {
     setRenameTarget(thread);
