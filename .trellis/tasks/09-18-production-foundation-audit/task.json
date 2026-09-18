@@ -1,0 +1,29 @@
+{
+  "id": "production-foundation-audit",
+  "name": "production-foundation-audit",
+  "title": "Audit manual production workflow and asset foundations",
+  "description": "Audit projects, characters, scenes, props, styles, manual end-to-end workflows and future AI integration boundaries; produce evidence-backed prioritized expansion plan.",
+  "status": "in_progress",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-09-18",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [
+    "09-18-asset-output-foundation",
+    "09-18-handoff-ai-data-contracts"
+  ],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "User approved R1–R6 first batch on 2026-09-18. Implementation/review complete: 340 tests, lint/build passed; browser verification and commit plan in task directory. Awaiting commit-plan confirmation, follow-up tasks queued.",
+  "meta": {}
+}

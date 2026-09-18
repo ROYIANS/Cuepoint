@@ -1,0 +1,7 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Quality and routing invariants"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "Owner/episode/draft/repo contracts"}
+{"file": ".trellis/spec/frontend/delivery-export.md", "reason": "Delivery and package behavior"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Testing and verification"}
+{"file": ".trellis/tasks/09-18-production-foundation-audit/audit.md", "reason": "Prioritized findings and scope"}
+{"file": ".trellis/tasks/09-18-production-foundation-audit/research/assets-audit.md", "reason": "Asset evidence and concurrency repro"}
+{"file": ".trellis/tasks/09-18-production-foundation-audit/research/workflow-audit.md", "reason": "Workflow defects and verification"}
