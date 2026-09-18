@@ -12,6 +12,10 @@ export type ChatModelPolicy = {
   incompatibleModels: readonly string[];
 };
 
+export function requiresChatModelVerification(connector: ChatModelConnector | undefined): boolean {
+  return connector?.definitionId === "apimart" || connector?.definitionId === "aihubmix";
+}
+
 /** Credentials are compared in memory only; never use a key-bearing serialized cache key. */
 export function sameChatModelConnector(left: ChatModelConnector | undefined, right: ChatModelConnector | undefined): boolean {
   return Boolean(left && right && left.id === right.id && left.definitionId === right.definitionId &&
@@ -22,16 +26,16 @@ export function getChatModelPolicy(
   connector: ChatModelConnector | undefined,
   catalog: ChatModelCatalog | undefined,
 ): ChatModelPolicy {
-  if (connector?.definitionId !== "apimart") return { verified: true, incompatibleModels: [] };
+  if (!requiresChatModelVerification(connector)) return { verified: true, incompatibleModels: [] };
   if (!catalog || !sameChatModelConnector(connector, catalog.connector)) return { verified: false, incompatibleModels: [] };
   return { verified: catalog.status === "ready", incompatibleModels: catalog.incompatibleModels };
 }
 
 export function chatModelIssue(model: string, policy: ChatModelPolicy): string | undefined {
   if (policy.incompatibleModels.includes(model.trim())) {
-    return "当前模型用于生图、视频或音频，无法用于对话。请选择聊天模型；已有消息会保留。";
+    return "当前模型的能力或接口与聊天不兼容，无法用于对话。请选择聊天模型；已有消息会保留。";
   }
-  if (!policy.verified) return "暂时无法确认 APIMart 模型类型，发送时会重新校验。";
+  if (!policy.verified) return "暂时无法确认当前连接的模型兼容性，发送时会重新校验。";
   return undefined;
 }
 

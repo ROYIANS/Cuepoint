@@ -1,0 +1,5 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Frontend quality checklist"}
+{"file": ".trellis/spec/frontend/ai-connectors.md", "reason": "Existing provider discovery and chat send contracts"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Typed boundaries and validation"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Project checks and testing"}
+{"file": ".trellis/tasks/09-18-aihubmix-adapters/research/aihubmix.md", "reason": "Verified AIHubMix contract and CORS/probe findings"}

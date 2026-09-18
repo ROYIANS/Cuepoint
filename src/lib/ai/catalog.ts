@@ -42,6 +42,16 @@ export const CONNECTOR_CATALOG: readonly ConnectorDefinition[] = [
     defaultModel: "",
     mark: "AM",
   },
+  {
+    id: "aihubmix",
+    title: "AIHubMix",
+    blurb: "统一接入聊天、图像与视频模型；生成入口将在后续开放",
+    protocol: "openai-compatible",
+    capabilities: ["chat", "image", "video"],
+    defaultBaseUrl: "https://aihubmix.com/v1",
+    defaultModel: "",
+    mark: "AH",
+  },
 ] as const;
 
 export function getConnectorDefinition(
@@ -59,6 +69,7 @@ export function connectorDisplayName(connector: {
 }
 
 export function connectorProviderKey(definitionId: ConnectorDefinitionId): string {
+  if (definitionId === "aihubmix") return "aihubmix";
   if (definitionId === "apimart") return "apimart";
   return definitionId === "deepseek" ? "deepseek" : "openai";
 }

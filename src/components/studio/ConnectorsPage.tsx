@@ -89,7 +89,9 @@ export function ConnectorsPage() {
       }
       setProbeModels(result.models);
       toast.success(
-        result.models.length > 0
+        editor.definition.id === "aihubmix"
+          ? `已获取 ${result.models.length} 个公开模型；API Key 请通过测试连接验证`
+          : result.models.length > 0
           ? `探活成功，可见 ${result.models.length} 个模型`
           : "探活成功，但接口未返回模型列表",
       );
@@ -112,7 +114,7 @@ export function ConnectorsPage() {
           result.via === "models" && result.modelCount != null
             ? `（${result.modelCount} 个模型）`
             : "";
-        toast.success(`连接成功${detail}`);
+        toast.success(result.via === "authenticated-read" ? "鉴权读取成功；具体模型权限以实际调用为准" : `连接成功${detail}`);
         if (result.via === "models") {
           const listed = await listConnectorModels({
             definitionId: editor.definition.id,
@@ -240,7 +242,9 @@ export function ConnectorsPage() {
           <DialogHeader>
             <DialogTitle>{editor?.existing ? "编辑连接" : "安装连接"}</DialogTitle>
             <DialogDescription>
-              {editor?.definition.id === "apimart"
+              {editor?.definition.id === "aihubmix"
+                ? "AIHubMix · 聊天、图像与视频共用此连接。模型目录公开可读；测试连接仅验证任务列表读取权限，不发起生成。"
+                : editor?.definition.id === "apimart"
                 ? "APIMart · 聊天、图像与视频共用此连接。测试连接仅查询模型，不发起生成。"
                 : `${editor?.definition.title ?? ""} · OpenAI 兼容协议。此处只配置接入点；模型在聊天里选。`}
             </DialogDescription>
@@ -269,7 +273,9 @@ export function ConnectorsPage() {
             </Field>
             {probeModels.length > 0 ? (
               <div className="bg-muted/40 rounded-lg border px-3 py-2">
-                <p className="text-muted-foreground text-xs">探活可见模型（前 12 个）</p>
+                <p className="text-muted-foreground text-xs">
+                  {editor?.definition.id === "aihubmix" ? "公开模型目录（前 12 个，不代表 Key 权限）" : "探活可见模型（前 12 个）"}
+                </p>
                 <p className="mt-1 text-xs leading-5 break-all">
                   {probeModels.slice(0, 12).join(" · ")}
                   {probeModels.length > 12 ? ` · …共 ${probeModels.length} 个` : ""}
@@ -295,7 +301,7 @@ export function ConnectorsPage() {
                 disabled={testing || saving || probing}
                 onClick={() => void handleProbeModels()}
               >
-                {probing ? "拉取中…" : "拉取模型探活"}
+                {probing ? "拉取中…" : editor?.definition.id === "aihubmix" ? "获取公开模型" : "拉取模型探活"}
               </Button>
               <Button
                 variant="outline"

@@ -19,6 +19,7 @@ describe("connectorProviderKey", () => {
     expect(connectorProviderKey("deepseek")).toBe("deepseek");
     expect(connectorProviderKey("openai-compatible")).toBe("openai");
     expect(connectorProviderKey("apimart")).toBe("apimart");
+    expect(connectorProviderKey("aihubmix")).toBe("aihubmix");
     expect(getConnectorDefinition("openai-compatible")?.title).toBe("OpenAI 兼容");
   });
 });
@@ -31,4 +32,8 @@ it("exposes APIMart media capabilities independently of compatible chat protocol
   });
   expect(connectorDisplayName({ definitionId: "apimart" })).toBe("APIMart");
   expect(getConnectorDefinition("deepseek")?.capabilities).toEqual(["chat"]);
+});
+
+it("registers AIHubMix with a compatible chat base and media capabilities", () => {
+  expect(getConnectorDefinition("aihubmix")).toMatchObject({ title: "AIHubMix", defaultBaseUrl: "https://aihubmix.com/v1", protocol: "openai-compatible", capabilities: ["chat", "image", "video"] });
 });

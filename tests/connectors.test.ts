@@ -2,13 +2,15 @@ import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { streamChatCompletions } from "@/lib/ai/chatStream";
 import { appendChatMessage, createChatThread, deleteConnector, listConnectors, upsertConnector } from "@/db/repo";
-import { listConnectorModels, runWithCompatibleChatModel, testConnectorConnection } from "@/lib/ai/connectors";
+import { discoverConnectorChatModels, listConnectorModels, runWithCompatibleChatModel, testConnectorConnection } from "@/lib/ai/connectors";
 
 const apimart = {
   definitionId: "apimart" as const,
   baseUrl: "https://api.apimart.ai/v1",
   apiKey: "test-key",
 };
+
+const aihubmix = { definitionId: "aihubmix" as const, baseUrl: "https://aihubmix.com/v1", apiKey: "test-key" };
 
 describe("connector routing", () => {
   it("discovers all APIMart models for connection checks, but only categorized chat models for chat", async () => {
@@ -66,18 +68,18 @@ describe("connector routing", () => {
   });
 });
 
-it("persists and edits one APIMart record without disturbing existing providers", async () => {
+it.each([apimart, aihubmix])("persists and edits one $definitionId record without disturbing existing providers", async (connector) => {
   const existing = await upsertConnector({
     definitionId: "deepseek", protocol: "openai-compatible",
     baseUrl: "https://api.deepseek.com/v1", apiKey: "existing-key",
   });
-  const first = await upsertConnector({ ...apimart, protocol: "openai-compatible" });
-  const edited = await upsertConnector({ ...apimart, protocol: "openai-compatible", apiKey: "updated-key" });
+  const first = await upsertConnector({ ...connector, protocol: "openai-compatible" });
+  const edited = await upsertConnector({ ...connector, protocol: "openai-compatible", apiKey: "updated-key" });
   expect(edited.id).toBe(first.id);
   db.close();
   await db.open();
   expect(await listConnectors()).toEqual(expect.arrayContaining([
-    expect.objectContaining({ id: first.id, definitionId: "apimart", apiKey: "updated-key" }),
+    expect.objectContaining({ id: first.id, definitionId: connector.definitionId, apiKey: "updated-key" }),
     expect.objectContaining({ id: existing.id, definitionId: "deepseek", apiKey: "existing-key" }),
   ]));
   expect(await db.connectors.count()).toBe(2);
@@ -86,7 +88,7 @@ it("persists and edits one APIMart record without disturbing existing providers"
 });
 
 // These tests exercise the exact guard wrapping Agent mutations and the real chat transport.
-describe("chat send compatibility boundary", () => {
+describe.each([apimart, aihubmix])("$definitionId chat send compatibility boundary", (connector) => {
   const modelResponse = { data: [
     { id: "image-model", category: "image" },
     { id: "video-model", category: "video" },
@@ -96,14 +98,14 @@ describe("chat send compatibility boundary", () => {
   ] };
   function transport() {
     return vi.fn<typeof fetch>(async (url) => String(url).includes("/models")
-      ? Response.json(modelResponse)
+      ? Response.json(connector.definitionId === "apimart" ? modelResponse : { success: true, data: modelResponse.data.map((row) => ({ model_id: row.id, types: ({ chat: "llm", image: "image_generation", video: "video", audio: "tts", unknown: "" })[row.category] })) })
       : Response.json({ choices: [{ message: { content: "reply" } }] }));
   }
   function sendAction(model: string, fetchImpl: typeof fetch) {
     return vi.fn(async () => {
       const thread = await createChatThread({ model });
       await appendChatMessage({ threadId: thread.id, role: "user", content: "draft", status: "complete" });
-      return streamChatCompletions({ ...apimart, model, messages: [{ role: "user", content: "draft" }] }, { fetchImpl });
+      return streamChatCompletions({ ...connector, model, messages: [{ role: "user", content: "draft" }] }, { fetchImpl });
     });
   }
 
@@ -112,7 +114,7 @@ describe("chat send compatibility boundary", () => {
     await appendChatMessage({ threadId: oldThread.id, role: "user", content: "saved history", status: "complete" });
     const fetchImpl = transport();
     const action = sendAction(model, fetchImpl);
-    expect(await runWithCompatibleChatModel(apimart, model, action, { fetchImpl })).toMatchObject({ ok: false, message: expect.stringContaining("无法用于对话") });
+    expect(await runWithCompatibleChatModel(connector, model, action, { fetchImpl })).toMatchObject({ ok: false, message: expect.stringContaining("无法用于对话") });
     expect(action).not.toHaveBeenCalled();
     expect(fetchImpl).toHaveBeenCalledOnce();
     expect(fetchImpl.mock.calls[0][1]?.method).toBe("GET");
@@ -123,7 +125,7 @@ describe("chat send compatibility boundary", () => {
   it.each(["unknown-model", "custom-video-chat", "chat-model"])("allows %s after successful metadata validation", async (model) => {
     const fetchImpl = transport();
     const action = sendAction(model, fetchImpl);
-    expect(await runWithCompatibleChatModel(apimart, model, action, { fetchImpl })).toMatchObject({ ok: true, value: { ok: true, content: "reply" } });
+    expect(await runWithCompatibleChatModel(connector, model, action, { fetchImpl })).toMatchObject({ ok: true, value: { ok: true, content: "reply" } });
     expect(action).toHaveBeenCalledOnce();
     expect(fetchImpl.mock.calls.map((call) => call[1]?.method)).toEqual(["GET", "POST"]);
     expect(JSON.parse(String(fetchImpl.mock.calls[1][1]?.body)).model).toBe(model);
@@ -133,7 +135,7 @@ describe("chat send compatibility boundary", () => {
   it("preserves generic manual models without requiring category discovery", async () => {
     const fetchImpl = transport();
     const action = sendAction("image-model", fetchImpl);
-    expect(await runWithCompatibleChatModel({ ...apimart, definitionId: "openai-compatible" }, "image-model", action, { fetchImpl })).toMatchObject({ ok: true });
+    expect(await runWithCompatibleChatModel({ ...connector, definitionId: "openai-compatible" }, "image-model", action, { fetchImpl })).toMatchObject({ ok: true });
     expect(fetchImpl).toHaveBeenCalledOnce();
     expect(fetchImpl.mock.calls[0][1]?.method).toBe("POST");
   });
@@ -146,7 +148,7 @@ describe("chat send compatibility boundary", () => {
       draft = "";
       return mutateAndSend();
     });
-    expect(await runWithCompatibleChatModel(apimart, "custom", action, { fetchImpl })).toMatchObject({ ok: false, message: expect.stringContaining("无法确认") });
+    expect(await runWithCompatibleChatModel(connector, "custom", action, { fetchImpl })).toMatchObject({ ok: false, message: expect.stringContaining("无法确认") });
     expect(action).not.toHaveBeenCalled();
     expect(draft).toBe("unsent draft");
     expect(await db.chatThreads.count()).toBe(0);
@@ -160,11 +162,11 @@ describe("chat send compatibility boundary", () => {
     const controller = new AbortController();
     let current = true;
     const action = sendAction("chat-model", fetchImpl);
-    const pending = runWithCompatibleChatModel(apimart, "chat-model", action, { fetchImpl, signal: controller.signal, isCurrent: () => current });
+    const pending = runWithCompatibleChatModel(connector, "chat-model", action, { fetchImpl, signal: controller.signal, isCurrent: () => current });
     expect(action).not.toHaveBeenCalled();
     if (mode === "switch") current = false;
     else controller.abort();
-    resolve(Response.json(modelResponse));
+    resolve(Response.json(connector.definitionId === "apimart" ? modelResponse : { success: true, data: modelResponse.data.map((row) => ({ model_id: row.id, types: ({ chat: "llm", image: "image_generation", video: "video", audio: "tts", unknown: "" })[row.category] })) }));
     expect(await pending).toMatchObject({ ok: false, aborted: true });
     expect(action).not.toHaveBeenCalled();
     expect(await db.chatThreads.count()).toBe(0);
@@ -174,9 +176,54 @@ describe("chat send compatibility boundary", () => {
   it("rejects blank models before creating an empty thread or calling a provider", async () => {
     const fetchImpl = transport();
     const action = sendAction("", fetchImpl);
-    expect(await runWithCompatibleChatModel(apimart, " ", action, { fetchImpl })).toMatchObject({ ok: false });
+    expect(await runWithCompatibleChatModel(connector, " ", action, { fetchImpl })).toMatchObject({ ok: false });
     expect(action).not.toHaveBeenCalled();
     expect(fetchImpl).not.toHaveBeenCalled();
     expect(await db.chatThreads.count()).toBe(0);
+  });
+});
+
+describe("AIHubMix catalog compatibility and read-only probe", () => {
+  it("uses public metadata, separates input vision from media output, and resolves duplicate conflicts", async () => {
+    const rows = [
+      { model_id: "vision-chat", types: "llm", input_modalities: "text,image,video", output_modalities: "text", endpoints: "chat_completions,responses" },
+      { model_id: "unannotated-endpoints", types: "llm" },
+      { model_id: "legacy-chat", types: "t2t" },
+      { model_id: "image", types: "t2i" },
+      { model_id: "video", types: "t2v" },
+      { model_id: "embedding", types: "embedding" },
+      { model_id: "rerank", types: "reranking" },
+      { model_id: "responses-only", types: "llm", endpoints: "responses" },
+      { model_id: "mixed-output", types: "llm", output_modalities: "text,image" },
+      { model_id: "conflict", types: "llm" },
+      { model_id: "conflict", types: "image_generation" },
+      { model_id: "uncertain", types: "llm" },
+      { model_id: "uncertain" },
+      { model_id: "future", types: "future" },
+      { model_id: "malformed", types: "llm", endpoints: 42 },
+    ];
+    const fetchImpl = vi.fn<typeof fetch>(async () => Response.json({ success: true, data: rows }));
+    const result = await discoverConnectorChatModels(aihubmix, { fetchImpl });
+    expect(result).toEqual({ ok: true, models: ["legacy-chat", "unannotated-endpoints", "vision-chat"], incompatibleModels: ["image", "video", "embedding", "rerank", "responses-only", "mixed-output", "conflict"] });
+    expect(fetchImpl.mock.calls[0][0]).toBe("https://aihubmix.com/api/v1/models");
+    expect(new Headers(fetchImpl.mock.calls[0][1]?.headers).has("Authorization")).toBe(false);
+    const all = await listConnectorModels(aihubmix, "all", fetchImpl);
+    expect(all.ok && all.models).toHaveLength(13);
+  });
+
+  it("tests key access via authenticated task-list GET, not the public model directory", async () => {
+    const fetchImpl = vi.fn<typeof fetch>(async () => Response.json({ object: "list", data: [], has_more: false, next_after: null }));
+    expect(await testConnectorConnection(aihubmix, fetchImpl)).toEqual({ ok: true, via: "authenticated-read" });
+    expect(fetchImpl).toHaveBeenCalledOnce();
+    expect(fetchImpl.mock.calls[0][0]).toBe("https://aihubmix.com/ai/v1/images?limit=1");
+    expect(fetchImpl.mock.calls[0][1]?.method).toBe("GET");
+    expect(new Headers(fetchImpl.mock.calls[0][1]?.headers).get("Authorization")).toBe("Bearer test-key");
+  });
+
+  it.each([401, 403, 404, 500])("does not use public discovery or paid fallback after HTTP %s", async (status) => {
+    const fetchImpl = vi.fn<typeof fetch>(async () => Response.json({ error: { message: "denied" } }, { status }));
+    expect(await testConnectorConnection(aihubmix, fetchImpl)).toMatchObject({ ok: false });
+    expect(fetchImpl).toHaveBeenCalledOnce();
+    expect(fetchImpl.mock.calls[0][1]?.method).toBe("GET");
   });
 });

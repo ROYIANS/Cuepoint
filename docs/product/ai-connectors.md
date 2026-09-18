@@ -20,7 +20,7 @@
 ## 协议客户端
 
 - `src/lib/ai/openaiCompatible.ts`：规范化 Base URL、Bearer、`testConnection`、`listModels`
-- 目录：`src/lib/ai/catalog.ts`（`openai-compatible`、`deepseek`、`apimart`）
+- 目录：`src/lib/ai/catalog.ts`（`openai-compatible`、`deepseek`、`apimart`、`aihubmix`）
 
 ## MVP 范围（已定）
 
@@ -64,3 +64,31 @@ The client accepts credentials and request options (`signal`, `fetchImpl`). Gene
 No generation UI, job persistence, automatic polling, result download or slot mutation is included. Future runtime callers must retain provider task IDs, handle ambiguous submission failures without blind retries, and archive results before their URLs expire. Aborting a local request does not cancel a remote task.
 
 Official contracts: [model metadata](https://docs.apimart.ai/en/api-reference/texts/models/list.md), [image upload](https://docs.apimart.ai/en/api-reference/uploads/images.md), [task status](https://docs.apimart.ai/en/api-reference/tasks/status.md). The upload guide supersedes conflicting base64 examples in individual model pages for this implementation's supported reference-image flow.
+
+## AIHubMix adapter foundation
+
+AIHubMix is available in the existing connector catalog with default Base URL `https://aihubmix.com/v1`. It uses the same studio-global key persistence and OpenAI-compatible chat transport. No database migration is needed. The installed provider supports chat/image/video at the adapter level; generation entrypoints remain deferred.
+
+**Public discovery is not authentication.** The connector's “获取公开模型” action reads `/api/v1/models` without sending the key. Its catalog describes provider-wide availability, not per-key permissions. “测试连接” instead makes an authenticated, read-only `GET /ai/v1/images?limit=1` and reports that access specifically; it never falls back to a chat or media POST. Permission/account-feature errors are surfaced rather than claiming that public discovery validated the key.
+
+Chat discovery uses `types`, `endpoints` and `output_modalities`. Text LLMs with Chat Completions support (or unannotated protocols) are suggested. Image/video **input** does not disqualify a text model. Known media/non-chat types, media outputs and explicitly incompatible protocol sets are excluded from suggestions, saved selections and manual search. Unknown aliases remain manual-only after successful metadata discovery. The existing send boundary validates again before any thread/message mutation or chat request; failures preserve history and draft.
+
+The independent `src/lib/ai/aihubmix.ts` client provides:
+
+| Operation | Purpose |
+| --- | --- |
+| `listAIHubMixModels` | Public catalog with normalized types, modalities, protocols and metadata validity |
+| `testAIHubMixConnection` | Authenticated task-list read; no generated content |
+| `getAIHubMixModelSchema` | Optional public per-model schema lookup, selecting the native endpoint by path |
+| `submitAIHubMixImageGeneration` | Native `/ai/v1/images/generations`, synchronous by default or explicit `async: true` |
+| `submitAIHubMixVideoGeneration` | Native `/ai/v1/videos`, always asynchronous |
+| `getAIHubMixImageTask` / `getAIHubMixVideoTask` | Active media detail reads, preserving outputs, errors and expiry |
+| `downloadAIHubMixResult` | Explicit protected result retrieval as Blob; no automatic storage |
+
+The media client preserves native image/mask inputs, video reference/frame roles, numeric `duration` and model-specific `extra`. Schema metadata is informative: returned paths are never executed dynamically and lookup failure does not block ordinary chat. Task responses are top-level objects, unlike APIMart envelopes. Queries use image/video detail endpoints, not unified task snapshots. Completed results preserve all indexed outputs, Base64 and content URLs.
+
+AIHubMix content URLs require Bearer authentication and cannot be treated as public preview URLs. Explicit retrieval verifies the configured provider origin, route and task identity before attaching the key; redirects are rejected. Future callers must persist results before expiry. A local abort does not cancel the remote task, and ambiguous submission failures must not trigger automatic resubmission.
+
+Async media requires activation in the provider console. Read-only checks observed local-origin CORS headers on main API routes, but the public schema response lacked them. Schema lookup therefore may fail in a browser; no proxy is added in this task. Real authenticated generation, production CORS and paid results have not been validated. No generation UI, polling, job persistence, slot writes or automatic result download is included.
+
+Official contracts: [model metadata](https://docs.aihubmix.com/cn/api/Models-API.md), [images](https://docs.aihubmix.com/cn/api/aihubmix-image-generation.md), [videos](https://docs.aihubmix.com/cn/api/aihubmix-video-generation.md), [task/schema semantics](https://docs.aihubmix.com/cn/api/async-tasks.md).

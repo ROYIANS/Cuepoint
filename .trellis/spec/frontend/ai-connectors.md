@@ -2,7 +2,7 @@
 
 ## 1. Scope / Trigger
 
-Read before changing provider discovery/probes or adding consumers of the APIMart image/video client. Catalog capabilities are separate from chat wire protocol. Keys belong to the existing studio-global Dexie connector table and never to project ZIPs.
+Read before changing provider discovery/probes or adding consumers of the APIMart/AIHubMix image/video clients. Catalog capabilities are separate from chat wire protocol. Keys belong to the existing studio-global Dexie connector table and never to project ZIPs.
 
 ## 2. Signatures
 
@@ -35,11 +35,11 @@ getApimartTask(credentials, taskId, options?)
 - APIMart probes are read-only model queries, including when the key only permits media models.
 - Discovery preserves category/capability tags and exposes parameter schema availability. Only `category === "chat"` populates automatic chat suggestions; unknown categories remain available through manual entry. Connection-page discovery retains all categories.
 - Chat compatibility applies to every selection source: discovered suggestions, manual search and the current/saved model. Known `image`, `video` and `audio` categories cannot be reinserted by manual input. Use provider metadata rather than guessing from model names. A saved incompatible selection warns the user without changing historical messages.
-- The send boundary checks the actual connector/model before creating a thread, appending messages, clearing the draft or calling chat transport. APIMart metadata lookup failure cannot authorize an unchecked send; show the error and preserve the draft. Unknown custom models remain manually usable after successful discovery. Connector switching must not reuse another connector's classifications.
+- The send boundary checks the actual connector/model before creating a thread, appending messages, clearing the draft or calling chat transport. APIMart/AIHubMix metadata lookup failure cannot authorize an unchecked send; show the error and preserve the draft. Unknown custom models remain manually usable after successful discovery. Connector switching must not reuse another connector's classifications.
 - Submit responses use a `data` array with task IDs. Query responses use a `data` object. Never copy the conflicting final upload-guide example instead of dedicated generation/query contracts.
 - Model-native fields (`size` vs `aspect_ratio`, audio flags, frame roles) survive unchanged. Server validation handles model-specific restrictions.
 - Upload uses FormData without manually setting Content-Type; supported types are JPEG/PNG/WebP/GIF, up to 20 MB. Provider URLs are temporary, not durable media IDs.
-- This layer does not poll, persist jobs, download results or mutate slots. Multiple results and expiry must remain available to future callers.
+- These adapters do not poll, persist jobs, automatically download results or mutate slots. AIHubMix offers an explicit protected Blob download. Multiple results and expiry must remain available to future callers.
 - Requests are abortable; local abort does not cancel the remote task. Never automatically retry generation submissions after timeout or ambiguous network failure.
 
 ## 4. Validation & Error Matrix
@@ -85,3 +85,50 @@ await listConnectorModels(apimartConnector, "chat");
 // Correct: return the ambiguous failure to the caller without retrying.
 // A future job runtime must reconcile provider identity before another submission.
 ```
+
+
+## AIHubMix contracts
+
+### 1. Scope / Trigger
+Use for AIHubMix discovery, credential tests, native media requests and protected content reads. The approved task adds a provider client, not a generation runtime or UI.
+
+### 2. Signatures
+`src/lib/ai/aihubmix.ts`: `listAIHubMixModels`, `testAIHubMixConnection`, `getAIHubMixModelSchema`, `submitAIHubMixImageGeneration`, `submitAIHubMixVideoGeneration`, `getAIHubMixImageTask`, `getAIHubMixVideoTask`, `downloadAIHubMixResult`. Requests accept passed credentials plus optional `signal`/`fetchImpl`; explicit downloads return Blob without repository mutation. Provider dispatch returns `via: "authenticated-read"` for a successful AIHubMix connection probe.
+
+### 3. Contracts
+- Chat Base URL ends in `/v1`. Media/catalog/schema routes derive from the same configured root, preserving proxy prefixes. Reject credentials/query/fragment in base URLs and unsupported path shapes. No hardcoded-host fallback.
+- `/api/v1/models` is public; never send the key or claim discovery authenticates it. `/v1/models` was also readable without a key. Test access via authenticated `GET /ai/v1/images?limit=1`; never a POST or public-directory fallback.
+- Metadata tokens: `types`, `endpoints`, `input_modalities`, `output_modalities`; missing annotations differ from explicit incompatibility. `t2t/t2i/t2v/reranking` map to documented current types. Preserve duplicates for conservative conflict resolution.
+- Suggest known text LLMs supporting Chat Completions or with unannotated protocols. Known non-chat types, media outputs and explicitly incompatible protocol sets block all selection sources and send. Image/video INPUT alone never blocks chat. Unknown/malformed metadata is manual-only after successful directory lookup; no name guessing.
+- Schema lookup is optional public data. Select native POST endpoint by path, never first array element; surface missing/invalid metadata and network/CORS failure distinctly. Do not execute returned routes.
+- Native image submit `/ai/v1/images/generations` defaults synchronous; preserve explicit boolean `async`. Native video `/ai/v1/videos` is always async, with numeric `duration` and native reference structures. Do not translate legacy `seconds`.
+- Task reads use `/ai/v1/images/{id}` or `/ai/v1/videos/{id}`; unified `/ai/v1/tasks/{id}` is only a snapshot. Top-level task object has id/object/model/status/output/error/timestamps. Validate id/kind, preserve original status, map unknown states to unknown, preserve all indexed outputs and nullable Unix-second expiry.
+- Protected content is not a public preview URL. Explicit binary reads verify origin AND exact configured-root task content route before Bearer auth. Reject redirects/cross-origin/task mismatch. Base64 is retained without automatic persistence.
+- Task failure in HTTP 200 is a valid task read containing failed state. Request failure and failed remote task are distinct. Redact key-bearing provider errors, never retry generation, and never describe local abort as remote cancellation.
+
+### 4. Validation & Error Matrix
+| Input/result | Required behavior |
+| --- | --- |
+| Public model directory success | Metadata only; does not authenticate key |
+| Authenticated probe rejected | Explicit error, no fallback POST |
+| Vision input + text output | Eligible text model if protocol compatible |
+| Known media or incompatible protocol, manual/saved | Exclude and block before all chat mutations |
+| Metadata unavailable / changed connector | Unverified; preserve draft and history |
+| Failed task in HTTP 200 | Return failed task and sanitized error |
+| Completed task without usable output | Protocol failure |
+| Unknown task state | Preserve provider state, never completed |
+| Protected content foreign URL / wrong task / redirect | Do not forward key |
+| Schema CORS / unavailable endpoint | Explicit failure/missing status; no fake schema |
+
+### 5. Good/Base/Bad Cases
+Good: a metadata-only catalog can load while testing an invalid key still fails. Base: APIMart categories and generic provider probe fallback remain unchanged. Bad: embed a protected result URL as a public image, or resend a paid POST after losing the response.
+
+### 6. Tests Required
+`tests/aihubmix.test.ts`: fixed paths, auth separation, native payloads, schema path selection, task states/identity/output/expiry, malformed envelopes, abort/redaction/no retry, protected Blob retrieval and path/origin rejection. `tests/connectors.test.ts` and `tests/chatModelPolicy.test.ts`: provider dispatch, text vs media classification, unknown/manual and saved selection behavior, stale catalog, aborted/switched sends with no downstream writes, and persistence. ZIP export covers all providers.
+
+### 7. Wrong vs Correct
+Wrong: use successful public model discovery as proof that the configured API key is valid.
+Correct: expose public discovery separately and test the authenticated task-list GET, describing that permission precisely.
+
+Wrong: pass `content_url` directly to `<img>` or fetch any provider-returned URL with a Bearer header.
+Correct: call the explicit guarded content reader, then let the future media runtime persist or display the Blob.

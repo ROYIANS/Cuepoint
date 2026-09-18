@@ -247,7 +247,7 @@ describe("project packages", () => {
     expect(await db.projects.count()).toBe(before);
   });
 
-  it.each(["openai-compatible", "deepseek", "apimart"] as const)("does not include %s API keys in project ZIP export", async (definitionId) => {
+  it.each(["openai-compatible", "deepseek", "apimart", "aihubmix"] as const)("does not include %s API keys in project ZIP export", async (definitionId) => {
     const project = await createProject("secrets stay local");
     await upsertConnector({
       definitionId,
