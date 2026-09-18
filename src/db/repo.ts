@@ -14,6 +14,9 @@ import {
   type AspectPresetId,
   type Character,
   type CharacterImageSlot,
+  type ConnectorConfig,
+  type ConnectorDefinitionId,
+  type ConnectorProtocol,
   type Episode,
   type EpisodeStory,
   type GenerationSlot,
@@ -34,6 +37,7 @@ import {
   type VisualStyle,
   type WorldSetting,
 } from "@/domain/types";
+import { normalizeBaseUrl } from "@/lib/ai/openaiCompatible";
 import { collectSlotsMedia, emptySlot, SHOT_PICTURE_FIELDS, slotMediaIds } from "@/domain/slot";
 import { createId, nowIso } from "@/lib/ids";
 
@@ -1289,4 +1293,48 @@ export async function setVisibleColumns(
   visible: ShotColumnId[],
 ): Promise<void> {
   await updateProject(projectId, { columnSettings: { visible } });
+}
+
+export async function listConnectors(): Promise<ConnectorConfig[]> {
+  return db.connectors.orderBy("updatedAt").reverse().toArray();
+}
+
+export async function getConnectorByDefinition(
+  definitionId: ConnectorDefinitionId,
+): Promise<ConnectorConfig | undefined> {
+  return db.connectors.where("definitionId").equals(definitionId).first();
+}
+
+export type UpsertConnectorInput = {
+  definitionId: ConnectorDefinitionId;
+  protocol: ConnectorProtocol;
+  baseUrl: string;
+  apiKey: string;
+  label?: string;
+};
+
+/** One saved config per catalog definitionId. */
+export async function upsertConnector(input: UpsertConnectorInput): Promise<ConnectorConfig> {
+  const baseUrl = normalizeBaseUrl(input.baseUrl);
+  const apiKey = input.apiKey.trim();
+  if (!baseUrl) throw new Error("请填写 Base URL");
+  if (!apiKey) throw new Error("请填写 API Key");
+
+  const existing = await getConnectorByDefinition(input.definitionId);
+  const at = nowIso();
+  const record: ConnectorConfig = {
+    id: existing?.id ?? createId("conn"),
+    definitionId: input.definitionId,
+    protocol: input.protocol,
+    label: input.label?.trim() || undefined,
+    baseUrl,
+    apiKey,
+    updatedAt: at,
+  };
+  await db.connectors.put(record);
+  return record;
+}
+
+export async function deleteConnector(id: Id): Promise<void> {
+  await db.connectors.delete(id);
 }

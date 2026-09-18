@@ -19,6 +19,7 @@ import {
   putMedia,
   updateProject,
   updateShotSettings,
+  upsertConnector,
 } from "@/db/repo";
 import { emptySlot } from "@/domain/slot";
 import { PACKAGE_FORMAT, STUDIO_LIBRARY_ID } from "@/domain/types";
@@ -242,5 +243,27 @@ describe("project packages", () => {
 
     await expect(importProjectZip(blob)).rejects.toBeInstanceOf(PackageError);
     expect(await db.projects.count()).toBe(before);
+  });
+
+  it("does not include studio connector API keys in project ZIP export", async () => {
+    const project = await createProject("secrets stay local");
+    await upsertConnector({
+      definitionId: "openai-compatible",
+      protocol: "openai-compatible",
+      baseUrl: "https://api.openai.com/v1",
+      apiKey: "sk-secret-should-not-export",
+    });
+
+    const zip = await JSZip.loadAsync(await exportProjectZip(project.id));
+    const names = Object.keys(zip.files);
+    expect(names.some((name) => name.toLowerCase().includes("connector"))).toBe(false);
+
+    const texts = await Promise.all(
+      names
+        .filter((name) => name.endsWith(".json"))
+        .map(async (name) => zip.file(name)!.async("string")),
+    );
+    expect(texts.join("\n")).not.toContain("sk-secret-should-not-export");
+    expect(await db.connectors.count()).toBe(1);
   });
 });

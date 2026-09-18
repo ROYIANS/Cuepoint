@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Box, Clapperboard, MapPinned, Palette, Upload, UserRound } from "lucide-react";
+import { Box, Cable, Clapperboard, MapPinned, Palette, Upload, UserRound } from "lucide-react";
 import type { ReactNode } from "react";
 import { StudioField } from "@/components/studio/StudioField";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,7 @@ const NAV = [
   { to: "/scenes", label: "场景", icon: MapPinned, exact: false },
   { to: "/props", label: "道具", icon: Box, exact: false },
   { to: "/styles", label: "风格", icon: Palette, exact: false },
+  { to: "/connectors", label: "连接", icon: Cable, exact: false },
 ] as const;
 
 export function StudioShell({

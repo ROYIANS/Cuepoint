@@ -453,3 +453,20 @@ export const DEFAULT_VISIBLE_COLUMNS: ShotColumnId[] = [
   "scene",
   "notes",
 ];
+
+/** Studio-global BYOK connectors (not part of project ZIP). */
+export type ConnectorProtocol = "openai-compatible";
+
+export type ConnectorDefinitionId = "openai-compatible" | "deepseek";
+
+export interface ConnectorConfig {
+  id: Id;
+  definitionId: ConnectorDefinitionId;
+  protocol: ConnectorProtocol;
+  label?: string;
+  baseUrl: string;
+  apiKey: string;
+  /** Optional; unused by Agent chat (model picked there). Kept for probe fallback only. */
+  defaultModel?: string;
+  updatedAt: string;
+}

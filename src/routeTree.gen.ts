@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as StudioRouteImport } from './routes/_studio'
 import { Route as StudioIndexRouteImport } from './routes/_studio.index'
 import { Route as StudioCharactersRouteImport } from './routes/_studio.characters'
+import { Route as StudioConnectorsRouteImport } from './routes/_studio.connectors'
 import { Route as StudioPropsRouteImport } from './routes/_studio.props'
 import { Route as StudioScenesRouteImport } from './routes/_studio.scenes'
 import { Route as StudioStylesRouteImport } from './routes/_studio.styles'
@@ -55,6 +56,11 @@ const StudioIndexRoute = StudioIndexRouteImport.update({
 const StudioCharactersRoute = StudioCharactersRouteImport.update({
   id: '/characters',
   path: '/characters',
+  getParentRoute: () => StudioRoute,
+} as any)
+const StudioConnectorsRoute = StudioConnectorsRouteImport.update({
+  id: '/connectors',
+  path: '/connectors',
   getParentRoute: () => StudioRoute,
 } as any)
 const StudioPropsRoute = StudioPropsRouteImport.update({
@@ -220,6 +226,7 @@ const PProjectIdEEpisodeIdStoryboardRoute =
 export interface FileRoutesByFullPath {
   '/': typeof StudioIndexRoute
   '/characters': typeof StudioCharactersRouteWithChildren
+  '/connectors': typeof StudioConnectorsRoute
   '/props': typeof StudioPropsRouteWithChildren
   '/scenes': typeof StudioScenesRouteWithChildren
   '/styles': typeof StudioStylesRouteWithChildren
@@ -252,6 +259,7 @@ export interface FileRoutesByFullPath {
   '/p/$projectId/e/$episodeId/': typeof PProjectIdEEpisodeIdIndexRoute
 }
 export interface FileRoutesByTo {
+  '/connectors': typeof StudioConnectorsRoute
   '/': typeof StudioIndexRoute
   '/characters/$characterId': typeof StudioCharactersCharacterIdRoute
   '/props/$propId': typeof StudioPropsPropIdRoute
@@ -282,6 +290,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_studio': typeof StudioRouteWithChildren
   '/_studio/characters': typeof StudioCharactersRouteWithChildren
+  '/_studio/connectors': typeof StudioConnectorsRoute
   '/_studio/props': typeof StudioPropsRouteWithChildren
   '/_studio/scenes': typeof StudioScenesRouteWithChildren
   '/_studio/styles': typeof StudioStylesRouteWithChildren
@@ -319,6 +328,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/characters'
+    | '/connectors'
     | '/props'
     | '/scenes'
     | '/styles'
@@ -351,6 +361,7 @@ export interface FileRouteTypes {
     | '/p/$projectId/e/$episodeId/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/connectors'
     | '/'
     | '/characters/$characterId'
     | '/props/$propId'
@@ -380,6 +391,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_studio'
     | '/_studio/characters'
+    | '/_studio/connectors'
     | '/_studio/props'
     | '/_studio/scenes'
     | '/_studio/styles'
@@ -439,6 +451,13 @@ declare module '@tanstack/react-router' {
       path: '/characters'
       fullPath: '/characters'
       preLoaderRoute: typeof StudioCharactersRouteImport
+      parentRoute: typeof StudioRoute
+    }
+    '/_studio/connectors': {
+      id: '/_studio/connectors'
+      path: '/connectors'
+      fullPath: '/connectors'
+      preLoaderRoute: typeof StudioConnectorsRouteImport
       parentRoute: typeof StudioRoute
     }
     '/_studio/props': {
@@ -711,6 +730,7 @@ const StudioStylesRouteWithChildren = StudioStylesRoute._addFileChildren(
 
 interface StudioRouteChildren {
   StudioCharactersRoute: typeof StudioCharactersRouteWithChildren
+  StudioConnectorsRoute: typeof StudioConnectorsRoute
   StudioPropsRoute: typeof StudioPropsRouteWithChildren
   StudioScenesRoute: typeof StudioScenesRouteWithChildren
   StudioStylesRoute: typeof StudioStylesRouteWithChildren
@@ -719,6 +739,7 @@ interface StudioRouteChildren {
 
 const StudioRouteChildren: StudioRouteChildren = {
   StudioCharactersRoute: StudioCharactersRouteWithChildren,
+  StudioConnectorsRoute: StudioConnectorsRoute,
   StudioPropsRoute: StudioPropsRouteWithChildren,
   StudioScenesRoute: StudioScenesRouteWithChildren,
   StudioStylesRoute: StudioStylesRouteWithChildren,
