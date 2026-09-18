@@ -89,3 +89,24 @@ Filled remaining frontend specs (components, types, quality), verified, committe
 ### Status
 
 [OK] **Completed**
+
+
+## Session 5: Brand as 小光点 Cuepoint
+
+**Date**: 2026-09-18
+**Task**: Brand as 小光点 Cuepoint
+**Branch**: `main`
+
+### Summary
+
+Rebranded user-facing product to 小光点 Cuepoint; kept storage/package IDs; origin set to ROYIANS/Cuepoint; user pushes.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `0e15925` | (see git log) |
+
+### Status
+
+[OK] **Completed**
