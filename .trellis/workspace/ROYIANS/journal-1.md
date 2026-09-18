@@ -278,3 +278,24 @@ Shipped /agent chat: Dexie threads, lobe-scoped UI, streaming BYOK, scroll/memo 
 ### Status
 
 [OK] **Completed**
+
+
+## Session 13: Agent reasoning display
+
+**Date**: 2026-09-18
+**Task**: Agent reasoning display
+**Branch**: `main`
+
+### Summary
+
+Reasoning panel + SSE parse + Dexie persist; Accordion replaced with toggle so expand works after complete. Next: mobile shell/chat + topic search.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `443f6e9` | (see git log) |
+
+### Status
+
+[OK] **Completed**
