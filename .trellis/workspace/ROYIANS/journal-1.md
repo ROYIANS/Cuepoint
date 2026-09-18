@@ -173,3 +173,24 @@ Centered capped shot rows; scene-style multi character picker; left control padd
 ### Status
 
 [OK] **Completed**
+
+
+## Session 8: Media view row chrome parity
+
+**Date**: 2026-09-18
+**Task**: Media view row chrome parity
+**Branch**: `main`
+
+### Summary
+
+Media shot rows share design max-height/centering; content column flexes; frame tiles stay fixed width.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `HEAD` | (see git log) |
+
+### Status
+
+[OK] **Completed**

@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 7
+- **Total Sessions**: 8
 - **Last Active**: 2026-09-18
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~175 | Active |
+| `journal-1.md` | ~196 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 8 | 2026-09-18 | Media view row chrome parity | HEAD | `main` |
 | 7 | 2026-09-18 | Shot row align and pickers | `58bb1b6` | `main` |
 | 6 | 2026-09-18 | Shot grid cell polish | `32d20e6` | `main` |
 | 5 | 2026-09-18 | Brand as 小光点 Cuepoint | `0e15925` | `main` |
