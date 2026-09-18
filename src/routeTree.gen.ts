@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StudioRouteImport } from './routes/_studio'
 import { Route as StudioIndexRouteImport } from './routes/_studio.index'
+import { Route as StudioAboutRouteImport } from './routes/_studio.about'
 import { Route as StudioCharactersRouteImport } from './routes/_studio.characters'
 import { Route as StudioConnectorsRouteImport } from './routes/_studio.connectors'
 import { Route as StudioPropsRouteImport } from './routes/_studio.props'
@@ -51,6 +52,11 @@ const StudioRoute = StudioRouteImport.update({
 const StudioIndexRoute = StudioIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => StudioRoute,
+} as any)
+const StudioAboutRoute = StudioAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => StudioRoute,
 } as any)
 const StudioCharactersRoute = StudioCharactersRouteImport.update({
@@ -225,6 +231,7 @@ const PProjectIdEEpisodeIdStoryboardRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof StudioIndexRoute
+  '/about': typeof StudioAboutRoute
   '/characters': typeof StudioCharactersRouteWithChildren
   '/connectors': typeof StudioConnectorsRoute
   '/props': typeof StudioPropsRouteWithChildren
@@ -259,6 +266,7 @@ export interface FileRoutesByFullPath {
   '/p/$projectId/e/$episodeId/': typeof PProjectIdEEpisodeIdIndexRoute
 }
 export interface FileRoutesByTo {
+  '/about': typeof StudioAboutRoute
   '/connectors': typeof StudioConnectorsRoute
   '/': typeof StudioIndexRoute
   '/characters/$characterId': typeof StudioCharactersCharacterIdRoute
@@ -289,6 +297,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_studio': typeof StudioRouteWithChildren
+  '/_studio/about': typeof StudioAboutRoute
   '/_studio/characters': typeof StudioCharactersRouteWithChildren
   '/_studio/connectors': typeof StudioConnectorsRoute
   '/_studio/props': typeof StudioPropsRouteWithChildren
@@ -327,6 +336,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/characters'
     | '/connectors'
     | '/props'
@@ -361,6 +371,7 @@ export interface FileRouteTypes {
     | '/p/$projectId/e/$episodeId/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/about'
     | '/connectors'
     | '/'
     | '/characters/$characterId'
@@ -390,6 +401,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_studio'
+    | '/_studio/about'
     | '/_studio/characters'
     | '/_studio/connectors'
     | '/_studio/props'
@@ -444,6 +456,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof StudioIndexRouteImport
+      parentRoute: typeof StudioRoute
+    }
+    '/_studio/about': {
+      id: '/_studio/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof StudioAboutRouteImport
       parentRoute: typeof StudioRoute
     }
     '/_studio/characters': {
@@ -729,6 +748,7 @@ const StudioStylesRouteWithChildren = StudioStylesRoute._addFileChildren(
 )
 
 interface StudioRouteChildren {
+  StudioAboutRoute: typeof StudioAboutRoute
   StudioCharactersRoute: typeof StudioCharactersRouteWithChildren
   StudioConnectorsRoute: typeof StudioConnectorsRoute
   StudioPropsRoute: typeof StudioPropsRouteWithChildren
@@ -738,6 +758,7 @@ interface StudioRouteChildren {
 }
 
 const StudioRouteChildren: StudioRouteChildren = {
+  StudioAboutRoute: StudioAboutRoute,
   StudioCharactersRoute: StudioCharactersRouteWithChildren,
   StudioConnectorsRoute: StudioConnectorsRoute,
   StudioPropsRoute: StudioPropsRouteWithChildren,

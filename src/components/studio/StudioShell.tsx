@@ -1,7 +1,17 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Box, Cable, Clapperboard, MapPinned, Palette, Upload, UserRound } from "lucide-react";
+import {
+  Box,
+  Cable,
+  Clapperboard,
+  Info,
+  MapPinned,
+  Palette,
+  Upload,
+  UserRound,
+} from "lucide-react";
 import type { ReactNode } from "react";
 import { StudioField } from "@/components/studio/StudioField";
+import { LOGO_SRC, PRODUCT_NAME_ZH } from "@/lib/brand";
 import { cn } from "@/lib/utils";
 import {
   Tooltip,
@@ -16,6 +26,7 @@ const NAV = [
   { to: "/props", label: "道具", icon: Box, exact: false },
   { to: "/styles", label: "风格", icon: Palette, exact: false },
   { to: "/connectors", label: "连接", icon: Cable, exact: false },
+  { to: "/about", label: "关于", icon: Info, exact: false },
 ] as const;
 
 export function StudioShell({
@@ -30,14 +41,14 @@ export function StudioShell({
   return (
     <div className="studio-floor flex min-h-screen">
       <aside className="bg-sidebar sticky top-0 flex h-screen w-[76px] shrink-0 flex-col items-center border-r py-4">
-        <div
-          className="mb-6 flex size-10 items-center justify-center rounded-2xl bg-brand text-brand-foreground shadow-[0_8px_20px_-10px_rgb(0_0_0_/_0.65)]"
-          role="img"
-          aria-label="小光点"
-          title="小光点"
+        <Link
+          to="/about"
+          className="mb-6 flex size-10 items-center justify-center overflow-visible transition-opacity hover:opacity-90"
+          aria-label={PRODUCT_NAME_ZH}
+          title={PRODUCT_NAME_ZH}
         >
-          <StudioMark />
-        </div>
+          <img src={LOGO_SRC} alt="" className="size-10 object-contain drop-shadow-[0_6px_14px_rgb(0_0_0_/_0.55)]" />
+        </Link>
         <nav className="flex flex-1 flex-col gap-1">
           {NAV.map((item) => {
             const active = item.exact ? pathname === "/" : pathname.startsWith(item.to);
@@ -79,14 +90,5 @@ export function StudioShell({
         <div className="app-scroll relative h-screen overflow-auto">{children}</div>
       </div>
     </div>
-  );
-}
-
-function StudioMark() {
-  return (
-    <svg viewBox="0 0 24 24" className="size-5" fill="none" aria-hidden>
-      <rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M9 5v14M15 5v14" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
   );
 }

@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Quality Check section and guideline index for frontend package"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Thin routes, Chinese UI copy, lucide icons, a11y for decorative vs labeled controls"}
+{"file": ".trellis/spec/frontend/directory-structure.md", "reason": "Studio route file naming (_studio.*) and components/studio feature pages"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "pnpm lint=tsc, Vitest gate, no required RTL for presentational About UI"}
