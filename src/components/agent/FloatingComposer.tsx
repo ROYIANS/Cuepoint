@@ -137,6 +137,8 @@ export function FloatingComposer({
   model,
   modelOptions,
   probingModels,
+  modelPolicy,
+  modelWarning,
   chatMode,
   onChange,
   onSend,
@@ -146,7 +148,7 @@ export function FloatingComposer({
   onChatModeChange,
   large,
 }: ComposerProps) {
-  const canSend = Boolean(value.trim()) && !sending;
+  const canSend = Boolean(value.trim()) && !sending && !modelPolicy.incompatibleModels.includes(model.trim());
   const composing = useRef(false);
 
   const trySend = () => {
@@ -174,6 +176,7 @@ export function FloatingComposer({
           trySend();
         }}
       />
+      {modelWarning ? <div role="status" style={{ padding: "0 16px 8px", fontSize: 12, color: "#e0b878" }}>{modelWarning}</div> : null}
       <div className="agent-composer-footer">
         <div className="agent-composer-cluster">
           <ModeSwitch mode={chatMode} onChange={onChatModeChange} />
@@ -210,6 +213,7 @@ export function FloatingComposer({
             model={model}
             modelOptions={modelOptions}
             probingModels={probingModels}
+            modelPolicy={modelPolicy}
             connectors={connectors}
             selectedConnectorId={selectedConnectorId}
             onConnectorChange={onConnectorChange}

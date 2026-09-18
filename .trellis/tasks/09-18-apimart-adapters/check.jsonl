@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Runtime boundary typing"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Tests and checks"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "UI conventions"}
+{"file": ".trellis/tasks/09-18-apimart-adapters/research/apimart.md", "reason": "Verified provider contracts"}

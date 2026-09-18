@@ -457,7 +457,7 @@ export const DEFAULT_VISIBLE_COLUMNS: ShotColumnId[] = [
 /** Studio-global BYOK connectors (not part of project ZIP). */
 export type ConnectorProtocol = "openai-compatible";
 
-export type ConnectorDefinitionId = "openai-compatible" | "deepseek";
+export type ConnectorDefinitionId = "openai-compatible" | "deepseek" | "apimart";
 
 export interface ConnectorConfig {
   id: Id;

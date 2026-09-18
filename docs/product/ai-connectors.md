@@ -20,7 +20,7 @@
 ## 协议客户端
 
 - `src/lib/ai/openaiCompatible.ts`：规范化 Base URL、Bearer、`testConnection`、`listModels`
-- 目录：`src/lib/ai/catalog.ts`（`openai-compatible`、`deepseek`）
+- 目录：`src/lib/ai/catalog.ts`（`openai-compatible`、`deepseek`、`apimart`）
 
 ## MVP 范围（已定）
 
@@ -39,3 +39,28 @@
 ```
 
 编辑弹窗：Base URL、API Key、测试连接、拉取模型探活（展示可见模型，不保存选型）、保存。
+
+## APIMart adapter foundation
+
+APIMart uses the existing studio-global connector storage with default Base URL `https://api.apimart.ai/v1`. The catalog distinguishes provider capabilities (`chat`, `image`, `video`) from the OpenAI-compatible chat protocol. No database migration is required.
+
+`src/lib/ai/connectors.ts` owns provider dispatch for connection testing and model discovery. APIMart probes only `GET /models?expand=category`; it never falls back to a paid POST. The connection page lists every visible model; the chat picker lists only models categorized as `chat`. Unknown or missing categories require manual model entry. Other providers retain their existing behavior.
+
+Chat also excludes known image/video/audio models from manual search and saved-selection reinsertion. Old conversations keep their messages, but an incompatible saved model prompts the user to choose a chat model. A send validates the actual provider/model before any message writes or chat POST; a failed APIMart metadata query leaves the draft intact. Unknown custom model IDs remain allowed after a successful metadata query. Classification is scoped to the connector and relies on provider metadata, not a model-name blocklist.
+
+`src/lib/ai/apimart.ts` provides:
+
+| Export | Purpose |
+| --- | --- |
+| `listApimartModels` | Discover categories/capability tags and optional parameter schemas with `expand: "parameters"` |
+| `testApimartConnection` | Read-only model-list probe |
+| `uploadApimartImage` | Upload a Blob/File as multipart data and return its temporary URL |
+| `submitApimartImageGeneration` | Submit a native request to `/images/generations` |
+| `submitApimartVideoGeneration` | Submit a native request to `/videos/generations` |
+| `getApimartTask` | Query one provider task and normalize states, media URLs, expiry and errors |
+
+The client accepts credentials and request options (`signal`, `fetchImpl`). Generation requests preserve model-native fields instead of translating all models into a single parameter vocabulary. Schema metadata is informative and never used to execute arbitrary provider URLs; server validation remains authoritative. Special routes such as Midjourney actions are outside this adapter's generic-endpoint coverage.
+
+No generation UI, job persistence, automatic polling, result download or slot mutation is included. Future runtime callers must retain provider task IDs, handle ambiguous submission failures without blind retries, and archive results before their URLs expire. Aborting a local request does not cancel a remote task.
+
+Official contracts: [model metadata](https://docs.apimart.ai/en/api-reference/texts/models/list.md), [image upload](https://docs.apimart.ai/en/api-reference/uploads/images.md), [task status](https://docs.apimart.ai/en/api-reference/tasks/status.md). The upload guide supersedes conflicting base64 examples in individual model pages for this implementation's supported reference-image flow.

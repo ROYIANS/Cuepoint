@@ -1,10 +1,11 @@
 import { ModelIcon, ProviderIcon } from "@lobehub/icons";
 import { ActionIcon } from "@lobehub/ui";
 import { Dropdown } from "antd";
-import { ArrowUp, Check, ChevronDown, Eye, Square, Wrench } from "lucide-react";
+import { ArrowUp, Check, ChevronDown, Eye, Plug, Square, Wrench } from "lucide-react";
 import { useMemo, useState } from "react";
 import { SURFACE_ELEVATED, TEXT, TEXT_TERTIARY } from "@/components/agent/agentTheme";
 import type { ConnectorConfig, Id } from "@/domain/types";
+import { buildChatModelOptions, type ChatModelPolicy } from "@/lib/ai/chatModelPolicy";
 import {
   connectorDisplayName,
   connectorProviderKey,
@@ -73,6 +74,7 @@ export function ModelSelectTrigger({
   model,
   modelOptions,
   probingModels,
+  modelPolicy,
   connectors,
   selectedConnectorId,
   onConnectorChange,
@@ -81,6 +83,7 @@ export function ModelSelectTrigger({
   model: string;
   modelOptions: Array<{ label: string; value: string }>;
   probingModels: boolean;
+  modelPolicy: ChatModelPolicy;
   connectors: ConnectorConfig[];
   selectedConnectorId?: Id;
   onConnectorChange: (id: string) => void;
@@ -90,13 +93,9 @@ export function ModelSelectTrigger({
   const [search, setSearch] = useState("");
   const [preview, setPreview] = useState(model);
 
-  const ids = useMemo(() => {
-    const set = new Set(modelOptions.map((opt) => opt.value));
-    if (model) set.add(model);
-    const extra = search.trim();
-    if (extra) set.add(extra);
-    return [...set];
-  }, [modelOptions, model, search]);
+  const ids = useMemo(() => buildChatModelOptions(
+    modelOptions.map((opt) => opt.value), model, search, modelPolicy,
+  ), [modelOptions, model, search, modelPolicy]);
 
   const groups = useMemo(() => {
     const needle = search.trim().toLowerCase();
@@ -110,7 +109,7 @@ export function ModelSelectTrigger({
 
   const previewId = groups.some((group) => group.models.includes(preview))
     ? preview
-    : (groups[0]?.models[0] ?? model);
+    : groups[0]?.models[0];
 
   const panel = (
     <div
@@ -133,11 +132,15 @@ export function ModelSelectTrigger({
                 className={`agent-model-provider${connector.id === selectedConnectorId ? " is-active" : ""}`}
                 onClick={() => onConnectorChange(connector.id)}
               >
-                <ProviderIcon
-                  provider={connectorProviderKey(connector.definitionId)}
-                  size={14}
-                  type="color"
-                />
+                {connector.definitionId === "apimart" ? (
+                  <Plug size={14} />
+                ) : (
+                  <ProviderIcon
+                    provider={connectorProviderKey(connector.definitionId)}
+                    size={14}
+                    type="color"
+                  />
+                )}
                 {connectorDisplayName(connector)}
               </button>
             ))}
@@ -145,7 +148,7 @@ export function ModelSelectTrigger({
         ) : null}
         <div className="agent-model-rows">
           {groups.length === 0 ? (
-            <div className="agent-model-group">{probingModels ? "拉取模型中…" : "没有匹配的模型"}</div>
+            <div className="agent-model-group">{probingModels ? "拉取模型中…" : !modelPolicy.verified ? "无法确认模型类型，请切换连接后重试" : "没有匹配的模型"}</div>
           ) : (
             groups.map((group) => (
               <div key={group.key}>

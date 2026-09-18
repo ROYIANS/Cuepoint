@@ -1,0 +1,87 @@
+# AI connector and generation boundaries
+
+## 1. Scope / Trigger
+
+Read before changing provider discovery/probes or adding consumers of the APIMart image/video client. Catalog capabilities are separate from chat wire protocol. Keys belong to the existing studio-global Dexie connector table and never to project ZIPs.
+
+## 2. Signatures
+
+Provider dispatch in `src/lib/ai/connectors.ts`:
+
+```ts
+listConnectorModels(connector, usage: "all" | "chat", fetchImpl?)
+testConnectorConnection(connector, fetchImpl?)
+discoverConnectorChatModels(connector, options?)
+runWithCompatibleChatModel(connector, model, action, options?)
+```
+
+`src/lib/ai/chatModelPolicy.ts` owns connector-scoped compatibility, warning copy and the shared `buildChatModelOptions` filter. `runWithCompatibleChatModel` invokes the mutation/transport action only after compatibility succeeds; abort or a changed selection prevents action execution.
+
+Provider client in `src/lib/ai/apimart.ts`:
+
+```ts
+listApimartModels(credentials, query?, options?)
+testApimartConnection(credentials, options?)
+uploadApimartImage(credentials, file: Blob, options?)
+submitApimartImageGeneration(credentials, input, options?)
+submitApimartVideoGeneration(credentials, input, options?)
+getApimartTask(credentials, taskId, options?)
+// credentials: {baseUrl, apiKey}; options: {signal?, fetchImpl?}
+```
+
+## 3. Contracts
+
+- `baseUrl` includes `/v1`. Only fixed relative routes are executed; metadata endpoint/schema URLs are never followed with credentials.
+- APIMart probes are read-only model queries, including when the key only permits media models.
+- Discovery preserves category/capability tags and exposes parameter schema availability. Only `category === "chat"` populates automatic chat suggestions; unknown categories remain available through manual entry. Connection-page discovery retains all categories.
+- Chat compatibility applies to every selection source: discovered suggestions, manual search and the current/saved model. Known `image`, `video` and `audio` categories cannot be reinserted by manual input. Use provider metadata rather than guessing from model names. A saved incompatible selection warns the user without changing historical messages.
+- The send boundary checks the actual connector/model before creating a thread, appending messages, clearing the draft or calling chat transport. APIMart metadata lookup failure cannot authorize an unchecked send; show the error and preserve the draft. Unknown custom models remain manually usable after successful discovery. Connector switching must not reuse another connector's classifications.
+- Submit responses use a `data` array with task IDs. Query responses use a `data` object. Never copy the conflicting final upload-guide example instead of dedicated generation/query contracts.
+- Model-native fields (`size` vs `aspect_ratio`, audio flags, frame roles) survive unchanged. Server validation handles model-specific restrictions.
+- Upload uses FormData without manually setting Content-Type; supported types are JPEG/PNG/WebP/GIF, up to 20 MB. Provider URLs are temporary, not durable media IDs.
+- This layer does not poll, persist jobs, download results or mutate slots. Multiple results and expiry must remain available to future callers.
+- Requests are abortable; local abort does not cancel the remote task. Never automatically retry generation submissions after timeout or ambiguous network failure.
+
+## 4. Validation & Error Matrix
+
+| Condition | Required outcome |
+| --- | --- |
+| Missing credentials / invalid upload | Validation error without network traffic |
+| APIMart model probe fails | Surface failure; never fall back to a POST |
+| HTTP failure / provider error in HTTP 200 | Explicit failure, with credentials redacted |
+| Invalid JSON/envelope or missing submitted task IDs | Protocol error, not empty success |
+| Missing/unknown category or invalid parameter metadata | Preserve explicit metadata status; no name-based category guessing |
+| Known media model entered manually or stored on a thread | Exclude from selectable chat options; warn and reject send without message writes or chat POST |
+| APIMart metadata loading/failure during send | Finish validation or show error; never infer compatibility from an empty list |
+| Unknown custom model after successful discovery | Allow manual chat selection/send |
+| Unknown task state | Preserve provider state and normalize to unknown, never completed |
+| Abort | Distinct aborted result; no claim of provider cancellation |
+
+## 5. Good/Base/Bad Cases
+
+- Good: connection page can discover a video-only key while chat suggestions remain empty.
+- Base: existing OpenAI-compatible/DeepSeek discovery and fallback behavior stays unchanged.
+- Bad: submit retries create multiple paid tasks after a lost response.
+- Bad: an expiring result URL is stored as if it were permanent local media.
+
+## 6. Tests Required
+
+`tests/apimart.test.ts` owns provider envelope, upload, task-state and error contracts. `tests/connectors.test.ts` covers provider dispatch, filtering, read-only probes and configuration persistence. `tests/projectPackage.test.ts` checks key exclusion for each provider. Assert HTTP paths/bodies and call counts, not only parser output.
+
+Chat-policy regression coverage must exercise manual-search and saved-selection reinsertion, metadata scope/loading/failure, unknown custom models, and the send gate with a downstream operation spy proving rejection causes no side effects.
+
+## 7. Wrong vs Correct
+
+```ts
+// Wrong: provider model names alone include image/video models in chat.
+await listModels(apimartConnector);
+
+// Correct: the provider-aware layer filters documented categories.
+await listConnectorModels(apimartConnector, "chat");
+```
+
+```ts
+// Wrong: re-submit generation when a network response is lost.
+// Correct: return the ambiguous failure to the caller without retrying.
+// A future job runtime must reconcile provider identity before another submission.
+```

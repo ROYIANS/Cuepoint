@@ -17,6 +17,7 @@
 | [Directory Structure](./directory-structure.md) | Studio layout+index+$id vs project workspace | Filled |
 | [Component Guidelines](./component-guidelines.md) | Thin routes, feature pages, ui primitives, slots | Filled |
 | [Chat Performance](./chat-performance.md) | Agent transcript scroll + memo vs LobeHub virtua | Filled |
+| [AI Connectors](./ai-connectors.md) | Provider capabilities, APIMart generation contracts and discovery | Filled |
 | [Hook Guidelines](./hook-guidelines.md) | Dexie liveQuery loading vs missing | Filled |
 | [State Management](./state-management.md) | IndexedDB owner id, episodes, STUDIO_LIBRARY_ID | Filled |
 | [Delivery Export](./delivery-export.md) | Episode-scoped CSV and printable storyboard contracts | Filled |

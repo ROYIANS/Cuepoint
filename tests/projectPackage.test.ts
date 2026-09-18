@@ -247,10 +247,10 @@ describe("project packages", () => {
     expect(await db.projects.count()).toBe(before);
   });
 
-  it("does not include studio connector API keys in project ZIP export", async () => {
+  it.each(["openai-compatible", "deepseek", "apimart"] as const)("does not include %s API keys in project ZIP export", async (definitionId) => {
     const project = await createProject("secrets stay local");
     await upsertConnector({
-      definitionId: "openai-compatible",
+      definitionId,
       protocol: "openai-compatible",
       baseUrl: "https://api.openai.com/v1",
       apiKey: "sk-secret-should-not-export",

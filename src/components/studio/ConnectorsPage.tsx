@@ -26,7 +26,8 @@ import { db } from "@/db/database";
 import { deleteConnector, upsertConnector } from "@/db/repo";
 import type { ConnectorConfig, ConnectorDefinitionId } from "@/domain/types";
 import { CONNECTOR_CATALOG, type ConnectorDefinition } from "@/lib/ai/catalog";
-import { listModels, maskApiKey, testConnection } from "@/lib/ai/openaiCompatible";
+import { maskApiKey } from "@/lib/ai/openaiCompatible";
+import { listConnectorModels, testConnectorConnection } from "@/lib/ai/connectors";
 import { cn } from "@/lib/utils";
 
 type EditorState = {
@@ -73,9 +74,11 @@ export function ConnectorsPage() {
   }
 
   async function handleProbeModels() {
+    if (!editor) return;
     setProbing(true);
     try {
-      const result = await listModels({
+      const result = await listConnectorModels({
+        definitionId: editor.definition.id,
         baseUrl,
         apiKey: resolveApiKey(),
       });
@@ -96,13 +99,13 @@ export function ConnectorsPage() {
   }
 
   async function handleTest() {
+    if (!editor) return;
     setTesting(true);
     try {
-      const result = await testConnection({
+      const result = await testConnectorConnection({
+        definitionId: editor.definition.id,
         baseUrl,
         apiKey: resolveApiKey(),
-        // Chat fallback only — not a saved preference; real model pick is in Agent chat.
-        defaultModel: editor?.definition.defaultModel,
       });
       if (result.ok) {
         const detail =
@@ -111,7 +114,8 @@ export function ConnectorsPage() {
             : "";
         toast.success(`连接成功${detail}`);
         if (result.via === "models") {
-          const listed = await listModels({
+          const listed = await listConnectorModels({
+            definitionId: editor.definition.id,
             baseUrl,
             apiKey: resolveApiKey(),
           });
@@ -236,7 +240,9 @@ export function ConnectorsPage() {
           <DialogHeader>
             <DialogTitle>{editor?.existing ? "编辑连接" : "安装连接"}</DialogTitle>
             <DialogDescription>
-              {editor?.definition.title} · OpenAI 兼容协议。此处只配置接入点；模型在聊天里选。
+              {editor?.definition.id === "apimart"
+                ? "APIMart · 聊天、图像与视频共用此连接。测试连接仅查询模型，不发起生成。"
+                : `${editor?.definition.title ?? ""} · OpenAI 兼容协议。此处只配置接入点；模型在聊天里选。`}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4">
@@ -244,7 +250,7 @@ export function ConnectorsPage() {
               <Input
                 value={baseUrl}
                 onChange={(event) => setBaseUrl(event.target.value)}
-                placeholder="https://api.openai.com/v1"
+                placeholder={editor?.definition.defaultBaseUrl}
                 autoComplete="off"
               />
             </Field>

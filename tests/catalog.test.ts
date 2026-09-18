@@ -18,6 +18,17 @@ describe("connectorProviderKey", () => {
   it("maps catalog ids to icon providers", () => {
     expect(connectorProviderKey("deepseek")).toBe("deepseek");
     expect(connectorProviderKey("openai-compatible")).toBe("openai");
+    expect(connectorProviderKey("apimart")).toBe("apimart");
     expect(getConnectorDefinition("openai-compatible")?.title).toBe("OpenAI 兼容");
   });
+});
+
+it("exposes APIMart media capabilities independently of compatible chat protocol", () => {
+  expect(getConnectorDefinition("apimart")).toMatchObject({
+    protocol: "openai-compatible",
+    defaultBaseUrl: "https://api.apimart.ai/v1",
+    capabilities: ["chat", "image", "video"],
+  });
+  expect(connectorDisplayName({ definitionId: "apimart" })).toBe("APIMart");
+  expect(getConnectorDefinition("deepseek")?.capabilities).toEqual(["chat"]);
 });

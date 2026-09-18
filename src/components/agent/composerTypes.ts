@@ -1,4 +1,5 @@
 import type { ConnectorConfig, Id } from "@/domain/types";
+import type { ChatModelPolicy } from "@/lib/ai/chatModelPolicy";
 
 export type ChatSurfaceMode = "agent" | "task";
 
@@ -10,6 +11,8 @@ export type ComposerProps = {
   model: string;
   modelOptions: Array<{ label: string; value: string }>;
   probingModels: boolean;
+  modelPolicy: ChatModelPolicy;
+  modelWarning?: string;
   chatMode: ChatSurfaceMode;
   onChange: (value: string) => void;
   onSend: () => void;
