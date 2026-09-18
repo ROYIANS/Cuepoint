@@ -6,7 +6,7 @@
 
 ## Overview
 
-This directory contains guidelines for frontend development. Fill in each file with your project's specific conventions.
+Aifenjing is a Vite + React + TanStack Router client with Dexie IndexedDB as the system of record. Specs in this directory describe how routes, components, hooks, domain types, and tests are actually structured so agents match existing patterns.
 
 ---
 
@@ -15,12 +15,12 @@ This directory contains guidelines for frontend development. Fill in each file w
 | Guide | Description | Status |
 | --- | --- | --- |
 | [Directory Structure](./directory-structure.md) | Studio layout+index+$id vs project workspace | Filled |
-| [Component Guidelines](./component-guidelines.md) | Component patterns, props, composition | To fill |
+| [Component Guidelines](./component-guidelines.md) | Thin routes, feature pages, ui primitives, slots | Filled |
 | [Hook Guidelines](./hook-guidelines.md) | Dexie liveQuery loading vs missing | Filled |
 | [State Management](./state-management.md) | IndexedDB owner id, episodes, STUDIO_LIBRARY_ID | Filled |
 | [Delivery Export](./delivery-export.md) | Episode-scoped CSV and printable storyboard contracts | Filled |
-| [Quality Guidelines](./quality-guidelines.md) | Code standards, forbidden patterns | To fill |
-| [Type Safety](./type-safety.md) | Type patterns, validation | To fill |
+| [Quality Guidelines](./quality-guidelines.md) | tsc lint, Vitest lib/repo tests, forbidden patterns | Filled |
+| [Type Safety](./type-safety.md) | Domain types, normalizers, Zod package boundary | Filled |
 
 ---
 
