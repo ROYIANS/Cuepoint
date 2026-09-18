@@ -11,7 +11,7 @@ const CHAT_PRIMARY = "#eeeeee";
 
 /**
  * Scopes @lobehub/ui + antd theme to the Agent chat tree only.
- * Canvas is transparent so StudioField + grain from StudioShell show through.
+ * Canvas inherits the shared StudioShell content surface.
  * Do not import antd/dist/reset.css here — it mutates html/body globally
  * and would leak into studio pages after visiting /agent.
  */
@@ -22,7 +22,7 @@ export function LobeChatTheme({ children }: { children: ReactNode }) {
       data-agent-chat=""
       style={{
         height: "100%",
-        minHeight: "100vh",
+        minHeight: "100%",
         background: "transparent",
         color: "rgba(255,255,255,0.88)",
         position: "relative",
@@ -52,7 +52,7 @@ export function LobeChatTheme({ children }: { children: ReactNode }) {
           }}
           style={{
             height: "100%",
-            minHeight: "100vh",
+            minHeight: "100%",
             background: "transparent",
           }}
         >

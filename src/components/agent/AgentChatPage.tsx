@@ -447,7 +447,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
 
   if (!loaded || routedThreadPending) {
     return (
-      <Flexbox align="center" justify="center" height="100%" style={{ minHeight: "100vh" }}>
+      <Flexbox align="center" justify="center" height="100%" style={{ minHeight: "100%" }}>
         加载中…
       </Flexbox>
     );
@@ -460,7 +460,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
         justify="center"
         height="100%"
         gap={16}
-        style={{ minHeight: "100vh", padding: 32 }}
+        style={{ minHeight: "100%", padding: 32 }}
       >
         <Empty
           title="还没有可用的连接"

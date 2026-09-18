@@ -12,7 +12,6 @@ import {
   UserRound,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
-import { StudioField } from "@/components/studio/StudioField";
 import { ClickSpark } from "@/components/ui/click-spark";
 import {
   Sheet,
@@ -54,14 +53,14 @@ export function StudioShell({
 
   return (
     <ClickSpark
-      className="studio-floor flex min-h-screen"
+      className="studio-floor flex h-dvh overflow-hidden"
       sparkColor="#fff"
       sparkSize={10}
       sparkRadius={15}
       sparkCount={8}
       duration={400}
     >
-      <aside className="bg-sidebar sticky top-0 hidden h-screen w-[76px] shrink-0 flex-col items-center border-r py-4 md:flex">
+      <aside className="studio-navigation hidden h-full w-[76px] shrink-0 flex-col items-center py-4 md:flex">
         <Link
           to="/about"
           className="mb-6 flex size-10 items-center justify-center overflow-visible transition-opacity hover:opacity-90"
@@ -106,7 +105,7 @@ export function StudioShell({
         </Tooltip>
       </aside>
 
-      <div className={cn("relative flex min-w-0 flex-1 flex-col", onAgent ? "overflow-clip" : "overflow-hidden")}>
+      <div className="studio-content-surface relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
         <header
           className={cn(
             "studio-mobile-header bg-sidebar/80 sticky top-0 z-20 flex h-12 shrink-0 items-center gap-3 border-b px-3 backdrop-blur-md md:hidden",
@@ -188,14 +187,7 @@ export function StudioShell({
           </SheetContent>
         </Sheet>
 
-        <StudioField />
-        <div className="studio-grain pointer-events-none absolute -inset-[18%]" />
-        <div
-          className={cn(
-            "app-scroll relative min-h-0 min-w-0 flex-1 overflow-auto",
-            onAgent ? "h-screen" : "h-[calc(100vh-3rem)] md:h-screen",
-          )}
-        >
+        <div className="app-scroll relative min-h-0 min-w-0 flex-1 overflow-auto">
           {children}
         </div>
       </div>

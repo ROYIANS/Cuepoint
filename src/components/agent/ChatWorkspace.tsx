@@ -138,7 +138,7 @@ export function ChatWorkspace({
       style={
         {
           minHeight: "100%",
-          maxHeight: "100vh",
+          maxHeight: "100%",
           background: "transparent",
           overflow: "hidden",
           "--agent-chat-header-height": `${CHAT_HEADER_HEIGHT}px`,

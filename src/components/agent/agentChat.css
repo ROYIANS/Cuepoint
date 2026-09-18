@@ -217,7 +217,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 100%;
   height: 100%;
   overflow-y: auto;
   padding: 32px 24px;
@@ -529,6 +529,7 @@
 
 .agent-chat-root .agent-chat-column {
   position: relative;
+  isolation: isolate;
   min-width: 0;
   height: 100%;
   overflow: hidden;
@@ -539,8 +540,29 @@
   position: absolute !important;
   top: 0;
   z-index: 10;
+  isolation: isolate;
   height: var(--agent-chat-header-height, 52px) !important;
-  background: #0d0d0d !important;
+  overflow: visible;
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  backdrop-filter: none;
+}
+
+/* Fade the background only: titles and actions stay crisp as messages scroll beneath. */
+.agent-chat-root .agent-chat-header::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -100%;
+  pointer-events: none;
+  border: 0;
+  border-radius: 0;
+  outline: none;
+  transform: none;
+  background: #111;
+  -webkit-mask: radial-gradient(farthest-side at top, #000 50%, #0000);
+  mask: radial-gradient(farthest-side at top, #000 50%, #0000);
 }
 
 .agent-chat-root .agent-message-list {
