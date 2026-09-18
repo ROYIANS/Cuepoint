@@ -145,11 +145,20 @@ function columnPlaceholder(id: ShotColumnId): string {
     case "notes":
       return "备注";
     case "scene":
-      return "未选择";
+      return "未选择场景";
+    case "characters":
+      return "未选择角色";
     default:
       return SHOT_COLUMNS.find((column) => column.id === id)?.label ?? "";
   }
 }
+
+/** Shared design-view row/cell height: min band + hard cap; text scrolls inside. */
+const DESIGN_ROW_H = "h-full min-h-[124px] max-h-[160px]";
+
+/** Shared design-view cell chrome: capped height, content centered with vertical padding. */
+const DESIGN_CELL_CHROME =
+  `${DESIGN_ROW_H} flex items-center justify-center overflow-hidden px-2 py-3`;
 
 function coverMediaId(
   slots: Partial<Record<string, GenerationSlot>> | undefined,
@@ -180,25 +189,38 @@ function AssetStill({
 }
 
 const FLUSH_SELECT_TRIGGER =
-  "h-full min-h-[124px] w-full rounded-none border-0 bg-transparent px-2 shadow-none focus:ring-0 focus-visible:ring-0 data-[size=default]:h-full dark:bg-transparent dark:hover:bg-transparent";
+  `${DESIGN_CELL_CHROME} w-full rounded-none border-0 bg-transparent shadow-none focus:ring-0 focus-visible:ring-0 data-[size=default]:h-full dark:bg-transparent dark:hover:bg-transparent`;
 
 function PlainCell({
   value,
   placeholder,
   onCommit,
+  design = false,
 }: {
   value: string;
   placeholder: string;
   onCommit: (value: string) => void;
+  /** Design-view capped/centered chrome; media view stays uncapped stretch. */
+  design?: boolean;
 }) {
   return (
-    <Textarea
-      value={value}
-      rows={4}
-      placeholder={placeholder}
-      onChange={(event) => onCommit(event.target.value)}
-      className="h-full min-h-[124px] w-full resize-none rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent"
-    />
+    <div
+      className={cn(
+        design ? DESIGN_CELL_CHROME : "h-full min-h-[124px]",
+        "w-full min-h-0",
+      )}
+    >
+      <Textarea
+        value={value}
+        rows={4}
+        placeholder={placeholder}
+        onChange={(event) => onCommit(event.target.value)}
+        className={cn(
+          "h-full w-full resize-none rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent",
+          design ? "max-h-full overflow-auto" : "min-h-[124px]",
+        )}
+      />
+    </div>
   );
 }
 
@@ -1442,14 +1464,17 @@ function ShotRow({
     zIndex: isDragging ? 10 : undefined,
   };
   const selectedScene = scenes.find((scene) => scene.id === shot.sceneId);
+  const selectedCharacters = characters.filter((character) =>
+    shot.characterIds.includes(character.id),
+  );
 
   return (
     <div
       id={`shot-${shot.id}`}
       ref={setNodeRef}
       style={style}
-      className={`relative scroll-m-20 transition-shadow duration-300 ${
-        active ? "z-10 ring-2 ring-inset ring-brand" : ""
+      className={`group relative scroll-m-20 transition-shadow duration-300 ${
+        active ? "z-10 overflow-visible" : ""
       }`}
       onMouseDown={onActivate}
       onFocusCapture={onActivate}
@@ -1458,8 +1483,7 @@ function ShotRow({
         type="button"
         variant="outline"
         size="icon-sm"
-        className="absolute z-10 size-6 rounded-full"
-        style={{ left: 14, top: -12 }}
+        className="absolute top-0 left-3.5 z-10 size-6 -translate-y-1/2 rounded-full opacity-0 transition-opacity group-hover:opacity-100"
         onClick={() =>
           void addShot(projectId, episodeId, {
             atOrder: shot.order,
@@ -1471,10 +1495,22 @@ function ShotRow({
         <Plus />
       </Button>
       <div
-        className={`grid items-stretch border-b ${striped ? "bg-muted/40" : "bg-background"}`}
+        className={cn(
+          "grid items-stretch border-b",
+          workspaceView === "design" && "max-h-[160px]",
+          striped ? "bg-muted/40" : "bg-background",
+          active && "ring-2 ring-inset ring-brand",
+        )}
         style={{ gridTemplateColumns: gridColumns(workspaceView, visibleDefs) }}
       >
-        <div className="flex flex-col items-center justify-center gap-2 py-4">
+        <div
+          className={cn(
+            "flex flex-col items-center px-1",
+            workspaceView === "design"
+              ? "box-border flex h-full max-h-[160px] min-h-[124px] flex-col items-center justify-center gap-1.5 overflow-hidden py-4"
+              : "justify-center gap-2 py-4",
+          )}
+        >
           {selecting ? (
             <Checkbox
               aria-label={`选择镜头 ${shot.shotNumber}`}
@@ -1493,6 +1529,7 @@ function ShotRow({
               <Button
                 size="icon-sm"
                 variant="ghost"
+                className={workspaceView === "design" ? "size-6" : undefined}
                 aria-label="上移镜头"
                 disabled={!canMoveUp}
                 onClick={() => onMove(-1)}
@@ -1501,7 +1538,10 @@ function ShotRow({
               </Button>
               <button
                 type="button"
-                className="text-muted-foreground hover:text-foreground inline-flex size-7 cursor-grab items-center justify-center rounded-md active:cursor-grabbing"
+                className={cn(
+                  "text-muted-foreground hover:text-foreground inline-flex cursor-grab items-center justify-center rounded-md active:cursor-grabbing",
+                  workspaceView === "design" ? "size-6" : "size-7",
+                )}
                 aria-label="拖拽调整镜头顺序"
                 {...attributes}
                 {...listeners}
@@ -1511,6 +1551,7 @@ function ShotRow({
               <Button
                 size="icon-sm"
                 variant="ghost"
+                className={workspaceView === "design" ? "size-6" : undefined}
                 aria-label="下移镜头"
                 disabled={!canMoveDown}
                 onClick={() => onMove(1)}
@@ -1520,6 +1561,7 @@ function ShotRow({
               <Button
                 size="icon-sm"
                 variant="ghost"
+                className={workspaceView === "design" ? "size-6" : undefined}
                 aria-label="复制镜头"
                 onClick={onDuplicate}
               >
@@ -1527,16 +1569,29 @@ function ShotRow({
               </Button>
             </>
           )}
-          <span className="text-muted-foreground text-xs">{shot.order}</span>
         </div>
-        <div className="flex items-center justify-center">
+        <div
+          className={cn(
+            "flex h-full",
+            workspaceView === "design"
+              ? DESIGN_CELL_CHROME
+              : "items-center justify-center",
+          )}
+        >
           <Input
             value={shot.shotNumber}
             onChange={(event) => void patchShot(shot.id, { shotNumber: event.target.value })}
             className="h-8 w-10 border-0 bg-transparent text-center shadow-none focus-visible:ring-0"
           />
         </div>
-        <div className="flex items-center justify-center border-l px-2">
+        <div
+          className={cn(
+            "flex h-full border-l",
+            workspaceView === "design"
+              ? DESIGN_CELL_CHROME
+              : "items-center justify-center px-2",
+          )}
+        >
           <Select
             value={normalizeShotStatus(shot.status)}
             onValueChange={(value) =>
@@ -1593,58 +1648,121 @@ function ShotRow({
             </div>
           </>
         ) : visibleDefs.map((column) => (
-          <div key={column.id} className="border-l">
+          <div key={column.id} className="flex h-full min-h-0 border-l">
             {column.id === "durationSec" ? (
-              <Input
-                value={String(shot.durationSec || "")}
-                placeholder={columnPlaceholder("durationSec")}
-                onChange={(event) =>
-                  void patchShot(shot.id, {
-                    durationSec: Math.max(0, Number(event.target.value) || 0),
-                  })
-                }
-                className="h-full min-h-[124px] w-full rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent"
-              />
-            ) : column.id === "characters" ? (
-              <div className="h-full min-h-[124px] overflow-auto p-1.5">
-                {characters.length === 0 ? (
-                  <p className="text-muted-foreground px-1 py-2 text-sm">先在世界里添加角色</p>
-                ) : (
-                  <div className="grid grid-cols-2 gap-1.5">
-                    {characters.map((character) => {
-                      const selectedChar = shot.characterIds.includes(character.id);
-                      return (
-                        <button
-                          key={character.id}
-                          type="button"
-                          aria-pressed={selectedChar}
-                          title={character.name}
-                          onClick={() => {
-                            const ids = selectedChar
-                              ? shot.characterIds.filter((id) => id !== character.id)
-                              : [...shot.characterIds, character.id];
-                            void patchShot(shot.id, { characterIds: ids });
-                          }}
-                          className={cn(
-                            "flex flex-col items-center gap-1 rounded-md p-1.5 text-center transition-colors",
-                            selectedChar
-                              ? "bg-brand/10 ring-brand ring-2"
-                              : "hover:bg-muted/60",
-                          )}
-                        >
-                          <AssetStill
-                            mediaId={coverMediaId(character.slots, ["front"])}
-                            title={character.name}
-                          />
-                          <span className="w-full truncate text-[11px] leading-tight">
-                            {character.name}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
+              <div className={cn(DESIGN_CELL_CHROME, "w-full")}>
+                <Input
+                  value={String(shot.durationSec || "")}
+                  placeholder={columnPlaceholder("durationSec")}
+                  onChange={(event) =>
+                    void patchShot(shot.id, {
+                      durationSec: Math.max(0, Number(event.target.value) || 0),
+                    })
+                  }
+                  className="h-8 w-full rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent"
+                />
               </div>
+            ) : column.id === "characters" ? (
+              <DropdownMenu
+                onOpenChange={(open) => {
+                  if (open) onActivate();
+                }}
+              >
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    aria-label="选择角色"
+                    className={cn(
+                      FLUSH_SELECT_TRIGGER,
+                      "[&_svg]:pointer-events-none [&_svg]:shrink-0",
+                    )}
+                  >
+                    <span className="flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5">
+                      {characters.length === 0 ? (
+                        <span className="text-muted-foreground text-sm">先在世界里添加角色</span>
+                      ) : selectedCharacters.length === 0 ? (
+                        <span className="text-muted-foreground text-sm">
+                          {columnPlaceholder("characters")}
+                        </span>
+                      ) : selectedCharacters.length === 1 ? (
+                        <>
+                          <AssetStill
+                            mediaId={coverMediaId(selectedCharacters[0].slots, ["front"])}
+                            title={selectedCharacters[0].name}
+                            className="size-16"
+                          />
+                          <span
+                            title={selectedCharacters[0].name}
+                            className="text-muted-foreground max-w-full truncate text-center text-[10px] leading-none"
+                          >
+                            {selectedCharacters[0].name}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <AssetStill
+                            mediaId={coverMediaId(selectedCharacters[0].slots, ["front"])}
+                            title={selectedCharacters[0].name}
+                            className="size-16"
+                          />
+                          <span
+                            title={selectedCharacters.map((c) => c.name).join("、")}
+                            className="text-muted-foreground max-w-full truncate text-center text-[10px] leading-none"
+                          >
+                            角色 · {selectedCharacters.length}
+                          </span>
+                        </>
+                      )}
+                    </span>
+                    <ChevronDown className="size-4 opacity-50" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-56">
+                  {characters.length === 0 ? (
+                    <DropdownMenuItem disabled>先在世界里添加角色</DropdownMenuItem>
+                  ) : (
+                    <>
+                      <DropdownMenuItem
+                        disabled={selectedCharacters.length === 0}
+                        onSelect={(event) => {
+                          event.preventDefault();
+                          onActivate();
+                          void patchShot(shot.id, { characterIds: [] });
+                        }}
+                      >
+                        清除
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      {characters.map((character) => {
+                        const selectedChar = shot.characterIds.includes(character.id);
+                        return (
+                          <DropdownMenuCheckboxItem
+                            key={character.id}
+                            checked={selectedChar}
+                            onSelect={(event) => event.preventDefault()}
+                            onCheckedChange={(checked) => {
+                              onActivate();
+                              const ids = checked
+                                ? selectedChar
+                                  ? shot.characterIds
+                                  : [...shot.characterIds, character.id]
+                                : shot.characterIds.filter((id) => id !== character.id);
+                              void patchShot(shot.id, { characterIds: ids });
+                            }}
+                          >
+                            <AssetStill
+                              mediaId={coverMediaId(character.slots, ["front"])}
+                              title={character.name}
+                              className="size-8"
+                            />
+                            <span className="truncate">{character.name}</span>
+                          </DropdownMenuCheckboxItem>
+                        );
+                      })}
+                    </>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : column.id === "scene" ? (
               <Select
                 value={shot.sceneId ?? "none"}
@@ -1653,27 +1771,35 @@ function ShotRow({
                     sceneId: value === "none" ? undefined : value,
                   })
                 }
+                onOpenChange={(open) => {
+                  if (open) onActivate();
+                }}
               >
                 <SelectTrigger className={FLUSH_SELECT_TRIGGER}>
-                  <span className="flex min-w-0 flex-1 items-center gap-2">
+                  <span className="flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5">
                     {selectedScene ? (
                       <>
                         <AssetStill
                           mediaId={coverMediaId(selectedScene.slots, ["wide"])}
                           title={selectedScene.name}
-                          className="size-9"
+                          className="size-16"
                         />
-                        <span className="truncate">{selectedScene.name}</span>
+                        <span
+                          title={selectedScene.name}
+                          className="text-muted-foreground max-w-full truncate text-center text-[10px] leading-none"
+                        >
+                          {selectedScene.name}
+                        </span>
                       </>
                     ) : (
-                      <span className="text-muted-foreground">
+                      <span className="text-muted-foreground text-sm">
                         {columnPlaceholder("scene")}
                       </span>
                     )}
                   </span>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">未选择</SelectItem>
+                  <SelectItem value="none">未选择场景</SelectItem>
                   {scenes.map((scene) => (
                     <SelectItem key={scene.id} value={scene.id}>
                       <AssetStill
@@ -1688,6 +1814,7 @@ function ShotRow({
               </Select>
             ) : (
               <PlainCell
+                design
                 value={String(shot[column.id as keyof Shot] ?? "")}
                 placeholder={columnPlaceholder(column.id)}
                 onCommit={(value) =>
@@ -1703,8 +1830,7 @@ function ShotRow({
           type="button"
           variant="outline"
           size="icon-sm"
-          className="absolute z-10 size-6 rounded-full"
-          style={{ left: 14, bottom: -12 }}
+          className="absolute bottom-0 left-3.5 z-10 size-6 translate-y-1/2 rounded-full opacity-0 transition-opacity group-hover:opacity-100"
           onClick={() => void addShot(projectId, episodeId, { beatId })}
           aria-label="在末尾添加镜头"
         >
