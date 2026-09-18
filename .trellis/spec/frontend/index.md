@@ -6,7 +6,7 @@
 
 ## Overview
 
-Aifenjing is a Vite + React + TanStack Router client with Dexie IndexedDB as the system of record. Specs in this directory describe how routes, components, hooks, domain types, and tests are actually structured so agents match existing patterns.
+小光点 Cuepoint is a Vite + React + TanStack Router client with Dexie IndexedDB as the system of record. Specs in this directory describe how routes, components, hooks, domain types, and tests are actually structured so agents match existing patterns.
 
 ---
 

@@ -29,7 +29,12 @@ export function StudioShell({
   return (
     <div className="studio-floor flex min-h-screen">
       <aside className="bg-sidebar sticky top-0 flex h-screen w-[76px] shrink-0 flex-col items-center border-r py-4">
-        <div className="mb-6 flex size-10 items-center justify-center rounded-2xl bg-brand text-brand-foreground shadow-[0_8px_20px_-10px_rgb(0_0_0_/_0.65)]">
+        <div
+          className="mb-6 flex size-10 items-center justify-center rounded-2xl bg-brand text-brand-foreground shadow-[0_8px_20px_-10px_rgb(0_0_0_/_0.65)]"
+          role="img"
+          aria-label="小光点"
+          title="小光点"
+        >
           <StudioMark />
         </div>
         <nav className="flex flex-1 flex-col gap-1">
