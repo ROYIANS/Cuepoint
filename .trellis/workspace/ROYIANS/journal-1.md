@@ -427,3 +427,24 @@ Completed third and final foundation batch: original-media handoff ZIP, scoped c
 ### Status
 
 [OK] **Completed**
+
+
+## Session 20: Agent execution foundation and recovery
+
+**Date**: 2026-09-18
+**Task**: Agent execution foundation and recovery
+**Branch**: `main`
+
+### Summary
+
+Created Agent core parent and three sequential children. Implemented durable Agent runs, serialized checkpoints, explicit retry, cross-tab ownership/recovery and strict single-request chat transport. Independent review, 467 tests, typecheck/build and local simulated browser flows passed. Child 1 archived; tools/permissions and task workspace remain planned. No real provider calls or media integration.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `0e10553` | (see git log) |
+
+### Status
+
+[OK] **Completed**
