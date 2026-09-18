@@ -30,7 +30,7 @@ Typical feature page shape (see `CharacterDetailPage`):
 1. Props with route discriminants (`characterId`, `back`).
 2. `useLiveQuery` with `get(id) ?? null`.
 3. Loading / missing early returns (Chinese: 加载中… / 找不到这个角色).
-4. Ownership check when `back.kind === "project"` (`character.projectId !== back.projectId` → missing).
+4. Ownership check for both contexts: project IDs must match `back.projectId`; studio routes require `STUDIO_LIBRARY_ID`.
 5. Layout + `Field` / `EditableGenerationSlot` / inline `void patch*(...)`.
 
 ```tsx
@@ -133,3 +133,6 @@ Primitives export named functions (not default exports): `Button`, `Field`, `but
 - `src/components/studio/StudioField.tsx`
 - `src/lib/formFieldFocus.ts`
 - `components.json`
+
+
+Optional creative fields, output settings, props/style dialogs and media reuse follow [Asset / Output Foundation](./asset-output-foundation.md). Do not add duplicate per-provider selectors or make optional metadata required at creation.

@@ -14,12 +14,12 @@ Second batch following the approved reliability repairs. Make manually authored 
 - Reuse existing local media via an owner-aware picker; maintain independent library/project snapshots. Improve asset discovery, tab return, film labels and narrow-screen controls from audit findings.
 
 ## Acceptance criteria
-- [ ] A user can describe project, character, scene, prop and style without AI, with clear optional fields and saving/error feedback.
-- [ ] Style/prop/beat relationships survive delete/duplicate/export/import and cannot point to a foreign project.
-- [ ] Image/video settings only offer applicable provider/model values and explain inherited/default/overridden values.
-- [ ] GPT Image 2 standard and MiniMax H3 constraints have parameterized tests; incompatible model switch and legacy settings have migration tests.
-- [ ] Existing media reuse requires no second upload; project library cannot mutate source studio assets.
-- [ ] Responsive and keyboard workflows are checked, including create → fill → link → attach → delivery.
+- [x] A user can describe project, character, scene, prop and style without AI, with clear optional fields and saving/error feedback.
+- [x] Style/prop/beat relationships survive delete/duplicate/export/import and cannot point to a foreign project.
+- [x] Image/video settings only offer applicable provider/model values and explain inherited/default/overridden values.
+- [x] GPT Image 2 standard and MiniMax H3 constraints have parameterized tests; incompatible model switch and legacy settings have migration tests.
+- [x] Existing media reuse requires no second upload; project library cannot mutate source studio assets.
+- [x] Responsive and keyboard workflows are checked, including create → fill → link → attach → delivery.
 
 ## Scope status
-User approved direction on 2026-09-18. This is queued after batch one. Final field inventory, interaction design and migration plan must be made concrete before implementation. No generation execution in this batch. Use parent audit.md for evidence and unresolved issues.
+User approved direction on 2026-09-18. User explicitly authorized starting this batch after the previous commit. Concrete field inventory, interaction design and compatibility plan are in design.md; implementation starts now. No generation execution in this batch. Use parent audit.md for evidence and unresolved issues.

@@ -3,7 +3,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { ChevronLeft } from "lucide-react";
 import { db } from "@/db/database";
 import { patchStyle, setStyleSlot } from "@/db/repo";
-import { STYLE_SLOTS } from "@/domain/types";
+import { STYLE_SLOTS, STUDIO_LIBRARY_ID } from "@/domain/types";
 import { EditableGenerationSlot } from "@/components/slots/GenerationSlotCard";
 import { AssetTextField } from "./AssetTextField";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ export function StyleDetailPage({
     return <div className="text-muted-foreground p-8 text-sm">加载中…</div>;
   }
   const missing =
-    style === null || (back.kind === "project" && style.projectId !== back.projectId);
+    style === null || style.projectId !== (back.kind === "project" ? back.projectId : STUDIO_LIBRARY_ID);
   if (missing) {
     return (
       <div className="p-8">
@@ -32,7 +32,7 @@ export function StyleDetailPage({
           onClick={() =>
             void (back.kind === "studio"
               ? navigate({ to: "/styles" })
-              : navigate({ to: "/p/$projectId/world", params: { projectId: back.projectId } }))
+              : navigate({ to: "/p/$projectId/world", params: { projectId: back.projectId }, search: { tab: "styles" } }))
           }
         >
           {back.kind === "studio" ? "返回风格库" : "返回世界"}
@@ -43,7 +43,7 @@ export function StyleDetailPage({
 
   return (
     <div className="h-full overflow-auto">
-      <div className="mx-auto max-w-5xl px-8 py-6">
+      <div className="mx-auto max-w-5xl px-4 py-6 sm:px-8">
         {back.kind === "studio" ? (
           <Link
             to="/styles"
@@ -55,6 +55,7 @@ export function StyleDetailPage({
           <Link
             to="/p/$projectId/world"
             params={{ projectId: back.projectId }}
+            search={{ tab: "styles" }}
             className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
           >
             <ChevronLeft className="size-4" /> 世界
@@ -94,6 +95,62 @@ export function StyleDetailPage({
               multiline
               placeholder="画风、光色、镜头气质"
             />
+            <details className="rounded-xl border bg-card p-4">
+              <summary className="cursor-pointer text-sm font-medium">创作细节 · 选填</summary>
+              <p className="text-muted-foreground mt-2 text-xs leading-5">把色彩、光影与构图方向写清楚，作为整部作品的视觉依据。所有信息均为选填。</p>
+              <div className="mt-4 space-y-4">
+                <AssetTextField
+                  key={`${style.id}:palette`}
+                  draftKey={`${style.id}:palette`}
+                  label="色彩方案"
+                  value={style.palette ?? ""}
+                  projectId={style.projectId}
+                  persist={(value) => patchStyle(style.id, { palette: value })}
+                  placeholder="主色、辅助色、饱和度与色彩关系"
+                  multiline
+                />
+                <AssetTextField
+                  key={`${style.id}:lighting`}
+                  draftKey={`${style.id}:lighting`}
+                  label="光影风格"
+                  value={style.lighting ?? ""}
+                  projectId={style.projectId}
+                  persist={(value) => patchStyle(style.id, { lighting: value })}
+                  placeholder="柔硬、反差、色温与阴影"
+                  multiline
+                />
+                <AssetTextField
+                  key={`${style.id}:lens`}
+                  draftKey={`${style.id}:lens`}
+                  label="镜头气质"
+                  value={style.lens ?? ""}
+                  projectId={style.projectId}
+                  persist={(value) => patchStyle(style.id, { lens: value })}
+                  placeholder="焦段倾向、景深、畸变与颗粒"
+                  multiline
+                />
+                <AssetTextField
+                  key={`${style.id}:composition`}
+                  draftKey={`${style.id}:composition`}
+                  label="构图原则"
+                  value={style.composition ?? ""}
+                  projectId={style.projectId}
+                  persist={(value) => patchStyle(style.id, { composition: value })}
+                  placeholder="画面重心、留白、对称与层次"
+                  multiline
+                />
+                <AssetTextField
+                  key={`${style.id}:negativePrompt`}
+                  draftKey={`${style.id}:negativePrompt`}
+                  label="避免出现"
+                  value={style.negativePrompt ?? ""}
+                  projectId={style.projectId}
+                  persist={(value) => patchStyle(style.id, { negativePrompt: value })}
+                  placeholder="不希望出现的颜色、质感、构图或元素"
+                  multiline
+                />
+              </div>
+            </details>
           </div>
         </div>
       </div>

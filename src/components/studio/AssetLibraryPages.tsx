@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { CoverCard, CreateTile, LibraryGrid } from "@/components/studio/CoverCard";
 import { LibraryHeader } from "@/components/studio/LibraryHeader";
 import {
@@ -31,12 +31,12 @@ import {
   SCENE_SLOTS,
   STUDIO_LIBRARY_ID,
   STYLE_SLOTS,
-  isStudioLibrary,
   type Character,
   type Prop,
   type Scene,
   type VisualStyle,
 } from "@/domain/types";
+import { matchesAssetSearch } from "@/lib/assetLibrary";
 import { formatUpdatedAt } from "@/lib/format";
 import { filterAndSortLibrary, type LibrarySort } from "@/lib/library";
 
@@ -76,7 +76,7 @@ const COPY: Record<
   },
   prop: {
     title: "道具",
-    hint: "衣服、物件、关键道具。创建后留在这里，以后给角色和分镜引用。",
+    hint: "衣服、物件、关键道具。添加到项目后可关联分镜，项目中的修改不影响这里。",
     create: "创建道具",
     empty: "删掉这个道具？",
   },
@@ -107,19 +107,13 @@ export function StyleLibraryPage() {
 function StudioLibrary({ kind }: { kind: LibraryKind }) {
   const navigate = useNavigate();
   const copy = COPY[kind];
-  const projects = useLiveQuery(() => db.projects.toArray(), []) ?? [];
-  const characters = useLiveQuery(() => db.characters.toArray(), []) ?? [];
-  const scenes = useLiveQuery(() => db.scenes.toArray(), []) ?? [];
-  const props = useLiveQuery(() => db.props.toArray(), []) ?? [];
-  const styles = useLiveQuery(() => db.styles.toArray(), []) ?? [];
+  const characters = useLiveQuery(() => db.characters.where("projectId").equals(STUDIO_LIBRARY_ID).toArray(), []) ?? [];
+  const scenes = useLiveQuery(() => db.scenes.where("projectId").equals(STUDIO_LIBRARY_ID).toArray(), []) ?? [];
+  const props = useLiveQuery(() => db.props.where("projectId").equals(STUDIO_LIBRARY_ID).toArray(), []) ?? [];
+  const styles = useLiveQuery(() => db.styles.where("projectId").equals(STUDIO_LIBRARY_ID).toArray(), []) ?? [];
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<LibrarySort>("updated");
   const [pendingDelete, setPendingDelete] = useState<{ id: string; name: string }>();
-
-  const projectName = useMemo(
-    () => new Map(projects.map((project) => [project.id, project.name])),
-    [projects],
-  );
 
   const raw: { id: string; name: string; projectId: string; createdAt: string; updatedAt: string }[] =
     kind === "character"
@@ -129,12 +123,7 @@ function StudioLibrary({ kind }: { kind: LibraryKind }) {
         : kind === "prop"
           ? props
           : styles;
-  const items = filterAndSortLibrary(raw, query, sort);
-
-  function ownerLabel(ownerId: string) {
-    if (isStudioLibrary(ownerId)) return "工作室";
-    return projectName.get(ownerId) ?? "未知项目";
-  }
+  const items = filterAndSortLibrary(raw.filter((item) => matchesAssetSearch(item, query)), "", sort);
 
   async function handleCreate() {
     if (kind === "character") {
@@ -190,7 +179,7 @@ function StudioLibrary({ kind }: { kind: LibraryKind }) {
   }
 
   return (
-    <div className="px-10 py-8">
+    <div className="px-4 py-8 sm:px-10">
       <LibraryHeader title={copy.title} query={query} onQuery={setQuery} sort={sort} onSort={setSort} />
       <p className="text-muted-foreground mt-3 max-w-xl text-[13px] leading-6">{copy.hint}</p>
       <div className="mt-8">
@@ -200,7 +189,7 @@ function StudioLibrary({ kind }: { kind: LibraryKind }) {
             <CoverCard
               key={item.id}
               title={item.name}
-              subtitle={`${ownerLabel(item.projectId)} · ${formatUpdatedAt(item.updatedAt)}`}
+              subtitle={`工作室 · ${formatUpdatedAt(item.updatedAt)}`}
               mediaId={coverOf(item.id)}
               onOpen={() => openItem(item.id)}
               actions={[
@@ -213,6 +202,7 @@ function StudioLibrary({ kind }: { kind: LibraryKind }) {
             />
           ))}
         </LibraryGrid>
+        {query.trim() && items.length === 0 ? <p className="text-muted-foreground mt-6 text-sm">没有匹配的资产，试试其他关键词。</p> : null}
       </div>
 
       <AlertDialog

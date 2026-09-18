@@ -37,6 +37,7 @@ function isScriptFile(file: File): boolean {
 }
 
 export function StoryPage({ projectId, episodeId }: { projectId: string; episodeId: string }) {
+  const project = useLiveQuery(async () => (await db.projects.get(projectId)) ?? null, [projectId]);
   const episode = useLiveQuery(
     async () => (await db.episodes.get(episodeId)) ?? null,
     [episodeId],
@@ -48,10 +49,10 @@ export function StoryPage({ projectId, episodeId }: { projectId: string; episode
     ) ?? [];
   const scenes =
     useLiveQuery(() => db.scenes.where("projectId").equals(projectId).toArray(), [projectId]) ?? [];
-  if (episode === undefined) {
+  if (episode === undefined || project === undefined) {
     return <div className="text-muted-foreground p-8 text-sm">加载故事…</div>;
   }
-  if (episode === null || episode.projectId !== projectId) {
+  if (project === null || episode === null || episode.projectId !== projectId) {
     return <div className="text-muted-foreground p-8 text-sm">找不到这一集</div>;
   }
 
@@ -59,6 +60,7 @@ export function StoryPage({ projectId, episodeId }: { projectId: string; episode
     <StoryEditor
       key={episode.id}
       episode={episode}
+      film={project.mode === "film"}
       characters={characters}
       scenes={scenes}
     />
@@ -67,10 +69,12 @@ export function StoryPage({ projectId, episodeId }: { projectId: string; episode
 
 function StoryEditor({
   episode,
+  film,
   characters,
   scenes,
 }: {
   episode: Episode;
+  film: boolean;
   characters: { id: string; name: string }[];
   scenes: { id: string; name: string }[];
 }) {
@@ -148,31 +152,31 @@ function StoryEditor({
 
   return (
     <div className="app-scroll h-full overflow-auto">
-      <div className="mx-auto grid max-w-6xl gap-8 px-8 py-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(20rem,0.8fr)]">
+      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-6 sm:px-8 sm:py-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(20rem,0.8fr)]">
         <section className="min-w-0">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <h1 className="text-[17px] font-semibold">本集故事</h1>
+              <h1 className="text-[17px] font-semibold">{film ? "故事" : "本集故事"}</h1>
               <p className="text-muted-foreground mt-1 text-xs">
-                先写这一集要讲什么。场次可以后补，分镜会从这里长出来。
+                {film ? "先写这部作品要讲什么。" : "先写这一集要讲什么。"}场次可以后补，分镜会从这里长出来。
               </p>
             </div>
             <DraftStatus status={status} error={error} onRetry={() => void retry()} />
           </div>
-          <Label className="mt-6">集标题（可选）</Label>
+          <Label className="mt-6">{film ? "故事标题（可选）" : "集标题（可选）"}</Label>
           <Input
             className="mt-2"
             value={draft.title}
-            placeholder="不填就显示第几集"
+            placeholder={film ? "可填写这一稿的标题" : "不填就显示第几集"}
             onChange={(event) => {
               setDraft((current) => ({ ...current, title: event.target.value }));
             }}
           />
-          <Label className="mt-6">本集一句话</Label>
+          <Label className="mt-6">{film ? "一句话故事" : "本集一句话"}</Label>
           <Input
             className="mt-2"
             value={draft.logline}
-            placeholder="这一集，用一句话说完"
+            placeholder={film ? "这个故事，用一句话说完" : "这一集，用一句话说完"}
             onChange={(event) =>
               setDraft((current) => ({ ...current, logline: event.target.value }))
             }

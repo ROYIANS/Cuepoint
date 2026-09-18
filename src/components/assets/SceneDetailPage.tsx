@@ -3,7 +3,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { ChevronLeft } from "lucide-react";
 import { db } from "@/db/database";
 import { patchScene, setSceneSlot } from "@/db/repo";
-import { SCENE_SLOTS } from "@/domain/types";
+import { SCENE_SLOTS, STUDIO_LIBRARY_ID } from "@/domain/types";
 import { EditableGenerationSlot } from "@/components/slots/GenerationSlotCard";
 import { AssetTextField } from "./AssetTextField";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ export function SceneDetailPage({
     return <div className="text-muted-foreground p-8 text-sm">加载中…</div>;
   }
   const missing =
-    scene === null || (back.kind === "project" && scene.projectId !== back.projectId);
+    scene === null || scene.projectId !== (back.kind === "project" ? back.projectId : STUDIO_LIBRARY_ID);
   if (missing) {
     return (
       <div className="p-8">
@@ -32,7 +32,7 @@ export function SceneDetailPage({
           onClick={() =>
             void (back.kind === "studio"
               ? navigate({ to: "/scenes" })
-              : navigate({ to: "/p/$projectId/world", params: { projectId: back.projectId } }))
+              : navigate({ to: "/p/$projectId/world", params: { projectId: back.projectId }, search: { tab: "scenes" } }))
           }
         >
           {back.kind === "studio" ? "返回场景库" : "返回世界"}
@@ -43,7 +43,7 @@ export function SceneDetailPage({
 
   return (
     <div className="h-full overflow-auto">
-      <div className="mx-auto max-w-5xl px-8 py-6">
+      <div className="mx-auto max-w-5xl px-4 py-6 sm:px-8">
         {back.kind === "studio" ? (
           <Link
             to="/scenes"
@@ -55,6 +55,7 @@ export function SceneDetailPage({
           <Link
             to="/p/$projectId/world"
             params={{ projectId: back.projectId }}
+            search={{ tab: "scenes" }}
             className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
           >
             <ChevronLeft className="size-4" /> 世界
@@ -118,6 +119,32 @@ export function SceneDetailPage({
               persist={(value) => patchScene(scene.id, { notes: value })}
               multiline
             />
+            <details className="rounded-xl border bg-card p-4">
+              <summary className="cursor-pointer text-sm font-medium">创作细节 · 选填</summary>
+              <p className="text-muted-foreground mt-2 text-xs leading-5">记录空间与光线，方便安排机位和延续场景氛围。所有信息均为选填。</p>
+              <div className="mt-4 space-y-4">
+                <AssetTextField
+                  key={`${scene.id}:geography`}
+                  draftKey={`${scene.id}:geography`}
+                  label="空间布局"
+                  value={scene.geography ?? ""}
+                  projectId={scene.projectId}
+                  persist={(value) => patchScene(scene.id, { geography: value })}
+                  placeholder="出入口、动线、主要物件之间的位置关系"
+                  multiline
+                />
+                <AssetTextField
+                  key={`${scene.id}:lighting`}
+                  draftKey={`${scene.id}:lighting`}
+                  label="光线设计"
+                  value={scene.lighting ?? ""}
+                  projectId={scene.projectId}
+                  persist={(value) => patchScene(scene.id, { lighting: value })}
+                  placeholder="主光来源、方向、冷暖与明暗层次"
+                  multiline
+                />
+              </div>
+            </details>
           </div>
         </div>
       </div>

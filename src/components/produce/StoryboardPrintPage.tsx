@@ -5,7 +5,7 @@ import { ArrowLeft, Printer } from "lucide-react";
 import { MediaPreview } from "@/components/media/MediaThumb";
 import { Button } from "@/components/ui/button";
 import { db } from "@/db/database";
-import { episodeLabel } from "@/domain/types";
+import { episodeLabel, normalizeProjectMode } from "@/domain/types";
 import { deriveEpisodeDelivery } from "@/lib/episodeDelivery";
 import { formatDuration } from "@/lib/format";
 
@@ -37,6 +37,14 @@ export function StoryboardPrintPage({
     [projectId],
   );
 
+  const relationAssets = useLiveQuery(async () => ({
+    projectId,
+    props: await db.props.where("projectId").equals(projectId).toArray(),
+    styles: await db.styles.where("projectId").equals(projectId).toArray(),
+  }), [projectId]);
+  const props = relationAssets?.projectId === projectId ? relationAssets.props : undefined;
+  const styles = relationAssets?.projectId === projectId ? relationAssets.styles : undefined;
+
   const media = useShotMedia(shots);
 
   if (
@@ -45,12 +53,14 @@ export function StoryboardPrintPage({
     episode === undefined ||
     shots === undefined ||
     characters === undefined ||
+    props === undefined ||
+    styles === undefined ||
     scenes === undefined
   ) {
     return <div className="p-8 text-sm">加载故事板…</div>;
   }
   if (project === null || episode === null || episode.projectId !== projectId) {
-    return <div className="p-8 text-sm">找不到当前集故事板</div>;
+    return <div className="p-8 text-sm">找不到当前故事板</div>;
   }
 
   const delivery = deriveEpisodeDelivery({
@@ -59,12 +69,14 @@ export function StoryboardPrintPage({
     shots,
     characters,
     scenes,
+    props,
+    styles,
     media,
   });
 
   return (
-    <main className="storyboard-print min-h-full bg-white px-8 py-6 text-black">
-      <div className="print-toolbar mx-auto mb-6 flex max-w-6xl items-center justify-between">
+    <main className="storyboard-print min-h-full bg-white px-4 py-6 sm:px-8 text-black">
+      <div className="print-toolbar mx-auto mb-6 flex max-w-6xl flex-wrap items-center justify-between gap-3">
         <Button variant="outline" asChild>
           <Link
             to="/p/$projectId/e/$episodeId/produce"
@@ -84,7 +96,7 @@ export function StoryboardPrintPage({
         <p className="text-xs tracking-[0.18em] text-black/55">分镜故事板</p>
         <h1 className="mt-1 text-2xl font-semibold">{project.name}</h1>
         <div className="mt-2 flex gap-5 text-sm text-black/65">
-          <span>{episodeLabel(episode)}</span>
+          {normalizeProjectMode(project.mode) === "series" ? <span>{episodeLabel(episode)}</span> : null}
           <span>{delivery.rows.length} 镜</span>
           <span>{formatDuration(delivery.totalDurationSec)}</span>
         </div>
@@ -92,10 +104,10 @@ export function StoryboardPrintPage({
 
       {delivery.rows.length === 0 ? (
         <p className="mx-auto mt-12 max-w-6xl text-center text-sm text-black/50">
-          当前集还没有镜头
+          还没有镜头
         </p>
       ) : (
-        <div className="storyboard-grid mx-auto mt-6 grid max-w-6xl grid-cols-2 gap-4">
+        <div className="storyboard-grid mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-4 md:grid-cols-2 print:grid-cols-2">
           {delivery.rows.map((row) => (
             <article
               key={row.shot.id}
@@ -122,6 +134,15 @@ export function StoryboardPrintPage({
                 <p className="mt-3 whitespace-pre-wrap break-words text-xs leading-5">
                   {row.content || "未写内容"}
                 </p>
+                <dl className="mt-3 space-y-1 whitespace-pre-wrap break-words text-[11px] leading-4 text-black/65">
+                  <div><dt className="inline font-medium">角色：</dt><dd className="inline">{row.characters || "未选择"}</dd></div>
+                  <div><dt className="inline font-medium">道具：</dt><dd className="inline">{row.props || "未选择"}</dd></div>
+                  <div><dt className="inline font-medium">风格：</dt><dd className="inline">{row.style}（{row.styleSource}）</dd></div>
+                  {row.notes ? <div><dt className="inline font-medium">备注：</dt><dd className="inline">{row.notes}</dd></div> : null}
+                  {delivery.columns.map((column) => row.values[column.id] ? (
+                    <div key={column.id}><dt className="inline font-medium">{column.label}：</dt><dd className="inline">{row.values[column.id]}</dd></div>
+                  ) : null)}
+                </dl>
               </div>
             </article>
           ))}

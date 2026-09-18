@@ -1,3 +1,4 @@
+import { validateGenerationDefaults } from "@/domain/output";
 import { db } from "./database";
 import {
   DEFAULT_SHOT_SETTINGS,
@@ -53,6 +54,10 @@ const PRODUCTION_TABLES = [
   db.projects, db.episodes, db.characters, db.scenes,
   db.props, db.styles, db.shots, db.media,
 ];
+
+function pickPatch<T extends object>(patch: T, keys: readonly (keyof T)[]): Partial<T> {
+  return Object.fromEntries(keys.filter((key) => Object.hasOwn(patch, key)).map((key) => [key, patch[key]])) as Partial<T>;
+}
 
 function touch<T extends { updatedAt: string }>(record: T): T {
   return { ...record, updatedAt: nowIso() };
@@ -215,6 +220,41 @@ export async function renameProject(id: Id, name: string): Promise<void> {
     const project = await db.projects.get(id);
     if (!project) throw new Error("项目不存在，无法保存");
     await db.projects.put(touch({ ...project, name: name.trim() || project.name }));
+  });
+}
+
+/** Optional project metadata uses explicit undefined to clear saved defaults. */
+export async function patchProjectDetails(
+  id: Id,
+  patch: Partial<Pick<Project, "name" | "brief" | "genre" | "audience" | "tone" | "aspectPreset" | "defaultStyleId" | "generationDefaults">>,
+): Promise<void> {
+  await db.transaction("rw", db.projects, db.styles, async () => {
+    const project = await db.projects.get(id);
+    if (!project) throw new Error("项目不存在，无法保存");
+    const next = { ...project };
+    for (const key of ["name", "brief", "genre", "audience", "tone"] as const) {
+      if (key in patch) {
+        if (patch[key] !== undefined && typeof patch[key] !== "string") throw new Error("项目信息必须是文本");
+        if (key === "name") {
+          if (!patch.name?.trim()) throw new Error("项目名称不能为空");
+          next.name = patch.name.trim();
+        }
+        else next[key] = patch[key];
+      }
+    }
+    if ("aspectPreset" in patch) next.aspectPreset = normalizeAspectPreset(patch.aspectPreset);
+    if ("defaultStyleId" in patch) {
+      if (patch.defaultStyleId !== undefined && (await db.styles.get(patch.defaultStyleId))?.projectId !== id) {
+        throw new Error("风格不属于当前项目");
+      }
+      next.defaultStyleId = patch.defaultStyleId;
+    }
+    if ("generationDefaults" in patch) {
+      const errors = validateGenerationDefaults(patch.generationDefaults);
+      if (errors.length) throw new Error(errors.join("；"));
+      next.generationDefaults = patch.generationDefaults;
+    }
+    await db.projects.put(touch(next));
   });
 }
 
@@ -446,12 +486,11 @@ export async function restoreEpisode(snapshot: DeletedEpisodeSnapshot): Promise<
   const { episode, shots, media } = snapshot;
   await db.transaction(
     "rw",
-    db.episodes,
-    db.shots,
-    db.media,
-    db.projects,
+    PRODUCTION_TABLES,
     async () => {
       if (await db.episodes.get(episode.id)) return;
+      if (!(await db.projects.get(episode.projectId))) throw new Error("项目不存在");
+      for (const beat of normalizeEpisodeStory(episode.story).beats) await assertAssetReferences(episode.projectId, beat);
       const siblings = await db.episodes.where("projectId").equals(episode.projectId).toArray();
       for (const sibling of siblings) {
         if (sibling.order >= episode.order) {
@@ -459,6 +498,11 @@ export async function restoreEpisode(snapshot: DeletedEpisodeSnapshot): Promise<
         }
       }
       await db.episodes.add(episode);
+      for (const shot of shots) {
+        if (shot.episodeId !== episode.id || shot.projectId !== episode.projectId) throw new Error("镜头与集不属于同一项目");
+        await assertShotReferences(shot);
+        if (await db.shots.get(shot.id)) throw new Error("镜头已存在，无法恢复");
+      }
       if (shots.length > 0) await db.shots.bulkPut(shots);
       if (media.length > 0) await db.media.bulkPut(media);
       await touchProject(episode.projectId);
@@ -678,12 +722,27 @@ export async function patchCharacter(
   await db.transaction("rw", db.projects, db.characters, async () => {
     const character = await db.characters.get(id);
     if (!character) throw new Error("角色不存在，无法保存");
+    patch = pickPatch(patch, ["name", "bio", "appearance", "notes", "personality", "motivation", "voice", "slots", "extra"]);
     await db.characters.put(touch({
       ...character, ...patch,
       ...(patch.slots ? { slots: { ...character.slots, ...patch.slots } } : {}),
     }));
     await touchProject(character.projectId);
   });
+}
+
+async function assertSlotMedia(projectId: Id, slot: GenerationSlot): Promise<void> {
+  const expected = [
+    ...slot.referenceImageIds.map((id) => ({ id, kind: "image" as const })),
+    ...slot.referenceVideoIds.map((id) => ({ id, kind: "video" as const })),
+    ...(slot.result ? [{ id: slot.result.mediaId, kind: slot.result.kind }] : []),
+  ];
+  for (const { id, kind } of expected) {
+    const media = await db.media.get(id);
+    if (!media || media.projectId !== projectId || media.blob.size === 0 || !media.mimeType.startsWith(`${kind}/`)) {
+      throw new Error("素材已失效、类型不符或不属于当前项目，请重新选择");
+    }
+  }
 }
 
 export async function setCharacterSlot(
@@ -694,6 +753,7 @@ export async function setCharacterSlot(
   await db.transaction("rw", PRODUCTION_TABLES, async () => {
     const character = await db.characters.get(id);
     if (!character) throw new Error("角色不存在，无法保存");
+    await assertSlotMedia(character.projectId, slot);
     const previous = character.slots[slotKey];
     await db.characters.put(
       touch({ ...character, slots: { ...character.slots, [slotKey]: slot } }),
@@ -748,6 +808,7 @@ export async function patchScene(
   await db.transaction("rw", db.projects, db.scenes, async () => {
     const scene = await db.scenes.get(id);
     if (!scene) throw new Error("场景不存在，无法保存");
+    patch = pickPatch(patch, ["name", "location", "timeOfDay", "atmosphere", "notes", "geography", "lighting", "slots", "extra"]);
     await db.scenes.put(touch({
       ...scene, ...patch,
       ...(patch.slots ? { slots: { ...scene.slots, ...patch.slots } } : {}),
@@ -764,6 +825,7 @@ export async function setSceneSlot(
   await db.transaction("rw", PRODUCTION_TABLES, async () => {
     const scene = await db.scenes.get(id);
     if (!scene) throw new Error("场景不存在，无法保存");
+    await assertSlotMedia(scene.projectId, slot);
     const previous = scene.slots[slotKey];
     await db.scenes.put(touch({ ...scene, slots: { ...scene.slots, [slotKey]: slot } }));
     await touchProject(scene.projectId);
@@ -812,6 +874,7 @@ export async function patchProp(
   await db.transaction("rw", db.projects, db.props, async () => {
     const prop = await db.props.get(id);
     if (!prop) throw new Error("道具不存在，无法保存");
+    patch = pickPatch(patch, ["name", "kind", "notes", "appearance", "material", "size", "usage", "continuity", "slots", "extra"]);
     await db.props.put(touch({
       ...prop, ...patch,
       ...(patch.slots ? { slots: { ...prop.slots, ...patch.slots } } : {}),
@@ -828,6 +891,7 @@ export async function setPropSlot(
   await db.transaction("rw", PRODUCTION_TABLES, async () => {
     const prop = await db.props.get(id);
     if (!prop) throw new Error("道具不存在，无法保存");
+    await assertSlotMedia(prop.projectId, slot);
     const previous = prop.slots[slotKey];
     await db.props.put(touch({ ...prop, slots: { ...prop.slots, [slotKey]: slot } }));
     await touchProject(prop.projectId);
@@ -841,6 +905,9 @@ export async function deleteProp(id: Id): Promise<void> {
     if (!prop) return;
     const mediaIds = collectSlotsMedia(Object.values(prop.slots));
     await db.props.delete(id);
+    await db.shots.where("projectId").equals(prop.projectId).modify((shot) => {
+      if (shot.propIds?.includes(id)) shot.propIds = shot.propIds.filter((value) => value !== id);
+    });
     await touchProject(prop.projectId);
     for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
   });
@@ -860,6 +927,7 @@ export async function patchStyle(
   await db.transaction("rw", db.projects, db.styles, async () => {
     const style = await db.styles.get(id);
     if (!style) throw new Error("风格不存在，无法保存");
+    patch = pickPatch(patch, ["name", "notes", "palette", "lighting", "lens", "composition", "negativePrompt", "slots", "extra"]);
     await db.styles.put(touch({
       ...style, ...patch,
       ...(patch.slots ? { slots: { ...style.slots, ...patch.slots } } : {}),
@@ -876,6 +944,7 @@ export async function setStyleSlot(
   await db.transaction("rw", PRODUCTION_TABLES, async () => {
     const style = await db.styles.get(id);
     if (!style) throw new Error("风格不存在，无法保存");
+    await assertSlotMedia(style.projectId, slot);
     const previous = style.slots[slotKey];
     await db.styles.put(touch({ ...style, slots: { ...style.slots, [slotKey]: slot } }));
     await touchProject(style.projectId);
@@ -889,6 +958,11 @@ export async function deleteStyle(id: Id): Promise<void> {
     if (!style) return;
     const mediaIds = collectSlotsMedia(Object.values(style.slots));
     await db.styles.delete(id);
+    const project = await db.projects.get(style.projectId);
+    if (project?.defaultStyleId === id) await db.projects.update(project.id, { defaultStyleId: undefined });
+    await db.shots.where("projectId").equals(style.projectId).modify((shot) => {
+      if (shot.styleId === id) shot.styleId = null;
+    });
     await touchProject(style.projectId);
     for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
   });
@@ -975,9 +1049,10 @@ export async function patchStoryBeat(
     >
   >,
 ): Promise<void> {
-  await db.transaction("rw", db.episodes, db.projects, async () => {
+  await db.transaction("rw", PRODUCTION_TABLES, async () => {
     const episode = await db.episodes.get(episodeId);
     if (!episode) return;
+    await assertAssetReferences(episode.projectId, patch);
     const story = normalizeEpisodeStory(episode.story);
     await db.episodes.put(touch({
       ...episode,
@@ -1024,7 +1099,7 @@ export async function duplicateBeat(
   beatId: Id,
   options?: { includeShots?: boolean },
 ): Promise<{ beat: StoryBeat; shots: Shot[] }> {
-  return db.transaction("rw", db.episodes, db.shots, db.projects, async () => {
+  return db.transaction("rw", PRODUCTION_TABLES, async () => {
     const episode = await db.episodes.get(episodeId);
     if (!episode) throw new Error("集不存在");
     const story = normalizeEpisodeStory(episode.story);
@@ -1036,6 +1111,7 @@ export async function duplicateBeat(
       id: createId("beat"),
       title: `${source.title} 副本`,
     });
+    await assertAssetReferences(episode.projectId, beat);
     story.beats.splice(sourceIndex + 1, 0, beat);
 
     const created: Shot[] = [];
@@ -1060,6 +1136,7 @@ export async function duplicateBeat(
           beatId: beat.id,
           order: lastSourceOrder + index + 1,
         });
+        await assertShotReferences(sourceShot);
         await db.shots.add(copy);
         created.push(copy);
       }
@@ -1077,9 +1154,10 @@ export async function restoreStoryBeat(
   index: number,
   shotIds: Id[] = [],
 ): Promise<void> {
-  await db.transaction("rw", db.episodes, db.shots, db.projects, async () => {
+  await db.transaction("rw", PRODUCTION_TABLES, async () => {
     const episode = await db.episodes.get(episodeId);
     if (!episode) throw new Error("集不存在");
+    await assertAssetReferences(episode.projectId, beat);
     const story = normalizeEpisodeStory(episode.story);
     if (story.beats.some((item) => item.id === beat.id)) return;
     const beats = [...story.beats];
@@ -1122,6 +1200,31 @@ export async function updateEpisodeShotFilters(episodeId: Id, patch: Partial<Sho
   });
 }
 
+async function assertAssetReferences(
+  projectId: Id,
+  fields: { characterIds?: Id[]; sceneId?: Id; propIds?: Id[]; styleId?: Id | null },
+): Promise<void> {
+  for (const [ids, table, label] of [
+    [fields.characterIds, db.characters, "角色"],
+    [fields.propIds, db.props, "道具"],
+  ] as const) {
+    if (ids !== undefined) {
+      if (!Array.isArray(ids) || ids.some((id) => typeof id !== "string")) throw new Error(`${label}引用无效`);
+      const rows = await table.bulkGet(ids);
+      if (rows.some((row) => !row || row.projectId !== projectId)) throw new Error(`${label}不属于当前项目`);
+    }
+  }
+  if (fields.sceneId !== undefined && (await db.scenes.get(fields.sceneId))?.projectId !== projectId) throw new Error("场景不属于当前项目");
+  if (fields.styleId !== undefined && fields.styleId !== null && (await db.styles.get(fields.styleId))?.projectId !== projectId) throw new Error("风格不属于当前项目");
+}
+
+async function assertShotReferences(shot: Shot): Promise<void> {
+  const episode = await db.episodes.get(shot.episodeId);
+  if (!episode || episode.projectId !== shot.projectId) throw new Error("镜头与集不属于同一项目");
+  if (shot.beatId !== undefined && !normalizeEpisodeStory(episode.story).beats.some((beat) => beat.id === shot.beatId)) throw new Error("场次不属于当前集");
+  await assertAssetReferences(shot.projectId, shot);
+}
+
 export async function addShots(
   projectId: Id,
   episodeId: Id,
@@ -1129,12 +1232,15 @@ export async function addShots(
   options?: { atOrder?: number; beatId?: Id },
 ): Promise<Shot[]> {
   if (count <= 0) return [];
-  return db.transaction("rw", db.episodes, db.projects, db.shots, async () => {
+  return db.transaction("rw", PRODUCTION_TABLES, async () => {
     const episode = await db.episodes.get(episodeId);
     if (!episode || episode.projectId !== projectId) return [];
     const project = await db.projects.get(projectId);
     if (!project) return [];
     const beats = normalizeEpisodeStory(episode.story).beats;
+    const beat = options?.beatId === undefined ? undefined : beats.find((item) => item.id === options.beatId);
+    if (options?.beatId !== undefined && !beat) throw new Error("场次不属于当前集");
+    if (beat) await assertAssetReferences(projectId, beat);
     const shots = (await db.shots.where("episodeId").equals(episodeId).toArray()).sort(
       (a, b) => a.order - b.order,
     );
@@ -1161,6 +1267,10 @@ export async function addShots(
         shotSettings.defaultDurationSec,
         options?.beatId,
       );
+      if (beat) {
+        shot.characterIds = [...beat.characterIds];
+        shot.sceneId = beat.sceneId;
+      }
       await db.shots.add(shot);
       created.push(shot);
     }
@@ -1183,16 +1293,18 @@ export async function patchShot(
   id: Id,
   patch: Partial<Omit<Shot, "id" | "projectId" | "episodeId">>,
 ): Promise<void> {
-  await db.transaction("rw", db.projects, db.shots, async () => {
+  await db.transaction("rw", PRODUCTION_TABLES, async () => {
     const shot = await db.shots.get(id);
     if (!shot) throw new Error("镜头不存在，无法保存");
+    patch = pickPatch(patch, ["order", "shotNumber", "status", "firstFrame", "lastFrame", "clip", "category", "durationSec", "content", "notes", "sceneCloseup", "sound", "emotion", "cameraAngle", "cameraGear", "focalLength", "characterIds", "sceneId", "beatId", "propIds", "styleId", "extra"]);
+    await assertShotReferences({ ...shot, ...patch });
     await db.shots.put({ ...shot, ...patch });
     await touchProject(shot.projectId);
   });
 }
 
 export type EpisodeShotBulkPatch = Partial<
-  Pick<Shot, "beatId" | "durationSec" | "status" | "characterIds" | "sceneId" | "notes">
+  Pick<Shot, "beatId" | "durationSec" | "status" | "characterIds" | "sceneId" | "propIds" | "styleId" | "notes">
 >;
 
 export async function patchEpisodeShots(
@@ -1201,7 +1313,7 @@ export async function patchEpisodeShots(
   patch: EpisodeShotBulkPatch,
 ): Promise<void> {
   if (ids.length === 0) return;
-  await db.transaction("rw", db.shots, db.episodes, db.projects, async () => {
+  await db.transaction("rw", PRODUCTION_TABLES, async () => {
     const episode = await db.episodes.get(episodeId);
     if (!episode) throw new Error("集不存在");
     if (new Set(ids).size !== ids.length) throw new Error("镜头列表包含重复记录");
@@ -1220,6 +1332,7 @@ export async function patchEpisodeShots(
     ) {
       throw new Error("场次不属于当前集");
     }
+    patch = pickPatch(patch, ["beatId", "durationSec", "status", "characterIds", "sceneId", "propIds", "styleId", "notes"]);
     const nextPatch: EpisodeShotBulkPatch = { ...patch };
     if ("status" in patch) {
       nextPatch.status = normalizeShotStatus(patch.status);
@@ -1229,6 +1342,7 @@ export async function patchEpisodeShots(
         ? [...patch.characterIds]
         : [];
     }
+    for (const shot of shots) await assertShotReferences({ ...shot!, ...nextPatch });
     await Promise.all(shots.map((shot) => db.shots.put({ ...shot!, ...nextPatch })));
     await touchProject(episode.projectId);
   });
@@ -1252,7 +1366,7 @@ export async function reorderShots(episodeId: Id, orderedIds: Id[]): Promise<voi
 }
 
 export async function duplicateShot(id: Id): Promise<Shot> {
-  return db.transaction("rw", db.shots, db.episodes, db.projects, async () => {
+  return db.transaction("rw", PRODUCTION_TABLES, async () => {
     const source = await db.shots.get(id);
     if (!source) throw new Error("镜头不存在");
     const episode = await db.episodes.get(source.episodeId);
@@ -1273,6 +1387,7 @@ export async function duplicateShot(id: Id): Promise<Shot> {
       id: createId("sht"),
       order: source.order + 1,
     });
+    await assertShotReferences(copy);
     await db.shots.add(copy);
     await touchProject(source.projectId);
     return copy;
@@ -1281,7 +1396,7 @@ export async function duplicateShot(id: Id): Promise<Shot> {
 
 export async function restoreShots(shots: Shot[], media: MediaRecord[] = []): Promise<void> {
   if (shots.length === 0) return;
-  await db.transaction("rw", db.shots, db.episodes, db.projects, db.media, async () => {
+  await db.transaction("rw", PRODUCTION_TABLES, async () => {
     if (media.length > 0) await db.media.bulkPut(media);
     const episodeIds = new Set(shots.map((shot) => shot.episodeId));
     for (const episodeId of episodeIds) {
@@ -1297,6 +1412,9 @@ export async function restoreShots(shots: Shot[], media: MediaRecord[] = []): Pr
         (left, right) => left.order - right.order,
       );
       for (const shot of scoped) {
+        await assertShotReferences(shot);
+        const existing = await db.shots.get(shot.id);
+        if (existing) throw new Error("镜头已存在，无法恢复");
         all.splice(Math.max(0, Math.min(shot.order - 1, all.length)), 0, shot);
       }
       await Promise.all(
@@ -1315,6 +1433,7 @@ export async function setShotSlot(
   await db.transaction("rw", PRODUCTION_TABLES, async () => {
     const shot = await db.shots.get(id);
     if (!shot) throw new Error("镜头不存在，无法保存");
+    await assertSlotMedia(shot.projectId, slot);
     const previous = shot[field];
     await db.shots.put({ ...shot, [field]: slot });
     await touchProject(shot.projectId);

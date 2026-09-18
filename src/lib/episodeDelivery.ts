@@ -1,3 +1,4 @@
+import { shotRelations } from "@/lib/shotRelations";
 import { validShotMediaId, type ShotMediaIndex } from "@/lib/shotMedia";
 import { SHOT_COLUMNS, normalizeVisibleColumns } from "@/domain/columns";
 import {
@@ -5,12 +6,15 @@ import {
   episodeLabel,
   normalizeEpisodeStory,
   normalizeShotStatus,
+  normalizeProjectMode,
 } from "@/domain/types";
 import type {
   Character,
   Episode,
   Id,
   Project,
+  Prop,
+  VisualStyle,
   Scene,
   Shot,
   ShotColumnId,
@@ -42,6 +46,9 @@ export interface EpisodeDeliveryRow {
   characters: string;
   scene: string;
   notes: string;
+  props: string;
+  style: string;
+  styleSource: string;
   visualMediaId?: Id;
   values: Record<string, string>;
   missing: Array<"content" | "duration" | "scene" | "firstFrame" | "clip">;
@@ -62,6 +69,8 @@ export function deriveEpisodeDelivery(input: {
   shots: Shot[];
   characters: Character[];
   scenes: Scene[];
+  props: Prop[];
+  styles: VisualStyle[];
   media: ShotMediaIndex;
 }): EpisodeDelivery {
   const { project, episode } = input;
@@ -104,6 +113,7 @@ export function deriveEpisodeDelivery(input: {
           .join("、"),
         scene: shot.sceneId ? (sceneNames.get(shot.sceneId) ?? `未知场景(${shot.sceneId})`) : "",
         notes: shot.notes,
+        ...shotRelations(project, shot, input.props, input.styles),
         visualMediaId:
           validShotMediaId(shot.firstFrame.result, "image", project.id, input.media) ??
           validShotMediaId(shot.lastFrame.result, "image", project.id, input.media),
@@ -137,6 +147,9 @@ export function episodeDeliveryCsv(delivery: EpisodeDelivery): string {
     "时长(秒)",
     "角色",
     "场景",
+    "道具",
+    "风格",
+    "风格来源",
     "备注",
     ...delivery.columns.map((column) => column.label),
   ];
@@ -149,6 +162,9 @@ export function episodeDeliveryCsv(delivery: EpisodeDelivery): string {
     row.durationSec,
     row.characters,
     row.scene,
+    row.props,
+    row.style,
+    row.styleSource,
     row.notes,
     ...delivery.columns.map((column) => row.values[column.id] ?? ""),
   ]);
@@ -158,7 +174,10 @@ export function episodeDeliveryCsv(delivery: EpisodeDelivery): string {
 }
 
 export function episodeDeliveryFilename(delivery: EpisodeDelivery): string {
-  const safe = `${delivery.project.name}-${episodeLabel(delivery.episode)}`
+  const name = normalizeProjectMode(delivery.project.mode) === "film"
+    ? delivery.project.name
+    : `${delivery.project.name}-${episodeLabel(delivery.episode)}`;
+  const safe = name
     .replace(/[\\/:*?"<>|]+/g, "-")
     .replace(/\s+/g, " ")
     .trim();

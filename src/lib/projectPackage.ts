@@ -1,3 +1,4 @@
+import { parseGenerationDefaults } from "@/domain/output";
 import JSZip from "jszip";
 import { z } from "zod";
 import { db } from "@/db/database";
@@ -104,7 +105,21 @@ function mimeForFilename(filename: string): string {
   return (extension && known[extension]) || "application/octet-stream";
 }
 
+function optionalText(raw: Record<string, unknown>, key: string): string | undefined {
+  if (raw[key] === undefined) return undefined;
+  if (typeof raw[key] !== "string") throw new PackageError(`${key} 必须是文本`);
+  return raw[key];
+}
+
+function optionalIds(raw: Record<string, unknown>, key: string): Id[] | undefined {
+  const value = raw[key];
+  if (value === undefined) return undefined;
+  if (!Array.isArray(value) || value.some((id) => typeof id !== "string")) throw new PackageError(`${key} 必须是 ID 数组`);
+  return [...new Set(value as string[])];
+}
+
 const PROJECT_KEYS = [
+  "brief", "genre", "audience", "tone", "defaultStyleId", "generationDefaults",
   "id",
   "name",
   "mode",
@@ -130,6 +145,12 @@ function parseProject(raw: Record<string, unknown>, fallbackName: string): Proje
   const project: Project = {
     id: String(raw.id ?? createId("prj")),
     name: String(raw.name ?? fallbackName),
+    brief: optionalText(raw, "brief"),
+    genre: optionalText(raw, "genre"),
+    audience: optionalText(raw, "audience"),
+    tone: optionalText(raw, "tone"),
+    defaultStyleId: optionalText(raw, "defaultStyleId"),
+    generationDefaults: parseGenerationDefaults(raw.generationDefaults),
     mode: normalizeProjectMode(raw.mode),
     aspectPreset: normalizeAspectPreset(raw.aspectPreset),
     createdAt: String(raw.createdAt ?? at),
@@ -150,6 +171,7 @@ function parseProject(raw: Record<string, unknown>, fallbackName: string): Proje
 }
 
 const CHARACTER_KEYS = [
+  "personality", "motivation", "voice",
   "id",
   "projectId",
   "name",
@@ -186,6 +208,9 @@ function parseCharacter(raw: Record<string, unknown>, projectId: Id): Character 
   return {
     id: String(raw.id ?? createId("chr")),
     projectId,
+    personality: optionalText(raw, "personality"),
+    motivation: optionalText(raw, "motivation"),
+    voice: optionalText(raw, "voice"),
     name: String(raw.name ?? "未命名角色"),
     bio: String(raw.bio ?? ""),
     appearance: String(raw.appearance ?? ""),
@@ -198,6 +223,7 @@ function parseCharacter(raw: Record<string, unknown>, projectId: Id): Character 
 }
 
 const SCENE_KEYS = [
+  "geography", "lighting",
   "id",
   "projectId",
   "name",
@@ -217,6 +243,8 @@ function parseScene(raw: Record<string, unknown>, projectId: Id): Scene {
   return {
     id: String(raw.id ?? createId("scn")),
     projectId,
+    geography: optionalText(raw, "geography"),
+    lighting: optionalText(raw, "lighting"),
     name: String(raw.name ?? "未命名场景"),
     location: String(raw.location ?? ""),
     timeOfDay: String(raw.timeOfDay ?? ""),
@@ -230,6 +258,7 @@ function parseScene(raw: Record<string, unknown>, projectId: Id): Scene {
 }
 
 const PROP_KEYS = [
+  "appearance", "material", "size", "usage", "continuity",
   "id",
   "projectId",
   "name",
@@ -246,6 +275,11 @@ function parseProp(raw: Record<string, unknown>, projectId: Id): Prop {
   return {
     id: String(raw.id ?? createId("prp")),
     projectId,
+    appearance: optionalText(raw, "appearance"),
+    material: optionalText(raw, "material"),
+    size: optionalText(raw, "size"),
+    usage: optionalText(raw, "usage"),
+    continuity: optionalText(raw, "continuity"),
     name: String(raw.name ?? "未命名道具"),
     kind: String(raw.kind ?? ""),
     notes: String(raw.notes ?? ""),
@@ -257,6 +291,7 @@ function parseProp(raw: Record<string, unknown>, projectId: Id): Prop {
 }
 
 const STYLE_KEYS = [
+  "palette", "lighting", "lens", "composition", "negativePrompt",
   "id",
   "projectId",
   "name",
@@ -272,6 +307,11 @@ function parseStyle(raw: Record<string, unknown>, projectId: Id): VisualStyle {
   return {
     id: String(raw.id ?? createId("sty")),
     projectId,
+    palette: optionalText(raw, "palette"),
+    lighting: optionalText(raw, "lighting"),
+    lens: optionalText(raw, "lens"),
+    composition: optionalText(raw, "composition"),
+    negativePrompt: optionalText(raw, "negativePrompt"),
     name: String(raw.name ?? "未命名风格"),
     notes: String(raw.notes ?? ""),
     slots: parseNamedSlots<StyleImageSlot>(raw.slots, undefined),
@@ -324,6 +364,7 @@ function synthesizeFirstEpisode(
 }
 
 const SHOT_KEYS = [
+  "propIds", "styleId",
   "id",
   "projectId",
   "episodeId",
@@ -367,6 +408,8 @@ function parseShot(
     order: Number(raw.order ?? index + 1) || index + 1,
     shotNumber: String(raw.shotNumber ?? index + 1),
     status: normalizeShotStatus(raw.status),
+    propIds: optionalIds(raw, "propIds"),
+    styleId: raw.styleId === null ? null : optionalText(raw, "styleId"),
     firstFrame: slots.firstFrame,
     lastFrame: slots.lastFrame,
     clip: slots.clip,
@@ -573,6 +616,8 @@ export async function importProjectZip(file: Blob): Promise<Project> {
     return style;
   });
 
+  if (project.defaultStyleId !== undefined) project.defaultStyleId = styleMap.get(project.defaultStyleId);
+
   const parsedEpisodes = hasEpisodes
     ? episodesRaw.map((raw, index) => parseEpisode(raw, projectId, index))
     : [synthesizeFirstEpisode(project, projectRaw)];
@@ -627,6 +672,9 @@ export async function importProjectZip(file: Blob): Promise<Project> {
       .map((id) => characterMap.get(id))
       .filter((id): id is string => Boolean(id));
     shot.sceneId = shot.sceneId ? sceneMap.get(shot.sceneId) : undefined;
+    if (shot.propIds !== undefined) shot.propIds = shot.propIds.flatMap((id) => propMap.get(id) ?? []);
+    // A missing explicit style must not unexpectedly inherit a different default.
+    if (typeof shot.styleId === "string") shot.styleId = styleMap.get(shot.styleId) ?? null;
     const beatMap = beatMaps.get(oldEpisodeId) ?? beatMaps.values().next().value;
     shot.beatId = shot.beatId ? beatMap?.get(shot.beatId) : undefined;
     return shot;

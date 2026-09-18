@@ -3,7 +3,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { ChevronLeft } from "lucide-react";
 import { db } from "@/db/database";
 import { patchCharacter, setCharacterSlot } from "@/db/repo";
-import { CHARACTER_SLOTS } from "@/domain/types";
+import { CHARACTER_SLOTS, STUDIO_LIBRARY_ID } from "@/domain/types";
 import { EditableGenerationSlot } from "@/components/slots/GenerationSlotCard";
 import { AssetTextField } from "./AssetTextField";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,7 @@ export function CharacterDetailPage({
     return <div className="text-muted-foreground p-8 text-sm">加载中…</div>;
   }
   const missing =
-    character === null || (back.kind === "project" && character.projectId !== back.projectId);
+    character === null || character.projectId !== (back.kind === "project" ? back.projectId : STUDIO_LIBRARY_ID);
   if (missing) {
     return (
       <div className="p-8">
@@ -39,7 +39,7 @@ export function CharacterDetailPage({
 
   return (
     <div className="h-full overflow-auto">
-      <div className="mx-auto max-w-5xl px-8 py-6">
+      <div className="mx-auto max-w-5xl px-4 py-6 sm:px-8">
         {back.kind === "studio" ? (
           <Link
             to="/characters"
@@ -51,6 +51,7 @@ export function CharacterDetailPage({
           <Link
             to="/p/$projectId/world"
             params={{ projectId: back.projectId }}
+            search={{ tab: "characters" }}
             className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
           >
             <ChevronLeft className="size-4" /> 世界
@@ -107,6 +108,42 @@ export function CharacterDetailPage({
               persist={(value) => patchCharacter(character.id, { notes: value })}
               multiline
             />
+            <details className="rounded-xl border bg-card p-4">
+              <summary className="cursor-pointer text-sm font-medium">创作细节 · 选填</summary>
+              <p className="text-muted-foreground mt-2 text-xs leading-5">记录人物的行为、目标与声音，让表演前后一致。所有信息均为选填。</p>
+              <div className="mt-4 space-y-4">
+                <AssetTextField
+                  key={`${character.id}:personality`}
+                  draftKey={`${character.id}:personality`}
+                  label="性格与行为"
+                  value={character.personality ?? ""}
+                  projectId={character.projectId}
+                  persist={(value) => patchCharacter(character.id, { personality: value })}
+                  placeholder="说话习惯、待人方式、面对压力的反应"
+                  multiline
+                />
+                <AssetTextField
+                  key={`${character.id}:motivation`}
+                  draftKey={`${character.id}:motivation`}
+                  label="动机与目标"
+                  value={character.motivation ?? ""}
+                  projectId={character.projectId}
+                  persist={(value) => patchCharacter(character.id, { motivation: value })}
+                  placeholder="想要什么、害怕什么、行动的原因"
+                  multiline
+                />
+                <AssetTextField
+                  key={`${character.id}:voice`}
+                  draftKey={`${character.id}:voice`}
+                  label="声音与表达"
+                  value={character.voice ?? ""}
+                  projectId={character.projectId}
+                  persist={(value) => patchCharacter(character.id, { voice: value })}
+                  placeholder="音色、语速、口音与表达习惯"
+                  multiline
+                />
+              </div>
+            </details>
           </div>
         </div>
       </div>
@@ -119,5 +156,5 @@ function goBack(
   back: { kind: "studio" } | { kind: "project"; projectId: string },
 ) {
   if (back.kind === "studio") return navigate({ to: "/characters" });
-  return navigate({ to: "/p/$projectId/world", params: { projectId: back.projectId } });
+  return navigate({ to: "/p/$projectId/world", params: { projectId: back.projectId }, search: { tab: "characters" } });
 }

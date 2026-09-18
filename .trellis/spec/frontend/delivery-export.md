@@ -16,6 +16,8 @@ deriveEpisodeDelivery(input: {
   characters: Character[];
   scenes: Scene[];
   media: ShotMediaIndex;
+  props: Prop[];
+  styles: VisualStyle[];
 }): EpisodeDelivery
 
 episodeDeliveryCsv(delivery: EpisodeDelivery): string
@@ -33,6 +35,7 @@ Print route:
 - Filter shots by both `project.id` and `episode.id`, then sort by stored shot order.
 - Do not enable export until shots and referenced assets have finished loading.
 - CSV starts with a UTF-8 BOM, uses comma delimiters, CRLF rows, and doubles quotes inside quoted cells.
+- Prop/style names and style source are derived by `shotRelations`; undefined inherits, null means none, foreign/missing IDs stay explicit unknown labels. Wait for scoped prop/style live queries before export. Film delivery labels omit the internal episode number.
 - Delivery includes base columns plus currently visible optional shot columns.
 - Shot `status` is always exported (Chinese label in CSV / print). Missing or unknown values normalize to `draft` / 草稿.
 - Readiness and gap filters use `validShotMediaId`: same project, existing nonempty Blob, matching declared result kind and stored MIME. A clip still image remains an allowed planning placeholder but is not video-ready. Missing scene records count as gaps. Manual status is never changed by these checks.

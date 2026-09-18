@@ -1,7 +1,9 @@
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { ProjectSettingsPanel } from "./ProjectSettingsPanel";
 import { flushPendingDrafts } from "@/lib/debouncedDraft";
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
-import { ChevronLeft, Download, Ellipsis } from "lucide-react";
+import { ChevronLeft, Download, Settings2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Still } from "@/components/studio/Still";
@@ -13,22 +15,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { db } from "@/db/database";
 import { patchProjectOutput } from "@/db/repo";
 import {
-  ASPECT_PRESET_IDS,
-  ASPECT_PRESETS,
   episodeLabel,
-  normalizeAspectPreset,
   normalizeProjectMode,
-  resolutionForAspect,
-  type AspectPresetId,
 } from "@/domain/types";
 import { IMAGE_ACCEPT, pickMediaFile, uploadMediaFile } from "@/lib/media";
 import { downloadBlob, exportProjectZip } from "@/lib/projectPackage";
@@ -73,6 +64,14 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
   }, [projectId]);
   const [backingUp, setBackingUp] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [outputState, setOutputState] = useState({ dirty: false, saving: false });
+  const [confirmSettingsClose, setConfirmSettingsClose] = useState(false);
+  function changeSettingsOpen(open: boolean) {
+    if (!open && outputState.saving) return;
+    if (!open && outputState.dirty) { setConfirmSettingsClose(true); return; }
+    setOutputState({ dirty: false, saving: false });
+    setSettingsOpen(open);
+  }
 
   if (
     project === undefined ||
@@ -92,8 +91,6 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
   }
 
   const mode = normalizeProjectMode(project.mode);
-  const aspectPreset = normalizeAspectPreset(project.aspectPreset);
-  const aspectResolution = resolutionForAspect(aspectPreset);
   const projectHome = pathname === `/p/${projectId}` || pathname === `/p/${projectId}/`;
 
   if (episodeId && currentEpisode === null) {
@@ -123,15 +120,6 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
   const title = mode === "film" ? project.name : episode ? episodeLabel(episode) : project.name;
   const backToStudio = mode === "film" || !episode;
 
-  async function setAspect(preset: AspectPresetId) {
-    if (normalizeAspectPreset(project!.aspectPreset) === preset) return;
-    try {
-      await patchProjectOutput(projectId, { aspectPreset: preset });
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "保存失败");
-    }
-  }
-
   async function uploadCover() {
     try {
       const file = await pickMediaFile(IMAGE_ACCEPT);
@@ -153,7 +141,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
 
   return (
     <div className="workspace-shell bg-background flex h-screen flex-col">
-      <header className="workspace-header grid h-14 shrink-0 grid-cols-[1fr_auto_1fr] items-center border-b px-4">
+      <header className="workspace-header grid min-h-14 shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-2 border-b px-3 py-2 sm:grid-cols-[1fr_auto_1fr] sm:px-4">
         <div className="flex min-w-0 items-center gap-1">
           {backToStudio ? (
             <Button variant="ghost" size="icon-sm" asChild>
@@ -170,7 +158,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
           )}
           <span className="truncate text-[15px] font-medium">{title}</span>
         </div>
-        <nav className="text-muted-foreground flex items-center gap-6 text-[13px]">
+        <nav className="text-muted-foreground col-span-2 row-start-2 flex items-center justify-center gap-6 text-[13px] sm:col-span-1 sm:row-start-auto">
           {filmEpisode ? (
             <>
               <Link
@@ -268,17 +256,10 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
             </>
           )}
         </nav>
-        <div className="flex items-center justify-end gap-1">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon-sm" aria-label="更多">
-                <Ellipsis />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onSelect={() => setSettingsOpen(true)}>项目设定</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <div className="col-start-2 row-start-1 flex items-center justify-end gap-1 sm:col-start-auto">
+          <Button variant="ghost" size="sm" onClick={() => changeSettingsOpen(true)} aria-label="项目设定">
+            <Settings2 /><span className="hidden sm:inline">项目设定</span>
+          </Button>
           <Button
             variant="outline"
             size="sm"
@@ -306,35 +287,12 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
         <Outlet />
       </div>
 
-      <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
-        <DialogContent>
+      <Dialog open={settingsOpen} onOpenChange={changeSettingsOpen}>
+        <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-2xl">
           <DialogHeader>
             <DialogTitle>项目设定</DialogTitle>
           </DialogHeader>
-          <fieldset>
-            <legend className="text-sm font-medium">画幅比例</legend>
-            <div className="mt-2 grid grid-cols-3 gap-2">
-              {ASPECT_PRESET_IDS.map((preset) => (
-                <button
-                  key={preset}
-                  type="button"
-                  aria-pressed={aspectPreset === preset}
-                  className={cn(
-                    "rounded-xl border px-3 py-2.5 text-center text-sm font-medium transition-colors",
-                    aspectPreset === preset
-                      ? "border-brand bg-brand/5"
-                      : "hover:bg-muted/50",
-                  )}
-                  onClick={() => void setAspect(preset)}
-                >
-                  {ASPECT_PRESETS[preset].label}
-                </button>
-              ))}
-            </div>
-            <p className="text-muted-foreground mt-2 text-xs">
-              默认分辨率 {aspectResolution.width}×{aspectResolution.height}
-            </p>
-          </fieldset>
+          <ProjectSettingsPanel project={project} onOutputState={setOutputState} />
           <div>
             <p className="text-sm font-medium">项目封面</p>
             <div className="mt-2 flex items-start gap-4">
@@ -358,12 +316,24 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setSettingsOpen(false)}>
+            <Button variant="outline" disabled={outputState.saving} onClick={() => changeSettingsOpen(false)}>
               完成
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <AlertDialog open={confirmSettingsClose} onOpenChange={setConfirmSettingsClose}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>输出配置尚未保存</AlertDialogTitle>
+            <AlertDialogDescription>返回后可保存当前画幅和生成默认值；放弃只撤销本次输出配置修改，已自动保存的项目信息会保留。</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>返回继续编辑</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { setOutputState({ dirty: false, saving: false }); setSettingsOpen(false); }}>放弃输出修改</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

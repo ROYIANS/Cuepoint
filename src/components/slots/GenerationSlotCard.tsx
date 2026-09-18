@@ -1,10 +1,10 @@
-import { Plus, Trash2, Type } from "lucide-react";
+import { Library, Plus, Trash2, Type } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { toast } from "sonner";
 import { deleteMediaIfOrphan } from "@/db/repo";
 import { DraftMediaSession } from "@/lib/draftMedia";
 import { emptySlot, slotHasBody } from "@/domain/slot";
-import type { GenerationSlot, Id } from "@/domain/types";
+import type { GenerationSlot, Id, MediaKind, MediaRecord } from "@/domain/types";
 import {
   IMAGE_ACCEPT,
   MEDIA_ACCEPT,
@@ -13,6 +13,7 @@ import {
   uploadMediaFile,
 } from "@/lib/media";
 import { cn } from "@/lib/utils";
+import { MediaPicker } from "@/components/media/MediaPicker";
 import { MediaPreview } from "@/components/media/MediaThumb";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -169,8 +170,10 @@ export function GenerationSlotEditor({
   value,
   onClose,
   onSave,
+  resultKinds = ["image", "video"],
 }: {
   open: boolean;
+  resultKinds?: readonly MediaKind[];
   title: string;
   projectId: Id;
   value: GenerationSlot;
@@ -178,6 +181,7 @@ export function GenerationSlotEditor({
   onSave: (slot: GenerationSlot) => Promise<void>;
 }) {
   const [draft, setDraft] = useState(value);
+  const [pickerTarget, setPickerTarget] = useState<"image" | "video" | "result" | null>(null);
   const [pending, setPending] = useState<"upload" | "save" | "close" | null>(null);
   const [error, setError] = useState<string>();
   const [cancelled, setCancelled] = useState(false);
@@ -214,8 +218,12 @@ export function GenerationSlotEditor({
     setError(undefined);
     try {
       const uploaded = await session.upload(async () => {
-        const file = retryFile ?? await pickMediaFile(kind === "result" ? MEDIA_ACCEPT : kind === "video" ? VIDEO_ACCEPT : IMAGE_ACCEPT);
+        const file = retryFile ?? await pickMediaFile(kind === "result" ? (resultKinds.length === 1 ? IMAGE_ACCEPT : MEDIA_ACCEPT) : kind === "video" ? VIDEO_ACCEPT : IMAGE_ACCEPT);
         if (!file) throw new Error("未选择文件");
+        const allowedKinds = kind === "result" ? resultKinds : [kind];
+        if (!allowedKinds.some((allowed) => file.type.startsWith(`${allowed}/`))) {
+          throw new Error(kind === "video" ? "请选择视频文件" : "请选择支持的图片文件");
+        }
         failedUpload.current = { kind, file };
         return uploadMediaFile(projectId, file);
       });
@@ -234,6 +242,50 @@ export function GenerationSlotEditor({
       busy.current = false;
       if (mounted.current) setPending((current) => current === "close" ? current : null);
     }
+  }
+
+  async function selectExisting(record: MediaRecord) {
+    if (busy.current || cancelled || !pickerTarget || record.projectId !== projectId) return;
+    const kind: MediaKind = record.mimeType.startsWith("video/") ? "video" : "image";
+    const allowedKinds = pickerTarget === "result" ? resultKinds : [pickerTarget];
+    if (!allowedKinds.includes(kind) || record.blob.size === 0) return;
+    const next = pickerTarget === "result"
+      ? { ...draft, result: { mediaId: record.id, kind } }
+      : pickerTarget === "video"
+        ? { ...draft, referenceVideoIds: [...new Set([...draft.referenceVideoIds, record.id])] }
+        : { ...draft, referenceImageIds: [...new Set([...draft.referenceImageIds, record.id])] };
+    busy.current = true;
+    setPending("upload");
+    setError(undefined);
+    setDraft(next);
+    setPickerTarget(null);
+    failedUpload.current = null;
+    try {
+      await session.discardExcept(mediaIds(next));
+    } catch (reason) {
+      fail(reason);
+    } finally {
+      busy.current = false;
+      if (mounted.current) setPending(null);
+    }
+  }
+
+  function renderPicker(target: "image" | "video" | "result") {
+    if (pickerTarget !== target) return null;
+    const selectedIds = target === "result"
+      ? draft.result ? [draft.result.mediaId] : []
+      : target === "image" ? draft.referenceImageIds : draft.referenceVideoIds;
+    return (
+      <MediaPicker
+        key={target}
+        projectId={projectId}
+        kinds={target === "result" ? resultKinds : [target]}
+        disabled={pending !== null || cancelled}
+        selectedIds={selectedIds}
+        onSelect={(record) => void selectExisting(record)}
+        onClose={() => setPickerTarget(null)}
+      />
+    );
   }
 
   async function close() {
@@ -271,7 +323,7 @@ export function GenerationSlotEditor({
       <DialogContent className="flex max-h-[90vh] max-w-2xl flex-col overflow-hidden sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>填写画面描述、添加参考，或直接上传已有素材。保存后可用于分镜和交付。</DialogDescription>
+          <DialogDescription>填写画面描述、添加参考，或上传、复用已有素材。保存后可用于分镜和交付。</DialogDescription>
         </DialogHeader>
         <div className="app-scroll space-y-5 overflow-auto pr-1">
           <div className="grid gap-2">
@@ -287,7 +339,13 @@ export function GenerationSlotEditor({
             />
           </div>
           <div className="grid gap-2">
-            <div id={refImageId} className="text-sm font-medium">参考图</div>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div id={refImageId} className="text-sm font-medium">参考图</div>
+              <Button type="button" variant="ghost" size="sm" disabled={pending !== null || cancelled}
+                onClick={() => setPickerTarget(pickerTarget === "image" ? null : "image")}>
+                <Library /> 选择已有参考图
+              </Button>
+            </div>
             <RefStrip
               disabled={pending !== null || cancelled}
               labelledBy={refImageId}
@@ -301,9 +359,16 @@ export function GenerationSlotEditor({
                 })
               }
             />
+            {renderPicker("image")}
           </div>
           <div className="grid gap-2">
-            <div id={refVideoId} className="text-sm font-medium">参考视频</div>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div id={refVideoId} className="text-sm font-medium">参考视频</div>
+              <Button type="button" variant="ghost" size="sm" disabled={pending !== null || cancelled}
+                onClick={() => setPickerTarget(pickerTarget === "video" ? null : "video")}>
+                <Library /> 选择已有参考视频
+              </Button>
+            </div>
             <RefStrip
               disabled={pending !== null || cancelled}
               labelledBy={refVideoId}
@@ -317,16 +382,21 @@ export function GenerationSlotEditor({
                 })
               }
             />
+            {renderPicker("video")}
           </div>
           <div className="bg-muted space-y-3 rounded-xl p-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <div className="text-sm font-medium">成片 / 画面素材</div>
                 <div className="text-muted-foreground text-[11px]">
-                  支持已有图片或视频，视频可直接播放检查
+                  {resultKinds.length === 1 ? "支持图片素材，可复用已有画面" : "支持已有图片或视频，视频可直接播放检查"}
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
+                <Button type="button" size="sm" variant="outline" disabled={pending !== null || cancelled}
+                  onClick={() => setPickerTarget(pickerTarget === "result" ? null : "result")}>
+                  <Library /> 选择已有素材
+                </Button>
                 <Button size="sm" variant="outline" disabled={pending !== null || cancelled} onClick={() => void upload("result")}>
                   上传素材
                 </Button>
@@ -350,6 +420,7 @@ export function GenerationSlotEditor({
                 inspect
               />
             </div>
+            {renderPicker("result")}
           </div>
         </div>
         {error ? (
@@ -415,6 +486,7 @@ export function EditableGenerationSlot({
           title={title}
           projectId={projectId}
           value={value}
+          resultKinds={variant === "clip" ? ["image", "video"] : ["image"]}
           onClose={() => setOpen(false)}
           onSave={onSave}
         />

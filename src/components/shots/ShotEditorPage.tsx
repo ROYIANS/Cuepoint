@@ -1,3 +1,4 @@
+import { shotRelations } from "@/lib/shotRelations";
 import { toast } from "sonner";
 import { useShotMedia } from "@/lib/useShotMedia";
 import {
@@ -82,6 +83,9 @@ import {
   type GenerationSlot,
   type Id,
   type Scene,
+  type Project,
+  type Prop,
+  type VisualStyle,
   type Shot,
   type ShotColumnId,
   type ShotFilters,
@@ -128,6 +132,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -268,6 +273,22 @@ export function ShotEditorPage({
       [projectId],
     ) ?? [];
 
+  const relationAssets = useLiveQuery(async () => ({
+    projectId,
+    props: await db.props.where("projectId").equals(projectId).toArray(),
+    styles: await db.styles.where("projectId").equals(projectId).toArray(),
+  }), [projectId]);
+  const props = relationAssets?.projectId === projectId ? relationAssets.props : undefined;
+  const styles = relationAssets?.projectId === projectId ? relationAssets.styles : undefined;
+  const [relationShotId, setRelationShotId] = useState<string>();
+  const [relationStatus, setRelationStatus] = useState<"saved" | "saving" | "error">("saved");
+  useEffect(() => {
+    if (relationStatus === "saved") return;
+    const preventUnload = (event: BeforeUnloadEvent) => { event.preventDefault(); };
+    window.addEventListener("beforeunload", preventUnload);
+    return () => window.removeEventListener("beforeunload", preventUnload);
+  }, [relationStatus]);
+
   const visible = normalizeVisibleColumns(project?.columnSettings.visible);
   const visibleDefs = SHOT_COLUMNS.filter((column) => visible.includes(column.id));
   const shotSettings = normalizeShotSettings(project?.shotSettings);
@@ -321,6 +342,8 @@ export function ShotEditorPage({
   );
 
   useEffect(() => {
+    setRelationShotId(undefined);
+    setRelationStatus("saved");
     setSelecting(false);
     setSelected(new Set());
     setConfirmDelete(false);
@@ -536,14 +559,14 @@ export function ShotEditorPage({
     void persistFilters({ ...filters, gaps });
   }
 
-  if (project === undefined || episode === undefined) {
+  if (project === undefined || episode === undefined || props === undefined || styles === undefined) {
     return <div className="text-muted-foreground p-8 text-sm">加载分镜…</div>;
   }
   if (project === null) {
     return <div className="text-muted-foreground p-8 text-sm">找不到这个项目</div>;
   }
   if (episode === null || episode.projectId !== projectId) {
-    return <div className="text-muted-foreground p-8 text-sm">找不到这一集</div>;
+    return <div className="text-muted-foreground p-8 text-sm">找不到当前故事</div>;
   }
 
   async function toggleColumn(id: ShotColumnId, next: boolean) {
@@ -688,7 +711,7 @@ export function ShotEditorPage({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex h-14 shrink-0 items-center justify-between px-5">
+      <div className="flex min-h-14 shrink-0 flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-5">
         <div className="flex items-center gap-3">
           <h1 className="text-[17px] font-semibold">制作分镜</h1>
           <DropdownMenu>
@@ -720,7 +743,11 @@ export function ShotEditorPage({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex flex-wrap items-center gap-1">
+          <Button size="sm" variant="outline" disabled={visibleShots.length === 0}
+            onClick={() => setRelationShotId(visibleShots.find((shot) => shot.id === activeShotId)?.id ?? visibleShots[0]?.id)}>
+            <Settings2 />道具与风格
+          </Button>
           <div
             className="bg-muted flex rounded-md p-0.5"
             role="group"
@@ -1178,6 +1205,7 @@ export function ShotEditorPage({
                     sensors={sensors}
                     onDeleteBeat={() => setPendingBeatId(beat.id)}
                     onReorderShots={commitShotReorder}
+                    onEditRelations={setRelationShotId}
                     onDuplicateShot={(shotId) => void copyShot(shotId)}
                   />
                 ))}
@@ -1204,6 +1232,7 @@ export function ShotEditorPage({
                 hideHeader={beats.length === 0}
                 sensors={sensors}
                 onReorderShots={commitShotReorder}
+                onEditRelations={setRelationShotId}
                 onDuplicateShot={(shotId) => void copyShot(shotId)}
               />
             ) : null}
@@ -1215,6 +1244,34 @@ export function ShotEditorPage({
           <span className="mx-3">总时长 {formatDuration(totalDuration)}</span>
         </div>
       </div>
+
+      <Dialog open={Boolean(relationShotId)} onOpenChange={(open) => {
+        if (open) return;
+        if (relationStatus !== "saved") {
+          toast.error(relationStatus === "saving" ? "正在保存，请稍候" : "保存未成功，请先重试或放弃未保存的选择");
+          return;
+        }
+        setRelationShotId(undefined);
+      }}>
+        <DialogContent className="max-h-[85dvh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>镜头道具与风格</DialogTitle>
+            <DialogDescription>选择自动保存。风格可跟随项目，也可为这条镜头单独指定。</DialogDescription>
+          </DialogHeader>
+          <Select value={relationShotId} onValueChange={setRelationShotId} disabled={relationStatus !== "saved"}>
+            <SelectTrigger aria-label="选择要编辑的镜头" className="w-full"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {shots.map((shot) => <SelectItem key={shot.id} value={shot.id}>镜 {shot.shotNumber || shot.order + 1} · {shot.content.slice(0, 36) || "未写内容"}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          {shots.find((shot) => shot.id === relationShotId) ? (
+            <ShotRelationsEditor key={relationShotId} project={project} shot={shots.find((shot) => shot.id === relationShotId)!} props={props} styles={styles} onStatusChange={setRelationStatus} />
+          ) : <div className="space-y-2">
+            <p className="text-muted-foreground text-sm">这个镜头已不存在，请选择其他镜头。</p>
+            {relationStatus === "error" && <Button variant="ghost" onClick={() => setRelationStatus("saved")}>放弃未保存的选择</Button>}
+          </div>}
+        </DialogContent>
+      </Dialog>
 
       <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
         <AlertDialogContent>
@@ -1293,6 +1350,7 @@ type BeatBlockProps = {
   sensors: ReturnType<typeof useSensors>;
   onDeleteBeat?: () => void;
   onReorderShots: (groupIds: string[], activeId: string, overId: string) => Promise<void>;
+  onEditRelations: (shotId: string) => void;
   onDuplicateShot: (shotId: string) => void;
 };
 
@@ -1327,6 +1385,7 @@ function BeatBlockView({
   onDeleteBeat,
   onReorderShots,
   onDuplicateShot,
+  onEditRelations,
   sortableState,
 }: BeatBlockProps & {
   sortableState?: ReturnType<typeof useSortable>;
@@ -1436,6 +1495,7 @@ function BeatBlockView({
                   const target = shots[index + offset];
                   if (target) void onReorderShots(shotIds, shot.id, target.id);
                 }}
+                onEditRelations={() => onEditRelations(shot.id)}
                 onDuplicate={() => onDuplicateShot(shot.id)}
               />
             ))}
@@ -1466,6 +1526,7 @@ function ShotRow({
   canMoveDown,
   onMove,
   onDuplicate,
+  onEditRelations,
 }: {
   shot: Shot;
   striped: boolean;
@@ -1486,6 +1547,7 @@ function ShotRow({
   canMoveDown: boolean;
   onMove: (offset: -1 | 1) => void;
   onDuplicate: () => void;
+  onEditRelations: () => void;
 }) {
   const {
     attributes,
@@ -1597,12 +1659,14 @@ function ShotRow({
             </>
           )}
         </div>
-        <div className={DESIGN_CELL_CHROME}>
+        <div className={cn(DESIGN_CELL_CHROME, "flex-col gap-2")}>
           <Input
+            aria-label="镜号"
             value={shot.shotNumber}
             onChange={(event) => void patchShot(shot.id, { shotNumber: event.target.value })}
             className="h-8 w-10 border-0 bg-transparent text-center shadow-none focus-visible:ring-0"
           />
+          <Button size="sm" variant="ghost" className="h-7 px-1 text-xs" aria-label={`镜头 ${shot.shotNumber} 道具与风格`} onClick={onEditRelations}>设定</Button>
         </div>
         <div className={cn(DESIGN_CELL_CHROME, "border-l")}>
           <Select
@@ -1854,6 +1918,94 @@ function ShotRow({
           <Plus />
         </Button>
       ) : null}
+    </div>
+  );
+}
+
+function ShotRelationsEditor({ project, shot, props, styles, onStatusChange }: {
+  project: Project;
+  shot: Shot;
+  props: Prop[];
+  styles: VisualStyle[];
+  onStatusChange: (status: "saved" | "saving" | "error") => void;
+}) {
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string>();
+  const pending = useRef(false);
+  const retryPatch = useRef<Partial<Shot> | undefined>(undefined);
+  const relations = shotRelations(project, shot, props, styles);
+  const styleValue = shot.styleId === undefined ? "inherit" : shot.styleId === null ? "none" : shot.styleId;
+  const defaultStyle = styles.find((item) => item.id === project.defaultStyleId);
+  const missingPropIds = (shot.propIds ?? []).filter((id) => !props.some((item) => item.id === id));
+
+  async function save(patch: Partial<Shot>) {
+    if (pending.current) return;
+    pending.current = true;
+    setSaving(true);
+    onStatusChange("saving");
+    setError(undefined);
+    retryPatch.current = patch;
+    try {
+      await patchShot(shot.id, patch);
+      retryPatch.current = undefined;
+      onStatusChange("saved");
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "保存失败，请重试");
+      onStatusChange("error");
+    } finally {
+      pending.current = false;
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="space-y-5">
+      <div className="space-y-2">
+        <Label htmlFor={`shot-style-${shot.id}`}>镜头风格</Label>
+        <Select value={styleValue} disabled={saving} onValueChange={(value) => void save({ styleId: value === "inherit" ? undefined : value === "none" ? null : value })}>
+          <SelectTrigger id={`shot-style-${shot.id}`} className="w-full"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="inherit">继承项目 · {defaultStyle?.name ?? (project.defaultStyleId ? "默认风格已失效" : "未设默认风格")}</SelectItem>
+            <SelectItem value="none">不使用风格</SelectItem>
+            {shot.styleId && !styles.some((item) => item.id === shot.styleId) ? <SelectItem value={shot.styleId} disabled>已失效的风格</SelectItem> : null}
+            {styles.map((style) => <SelectItem key={style.id} value={style.id}>{style.name || "未命名风格"}</SelectItem>)}
+          </SelectContent>
+        </Select>
+        <p className="text-muted-foreground text-xs">当前生效：{relations.style} · {relations.styleSource}</p>
+      </div>
+      <fieldset disabled={saving} className="space-y-2">
+        <legend className="mb-2 text-sm font-medium">镜头道具（可多选）</legend>
+        {props.length === 0 ? <p className="text-muted-foreground text-xs">先在世界的道具库中添加道具，再关联到镜头。</p> : (
+          <div className="max-h-56 space-y-1 overflow-y-auto rounded-md border p-2">
+            {props.map((prop) => (
+              <label key={prop.id} className="hover:bg-muted flex cursor-pointer items-center gap-3 rounded px-2 py-2 text-sm">
+                <Checkbox disabled={saving} checked={(shot.propIds ?? []).includes(prop.id)} onCheckedChange={(checked) => {
+                  const ids = new Set(shot.propIds ?? []);
+                  if (checked) ids.add(prop.id); else ids.delete(prop.id);
+                  void save({ propIds: [...ids] });
+                }} />
+                <span>{prop.name || "未命名道具"}</span>
+              </label>
+            ))}
+          </div>
+        )}
+        {missingPropIds.length > 0 ? <div className="text-destructive text-xs">
+          有 {missingPropIds.length} 个道具关联已失效。
+          <Button size="sm" variant="ghost" disabled={saving} onClick={() => void save({ propIds: (shot.propIds ?? []).filter((id) => !missingPropIds.includes(id)) })}>移除失效关联</Button>
+        </div> : null}
+        <p className="text-muted-foreground text-xs">已关联：{relations.props || "无道具"}</p>
+      </fieldset>
+      <div role="status" aria-live="polite" className="text-muted-foreground text-xs">
+        {saving ? "保存中…" : error ? (
+          <div className="text-destructive space-y-2">
+            <p>{error}</p>
+            <div className="flex flex-wrap gap-2">
+              <Button size="sm" variant="outline" onClick={() => retryPatch.current && void save(retryPatch.current)}>重试</Button>
+              <Button size="sm" variant="ghost" onClick={() => { retryPatch.current = undefined; setError(undefined); onStatusChange("saved"); }}>放弃未保存的选择</Button>
+            </div>
+          </div>
+        ) : "选择已保存"}
+      </div>
     </div>
   );
 }

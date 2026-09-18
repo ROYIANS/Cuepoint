@@ -37,7 +37,6 @@ import {
 import {
   ASPECT_PRESET_IDS,
   ASPECT_PRESETS,
-  resolutionForAspect,
   type AspectPresetId,
   type Id,
   type ProjectMode,
@@ -71,7 +70,6 @@ export function ProjectGalleryPage() {
     [projects, query, sort],
   );
 
-  const aspectResolution = resolutionForAspect(aspectPreset);
 
   async function handleCreate() {
     try {
@@ -198,7 +196,7 @@ export function ProjectGalleryPage() {
               ))}
             </div>
             <p className="text-muted-foreground mt-2 text-xs">
-              默认分辨率 {aspectResolution.width}×{aspectResolution.height}
+              生成模型与分辨率可在创建后的项目设定中分别配置
             </p>
           </fieldset>
           <DialogFooter>

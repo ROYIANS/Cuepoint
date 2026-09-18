@@ -1,3 +1,5 @@
+import { matchesAssetSearch, type WorldTab } from "@/lib/assetLibrary";
+import { Input } from "@/components/ui/input";
 import { copySelection } from "@/lib/copySelection";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
@@ -56,7 +58,6 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { WorldSettingPanel } from "@/components/assets/WorldSettingPanel";
 
-type WorldTab = "setting" | "characters" | "scenes" | "props" | "styles";
 type AssetTab = Exclude<WorldTab, "setting">;
 type WorldAsset = Character | Scene | Prop | VisualStyle;
 
@@ -99,9 +100,13 @@ function assetDetail(asset: WorldAsset, tab: AssetTab): string {
   return asset.notes || "未填写风格说明";
 }
 
-export function AssetLibraryPage({ projectId }: { projectId: string }) {
+export function AssetLibraryPage({ projectId, tab, onTabChange }: {
+  projectId: string;
+  tab: WorldTab;
+  onTabChange: (tab: WorldTab) => void;
+}) {
   const navigate = useNavigate();
-  const [tab, setTab] = useState<WorldTab>("setting");
+  const [query, setQuery] = useState("");
   const [pickerOpen, setPickerOpen] = useState(false);
   const characters =
     useLiveQuery(
@@ -128,7 +133,7 @@ export function AssetLibraryPage({ projectId }: { projectId: string }) {
   >();
 
   const assets: Record<AssetTab, WorldAsset[]> = { characters, scenes, props, styles };
-  const activeAssets = tab === "setting" ? [] : assets[tab];
+  const activeAssets = tab === "setting" ? [] : assets[tab].filter((asset) => matchesAssetSearch(asset, query));
 
   async function createLocal(activeTab: AssetTab) {
     if (activeTab === "characters") {
@@ -160,8 +165,8 @@ export function AssetLibraryPage({ projectId }: { projectId: string }) {
 
   return (
     <div className="h-full overflow-auto">
-      <div className="mx-auto max-w-6xl px-8 py-6">
-        <div className="flex items-center justify-between">
+      <div className="mx-auto max-w-6xl px-4 py-6 sm:px-8">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-lg font-semibold">世界</h1>
             <p className="text-muted-foreground mt-1 text-xs">
@@ -182,10 +187,10 @@ export function AssetLibraryPage({ projectId }: { projectId: string }) {
 
         <Tabs
           value={tab}
-          onValueChange={(value) => setTab(value as WorldTab)}
+          onValueChange={(value) => { setQuery(""); onTabChange(value as WorldTab); }}
           className="mt-5"
         >
-          <TabsList>
+          <TabsList className="h-auto flex-wrap">
             <TabsTrigger value="setting">设定</TabsTrigger>
             <TabsTrigger value="characters">角色 {characters.length}</TabsTrigger>
             <TabsTrigger value="scenes">场景 {scenes.length}</TabsTrigger>
@@ -194,10 +199,12 @@ export function AssetLibraryPage({ projectId }: { projectId: string }) {
           </TabsList>
         </Tabs>
 
+        {tab !== "setting" ? <Input className="mt-5 max-w-sm" aria-label={`搜索项目${TAB_COPY[tab].singular}`}
+          placeholder={`搜索${TAB_COPY[tab].singular}名称与设定…`} value={query} onChange={(event) => setQuery(event.target.value)} /> : null}
         {tab === "setting" ? (
           <WorldSettingPanel projectId={projectId} />
         ) : activeAssets.length === 0 ? (
-          <EmptyWorldTab singular={TAB_COPY[tab].singular} />
+          query.trim() ? <p className="text-muted-foreground py-8 text-sm">没有匹配的{TAB_COPY[tab].singular}，试试其他关键词。</p> : <EmptyWorldTab singular={TAB_COPY[tab].singular} />
         ) : (
           <ul className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {activeAssets.map((asset) => (
@@ -215,6 +222,7 @@ export function AssetLibraryPage({ projectId }: { projectId: string }) {
 
       {tab !== "setting" ? (
         <StudioAssetPicker
+          key={tab}
           open={pickerOpen}
           onOpenChange={setPickerOpen}
           projectId={projectId}
@@ -345,6 +353,7 @@ function StudioAssetPicker({
 }) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [copying, setCopying] = useState(false);
+  const [query, setQuery] = useState("");
   const studioAssets =
     useLiveQuery(async () => {
       const table =
@@ -360,7 +369,7 @@ function StudioAssetPicker({
   const copiedSourceIds = new Set(
     copiedAssets.map(sourceAssetId).filter((id): id is string => Boolean(id)),
   );
-  const available = studioAssets.filter((asset) => !copiedSourceIds.has(asset.id));
+  const available = studioAssets.filter((asset) => !copiedSourceIds.has(asset.id) && matchesAssetSearch(asset, query));
 
   function closePicker() {
     setSelected(new Set());
@@ -399,10 +408,12 @@ function StudioAssetPicker({
           <DialogTitle>从工作室添加{TAB_COPY[tab].singular}</DialogTitle>
           <DialogDescription>添加后成为项目快照，可以独立修改。</DialogDescription>
         </DialogHeader>
+        <Input aria-label="搜索工作室资产" placeholder="搜索名称与设定…" value={query}
+          disabled={copying} onChange={(event) => setQuery(event.target.value)} />
         <div className="max-h-80 space-y-2 overflow-auto">
           {available.length === 0 ? (
             <p className="text-muted-foreground py-8 text-center text-sm">
-              没有可添加的工作室{TAB_COPY[tab].singular}
+              {query.trim() ? "没有匹配的" : "没有可添加的"}工作室{TAB_COPY[tab].singular}
             </p>
           ) : (
             available.map((asset) => (

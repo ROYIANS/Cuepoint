@@ -1,3 +1,5 @@
+import type { ProjectGenerationDefaults } from "@/domain/output";
+
 export const PACKAGE_FORMAT = "aifenjing-project-v1" as const;
 
 export const STUDIO_LIBRARY_ID = "studio" as const;
@@ -197,7 +199,7 @@ export function normalizeProjectMode(raw: unknown): ProjectMode {
   return raw === "film" ? "film" : "series";
 }
 
-export const ASPECT_PRESET_IDS = ["16:9", "9:16", "1:1"] as const;
+export const ASPECT_PRESET_IDS = ["21:9", "16:9", "4:3", "1:1", "3:4", "9:16"] as const;
 
 export type AspectPresetId = (typeof ASPECT_PRESET_IDS)[number];
 
@@ -205,6 +207,9 @@ export const ASPECT_PRESETS: Record<
   AspectPresetId,
   { width: number; height: number; label: string }
 > = {
+  "21:9": { width: 2520, height: 1080, label: "21:9" },
+  "4:3": { width: 1440, height: 1080, label: "4:3" },
+  "3:4": { width: 1080, height: 1440, label: "3:4" },
   "16:9": { width: 1920, height: 1080, label: "16:9" },
   "9:16": { width: 1080, height: 1920, label: "9:16" },
   "1:1": { width: 1080, height: 1080, label: "1:1" },
@@ -225,6 +230,12 @@ export function resolutionForAspect(preset: AspectPresetId): {
 }
 
 export interface Project {
+  defaultStyleId?: Id;
+  generationDefaults?: ProjectGenerationDefaults;
+  brief?: string;
+  genre?: string;
+  audience?: string;
+  tone?: string;
   id: Id;
   name: string;
   mode: ProjectMode;
@@ -240,6 +251,9 @@ export interface Project {
 }
 
 export interface Character {
+  personality?: string;
+  motivation?: string;
+  voice?: string;
   id: Id;
   projectId: Id;
   name: string;
@@ -253,6 +267,8 @@ export interface Character {
 }
 
 export interface Scene {
+  geography?: string;
+  lighting?: string;
   id: Id;
   projectId: Id;
   name: string;
@@ -267,6 +283,11 @@ export interface Scene {
 }
 
 export interface Prop {
+  appearance?: string;
+  material?: string;
+  size?: string;
+  usage?: string;
+  continuity?: string;
   id: Id;
   projectId: Id;
   name: string;
@@ -279,6 +300,11 @@ export interface Prop {
 }
 
 export interface VisualStyle {
+  palette?: string;
+  lighting?: string;
+  lens?: string;
+  composition?: string;
+  negativePrompt?: string;
   id: Id;
   projectId: Id;
   name: string;
@@ -292,6 +318,9 @@ export interface VisualStyle {
 export type ShotPictureField = "firstFrame" | "lastFrame" | "clip";
 
 export interface Shot {
+  propIds?: Id[];
+  /** Undefined inherits project default; null explicitly disables style. */
+  styleId?: Id | null;
   id: Id;
   projectId: Id;
   episodeId: Id;

@@ -3,7 +3,7 @@
   "name": "asset-output-foundation",
   "title": "Connect asset information and model-aware project output settings",
   "description": "Second batch: optional asset fields, prop/style relationships, media reuse, and provider-model-aware image/video project defaults based on verified APIMart contracts.",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": null,
@@ -21,6 +21,6 @@
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "",
+  "notes": "Second batch implemented, independent check complete; 386 tests/lint/build pass, browser output-settings/relations/CSV/media-reuse/mobile verified. Awaiting commit-plan confirmation.",
   "meta": {}
 }
