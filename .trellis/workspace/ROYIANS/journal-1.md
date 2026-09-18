@@ -110,3 +110,45 @@ Rebranded user-facing product to 小光点 Cuepoint; kept storage/package IDs; o
 ### Status
 
 [OK] **Completed**
+
+
+## Session 6: Shot grid cell polish
+
+**Date**: 2026-09-18
+**Task**: Shot grid cell polish
+**Branch**: `main`
+
+### Summary
+
+Session summary was not supplied.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `32d20e6; wait` | (see git log) |
+
+### Status
+
+[OK] **Completed**
+
+
+## Session 6: Shot grid cell polish
+
+**Date**: 2026-09-18
+**Task**: Shot grid cell polish
+**Branch**: `main`
+
+### Summary
+
+Flushed shot-table cells, column placeholders, row focus highlight, and visual character/scene picks.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `32d20e6` | (see git log) |
+
+### Status
+
+[OK] **Completed**
