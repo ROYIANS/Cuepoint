@@ -1,3 +1,4 @@
+import { validateTaskPlan } from "@/lib/agent/taskState";
 import { db } from "@/db/database";
 import type { AgentPlanItem, AgentResponseItem, AgentRun, AgentToolCall, AgentWireToolCall } from "@/domain/agent";
 import { toResponseInput } from "@/lib/ai/responsesStream";
@@ -13,7 +14,7 @@ async function requireRun(runId: string): Promise<AgentRun> {
   if (!message || message.threadId !== run.threadId || message.runId !== run.id) throw new Error("执行消息归属不匹配");
   return run;
 }
-const tables = () => [db.agentRuns, db.agentToolCalls, db.chatThreads, db.chatMessages];
+const tables = () => [db.agentRuns, db.agentToolCalls, db.chatThreads, db.chatMessages, db.agentTasks];
 async function requireLatestRun(run: AgentRun): Promise<void> {
   const siblings = await db.agentRuns.where("threadId").equals(run.threadId).toArray();
   const history = await db.chatMessages.where("threadId").equals(run.threadId).toArray();
@@ -122,6 +123,12 @@ export async function updateRunPlanAndComplete(runId: string, callId: string, pl
     const run = await requireRun(runId);
     const call = await db.agentToolCalls.get(callId);
     if (run.status !== "running" || !call || call.runId !== runId || call.threadId !== run.threadId || call.status !== "running" || call.name !== "update_run_plan") throw new Error("计划操作归属不匹配");
+    plan = validateTaskPlan(plan);
+    if (run.taskId) {
+      const task = await db.agentTasks.get(run.taskId);
+      if (!task || task.threadId !== run.threadId || task.lifecycle !== "open") throw new Error("关联任务不可修改");
+      await db.agentTasks.update(task.id, { plan, updatedAt: nowIso() });
+    }
     const result = JSON.stringify({ plan });
     await db.agentRuns.update(runId, { plan, updatedAt: nowIso() });
     await db.agentToolCalls.update(callId, { status: "completed", result, updatedAt: nowIso() });

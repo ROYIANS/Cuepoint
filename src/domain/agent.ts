@@ -66,6 +66,7 @@ export interface AgentModelMetrics {
 export interface AgentRun {
   id: Id;
   threadId: Id;
+  taskId?: Id;
   agentId: Id;
   agentSnapshot: Pick<AgentConfig, "name" | "instructions">;
   userMessageId: Id;
@@ -105,3 +106,16 @@ export interface AgentRunOutput {
 }
 
 export const GENERAL_AGENT_ID = "agent_general";
+
+export interface AgentTask {
+  id: Id;
+  threadId: Id;
+  title: string;
+  goal: string;
+  agentId: Id;
+  plan: AgentPlanItem[];
+  lifecycle: "open" | "completed" | "archived";
+  artifacts: Array<{ id: Id; runId: Id; messageId: Id; createdAt: string }>;
+  createdAt: string;
+  updatedAt: string;
+}

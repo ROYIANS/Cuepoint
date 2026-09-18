@@ -21,7 +21,6 @@ import {
   type ComponentType,
   type ReactNode,
 } from "react";
-import { toast } from "sonner";
 import { filterThreadsByTitle } from "@/components/agent/filterThreadsByTitle";
 import { groupThreadsByTime } from "@/components/agent/timeGroups";
 import {
@@ -43,6 +42,7 @@ export function TopicSidebar({
   onToggleCollapsed,
   onSelect,
   onNewTopic,
+  onOpenTasks,
   onRename,
   onDelete,
 }: {
@@ -52,6 +52,7 @@ export function TopicSidebar({
   onToggleCollapsed: () => void;
   onSelect: (id: Id) => void;
   onNewTopic: () => void;
+  onOpenTasks: () => void;
   onRename: (thread: ChatThread) => void;
   onDelete: (thread: ChatThread) => void;
 }) {
@@ -68,6 +69,7 @@ export function TopicSidebar({
       >
         <ActionIcon icon={PanelLeft} title="展开侧栏" onClick={onToggleCollapsed} />
         <ActionIcon icon={MessageSquarePlus} title="开启新话题" onClick={onNewTopic} />
+        <ActionIcon icon={ListTodo} title="任务看板" onClick={onOpenTasks} />
       </Flexbox>
     );
   }
@@ -103,6 +105,7 @@ export function TopicSidebar({
         activeThreadId={activeThreadId}
         onSelect={onSelect}
         onNewTopic={onNewTopic}
+        onOpenTasks={onOpenTasks}
         onRename={onRename}
         onDelete={onDelete}
         footer={
@@ -125,6 +128,7 @@ export function TopicListBody({
   activeThreadId,
   onSelect,
   onNewTopic,
+  onOpenTasks,
   onRename,
   onDelete,
   footer,
@@ -133,6 +137,7 @@ export function TopicListBody({
   activeThreadId?: Id;
   onSelect: (id: Id) => void;
   onNewTopic: () => void;
+  onOpenTasks: () => void;
   onRename: (thread: ChatThread) => void;
   onDelete: (thread: ChatThread) => void;
   footer?: ReactNode;
@@ -179,7 +184,7 @@ export function TopicListBody({
             setTopicsOpen(true);
           }}
         />
-        <SidebarNavItem icon={ListTodo} label="任务" onClick={() => toast.info("任务看板即将开放")} />
+        <SidebarNavItem icon={ListTodo} label="任务" onClick={onOpenTasks} />
       </Flexbox>
 
       {searchOpen ? (

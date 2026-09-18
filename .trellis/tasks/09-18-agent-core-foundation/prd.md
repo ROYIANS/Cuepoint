@@ -21,3 +21,10 @@ Real business CRUD tools, image/video task execution, search integration, attach
 
 ## Cross-child acceptance
 A user can follow one goal across conversation, execution and board; stop/reload/failure never produces false completion or duplicate actions. Permission decisions remain auditable across interruptions. Existing project workflows and provider adapters remain intact.
+
+## Durable product direction (user reaffirmed 2026-09-19)
+Follow a Trellis-like lifecycle, including wrap-up reflection and long-term experience:
+goal → plan → execute → verify → summarize → archive → extract reusable memory →
+retrieve for later work. Full intent and deferred boundaries are in
+`docs/agent-workflow-direction.md`. Long-term memory is more than conversation storage;
+retain task conclusions separately from reusable lessons, with provenance.

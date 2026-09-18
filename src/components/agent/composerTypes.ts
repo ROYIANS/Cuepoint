@@ -10,6 +10,7 @@ export type { AgentInteractionMode } from "@/domain/agent";
 export type ComposerProps = {
   value: string;
   sending: boolean;
+  blocked?: boolean;
   connectors: ConnectorConfig[];
   selectedConnectorId?: Id;
   model: string;

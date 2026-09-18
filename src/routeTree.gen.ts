@@ -22,6 +22,7 @@ import { Route as StudioStylesRouteImport } from './routes/_studio.styles'
 import { Route as PProjectIdRouteImport } from './routes/p.$projectId'
 import { Route as StudioAgentIndexRouteImport } from './routes/_studio.agent.index'
 import { Route as StudioAgentThreadIdRouteImport } from './routes/_studio.agent.$threadId'
+import { Route as StudioAgentTasksRouteImport } from './routes/_studio.agent.tasks'
 import { Route as StudioCharactersIndexRouteImport } from './routes/_studio.characters.index'
 import { Route as StudioCharactersCharacterIdRouteImport } from './routes/_studio.characters.$characterId'
 import { Route as StudioPropsIndexRouteImport } from './routes/_studio.props.index'
@@ -111,6 +112,11 @@ const StudioAgentIndexRoute = StudioAgentIndexRouteImport.update({
 const StudioAgentThreadIdRoute = StudioAgentThreadIdRouteImport.update({
   id: '/$threadId',
   path: '/$threadId',
+  getParentRoute: () => StudioAgentRoute,
+} as any)
+const StudioAgentTasksRoute = StudioAgentTasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
   getParentRoute: () => StudioAgentRoute,
 } as any)
 const StudioCharactersIndexRoute = StudioCharactersIndexRouteImport.update({
@@ -265,6 +271,7 @@ export interface FileRoutesByFullPath {
   '/styles': typeof StudioStylesRouteWithChildren
   '/p/$projectId': typeof PProjectIdRouteWithChildren
   '/agent/$threadId': typeof StudioAgentThreadIdRoute
+  '/agent/tasks': typeof StudioAgentTasksRoute
   '/characters/$characterId': typeof StudioCharactersCharacterIdRoute
   '/props/$propId': typeof StudioPropsPropIdRoute
   '/scenes/$sceneId': typeof StudioScenesSceneIdRoute
@@ -299,6 +306,7 @@ export interface FileRoutesByTo {
   '/projects': typeof StudioProjectsRoute
   '/': typeof StudioIndexRoute
   '/agent/$threadId': typeof StudioAgentThreadIdRoute
+  '/agent/tasks': typeof StudioAgentTasksRoute
   '/characters/$characterId': typeof StudioCharactersCharacterIdRoute
   '/props/$propId': typeof StudioPropsPropIdRoute
   '/scenes/$sceneId': typeof StudioScenesSceneIdRoute
@@ -339,6 +347,7 @@ export interface FileRoutesById {
   '/p/$projectId': typeof PProjectIdRouteWithChildren
   '/_studio/': typeof StudioIndexRoute
   '/_studio/agent/$threadId': typeof StudioAgentThreadIdRoute
+  '/_studio/agent/tasks': typeof StudioAgentTasksRoute
   '/_studio/characters/$characterId': typeof StudioCharactersCharacterIdRoute
   '/_studio/props/$propId': typeof StudioPropsPropIdRoute
   '/_studio/scenes/$sceneId': typeof StudioScenesSceneIdRoute
@@ -381,6 +390,7 @@ export interface FileRouteTypes {
     | '/styles'
     | '/p/$projectId'
     | '/agent/$threadId'
+    | '/agent/tasks'
     | '/characters/$characterId'
     | '/props/$propId'
     | '/scenes/$sceneId'
@@ -415,6 +425,7 @@ export interface FileRouteTypes {
     | '/projects'
     | '/'
     | '/agent/$threadId'
+    | '/agent/tasks'
     | '/characters/$characterId'
     | '/props/$propId'
     | '/scenes/$sceneId'
@@ -454,6 +465,7 @@ export interface FileRouteTypes {
     | '/p/$projectId'
     | '/_studio/'
     | '/_studio/agent/$threadId'
+    | '/_studio/agent/tasks'
     | '/_studio/characters/$characterId'
     | '/_studio/props/$propId'
     | '/_studio/scenes/$sceneId'
@@ -579,6 +591,13 @@ declare module '@tanstack/react-router' {
       path: '/$threadId'
       fullPath: '/agent/$threadId'
       preLoaderRoute: typeof StudioAgentThreadIdRouteImport
+      parentRoute: typeof StudioAgentRoute
+    }
+    '/_studio/agent/tasks': {
+      id: '/_studio/agent/tasks'
+      path: '/tasks'
+      fullPath: '/agent/tasks'
+      preLoaderRoute: typeof StudioAgentTasksRouteImport
       parentRoute: typeof StudioAgentRoute
     }
     '/_studio/characters/': {
@@ -768,11 +787,13 @@ declare module '@tanstack/react-router' {
 
 interface StudioAgentRouteChildren {
   StudioAgentThreadIdRoute: typeof StudioAgentThreadIdRoute
+  StudioAgentTasksRoute: typeof StudioAgentTasksRoute
   StudioAgentIndexRoute: typeof StudioAgentIndexRoute
 }
 
 const StudioAgentRouteChildren: StudioAgentRouteChildren = {
   StudioAgentThreadIdRoute: StudioAgentThreadIdRoute,
+  StudioAgentTasksRoute: StudioAgentTasksRoute,
   StudioAgentIndexRoute: StudioAgentIndexRoute,
 }
 

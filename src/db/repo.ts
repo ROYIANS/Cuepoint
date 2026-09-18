@@ -1596,7 +1596,8 @@ export async function updateChatThread(
 }
 
 export async function deleteChatThread(id: Id): Promise<void> {
-  await db.transaction("rw", db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, async () => {
+  await db.transaction("rw", db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, db.agentTasks, async () => {
+    await db.agentTasks.where("threadId").equals(id).delete();
     await db.agentToolCalls.where("threadId").equals(id).delete();
     await db.agentRuns.where("threadId").equals(id).delete();
     await db.chatMessages.where("threadId").equals(id).delete();

@@ -1,4 +1,4 @@
-import type { AgentConfig, AgentRun, AgentToolCall } from "@/domain/agent";
+import type { AgentConfig, AgentRun, AgentToolCall, AgentTask } from "@/domain/agent";
 import type { ProductionProposal } from "@/domain/production";
 import Dexie, { type Table } from "dexie";
 import type {
@@ -19,6 +19,7 @@ import { parseShotPictureSlots } from "@/domain/slot";
 import { createId, nowIso } from "@/lib/ids";
 
 export class AifenjingDB extends Dexie {
+  agentTasks!: Table<AgentTask, string>;
   agentToolCalls!: Table<AgentToolCall, string>;
   agents!: Table<AgentConfig, string>;
   agentRuns!: Table<AgentRun, string>;
@@ -162,6 +163,7 @@ export class AifenjingDB extends Dexie {
       });
     });
     this.version(9).stores({ agentToolCalls: "id, runId, threadId, &[runId+providerCallId], status" });
+    this.version(10).stores({ agentTasks: "id, &threadId, lifecycle, updatedAt", agentRuns: "id, threadId, taskId, status, createdAt" });
   }
 }
 

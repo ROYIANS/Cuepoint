@@ -6,5 +6,15 @@ Depends on execution and tools/permissions. Add goals, ordered checklist, one ge
 ## Acceptance
 Verify persistence/reload, shared identity and every transition across chat/runtime. Existing conversations and project data must remain usable.
 
-## Planning boundary
-This child stays in planning until the upstream APIs are verified. The overall scope and sequential implementation are user-approved.
+## Upstream boundary
+Execution and tools/permissions APIs have been verified. The overall scope and sequential implementation are user-approved. Summary/reflection and memory follow the direction in `docs/agent-workflow-direction.md` and remain a subsequent layer.
+
+## Refined acceptance (2026-09-19)
+- Task mode creates one durable goal linked to its conversation; ordinary Q&A does not.
+- Users can create/edit tasks and ordered checklists manually without a connector.
+- Board and chat share task identity, checklist and status across retry and reload.
+- Distinguish successful reply (awaiting review) from user-confirmed task completion.
+- Expose complete assistant replies as explicitly pinned result references.
+- Archive/reopen is explicit; active/unsettled runs cannot be silently hidden or completed.
+- Use a polished minimal dark board and focused task inspector; desktop and mobile
+  layouts must preserve keyboard access, visible feedback, empty/loading/error states.

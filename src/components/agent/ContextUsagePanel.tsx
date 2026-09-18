@@ -1,3 +1,5 @@
+import { buildTaskInstructions } from "@/lib/agent/taskState";
+import type { AgentTask } from "@/domain/agent";
 import { resolveModelMetadata } from "@/lib/ai/modelMetadata";
 import type { ChatModelMetadata } from "@/lib/ai/modelMetadata";
 import type { ConnectorConfig } from "@/domain/types";
@@ -13,10 +15,11 @@ import { toolSchemas } from "@/lib/agent/tools";
 import { buildAgentRequestMessages, estimateContextUsage, formatTokenCount } from "@/lib/agent/contextUsage";
 
 type ContextProps = {
+  task?: AgentTask;
   interactionMode?: AgentInteractionMode; draft: string; messages: ChatMessage[]; runs: AgentRun[]; model: string; connector?: ConnectorConfig; modelMetadata?: Record<string, ChatModelMetadata>;
 };
 
-function useContextUsage({ draft, messages, runs, model, connector, modelMetadata, interactionMode }: ContextProps) {
+function useContextUsage({ draft, messages, runs, model, connector, modelMetadata, interactionMode, task }: ContextProps) {
   const config = useLiveQuery(() => db.agents.get(GENERAL_AGENT_ID), []);
   const deferredDraft = useDeferredValue(draft);
   const latest = runs.at(-1);
@@ -24,14 +27,14 @@ function useContextUsage({ draft, messages, runs, model, connector, modelMetadat
   const usage = useMemo(() => {
     if (!config && !activeRun) return undefined;
     const skills = assembleSkills(interactionMode === "conversation" ? [] : config?.enabledSkillIds ?? DEFAULT_SKILL_IDS);
-    const instructions = activeRun?.agentSnapshot.instructions ?? config?.instructions ?? "";
+    const instructions = activeRun?.agentSnapshot.instructions ?? buildTaskInstructions(config?.instructions ?? "", task);
     const skillInstructions = activeRun ? activeRun.skillInstructions ?? "" : skills.skillInstructions;
     return estimateContextUsage({
       instructions, skillInstructions,
       messages: activeRun ? activeRun.continuationMessages ?? activeRun.requestMessages : buildAgentRequestMessages(instructions, skillInstructions, messages, deferredDraft),
       tools: toolSchemas(activeRun ? activeRun.enabledToolNames ?? [] : skills.enabledToolNames),
     });
-  }, [activeRun, config, messages, deferredDraft, interactionMode]);
+  }, [activeRun, config, messages, deferredDraft, interactionMode, task]);
   const sameConnector = !activeRun || (connector?.id === activeRun.connector.id && connector?.baseUrl.replace(/\/+$/, "") === activeRun.connector.baseUrl.replace(/\/+$/, "") && connector?.definitionId === activeRun.connector.definitionId);
   const metadata = resolveModelMetadata(activeRun?.model ?? model, sameConnector ? modelMetadata?.[activeRun?.model ?? model] : undefined, activeRun?.connector.definitionId ?? connector?.definitionId);
   const capacity = metadata.contextWindow?.tokens;

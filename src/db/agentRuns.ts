@@ -1,3 +1,5 @@
+import { createAgentTaskForThread } from "@/db/agentTasks";
+import { buildTaskInstructions } from "@/lib/agent/taskState";
 import { db } from "@/db/database";
 import type { AgentInteractionMode, AgentModelMetrics, AgentTokenUsage, AgentReasoningEffort, AgentRun, AgentRunOutput, AgentRunStatus } from "@/domain/agent";
 import type { ChatMessage, ConnectorConfig } from "@/domain/types";
@@ -39,10 +41,11 @@ export async function beginAgentRun(input: {
   retryOfRunId?: string;
   reasoningEffort?: AgentReasoningEffort;
   interactionMode?: AgentInteractionMode;
+  createTask?: boolean;
 }): Promise<AgentRun> {
   const identity = connectorRunIdentity(input.connector);
   if (!input.model.trim() || !input.connector.apiKey.trim()) throw new Error("请选择模型并配置 API Key");
-  return db.transaction("rw", [db.chatThreads, db.chatMessages, db.agentRuns, db.agents], async () => {
+  return db.transaction("rw", [db.chatThreads, db.chatMessages, db.agentRuns, db.agents, db.agentTasks], async () => {
     const thread = await db.chatThreads.get(input.threadId);
     if (!thread) throw new Error("对话不存在");
     const runs = await db.agentRuns.where("threadId").equals(thread.id).toArray();
@@ -63,6 +66,11 @@ export async function beginAgentRun(input: {
     assertReasoningEffort(identity, input.model, reasoningEffort);
     const content = input.content?.trim() ?? "";
     if (!previous && !content) throw new Error("消息不能为空");
+    let task = await db.agentTasks.where("threadId").equals(thread.id).first();
+    if (input.createTask && !task && !previous) task = await createAgentTaskForThread(thread.id, { title: deriveChatTitle(content), goal: content });
+    if (task && task.lifecycle !== "open") throw new Error("请先重新打开任务，再继续对话");
+    if (previous?.taskId && previous.taskId !== task?.id) throw new Error("原任务关联已失效");
+    const instructions = buildTaskInstructions(agent.instructions, task);
     const userMessageId = previous?.userMessageId ?? createId("cmsg");
     const runId = createId("run");
     const assistantMessageId = createId("cmsg");
@@ -70,10 +78,10 @@ export async function beginAgentRun(input: {
     const skills = assembleSkills(agent.enabledSkillIds ?? []);
     const enabledToolNames = interactionMode === "conversation" ? [] : (previous ? previous.enabledToolNames ?? [] : skills.enabledToolNames);
     const skillInstructions = interactionMode === "conversation" ? "" : (previous ? previous.skillInstructions ?? "" : skills.skillInstructions);
-    const requestMessages = previous?.requestMessages ?? buildAgentRequestMessages(agent.instructions, skillInstructions, history, content);
+    const requestMessages = previous?.requestMessages ?? buildAgentRequestMessages(instructions, skillInstructions, history, content);
     const run: AgentRun = {
-      id: runId, threadId: thread.id, agentId: previous?.agentId ?? agent.id,
-      agentSnapshot: previous?.agentSnapshot ?? { name: agent.name, instructions: agent.instructions },
+      id: runId, threadId: thread.id, taskId: previous?.taskId ?? task?.id, plan: previous?.plan ?? task?.plan, agentId: previous?.agentId ?? agent.id,
+      agentSnapshot: previous?.agentSnapshot ?? { name: agent.name, instructions },
       userMessageId, assistantMessageId, retryOfRunId: previous?.id,
       model: input.model.trim(), connector: identity, requestMessages,
       protocol: previous?.protocol ?? (previous?.hasToolCalls ? "chat-completions" : selectAgentProtocol(identity, input.model, reasoningEffort, enabledToolNames.length > 0)),
@@ -87,6 +95,7 @@ export async function beginAgentRun(input: {
     if (!previous) await db.chatMessages.add({ id: userMessageId, threadId: thread.id, role: "user", content, createdAt: at, status: "complete" });
     await db.chatMessages.add({ id: assistantMessageId, threadId: thread.id, role: "assistant", content: "", createdAt: new Date(Date.parse(at) + 1).toISOString(), status: "streaming", runId });
     await db.agentRuns.add(run);
+    if (task) await db.agentTasks.update(task.id, { updatedAt: at });
     await db.chatThreads.update(thread.id, {
       updatedAt: at, connectorId: identity.id, model: run.model,
       ...(!previous && (thread.title === "新话题" || thread.title === "新对话")

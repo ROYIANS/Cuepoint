@@ -2,3 +2,4 @@
 {"file": ".trellis/spec/frontend/chat-performance.md", "reason": "Chat rendering and history isolation"}
 {"file": ".trellis/spec/frontend/ai-connectors.md", "reason": "Provider guard and credentials scope"}
 {"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Approved execution and recovery contracts"}
+{"file": ".trellis/spec/frontend/agent-tasks.md", "reason": "Shared task identity, lifecycle, plan transactions and result references"}

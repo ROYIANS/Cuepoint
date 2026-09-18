@@ -5,6 +5,7 @@ import { ChatHeader, ChatHeaderTitle } from "@lobehub/ui/chat";
 import { Dropdown } from "antd";
 import {
   MoreHorizontal,
+  ListTodo,
   PanelLeft,
   PanelRight,
   Pencil,
@@ -69,7 +70,15 @@ export function ChatWorkspace({
   onNewTopic,
   onRenameThread,
   onDeleteThread,
+  onOpenTasks,
+  onOpenTask,
+  taskTitle,
+  taskGoal,
 }: {
+  onOpenTasks: () => void;
+  onOpenTask: () => void;
+  taskTitle?: string;
+  taskGoal?: string;
   threads: ChatThread[];
   activeThreadId?: Id;
   activeThread?: ChatThread;
@@ -149,6 +158,7 @@ export function ChatWorkspace({
           onNewTopic={onNewTopic}
           onRename={onRenameThread}
           onDelete={onDeleteThread}
+          onOpenTasks={onOpenTasks}
         />
       </div>
 
@@ -175,6 +185,7 @@ export function ChatWorkspace({
               onNewTopic={newTopicAndClose}
               onRename={onRenameThread}
               onDelete={onDeleteThread}
+          onOpenTasks={onOpenTasks}
             />
           </Flexbox>
         </SheetContent>
@@ -219,6 +230,7 @@ export function ChatWorkspace({
           }
           right={
             <Flexbox horizontal gap={4}>
+              <ActionIcon icon={ListTodo} title={taskTitle ? "任务详情" : "创建关联任务"} onClick={onOpenTask} />
               <span className="md:hidden">
                 <ActionIcon
                   icon={PanelLeft}
@@ -236,7 +248,8 @@ export function ChatWorkspace({
             </Flexbox>
           }
         />
-        <div className="agent-transcript-container" inert={expanded} style={expanded ? { visibility: "hidden" } : undefined}><MessageList messages={messages} runs={runs} retryableRunId={retryableRunId} onRetryRun={onRetryRun} busy={composer.sending} onRunAction={onRunAction} /></div>
+        <div className="agent-transcript-container" inert={expanded} style={expanded ? { visibility: "hidden" } : undefined}>
+          {taskTitle && messages?.length === 0 ? <div className="agent-task-conversation-empty"><ListTodo size={28} strokeWidth={1.5} /><span>准备开始</span><h2>{taskTitle}</h2><p>{taskGoal}</p><div><button type="button" onClick={onOpenTask}>整理目标与清单</button>{!composer.blocked && <button type="button" onClick={() => composer.onChange("请根据当前任务目标和执行清单开始推进；如需补充关键信息，请先说明。")}>与助手一起开始</button>}</div><small>也可以独立完成清单，随时回来确认成果。</small></div> : <MessageList messages={messages} runs={runs} retryableRunId={retryableRunId} onRetryRun={onRetryRun} busy={composer.sending} onRunAction={onRunAction} />}</div>
         <div ref={dockRef} className={`agent-composer-dock${expanded ? " is-expanded" : ""}`}>
           <div className="agent-content">
             <FloatingComposer {...composer} surface="detail" expanded={expanded} onExpandedChange={setExpanded} />

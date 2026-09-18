@@ -3,7 +3,7 @@
   "name": "agent-task-workspace",
   "title": "Unified chat and task workspace",
   "description": "Unified chat and task workspace",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": null,
@@ -21,6 +21,6 @@
   "children": [],
   "parent": "09-18-agent-core-foundation",
   "relatedFiles": [],
-  "notes": "",
+  "notes": "Implementation and QA complete; authorized for commit/archive. Trellis workflow and memory direction recorded in docs/agent-workflow-direction.md. No live provider calls during QA.",
   "meta": {}
 }

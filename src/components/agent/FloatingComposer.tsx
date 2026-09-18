@@ -46,7 +46,7 @@ function ModeSwitch({ mode, onChange }: {
         selectedKeys: [mode],
         items: [
           { key: "agent", icon: <InfinityIcon size={16} />, label: <span className="agent-control-option"><span>Agent {mode === "agent" && <Check size={14} />}</span><small>聊天并调用已启用的工具</small></span> },
-          { key: "task", icon: <LayoutList size={16} />, label: <span className="agent-control-option"><span>任务 {mode === "task" && <Check size={14} />}</span><small>任务看板即将开放</small></span> },
+          { key: "task", icon: <LayoutList size={16} />, label: <span className="agent-control-option"><span>任务 {mode === "task" && <Check size={14} />}</span><small>围绕目标规划步骤，追踪进度与成果</small></span> },
         ],
         onClick: ({ key }) => { onChange(key as ChatSurfaceMode); setOpen(false); },
       }}
@@ -92,6 +92,7 @@ function InteractionModeSwitch({ mode, onChange }: {
 export function FloatingComposer({
   value,
   sending,
+  blocked,
   connectors,
   selectedConnectorId,
   model,
@@ -118,7 +119,7 @@ export function FloatingComposer({
   expanded = false,
   onExpandedChange,
 }: ComposerProps & { surface?: "home" | "detail"; expanded?: boolean; onExpandedChange?: (expanded: boolean) => void }) {
-  const canSend = Boolean(value.trim()) && !sending && !modelPolicy.incompatibleModels.includes(model.trim());
+  const canSend = Boolean(value.trim()) && !blocked && !sending && !modelPolicy.incompatibleModels.includes(model.trim());
   const composing = useRef(false);
   const inputRef = useRef<ComponentRef<typeof Input.TextArea>>(null);
   useEffect(() => { inputRef.current?.focus({ preventScroll: true }); }, [expanded]);
@@ -187,7 +188,7 @@ export function FloatingComposer({
         readOnly={listening}
         value={value}
         variant="borderless"
-        placeholder="提问、创建内容或启动任务"
+        placeholder={blocked ? "重新打开任务后可继续对话" : surface === "home" && chatMode === "task" ? "描述目标、要求和期望成果，开始一个任务…" : "提问、创建内容或启动任务"}
         autoSize={expanded ? false : { minRows: large ? 3 : 2, maxRows: 10 }}
         className="agent-composer-input"
         onChange={(event) => onChange(event.target.value)}
