@@ -25,6 +25,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 type TileVariant = "frame" | "reference" | "asset" | "clip";
+/** `row`: fit capped media/design shot cells; `default`: fixed library/detail tiles. */
+type TileSize = "default" | "row";
 
 export function GenerationSlotTile({
   slot,
@@ -32,19 +34,30 @@ export function GenerationSlotTile({
   label,
   ariaLabel,
   onOpen,
+  size = "default",
 }: {
   slot: GenerationSlot;
   variant: TileVariant;
   label?: string;
   ariaLabel?: string;
   onOpen: () => void;
+  size?: TileSize;
 }) {
   const hasResult = Boolean(slot.result?.mediaId);
   const hasBody = slotHasBody(slot);
   const dashed = (variant === "reference" || variant === "clip") && !hasResult;
+  const rowFit = size === "row" && variant !== "asset";
 
   return (
-    <div className={variant === "asset" ? "w-full" : "relative mx-auto h-[124px] w-[220px]"}>
+    <div
+      className={
+        variant === "asset"
+          ? "w-full"
+          : rowFit
+            ? "relative mx-auto h-full max-h-[120px] w-full max-w-full"
+            : "relative mx-auto h-[124px] w-[220px]"
+      }
+    >
       {label ? <div className="text-muted-foreground mb-1.5 text-xs">{label}</div> : null}
       <button
         type="button"
@@ -273,6 +286,7 @@ export function EditableGenerationSlot({
   label,
   title,
   onSave,
+  size = "default",
 }: {
   projectId: Id;
   slot?: GenerationSlot;
@@ -280,6 +294,7 @@ export function EditableGenerationSlot({
   label?: string;
   title: string;
   onSave: (slot: GenerationSlot) => void;
+  size?: TileSize;
 }) {
   const value = slot ?? emptySlot();
   const [open, setOpen] = useState(false);
@@ -290,6 +305,7 @@ export function EditableGenerationSlot({
         variant={variant}
         label={label}
         ariaLabel={title}
+        size={size}
         onOpen={() => setOpen(true)}
       />
       {open ? (

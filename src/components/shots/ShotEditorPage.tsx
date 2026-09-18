@@ -153,12 +153,16 @@ function columnPlaceholder(id: ShotColumnId): string {
   }
 }
 
-/** Shared design-view row/cell height: min band + hard cap; text scrolls inside. */
+/** Shared shot-row height: min band + hard cap; text scrolls inside. */
 const DESIGN_ROW_H = "h-full min-h-[124px] max-h-[160px]";
 
-/** Shared design-view cell chrome: capped height, content centered with vertical padding. */
+/** Shared shot cell chrome: capped height, content centered with vertical padding. */
 const DESIGN_CELL_CHROME =
   `${DESIGN_ROW_H} flex items-center justify-center overflow-hidden px-2 py-3`;
+
+/** Left reorder stack: centered controls with vertical padding inside the capped row. */
+const SHOT_LEFT_CONTROLS =
+  "box-border flex h-full max-h-[160px] min-h-[124px] flex-col items-center justify-center gap-1.5 overflow-hidden px-1 py-4";
 
 function coverMediaId(
   slots: Partial<Record<string, GenerationSlot>> | undefined,
@@ -195,18 +199,21 @@ function PlainCell({
   value,
   placeholder,
   onCommit,
-  design = false,
+  chrome = false,
 }: {
   value: string;
   placeholder: string;
   onCommit: (value: string) => void;
-  /** Design-view capped/centered chrome; media view stays uncapped stretch. */
-  design?: boolean;
+  /** Capped/centered chrome for design + media shot rows. */
+  chrome?: boolean;
 }) {
   return (
     <div
       className={cn(
-        design ? DESIGN_CELL_CHROME : "h-full min-h-[124px]",
+        chrome
+          ? // Full-width band: avoid justify-center + field-sizing-content shrinking to a skinny strip
+            `${DESIGN_ROW_H} flex w-full min-w-0 items-center overflow-hidden px-2 py-3`
+          : "h-full min-h-[124px]",
         "w-full min-h-0",
       )}
     >
@@ -216,8 +223,8 @@ function PlainCell({
         placeholder={placeholder}
         onChange={(event) => onCommit(event.target.value)}
         className={cn(
-          "h-full w-full resize-none rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent",
-          design ? "max-h-full overflow-auto" : "min-h-[124px]",
+          "h-full w-full min-w-0 resize-none rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 field-sizing-fixed dark:bg-transparent",
+          chrome ? "max-h-full overflow-auto" : "min-h-[124px]",
         )}
       />
     </div>
@@ -1073,7 +1080,13 @@ export function ShotEditorPage({
 
       <div className="relative min-h-0 flex-1">
         <div className="app-scroll h-full overflow-auto">
-          <div className="min-w-max pb-16">
+          <div
+            className={cn(
+              "pb-16",
+              // Media rows use 1fr columns and must fill the scrollport; design keeps min-w-max for many cols.
+              workspaceView === "media" ? "w-full min-w-0" : "min-w-max",
+            )}
+          >
             <div
               className="bg-muted text-muted-foreground grid items-stretch border-y text-xs"
               style={{
@@ -1230,7 +1243,10 @@ export function ShotEditorPage({
 }
 
 function gridColumns(workspaceView: ShotWorkspaceView, visibleDefs: ColumnDef[]) {
-  if (workspaceView === "media") return "52px 64px 108px 248px 248px 248px 220px";
+  // Media: keep frame/clip tiles at a fixed band; only 内容 grows with the viewport.
+  if (workspaceView === "media") {
+    return "52px 64px 108px 220px 220px 220px minmax(220px, 1fr)";
+  }
   return `52px 64px 108px ${visibleDefs.map((column) => `${column.width}px`).join(" ")}`;
 }
 
@@ -1496,21 +1512,13 @@ function ShotRow({
       </Button>
       <div
         className={cn(
-          "grid items-stretch border-b",
-          workspaceView === "design" && "max-h-[160px]",
+          "grid max-h-[160px] items-stretch border-b",
           striped ? "bg-muted/40" : "bg-background",
           active && "ring-2 ring-inset ring-brand",
         )}
         style={{ gridTemplateColumns: gridColumns(workspaceView, visibleDefs) }}
       >
-        <div
-          className={cn(
-            "flex flex-col items-center px-1",
-            workspaceView === "design"
-              ? "box-border flex h-full max-h-[160px] min-h-[124px] flex-col items-center justify-center gap-1.5 overflow-hidden py-4"
-              : "justify-center gap-2 py-4",
-          )}
-        >
+        <div className={SHOT_LEFT_CONTROLS}>
           {selecting ? (
             <Checkbox
               aria-label={`选择镜头 ${shot.shotNumber}`}
@@ -1529,7 +1537,7 @@ function ShotRow({
               <Button
                 size="icon-sm"
                 variant="ghost"
-                className={workspaceView === "design" ? "size-6" : undefined}
+                className="size-6"
                 aria-label="上移镜头"
                 disabled={!canMoveUp}
                 onClick={() => onMove(-1)}
@@ -1538,10 +1546,7 @@ function ShotRow({
               </Button>
               <button
                 type="button"
-                className={cn(
-                  "text-muted-foreground hover:text-foreground inline-flex cursor-grab items-center justify-center rounded-md active:cursor-grabbing",
-                  workspaceView === "design" ? "size-6" : "size-7",
-                )}
+                className="text-muted-foreground hover:text-foreground inline-flex size-6 cursor-grab items-center justify-center rounded-md active:cursor-grabbing"
                 aria-label="拖拽调整镜头顺序"
                 {...attributes}
                 {...listeners}
@@ -1551,7 +1556,7 @@ function ShotRow({
               <Button
                 size="icon-sm"
                 variant="ghost"
-                className={workspaceView === "design" ? "size-6" : undefined}
+                className="size-6"
                 aria-label="下移镜头"
                 disabled={!canMoveDown}
                 onClick={() => onMove(1)}
@@ -1561,7 +1566,7 @@ function ShotRow({
               <Button
                 size="icon-sm"
                 variant="ghost"
-                className={workspaceView === "design" ? "size-6" : undefined}
+                className="size-6"
                 aria-label="复制镜头"
                 onClick={onDuplicate}
               >
@@ -1570,28 +1575,14 @@ function ShotRow({
             </>
           )}
         </div>
-        <div
-          className={cn(
-            "flex h-full",
-            workspaceView === "design"
-              ? DESIGN_CELL_CHROME
-              : "items-center justify-center",
-          )}
-        >
+        <div className={DESIGN_CELL_CHROME}>
           <Input
             value={shot.shotNumber}
             onChange={(event) => void patchShot(shot.id, { shotNumber: event.target.value })}
             className="h-8 w-10 border-0 bg-transparent text-center shadow-none focus-visible:ring-0"
           />
         </div>
-        <div
-          className={cn(
-            "flex h-full border-l",
-            workspaceView === "design"
-              ? DESIGN_CELL_CHROME
-              : "items-center justify-center px-2",
-          )}
-        >
+        <div className={cn(DESIGN_CELL_CHROME, "border-l")}>
           <Select
             value={normalizeShotStatus(shot.status)}
             onValueChange={(value) =>
@@ -1612,35 +1603,39 @@ function ShotRow({
         </div>
         {workspaceView === "media" ? (
           <>
-            <div className="flex items-center py-3">
+            <div className={cn(DESIGN_CELL_CHROME, "w-full")}>
               <EditableGenerationSlot
                 projectId={projectId}
                 slot={shot.firstFrame ?? emptySlot()}
                 variant="frame"
+                size="row"
                 title={`镜头 ${shot.shotNumber} · 首帧`}
                 onSave={(slot) => void setShotSlot(shot.id, "firstFrame", slot)}
               />
             </div>
-            <div className="flex items-center border-l py-3">
+            <div className={cn(DESIGN_CELL_CHROME, "w-full border-l")}>
               <EditableGenerationSlot
                 projectId={projectId}
                 slot={shot.lastFrame ?? emptySlot()}
                 variant="frame"
+                size="row"
                 title={`镜头 ${shot.shotNumber} · 尾帧`}
                 onSave={(slot) => void setShotSlot(shot.id, "lastFrame", slot)}
               />
             </div>
-            <div className="flex items-center border-l py-3">
+            <div className={cn(DESIGN_CELL_CHROME, "w-full border-l")}>
               <EditableGenerationSlot
                 projectId={projectId}
                 slot={shot.clip ?? emptySlot()}
                 variant="clip"
+                size="row"
                 title={`镜头 ${shot.shotNumber} · 成片`}
                 onSave={(slot) => void setShotSlot(shot.id, "clip", slot)}
               />
             </div>
-            <div className="border-l">
+            <div className="flex h-full min-w-0 border-l">
               <PlainCell
+                chrome
                 value={shot.content}
                 placeholder={columnPlaceholder("content")}
                 onCommit={(content) => void patchShot(shot.id, { content })}
@@ -1648,7 +1643,7 @@ function ShotRow({
             </div>
           </>
         ) : visibleDefs.map((column) => (
-          <div key={column.id} className="flex h-full min-h-0 border-l">
+          <div key={column.id} className="flex h-full min-h-0 min-w-0 border-l">
             {column.id === "durationSec" ? (
               <div className={cn(DESIGN_CELL_CHROME, "w-full")}>
                 <Input
@@ -1814,7 +1809,7 @@ function ShotRow({
               </Select>
             ) : (
               <PlainCell
-                design
+                chrome
                 value={String(shot[column.id as keyof Shot] ?? "")}
                 placeholder={columnPlaceholder(column.id)}
                 onCommit={(value) =>
