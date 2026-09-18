@@ -541,3 +541,24 @@ Implemented LobeHub-aligned context defaults, per-thread parameters, group-safe 
 ### Next Steps
 
 - Review the next Agent capability with the user; keep task retrospectives and cross-task memory distinct from working-context compaction.
+
+
+## Session 24: Unify studio surface and chat header
+
+**Date**: 2026-09-19
+**Task**: Unify studio surface and chat header
+**Branch**: `main`
+
+### Summary
+
+Moved the rounded bordered surface to StudioShell, removed navigation rail background and divider, retained chat header fade, corrected parent-relative chat heights. Verified desktop/mobile library and chat layouts, menus and expanded editor; typecheck and all 576 tests passed. Recorded shell ownership in frontend component guidelines.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `c2a064c` | (see git log) |
+
+### Status
+
+[OK] **Completed**

@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 23
+- **Total Sessions**: 24
 - **Last Active**: 2026-09-19
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~543 | Active |
+| `journal-1.md` | ~564 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 24 | 2026-09-19 | Unify studio surface and chat header | `c2a064c` | `main` |
 | 23 | 2026-09-19 | Conversation context settings and durable compaction | `633a609` | `main` |
 | 22 | 2026-09-19 | Complete unified Agent task workspace and foundation round | `a62bd36` | `main` |
 | 21 | 2026-09-19 | Complete Agent batch 2, full Model Bank and licensing | `3c76a36` | `main` |
