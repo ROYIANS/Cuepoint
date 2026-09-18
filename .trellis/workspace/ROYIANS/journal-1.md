@@ -68,3 +68,24 @@ Shipped drag-and-drop reorder, manual shot status with filters, keyboard shortcu
 ### Status
 
 [OK] **Completed**
+
+
+## Session 4: Bootstrap frontend guidelines
+
+**Date**: 2026-09-18
+**Task**: Bootstrap frontend guidelines
+**Branch**: `main`
+
+### Summary
+
+Filled remaining frontend specs (components, types, quality), verified, committed, and archived 00-bootstrap-guidelines.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `98560a0` | (see git log) |
+
+### Status
+
+[OK] **Completed**
