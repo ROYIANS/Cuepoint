@@ -1,7 +1,7 @@
 # Execution record
 
-Status: implementation approved and complete; verification passed. User approved the
-Phase 3.4 commit plan; commit, archive and journal are being finalized.
+Status: implementation complete and verified; committed as `633a609`. User approved
+task closure. Archive and journal follow the feature commit through finish-work.
 
 ## Delivered
 - [x] Shared normalized LobeHub defaults: auto ON, history cap OFF, preset 20.
@@ -24,9 +24,10 @@ Phase 3.4 commit plan; commit, archive and journal are being finalized.
       the session agent/thread limit was reached. See verification.md.
 - [x] Executable contracts recorded in `.trellis/spec/frontend/agent-context.md`.
 
-## Remaining bookkeeping
-- [ ] Confirm and execute commit-plan.md (no push).
-- [ ] Archive current Trellis task and write developer session journal.
+## Delivery
+- [x] User confirmed commit-plan.md; feature committed as `633a609` (no push).
+- Task archival is recorded in task.json; the workspace journal references the feature
+  commit and the verified behavior.
 
 Important design refinement: compression only replaces historical base messages. Full
 live tool chains remain untouched to uphold ledger equality and provider continuation.

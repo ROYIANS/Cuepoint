@@ -3,7 +3,7 @@
   "name": "agent-context-management",
   "title": "Conversation parameters and automatic context compaction",
   "description": "Add conversation-scoped history settings, shared context budgeting, and durable automatic summarization for long chats and Agent tool runs.",
-  "status": "in_progress",
+  "status": "completed",
   "dev_type": null,
   "scope": null,
   "package": null,
@@ -11,11 +11,11 @@
   "creator": "ROYIANS",
   "assignee": "ROYIANS",
   "createdAt": "2026-09-19",
-  "completedAt": null,
+  "completedAt": "2026-09-19",
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "633a609",
   "pr_url": null,
   "subtasks": [],
   "children": [],
@@ -28,6 +28,6 @@
     "tests/contextManagement.test.ts",
     ".trellis/spec/frontend/agent-context.md"
   ],
-  "notes": "Implementation and verification complete. User approved commit and task closure. Full suite: 576 tests; final focused checks: 21 tests; lint/build and desktop/mobile fixtures passed.",
+  "notes": "Implemented and verified in 633a609. User approved commit and archival. Full suite: 576 tests; focused final checks: 21 tests; lint/build and desktop/mobile browser fixtures passed. Executable context contracts captured in specs.",
   "meta": {}
 }

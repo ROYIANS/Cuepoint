@@ -66,5 +66,6 @@ but unavailable due to the session's thread limit; no independent agent review c
 - Paid/live supplier behavior was not tested; both protocol paths used HTTP fixtures.
 
 ## Delivery state
-Implementation and verification complete. User approved the workflow Phase 3.4 commit
-batch and task closure. Commit/archive/journal are finalized in that order; no push.
+Implementation and verification complete. User approved commit and task closure.
+Feature committed as `633a609`; archive and journal follow in separate bookkeeping
+commits. No push.
