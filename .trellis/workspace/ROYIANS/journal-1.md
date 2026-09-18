@@ -299,3 +299,24 @@ Reasoning panel + SSE parse + Dexie persist; Accordion replaced with toggle so e
 ### Status
 
 [OK] **Completed**
+
+
+## Session 14: Mobile agent shell and search
+
+**Date**: 2026-09-18
+**Task**: Mobile agent shell and search
+**Branch**: `main`
+
+### Summary
+
+Mobile hamburger + topic Sheet, title search, chrome cleanup; fixed overlay click-through and sheet CSS scope; tighter mobile content gutters.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `99dd3a3` | (see git log) |
+
+### Status
+
+[OK] **Completed**
