@@ -1,4 +1,4 @@
-import { buildTaskInstructions } from "@/lib/agent/taskState";
+import { getTaskContext } from "@/lib/agent/taskContext";
 import type { AgentTask } from "@/domain/agent";
 import { ContextCompactionDetails } from "./ContextCompactionDetails";
 import { normalizeContextPolicy, resolveContextCapacity } from "@/lib/agent/contextPolicy";
@@ -27,6 +27,7 @@ function useContextUsage({ draft, messages, runs, model, connector, modelMetadat
   const config = useLiveQuery(() => db.agents.get(GENERAL_AGENT_ID), []);
   const thread = useLiveQuery(() => threadId ? db.chatThreads.get(threadId) : undefined, [threadId]);
   const records = useLiveQuery(() => threadId ? db.contextCompactions.where("threadId").equals(threadId).sortBy("createdAt") : [], [threadId]);
+  const taskContext = useLiveQuery(() => getTaskContext(threadId, config?.instructions ?? "", thread?.taskMode, interactionMode), [threadId, config?.instructions, thread?.taskMode, interactionMode, task?.id]);
   const deferredDraft = useDeferredValue(draft);
   const latest = runs.at(-1);
   const activeRun = latest && (latest.status === "running" || latest.status === "waiting_approval" || (latest.hasToolCalls && (latest.status === "failed" || latest.status === "interrupted"))) ? latest : undefined;
@@ -37,18 +38,18 @@ function useContextUsage({ draft, messages, runs, model, connector, modelMetadat
     const resolved = activeRun?.context ?? resolveContextCapacity(model, modelMetadata?.[model], connector?.definitionId, policy);
     const { capacity, capacitySource: source } = resolved;
     const skills = assembleSkills(interactionMode === "conversation" ? [] : config?.enabledSkillIds ?? DEFAULT_SKILL_IDS);
-    const instructions = activeRun?.agentSnapshot.instructions ?? buildTaskInstructions(config?.instructions ?? "", task);
+    const instructions = activeRun?.agentSnapshot.instructions ?? (taskContext?.instructions ?? config?.instructions ?? "");
     const skillInstructions = activeRun ? activeRun.skillInstructions ?? "" : skills.skillInstructions;
     const request = activeRun ? activeRun.continuationMessages ?? activeRun.requestMessages : buildContextMessages(instructions, skillInstructions, selected, deferredDraft, summary);
-    const tools = toolSchemas(activeRun ? activeRun.enabledToolNames ?? [] : skills.enabledToolNames);
+    const tools = toolSchemas(activeRun ? activeRun.enabledToolNames ?? [] : [...new Set([...skills.enabledToolNames, ...(taskContext?.taskToolNames ?? [])])]);
     const budget = budgetContext(request, tools, capacity, !!(activeRun?.context?.summaryId ?? summary), activeRun ? continuationExtraTokens(activeRun) : 0);
     const usage = estimateContextUsage({ instructions, skillInstructions, messages: request, tools });
     const overhead = Math.max(0, budget.estimatedTokens - usage.total);
     usage.categories.push({ id: "envelope", label: "请求结构与续接状态", tokens: overhead, color: "#888888" });
     usage.total += overhead;
     const percent = capacity ? Math.min(100, usage.total / capacity * 100) : undefined;
-    return { usage: config || activeRun ? usage : undefined, capacity, percent, activeRun, source, policy, budget, selectedCount: activeRun?.context?.history.length ?? selected.length, lastRecord: records?.at(-1) };
-  }, [activeRun, config, thread, threadId, records, messages, deferredDraft, interactionMode, task, model, modelMetadata, connector]);
+    return { usage: (config && taskContext) || activeRun ? usage : undefined, capacity, percent, activeRun, source, policy, budget, selectedCount: activeRun?.context?.history.length ?? selected.length, lastRecord: records?.at(-1) };
+  }, [activeRun, config, thread, threadId, records, messages, deferredDraft, interactionMode, taskContext, model, modelMetadata, connector]);
 }
 
 export function ContextUsagePanel({ onClose, ...props }: ContextProps & { onClose: () => void }) {

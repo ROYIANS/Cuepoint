@@ -101,3 +101,11 @@ Correct: require its entire exact ordered coverage to be a prefix of the selecte
 
 Wrong: store new defaults only globally so old conversations change silently.
 Correct: snapshot when creating a thread and use deterministic defaults for legacy records.
+
+## Task work records
+New task runs and ContextUsagePanel both use getTaskContext from agent/taskContext.ts.
+It assembles current goal/acceptance/Todo and up to eight current record excerpts
+(1,200 body characters each), plus task tool definitions. These count in the shared
+request budget. Current running/continuing requests retain their frozen snapshots;
+new records arrive as tool results. Record history is neither compression nor cross-task
+long-term memory. See agent-tasks.md for provenance and paged-read contracts.

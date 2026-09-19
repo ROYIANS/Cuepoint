@@ -318,7 +318,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
       const checked = await runWithCompatibleChatModel(connector, model, async () => {
         let thread = activeThread;
         if (!thread) {
-          thread = await createChatThread({ connectorId: connector.id, model, title: deriveChatTitle(content) });
+          thread = await createChatThread({ connectorId: connector.id, model, title: deriveChatTitle(content), taskMode: chatMode === "task" });
           if (controller.signal.aborted) return;
           executionThreadRef.current = thread.id;
           await navigate({ to: "/agent/$threadId", params: { threadId: thread.id } });
@@ -327,7 +327,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
         await withThreadRunLock(targetThread.id, async () => {
           if (controller.signal.aborted) return;
           await updateChatThread(targetThread.id, { interactionMode: activeThreadId ? interactionMode : "smart", reasoningSelection: { connectorId: connector.id, baseUrl: connector.baseUrl, model, value: reasoningEffort } });
-          const run = await beginAgentRun({ threadId: targetThread.id, connector, model, content, modelMetadata: catalogMatches ? modelCatalog?.metadata?.[model] : undefined, reasoningEffort, interactionMode: activeThreadId ? interactionMode : "smart", createTask: !activeThreadId && chatMode === "task" });
+          const run = await beginAgentRun({ threadId: targetThread.id, connector, model, content, modelMetadata: catalogMatches ? modelCatalog?.metadata?.[model] : undefined, reasoningEffort, interactionMode: activeThreadId ? interactionMode : "smart" });
           setDraft((current) => current === draft ? "" : current);
           await executeChatRun(run, connector.apiKey, controller);
         });
@@ -491,7 +491,8 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
   const composerProps: ComposerProps = {
     threadId: activeThreadId,
     blocked: Boolean(activeTask && activeTask.lifecycle !== "open"),
-    status: activeTask || showRunStatus ? <>
+    status: activeTask || activeThread?.taskMode || showRunStatus ? <>
+      {activeThread?.taskMode && !activeTask && <div className="agent-composer-run-status"><span>需求沟通中 · 明确目标后，助手会建立任务</span></div>}
       {activeTask && <div className="agent-composer-task-summary">
         <button type="button" onClick={() => setTaskInspectorOpen(true)}>
           <span className="agent-task-summary-label">任务</span><strong>{activeTask.title}</strong>

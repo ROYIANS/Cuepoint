@@ -519,6 +519,7 @@ export type ChatMessageRole = "user" | "assistant" | "system";
 export type ChatMessageStatus = "pending" | "streaming" | "complete" | "error" | "aborted" | "interrupted";
 
 export interface ChatThread {
+  taskMode?: boolean;
   contextPolicy?: ContextPolicy;
   interactionMode?: import("./agent").AgentInteractionMode;
   reasoningSelection?: { connectorId: Id; baseUrl: string; model: string; value?: import("./agent").AgentReasoningEffort };

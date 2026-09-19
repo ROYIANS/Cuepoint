@@ -1,3 +1,4 @@
+import type { AgentTaskRecord, AgentTaskRecordVersion } from "@/domain/agentTaskRecords";
 import type { AgentGenerationJob } from "@/domain/agentGeneration";
 import type { ContextCompaction } from "@/domain/context";
 import type { AgentConfig, AgentRun, AgentToolCall, AgentTask } from "@/domain/agent";
@@ -39,6 +40,8 @@ export class AifenjingDB extends Dexie {
   /** Studio-global AI connectors — never included in project ZIP export. */
   connectors!: Table<ConnectorConfig, string>;
   /** Studio-global Agent chat threads — never included in project ZIP export. */
+  agentTaskRecords!: Table<AgentTaskRecord, string>;
+  agentTaskRecordVersions!: Table<AgentTaskRecordVersion, string>;
   chatThreads!: Table<ChatThread, string>;
   /** Studio-global Agent chat messages — never included in project ZIP export. */
   chatMessages!: Table<ChatMessage, string>;
@@ -170,6 +173,7 @@ export class AifenjingDB extends Dexie {
     this.version(10).stores({ agentTasks: "id, &threadId, lifecycle, updatedAt", agentRuns: "id, threadId, taskId, status, createdAt" });
     this.version(11).stores({ contextCompactions: "id, threadId, runId, status, createdAt" });
     this.version(12).stores({ agentGenerationJobs: "id, &callId, runId, threadId, projectId, status, fingerprint, updatedAt" });
+    this.version(13).stores({ agentTaskRecords: "id, taskId, [taskId+kind], updatedAt", agentTaskRecordVersions: "versionId, taskId, recordId, &[recordId+revision]" });
   }
 }
 

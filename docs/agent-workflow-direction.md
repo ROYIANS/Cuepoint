@@ -11,8 +11,12 @@ The task is the organizing unit; chat is its interaction surface. A successful
 model response alone is not task completion.
 
 ## Current foundation
-A general assistant, durable runs, permission decisions, shared task goals and
-checklists, linked conversations and explicitly saved response references.
+A general assistant, durable runs, permission decisions, shared task goals, acceptance
+criteria and checklists, linked conversations and explicitly saved response references.
+Task mode now persists intake without creating a placeholder: the AI clarifies material
+requirements, then explicitly creates the task through a current-run tool. Research,
+approach, progress, verification and question records preserve source references and
+versions. Users can inspect/edit safely; new runs load bounded current records.
 A human can manage this foundation without a model connector.
 
 ## Next workflow layer

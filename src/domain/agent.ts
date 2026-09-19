@@ -81,6 +81,8 @@ export interface AgentModelMetrics {
 
 /** Frozen execution inputs. Credentials are resolved from the connector at dispatch. */
 export interface AgentRun {
+  /** Frozen task-intake eligibility; never inferred from model arguments. */
+  taskMode?: boolean;
   context?: ContextSnapshot;
   id: Id;
   threadId: Id;
@@ -130,6 +132,8 @@ export const GENERAL_AGENT_ID = "agent_general";
 export const MODEL_STEPS_PER_SEGMENT = 32;
 
 export interface AgentTask {
+  acceptanceCriteria?: string[];
+  revision?: number;
   id: Id;
   threadId: Id;
   title: string;

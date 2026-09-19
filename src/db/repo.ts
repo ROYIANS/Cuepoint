@@ -1558,6 +1558,7 @@ export async function getChatThread(id: Id): Promise<ChatThread | undefined> {
 }
 
 export async function createChatThread(options?: {
+  taskMode?: boolean;
   title?: string;
   connectorId?: Id;
   model?: string;
@@ -1567,6 +1568,7 @@ export async function createChatThread(options?: {
     contextPolicy: normalizeContextPolicy((await getGeneralAgentConfig()).contextPolicy),
     id: createId("cth"),
     title: options?.title?.trim() || "新对话",
+    taskMode: options?.taskMode === true,
     connectorId: options?.connectorId,
     model: options?.model?.trim() || undefined,
     createdAt: at,
@@ -1605,11 +1607,15 @@ export async function updateChatThread(
 }
 
 export async function deleteChatThread(id: Id): Promise<void> {
-  await db.transaction("rw", [...PRODUCTION_TABLES, db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, db.agentTasks, db.contextCompactions], async () => {
+  await db.transaction("rw", [...PRODUCTION_TABLES, db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, db.agentTasks, db.contextCompactions, db.agentTaskRecords, db.agentTaskRecordVersions], async () => {
     const jobs = await db.agentGenerationJobs.where("threadId").equals(id).toArray();
     const jobMedia = new Set(jobs.flatMap((job) => [...job.inputs.map((input) => input.mediaId), ...(job.result ? [job.result.mediaId] : [])]));
     await db.agentGenerationJobs.where("threadId").equals(id).delete();
     await db.contextCompactions.where("threadId").equals(id).delete();
+    for (const task of await db.agentTasks.where("threadId").equals(id).toArray()) {
+      await db.agentTaskRecords.where("taskId").equals(task.id).delete();
+      await db.agentTaskRecordVersions.where("taskId").equals(task.id).delete();
+    }
     await db.agentTasks.where("threadId").equals(id).delete();
     await db.agentToolCalls.where("threadId").equals(id).delete();
     await db.agentRuns.where("threadId").equals(id).delete();

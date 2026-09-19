@@ -10,6 +10,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { TaskRecords } from "./TaskRecords";
 import "./taskWorkspace.css";
 
 type InspectorProps = { task: AgentTask; runs: AgentRun[]; messages: ChatMessage[]; open: boolean; onOpenChange: (open: boolean) => void; onOpenBoard: () => void };
@@ -22,6 +23,9 @@ export function TaskInspector(props: InspectorProps) {
 
 function TaskInspectorContent({ task, runs, messages, open, onOpenChange, onOpenBoard }: InspectorProps) {
   const [editor, setEditor] = useState<"goal" | "plan" | null>(null);
+  const [tab, setTab] = useState<"overview" | "records">("overview");
+  const [criteria, setCriteria] = useState("");
+  const [editRevision, setEditRevision] = useState(1);
   const [title, setTitle] = useState("");
   const [goal, setGoal] = useState("");
   const [planText, setPlanText] = useState("");
@@ -46,8 +50,8 @@ function TaskInspectorContent({ task, runs, messages, open, onOpenChange, onOpen
     catch (error) { toast.error(error instanceof Error ? error.message : "保存失败，请重试"); }
     finally { lock.current = false; setPending(false); }
   }
-  function editGoal() { setTitle(task.title); setGoal(task.goal); setEditor("goal"); }
-  function editPlan() { setPlanText(task.plan.map((item) => item.title).join("\n")); setEditor("plan"); }
+  function editGoal() { setTitle(task.title); setGoal(task.goal); setCriteria((task.acceptanceCriteria ?? []).join("\n")); setEditRevision(task.revision ?? 1); setEditor("goal"); }
+  function editPlan() { setEditRevision(task.revision ?? 1); setPlanText(task.plan.map((item) => item.title).join("\n")); setEditor("plan"); }
   function savePlan() {
     // Consume matches once: duplicate titles retain their own IDs when reordered.
     const remaining = [...task.plan];
@@ -55,7 +59,7 @@ function TaskInspectorContent({ task, runs, messages, open, onOpenChange, onOpen
       const index = remaining.findIndex((item) => item.title === title);
       return index >= 0 ? remaining.splice(index, 1)[0] : { id: crypto.randomUUID(), title, status: "pending" };
     });
-    void mutate(() => updateAgentTask(task.id, { plan }), "执行清单已保存", () => setEditor(null));
+    void mutate(() => updateAgentTask(task.id, { plan }, editRevision), "执行清单已保存", () => setEditor(null));
   }
   return <Sheet open={open} onOpenChange={(next) => { if (!lock.current && !editor) onOpenChange(next); }}>
     <SheetContent className="agent-task-inspector" showCloseButton={false}>
@@ -64,10 +68,13 @@ function TaskInspectorContent({ task, runs, messages, open, onOpenChange, onOpen
         <SheetHeader className="agent-task-inspector-heading"><span className={`agent-task-status is-${state}`}>{TASK_STATE_LABELS[state]}</span><SheetTitle>{task.title}</SheetTitle><SheetDescription><Sparkles size={14} aria-hidden />小光点 · 通用助手<span>更新于 {dateLabel(task.updatedAt)}</span></SheetDescription></SheetHeader>
         {busy && <div className="agent-task-notice">执行尚未结束。请在对话中处理批准、停止或恢复操作，再编辑任务。</div>}
         {state === "review" && <div className="agent-task-notice">请检查成果与清单，由你确认任务完成。</div>}
-        <section className="agent-task-section"><div className="agent-task-section-heading"><h3>任务目标</h3><Button variant="ghost" size="icon-sm" aria-label="编辑任务目标" disabled={!editable} onClick={editGoal}><Pencil /></Button></div><p className="agent-task-goal">{task.goal}</p></section>
+        <div className="agent-task-inspector-tabs" aria-label="任务详情视图"><button type="button" aria-pressed={tab === "overview"} onClick={() => setTab("overview")}>概览</button><button type="button" aria-pressed={tab === "records"} onClick={() => setTab("records")}>工作记录</button></div>
+        <div hidden={tab !== "records"}><TaskRecords task={task} messages={messages} editable={editable} /></div>
+        <div hidden={tab !== "overview"}>
+        <section className="agent-task-section"><div className="agent-task-section-heading"><h3>任务目标</h3><Button variant="ghost" size="icon-sm" aria-label="编辑任务目标" disabled={!editable} onClick={editGoal}><Pencil /></Button></div><p className="agent-task-goal">{task.goal}</p>{!!task.acceptanceCriteria?.length && <div className="agent-task-acceptance"><h4>完成标准</h4><ul>{task.acceptanceCriteria.map((criterion, index) => <li key={index}>{criterion}</li>)}</ul></div>}</section>
         <section className="agent-task-section"><div className="agent-task-section-heading"><h3>执行清单 <span>{completed} / {task.plan.length}</span></h3><Button variant="ghost" size="sm" disabled={!editable} onClick={editPlan}>{task.plan.length ? <Pencil /> : <Plus />}{task.plan.length ? "编辑" : "添加步骤"}</Button></div>
           {task.plan.length ? <><div className="agent-task-progress" role="progressbar" aria-label="任务步骤完成进度" aria-valuemin={0} aria-valuemax={task.plan.length} aria-valuenow={completed}><span style={{ width: `${completed / task.plan.length * 100}%` }} /></div>
-            <ol className="agent-task-checklist">{task.plan.map((step) => <li key={step.id} className={step.status === "completed" ? "is-completed" : ""}><button type="button" role="checkbox" aria-checked={step.status === "completed"} aria-label={step.title} disabled={!editable} onClick={() => void mutate(() => updateAgentTask(task.id, { plan: task.plan.map((item) => item.id === step.id ? { ...item, status: item.status === "completed" ? "pending" : "completed" } : item) }))}>{step.status === "completed" ? <Check size={14} /> : step.status === "in_progress" ? <span className="agent-task-step-active" /> : null}</button><span>{step.title}{step.status === "in_progress" && <small>进行中</small>}</span></li>)}</ol></> : <p className="agent-task-muted">把目标拆成几个可执行的步骤，也可以在对话中请助手帮你规划。</p>}
+            <ol className="agent-task-checklist">{task.plan.map((step) => <li key={step.id} className={step.status === "completed" ? "is-completed" : ""}><button type="button" role="checkbox" aria-checked={step.status === "completed"} aria-label={step.title} disabled={!editable} onClick={() => void mutate(() => updateAgentTask(task.id, { plan: task.plan.map((item) => item.id === step.id ? { ...item, status: item.status === "completed" ? "pending" : "completed" } : item) }, task.revision ?? 1))}>{step.status === "completed" ? <Check size={14} /> : step.status === "in_progress" ? <span className="agent-task-step-active" /> : null}</button><span>{step.title}{step.status === "in_progress" && <small>进行中</small>}</span></li>)}</ol></> : <p className="agent-task-muted">把目标拆成几个可执行的步骤，也可以在对话中请助手帮你规划。</p>}
         </section>
         <section className="agent-task-section"><div className="agent-task-section-heading"><h3>任务成果 <span>{task.artifacts.length}</span></h3><Pin size={16} className="agent-task-muted" aria-hidden /></div>
           {task.artifacts.length === 0 && <p className="agent-task-muted">将有价值的完整回复保留在这里，方便随时回看。</p>}
@@ -78,12 +85,13 @@ function TaskInspectorContent({ task, runs, messages, open, onOpenChange, onOpen
           {outputs.some(({ message }) => !task.artifacts.some((artifact) => artifact.messageId === message.id)) && <details className="agent-task-output-picker"><summary><Plus size={14} />从完整回复中添加</summary>{outputs.filter(({ message }) => !task.artifacts.some((artifact) => artifact.messageId === message.id)).map(({ run, message }) => <div key={run.id}><span><small>{dateLabel(run.createdAt)}</small><p>{message.content.slice(0, 160)}</p></span><Button variant="ghost" size="icon-sm" aria-label={`保留 ${dateLabel(run.createdAt)} 的回复为成果`} disabled={!editable} onClick={() => void mutate(() => pinAgentTaskResult(task.id, run.id), "已保留为任务成果")}><Pin /></Button></div>)}</details>}
         </section>
         <section className="agent-task-section"><div className="agent-task-section-heading"><h3>执行记录 <span>{taskRuns.length}</span></h3><ListTodo size={16} className="agent-task-muted" aria-hidden /></div>{orderedRuns.length ? <ol className="agent-task-history">{orderedRuns.map((run) => <li key={run.id}><Circle size={8} aria-hidden /><div><span>{RUN_LABELS[run.status]}</span><small>{run.model} · {dateLabel(run.createdAt)}</small>{run.retryOfRunId && <small>继续尝试</small>}</div></li>)}</ol> : <p className="agent-task-muted">还没有执行记录。在对话中发送目标，即可开始。</p>}</section>
+        </div>
       </div>
       <footer className="agent-task-inspector-footer">
         {task.lifecycle === "open" ? <><Button variant="ghost" disabled={busy || pending} onClick={() => void mutate(() => setAgentTaskLifecycle(task.id, "archived"), "任务已归档", () => onOpenChange(false))}><Archive />归档</Button><Button disabled={!canComplete} title={completed !== task.plan.length ? "请先完成清单中的所有步骤" : undefined} onClick={() => void mutate(() => setAgentTaskLifecycle(task.id, "completed"), "任务已确认完成")}><CheckCheck />确认完成</Button></> : <><span className="agent-task-muted">{task.lifecycle === "completed" ? <Button variant="ghost" disabled={busy || pending} onClick={() => void mutate(() => setAgentTaskLifecycle(task.id, "archived"), "任务已归档", () => onOpenChange(false))}><Archive />归档</Button> : "已归档"}</span><Button disabled={busy || pending} onClick={() => void mutate(() => setAgentTaskLifecycle(task.id, "open"), "任务已重新打开")}><RotateCcw />重新打开</Button></>}
       </footer>
-      <Dialog open={editor !== null} onOpenChange={(next) => { if (!next && !lock.current) setEditor(null); }}><DialogContent className="agent-task-dialog" showCloseButton={!pending}><DialogHeader><DialogTitle>{editor === "goal" ? "编辑任务目标" : "编辑执行清单"}</DialogTitle><DialogDescription>{editor === "goal" ? "清晰的目标和完成标准，帮助每一次执行保持方向。" : "每行一个步骤，调整行的顺序即可排序。修改名称会将该步骤重置为待完成。"}</DialogDescription></DialogHeader><form onSubmit={(event) => { event.preventDefault(); if (editor === "goal") void mutate(() => updateAgentTask(task.id, { title: title.trim(), goal: goal.trim() }), "任务目标已保存", () => setEditor(null)); else savePlan(); }}>
-        {editor === "goal" ? <><label className="agent-task-field">任务名称<Input autoFocus value={title} maxLength={120} required disabled={pending} onChange={(event) => setTitle(event.target.value)} /></label><label className="agent-task-field">目标与完成标准<Textarea value={goal} maxLength={20_000} required rows={6} disabled={pending} onChange={(event) => setGoal(event.target.value)} /></label></> : <label className="agent-task-field">步骤<Textarea autoFocus value={planText} rows={9} disabled={pending} onChange={(event) => setPlanText(event.target.value)} placeholder={"明确故事主题\n完善人物关系\n确认最终设定"} /></label>}
+      <Dialog open={editor !== null} onOpenChange={(next) => { if (!next && !lock.current) setEditor(null); }}><DialogContent className="agent-task-dialog" showCloseButton={!pending}><DialogHeader><DialogTitle>{editor === "goal" ? "编辑任务目标" : "编辑执行清单"}</DialogTitle><DialogDescription>{editor === "goal" ? "清晰的目标和完成标准，帮助每一次执行保持方向。" : "每行一个步骤，调整行的顺序即可排序。修改名称会将该步骤重置为待完成。"}</DialogDescription></DialogHeader><form onSubmit={(event) => { event.preventDefault(); if (editor === "goal") void mutate(() => updateAgentTask(task.id, { title: title.trim(), goal: goal.trim(), acceptanceCriteria: criteria.split("\n").map((line) => line.trim()).filter(Boolean) }, editRevision), "任务目标已保存", () => setEditor(null)); else savePlan(); }}>
+        {editor === "goal" ? <><label className="agent-task-field">任务名称<Input autoFocus value={title} maxLength={120} required disabled={pending} onChange={(event) => setTitle(event.target.value)} /></label><label className="agent-task-field">任务目标<Textarea value={goal} maxLength={20_000} required rows={6} disabled={pending} onChange={(event) => setGoal(event.target.value)} /></label><label className="agent-task-field">完成标准<Textarea value={criteria} rows={4} disabled={pending} onChange={(event) => setCriteria(event.target.value)} placeholder="每行一项，写下如何判断任务已经完成" /></label></> : <label className="agent-task-field">步骤<Textarea autoFocus value={planText} rows={9} disabled={pending} onChange={(event) => setPlanText(event.target.value)} placeholder={"明确故事主题\n完善人物关系\n确认最终设定"} /></label>}
         <DialogFooter><Button type="button" variant="ghost" disabled={pending} onClick={() => setEditor(null)}>取消</Button><Button type="submit" disabled={!editable || (editor === "goal" && (!title.trim() || !goal.trim()))}>{pending ? "保存中…" : "保存"}</Button></DialogFooter></form></DialogContent></Dialog>
     </SheetContent>
   </Sheet>;

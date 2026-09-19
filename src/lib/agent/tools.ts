@@ -1,3 +1,4 @@
+import { TASK_TOOLS } from "./taskTools";
 import { GENERATION_TOOLS } from "./generationTools";
 import { BUSINESS_TOOLS } from "./businessTools";
 import { z } from "zod";
@@ -24,7 +25,7 @@ export function requiresToolApproval(mode: AgentPermissionMode, tool: Pick<Agent
   if (tool.highRisk(args)) return true;
   return mode === "ask" && (tool.effect === "write" || tool.effect === "network");
 }
-const planSchema = z.object({ steps: z.array(z.object({ id: z.string().trim().min(1).max(80), title: z.string().trim().min(1).max(240), status: z.enum(["pending", "in_progress", "completed"]) }).strict()).max(30) }).strict().refine((value) => new Set(value.steps.map((step) => step.id)).size === value.steps.length && value.steps.filter((step) => step.status === "in_progress").length <= 1, "步骤标识必须唯一，最多一个步骤进行中");
+const planSchema = z.object({ reason: z.string().trim().min(1).max(1000).optional(), steps: z.array(z.object({ id: z.string().trim().min(1).max(80), title: z.string().trim().min(1).max(240), status: z.enum(["pending", "in_progress", "completed"]) }).strict()).max(30) }).strict().refine((value) => new Set(value.steps.map((step) => step.id)).size === value.steps.length && value.steps.filter((step) => step.status === "in_progress").length <= 1, "步骤标识必须唯一，最多一个步骤进行中");
 export const BUILTIN_TOOLS: readonly AgentToolDefinition[] = [
   { name: "workspace_overview", title: "查看工作区概览", description: "读取工作区项目和角色、场景、道具、风格的数量，最多返回 10 个最近项目名称，不读取密钥或完整业务内容。",
     parameters: { type: "object", properties: {}, additionalProperties: false }, effect: "read", highRisk: () => false,
@@ -38,10 +39,11 @@ export const BUILTIN_TOOLS: readonly AgentToolDefinition[] = [
     },
   },
   { name: "update_run_plan", title: "更新执行计划", description: "维护当前执行及其关联任务的共享计划（最多 30 项），每项有唯一 id、title 和 pending/in_progress/completed 状态。不会修改项目或素材。",
-    parameters: { type: "object", additionalProperties: false, required: ["steps"], properties: { steps: { type: "array", maxItems: 30, items: { type: "object", additionalProperties: false, required: ["id", "title", "status"], properties: { id: { type: "string", minLength: 1, maxLength: 80 }, title: { type: "string", minLength: 1, maxLength: 240 }, status: { type: "string", enum: ["pending", "in_progress", "completed"] } } } } } },
+    parameters: { type: "object", additionalProperties: false, required: ["steps"], properties: { reason: { type: "string", minLength: 1, maxLength: 1000 }, steps: { type: "array", maxItems: 30, items: { type: "object", additionalProperties: false, required: ["id", "title", "status"], properties: { id: { type: "string", minLength: 1, maxLength: 80 }, title: { type: "string", minLength: 1, maxLength: 240 }, status: { type: "string", enum: ["pending", "in_progress", "completed"] } } } } } },
     effect: "bookkeeping", highRisk: () => false, parseArguments: (raw) => planSchema.parse(raw),
-    async execute(args, { runId, callId, signal }) { signal.throwIfAborted(); return JSON.parse(await updateRunPlanAndComplete(runId, callId, (args as { steps: AgentPlanItem[] }).steps)); },
+    async execute(args, { runId, callId, signal }) { signal.throwIfAborted(); return JSON.parse(await updateRunPlanAndComplete(runId, callId, (args as { steps: AgentPlanItem[] }).steps, (args as { reason?: string }).reason)); },
   },
+  ...TASK_TOOLS,
   ...BUSINESS_TOOLS,
   ...GENERATION_TOOLS,
 ];

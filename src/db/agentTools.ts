@@ -1,7 +1,8 @@
+import { writeTaskRecord } from "./agentTaskRecords";
 import { generationSubmitSchema } from "@/lib/agent/generationProfiles";
 import { targetRevision } from "@/lib/productionRevision";
 import { interruptedToolState } from "./agentToolRecovery";
-import { validateTaskPlan } from "@/lib/agent/taskState";
+import { validateTaskPlan, formatTaskPlan } from "@/lib/agent/taskState";
 import { db } from "@/db/database";
 import { MODEL_STEPS_PER_SEGMENT } from "@/domain/agent";
 import type { AgentPlanItem, AgentResponseItem, AgentRun, AgentToolCall, AgentWireToolCall, AgentToolPreview } from "@/domain/agent";
@@ -18,7 +19,7 @@ async function requireRun(runId: string): Promise<AgentRun> {
   if (!message || message.threadId !== run.threadId || message.runId !== run.id) throw new Error("执行消息归属不匹配");
   return run;
 }
-const tables = () => [db.agentRuns, db.agentToolCalls, db.chatThreads, db.chatMessages, db.agentTasks, db.agentGenerationJobs];
+const tables = () => [db.agentRuns, db.agentToolCalls, db.chatThreads, db.chatMessages, db.agentTasks, db.agentGenerationJobs, db.agentTaskRecords, db.agentTaskRecordVersions];
 async function requireLatestRun(run: AgentRun): Promise<void> {
   const siblings = await db.agentRuns.where("threadId").equals(run.threadId).toArray();
   const history = await db.chatMessages.where("threadId").equals(run.threadId).toArray();
@@ -137,7 +138,7 @@ export async function appendToolResults(runId: string): Promise<void> {
   });
 }
 /** Plan changes and the successful ledger result commit together. */
-export async function updateRunPlanAndComplete(runId: string, callId: string, plan: AgentPlanItem[]): Promise<string> {
+export async function updateRunPlanAndComplete(runId: string, callId: string, plan: AgentPlanItem[], reason?: string): Promise<string> {
   return db.transaction("rw", tables(), async () => {
     const run = await requireRun(runId);
     const call = await db.agentToolCalls.get(callId);
@@ -146,7 +147,8 @@ export async function updateRunPlanAndComplete(runId: string, callId: string, pl
     if (run.taskId) {
       const task = await db.agentTasks.get(run.taskId);
       if (!task || task.threadId !== run.threadId || task.lifecycle !== "open") throw new Error("关联任务不可修改");
-      await db.agentTasks.update(task.id, { plan, updatedAt: nowIso() });
+      await writeTaskRecord(task, { kind: "progress", claim: "proposal", title: "Todo 更新", body: `${reason?.trim() || "按当前任务进展调整执行计划；勾选状态不是业务完成证据"}\n\n调整前\n${formatTaskPlan(task.plan)}\n\n调整后\n${formatTaskPlan(plan)}`, sources: [] }, { author: "ai", runId, requirementSnapshot: true });
+      await db.agentTasks.update(task.id, { plan, revision: (task.revision ?? 1) + 1, updatedAt: nowIso() });
     }
     const result = JSON.stringify({ plan });
     await db.agentRuns.update(runId, { plan, updatedAt: nowIso() });

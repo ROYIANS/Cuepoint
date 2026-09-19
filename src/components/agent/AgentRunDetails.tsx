@@ -16,7 +16,7 @@ const STATUS: Record<AgentToolCall["status"], string> = {
   running: "执行中", completed: "已完成", failed: "失败", rejected: "已拒绝", unknown: "结果待核实",
 };
 const EFFECT: Record<AgentToolCall["effect"], string> = {
-  read: "读取本地数据", write: "编辑数据", network: "使用互联网", bookkeeping: "更新执行计划",
+  read: "读取本地数据", write: "编辑数据", network: "使用互联网", bookkeeping: "维护任务与计划",
 };
 
 function StepIcon({ status }: { status: AgentToolCall["status"] }) {
@@ -27,7 +27,7 @@ function StepIcon({ status }: { status: AgentToolCall["status"] }) {
   return <Circle size={15} />;
 }
 
-function CreatedEntityLinks({ call }: { call: AgentToolCall }) {
+export function CreatedEntityLinks({ call, includePreview = false }: { call: AgentToolCall; includePreview?: boolean }) {
   if (call.status !== "completed" || call.effect !== "write" || !call.result) return null;
   let result: unknown;
   try { result = JSON.parse(call.result); } catch { return null; }
@@ -39,7 +39,7 @@ function CreatedEntityLinks({ call }: { call: AgentToolCall }) {
     const target = item.target;
     if (!target || typeof target !== "object" || !("href" in target) || !("label" in target)) continue;
     if (typeof target.href !== "string" || !/^\/(?!\/)/.test(target.href) || typeof target.label !== "string") continue;
-    if (target.href !== call.preview?.target?.href) links.set(target.href, target.label);
+    if (includePreview || target.href !== call.preview?.target?.href) links.set(target.href, target.label);
   }
   if (!links.size) return null;
   return <div className="agent-change-results">{[...links].map(([href, label]) => <Link key={href} to={href} className="agent-change-link">查看{label} ↗</Link>)}</div>;

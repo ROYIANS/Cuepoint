@@ -46,7 +46,7 @@ export function HomeWelcome({
             {hello}，欢迎使用 {PRODUCT_NAME_ZH}
           </Text>
           <Text type="secondary" style={{ fontSize: 14, maxWidth: 560, lineHeight: 1.57 }}>
-            {composer.chatMode === "task" ? "把想法变成清晰的目标，与助手一起拆解步骤、推进并沉淀成果。" : `我是 ${PRODUCT_NAME_ZH}。提问、创建内容或启动任务，选好模型后直接发送即可。`}
+            {composer.chatMode === "task" ? "先聊清目标与要求，再由助手建立任务、拆解步骤并持续推进。" : `我是 ${PRODUCT_NAME_ZH}。提问、创建内容或启动任务，选好模型后直接发送即可。`}
           </Text>
         </div>
 

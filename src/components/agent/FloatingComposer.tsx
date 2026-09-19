@@ -189,7 +189,7 @@ export function FloatingComposer({
         readOnly={listening}
         value={value}
         variant="borderless"
-        placeholder={blocked ? "重新打开任务后可继续对话" : surface === "home" && chatMode === "task" ? "描述目标、要求和期望成果，开始一个任务…" : "提问、创建内容或启动任务"}
+        placeholder={blocked ? "重新打开任务后可继续对话" : surface === "home" && chatMode === "task" ? "描述你想完成的事，与助手一起明确需求…" : "提问、创建内容或启动任务"}
         autoSize={expanded ? false : { minRows: large ? 3 : 2, maxRows: 10 }}
         className="agent-composer-input"
         onChange={(event) => onChange(event.target.value)}

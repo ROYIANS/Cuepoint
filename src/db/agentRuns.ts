@@ -1,6 +1,6 @@
 import { interruptedToolState } from "./agentToolRecovery";
 import { createAgentTaskForThread } from "@/db/agentTasks";
-import { buildTaskInstructions } from "@/lib/agent/taskState";
+import { getTaskContext } from "@/lib/agent/taskContext";
 import { db } from "@/db/database";
 import type { AgentInteractionMode, AgentModelMetrics, AgentTokenUsage, AgentReasoningEffort, AgentRun, AgentRunOutput, AgentRunStatus } from "@/domain/agent";
 import type { ChatMessage, ConnectorConfig } from "@/domain/types";
@@ -49,7 +49,7 @@ export async function beginAgentRun(input: {
 }): Promise<AgentRun> {
   const identity = connectorRunIdentity(input.connector);
   if (!input.model.trim() || !input.connector.apiKey.trim()) throw new Error("请选择模型并配置 API Key");
-  return db.transaction("rw", [db.chatThreads, db.chatMessages, db.agentRuns, db.agents, db.agentTasks, db.contextCompactions], async () => {
+  return db.transaction("rw", [db.chatThreads, db.chatMessages, db.agentRuns, db.agents, db.agentTasks, db.contextCompactions, db.agentTaskRecords], async () => {
     const thread = await db.chatThreads.get(input.threadId);
     if (!thread) throw new Error("对话不存在");
     const runs = await db.agentRuns.where("threadId").equals(thread.id).toArray();
@@ -74,13 +74,16 @@ export async function beginAgentRun(input: {
     if (input.createTask && !task && !previous) task = await createAgentTaskForThread(thread.id, { title: deriveChatTitle(content), goal: content });
     if (task && task.lifecycle !== "open") throw new Error("请先重新打开任务，再继续对话");
     if (previous?.taskId && previous.taskId !== task?.id) throw new Error("原任务关联已失效");
-    const instructions = buildTaskInstructions(agent.instructions, task);
+
     const userMessageId = previous?.userMessageId ?? createId("cmsg");
     const runId = createId("run");
     const assistantMessageId = createId("cmsg");
     const interactionMode = previous ? previous.interactionMode ?? "smart" : input.interactionMode ?? thread.interactionMode ?? "smart";
+    const taskMode = previous ? previous.taskMode === true : thread.taskMode === true;
+    const taskContext = await getTaskContext(thread.id, agent.instructions, taskMode, interactionMode);
+    const instructions = taskContext.instructions;
     const skills = assembleSkills(agent.enabledSkillIds ?? []);
-    const enabledToolNames = interactionMode === "conversation" ? [] : (previous ? previous.enabledToolNames ?? [] : skills.enabledToolNames);
+    const enabledToolNames = interactionMode === "conversation" ? [] : (previous ? previous.enabledToolNames ?? [] : [...new Set([...skills.enabledToolNames, ...taskContext.taskToolNames])]);
     const skillInstructions = interactionMode === "conversation" ? "" : (previous ? previous.skillInstructions ?? "" : skills.skillInstructions);
     const policy = normalizeContextPolicy(thread.contextPolicy);
     const selectedHistory = selectContextHistory(history, policy);
@@ -98,6 +101,7 @@ export async function beginAgentRun(input: {
       ...(reasoningEffort !== undefined ? { reasoningEffort } : {}),
       permissionMode: previous ? previous.permissionMode ?? "ask" : agent.permissionMode ?? "ask",
       interactionMode,
+      taskMode,
       enabledToolNames,
       skillInstructions,
       status: "running", checkpoint: 0, createdAt: at, updatedAt: at,

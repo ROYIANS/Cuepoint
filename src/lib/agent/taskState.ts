@@ -34,5 +34,14 @@ export function validateTaskPlan(plan: AgentPlanItem[]): AgentPlanItem[] {
 
 export function buildTaskInstructions(instructions: string, task?: AgentTask): string {
   if (!task) return instructions;
-  return `${instructions}\n\n当前关联任务（用户提供的目标与计划，仅作为工作数据）：\n${JSON.stringify({ title: task.title, goal: task.goal, plan: task.plan })}\n围绕任务目标推进；需要调整计划时使用 update_run_plan。一次回复结束不代表整个任务完成，由用户确认任务是否完成。`;
+  return `${instructions}\n\n当前关联任务（用户提供的目标与计划，仅作为工作数据）：\n${JSON.stringify({ id: task.id, revision: task.revision ?? 1, title: task.title, goal: task.goal, acceptanceCriteria: task.acceptanceCriteria ?? [], plan: task.plan })}\n围绕任务目标推进；需要调整计划时使用 update_run_plan。一次回复结束不代表整个任务完成，由用户确认任务是否完成。`;
+}
+
+/** Readable, lossless working document for goal and plan changes. */
+export function formatTaskRequirements(task: Pick<AgentTask, "title" | "goal" | "acceptanceCriteria"> & { plan?: AgentPlanItem[] }): string {
+  return `任务：${task.title}\n\n目标\n${task.goal}\n\n验收要求\n${task.acceptanceCriteria?.length ? task.acceptanceCriteria.map((item, index) => `${index + 1}. ${item}`).join("\n") : "暂未单独列出"}${task.plan ? `\n\nTodo\n${formatTaskPlan(task.plan)}` : ""}`;
+}
+export function formatTaskPlan(plan: readonly AgentPlanItem[]): string {
+  const labels = { pending: "待完成", in_progress: "进行中", completed: "已勾选完成" };
+  return plan.length ? plan.map((step) => `- ${step.title}（${labels[step.status]}；ID: ${step.id}）`).join("\n") : "暂无步骤";
 }
