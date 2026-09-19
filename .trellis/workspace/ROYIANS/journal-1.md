@@ -596,3 +596,25 @@ Delivered 40 tools in six default-enabled skills covering all creative business 
 ### Next Steps
 
 - Recommended next: task verification and wrap-up summaries, then scoped editable memory with provenance and retrieval, following docs/agent-workflow-direction.md. Await user selection before creating the next task.
+
+
+## Session 26: AI-managed task workspace and working records
+
+**Date**: 2026-09-19
+**Task**: AI-managed task workspace and working records
+**Branch**: `main`
+
+### Summary
+
+Implemented Task-mode intake without first-send task creation, AI-owned atomic task tools, acceptance criteria, versioned research/approach/progress/verification/question records, validated source evidence and paged reads, bounded new-run context, flat desktop/mobile task inspector, and safe manual revision editing. Independent review corrected generation outcome evidence and long internal snapshots. Verified 57 files / 719 tests, lint, production build, actual mocked browser task/character/evidence flow, reload, next-request correction and stale-edit draft retention. Updated executable Trellis specs. User approved commit and archive; next child is task verification and wrap-up, with long-term memory still deferred.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `22c8b70` | (see git log) |
+| `7f8143c` | (see git log) |
+
+### Status
+
+[OK] **Completed**
