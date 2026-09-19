@@ -662,3 +662,26 @@ Delivered project-scoped reviewed memory CRUD, summary promotion, provenance and
 ### Status
 
 [OK] **Completed**
+
+
+## Session 29: Project memory retrieval and task transaction recovery
+
+**Date**: 2026-09-19
+**Task**: Project memory retrieval and task transaction recovery
+**Branch**: `main`
+
+### Summary
+
+Delivered reviewed project-scoped lexical memory selection, independent request envelope and immutable dispatch audit, reversible thread exclusions, smart-mode read tools and preview/history UI. Reproduced task inspector PrematureCommit with native Edge 150/500 cached lookups; fixed Promise adoption and recoverable summary reads with draft retention. Verified 64 files / 788 tests, lint, build and browser flows. Archived retrieval child; next: reference/document intake planning.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `e195bdf` | (see git log) |
+| `7d680e5` | (see git log) |
+| `90dbd1d` | (see git log) |
+
+### Status
+
+[OK] **Completed**
