@@ -1,1 +1,12 @@
-{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python3 .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file": ".trellis/spec/frontend/index.md", "reason": "Frontend package conventions and full-scope quality checklist."}
+{"file": ".trellis/spec/frontend/agent-creative-skills.md", "reason": "Existing generation confirmation, provider profiles, durable jobs and guarded application."}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Tool effect boundaries, strict schemas, permission snapshots and immutable protocol envelopes."}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Thread Web Locks, interruption, recovery and no startup network replay."}
+{"file": ".trellis/spec/frontend/agent-project-context.md", "reason": "Frozen project ownership and deletion boundaries."}
+{"file": ".trellis/spec/frontend/agent-references.md", "reason": "Reference/media ownership, immutable input bytes and source withdrawal."}
+{"file": ".trellis/spec/frontend/production-contracts.md", "reason": "Target revisions, scoped slot writes, media retention and export boundaries."}
+{"file": ".trellis/spec/frontend/agent-task-wrapup.md", "reason": "Current output evidence, completion blockers and native Dexie transaction behavior."}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Flat Agent theme, shared forms, media inspection and keyboard interactions."}
+{"file": ".trellis/spec/frontend/hook-guidelines.md", "reason": "Scoped live-query identity, loading/missing states and retained drafts."}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Repo/lib tests, type checks and final verification."}
+{"file": ".trellis/tasks/09-19-agent-batch-generation/research/existing-generation.md", "reason": "Verified source constraints and identity/recovery/application design implications."}

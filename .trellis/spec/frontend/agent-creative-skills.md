@@ -10,9 +10,9 @@ Read before extending creative CRUD, generation profiles, tool previews, recover
 - `AgentToolDefinition.requiresConfirmation?: boolean` is frozen into calls and checked against the registry; paid `submit_generation` requires confirmation under ask/assist/full. Other tools retain their policy.
 - `AgentToolDefinition.prepare?(args, context): Promise<AgentToolPreview>`; context includes optional saved preview. `saveToolPreview(runId, callId, preview)` saves it once while pending.
 - `executeAtomicTool(context, callback): Promise<unknown>` in `db/agentTools.ts`: local business mutation and successful result commit together. `AtomicToolRollbackError` certifies no committed business effect.
-- `GENERATION_TOOLS`: `generation_capabilities`, `submit_generation`, `check_generation`, `apply_generation`, `list_generation_jobs`.
+- `GENERATION_TOOLS`: `generation_capabilities`, `submit_generation`, `check_generation`, `apply_generation`, `list_generation_jobs`, `prepare_generation_batch`, `read_generation_batch`. Batch contracts live in [Batch Generation](./agent-batch-generation.md).
 - `prepareAgentGeneration`, `submitAgentGeneration`, `checkAgentGeneration`, `monitorAgentGeneration`, `prepareGenerationApply`, `applyAgentGeneration` in `lib/agent/generationRuntime.ts`.
-- Dexie v12 `agentGenerationJobs`: `id, &callId, runId, threadId, projectId, status, fingerprint, updatedAt`.
+- Dexie v18 `agentGenerationJobs`: sparse unique `callId` for single calls or sparse unique `batchItemId` plus `batchId` for batches; shared owner/status/fingerprint indexes remain. See [Batch Generation](./agent-batch-generation.md) for new batch/item tables.
 
 ## 3. Contracts
 - All six foundational skill groups default on. getGeneralAgentConfig transactionally upgrades legacy configurations without skillDefaultsVersion to version1 and enables all six once (user decision2026-09-19). New configurations persist version1 immediately. Later user switch choices, including an empty list, remain intact. New permissions/skills affect new runs; existing run snapshots and conversation-mode empty tool sets remain unchanged.

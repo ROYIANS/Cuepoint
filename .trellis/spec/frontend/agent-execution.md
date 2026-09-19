@@ -3,6 +3,8 @@
 ## 1. Scope / Trigger
 Read when changing Agent messages, execution lifecycle, retry, tool-loop integration or startup recovery. IndexedDB v8 adds studio-global agents and agentRuns; v9 adds the tool-call ledger. These records and credentials are excluded from project ZIPs.
 
+Batch queue, selection and genuine generation-source evidence extend these contracts; read [Batch Generation](./agent-batch-generation.md) when touching those paths.
+
 ## 2. Signatures
 - `beginAgentRun({threadId, connector, model, content?, retryOfRunId?}): Promise<AgentRun>`
 - `checkpointAgentRun(runId, sequence, output): Promise<void>`

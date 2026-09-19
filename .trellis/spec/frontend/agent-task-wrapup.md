@@ -5,6 +5,8 @@ Read when changing task review, completion, summary generation, evidence assembl
 source availability, recovery or wrap-up persistence. Working records remain in
 `agent-tasks.md`; this is not context compaction or cross-task long-term memory.
 
+Batch queue, selection and genuine generation-source evidence extend these contracts; read [Batch Generation](./agent-batch-generation.md) when touching those paths.
+
 ## 2. Signatures (DB / API)
 - Dexie v14 adds `agentTaskWrapups` and `agentTaskWrapupVersions`; existing data is
   preserved. Both are task/thread-owned studio data, excluded from project ZIPs.

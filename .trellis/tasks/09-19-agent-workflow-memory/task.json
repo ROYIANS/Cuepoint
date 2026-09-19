@@ -29,6 +29,6 @@
   ],
   "parent": null,
   "relatedFiles": [],
-  "notes": "Children 1-5 are archived. Child 6 reference intake and native image reading passed implementation, review and validation; user approved its commits and archival. Batch generation is the remaining scoped backlog child. Parent cross-child acceptance still requires final integration review.",
+  "notes": "Children 1–6 archived; child 7 implementation, independent review, 839 tests, browser validation and specs complete. Final native task A→memory→task B→video candidates→current evidence→reviewed completion passes. AC5 still requires final child work commits and archival; parent not yet complete.",
   "meta": {}
 }
