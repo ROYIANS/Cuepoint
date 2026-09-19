@@ -3,7 +3,7 @@
   "name": "agent-memory-management",
   "title": "Creative memory capture and management",
   "description": "Promote reviewed task experience into scoped, editable, source-linked memory.",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": "frontend",
   "scope": "agent-memory-management",
   "package": null,
@@ -15,12 +15,21 @@
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "2fedc10",
   "pr_url": null,
   "subtasks": [],
   "children": [],
   "parent": "09-19-agent-workflow-memory",
-  "relatedFiles": [],
-  "notes": "Scoped backlog. Depends on 09-19-agent-task-wrapup; detailed planning required before activation.",
+  "relatedFiles": [
+    "src/domain/projectMemory.ts",
+    "src/db/projectMemories.ts",
+    "src/lib/memory/schema.ts",
+    "src/lib/projectPackage.ts",
+    "src/components/memory/ProjectMemoryPage.tsx",
+    "src/components/memory/MemoryEditor.tsx",
+    "src/components/agent/TaskWrapup.tsx",
+    ".trellis/spec/frontend/project-memory.md"
+  ],
+  "notes": "Implementation complete: reviewed project memory CRUD, stable promotion editor, history/source lifecycle, ZIP pending-review transfer and UI. Full gate 61 files / 766 tests, lint/build/diff-check passed; browser fixtures passed. User approved grouped commits; implementation committed as 2fedc10. Ready for archive. Retrieval remains next child.",
   "meta": {}
 }

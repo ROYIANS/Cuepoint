@@ -1,1 +1,6 @@
-{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python3 .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file": ".trellis/spec/frontend/agent-project-context.md", "reason": "Project ownership and deletion boundary"}
+{"file": ".trellis/spec/frontend/agent-task-wrapup.md", "reason": "Confirmed sources and immutable summary revisions"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "Dexie transactions and project package remapping"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Shared primitives, flat UI and draft preservation"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Validation gates"}
+{"file": ".trellis/tasks/09-19-agent-memory-management/research/memory-foundation.md", "reason": "Actual source, package and UI integration evidence"}
