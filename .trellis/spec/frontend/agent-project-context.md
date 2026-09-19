@@ -48,6 +48,11 @@ independent assets/media into the bound project. Never mutate studio originals f
 bound run. Verify scope before preview and in write/claim/apply transactions, plus before
 paid submission. Model-provided ownerId cannot widen the run's authority.
 
+Unbound smart conversations may inspect a named project image through completed
+same-run discovery/read provenance only; see [Image Discovery](./agent-image-discovery.md).
+This narrow read path does not change the binding, write scope, memory selection
+or document access. Raw media IDs do not grant an unbound image read.
+
 Project deletion preserves chat/task/run/working-record/review history. Execution,
 resumption, tools, Todo edits, generation and summary preparation cannot proceed. Context
 compaction checks project existence/binding before each POST and before activation;

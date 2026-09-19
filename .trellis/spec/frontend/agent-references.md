@@ -20,6 +20,8 @@ material is original evidence, not automatically accepted business fact or memor
   audit preserve the actual prepared selection rather than the current library.
 - Tools: `project_reference_search`, `project_reference_read`, `read_project_image`.
   Read-image accepts a real project-owned `mediaId`, including generated media.
+  Named-project discovery and the exclusive `{discoveryCallId,candidateId}` reader
+  use the run-scoped contract in [Image Discovery](./agent-image-discovery.md).
 - `ReferenceSourceLink({projectId,attachment,label?,chunkIndex?})` is the shared
   source inspector for chat, task records and wrap-up evidence.
 

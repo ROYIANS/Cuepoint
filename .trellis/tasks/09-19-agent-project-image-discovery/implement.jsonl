@@ -1,0 +1,9 @@
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Required contract for scoped tools, native inputs, persistence and review."}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Required contract for scoped tools, native inputs, persistence and review."}
+{"file": ".trellis/spec/frontend/agent-references.md", "reason": "Required contract for scoped tools, native inputs, persistence and review."}
+{"file": ".trellis/spec/frontend/agent-task-wrapup.md", "reason": "Required contract for scoped tools, native inputs, persistence and review."}
+{"file": ".trellis/spec/frontend/agent-project-context.md", "reason": "Required contract for scoped tools, native inputs, persistence and review."}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Required contract for scoped tools, native inputs, persistence and review."}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Required contract for scoped tools, native inputs, persistence and review."}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Required contract for scoped tools, native inputs, persistence and review."}
+{"file": ".trellis/tasks/09-19-agent-project-image-discovery/research/existing-image-path.md", "reason": "Verified discovery and ownership gaps; avoid weakening existing image scope."}

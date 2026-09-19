@@ -19,11 +19,13 @@
 | [Agent Tools](./agent-tools.md) | Strict tools, permission snapshots, approval ledger and continuation | Filled |
 | [Creative Skills](./agent-creative-skills.md) | Business CRUD, frozen previews, atomic writes and durable media generation | Filled |
 | [Batch Generation](./agent-batch-generation.md) | Reviewed 20-item queue, two-worker safety, candidate selection and current evidence | Filled |
+| [Web Research](./agent-web-research.md) | Independent search connection, bounded source reads and truthful network recovery | Filled |
 | [Agent Tasks](./agent-tasks.md) | Shared task/chat identity, plan ownership, artifacts and explicit completion | Filled |
 | [Task Wrap-up](./agent-task-wrapup.md) | Evidence-backed review, durable summaries and explicit completion | Filled |
 | [Project Memory](./project-memory.md) | Reviewed project knowledge, provenance, revision CAS and ZIP transfer | Filled |
 | [Memory Retrieval](./agent-memory-retrieval.md) | Scoped lexical selection, independent request envelopes, audits and read tools | Filled |
 | [Project Context](./agent-project-context.md) | Project binding, bounded facts, tool scope and deletion guards | Filled |
+| [Image Discovery](./agent-image-discovery.md) | Named-project image lookup, same-run source proof and actual pixels | Filled |
 | [Project References](./agent-references.md) | Local reference parsing, shared source library and native model image input | Filled |
 | [Agent Context](./agent-context.md) | History policy, shared budgets and durable compaction | Filled |
 | [Agent Execution](./agent-execution.md) | Durable runs, ordered checkpoints, explicit retry and cross-tab recovery | Filled |
