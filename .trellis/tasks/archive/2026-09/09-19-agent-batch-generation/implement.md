@@ -1,6 +1,6 @@
 # Batch generation implementation plan
 
-Status: implementation and verification complete on 2026-09-19; concrete commit plan prepared, awaiting one-shot commit approval. Child/parent archival follows work commits.
+Status: completed on 2026-09-19. Approved work commits: e6e3f94 (feature), 2903466 (contracts and validation). Child archival and session journal follow these commits.
 
 ## 0. Planning and activation
 
@@ -81,8 +81,8 @@ git diff --check
 
 - [x] Verify parent AC0–AC5 using actual Task A → reviewed summary → promoted memory → Task B → batch selection/output → current evidence. Record remaining gaps explicitly; child completion does not automatically complete parent.
 - [x] Update executable frontend specs/index and retrospective for identity, recovery, selection and evidence lessons.
-- [ ] Propose session-owned logical work/docs commits, follow approved commit/archive/journal order; no push implied.
-- [ ] Archive child after verification/authorized commits and update parent with exact integration status.
+- [x] Propose session-owned logical work/docs commits, follow approved commit/archive/journal order; no push implied.
+- [x] Archive child after verification/authorized commits and update parent with exact integration status.
 
 ## Rollback checkpoints
 

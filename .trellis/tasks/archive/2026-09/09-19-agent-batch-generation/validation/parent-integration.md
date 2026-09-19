@@ -25,3 +25,7 @@ Task B creation used exactly two mocked model requests (tool call plus continuat
 - AC4: archive retains accessible source verified here; reference withdrawal/deletion tests remain in the archived reference-intake quality record.
 - AC3: batch runtime and native-browser gates pass unknown/reload/exact-POST/business-write checks. Native task B proves draft blocking, real output evidence and reviewed completion.
 - AC5: batch implementation, independent review, tests, native browser acceptance and spec updates are complete. Work commits and archival remain outstanding. Parent is not complete.
+
+## Finish update
+
+User approved commits on 2026-09-19. Feature commit: `e6e3f94`; documentation commit: `2903466`. Child archived after work commits; parent AC5 closes with that archive. Earlier pending-finish statements describe the pre-commit validation snapshot. Session journal records final commit/acceptance state.

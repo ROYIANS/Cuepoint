@@ -1,6 +1,6 @@
 # Batch media generation and result selection
 
-Status: implementation and verification complete, 2026-09-19. Task remains in progress pending approved work commits and archival. See validation/quality.md.
+Status: implementation and verification complete, 2026-09-19. Approved work commits e6e3f94 and 2903466 are complete; archived at session finish. See validation/quality.md.
 
 ## Goal
 Review and edit multiple target-bound image/video requests together, track real results, compare candidates and choose what is applied. Preserve partial success and recover after interruption without duplicate paid submissions or overwriting manual work.
@@ -48,4 +48,4 @@ Follow parent provenance, user-control, pure-frontend and visual-quality contrac
 
 ## Acceptance evidence
 
-AC1–AC8 passed the final source/tests/native-browser gates recorded in `validation/quality.md`. Independent review found and fixed storage-fault dispatch and lock-drain defects. No paid service calls were made. Final work commits and archival are pending the workflow commit-plan approval.
+AC1–AC8 passed the final source/tests/native-browser gates recorded in `validation/quality.md`. Independent review found and fixed storage-fault dispatch and lock-drain defects. No paid service calls were made. The user approved the commit plan with “提交吧”; work commits e6e3f94 and 2903466 completed before archival.

@@ -1,6 +1,6 @@
 # Proposed work commits
 
-Status: user approved this exact plan on 2026-09-19 with “提交吧”; execution authorized. All listed paths were edited by this session or its assigned agents. No unrecognized changes. No push is included.
+Status: user approved this exact plan on 2026-09-19 with “提交吧”; executed as e6e3f94 and 2903466. All listed paths were edited by this session or its assigned agents. No unrecognized changes. No push is included.
 
 ## 1. `feat: add reviewed batch generation and candidate selection`
 

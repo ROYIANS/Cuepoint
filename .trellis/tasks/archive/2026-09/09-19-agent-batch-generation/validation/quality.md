@@ -44,3 +44,7 @@ No unresolved correctness finding remains in independent source review. Live pro
 ## Finish state
 
 Executable batch spec and cross-links updated; retrospective recorded. All session edits are owned by this task, including the parent roadmap progress update. No commits or push have been made. Work commits require the one-shot concrete plan approval in workflow Phase 3.4; then archive the child and record the journal. Parent AC5 remains open until that archival gate completes.
+
+## Finish update
+
+User approved commits on 2026-09-19. Feature commit: `e6e3f94`; documentation commit: `2903466`. Child archived after work commits; parent AC5 closes with that archive. Earlier pending-finish statements describe the pre-commit validation snapshot. Session journal records final commit/acceptance state.

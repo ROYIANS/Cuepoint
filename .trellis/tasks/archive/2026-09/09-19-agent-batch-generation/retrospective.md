@@ -14,3 +14,7 @@ Delivered reviewed multi-target queues and candidate comparison with explicit ap
 
 ## Validation limits and finish
 Mocked providers protect against accidental charges but cannot certify account availability or live output quality. Browser fixtures additionally decode real locally produced media and run native IndexedDB transactions. Existing bundle size warnings are unchanged. Work commits, archival and journal recording remain pending the single workflow approval; parent roadmap completion waits for final child archival.
+
+## Finish update
+
+User approved commits on 2026-09-19. Feature commit: `e6e3f94`; documentation commit: `2903466`. Child archived after work commits; parent AC5 closes with that archive. Earlier pending-finish statements describe the pre-commit validation snapshot. Session journal records final commit/acceptance state.
