@@ -223,7 +223,7 @@ export function FloatingComposer({
         <div className="agent-composer-cluster">
           <div className="agent-composer-scope"><ProjectPicker projects={projects} projectId={projectId} required={projectRequired} locked={projectLocked} onChange={onProjectChange} />
           {!detail && <ModeSwitch mode={chatMode} onChange={onChatModeChange} />}</div>
-          <ComposerPlusMenu threadId={threadId} />
+          <ComposerPlusMenu threadId={threadId} projectId={projectId} />
           {detail ? <button type="button" className="agent-chip agent-control agent-control-icon" aria-label={expanded ? "退出全屏编辑" : "展开编辑器"} onClick={() => onExpandedChange?.(!expanded)}>
             {expanded ? <Minimize2 size={17} aria-hidden /> : <Expand size={17} aria-hidden />}
           </button> : null}

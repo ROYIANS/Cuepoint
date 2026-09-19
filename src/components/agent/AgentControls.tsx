@@ -1,8 +1,9 @@
+import { useNavigate } from "@tanstack/react-router";
 import { ContextParameters } from "./ContextParameters";
 import { useEffect, useRef, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Dropdown, Input, Switch, Tooltip } from "antd";
-import { ArrowLeft, Boxes, Check, ChevronDown, ChevronRight, Hand, Plus, Search, SlidersHorizontal, ShieldAlert, ShieldCheck } from "lucide-react";
+import { ArrowLeft, BookOpen, Boxes, Check, ChevronDown, ChevronRight, Hand, Plus, Search, SlidersHorizontal, ShieldAlert, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { db } from "@/db/database";
 import { GENERAL_AGENT_ID, type AgentPermissionMode } from "@/domain/agent";
@@ -93,7 +94,10 @@ export function AgentControls() {
   );
 }
 
-export function ComposerPlusMenu({ threadId }: { threadId?: string }) {
+export function ComposerPlusMenu({ threadId, projectId }: { threadId?: string; projectId?: string }) {
+  const navigate = useNavigate();
+  const project = useLiveQuery(async () => projectId ? (await db.projects.get(projectId)) ?? null : null, [projectId]);
+  const openMemory = () => { if (projectId && project) { setOpen(false); void navigate({ to: "/p/$projectId/memory", params: { projectId } }); } };
   const { config, saving, save, enabledSkills } = useAgentSettings();
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<"home" | "skills" | "parameters">("home");
@@ -135,10 +139,12 @@ export function ComposerPlusMenu({ threadId }: { threadId?: string }) {
     menu={{
       className: "agent-composer-menu",
       items: view === "home" ? [
+        ...(project ? [{ key: "memory", icon: <BookOpen size={16} />, label: <span className="agent-plus-row">项目记忆<span>规范与经验<ChevronRight size={14} /></span></span> }] : []),
         { key: "parameters", icon: <SlidersHorizontal size={16} />, label: <span className="agent-plus-row">对话参数<span>历史与压缩<ChevronRight size={14} /></span></span> },
         { key: "skills", icon: <Boxes size={16} />, label: <span className="agent-plus-row">技能<span>{enabledSkills.length} 项已启用<ChevronRight size={14} /></span></span> },
       ] : [],
       onClick: ({ key }) => {
+        if (key === "memory") { openMemory(); return; }
         if (key === "skills" || key === "parameters") { setView(key); return; }
         setOpen(false);
       },
@@ -146,7 +152,7 @@ export function ComposerPlusMenu({ threadId }: { threadId?: string }) {
     popupRender={(menu) => <div ref={panelRef}>{view === "parameters" ? <ContextParameters threadId={threadId} onBack={() => { setView("home"); setSearch(""); }} /> : view === "home" ? <div className="agent-control-panel">
       <div className="agent-skill-search"><Input variant="borderless" ref={searchInput} prefix={<Search size={14} />} value={search} onChange={(event) => setSearch(event.target.value)} placeholder="搜索技能与操作…" aria-label="搜索技能与操作" allowClear /></div>
       <div className="agent-control-panel-heading">创作能力</div>
-      {search.trim() ? <div className="agent-skill-list">{ /参数|历史|压缩|context|parameter/i.test(search) && <button type="button" className="agent-plus-search-result" onClick={() => setView("parameters")}><SlidersHorizontal size={16} />对话参数<ChevronRight size={14} /></button>}{skills.length ? skills.map((skill) => <button key={skill.id} type="button" className="agent-plus-search-result" onClick={() => setView("skills")}><Boxes size={16} /><span className="agent-control-option"><span>{skill.name}</span><small>{skill.description}</small></span><ChevronRight size={14} /></button>) : !/参数|历史|压缩|context|parameter/i.test(search) ? <p className="agent-control-panel-note">没有匹配的技能或操作</p> : null}</div> : menu}
+      {search.trim() ? <div className="agent-skill-list">{project && /记忆|项目|memory/i.test(search) && <button type="button" className="agent-plus-search-result" onClick={openMemory}><BookOpen size={16} />项目记忆<ChevronRight size={14} /></button>}{ /参数|历史|压缩|context|parameter/i.test(search) && <button type="button" className="agent-plus-search-result" onClick={() => setView("parameters")}><SlidersHorizontal size={16} />对话参数<ChevronRight size={14} /></button>}{skills.length ? skills.map((skill) => <button key={skill.id} type="button" className="agent-plus-search-result" onClick={() => setView("skills")}><Boxes size={16} /><span className="agent-control-option"><span>{skill.name}</span><small>{skill.description}</small></span><ChevronRight size={14} /></button>) : !/参数|历史|压缩|context|parameter/i.test(search) && !(project && /记忆|项目|memory/i.test(search)) ? <p className="agent-control-panel-note">没有匹配的技能或操作</p> : null}</div> : menu}
     </div> : <div className="agent-control-panel agent-skill-panel">
       <div className="agent-skill-heading">
         <button type="button" className="agent-skill-back" aria-label="返回更多选项" onClick={() => setView("home")}><ArrowLeft size={16} />技能</button>

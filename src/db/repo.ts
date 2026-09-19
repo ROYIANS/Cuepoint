@@ -266,6 +266,8 @@ export async function deleteProject(id: Id): Promise<void> {
     "rw",
     [
       db.projects,
+      db.projectMemories,
+      db.projectMemoryVersions,
       db.characters,
       db.scenes,
       db.props,
@@ -277,6 +279,8 @@ export async function deleteProject(id: Id): Promise<void> {
       db.agentGenerationJobs,
     ],
     async () => {
+      await db.projectMemories.where("projectId").equals(id).delete();
+      await db.projectMemoryVersions.where("projectId").equals(id).delete();
       await db.agentGenerationJobs.where("projectId").equals(id).delete();
       await db.productionProposals.where("projectId").equals(id).delete();
       await db.characters.where("projectId").equals(id).delete();

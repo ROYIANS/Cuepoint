@@ -104,7 +104,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
     );
   }
 
-  if (mode === "film" && firstProjectEpisode === null && !projectHome) {
+  if (mode === "film" && firstProjectEpisode === null && !projectHome && pathname !== `/p/${projectId}/memory`) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-3">
         <p>这个单片项目缺少内部集</p>
@@ -255,6 +255,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
               })}
             </>
           )}
+          <Link to="/p/$projectId/memory" params={{ projectId }} className={cn("hover:text-foreground", pathname === `/p/${projectId}/memory` && "text-foreground font-medium")}>记忆</Link>
         </nav>
         <div className="col-start-2 row-start-1 flex items-center justify-end gap-1 sm:col-start-3">
           <Button variant="ghost" size="sm" onClick={() => changeSettingsOpen(true)} aria-label="项目设定">

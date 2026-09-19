@@ -1,3 +1,13 @@
+import type {
+  ProjectMemory,
+  ProjectMemoryVersion,
+  MemorySource,
+} from "@/domain/projectMemory";
+import {
+  normalizeMemoryText,
+  projectMemorySchema,
+  projectMemoryVersionSchema,
+} from "@/lib/memory/schema";
 import { parseGenerationDefaults } from "@/domain/output";
 import JSZip from "jszip";
 import { z } from "zod";
@@ -32,7 +42,11 @@ import {
   type StyleImageSlot,
   type VisualStyle,
 } from "@/domain/types";
-import { parseGenerationSlot, parseShotPictureSlots, remapSlot } from "@/domain/slot";
+import {
+  parseGenerationSlot,
+  parseShotPictureSlots,
+  remapSlot,
+} from "@/domain/slot";
 import { createId, nowIso } from "./ids";
 
 const recordSchema = z.object({}).passthrough();
@@ -79,7 +93,8 @@ function pickExtra(
 
 function extFor(mimeType: string, filename: string): string {
   const fromName = filename.split(".").pop();
-  if (fromName && fromName !== filename && fromName.length <= 5) return fromName;
+  if (fromName && fromName !== filename && fromName.length <= 5)
+    return fromName;
   if (mimeType.includes("png")) return "png";
   if (mimeType.includes("webp")) return "webp";
   if (mimeType.includes("gif")) return "gif";
@@ -105,21 +120,33 @@ function mimeForFilename(filename: string): string {
   return (extension && known[extension]) || "application/octet-stream";
 }
 
-function optionalText(raw: Record<string, unknown>, key: string): string | undefined {
+function optionalText(
+  raw: Record<string, unknown>,
+  key: string,
+): string | undefined {
   if (raw[key] === undefined) return undefined;
   if (typeof raw[key] !== "string") throw new PackageError(`${key} 必须是文本`);
   return raw[key];
 }
 
-function optionalIds(raw: Record<string, unknown>, key: string): Id[] | undefined {
+function optionalIds(
+  raw: Record<string, unknown>,
+  key: string,
+): Id[] | undefined {
   const value = raw[key];
   if (value === undefined) return undefined;
-  if (!Array.isArray(value) || value.some((id) => typeof id !== "string")) throw new PackageError(`${key} 必须是 ID 数组`);
+  if (!Array.isArray(value) || value.some((id) => typeof id !== "string"))
+    throw new PackageError(`${key} 必须是 ID 数组`);
   return [...new Set(value as string[])];
 }
 
 const PROJECT_KEYS = [
-  "brief", "genre", "audience", "tone", "defaultStyleId", "generationDefaults",
+  "brief",
+  "genre",
+  "audience",
+  "tone",
+  "defaultStyleId",
+  "generationDefaults",
   "id",
   "name",
   "mode",
@@ -134,9 +161,13 @@ const PROJECT_KEYS = [
   "extra",
 ];
 
-function parseProject(raw: Record<string, unknown>, fallbackName: string): Project {
-  const visible = (raw.columnSettings as { visible?: ShotColumnId[] } | undefined)
-    ?.visible;
+function parseProject(
+  raw: Record<string, unknown>,
+  fallbackName: string,
+): Project {
+  const visible = (
+    raw.columnSettings as { visible?: ShotColumnId[] } | undefined
+  )?.visible;
   const at = nowIso();
   const coverMediaId =
     raw.coverMediaId != null && String(raw.coverMediaId).trim()
@@ -171,7 +202,9 @@ function parseProject(raw: Record<string, unknown>, fallbackName: string): Proje
 }
 
 const CHARACTER_KEYS = [
-  "personality", "motivation", "voice",
+  "personality",
+  "motivation",
+  "voice",
   "id",
   "projectId",
   "name",
@@ -191,19 +224,27 @@ function parseNamedSlots<K extends string>(
 ): Partial<Record<K, GenerationSlot>> {
   const slots: Partial<Record<K, GenerationSlot>> = {};
   if (rawSlots && typeof rawSlots === "object") {
-    for (const [key, value] of Object.entries(rawSlots as Record<string, unknown>)) {
+    for (const [key, value] of Object.entries(
+      rawSlots as Record<string, unknown>,
+    )) {
       slots[key as K] = parseGenerationSlot(value);
     }
   }
   if (legacyImages && typeof legacyImages === "object") {
-    for (const [key, value] of Object.entries(legacyImages as Record<string, unknown>)) {
-      if (!slots[key as K]) slots[key as K] = parseGenerationSlot(undefined, value);
+    for (const [key, value] of Object.entries(
+      legacyImages as Record<string, unknown>,
+    )) {
+      if (!slots[key as K])
+        slots[key as K] = parseGenerationSlot(undefined, value);
     }
   }
   return slots;
 }
 
-function parseCharacter(raw: Record<string, unknown>, projectId: Id): Character {
+function parseCharacter(
+  raw: Record<string, unknown>,
+  projectId: Id,
+): Character {
   const at = nowIso();
   return {
     id: String(raw.id ?? createId("chr")),
@@ -223,7 +264,8 @@ function parseCharacter(raw: Record<string, unknown>, projectId: Id): Character 
 }
 
 const SCENE_KEYS = [
-  "geography", "lighting",
+  "geography",
+  "lighting",
   "id",
   "projectId",
   "name",
@@ -258,7 +300,11 @@ function parseScene(raw: Record<string, unknown>, projectId: Id): Scene {
 }
 
 const PROP_KEYS = [
-  "appearance", "material", "size", "usage", "continuity",
+  "appearance",
+  "material",
+  "size",
+  "usage",
+  "continuity",
   "id",
   "projectId",
   "name",
@@ -291,7 +337,11 @@ function parseProp(raw: Record<string, unknown>, projectId: Id): Prop {
 }
 
 const STYLE_KEYS = [
-  "palette", "lighting", "lens", "composition", "negativePrompt",
+  "palette",
+  "lighting",
+  "lens",
+  "composition",
+  "negativePrompt",
   "id",
   "projectId",
   "name",
@@ -333,7 +383,11 @@ const EPISODE_KEYS = [
   "extra",
 ];
 
-function parseEpisode(raw: Record<string, unknown>, projectId: Id, index: number): Episode {
+function parseEpisode(
+  raw: Record<string, unknown>,
+  projectId: Id,
+  index: number,
+): Episode {
   const at = nowIso();
   return {
     id: String(raw.id ?? createId("ep")),
@@ -341,7 +395,9 @@ function parseEpisode(raw: Record<string, unknown>, projectId: Id, index: number
     order: Number.isFinite(Number(raw.order)) ? Number(raw.order) : index,
     title: String(raw.title ?? ""),
     story: normalizeEpisodeStory(raw.story),
-    ...(raw.shotFilters === undefined ? {} : { shotFilters: normalizeShotFilters(raw.shotFilters) }),
+    ...(raw.shotFilters === undefined
+      ? {}
+      : { shotFilters: normalizeShotFilters(raw.shotFilters) }),
     createdAt: String(raw.createdAt ?? at),
     updatedAt: String(raw.updatedAt ?? at),
     extra: pickExtra(raw, EPISODE_KEYS),
@@ -364,7 +420,8 @@ function synthesizeFirstEpisode(
 }
 
 const SHOT_KEYS = [
-  "propIds", "styleId",
+  "propIds",
+  "styleId",
   "id",
   "projectId",
   "episodeId",
@@ -432,7 +489,11 @@ function parseShot(
   };
 }
 
-function remapId(map: Map<string, string>, oldId: string | undefined, prefix: string) {
+function remapId(
+  map: Map<string, string>,
+  oldId: string | undefined,
+  prefix: string,
+) {
   if (!oldId) return undefined;
   const existing = map.get(oldId);
   if (existing) return existing;
@@ -441,32 +502,232 @@ function remapId(map: Map<string, string>, oldId: string | undefined, prefix: st
   return next;
 }
 
+type MemoryPackage = {
+  memories: ProjectMemory[];
+  memoryVersions: ProjectMemoryVersion[];
+};
+
+/** Validate the whole aggregate before any imported project or media is persisted. */
+function parseMemoryPackage(
+  rawRows: unknown,
+  rawVersions: unknown,
+  projectId: unknown,
+): MemoryPackage {
+  const rows = z
+    .array(projectMemorySchema)
+    .safeParse(rawRows === undefined ? [] : rawRows);
+  const versions = z
+    .array(projectMemoryVersionSchema)
+    .safeParse(rawVersions === undefined ? [] : rawVersions);
+  if (!rows.success || !versions.success)
+    throw new PackageError("项目记忆或历史版本格式无效");
+  const memories = rows.data;
+  const memoryVersions = versions.data;
+  const fail = () => {
+    throw new PackageError("项目记忆的归属、替代关系或版本链无效");
+  };
+  const byId = new Map(memories.map((row) => [row.id, row]));
+  if (
+    byId.size !== memories.length ||
+    new Set(memoryVersions.map((row) => row.versionId)).size !==
+      memoryVersions.length
+  )
+    fail();
+  const chains = new Map<string, ProjectMemoryVersion[]>();
+  for (const version of memoryVersions) {
+    if (
+      !byId.has(version.memoryId) ||
+      version.projectId !== projectId ||
+      version.snapshot.id !== version.memoryId ||
+      version.snapshot.projectId !== projectId ||
+      version.snapshot.revision !== version.revision
+    )
+      fail();
+    const chain = chains.get(version.memoryId) ?? [];
+    chain.push(version);
+    chains.set(version.memoryId, chain);
+  }
+  const validateSnapshot = (row: ProjectMemory) => {
+    if (row.projectId !== projectId || row.projectId === "studio") fail();
+    if (row.source.kind === "summary" && row.source.projectId !== projectId)
+      fail();
+    if (row.supersededBy === row.id) fail();
+  };
+  for (const row of memories) {
+    validateSnapshot(row);
+    const chain = (chains.get(row.id) ?? []).sort(
+      (a, b) => a.revision - b.revision,
+    );
+    if (
+      chain.length !== row.revision ||
+      chain.some((v, index) => v.revision !== index + 1)
+    )
+      fail();
+    if (JSON.stringify(chain.at(-1)?.snapshot) !== JSON.stringify(row)) fail();
+    for (const version of chain) validateSnapshot(version.snapshot);
+    const visited = new Set<string>([row.id]);
+    let next = row.supersededBy;
+    while (next) {
+      if (visited.has(next)) fail();
+      visited.add(next);
+      next = byId.get(next)?.supersededBy;
+    }
+  }
+  // Match CRUD topic identity after validating the original chain, so normalization
+  // cannot conceal inconsistent source snapshots or bypass same-topic conflicts.
+  for (const row of memories) row.topicKey = normalizeMemoryText(row.topicKey);
+  for (const version of memoryVersions) {
+    version.snapshot.topicKey = normalizeMemoryText(version.snapshot.topicKey);
+  }
+  return { memories, memoryVersions };
+}
+
+function detachedMemorySource(row: ProjectMemory): MemorySource {
+  const source = row.source;
+  if (source.kind === "imported") return { ...source };
+  return {
+    kind: "imported",
+    originProjectId: row.projectId,
+    originMemoryId: row.id,
+    originalKind: source.kind,
+    excerpt:
+      source.kind === "summary" ? source.excerpt : row.body.slice(0, 3000),
+    ...(source.kind === "summary"
+      ? {
+          taskTitle: source.taskTitle,
+          summaryId: source.summaryId,
+          summaryRevision: source.summaryRevision,
+          evidence: source.evidence,
+        }
+      : {}),
+  };
+}
+
+function remapMemoryPackage(
+  input: MemoryPackage,
+  projectId: Id,
+  at: string,
+): MemoryPackage {
+  const ids = new Map(input.memories.map((row) => [row.id, createId("pm")]));
+  const snapshot = (row: ProjectMemory): ProjectMemory => ({
+    ...row,
+    id: ids.get(row.id)!,
+    projectId,
+    source: detachedMemorySource(row),
+    supersededBy: row.supersededBy ? ids.get(row.supersededBy) : undefined,
+  });
+  const memoryVersions = input.memoryVersions.map((version) => ({
+    ...version,
+    versionId: createId("pmv"),
+    memoryId: ids.get(version.memoryId)!,
+    projectId,
+    snapshot: snapshot(version.snapshot),
+  }));
+  const memories = input.memories.map((row) => {
+    const current = {
+      ...snapshot(row),
+      status: "pending_review" as const,
+      revision: row.revision + 1,
+      updatedAt: at,
+    };
+    delete current.reviewedAt;
+    const detachedReplacement = input.memoryVersions.some(
+      (version) =>
+        version.memoryId === row.id &&
+        version.snapshot.supersededBy &&
+        !ids.has(version.snapshot.supersededBy),
+    );
+    memoryVersions.push({
+      versionId: createId("pmv"),
+      memoryId: current.id,
+      projectId,
+      revision: current.revision,
+      reason: `导入项目备份，等待重新审核${detachedReplacement ? "；原替代条目已删除，已解除关联" : ""}`,
+      snapshot: current,
+    });
+    return current;
+  });
+  return { memories, memoryVersions };
+}
+
 export async function exportProjectZip(projectId: Id): Promise<Blob> {
   // Snapshot all JSON rows and referenced Blobs under one read transaction.
   // Compression happens after the transaction closes; no external awaits hold it open.
-  const { project, characters, scenes, props, styles, episodes, shots, mediaRecords } =
-    await db.transaction("r", [db.projects, db.characters, db.scenes, db.props, db.styles, db.episodes, db.shots, db.media], async () => {
+  const {
+    project,
+    characters,
+    scenes,
+    props,
+    styles,
+    episodes,
+    shots,
+    mediaRecords,
+    memories,
+    memoryVersions,
+  } = await db.transaction(
+    "r",
+    [
+      db.projects,
+      db.characters,
+      db.scenes,
+      db.props,
+      db.styles,
+      db.episodes,
+      db.shots,
+      db.media,
+      db.projectMemories,
+      db.projectMemoryVersions,
+    ],
+    async () => {
       const project = await db.projects.get(projectId);
       if (!project) throw new PackageError("项目不存在");
-      const [characters, scenes, props, styles, episodes, shots] = await Promise.all([
+      const [
+        characters,
+        scenes,
+        props,
+        styles,
+        episodes,
+        shots,
+        memories,
+        memoryVersions,
+      ] = await Promise.all([
         db.characters.where("projectId").equals(projectId).toArray(),
         db.scenes.where("projectId").equals(projectId).toArray(),
         db.props.where("projectId").equals(projectId).toArray(),
         db.styles.where("projectId").equals(projectId).toArray(),
         db.episodes.where("projectId").equals(projectId).sortBy("order"),
         db.shots.where("projectId").equals(projectId).sortBy("order"),
+        db.projectMemories.where("projectId").equals(projectId).toArray(),
+        db.projectMemoryVersions.where("projectId").equals(projectId).toArray(),
       ]);
       const mediaIds = await collectMediaIds(projectId);
       const mediaRecords = (await db.media.bulkGet([...mediaIds])).filter(
-        (media): media is MediaRecord => media !== undefined && media.projectId === projectId,
+        (media): media is MediaRecord =>
+          media !== undefined && media.projectId === projectId,
       );
-      return { project, characters, scenes, props, styles, episodes, shots, mediaRecords };
-    });
+      return {
+        project,
+        characters,
+        scenes,
+        props,
+        styles,
+        episodes,
+        shots,
+        mediaRecords,
+        memories,
+        memoryVersions,
+      };
+    },
+  );
   const zip = new JSZip();
   zip.file(
     "manifest.json",
     JSON.stringify(
-      { format: PACKAGE_FORMAT, exportedAt: nowIso(), projectName: project.name },
+      {
+        format: PACKAGE_FORMAT,
+        exportedAt: nowIso(),
+        projectName: project.name,
+      },
       null,
       2,
     ),
@@ -478,6 +739,8 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
   zip.file("styles.json", JSON.stringify(styles, null, 2));
   zip.file("episodes.json", JSON.stringify(episodes, null, 2));
   zip.file("shots.json", JSON.stringify(shots, null, 2));
+  zip.file("memories.json", JSON.stringify(memories, null, 2));
+  zip.file("memoryVersions.json", JSON.stringify(memoryVersions, null, 2));
   for (const media of mediaRecords) {
     const filename = `media/${media.id}.${extFor(media.mimeType, media.filename)}`;
     zip.file(filename, media.blob);
@@ -491,7 +754,9 @@ export async function importProjectZip(file: Blob): Promise<Project> {
   });
   const manifestFile = zip.file("manifest.json");
   if (!manifestFile) throw new PackageError("缺少 manifest.json");
-  const manifestJson = JSON.parse(await manifestFile.async("string")) as unknown;
+  const manifestJson = JSON.parse(
+    await manifestFile.async("string"),
+  ) as unknown;
   const manifest = manifestSchema.safeParse(manifestJson);
   if (!manifest.success) {
     throw new PackageError("不是小光点项目包（manifest.format 不匹配）");
@@ -510,14 +775,26 @@ export async function importProjectZip(file: Blob): Promise<Project> {
     }
   };
 
-  const projectRaw = asRecord(await readJson("project.json", true), "project.json");
-  const charactersRaw = asArray(await readJson("characters.json"), "characters.json");
+  const projectRaw = asRecord(
+    await readJson("project.json", true),
+    "project.json",
+  );
+  const charactersRaw = asArray(
+    await readJson("characters.json"),
+    "characters.json",
+  );
   const scenesRaw = asArray(await readJson("scenes.json"), "scenes.json");
   const propsRaw = asArray(await readJson("props.json"), "props.json");
   const stylesRaw = asArray(await readJson("styles.json"), "styles.json");
   const episodesFile = await readJson("episodes.json");
-  const episodesRaw = episodesFile == null ? [] : asArray(episodesFile, "episodes.json");
+  const episodesRaw =
+    episodesFile == null ? [] : asArray(episodesFile, "episodes.json");
   const shotsRaw = asArray(await readJson("shots.json"), "shots.json");
+  const memoryPackage = parseMemoryPackage(
+    await readJson("memories.json"),
+    await readJson("memoryVersions.json"),
+    projectRaw.id,
+  );
   const hasEpisodes = episodesRaw.length > 0;
 
   const project = parseProject(projectRaw, "导入的项目");
@@ -526,6 +803,11 @@ export async function importProjectZip(file: Blob): Promise<Project> {
   project.id = projectId;
   project.createdAt = at;
   project.updatedAt = at;
+  const { memories, memoryVersions } = remapMemoryPackage(
+    memoryPackage,
+    projectId,
+    at,
+  );
   if (!hasEpisodes) {
     project.columnSettings = { visible: [...DEFAULT_VISIBLE_COLUMNS] };
   }
@@ -616,7 +898,8 @@ export async function importProjectZip(file: Blob): Promise<Project> {
     return style;
   });
 
-  if (project.defaultStyleId !== undefined) project.defaultStyleId = styleMap.get(project.defaultStyleId);
+  if (project.defaultStyleId !== undefined)
+    project.defaultStyleId = styleMap.get(project.defaultStyleId);
 
   const parsedEpisodes = hasEpisodes
     ? episodesRaw.map((raw, index) => parseEpisode(raw, projectId, index))
@@ -672,10 +955,13 @@ export async function importProjectZip(file: Blob): Promise<Project> {
       .map((id) => characterMap.get(id))
       .filter((id): id is string => Boolean(id));
     shot.sceneId = shot.sceneId ? sceneMap.get(shot.sceneId) : undefined;
-    if (shot.propIds !== undefined) shot.propIds = shot.propIds.flatMap((id) => propMap.get(id) ?? []);
+    if (shot.propIds !== undefined)
+      shot.propIds = shot.propIds.flatMap((id) => propMap.get(id) ?? []);
     // A missing explicit style must not unexpectedly inherit a different default.
-    if (typeof shot.styleId === "string") shot.styleId = styleMap.get(shot.styleId) ?? null;
-    const beatMap = beatMaps.get(oldEpisodeId) ?? beatMaps.values().next().value;
+    if (typeof shot.styleId === "string")
+      shot.styleId = styleMap.get(shot.styleId) ?? null;
+    const beatMap =
+      beatMaps.get(oldEpisodeId) ?? beatMaps.values().next().value;
     shot.beatId = shot.beatId ? beatMap?.get(shot.beatId) : undefined;
     return shot;
   });
@@ -692,6 +978,8 @@ export async function importProjectZip(file: Blob): Promise<Project> {
         db.episodes,
         db.shots,
         db.media,
+        db.projectMemories,
+        db.projectMemoryVersions,
       ],
       async () => {
         await db.projects.add(project);
@@ -702,6 +990,9 @@ export async function importProjectZip(file: Blob): Promise<Project> {
         if (episodes.length) await db.episodes.bulkAdd(episodes);
         if (shots.length) await db.shots.bulkAdd(shots);
         if (mediaRecords.length) await db.media.bulkAdd(mediaRecords);
+        if (memories.length) await db.projectMemories.bulkAdd(memories);
+        if (memoryVersions.length)
+          await db.projectMemoryVersions.bulkAdd(memoryVersions);
       },
     );
   } catch (error) {

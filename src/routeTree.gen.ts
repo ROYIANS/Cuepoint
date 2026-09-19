@@ -33,6 +33,7 @@ import { Route as StudioStylesIndexRouteImport } from './routes/_studio.styles.i
 import { Route as StudioStylesStyleIdRouteImport } from './routes/_studio.styles.$styleId'
 import { Route as PProjectIdIndexRouteImport } from './routes/p.$projectId.index'
 import { Route as PProjectIdAssetsRouteImport } from './routes/p.$projectId.assets'
+import { Route as PProjectIdMemoryRouteImport } from './routes/p.$projectId.memory'
 import { Route as PProjectIdPlanRouteImport } from './routes/p.$projectId.plan'
 import { Route as PProjectIdProduceRouteImport } from './routes/p.$projectId.produce'
 import { Route as PProjectIdReportRouteImport } from './routes/p.$projectId.report'
@@ -170,6 +171,11 @@ const PProjectIdAssetsRoute = PProjectIdAssetsRouteImport.update({
   path: '/assets',
   getParentRoute: () => PProjectIdRoute,
 } as any)
+const PProjectIdMemoryRoute = PProjectIdMemoryRouteImport.update({
+  id: '/memory',
+  path: '/memory',
+  getParentRoute: () => PProjectIdRoute,
+} as any)
 const PProjectIdPlanRoute = PProjectIdPlanRouteImport.update({
   id: '/plan',
   path: '/plan',
@@ -277,6 +283,7 @@ export interface FileRoutesByFullPath {
   '/scenes/$sceneId': typeof StudioScenesSceneIdRoute
   '/styles/$styleId': typeof StudioStylesStyleIdRoute
   '/p/$projectId/assets': typeof PProjectIdAssetsRouteWithChildren
+  '/p/$projectId/memory': typeof PProjectIdMemoryRoute
   '/p/$projectId/plan': typeof PProjectIdPlanRoute
   '/p/$projectId/produce': typeof PProjectIdProduceRoute
   '/p/$projectId/report': typeof PProjectIdReportRoute
@@ -311,6 +318,7 @@ export interface FileRoutesByTo {
   '/props/$propId': typeof StudioPropsPropIdRoute
   '/scenes/$sceneId': typeof StudioScenesSceneIdRoute
   '/styles/$styleId': typeof StudioStylesStyleIdRoute
+  '/p/$projectId/memory': typeof PProjectIdMemoryRoute
   '/p/$projectId/plan': typeof PProjectIdPlanRoute
   '/p/$projectId/produce': typeof PProjectIdProduceRoute
   '/p/$projectId/report': typeof PProjectIdReportRoute
@@ -353,6 +361,7 @@ export interface FileRoutesById {
   '/_studio/scenes/$sceneId': typeof StudioScenesSceneIdRoute
   '/_studio/styles/$styleId': typeof StudioStylesStyleIdRoute
   '/p/$projectId/assets': typeof PProjectIdAssetsRouteWithChildren
+  '/p/$projectId/memory': typeof PProjectIdMemoryRoute
   '/p/$projectId/plan': typeof PProjectIdPlanRoute
   '/p/$projectId/produce': typeof PProjectIdProduceRoute
   '/p/$projectId/report': typeof PProjectIdReportRoute
@@ -396,6 +405,7 @@ export interface FileRouteTypes {
     | '/scenes/$sceneId'
     | '/styles/$styleId'
     | '/p/$projectId/assets'
+    | '/p/$projectId/memory'
     | '/p/$projectId/plan'
     | '/p/$projectId/produce'
     | '/p/$projectId/report'
@@ -430,6 +440,7 @@ export interface FileRouteTypes {
     | '/props/$propId'
     | '/scenes/$sceneId'
     | '/styles/$styleId'
+    | '/p/$projectId/memory'
     | '/p/$projectId/plan'
     | '/p/$projectId/produce'
     | '/p/$projectId/report'
@@ -471,6 +482,7 @@ export interface FileRouteTypes {
     | '/_studio/scenes/$sceneId'
     | '/_studio/styles/$styleId'
     | '/p/$projectId/assets'
+    | '/p/$projectId/memory'
     | '/p/$projectId/plan'
     | '/p/$projectId/produce'
     | '/p/$projectId/report'
@@ -668,6 +680,13 @@ declare module '@tanstack/react-router' {
       path: '/assets'
       fullPath: '/p/$projectId/assets'
       preLoaderRoute: typeof PProjectIdAssetsRouteImport
+      parentRoute: typeof PProjectIdRoute
+    }
+    '/p/$projectId/memory': {
+      id: '/p/$projectId/memory'
+      path: '/memory'
+      fullPath: '/p/$projectId/memory'
+      preLoaderRoute: typeof PProjectIdMemoryRouteImport
       parentRoute: typeof PProjectIdRoute
     }
     '/p/$projectId/plan': {
@@ -922,6 +941,7 @@ const PProjectIdEEpisodeIdRouteWithChildren =
 
 interface PProjectIdRouteChildren {
   PProjectIdAssetsRoute: typeof PProjectIdAssetsRouteWithChildren
+  PProjectIdMemoryRoute: typeof PProjectIdMemoryRoute
   PProjectIdPlanRoute: typeof PProjectIdPlanRoute
   PProjectIdProduceRoute: typeof PProjectIdProduceRoute
   PProjectIdReportRoute: typeof PProjectIdReportRoute
@@ -934,6 +954,7 @@ interface PProjectIdRouteChildren {
 
 const PProjectIdRouteChildren: PProjectIdRouteChildren = {
   PProjectIdAssetsRoute: PProjectIdAssetsRouteWithChildren,
+  PProjectIdMemoryRoute: PProjectIdMemoryRoute,
   PProjectIdPlanRoute: PProjectIdPlanRoute,
   PProjectIdProduceRoute: PProjectIdProduceRoute,
   PProjectIdReportRoute: PProjectIdReportRoute,
