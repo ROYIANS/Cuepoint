@@ -1,0 +1,13 @@
+# Browser parser implementation evidence
+
+- Installed exact versions: `pdfjs-dist@5.4.530` (Apache-2.0), `mammoth@1.12.0` (BSD-2-Clause). Versions intentionally match the inspected LobeHub loader foundation. Installed with the explicit machine pnpm path; its project package-manager delegation used pnpm 10.15.0, never the Codex Runtime pnpm 11.
+- PDF.js uses lazy browser import and a locally bundled `pdf.worker.min.mjs` URL. Extraction uses `getDocument`, sequential page `getTextContent`, actual page locators, page cleanup and loading task destruction. Predefined CJK CMaps and standard-font data are bundled as local Vite assets and fetched only through allowlisted package filenames; no remote CMaps/fonts/OCR service is configured; password/scan-only cases are explicit failures and blank pages are disclosed.
+- Mammoth uses its browser bundle `extractRawText({arrayBuffer})`, not HTML conversion. Extraction runs inside an explicitly terminable 60-second worker. DOCX paragraphs are source units; embedded images and page-layout interpretation are not claimed.
+- DOCX preflight rejects ZIP64, encryption, malformed directories, more than 4096 entries and declared aggregate uncompressed sizes above 64 MiB. Every real inflated stream also counts bytes before accumulation, pauses/rejects on overrun, then validated entries are repacked as STORE for Mammoth. JSZip 3.x `ZipObject.internalStream` exists in installed `lib/zipObject.js` but lacks a TypeScript declaration; a local minimal interface documents this seam.
+- TXT/MD use fatal UTF-8 or BOM UTF-16LE/BE decoding, reject binary NUL, and preserve original line locators. Chunk limits and document extraction limits are centralized in `domain/references.ts`.
+- File hashing, byte reads, worker waits and parsing are outside Dexie transactions. Final writes revalidate project existence and operation identity to prevent removed or superseded imports from returning.
+- Initial production build exposed Vite's default IIFE worker output incompatibility with a dynamic import in the DOCX worker graph. Keep the Mammoth import static *inside the lazy worker graph* so the ordinary chat bundle still does not load the parser and Vite can emit one worker bundle.
+
+Primary references inspected: https://mozilla.github.io/pdf.js/examples/ and https://github.com/mwilliamson/mammoth.js . Package licenses verified directly in installed package.json files. The preserved upstream dependency licenses are included by npm packages; application license remains MIT.
+
+- Resource review added a 100,000 line/paragraph source-unit cap (blank-line files cannot allocate millions of source units) and image header dimensions are checked using the existing generationImageDimensions helper before browser decoding.

@@ -39,6 +39,7 @@ pnpm dev
 
 | 项目 | 使用与参考 |
 | --- | --- |
+| [PDF.js](https://github.com/mozilla/pdf.js)、[Mammoth.js](https://github.com/mwilliamson/mammoth.js) | 浏览器本地 PDF 正文与 DOCX 文本提取；分别采用 Apache-2.0、BSD-2-Clause 许可 |
 | [LobeHub](https://github.com/lobehub/lobehub) | 完整 Model Bank 数据来源；Agent、聊天输入区和上下文交互的实现参考。原始快照及许可保存在 [`vendor/lobehub`](vendor/lobehub/README.md) |
 | [Lobe UI](https://github.com/lobehub/lobe-ui)、[Lobe Icons](https://github.com/lobehub/lobe-icons)、[Fluent Emoji](https://github.com/lobehub/fluent-emoji) | 聊天组件、模型品牌图标与表情资源 |
 | [React](https://react.dev/)、[TypeScript](https://github.com/microsoft/TypeScript) | 应用界面与类型系统 |

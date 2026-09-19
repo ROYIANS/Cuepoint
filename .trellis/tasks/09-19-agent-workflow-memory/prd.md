@@ -31,7 +31,7 @@ Existing task/chat identity, manual lifecycle, checklists, 40 creative tools, re
 | 6 | 09-19-agent-reference-intake | User reference images/documents with traceable extraction | After core loop 1-5 |
 | 7 | 09-19-agent-batch-generation | Reviewed queue, result comparison and scoped application | After 6; existing durable generation |
 
-Planning amendment 2026-09-19: insert a project-binding and shared-context foundation between children2 and3. Detailed scope (including tool boundaries) is being clarified; this is not yet implementation-ready. Memory-management/retrieval now depend on that foundation.
+Progress 2026-09-19: children 1-5 are committed and archived. Child 6 is implemented and verified: common image/text/PDF/DOCX intake, project-shared on-demand reading and native selected-model image input. Its work commits and archival were approved by the user. Child 7 remains scoped backlog. Memory retrieval browser validation covered reviewed task A summary → project memory → actual request in a new same-project conversation B; the exact task-B parent scenario remains a final integration check.
 
 Parent-child links are organizational; ordering is enforced by child planning and validation. Parent has no direct implementation work. Later children are scoped backlog, not implementation-ready designs.
 
@@ -47,4 +47,4 @@ Parent-child links are organizational; ordering is enforced by child planning an
 No background server, cloud synchronization, autonomous multi-agent orchestration, scheduled jobs or direct execution of Trellis CLI in the browser product. No claim that long-term memory is identical to context compression or that a vector database alone supplies memory quality.
 
 ## Planning gates
-Child1 has a final planning proposal: Task-mode intake first, AI creation only after sufficient requirements clarification, then Todo and working records. Child2 has a wrap-up proposal that must be rechecked against child1. Children3-6 are scoped backlog and require detailed design when reached.
+Children 1-6 have completed implementation and verification; child 6 is closing its approved commit/archive steps. Child 7 requires detailed planning after reference intake. Parent acceptance is not marked complete merely because a child is archived.

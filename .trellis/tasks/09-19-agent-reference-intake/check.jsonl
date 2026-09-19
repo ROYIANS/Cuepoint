@@ -1,1 +1,12 @@
-{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python3 .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file": ".trellis/spec/frontend/agent-project-context.md", "reason": "Reference intake must preserve existing agent-project-context contracts."}
+{"file": ".trellis/spec/frontend/agent-context.md", "reason": "Reference intake must preserve existing agent-context contracts."}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Reference intake must preserve existing agent-execution contracts."}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Reference intake must preserve existing agent-tools contracts."}
+{"file": ".trellis/spec/frontend/agent-creative-skills.md", "reason": "Reference intake must preserve existing agent-creative-skills contracts."}
+{"file": ".trellis/spec/frontend/agent-task-wrapup.md", "reason": "Reference intake must preserve existing agent-task-wrapup contracts."}
+{"file": ".trellis/spec/frontend/agent-memory-retrieval.md", "reason": "Reference intake must preserve existing agent-memory-retrieval contracts."}
+{"file": ".trellis/spec/frontend/production-contracts.md", "reason": "Reference intake must preserve existing production-contracts contracts."}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Reference intake must preserve existing component-guidelines contracts."}
+{"file": ".trellis/spec/frontend/hook-guidelines.md", "reason": "Reference intake must preserve existing hook-guidelines contracts."}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Reference intake must preserve existing quality-guidelines contracts."}
+{"file": ".trellis/tasks/09-19-agent-reference-intake/research/intake-foundation.md", "reason": "Inspected source boundaries, parser evidence and confirmed scope."}

@@ -114,3 +114,8 @@ long-term memory. See agent-tasks.md for provenance and paged-read contracts.
 See [Project Context](./agent-project-context.md). Project snapshots share the initial
 instruction envelope; settled continuations append only visible fact differences.
 Compaction must validate the frozen project before every request and activation.
+
+## Project reference integration
+
+See [Project References](./agent-references.md) for shared source ownership,
+request materialization, withdrawal, source evidence and ZIP lifecycle contracts.

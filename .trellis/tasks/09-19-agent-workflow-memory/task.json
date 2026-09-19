@@ -29,6 +29,6 @@
   ],
   "parent": null,
   "relatedFiles": [],
-  "notes": "Seven deliveries: task orchestration archived; wrap-up and project-context foundation implemented, independently reviewed, verified and committed as 6b6289b; archival approved. Next: project-scoped memory management and retrieval. No memory retrieval implementation claimed.",
+  "notes": "Children 1-5 are archived. Child 6 reference intake and native image reading passed implementation, review and validation; user approved its commits and archival. Batch generation is the remaining scoped backlog child. Parent cross-child acceptance still requires final integration review.",
   "meta": {}
 }

@@ -124,3 +124,8 @@ Wrong: every failed historical tool blocks completion forever. Correct: distingu
 unresolved live outcomes from resolved historical failures and explicit review items.
 Wrong: show snapshot links as available forever. Correct: preserve historical prose,
 resolve current source status, and disable unavailable navigation.
+
+## Project reference integration
+
+See [Project References](./agent-references.md) for shared source ownership,
+request materialization, withdrawal, source evidence and ZIP lifecycle contracts.

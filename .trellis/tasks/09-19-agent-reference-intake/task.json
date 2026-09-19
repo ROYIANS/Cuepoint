@@ -3,7 +3,7 @@
   "name": "agent-reference-intake",
   "title": "Reference attachments and document intake",
   "description": "Let users work from actual reference images and script/documents with traceable source coverage.",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": "frontend",
   "scope": "agent-reference-intake",
   "package": null,
@@ -15,12 +15,17 @@
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "1e0b817",
   "pr_url": null,
   "subtasks": [],
   "children": [],
   "parent": "09-19-agent-workflow-memory",
-  "relatedFiles": [],
-  "notes": "Scoped backlog. Depends on 09-19-agent-memory-retrieval; detailed planning required before activation.",
+  "relatedFiles": [
+    ".trellis/tasks/09-19-agent-reference-intake/prd.md",
+    ".trellis/tasks/09-19-agent-reference-intake/design.md",
+    ".trellis/tasks/09-19-agent-reference-intake/implement.md",
+    ".trellis/tasks/09-19-agent-reference-intake/research/intake-foundation.md"
+  ],
+  "notes": "Implementation and independent review complete. Full 67-file/818-test suite, TypeScript, production build and native browser image/document/PDF checks pass. User approved the two work commits, archival and journal on 2026-09-19. Feature commit: 1e0b817.",
   "meta": {}
 }

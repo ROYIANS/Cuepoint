@@ -63,3 +63,8 @@ Correct: compare current target with appliedRevision, restore only fields includ
 
 ## Current limits
 ZIP generation uses browser memory (STORE for media); no streaming archive or timeline renderer. Legacy intent state remains a typed local contract; durable Agent execution/resume lives in agentGenerationJobs and the creative-skills executor. Source dependencies are recorded; only target revision is enforced for apply. The Agent executor validates adapter upload limits, input-byte revisions, result signatures and H3 image dimensions; full video codec/duration validation remains outside that executor. Current verified intent profiles are APIMart GPT Image 2 / MiniMax H3; connector support for other models does not automatically extend these profiles.
+
+## Project reference integration
+
+See [Project References](./agent-references.md) for shared source ownership,
+request materialization, withdrawal, source evidence and ZIP lifecycle contracts.

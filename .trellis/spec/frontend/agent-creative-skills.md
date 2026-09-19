@@ -122,3 +122,8 @@ Browser: full mode still waits; AIHubMix→APIMart edits and prompt/16:9/2K reac
 Wrong: change the model's durable function-call envelope after the user edits its arguments.
 
 Correct: retain that envelope, atomically record a separately validated confirmed override, execute it and disclose the actual configuration in the tool result.
+
+## Project reference integration
+
+See [Project References](./agent-references.md) for shared source ownership,
+request materialization, withdrawal, source evidence and ZIP lifecycle contracts.

@@ -23,6 +23,7 @@
 | [Project Memory](./project-memory.md) | Reviewed project knowledge, provenance, revision CAS and ZIP transfer | Filled |
 | [Memory Retrieval](./agent-memory-retrieval.md) | Scoped lexical selection, independent request envelopes, audits and read tools | Filled |
 | [Project Context](./agent-project-context.md) | Project binding, bounded facts, tool scope and deletion guards | Filled |
+| [Project References](./agent-references.md) | Local reference parsing, shared source library and native model image input | Filled |
 | [Agent Context](./agent-context.md) | History policy, shared budgets and durable compaction | Filled |
 | [Agent Execution](./agent-execution.md) | Durable runs, ordered checkpoints, explicit retry and cross-tab recovery | Filled |
 | [Chat Performance](./chat-performance.md) | Agent transcript scroll + memo vs LobeHub virtua | Filled |
