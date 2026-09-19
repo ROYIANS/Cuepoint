@@ -1,3 +1,4 @@
+import { ReferenceMessageSources } from "./ReferenceAttachments";
 import { ModelIcon } from "@lobehub/icons";
 import { Coins, Gauge } from "lucide-react";
 import { formatTokenCount } from "@/lib/agent/contextUsage";
@@ -160,8 +161,9 @@ const AgentChatMessageItem = memo(
         aboveMessage={!isUser ? <>
           {run && <AgentRunDetails run={run} busy={busy} readOnly={readOnly} onAction={onRunAction} />}
           {hasReasoning && <ThinkingPanel reasoning={message.reasoning ?? ""} active={reasoningActive} durationMs={message.reasoningDurationMs} />}
-        </> : undefined}
+        </> : <ReferenceMessageSources context={message.referenceContext} content={message.content} />}
         belowMessage={!isUser ? <div className="agent-message-footer">
+          <ReferenceMessageSources run={run} content={message.content} />
           <div className="agent-message-meta">
             {run?.model && <span className="agent-model-attribution" title={run.model}><ModelIcon model={run.model} size={14} />{run.model}</span>}
             {run?.outputTokensPerSecond !== undefined && <span className="agent-model-attribution" title="生成速度：供应商返回的输出 token ÷ 流式生成耗时（不含工具和审批等待）"><Gauge size={12} />{run.outputTokensPerSecond.toFixed(1)} tok/s</span>}
@@ -193,6 +195,8 @@ const AgentChatMessageItem = memo(
     prev.onRunAction === next.onRunAction &&
     prev.retryable === next.retryable &&
     prev.onRetryRun === next.onRetryRun &&
+    prev.run?.referenceAudit?.length === next.run?.referenceAudit?.length &&
+    prev.run?.referenceAudit?.at(-1)?.preparedAt === next.run?.referenceAudit?.at(-1)?.preparedAt &&
     prev.message.error === next.message.error &&
     prev.message.runId === next.message.runId &&
     prev.message.id === next.message.id &&

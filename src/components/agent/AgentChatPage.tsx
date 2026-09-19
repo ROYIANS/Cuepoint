@@ -1,3 +1,4 @@
+import { useReferenceDraft } from "./useReferenceDraft";
 import { TaskBoard } from "./TaskBoard";
 import { TaskInspector } from "./TaskInspector";
 import { createAgentTaskForThread, setAgentTaskLifecycle } from "@/db/agentTasks";
@@ -202,6 +203,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
 
   const modelValue = sessionModel.trim();
   const projectId = activeThreadId ? activeThread?.projectId : composerProjectId;
+  const references = useReferenceDraft(JSON.stringify([activeThreadId ?? "home", projectId]), projectId);
   const taskMode = activeThreadId ? Boolean(activeThread?.taskMode) : chatMode === "task";
   const projectRequired = taskMode && !projectId;
   const projectUnavailable = Boolean(projectId && projects && !projects.some((project) => project.id === projectId));
@@ -329,7 +331,8 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
 
   const handleSend = useCallback(async () => {
     const content = draft.trim();
-    if (!content || sendLockRef.current) return;
+    const attachments = [...references.attachments];
+    if ((!content && !attachments.length) || references.imports.length || sendLockRef.current) return;
     if (projectRequired) { toast.error("任务模式请先选择项目"); return; }
     if (projectUnavailable) { toast.error("项目已不可用，请选择其他项目开启新对话"); return; }
     const connector = selectedConnector && { ...selectedConnector };
@@ -359,11 +362,12 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
         await withThreadRunLock(targetThread.id, async () => {
           if (controller.signal.aborted) return;
           // Acquire execution ownership before mounting detail recovery effects.
-          if (!activeThread) await navigate({ to: "/agent/$threadId", params: { threadId: targetThread.id } });
+          if (!activeThread) { references.moveTo(JSON.stringify([targetThread.id, projectId])); await navigate({ to: "/agent/$threadId", params: { threadId: targetThread.id } }); }
           if (controller.signal.aborted) return;
           await updateChatThread(targetThread.id, { interactionMode: activeThreadId ? interactionMode : "smart", reasoningSelection: { connectorId: connector.id, baseUrl: connector.baseUrl, model, value: reasoningEffort } });
-          const run = await beginAgentRun({ threadId: targetThread.id, connector, model, content, modelMetadata: catalogMatches ? modelCatalog?.metadata?.[model] : undefined, reasoningEffort, interactionMode: activeThreadId ? interactionMode : "smart" });
+          const run = await beginAgentRun({ threadId: targetThread.id, connector, model, content, attachments, modelMetadata: catalogMatches ? modelCatalog?.metadata?.[model] : undefined, reasoningEffort, interactionMode: activeThreadId ? interactionMode : "smart" });
           setDraft((current) => current === draft ? "" : current);
+          references.clearSent(attachments, JSON.stringify([targetThread.id, projectId]));
           await executeChatRun(run, connector.apiKey, controller);
         });
 
@@ -383,7 +387,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
         setSending(false);
       }
     }
-  }, [navigate, draft, activeThread, activeThreadId, selectedConnector, modelValue, reasoningEffort, interactionMode, chatMode, projectId, projectRequired, projectUnavailable]);
+  }, [navigate, draft, activeThread, activeThreadId, selectedConnector, modelValue, reasoningEffort, interactionMode, chatMode, projectId, projectRequired, projectUnavailable, references]);
 
   const handleRetry = useCallback(async (runId: string) => {
     if (sendLockRef.current) return;
@@ -525,6 +529,13 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
     } catch (error) { toast.error(error instanceof Error ? error.message : "关联任务失败"); }
   };
   const composerProps: ComposerProps = {
+    attachments: references.attachments,
+    referenceImports: references.imports,
+    onAttachReference: (attachment) => { if (!sendLockRef.current) references.attach(attachment); },
+    onRemoveReference: references.remove,
+    onImportReferences: (files) => { if (!sendLockRef.current) void references.importFiles(files); },
+    onCancelReferenceImport: references.cancel,
+    onRetryReferenceImport: (job) => { if (!sendLockRef.current) references.retry(job); },
     threadId: activeThreadId,
     projects: projects ?? [],
     projectId,
@@ -550,7 +561,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
         {currentRun.status === "running" && <button type="button" onClick={handleStop} disabled={!sending}>停止</button>}
       </div>
     ) : null}</> : undefined,
-    contextUsage: <ContextUsageTrigger projectId={projectId} threadId={activeThreadId} task={activeTask} interactionMode={interactionMode} draft={draft} messages={messages?.filter((m) => m.threadId === activeThreadId) ?? []} runs={runs?.filter((r) => r.threadId === activeThreadId) ?? []} model={modelValue} connector={selectedConnector} modelMetadata={catalogMatches ? modelCatalog?.metadata : undefined} open={contextOpen} onOpenChange={setContextOpen} />,
+    contextUsage: <ContextUsageTrigger attachments={references.attachments} projectId={projectId} threadId={activeThreadId} task={activeTask} interactionMode={interactionMode} draft={draft} messages={messages?.filter((m) => m.threadId === activeThreadId) ?? []} runs={runs?.filter((r) => r.threadId === activeThreadId) ?? []} model={modelValue} connector={selectedConnector} modelMetadata={catalogMatches ? modelCatalog?.metadata : undefined} open={contextOpen} onOpenChange={setContextOpen} />,
 
     reasoningEffort,
     onReasoningEffortChange: (value) => {

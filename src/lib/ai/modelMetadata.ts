@@ -1,6 +1,7 @@
 import { getModelBankEntry, MODEL_BANK_COPIED_AT } from "./modelBank";
 
 export interface ChatModelMetadata {
+  vision?: boolean;
   contextWindow?: number;
   maxOutputTokens?: number;
   source: "provider";
@@ -43,7 +44,9 @@ export function parseModelMetadata(value: unknown): ChatModelMetadata | undefine
   const row = value as Record<string, unknown>;
   const contextWindow = positiveInteger(row.context_length) ?? positiveInteger(row.context_window);
   const maxOutputTokens = positiveInteger(row.max_output) ?? positiveInteger(row.max_output_tokens);
-  return contextWindow || maxOutputTokens ? { ...(contextWindow ? { contextWindow } : {}), ...(maxOutputTokens ? { maxOutputTokens } : {}), source: "provider" } : undefined;
+  const capabilities = row.capabilities;
+  const vision = capabilities && typeof capabilities === "object" && "vision" in capabilities && typeof capabilities.vision === "boolean" ? capabilities.vision : undefined;
+  return contextWindow || maxOutputTokens || vision !== undefined ? { ...(vision !== undefined ? { vision } : {}), ...(contextWindow ? { contextWindow } : {}), ...(maxOutputTokens ? { maxOutputTokens } : {}), source: "provider" } : undefined;
 }
 
 /** Duplicate provider rows can describe routes with different limits: use the smallest. */
@@ -53,7 +56,8 @@ export function collectModelMetadata(entries: readonly (readonly [string, ChatMo
     const previous = result[id];
     const contextWindow = previous?.contextWindow && metadata.contextWindow ? Math.min(previous.contextWindow, metadata.contextWindow) : previous?.contextWindow ?? metadata.contextWindow;
     const maxOutputTokens = previous?.maxOutputTokens && metadata.maxOutputTokens ? Math.min(previous.maxOutputTokens, metadata.maxOutputTokens) : previous?.maxOutputTokens ?? metadata.maxOutputTokens;
-    result[id] = { source: "provider", ...(contextWindow ? { contextWindow } : {}), ...(maxOutputTokens ? { maxOutputTokens } : {}) };
+    const vision = previous?.vision === false || metadata.vision === false ? false : previous?.vision ?? metadata.vision;
+    result[id] = { ...(vision !== undefined ? { vision } : {}), source: "provider", ...(contextWindow ? { contextWindow } : {}), ...(maxOutputTokens ? { maxOutputTokens } : {}) };
   }
   return result;
 }

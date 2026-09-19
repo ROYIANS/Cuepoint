@@ -1,3 +1,6 @@
+import type { ReferenceAttachment } from "@/domain/references";
+import { selectReferenceContext, referenceSelectionCharacterBudget } from "@/lib/agent/referenceContext";
+import { requireVision, resolveVisionCapability } from "@/lib/ai/visionCapability";
 import { getMemorySelection } from "@/db/memoryRetrieval";
 import { withMemoryContext } from "@/lib/memory/retrieval";
 import { filterProjectMemoryTools } from "@/lib/agent/memoryToolNames";
@@ -37,6 +40,7 @@ import {
 } from "@/lib/agent/contextUsage";
 
 type ContextProps = {
+  attachments?: ReferenceAttachment[];
   threadId?: string;
   projectId?: string;
   task?: AgentTask;
@@ -50,6 +54,7 @@ type ContextProps = {
 };
 
 function useContextUsage({
+  attachments = [],
   draft,
   messages,
   runs,
@@ -110,6 +115,7 @@ function useContextUsage({
     loadedContext?.key === contextKey ? loadedContext : undefined;
   const taskContext = contextState?.context;
   const deferredDraft = useDeferredValue(draft);
+  const requestDraft = deferredDraft.trim() || (attachments.length ? "请结合附加的参考资料协助我。" : "");
   const previewPolicy = normalizeContextPolicy(
     threadId ? thread?.contextPolicy : config?.contextPolicy,
   );
@@ -117,7 +123,7 @@ function useContextUsage({
     ? {
         projectId: taskContext.projectContext.projectId,
         threadId,
-        draft: deferredDraft,
+        draft: requestDraft,
         recentUserTurns: selectContextHistory(
           messages.filter((message) => message.threadId === threadId),
           previewPolicy,
@@ -156,6 +162,22 @@ function useContextUsage({
   }, [memoryKey]);
   const memoryState =
     loadedMemory?.key === memoryKey ? loadedMemory : undefined;
+  const referenceOptions = {
+    projectId: thread?.projectId ?? projectId,
+    attachments,
+    capacity: resolveContextCapacity(model, modelMetadata?.[model], connector?.definitionId, previewPolicy).capacity,
+  };
+  const referenceKey = JSON.stringify([threadId, contextKey, referenceOptions, model, connector?.definitionId, modelMetadata?.[model]]);
+  const loadedReferences = useLiveQuery(async () => {
+    try {
+      const selection = await selectReferenceContext(referenceOptions.projectId, referenceOptions.attachments, referenceSelectionCharacterBudget(referenceOptions.capacity));
+      if (selection?.images?.length) requireVision(await resolveVisionCapability(model, connector?.definitionId, modelMetadata?.[model]));
+      return { key: referenceKey, selection, error: undefined };
+    } catch (error) {
+      return { key: referenceKey, selection: undefined, error: error instanceof Error ? error.message : "参考资料暂时无法读取" };
+    }
+  }, [referenceKey]);
+  const referenceState = loadedReferences?.key === referenceKey ? loadedReferences : undefined;
   const latest = runs.at(-1);
   const activeRun =
     latest &&
@@ -206,6 +228,7 @@ function useContextUsage({
       : skills.skillInstructions;
     const memorySelection =
       activeRun?.memorySelection ?? memoryState?.selection;
+    const selectedReferences = activeRun ? activeRun.context?.selectedReferences : referenceState?.selection;
     const request = activeRun
       ? (activeRun.continuationMessages ?? activeRun.requestMessages)
       : withMemoryContext(
@@ -213,8 +236,10 @@ function useContextUsage({
             instructions,
             skillInstructions,
             selected,
-            deferredDraft,
+            requestDraft,
             summary,
+            undefined,
+            selectedReferences,
           ),
           memorySelection,
         );
@@ -262,16 +287,19 @@ function useContextUsage({
     return {
       projectContext,
       memorySelection,
-      error: contextState?.error ?? memoryState?.error,
+      selectedReferences,
+      referencesLoading: !activeRun && attachments.length > 0 && !referenceState,
+      error: activeRun ? undefined : contextState?.error ?? memoryState?.error ?? referenceState?.error,
       usage:
         (config &&
           taskContext &&
-          (!taskContext.projectContext || memoryState)) ||
+          (!taskContext.projectContext || memoryState) &&
+          (!attachments.length || (referenceState?.selection && !referenceState.error))) ||
         activeRun
           ? usage
           : undefined,
       capacity,
-      percent,
+      percent: activeRun || !attachments.length || referenceState?.selection ? percent : undefined,
       activeRun,
       source,
       policy,
@@ -286,7 +314,9 @@ function useContextUsage({
     threadId,
     records,
     messages,
-    deferredDraft,
+    requestDraft,
+    attachments.length,
+    referenceState,
     interactionMode,
     taskContext,
     memoryState,
@@ -314,6 +344,8 @@ export function ContextUsagePanel({
     lastRecord,
     projectContext,
     memorySelection,
+    selectedReferences,
+    referencesLoading,
     error,
   } = useContextUsage(props);
   const { model } = props;
@@ -358,6 +390,20 @@ export function ContextUsagePanel({
           <span>查看引用与排除 →</span>
         </button>
       )}
+      {selectedReferences && (
+        <details className="agent-context-project">
+          <summary>本次消息参考资料 · {selectedReferences.references.length} 份</summary>
+          <small>仅显示本次准备的范围；原文未覆盖部分不会自动发送。</small>
+          {selectedReferences.coverage?.map((item) => (
+            <div key={`${item.referenceId}:${item.revision}`}>
+              <strong>{item.filename}</strong>
+              <small>{item.kind === "image" ? "真实图片输入 · 按 4096 tokens 保守估算" : `文本片段 ${item.includedChunkIndices.length}/${item.totalChunks} · ${item.includedCharacters.toLocaleString()} 字符${item.partial ? " · 部分摘录" : ""}`}</small>
+              {item.warnings.map((warning, index) => <small key={index}>{warning}</small>)}
+            </div>
+          ))}
+        </details>
+      )}
+      {referencesLoading && <p role="status">正在准备所选参考资料的范围与估算…</p>}
       {error && <p role="status">{error}。历史仍可查看。</p>}
       {usage ? (
         <>
@@ -431,7 +477,7 @@ export function ContextUsagePanel({
           </div>
           {lastRecord && <ContextCompactionDetails record={lastRecord} />}
           <p>
-            按文本长度粗略估算，非模型实际用量。
+            文本按长度粗略估算；每张图片按 4096 tokens 保守估算，非模型实际用量。
             {capacity
               ? `预计占用 ${((usage.total / capacity) * 100).toFixed(1)}%；整理触发基于上限的 50%（已有摘要时为 65%），另计 25% 估算余量及输出预留。`
               : "当前连接未提供可信的上下文上限，暂不计算占用比例。"}
@@ -446,7 +492,7 @@ export function ContextUsagePanel({
           )}
         </>
       ) : (
-        !error && <p>正在读取助手配置…</p>
+        !error && !referencesLoading && <p>正在读取助手配置…</p>
       )}
     </div>
   );

@@ -1,3 +1,4 @@
+import { parseReferencePackage, remapReferencePackage } from "./references/package";
 import type {
   ProjectMemory,
   ProjectMemoryVersion,
@@ -664,6 +665,8 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
     mediaRecords,
     memories,
     memoryVersions,
+    references,
+    referenceChunks,
   } = await db.transaction(
     "r",
     [
@@ -677,6 +680,8 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
       db.media,
       db.projectMemories,
       db.projectMemoryVersions,
+      db.projectReferences,
+      db.referenceChunks,
     ],
     async () => {
       const project = await db.projects.get(projectId);
@@ -690,6 +695,8 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
         shots,
         memories,
         memoryVersions,
+        references,
+        referenceChunks,
       ] = await Promise.all([
         db.characters.where("projectId").equals(projectId).toArray(),
         db.scenes.where("projectId").equals(projectId).toArray(),
@@ -699,6 +706,8 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
         db.shots.where("projectId").equals(projectId).sortBy("order"),
         db.projectMemories.where("projectId").equals(projectId).toArray(),
         db.projectMemoryVersions.where("projectId").equals(projectId).toArray(),
+        db.projectReferences.where("projectId").equals(projectId).toArray(),
+        db.referenceChunks.where("projectId").equals(projectId).toArray(),
       ]);
       const mediaIds = await collectMediaIds(projectId);
       const mediaRecords = (await db.media.bulkGet([...mediaIds])).filter(
@@ -716,6 +725,8 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
         mediaRecords,
         memories,
         memoryVersions,
+        references,
+        referenceChunks,
       };
     },
   );
@@ -741,6 +752,8 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
   zip.file("shots.json", JSON.stringify(shots, null, 2));
   zip.file("memories.json", JSON.stringify(memories, null, 2));
   zip.file("memoryVersions.json", JSON.stringify(memoryVersions, null, 2));
+  zip.file("references.json", JSON.stringify(references));
+  zip.file("referenceChunks.json", JSON.stringify(referenceChunks));
   for (const media of mediaRecords) {
     const filename = `media/${media.id}.${extFor(media.mimeType, media.filename)}`;
     zip.file(filename, media.blob);
@@ -795,6 +808,7 @@ export async function importProjectZip(file: Blob): Promise<Project> {
     await readJson("memoryVersions.json"),
     projectRaw.id,
   );
+  const referencePackage = parseReferencePackage(await readJson("references.json"), await readJson("referenceChunks.json"), projectRaw.id);
   const hasEpisodes = episodesRaw.length > 0;
 
   const project = parseProject(projectRaw, "导入的项目");
@@ -838,6 +852,8 @@ export async function importProjectZip(file: Blob): Promise<Project> {
       blob: blob.type ? blob : new Blob([blob], { type: mimeType }),
     });
   }
+
+  const { references, chunks: referenceChunks } = await remapReferencePackage(referencePackage, projectId, mediaMap, mediaRecords);
 
   const mapMedia = (id?: string) => (id ? mediaMap.get(id) : undefined);
 
@@ -980,6 +996,8 @@ export async function importProjectZip(file: Blob): Promise<Project> {
         db.media,
         db.projectMemories,
         db.projectMemoryVersions,
+        db.projectReferences,
+        db.referenceChunks,
       ],
       async () => {
         await db.projects.add(project);
@@ -990,6 +1008,8 @@ export async function importProjectZip(file: Blob): Promise<Project> {
         if (episodes.length) await db.episodes.bulkAdd(episodes);
         if (shots.length) await db.shots.bulkAdd(shots);
         if (mediaRecords.length) await db.media.bulkAdd(mediaRecords);
+        if (references.length) await db.projectReferences.bulkAdd(references);
+        if (referenceChunks.length) await db.referenceChunks.bulkAdd(referenceChunks);
         if (memories.length) await db.projectMemories.bulkAdd(memories);
         if (memoryVersions.length)
           await db.projectMemoryVersions.bulkAdd(memoryVersions);

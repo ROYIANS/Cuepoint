@@ -303,14 +303,14 @@ const mediaTools = [
     else await repo.setShotSlot(args.id, args.slot as ShotPictureField, slot);
     return { ...rowResult(args.kind, await getRow(args.kind, args.id, args.ownerId, args.episodeId)), slot: args.slot, value: slot };
   }),
-  writeTool("media_delete_orphan", "清理未引用素材", "仅删除未被项目封面、资产、镜头、生成任务或历史提案引用的真实媒体。使用中的文件不会删除；不支持任意文件或 Blob 写入。", s.object(s.target), (args) => [args.ownerId], async (args) => {
+  writeTool("media_delete_orphan", "清理未引用素材", "仅删除未被项目封面、资产、镜头、参考资料、生成任务或历史提案引用的真实媒体。使用中的文件不会删除；不支持任意文件或 Blob 写入。", s.object(s.target), (args) => [args.ownerId], async (args) => {
     const row = await getRow("media", args.id, args.ownerId);
     const usage = await mediaUsage(args.ownerId, args.id);
     if (usage.length) throw new Error(`素材仍有 ${usage.length} 处引用，请先明确解除关联`);
     const retention = await mediaRetention(args.ownerId, args.id);
     if (retention.proposals || retention.generationJobs) throw new Error(`素材仍被 ${retention.proposals} 个历史提案、${retention.generationJobs} 个生成任务保留，不能删除`);
-    return { state: await ownerSnapshot(args.ownerId), target: navigation("media", row), changes: [`删除文件「${row.filename}」（${row.size} 字节）；如生成任务或历史提案保留该文件则拒绝删除。`] };
-  }, async (args) => { await repo.deleteMediaIfOrphan(args.id); if (await db.media.get(args.id)) throw new Error("素材仍被生成任务或历史提案保留，未删除"); return { deletedId: args.id }; }, true),
+    return { state: await ownerSnapshot(args.ownerId), target: navigation("media", row), changes: [`删除文件「${row.filename}」（${row.size} 字节）；如参考资料、生成任务或历史提案保留该文件则拒绝删除。`] };
+  }, async (args) => { await repo.deleteMediaIfOrphan(args.id); if (await db.media.get(args.id)) throw new Error("素材仍被参考资料、生成任务或历史提案保留，未删除"); return { deletedId: args.id }; }, true),
 ];
 
 export const BUSINESS_TOOLS: readonly AgentToolDefinition[] = [...reads, ...projectTools, ...episodeTools, ...beatTools, ...shotTools, ...assetTools, ...reuseTools, ...mediaTools];

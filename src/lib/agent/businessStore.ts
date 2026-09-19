@@ -174,6 +174,7 @@ export async function ownerSnapshot(ownerId: string): Promise<unknown> {
     if (ownerId === STUDIO_LIBRARY_ID && ["episode", "shot"].includes(kind)) continue;
     groups[kind] = (await listRows(kind, ownerId)).sort((a, b) => a.id.localeCompare(b.id));
   }
+  groups.references = await db.projectReferences.where("projectId").equals(ownerId).sortBy("id");
   groups.proposals = await db.productionProposals.where("projectId").equals(ownerId).sortBy("id");
   // Optional during additive integration; only hashed internally, never returned to the model.
   const jobs = db.tables.find((table) => table.name === "agentGenerationJobs");
@@ -192,6 +193,10 @@ export async function mediaUsage(ownerId: string, mediaId: string): Promise<Arra
         if (slotMediaIds(parseGenerationSlot(value)).includes(mediaId)) usages.push({ kind, id: row.id, label: String(row.name ?? row.shotNumber ?? row.id), slot });
       }
     }
+  }
+  const references = await db.projectReferences.where("mediaId").equals(mediaId).toArray();
+  for (const reference of references) {
+    if (reference.projectId === ownerId && reference.status !== "unavailable") usages.push({ kind: "reference", id: reference.id, label: reference.filename });
   }
   return usages;
 }

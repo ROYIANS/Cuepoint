@@ -23,6 +23,7 @@ export function estimateContextUsage(input: {
     { id: "messages", label: "会话消息", tokens: 0, color: "#edb44d" },
     { id: "summary", label: "历史摘要", tokens: 0, color: "#ce9763" },
     { id: "memory", label: "项目记忆", tokens: 0, color: "#a98bea" },
+    { id: "references", label: "参考资料与图片", tokens: 0, color: "#5baea5" },
     { id: "results", label: "工具结果", tokens: 0, color: "#a2c96a" },
   ];
   const system = [input.instructions, input.skillInstructions].filter(Boolean).join("\n");
@@ -32,8 +33,8 @@ export function estimateContextUsage(input: {
       categories[0].tokens += estimateTokens(input.instructions) + 4;
       return;
     }
-    const category = message.role === "user" && message.content.startsWith("[项目记忆 ·") ? categories[4] : message.role === "tool" ? categories[5] : message.role === "assistant" && message.content.startsWith("[历史摘要 ·") ? categories[3] : message.role === "system" ? categories[0] : categories[2];
-    category.tokens += estimateTokens(message.content) + 4;
+    const category = message.referenceInput ? categories[5] : message.role === "user" && message.content.startsWith("[项目记忆 ·") ? categories[4] : message.role === "tool" ? categories[6] : message.role === "assistant" && message.content.startsWith("[历史摘要 ·") ? categories[3] : message.role === "system" ? categories[0] : categories[2];
+    category.tokens += estimateTokens(message.content) + 4 + (message.referenceInput?.images?.length ?? 0) * 4096;
     if (message.role === "assistant" && message.tool_calls) category.tokens += estimateTokens(JSON.stringify(message.tool_calls));
     if (message.role === "tool") category.tokens += estimateTokens(message.tool_call_id);
   });

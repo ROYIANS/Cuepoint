@@ -16,6 +16,7 @@ import {
 } from "./businessSchemas";
 
 import { MEMORY_TOOL_NAMES } from "./memoryToolNames";
+import { REFERENCE_TOOL_NAMES } from "./referenceToolNames";
 export { MEMORY_TOOL_NAMES } from "./memoryToolNames";
 const id = text(160, 1);
 const revision = number(1, Number.MAX_SAFE_INTEGER, true);
@@ -385,7 +386,8 @@ export const MEMORY_TOOLS: readonly AgentToolDefinition[] = [
           !call ||
           call.threadId !== task.threadId ||
           !["completed", "failed", "rejected"].includes(call.status) ||
-          MEMORY_TOOL_NAMES.some((name) => name === call.name)
+          MEMORY_TOOL_NAMES.some((name) => name === call.name) ||
+          REFERENCE_TOOL_NAMES.some((name) => name === call.name)
         )
           return missing();
         const run = await db.agentRuns.get(call.runId);

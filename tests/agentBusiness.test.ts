@@ -1,3 +1,5 @@
+import { importReferenceFile } from "@/lib/references/import";
+import { ownerSnapshot, targetRevision } from "@/lib/agent/businessStore";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import * as repo from "@/db/repo";
@@ -53,6 +55,21 @@ describe("business operation schemas and permissions", () => {
 });
 
 describe("complete manual creative workflow through real repository tools", () => {
+  it("includes project reference ownership before approving media cleanup", async () => {
+    const project = await repo.createProject("资料项目");
+    const before = targetRevision(await ownerSnapshot(project.id));
+    const reference = await importReferenceFile(project.id, new File(["PRIVATE_REFERENCE_BODY"], "剧本.txt"));
+    const detail = await read("business_detail", { kind: "media", ownerId: project.id, id: reference.mediaId });
+    expect((detail.data as { usage: unknown[] }).usage).toContainEqual({ kind: "reference", id: reference.id, label: reference.filename });
+    expect(JSON.stringify(detail)).not.toContain("PRIVATE_REFERENCE_BODY");
+    await expect(prepare("media_delete_orphan", { ownerId: project.id, id: reference.mediaId })).rejects.toThrow("引用");
+    expect(await db.media.get(reference.mediaId)).toBeDefined();
+    expect(targetRevision(await ownerSnapshot(project.id))).not.toBe(before);
+    const ready = targetRevision(await ownerSnapshot(project.id));
+    await db.projectReferences.update(reference.id, { status: "unavailable" });
+    expect(targetRevision(await ownerSnapshot(project.id))).not.toBe(ready);
+  });
+
   it("creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion", async () => {
     const scope = await fixture();
     const { ownerId, episodeId } = scope;

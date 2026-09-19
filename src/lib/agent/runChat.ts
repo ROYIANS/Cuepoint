@@ -160,7 +160,7 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
         writer.push(output());
       };
       const transport = run.protocol === "responses" ? streamResponses : streamChatCompletions;
-      const result: ResponsesResult = await transport({ responseItems: run.responseItems, baseUrl: run.connector.baseUrl, apiKey, model: run.model, connectorDefinitionId: run.connector.definitionId, reasoningEffort: run.reasoningEffort, messages: run.continuationMessages ?? run.requestMessages, tools: toolSchemas(run.enabledToolNames ?? [], registry) }, {
+      const result: ResponsesResult = await transport({ projectId: run.projectId, runId: run.id, visionCapability: run.visionCapability, responseItems: run.responseItems, baseUrl: run.connector.baseUrl, apiKey, model: run.model, connectorDefinitionId: run.connector.definitionId, reasoningEffort: run.reasoningEffort, messages: run.continuationMessages ?? run.requestMessages, tools: toolSchemas(run.enabledToolNames ?? [], registry) }, {
         signal: controller.signal, fetchImpl,
         onDelta: (content) => onDelta({ content }), onReasoning: (reasoning) => onDelta({ reasoning }),
       });

@@ -1,3 +1,6 @@
+import type { ReferenceAttachment } from "@/domain/references";
+import { selectReferenceContext, referenceSelectionCharacterBudget } from "@/lib/agent/referenceContext";
+import { resolveVisionCapability, requireVision } from "@/lib/ai/visionCapability";
 import { getMemorySelection } from "./memoryRetrieval";
 import { filterProjectMemoryTools } from "@/lib/agent/memoryToolNames";
 import { interruptedToolState } from "./agentToolRecovery";
@@ -43,6 +46,7 @@ export async function beginAgentRun(input: {
   connector: ConnectorConfig;
   model: string;
   content?: string;
+  attachments?: ReferenceAttachment[];
   retryOfRunId?: string;
   reasoningEffort?: AgentReasoningEffort;
   interactionMode?: AgentInteractionMode;
@@ -51,6 +55,7 @@ export async function beginAgentRun(input: {
 }): Promise<AgentRun> {
   const identity = connectorRunIdentity(input.connector);
   if (!input.model.trim() || !input.connector.apiKey.trim()) throw new Error("请选择模型并配置 API Key");
+  const visionCapability = await resolveVisionCapability(input.model, identity.definitionId, input.modelMetadata);
   return db.transaction("rw", db.tables, async () => {
     const thread = await db.chatThreads.get(input.threadId);
     if (!thread) throw new Error("对话不存在");
@@ -74,7 +79,7 @@ export async function beginAgentRun(input: {
     }
     const reasoningEffort = previous ? previous.reasoningEffort : input.reasoningEffort;
     assertReasoningEffort(identity, input.model, reasoningEffort);
-    const content = input.content?.trim() ?? "";
+    const content = input.content?.trim() || (input.attachments?.length ? "请结合附加的参考资料协助我。" : "");
     if (!previous && !content) throw new Error("消息不能为空");
     let task = await db.agentTasks.where("threadId").equals(thread.id).first();
     if (input.createTask && !task && !previous) task = await createAgentTaskForThread(thread.id, { title: deriveChatTitle(content), goal: content });
@@ -98,11 +103,13 @@ export async function beginAgentRun(input: {
     const summary = policy.autoCompress ? findApplicableSummary(selectedHistory, await db.contextCompactions.where("threadId").equals(thread.id).toArray()) : undefined;
     const capacity = resolveContextCapacity(input.model, input.modelMetadata, identity.definitionId, policy);
     const memorySelection = previous?.memorySelection ?? (thread.projectId ? await getMemorySelection({projectId:thread.projectId,threadId:thread.id,draft:content,recentUserTurns:selectedHistory.filter(m=>m.role==='user').map(m=>m.content),taskTitle:task?.title,taskGoal:task?.goal,capacity:capacity.capacity}) : undefined);
-    const baseMessages = buildContextMessages(instructions, skillInstructions, selectedHistory, content, summary, memorySelection?.envelope);
+    const selectedReferences = previous?.context?.selectedReferences ?? await selectReferenceContext(thread.projectId, input.attachments ?? [], referenceSelectionCharacterBudget(capacity.capacity));
+    if (selectedReferences?.images?.length) requireVision(previous?.visionCapability ?? visionCapability);
+    const baseMessages = buildContextMessages(instructions, skillInstructions, selectedHistory, content, summary, memorySelection?.envelope, selectedReferences);
     const requestMessages = previous?.context?.baseMessages ?? previous?.requestMessages ?? baseMessages;
-    const context = previous ? previous.context : { policy, history: selectedHistory, baseMessages, draft: content, summaryId: summary?.id, memoryEnvelope:memorySelection?.envelope, ...capacity };
+    const context = previous ? previous.context : { policy, history: selectedHistory, baseMessages, draft: content, selectedReferences, summaryId: summary?.id, memoryEnvelope:memorySelection?.envelope, ...capacity };
     const run: AgentRun = {
-      context, memorySelection, memoryAudit: [],
+      context, memorySelection, memoryAudit: [], referenceAudit: [], visionCapability: previous?.visionCapability ?? visionCapability,
       projectId: thread.projectId, projectContext: previous?.projectContext ?? taskContext.projectContext,
       id: runId, threadId: thread.id, taskId: previous?.taskId ?? task?.id, plan: previous?.plan ?? task?.plan, agentId: previous?.agentId ?? agent.id,
       agentSnapshot: previous?.agentSnapshot ?? { name: agent.name, instructions },
@@ -117,7 +124,7 @@ export async function beginAgentRun(input: {
       skillInstructions,
       status: "running", checkpoint: 0, createdAt: at, updatedAt: at,
     };
-    if (!previous) await db.chatMessages.add({ id: userMessageId, threadId: thread.id, role: "user", content, createdAt: at, status: "complete" });
+    if (!previous) await db.chatMessages.add({ id: userMessageId, threadId: thread.id, role: "user", content, ...(selectedReferences ? { attachments: selectedReferences.references, referenceContext: selectedReferences } : {}), createdAt: at, status: "complete" });
     await db.chatMessages.add({ id: assistantMessageId, threadId: thread.id, role: "assistant", content: "", createdAt: new Date(Date.parse(at) + 1).toISOString(), status: "streaming", runId });
     await db.agentRuns.add(run);
     if (task) await db.agentTasks.update(task.id, { updatedAt: at });
@@ -137,7 +144,7 @@ export async function checkpointAgentRun(runId: string, sequence: number, output
     if (run.status !== "running" || sequence <= run.checkpoint) return;
     const message = await db.chatMessages.get(run.assistantMessageId);
     if (!message || message.runId !== run.id) throw new Error("执行消息不存在");
-    await db.chatMessages.update(message.id, output);
+    await db.chatMessages.update(message.id, { ...output });
     await db.agentRuns.update(run.id, { checkpoint: sequence, updatedAt: nowIso() });
   });
 }

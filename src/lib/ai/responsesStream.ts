@@ -1,3 +1,4 @@
+import { materializeResponseItems } from "./referenceWire";
 import type { AgentRequestMessage, AgentResponseItem, AgentTokenUsage, AgentWireToolCall } from "@/domain/agent";
 import type { StreamChatHandlers, StreamChatInput, StreamChatResult } from "@/lib/ai/chatStream";
 import { authHeaders, normalizeBaseUrl } from "@/lib/ai/openaiCompatible";
@@ -23,8 +24,8 @@ function usageOf(value: unknown): AgentTokenUsage | undefined {
 
 export function toResponseInput(messages: readonly AgentRequestMessage[]): AgentResponseItem[] {
   return messages.flatMap((message): AgentResponseItem[] => {
-    if (message.role === "tool") return [{ type: "function_call_output", call_id: message.tool_call_id, output: message.content }];
-    const items: AgentResponseItem[] = message.content ? [{ type: "message", role: message.role, content: message.content }] : [];
+    if (message.role === "tool") return [{ type: "function_call_output", call_id: message.tool_call_id, output: message.content, ...(message.referenceInput ? { referenceInput: message.referenceInput } : {}) }];
+    const items: AgentResponseItem[] = message.content ? [{ type: "message", role: message.role, content: message.content, ...(message.referenceInput ? { referenceInput: message.referenceInput } : {}), ...(message.sourceToolCallId ? { sourceToolCallId: message.sourceToolCallId } : {}) }] : [];
     if (message.role === "assistant") for (const call of message.tool_calls ?? []) items.push({ type: "function_call", call_id: call.id, name: call.function.name, arguments: call.function.arguments });
     return items;
   });
@@ -117,7 +118,7 @@ export async function streamResponses(input: StreamChatInput & { responseItems?:
     assertReasoningEffort({ definitionId: input.connectorDefinitionId, baseUrl: base }, model, input.reasoningEffort);
     const res = await (handlers.fetchImpl ?? fetch)(`${base}/responses`, {
       method: "POST", headers: authHeaders(apiKey), signal,
-      body: JSON.stringify({ model, ...(input.maxOutputTokens ? { max_output_tokens: input.maxOutputTokens } : {}), input: input.responseItems ?? toResponseInput(input.messages), stream: true, store: false, include: ["reasoning.encrypted_content"],
+      body: JSON.stringify({ model, ...(input.maxOutputTokens ? { max_output_tokens: input.maxOutputTokens } : {}), input: await materializeResponseItems(input.responseItems ?? toResponseInput(input.messages), input, signal), stream: true, store: false, include: ["reasoning.encrypted_content"],
         ...(input.reasoningEffort !== undefined ? { reasoning: { effort: input.reasoningEffort, summary: "auto" } } : { reasoning: { summary: "auto" } }),
         ...(input.tools?.length ? { tools: input.tools.map((tool) => ({ type: "function", ...tool.function, strict: false })) } : {}),
       }),

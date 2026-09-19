@@ -1,3 +1,4 @@
+import type { AgentSelectedReferences } from "./referenceInput";
 import type { AgentRequestMessage, AgentRun, AgentTokenUsage } from "./agent";
 
 export interface ContextPolicy {
@@ -7,7 +8,7 @@ export interface ContextPolicy {
   /** Explicit local budget, never presented as provider metadata. */
   customContextTokens?: number;
 }
-export interface ContextSource { id: string; role: "user" | "assistant" | "system"; content: string }
+export interface ContextSource { id: string; role: "user" | "assistant" | "system"; content: string; referenceContext?: AgentSelectedReferences }
 export interface ContextSnapshot {
   policy: ContextPolicy;
   capacity?: number;
@@ -17,6 +18,7 @@ export interface ContextSnapshot {
   /** Current base envelope; tool continuation is always appended after it. */
   baseMessages: AgentRequestMessage[];
   draft: string;
+  selectedReferences?: AgentSelectedReferences;
   /** Separate, replaceable upcoming memory layer; excluded from history compaction. */
   memoryEnvelope?: string;
 }

@@ -1,3 +1,4 @@
+import { REFERENCE_TOOL_NAMES } from "./referenceToolNames";
 export const MEMORY_TOOL_NAMES = [
   "memory_search",
   "memory_read",
@@ -7,5 +8,5 @@ export const MEMORY_TOOL_NAMES = [
 /** Scope filters never enable a skill the user switched off. */
 export function filterProjectMemoryTools(names:readonly string[],projectId?:string,interactionMode:'smart'|'conversation'='smart'):string[]{
  if(interactionMode==='conversation')return [];
- return projectId?[...names]:names.filter(name=>!MEMORY_TOOL_NAMES.includes(name as typeof MEMORY_TOOL_NAMES[number]));
+ return projectId?[...names]:names.filter(name=>![...MEMORY_TOOL_NAMES, ...REFERENCE_TOOL_NAMES].includes(name as typeof MEMORY_TOOL_NAMES[number]));
 }

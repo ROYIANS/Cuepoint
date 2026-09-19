@@ -9,7 +9,7 @@ export interface WrapupContent {
 }
 export interface WrapupEvidence {
   id: string;
-  kind: "message" | "tool" | "record" | "generation" | "entity";
+  kind: "message" | "tool" | "record" | "generation" | "entity" | "reference";
   label: string;
   body: string;
   outcome: "fact" | "downloaded" | "applied" | "unresolved";
@@ -17,6 +17,7 @@ export interface WrapupEvidence {
   href?: string;
   truncated?: boolean;
   supportsResult?: boolean;
+  reference?: { projectId: string; referenceId: string; revision: number };
 }
 export interface WrapupSnapshot {
   fingerprint: string;

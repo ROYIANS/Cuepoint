@@ -3,7 +3,7 @@ import { ContextParameters } from "./ContextParameters";
 import { useEffect, useRef, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Dropdown, Input, Switch, Tooltip } from "antd";
-import { ArrowLeft, BookOpen, Boxes, Check, ChevronDown, ChevronRight, Hand, Plus, Search, SlidersHorizontal, ShieldAlert, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Upload, FolderOpen, BookOpen, Boxes, Check, ChevronDown, ChevronRight, Hand, Plus, Search, SlidersHorizontal, ShieldAlert, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { db } from "@/db/database";
 import { GENERAL_AGENT_ID, type AgentPermissionMode } from "@/domain/agent";
@@ -94,7 +94,7 @@ export function AgentControls() {
   );
 }
 
-export function ComposerPlusMenu({ threadId, projectId }: { threadId?: string; projectId?: string }) {
+export function ComposerPlusMenu({ threadId, projectId, onImport, onLibrary }: { threadId?: string; projectId?: string; onImport?: () => void; onLibrary?: () => void }) {
   const navigate = useNavigate();
   const project = useLiveQuery(async () => projectId ? (await db.projects.get(projectId)) ?? null : null, [projectId]);
   const openMemory = () => { if (projectId && project) { setOpen(false); void navigate({ to: "/p/$projectId/memory", params: { projectId } }); } };
@@ -139,11 +139,14 @@ export function ComposerPlusMenu({ threadId, projectId }: { threadId?: string; p
     menu={{
       className: "agent-composer-menu",
       items: view === "home" ? [
+        { key: "import", icon: <Upload size={16} />, label: <span className="agent-plus-row">导入资料<span>图片与文档</span></span> },
+        { key: "library", icon: <FolderOpen size={16} />, label: <span className="agent-plus-row">项目资料<span>复用参考文件</span></span> },
         ...(project ? [{ key: "memory", icon: <BookOpen size={16} />, label: <span className="agent-plus-row">项目记忆<span>规范与经验<ChevronRight size={14} /></span></span> }] : []),
         { key: "parameters", icon: <SlidersHorizontal size={16} />, label: <span className="agent-plus-row">对话参数<span>历史与压缩<ChevronRight size={14} /></span></span> },
         { key: "skills", icon: <Boxes size={16} />, label: <span className="agent-plus-row">技能<span>{enabledSkills.length} 项已启用<ChevronRight size={14} /></span></span> },
       ] : [],
       onClick: ({ key }) => {
+        if (key === "import" || key === "library") { setOpen(false); if (key === "import") onImport?.(); else onLibrary?.(); return; }
         if (key === "memory") { openMemory(); return; }
         if (key === "skills" || key === "parameters") { setView(key); return; }
         setOpen(false);
@@ -152,7 +155,8 @@ export function ComposerPlusMenu({ threadId, projectId }: { threadId?: string; p
     popupRender={(menu) => <div ref={panelRef}>{view === "parameters" ? <ContextParameters threadId={threadId} onBack={() => { setView("home"); setSearch(""); }} /> : view === "home" ? <div className="agent-control-panel">
       <div className="agent-skill-search"><Input variant="borderless" ref={searchInput} prefix={<Search size={14} />} value={search} onChange={(event) => setSearch(event.target.value)} placeholder="搜索技能与操作…" aria-label="搜索技能与操作" allowClear /></div>
       <div className="agent-control-panel-heading">创作能力</div>
-      {search.trim() ? <div className="agent-skill-list">{project && /记忆|项目|memory/i.test(search) && <button type="button" className="agent-plus-search-result" onClick={openMemory}><BookOpen size={16} />项目记忆<ChevronRight size={14} /></button>}{ /参数|历史|压缩|context|parameter/i.test(search) && <button type="button" className="agent-plus-search-result" onClick={() => setView("parameters")}><SlidersHorizontal size={16} />对话参数<ChevronRight size={14} /></button>}{skills.length ? skills.map((skill) => <button key={skill.id} type="button" className="agent-plus-search-result" onClick={() => setView("skills")}><Boxes size={16} /><span className="agent-control-option"><span>{skill.name}</span><small>{skill.description}</small></span><ChevronRight size={14} /></button>) : !/参数|历史|压缩|context|parameter/i.test(search) && !(project && /记忆|项目|memory/i.test(search)) ? <p className="agent-control-panel-note">没有匹配的技能或操作</p> : null}</div> : menu}
+      {search.trim() ? <div className="agent-skill-list">{/导入|上传|图片|文档|文件|upload|import/i.test(search) && <button type="button" className="agent-plus-search-result" onClick={() => { setOpen(false); onImport?.(); }}><Upload size={16} />导入资料</button>}{/资料|项目|文件|library|reference/i.test(search) && <button type="button" className="agent-plus-search-result" onClick={() => { setOpen(false); onLibrary?.(); }}><FolderOpen size={16} />项目资料</button>}{project && /记忆|项目|memory/i.test(search) && <button type="button" className="agent-plus-search-result" onClick={openMemory}><BookOpen size={16} />项目记忆<ChevronRight size={14} /></button>}{ /参数|历史|压缩|context|parameter/i.test(search) && <button type="button" className="agent-plus-search-result" onClick={() => setView("parameters")}><SlidersHorizontal size={16} />对话参数<ChevronRight size={14} /></button>}{skills.length ? skills.map((skill) => <button key={skill.id} type="button" className="agent-plus-search-result" onClick={() => setView("skills")}><Boxes size={16} /><span className="agent-control-option"><span>{skill.name}</span><small>{skill.description}</small></span><ChevronRight size={14} /></button>) : !/导入|上传|图片|文档|文件|upload|import|资料|项目|library|reference|参数|历史|压缩|context|parameter/i.test(search) && !(project && /记忆|项目|memory/i.test(search)) ? <p className="agent-control-panel-note">没有匹配的技能或操作</p> : null}</div> : menu}
+      <p className="agent-control-panel-note">图片 ≤10 MB · TXT / MD ≤5 MB · PDF / DOCX ≤20 MB<br />每次最多 10 个，导入仅在本地解析。</p>
     </div> : <div className="agent-control-panel agent-skill-panel">
       <div className="agent-skill-heading">
         <button type="button" className="agent-skill-back" aria-label="返回更多选项" onClick={() => setView("home")}><ArrowLeft size={16} />技能</button>

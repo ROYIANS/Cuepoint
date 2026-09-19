@@ -1,3 +1,5 @@
+import type { ReferenceAttachment } from "@/domain/references";
+import type { ReferenceImportDraft } from "./useReferenceDraft";
 import type { ChatModelMetadata } from "@/lib/ai/modelMetadata";
 import type { AgentInteractionMode, AgentReasoningEffort } from "@/domain/agent";
 import type { ReactNode } from "react";
@@ -9,6 +11,13 @@ export type { AgentInteractionMode } from "@/domain/agent";
 
 export type ComposerProps = {
   threadId?: string;
+  attachments?: ReferenceAttachment[];
+  referenceImports?: ReferenceImportDraft[];
+  onAttachReference?: (attachment: ReferenceAttachment) => void;
+  onRemoveReference?: (attachment: ReferenceAttachment) => void;
+  onImportReferences?: (files: File[]) => void;
+  onCancelReferenceImport?: (id: string) => void;
+  onRetryReferenceImport?: (job: ReferenceImportDraft) => void;
   value: string;
   sending: boolean;
   blocked?: boolean;

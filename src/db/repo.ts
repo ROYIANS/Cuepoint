@@ -55,7 +55,7 @@ import { createId, nowIso } from "@/lib/ids";
 // Media recycling must hold the same lock as every committed slot/cover writer.
 export const PRODUCTION_TABLES = [
   db.projects, db.episodes, db.characters, db.scenes,
-  db.props, db.styles, db.shots, db.media, db.productionProposals, db.agentGenerationJobs,
+  db.props, db.styles, db.shots, db.media, db.productionProposals, db.agentGenerationJobs, db.projectReferences, db.referenceChunks,
 ];
 
 function pickPatch<T extends object>(patch: T, keys: readonly (keyof T)[]): Partial<T> {
@@ -266,6 +266,8 @@ export async function deleteProject(id: Id): Promise<void> {
     "rw",
     [
       db.projects,
+      db.projectReferences,
+      db.referenceChunks,
       db.projectMemories,
       db.projectMemoryVersions,
       db.characters,
@@ -279,6 +281,8 @@ export async function deleteProject(id: Id): Promise<void> {
       db.agentGenerationJobs,
     ],
     async () => {
+      await db.projectReferences.where("projectId").equals(id).delete();
+      await db.referenceChunks.where("projectId").equals(id).delete();
       await db.projectMemories.where("projectId").equals(id).delete();
       await db.projectMemoryVersions.where("projectId").equals(id).delete();
       await db.agentGenerationJobs.where("projectId").equals(id).delete();
@@ -545,15 +549,17 @@ export async function reorderEpisodes(projectId: Id, orderedIds: Id[]): Promise<
 }
 
 export async function collectMediaIds(projectId?: Id): Promise<Set<Id>> {
-  const [projects, characters, scenes, props, styles, shots] = await Promise.all([
+  const [projects, characters, scenes, props, styles, shots, references] = await Promise.all([
     projectId === undefined ? db.projects.toArray() : db.projects.where("id").equals(projectId).toArray(),
     (projectId === undefined ? db.characters : db.characters.where("projectId").equals(projectId)).toArray(),
     (projectId === undefined ? db.scenes : db.scenes.where("projectId").equals(projectId)).toArray(),
     (projectId === undefined ? db.props : db.props.where("projectId").equals(projectId)).toArray(),
     (projectId === undefined ? db.styles : db.styles.where("projectId").equals(projectId)).toArray(),
     (projectId === undefined ? db.shots : db.shots.where("projectId").equals(projectId)).toArray(),
+    (projectId === undefined ? db.projectReferences : db.projectReferences.where("projectId").equals(projectId)).toArray(),
   ]);
   const ids = new Set<Id>();
+  for (const reference of references) if (reference.status !== "unavailable") ids.add(reference.mediaId);
   for (const project of projects) if (project.coverMediaId) ids.add(project.coverMediaId);
   for (const mediaId of collectSlotsMedia([
     ...characters.flatMap((character) => Object.values(character.slots ?? {})),

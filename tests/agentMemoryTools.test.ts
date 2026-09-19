@@ -1,3 +1,6 @@
+import { importReferenceFile } from "@/lib/references/import";
+import { removeProjectReference } from "@/db/references";
+import { REFERENCE_TOOL_NAMES } from "@/lib/agent/referenceToolNames";
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
 import { beginAgentRun } from "@/db/agentRuns";
@@ -500,6 +503,26 @@ describe("scoped memory and historical source tools", () => {
         })
       ).status,
     ).toBe("unavailable");
+  });
+  it("cannot replay withdrawn reference text through historical tool-result reads", async () => {
+    const project = await createProject("P");
+    const past = await historicalTask(project.id);
+    const oldRun = await beginAgentRun({ threadId: past.task.threadId, connector, model: "model", content: "读取资料" });
+    const source = await importReferenceFile(project.id, new File(["WITHDRAWN_SOURCE_TEXT"], "private.txt"));
+    const { call } = await prepare(oldRun, "memory_search", { query: "source" });
+    const cached = JSON.stringify({
+      chunks: [{ text: "WITHDRAWN_SOURCE_TEXT", index: 0 }],
+      referenceInput: { projectId: project.id, references: [{ referenceId: source.id, revision: source.revision }] },
+    });
+    await db.agentToolCalls.update(call.id, { status: "completed", result: cached });
+    await removeProjectReference(project.id, source.id);
+    const run = await runFor(project.id);
+    for (const name of REFERENCE_TOOL_NAMES) {
+      await db.agentToolCalls.update(call.id, { name });
+      const result = await invoke(run, "project_history_read", { taskId: past.task.id, source: { type: "tool", id: call.id } });
+      expect(result.status).toBe("unavailable");
+      expect(JSON.stringify(result)).not.toContain("WITHDRAWN_SOURCE_TEXT");
+    }
   });
   it("rejects spoofed source run ownership and late reads after source/project deletion", async () => {
     const p = await createProject("P"),

@@ -1,3 +1,5 @@
+import type { ReferenceAttachment } from "./references";
+import type { AgentSelectedReferences } from "./referenceInput";
 import type { ContextPolicy } from "./context";
 import type { ProjectGenerationDefaults } from "@/domain/output";
 
@@ -534,6 +536,8 @@ export interface ChatThread {
 }
 
 export interface ChatMessage {
+  attachments?: ReferenceAttachment[];
+  referenceContext?: AgentSelectedReferences;
   runId?: Id;
   /** Execution notices are separate from answer content and never sent as history. */
   error?: string;

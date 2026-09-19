@@ -1,3 +1,4 @@
+import type { ProjectReference, ReferenceChunk } from "@/domain/references";
 import type { ProjectMemory, ProjectMemoryVersion } from "@/domain/projectMemory";
 import type { AgentTaskWrapup, AgentTaskWrapupVersion } from "@/domain/agentTaskWrapup";
 import type { AgentTaskRecord, AgentTaskRecordVersion } from "@/domain/agentTaskRecords";
@@ -24,6 +25,8 @@ import { parseShotPictureSlots } from "@/domain/slot";
 import { createId, nowIso } from "@/lib/ids";
 
 export class AifenjingDB extends Dexie {
+  projectReferences!: Table<ProjectReference, string>;
+  referenceChunks!: Table<ReferenceChunk, string>;
   projectMemories!: Table<ProjectMemory, string>;
   projectMemoryVersions!: Table<ProjectMemoryVersion, string>;
   agentTaskWrapups!: Table<AgentTaskWrapup, string>;
@@ -183,6 +186,7 @@ export class AifenjingDB extends Dexie {
     this.version(14).stores({ agentTaskWrapups: "id, taskId, threadId, status, createdAt", agentTaskWrapupVersions: "versionId, taskId, threadId, &[id+revision]" });
     this.version(15).stores({ chatThreads: "id, projectId, updatedAt", agentTasks: "id, &threadId, projectId, lifecycle, updatedAt", agentRuns: "id, threadId, taskId, projectId, status, createdAt" });
     this.version(16).stores({ projectMemories: "id, projectId, [projectId+status], updatedAt", projectMemoryVersions: "versionId, projectId, memoryId, &[memoryId+revision]" });
+    this.version(17).stores({ projectReferences: "id, projectId, mediaId, [projectId+digest], updatedAt", referenceChunks: "id, projectId, referenceId, &[referenceId+revision+index]" });
   }
 }
 

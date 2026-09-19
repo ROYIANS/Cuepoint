@@ -1,5 +1,7 @@
 import type { ChatModelMetadata } from "@/lib/ai/modelMetadata";
 import { resolveModelMetadata } from "@/lib/ai/modelMetadata";
+import { resolveVisionCapability } from "@/lib/ai/visionCapability";
+import { useLiveQuery } from "dexie-react-hooks";
 import { formatTokenCount } from "@/lib/agent/contextUsage";
 import { ModelIcon, ProviderIcon } from "@lobehub/icons";
 import { ActionIcon } from "@lobehub/ui";
@@ -29,8 +31,11 @@ function ModelDetail({ modelId, metadata, providerId }: { modelId: string; metad
   const contextWindow = resolved.contextWindow?.tokens;
   const vendor = lookupVendor(modelId);
   const hints = inferModelHints(modelId);
+  const visionKey = `${providerId ?? ""}:${modelId}:${metadata?.vision ?? "unknown"}`;
+  const visionResult = useLiveQuery(async () => ({ key: visionKey, capability: await resolveVisionCapability(modelId, providerId, metadata) }), [visionKey]);
+  const vision = visionResult?.key === visionKey ? visionResult.capability : undefined;
   const abilities = [
-    hints.vision ? "视觉识别" : null,
+    vision?.supported ? "视觉识别" : null,
     hints.tools ? "工具调用" : null,
     hints.reasoning ? "深度思考" : null,
   ].filter(Boolean);
@@ -55,13 +60,17 @@ function ModelDetail({ modelId, metadata, providerId }: { modelId: string; metad
         <div>
           <dt>能力</dt>
           <dd>
-            {abilities.length > 0 ? abilities.join(" · ") : "即将开放"}
+            {abilities.length > 0 ? abilities.join(" · ") : "暂无已确认的能力"}
             <div style={{ marginTop: 8, display: "flex", gap: 6, color: "#aaa" }}>
-              {hints.vision ? <Eye size={14} /> : null}
+              {vision?.supported ? <Eye size={14} /> : null}
               {hints.tools ? <Wrench size={14} /> : null}
               {hints.reasoning ? <Check size={14} /> : null}
             </div>
           </dd>
+        </div>
+        <div>
+          <dt>图片输入{vision && vision.source !== "unknown" ? ` · ${vision.source === "provider" ? "供应商" : "Model Bank"}` : ""}</dt>
+          <dd title={vision?.sourceUrl}>{!vision ? "正在确认…" : vision.supported ? "支持 · 使用当前模型识图" : vision.source === "unknown" ? "能力未确认" : "不支持"}</dd>
         </div>
 
       </dl>

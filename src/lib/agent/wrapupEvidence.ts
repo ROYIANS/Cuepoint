@@ -1,3 +1,4 @@
+import { collectReferenceEvidence, toolReferenceAttachments, referenceToolSummary } from "./referenceEvidence";
 import { provesCompletedEffect } from "@/db/agentTaskRecords";
 import { db } from "@/db/database";
 import type { AgentTask } from "@/domain/agent";
@@ -34,7 +35,7 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
     const generation=["submit_generation","apply_generation","check_generation"].includes(call.name);
     const failed=call.status!=="completed"||!!value.error||value.ok===false||value.success===false||(!generation&&value.applied===false);
     const outcome:WrapupEvidence['outcome']=unsettled||failed?"unresolved":generation?(value.status==="applied"?"applied":value.status==="downloaded"?"downloaded":"unresolved"):"fact";
-    add({id:`tool:${call.id}`,kind:"tool",label:call.title,body:JSON.stringify({status:call.status,result:value,error:call.error}),outcome,available:true,supportsResult:call.status==="completed"&&provesCompletedEffect(call)},call);
+    add({id:`tool:${call.id}`,kind:"tool",label:call.title,body:JSON.stringify({status:call.status,result:referenceToolSummary(call.name, call.result, task.projectId ?? "") ?? value,error:call.error}),outcome,available:true,supportsResult:call.status==="completed"&&provesCompletedEffect(call)},call);
     const rows=Array.isArray(value.items)?value.items:[value];
     for(const item of rows){const row=json(item);const kind=typeof row.kind==='string'&&kinds.includes(row.kind)?row.kind:typeof args.kind==='string'&&kinds.includes(args.kind)?args.kind:call.name.split('_')[0];
       const id=typeof row.id==='string'?row.id:typeof args.id==='string'?args.id:undefined;
@@ -66,12 +67,19 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
   }
   for(const record of records)add({id:`record:${record.id}`,kind:"record",label:record.title,body:JSON.stringify({kind:record.kind,claim:record.claim,author:record.author,body:record.body,sources:record.sources}),outcome:record.kind==='question'?'unresolved':'fact',available:true},record);
   for(const message of messages)add({id:`message:${message.id}`,kind:"message",label:message.role==='user'?'用户要求与反馈':'AI 回复（待核实）',body:message.content,outcome:message.role==='assistant'&&message.status!=='complete'?'unresolved':'fact',available:true},message);
+  if (task.projectId) {
+    const attachments = [
+      ...messages.flatMap(message => message.attachments ?? []),
+      ...calls.filter(call => call.status === "completed").flatMap(call => toolReferenceAttachments(call.result, task.projectId!)),
+    ];
+    for (const source of await collectReferenceEvidence(task.projectId, attachments)) add(source.evidence, source.fingerprint);
+  }
   // Prioritize unresolved outcomes and the latest user corrections. Record all omissions.
   const ordered=[...evidence].reverse(), selected:WrapupEvidence[]=[];
   const take=(items:WrapupEvidence[],count:number)=>{for(const item of items.filter(item=>!selected.some(s=>s.id===item.id)).slice(0,count))selected.push(item);};
   take(ordered.filter(e=>e.outcome==='unresolved'),6);
-  for(const kind of ['generation','entity','tool','record'] as const)take(ordered.filter(e=>e.kind===kind),8);
-  take(ordered.filter(e=>e.kind==='message'),10);
+  for(const kind of ['generation','entity','tool','record','reference'] as const)take(ordered.filter(e=>e.kind===kind),Math.min(8,48-selected.length));
+  take(ordered.filter(e=>e.kind==='message'),Math.min(10,48-selected.length));
   take(ordered,48-selected.length);
   const selectedIds=new Set(selected.map(e=>e.id));
   return {fingerprint:targetRevision({project:task.projectId?await db.projects.get(task.projectId):null,task:{id:task.id,projectId:task.projectId,title:task.title,goal:task.goal,plan:task.plan,acceptanceCriteria:task.acceptanceCriteria??[],revision:task.revision??1,artifacts:task.artifacts},runs:runs.map(r=>({id:r.id,status:r.status,updatedAt:r.updatedAt})),sources:fingerprints.sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b)))}),taskRevision:task.revision??1,criteria:task.acceptanceCriteria??[],evidence:includeAllEvidence?evidence.map(item=>selectedIds.has(item.id)?item:{...item,body:"",truncated:true}):selected,coverage:{total:evidence.length,included:selected.length,omitted:evidence.length-selected.length,truncated:selected.filter(e=>e.truncated).length}};

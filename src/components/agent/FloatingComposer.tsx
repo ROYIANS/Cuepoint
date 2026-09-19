@@ -1,8 +1,12 @@
+import { ReferenceAttachments } from "./ReferenceAttachments";
+import { ReferenceLibrary } from "./ReferenceLibrary";
+import { REFERENCE_ACCEPT } from "@/domain/references";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ModelSettingsMenu } from "./ModelSettingsMenu";
 import { ProjectPicker } from "./ProjectPicker";
 import { AgentControls, ComposerPlusMenu } from "@/components/agent/AgentControls";
 import { Dropdown, Input } from "antd";
-import { Check, ChevronDown, Expand, Infinity as InfinityIcon, LayoutList, MessagesSquare, Mic, Minimize2, Sparkles } from "lucide-react";
+import { Check, ChevronDown, Expand, Infinity as InfinityIcon, LayoutList, MessagesSquare, Mic, X, RotateCcw, LoaderCircle, Minimize2, Sparkles } from "lucide-react";
 import { useEffect, useRef, useState, type ComponentRef } from "react";
 import { toast } from "sonner";
 import type { ChatSurfaceMode, ComposerProps } from "@/components/agent/composerTypes";
@@ -92,6 +96,7 @@ function InteractionModeSwitch({ mode, onChange }: {
  */
 export function FloatingComposer({
   threadId,
+  attachments = [], referenceImports = [], onAttachReference, onRemoveReference, onImportReferences, onCancelReferenceImport, onRetryReferenceImport,
   value,
   sending,
   blocked,
@@ -127,7 +132,31 @@ export function FloatingComposer({
   expanded = false,
   onExpandedChange,
 }: ComposerProps & { surface?: "home" | "detail"; expanded?: boolean; onExpandedChange?: (expanded: boolean) => void }) {
-  const canSend = Boolean(value.trim()) && !blocked && !sending && !projectRequired && !modelPolicy.incompatibleModels.includes(model.trim());
+  const canSend = (Boolean(value.trim()) || attachments.length > 0) && referenceImports.length === 0 && !blocked && !sending && !projectRequired && !modelPolicy.incompatibleModels.includes(model.trim());
+  const [libraryOpen, setLibraryOpen] = useState(false);
+  const [projectAction, setProjectAction] = useState<"import" | "library" | File[]>();
+  const fileInput = useRef<HTMLInputElement>(null);
+  const [dragging, setDragging] = useState(false);
+  const scope = `${threadId ?? "home"}/${projectId ?? ""}`;
+  useEffect(() => { setLibraryOpen(false); setProjectAction(undefined); setDragging(false); }, [threadId]);
+  function filesSelected(files: File[]) {
+    if (!files.length || blocked || sending) return;
+    if (!projectId) { setProjectAction(files); return; }
+    onImportReferences?.(files);
+  }
+  function openReferenceAction(action: "import" | "library") {
+    if (sending || blocked) return;
+    if (!projectId) { setProjectAction(action); return; }
+    if (action === "library") setLibraryOpen(true); else fileInput.current?.click();
+  }
+  useEffect(() => {
+    if (!projectId || !projectAction) return;
+    const action = projectAction;
+    setProjectAction(undefined);
+    if (action === "library") setLibraryOpen(true);
+    else if (action === "import") fileInput.current?.click();
+    else onImportReferences?.(action);
+  }, [projectId, projectAction, onImportReferences]);
   const composing = useRef(false);
   const inputRef = useRef<ComponentRef<typeof Input.TextArea>>(null);
   useEffect(() => { inputRef.current?.focus({ preventScroll: true }); }, [expanded]);
@@ -190,7 +219,16 @@ export function FloatingComposer({
   return (
     <div className={`agent-composer-stack${expanded ? " is-expanded" : ""}`}>
       {status && !expanded ? <div className="agent-composer-status">{status}</div> : null}
-    <div className="agent-composer agent-composer-refined">
+    <div className={`agent-composer agent-composer-refined${dragging ? " reference-dragging" : ""}`}
+      onDragOver={(event) => { if (event.dataTransfer.types.includes("Files")) { event.preventDefault(); setDragging(true); } }}
+      onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDragging(false); }}
+      onDrop={(event) => { if (!event.dataTransfer.types.includes("Files")) return; event.preventDefault(); setDragging(false); filesSelected(Array.from(event.dataTransfer.files)); }}
+      onPaste={(event) => { const images = Array.from(event.clipboardData.items).filter((item) => item.kind === "file" && item.type.startsWith("image/")).map((item) => item.getAsFile()).filter((file): file is File => !!file); if (images.length) { if (!event.clipboardData.getData("text/plain")) event.preventDefault(); filesSelected(images); } }}>
+      <input ref={fileInput} type="file" accept={REFERENCE_ACCEPT} multiple hidden onChange={(event) => { filesSelected(Array.from(event.target.files ?? [])); event.target.value = ""; }} />
+      <ReferenceAttachments projectId={projectId} attachments={attachments} onRemove={onRemoveReference} />
+      {referenceImports.length > 0 && <div className="reference-imports" aria-live="polite">{referenceImports.map((job) => <div key={job.id}>{job.status === "importing" ? <LoaderCircle size={14} className="reference-spinner" /> : <span aria-hidden>!</span>}<span><strong>{job.filename}</strong><small>{job.error ?? "正在本地导入与解析…"}</small></span>{job.status === "failed" && <button type="button" aria-label={`重试导入 ${job.filename}`} onClick={() => onRetryReferenceImport?.(job)}><RotateCcw size={14} /></button>}<button type="button" aria-label={`取消附件 ${job.filename}`} onClick={() => onCancelReferenceImport?.(job.id)}><X size={14} /></button></div>)}</div>}
+      {attachments.length > 0 && <p className="reference-send-note">发送后，所选图片及文档提取文字将分享给当前模型；超长内容按上下文预算读取。</p>}
+      {dragging && <div className="reference-drop-hint">松开以导入参考资料</div>}
       <Input.TextArea
         ref={inputRef}
         readOnly={listening}
@@ -223,7 +261,7 @@ export function FloatingComposer({
         <div className="agent-composer-cluster">
           <div className="agent-composer-scope"><ProjectPicker projects={projects} projectId={projectId} required={projectRequired} locked={projectLocked} onChange={onProjectChange} />
           {!detail && <ModeSwitch mode={chatMode} onChange={onChatModeChange} />}</div>
-          <ComposerPlusMenu threadId={threadId} projectId={projectId} />
+          <ComposerPlusMenu threadId={threadId} projectId={projectId} onImport={() => openReferenceAction("import")} onLibrary={() => openReferenceAction("library")} />
           {detail ? <button type="button" className="agent-chip agent-control agent-control-icon" aria-label={expanded ? "退出全屏编辑" : "展开编辑器"} onClick={() => onExpandedChange?.(!expanded)}>
             {expanded ? <Minimize2 size={17} aria-hidden /> : <Expand size={17} aria-hidden />}
           </button> : null}
@@ -271,6 +309,8 @@ export function FloatingComposer({
       </div>
       <div className="agent-composer-cluster agent-composer-permissions"><AgentControls />{contextUsage}</div>
     </div> : null}
+    {projectId && <ReferenceLibrary key={scope} projectId={projectId} open={libraryOpen} onOpenChange={setLibraryOpen} selected={attachments} onSelect={(attachment) => onAttachReference?.(attachment)} onImport={() => fileInput.current?.click()} />}
+    <Dialog open={!!projectAction && !projectId} onOpenChange={(open) => { if (!open) setProjectAction(undefined); }}><DialogContent className="reference-dialog reference-project-dialog"><DialogHeader><DialogTitle>先为资料选择项目</DialogTitle><DialogDescription>{projectLocked ? "当前对话未绑定项目且已开始，请新开一个项目对话导入资料。" : "资料保存在所选项目中；你的消息草稿会保留。"}</DialogDescription></DialogHeader><ProjectPicker projects={projects} projectId={projectId} locked={projectLocked} allowClear={false} onChange={onProjectChange} /><p className="reference-note">支持 JPEG / PNG / WebP（10 MB）、TXT / MD（5 MB）、PDF / DOCX（20 MB），每次最多 10 个文件。导入仅在本地解析。</p></DialogContent></Dialog>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import type { AgentReferenceInput, AgentReferenceAudit, AgentVisionCapability } from "./referenceInput";
 import type { MemorySelection, MemoryDispatchAudit } from "./memoryRetrieval";
 import type { ProjectContextSnapshot } from "./projectContext";
 import type { GenerationPreferences } from "./generationPreferences";
@@ -23,10 +24,10 @@ export type AgentPermissionMode = "ask" | "assist" | "full";
 export type AgentInteractionMode = "smart" | "conversation";
 export interface AgentWireToolCall { id: string; type: "function"; function: { name: string; arguments: string } }
 export interface AgentToolSchema { type: "function"; function: { name: string; description: string; parameters: Record<string, unknown> } }
-export type AgentRequestMessage =
+export type AgentRequestMessage = (
   | { role: "user" | "system"; content: string }
   | { role: "assistant"; content: string; tool_calls?: AgentWireToolCall[] }
-  | { role: "tool"; content: string; tool_call_id: string };
+  | { role: "tool"; content: string; tool_call_id: string }) & { referenceInput?: AgentReferenceInput; sourceToolCallId?: string };
 export interface AgentPlanItem { id: string; title: string; status: "pending" | "in_progress" | "completed" }
 export type AgentToolCallStatus = "pending" | "awaiting_approval" | "approved" | "running" | "completed" | "failed" | "rejected" | "unknown";
 export type AgentToolEffect = "read" | "write" | "network" | "bookkeeping";
@@ -65,11 +66,11 @@ export interface AgentToolCall {
 
 export type AgentProtocol = "chat-completions" | "responses";
 /** Opaque provider continuation lives only in the run, never in display messages. */
-export type AgentResponseItem =
+export type AgentResponseItem = (
   | { type: "message"; role: "system" | "user" | "assistant"; content: string | Array<{ type: "output_text"; text: string; annotations: unknown[] }>; id?: string; status?: "completed"; phase?: string }
   | { type: "reasoning"; id?: string; summary: Array<{ type: "summary_text"; text: string }>; encrypted_content?: string }
   | { type: "function_call"; id?: string; call_id: string; name: string; arguments: string; status?: "completed" }
-  | { type: "function_call_output"; call_id: string; output: string };
+  | { type: "function_call_output"; call_id: string; output: string }) & { referenceInput?: AgentReferenceInput; sourceToolCallId?: string };
 
 /** Provider-reported counts only; absence is unknown, never zero. */
 export interface AgentTokenUsage { inputTokens?: number; outputTokens?: number; totalTokens?: number }
@@ -83,6 +84,8 @@ export interface AgentModelMetrics {
 
 /** Frozen execution inputs. Credentials are resolved from the connector at dispatch. */
 export interface AgentRun {
+  visionCapability?: AgentVisionCapability;
+  referenceAudit?: AgentReferenceAudit[];
   memorySelection?: MemorySelection;
   memoryAudit?: MemoryDispatchAudit[];
   projectId?: Id;

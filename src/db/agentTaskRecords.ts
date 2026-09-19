@@ -35,7 +35,7 @@ export async function validateTaskSources(task: Pick<AgentTask, "id" | "threadId
     if (!source.id || source.id.length > 120) throw new Error("来源标识无效");
     if (source.type === "message") {
       const message = await db.chatMessages.get(source.id);
-      if (!message || message.threadId !== task.threadId || message.role !== "user" || !message.content.trim()) throw new Error("只能引用当前对话真实的用户消息");
+      if (!message || message.threadId !== task.threadId || message.role !== "user" || (!message.content.trim() && !message.attachments?.length)) throw new Error("只能引用当前对话真实的用户消息");
       userEvidence = true;
     } else if (source.type === "tool") {
       const call = await db.agentToolCalls.get(source.id);
