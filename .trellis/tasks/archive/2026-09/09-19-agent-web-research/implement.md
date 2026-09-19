@@ -17,6 +17,9 @@ Status: implemented; lint/full tests/native verification passed. Independent bui
 - [x] Focused regression suites then explicit local pnpm lint/test/build; git diff --check.
 - [x] Main session independently runs native Edge/IndexedDB tests with mocked billed services, desktop/390px/keyboard; save reproducible evidence.
 - [x] Independent trellis-check reviews the whole change, fixes concrete findings and reruns affected gates.
-- [ ] Update executable specs and retrospective, prepare concrete commit plan, commit only with applicable authorization, archive child and record journal.
+- [x] Update executable specs and retrospective, prepare concrete commit plan, commit only with applicable authorization, archive child and record journal.
 
 Commands use `/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm`; no bundled runtime pnpm or unnecessary installs. Do not claim authenticated/live model verification from mocks. Network requests during implementation use fixtures unless live paid calls are expressly authorized.
+
+## Closeout
+User approved commit/archive on 2026-09-19. Work commits: 3bbcedc and 6ba3c83. Task archival and session journal are recorded in subsequent bookkeeping commits.

@@ -3,7 +3,7 @@
   "name": "agent-web-vision",
   "title": "Web research and natural-language project image inspection",
   "description": "Add web research and make existing generated project images discoverable and readable from natural-language requests.",
-  "status": "planning",
+  "status": "completed",
   "dev_type": "frontend",
   "scope": "agent-web-vision",
   "package": null,
@@ -11,11 +11,11 @@
   "creator": "ROYIANS",
   "assignee": "ROYIANS",
   "createdAt": "2026-09-19",
-  "completedAt": null,
+  "completedAt": "2026-09-19",
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "3bbcedc",
   "pr_url": null,
   "subtasks": [],
   "children": [
@@ -24,6 +24,6 @@
   ],
   "parent": null,
   "relatedFiles": [],
-  "notes": "Integrated PRD/design approved by user with ok on 2026-09-19. Web research implementation first; image-discovery activation follows its verification. Main owns documentation and native validation; assigned agents own product implementation/review.",
+  "notes": "Integrated PRD/design approved by user with ok on 2026-09-19. Web research implementation first; image-discovery activation follows its verification. Main owns documentation and native validation; assigned agents own product implementation/review. Engineering acceptance complete: lint/type-check, 72 files / 891 tests, build, independent reviews and native combined verification PASS. User authorized commit/archive with 提交. Work commits: 3bbcedc, 6ba3c83.",
   "meta": {}
 }
