@@ -1,3 +1,4 @@
+import { SearchConnection } from "./SearchConnection";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Check, Plug } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -162,7 +163,7 @@ export function ConnectorsPage() {
   }
 
   return (
-    <div className="px-10 py-8">
+    <div className="px-4 py-6 md:px-10 md:py-8">
       <div className="max-w-3xl">
         <h1 className="font-display text-[28px] leading-none tracking-tight">连接</h1>
         <p className="text-muted-foreground mt-3 max-w-xl text-sm leading-6">
@@ -235,6 +236,7 @@ export function ConnectorsPage() {
             );
           })}
         </div>
+        <SearchConnection />
       </div>
 
       <Dialog open={Boolean(editor)} onOpenChange={(open) => !open && closeEditor()}>

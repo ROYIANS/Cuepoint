@@ -1,3 +1,4 @@
+import { WEB_TOOLS } from "./webTools";
 import { REFERENCE_TOOLS } from "./referenceTools";
 import { MEMORY_TOOLS } from "./memoryTools";
 import { frozenProjectScope } from "./projectScope";
@@ -54,6 +55,7 @@ export const BUILTIN_TOOLS: readonly AgentToolDefinition[] = [
   ...GENERATION_TOOLS,
   ...MEMORY_TOOLS,
   ...REFERENCE_TOOLS,
+  ...WEB_TOOLS,
 ];
 export function toolSchemas(names: readonly string[], registry: readonly AgentToolDefinition[] = BUILTIN_TOOLS): AgentToolSchema[] {
   return names.map((name) => {

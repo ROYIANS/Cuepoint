@@ -1,3 +1,5 @@
+import { WebResearchSources } from "./WebResearchSources";
+import { ProjectImageSources } from "./ProjectImageSources";
 import { GenerationReview } from "./GenerationReview";
 import { AgentGenerationResults } from "./AgentGenerationResults";
 import { Link } from "@tanstack/react-router";
@@ -92,6 +94,8 @@ export function AgentRunDetails({ run, busy, readOnly, onAction }: {
                 {preview.changes.length > 0 && <ul>{preview.changes.map((change, index) => <li key={index}>{change}</li>)}</ul>}
                 {preview.target && /^\/(?!\/)/.test(preview.target.href) && <Link to={preview.target.href} className="agent-change-link">查看{preview.target.label} ↗</Link>}
               </div>}
+              <WebResearchSources call={call} />
+              <ProjectImageSources call={call} />
               <details className="agent-step-technical">
                 <summary>参数与返回结果</summary>
                 <div className="agent-step-payload-label">AI 原始参数</div><pre>{call.arguments}</pre>

@@ -1,3 +1,4 @@
+import type { SearchConnection } from "@/domain/search";
 import type { GenerationBatch, GenerationBatchItem } from "@/domain/agentGenerationBatch";
 import type { ProjectReference, ReferenceChunk } from "@/domain/references";
 import type { ProjectMemory, ProjectMemoryVersion } from "@/domain/projectMemory";
@@ -26,6 +27,7 @@ import { parseShotPictureSlots } from "@/domain/slot";
 import { createId, nowIso } from "@/lib/ids";
 
 export class AifenjingDB extends Dexie {
+  searchConnections!: Table<SearchConnection, string>;
   projectReferences!: Table<ProjectReference, string>;
   referenceChunks!: Table<ReferenceChunk, string>;
   projectMemories!: Table<ProjectMemory, string>;
@@ -189,6 +191,7 @@ export class AifenjingDB extends Dexie {
     this.version(14).stores({ agentTaskWrapups: "id, taskId, threadId, status, createdAt", agentTaskWrapupVersions: "versionId, taskId, threadId, &[id+revision]" });
     this.version(15).stores({ chatThreads: "id, projectId, updatedAt", agentTasks: "id, &threadId, projectId, lifecycle, updatedAt", agentRuns: "id, threadId, taskId, projectId, status, createdAt" });
     this.version(16).stores({ projectMemories: "id, projectId, [projectId+status], updatedAt", projectMemoryVersions: "versionId, projectId, memoryId, &[memoryId+revision]" });
+    this.version(19).stores({ searchConnections: "id" });
     this.version(18).stores({
       agentGenerationBatches: "id, &sourceCallId, projectId, threadId, runId, taskId, status, updatedAt",
       agentGenerationBatchItems: "id, batchId, projectId, threadId, &jobId",

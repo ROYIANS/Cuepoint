@@ -1,4 +1,5 @@
 import { REFERENCE_TOOL_NAMES } from "./referenceToolNames";
+import { projectImageSources } from "@/domain/imageDiscovery";
 import { db } from "@/db/database";
 import type { ReferenceAttachment } from "@/domain/references";
 import type { WrapupEvidence } from "@/domain/agentTaskWrapup";
@@ -60,6 +61,7 @@ export function referenceToolSummary(name: string, result: string | undefined, p
   return {
     kind: "historical_reference_read",
     projectId, references, coverage, images,
+    imageSources: projectImageSources(name, result).filter((source) => source.projectId === projectId).map(({ id, projectId, entityKind, entityId, episodeId, slot, source, mediaId, revision }) => ({ id, projectId, entityKind, entityId, episodeId, slot, source, mediaId, revision })),
     ...(typeof value.status === "string" ? { status: value.status } : {}),
     note: "此处仅记录当时查找或读取的来源身份与覆盖范围，不重放资料正文或图片像素。来源当前是否可用请以独立资料证据为准；读取不代表结论已核实。",
   };

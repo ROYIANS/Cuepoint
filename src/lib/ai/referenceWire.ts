@@ -18,7 +18,7 @@ async function pixels(inputs: Array<AgentReferenceInput | undefined>, scope: Ref
   const images = active.flatMap((item) => item.images ?? []);
   if (images.length > 10) throw new Error("本次上下文图片超过 10 张，请减少历史或选择的图片");
   if (images.length) requireVision(scope.visionCapability ?? await resolveVisionCapability(scope.model, scope.connectorDefinitionId));
-  for (const input of active) await validateReferenceInput(input, scope.projectId);
+  for (const input of active) await validateReferenceInput(input, scope.projectId, scope.runId);
   const encoded = new Map<string, string>();
   for (const image of images) {
     signal?.throwIfAborted();
@@ -31,7 +31,7 @@ async function pixels(inputs: Array<AgentReferenceInput | undefined>, scope: Ref
     encoded.set(image.mediaId, `data:${image.mimeType};base64,${btoa(binary)}`);
   }
   // Reading blobs is asynchronous; withdrawal during encoding must also block dispatch.
-  for (const input of active) await validateReferenceInput(input, scope.projectId);
+  for (const input of active) await validateReferenceInput(input, scope.projectId, scope.runId);
   await requireLiveScope();
   signal?.throwIfAborted();
   return encoded;
