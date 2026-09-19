@@ -3,7 +3,7 @@
   "name": "agent-workflow-memory",
   "title": "Trellis-style creative workflow and durable memory",
   "description": "Roadmap and cross-child acceptance for Trellis-style creative work, memory, references and batch outputs.",
-  "status": "planning",
+  "status": "completed",
   "dev_type": "frontend",
   "scope": "agent-workflow-memory",
   "package": null,
@@ -11,7 +11,7 @@
   "creator": "ROYIANS",
   "assignee": "ROYIANS",
   "createdAt": "2026-09-19",
-  "completedAt": null,
+  "completedAt": "2026-09-19",
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
@@ -29,6 +29,6 @@
   ],
   "parent": null,
   "relatedFiles": [],
-  "notes": "Children 1–6 archived; child 7 implementation, independent review, 839 tests, browser validation and specs complete. Final native task A→memory→task B→video candidates→current evidence→reviewed completion passes. AC5 still requires final child work commits and archival; parent not yet complete.",
+  "notes": "All seven children committed and archived. Cross-child AC0–AC5 satisfied by child validations and native task A→memory→task B→video candidates→current evidence→reviewed completion. Final child work commits: e6e3f94, 2903466; final test gate: 69 files / 839 passing tests. Parent record retained, not archived.",
   "meta": {}
 }

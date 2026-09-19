@@ -1,6 +1,6 @@
 # Trellis-style creative workflow and durable memory
 
-Status: all seven children implemented; final child passed verification. Awaiting final work commits and archival before completing the roadmap.
+Status: completed on 2026-09-19. All seven children are committed and archived; cross-child acceptance AC0–AC5 is satisfied. Parent record is retained in the task directory.
 
 ## Goal
 Make creative work reproducible across tasks: clarify the outcome, plan, execute, verify actual results, reflect, archive, retain useful experience and retrieve it at the next relevant moment. The user explicitly prioritizes the essence of Trellis, long-term memory and excellent visual/interaction quality.
@@ -31,7 +31,7 @@ Existing task/chat identity, manual lifecycle, checklists, 40 creative tools, re
 | 6 | 09-19-agent-reference-intake | User reference images/documents with traceable extraction | After core loop 1-5 |
 | 7 | 09-19-agent-batch-generation | Reviewed queue, result comparison and scoped application | After 6; existing durable generation |
 
-Progress 2026-09-19: children 1–6 are committed and archived. Child 7 is implemented and verified with 839 passing tests and native browser fixtures. The exact task A → reviewed lesson → actual task B request → batch video selection → reviewed completion scenario passes; correction, isolation, disable/delete and historical provenance checks also pass. Child 7 work commits/archival remain pending, so parent AC5 is not yet complete. See child 7 `validation/quality.md` and `validation/parent-integration.md`.
+Progress 2026-09-19: children 1–6 are committed and archived. Child 7 is implemented and verified with 839 passing tests and native browser fixtures. The exact task A → reviewed lesson → actual task B request → batch video selection → reviewed completion scenario passes; correction, isolation, disable/delete and historical provenance checks also pass. Child 7 work commits e6e3f94 and 2903466 are complete and the child is archived, closing AC5. See [final quality gate](../archive/2026-09/09-19-agent-batch-generation/validation/quality.md) and [parent integration](../archive/2026-09/09-19-agent-batch-generation/validation/parent-integration.md).
 
 Parent-child links are organizational; ordering is enforced by child planning and validation. Parent has no direct implementation work. Later children are scoped backlog, not implementation-ready designs.
 
@@ -47,4 +47,4 @@ Parent-child links are organizational; ordering is enforced by child planning an
 No background server, cloud synchronization, autonomous multi-agent orchestration, scheduled jobs or direct execution of Trellis CLI in the browser product. No claim that long-term memory is identical to context compression or that a vector database alone supplies memory quality.
 
 ## Planning gates
-Children 1–6 are archived. Child 7 passed implementation, independent review, browser acceptance and spec updates. AC0–AC4 have evidence across the child validations and final native integration; AC5 remains pending child 7 archival. Parent completion must follow that last gate.
+All seven children are archived. AC0–AC4 have evidence across child validations and the final native integration. AC5 closed after final child work commits and archival. This parent record is completed, retained and not archived in this session.

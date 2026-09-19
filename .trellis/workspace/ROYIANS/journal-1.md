@@ -707,3 +707,25 @@ Implemented project-shared image, TXT/Markdown, PDF and DOCX references with bou
 ### Status
 
 [OK] **Completed**
+
+
+## Session 31: Reviewed batch generation and workflow integration
+
+**Date**: 2026-09-19
+**Task**: Reviewed batch generation and workflow integration
+**Branch**: `main`
+
+### Summary
+
+Implemented reviewed generation batches: 20 requests, four candidates per target, two active workers; durable draft/confirmation/recovery, fail-closed storage faults, candidate comparison/application and current task evidence. Independent review and 69 files/839 tests, type-check/build passed. Native desktop/mobile, exact POST counts, 20-item queue and playable-video task A→memory→task B→reviewed completion passed with mocked providers. User approved work commits; final child archived, parent AC0–AC5 completed and retained. No push or paid calls.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `e6e3f94` | (see git log) |
+| `2903466` | (see git log) |
+
+### Status
+
+[OK] **Completed**
