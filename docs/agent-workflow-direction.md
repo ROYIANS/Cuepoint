@@ -7,7 +7,8 @@ not claim that deferred capabilities are implemented.
 The creative assistant should work through a Trellis-like task lifecycle:
 clarify the goal → make a plan → execute → verify → summarize and reflect →
 archive → retain reusable experience → retrieve relevant experience for the next task.
-The task is the organizing unit; chat is its interaction surface. A successful
+The project is the durable creative context and memory boundary; tasks organize
+work within it, and chat is the interaction surface. A successful
 model response alone is not task completion.
 
 ## Current foundation
@@ -38,3 +39,16 @@ A human can manage this foundation without a model connector.
 Detailed schemas, extraction rules, retrieval and approval behavior are to be designed
 in the subsequent memory/context round. This direction does not expand the current
 workspace batch into media generation, business CRUD, autonomous teams or scheduling.
+
+## Project ownership clarification — 2026-09-19
+Task mode will require a project selection before conversation intake. Current
+project facts should be available to the first request, remain current after edits,
+and be reused by new conversations in the same project. Task creation still follows
+requirements clarification. Project-specific experience, rules and conventions stay
+with that project. Basic facts come from business data; long-term memory preserves
+source-linked experience rather than copies of mutable project fields.
+
+This is newly confirmed product direction, not implemented behavior. Add project
+binding/context foundation before the memory-management and retrieval deliveries.
+See `.trellis/tasks/09-19-agent-workflow-memory/research/project-scoped-context.md`
+for current gaps and outstanding scope decisions.

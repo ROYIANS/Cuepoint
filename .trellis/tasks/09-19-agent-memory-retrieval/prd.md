@@ -26,3 +26,10 @@ Start after 09-19-agent-memory-management is accepted. Parent: 09-19-agent-workf
 
 ## Boundaries
 Follow parent provenance, user-control, pure-frontend and visual-quality contracts. No implementation or design-finality is implied by creating this backlog. Research actual source/contracts when reached and keep later-child behavior out of this child.
+
+## Project-first planning amendment — 2026-09-19
+Project binding and shared current context are prerequisites. New Task-mode chats
+require a selected project; memories/experience/rules default to their source project
+and are reused across that project's conversations. Do not infer global scope or
+copy all prior transcripts. Follow the project-only operation boundary and deleted-project behavior from
+parent research/project-scoped-context.md before final design.

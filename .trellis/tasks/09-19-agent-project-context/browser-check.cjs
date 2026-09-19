@@ -1,0 +1,52 @@
+// Disposable IndexedDB context and intercepted fixture connector only. Start Vite on 5185 first.
+const assert=require('node:assert/strict');
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE || '/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+(async()=>{
+const browser=await chromium.launch({executablePath:process.env.BROWSER_EXECUTABLE || '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',headless:true});
+const page=await browser.newPage({viewport:{width:1440,height:1000},reducedMotion:'reduce'});const errors=[];page.on('pageerror',e=>errors.push(e.message));page.setDefaultTimeout(18000);
+let phase=0,step=0;const requests=[];
+await page.route('https://chat.test/**',async route=>{
+ if(route.request().method()==='GET')return route.fulfill({json:{data:[{id:'gpt-4.1'}]}});
+ const body=JSON.parse(route.request().postData());requests.push(body);
+ const reply=content=>route.fulfill({json:{choices:[{message:{role:'assistant',content},finish_reason:'stop'}]}});
+ if(phase===0)return reply('我已了解雨后书店的设定。你希望这次完善哪些角色？');
+ if(phase===2)return reply('将按更新后的温暖纪录片基调继续。');
+ const user=await page.evaluate(async()=>{const{db}=await import('/src/db/database.ts');return(await db.chatMessages.toArray()).filter(m=>m.role==='user').at(-1)});
+ const seq=[['task_read',{}],['task_create',{title:'雨后的书店 · 主角设定',goal:'保存主角林雨的小传与人物动机。',acceptanceCriteria:['人物设定符合项目基调'],steps:[{id:'one',title:'整理林雨的角色资料',status:'pending'}],sources:[{type:'message',id:user.id}]}]];
+ const next=seq[step++];if(!next)return reply('已在雨后的书店项目下建立主角设定任务。');
+ return route.fulfill({json:{choices:[{message:{role:'assistant',content:'',tool_calls:[{id:'fixture-'+step,type:'function',function:{name:next[0],arguments:JSON.stringify(next[1])}}]},finish_reason:'tool_calls'}]}});
+});
+await page.goto('http://127.0.0.1:5185/agent');
+const f=await page.evaluate(async()=>{
+const{db}=await import('/src/db/database.ts');const r=await import('/src/db/repo.ts');
+await db.connectors.put({id:'chat',name:'测试对话',definitionId:'openai-compatible',baseUrl:'https://chat.test/v1',apiKey:'fixture-only',updatedAt:new Date().toISOString()});
+const a=await r.createProject('雨后的书店');await r.updateProject(a.id,{brief:'下雨天，经营旧书店的林雨遇见陌生访客。',tone:'温暖写实',setting:{worldview:'城市的旧街区',background:'一家旧书店',rules:'人物用行动表达感情'}});
+const b=await r.createProject('远行的鲸');await r.updateProject(b.id,{brief:'海上纪录短片，观察迁徙。'});
+const{updateGeneralAgentConfig}=await import('/src/db/agentSettings.ts');await updateGeneralAgentConfig({permissionMode:'full'});
+return{a:a.id,b:b.id};});
+await page.getByRole('button',{name:'Agent 模式',exact:true}).click();await page.getByRole('menuitem').filter({hasText:'围绕目标规划步骤'}).click();
+await page.getByRole('button',{name:'选择模型',exact:true}).click();await page.getByRole('button').filter({hasText:'GPT-4.1'}).last().click();
+await page.locator('textarea.agent-composer-input').fill('帮我完善角色');await page.locator('textarea.agent-composer-input').press('Enter');assert.equal(requests.length,0);
+await page.getByRole('button',{name:'选择项目',exact:true}).click();await page.getByRole('textbox',{name:'搜索项目'}).fill('书店');await page.getByRole('textbox',{name:'搜索项目'}).press('ArrowDown');await page.keyboard.press('Enter');
+await page.getByRole('button',{name:'项目：雨后的书店',exact:true}).waitFor();await page.screenshot({path:'/tmp/project-home.png'});
+await page.locator('textarea.agent-composer-input').press('Enter');await page.getByText('我已了解雨后书店的设定。你希望这次完善哪些角色？',{exact:true}).waitFor().catch(async e=>{console.log('STATE',await page.locator('body').innerText(),errors,requests.length,await page.evaluate(async()=>{const{db}=await import('/src/db/database.ts');return{threads:await db.chatThreads.toArray(),runs:await db.agentRuns.toArray()}}));throw e;});
+assert(JSON.stringify(requests[0]).includes('城市的旧街区'));assert(!JSON.stringify(requests[0]).includes('海上纪录短片'));
+let state=await page.evaluate(async()=>{const{db}=await import('/src/db/database.ts');return{tasks:await db.agentTasks.toArray(),thread:(await db.chatThreads.toArray())[0]}});assert.equal(state.tasks.length,0);assert.equal(state.thread.projectId,f.a);assert.equal(state.thread.taskMode,true);const threadId=state.thread.id;
+assert(await page.getByRole('button',{name:'项目：雨后的书店',exact:true}).isDisabled());
+await page.getByRole('button',{name:'上下文明细',exact:true}).click();await page.getByText('当前项目事实 · 随资料更新',{exact:true}).waitFor();await page.screenshot({path:'/tmp/project-context.png'});await page.getByRole('button',{name:'关闭上下文明细'}).click();
+phase=1;await page.locator('textarea.agent-composer-input').fill('请完善林雨的角色小传和人物动机，并建立对应任务。');await page.locator('textarea.agent-composer-input').press('Enter');await page.getByText('已在雨后的书店项目下建立主角设定任务。',{exact:true}).waitFor();
+state=await page.evaluate(async()=>{const{db}=await import('/src/db/database.ts');return{tasks:await db.agentTasks.toArray()}});assert.equal(state.tasks.length,1);assert.equal(state.tasks[0].projectId,f.a);
+await page.evaluate(async id=>{await(await import('/src/db/repo.ts')).updateProject(id,{tone:'温暖纪录片基调'});},f.a);
+phase=2;await page.reload();await page.locator('textarea.agent-composer-input').fill('按新的基调继续');await page.locator('textarea.agent-composer-input').press('Enter');await page.getByText('将按更新后的温暖纪录片基调继续。',{exact:true}).waitFor();assert(JSON.stringify(requests.at(-1)).includes('温暖纪录片基调'));
+await page.goto('http://127.0.0.1:5185/agent');await page.getByRole('button',{name:'选择项目',exact:true}).click();await page.getByRole('option',{name:/雨后的书店/}).click();await page.getByRole('button',{name:'选择模型',exact:true}).click().catch(()=>{});const opt=page.getByRole('button').filter({hasText:'GPT-4.1'}).last();if(await opt.count())await opt.click();
+await page.locator('textarea.agent-composer-input').fill('在同一个项目开始新对话');await page.locator('textarea.agent-composer-input').press('Enter');await page.getByText('将按更新后的温暖纪录片基调继续。',{exact:true}).waitFor();assert(JSON.stringify(requests.at(-1)).includes('温暖纪录片基调'));
+await page.goto('http://127.0.0.1:5185/agent/tasks');await page.getByRole('button',{name:'选择项目',exact:true}).click();await page.getByRole('option',{name:/远行的鲸/}).click();assert.equal(await page.locator('.agent-task-card').count(),0);await page.getByRole('button',{name:'项目：远行的鲸',exact:true}).click();await page.getByRole('button',{name:'全部项目',exact:true}).click();assert.equal(await page.locator('.agent-task-card').count(),1);
+await page.getByRole('button',{name:'新建任务',exact:true}).click();await page.getByRole('dialog',{name:'新建任务'}).getByRole('button',{name:'选择项目',exact:true}).click();await page.getByRole('option',{name:/远行的鲸/}).click();await page.getByRole('textbox',{name:'任务名称'}).fill('迁徙的开场');await page.getByRole('textbox',{name:'目标与完成标准'}).fill('制作开场的镜头清单');await page.getByRole('button',{name:'创建任务',exact:true}).click();await page.getByRole('button',{name:'项目：远行的鲸',exact:true}).waitFor();
+await page.goto('http://127.0.0.1:5185/agent');await page.getByRole('button',{name:'选择项目',exact:true}).click();await page.getByRole('button',{name:'新建项目',exact:true}).click();await page.getByRole('textbox',{name:'项目名称',exact:true}).fill('窗边的风');await page.getByRole('button',{name:'创建并选择',exact:true}).click();await page.getByRole('button',{name:'项目：窗边的风',exact:true}).waitFor();
+await page.setViewportSize({width:390,height:844});await page.screenshot({path:'/tmp/project-mobile.png'});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);await page.getByRole('button',{name:'项目：窗边的风',exact:true}).click();await page.screenshot({path:'/tmp/project-picker-mobile.png'});await page.keyboard.press('Escape');assert.equal(await page.getByRole('textbox',{name:'搜索项目'}).count(),0);
+await page.goto('http://127.0.0.1:5185/agent/'+threadId);
+await page.evaluate(async threadId=>{const{db}=await import('/src/db/database.ts');const r=(await db.agentRuns.where('threadId').equals(threadId).sortBy('createdAt')).at(-1);await db.agentRuns.update(r.id,{status:'waiting_approval',hasToolCalls:true,updatedAt:new Date().toISOString()});await db.agentToolCalls.add({id:'pending-review',runId:r.id,threadId,step:1,order:0,toolCallId:'review-1',name:'character_create',title:'创建角色',arguments:'{}',effect:'write',status:'awaiting_approval',createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()});},threadId);
+await page.getByRole('button',{name:'批准此次操作',exact:true}).waitFor();
+await page.evaluate(async id=>{await(await import('/src/db/repo.ts')).deleteProject(id)},f.a);await page.getByText('项目不可用 · 对话与记录仍保留',{exact:true}).waitFor();assert.equal(await page.getByRole('button',{name:'批准此次操作',exact:true}).count(),0);assert.equal(await page.getByRole('button',{name:'结束本次执行',exact:true}).count(),0);await page.screenshot({path:'/tmp/project-deleted-mobile.png'});await page.getByRole('button',{name:'上下文明细',exact:true}).click();await page.getByText('关联项目已不存在，请在其他项目开启新对话。历史仍可查看。',{exact:true}).waitFor();assert.equal(errors.length,0,errors.join('\n'));
+console.log('PASS task project required, keyboard selection, first request facts, AI task inheritance, refresh and new chat, task filtering/manual creation, project creation, mobile, deleted-project history.');await browser.close();
+})().catch(e=>{console.error(e);process.exit(1)});

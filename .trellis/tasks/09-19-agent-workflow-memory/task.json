@@ -21,6 +21,7 @@
   "children": [
     "09-19-agent-task-orchestration",
     "09-19-agent-task-wrapup",
+    "09-19-agent-project-context",
     "09-19-agent-memory-management",
     "09-19-agent-memory-retrieval",
     "09-19-agent-reference-intake",
@@ -28,6 +29,6 @@
   ],
   "parent": null,
   "relatedFiles": [],
-  "notes": "Six sequential children tracked. First child implemented, verified and approved for commit/archive; remaining five children remain planning. No cross-task memory implementation claimed.",
+  "notes": "Seven deliveries: task orchestration archived; wrap-up and project-context foundation implemented, independently reviewed, verified and committed as 6b6289b; archival approved. Next: project-scoped memory management and retrieval. No memory retrieval implementation claimed.",
   "meta": {}
 }

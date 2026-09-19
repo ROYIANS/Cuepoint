@@ -1,0 +1,5 @@
+{"file":".trellis/spec/frontend/agent-tasks.md","reason":"Task identity, lifecycle and project-bound completion context"}
+{"file":".trellis/spec/frontend/agent-context.md","reason":"Bounded context, fingerprints and continuation snapshots"}
+{"file":".trellis/spec/frontend/agent-creative-skills.md","reason":"Business ownership, generation scope and explicit studio import"}
+{"file":".trellis/spec/frontend/agent-execution.md","reason":"Durable run scope, retries and cross-tab recovery"}
+{"file":".trellis/spec/frontend/component-guidelines.md","reason":"Composer picker and task/thread UI conventions"}

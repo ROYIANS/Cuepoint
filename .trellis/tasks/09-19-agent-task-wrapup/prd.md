@@ -1,6 +1,6 @@
 # Task verification and wrap-up summaries
 
-Status: second child planning proposal; revisit contracts after 09-19-agent-task-orchestration is accepted. Parent: 09-19-agent-workflow-memory.
+Status: approved to proceed on 2026-09-19 after child1 acceptance; implementation contracts reconciled with child1.
 
 ## Goal
 Let users understand what a creative task actually delivered, check it against the goal, and retain a useful handoff before completing or archiving it. Build the trustworthy source layer for subsequent long-term memory.
@@ -29,4 +29,4 @@ Task/plan/lifecycle and pinned replies exist; successful runs project to review,
 Memory extraction/promotion, memory storage/retrieval, attachments, batch generation, background summarization, model-defined automatic completion, subjective visual quality scoring and a new task board.
 
 ## Key proposal for review
-AI drafts and the user confirms, matching generation configuration review. Preparation is explicit; manual summaries remain available. Current goal/plan/evidence determine review, not assistant confidence. Pending implementation approval after this planning summary; no product code changed.
+AI drafts and the user confirms, matching generation configuration review. Preparation is explicit; manual summaries remain available. Current goal/plan/evidence determine review, not assistant confidence. Implementation proceeds after child1 acceptance and the user’s confirmation to continue.

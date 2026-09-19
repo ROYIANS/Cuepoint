@@ -109,3 +109,8 @@ It assembles current goal/acceptance/Todo and up to eight current record excerpt
 request budget. Current running/continuing requests retain their frozen snapshots;
 new records arrive as tool results. Record history is neither compression nor cross-task
 long-term memory. See agent-tasks.md for provenance and paged-read contracts.
+
+## Project facts
+See [Project Context](./agent-project-context.md). Project snapshots share the initial
+instruction envelope; settled continuations append only visible fact differences.
+Compaction must validate the frozen project before every request and activation.

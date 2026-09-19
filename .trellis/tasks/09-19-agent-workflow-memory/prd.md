@@ -18,15 +18,20 @@ Existing task/chat identity, manual lifecycle, checklists, 40 creative tools, re
 - R6: Preserve pure-frontend operation, durable checkpoints, no automatic resubmission and explicit missing/stale-source states. Archive, deletion and memory removal are distinct operations.
 - R7: Flat, restrained interfaces; no nested cards or permanent toolbar clutter. Keyboard and mobile access, clear progress and failure recovery are acceptance requirements.
 
+- R8: Task mode requires project selection before conversation intake. Project-owned tasks and conversations share current project facts and scoped experience/rules across conversations. Business edits refresh current context; selecting a project still does not automatically create a task. See research/project-scoped-context.md.
+
 ## Ordered children
 | Order | Child | Deliverable | Prerequisite |
 | --- | --- | --- | --- |
 | 1 | 09-19-agent-task-orchestration | AI task creation/linking, Todo and research/design/progress records | Existing task/runtime foundation |
 | 2 | 09-19-agent-task-wrapup | Acceptance evidence, reviewed task summary, completion/archive handoff | 1 |
-| 3 | 09-19-agent-memory-management | Promote, edit, scope, supersede and remove creative memory | 2 for verified sources |
-| 4 | 09-19-agent-memory-retrieval | Retrieve relevant memory and inject bounded, inspectable context | 3; uses 1-2 records |
-| 5 | 09-19-agent-reference-intake | User reference images/documents with traceable extraction | After core loop 1-4 |
-| 6 | 09-19-agent-batch-generation | Reviewed queue, result comparison and scoped application | After 5; existing durable generation |
+| 3 | 09-19-agent-project-context | Project-bound intake, execution scope and shared current context | 2 |
+| 4 | 09-19-agent-memory-management | Promote, edit, scope, supersede and remove creative memory | 2 for verified sources; 3 for project scope |
+| 5 | 09-19-agent-memory-retrieval | Retrieve relevant memory and inject bounded, inspectable context | 4; uses 1-2 records |
+| 6 | 09-19-agent-reference-intake | User reference images/documents with traceable extraction | After core loop 1-5 |
+| 7 | 09-19-agent-batch-generation | Reviewed queue, result comparison and scoped application | After 6; existing durable generation |
+
+Planning amendment 2026-09-19: insert a project-binding and shared-context foundation between children2 and3. Detailed scope (including tool boundaries) is being clarified; this is not yet implementation-ready. Memory-management/retrieval now depend on that foundation.
 
 Parent-child links are organizational; ordering is enforced by child planning and validation. Parent has no direct implementation work. Later children are scoped backlog, not implementation-ready designs.
 

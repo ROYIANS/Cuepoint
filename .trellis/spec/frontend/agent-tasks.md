@@ -3,8 +3,8 @@
 ## 1. Scope / Trigger
 Read when modifying Task-mode intake, AI task tools, task/record context, the task
 inspector, checklist, evidence, lifecycle or deletion. The broader Trellis-inspired
-product direction is in `docs/agent-workflow-direction.md`; automatic wrap-up and
-cross-task long-term memory remain separate future deliveries.
+product direction is in `docs/agent-workflow-direction.md`; task verification and wrap-up are specified in `agent-task-wrapup.md`. Cross-task
+long-term memory remains a separate future delivery.
 
 ## 2. Signatures (DB / API)
 - Dexie v10: `agentTasks: id, &threadId, lifecycle, updatedAt`; `agentRuns.taskId`.
@@ -16,7 +16,8 @@ cross-task long-term memory remain separate future deliveries.
 - `createChatThread({..., taskMode?})` creates no task. UI never passes createTask
   to beginAgentRun. Its compatibility flag remains available for explicit callers.
 - `createAgentTask`, `createAgentTaskForThread`, `updateAgentTask(id, patch,
-  expectedRevision?)`, lifecycle/pin APIs remain guarded manual operations.
+  expectedRevision?)`, lifecycle/pin APIs remain guarded manual operations. Completion now requires a
+  current confirmed wrap-up identity/revision; see `agent-task-wrapup.md`.
 - `AgentTaskRecord`: id/taskId, kind research|approach|progress|verification|question,
   claim observation|proposal|decision|result, title/body, sources, todoId?, revision,
   author user|ai, runId?, timestamps. Version rows add recordId and versionId.
@@ -103,7 +104,7 @@ cross-task long-term memory remain separate future deliveries.
 ## 5. Good / Base / Bad Cases
 Good: Task intake → clarify → task_create → proposal → real business tool → sourced
 verification → user reviews; refresh/reopen preserves task and actual work.
-Base: ordinary Q&A has no task; explicit manual create/edit/complete still works.
+Base: ordinary Q&A has no task; manual create/edit and reviewed completion work.
 Bad: first Send creates placeholder; tool bookkeeping substitutes for actual work;
 network status-read returning failure is reported as a successful generation.
 
@@ -126,3 +127,9 @@ Wrong: overwrite earlier run requests with live task documents after task creati
 Correct: atomic tool result now, bounded new snapshot on next send.
 Wrong: save one mutable log or paste its entire version archive into every request.
 Correct: preserve append-only revisions, inject current bounded excerpts, read on demand.
+
+## Project ownership
+Every task requires projectId and inherits the chat binding. Task-mode first send
+requires a selected project but still leaves task creation to AI after clarification.
+Project deletion preserves task history as read-only. See
+[Project Context](./agent-project-context.md) for binding, tools and request contracts.

@@ -5,3 +5,4 @@
 {"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Existing task UI conventions"}
 {"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Tests and validation"}
 {"file": ".trellis/tasks/09-19-agent-workflow-memory/research/trellis-mapping.md", "reason": "Local source evidence and workflow-memory boundaries"}
+{"file": ".trellis/spec/frontend/agent-task-wrapup.md", "reason": "Validated review/version/evidence/completion contracts"}
