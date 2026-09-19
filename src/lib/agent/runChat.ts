@@ -1,3 +1,5 @@
+import { refreshRunProjectContext } from "./projectContext";
+import { frozenProjectScope } from "./projectScope";
 import { ToolPendingError } from "./toolErrors";
 import { prepareRunContext } from "./contextCompaction";
 import { streamResponses, type ResponsesResult } from "@/lib/ai/responsesStream";
@@ -56,7 +58,7 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
     if (call.status === "unknown" || call.status === "running") throw new Error("有工具结果不确定，不能重跑");
     if (call.status === "awaiting_approval") { waiting = true; continue; }
     let validated: ReturnType<typeof validateToolCall>;
-    try { validated = validateToolCall(call.name, effectiveToolInput(call).arguments, run.enabledToolNames ?? [], registry); }
+    try { await frozenProjectScope({runId:run.id,threadId:run.threadId,callId:call.id,signal:controller.signal,projectId:run.projectId}); validated = validateToolCall(call.name, effectiveToolInput(call).arguments, run.enabledToolNames ?? [], registry); }
     catch (error) {
       const message = error instanceof Error ? error.message : "工具参数无效";
       await transitionToolCall(run.id, call.id, ["pending", "approved"], "failed", { error: message, result: JSON.stringify({ error: message }) });
@@ -67,7 +69,7 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
     if (tool.prepare && !call.preview) {
       try {
         if (call.status !== "pending") throw new Error("操作缺少批准前预览，请重新发起");
-        const preview = await tool.prepare(args, { runId: run.id, threadId: run.threadId, callId: call.id, signal: controller.signal });
+        const preview = await tool.prepare(args, { projectId: run.projectId, runId: run.id, threadId: run.threadId, callId: call.id, signal: controller.signal });
         await saveToolPreview(run.id, call.id, preview);
       } catch (error) {
         controller.signal.throwIfAborted();
@@ -93,7 +95,7 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
     if (!await transitionToolCall(run.id, call.id, ["pending", "approved"], "running")) throw new Error("工具已被其他执行领取");
     controller.signal.throwIfAborted();
     try {
-      const value = await tool.execute(args, { runId: run.id, threadId: run.threadId, callId: call.id, signal: controller.signal, preview: effectiveToolInput(call).preview });
+      const value = await tool.execute(args, { projectId: run.projectId, runId: run.id, threadId: run.threadId, callId: call.id, signal: controller.signal, preview: effectiveToolInput(call).preview });
       const result = JSON.stringify(value);
       if (result === undefined || result.length > 65_536) throw new Error("工具结果无效或超过大小限制");
       // Save a known completed result even if Stop was clicked while the operation settled.
@@ -139,6 +141,7 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
     while (true) {
       controller.signal.throwIfAborted();
       if (await pauseAtModelStepLimit(run.id)) return;
+      run = await refreshRunProjectContext(run.id);
       run = await prepareRunContext(run.id, toolSchemas(run.enabledToolNames ?? [], registry), apiKey, controller.signal, fetchImpl);
       run = await startModelStep(run.id, MAX_MODEL_STEPS);
       controller.signal.throwIfAborted();

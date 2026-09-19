@@ -1,0 +1,71 @@
+.task-review { padding: 32px 0 16px; }
+.task-review-heading { display: flex; align-items: flex-start; gap: 24px; margin-bottom: 32px; }
+.task-review-heading > div { flex: 1; min-width: 0; }
+.task-review-heading > svg { color: #8ca698; flex-shrink: 0; margin-top: 4px; }
+.task-review-eyebrow { font-size: 10px; letter-spacing: .16em; color: #7e988a; }
+.task-review-heading h3 { font-size: 18px; font-weight: 500; line-height: 1.6; letter-spacing: -.025em; margin: 12px 0 8px; }
+.task-review-heading p, .task-review-start > p { font-size: 14px; color: #a0a0a0; line-height: 1.8; }
+.task-review-start { padding: 8px 0 40px; }
+.task-review-start > div { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0 16px; }
+.task-review-start small { display: block; font-size: 12px; line-height: 1.7; color: #858585; overflow-wrap: anywhere; }
+.task-review-toolbar { display: flex; gap: 8px; align-items: center; padding: 16px 0; border-top: 1px solid #ffffff12; }
+.task-review-toolbar > span { flex: 1; font-size: 14px; color: #d5c399; }
+.task-review-toolbar small { display: block; margin-top: 4px; color: #858585; font-size: 12px; }
+.task-review-notice { display: flex; align-items: flex-start; gap: 12px; padding: 16px 0; font-size: 14px; line-height: 1.8; color: #d1c3a6; }
+.task-review-notice > svg { flex-shrink: 0; margin-top: 4px; }
+.task-review-notice > span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.task-review-notice small { display: block; color: #979187; font-size: 12px; }
+.task-review-coverage { font-size: 12px; color: #858585; line-height: 1.8; padding-bottom: 24px; }
+.task-review-overview { font-size: 16px; color: #dedede; line-height: 1.9; white-space: pre-wrap; overflow-wrap: anywhere; margin-bottom: 32px; }
+.task-review-section { padding: 24px 0; border-top: 1px solid #ffffff0c; }
+.task-review-section h3 { font-size: 14px; font-weight: 550; margin-bottom: 16px; }
+.task-review-section h3 > span { color: #777; font-size: 12px; font-weight: 400; margin-left: 12px; }
+.task-review-section .agent-task-section-heading { margin-bottom: 8px; }
+.task-review-section .agent-task-section-heading h3 { margin: 0; }
+.task-review-finding, .task-review-entry { padding: 12px 0; }
+.task-review-finding > div:first-child { display: flex; gap: 16px; justify-content: space-between; font-size: 14px; line-height: 1.8; }
+.task-review-finding > div:first-child > span { min-width: 0; overflow-wrap: anywhere; }
+.task-review-finding small { white-space: nowrap; font-size: 12px; color: #bba778; }
+.task-review-finding small.is-met { color: #9ebca6; }
+.task-review-finding small.is-unmet { color: #d4a59a; }
+.task-review-finding > p, .task-review-entry > p { font-size: 14px; line-height: 1.9; color: #bbb; white-space: pre-wrap; overflow-wrap: anywhere; }
+.task-review-finding > p { margin-top: 8px; }
+.task-review-sources { font-size: 12px; color: #909090; margin-top: 8px; }
+.task-review-sources > summary { cursor: pointer; padding: 6px 0; }
+.task-review-sources > summary > span { margin-left: 8px; font-variant-numeric: tabular-nums; color: #727272; }
+.task-review-source { padding: 12px 0 12px 12px; margin: 4px 0; border-left: 1px solid #ffffff16; }
+.task-review-source > div { display: flex; gap: 8px; flex-wrap: wrap; color: #bbb; }
+.task-review-source small { color: #8fa292; }
+.task-review-source a { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; color: #b5cec0; }
+.task-review-source summary { cursor: pointer; margin-top: 8px; color: #777; }
+.task-review-source pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; line-height: 1.8; color: #999; max-height: 200px; overflow-y: auto; margin-top: 8px; }
+.task-review-source-options { max-height: 220px; overflow: auto; padding: 8px 0; }
+.task-review-source-options label { display: flex; gap: 8px; align-items: flex-start; padding: 8px 0; line-height: 1.6; }
+.task-review-source-options input { margin-top: 4px; accent-color: #abc8b9; }
+.task-review-source-options span { min-width: 0; overflow-wrap: anywhere; }
+.task-review-source-options small { display: block; color: #747474; }
+.task-review-editor textarea { field-sizing: fixed; resize: vertical; max-height: 50dvh; background: #ffffff03; border-color: #ffffff18; color: #ddd; font-size: 14px; line-height: 1.8; }
+.task-review-finding-editor { margin: 20px 0 24px; }
+.task-review-finding-editor .agent-task-field { margin-bottom: 12px; }
+.task-review-entry-editor { margin-top: 16px; }
+.task-review-entry-editor > div { display: flex; align-items: flex-start; gap: 8px; }
+.task-review-entry-editor textarea { min-width: 0; }
+.task-review-entry-editor button { flex-shrink: 0; }
+.task-review-editor-actions { position: sticky; bottom: -24px; display: flex; justify-content: flex-end; gap: 8px; padding: 16px 0; background: #111; border-top: 1px solid #ffffff12; }
+.task-review-actions { border-top: 1px solid #ffffff12; padding-top: 24px; display: flex; flex-direction: column; gap: 20px; }
+.task-review-actions > div:first-child { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; }
+.task-review-actions > button { align-self: flex-end; }
+.task-review-blockers { font-size: 12px; color: #b4a789; line-height: 1.9; }
+.task-review-blockers ul { padding-left: 18px; list-style: disc; margin-top: 8px; }
+.task-review-error { color: #e2aaa3; font-size: 14px; line-height: 1.8; padding: 16px 0; overflow-wrap: anywhere; }
+.task-review-previous { padding: 24px 0; border-top: 1px solid #ffffff14; }
+.task-review-previous > summary { font-size: 12px; color: #999; cursor: pointer; margin-bottom: 16px; }
+.task-review-history[data-slot="dialog-content"] { max-width: min(640px, calc(100vw - 32px)); }
+.task-review-history > details { border-top: 1px solid #ffffff12; padding: 16px 0; }
+.task-review-history > details > summary { cursor: pointer; font-size: 14px; }
+.task-review-history small { display: block; font-size: 12px; color: #858585; margin-top: 4px; }
+.task-review-history .task-review-document { padding-top: 24px; }
+@keyframes task-review-spin { to { transform: rotate(360deg); } }
+.task-review-spinner { animation: task-review-spin 1.2s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .task-review-spinner { animation: none; } }
+@media (max-width: 640px) { .task-review { padding-top: 24px; } .task-review-heading { gap: 16px; } .task-review-heading h3 { font-size: 16px; } .task-review-editor-actions { bottom: -20px; } }

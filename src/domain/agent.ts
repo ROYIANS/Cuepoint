@@ -1,3 +1,4 @@
+import type { ProjectContextSnapshot } from "./projectContext";
 import type { GenerationPreferences } from "./generationPreferences";
 import type { ContextPolicy, ContextSnapshot } from "./context";
 import type { ConnectorConfig, Id } from "@/domain/types";
@@ -81,6 +82,8 @@ export interface AgentModelMetrics {
 
 /** Frozen execution inputs. Credentials are resolved from the connector at dispatch. */
 export interface AgentRun {
+  projectId?: Id;
+  projectContext?: ProjectContextSnapshot;
   /** Frozen task-intake eligibility; never inferred from model arguments. */
   taskMode?: boolean;
   context?: ContextSnapshot;
@@ -132,6 +135,7 @@ export const GENERAL_AGENT_ID = "agent_general";
 export const MODEL_STEPS_PER_SEGMENT = 32;
 
 export interface AgentTask {
+  projectId: Id;
   acceptanceCriteria?: string[];
   revision?: number;
   id: Id;

@@ -35,7 +35,9 @@ describe("reviewed production proposals", () => {
     await legacy.table("media").add(storedMedia);
     legacy.close();
     await db.open();
-    expect(db.verno).toBe(13);
+    expect(db.verno).toBe(15);
+    expect(await db.agentTaskWrapups.count()).toBe(0);
+    expect(await db.agentTaskWrapupVersions.count()).toBe(0);
     expect(await db.agentTaskRecords.count()).toBe(0);
     expect(await db.agentTaskRecordVersions.count()).toBe(0);
     expect(await db.agentGenerationJobs.count()).toBe(0);

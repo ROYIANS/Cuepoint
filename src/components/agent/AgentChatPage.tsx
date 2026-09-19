@@ -46,10 +46,12 @@ import {
   deleteChatThread,
   updateChatThread,
 } from "@/db/repo";
-import type { ChatThread, Id } from "@/domain/types";
+import { STUDIO_LIBRARY_ID, type ChatThread, type Id } from "@/domain/types";
+import { bindChatThreadProject } from "@/db/repo";
 import { assertRetryConnector, beginAgentRun, canRetryRun } from "@/db/agentRuns";
 import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
 import { recoverAbandonedRuns, withThreadRunLock } from "@/lib/agent/runOwnership";
+import { recoverTaskWrapups } from "@/lib/agent/taskWrapup";
 import { deriveChatTitle } from "@/lib/chatTitle";
 import { discoverConnectorChatModels, runWithCompatibleChatModel } from "@/lib/ai/connectors";
 import {
@@ -73,6 +75,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
   const [taskInspectorOpen, setTaskInspectorOpen] = useState(false);
   const openBoard = () => { setTaskInspectorOpen(false); void navigate({ to: "/agent/tasks" }); };
   const connectors = useLiveQuery(() => db.connectors.toArray(), []);
+  const projects = useLiveQuery(() => db.projects.orderBy("updatedAt").reverse().filter((project) => project.id !== STUDIO_LIBRARY_ID).toArray(), []);
   const activeThreadId = threadId;
   const [draft, setDraft] = useState("");
   const [contextOpen, setContextOpen] = useState(false);
@@ -81,6 +84,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
   const [effortSelection, setEffortSelection] = useState<{ threadId?: Id; connectorId?: string; baseUrl?: string; model: string; value?: AgentReasoningEffort }>();
   const [modelCatalog, setModelCatalog] = useState<ChatModelCatalog>();
   const [chatMode, setChatMode] = useState<ChatSurfaceMode>("agent");
+  const [composerProjectId, setComposerProjectId] = useState<Id>();
   const [interactionSelection, setInteractionSelection] = useState<{ threadId?: Id; mode: AgentInteractionMode }>();
   const [sending, setSending] = useState(false);
   const [renameTarget, setRenameTarget] = useState<ChatThread>();
@@ -99,7 +103,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
     if (executionThreadRef.current !== activeThreadId) abortRef.current?.abort();
   }, [activeThreadId]);
 
-  const loaded = threads !== undefined && connectors !== undefined;
+  const loaded = threads !== undefined && connectors !== undefined && projects !== undefined;
   const threadList = threads ?? [];
   const connectorList = connectors ?? [];
 
@@ -170,6 +174,16 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
   }, []);
 
   useEffect(() => {
+    if (!activeThreadId) return;
+    const recover = () => void recoverTaskWrapups(activeThreadId).catch((error: unknown) => {
+      toast.error(error instanceof Error ? error.message : "恢复总结状态失败");
+    });
+    recover();
+    window.addEventListener("focus", recover);
+    return () => window.removeEventListener("focus", recover);
+  }, [activeThreadId]);
+
+  useEffect(() => {
     if (!loaded) return;
     if (activeThread) {
       setSessionConnectorId(activeThread.connectorId ?? connectorList[0]?.id);
@@ -187,6 +201,10 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
   }, [sessionConnectorId, connectorList]);
 
   const modelValue = sessionModel.trim();
+  const projectId = activeThreadId ? activeThread?.projectId : composerProjectId;
+  const taskMode = activeThreadId ? Boolean(activeThread?.taskMode) : chatMode === "task";
+  const projectRequired = taskMode && !projectId;
+  const projectUnavailable = Boolean(projectId && projects && !projects.some((project) => project.id === projectId));
   const showHome = !activeThreadId && view !== "tasks";
   const interactionMode = interactionSelection?.threadId === activeThreadId ? interactionSelection?.mode ?? "smart" : activeThread?.interactionMode ?? "smart";
   const effortPolicy = selectedConnector ? getReasoningPolicy(selectedConnector, modelValue) : undefined;
@@ -236,10 +254,12 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
       const thread = await createChatThread({
         connectorId: selectedConnector?.id,
         model: modelValue || undefined,
+        projectId,
+        taskMode,
       });
       openThread(thread.id);
-    })();
-  }, [openThread, selectedConnector?.id, modelValue]);
+    })().catch((error: unknown) => toast.error(error instanceof Error ? error.message : "创建对话失败"));
+  }, [openThread, selectedConnector?.id, modelValue, projectId, taskMode]);
 
   const handleRenameThread = useCallback((thread: ChatThread) => {
     setRenameTarget(thread);
@@ -293,6 +313,16 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
     [activeThread, modelPolicy],
   );
 
+  const handleProjectChange = useCallback(async (next?: Id) => {
+    selectionRevisionRef.current += 1;
+    if (activeThread) {
+      if (!next) throw new Error("项目归属已锁定，不能清空");
+      await bindChatThreadProject(activeThread.id, next, activeThread.projectId);
+      return;
+    }
+    setComposerProjectId(next);
+  }, [activeThread]);
+
   const handleStop = useCallback(() => {
     abortRef.current?.abort();
   }, []);
@@ -300,6 +330,8 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
   const handleSend = useCallback(async () => {
     const content = draft.trim();
     if (!content || sendLockRef.current) return;
+    if (projectRequired) { toast.error("任务模式请先选择项目"); return; }
+    if (projectUnavailable) { toast.error("项目已不可用，请选择其他项目开启新对话"); return; }
     const connector = selectedConnector && { ...selectedConnector };
     const model = modelValue;
     if (!connector) {
@@ -318,13 +350,16 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
       const checked = await runWithCompatibleChatModel(connector, model, async () => {
         let thread = activeThread;
         if (!thread) {
-          thread = await createChatThread({ connectorId: connector.id, model, title: deriveChatTitle(content), taskMode: chatMode === "task" });
+          thread = await createChatThread({ connectorId: connector.id, model, title: deriveChatTitle(content), taskMode: chatMode === "task", projectId });
           if (controller.signal.aborted) return;
           executionThreadRef.current = thread.id;
-          await navigate({ to: "/agent/$threadId", params: { threadId: thread.id } });
+
         }
         const targetThread = thread;
         await withThreadRunLock(targetThread.id, async () => {
+          if (controller.signal.aborted) return;
+          // Acquire execution ownership before mounting detail recovery effects.
+          if (!activeThread) await navigate({ to: "/agent/$threadId", params: { threadId: targetThread.id } });
           if (controller.signal.aborted) return;
           await updateChatThread(targetThread.id, { interactionMode: activeThreadId ? interactionMode : "smart", reasoningSelection: { connectorId: connector.id, baseUrl: connector.baseUrl, model, value: reasoningEffort } });
           const run = await beginAgentRun({ threadId: targetThread.id, connector, model, content, modelMetadata: catalogMatches ? modelCatalog?.metadata?.[model] : undefined, reasoningEffort, interactionMode: activeThreadId ? interactionMode : "smart" });
@@ -348,7 +383,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
         setSending(false);
       }
     }
-  }, [navigate, draft, activeThread, activeThreadId, selectedConnector, modelValue, reasoningEffort, interactionMode, chatMode]);
+  }, [navigate, draft, activeThread, activeThreadId, selectedConnector, modelValue, reasoningEffort, interactionMode, chatMode, projectId, projectRequired, projectUnavailable]);
 
   const handleRetry = useCallback(async (runId: string) => {
     if (sendLockRef.current) return;
@@ -481,6 +516,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
     if (!activeThreadId) return;
     try {
       await createAgentTaskForThread(activeThreadId, {
+        projectId: activeThread?.projectId ?? projectId ?? "",
         title: activeThread?.title ?? "新任务",
         goal: messages?.find((message) => message.threadId === activeThreadId && message.role === "user")?.content || activeThread?.title || "补充任务目标",
         plan: currentRun?.plan,
@@ -490,15 +526,23 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
   };
   const composerProps: ComposerProps = {
     threadId: activeThreadId,
-    blocked: Boolean(activeTask && activeTask.lifecycle !== "open"),
-    status: activeTask || activeThread?.taskMode || showRunStatus ? <>
+    projects: projects ?? [],
+    projectId,
+    projectRequired,
+    projectLocked: sending || Boolean(activeThreadId && (activeThread?.projectId || messages?.length || runs?.length)),
+    onProjectChange: handleProjectChange,
+    blocked: projectUnavailable || Boolean(activeTask && activeTask.lifecycle !== "open"),
+    readOnly: projectUnavailable,
+    blockedReason: projectUnavailable ? "项目不可用 · 历史仍可查看，请新开项目对话" : undefined,
+    status: projectUnavailable || activeTask || activeThread?.taskMode || showRunStatus ? <>
+      {projectUnavailable && <div className="agent-composer-run-status"><span>项目不可用 · 对话与记录仍保留</span><button type="button" onClick={() => { setComposerProjectId(undefined); void navigate({ to: "/agent" }); }}>选择项目，开启新对话</button></div>}
       {activeThread?.taskMode && !activeTask && <div className="agent-composer-run-status"><span>需求沟通中 · 明确目标后，助手会建立任务</span></div>}
       {activeTask && <div className="agent-composer-task-summary">
         <button type="button" onClick={() => setTaskInspectorOpen(true)}>
           <span className="agent-task-summary-label">任务</span><strong>{activeTask.title}</strong>
           <span>{TASK_STATE_LABELS[getTaskDisplayState(activeTask, runs ?? [])]}{activeTask.plan.length > 0 ? ` · ${activeTask.plan.filter((item) => item.status === "completed").length}/${activeTask.plan.length}` : ""}</span>
         </button>
-        {activeTask.lifecycle !== "open" && <button type="button" onClick={() => void setAgentTaskLifecycle(activeTask.id, "open").catch((error: Error) => toast.error(error.message))}>重新打开</button>}
+        {!projectUnavailable && activeTask.lifecycle !== "open" && <button type="button" onClick={() => void setAgentTaskLifecycle(activeTask.id, "open").catch((error: Error) => toast.error(error.message))}>重新打开</button>}
       </div>}
       {showRunStatus ? (
       <div className="agent-composer-run-status" role="status">
@@ -506,7 +550,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
         {currentRun.status === "running" && <button type="button" onClick={handleStop} disabled={!sending}>停止</button>}
       </div>
     ) : null}</> : undefined,
-    contextUsage: <ContextUsageTrigger threadId={activeThreadId} task={activeTask} interactionMode={interactionMode} draft={draft} messages={messages?.filter((m) => m.threadId === activeThreadId) ?? []} runs={runs?.filter((r) => r.threadId === activeThreadId) ?? []} model={modelValue} connector={selectedConnector} modelMetadata={catalogMatches ? modelCatalog?.metadata : undefined} open={contextOpen} onOpenChange={setContextOpen} />,
+    contextUsage: <ContextUsageTrigger projectId={projectId} threadId={activeThreadId} task={activeTask} interactionMode={interactionMode} draft={draft} messages={messages?.filter((m) => m.threadId === activeThreadId) ?? []} runs={runs?.filter((r) => r.threadId === activeThreadId) ?? []} model={modelValue} connector={selectedConnector} modelMetadata={catalogMatches ? modelCatalog?.metadata : undefined} open={contextOpen} onOpenChange={setContextOpen} />,
 
     reasoningEffort,
     onReasoningEffortChange: (value) => {
@@ -538,6 +582,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
     onConnectorChange: (id) => void handleConnectorChange(id),
     onModelChange: (model) => void handleModelChange(model),
     onChatModeChange: (mode) => {
+      selectionRevisionRef.current += 1;
       setChatMode(mode);
     },
     onInteractionModeChange: (mode) => {
@@ -548,7 +593,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
 
   return (
     <>
-      {view === "tasks" ? <TaskBoard tasks={tasks} runs={boardRuns} onOpenTask={(task) => openThread(task.threadId)} onBack={() => void navigate({ to: "/agent" })} /> : showHome ? (
+      {view === "tasks" ? <TaskBoard tasks={tasks} runs={boardRuns} projects={projects ?? []} onOpenTask={(task) => openThread(task.threadId)} onBack={() => void navigate({ to: "/agent" })} /> : showHome ? (
         <HomeWelcome
           threads={threadList}
           composer={composerProps}
@@ -568,7 +613,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
           activeThread={activeThread}
           messages={messages?.filter((message) => message.threadId === activeThreadId)}
           runs={runs?.filter((run) => run.threadId === activeThreadId)}
-          retryableRunId={sending ? undefined : retryableRunId}
+          retryableRunId={sending || projectUnavailable ? undefined : retryableRunId}
           onRetryRun={onRetryRun}
           onRunAction={onRunAction}
           composer={composerProps}
@@ -579,7 +624,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
         />
       )}
 
-      {activeTask && <TaskInspector key={activeTask.id} task={activeTask} runs={(runs ?? []).filter((run) => run.threadId === activeThreadId)} messages={(messages ?? []).filter((message) => message.threadId === activeThreadId)} open={taskInspectorOpen} onOpenChange={setTaskInspectorOpen} onOpenBoard={openBoard} />}
+      {activeTask && <TaskInspector projectName={projects?.find((project) => project.id === activeTask.projectId)?.name} projectUnavailable={projectUnavailable} key={activeTask.id} summaryModel={selectedConnector && modelValue ? { connector: selectedConnector, model: modelValue, modelMetadata: catalogMatches ? modelCatalog?.metadata?.[modelValue] : undefined, reasoningEffort } : undefined} task={activeTask} runs={(runs ?? []).filter((run) => run.threadId === activeThreadId)} messages={(messages ?? []).filter((message) => message.threadId === activeThreadId)} open={taskInspectorOpen} onOpenChange={setTaskInspectorOpen} onOpenBoard={openBoard} />}
 
       <Dialog
         open={Boolean(renameTarget)}

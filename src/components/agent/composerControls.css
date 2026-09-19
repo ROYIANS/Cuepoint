@@ -370,3 +370,59 @@
 .studio-floor:has(.agent-composer-dock.is-expanded) .studio-mobile-header {
   visibility: hidden;
 }
+
+.agent-project-trigger {
+  max-width: min(220px, 28vw);
+  color: #c7c0b2;
+}
+.agent-project-trigger.is-required { color: #e0b878; }
+.agent-project-trigger > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.agent-project-picker {
+  width: min(360px, calc(100vw - 32px));
+  overflow: hidden;
+  border: 1px solid #292929;
+  border-radius: 14px;
+  background: #171717;
+  box-shadow: 0 18px 48px rgb(0 0 0 / 48%);
+}
+.agent-project-picker-search { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-bottom: 1px solid #292929; color: #8d8d8d; }
+.agent-project-picker-search input { min-width: 0; height: 30px; border: 0; background: transparent; color: #eee; box-shadow: none; }
+.agent-project-picker-list { max-height: min(300px, 42dvh); overflow-y: auto; padding: 6px; }
+.agent-project-picker-list button { display: flex; align-items: center; width: 100%; gap: 10px; padding: 10px; border: 0; border-radius: 9px; background: transparent; color: #ddd; text-align: left; cursor: pointer; }
+.agent-project-picker-list button:hover, .agent-project-picker-list button[aria-selected="true"] { background: rgb(255 255 255 / 7%); }
+.agent-project-picker-list button > span { min-width: 0; flex: 1; }
+.agent-project-picker-list strong, .agent-project-picker-list small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.agent-project-picker-list small { margin-top: 3px; color: #888; font-size: 11px; }
+.agent-project-picker-empty { padding: 20px 12px; color: #888; text-align: center; font-size: 12px; }
+.agent-project-picker-actions { display: flex; gap: 4px; padding: 7px; border-top: 1px solid #292929; }
+.agent-project-picker-actions button { display: inline-flex; align-items: center; gap: 7px; flex: 1; min-width: 0; padding: 9px 8px; border: 0; border-radius: 8px; background: transparent; color: #aaa; font-size: 12px; cursor: pointer; }
+.agent-project-picker-actions button:hover:not(:disabled) { background: rgb(255 255 255 / 6%); color: #eee; }
+.agent-project-picker-actions button:disabled { cursor: not-allowed; opacity: .42; }
+@media (max-width: 480px) { .agent-project-trigger { max-width: 150px; } .agent-project-picker { width: min(340px, calc(100vw - 24px)); } }
+.agent-project-picker { z-index: 80; outline: none; color: #ddd; }
+.agent-project-trigger { display: inline-flex; align-items: center; gap: 7px; padding: 6px 8px; border: 0; border-radius: 8px; background: transparent; font-size: 12px; min-width: 0; }
+.agent-project-trigger:disabled { opacity: 1; cursor: default; }
+.agent-project-picker-search input { width: 100%; outline: none; }
+.agent-project-picker-list button:focus-visible, .agent-project-picker-actions button:focus-visible { outline: 2px solid #a7b7ad; outline-offset: -2px; background: #ffffff0b; }
+.agent-project-create-form { padding: 16px; }
+.agent-project-create-form > button:first-child { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #999; }
+.agent-project-create-form h3 { margin: 20px 0 8px; font-size: 16px; }
+.agent-project-create-form p { font-size: 12px; color: #999; line-height: 1.7; margin-bottom: 16px; }
+.agent-project-create-form input { width: 100%; background: #ffffff07; border: 1px solid #ffffff18; border-radius: 8px; padding: 10px; outline-color: #b4c4b9; }
+.agent-project-create-submit { display: block; width: 100%; background: #ddd; color: #171717; border-radius: 8px; padding: 9px; margin-top: 16px; font-size: 14px; }
+.agent-project-create-submit:disabled { opacity: .4; }
+.agent-task-card-project { display: block; color: #a29e94; margin: 12px 0; font-size: 12px; }
+
+.agent-context-project { display: flex; flex-direction: column; gap: 5px; padding: 12px 0; border-bottom: 1px solid #ffffff10; margin-bottom: 12px; font-size: 12px; }
+.agent-context-project strong { color: #d7d4cb; overflow-wrap: anywhere; }
+.agent-context-project span, .agent-context-project small { color: #999; font-size: 11px; line-height: 1.6; }
+
+.agent-composer-scope { display: contents; }
+@media (max-width: 640px) {
+  .agent-chat-root .agent-composer-refined .agent-composer-footer { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 8px 4px; }
+  .agent-chat-root .agent-composer-footer > .agent-composer-cluster:first-child { display: contents; }
+  .agent-chat-root .agent-composer-footer .agent-composer-scope { display: flex; align-items: center; gap: 4px; grid-column: 1 / -1; min-width: 0; }
+  .agent-chat-root .agent-composer-scope .agent-project-trigger { max-width: min(230px, 65vw); }
+  .agent-chat-root .agent-composer-footer .agent-composer-cluster-right { grid-column: 3; grid-row: 2; justify-content: flex-end; width: 100%; }
+  .agent-chat-root .agent-composer-footer .agent-model-settings-anchor { flex: 0 1 auto; }
+}

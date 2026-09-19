@@ -32,10 +32,11 @@ const ASSISTANT_AVATAR = {
  * Stick with `scrollTop` on this element (not `scrollIntoView` smooth).
  * History rows are memoized so Dexie liveQuery ticks only paint the streaming item.
  */
-export function MessageList({ messages, runs, retryableRunId, onRetryRun, busy, onRunAction }: {
+export function MessageList({ messages, runs, retryableRunId, onRetryRun, busy, readOnly, onRunAction }: {
   messages: ChatMessage[] | undefined;
   runs?: AgentRun[];
   busy: boolean;
+  readOnly?: boolean;
   onRunAction: (runId: string, action: RunAction, callId?: string) => void;
   retryableRunId?: string;
   onRetryRun: (id: string) => void;
@@ -92,7 +93,7 @@ export function MessageList({ messages, runs, retryableRunId, onRetryRun, busy, 
             if (message.role === "system") return null;
             return (
               <AgentChatMessageItem key={message.id} message={message} userMeta={userMeta}
-                run={runs?.find((run) => run.id === message.runId)} busy={busy} onRunAction={onRunAction}
+                run={runs?.find((run) => run.id === message.runId)} busy={busy} readOnly={readOnly} onRunAction={onRunAction}
                 retryable={Boolean(message.runId && message.runId === retryableRunId)} onRetryRun={onRetryRun} />
             );
           })
@@ -108,6 +109,7 @@ const AgentChatMessageItem = memo(
     userMeta,
     run,
     busy,
+    readOnly,
     onRunAction,
     retryable,
     onRetryRun,
@@ -115,6 +117,7 @@ const AgentChatMessageItem = memo(
     message: ChatMessage;
     run?: AgentRun;
     busy: boolean;
+  readOnly?: boolean;
     onRunAction: (runId: string, action: RunAction, callId?: string) => void;
     retryable: boolean;
     onRetryRun: (id: string) => void;
@@ -154,7 +157,7 @@ const AgentChatMessageItem = memo(
         markdownProps={MARKDOWN_PROPS}
         placeholderMessage=""
         aboveMessage={!isUser ? <>
-          {run && <AgentRunDetails run={run} busy={busy} onAction={onRunAction} />}
+          {run && <AgentRunDetails run={run} busy={busy} readOnly={readOnly} onAction={onRunAction} />}
           {hasReasoning && <ThinkingPanel reasoning={message.reasoning ?? ""} active={reasoningActive} durationMs={message.reasoningDurationMs} />}
         </> : undefined}
         belowMessage={!isUser ? <div className="agent-message-footer">
@@ -184,6 +187,7 @@ const AgentChatMessageItem = memo(
     prev.run?.usage?.outputTokens === next.run?.usage?.outputTokens &&
     prev.run?.outputTokensPerSecond === next.run?.outputTokensPerSecond &&
     prev.busy === next.busy &&
+    prev.readOnly === next.readOnly &&
     prev.onRunAction === next.onRunAction &&
     prev.retryable === next.retryable &&
     prev.onRetryRun === next.onRetryRun &&

@@ -1,4 +1,5 @@
 import { ModelSettingsMenu } from "./ModelSettingsMenu";
+import { ProjectPicker } from "./ProjectPicker";
 import { AgentControls, ComposerPlusMenu } from "@/components/agent/AgentControls";
 import { Dropdown, Input } from "antd";
 import { Check, ChevronDown, Expand, Infinity as InfinityIcon, LayoutList, MessagesSquare, Mic, Minimize2, Sparkles } from "lucide-react";
@@ -94,6 +95,7 @@ export function FloatingComposer({
   value,
   sending,
   blocked,
+  blockedReason,
   connectors,
   selectedConnectorId,
   model,
@@ -105,6 +107,11 @@ export function FloatingComposer({
   modelPolicy,
   modelWarning,
   chatMode,
+  projects,
+  projectId,
+  projectRequired,
+  projectLocked,
+  onProjectChange,
   interactionMode,
   onChange,
   onSend,
@@ -120,7 +127,7 @@ export function FloatingComposer({
   expanded = false,
   onExpandedChange,
 }: ComposerProps & { surface?: "home" | "detail"; expanded?: boolean; onExpandedChange?: (expanded: boolean) => void }) {
-  const canSend = Boolean(value.trim()) && !blocked && !sending && !modelPolicy.incompatibleModels.includes(model.trim());
+  const canSend = Boolean(value.trim()) && !blocked && !sending && !projectRequired && !modelPolicy.incompatibleModels.includes(model.trim());
   const composing = useRef(false);
   const inputRef = useRef<ComponentRef<typeof Input.TextArea>>(null);
   useEffect(() => { inputRef.current?.focus({ preventScroll: true }); }, [expanded]);
@@ -189,7 +196,7 @@ export function FloatingComposer({
         readOnly={listening}
         value={value}
         variant="borderless"
-        placeholder={blocked ? "重新打开任务后可继续对话" : surface === "home" && chatMode === "task" ? "描述你想完成的事，与助手一起明确需求…" : "提问、创建内容或启动任务"}
+        placeholder={blocked ? blockedReason ?? "重新打开任务后可继续对话" : projectRequired ? "先选择项目，再描述你想完成的事…" : surface === "home" && chatMode === "task" ? "描述你想完成的事，与助手一起明确需求…" : "提问、创建内容或启动任务"}
         autoSize={expanded ? false : { minRows: large ? 3 : 2, maxRows: 10 }}
         className="agent-composer-input"
         onChange={(event) => onChange(event.target.value)}
@@ -214,7 +221,8 @@ export function FloatingComposer({
       {modelWarning ? <div role="status" style={{ padding: "0 16px 8px", fontSize: 12, color: "#e0b878" }}>{modelWarning}</div> : null}
       <div className="agent-composer-footer">
         <div className="agent-composer-cluster">
-          {!detail && <ModeSwitch mode={chatMode} onChange={onChatModeChange} />}
+          <div className="agent-composer-scope"><ProjectPicker projects={projects} projectId={projectId} required={projectRequired} locked={projectLocked} onChange={onProjectChange} />
+          {!detail && <ModeSwitch mode={chatMode} onChange={onChatModeChange} />}</div>
           <ComposerPlusMenu threadId={threadId} />
           {detail ? <button type="button" className="agent-chip agent-control agent-control-icon" aria-label={expanded ? "退出全屏编辑" : "展开编辑器"} onClick={() => onExpandedChange?.(!expanded)}>
             {expanded ? <Minimize2 size={17} aria-hidden /> : <Expand size={17} aria-hidden />}

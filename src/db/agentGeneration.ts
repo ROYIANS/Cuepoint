@@ -12,6 +12,8 @@ export async function claimGenerationJob(job: AgentGenerationJob): Promise<{ job
     if (active) throw new Error(`相同生成请求尚未确认，请继续查询已有任务 ${active.id}，不会重复付费提交`);
     const run = await db.agentRuns.get(job.runId);
     const call = await db.agentToolCalls.get(job.callId);
+    const thread = await db.chatThreads.get(job.threadId);
+    if (run?.projectId !== thread?.projectId || run?.projectId && run.projectId !== job.projectId) throw new Error("生成项目归属不匹配");
     if (!run || run.threadId !== job.threadId || run.status !== "running" || !await db.chatThreads.get(job.threadId) ||
         !call || call.runId !== job.runId || call.threadId !== job.threadId || call.status !== "running") throw new Error("生成执行已停止或归属不匹配");
     if (job.projectId !== "studio" && !await db.projects.get(job.projectId)) throw new Error("项目已删除");

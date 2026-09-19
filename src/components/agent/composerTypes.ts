@@ -1,7 +1,7 @@
 import type { ChatModelMetadata } from "@/lib/ai/modelMetadata";
 import type { AgentInteractionMode, AgentReasoningEffort } from "@/domain/agent";
 import type { ReactNode } from "react";
-import type { ConnectorConfig, Id } from "@/domain/types";
+import type { ConnectorConfig, Id, Project } from "@/domain/types";
 import type { ChatModelPolicy } from "@/lib/ai/chatModelPolicy";
 
 export type ChatSurfaceMode = "agent" | "task";
@@ -12,6 +12,8 @@ export type ComposerProps = {
   value: string;
   sending: boolean;
   blocked?: boolean;
+  blockedReason?: string;
+  readOnly?: boolean;
   connectors: ConnectorConfig[];
   selectedConnectorId?: Id;
   model: string;
@@ -23,6 +25,11 @@ export type ComposerProps = {
   modelPolicy: ChatModelPolicy;
   modelWarning?: string;
   chatMode: ChatSurfaceMode;
+  projects: Project[];
+  projectId?: Id;
+  projectRequired?: boolean;
+  projectLocked?: boolean;
+  onProjectChange: (projectId: Id | undefined) => void | Promise<void>;
   interactionMode: AgentInteractionMode;
   onChange: (value: string) => void;
   onSend: () => void;

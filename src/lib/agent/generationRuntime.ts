@@ -1,3 +1,4 @@
+import { assertProjectToolScope } from "./projectScope";
 import { db } from "@/db/database";
 import { claimGenerationJob, generationJobSummary, storeGenerationMedia, updateGenerationJob } from "@/db/agentGeneration";
 import { AtomicToolRollbackError, executeAtomicTool } from "@/db/agentTools";
@@ -96,6 +97,7 @@ async function prepareSnapshot(raw: GenerationSubmitArgs, signal: AbortSignal) {
   return {args,config,provider,request,inputs,fingerprint,current:snapshot.current};
 }
 export async function prepareAgentGeneration(raw: GenerationSubmitArgs, context: AgentToolContext): Promise<AgentToolPreview> {
+  await assertProjectToolScope(context,"submit_generation",{projectId:raw.target.projectId},true);
   const snapshot = await prepareSnapshot(raw,context.signal);
   return { summary:`使用 ${snapshot.provider} / ${snapshot.args.model} 为「${snapshot.current.label}」生成${snapshot.request.kind === "image" ? "图片" : "视频"}`,
     changes:[`槽位：${snapshot.request.target.slot}`,`提示词：${snapshot.args.prompt.slice(0,1500)}`,`参数：${JSON.stringify(snapshot.request.parameters).slice(0,1800)}`,`参考素材：${snapshot.inputs.length} 项；此操作可能产生供应商费用，完成后需要单独写入目标。`],
@@ -104,6 +106,7 @@ export async function prepareAgentGeneration(raw: GenerationSubmitArgs, context:
 async function jobForContext(jobId: string, context: AgentToolContext) {
   const job = await db.agentGenerationJobs.get(jobId);
   if (!job || job.threadId !== context.threadId || !await db.chatThreads.get(job.threadId) || !await db.agentRuns.get(job.runId)) throw new Error("生成任务不存在或不属于当前对话");
+  await assertProjectToolScope(context,"generation_job",{projectId:job.projectId},true);
   return job;
 }
 async function loadInputs(job: AgentGenerationJob) {
@@ -155,6 +158,7 @@ export async function submitAgentGeneration(raw: GenerationSubmitArgs, context: 
   }
   let snapshot;
   try {
+    await assertProjectToolScope(context,"submit_generation",{projectId:raw.target.projectId},true);
     snapshot = await prepareSnapshot(raw,context.signal);
     if (context.preview?.revision && context.preview.revision !== snapshot.fingerprint) throw new Error("生成目标、输入或配置已变化，请重新确认，尚未付费提交");
   } catch(error) { throw new AtomicToolRollbackError(cleanError(error)); }
@@ -175,6 +179,7 @@ export async function submitAgentGeneration(raw: GenerationSubmitArgs, context: 
     const active=await db.agentRuns.get(context.runId);
     const activeCall=await db.agentToolCalls.get(context.callId);
     if (!await db.agentGenerationJobs.get(claim.job.id) || !active || active.status!=="running" || !activeCall || activeCall.status!=="running") throw new Error("生成记录或执行已停止，尚未付费提交");
+    await assertProjectToolScope(context,"submit_generation",{projectId:claim.job.projectId},true);
     postStarted=true;
     if (snapshot.provider === "apimart") {
       const result=await (claim.job.kind === "image" ? submitApimartImageGeneration : submitApimartVideoGeneration)(snapshot.config,request,{signal:context.signal,fetchImpl:options.fetchImpl});

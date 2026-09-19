@@ -24,7 +24,9 @@ export function HomeWelcome({
   composer: ComposerProps;
   onSelectThread: (id: Id) => void;
 }) {
-  const recent = threads.slice(0, 8);
+  const recent = threads.filter((thread) => !composer.projectId || thread.projectId === composer.projectId).slice(0, 8);
+  const project = composer.projects.find((item) => item.id === composer.projectId);
+  const projectTasks = tasks.filter((task) => (!composer.projectId || task.projectId === composer.projectId) && task.lifecycle !== "archived");
   const hour = new Date().getHours();
   const hello =
     hour < 5 ? "夜深了" : hour < 11 ? "早上好" : hour < 14 ? "中午好" : hour < 18 ? "下午好" : "晚上好";
@@ -41,12 +43,14 @@ export function HomeWelcome({
               fontSize: 24,
               fontWeight: 700,
               letterSpacing: "-0.02em",
+              overflowWrap: "anywhere",
+              maxWidth: "100%",
             }}
           >
-            {hello}，欢迎使用 {PRODUCT_NAME_ZH}
+            {project ? `在「${project.name}」中，开始下一次创作` : `${hello}，欢迎使用 ${PRODUCT_NAME_ZH}`}
           </Text>
           <Text type="secondary" style={{ fontSize: 14, maxWidth: 560, lineHeight: 1.57 }}>
-            {composer.chatMode === "task" ? "先聊清目标与要求，再由助手建立任务、拆解步骤并持续推进。" : `我是 ${PRODUCT_NAME_ZH}。提问、创建内容或启动任务，选好模型后直接发送即可。`}
+            {composer.chatMode === "task" ? "先选定项目，聊清目标与要求，再由助手建立任务、拆解步骤并持续推进。" : `我是 ${PRODUCT_NAME_ZH}。提问、创建内容或启动任务，选好模型后直接发送即可。`}
           </Text>
         </div>
 
@@ -58,13 +62,13 @@ export function HomeWelcome({
         </div>
         {composer.chatMode === "task" ? (
           <div className="agent-home-task-list">
-            {tasks.filter((task) => task.lifecycle !== "archived").slice(0, 4).map((task) => (
+            {projectTasks.slice(0, 4).map((task) => (
               <button type="button" key={task.id} onClick={() => onSelectThread(task.threadId)} className="agent-home-task-row">
                 <ListTodo size={18} /><span><strong>{task.title}</strong><small>{task.goal}</small></span>
                 <small>{task.lifecycle === "completed" ? "已完成" : task.plan.length ? `${task.plan.filter((item) => item.status === "completed").length}/${task.plan.length} 步` : "尚未规划"}</small>
               </button>
             ))}
-            {!tasks.some((task) => task.lifecycle !== "archived") && <div className="agent-home-task-empty"><ListTodo size={24} /><strong>给下一件创作留一个位置</strong><p>在上方描述目标启动任务，也可以先到看板手动整理计划。</p><button type="button" onClick={onOpenTasks}>打开任务看板 <ArrowRight size={14} /></button></div>}
+            {!projectTasks.length && <div className="agent-home-task-empty"><ListTodo size={24} /><strong>给下一件创作留一个位置</strong><p>在上方描述目标启动任务，也可以先到看板手动整理计划。</p><button type="button" onClick={onOpenTasks}>打开任务看板 <ArrowRight size={14} /></button></div>}
           </div>
         ) : recent.length > 0 ? (
           <div style={{ marginTop: 24, textAlign: "start" }}>

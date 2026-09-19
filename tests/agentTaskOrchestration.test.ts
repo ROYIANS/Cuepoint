@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
-import { createChatThread, deleteChatThread } from "@/db/repo";
+import { createProject, createChatThread, deleteChatThread } from "@/db/repo";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
 import { saveToolRound, transitionToolCall } from "@/db/agentTools";
 import { saveTaskRecord, listTaskRecords, listTaskRecordVersions } from "@/db/agentTaskRecords";
@@ -15,7 +15,7 @@ const connector:ConnectorConfig={id:"cx",name:"test",definitionId:"openai-compat
 const createArgs=(run:AgentRun)=>({title:"建立角色",goal:"创建一位名为小雨的主角",acceptanceCriteria:["工作室中存在小雨角色"],steps:[{id:"create",title:"创建角色",status:"pending"}],sources:[{type:"message",id:run.userMessageId}]});
 const recordInput:TaskRecordInput={kind:"approach",claim:"proposal",title:"实施方案",body:"先整理人物设定，再创建角色",sources:[]};
 async function start(taskMode=true,interactionMode:"smart"|"conversation"="smart") {
- const thread=await createChatThread({taskMode});
+ const thread=await createChatThread({taskMode,projectId:(await createProject("任务项目")).id});
  return beginAgentRun({threadId:thread.id,connector,model:"model",content:"请创建名为小雨的主角",interactionMode});
 }
 let serial=0;
@@ -47,7 +47,7 @@ describe("AI owned task orchestration",()=>{
   await invoke(run,"task_create",{...createArgs(run),title:"重复请求"});
   expect(await db.agentTasks.count()).toBe(1);const task=(await db.agentTasks.toArray())[0];
   const saved=(await db.agentRuns.get(run.id))!;expect(saved.taskId).toBe(task.id);expect(saved.requestMessages).toEqual(original);expect(saved.agentSnapshot).toEqual(run.agentSnapshot);
-  expect((await db.agentToolCalls.get(operation.call.id))?.status).toBe("completed");expect(task.title).toBe("建立角色");
+  expect((await db.agentToolCalls.get(operation.call.id))?.status).toBe("completed");expect(task.title).toBe("建立角色");expect(task.projectId).toBe(run.projectId);
  });
  it("rolls back task, binding and initial record if ledger persistence fails",async()=>{
   const run=await start(),op=await pending(run,"task_create",createArgs(run));

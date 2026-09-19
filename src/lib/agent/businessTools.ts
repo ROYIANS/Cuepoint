@@ -1,3 +1,4 @@
+import { assertProjectToolScope, frozenProjectScope } from "./projectScope";
 import * as repo from "@/db/repo";
 import { db } from "@/db/database";
 import { executeAtomicTool, AtomicToolRollbackError } from "@/db/agentTools";
@@ -27,10 +28,10 @@ function changes(patch: object): string[] {
 function rowResult(kind: BusinessKind, row: BusinessRow) {
   return { ...summarize(kind, row), target: navigation(kind, row), revision: targetRevision(row) };
 }
-function readTool<T>(name: string, title: string, description: string, spec: s.Spec<T>, execute: (args: T) => Promise<unknown>): AgentToolDefinition {
+function readTool<T>(name: string, title: string, description: string, spec: s.Spec<T>, execute: (args: T, context?: AgentToolContext) => Promise<unknown>): AgentToolDefinition {
   return { name, title, description, effect: "read", parameters: spec.json, highRisk: () => false,
     parseArguments: (raw) => spec.schema.parse(raw),
-    async execute(raw, context) { context.signal.throwIfAborted(); return db.transaction("r", readTables(), async () => await execute(spec.schema.parse(raw))); },
+    async execute(raw, context) { context.signal.throwIfAborted(); return db.transaction("r", [...readTables(), db.agentRuns, db.chatThreads], async () => { const args=spec.schema.parse(raw); await assertProjectToolScope(context,name,args,false); return execute(args,context); }); },
   };
 }
 function writeTool<T>(name: string, title: string, description: string, spec: s.Spec<T>,
@@ -47,15 +48,16 @@ function writeTool<T>(name: string, title: string, description: string, spec: s.
   return { name, title, description, effect: "write", atomic: true, parameters: spec.json, highRisk: () => highRisk,
     parseArguments: (raw) => spec.schema.parse(raw),
     async prepare(raw, context) {
-      const args = spec.schema.parse(raw); await flush(args, context);
+      const args = spec.schema.parse(raw); await assertProjectToolScope(context,name,args,true); await flush(args, context);
       return db.transaction("r", readTables(), async () => await preview(args));
     },
     async execute(raw, context) {
       const args = spec.schema.parse(raw);
-      try { await flush(args, context); }
+      try { await assertProjectToolScope(context,name,args,true); await flush(args, context); }
       catch (error) { throw new AtomicToolRollbackError(error instanceof Error ? error.message : "草稿保存失败，业务操作尚未开始"); }
       return executeAtomicTool(context, async () => {
         context.signal.throwIfAborted();
+        await assertProjectToolScope(context,name,args,true);
         if (!context.preview?.revision || context.preview.revision !== (await preview(args)).revision) throw new Error("目标或影响范围已变化，请重新读取并提出操作，原批准不能覆盖新的内容");
         return execute(args);
       });
@@ -120,9 +122,10 @@ async function deletePreview(kind: BusinessKind, args: { id: string; ownerId: st
 const searchSpec = s.object({ kind: s.entityKind, ownerId: s.optional(s.id), episodeId: s.optional(s.id), query: s.optional(s.text(200)), ...s.page });
 const detailSpec = s.object({ kind: s.entityKind, ownerId: s.optional(s.id), episodeId: s.optional(s.id), id: s.id });
 const reads = [
-  readTool("business_search", "查询创作资料", "按类型、明确归属和关键词查询项目、分集、场次、镜头、角色、场景、道具、风格或素材。除项目列表外必须提供 ownerId，工作室资产用 studio。结果仅候选，不根据同名结果自动操作；offset/limit 分页，最多50项。", searchSpec, async (args) => {
+  readTool("business_search", "查询创作资料", "按类型、明确归属和关键词查询项目、分集、场次、镜头、角色、场景、道具、风格或素材。除项目列表外必须提供 ownerId，工作室资产用 studio。结果仅候选，不根据同名结果自动操作；offset/limit 分页，最多50项。", searchSpec, async (args, context) => {
     const query = args.query?.trim().toLocaleLowerCase();
-    const rows = (await listRows(args.kind, args.ownerId, args.episodeId)).filter((row) => !query || JSON.stringify(projection(args.kind, row)).toLocaleLowerCase().includes(query));
+    const projectId=context?await frozenProjectScope(context):undefined;
+    const rows = (await listRows(args.kind, args.ownerId, args.episodeId)).filter((row) => (!projectId || args.kind !== "project" || row.id===projectId) && (!query || JSON.stringify(projection(args.kind, row)).toLocaleLowerCase().includes(query)));
     rows.sort((a, b) => typeof a.order === "number" && typeof b.order === "number" ? a.order - b.order : a.id.localeCompare(b.id));
     const offset = args.offset ?? 0, limit = args.limit ?? 20;
     const items: Array<ReturnType<typeof summarize> & { target: ReturnType<typeof navigation> }> = [];

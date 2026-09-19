@@ -1,3 +1,4 @@
+import { frozenProjectScope } from "./projectScope";
 import { db } from "@/db/database";
 import type { AgentRequestMessage, AgentRun, AgentToolSchema } from "@/domain/agent";
 import type { ContextCompaction, ContextSource } from "@/domain/context";
@@ -18,11 +19,12 @@ export function continuationExtraTokens(run: AgentRun): number {
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 
 async function activate(run: AgentRun, record: ContextCompaction, content: string, usage: ContextCompaction["usage"], signal: AbortSignal): Promise<AgentRun> {
-  return db.transaction("rw", [db.agentRuns, db.contextCompactions, db.chatThreads], async () => {
+  return db.transaction("rw", [db.agentRuns, db.contextCompactions, db.chatThreads, db.projects], async () => {
     signal.throwIfAborted();
     const current = await db.agentRuns.get(run.id);
     const saved = await db.contextCompactions.get(record.id);
     if (!current || current.status !== "running" || !saved || saved.status !== "running" || !await db.chatThreads.get(run.threadId) || !same(current.context, run.context)) throw new Error("执行上下文已变化，摘要未启用");
+    await frozenProjectScope({runId:current.id,threadId:current.threadId,callId:"context",signal});
     const context = current.context!;
     const oldBase = context.baseMessages;
     const messages = current.continuationMessages ?? current.requestMessages;
@@ -81,13 +83,16 @@ export async function prepareRunContext(runId: string, tools: readonly AgentTool
       policy: context.policy, connector: run.connector, model: run.model, content: "",
       beforeTokens: estimateTokens((previous?.content ?? "") + JSON.stringify(selected.map(({ role, content }) => ({ role, content })))), createdAt: at, updatedAt: at,
     };
-    await db.transaction("rw", [db.contextCompactions, db.agentRuns], async () => {
+    await db.transaction("rw", [db.contextCompactions, db.agentRuns, db.chatThreads, db.projects], async () => {
       signal.throwIfAborted();
       const current = await db.agentRuns.get(run!.id);
       if (!current || current.status !== "running" || !same(current.context, context)) throw new Error("执行已变化");
+      await frozenProjectScope({runId:current.id,threadId:current.threadId,callId:"context",signal});
       await db.contextCompactions.add(record);
     });
     try {
+      await frozenProjectScope({runId:run.id,threadId:run.threadId,callId:"context",signal});
+      signal.throwIfAborted();
       const transport = run.protocol === "responses" ? streamResponses : streamChatCompletions;
       const result = await transport({ baseUrl: run.connector.baseUrl, apiKey, model: run.model, connectorDefinitionId: run.connector.definitionId, messages: input,
         maxOutputTokens: Math.min(budget.outputReserve, 4096), reasoningEffort: run.reasoningEffort }, { signal, fetchImpl });

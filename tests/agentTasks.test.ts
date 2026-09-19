@@ -1,3 +1,5 @@
+import { createProject as createBoundTestProject } from "@/db/repo";
+import { createManualWrapup, saveWrapup, confirmWrapup } from "@/db/agentTaskWrapups";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { createAgentTask, createAgentTaskForThread, updateAgentTask, setAgentTaskLifecycle, pinAgentTaskResult, unpinAgentTaskResult } from "@/db/agentTasks";
@@ -12,16 +14,16 @@ import type { ConnectorConfig } from "@/domain/types";
 const connector: ConnectorConfig = { id: "cx", name: "test", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "fixture", updatedAt: "2026-09-19" };
 const plan: AgentPlanItem[] = [{ id: "outline", title: "整理故事主题", status: "pending" }];
 async function runTask() {
-  const task = await createAgentTask({ title: "整理故事", goal: "产出一份完整故事提纲", plan });
+  const task = await createAgentTask({projectId:(await createBoundTestProject("测试项目")).id, title: "整理故事", goal: "产出一份完整故事提纲", plan });
   const run = await beginAgentRun({ threadId: task.threadId, connector, model: "model", content: "请开始" });
   return { task, run };
 }
 
 describe("unified task workspace", () => {
   it("creates manual tasks atomically without a connector and survives reopening the database", async () => {
-    await expect(createAgentTask({ title: "", goal: "goal" })).rejects.toThrow();
+    await expect(createAgentTask({projectId:(await createBoundTestProject("测试项目")).id, title: "", goal: "goal" })).rejects.toThrow();
     expect(await db.chatThreads.count()).toBe(0);
-    const task = await createAgentTask({ title: "手动任务", goal: "手动整理即可", plan });
+    const task = await createAgentTask({projectId:(await createBoundTestProject("测试项目")).id, title: "手动任务", goal: "手动整理即可", plan });
     expect(await db.connectors.count()).toBe(0);
     expect(await db.agentRuns.count()).toBe(0);
     expect(await db.chatThreads.get(task.threadId)).toMatchObject({ title: "手动任务" });
@@ -32,13 +34,13 @@ describe("unified task workspace", () => {
     expect(await db.agentTasks.count()).toBe(1);
   });
   it("projects manually started and finished checklists without inventing model execution", async () => {
-    const task = await createAgentTask({ title: "手动", goal: "人工完成", plan });
+    const task = await createAgentTask({projectId:(await createBoundTestProject("测试项目")).id, title: "手动", goal: "人工完成", plan });
     expect(getTaskDisplayState({ ...task, plan: [{ ...plan[0], status: "in_progress" }] }, [])).toBe("running");
     expect(getTaskDisplayState({ ...task, plan: [{ ...plan[0], status: "completed" }] }, [])).toBe("review");
     expect(isTaskBusy([])).toBe(false);
   });
   it("creates exactly one task in task mode, no task in Q&A and none on invalid input", async () => {
-    const thread = await createChatThread();
+    const thread = await createChatThread({projectId:(await createBoundTestProject("对话项目")).id});
     await expect(beginAgentRun({ threadId: thread.id, connector, model: "model", content: "", createTask: true })).rejects.toThrow();
     expect(await db.agentTasks.count()).toBe(0);
     const ordinary = await beginAgentRun({ threadId: thread.id, connector, model: "model", content: "你好" });
@@ -57,7 +59,7 @@ describe("unified task workspace", () => {
     expect(await db.agentTasks.count()).toBe(1);
   });
   it("rolls back task creation if its first execution message cannot be saved", async () => {
-    const thread = await createChatThread();
+    const thread = await createChatThread({projectId:(await createBoundTestProject("对话项目")).id});
     const failure = vi.spyOn(db.chatMessages, "add").mockRejectedValueOnce(new Error("storage unavailable"));
     try {
       await expect(beginAgentRun({ threadId: thread.id, connector, model: "model", content: "任务目标", createTask: true })).rejects.toThrow("storage unavailable");
@@ -122,7 +124,10 @@ describe("unified task workspace", () => {
     await expect(setAgentTaskLifecycle(task.id, "completed")).rejects.toThrow("未完成");
     await expect(updateAgentTask(task.id, { plan: [plan[0], plan[0]] })).rejects.toThrow();
     await updateAgentTask(task.id, { plan: [{ ...plan[0], status: "completed" }] });
-    await setAgentTaskLifecycle(task.id, "completed");
+    const wrap = await createManualWrapup(task.id);
+    const draft = await saveWrapup(task.id, wrap.id, { ...wrap.content, overview: "人工核实，全部工作已完成" }, wrap.revision);
+    const confirmed = await confirmWrapup(task.id, draft.id, draft.revision);
+    await setAgentTaskLifecycle(task.id, "completed", { id: confirmed.id, revision: confirmed.revision });
     expect(getTaskDisplayState((await db.agentTasks.get(task.id))!, [run])).toBe("completed");
     await expect(beginAgentRun({ threadId: task.threadId, connector, model: "model", content: "继续" })).rejects.toThrow("重新打开");
     await setAgentTaskLifecycle(task.id, "archived");
@@ -133,7 +138,7 @@ describe("unified task workspace", () => {
   it("pins only owned successful nonempty replies and cascades linked deletion", async () => {
     const { task, run } = await runTask();
     await finishAgentRun(run.id, "completed", { content: "可保存的成果" });
-    const other = await createAgentTask({ title: "其他", goal: "另一个目标" });
+    const other = await createAgentTask({projectId:(await createBoundTestProject("测试项目")).id, title: "其他", goal: "另一个目标" });
     await expect(pinAgentTaskResult(other.id, run.id)).rejects.toThrow("当前任务");
     await pinAgentTaskResult(task.id, run.id); await pinAgentTaskResult(task.id, run.id);
     const artifact = (await db.agentTasks.get(task.id))!.artifacts[0];

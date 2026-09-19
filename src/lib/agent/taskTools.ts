@@ -1,3 +1,4 @@
+import { frozenProjectScope } from "./projectScope";
 import { formatTaskRequirements } from "./taskState";
 import { db } from "@/db/database";
 import { taskFields } from "@/db/agentTasks";
@@ -18,6 +19,8 @@ const recordFields = { kind:choice(TASK_RECORD_KINDS), claim:choice(TASK_RECORD_
 
 async function owner(context: AgentToolContext, name: string) {
   context.signal.throwIfAborted();
+  const projectId = await frozenProjectScope(context);
+  if (!projectId) throw new Error("任务需要绑定项目");
   const run = await db.agentRuns.get(context.runId), call = await db.agentToolCalls.get(context.callId);
   const thread = await db.chatThreads.get(context.threadId);
   if (!run || !thread || run.threadId !== thread.id || run.status !== "running" || !call || call.runId !== run.id || call.threadId !== thread.id || call.name !== name || call.status !== "running" || !run.enabledToolNames?.includes(name) || run.interactionMode === "conversation") throw new Error("任务工具执行归属或权限无效");
@@ -25,7 +28,7 @@ async function owner(context: AgentToolContext, name: string) {
   if (siblings.some((other)=>other.id!==run.id && other.createdAt>=run.createdAt)) throw new Error("只能由当前最新执行维护任务");
   const task = await db.agentTasks.where("threadId").equals(thread.id).first();
   if (!run.taskMode && !run.taskId) throw new Error("只有任务模式可以创建或维护任务");
-  if (run.taskId && (!task || task.id !== run.taskId)) throw new Error("任务关联已失效");
+  if (run.taskId && (!task || task.id !== run.taskId || task.projectId !== projectId)) throw new Error("任务关联已失效");
   if (task && task.lifecycle !== "open") throw new Error("请先重新打开任务");
   return { run, thread, task };
 }
@@ -62,7 +65,7 @@ export const TASK_TOOLS:readonly AgentToolDefinition[] = [
     await validateTaskSources({id:"",threadId:thread.id},args.sources,"decision","ai");
     if(args.steps.some((step)=>step.status==="completed")) throw new Error("新任务不能预先声称步骤完成");
     const at=nowIso();
-    const created:AgentTask={...taskFields({...args,plan:args.steps}),id:createId("task"),threadId:thread.id,agentId:GENERAL_AGENT_ID,revision:1,lifecycle:"open",artifacts:[],createdAt:at,updatedAt:at};
+    const created:AgentTask={...taskFields({...args,plan:args.steps}),id:createId("task"),projectId:run.projectId!,threadId:thread.id,agentId:GENERAL_AGENT_ID,revision:1,lifecycle:"open",artifacts:[],createdAt:at,updatedAt:at};
     await db.agentTasks.add(created);
     await db.agentRuns.update(run.id,{taskId:created.id,plan:created.plan,updatedAt:at});
     await db.chatThreads.update(thread.id,{taskMode:true,updatedAt:at});

@@ -45,9 +45,10 @@ export function CreatedEntityLinks({ call, includePreview = false }: { call: Age
   return <div className="agent-change-results">{[...links].map(([href, label]) => <Link key={href} to={href} className="agent-change-link">查看{label} ↗</Link>)}</div>;
 }
 
-export function AgentRunDetails({ run, busy, onAction }: {
+export function AgentRunDetails({ run, busy, readOnly, onAction }: {
   run: AgentRun;
   busy: boolean;
+  readOnly?: boolean;
   onAction: (runId: string, action: RunAction, callId?: string) => void;
 }) {
   const calls = useLiveQuery(() => db.agentToolCalls.where("runId").equals(run.id).toArray(), [run.id]);
@@ -79,7 +80,7 @@ export function AgentRunDetails({ run, busy, onAction }: {
           </li>)}
         </ol>}
         {ordered.map((call) => {
-          const reviewGeneration = call.name === "submit_generation" && call.status === "awaiting_approval" && recoverable && !unknown && !executing;
+          const reviewGeneration = !readOnly && call.name === "submit_generation" && call.status === "awaiting_approval" && recoverable && !unknown && !executing;
           const preview = call.generationOverride?.preview ?? call.preview;
           return <div key={call.id} className="agent-run-step">
           <details open={call.status === "awaiting_approval" || call.status === "failed" || call.status === "unknown" ? true : undefined}>
@@ -101,13 +102,13 @@ export function AgentRunDetails({ run, busy, onAction }: {
             </div>
           </details>
           <CreatedEntityLinks call={call} />
-          {!reviewGeneration && call.status === "awaiting_approval" && recoverable && !unknown && !executing && <div className="agent-step-actions">
+          {!readOnly && !reviewGeneration && call.status === "awaiting_approval" && recoverable && !unknown && !executing && <div className="agent-step-actions">
             <Button size="sm" disabled={busy} onClick={() => onAction(run.id, "approve", call.id)}>批准此次操作</Button>
             <Button size="sm" variant="outline" disabled={busy} onClick={() => onAction(run.id, "reject", call.id)}>拒绝</Button>
           </div>}
         </div>; })}
         {unknown && <p role="status" className="text-xs text-amber-500">上次操作的结果尚未确认，为避免重复执行，已暂停自动接续。请先核实已有结果，再结束本次执行。</p>}
-        {recoverable && <div className="agent-step-actions">
+        {!readOnly && recoverable && <div className="agent-step-actions">
           {!unknown && !pendingApproval && <Button size="sm" variant="outline" disabled={busy} onClick={() => onAction(run.id, "resume")}>{budgetPaused ? `继续执行 · 最多 ${MODEL_STEPS_PER_SEGMENT} 轮` : "从已保存的步骤继续"}</Button>}
           <Button size="sm" variant="ghost" disabled={busy} onClick={() => onAction(run.id, "cancel")}>结束本次执行</Button>
         </div>}

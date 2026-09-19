@@ -19,7 +19,11 @@ async function requireRun(runId: string): Promise<AgentRun> {
   if (!message || message.threadId !== run.threadId || message.runId !== run.id) throw new Error("执行消息归属不匹配");
   return run;
 }
-const tables = () => [db.agentRuns, db.agentToolCalls, db.chatThreads, db.chatMessages, db.agentTasks, db.agentGenerationJobs, db.agentTaskRecords, db.agentTaskRecordVersions];
+async function requireProject(run: AgentRun) {
+ const thread = await db.chatThreads.get(run.threadId);
+ if (thread?.projectId !== run.projectId || run.projectId && !await db.projects.get(run.projectId)) throw new Error("关联项目已不存在或归属不匹配");
+}
+const tables = () => [db.projects, db.agentRuns, db.agentToolCalls, db.chatThreads, db.chatMessages, db.agentTasks, db.agentGenerationJobs, db.agentTaskRecords, db.agentTaskRecordVersions];
 async function requireLatestRun(run: AgentRun): Promise<void> {
   const siblings = await db.agentRuns.where("threadId").equals(run.threadId).toArray();
   const history = await db.chatMessages.where("threadId").equals(run.threadId).toArray();
@@ -43,6 +47,7 @@ export async function pauseAtModelStepLimit(runId: string): Promise<boolean> {
 export async function startModelStep(runId: string, limit: number): Promise<AgentRun> {
   return db.transaction("rw", tables(), async () => {
     const run = await requireRun(runId);
+    await requireProject(run);
     if (run.status !== "running") throw new Error("执行已停止");
     if ((run.modelStep ?? 0) - (run.modelStepSegmentStart ?? 0) >= limit) throw new Error("本段模型请求额度已用完，请继续下一段执行");
     const next = { ...run, modelStep: (run.modelStep ?? 0) + 1, usage: undefined, outputTokensPerSecond: undefined, updatedAt: nowIso() };
@@ -105,6 +110,7 @@ export async function resolveAgentToolApproval(runId: string, callId: string, de
 export async function resumeAgentRun(runId: string): Promise<AgentRun> {
   return db.transaction("rw", tables(), async () => {
     const run = await requireRun(runId);
+    await requireProject(run);
     if (!canResumeAgentRun(run)) throw new Error("此执行不能继续");
     await requireLatestRun(run);
     const calls = await db.agentToolCalls.where("runId").equals(runId).toArray();
@@ -141,6 +147,7 @@ export async function appendToolResults(runId: string): Promise<void> {
 export async function updateRunPlanAndComplete(runId: string, callId: string, plan: AgentPlanItem[], reason?: string): Promise<string> {
   return db.transaction("rw", tables(), async () => {
     const run = await requireRun(runId);
+    await requireProject(run);
     const call = await db.agentToolCalls.get(callId);
     if (run.status !== "running" || !call || call.runId !== runId || call.threadId !== run.threadId || call.status !== "running" || call.name !== "update_run_plan") throw new Error("计划操作归属不匹配");
     plan = validateTaskPlan(plan);
@@ -202,6 +209,7 @@ export async function executeAtomicTool(
     return await db.transaction("rw", db.tables, async () => {
       context.signal.throwIfAborted();
       const run = await requireRun(context.runId);
+      await requireProject(run);
       const call = await db.agentToolCalls.get(context.callId);
       if (run.status !== "running" || run.threadId !== context.threadId || !call || call.runId !== run.id || call.threadId !== run.threadId) throw new Error("操作归属或执行状态不匹配");
       if (call.status === "completed" && call.result) return JSON.parse(call.result);
@@ -221,6 +229,7 @@ export async function executeAtomicTool(
 export interface GenerationReviewExpected { arguments: string; revision: string }
 async function requireGenerationReviewCall(runId: string, callId: string, expected: GenerationReviewExpected): Promise<AgentToolCall> {
   const run=await requireRun(runId);
+    await requireProject(run);
   const call=await db.agentToolCalls.get(callId);
   if (!canResumeAgentRun(run) || !call || call.runId!==runId || call.threadId!==run.threadId || call.name!=="submit_generation" ||
     call.status!=="awaiting_approval" || !call.requiresConfirmation || call.decision || call.generationOverride) throw new Error("生成确认已处理或执行归属不匹配");

@@ -1,3 +1,4 @@
+import { frozenProjectScope } from "./projectScope";
 import { TASK_TOOLS } from "./taskTools";
 import { GENERATION_TOOLS } from "./generationTools";
 import { BUSINESS_TOOLS } from "./businessTools";
@@ -6,7 +7,7 @@ import { db } from "@/db/database";
 import { updateRunPlanAndComplete } from "@/db/agentTools";
 import type { AgentPermissionMode, AgentPlanItem, AgentToolEffect, AgentToolSchema, AgentToolPreview } from "@/domain/agent";
 
-export interface AgentToolContext { runId: string; threadId: string; callId: string; signal: AbortSignal; preview?: AgentToolPreview }
+export interface AgentToolContext { projectId?: string; runId: string; threadId: string; callId: string; signal: AbortSignal; preview?: AgentToolPreview }
 export interface AgentToolDefinition {
   name: string; title: string; description: string; parameters: Record<string, unknown>;
   effect: AgentToolEffect;
@@ -30,8 +31,11 @@ export const BUILTIN_TOOLS: readonly AgentToolDefinition[] = [
   { name: "workspace_overview", title: "查看工作区概览", description: "读取工作区项目和角色、场景、道具、风格的数量，最多返回 10 个最近项目名称，不读取密钥或完整业务内容。",
     parameters: { type: "object", properties: {}, additionalProperties: false }, effect: "read", highRisk: () => false,
     parseArguments: (raw) => z.object({}).strict().parse(raw),
-    async execute(_args, { signal }) {
+    async execute(_args, context) {
+      const {signal}=context;
       signal.throwIfAborted();
+      const projectId=await frozenProjectScope(context);
+      if(projectId){const project=await db.projects.get(projectId);return {project:{id:projectId,name:project!.name},counts:{characters:await db.characters.where("projectId").equals(projectId).count(),scenes:await db.scenes.where("projectId").equals(projectId).count(),props:await db.props.where("projectId").equals(projectId).count(),styles:await db.styles.where("projectId").equals(projectId).count()}};}
       return db.transaction("r", [db.projects, db.characters, db.scenes, db.props, db.styles], async () => ({
         counts: { projects: await db.projects.count(), characters: await db.characters.count(), scenes: await db.scenes.count(), props: await db.props.count(), styles: await db.styles.count() },
         projects: (await db.projects.orderBy("updatedAt").reverse().limit(10).toArray()).map((project) => ({ id: project.id, name: project.name.slice(0, 200) })),

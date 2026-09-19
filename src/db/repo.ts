@@ -1,3 +1,4 @@
+import { STUDIO_LIBRARY_ID } from "@/domain/types";
 import { getGeneralAgentConfig } from "./agentSettings";
 import { normalizeContextPolicy } from "@/lib/agent/contextPolicy";
 import { validateGenerationDefaults } from "@/domain/output";
@@ -1558,6 +1559,7 @@ export async function getChatThread(id: Id): Promise<ChatThread | undefined> {
 }
 
 export async function createChatThread(options?: {
+  projectId?: Id;
   taskMode?: boolean;
   title?: string;
   connectorId?: Id;
@@ -1569,12 +1571,16 @@ export async function createChatThread(options?: {
     id: createId("cth"),
     title: options?.title?.trim() || "新对话",
     taskMode: options?.taskMode === true,
+    projectId: options?.projectId,
     connectorId: options?.connectorId,
     model: options?.model?.trim() || undefined,
     createdAt: at,
     updatedAt: at,
   };
-  await db.chatThreads.put(thread);
+  await db.transaction("rw", [db.chatThreads, db.projects], async () => {
+    if (thread.projectId && (thread.projectId === STUDIO_LIBRARY_ID || !await db.projects.get(thread.projectId))) throw new Error("请选择可用项目");
+    await db.chatThreads.add(thread);
+  });
   return thread;
 }
 
@@ -1607,12 +1613,14 @@ export async function updateChatThread(
 }
 
 export async function deleteChatThread(id: Id): Promise<void> {
-  await db.transaction("rw", [...PRODUCTION_TABLES, db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, db.agentTasks, db.contextCompactions, db.agentTaskRecords, db.agentTaskRecordVersions], async () => {
+  await db.transaction("rw", [...PRODUCTION_TABLES, db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, db.agentTasks, db.contextCompactions, db.agentTaskRecords, db.agentTaskRecordVersions, db.agentTaskWrapups, db.agentTaskWrapupVersions], async () => {
     const jobs = await db.agentGenerationJobs.where("threadId").equals(id).toArray();
     const jobMedia = new Set(jobs.flatMap((job) => [...job.inputs.map((input) => input.mediaId), ...(job.result ? [job.result.mediaId] : [])]));
     await db.agentGenerationJobs.where("threadId").equals(id).delete();
     await db.contextCompactions.where("threadId").equals(id).delete();
     for (const task of await db.agentTasks.where("threadId").equals(id).toArray()) {
+      await db.agentTaskWrapups.where("taskId").equals(task.id).delete();
+      await db.agentTaskWrapupVersions.where("taskId").equals(task.id).delete();
       await db.agentTaskRecords.where("taskId").equals(task.id).delete();
       await db.agentTaskRecordVersions.where("taskId").equals(task.id).delete();
     }
@@ -1661,5 +1669,17 @@ export async function updateChatMessage(
     const existing = await db.chatMessages.get(id);
     if (!existing || existing.runId) return;
     await db.chatMessages.update(id, patch);
+  });
+}
+
+/** Bind once before any conversation execution; changing projects starts a new thread. */
+export async function bindChatThreadProject(threadId: string, projectId: string, expectedProjectId?: string): Promise<void> {
+  await db.transaction("rw", [db.chatThreads, db.projects, db.agentRuns, db.chatMessages, db.agentTasks], async () => {
+    const thread = await db.chatThreads.get(threadId);
+    if (!thread || thread.projectId !== expectedProjectId) throw new Error("对话项目已变化，请重新读取");
+    if (projectId === STUDIO_LIBRARY_ID || !await db.projects.get(projectId)) throw new Error("请选择可用项目");
+    if (thread.projectId === projectId) return;
+    if (thread.projectId || await db.agentRuns.where("threadId").equals(threadId).count() || await db.chatMessages.where("threadId").equals(threadId).count() || await db.agentTasks.where("threadId").equals(threadId).count()) throw new Error("已有对话不能切换项目，请新建对话");
+    await db.chatThreads.update(threadId, { projectId, updatedAt: nowIso() });
   });
 }

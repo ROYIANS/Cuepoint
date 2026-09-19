@@ -29,8 +29,8 @@ async function fixture() {
   return { ownerId: String(result.id), episodeId: String(result.firstEpisodeId) };
 }
 async function read(name: string, args: unknown) {
-  const definition = tool(name);
-  return definition.execute(definition.parseArguments(args), { runId: "read", threadId: "read", callId: "read", signal: new AbortController().signal }) as Promise<Record<string, unknown>>;
+  const definition = tool(name), run=await begin();
+  return definition.execute(definition.parseArguments(args), { runId: run.id, threadId: run.threadId, callId: "read", signal: new AbortController().signal }) as Promise<Record<string, unknown>>;
 }
 
 describe("business operation schemas and permissions", () => {

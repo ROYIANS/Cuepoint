@@ -49,9 +49,12 @@ export async function beginAgentRun(input: {
 }): Promise<AgentRun> {
   const identity = connectorRunIdentity(input.connector);
   if (!input.model.trim() || !input.connector.apiKey.trim()) throw new Error("请选择模型并配置 API Key");
-  return db.transaction("rw", [db.chatThreads, db.chatMessages, db.agentRuns, db.agents, db.agentTasks, db.contextCompactions, db.agentTaskRecords], async () => {
+  return db.transaction("rw", db.tables, async () => {
     const thread = await db.chatThreads.get(input.threadId);
     if (!thread) throw new Error("对话不存在");
+    if ((thread.taskMode || input.createTask) && !thread.projectId) throw new Error("任务模式请先选择项目");
+    if (thread.projectId && !await db.projects.get(thread.projectId)) throw new Error("关联项目已不存在，无法执行");
+    if (await db.agentTaskWrapups.where("threadId").equals(thread.id).filter((record) => record.status === "preparing").count()) throw new Error("总结正在整理，请先等待或停止");
     const runs = await db.agentRuns.where("threadId").equals(thread.id).toArray();
     if (runs.some((run) => run.status === "running" || run.status === "waiting_approval" || (run.hasToolCalls && (run.status === "interrupted" || run.status === "failed")))) throw new Error("此对话已有执行，请等待完成或恢复中断状态");
     const history = await db.chatMessages.where("threadId").equals(thread.id).sortBy("createdAt");
@@ -63,6 +66,7 @@ export async function beginAgentRun(input: {
       throw new Error("只能重新生成当前最后一次未完成的回复；后续已有消息时请发送新问题");
     }
     if (previous) {
+      if (previous.projectId !== thread.projectId) throw new Error("原执行项目归属已变化");
       assertRetryConnector(previous, input.connector);
       if (previous.model !== input.model.trim()) throw new Error("重新生成必须使用原模型");
     }
@@ -72,6 +76,7 @@ export async function beginAgentRun(input: {
     if (!previous && !content) throw new Error("消息不能为空");
     let task = await db.agentTasks.where("threadId").equals(thread.id).first();
     if (input.createTask && !task && !previous) task = await createAgentTaskForThread(thread.id, { title: deriveChatTitle(content), goal: content });
+    if (task && task.projectId !== thread.projectId) throw new Error("任务与对话项目归属不一致");
     if (task && task.lifecycle !== "open") throw new Error("请先重新打开任务，再继续对话");
     if (previous?.taskId && previous.taskId !== task?.id) throw new Error("原任务关联已失效");
 
@@ -80,7 +85,7 @@ export async function beginAgentRun(input: {
     const assistantMessageId = createId("cmsg");
     const interactionMode = previous ? previous.interactionMode ?? "smart" : input.interactionMode ?? thread.interactionMode ?? "smart";
     const taskMode = previous ? previous.taskMode === true : thread.taskMode === true;
-    const taskContext = await getTaskContext(thread.id, agent.instructions, taskMode, interactionMode);
+    const taskContext = await getTaskContext(thread.id, agent.instructions, taskMode, interactionMode, thread.projectId);
     const instructions = taskContext.instructions;
     const skills = assembleSkills(agent.enabledSkillIds ?? []);
     const enabledToolNames = interactionMode === "conversation" ? [] : (previous ? previous.enabledToolNames ?? [] : [...new Set([...skills.enabledToolNames, ...taskContext.taskToolNames])]);
@@ -93,6 +98,7 @@ export async function beginAgentRun(input: {
     const context = previous ? previous.context : { policy, history: selectedHistory, baseMessages, draft: content, summaryId: summary?.id, ...resolveContextCapacity(input.model, input.modelMetadata, identity.definitionId, policy) };
     const run: AgentRun = {
       context,
+      projectId: thread.projectId, projectContext: previous?.projectContext ?? taskContext.projectContext,
       id: runId, threadId: thread.id, taskId: previous?.taskId ?? task?.id, plan: previous?.plan ?? task?.plan, agentId: previous?.agentId ?? agent.id,
       agentSnapshot: previous?.agentSnapshot ?? { name: agent.name, instructions },
       userMessageId, assistantMessageId, retryOfRunId: previous?.id,

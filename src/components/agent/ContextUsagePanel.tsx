@@ -19,15 +19,20 @@ import { estimateContextUsage, formatTokenCount } from "@/lib/agent/contextUsage
 
 type ContextProps = {
   threadId?: string;
+  projectId?: string;
   task?: AgentTask;
   interactionMode?: AgentInteractionMode; draft: string; messages: ChatMessage[]; runs: AgentRun[]; model: string; connector?: ConnectorConfig; modelMetadata?: Record<string, ChatModelMetadata>;
 };
 
-function useContextUsage({ draft, messages, runs, model, connector, modelMetadata, interactionMode, task, threadId }: ContextProps) {
+function useContextUsage({ draft, messages, runs, model, connector, modelMetadata, interactionMode, task, threadId, projectId }: ContextProps) {
   const config = useLiveQuery(() => db.agents.get(GENERAL_AGENT_ID), []);
   const thread = useLiveQuery(() => threadId ? db.chatThreads.get(threadId) : undefined, [threadId]);
   const records = useLiveQuery(() => threadId ? db.contextCompactions.where("threadId").equals(threadId).sortBy("createdAt") : [], [threadId]);
-  const taskContext = useLiveQuery(() => getTaskContext(threadId, config?.instructions ?? "", thread?.taskMode, interactionMode), [threadId, config?.instructions, thread?.taskMode, interactionMode, task?.id]);
+  const contextState = useLiveQuery(async () => {
+    try { return { context: await getTaskContext(threadId, config?.instructions ?? "", thread?.taskMode, interactionMode, projectId), error: undefined }; }
+    catch (error) { return { context: undefined, error: error instanceof Error ? error.message : "项目上下文不可用" }; }
+  }, [threadId, config?.instructions, thread?.taskMode, interactionMode, task?.id, projectId]);
+  const taskContext = contextState?.context;
   const deferredDraft = useDeferredValue(draft);
   const latest = runs.at(-1);
   const activeRun = latest && (latest.status === "running" || latest.status === "waiting_approval" || (latest.hasToolCalls && (latest.status === "failed" || latest.status === "interrupted"))) ? latest : undefined;
@@ -44,21 +49,25 @@ function useContextUsage({ draft, messages, runs, model, connector, modelMetadat
     const tools = toolSchemas(activeRun ? activeRun.enabledToolNames ?? [] : [...new Set([...skills.enabledToolNames, ...(taskContext?.taskToolNames ?? [])])]);
     const budget = budgetContext(request, tools, capacity, !!(activeRun?.context?.summaryId ?? summary), activeRun ? continuationExtraTokens(activeRun) : 0);
     const usage = estimateContextUsage({ instructions, skillInstructions, messages: request, tools });
+    const projectContext = activeRun?.projectContext ?? taskContext?.projectContext;
+    if (projectContext) usage.categories[0].label = "助手指令与项目事实";
     const overhead = Math.max(0, budget.estimatedTokens - usage.total);
     usage.categories.push({ id: "envelope", label: "请求结构与续接状态", tokens: overhead, color: "#888888" });
     usage.total += overhead;
     const percent = capacity ? Math.min(100, usage.total / capacity * 100) : undefined;
-    return { usage: (config && taskContext) || activeRun ? usage : undefined, capacity, percent, activeRun, source, policy, budget, selectedCount: activeRun?.context?.history.length ?? selected.length, lastRecord: records?.at(-1) };
-  }, [activeRun, config, thread, threadId, records, messages, deferredDraft, interactionMode, taskContext, model, modelMetadata, connector]);
+    return { projectContext, error: contextState?.error, usage: (config && taskContext) || activeRun ? usage : undefined, capacity, percent, activeRun, source, policy, budget, selectedCount: activeRun?.context?.history.length ?? selected.length, lastRecord: records?.at(-1) };
+  }, [activeRun, config, thread, threadId, records, messages, deferredDraft, interactionMode, taskContext, contextState?.error, model, modelMetadata, connector]);
 }
 
 export function ContextUsagePanel({ onClose, ...props }: ContextProps & { onClose: () => void }) {
-  const { usage, capacity, percent, activeRun, source, policy, budget, selectedCount, lastRecord } = useContextUsage(props);
+  const { usage, capacity, percent, activeRun, source, policy, budget, selectedCount, lastRecord, projectContext, error } = useContextUsage(props);
   const { model } = props;
   return <div className="agent-context-panel" role="region" aria-label="上下文明细">
       <div className="agent-context-heading"><span>上下文明细</span><span className="agent-context-heading-actions"><small>TOKEN · 估算</small><button type="button" aria-label="关闭上下文明细" onClick={onClose}><X size={16} /></button></span></div>
       <div className="agent-context-scope">{activeRun ? "当前执行 · 已保存的上下文" : "下次发送 · 包含当前草稿"}</div>
       <div className="agent-context-model" title={activeRun?.model ?? model}>{activeRun?.model ?? (model || "尚未选择模型")}</div>
+      {projectContext && <div className="agent-context-project"><strong>{projectContext.name}</strong><span>当前项目事实 · {activeRun ? "执行快照" : "随资料更新"}</span><small>分集 {projectContext.coverage.episodes.included}/{projectContext.coverage.episodes.total} · 资产 {projectContext.coverage.assets.included}/{projectContext.coverage.assets.total}{projectContext.coverage.truncated ? " · 部分摘录" : ""}</small><small>包含项目设定与素材索引；完整内容由助手按需读取。</small></div>}
+      {error && <p role="status">{error}。历史仍可查看。</p>}
       {usage ? <>
         <div className="agent-context-bar" aria-hidden>{usage.categories.map((item) => <span key={item.id} style={{ width: `${usage.total ? item.tokens / usage.total * 100 : 0}%`, background: item.color }} />)}</div>
         <dl className="agent-context-breakdown">{usage.categories.map((item) => <div key={item.id}><dt><i style={{ background: item.color }} />{item.label}</dt><dd title={`${item.tokens.toLocaleString()} tokens（估算）`}>{formatTokenCount(item.tokens)}</dd></div>)}</dl>
@@ -72,7 +81,7 @@ export function ContextUsagePanel({ onClose, ...props }: ContextProps & { onClos
         {lastRecord && <ContextCompactionDetails record={lastRecord} />}
         <p>按文本长度粗略估算，非模型实际用量。{capacity ? `预计占用 ${(usage.total / capacity * 100).toFixed(1)}%；整理触发基于上限的 50%（已有摘要时为 65%），另计 25% 估算余量及输出预留。` : "当前连接未提供可信的上下文上限，暂不计算占用比例。"}</p>
         {activeRun && <p>包含已保存的请求与续接状态；当前输出及未回填的工具结果尚未计入。{activeRun.modelMetrics?.at(-1)?.usage?.inputTokens !== undefined ? `最近一次请求实际输入 ${formatTokenCount(activeRun.modelMetrics.at(-1)!.usage!.inputTokens!)} tokens。` : ""}</p>}
-      </> : <p>正在读取助手配置…</p>}
+      </> : !error && <p>正在读取助手配置…</p>}
     </div>;
 }
 

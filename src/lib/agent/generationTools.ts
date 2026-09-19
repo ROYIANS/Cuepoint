@@ -1,3 +1,4 @@
+import { frozenProjectScope, assertProjectToolScope } from "./projectScope";
 import { z } from "zod";
 import { getGenerationPreferenceState } from "@/db/generationPreferences";
 import { recommendGenerationSelection } from "./generationSelection";
@@ -18,9 +19,12 @@ const submitParameters={type:"object",additionalProperties:false,required:["conn
 export const GENERATION_TOOLS: readonly AgentToolDefinition[] = [
   {name:"generation_capabilities",title:"查看生成能力",description:"列出已配置供应商、代码已验证的模型参数，以及项目/全局生成推荐。传 projectId 获取项目默认；用户明确选择优先于项目、全局和自动建议。有问题的推荐不得静默降级。能力列表不是账户授权或余额保证。",effect:"read",highRisk:()=>false,
     parameters:{type:"object",properties:{projectId:id},additionalProperties:false},parseArguments:(raw)=>z.object({projectId:z.string().trim().min(1).max(160).optional()}).strict().parse(raw),
-    async execute(args,{signal}) {
+    async execute(args,context) {
+      const {signal}=context;
+      const boundProject=await frozenProjectScope(context);
       signal.throwIfAborted();
-      const {projectId}=args as {projectId?:string};
+      const projectId=(args as {projectId?:string}).projectId??boundProject;
+      if(projectId)await assertProjectToolScope(context,"generation_capabilities",{projectId},false);
       const project=projectId && projectId!=="studio" ? await db.projects.get(projectId):undefined;
       if(projectId && projectId!=="studio" && !project) throw new Error("项目不存在，请重新选择生成目标");
       const connectors=(await db.connectors.toArray()).filter((item)=>["apimart","aihubmix"].includes(item.definitionId));
@@ -40,5 +44,5 @@ export const GENERATION_TOOLS: readonly AgentToolDefinition[] = [
     execute:(args,context)=>applyAgentGeneration((args as {jobId:string}).jobId,context)},
   {name:"list_generation_jobs",title:"查看生成记录",description:"列出当前对话最近30项生成任务及真实本地状态，不发送网络请求。未知提交需核实，不可重新提交。",effect:"read",highRisk:()=>false,
     parameters:{type:"object",properties:{},additionalProperties:false},parseArguments:(raw)=>z.object({}).strict().parse(raw),
-    async execute(_args,context){context.signal.throwIfAborted();return (await db.agentGenerationJobs.where("threadId").equals(context.threadId).toArray()).sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt)).slice(0,30).map(generationJobSummary);}},
+    async execute(_args,context){context.signal.throwIfAborted();await frozenProjectScope(context);return (await db.agentGenerationJobs.where("threadId").equals(context.threadId).toArray()).sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt)).slice(0,30).map(generationJobSummary);}},
 ];

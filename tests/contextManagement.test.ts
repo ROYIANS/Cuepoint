@@ -1,3 +1,4 @@
+import { createProject as createBoundTestProject } from "@/db/repo";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { beginAgentRun, finishAgentRun, interruptThreadRuns } from "@/db/agentRuns";
@@ -50,7 +51,7 @@ describe("context policy and immutable scope", () => {
   it("freezes new thread defaults and each run; reset and save defaults are explicit", async () => {
     await updateContextPolicy(undefined, { ...policy, historyMessageCount: 4 });
     const first = await createChatThread();
-    const task = await createAgentTask({ title: "task", goal: "goal" });
+    const task = await createAgentTask({projectId:(await createBoundTestProject("测试项目")).id, title: "task", goal: "goal" });
     expect((await db.chatThreads.get(task.threadId))?.contextPolicy?.historyMessageCount).toBe(4);
     await updateContextPolicy(undefined, { ...policy, historyMessageCount: 8 });
     expect((await db.chatThreads.get(first.id))?.contextPolicy?.historyMessageCount).toBe(4);

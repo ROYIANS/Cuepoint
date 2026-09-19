@@ -1,3 +1,4 @@
+import { createProject as createBoundTestProject } from "@/db/repo";
 import { describe, expect, it } from "vitest";
 import { TASK_TOOLS } from "@/lib/agent/taskTools";
 import { db } from "@/db/database";
@@ -8,7 +9,7 @@ import { validateTaskSources } from "@/db/agentTaskRecords";
 import type { ConnectorConfig } from "@/domain/types";
 const connector:ConnectorConfig={id:"fixture",name:"Fixture",definitionId:"openai-compatible",baseUrl:"https://example.test/v1",apiKey:"fake",updatedAt:"now"};
 async function fixture(){
- const task=await createAgentTask({title:"任务",goal:"制作可验证的角色图片"});
+ const task=await createAgentTask({projectId:(await createBoundTestProject("测试项目")).id,title:"任务",goal:"制作可验证的角色图片"});
  const run=await beginAgentRun({threadId:task.threadId,connector,model:"fixture",content:"继续"});
  return {task,run};
 }
@@ -49,7 +50,7 @@ describe("task orchestration independent boundaries",()=>{
   expect(await read({source:{type:"message",id:run.userMessageId},contentOffset:6000,contentLimit:6000})).toMatchObject({content:"后".repeat(6000),totalLength:12000,nextOffset:null});
   expect(await read({source:source[0],contentOffset:6000,contentLimit:10})).toMatchObject({content:JSON.stringify({body}).slice(6000,6010),nextOffset:6010});
   await expect(read({source:{type:"message",id:foreign.run.userMessageId}})).rejects.toThrow("来源不是");
-  await expect(read({source:{type:"tool",id:(await db.agentToolCalls.where("runId").equals(run.id).last())!.id}})).rejects.toThrow("来源不是");
+  await expect(read({source:{type:"tool",id:(await db.agentToolCalls.where("[runId+providerCallId]").equals([run.id, "read-1"]).first())!.id}})).rejects.toThrow("来源不是");
   expect(()=>tool.parseArguments({source:source[0],contentLimit:6001})).toThrow();
   const artifacts=Array.from({length:1000},(_,index)=>({id:`artifact-${index}`,runId:run.id,messageId:run.assistantMessageId,createdAt:"now"}));
   await db.agentTasks.update(task.id,{artifacts});
@@ -59,7 +60,7 @@ describe("task orchestration independent boundaries",()=>{
  });
  it("retains maximal valid Todo and requirement changes without truncating history",async()=>{
   const plan=Array.from({length:30},(_,i)=>({id:`${i}`.padEnd(80,"x"),title:"长".repeat(240),status:"pending" as const}));
-  const task=await createAgentTask({title:"题".repeat(120),goal:"目".repeat(20000),acceptanceCriteria:Array.from({length:20},()=>"标".repeat(500)),plan});
+  const task=await createAgentTask({projectId:(await createBoundTestProject("测试项目")).id,title:"题".repeat(120),goal:"目".repeat(20000),acceptanceCriteria:Array.from({length:20},()=>"标".repeat(500)),plan});
   const run=await beginAgentRun({threadId:task.threadId,connector,model:"fixture",content:"继续"});
   await saveToolRound(run.id,"",[{id:"plan",type:"function",function:{name:"update_run_plan",arguments:"{}"}}],[{title:"计划",effect:"bookkeeping",highRisk:false}]);
   const call=(await db.agentToolCalls.where("runId").equals(run.id).first())!;

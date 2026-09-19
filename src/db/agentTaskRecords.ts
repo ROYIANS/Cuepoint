@@ -14,7 +14,7 @@ export async function listTaskRecordVersions(taskId: string, recordId: string) {
   return db.agentTaskRecordVersions.where("recordId").equals(recordId).sortBy("revision");
 }
 /** A completed ledger entry may describe a failed remote job or an apply conflict. */
-function provesCompletedEffect(call: AgentToolCall): boolean {
+export function provesCompletedEffect(call: AgentToolCall): boolean {
   let value: unknown;
   try { value = JSON.parse(call.result ?? "null"); } catch { return false; }
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
@@ -71,5 +71,5 @@ export async function writeTaskRecord(task: AgentTask, input: TaskRecordInput, o
   return record;
 }
 export async function saveTaskRecord(taskId: string, input: TaskRecordInput, options: { id?: string; expectedRevision?: number } = {}): Promise<AgentTaskRecord> {
-  return db.transaction("rw", [db.agentTasks, db.chatThreads, db.agentRuns, db.chatMessages, db.agentToolCalls, db.agentTaskRecords, db.agentTaskRecordVersions], async () => writeTaskRecord(await editableAgentTask(taskId), input, { ...options, author: "user" }));
+  return db.transaction("rw", [db.agentTasks, db.chatThreads, db.agentRuns, db.chatMessages, db.agentToolCalls, db.agentTaskRecords, db.agentTaskRecordVersions, db.agentTaskWrapups, db.projects], async () => writeTaskRecord(await editableAgentTask(taskId), input, { ...options, author: "user" }));
 }
