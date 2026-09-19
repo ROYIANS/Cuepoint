@@ -17,6 +17,8 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
   const calls=(await db.agentToolCalls.where("threadId").equals(task.threadId).toArray()).filter(c=>runIds.has(c.runId));
   const records=await db.agentTaskRecords.where("taskId").equals(task.id).sortBy("updatedAt");
   const jobs=(await db.agentGenerationJobs.where("threadId").equals(task.threadId).toArray()).filter(j=>runIds.has(j.runId));
+  const batches=(await db.agentGenerationBatches.where("threadId").equals(task.threadId).toArray()).filter(batch=>runIds.has(batch.runId));
+  const batchItems=(await db.agentGenerationBatchItems.where("threadId").equals(task.threadId).toArray()).filter(item=>batches.some(batch=>batch.id===item.batchId));
   const evidence:WrapupEvidence[]=[], fingerprints:unknown[]=[];
   const add=(item:WrapupEvidence,raw:unknown)=>{fingerprints.push([item.id,targetRevision(raw)]);evidence.push({...item,body:item.body.slice(0,1800),truncated:item.body.length>1800});};
   const entityIds=new Set<string>();
@@ -51,6 +53,11 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
       }
     }
   }
+  for(const batch of batches) {
+    const items=batchItems.filter(item=>item.batchId===batch.id);
+    const unresolved=batch.status==='draft'||items.some(item=>item.state==='queued')||jobs.some(job=>job.batchId===batch.id&&['submitting','submitted','running','downloading','remote_completed','unknown'].includes(job.status));
+    add({id:`batch:${batch.id}`,kind:'generation',label:`批量生成 · ${batch.title}`,body:JSON.stringify({status:batch.status,candidates:items.map(item=>({id:item.id,state:item.state,jobId:item.jobId,selected:batch.selections[item.targetKey]===item.id})),pauseReason:batch.pauseReason}),outcome:unresolved?'unresolved':'fact',available:true,supportsResult:false},{batch,items});
+  }
   for(const job of jobs) {
     const target=job.target;await Promise.resolve(entity(target.kind,target.entityId,target.projectId,'episodeId' in target?target.episodeId:undefined));
     const media=job.result?await db.media.get(job.result.mediaId):undefined;
@@ -58,7 +65,7 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
     try{const row=await getRow(target.kind,target.entityId,target.projectId,'episodeId'in target?target.episodeId:undefined);href=navigation(target.kind,row).href;
       const slot=target.kind==='shot'?row[target.slot??'clip']:json(row.slots)[target.slot];applied=!!media&&parseGenerationSlot(slot).result?.mediaId===media.id;
     }catch{/* Missing targets remain historical evidence. */}
-    const status=job.status==='applied'&&applied?'applied':job.status==='downloaded'&&media?'downloaded':'unresolved';
+    const status=applied?'applied':media&&(['downloaded','applied','conflict'].includes(job.status))?'downloaded':'unresolved';
     for (const call of calls.filter(call => call.id === job.callId || json(call.arguments).jobId === job.id)) {
       const source=evidence.find(item=>item.id===`tool:${call.id}`);
       if(source){source.supportsResult=status!=="unresolved";source.outcome=status;source.available=!!media;source.body=`${source.body}\n当前输出状态：${status}；原工具返回只记录当时事实。`;}

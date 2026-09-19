@@ -1,3 +1,4 @@
+import { recoverAbandonedGenerationBatches } from "@/db/agentGenerationBatches";
 import { db } from "@/db/database";
 import { interruptThreadRuns } from "@/db/agentRuns";
 
@@ -15,6 +16,7 @@ function browserLocks(): ThreadLockManager {
 export async function withThreadRunLock<T>(threadId: string, execute: () => Promise<T>, locks: ThreadLockManager = browserLocks()): Promise<T> {
   return locks.request(`cuepoint:agent:${threadId}`, { ifAvailable: true }, async (lock) => {
     if (!lock) throw new Error("此对话正在另一个页面执行，请先在那里停止或等待完成");
+    await recoverAbandonedGenerationBatches(threadId);
     await interruptThreadRuns(threadId);
     return execute();
   });
@@ -22,9 +24,10 @@ export async function withThreadRunLock<T>(threadId: string, execute: () => Prom
 
 export async function recoverAbandonedRuns(locks: ThreadLockManager = browserLocks()): Promise<void> {
   const active = await db.agentRuns.where("status").equals("running").toArray();
-  for (const threadId of new Set(active.map((run) => run.threadId))) {
+  const batches = await db.agentGenerationBatches.where("status").equals("running").toArray();
+  for (const threadId of new Set([...active, ...batches].map((run) => run.threadId))) {
     await locks.request(`cuepoint:agent:${threadId}`, { ifAvailable: true }, async (lock) => {
-      if (lock) await interruptThreadRuns(threadId);
+      if (lock) { await recoverAbandonedGenerationBatches(threadId); await interruptThreadRuns(threadId); }
     });
   }
 }

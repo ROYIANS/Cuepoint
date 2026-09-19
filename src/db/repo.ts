@@ -55,7 +55,7 @@ import { createId, nowIso } from "@/lib/ids";
 // Media recycling must hold the same lock as every committed slot/cover writer.
 export const PRODUCTION_TABLES = [
   db.projects, db.episodes, db.characters, db.scenes,
-  db.props, db.styles, db.shots, db.media, db.productionProposals, db.agentGenerationJobs, db.projectReferences, db.referenceChunks,
+  db.props, db.styles, db.shots, db.media, db.productionProposals, db.agentGenerationJobs, db.agentGenerationBatches, db.agentGenerationBatchItems, db.projectReferences, db.referenceChunks,
 ];
 
 function pickPatch<T extends object>(patch: T, keys: readonly (keyof T)[]): Partial<T> {
@@ -278,13 +278,15 @@ export async function deleteProject(id: Id): Promise<void> {
       db.shots,
       db.media,
       db.productionProposals,
-      db.agentGenerationJobs,
+      db.agentGenerationJobs, db.agentGenerationBatches, db.agentGenerationBatchItems,
     ],
     async () => {
       await db.projectReferences.where("projectId").equals(id).delete();
       await db.referenceChunks.where("projectId").equals(id).delete();
       await db.projectMemories.where("projectId").equals(id).delete();
       await db.projectMemoryVersions.where("projectId").equals(id).delete();
+      await db.agentGenerationBatches.where("projectId").equals(id).delete();
+      await db.agentGenerationBatchItems.where("projectId").equals(id).delete();
       await db.agentGenerationJobs.where("projectId").equals(id).delete();
       await db.productionProposals.where("projectId").equals(id).delete();
       await db.characters.where("projectId").equals(id).delete();
@@ -604,7 +606,10 @@ export async function deleteMediaIfOrphan(mediaId: Id | undefined): Promise<void
       (proposal.change.kind === "slot-result" && proposal.change.result.mediaId === mediaId));
     const jobs = await db.agentGenerationJobs.where("projectId").equals(record.projectId).toArray();
     const jobRetained = jobs.some((job) => job.result?.mediaId === mediaId || job.inputs.some((input) => input.mediaId === mediaId));
-    if (!used.has(mediaId) && !retained && !jobRetained) {
+    const batches = await db.agentGenerationBatches.where("projectId").equals(record.projectId).toArray();
+    const items = await db.agentGenerationBatchItems.where("projectId").equals(record.projectId).toArray();
+    const batchRetained = items.some(item => item.draft.inputs.some(input => input.mediaId === mediaId)) || batches.some(batch => batch.applications.some(a => a.before?.mediaId === mediaId || a.result.mediaId === mediaId));
+    if (!used.has(mediaId) && !retained && !jobRetained && !batchRetained) {
       await db.media.delete(mediaId);
     }
   });
@@ -1625,7 +1630,11 @@ export async function updateChatThread(
 export async function deleteChatThread(id: Id): Promise<void> {
   await db.transaction("rw", [...PRODUCTION_TABLES, db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, db.agentTasks, db.contextCompactions, db.agentTaskRecords, db.agentTaskRecordVersions, db.agentTaskWrapups, db.agentTaskWrapupVersions], async () => {
     const jobs = await db.agentGenerationJobs.where("threadId").equals(id).toArray();
-    const jobMedia = new Set(jobs.flatMap((job) => [...job.inputs.map((input) => input.mediaId), ...(job.result ? [job.result.mediaId] : [])]));
+    const batches = await db.agentGenerationBatches.where("threadId").equals(id).toArray();
+    const items = await db.agentGenerationBatchItems.where("threadId").equals(id).toArray();
+    const jobMedia = new Set([...jobs.flatMap(job => [...job.inputs.map(input => input.mediaId), ...(job.result ? [job.result.mediaId] : [])]), ...items.flatMap(item => item.draft.inputs.map(input => input.mediaId)), ...batches.flatMap(batch => batch.applications.flatMap(a => [a.result.mediaId, ...(a.before ? [a.before.mediaId] : [])]))]);
+    await db.agentGenerationBatches.where("threadId").equals(id).delete();
+    await db.agentGenerationBatchItems.where("threadId").equals(id).delete();
     await db.agentGenerationJobs.where("threadId").equals(id).delete();
     await db.contextCompactions.where("threadId").equals(id).delete();
     for (const task of await db.agentTasks.where("threadId").equals(id).toArray()) {

@@ -281,9 +281,9 @@ describe("business review regressions", () => {
     const target = { kind: "character" as const, projectId: scope.ownerId, entityId: asset.id, slot: "front" as const };
     await db.agentGenerationJobs.add({ version: 1, id: "job", runId: "r", threadId: "t", callId: "c", projectId: scope.ownerId, connectorId: "connector", provider: "apimart", baseUrl: "https://fixture.invalid", model: "gpt-image-2", kind: "image", target, baseRevision: "rev", sourceRevisions: [], parameters: {}, inputs: [], fingerprint: "fingerprint", status: "downloaded", result: { mediaId: "retained", kind: "image" }, createdAt: "2026", updatedAt: "2026" });
     const detail = await read("business_detail", { kind: "media", ownerId: scope.ownerId, id: "retained" });
-    expect((detail.data as { retention: unknown }).retention).toEqual({ generationJobs: 1, proposals: 0 });
+    expect((detail.data as { retention: unknown }).retention).toEqual({ generationJobs: 1, generationBatches: 0, proposals: 0 });
     expect(JSON.stringify(detail)).not.toContain("connector");
-    await expect(prepare("media_delete_orphan", { ownerId: scope.ownerId, id: "retained" })).rejects.toThrow("生成任务保留");
+    await expect(prepare("media_delete_orphan", { ownerId: scope.ownerId, id: "retained" })).rejects.toThrow("生成任务");
     await repo.deleteMediaIfOrphan("retained");
     expect(await db.media.get("retained")).toBeDefined();
     await execute("project_delete", { id: scope.ownerId });

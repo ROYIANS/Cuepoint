@@ -295,6 +295,7 @@ const mediaTools = [
     const row = await getRow(args.kind, args.id, args.ownerId, args.episodeId);
     const previous = args.kind === "shot" ? row[args.slot] : (row.slots as Record<string, unknown> | undefined)?.[args.slot];
     const { result, ...patch } = args.patch;
+    if (result?.mediaId && (await db.agentGenerationJobs.where("projectId").equals(args.ownerId).toArray()).some(job => job.batchId && job.result?.mediaId === result.mediaId)) throw new Error("批量候选必须由用户在批量面板选择并写入");
     const slot = { ...emptySlot(), ...parseGenerationSlot(previous), ...patch, ...(Object.hasOwn(args.patch, "result") ? { result: result ?? undefined } : {}) };
     if (args.kind === "character") await repo.setCharacterSlot(args.id, args.slot as CharacterImageSlot, slot);
     else if (args.kind === "scene") await repo.setSceneSlot(args.id, args.slot as SceneImageSlot, slot);
@@ -308,7 +309,7 @@ const mediaTools = [
     const usage = await mediaUsage(args.ownerId, args.id);
     if (usage.length) throw new Error(`素材仍有 ${usage.length} 处引用，请先明确解除关联`);
     const retention = await mediaRetention(args.ownerId, args.id);
-    if (retention.proposals || retention.generationJobs) throw new Error(`素材仍被 ${retention.proposals} 个历史提案、${retention.generationJobs} 个生成任务保留，不能删除`);
+    if (retention.proposals || retention.generationJobs || retention.generationBatches) throw new Error(`素材仍被 ${retention.proposals} 个历史提案、${retention.generationJobs} 个生成任务、${retention.generationBatches} 个生成批次保留，不能删除`);
     return { state: await ownerSnapshot(args.ownerId), target: navigation("media", row), changes: [`删除文件「${row.filename}」（${row.size} 字节）；如参考资料、生成任务或历史提案保留该文件则拒绝删除。`] };
   }, async (args) => { await repo.deleteMediaIfOrphan(args.id); if (await db.media.get(args.id)) throw new Error("素材仍被参考资料、生成任务或历史提案保留，未删除"); return { deletedId: args.id }; }, true),
 ];

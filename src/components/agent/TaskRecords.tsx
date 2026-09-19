@@ -1,3 +1,4 @@
+import { taskGenerationSource } from "@/db/agentTaskRecords";
 import { ReferenceSourceLink } from "./ReferenceAttachments";
 import { toolReferenceAttachments } from "@/lib/agent/referenceEvidence";
 import { useRef, useState } from "react";
@@ -28,6 +29,12 @@ export function TaskRecords({ task, messages, editable }: Props) {
     const owned = new Set(runs.filter((run) => run.threadId === task.threadId).map((run) => run.id));
     return (await db.agentToolCalls.where("threadId").equals(task.threadId).toArray()).filter((call) => owned.has(call.runId));
   }, [task.id, task.threadId]);
+  const generationEvidence = useLiveQuery(async () => {
+    const jobs = await db.agentGenerationJobs.where("threadId").equals(task.threadId).toArray();
+    const evidence: Awaited<ReturnType<typeof taskGenerationSource>>[] = [];
+    for (const job of jobs.filter(job => job.batchId)) { try { evidence.push(await taskGenerationSource(task, job.id)); } catch { /* Other task ownership is excluded. */ } }
+    return evidence;
+  }, [task.id, task.threadId]);
   const [filter, setFilter] = useState<TaskRecordInput["kind"] | "all">("all");
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<{ record?: AgentTaskRecord; input: TaskRecordInput }>();
@@ -37,6 +44,7 @@ export function TaskRecords({ task, messages, editable }: Props) {
   const saving = useRef(false);
   const history = useLiveQuery(() => historyId ? listTaskRecordVersions(task.id, historyId) : [], [task.id, historyId]);
   const evidence = [
+    ...(generationEvidence ?? []).map(item=>({type:"generation" as const,id:item.id,label:item.label,body:item.body})),
     ...messages.filter((message) => message.threadId === task.threadId && message.role === "user" && (message.content.trim() || message.attachments?.length)).map((message) => ({ type: "message" as const, id: message.id, label: `用户 · ${message.content.slice(0, 70) || "参考资料"}`, body: message.content })),
     ...(calls ?? []).filter((call) => call.status === "completed" && call.effect !== "bookkeeping" && call.result).map((call) => ({ type: "tool" as const, id: call.id, label: call.title, body: call.result! })),
   ];

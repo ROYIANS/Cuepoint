@@ -1,3 +1,4 @@
+import { AgentGenerationBatches } from "./AgentGenerationBatches";
 import { Link } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Check, CircleAlert, Image, LoaderCircle, Video } from "lucide-react";
@@ -21,9 +22,9 @@ function destination(job: AgentGenerationJob): string {
 
 /** Persistent job status stays visible even while the model waits or the run is paused. */
 export function AgentGenerationResults({ runId }: { runId: string }) {
-  const jobs = useLiveQuery(() => db.agentGenerationJobs.where("runId").equals(runId).sortBy("createdAt"), [runId]);
-  if (!jobs?.length) return null;
-  return <div className="agent-generation-results" aria-label="生成素材">
+  const jobs = useLiveQuery(() => db.agentGenerationJobs.where("runId").equals(runId).filter(job => !job.batchId).sortBy("createdAt"), [runId]);
+  if (!jobs?.length) return <AgentGenerationBatches runId={runId} />;
+  return <><AgentGenerationBatches runId={runId} /><div className="agent-generation-results" aria-label="生成素材">
     {jobs.map((job) => {
       const Icon = job.kind === "image" ? Image : Video;
       const attention = ["unknown", "conflict", "failed"].includes(job.status);
@@ -41,5 +42,5 @@ export function AgentGenerationResults({ runId }: { runId: string }) {
         <Link to={destination(job)} className="agent-change-link">查看{TARGETS[job.target.kind]} ↗</Link>
       </section>;
     })}
-  </div>;
+  </div></>;
 }

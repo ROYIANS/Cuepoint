@@ -3,12 +3,15 @@ import type { GenerationResult, MediaKind } from "./types";
 
 export type AgentGenerationStatus = "submitting" | "unknown" | "submitted" | "running" | "remote_completed" | "downloading" | "downloaded" | "applied" | "conflict" | "failed";
 export interface AgentGenerationInput extends GenerationMediaInput { revision: string }
-export interface AgentGenerationJob {
+export type AgentGenerationJob = AgentGenerationJobData & (
+  { callId: string; batchId?: never; batchItemId?: never } |
+  { callId?: never; batchId: string; batchItemId: string }
+);
+interface AgentGenerationJobData {
   version: 1;
   id: string;
   runId: string;
   threadId: string;
-  callId: string;
   projectId: string;
   connectorId: string;
   provider: "apimart" | "aihubmix";

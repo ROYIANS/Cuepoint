@@ -5,6 +5,7 @@ import { nowIso } from "@/lib/ids";
 
 export async function claimGenerationJob(job: AgentGenerationJob): Promise<{ job: AgentGenerationJob; claimed: boolean }> {
   return db.transaction("rw", [db.agentGenerationJobs, db.projects, db.agentRuns, db.agentToolCalls, db.chatThreads], async () => {
+    if (!job.callId) throw new Error("批量任务必须通过批量队列认领");
     const existing = await db.agentGenerationJobs.where("callId").equals(job.callId).first();
     if (existing) return { job: existing, claimed: false };
     const duplicates = await db.agentGenerationJobs.where("fingerprint").equals(job.fingerprint).toArray();
@@ -25,7 +26,7 @@ export async function claimGenerationJob(job: AgentGenerationJob): Promise<{ job
 /** Updates never reinsert a removed job/project; late network responses cannot resurrect work. */
 export async function updateGenerationJob(id: string, patch: Partial<Pick<AgentGenerationJob,
   "status" | "providerTaskId" | "providerTaskIds" | "providerStatus" | "progress" | "error" | "result">>): Promise<AgentGenerationJob> {
-  return db.transaction("rw", [db.agentGenerationJobs, db.projects, db.agentRuns, db.chatThreads], async () => {
+  return db.transaction("rw", [db.agentGenerationJobs, db.agentGenerationBatches, db.projects, db.agentRuns, db.chatThreads], async () => {
     const job = await db.agentGenerationJobs.get(id);
     if (!job || !await db.agentRuns.get(job.runId) || !await db.chatThreads.get(job.threadId) || job.projectId !== "studio" && !await db.projects.get(job.projectId)) throw new Error("生成记录或项目已删除");
     if (job.result && patch.status === undefined && patch.error !== undefined) return job;
@@ -33,6 +34,10 @@ export async function updateGenerationJob(id: string, patch: Partial<Pick<AgentG
     if (["applied", "downloaded", "conflict"].includes(job.status) && ["submitted", "running", "remote_completed", "downloading", "failed"].includes(patch.status ?? "")) return job;
     const next = { ...job, ...patch, updatedAt: nowIso() };
     await db.agentGenerationJobs.put(next);
+    if (next.batchId && next.status === "unknown") {
+      const batch = await db.agentGenerationBatches.get(next.batchId);
+      if (batch) await db.agentGenerationBatches.update(batch.id, { status: batch.status === "cancelled" ? "cancelled" : "paused", pauseReason: "提交结果未知，请核实供应商记录；已暂停后续发送", revision: batch.revision + 1, updatedAt: nowIso() });
+    }
     return next;
   });
 }

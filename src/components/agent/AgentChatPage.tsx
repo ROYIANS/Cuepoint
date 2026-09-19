@@ -1,3 +1,4 @@
+import { pauseThreadGeneration } from "@/lib/agent/generationBatchRuntime";
 import { useReferenceDraft } from "./useReferenceDraft";
 import { TaskBoard } from "./TaskBoard";
 import { TaskInspector } from "./TaskInspector";
@@ -97,6 +98,12 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
   const selectionRevisionRef = useRef(0);
 
   useEffect(() => () => abortRef.current?.abort(), []);
+  useEffect(() => {
+    if (!activeThreadId) return;
+    const pause = () => pauseThreadGeneration(activeThreadId);
+    window.addEventListener('pagehide', pause);
+    return () => { window.removeEventListener('pagehide', pause); pause(); };
+  }, [activeThreadId]);
 
   useEffect(() => {
     // Covers browser back/forward as well as links. New-thread sends assign their

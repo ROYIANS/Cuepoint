@@ -1,3 +1,4 @@
+import { ownedGenerationBatch } from "@/db/agentGenerationBatches";
 import { assertProjectToolScope } from "./projectScope";
 import { db } from "@/db/database";
 import { claimGenerationJob, generationJobSummary, storeGenerationMedia, updateGenerationJob } from "@/db/agentGeneration";
@@ -63,7 +64,7 @@ function cleanError(error: unknown, config?: ConnectorConfig) {
   const text = error instanceof Error ? error.message : "生成操作失败";
   return (config?.apiKey ? text.split(config.apiKey.trim()).join("[已隐藏]") : text).replace(/Bearer\s+[^\s"',;]+/gi,"Bearer [已隐藏]").slice(0,700);
 }
-async function prepareSnapshot(raw: GenerationSubmitArgs, signal: AbortSignal) {
+export async function prepareGenerationSnapshot(raw: GenerationSubmitArgs, signal: AbortSignal) {
   signal.throwIfAborted();
   const args = generationSubmitSchema.parse(raw);
   await flushPendingDrafts(args.target.projectId);
@@ -94,22 +95,23 @@ async function prepareSnapshot(raw: GenerationSubmitArgs, signal: AbortSignal) {
   if (provider === "aihubmix" && bytes + new TextEncoder().encode(args.prompt).length + 8192 > 32 * 1024 * 1024) throw new Error("AIHubMix 内联素材请求超过32MiB限制");
   signal.throwIfAborted();
   const fingerprint = targetRevision({target:request.target,connectorId:config.id,provider,baseUrl:config.baseUrl,model:args.model,parameters:request.parameters,inputs,baseRevision:snapshot.current.revision});
-  return {args,config,provider,request,inputs,fingerprint,current:snapshot.current};
+  return {args,config,provider,request,inputs,fingerprint,current:snapshot.current,records:snapshot.records};
 }
 export async function prepareAgentGeneration(raw: GenerationSubmitArgs, context: AgentToolContext): Promise<AgentToolPreview> {
   await assertProjectToolScope(context,"submit_generation",{projectId:raw.target.projectId},true);
-  const snapshot = await prepareSnapshot(raw,context.signal);
+  const snapshot = await prepareGenerationSnapshot(raw,context.signal);
   return { summary:`使用 ${snapshot.provider} / ${snapshot.args.model} 为「${snapshot.current.label}」生成${snapshot.request.kind === "image" ? "图片" : "视频"}`,
     changes:[`槽位：${snapshot.request.target.slot}`,`提示词：${snapshot.args.prompt.slice(0,1500)}`,`参数：${JSON.stringify(snapshot.request.parameters).slice(0,1800)}`,`参考素材：${snapshot.inputs.length} 项；此操作可能产生供应商费用，完成后需要单独写入目标。`],
     revision:snapshot.fingerprint,target:{label:snapshot.current.label,href:generationTargetHref(snapshot.request.target)}};
 }
-async function jobForContext(jobId: string, context: AgentToolContext) {
+async function jobForContext(jobId: string, context: Pick<AgentToolContext, 'threadId' | 'signal'> & Partial<AgentToolContext>) {
   const job = await db.agentGenerationJobs.get(jobId);
   if (!job || job.threadId !== context.threadId || !await db.chatThreads.get(job.threadId) || !await db.agentRuns.get(job.runId)) throw new Error("生成任务不存在或不属于当前对话");
-  await assertProjectToolScope(context,"generation_job",{projectId:job.projectId},true);
+  if (job.batchId) await ownedGenerationBatch(job.batchId, context.threadId);
+  if (context.runId && context.callId) await assertProjectToolScope(context as AgentToolContext,"generation_job",{projectId:job.projectId},true);
   return job;
 }
-async function loadInputs(job: AgentGenerationJob) {
+export async function loadGenerationInputs(job: AgentGenerationJob) {
   const rows: MediaRecord[] = [];
   for (const input of job.inputs) {
     const media = await db.media.get(input.mediaId);
@@ -124,8 +126,8 @@ async function dataUri(media: MediaRecord) {
   for (let offset=0;offset<bytes.length;offset+=32768) binary += String.fromCharCode(...bytes.subarray(offset,offset+32768));
   return `data:${media.mimeType};base64,${btoa(binary)}`;
 }
-async function nativeRequest(job: AgentGenerationJob, config: ConnectorConfig, context: AgentToolContext, options: GenerationRuntimeOptions): Promise<AIHubMixGenerationRequest> {
-  const records = await loadInputs(job);
+async function nativeRequest(job: AgentGenerationJob, config: ConnectorConfig, context: Pick<AgentToolContext, 'threadId' | 'signal'> & Partial<AgentToolContext>, options: GenerationRuntimeOptions): Promise<AIHubMixGenerationRequest> {
+  const records = await loadGenerationInputs(job);
   const input: AIHubMixGenerationRequest = {model:job.model,prompt:String(job.parameters.prompt)};
   for (const [key,value] of Object.entries(job.parameters)) if (!["mode","quality"].includes(key)) input[key]=value;
   if (job.provider === "aihubmix" && job.parameters.quality) input.extra = {quality:job.parameters.quality};
@@ -159,7 +161,7 @@ export async function submitAgentGeneration(raw: GenerationSubmitArgs, context: 
   let snapshot;
   try {
     await assertProjectToolScope(context,"submit_generation",{projectId:raw.target.projectId},true);
-    snapshot = await prepareSnapshot(raw,context.signal);
+    snapshot = await prepareGenerationSnapshot(raw,context.signal);
     if (context.preview?.revision && context.preview.revision !== snapshot.fingerprint) throw new Error("生成目标、输入或配置已变化，请重新确认，尚未付费提交");
   } catch(error) { throw new AtomicToolRollbackError(cleanError(error)); }
   const at=nowIso();
@@ -169,50 +171,60 @@ export async function submitAgentGeneration(raw: GenerationSubmitArgs, context: 
     sourceRevisions:[{kind:snapshot.request.target.kind,id:snapshot.request.target.entityId,revision:snapshot.current.revision}],
     parameters:snapshot.request.parameters,inputs:snapshot.inputs,fingerprint:snapshot.fingerprint,status:"submitting",createdAt:at,updatedAt:at}).catch((error:unknown)=>{throw new AtomicToolRollbackError(cleanError(error,snapshot.config));});
   if (!claim.claimed) return monitorAgentGeneration(claim.job.id,context,options);
-  let postStarted=false;
-  try {
-    const request=await nativeRequest(claim.job,snapshot.config,context,options);
+  const job = claim.job;
+  return submitClaimedGeneration(job,snapshot.config,context,options,async () => {
     // Reference uploads may take time; never submit paid work against a changed target.
-    const latest=await readGenerationTarget(claim.job.target);
-    if (latest.revision !== claim.job.baseRevision) throw new Error("生成目标已修改，尚未付费提交");
+    const latest=await readGenerationTarget(job.target);
+    if (latest.revision !== job.baseRevision) throw new Error("生成目标已修改，尚未付费提交");
     context.signal.throwIfAborted();
     const active=await db.agentRuns.get(context.runId);
     const activeCall=await db.agentToolCalls.get(context.callId);
-    if (!await db.agentGenerationJobs.get(claim.job.id) || !active || active.status!=="running" || !activeCall || activeCall.status!=="running") throw new Error("生成记录或执行已停止，尚未付费提交");
-    await assertProjectToolScope(context,"submit_generation",{projectId:claim.job.projectId},true);
+    if (!await db.agentGenerationJobs.get(job.id) || !active || active.status!=="running" || !activeCall || activeCall.status!=="running") throw new Error("生成记录或执行已停止，尚未付费提交");
+    await assertProjectToolScope(context,"submit_generation",{projectId:job.projectId},true);
+  });
+}
+
+/** Shared paid transport. Caller must own the job and provide a final durable dispatch guard. */
+export async function submitClaimedGeneration(job: AgentGenerationJob, config: ConnectorConfig,
+  context: Pick<AgentToolContext, 'threadId' | 'signal'>, options: GenerationRuntimeOptions, beforePost: () => Promise<void>) {
+  let postStarted=false;
+  try {
+    const request=await nativeRequest(job,config,context,options);
+    await beforePost();
+    context.signal.throwIfAborted();
     postStarted=true;
-    if (snapshot.provider === "apimart") {
-      const result=await (claim.job.kind === "image" ? submitApimartImageGeneration : submitApimartVideoGeneration)(snapshot.config,request,{signal:context.signal,fetchImpl:options.fetchImpl});
+    if (job.provider === "apimart") {
+      const result=await (job.kind === "image" ? submitApimartImageGeneration : submitApimartVideoGeneration)(config,request,{signal:context.signal,fetchImpl:options.fetchImpl});
       if (!result.ok) {
-        await updateGenerationJob(claim.job.id,{status:result.kind === "validation" || result.kind === "http" && [400,401,402,403,404,422,429].includes(result.httpStatus ?? 0) ? "failed" : "unknown",error:cleanError(new Error(result.message),snapshot.config)});
-        return monitorAgentGeneration(claim.job.id,context,options);
+        await updateGenerationJob(job.id,{status:result.kind === "validation" || result.kind === "http" && [400,401,402,403,404,422,429].includes(result.httpStatus ?? 0) ? "failed" : "unknown",error:cleanError(new Error(result.message),config)});
+        return monitorAgentGeneration(job.id,context,options);
       }
       // n=1 profiles create exactly one task. Preserve first received identity before further work.
-      await updateGenerationJob(claim.job.id,{providerTaskId:safeTaskId(result.tasks[0].id,snapshot.config),status:"submitted"});
+      await updateGenerationJob(job.id,{providerTaskId:safeTaskId(result.tasks[0].id,config),status:"submitted"});
       if (result.tasks.length !== 1) {
-        await updateGenerationJob(claim.job.id,{status:"unknown",providerTaskIds:result.tasks.map((task)=>safeTaskId(task.id,snapshot.config)),error:"供应商返回多个任务，已保留任务标识，请核实账户记录，不能自动选择结果或重复提交"});
-        throw new GenerationPendingError(claim.job.id,"供应商返回多个任务，需要人工核实，不能自动选择或重新提交");
+        await updateGenerationJob(job.id,{status:"unknown",providerTaskIds:result.tasks.map((task)=>safeTaskId(task.id,config)),error:"供应商返回多个任务，已保留任务标识，请核实账户记录，不能自动选择结果或重复提交"});
+        throw new GenerationPendingError(job.id,"供应商返回多个任务，需要人工核实，不能自动选择或重新提交");
       }
     } else {
-      const result=await (claim.job.kind === "image" ? submitAIHubMixImageGeneration : submitAIHubMixVideoGeneration)(snapshot.config,request,{signal:context.signal,fetchImpl:options.fetchImpl});
+      const result=await (job.kind === "image" ? submitAIHubMixImageGeneration : submitAIHubMixVideoGeneration)(config,request,{signal:context.signal,fetchImpl:options.fetchImpl});
       if (!result.ok) {
-        await updateGenerationJob(claim.job.id,{...(result.taskId ? {providerTaskId:safeTaskId(result.taskId,snapshot.config)} : {}),status:result.taskId ? "submitted" : result.kind === "validation" || result.kind === "http" && [400,401,402,403,404,422,429].includes(result.httpStatus ?? 0) ? "failed" : "unknown",error:cleanError(new Error(result.message),snapshot.config)});
-        if (!result.taskId) return monitorAgentGeneration(claim.job.id,context,options);
+        await updateGenerationJob(job.id,{...(result.taskId ? {providerTaskId:safeTaskId(result.taskId,config)} : {}),status:result.taskId ? "submitted" : result.kind === "validation" || result.kind === "http" && [400,401,402,403,404,422,429].includes(result.httpStatus ?? 0) ? "failed" : "unknown",error:cleanError(new Error(result.message),config)});
+        if (!result.taskId) return monitorAgentGeneration(job.id,context,options);
       } else {
-        await updateGenerationJob(claim.job.id,{providerTaskId:safeTaskId(result.task.id,snapshot.config),status:"submitted"});
+        await updateGenerationJob(job.id,{providerTaskId:safeTaskId(result.task.id,config),status:"submitted"});
         // Synchronous completion may carry the only copy of base64 output.
-        if (result.task.status === "completed") return await acceptHubTask(claim.job.id,result.task,snapshot.config,context,options);
+        if (result.task.status === "completed") return await acceptHubTask(job.id,result.task,config,context,options);
       }
     }
   } catch(error) {
-    const current=await db.agentGenerationJobs.get(claim.job.id);
+    const current=await db.agentGenerationJobs.get(job.id);
     if (!current) throw error;
-    await updateGenerationJob(current.id,{status:current.providerTaskId ? current.status : postStarted ? "unknown" : "failed",error:cleanError(error,snapshot.config)});
-    if (!postStarted) throw new AtomicToolRollbackError(cleanError(error,snapshot.config));
+    await updateGenerationJob(current.id,{status:current.providerTaskId ? current.status : postStarted ? "unknown" : "failed",error:cleanError(error,config)});
+    if (!postStarted) throw new AtomicToolRollbackError(cleanError(error,config));
     if (context.signal.aborted) throw new GenerationPendingError(current.id,"已停止本地等待；远端提交结果需核实，不能当作远端取消");
-    throw new GenerationPendingError(current.id,cleanError(error,snapshot.config));
+    throw new GenerationPendingError(current.id,cleanError(error,config));
   }
-  return monitorAgentGeneration(claim.job.id,context,options);
+  return monitorAgentGeneration(job.id,context,options);
 }
 
 async function validateBlob(blob: Blob, kind: "image"|"video") {
@@ -234,7 +246,7 @@ async function saveBlob(job: AgentGenerationJob, blob: Blob) {
   const ext=verified.type.split("/")[1];
   return storeGenerationMedia(job.id,{id:createId("media"),projectId:job.projectId,mimeType:verified.type,filename:`${job.model}-${job.id}.${ext}`,blob:verified});
 }
-async function acceptHubTask(jobId:string, task:AIHubMixTask, config:ConnectorConfig, context:AgentToolContext, options:GenerationRuntimeOptions) {
+async function acceptHubTask(jobId:string, task:AIHubMixTask, config:ConnectorConfig, context: Pick<AgentToolContext, 'threadId' | 'signal'> & Partial<AgentToolContext>, options:GenerationRuntimeOptions) {
   let job=await jobForContext(jobId,context);
   if (task.model !== job.model) throw new Error("供应商实际模型与已确认模型不同，保留任务但不应用结果");
   if (task.status === "failed" || task.status === "cancelled") return updateGenerationJob(jobId,{status:"failed",providerStatus:cleanError(new Error(task.providerStatus),config),error:cleanError(new Error(task.error?.message ?? "远端任务失败或已取消"),config)});
@@ -255,7 +267,7 @@ async function acceptHubTask(jobId:string, task:AIHubMixTask, config:ConnectorCo
   context.signal.throwIfAborted();
   return saveBlob(job,blob);
 }
-export async function checkAgentGeneration(jobId:string,context:AgentToolContext,options:GenerationRuntimeOptions={}):Promise<AgentGenerationJob> {
+export async function checkAgentGeneration(jobId:string,context: Pick<AgentToolContext, 'threadId' | 'signal'> & Partial<AgentToolContext>,options:GenerationRuntimeOptions={}):Promise<AgentGenerationJob> {
   context.signal.throwIfAborted();
   let job;
   try { job=await jobForContext(jobId,context); } catch(error) {throw new AtomicToolRollbackError(cleanError(error));}
@@ -303,7 +315,7 @@ function wait(ms:number,signal:AbortSignal) {
     signal.addEventListener("abort",abort,{once:true});
   });
 }
-export async function monitorAgentGeneration(jobId:string,context:AgentToolContext,options:GenerationRuntimeOptions={}) {
+export async function monitorAgentGeneration(jobId:string,context: Pick<AgentToolContext, 'threadId' | 'signal'> & Partial<AgentToolContext>,options:GenerationRuntimeOptions={}) {
   for(let step=0;step<(options.maxPolls??40);step++) {
     const job=await checkAgentGeneration(jobId,context,options);
     if (job.status === "unknown") throw new GenerationPendingError(jobId,job.error ?? "提交结果未知，请核实供应商账户，不会自动重试");
@@ -315,6 +327,7 @@ export async function monitorAgentGeneration(jobId:string,context:AgentToolConte
 }
 export async function prepareGenerationApply(jobId:string,context:AgentToolContext):Promise<AgentToolPreview> {
   const job=await jobForContext(jobId,context);
+  if (job.batchId) throw new Error("批量候选需要由用户在批量结果中选择并写入");
   if (!job.result) throw new Error("生成结果尚未下载到本地，不能写入目标");
   await flushPendingDrafts(job.projectId);
   let label="已删除或失效的目标";
@@ -325,11 +338,12 @@ export async function applyAgentGeneration(jobId:string,context:AgentToolContext
   let original;
   try { original=await jobForContext(jobId,context); await flushPendingDrafts(original.projectId); }
   catch(error) {throw new AtomicToolRollbackError(cleanError(error));}
+  if (original.batchId) throw new AtomicToolRollbackError("批量候选需要由用户在批量结果中选择并写入");
   if (!original.result || !["downloaded","conflict","applied"].includes(original.status)) throw new AtomicToolRollbackError("没有可写入的本地生成结果");
   if (original.status === "applied") return executeAtomicTool(context,async()=>generationJobSummary(await jobForContext(jobId,context)));
   // Hash Blob inputs outside Dexie; atomic callback rechecks immutable record metadata.
   let records: MediaRecord[];
-  try { records=await loadInputs(original); }
+  try { records=await loadGenerationInputs(original); }
   catch(error) {
     return executeAtomicTool(context,async()=>generationJobSummary(await updateGenerationJob(original.id,{status:"conflict",error:cleanError(error)})));
   }

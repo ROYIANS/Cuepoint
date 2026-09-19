@@ -1,3 +1,4 @@
+import { readGenerationTarget } from "@/lib/agent/generationRuntime";
 import { db } from "./database";
 import { editableAgentTask } from "./agentTasks";
 import type { AgentTaskRecord, TaskRecordInput, TaskRecordSource } from "@/domain/agentTaskRecords";
@@ -42,6 +43,9 @@ export async function validateTaskSources(task: Pick<AgentTask, "id" | "threadId
       const run = call && await db.agentRuns.get(call.runId);
       if (!call || !run || call.threadId !== task.threadId || run.threadId !== task.threadId || run.taskId !== task.id || call.status !== "completed" || !call.result || call.effect === "bookkeeping") throw new Error("来源不是当前任务已完成的业务工具结果");
       completedEffect ||= provesCompletedEffect(call);
+    } else if (source.type === "generation") {
+      const evidence = await taskGenerationSource(task, source.id);
+      completedEffect ||= evidence.available;
     } else throw new Error("来源类型无效");
   }
   if (author === "ai" && claim === "decision" && !userEvidence) throw new Error("确认决策必须引用用户消息");
@@ -71,5 +75,19 @@ export async function writeTaskRecord(task: AgentTask, input: TaskRecordInput, o
   return record;
 }
 export async function saveTaskRecord(taskId: string, input: TaskRecordInput, options: { id?: string; expectedRevision?: number } = {}): Promise<AgentTaskRecord> {
-  return db.transaction("rw", [db.agentTasks, db.chatThreads, db.agentRuns, db.chatMessages, db.agentToolCalls, db.agentTaskRecords, db.agentTaskRecordVersions, db.agentTaskWrapups, db.projects], async () => writeTaskRecord(await editableAgentTask(taskId), input, { ...options, author: "user" }));
+  return db.transaction("rw", db.tables, async () => writeTaskRecord(await editableAgentTask(taskId), input, { ...options, author: "user" }));
+}
+
+/** Genuine generation evidence is owned by the task and reflects current local media/slot state. */
+export async function taskGenerationSource(task: Pick<AgentTask, "id" | "threadId">, jobId: string) {
+  const job = await db.agentGenerationJobs.get(jobId);
+  const run = job && await db.agentRuns.get(job.runId);
+  if (!job || !run || run.taskId !== task.id || job.threadId !== task.threadId || run.threadId !== task.threadId || !job.batchId) throw new Error("生成结果不属于当前任务批次");
+  const batch = await db.agentGenerationBatches.get(job.batchId);
+  if (!batch || batch.taskId !== task.id || batch.threadId !== task.threadId) throw new Error("生成批次来源已失效");
+  const media = job.result && await db.media.get(job.result.mediaId);
+  const available = !!media && media.projectId === job.projectId && !!media.blob.size && media.mimeType.startsWith(`${job.kind}/`) && ['downloaded','applied','conflict'].includes(job.status);
+  let applied = false;
+  try { applied = available && (await readGenerationTarget(job.target)).slot.result?.mediaId === media!.id; } catch { /* Downloaded output survives target deletion. */ }
+  return { id: job.id, label: `${job.kind === 'image' ? '图片' : '视频'} · ${job.model}`, available, applied, body: JSON.stringify({ jobId: job.id, batchId: job.batchId, status: job.status, target: job.target, result: available ? job.result : undefined, available, applied, error: job.error }) };
 }

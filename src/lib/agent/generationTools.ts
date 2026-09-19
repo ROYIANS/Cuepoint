@@ -1,3 +1,5 @@
+import { prepareGenerationBatch, readGenerationBatch } from "@/db/agentGenerationBatches";
+import { validateBatchLimits } from "@/domain/agentGenerationBatch";
 import { frozenProjectScope, assertProjectToolScope } from "./projectScope";
 import { z } from "zod";
 import { getGenerationPreferenceState } from "@/db/generationPreferences";
@@ -16,7 +18,14 @@ const submitParameters={type:"object",additionalProperties:false,required:["conn
   parameters:{type:"object",additionalProperties:false,properties:{size:{type:"string"},resolution:{type:"string"},duration:{type:"integer"},aspectRatio:{type:"string"},mode:{type:"string",enum:["text","frames","reference"]},quality:{type:"string",enum:["low","medium","high"]}}},
   inputs:{type:"array",maxItems:16,items:{type:"object",additionalProperties:false,required:["mediaId","role"],properties:{mediaId:id,role:{type:"string",enum:["first-frame","last-frame","reference-image","reference-video"]}}}},
 }};
+const batchSchema = z.object({title:z.string().trim().min(1).max(160),candidates:z.array(generationSubmitSchema).min(1).max(20)}).strict().superRefine((value,ctx)=>{try{validateBatchLimits(value.candidates.map(draft=>({draft})));}catch(error){ctx.addIssue({code:"custom",message:error instanceof Error?error.message:"候选数量无效"});}});
 export const GENERATION_TOOLS: readonly AgentToolDefinition[] = [
+  {name:"prepare_generation_batch",title:"准备批量生成",description:"准备多个目标槽位的图片/视频候选草稿，每个槽位默认1份、最多4份，每批最多20份。每份独立配置。只保存草稿，不上传或付费提交；用户在批量面板编辑并一次确认。结果必须由用户比较选用，禁止自动写入。",effect:"bookkeeping",atomic:true,highRisk:()=>false,
+    parameters:{type:"object",additionalProperties:false,required:["title","candidates"],properties:{title:{type:"string",minLength:1,maxLength:160},candidates:{type:"array",minItems:1,maxItems:20,items:submitParameters}}},parseArguments:raw=>batchSchema.parse(raw),
+    execute:(args,context)=>{const parsed=batchSchema.parse(args);return prepareGenerationBatch(parsed.title,parsed.candidates,context);}},
+  {name:"read_generation_batch",title:"读取批量结果",description:"读取当前对话指定批次的候选状态和当前选用结果，不发送网络请求。draft不是生成成功，queued是未发送，unknown不可重试。",effect:"read",highRisk:()=>false,
+    parameters:{type:"object",additionalProperties:false,required:["batchId"],properties:{batchId:id}},parseArguments:raw=>z.object({batchId:z.string().trim().min(1).max(160)}).strict().parse(raw),
+    async execute(args,context){await frozenProjectScope(context);const state=await readGenerationBatch((args as {batchId:string}).batchId,context.threadId);await assertProjectToolScope(context,"read_generation_batch",{projectId:state.batch.projectId},false);return {batchId:state.batch.id,title:state.batch.title,status:state.batch.status,pauseReason:state.batch.pauseReason,candidates:state.items.map(item=>{const job=state.jobs.find(j=>j.id===item.jobId);return {itemId:item.id,target:item.baseline.target,label:item.label,status:job?.status??item.state,selected:state.batch.selections[item.targetKey]===item.id,applied:!!job?.result&&state.currentMedia[item.targetKey]===job.result.mediaId,...(job?{jobId:job.id,provider:job.provider,model:job.model,result:job.result,error:job.error}: {})};})};}},
   {name:"generation_capabilities",title:"查看生成能力",description:"列出已配置供应商、代码已验证的模型参数，以及项目/全局生成推荐。传 projectId 获取项目默认；用户明确选择优先于项目、全局和自动建议。有问题的推荐不得静默降级。能力列表不是账户授权或余额保证。",effect:"read",highRisk:()=>false,
     parameters:{type:"object",properties:{projectId:id},additionalProperties:false},parseArguments:(raw)=>z.object({projectId:z.string().trim().min(1).max(160).optional()}).strict().parse(raw),
     async execute(args,context) {

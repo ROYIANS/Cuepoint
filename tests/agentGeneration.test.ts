@@ -190,7 +190,7 @@ describe("durable agent generation",()=>{
 
 describe("verified generation tool contracts",()=>{
   it("advertises only separated truthful effects and strict schemas",()=>{
-    expect(GENERATION_TOOLS.map(({name,effect})=>[name,effect])).toEqual([["generation_capabilities","read"],["submit_generation","network"],["check_generation","network"],["apply_generation","write"],["list_generation_jobs","read"]]);
+    expect(GENERATION_TOOLS.map(({name,effect})=>[name,effect])).toEqual([["prepare_generation_batch","bookkeeping"],["read_generation_batch","read"],["generation_capabilities","read"],["submit_generation","network"],["check_generation","network"],["apply_generation","write"],["list_generation_jobs","read"]]);
     expect(()=>generationSubmitSchema.parse({apiKey:"secret"})).toThrow();
   });
   it("rejects unsupported model/provider parameters and explicit role mismatches before networking",async()=>{

@@ -36,6 +36,12 @@ async function completionBlockers(task:AgentTask,confirmed:AgentTaskWrapup|undef
  if(isTaskBusy(await db.agentRuns.where('threadId').equals(task.threadId).toArray()))reasons.push('请先处理当前执行');
  if((await db.agentTaskWrapups.where('taskId').equals(task.id).toArray()).some(w=>w.status==='preparing'))reasons.push('总结仍在整理');
  if(task.plan.some(p=>p.status!=='completed'))reasons.push('还有未完成的 Todo');
+ const ownedBatches=await db.agentGenerationBatches.where('taskId').equals(task.id).toArray();
+ for(const batch of ownedBatches){
+  const items=await db.agentGenerationBatchItems.where('batchId').equals(batch.id).toArray();
+  const jobs=await db.agentGenerationJobs.where('batchId').equals(batch.id).toArray();
+  if(batch.status==='draft'||items.some(item=>item.state==='queued')||jobs.some(job=>['submitting','submitted','running','downloading','remote_completed','unknown'].includes(job.status))){reasons.push('批量生成还有未确认草稿、排队或待核实结果');break;}
+ }
  const latest=(await db.agentTaskWrapups.where('taskId').equals(task.id).toArray()).sort((a,b)=>a.createdAt.localeCompare(b.createdAt)).at(-1);
  if(latest?.id!==confirmed?.id)reasons.push('请先检查最新总结草稿，旧版确认不能代表本次验收');
  if(!confirmed?.confirmedAt)reasons.push('请先保存并确认任务总结');

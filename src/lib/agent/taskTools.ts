@@ -2,7 +2,7 @@ import { frozenProjectScope } from "./projectScope";
 import { formatTaskRequirements } from "./taskState";
 import { db } from "@/db/database";
 import { taskFields } from "@/db/agentTasks";
-import { listTaskRecords, listTaskRecordVersions, validateTaskSources, writeTaskRecord } from "@/db/agentTaskRecords";
+import { listTaskRecords, listTaskRecordVersions, validateTaskSources, taskGenerationSource, writeTaskRecord } from "@/db/agentTaskRecords";
 import { executeAtomicTool } from "@/db/agentTools";
 import { GENERAL_AGENT_ID, type AgentTask } from "@/domain/agent";
 import { TASK_RECORD_KINDS, TASK_RECORD_CLAIMS } from "@/domain/agentTaskRecords";
@@ -11,7 +11,7 @@ import { object, text, array, choice, optional, number, type Spec } from "./busi
 import { createId, nowIso } from "@/lib/ids";
 
 const id = text(120,1);
-const source = object({ type: choice(["message","tool"]), id });
+const source = object({ type: choice(["message","tool","generation"]), id });
 const sources = array(source,12);
 const steps = array(object({ id: text(80,1), title: text(240,1), status: choice(["pending","in_progress","completed"]) }),30);
 const taskFieldsSpec = { title:text(120,1), goal:text(20000,1), acceptanceCriteria:array(text(500,1),20), steps };
@@ -47,6 +47,12 @@ export const TASK_TOOLS:readonly AgentToolDefinition[] = [
     const messages=(await db.chatMessages.where("threadId").equals(thread.id).sortBy("createdAt")).filter((m)=>m.role==="user" && !!m.content.trim()).reverse();
     const taskRunIds=new Set(task?(await db.agentRuns.where("taskId").equals(task.id).toArray()).map((run)=>run.id):[]);
     const calls=(await db.agentToolCalls.where("threadId").equals(thread.id).toArray()).filter((c)=>c.status==="completed" && c.effect!=="bookkeeping" && !!c.result && taskRunIds.has(c.runId)).sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt));
+    const jobs = task ? (await db.agentGenerationJobs.where("threadId").equals(thread.id).toArray()).filter(job=>job.batchId && taskRunIds.has(job.runId)) : [];
+    if (args.source?.type === "generation") {
+      if (!task) throw new Error("当前任务不存在");
+      const item=await taskGenerationSource(task,args.source.id), contentOffset=args.contentOffset??0,contentLimit=args.contentLimit??6000;
+      return {source:args.source,content:item.body.slice(contentOffset,contentOffset+contentLimit),totalLength:item.body.length,nextOffset:contentOffset+contentLimit<item.body.length?contentOffset+contentLimit:null};
+    }
     if (args.source) {
       const item = args.source.type === "message" ? messages.find((message)=>message.id===args.source!.id) : calls.find((call)=>call.id===args.source!.id);
       if (!item) throw new Error("来源不是当前任务可读取的用户消息或已完成业务工具结果");
@@ -57,6 +63,7 @@ export const TASK_TOOLS:readonly AgentToolDefinition[] = [
     const records=task?await listTaskRecords(task.id):[];
     return {task:task?taskResult(task):null, records:records.slice(offset,offset+limit).map(({id,kind,claim,title,revision,author,todoId})=>({id,kind,claim,title,revision,author,todoId})),recordCount:records.length,
       messages:messages.slice(offset,offset+limit).map((m)=>({id:m.id,content:m.content.slice(0,800),truncated:m.content.length>800})),messageCount:messages.length,
+      generations:jobs.slice(offset,offset+limit).map(job=>({id:job.id,batchId:job.batchId,status:job.status,result:job.result,sourceType:"generation"})),generationCount:jobs.length,
       tools:calls.slice(offset,offset+limit).map((c)=>({id:c.id,name:c.name,status:c.status,result:c.result?.slice(0,400),truncated:(c.result?.length??0)>400})),toolCount:calls.length};
   }),
   tool("task_create","建立创作任务","仅在任务模式、需求和交付物足够明确后创建。先通过 task_read 获取用户消息来源。重复创建返回同一任务，不覆盖目标。",object({...taskFieldsSpec,sources:array(source,12,1)}),async(args,_context,{run,thread,task})=>{
@@ -80,7 +87,7 @@ export const TASK_TOOLS:readonly AgentToolDefinition[] = [
     const updated={...current,...taskFields({...args,plan:current.plan}),revision:(current.revision??1)+1,updatedAt:nowIso()};
     await db.agentTasks.put(updated); return {task:taskResult(updated)};
   }),
-  tool("task_record_write","保存任务工作记录","保存调研、方案、进展、验证或待解决问题。proposal 是建议；decision 必须有用户消息来源；observation 引用真实读取结果；result 必须引用完成的业务操作。来源不代表主观目标已通过验收。更新需 id 和 expectedRevision。",object({...recordFields,id:optional(id),expectedRevision:optional(number(1,1000000,true))}),async(args,_context,{task,run})=>{
+  tool("task_record_write","保存任务工作记录","保存调研、方案、进展、验证或待解决问题。proposal 是建议；decision 必须有用户消息来源；observation 引用真实读取结果；result 必须引用完成的业务操作或真实批次 generation 结果。来源不代表主观目标已通过验收。更新需 id 和 expectedRevision。",object({...recordFields,id:optional(id),expectedRevision:optional(number(1,1000000,true))}),async(args,_context,{task,run})=>{
     const {id,expectedRevision,...input}=args;
     return {record:await writeTaskRecord(requiredTask(task),input,{id,expectedRevision,author:"ai",runId:run.id})};
   }),

@@ -179,6 +179,8 @@ export async function ownerSnapshot(ownerId: string): Promise<unknown> {
   // Optional during additive integration; only hashed internally, never returned to the model.
   const jobs = db.tables.find((table) => table.name === "agentGenerationJobs");
   if (jobs) groups.jobs = await jobs.where("projectId").equals(ownerId).sortBy("id");
+  groups.batches = await db.agentGenerationBatches.where("projectId").equals(ownerId).sortBy("id");
+  groups.batchItems = await db.agentGenerationBatchItems.where("projectId").equals(ownerId).sortBy("id");
   return groups;
 }
 export async function mediaUsage(ownerId: string, mediaId: string): Promise<Array<{ kind: string; id: string; label: string; slot?: string }>> {
@@ -201,12 +203,16 @@ export async function mediaUsage(ownerId: string, mediaId: string): Promise<Arra
   return usages;
 }
 /** Sanitized retention counts expose why cleanup is blocked without execution internals. */
-export async function mediaRetention(ownerId: string, mediaId: string): Promise<{ proposals: number; generationJobs: number }> {
+export async function mediaRetention(ownerId: string, mediaId: string): Promise<{ proposals: number; generationJobs: number; generationBatches: number }> {
   const proposals = (await db.productionProposals.where("projectId").equals(ownerId).toArray()).filter((proposal) =>
     proposal.before.result?.mediaId === mediaId || (proposal.change.kind === "slot-result" && proposal.change.result.mediaId === mediaId)).length;
   const generationJobs = (await db.agentGenerationJobs.where("projectId").equals(ownerId).toArray()).filter((job) =>
     job.result?.mediaId === mediaId || job.inputs.some((input) => input.mediaId === mediaId)).length;
-  return { proposals, generationJobs };
+  const items = await db.agentGenerationBatchItems.where("projectId").equals(ownerId).toArray();
+  const batches = await db.agentGenerationBatches.where("projectId").equals(ownerId).toArray();
+  const retained = new Set(items.filter(item => item.draft.inputs.some(input => input.mediaId === mediaId)).map(item => item.batchId));
+  for (const batch of batches) if (batch.applications.some(a => a.before?.mediaId === mediaId || a.result.mediaId === mediaId)) retained.add(batch.id);
+  return { proposals, generationJobs, generationBatches: retained.size };
 }
 
 /** Validate all referenced dependencies before preview; copying must never silently drop them. */
