@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/frontend/agent-tasks.md", "reason": "Task ownership and lifecycle"}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Atomic bookkeeping and permission snapshots"}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Recovery and frozen runs"}
+{"file": ".trellis/spec/frontend/agent-context.md", "reason": "Shared context assembly and budgets"}
+{"file": ".trellis/spec/frontend/agent-creative-skills.md", "reason": "Business result and generation evidence"}
+{"file": ".trellis/tasks/09-19-agent-workflow-memory/research/trellis-mapping.md", "reason": "Current gaps and Trellis adaptation"}

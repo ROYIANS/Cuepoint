@@ -1,0 +1,7 @@
+{"file": ".trellis/spec/frontend/agent-tasks.md", "reason": "Task identity, lifecycle and completion guards"}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Durable request lifecycle and recovery"}
+{"file": ".trellis/spec/frontend/agent-context.md", "reason": "Bounded context and compaction separation"}
+{"file": ".trellis/spec/frontend/agent-creative-skills.md", "reason": "Tool/result evidence and generation states"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Existing task UI conventions"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Tests and validation"}
+{"file": ".trellis/tasks/09-19-agent-workflow-memory/research/trellis-mapping.md", "reason": "Local source evidence and workflow-memory boundaries"}

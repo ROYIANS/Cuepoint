@@ -1,0 +1,33 @@
+{
+  "id": "agent-workflow-memory",
+  "name": "agent-workflow-memory",
+  "title": "Trellis-style creative workflow and durable memory",
+  "description": "Roadmap and cross-child acceptance for Trellis-style creative work, memory, references and batch outputs.",
+  "status": "planning",
+  "dev_type": "frontend",
+  "scope": "agent-workflow-memory",
+  "package": null,
+  "priority": "P1",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-09-19",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [
+    "09-19-agent-task-orchestration",
+    "09-19-agent-task-wrapup",
+    "09-19-agent-memory-management",
+    "09-19-agent-memory-retrieval",
+    "09-19-agent-reference-intake",
+    "09-19-agent-batch-generation"
+  ],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "Six sequential children tracked. First child implemented, verified and approved for commit/archive; remaining five children remain planning. No cross-task memory implementation claimed.",
+  "meta": {}
+}

@@ -1,0 +1,33 @@
+{
+  "id": "agent-task-orchestration",
+  "name": "agent-task-orchestration",
+  "title": "AI-managed task workspace and working records",
+  "description": "AI creates and links tasks, manages Todo and durable research/design/progress/verification records.",
+  "status": "in_progress",
+  "dev_type": "frontend",
+  "scope": "agent-task-orchestration",
+  "package": null,
+  "priority": "P1",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-09-19",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "09-19-agent-workflow-memory",
+  "relatedFiles": [
+    "src/lib/agent/taskTools.ts",
+    "src/lib/agent/taskContext.ts",
+    "src/db/agentTaskRecords.ts",
+    "src/components/agent/TaskRecords.tsx",
+    "tests/agentTaskOrchestration.test.ts",
+    "tests/agentTaskOrchestrationReview.test.ts"
+  ],
+  "notes": "Implemented, independently reviewed and user-approved for commit/archive on 2026-09-19. Quality gate passed: 57 files / 719 tests, lint, build, desktop/mobile and actual mocked tool-loop browser flows.",
+  "meta": {}
+}
