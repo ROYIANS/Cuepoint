@@ -729,3 +729,39 @@ Implemented reviewed generation batches: 20 requests, four candidates per target
 ### Status
 
 [OK] **Completed**
+
+
+## Session 32: Web research and named-project image inspection
+
+**Date**: 2026-09-19
+**Task**: Web research and named-project image inspection
+**Branch**: `main`
+
+### Summary
+
+Implemented independent Tavily search/read configuration and source UI, plus same-run proven image discovery for named projects in unbound smart chats. Verified both protocols and archived the approved task tree.
+
+### Main Changes
+
+- Added bounded Tavily search/extract with isolated credentials, explicit network permissions, truthful failure states and no automatic retries.
+- Added project image discovery, exact-pixel delivery, provenance and source lifecycle checks, current/reference/candidate labels and internal source navigation.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `3bbcedc` | (see git log) |
+| `6ba3c83` | (see git log) |
+
+### Testing
+
+- [OK] Independent lint/type-check, 72 files / 891 tests, production build and git diff check passed.
+- [OK] Native Edge verified Chat and Responses image-only and combined web/image loops, exact pixels, scope/ambiguity, source links, mobile and keyboard interactions.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Configure a real Tavily API key and try live-model research and image analysis; authenticated service quality was not tested with paid calls.
