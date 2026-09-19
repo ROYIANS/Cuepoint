@@ -640,3 +640,25 @@ Implemented and archived task verification/wrap-up and project-owned creative co
 ### Status
 
 [OK] **Completed**
+
+
+## Session 28: Project memory management and reviewed knowledge capture
+
+**Date**: 2026-09-19
+**Task**: Project memory management and reviewed knowledge capture
+**Branch**: `main`
+
+### Summary
+
+Delivered project-scoped reviewed memory CRUD, summary promotion, provenance and immutable revision history, conflict replacement, project ZIP transfer with pending review, and responsive management UI. Preserved drafts across summary refresh, CAS conflicts and storage failures. Full gate: 61 files / 766 tests, lint/build/diff-check passed; isolated Edge regression and final independent review passed. Archived memory management child; retrieval and context injection remain the next child.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `2fedc10` | (see git log) |
+| `4a244f9` | (see git log) |
+
+### Status
+
+[OK] **Completed**
