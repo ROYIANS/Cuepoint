@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import type { AgentTask, AgentReasoningEffort } from "@/domain/agent";
 import type { ConnectorConfig } from "@/domain/types";
 import type { ChatModelMetadata } from "@/lib/ai/modelMetadata";
-import type { AgentTaskWrapup, WrapupContent, WrapupEvidence } from "@/domain/agentTaskWrapup";
+import type { AgentTaskWrapup, TaskWrapupState, WrapupContent, WrapupEvidence } from "@/domain/agentTaskWrapup";
 import { createManualWrapup, getTaskWrapupState, saveWrapup, confirmWrapup } from "@/db/agentTaskWrapups";
 import { setAgentTaskLifecycle } from "@/db/agentTasks";
 import { prepareTaskWrapup, cancelTaskWrapup, recoverTaskWrapups } from "@/lib/agent/taskWrapup";
@@ -48,8 +48,18 @@ function ReviewDocument({ record, evidence, projectId, onCandidate }: { record: 
 }
 
 export function TaskWrapup({ task, modelSelection, busy, onEditingChange, onPendingChange }: Props) {
-  const state = useLiveQuery(() => getTaskWrapupState(task.id), [task.id]);
-  const [draft, setDraft] = useState<{ id: string; revision: number; content: WrapupContent; sources: WrapupEvidence[] }>();
+  const [readAttempt, setReadAttempt] = useState(0);
+  const [lastRead, setLastRead] = useState<{ taskId: string; data: TaskWrapupState }>();
+  const read = useLiveQuery(async () => {
+    try { return { taskId: task.id, data: await getTaskWrapupState(task.id), error: undefined }; }
+    catch (failure) { return { taskId: task.id, data: undefined, error: failure instanceof Error ? failure.message : "数据库读取失败" }; }
+  }, [task.id, readAttempt]);
+  const currentRead = read?.taskId === task.id ? read : undefined;
+  const state = currentRead?.data ?? (lastRead?.taskId === task.id ? lastRead.data : undefined);
+  const readError = currentRead?.error;
+  // Keep editors mounted through a live-query failure; stale evidence cannot be saved.
+  useEffect(() => { if (currentRead?.data) setLastRead({ taskId: task.id, data: currentRead.data }); }, [currentRead, task.id]);
+  const [draft, setDraft] = useState<{ id: string; revision: number; content: WrapupContent; sources: WrapupEvidence[]; record: AgentTaskWrapup }>();
   const [candidate, setCandidate] = useState<MemoryCandidate>();
   const [savedMemory, setSavedMemory] = useState<ProjectMemory>();
   const [memoryPending, setMemoryPending] = useState(false);
@@ -58,9 +68,9 @@ export function TaskWrapup({ task, modelSelection, busy, onEditingChange, onPend
   const [error, setError] = useState("");
   const lock = useRef(false);
   const controller = useRef<AbortController | null>(null);
-  const latest = state?.latest;
+  const latest = state?.latest ?? draft?.record;
   const preparing = latest?.status === "preparing";
-  const editable = !busy && !pending && !preparing && task.lifecycle === "open";
+  const editable = !!currentRead?.data && !busy && !pending && !preparing && task.lifecycle === "open";
   const canGenerate = !!modelSelection?.connector.apiKey.trim() && !!modelSelection.model.trim();
   useEffect(() => { void recoverTaskWrapups(task.threadId).catch((failure: unknown) => setError(failure instanceof Error ? failure.message : "无法读取整理状态")); }, [task.threadId]);
   useEffect(() => { onEditingChange(!!draft || !!candidate); return () => onEditingChange(false); }, [!!draft, !!candidate, onEditingChange]);
@@ -72,13 +82,13 @@ export function TaskWrapup({ task, modelSelection, busy, onEditingChange, onPend
     window.addEventListener("beforeunload", protect); return () => window.removeEventListener("beforeunload", protect);
   }, [draft]);
   async function act(action: () => Promise<unknown>, success?: string) {
-    if (lock.current) return;
+    if (lock.current || !currentRead?.data) return;
     lock.current = true; setPending(true); setError("");
     try { await action(); if (success) toast.success(success); }
     catch (failure) { setError(failure instanceof Error ? failure.message : "操作失败，请重试"); }
     finally { lock.current = false; setPending(false); }
   }
-  async function manual() { await act(async () => { const record = await createManualWrapup(task.id); setDraft({ id: record.id, revision: record.revision, content: structuredClone(record.content), sources: record.snapshot.evidence }); }); }
+  async function manual() { await act(async () => { const record = await createManualWrapup(task.id); setDraft({ id: record.id, revision: record.revision, content: structuredClone(record.content), sources: record.snapshot.evidence, record }); }); }
   async function generate() {
     if (!modelSelection || !canGenerate) return;
     await act(async () => {
@@ -87,7 +97,7 @@ export function TaskWrapup({ task, modelSelection, busy, onEditingChange, onPend
       finally { if (controller.current === abort) controller.current = null; }
     }, "总结草稿已准备好，请检查并确认");
   }
-  function edit() { if (latest) { setError(""); setDraft({ id: latest.id, revision: latest.revision, content: structuredClone(latest.content), sources: latest.snapshot.evidence }); } }
+  function edit() { if (latest) { setError(""); setDraft({ id: latest.id, revision: latest.revision, content: structuredClone(latest.content), sources: latest.snapshot.evidence, record: latest }); } }
   function change(content: WrapupContent) { setDraft((current) => current ? { ...current, content } : current); }
   function currentSources(sources: WrapupEvidence[]) {
     return sources.map((source) => {
@@ -98,7 +108,8 @@ export function TaskWrapup({ task, modelSelection, busy, onEditingChange, onPend
   const evidence = draft ? currentSources(draft.sources) : latest ? currentSources(latest.snapshot.evidence) : [];
   return <div className="task-review" aria-label="任务验收总结">
     <div className="task-review-heading"><div><span className="task-review-eyebrow">REVIEW & REFLECTION</span><h3>让这次工作，有一个清晰的收尾。</h3><p>检查交付，留下决策与经验，再确认完成。</p></div><ClipboardCheck size={24} strokeWidth={1.3} aria-hidden /></div>
-    {state === undefined ? <p className="agent-task-muted" role="status">正在读取总结…</p> : <>
+    {readError && <div className="task-review-error" role="alert"><p>暂时无法读取验收总结。{draft ? "你的草稿仍保留，恢复读取后可继续保存。" : "任务和对话仍可查看。"}</p><details><summary>查看错误详情</summary><p>{readError}</p></details><Button variant="outline" size="sm" onClick={() => setReadAttempt((value) => value + 1)}>重新读取总结</Button></div>}
+    {state === undefined ? !readError && <p className="agent-task-muted" role="status">正在读取总结…</p> : <>
       {!latest && <div className="task-review-start"><p>把已有成果与完成标准放在一起检查。也可以先保存阶段总结，之后再回来继续。</p><div><Button disabled={!editable || !canGenerate} onClick={() => void generate()}><Sparkles />AI 整理总结</Button><Button variant="ghost" disabled={!editable} onClick={() => void manual()}><Pencil />手动填写</Button></div><small>{canGenerate ? `使用 ${modelSelection!.model} · 仅整理已有记录` : "尚未配置对话模型，仍可手动填写总结。"}</small></div>}
       {latest && <>
         <div className="task-review-toolbar"><span>{latest.confirmedAt ? "已确认" : preparing ? "整理中" : latest.status === "failed" ? "整理失败" : latest.status === "interrupted" ? "整理已中断" : "待你检查"}<small>版本 {latest.revision} · {latest.author === "ai" ? "AI 草稿" : "人工修订"}</small></span><Button variant="ghost" size="icon-sm" aria-label="查看总结历史" onClick={() => setHistoryOpen(true)}><History /></Button>{!draft && !preparing && <Button variant="ghost" size="sm" disabled={!editable || state.stale || latest.status !== "draft" || !!latest.confirmedAt} onClick={edit}><Pencil />编辑</Button>}</div>
@@ -110,7 +121,7 @@ export function TaskWrapup({ task, modelSelection, busy, onEditingChange, onPend
           <label className="agent-task-field">总结<Textarea autoFocus value={draft.content.overview} rows={4} maxLength={4000} disabled={pending} onChange={(event) => change({ ...draft.content, overview: event.target.value })} placeholder="这次完成了什么，目前处于什么状态…" /></label>
           <section className="task-review-section"><h3>完成标准</h3>{draft.content.acceptance.length ? draft.content.acceptance.map((finding, index) => <div className="task-review-finding-editor" key={finding.criterionIndex}><label className="agent-task-field">{finding.criterion}<select aria-label={`验收：${finding.criterion}`} disabled={pending} value={finding.status} onChange={(event) => change({ ...draft.content, acceptance: draft.content.acceptance.map((item, at) => at === index ? { ...item, status: event.target.value as typeof finding.status } : item) })}>{Object.entries(FINDINGS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label><Textarea aria-label={`验收说明：${finding.criterion}`} placeholder="你的检查结果与判断依据…" value={finding.note} rows={2} maxLength={2000} disabled={pending} onChange={(event) => change({ ...draft.content, acceptance: draft.content.acceptance.map((item, at) => at === index ? { ...item, note: event.target.value } : item) })} /><Sources ids={finding.sourceIds} evidence={evidence} selectable={!pending} onChange={(sourceIds) => change({ ...draft.content, acceptance: draft.content.acceptance.map((item, at) => at === index ? { ...item, sourceIds } : item) })} /></div>) : <p className="agent-task-muted">尚无独立完成标准，可回到概览补充。</p>}</section>
           {SECTIONS.map(({ key, label, hint }) => <section className="task-review-section" key={key}><div className="agent-task-section-heading"><h3>{label}</h3><Button type="button" variant="ghost" size="icon-sm" aria-label={`添加${label}`} disabled={pending || draft.content[key].length >= 20} onClick={() => change({ ...draft.content, [key]: [...draft.content[key], { text: "", sourceIds: [] }] })}><Plus /></Button></div><p className="agent-task-muted">{hint}</p>{draft.content[key].map((entry, index) => <div className="task-review-entry-editor" key={index}><div><Textarea aria-label={`${label} ${index + 1}`} rows={3} maxLength={2000} disabled={pending} value={entry.text} onChange={(event) => change({ ...draft.content, [key]: draft.content[key].map((item, at) => at === index ? { ...item, text: event.target.value } : item) })} /><Button type="button" variant="ghost" size="icon-sm" disabled={pending} aria-label={`移除${label} ${index + 1}`} onClick={() => change({ ...draft.content, [key]: draft.content[key].filter((_, at) => at !== index) })}><X /></Button></div><Sources ids={entry.sourceIds} evidence={evidence} selectable={!pending} onChange={(sourceIds) => change({ ...draft.content, [key]: draft.content[key].map((item, at) => at === index ? { ...item, sourceIds } : item) })} /></div>)}</section>)}
-          <div className="task-review-editor-actions"><Button type="button" variant="ghost" disabled={pending} onClick={() => { setDraft(undefined); setError(""); }}>取消编辑</Button><Button type="submit" disabled={pending || busy || !draft.content.overview.trim()}>{pending ? "保存中…" : "保存草稿"}</Button></div>
+          <div className="task-review-editor-actions"><Button type="button" variant="ghost" disabled={pending} onClick={() => { setDraft(undefined); setError(""); }}>取消编辑</Button><Button type="submit" disabled={!editable || !draft.content.overview.trim()}>{pending ? "保存中…" : "保存草稿"}</Button></div>
         </form> : <>
           {latest.status === "draft" && <ReviewDocument onCandidate={setCandidate} projectId={task.projectId} record={latest} evidence={evidence} />}
           {state.confirmed && (latest.id !== state.confirmed.id || latest.revision !== state.confirmed.revision) && <details className="task-review-previous"><summary>上次确认的总结 · {dateLabel(state.confirmed.confirmedAt!)}</summary><ReviewDocument onCandidate={setCandidate} projectId={task.projectId} record={state.confirmed} evidence={currentSources(state.confirmed.snapshot.evidence)} /></details>}

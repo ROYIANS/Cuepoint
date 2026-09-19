@@ -92,7 +92,10 @@ describe("durable agent generation",()=>{
     const f=await setup("aihubmix");const fetchImpl=hubFetch("image",true);
     const job=await submitAgentGeneration(f.args,f.context,{fetchImpl});
     expect(job.status).toBe("downloaded");expect(fetchImpl).toHaveBeenCalledTimes(1);
-    expect(JSON.stringify(job)).not.toContain("b64");
+    // Random UUIDs/hashes may contain the letters b64; check the actual wire
+    // field and fixture payload, not an arbitrary substring of identifiers.
+    expect(JSON.stringify(job)).not.toContain('"b64_json":');
+    expect(JSON.stringify(job)).not.toContain(btoa(String.fromCharCode(...png)));
   });
   it("freezes preview and rejects changed targets before POST",async()=>{
     const f=await setup();f.context.preview=await prepareAgentGeneration(f.args,f.context);

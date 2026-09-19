@@ -19,6 +19,9 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
   const evidence:WrapupEvidence[]=[], fingerprints:unknown[]=[];
   const add=(item:WrapupEvidence,raw:unknown)=>{fingerprints.push([item.id,targetRevision(raw)]);evidence.push({...item,body:item.body.slice(0,1800),truncated:item.body.length>1800});};
   const entityIds=new Set<string>();
+  // Cache hits and invalid locators can settle without any IndexedDB request.
+  // Callers adopt this native promise through the transaction-zone Promise; a long
+  // loop of bare awaits otherwise exhausts Dexie's zone tracking in real browsers.
   async function entity(kind:BusinessKind,id:string,ownerId?:string,episodeId?:string,label?:string) {
     const key=`entity:${kind}:${id}`;
     if(entityIds.has(key)) return;entityIds.add(key);
@@ -36,7 +39,7 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
     for(const item of rows){const row=json(item);const kind=typeof row.kind==='string'&&kinds.includes(row.kind)?row.kind:typeof args.kind==='string'&&kinds.includes(args.kind)?args.kind:call.name.split('_')[0];
       const id=typeof row.id==='string'?row.id:typeof args.id==='string'?args.id:undefined;
       if(id&&kinds.includes(kind)) {
-        await entity(kind as BusinessKind,id,typeof row.ownerId==='string'?row.ownerId:typeof args.ownerId==='string'?args.ownerId:undefined,typeof row.episodeId==='string'?row.episodeId:typeof args.episodeId==='string'?args.episodeId:undefined,typeof row.label==='string'?row.label:undefined);
+        await Promise.resolve(entity(kind as BusinessKind,id,typeof row.ownerId==='string'?row.ownerId:typeof args.ownerId==='string'?args.ownerId:undefined,typeof row.episodeId==='string'?row.episodeId:typeof args.episodeId==='string'?args.episodeId:undefined,typeof row.label==='string'?row.label:undefined));
         // Keep successful deletion as a historical effect. Creation/update/copy
         // evidence cannot certify a currently delivered object after its removal.
         if(call.effect==='write'&&!call.name.includes('_delete')&&!evidence.find(e=>e.id===`entity:${kind}:${id}`)?.available){
@@ -48,7 +51,7 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
     }
   }
   for(const job of jobs) {
-    const target=job.target;await entity(target.kind,target.entityId,target.projectId,'episodeId' in target?target.episodeId:undefined);
+    const target=job.target;await Promise.resolve(entity(target.kind,target.entityId,target.projectId,'episodeId' in target?target.episodeId:undefined));
     const media=job.result?await db.media.get(job.result.mediaId):undefined;
     let applied=false,href:string|undefined;
     try{const row=await getRow(target.kind,target.entityId,target.projectId,'episodeId'in target?target.episodeId:undefined);href=navigation(target.kind,row).href;

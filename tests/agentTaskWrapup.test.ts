@@ -22,6 +22,21 @@ async function evidenceTask(){
  await db.agentToolCalls.add(call);await finishAgentRun(run.id,'completed',{content:'角色已创建'});return {current,run,character,call};
 }
 describe('task verification and durable wrapup',()=>{
+ it('collects long repeated and invalid entity histories without losing source evidence or freshness',async()=>{
+  const {current,run,character,call}=await evidenceTask();
+  await db.agentToolCalls.bulkAdd(Array.from({length:180},(_,i)=>({...call,id:`repeat-${i}`,providerCallId:`repeat-${i}`,step:i+2,result:i%2?JSON.stringify({kind:'character',id:'invalid-without-owner'}):call.result,arguments:'{}'})));
+  const view=await getTaskWrapupState(current.id);
+  expect(view.currentEvidence.filter(item=>item.kind==='tool')).toHaveLength(181);
+  expect(view.currentEvidence.filter(item=>item.id===`entity:character:${character.id}`)).toHaveLength(1);
+  expect(view.currentEvidence.find(item=>item.id==='entity:character:invalid-without-owner')?.available).toBe(false);
+  const draft=await createManualWrapup(current.id);
+  expect(draft.snapshot.coverage.omitted).toBeGreaterThan(0);
+  expect((await getTaskWrapupState(current.id)).stale).toBe(false);
+  await db.agentToolCalls.update('repeat-0',{error:'Corrected historical result'});
+  expect((await getTaskWrapupState(current.id)).stale).toBe(true);
+  expect((await db.agentRuns.get(run.id))?.status).toBe('completed');
+ });
+
  it('supports offline manual review, separates save/confirm/complete and cannot bypass review',async()=>{
   const current=await task([]);await expect(setAgentTaskLifecycle(current.id,'completed')).rejects.toThrow('总结');
   const draft=await createManualWrapup(current.id);expect(draft.content.acceptance).toEqual([]);expect(await db.connectors.count()).toBe(0);
