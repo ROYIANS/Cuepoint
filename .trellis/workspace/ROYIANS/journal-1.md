@@ -685,3 +685,25 @@ Delivered reviewed project-scoped lexical memory selection, independent request 
 ### Status
 
 [OK] **Completed**
+
+
+## Session 30: Project reference intake and native selected-model vision
+
+**Date**: 2026-09-19
+**Task**: Project reference intake and native selected-model vision
+**Branch**: `main`
+
+### Summary
+
+Implemented project-shared image, TXT/Markdown, PDF and DOCX references with bounded local parsing, source inspection, attachments and scoped search/read tools. Native image reading sends uploaded/generated image pixels through the selected model using both Chat Completions and Responses. Added source audits, context previews, task evidence and withdrawal guards; reviewed GC ownership, cached history/summary replay and long-text ZIP consistency. Verified 67 test files / 818 tests, TypeScript, production build and native Edge UI/protocol/PDF fixtures. Updated executable specs and retrospective. User approved work commits and task archival; batch generation remains the next planned child.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `1e0b817` | (see git log) |
+| `59a5ff4` | (see git log) |
+
+### Status
+
+[OK] **Completed**
