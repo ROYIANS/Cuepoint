@@ -519,6 +519,7 @@ export type ChatMessageRole = "user" | "assistant" | "system";
 export type ChatMessageStatus = "pending" | "streaming" | "complete" | "error" | "aborted" | "interrupted";
 
 export interface ChatThread {
+  excludedMemoryIds?: Id[];
   projectId?: Id;
   taskMode?: boolean;
   contextPolicy?: ContextPolicy;

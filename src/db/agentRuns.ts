@@ -1,3 +1,5 @@
+import { getMemorySelection } from "./memoryRetrieval";
+import { filterProjectMemoryTools } from "@/lib/agent/memoryToolNames";
 import { interruptedToolState } from "./agentToolRecovery";
 import { createAgentTaskForThread } from "@/db/agentTasks";
 import { getTaskContext } from "@/lib/agent/taskContext";
@@ -88,16 +90,19 @@ export async function beginAgentRun(input: {
     const taskContext = await getTaskContext(thread.id, agent.instructions, taskMode, interactionMode, thread.projectId);
     const instructions = taskContext.instructions;
     const skills = assembleSkills(agent.enabledSkillIds ?? []);
-    const enabledToolNames = interactionMode === "conversation" ? [] : (previous ? previous.enabledToolNames ?? [] : [...new Set([...skills.enabledToolNames, ...taskContext.taskToolNames])]);
+    const selectedToolNames = interactionMode === "conversation" ? [] : (previous ? previous.enabledToolNames ?? [] : [...new Set([...skills.enabledToolNames, ...taskContext.taskToolNames])]);
+    const enabledToolNames = filterProjectMemoryTools(selectedToolNames,thread.projectId,interactionMode);
     const skillInstructions = interactionMode === "conversation" ? "" : (previous ? previous.skillInstructions ?? "" : skills.skillInstructions);
     const policy = normalizeContextPolicy(thread.contextPolicy);
     const selectedHistory = selectContextHistory(history, policy);
     const summary = policy.autoCompress ? findApplicableSummary(selectedHistory, await db.contextCompactions.where("threadId").equals(thread.id).toArray()) : undefined;
-    const baseMessages = buildContextMessages(instructions, skillInstructions, selectedHistory, content, summary);
+    const capacity = resolveContextCapacity(input.model, input.modelMetadata, identity.definitionId, policy);
+    const memorySelection = previous?.memorySelection ?? (thread.projectId ? await getMemorySelection({projectId:thread.projectId,threadId:thread.id,draft:content,recentUserTurns:selectedHistory.filter(m=>m.role==='user').map(m=>m.content),taskTitle:task?.title,taskGoal:task?.goal,capacity:capacity.capacity}) : undefined);
+    const baseMessages = buildContextMessages(instructions, skillInstructions, selectedHistory, content, summary, memorySelection?.envelope);
     const requestMessages = previous?.context?.baseMessages ?? previous?.requestMessages ?? baseMessages;
-    const context = previous ? previous.context : { policy, history: selectedHistory, baseMessages, draft: content, summaryId: summary?.id, ...resolveContextCapacity(input.model, input.modelMetadata, identity.definitionId, policy) };
+    const context = previous ? previous.context : { policy, history: selectedHistory, baseMessages, draft: content, summaryId: summary?.id, memoryEnvelope:memorySelection?.envelope, ...capacity };
     const run: AgentRun = {
-      context,
+      context, memorySelection, memoryAudit: [],
       projectId: thread.projectId, projectContext: previous?.projectContext ?? taskContext.projectContext,
       id: runId, threadId: thread.id, taskId: previous?.taskId ?? task?.id, plan: previous?.plan ?? task?.plan, agentId: previous?.agentId ?? agent.id,
       agentSnapshot: previous?.agentSnapshot ?? { name: agent.name, instructions },

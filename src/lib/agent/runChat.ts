@@ -1,3 +1,6 @@
+import { budgetContext } from "./contextPlanner";
+import { continuationExtraTokens } from "./contextCompaction";
+import { refreshRunMemoryContext } from "./memoryContext";
 import { refreshRunProjectContext } from "./projectContext";
 import { frozenProjectScope } from "./projectScope";
 import { ToolPendingError } from "./toolErrors";
@@ -142,7 +145,11 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
       controller.signal.throwIfAborted();
       if (await pauseAtModelStepLimit(run.id)) return;
       run = await refreshRunProjectContext(run.id);
+      run = await refreshRunMemoryContext(run.id);
       run = await prepareRunContext(run.id, toolSchemas(run.enabledToolNames ?? [], registry), apiKey, controller.signal, fetchImpl);
+      // Compaction may await network; re-read memory once more at the final dispatch boundary.
+      run = await refreshRunMemoryContext(run.id);
+      if (budgetContext(run.continuationMessages ?? run.requestMessages, toolSchemas(run.enabledToolNames ?? [], registry), run.context?.capacity, !!run.context?.summaryId, continuationExtraTokens(run)).overBudget) throw new Error("记忆更新后上下文超出安全预算，请减少历史或调整输入后继续");
       run = await startModelStep(run.id, MAX_MODEL_STEPS);
       controller.signal.throwIfAborted();
       accum = createReasoningAccum();

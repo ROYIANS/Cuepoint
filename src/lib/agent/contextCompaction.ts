@@ -31,7 +31,7 @@ async function activate(run: AgentRun, record: ContextCompaction, content: strin
     if (!same(messages.slice(0, oldBase.length), oldBase)) throw new Error("历史与执行信封不一致，摘要未启用");
     const activatedAt = nowIso();
     const completed: ContextCompaction = { ...record, status: "completed", content, usage, afterTokens: estimateTokens(content), activatedAt, updatedAt: activatedAt };
-    const baseMessages = buildContextMessages(current.agentSnapshot.instructions, current.skillInstructions ?? "", context.history, context.draft, completed);
+    const baseMessages = buildContextMessages(current.agentSnapshot.instructions, current.skillInstructions ?? "", context.history, context.draft, completed, context.memoryEnvelope);
     const responseBase = toResponseInput(oldBase);
     if (current.responseItems && !same(current.responseItems.slice(0, responseBase.length), responseBase)) throw new Error("Responses 历史信封不一致，摘要未启用");
     const next: AgentRun = { ...current, context: { ...context, summaryId: record.id, baseMessages }, continuationMessages: [...baseMessages, ...messages.slice(oldBase.length)],

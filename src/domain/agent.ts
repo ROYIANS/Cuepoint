@@ -1,3 +1,4 @@
+import type { MemorySelection, MemoryDispatchAudit } from "./memoryRetrieval";
 import type { ProjectContextSnapshot } from "./projectContext";
 import type { GenerationPreferences } from "./generationPreferences";
 import type { ContextPolicy, ContextSnapshot } from "./context";
@@ -82,6 +83,8 @@ export interface AgentModelMetrics {
 
 /** Frozen execution inputs. Credentials are resolved from the connector at dispatch. */
 export interface AgentRun {
+  memorySelection?: MemorySelection;
+  memoryAudit?: MemoryDispatchAudit[];
   projectId?: Id;
   projectContext?: ProjectContextSnapshot;
   /** Frozen task-intake eligibility; never inferred from model arguments. */

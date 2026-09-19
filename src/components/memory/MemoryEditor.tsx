@@ -68,6 +68,7 @@ export function MemoryEditor({
   onPendingChange?: (pending: boolean) => void;
 }) {
   const baseline: MemoryInput = {
+    inclusion: initial.inclusion ?? "relevant",
     category: initial.category,
     title: initial.title,
     topicKey: initial.topicKey,
@@ -257,6 +258,8 @@ export function MemoryEditor({
                   placeholder="保留明确、可复用的结论，而不是整段聊天记录。"
                 />
               </Field>
+              <Field label="引用方式"><select className="memory-select" value={draft.inclusion ?? "relevant"} onChange={(event) => change({ inclusion: event.target.value as MemoryInput["inclusion"] })}><option value="relevant">按需引用</option><option value="project">项目通用</option></select></Field>
+              <p className="memory-field-hint">{draft.inclusion === "project" ? "在本项目的对话中优先带入，仍受上下文预算限制。请确认适用于整个项目。" : "根据当前问题和任务选择，仅在相关时带入。"}</p>
               <Field label="适用条件">
                 <Textarea
                   rows={2}
@@ -296,7 +299,7 @@ export function MemoryEditor({
                   最新版本 {current.revision}：{current.title}
                 </p>
                 <p>{current.body}</p>
-                <p>适用条件：{current.applicability || "未单独限定"}</p>
+                <p>适用条件：{current.applicability || "未单独限定"}</p><p>引用方式：{current.inclusion === "project" ? "项目通用" : "按需引用"}</p>
                 <Button
                   type="button"
                   variant="outline"

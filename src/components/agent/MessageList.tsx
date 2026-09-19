@@ -13,6 +13,7 @@ import { LOGO_SRC, PRODUCT_NAME_EN, PRODUCT_NAME_ZH } from "@/lib/brand";
 import { isChatNearBottom, snapChatToBottom } from "@/lib/chatScroll";
 import { ThinkingMatrix } from "./ThinkingMatrix";
 import { ThinkingPanel } from "./ThinkingPanel";
+import { MemoryRunHistory } from "./MemoryContextDetails";
 
 const MARKDOWN_PROPS = { variant: "chat" } as const;
 
@@ -165,6 +166,7 @@ const AgentChatMessageItem = memo(
             {run?.model && <span className="agent-model-attribution" title={run.model}><ModelIcon model={run.model} size={14} />{run.model}</span>}
             {run?.outputTokensPerSecond !== undefined && <span className="agent-model-attribution" title="生成速度：供应商返回的输出 token ÷ 流式生成耗时（不含工具和审批等待）"><Gauge size={12} />{run.outputTokensPerSecond.toFixed(1)} tok/s</span>}
             {run?.usage?.totalTokens !== undefined && <span className="agent-model-attribution" title={`本次执行累计 ${run.usage.totalTokens.toLocaleString()} tokens；输入 ${run.usage.inputTokens?.toLocaleString() ?? "未知"}，输出 ${run.usage.outputTokens?.toLocaleString() ?? "未知"}`}><Coins size={12} />{formatTokenCount(run.usage.totalTokens)}</span>}
+            {run && <MemoryRunHistory run={run} readOnly={readOnly} />}
             {showCopy && <CopyButton content={message.content} title="复制" size="small" />}
           </div>
           {statusLabel && <div role="status">{statusLabel} · {message.error || "已保留收到的内容"}</div>}

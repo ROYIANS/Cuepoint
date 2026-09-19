@@ -5,10 +5,10 @@ import { beginAgentRun } from "@/db/agentRuns";
 import { createChatThread } from "@/db/repo";
 import { GENERAL_AGENT_ID } from "@/domain/agent";
 
-const skills = ["workspace", "planning", "business-read", "story-edit", "asset-edit", "media-generation"];
+const skills = ["project-memory", "workspace", "planning", "business-read", "story-edit", "asset-edit", "media-generation"];
 
 describe("foundational skill defaults", () => {
-  it("persists all six defaults for new installations", async () => {
+  it("persists all seven defaults for new installations", async () => {
     expect(await getGeneralAgentConfig()).toMatchObject({ enabledSkillIds: skills, skillDefaultsVersion: 1, permissionMode: "ask" });
     expect((await db.agents.get(GENERAL_AGENT_ID))?.enabledSkillIds).toEqual(skills);
   });

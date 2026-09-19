@@ -159,7 +159,7 @@ export function ProjectMemoryPage({
                 >
                   <div>
                     <span className="memory-category">
-                      {CATEGORY_LABELS[memory.category]}
+                      {CATEGORY_LABELS[memory.category]}{memory.inclusion === "project" ? " · 项目通用" : ""}
                     </span>
                     <span className={`memory-status is-${memory.status}`}>
                       {STATUS_LABELS[memory.status]}
@@ -206,7 +206,7 @@ export function ProjectMemoryPage({
               <BookOpen size={36} strokeWidth={1} />
               <h2>{selectedId ? "这条记忆已被删除" : "项目的创作共识"}</h2>
               <p>选择一条记忆，查看它的适用条件、原始依据与修订过程。</p>
-              <small>当前用于整理与管理；自动引用将在后续接入。</small>
+              <small>已启用的记忆会按当前需求引用；也可标记为项目通用。</small>
             </div>
           )}
         </section>
@@ -354,7 +354,7 @@ function MemoryDetail({
           </div>
         )}
         <section className="memory-detail-section">
-          <h3>适用条件</h3>
+          <h3>适用条件<span>{memory.inclusion === "project" ? "项目通用 · 优先引用" : "按需引用"}</span></h3>
           <p>
             {memory.applicability || "未单独限定，请结合当前创作目标判断。"}
           </p>
@@ -410,7 +410,7 @@ function MemoryDetail({
               <h4>{version.snapshot.title}</h4>
               <p>{version.snapshot.body}</p>
               <small>
-                适用条件：{version.snapshot.applicability || "未单独限定"}
+                适用条件：{version.snapshot.applicability || "未单独限定"} · {version.snapshot.inclusion === "project" ? "项目通用" : "按需引用"}
               </small>
             </details>
           ))}

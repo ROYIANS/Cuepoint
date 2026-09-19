@@ -9,6 +9,7 @@ export const memoryCategorySchema = z.enum([
 export const memoryInputSchema = z
   .object({
     category: memoryCategorySchema,
+    inclusion: z.enum(["relevant", "project"]).optional(),
     title: text(160),
     topicKey: text(200),
     body: text(8000),

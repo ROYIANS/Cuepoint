@@ -3,6 +3,8 @@ export type MemoryCategory =
 export type MemoryStatus =
   "active" | "disabled" | "superseded" | "pending_review";
 export interface MemoryInput {
+  /** Project-wide priority requires explicit opt-in; absence is relevance-only. */
+  inclusion?: "relevant" | "project";
   category: MemoryCategory;
   title: string;
   topicKey: string;

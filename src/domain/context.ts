@@ -17,6 +17,8 @@ export interface ContextSnapshot {
   /** Current base envelope; tool continuation is always appended after it. */
   baseMessages: AgentRequestMessage[];
   draft: string;
+  /** Separate, replaceable upcoming memory layer; excluded from history compaction. */
+  memoryEnvelope?: string;
 }
 export interface ContextCompaction {
   id: string;

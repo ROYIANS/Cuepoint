@@ -50,7 +50,8 @@ export async function startModelStep(runId: string, limit: number): Promise<Agen
     await requireProject(run);
     if (run.status !== "running") throw new Error("执行已停止");
     if ((run.modelStep ?? 0) - (run.modelStepSegmentStart ?? 0) >= limit) throw new Error("本段模型请求额度已用完，请继续下一段执行");
-    const next = { ...run, modelStep: (run.modelStep ?? 0) + 1, usage: undefined, outputTokensPerSecond: undefined, updatedAt: nowIso() };
+    if(run.projectId&&!run.memorySelection)throw new Error("项目记忆尚未准备，不能提交请求");
+    const next = { ...run, memoryAudit:run.memorySelection?[...(run.memoryAudit??[]),{step:(run.modelStep??0)+1,preparedAt:nowIso(),selection:structuredClone(run.memorySelection)}]:run.memoryAudit, modelStep: (run.modelStep ?? 0) + 1, usage: undefined, outputTokensPerSecond: undefined, updatedAt: nowIso() };
     await db.agentRuns.put(next);
     return next;
   });
