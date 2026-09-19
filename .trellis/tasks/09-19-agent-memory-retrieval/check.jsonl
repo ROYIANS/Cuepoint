@@ -1,1 +1,9 @@
-{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python3 .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file": ".trellis/spec/frontend/project-memory.md", "reason": "Reviewed aggregate, provenance, lifecycle, CAS and backup contracts"}
+{"file": ".trellis/spec/frontend/agent-project-context.md", "reason": "Project ownership and safe-boundary refresh"}
+{"file": ".trellis/spec/frontend/agent-context.md", "reason": "Shared budgets, frozen history and compaction invariants"}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Durable dispatch/retry/resume and no effects replay"}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Read tool registration, permissions and scoped argument validation"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Flat responsive UI, namespaces and primitives"}
+{"file": ".trellis/spec/frontend/hook-guidelines.md", "reason": "Live query error/loading and owner identity"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "Trace storage through preview and actual protocol payload"}
+{"file": ".trellis/tasks/09-19-agent-memory-retrieval/research/retrieval-foundation.md", "reason": "Inspected integration boundaries and confirmed product intent"}

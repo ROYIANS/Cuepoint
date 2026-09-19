@@ -3,7 +3,7 @@
   "name": "agent-memory-retrieval",
   "title": "Scoped memory retrieval and context injection",
   "description": "Use relevant experience at the beginning of later tasks within an inspectable context budget.",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": "frontend",
   "scope": "agent-memory-retrieval",
   "package": null,
@@ -21,6 +21,6 @@
   "children": [],
   "parent": "09-19-agent-workflow-memory",
   "relatedFiles": [],
-  "notes": "Scoped backlog. Depends on 09-19-agent-memory-management; detailed planning required before activation.",
+  "notes": "Implementation plus user-reported task inspector PrematureCommit fix complete. Real Edge reproduced 150/500 cached or invalid entity reads before fix; 15 matrix cases pass after Promise adoption. Inspector read error/draft retry verified. Independent review passed. lint and 64 files / 788 tests passed; build verified. User approved grouped commits and archive/journal. Work complete; next phase preparation follows.",
   "meta": {}
 }

@@ -3,7 +3,7 @@
 ## 1. Scope / Trigger
 Read before changing task intake, project selection, request assembly, project deletion,
 creative tools, generation or context compaction. Project business records are the
-source of current facts. This foundation does not implement durable memory retrieval.
+source of current facts. Durable memory retrieval uses a separate layer described in `agent-memory-retrieval.md`.
 
 ## 2. Signatures
 - `ChatThread.projectId?: Id`, `AgentRun.projectId?: Id`: ordinary Agent chats may

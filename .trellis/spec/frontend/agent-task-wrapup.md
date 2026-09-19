@@ -30,6 +30,15 @@ status, source fingerprint and cancellation. Deletion cascades all summary versi
 late results cannot recreate the task. Saved revisions remain immutable history;
 confirmed content requires a new draft family for later changes.
 
+Evidence loops must adopt possibly cached/locally rejected native promises through
+`await Promise.resolve(entity(...))` inside the Dexie transaction. Long chains of bare
+native awaits without a new IndexedDB operation can lose Dexie's transaction zone in a
+real browser and raise PrematureCommit even though small fake-indexeddb tests pass.
+Do not hide this by returning partial evidence, dropping transactions or adding timers.
+Wrap-up live-query failures stay local to the inspector: retain its last successful
+snapshot and unsaved editor, show an explicit retry, and block mutations until a current
+read succeeds. A failed hidden wrap-up tab must not crash the conversation page.
+
 Manual draft saves use revision and current-family checks. Conflicts preserve editor
 content. New manual families preserve prior decisions/lessons/unresolved text and
 reset acceptance to review. They never silently discard outstanding issues merely
@@ -96,6 +105,12 @@ manual review and ordinary Todo/busy guards. Bad: a model certifies its own work
 a past successful apply proves a now-deleted output, or retry regenerates assets.
 
 ## 6. Tests Required
+Run a real-browser transaction test with at least 150 repeated entity locators and
+locally invalid locators, plus distinct-query controls. Open a running task inspector,
+verify live checkpoints continue, and inject a transient read failure to check draft
+retention, disabled saves and successful explicit reread. fake-indexeddb alone cannot
+establish native transaction lifetime correctness.
+
 Use wrap-up repository/transport tests for migration, ownership, revisions/families,
 current generation evidence, source quotas, capacity, cancellation, recovery,
 completion, reopen, cleanup and failed publication. Run browser fixtures with a mock

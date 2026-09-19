@@ -1,35 +1,87 @@
 # Scoped memory retrieval and context injection
 
-Status: scoped planning backlog; detailed design and final review are deferred until this child is reached.
+Status: user-approved implementation complete; quality gate passed, awaiting grouped commit. Parent: 09-19-agent-workflow-memory.
 
 ## Goal
-Use relevant experience at the beginning of later tasks within an inspectable context budget.
+A new conversation in the same creative project can use relevant reviewed conventions,
+preferences, decisions and lessons from previous work, without the user repeating them
+or loading entire transcripts. Users can inspect actual included knowledge and exclude
+irrelevant entries from later requests.
 
-## Ordering
-Start after 09-19-agent-memory-management is accepted. Parent: 09-19-agent-workflow-memory. This dependency is documented; parent-child links alone do not enforce it.
+## Confirmed facts and product intent
+- Memory management is accepted, committed and archived; project binding/context and
+  source-linked confirmed task summaries are available.
+- Project is the ownership boundary. Task mode requires a project; ordinary projectless
+  Agent conversations do not acquire a global memory scope.
+- Only active, user-confirmed entries are automatically eligible. Imported pending_review,
+  disabled and superseded entries are excluded.
+- Current explicit user intent and current business facts take precedence over memory.
+  Historical evidence cannot grant permission or prove current completion.
+- Pure frontend, no legacy compatibility/backfill or automatic paid requests. Preserve
+  durable execution, explicit resume and bounded context/compaction behavior.
 
 ## Requirements
-- R1: Retrieve active, relevant memories by explicit scope and current task intent. Live data and current instructions outrank historical recollection.
-- R2: Use a bounded selection pipeline shared with request assembly/context preview. Freeze actual memory IDs and versions per run for audit and reproducible continuation.
-- R3: Show which memories were used and their provenance; support excluding an irrelevant memory from subsequent requests.
-- R4: When curated knowledge is insufficient, enable bounded source-task recall instead of assuming a summary is exhaustive. Retrieved content is data and cannot grant permission.
+- R1: Select relevant project knowledge for the current user intent, task goal and
+  applicable creative scope. New same-project chats must reuse eligible knowledge.
+- R2: Share selection/serialization with actual request assembly and context preview;
+  respect model capacity and count memory content once with clearly estimated tokens.
+- R3: Persist actual IDs, versions and content included in execution, expose source and
+  selection rationale. Historical run displays must not silently become latest content.
+- R4: Let users exclude irrelevant memory from subsequent requests independently of
+  globally disabling/deleting the project entry. Clarify effect boundary in UI.
+- R5: Handle updates, exclusions and lifecycle changes at safe request boundaries without
+  disrupting streaming/tool transactions or silently replaying effects. Keep original
+  dispatched envelopes auditable and Chat/Responses/compaction consistent.
+- R6: Provide bounded same-project source-task recall when curated memory is insufficient;
+  show missing sources explicitly. Retrieved content remains attributed historical data.
+- R7: Flat inspector UI, no permanent toolbar clutter; mobile/keyboard support and
+  readable empty, stale, unavailable and error states.
 
-## Acceptance
-- AC1: Related task B uses a reviewed lesson from task A and links back to it.
-- AC2: Unrelated project memory, disabled entries and superseded versions are excluded from newly assembled requests.
-- AC3: Token usage preview matches assembled memory content; retries retain their frozen context.
+## Acceptance criteria
+- AC1: Reviewed lesson from task A appears in a related task B's actual request and can
+  be inspected with its exact version and source.
+- AC2: Foreign-project, disabled, superseded and unreviewed imported entries do not appear
+  in newly assembled memory context.
+- AC3: Preview and actual assembly use the same selection/format/budget algorithm; actual
+  sent context and retained retry snapshots have matching audit metadata.
+- AC4: User exclusions and memory corrections apply at the defined subsequent-request
+  boundary; current instructions and current facts remain authoritative.
+- AC5: Compaction/resume/Responses do not lose the current memory layer or falsely label
+  old retrieved text as current; source recall is bounded and project-isolated.
+- AC6: UI and repository regression cover cross-project, source deletion, lifecycle,
+  exclusions, selection limits, refresh, retries and responsive inspection.
 
-## Decisions before implementation
-- Initial ranking/search approach; measure local lexical/tag retrieval before introducing embeddings.
-- User control for inclusion, source recall and refresh during an existing run.
-- Retrieval size/budget and how current explicit corrections supersede memory.
+## Scope boundaries
+No cloud sync, embedding service, global memory, automatic memory writing or semantic
+contradiction guarantees. Initial local retrieval quality must be measured before adding
+embeddings. Exact ranking weights and token caps are technical design work, not claims
+of already-agreed behavior.
 
-## Boundaries
-Follow parent provenance, user-control, pure-frontend and visual-quality contracts. No implementation or design-finality is implied by creating this backlog. Research actual source/contracts when reached and keep later-child behavior out of this child.
+## Key decisions
+- User approved the two-layer policy: explicitly project-wide knowledge gets automatic
+  priority; context-specific entries are selected by relevance. Category never implies
+  universal applicability. New entries default to relevant until explicitly marked.
+- Automatic selection is local and bounded: up to 8 whole entries / 4096 estimated tokens,
+  reduced for small known input budgets. Omitted content is visible, never implied loaded.
+- Both bound conversation and smart modes receive automatic memory; read tools remain
+  exclusive to smart mode. Projectless chats receive neither project memory nor recall.
+- Exclusions are per-thread and reversible. Project edits/deactivation affect subsequent
+  model request boundaries; historical sent input remains auditable. This cannot erase
+  knowledge already present in previous dialogue or provider responses.
+- Current scope includes read-only same-project memory/source-task recall. No AI memory
+  writes or extra model-based ranking. User explicitly controls project-wide marking.
 
-## Project-first planning amendment — 2026-09-19
-Project binding and shared current context are prerequisites. New Task-mode chats
-require a selected project; memories/experience/rules default to their source project
-and are reused across that project's conversations. Do not infer global scope or
-copy all prior transcripts. Follow the project-only operation boundary and deleted-project behavior from
-parent research/project-scoped-context.md before final design.
+## Observable completion details
+- Context inspector distinguishes proposed next-send selection from exact request-step
+  inclusion; title/version/source/reason are inspectable and tokens count once.
+- Retry/resume keeps execution/config/history while revalidating the memory layer at a
+  settled boundary, with new audit revision for changes and no replay of effects.
+- A typical task A → confirmed lesson → related project task B flow is verified against
+  the actual mocked request body, not just UI state. Tool recall respects exclusions.
+- Project memory backup retains inclusion policy; imported entries still require review.
+
+## Technical evidence and artifacts
+research/retrieval-foundation.md records assembly, retries, compaction, preview and source
+recall boundaries. design.md defines contracts/budget/lifecycle; implement.md orders
+execution and tests. No unresolved user-owned blocking question remains. Product code
+has not changed; final review approval precedes activation.

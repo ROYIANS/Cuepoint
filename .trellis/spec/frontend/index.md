@@ -21,6 +21,7 @@
 | [Agent Tasks](./agent-tasks.md) | Shared task/chat identity, plan ownership, artifacts and explicit completion | Filled |
 | [Task Wrap-up](./agent-task-wrapup.md) | Evidence-backed review, durable summaries and explicit completion | Filled |
 | [Project Memory](./project-memory.md) | Reviewed project knowledge, provenance, revision CAS and ZIP transfer | Filled |
+| [Memory Retrieval](./agent-memory-retrieval.md) | Scoped lexical selection, independent request envelopes, audits and read tools | Filled |
 | [Project Context](./agent-project-context.md) | Project binding, bounded facts, tool scope and deletion guards | Filled |
 | [Agent Context](./agent-context.md) | History policy, shared budgets and durable compaction | Filled |
 | [Agent Execution](./agent-execution.md) | Durable runs, ordered checkpoints, explicit retry and cross-tab recovery | Filled |

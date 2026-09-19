@@ -3,8 +3,8 @@
 ## 1. Scope / Trigger
 
 Use for project-owned, user-reviewed reusable knowledge: conventions, creative preferences,
-decisions and lessons. This management layer does not retrieve memory for model requests,
-provide AI memory tools, or grant permissions. Current project facts remain authoritative.
+decisions and lessons. Automatic retrieval and AI read tools follow `agent-memory-retrieval.md`;
+this management repository never grants permissions. Current project facts remain authoritative.
 No global memory owner or legacy data backfill exists.
 
 ## 2. Signatures (API / DB)
@@ -31,7 +31,9 @@ No global memory owner or legacy data backfill exists.
   compares both revisions and writes both histories atomically. Hard delete removes all
   versions; project delete cascades both tables; source chat deletion retains memories.
 - `MemoryInput` is strict, bounded and contains only category/title/topicKey/body/
-  applicability/tags. Never send a full persisted record as an input payload.
+  applicability/tags and optional `inclusion: 'relevant' | 'project'`. Absence means
+  relevance-only; project-wide priority requires explicit opt-in. Preserve this field
+  through revision snapshots and ZIP import/export. Never send a full persisted record as an input payload.
 - Topic keys use shared NFKC + whitespace + lowercase normalization. Exact content or
   exact summary source deduplicates without overwriting edits or reactivating old rows.
   Same-topic different active content raises `MemoryConflictError(existingIds)`.
@@ -83,7 +85,7 @@ No global memory owner or legacy data backfill exists.
   then inspect its exact source and later revisions in project memory.
 - Base: manually create/edit/disable/reactivate knowledge with no connector configured.
 - Bad: promote an unconfirmed model draft, infer current validity from historical evidence,
-  silently accept a stale revision, or inject stored entries into prompts in this layer.
+  silently accept a stale revision, or bypass the reviewed retrieval policy when injecting stored entries.
 
 ## 6. Tests Required
 
