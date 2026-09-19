@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 26
+- **Total Sessions**: 27
 - **Last Active**: 2026-09-19
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~620 | Active |
+| `journal-1.md` | ~642 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 27 | 2026-09-19 | Project-owned tasks and verified wrap-up | `6b6289b`, `27026b8` | `main` |
 | 26 | 2026-09-19 | AI-managed task workspace and working records | `22c8b70`, `7f8143c` | `main` |
 | 25 | 2026-09-19 | Creative skills, reviewed generation and resumable execution | `d684534` | `main` |
 | 24 | 2026-09-19 | Unify studio surface and chat header | `c2a064c` | `main` |

@@ -618,3 +618,25 @@ Implemented Task-mode intake without first-send task creation, AI-owned atomic t
 ### Status
 
 [OK] **Completed**
+
+
+## Session 27: Project-owned tasks and verified wrap-up
+
+**Date**: 2026-09-19
+**Task**: Project-owned tasks and verified wrap-up
+**Branch**: `main`
+
+### Summary
+
+Implemented and archived task verification/wrap-up and project-owned creative context. Task mode requires project selection but AI creates tasks only after requirements are clear. Durable project scope governs business tools and media generation; studio reuse is explicit copy. Current bounded business facts flow into first requests and safe continuation diffs; same-project new chats reuse current facts. Deleted projects retain read-only task/chat/review history, including disabled approval actions. Review fixes: whitelist automatic context, retain world rules, avoid repeated invisible snapshots, stop deleted-project compaction, acquire execution lock before detail navigation. Full gate passed: 59 test files / 747 tests, type-check/build, desktop/mobile disposable browser flows and wrap-up regression. No legacy migration, paid API validation or remote push. Next deliveries are project-scoped memory management and retrieval; current project facts are not long-term memory.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `6b6289b` | (see git log) |
+| `27026b8` | (see git log) |
+
+### Status
+
+[OK] **Completed**
