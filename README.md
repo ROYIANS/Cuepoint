@@ -33,6 +33,29 @@ pnpm dev
 | `pnpm test` | 单元测试 |
 | `pnpm lint` | TypeScript 检查 |
 
+## 部署
+
+镜像发布在 [GHCR](https://github.com/ROYIANS/Cuepoint/pkgs/container/cuepoint)：`ghcr.io/royians/cuepoint`。
+
+推送到 `main` 会打 `latest`；打 `v*` 标签会再推 semver。仓库需开启 Actions 写 Packages 权限（Settings → Actions → General → Workflow permissions → Read and write）。
+
+```bash
+# 私有包需要登录；公开包可跳过
+echo "$GITHUB_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
+
+docker compose pull
+docker compose up -d
+```
+
+浏览器打开 http://localhost:8080 。数据仍在访问者浏览器的 IndexedDB，容器里不存项目和密钥。
+
+本机构建（不拉 GHCR）：
+
+```bash
+docker build -t ghcr.io/royians/cuepoint:latest .
+docker compose up -d
+```
+
 ## 感谢
 
 感谢以下项目及其贡献者，为小光点提供基础能力与实现参考：

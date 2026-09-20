@@ -1,0 +1,3 @@
+{"file": "package.json", "reason": "packageManager + build script"}
+{"file": "README.md", "reason": "existing develop docs — add deploy"}
+{"file": "vite.config.ts", "reason": "SPA output is dist/; no custom base"}
