@@ -86,6 +86,56 @@ describe("APIMart native generation submission", () => {
     expect(await submitApimartImageGeneration(credentials, { model: "any" }, { fetchImpl: fetchResponse(payload) })).toMatchObject({ ok: false, kind: "protocol" });
   });
 
+  it("accepts Ext 202 object task ids without treating them as multiple tasks", async () => {
+    const fetchImpl = fetchResponse({ code: 202, data: { id: "ext-task-1", status: "submitted", poll_url: "https://api.apimart.ai/v1/tasks/ext-task-1" } });
+    expect(await submitApimartImageGeneration(credentials, { model: "gpt-image-2.5-ext", prompt: "夜景", version: "flare" }, { fetchImpl })).toEqual({
+      ok: true, tasks: [{ id: "ext-task-1", providerStatus: "submitted" }],
+    });
+    expect(fetchImpl).toHaveBeenCalledOnce();
+  });
+
+  it("keeps Image 2 and video success on code 200 task-id arrays", async () => {
+    const imageFetch = fetchResponse({ code: 200, data: [{ task_id: "image-2", status: "submitted" }] });
+    expect(await submitApimartImageGeneration(credentials, { model: "gpt-image-2", prompt: "街景" }, { fetchImpl: imageFetch })).toEqual({
+      ok: true, tasks: [{ id: "image-2", providerStatus: "submitted" }],
+    });
+    const videoFetch = fetchResponse({ code: 202, data: { id: "video-object" } });
+    expect(await submitApimartVideoGeneration(credentials, { model: "MiniMax-H3", prompt: "镜头" }, { fetchImpl: videoFetch })).toMatchObject({ ok: false, kind: "protocol" });
+    expect(videoFetch).toHaveBeenCalledOnce();
+  });
+
+  it("attaches Ext response-version and idempotency headers only for Ext image submits", async () => {
+    const extFetch = fetchResponse({ code: 200, data: [{ task_id: "ext-1", status: "submitted" }] });
+    expect((await submitApimartImageGeneration(credentials, { model: "gpt-image-2.5-ext", prompt: "夜景", version: "sunburst", resolution: "2K" }, {
+      fetchImpl: extFetch, idempotencyKey: "job-stable-id",
+    })).ok).toBe(true);
+    expect(extFetch).toHaveBeenCalledExactlyOnceWith("https://api.apimart.ai/v1/images/generations", expect.objectContaining({
+      method: "POST",
+      headers: {
+        Authorization: "Bearer sk-secret-key",
+        "Content-Type": "application/json",
+        "X-APIMart-Response-Version": "2026-07-27",
+        "Idempotency-Key": "job-stable-id",
+      },
+    }));
+    const flareFetch = fetchResponse(submitted);
+    expect((await submitApimartImageGeneration(credentials, { model: "gpt-image-2.5-flare", prompt: "街景", quality: "auto" }, {
+      fetchImpl: flareFetch, idempotencyKey: "job-stable-id",
+    })).ok).toBe(true);
+    expect(flareFetch.mock.calls[0]?.[1]?.headers).toEqual({
+      Authorization: "Bearer sk-secret-key",
+      "Content-Type": "application/json",
+    });
+    const videoFetch = fetchResponse(submitted);
+    expect((await submitApimartVideoGeneration(credentials, { model: "MiniMax-H3", prompt: "镜头" }, {
+      fetchImpl: videoFetch, idempotencyKey: "job-stable-id",
+    })).ok).toBe(true);
+    expect(videoFetch.mock.calls[0]?.[1]?.headers).toEqual({
+      Authorization: "Bearer sk-secret-key",
+      "Content-Type": "application/json",
+    });
+  });
+
   it("does not retry an ambiguous paid submission failure or expose raw transport errors", async () => {
     const fetchImpl = vi.fn<typeof fetch>(async () => { throw new TypeError("request failed with sk-secret-key"); });
     const result = await submitApimartVideoGeneration(credentials, { model: "any" }, { fetchImpl });

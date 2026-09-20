@@ -5,9 +5,10 @@ import { db } from "@/db/database";
 import { patchProjectDetails } from "@/db/repo";
 import { ASPECT_PRESET_IDS, type AspectPresetId, type Project } from "@/domain/types";
 import {
-  defaultImageGeneration, defaultVideoGeneration, IMAGE_RATIOS, IMAGE_RESOLUTIONS,
-  OUTPUT_PROFILE_VERSION, validateGenerationDefaults, VIDEO_RATIOS, VIDEO_RESOLUTIONS,
-  type ProjectGenerationDefaults,
+  APIMART_IMAGE_MODELS, apimartImageSizes, defaultImageGeneration, defaultVideoGeneration,
+  IMAGE_EXT_VERSIONS, IMAGE_QUALITIES, IMAGE_RESOLUTIONS, isApimartImage25, isApimartImageExt,
+  isApimartImageModel, OUTPUT_PROFILE_VERSION, validateGenerationDefaults, VIDEO_RATIOS, VIDEO_RESOLUTIONS,
+  type ApimartImageModel, type ProjectGenerationDefaults,
 } from "@/domain/output";
 import { AssetTextField } from "@/components/assets/AssetTextField";
 import { Button } from "@/components/ui/button";
@@ -79,6 +80,13 @@ export function ProjectSettingsPanel({ project, onOutputState }: { project: Proj
   </div>;
 }
 
+const IMAGE_MODEL_LABELS: Record<ApimartImageModel, string> = {
+  "gpt-image-2": "APIMart · GPT Image 2（标准通道）",
+  "gpt-image-2.5-flare": "APIMart · GPT Image 2.5 Flare",
+  "gpt-image-2.5-sunburst": "APIMart · GPT Image 2.5 Sunburst",
+  "gpt-image-2.5-ext": "APIMart · GPT Image 2.5 Ext",
+};
+
 function ProjectOutputSettings({ project, onOutputState }: { project: Project; onOutputState: (state: { dirty: boolean; saving: boolean }) => void }) {
   const [ratio, setRatio] = useState<AspectPresetId>(project.aspectPreset);
   const [draft, setDraft] = useState<ProjectGenerationDefaults>(project.generationDefaults ?? {});
@@ -97,8 +105,9 @@ function ProjectOutputSettings({ project, onOutputState }: { project: Project; o
   }, [dirty, saving]);
   const image = draft.image;
   const video = draft.video;
-  const imageKnown = image?.provider === "apimart" && image.model === "gpt-image-2" && image.profileVersion === OUTPUT_PROFILE_VERSION;
+  const imageKnown = Boolean(image && image.provider === "apimart" && isApimartImageModel(image.model) && image.profileVersion === OUTPUT_PROFILE_VERSION);
   const videoKnown = video?.provider === "apimart" && video.model === "MiniMax-H3" && video.profileVersion === OUTPUT_PROFILE_VERSION;
+  const imageModel = imageKnown ? image!.model : undefined;
   const updateImage = (patch: Partial<NonNullable<ProjectGenerationDefaults["image"]>>) => {
     if (image) setDraft({ ...draft, image: { ...image, ...patch } });
   };
@@ -119,15 +128,17 @@ function ProjectOutputSettings({ project, onOutputState }: { project: Project; o
       <SettingSelect label="项目目标画幅" value={ratio} options={ASPECT_PRESET_IDS} onChange={(value) => setRatio(value as AspectPresetId)} />
       <div className="rounded-xl border p-4 space-y-4">
         <h4 className="text-sm font-medium">图片默认值</h4>
-        <SettingSelect label="图片模型" value={!image ? "manual" : imageKnown ? "gpt-image-2" : "unsupported"}
-          options={[{ value: "manual", label: "不设置生成默认值" }, { value: "gpt-image-2", label: "APIMart · GPT Image 2（标准通道）" }, ...(!imageKnown && image ? [{ value: "unsupported", label: `待确认：${image.model} / ${image.profileVersion}` }] : [])]}
-          onChange={(value) => value !== "unsupported" && setDraft({ ...draft, image: value === "manual" ? undefined : defaultImageGeneration(ratio) })} />
+        <SettingSelect label="图片模型" value={!image ? "manual" : imageKnown ? image.model : "unsupported"}
+          options={[{ value: "manual", label: "不设置生成默认值" }, ...APIMART_IMAGE_MODELS.map((model) => ({ value: model, label: IMAGE_MODEL_LABELS[model] })), ...(!imageKnown && image ? [{ value: "unsupported", label: `待确认：${image.model} / ${image.profileVersion}` }] : [])]}
+          onChange={(value) => value !== "unsupported" && setDraft({ ...draft, image: value === "manual" ? undefined : defaultImageGeneration(ratio, value as ApimartImageModel) })} />
         {image && <>
           <div className="grid gap-4 sm:grid-cols-2">
-            <SettingSelect label="图片比例" value={image.size} options={[...IMAGE_RATIOS, { value: "auto", label: "自动（默认 1:1）" }]} onChange={(size) => updateImage({ size })} />
+            <SettingSelect label="图片比例" value={image.size} options={[...apimartImageSizes(image.model), { value: "auto", label: "自动（默认 1:1）" }]} onChange={(size) => updateImage({ size })} />
             <SettingSelect label="图片清晰度" value={image.resolution} options={IMAGE_RESOLUTIONS} onChange={(resolution) => updateImage({ resolution })} />
+            {imageModel && isApimartImage25(imageModel) && <SettingSelect label="画质" value={image.quality ?? "auto"} options={[...IMAGE_QUALITIES]} onChange={(quality) => updateImage({ quality })} />}
+            {imageModel && isApimartImageExt(imageModel) && <SettingSelect label="版本" value={image.version ?? "flare"} options={[...IMAGE_EXT_VERSIONS]} onChange={(version) => updateImage({ version })} />}
           </div>
-          <p className="text-muted-foreground text-xs leading-5">清晰度是模型的输出档位，实际像素随比例而变化。一次生成 1 张图片。</p>
+          <p className="text-muted-foreground text-xs leading-5">清晰度是模型的输出档位，实际像素随比例而变化。一次生成 1 张图片。{imageModel && isApimartImage25(imageModel) ? " auto 会按最高档预扣，完成后再按实际用量结算。" : ""}</p>
         </>}
       </div>
       <div className="rounded-xl border p-4 space-y-4">

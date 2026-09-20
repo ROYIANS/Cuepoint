@@ -2,7 +2,7 @@ import { parseModelMetadata, type ChatModelMetadata } from "@/lib/ai/modelMetada
 import { normalizeBaseUrl } from "@/lib/ai/openaiCompatible";
 
 export type ApimartCredentials = { baseUrl: string; apiKey: string };
-export type ApimartRequestOptions = { signal?: AbortSignal; fetchImpl?: typeof fetch };
+export type ApimartRequestOptions = { signal?: AbortSignal; fetchImpl?: typeof fetch; idempotencyKey?: string };
 export type ApimartJson = null | boolean | number | string | ApimartJson[] | { [key: string]: ApimartJson };
 export type ApimartFailure = {
   ok: false;
@@ -125,10 +125,14 @@ function providerError(value: unknown, key: string): ApimartTask["error"] {
   };
 }
 
+function acceptedCode(code: unknown): boolean {
+  return code === 200 || code === 202;
+}
+
 async function request(
   credentials: ApimartCredentials,
   path: string,
-  init: { method: "GET" | "POST"; body?: string | FormData },
+  init: { method: "GET" | "POST"; body?: string | FormData; headers?: Record<string, string> },
   options: ApimartRequestOptions,
 ): Promise<ApimartResult<{ data: Record<string, unknown> }>> {
   const base = normalizeBaseUrl(credentials.baseUrl);
@@ -143,8 +147,9 @@ async function request(
     const response = await (options.fetchImpl ?? fetch)(`${base}${path}`, {
       ...init,
       headers: {
-        Authorization: `Bearer ${key}`,
         ...(typeof init.body === "string" ? { "Content-Type": "application/json" } : {}),
+        ...init.headers,
+        Authorization: `Bearer ${key}`,
       },
       signal: options.signal,
       redirect: "error",
@@ -160,7 +165,7 @@ async function request(
     const error = providerError(envelope?.error, key);
     const code = envelope?.code;
     const providerFailed = envelope?.success === false ||
-      (code !== undefined && code !== 200) || (envelope?.error !== undefined && envelope.error !== null);
+      (code !== undefined && !acceptedCode(code)) || (envelope?.error !== undefined && envelope.error !== null);
     if (!response.ok || providerFailed) {
       const prefix = response.status === 401 || response.status === 403 ? "鉴权失败" : "APIMart 请求失败";
       const detail = error?.message ?? (typeof envelope?.message === "string" ? redact(envelope.message, key) : undefined);
@@ -260,11 +265,29 @@ export async function uploadApimartImage(
   };
 }
 
+function parseSubmittedTasks(data: unknown, allowObject: boolean): ApimartResult<{ tasks: { id: string; providerStatus?: string }[] }> {
+  if (Array.isArray(data) && data.length > 0) {
+    const tasks: { id: string; providerStatus?: string }[] = [];
+    for (const row of data) {
+      if (!record(row) || !nonempty(row.task_id)) return protocol();
+      tasks.push({ id: row.task_id, providerStatus: typeof row.status === "string" ? row.status : undefined });
+    }
+    return { ok: true, tasks };
+  }
+  if (allowObject && record(data)) {
+    const id = nonempty(data.id) ? data.id : nonempty(data.task_id) ? data.task_id : undefined;
+    if (!id) return protocol();
+    return { ok: true, tasks: [{ id, providerStatus: typeof data.status === "string" ? data.status : undefined }] };
+  }
+  return protocol();
+}
+
 async function submitGeneration(
   credentials: ApimartCredentials,
   input: ApimartGenerationRequest,
   path: string,
   options: ApimartRequestOptions,
+  allowObject: boolean,
 ): Promise<ApimartResult<{ tasks: { id: string; providerStatus?: string }[] }>> {
   if (!nonempty(input.model)) return failure("validation", "请指定生成模型");
   let body: string;
@@ -275,16 +298,15 @@ async function submitGeneration(
     }
     body = JSON.stringify(input);
   } catch { return failure("validation", "生成参数必须是有效的 JSON"); }
+  const headers = input.model === "gpt-image-2.5-ext" && path === "/images/generations" ? {
+    "X-APIMart-Response-Version": "2026-07-27",
+    ...(options.idempotencyKey ? { "Idempotency-Key": options.idempotencyKey } : {}),
+  } : undefined;
   // Exactly one request: retries after network/abort failure could create duplicate paid jobs.
-  const response = await request(credentials, path, { method: "POST", body }, options);
+  const response = await request(credentials, path, { method: "POST", body, headers }, options);
   if (!response.ok) return response;
-  if (response.data.code !== 200 || !Array.isArray(response.data.data) || response.data.data.length === 0) return protocol();
-  const tasks: { id: string; providerStatus?: string }[] = [];
-  for (const row of response.data.data) {
-    if (!record(row) || !nonempty(row.task_id)) return protocol();
-    tasks.push({ id: row.task_id, providerStatus: typeof row.status === "string" ? row.status : undefined });
-  }
-  return { ok: true, tasks };
+  if (!acceptedCode(response.data.code)) return protocol();
+  return parseSubmittedTasks(response.data.data, allowObject);
 }
 
 export function submitApimartImageGeneration(
@@ -292,14 +314,14 @@ export function submitApimartImageGeneration(
   input: ApimartImageGenerationRequest,
   options: ApimartRequestOptions = {},
 ) {
-  return submitGeneration(credentials, input, "/images/generations", options);
+  return submitGeneration(credentials, input, "/images/generations", options, true);
 }
 export function submitApimartVideoGeneration(
   credentials: ApimartCredentials,
   input: ApimartVideoGenerationRequest,
   options: ApimartRequestOptions = {},
 ) {
-  return submitGeneration(credentials, input, "/videos/generations", options);
+  return submitGeneration(credentials, input, "/videos/generations", options, false);
 }
 
 function mediaResults(value: unknown): ApimartMediaResult[] | undefined {

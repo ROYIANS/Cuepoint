@@ -295,7 +295,7 @@ function BatchConfigurationSummary({ draft }: { draft: GenerationSubmitArgs }) {
     catch { return { id: draft.connectorId, label: "连接读取失败" }; }
   }, [draft.connectorId]);
   const p = draft.parameters;
-  const parameters = [p.size, p.resolution, p.aspectRatio, p.duration === undefined ? undefined : `${p.duration} 秒`, p.quality].filter(Boolean);
+  const parameters = [p.size, p.resolution, p.aspectRatio, p.duration === undefined ? undefined : `${p.duration} 秒`, p.quality, p.version].filter(Boolean);
   return <span className="agent-batch-config-summary">{connector?.id === draft.connectorId ? connector.label : "读取连接…"} · {draft.model}{parameters.length ? ` · ${parameters.join(" / ")}` : " · 模型默认参数"} · {draft.inputs.length} 份参考</span>;
 }
 

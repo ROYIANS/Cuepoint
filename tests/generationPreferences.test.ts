@@ -77,6 +77,34 @@ describe("generation preferences persistence", () => {
     await expect(saveGenerationPreference("image", image)).rejects.toThrow("尚未配置");
     expect(await db.agents.count()).toBe(0);
   });
+
+  it("persists GPT Image 2.5 quality and Ext version without merging incompatible fields", async () => {
+    await seed();
+    const flare: GenerationPreference = {
+      connectorId: apimart.id, model: "gpt-image-2.5-flare",
+      parameters: { size: "16:9", resolution: "2k", quality: "auto" },
+    };
+    const ext: GenerationPreference = {
+      connectorId: apimart.id, model: "gpt-image-2.5-ext",
+      parameters: { size: "1:1", resolution: "4k", version: "sunburst" },
+    };
+    await saveGenerationPreference("image", flare);
+    expect(await getGenerationPreferences()).toEqual({ image: flare });
+    await expect(saveGenerationPreference("image", {
+      connectorId: apimart.id, model: "gpt-image-2", parameters: { size: "16:9", resolution: "1k", quality: "auto" },
+    })).rejects.toThrow();
+    await expect(saveGenerationPreference("image", {
+      connectorId: apimart.id, model: "gpt-image-2.5-ext", parameters: { size: "2:1", resolution: "1k", version: "flare" },
+    })).rejects.toThrow();
+    await saveGenerationPreference("image", ext);
+    expect(await getGenerationPreferences()).toEqual({ image: ext });
+    expect(recommendGenerationSelection({
+      kind: "image", connectors, projectDefaults: { image: defaultImageGeneration("9:16", "gpt-image-2.5-sunburst") },
+    })).toMatchObject({
+      source: "project", status: "ready",
+      recommendation: { model: "gpt-image-2.5-sunburst", parameters: { size: "9:16", resolution: "1k", quality: "auto" } },
+    });
+  });
 });
 
 describe("independent generation recommendations", () => {

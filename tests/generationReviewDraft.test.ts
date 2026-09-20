@@ -43,6 +43,52 @@ describe("generation review selection changes", () => {
     expect(profileRequest(next, "aihubmix").kind).toBe("image");
   });
 
+  it("does not merge Image 2 / 2.5 / Ext fields when the model changes", () => {
+    const image = (model: GenerationSubmitArgs["model"], parameters: GenerationSubmitArgs["parameters"]): GenerationSubmitArgs => ({
+      connectorId: "apimart", model, prompt: "雨夜车站",
+      target: { kind: "character", projectId: "project", entityId: "character", slot: "front" },
+      inputs: [], parameters,
+    });
+    const toFlare = applyGenerationSelection(
+      image("gpt-image-2", { size: "2:1", resolution: "4k" }),
+      { connectorId: "apimart", model: "gpt-image-2.5-flare", parameters: {} },
+      "apimart",
+    );
+    expect(toFlare.parameters).toEqual({});
+    expect(profileRequest(toFlare, "apimart").parameters).toMatchObject({ quality: "auto", resolution: "1k", size: "auto", n: 1 });
+    expect(profileRequest(toFlare, "apimart").parameters).not.toHaveProperty("version");
+
+    const toExt = applyGenerationSelection(
+      image("gpt-image-2.5-flare", { size: "2:1", resolution: "2k", quality: "max" }),
+      { connectorId: "apimart", model: "gpt-image-2.5-ext", parameters: {} },
+      "apimart",
+    );
+    expect(toExt.parameters).toEqual({});
+    expect(profileRequest(toExt, "apimart").parameters).toMatchObject({ version: "flare", resolution: "1K", size: "auto", n: 1 });
+    expect(profileRequest(toExt, "apimart").parameters).not.toHaveProperty("quality");
+
+    const backToImage2 = applyGenerationSelection(
+      image("gpt-image-2.5-ext", { size: "21:9", resolution: "2k", version: "sunburst" }),
+      { connectorId: "apimart", model: "gpt-image-2", parameters: { size: "16:9", resolution: "1k" } },
+      "apimart",
+    );
+    expect(backToImage2.parameters).toEqual({ size: "16:9", resolution: "1k" });
+    expect(profileRequest(backToImage2, "apimart").parameters).not.toHaveProperty("quality");
+    expect(profileRequest(backToImage2, "apimart").parameters).not.toHaveProperty("version");
+  });
+
+  it("rejects Ext-only sizes and Image 2 quality locally before any paid mapping", () => {
+    const base: GenerationSubmitArgs = {
+      connectorId: "apimart", model: "gpt-image-2.5-ext", prompt: "雨夜车站",
+      target: { kind: "character", projectId: "project", entityId: "character", slot: "front" },
+      inputs: [], parameters: { size: "2:1", resolution: "2k", version: "flare" },
+    };
+    expect(() => profileRequest(base, "apimart")).toThrow("Ext");
+    expect(() => profileRequest({ ...base, model: "gpt-image-2", parameters: { size: "16:9", resolution: "1k", quality: "auto" } }, "apimart")).toThrow("不支持");
+    expect(profileRequest({ ...base, parameters: { size: "16:9", resolution: "2k", version: "sunburst" } }, "apimart").parameters)
+      .toMatchObject({ version: "sunburst", resolution: "2K", size: "16:9", n: 1 });
+  });
+
   it("preserves an unfinished prompt while switching configuration", () => {
     for (const prompt of ["", "  尚在编辑\n"]) {
       const next = applyGenerationSelection({ ...video([]), prompt }, { connectorId: "new", model: "MiniMax-H3", parameters: {} }, "apimart");

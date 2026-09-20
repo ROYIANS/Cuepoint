@@ -12,6 +12,7 @@ import { emptySlot } from "@/domain/slot";
 import { targetRevision } from "@/lib/productionRevision";
 import { flushPendingDrafts } from "@/lib/debouncedDraft";
 import { createId, nowIso } from "@/lib/ids";
+import { isApimartImage25 } from "@/domain/output";
 import { getApimartTask, submitApimartImageGeneration, submitApimartVideoGeneration, uploadApimartImage } from "@/lib/ai/apimart";
 import { downloadAIHubMixResult, getAIHubMixImageTask, getAIHubMixVideoTask, submitAIHubMixImageGeneration, submitAIHubMixVideoGeneration } from "@/lib/ai/aihubmix";
 import type { AIHubMixGenerationRequest, AIHubMixTask } from "@/lib/ai/aihubmix";
@@ -131,6 +132,7 @@ async function nativeRequest(job: AgentGenerationJob, config: ConnectorConfig, c
   const input: AIHubMixGenerationRequest = {model:job.model,prompt:String(job.parameters.prompt)};
   for (const [key,value] of Object.entries(job.parameters)) if (!["mode","quality"].includes(key)) input[key]=value;
   if (job.provider === "aihubmix" && job.parameters.quality) input.extra = {quality:job.parameters.quality};
+  if (job.provider === "apimart" && isApimartImage25(job.model) && typeof job.parameters.quality === "string") input.quality = job.parameters.quality;
   const urls: string[] = [];
   for (const media of records) {
     context.signal.throwIfAborted();
@@ -194,7 +196,7 @@ export async function submitClaimedGeneration(job: AgentGenerationJob, config: C
     context.signal.throwIfAborted();
     postStarted=true;
     if (job.provider === "apimart") {
-      const result=await (job.kind === "image" ? submitApimartImageGeneration : submitApimartVideoGeneration)(config,request,{signal:context.signal,fetchImpl:options.fetchImpl});
+      const result=await (job.kind === "image" ? submitApimartImageGeneration : submitApimartVideoGeneration)(config,request,{signal:context.signal,fetchImpl:options.fetchImpl,idempotencyKey:job.id});
       if (!result.ok) {
         await updateGenerationJob(job.id,{status:result.kind === "validation" || result.kind === "http" && [400,401,402,403,404,422,429].includes(result.httpStatus ?? 0) ? "failed" : "unknown",error:cleanError(new Error(result.message),config)});
         return monitorAgentGeneration(job.id,context,options);

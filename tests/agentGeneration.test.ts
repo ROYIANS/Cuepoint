@@ -200,6 +200,48 @@ describe("verified generation tool contracts",()=>{
     expect(()=>profileRequest(f.args,"aihubmix")).toThrow("Veo");
     expect(()=>profileRequest({...f.args,model:"veo-3.1-fast-generate-preview",parameters:{resolution:"4K",duration:4}},"aihubmix")).toThrow("8 秒");
   });
+  it("maps GPT Image 2.5 flare quality and Ext version/resolution before any network call",()=>{
+    const target={kind:"character" as const,projectId:"project",entityId:"character",slot:"front"};
+    const flare=profileRequest({connectorId:"cx",model:"gpt-image-2.5-flare",prompt:"雨夜车站",target,inputs:[],parameters:{}},"apimart");
+    expect(flare.parameters).toMatchObject({quality:"auto",resolution:"1k",size:"auto",n:1});
+    expect(flare.parameters).not.toHaveProperty("version");
+    const sunburst=profileRequest({connectorId:"cx",model:"gpt-image-2.5-sunburst",prompt:"雨夜车站",target,inputs:[],parameters:{size:"16:9",resolution:"2k",quality:"xhigh"}},"apimart");
+    expect(sunburst.parameters).toMatchObject({quality:"xhigh",resolution:"2k",size:"16:9"});
+    const ext=profileRequest({connectorId:"cx",model:"gpt-image-2.5-ext",prompt:"雨夜车站",target,inputs:[],parameters:{size:"9:16",resolution:"4k"}},"apimart");
+    expect(ext.parameters).toMatchObject({version:"flare",resolution:"4K",size:"9:16",n:1});
+    expect(ext.parameters).not.toHaveProperty("quality");
+    expect(()=>profileRequest({connectorId:"cx",model:"gpt-image-2",prompt:"雨夜车站",target,inputs:[],parameters:{quality:"auto"}},"apimart")).toThrow();
+    expect(()=>profileRequest({connectorId:"cx",model:"gpt-image-2.5-ext",prompt:"雨夜车站",target,inputs:[],parameters:{size:"2:1",resolution:"1k"}},"apimart")).toThrow("Ext");
+    expect(()=>profileRequest({connectorId:"cx",model:"gpt-image-2.5-flare",prompt:"雨夜车站",target,inputs:Array.from({length:16},(_,i)=>({mediaId:`m${i}`,role:"reference-image" as const})),parameters:{}},"apimart")).not.toThrow();
+    expect(()=>profileRequest({connectorId:"cx",model:"gpt-image-2",prompt:"雨夜车站",target,inputs:Array.from({length:16},(_,i)=>({mediaId:`m${i}`,role:"reference-image" as const})),parameters:{}},"apimart")).toThrow();
+  });
+});
+
+describe("APIMart GPT Image 2.5 paid request mapping",()=>{
+  it("posts flare with quality auto and Ext with version plus uppercase resolution",async()=>{
+    const flare=await setup();
+    flare.args={...flare.args,model:"gpt-image-2.5-flare",parameters:{size:"16:9",resolution:"2k"}};
+    const flareFetch=apimartFetch();
+    await submitAgentGeneration(flare.args,flare.context,{fetchImpl:flareFetch,pollIntervalMs:0,maxPolls:3});
+    const flareBody=JSON.parse(String(flareFetch.mock.calls.find(([url,init])=>init?.method==="POST"&&String(url).includes("/images/generations"))![1]!.body));
+    expect(flareBody).toMatchObject({model:"gpt-image-2.5-flare",prompt:"雨夜车站",size:"16:9",resolution:"2k",quality:"auto",n:1});
+    expect(flareBody).not.toHaveProperty("version");
+    expect(flareFetch.mock.calls.find(([url,init])=>init?.method==="POST"&&String(url).includes("/images/generations"))![1]!.headers).toEqual({
+      Authorization:"Bearer private-key-123","Content-Type":"application/json",
+    });
+
+    const ext=await setup();
+    ext.args={...ext.args,model:"gpt-image-2.5-ext",parameters:{size:"9:16",resolution:"4k",version:"sunburst"}};
+    const extFetch=apimartFetch();
+    const extJob=await submitAgentGeneration(ext.args,ext.context,{fetchImpl:extFetch,pollIntervalMs:0,maxPolls:3});
+    const extInit=extFetch.mock.calls.find(([url,init])=>init?.method==="POST"&&String(url).includes("/images/generations"))![1]!;
+    expect(JSON.parse(String(extInit.body))).toMatchObject({model:"gpt-image-2.5-ext",version:"sunburst",resolution:"4K",size:"9:16",n:1});
+    expect(JSON.parse(String(extInit.body))).not.toHaveProperty("quality");
+    expect(extInit.headers).toEqual({
+      Authorization:"Bearer private-key-123","Content-Type":"application/json",
+      "X-APIMart-Response-Version":"2026-07-27","Idempotency-Key":extJob.id,
+    });
+  });
 });
 
 describe("generation interruption and storage failures",()=>{

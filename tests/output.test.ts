@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { defaultImageGeneration, defaultVideoGeneration, generationParameters, IMAGE_RATIOS, parseGenerationDefaults, validateGenerationDefaults, VIDEO_RATIOS } from "@/domain/output";
+import {
+  APIMART_IMAGE_MODELS, defaultImageGeneration, defaultVideoGeneration, generationParameters,
+  IMAGE_EXT_RATIOS, IMAGE_QUALITIES, IMAGE_RATIOS, OUTPUT_PROFILE_VERSION, parseGenerationDefaults,
+  validateGenerationDefaults, VIDEO_RATIOS,
+} from "@/domain/output";
 
 describe("verified APIMart project defaults", () => {
   it.each(IMAGE_RATIOS)("maps image ratio %s with native size and resolution", (size) => {
@@ -8,6 +12,53 @@ describe("verified APIMart project defaults", () => {
       expect(validateGenerationDefaults({ image })).toEqual([]);
       expect(generationParameters({ image }, "image")).toEqual({ model: "gpt-image-2", size, resolution, n: 1 });
     }
+  });
+  it("keeps OUTPUT_PROFILE_VERSION and defaults new projects to Image 2", () => {
+    expect(OUTPUT_PROFILE_VERSION).toBe("2026-09-18");
+    expect(defaultImageGeneration()).toMatchObject({ model: "gpt-image-2", profileVersion: OUTPUT_PROFILE_VERSION });
+    expect(defaultImageGeneration()).not.toHaveProperty("quality");
+    expect(defaultImageGeneration()).not.toHaveProperty("version");
+  });
+  it.each(APIMART_IMAGE_MODELS)("accepts verified APIMart image model %s with model-specific fields", (model) => {
+    const image = defaultImageGeneration("16:9", model);
+    expect(validateGenerationDefaults({ image })).toEqual([]);
+    const parameters = generationParameters({ image }, "image");
+    expect(parameters).toMatchObject({ model, size: "16:9", resolution: "1k", n: 1 });
+    if (model === "gpt-image-2.5-flare" || model === "gpt-image-2.5-sunburst") {
+      expect(image.quality).toBe("auto");
+      expect(parameters.quality).toBe("auto");
+      expect(parameters).not.toHaveProperty("version");
+    } else if (model === "gpt-image-2.5-ext") {
+      expect(image.version).toBe("flare");
+      expect(parameters.version).toBe("flare");
+      expect(parameters).not.toHaveProperty("quality");
+    } else {
+      expect(parameters).not.toHaveProperty("quality");
+      expect(parameters).not.toHaveProperty("version");
+    }
+  });
+  it("rejects Image 2 quality, Ext quality, Ext-unsupported sizes and invalid 2.5 quality", () => {
+    expect(validateGenerationDefaults({ image: { ...defaultImageGeneration(), quality: "auto" } })).not.toEqual([]);
+    expect(validateGenerationDefaults({ image: { ...defaultImageGeneration("16:9", "gpt-image-2.5-ext"), quality: "auto" } })).not.toEqual([]);
+    expect(validateGenerationDefaults({ image: { ...defaultImageGeneration("16:9", "gpt-image-2.5-ext"), size: "2:1" } })).not.toEqual([]);
+    expect(validateGenerationDefaults({ image: { ...defaultImageGeneration("16:9", "gpt-image-2.5-flare"), quality: "ultra" } })).not.toEqual([]);
+    expect(validateGenerationDefaults({ image: { ...defaultImageGeneration("16:9", "gpt-image-2.5-flare"), version: "flare" } })).not.toEqual([]);
+    for (const size of IMAGE_EXT_RATIOS) {
+      expect(validateGenerationDefaults({ image: { ...defaultImageGeneration("16:9", "gpt-image-2.5-ext"), size } })).toEqual([]);
+    }
+    for (const quality of IMAGE_QUALITIES) {
+      expect(validateGenerationDefaults({ image: { ...defaultImageGeneration("16:9", "gpt-image-2.5-sunburst"), quality } })).toEqual([]);
+    }
+  });
+  it("parses quality and version as known image keys instead of extra bags", () => {
+    const parsed = parseGenerationDefaults({
+      image: { ...defaultImageGeneration("1:1", "gpt-image-2.5-flare"), quality: "xhigh", version: undefined, futureField: "keep" },
+    })!;
+    expect(parsed.image).toMatchObject({ model: "gpt-image-2.5-flare", quality: "xhigh", extra: { futureField: "keep" } });
+    expect(parsed.image).not.toHaveProperty("version");
+    const ext = parseGenerationDefaults({ image: { ...defaultImageGeneration("1:1", "gpt-image-2.5-ext"), version: "sunburst" } })!;
+    expect(ext.image).toMatchObject({ version: "sunburst" });
+    expect(ext.image?.extra).toBeUndefined();
   });
   it.each(VIDEO_RATIOS)("accepts H3 text ratio %s and 4–15 second integer durations", (aspectRatio) => {
     for (const resolution of ["768P", "2K"]) {

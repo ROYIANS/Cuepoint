@@ -1,9 +1,27 @@
 /** Verified APIMart standard-channel profiles, independent of connector credentials. */
 export const OUTPUT_PROFILE_VERSION = "2026-09-18";
 export const IMAGE_RATIOS = ["1:1", "3:2", "2:3", "4:3", "3:4", "5:4", "4:5", "16:9", "9:16", "2:1", "1:2", "3:1", "1:3", "21:9", "9:21"] as const;
+export const IMAGE_EXT_RATIOS = ["1:1", "16:9", "9:16", "4:3", "3:4", "3:2", "2:3", "5:4", "4:5", "21:9"] as const;
 export const VIDEO_RATIOS = ["21:9", "16:9", "4:3", "1:1", "3:4", "9:16"] as const;
 export const IMAGE_RESOLUTIONS = ["1k", "2k", "4k"] as const;
+export const IMAGE_QUALITIES = ["low", "medium", "high", "xhigh", "max", "auto"] as const;
+export const IMAGE_EXT_VERSIONS = ["flare", "sunburst"] as const;
 export const VIDEO_RESOLUTIONS = ["768P", "2K"] as const;
+export const APIMART_IMAGE_MODELS = ["gpt-image-2", "gpt-image-2.5-flare", "gpt-image-2.5-sunburst", "gpt-image-2.5-ext"] as const;
+export type ApimartImageModel = typeof APIMART_IMAGE_MODELS[number];
+
+export function isApimartImageModel(model: string): model is ApimartImageModel {
+  return (APIMART_IMAGE_MODELS as readonly string[]).includes(model);
+}
+export function isApimartImage25(model: string): boolean {
+  return model === "gpt-image-2.5-flare" || model === "gpt-image-2.5-sunburst";
+}
+export function isApimartImageExt(model: string): boolean {
+  return model === "gpt-image-2.5-ext";
+}
+export function apimartImageSizes(model: string): readonly string[] {
+  return isApimartImageExt(model) ? IMAGE_EXT_RATIOS : IMAGE_RATIOS;
+}
 
 // Strings deliberately retain unknown/older profiles for review after import.
 export interface ImageGenerationDefaults {
@@ -12,6 +30,8 @@ export interface ImageGenerationDefaults {
   profileVersion: string;
   size: string;
   resolution: string;
+  quality?: string;
+  version?: string;
   extra?: Record<string, unknown>;
 }
 export interface VideoGenerationDefaults {
@@ -30,9 +50,14 @@ export interface ProjectGenerationDefaults {
   extra?: Record<string, unknown>;
 }
 
-export function defaultImageGeneration(ratio = "16:9"): ImageGenerationDefaults {
-  return { provider: "apimart", model: "gpt-image-2", profileVersion: OUTPUT_PROFILE_VERSION,
-    size: IMAGE_RATIOS.includes(ratio as typeof IMAGE_RATIOS[number]) ? ratio : "16:9", resolution: "1k" };
+export function defaultImageGeneration(ratio = "16:9", model: ApimartImageModel = "gpt-image-2"): ImageGenerationDefaults {
+  const sizes = apimartImageSizes(model);
+  return {
+    provider: "apimart", model, profileVersion: OUTPUT_PROFILE_VERSION,
+    size: (sizes as readonly string[]).includes(ratio) ? ratio : "16:9", resolution: "1k",
+    ...(isApimartImage25(model) ? { quality: "auto" } : {}),
+    ...(isApimartImageExt(model) ? { version: "flare" } : {}),
+  };
 }
 export function defaultVideoGeneration(ratio = "16:9"): VideoGenerationDefaults {
   return { provider: "apimart", model: "MiniMax-H3", profileVersion: OUTPUT_PROFILE_VERSION,
@@ -47,6 +72,9 @@ function textField(raw: Record<string, unknown>, key: string): string {
   if (typeof raw[key] !== "string") throw new Error(`生成配置 ${key} 必须是文本`);
   return raw[key];
 }
+function optionalText(raw: Record<string, unknown>, key: string): string | undefined {
+  return raw[key] === undefined ? undefined : textField(raw, key);
+}
 function extras(raw: Record<string, unknown>, known: string[]): Record<string, unknown> | undefined {
   const result = { ...(raw.extra === undefined ? {} : record(raw.extra, "扩展配置")) };
   for (const [key, value] of Object.entries(raw)) {
@@ -55,6 +83,8 @@ function extras(raw: Record<string, unknown>, known: string[]): Record<string, u
   return Object.keys(result).length ? result : undefined;
 }
 
+const IMAGE_KNOWN = ["provider", "model", "profileVersion", "size", "resolution", "quality", "version"];
+
 /** Shape validation only: unknown models/unsupported values survive ZIP round trips. */
 export function parseGenerationDefaults(raw: unknown): ProjectGenerationDefaults | undefined {
   if (raw === undefined) return undefined;
@@ -62,10 +92,14 @@ export function parseGenerationDefaults(raw: unknown): ProjectGenerationDefaults
   const parsed: ProjectGenerationDefaults = { extra: extras(root, ["image", "video"]) };
   if (root.image !== undefined) {
     const image = record(root.image, "图片默认值");
+    const quality = optionalText(image, "quality");
+    const version = optionalText(image, "version");
     parsed.image = {
       provider: textField(image, "provider"), model: textField(image, "model"),
       profileVersion: textField(image, "profileVersion"), size: textField(image, "size"),
-      resolution: textField(image, "resolution"), extra: extras(image, ["provider", "model", "profileVersion", "size", "resolution"]),
+      resolution: textField(image, "resolution"), extra: extras(image, IMAGE_KNOWN),
+      ...(quality !== undefined ? { quality } : {}),
+      ...(version !== undefined ? { version } : {}),
     };
   }
   if (root.video !== undefined) {
@@ -88,11 +122,24 @@ export function validateGenerationDefaults(raw: unknown): string[] {
   const issues: string[] = [];
   if (config?.image) {
     const image = config.image;
-    if (image.provider !== "apimart" || image.model !== "gpt-image-2" || image.profileVersion !== OUTPUT_PROFILE_VERSION) {
-      issues.push("图片配置版本或模型尚不支持，请明确选择 GPT Image 2 标准通道或清除配置");
+    if (image.provider !== "apimart" || !isApimartImageModel(image.model) || image.profileVersion !== OUTPUT_PROFILE_VERSION) {
+      issues.push("图片配置版本或模型尚不支持，请明确选择已验证的 APIMart 图片模型或清除配置");
+    } else {
+      if (![...apimartImageSizes(image.model), "auto"].includes(image.size)) {
+        issues.push(isApimartImageExt(image.model) ? "请选择 GPT Image 2.5 Ext 支持的图片比例" : "请选择 GPT Image 2 支持的图片比例");
+      }
+      if (!(IMAGE_RESOLUTIONS as readonly string[]).includes(image.resolution)) issues.push("图片清晰度须为 1k、2k 或 4k");
+      if (isApimartImage25(image.model)) {
+        if (image.quality !== undefined && !(IMAGE_QUALITIES as readonly string[]).includes(image.quality)) issues.push("请选择 GPT Image 2.5 支持的画质");
+        if (image.version !== undefined) issues.push("标准 GPT Image 2.5 不使用 Ext 版本参数");
+      } else if (isApimartImageExt(image.model)) {
+        if (image.quality !== undefined) issues.push("GPT Image 2.5 Ext 不支持画质参数");
+        if (image.version !== undefined && !(IMAGE_EXT_VERSIONS as readonly string[]).includes(image.version)) issues.push("请选择 Ext 版本 flare 或 sunburst");
+      } else {
+        if (image.quality !== undefined) issues.push("GPT Image 2 不支持画质参数");
+        if (image.version !== undefined) issues.push("GPT Image 2 不使用 Ext 版本参数");
+      }
     }
-    if (![...IMAGE_RATIOS, "auto"].includes(image.size)) issues.push("请选择 GPT Image 2 支持的图片比例");
-    if (!(IMAGE_RESOLUTIONS as readonly string[]).includes(image.resolution)) issues.push("图片清晰度须为 1k、2k 或 4k");
   }
   if (config?.video) {
     const video = config.video;
@@ -118,7 +165,11 @@ export function generationParameters(config: ProjectGenerationDefaults, kind: "i
   const errors = validateGenerationDefaults(selected);
   if (errors.length) throw new Error(errors.join("；"));
   if (kind === "image" && config.image) {
-    return { model: config.image.model, size: config.image.size, resolution: config.image.resolution, n: 1 };
+    return {
+      model: config.image.model, size: config.image.size, resolution: config.image.resolution, n: 1,
+      ...(config.image.quality ? { quality: config.image.quality } : {}),
+      ...(config.image.version ? { version: config.image.version } : {}),
+    };
   }
   if (kind === "video" && config.video) {
     const video = config.video;

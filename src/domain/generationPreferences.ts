@@ -7,7 +7,8 @@ export interface GenerationSelectionParameters {
   duration?: number;
   aspectRatio?: string;
   mode?: "text" | "frames" | "reference";
-  quality?: "low" | "medium" | "high";
+  quality?: "low" | "medium" | "high" | "xhigh" | "max" | "auto";
+  version?: "flare" | "sunburst";
 }
 export type GenerationPreferenceParameters = Omit<GenerationSelectionParameters, "mode">;
 

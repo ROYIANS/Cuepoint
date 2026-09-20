@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { ASPECT_PRESET_IDS, SHOT_STATUSES } from "@/domain/types";
-import { IMAGE_RATIOS, IMAGE_RESOLUTIONS, OUTPUT_PROFILE_VERSION, VIDEO_RATIOS, VIDEO_RESOLUTIONS } from "@/domain/output";
+import { APIMART_IMAGE_MODELS, IMAGE_EXT_VERSIONS, IMAGE_QUALITIES, IMAGE_RATIOS, IMAGE_RESOLUTIONS, OUTPUT_PROFILE_VERSION, VIDEO_RATIOS, VIDEO_RESOLUTIONS } from "@/domain/output";
 
 /** Build strict runtime and advertised schemas together; never accept passthrough fields. */
 export interface Spec<T> { schema: z.ZodType<T>; json: Record<string, unknown>; optional?: boolean }
@@ -52,7 +52,11 @@ export const assetFields = {
   prop: { name: optional(text(200, 1)), kind: optional(text(200)), notes: optional(text()), appearance: optional(text()), material: optional(text()), size: optional(text()), usage: optional(text()), continuity: optional(text()) },
   style: { name: optional(text(200, 1)), notes: optional(text()), palette: optional(text()), lighting: optional(text()), lens: optional(text()), composition: optional(text()), negativePrompt: optional(text()) },
 };
-export const imageDefaults = object({ provider: choice(["apimart"]), model: choice(["gpt-image-2"]), profileVersion: choice([OUTPUT_PROFILE_VERSION]), size: choice([...IMAGE_RATIOS, "auto"]), resolution: choice(IMAGE_RESOLUTIONS) });
+export const imageDefaults = object({
+  provider: choice(["apimart"]), model: choice(APIMART_IMAGE_MODELS), profileVersion: choice([OUTPUT_PROFILE_VERSION]),
+  size: choice([...IMAGE_RATIOS, "auto"]), resolution: choice(IMAGE_RESOLUTIONS),
+  quality: optional(choice(IMAGE_QUALITIES)), version: optional(choice(IMAGE_EXT_VERSIONS)),
+});
 export const videoDefaults = object({ provider: choice(["apimart"]), model: choice(["MiniMax-H3"]), profileVersion: choice([OUTPUT_PROFILE_VERSION]), mode: choice(["text", "frames", "reference"]), aspectRatio: choice([...VIDEO_RATIOS, "adaptive"]), resolution: choice(VIDEO_RESOLUTIONS), duration: number(4, 15, true) });
 export const projectFields = {
   name: optional(text(200, 1)), brief: optional(text()), genre: optional(text(1000)), audience: optional(text(1000)), tone: optional(text(1000)),

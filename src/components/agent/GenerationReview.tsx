@@ -130,7 +130,8 @@ export function GenerationConfigurationFields({draft,onChange,disabled}: {draft:
   const provider=selected?.definitionId;
   const validProvider=provider==='apimart'||provider==='aihubmix'?provider:undefined;
   const choices=(connectors??[]).filter(item=>item.definitionId==='apimart'||item.definitionId==='aihubmix');
-  const models=GENERATION_PROFILES.filter(profile=>profile.provider===provider&&profile.kind===kind);
+  const models=GENERATION_PROFILES.filter(item=>item.provider===provider&&item.kind===kind);
+  const profile=models.find(item=>item.model===draft.model);
   const p=draft.parameters;
   const frames=draft.inputs.some(input=>['first-frame','last-frame'].includes(input.role));
   const references=draft.inputs.length>0&&!frames;
@@ -148,22 +149,25 @@ export function GenerationConfigurationFields({draft,onChange,disabled}: {draft:
         ...choices.map((item) => ({ value: item.id, label: `${PROVIDER_LABELS[item.definitionId as keyof typeof PROVIDER_LABELS]}${item.label ? ` · ${item.label}` : ""}${!item.apiKey.trim() ? "（未配置密钥）" : ""}`, disabled: !item.apiKey.trim() })),
         ...(!selected ? [{ value: draft.connectorId, label: connectors ? "原连接已不可用" : "读取连接…", disabled: true }] : []),
       ]} onChange={changeConnection} />
-      <Choice label="生成模型" value={draft.model} disabled={disabled || !models.length} options={models.map((model) => ({ value: model.model, label: model.model }))} onChange={(model) => {
+      <Choice label="生成模型" value={draft.model} disabled={disabled || !models.length} options={models.map((model) => ({ value: model.model, label: model.label }))} onChange={(model) => {
         if (validProvider) onChange(applyGenerationSelection(draft, { connectorId: draft.connectorId, model, parameters: {} }, validProvider));
       }} />
     </div>
     <div className="agent-generation-field"><label htmlFor={promptId}>画面描述</label><Input.TextArea id={promptId} value={draft.prompt} onChange={(event) => { onChange({ ...draft, prompt: event.target.value }); }} disabled={disabled} autoSize={{ minRows: 3, maxRows: 9 }} maxLength={32000} variant="borderless" /></div>
     <div className="agent-generation-fields agent-generation-parameters">
       {kind === "image" ? <>
-        <Choice label={provider === "aihubmix" ? "图片尺寸" : "图片比例"} value={p.size ?? "auto"} disabled={disabled} options={provider === "aihubmix" ? options(["auto", "1024x1024", "1536x1024", "1024x1536"]) : options(["auto", ...IMAGE_RATIOS])} onChange={(size) => patch({ size })} />
+        <Choice label={provider === "aihubmix" ? "图片尺寸" : "图片比例"} value={p.size ?? "auto"} disabled={disabled} options={provider === "aihubmix" ? options(["auto", "1024x1024", "1536x1024", "1024x1536"]) : options(profile && "sizes" in profile ? profile.sizes : ["auto", ...IMAGE_RATIOS])} onChange={(size) => patch({ size })} />
         {provider === "aihubmix" ? <Choice label="画质" value={p.quality ?? "default"} disabled={disabled} options={[{ value: "default", label: "模型默认" }, { value: "low", label: "低" }, { value: "medium", label: "中" }, { value: "high", label: "高" }]} onChange={(quality) => patch({ quality: quality === "default" ? undefined : quality as "low" | "medium" | "high" })} />
           : <Choice label="分辨率" value={p.resolution ?? "1k"} disabled={disabled} options={options(["1k", "2k", "4k"])} onChange={(resolution) => patch({ resolution })} />}
+        {profile && "qualities" in profile && <Choice label="画质" value={p.quality ?? "auto"} disabled={disabled} options={options(profile.qualities)} onChange={(quality) => patch({ quality: quality as NonNullable<GenerationSubmitArgs["parameters"]["quality"]> })} />}
+        {profile && "versions" in profile && <Choice label="版本" value={p.version ?? "flare"} disabled={disabled} options={[{ value: "flare", label: "flare" }, { value: "sunburst", label: "sunburst" }]} onChange={(version) => patch({ version: version as "flare" | "sunburst" })} />}
       </> : <>
         <Choice label="分辨率" value={p.resolution ?? (provider === "aihubmix" ? "720p" : "2K")} disabled={disabled} options={options(provider === "aihubmix" ? referenceVideos ? ["720p"] : ["720p", "1080p", "4K"] : ["768P", "2K"])} onChange={(resolution) => patch({ resolution, ...(provider === "aihubmix" && resolution !== "720p" ? { duration: 8 } : {}) })} />
         <Choice label="时长（秒）" value={String(p.duration ?? (provider === "aihubmix" ? 8 : 5))} disabled={disabled} options={options(provider === "aihubmix" ? (p.resolution && p.resolution !== "720p" || references) ? [8] : [4, 6, 8] : Array.from({ length: 12 }, (_, i) => i + 4))} onChange={(duration) => patch({ duration: Number(duration) })} />
         {!(frames && provider === "apimart") && <Choice label="视频比例" value={p.aspectRatio ?? (references && provider === "apimart" ? "adaptive" : "16:9")} disabled={disabled} options={options(provider === "aihubmix" ? ["16:9", "9:16"] : [...VIDEO_RATIOS, ...(references ? ["adaptive"] : [])])} onChange={(aspectRatio) => patch({ aspectRatio })} />}
       </>}
     </div>
+    {profile && "qualities" in profile && <p className="agent-generation-form-note">auto 会按最高档预扣，完成后再按实际用量结算。</p>}
     <p className="agent-generation-reference-note">{draft.inputs.length ? `已选 ${draft.inputs.length - referenceVideos} 张参考图片${referenceVideos ? `、${referenceVideos} 段视频` : ""}${frames ? " · 首尾帧模式" : ""}` : "根据文字描述生成"} · 目标和参考素材沿用本次提案</p>
   </>;
 }

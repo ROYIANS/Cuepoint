@@ -13,9 +13,9 @@ import { applyAgentGeneration, monitorAgentGeneration, prepareAgentGeneration, p
 const id={type:"string",minLength:1,maxLength:160};
 const jobParameters={type:"object",additionalProperties:false,required:["jobId"],properties:{jobId:id}};
 const submitParameters={type:"object",additionalProperties:false,required:["connectorId","model","target","prompt"],properties:{
-  connectorId:id,model:{type:"string",enum:["gpt-image-2","MiniMax-H3","veo-3.1-fast-generate-preview"]},prompt:{type:"string",minLength:1,maxLength:32000},
+  connectorId:id,model:{type:"string",enum:["gpt-image-2","gpt-image-2.5-flare","gpt-image-2.5-sunburst","gpt-image-2.5-ext","MiniMax-H3","veo-3.1-fast-generate-preview"]},prompt:{type:"string",minLength:1,maxLength:32000},
   target:{type:"object",additionalProperties:false,required:["kind","projectId","entityId","slot"],properties:{kind:{type:"string",enum:["shot","character","scene","prop","style"]},projectId:id,entityId:id,episodeId:id,slot:{type:"string"}}},
-  parameters:{type:"object",additionalProperties:false,properties:{size:{type:"string"},resolution:{type:"string"},duration:{type:"integer"},aspectRatio:{type:"string"},mode:{type:"string",enum:["text","frames","reference"]},quality:{type:"string",enum:["low","medium","high"]}}},
+  parameters:{type:"object",additionalProperties:false,properties:{size:{type:"string"},resolution:{type:"string"},duration:{type:"integer"},aspectRatio:{type:"string"},mode:{type:"string",enum:["text","frames","reference"]},quality:{type:"string",enum:["low","medium","high","xhigh","max","auto"]},version:{type:"string",enum:["flare","sunburst"]}}},
   inputs:{type:"array",maxItems:16,items:{type:"object",additionalProperties:false,required:["mediaId","role"],properties:{mediaId:id,role:{type:"string",enum:["first-frame","last-frame","reference-image","reference-video"]}}}},
 }};
 const batchSchema = z.object({title:z.string().trim().min(1).max(160),candidates:z.array(generationSubmitSchema).min(1).max(20)}).strict().superRefine((value,ctx)=>{try{validateBatchLimits(value.candidates.map(draft=>({draft})));}catch(error){ctx.addIssue({code:"custom",message:error instanceof Error?error.message:"候选数量无效"});}});

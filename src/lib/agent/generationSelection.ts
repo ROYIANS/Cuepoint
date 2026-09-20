@@ -85,8 +85,13 @@ export function recommendGenerationSelection(input: {
     const errors = validateGenerationDefaults({ [kind]: project });
     if (errors.length) return { source: "project", status: "needs-selection", candidateConnectorIds: [], issues: errors };
     const candidates = connectors.filter((connector) => connector.definitionId === project.provider && configured(connector));
-    const parameters = kind === "image" && input.projectDefaults?.image
-      ? { size: input.projectDefaults.image.size, resolution: input.projectDefaults.image.resolution }
+    const image = input.projectDefaults?.image;
+    const parameters = kind === "image" && image
+      ? {
+        size: image.size, resolution: image.resolution,
+        ...(image.quality ? { quality: image.quality as GenerationSelection["parameters"]["quality"] } : {}),
+        ...(image.version ? { version: image.version as GenerationSelection["parameters"]["version"] } : {}),
+      }
       : input.projectDefaults?.video ? { mode: input.projectDefaults.video.mode as "text" | "frames" | "reference", aspectRatio: input.projectDefaults.video.aspectRatio, resolution: input.projectDefaults.video.resolution, duration: input.projectDefaults.video.duration } : {};
     const draft = { model: project.model, parameters };
     if (candidates.length !== 1) return { source: "project", status: candidates.length > 1 ? "ambiguous" : "needs-selection", draft,
