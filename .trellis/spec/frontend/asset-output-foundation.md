@@ -23,8 +23,9 @@ generationParameters(config: ProjectGenerationDefaults, kind: 'image' | 'video')
 
 ## 3. Contracts
 - Project creative target aspect and image/video generation defaults are separate. Expanding target aspects does not change existing dimension mappings or authored shot durations.
-- APIMart standard `gpt-image-2` uses size ratio/auto and lowercase 1k/2k/4k, count1. MiniMax-H3 uses uppercase 768P/2K, integer4..15 seconds, six concrete ratios. Reference mode may use adaptive; frames mode requires adaptive and native mapping omits aspect_ratio because inputs determine it. Never infer first/last-frame roles from image array length.
-- Profile version is 2026-09-18. Reverify official docs before changing constants. Official GPT Image 2 and H3-Max are distinct profiles, not aliases of these UI defaults.
+- APIMart image defaults accept `gpt-image-2`, `gpt-image-2.5-flare`, `gpt-image-2.5-sunburst`, and `gpt-image-2.5-ext` under profile version `2026-09-18` (do not bump the version when adding these models). New projects still default to `gpt-image-2`. All keep `n: 1`.
+- Image 2: 15 ratios + auto, lowercase `1k`/`2k`/`4k`, max 15 refs, reject `quality`/`version`. Standard 2.5 flare/sunburst: same sizes, lowercase resolution, max 16 refs, optional `quality` (`low`/`medium`/`high`/`xhigh`/`max`/`auto`, default `auto`), reject `version`. Ext: 10 ratios + auto (no `2:1`/`1:2`/`3:1`/`1:3`/`9:21`), store lowercase resolution and map to `1K`/`2K`/`4K` only in `profileRequest`, max 16 refs, optional `version` (`flare`/`sunburst`, default `flare`), reject `quality`. MiniMax-H3: uppercase 768P/2K, integer 4..15 seconds, six concrete ratios. Reference mode may use adaptive; frames mode requires adaptive and native mapping omits aspect_ratio because inputs determine it. Never infer first/last-frame roles from image array length.
+- Profile version is 2026-09-18. Reverify official docs before changing constants. Official GPT Image 2 / 2.5 / Ext and H3-Max are distinct profiles, not aliases of these UI defaults. No silent remap across Image 2 / 2.5 / Ext.
 - Parser preserves unknown model/version/value for review, plus unknown keys under extra; validator and parameter builder reject unsupported configurations. Manual legacy projects have no generation defaults. Explicit reset/reselection replaces unsupported settings. Parameter builder only provides common settings, not complete prompt/media validation or paid execution.
 - Project config stores no API key or connector instance. Changing defaults never rewrites existing shots/media. Output settings require explicit Save, errors disable Save, pending saves prevent closing, and dirty-close prompts offer return/discard. Auto-saved creative text remains separate.
 - A blank project name rejects without changing other fields in the patch; the text draft retains its error/retry state. Relation dialogs prevent closing or switching shots during a pending save; failed choices require retry or explicit discard before leaving.
@@ -39,6 +40,8 @@ generationParameters(config: ProjectGenerationDefaults, kind: 'image' | 'video')
 | --- | --- |
 | Legacy missing optional strings/defaults | Empty optional UI; retain manual operation |
 | Unsupported model/profile imported | Preserve for review; generation mapping and Save reject until corrected |
+| Image 2 or Ext with `quality`, or standard 2.5 with `version` | Reject Save / mapping; do not strip silently |
+| Ext size outside its 10 ratios + auto | Reject; do not remap to Image 2 sizes |
 | H3 text→frames with fixed ratio | Show incompatible ratio and block Save; user chooses follow input |
 | H3 frames→text with adaptive | Show incompatible ratio and block Save; user chooses supported fixed ratio |
 | 1080P or fractional/out-of-range H3 duration | Reject; do not coerce |

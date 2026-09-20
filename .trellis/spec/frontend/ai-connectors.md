@@ -40,7 +40,7 @@ uploadApimartImage(credentials, file: Blob, options?)
 submitApimartImageGeneration(credentials, input, options?)
 submitApimartVideoGeneration(credentials, input, options?)
 getApimartTask(credentials, taskId, options?)
-// credentials: {baseUrl, apiKey}; options: {signal?, fetchImpl?}
+// credentials: {baseUrl, apiKey}; options: {signal?, fetchImpl?, idempotencyKey?}
 ```
 
 ## 3. Contracts
@@ -50,8 +50,9 @@ getApimartTask(credentials, taskId, options?)
 - Discovery preserves category/capability tags and exposes parameter schema availability. Only `category === "chat"` populates automatic chat suggestions; unknown categories remain available through manual entry. Connection-page discovery retains all categories.
 - Chat compatibility applies to every selection source: discovered suggestions, manual search and the current/saved model. Known `image`, `video` and `audio` categories cannot be reinserted by manual input. Use provider metadata rather than guessing from model names. A saved incompatible selection warns the user without changing historical messages.
 - The send boundary checks the actual connector/model before creating a thread, appending messages, clearing the draft or calling chat transport. APIMart/AIHubMix metadata lookup failure cannot authorize an unchecked send; show the error and preserve the draft. Unknown custom models remain manually usable after successful discovery. Connector switching must not reuse another connector's classifications.
-- Submit responses use a `data` array with task IDs. Query responses use a `data` object. Never copy the conflicting final upload-guide example instead of dedicated generation/query contracts.
-- Model-native fields (`size` vs `aspect_ratio`, audio flags, frame roles) survive unchanged. Server validation handles model-specific restrictions.
+- Envelope `code` 200 or 202 without `error` is transport success. Image submit accepts either a `data` array of `{ task_id }` (Image 2 / standard 2.5) or a single `data` object with nonempty `id`/`task_id` (Ext 202 example). Video submit stays on the nonempty task-id array only — never treat a 202 object as video success. Query responses use a `data` object and still require `code === 200`. Never copy the conflicting final upload-guide example instead of dedicated generation/query contracts.
+- Ext image submits alone may send `X-APIMart-Response-Version: 2026-07-27` and `Idempotency-Key` (stable local job id). Image 2 / flare / sunburst / video must not attach those headers.
+- Model-native fields (`size` vs `aspect_ratio`, audio flags, frame roles, Ext `version`, 2.5 `quality`) survive unchanged. Server validation handles model-specific restrictions.
 - Upload uses FormData without manually setting Content-Type; supported types are JPEG/PNG/WebP/GIF, up to 20 MB. Provider URLs are temporary, not durable media IDs.
 - These adapters do not poll, persist jobs, automatically download results or mutate slots. AIHubMix offers an explicit protected Blob download. Multiple results and expiry must remain available to future callers.
 - Requests are abortable; local abort does not cancel the remote task. Never automatically retry generation submissions after timeout or ambiguous network failure.
@@ -64,6 +65,8 @@ getApimartTask(credentials, taskId, options?)
 | APIMart model probe fails | Surface failure; never fall back to a POST |
 | HTTP failure / provider error in HTTP 200 | Explicit failure, with credentials redacted |
 | Invalid JSON/envelope or missing submitted task IDs | Protocol error, not empty success |
+| Image Ext `code:202` object with `id`/`task_id` | Single task id; never invent a multi-task array |
+| Video `code:202` object envelope | Protocol error; array parser only |
 | Missing/unknown category or invalid parameter metadata | Preserve explicit metadata status; no name-based category guessing |
 | Known media model entered manually or stored on a thread | Exclude from selectable chat options; warn and reject send without message writes or chat POST |
 | APIMart metadata loading/failure during send | Finish validation or show error; never infer compatibility from an empty list |
@@ -98,6 +101,12 @@ await listConnectorModels(apimartConnector, "chat");
 // Wrong: re-submit generation when a network response is lost.
 // Correct: return the ambiguous failure to the caller without retrying.
 // A future job runtime must reconcile provider identity before another submission.
+```
+
+```ts
+// Wrong: treat every image/video envelope as code 200 + data[].
+// Correct: accept Ext image code 202 + data{id|task_id} as one task;
+// keep video (and Image 2 array) on the array parser; task GET still requires code 200.
 ```
 
 

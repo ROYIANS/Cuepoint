@@ -1,0 +1,9 @@
+{"file": ".trellis/spec/frontend/ai-connectors.md", "reason": "APIMart submit envelope, task ids, no retry after lost POST"}
+{"file": ".trellis/spec/frontend/agent-creative-skills.md", "reason": "Verified generation profiles, review form, preferences, no silent parameter merge"}
+{"file": ".trellis/spec/frontend/asset-output-foundation.md", "reason": "Project image defaults, profile version, preserve unknown models"}
+{"file": ".trellis/spec/frontend/agent-batch-generation.md", "reason": "Batch candidates are separate n=1 requests; confirmation uses the same profiles"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "Draft size/quality/version vs native resolution case and Ext headers"}
+{"file": ".trellis/tasks/09-20-gpt-image-25/prd.md", "reason": "Accepted models, Ext version UX, quality auto"}
+{"file": ".trellis/tasks/09-20-gpt-image-25/design.md", "reason": "Profile table, adapter 202 parse, UI mapping"}
+{"file": ".trellis/tasks/09-20-gpt-image-25/implement.md", "reason": "Ordered files, tests, rollback"}
+{"file": ".trellis/tasks/09-20-gpt-image-25/research/apimart-gpt-image-25.md", "reason": "Official 2.5 and Ext request contracts"}

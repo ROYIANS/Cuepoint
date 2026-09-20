@@ -1,0 +1,8 @@
+{"file": ".trellis/spec/frontend/ai-connectors.md", "reason": "Submit success detection must not break Image 2 or video"}
+{"file": ".trellis/spec/frontend/agent-creative-skills.md", "reason": "Lockstep tool enum, schema, review, and actual POST"}
+{"file": ".trellis/spec/frontend/asset-output-foundation.md", "reason": "Do not bump profile version; Image 2 defaults stay valid"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "lint = tsc, Vitest without live billed calls"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "Stored lowercase resolution vs Ext 1K body"}
+{"file": ".trellis/tasks/09-20-gpt-image-25/prd.md", "reason": "Acceptance: four models, native fields, 202 task id"}
+{"file": ".trellis/tasks/09-20-gpt-image-25/design.md", "reason": "Header/idempotency and parser split"}
+{"file": ".trellis/tasks/09-20-gpt-image-25/research/apimart-gpt-image-25.md", "reason": "Quality auto pre-auth; Ext has no quality"}
