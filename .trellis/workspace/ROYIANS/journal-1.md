@@ -765,3 +765,36 @@ Implemented independent Tavily search/read configuration and source UI, plus sam
 ### Next Steps
 
 - Configure a real Tavily API key and try live-model research and image analysis; authenticated service quality was not tested with paid calls.
+
+
+## Session 33: GHCR Docker release
+
+**Date**: 2026-09-20
+**Task**: GHCR Docker release
+**Branch**: `main`
+
+### Summary
+
+Published the SPA as a GHCR nginx image with GitHub Action, compose deploy, and README pull instructions.
+
+### Main Changes
+
+- Added Dockerfile, nginx SPA fallback, GHCR workflow, docker-compose, and README deploy steps
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `2e967bd` | (see git log) |
+
+### Testing
+
+- [OK] Workflow and compose files reviewed; live docker daemon smoke was unavailable on the implementation host
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Add APIMart GPT Image 2.5 flare, sunburst, and ext to image generation selection

@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 32
-- **Last Active**: 2026-09-19
+- **Total Sessions**: 33
+- **Last Active**: 2026-09-20
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~767 | Active |
+| `journal-1.md` | ~800 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 33 | 2026-09-20 | GHCR Docker release | `2e967bd` | `main` |
 | 32 | 2026-09-19 | Web research and named-project image inspection | `3bbcedc`, `6ba3c83` | `main` |
 | 31 | 2026-09-19 | Reviewed batch generation and workflow integration | `e6e3f94`, `2903466` | `main` |
 | 30 | 2026-09-19 | Project reference intake and native selected-model vision | `1e0b817`, `59a5ff4` | `main` |
