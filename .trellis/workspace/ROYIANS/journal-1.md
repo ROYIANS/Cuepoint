@@ -798,3 +798,37 @@ Published the SPA as a GHCR nginx image with GitHub Action, compose deploy, and 
 ### Next Steps
 
 - Add APIMart GPT Image 2.5 flare, sunburst, and ext to image generation selection
+
+
+## Session 34: APIMart GPT Image 2.5 models
+
+**Date**: 2026-09-20
+**Task**: APIMart GPT Image 2.5 models
+**Branch**: `main`
+
+### Summary
+
+Added APIMart gpt-image-2.5-flare, sunburst, and ext to image generation pickers with Ext version and quality auto, plus adapter 202 support.
+
+### Main Changes
+
+- Verified profiles, project defaults, review/batch UI, Ext headers and 200/202 task parsing
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `205c7b2` | (see git log) |
+| `c1ba6d7` | (see git log) |
+
+### Testing
+
+- [OK] pnpm lint; 906 Vitest tests including targeted profile and adapter cases
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Optional browser check of four-model picker without paid submit; archive leftover 09-19-agent-workflow-memory if desired

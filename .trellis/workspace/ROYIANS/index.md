@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 33
+- **Total Sessions**: 34
 - **Last Active**: 2026-09-20
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~800 | Active |
+| `journal-1.md` | ~834 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 34 | 2026-09-20 | APIMart GPT Image 2.5 models | `205c7b2`, `c1ba6d7` | `main` |
 | 33 | 2026-09-20 | GHCR Docker release | `2e967bd` | `main` |
 | 32 | 2026-09-19 | Web research and named-project image inspection | `3bbcedc`, `6ba3c83` | `main` |
 | 31 | 2026-09-19 | Reviewed batch generation and workflow integration | `e6e3f94`, `2903466` | `main` |
