@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Quality gate and tests"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "Ownership, drafts, persistence"}
+{"file": ".trellis/spec/frontend/agent-references.md", "reason": "Revocation contracts"}
+{"file": ".trellis/spec/guides/index.md", "reason": "Shared cross-layer review"}

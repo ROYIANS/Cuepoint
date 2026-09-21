@@ -1,0 +1,17 @@
+{
+  "checks": [
+    {
+      "name": "clean rebase and independent title patch",
+      "passed": true
+    },
+    {
+      "name": "same-field CAS preserves local draft and remote value",
+      "passed": true
+    },
+    {
+      "name": "explicit latest resolution and navigation flush",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

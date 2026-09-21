@@ -1,0 +1,39 @@
+{
+  "checks": [
+    {
+      "name": "duration save failure survives blur and explicit retry persists it",
+      "passed": true
+    },
+    {
+      "name": "duration typing, zero, pasted fractional value, clear persisted",
+      "passed": true
+    },
+    {
+      "name": "native button Space activates copy exactly once",
+      "passed": true
+    },
+    {
+      "name": "dnd keyboard sensor receives Space / ArrowDown / Space",
+      "passed": true
+    },
+    {
+      "name": "1001 shot list keeps anchors but bounds rendered controls",
+      "anchors": 1001,
+      "mounted": 9,
+      "dom": 1529
+    },
+    {
+      "name": "deep link materializes last row, scrolls and persists edit",
+      "passed": true
+    },
+    {
+      "name": "Tab enters controls after focusing an unmounted row placeholder",
+      "passed": true
+    },
+    {
+      "name": "pointer drag across scroll boundary reorders against initially unmounted row",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

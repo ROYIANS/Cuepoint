@@ -1,0 +1,49 @@
+{
+  "browser": "153.0.4234.48",
+  "checks": [
+    {
+      "name": "shots 10",
+      "readyMs": 135,
+      "inputActionToNextFrameMs": [
+        25,
+        16,
+        16
+      ],
+      "dom": 684,
+      "anchors": 10,
+      "mounted": 9
+    },
+    {
+      "name": "shots 200",
+      "readyMs": 131,
+      "inputActionToNextFrameMs": [
+        15,
+        35,
+        18
+      ],
+      "dom": 874,
+      "anchors": 200,
+      "mounted": 9
+    },
+    {
+      "name": "shots 1000",
+      "readyMs": 165,
+      "inputActionToNextFrameMs": [
+        65,
+        86,
+        31
+      ],
+      "dom": 1674,
+      "anchors": 1000,
+      "mounted": 9
+    },
+    {
+      "name": "task board settled",
+      "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n返回助手\n创作工作区\n/\nTASKS\n让每一个想法，走向完成。\n\n与小光点一起拆解目标、推进步骤，留下经过确认的成果。\n\n新建任务\n全部项目\n工作台\n全部\n已归档\n0 个任务 · 0 个已完成\n先定一个小目标\n\n整理角色设定、打磨故事，或准备下一次创作。\n你可以先写下任务，随时再与助手一起推进。\n\n创建第一个任务\n无需配置模型，也可以手动管理任务"
+    }
+  ],
+  "webkit": {
+    "available": false,
+    "reason": "browserType.launch: Executable doesn't exist at /Users/xiaomengdao/Library/Caches/ms-playwright/webkit-2336/pw_run.sh"
+  }
+}

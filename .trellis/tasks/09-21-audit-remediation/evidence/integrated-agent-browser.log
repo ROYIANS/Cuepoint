@@ -1,0 +1,45 @@
+{
+  "result": {
+    "runs": [
+      {
+        "combined": false,
+        "threadId": "cth_e7142e86-44f4-46b1-a57a-db3d7e9ffdda",
+        "protocol": "chat-completions",
+        "turns": 3,
+        "exactPixels": true,
+        "noAttachment": true,
+        "unbound": true
+      },
+      {
+        "combined": false,
+        "threadId": "cth_45daeaa5-2018-4e27-b214-6ed4f94042f5",
+        "protocol": "responses",
+        "turns": 3,
+        "exactPixels": true,
+        "noAttachment": true,
+        "unbound": true
+      },
+      {
+        "combined": true,
+        "threadId": "cth_6b6f221e-a71c-45d4-9aba-0d3551667c34",
+        "protocol": "chat-completions",
+        "turns": 5,
+        "exactPixels": true,
+        "noAttachment": true,
+        "unbound": true
+      },
+      {
+        "combined": true,
+        "threadId": "cth_e8052ea2-336d-4034-916b-68042efecf81",
+        "protocol": "responses",
+        "turns": 5,
+        "exactPixels": true,
+        "noAttachment": true,
+        "unbound": true
+      }
+    ],
+    "boundForeignRejected": true,
+    "ambiguityExplicit": true
+  },
+  "pageErrors": []
+}

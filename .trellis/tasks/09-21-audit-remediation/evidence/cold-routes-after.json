@@ -1,0 +1,887 @@
+{
+  "browser": "153.0.4234.48",
+  "checks": [
+    {
+      "name": "cold projects",
+      "visibleMs": 1133,
+      "network": "CDP 5 Mbps, latency 40ms; Vite preview; observed transfer sizes",
+      "networkIdleMs": 2374,
+      "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n我的项目\n按修改\n\n创建新项目\n\n本地项目",
+      "allResources": [
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&display=swap",
+          "transfer": 62129,
+          "duration": 647.1000000005588
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/index-p2o5JvUW.js",
+          "transfer": 210653,
+          "duration": 388.3999999994412
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/index-DXNR2KO2.css",
+          "transfer": 12931,
+          "duration": 84.79999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/_studio-D2jO1ZUy.js",
+          "transfer": 4133,
+          "duration": 67
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/useRouterState-B_SIDEuy.js",
+          "transfer": 470,
+          "duration": 46.40000000037253
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/sheet-Dlm9jDNV.js",
+          "transfer": 1428,
+          "duration": 51.200000000186265
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/createLucideIcon-DboD2IJy.js",
+          "transfer": 985,
+          "duration": 53.200000000186265
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/index-B3KW0uep.js",
+          "transfer": 1996,
+          "duration": 62
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/input-FyLYUl7p.js",
+          "transfer": 7207,
+          "duration": 74
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/dialog-CkL3mKCg.js",
+          "transfer": 1250,
+          "duration": 87.30000000074506
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/brand-BocejDcr.js",
+          "transfer": 542,
+          "duration": 91.59999999962747
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/ProjectGalleryPage-CE8WGZG3.js",
+          "transfer": 2384,
+          "duration": 96.79999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/debouncedDraft-CjWpqHHG.js",
+          "transfer": 2002,
+          "duration": 107.79999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/dexie-react-hooks-B_zuxmwQ.js",
+          "transfer": 939,
+          "duration": 110
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/CoverCard-g0mtSHtn.js",
+          "transfer": 1443,
+          "duration": 116.90000000037253
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/Still-GxgzMmhv.js",
+          "transfer": 999,
+          "duration": 130.69999999925494
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/MediaThumb-Cp1U2KGJ.js",
+          "transfer": 1277,
+          "duration": 132.8999999994412
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/dropdown-menu-acF7K7lz.js",
+          "transfer": 5458,
+          "duration": 144.29999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/index-DlGucW_c.js",
+          "transfer": 3230,
+          "duration": 155.69999999925494
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/index-C2EDvPNI.js",
+          "transfer": 2180,
+          "duration": 157.79999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/check-DBGxfzfm.js",
+          "transfer": 431,
+          "duration": 160.29999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/plus-BUbpgtrK.js",
+          "transfer": 465,
+          "duration": 171.5
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/ellipsis-DJQSonAp.js",
+          "transfer": 533,
+          "duration": 174
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/LibraryHeader-ltvHu0LO.js",
+          "transfer": 917,
+          "duration": 185.20000000018626
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/chevron-down-LVB_ZCzG.js",
+          "transfer": 440,
+          "duration": 201.20000000018626
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/search-Bl2JyFyB.js",
+          "transfer": 481,
+          "duration": 205.8999999994412
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/select-xPgROlmQ.js",
+          "transfer": 8109,
+          "duration": 217.5
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/alert-dialog-Dels1hBk.js",
+          "transfer": 1490,
+          "duration": 221.79999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/format-BxO4S7Os.js",
+          "transfer": 637,
+          "duration": 219.29999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/schema-DFTcSCNt.js",
+          "transfer": 13777,
+          "duration": 308.5
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/projectPackage-CYxkk_pb.js",
+          "transfer": 37452,
+          "duration": 347.40000000037253
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/parse-CUOMQOeR.js",
+          "transfer": 1832,
+          "duration": 257.8999999994412
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/_commonjs-dynamic-modules-TDtrdbi3.js",
+          "transfer": 539,
+          "duration": 265.79999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/_studio.projects-B_YgOwNy.js",
+          "transfer": 1222,
+          "duration": 267.5
+        },
+        {
+          "url": "http://127.0.0.1:4174/brand/logo-256.png",
+          "transfer": 53783,
+          "duration": 393.79999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/brand/logo.webp",
+          "transfer": 108402,
+          "duration": 209.1000000005588
+        }
+      ],
+      "resources": [
+        {
+          "url": "index-p2o5JvUW.js",
+          "transfer": 210653,
+          "duration": 388.3999999994412
+        },
+        {
+          "url": "_studio-D2jO1ZUy.js",
+          "transfer": 4133,
+          "duration": 67
+        },
+        {
+          "url": "useRouterState-B_SIDEuy.js",
+          "transfer": 470,
+          "duration": 46.40000000037253
+        },
+        {
+          "url": "sheet-Dlm9jDNV.js",
+          "transfer": 1428,
+          "duration": 51.200000000186265
+        },
+        {
+          "url": "createLucideIcon-DboD2IJy.js",
+          "transfer": 985,
+          "duration": 53.200000000186265
+        },
+        {
+          "url": "index-B3KW0uep.js",
+          "transfer": 1996,
+          "duration": 62
+        },
+        {
+          "url": "input-FyLYUl7p.js",
+          "transfer": 7207,
+          "duration": 74
+        },
+        {
+          "url": "dialog-CkL3mKCg.js",
+          "transfer": 1250,
+          "duration": 87.30000000074506
+        },
+        {
+          "url": "brand-BocejDcr.js",
+          "transfer": 542,
+          "duration": 91.59999999962747
+        },
+        {
+          "url": "ProjectGalleryPage-CE8WGZG3.js",
+          "transfer": 2384,
+          "duration": 96.79999999981374
+        },
+        {
+          "url": "debouncedDraft-CjWpqHHG.js",
+          "transfer": 2002,
+          "duration": 107.79999999981374
+        },
+        {
+          "url": "dexie-react-hooks-B_zuxmwQ.js",
+          "transfer": 939,
+          "duration": 110
+        },
+        {
+          "url": "CoverCard-g0mtSHtn.js",
+          "transfer": 1443,
+          "duration": 116.90000000037253
+        },
+        {
+          "url": "Still-GxgzMmhv.js",
+          "transfer": 999,
+          "duration": 130.69999999925494
+        },
+        {
+          "url": "MediaThumb-Cp1U2KGJ.js",
+          "transfer": 1277,
+          "duration": 132.8999999994412
+        },
+        {
+          "url": "dropdown-menu-acF7K7lz.js",
+          "transfer": 5458,
+          "duration": 144.29999999981374
+        },
+        {
+          "url": "index-DlGucW_c.js",
+          "transfer": 3230,
+          "duration": 155.69999999925494
+        },
+        {
+          "url": "index-C2EDvPNI.js",
+          "transfer": 2180,
+          "duration": 157.79999999981374
+        },
+        {
+          "url": "check-DBGxfzfm.js",
+          "transfer": 431,
+          "duration": 160.29999999981374
+        },
+        {
+          "url": "plus-BUbpgtrK.js",
+          "transfer": 465,
+          "duration": 171.5
+        },
+        {
+          "url": "ellipsis-DJQSonAp.js",
+          "transfer": 533,
+          "duration": 174
+        },
+        {
+          "url": "LibraryHeader-ltvHu0LO.js",
+          "transfer": 917,
+          "duration": 185.20000000018626
+        },
+        {
+          "url": "chevron-down-LVB_ZCzG.js",
+          "transfer": 440,
+          "duration": 201.20000000018626
+        },
+        {
+          "url": "search-Bl2JyFyB.js",
+          "transfer": 481,
+          "duration": 205.8999999994412
+        },
+        {
+          "url": "select-xPgROlmQ.js",
+          "transfer": 8109,
+          "duration": 217.5
+        },
+        {
+          "url": "alert-dialog-Dels1hBk.js",
+          "transfer": 1490,
+          "duration": 221.79999999981374
+        },
+        {
+          "url": "format-BxO4S7Os.js",
+          "transfer": 637,
+          "duration": 219.29999999981374
+        },
+        {
+          "url": "schema-DFTcSCNt.js",
+          "transfer": 13777,
+          "duration": 308.5
+        },
+        {
+          "url": "projectPackage-CYxkk_pb.js",
+          "transfer": 37452,
+          "duration": 347.40000000037253
+        },
+        {
+          "url": "parse-CUOMQOeR.js",
+          "transfer": 1832,
+          "duration": 257.8999999994412
+        },
+        {
+          "url": "_commonjs-dynamic-modules-TDtrdbi3.js",
+          "transfer": 539,
+          "duration": 265.79999999981374
+        },
+        {
+          "url": "_studio.projects-B_YgOwNy.js",
+          "transfer": 1222,
+          "duration": 267.5
+        }
+      ]
+    },
+    {
+      "name": "cold agent",
+      "visibleMs": 2476,
+      "network": "CDP 5 Mbps, latency 40ms; Vite preview; observed transfer sizes",
+      "networkIdleMs": 16648,
+      "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n还没有可用的连接\n对话需要先配置 OpenAI 兼容连接（Base URL + API Key）。密钥只保存在本机。\n前往连接\n先整理任务",
+      "allResources": [
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&display=swap",
+          "transfer": 62129,
+          "duration": 598.5
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/index-p2o5JvUW.js",
+          "transfer": 210653,
+          "duration": 387.90000000037253
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/index-DXNR2KO2.css",
+          "transfer": 12931,
+          "duration": 83.5
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/_studio-D2jO1ZUy.js",
+          "transfer": 4133,
+          "duration": 66.20000000018626
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/useRouterState-B_SIDEuy.js",
+          "transfer": 470,
+          "duration": 46.299999999813735
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/sheet-Dlm9jDNV.js",
+          "transfer": 1428,
+          "duration": 50.299999999813735
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/createLucideIcon-DboD2IJy.js",
+          "transfer": 985,
+          "duration": 52.5
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/index-B3KW0uep.js",
+          "transfer": 1996,
+          "duration": 61.799999999813735
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/input-FyLYUl7p.js",
+          "transfer": 7207,
+          "duration": 72.79999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/dialog-CkL3mKCg.js",
+          "transfer": 1250,
+          "duration": 95.90000000037253
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/brand-BocejDcr.js",
+          "transfer": 542,
+          "duration": 104.90000000037253
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/ProjectGalleryPage-CE8WGZG3.js",
+          "transfer": 2384,
+          "duration": 113.79999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/debouncedDraft-CjWpqHHG.js",
+          "transfer": 2002,
+          "duration": 123.30000000074506
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/dexie-react-hooks-B_zuxmwQ.js",
+          "transfer": 939,
+          "duration": 132
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/CoverCard-g0mtSHtn.js",
+          "transfer": 1443,
+          "duration": 138.79999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/Still-GxgzMmhv.js",
+          "transfer": 999,
+          "duration": 148.3999999994412
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/MediaThumb-Cp1U2KGJ.js",
+          "transfer": 1277,
+          "duration": 154.79999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/dropdown-menu-acF7K7lz.js",
+          "transfer": 5458,
+          "duration": 173.29999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/index-DlGucW_c.js",
+          "transfer": 3230,
+          "duration": 179.90000000037253
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/index-C2EDvPNI.js",
+          "transfer": 2180,
+          "duration": 182.20000000018626
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/check-DBGxfzfm.js",
+          "transfer": 431,
+          "duration": 184.29999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/plus-BUbpgtrK.js",
+          "transfer": 465,
+          "duration": 191.29999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/ellipsis-DJQSonAp.js",
+          "transfer": 533,
+          "duration": 195.79999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/LibraryHeader-ltvHu0LO.js",
+          "transfer": 917,
+          "duration": 216.79999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/chevron-down-LVB_ZCzG.js",
+          "transfer": 440,
+          "duration": 225.5
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/select-xPgROlmQ.js",
+          "transfer": 8109,
+          "duration": 243.70000000018626
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/search-Bl2JyFyB.js",
+          "transfer": 481,
+          "duration": 230.20000000018626
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/alert-dialog-Dels1hBk.js",
+          "transfer": 1490,
+          "duration": 239.40000000037253
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/format-BxO4S7Os.js",
+          "transfer": 637,
+          "duration": 241.29999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/schema-DFTcSCNt.js",
+          "transfer": 13777,
+          "duration": 351.09999999962747
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/projectPackage-CYxkk_pb.js",
+          "transfer": 37452,
+          "duration": 449.70000000018626
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/parse-CUOMQOeR.js",
+          "transfer": 1832,
+          "duration": 282.29999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/_commonjs-dynamic-modules-TDtrdbi3.js",
+          "transfer": 539,
+          "duration": 287.40000000037253
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/MemoryEditor-BVTes4vc.js",
+          "transfer": 45372,
+          "duration": 533.7000000001863
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/_studio.agent-D6XCcIrv.js",
+          "transfer": 515575,
+          "duration": 1337.2999999998137
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/productionRevision-CNB_IYMf.js",
+          "transfer": 2060,
+          "duration": 346.29999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/aihubmix-vQphS1yh.js",
+          "transfer": 5829,
+          "duration": 371.29999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/textarea-n3_3pcaJ.js",
+          "transfer": 918,
+          "duration": 394.59999999962747
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/field-CKcWEPAy.js",
+          "transfer": 675,
+          "duration": 401.3999999994412
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/MemoryEditor-CwGXNFcH.css",
+          "transfer": 2042,
+          "duration": 89.70000000018626
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/label-Cltrb4Bg.js",
+          "transfer": 980,
+          "duration": 419.1000000005588
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/arrow-left-CtgtFU8b.js",
+          "transfer": 477,
+          "duration": 451.29999999981374
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/index-D1XxFQA5.js",
+          "transfer": 2312,
+          "duration": 453.3999999994412
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/connectors-BSyd_vm6.js",
+          "transfer": 5829,
+          "duration": 486
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/copy-uAqh42cK.js",
+          "transfer": 543,
+          "duration": 499.5
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/trash-2-BDrls2pL.js",
+          "transfer": 640,
+          "duration": 503.90000000037253
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/checkbox-CpRa6j3w.js",
+          "transfer": 2258,
+          "duration": 505.70000000018626
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/triangle-alert-jUluo3uR.js",
+          "transfer": 577,
+          "duration": 531.3000000007451
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/arrow-up-BRYC0tb_.js",
+          "transfer": 474,
+          "duration": 543
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/_studio-CDMNgg4B.css",
+          "transfer": 13610,
+          "duration": 126.09999999962747
+        },
+        {
+          "url": "http://127.0.0.1:4174/assets/_studio.agent.index-zRh33zZ_.js",
+          "transfer": 349,
+          "duration": 546.8999999994412
+        },
+        {
+          "url": "http://127.0.0.1:4174/brand/logo-256.png",
+          "transfer": 53783,
+          "duration": 706.1999999992549
+        },
+        {
+          "url": "https://registry.npmmirror.com/@lobehub/webfont-geist-mono/1.0.0/files/css/index.css",
+          "transfer": 605,
+          "duration": 85.90000000037253
+        },
+        {
+          "url": "https://registry.npmmirror.com/@lobehub/webfont-geist/1.0.0/files/css/index-full.css",
+          "transfer": 888,
+          "duration": 87.79999999981374
+        },
+        {
+          "url": "https://registry.npmmirror.com/@lobehub/webfont-harmony-sans-sc/1.0.0/files/css/index.css",
+          "transfer": 620,
+          "duration": 89.59999999962747
+        },
+        {
+          "url": "https://registry.npmmirror.com/katex/0.18.1/files/dist/katex.min.css",
+          "transfer": 4486,
+          "duration": 105.20000000018626
+        },
+        {
+          "url": "http://127.0.0.1:4174/brand/logo.webp",
+          "transfer": 108402,
+          "duration": 333.70000000018626
+        }
+      ],
+      "resources": [
+        {
+          "url": "index-p2o5JvUW.js",
+          "transfer": 210653,
+          "duration": 387.90000000037253
+        },
+        {
+          "url": "_studio-D2jO1ZUy.js",
+          "transfer": 4133,
+          "duration": 66.20000000018626
+        },
+        {
+          "url": "useRouterState-B_SIDEuy.js",
+          "transfer": 470,
+          "duration": 46.299999999813735
+        },
+        {
+          "url": "sheet-Dlm9jDNV.js",
+          "transfer": 1428,
+          "duration": 50.299999999813735
+        },
+        {
+          "url": "createLucideIcon-DboD2IJy.js",
+          "transfer": 985,
+          "duration": 52.5
+        },
+        {
+          "url": "index-B3KW0uep.js",
+          "transfer": 1996,
+          "duration": 61.799999999813735
+        },
+        {
+          "url": "input-FyLYUl7p.js",
+          "transfer": 7207,
+          "duration": 72.79999999981374
+        },
+        {
+          "url": "dialog-CkL3mKCg.js",
+          "transfer": 1250,
+          "duration": 95.90000000037253
+        },
+        {
+          "url": "brand-BocejDcr.js",
+          "transfer": 542,
+          "duration": 104.90000000037253
+        },
+        {
+          "url": "ProjectGalleryPage-CE8WGZG3.js",
+          "transfer": 2384,
+          "duration": 113.79999999981374
+        },
+        {
+          "url": "debouncedDraft-CjWpqHHG.js",
+          "transfer": 2002,
+          "duration": 123.30000000074506
+        },
+        {
+          "url": "dexie-react-hooks-B_zuxmwQ.js",
+          "transfer": 939,
+          "duration": 132
+        },
+        {
+          "url": "CoverCard-g0mtSHtn.js",
+          "transfer": 1443,
+          "duration": 138.79999999981374
+        },
+        {
+          "url": "Still-GxgzMmhv.js",
+          "transfer": 999,
+          "duration": 148.3999999994412
+        },
+        {
+          "url": "MediaThumb-Cp1U2KGJ.js",
+          "transfer": 1277,
+          "duration": 154.79999999981374
+        },
+        {
+          "url": "dropdown-menu-acF7K7lz.js",
+          "transfer": 5458,
+          "duration": 173.29999999981374
+        },
+        {
+          "url": "index-DlGucW_c.js",
+          "transfer": 3230,
+          "duration": 179.90000000037253
+        },
+        {
+          "url": "index-C2EDvPNI.js",
+          "transfer": 2180,
+          "duration": 182.20000000018626
+        },
+        {
+          "url": "check-DBGxfzfm.js",
+          "transfer": 431,
+          "duration": 184.29999999981374
+        },
+        {
+          "url": "plus-BUbpgtrK.js",
+          "transfer": 465,
+          "duration": 191.29999999981374
+        },
+        {
+          "url": "ellipsis-DJQSonAp.js",
+          "transfer": 533,
+          "duration": 195.79999999981374
+        },
+        {
+          "url": "LibraryHeader-ltvHu0LO.js",
+          "transfer": 917,
+          "duration": 216.79999999981374
+        },
+        {
+          "url": "chevron-down-LVB_ZCzG.js",
+          "transfer": 440,
+          "duration": 225.5
+        },
+        {
+          "url": "select-xPgROlmQ.js",
+          "transfer": 8109,
+          "duration": 243.70000000018626
+        },
+        {
+          "url": "search-Bl2JyFyB.js",
+          "transfer": 481,
+          "duration": 230.20000000018626
+        },
+        {
+          "url": "alert-dialog-Dels1hBk.js",
+          "transfer": 1490,
+          "duration": 239.40000000037253
+        },
+        {
+          "url": "format-BxO4S7Os.js",
+          "transfer": 637,
+          "duration": 241.29999999981374
+        },
+        {
+          "url": "schema-DFTcSCNt.js",
+          "transfer": 13777,
+          "duration": 351.09999999962747
+        },
+        {
+          "url": "projectPackage-CYxkk_pb.js",
+          "transfer": 37452,
+          "duration": 449.70000000018626
+        },
+        {
+          "url": "parse-CUOMQOeR.js",
+          "transfer": 1832,
+          "duration": 282.29999999981374
+        },
+        {
+          "url": "_commonjs-dynamic-modules-TDtrdbi3.js",
+          "transfer": 539,
+          "duration": 287.40000000037253
+        },
+        {
+          "url": "MemoryEditor-BVTes4vc.js",
+          "transfer": 45372,
+          "duration": 533.7000000001863
+        },
+        {
+          "url": "_studio.agent-D6XCcIrv.js",
+          "transfer": 515575,
+          "duration": 1337.2999999998137
+        },
+        {
+          "url": "productionRevision-CNB_IYMf.js",
+          "transfer": 2060,
+          "duration": 346.29999999981374
+        },
+        {
+          "url": "aihubmix-vQphS1yh.js",
+          "transfer": 5829,
+          "duration": 371.29999999981374
+        },
+        {
+          "url": "textarea-n3_3pcaJ.js",
+          "transfer": 918,
+          "duration": 394.59999999962747
+        },
+        {
+          "url": "field-CKcWEPAy.js",
+          "transfer": 675,
+          "duration": 401.3999999994412
+        },
+        {
+          "url": "label-Cltrb4Bg.js",
+          "transfer": 980,
+          "duration": 419.1000000005588
+        },
+        {
+          "url": "arrow-left-CtgtFU8b.js",
+          "transfer": 477,
+          "duration": 451.29999999981374
+        },
+        {
+          "url": "index-D1XxFQA5.js",
+          "transfer": 2312,
+          "duration": 453.3999999994412
+        },
+        {
+          "url": "connectors-BSyd_vm6.js",
+          "transfer": 5829,
+          "duration": 486
+        },
+        {
+          "url": "copy-uAqh42cK.js",
+          "transfer": 543,
+          "duration": 499.5
+        },
+        {
+          "url": "trash-2-BDrls2pL.js",
+          "transfer": 640,
+          "duration": 503.90000000037253
+        },
+        {
+          "url": "checkbox-CpRa6j3w.js",
+          "transfer": 2258,
+          "duration": 505.70000000018626
+        },
+        {
+          "url": "triangle-alert-jUluo3uR.js",
+          "transfer": 577,
+          "duration": 531.3000000007451
+        },
+        {
+          "url": "arrow-up-BRYC0tb_.js",
+          "transfer": 474,
+          "duration": 543
+        },
+        {
+          "url": "_studio.agent.index-zRh33zZ_.js",
+          "transfer": 349,
+          "duration": 546.8999999994412
+        }
+      ]
+    }
+  ]
+}

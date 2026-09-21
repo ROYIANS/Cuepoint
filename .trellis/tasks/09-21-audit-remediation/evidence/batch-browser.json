@@ -1,0 +1,21 @@
+{
+  "checks": [
+    {
+      "name": "SPA navigation is blocked, continue preserves local text",
+      "passed": true
+    },
+    {
+      "name": "save and leave persists draft without generation, exact-shot destination",
+      "passed": true
+    },
+    {
+      "name": "explicit discard leaves saved draft unchanged",
+      "passed": true
+    },
+    {
+      "name": "revision-conflict save keeps route and local draft",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

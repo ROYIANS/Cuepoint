@@ -1,0 +1,562 @@
+{
+  "browser": "153.0.4234.48",
+  "checks": [
+    {
+      "name": "film/series landing",
+      "film": "http://127.0.0.1:4173/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/e/ep_27f91d47-78d7-4f6b-9d6d-6e89fa86e942",
+      "seriesText": "审查连载\n集\n世界\n记忆\n项目设定\n备份项目\n集\n\n一部戏先分集。点进某一集再写本集故事和分镜。世界在系列层，各集共用。\n\n整部戏一句话\n已保存\n\n新建第 2 集\n\n接着往下写\n\n第\n\n第1集\n\n更新 9月21日 10:14"
+    },
+    {
+      "name": "route/viewport smoke 1440",
+      "items": [
+        {
+          "route": "/projects",
+          "ms": 225,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n我的项目\n按修改\n\n创建新项目\n\n本地项目\n\n审\n\n审查电影\n\n更新 9月21日 10:14\n\n审\n\n审查连载\n\n更新 9月21日 10:14",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "/characters",
+          "ms": 213,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n角色设定\n按修改\n\n工作室里的人。创建后留在这里编辑，项目再引用，不跳进某部戏。\n\n创建角色\n\n留在工作室\n\n未\n\n未命名角色\n\n工作室 · 9月21日 10:14",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "/scenes",
+          "ms": 224,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n常用场景\n按修改\n\n工作室里的地。创建后留在这里编辑，项目再引用。\n\n创建场景\n\n留在工作室\n\n未\n\n未命名场景\n\n工作室 · 9月21日 10:14",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "/props",
+          "ms": 214,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n道具\n按修改\n\n衣服、物件、关键道具。添加到项目后可关联分镜，项目中的修改不影响这里。\n\n创建道具\n\n留在工作室\n\n未\n\n未命名道具\n\n工作室 · 9月21日 10:14",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "/styles",
+          "ms": 214,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n视觉风格\n按修改\n\n画风、光色、镜头气质。创建后留在这里，避免每部戏重新发明。\n\n创建风格\n\n留在工作室\n\n未\n\n未命名风格\n\n工作室 · 9月21日 10:14",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "/connectors",
+          "ms": 212,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n连接\n\n密钥仅保存在本机，配置一次后工作室与后续 Agent 共用。不会写入项目备份 ZIP。 具体聊天用哪个模型，在 Agent 对话里选择。\n\nOA\nOpenAI 兼容\n任意兼容 /v1/chat/completions 的服务（OpenAI、代理、本地网关等）\n未连",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "/about",
+          "ms": 216,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n小光点\n\nCuepoint\n\n本地优先的影视创作工作室：项目、分镜、资产与交付，密钥只留在本机。\n\nGitHub · Cuepoint\n数据与隐私\n项目、分镜与资产默认保存在本机浏览器（IndexedDB），不依赖云端用户库。\nAI 连接密钥（BYOK）只存在本机，不会写",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "/agent",
+          "ms": 655,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n还没有可用的连接\n对话需要先配置 OpenAI 兼容连接（Base URL + API Key）。密钥只保存在本机。\n前往连接\n先整理任务",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "/agent/tasks",
+          "ms": 282,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n加载中…",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "/characters/missing",
+          "ms": 324,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n\n找不到这个角色\n\n返回角色库",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "/p/missing",
+          "ms": 237,
+          "text": "找不到这个项目\n\n返回工作室",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/world",
+          "ms": 217,
+          "text": "审查电影\n故事\n世界\n分镜\n制作\n记忆\n项目设定\n备份项目\n世界\n\n设定是这部戏一直为真的东西。角色、场景、道具、风格是能被点名的名册。\n\n设定\n角色 0\n场景 0\n道具 0\n风格 0\n\n设定是这部戏一直为真的东西，不跟某一集走。\n\n已保存\n世界观\n\n这部宇宙怎么运转。时代、力量从哪来、人和世界的关系。\n\n背景\n\n开拍",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/memory",
+          "ms": 218,
+          "text": "审查电影\n故事\n世界\n分镜\n制作\n记忆\n项目设定\n备份项目\n项目知识\n把经验，留给下一次创作。\n\n汇集这个项目的规范、偏好与决策，每一条都经过你的确认。\n\n添加记忆\n全部分类\n项目规范\n创作偏好\n关键决策\n经验教训\n全部状态\n已确认\n已停用\n已被替代\n待复核\n0 条记忆\n0 条已确认\n让好方法留下来\n\n可以手动写下一条",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "http://127.0.0.1:4173/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/e/ep_27f91d47-78d7-4f6b-9d6d-6e89fa86e942",
+          "ms": 219,
+          "text": "审查电影\n故事\n世界\n分镜\n制作\n记忆\n项目设定\n备份项目\n故事\n\n先写这部作品要讲什么。场次可以后补，分镜会从这里长出来。\n\n已保存\n故事标题（可选）\n一句话故事\n剧本\n\n可拖入 .txt / .md，写入正文，不会自动拆场。\n\n场次\n从选中内容建场\n加一场\n\n加一场，分镜里就会出现对应的空场。出场角色和地点从本戏世",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "http://127.0.0.1:4173/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/e/ep_27f91d47-78d7-4f6b-9d6d-6e89fa86e942/shots",
+          "ms": 223,
+          "text": "审查电影\n故事\n世界\n分镜\n制作\n记忆\n项目设定\n备份项目\n制作分镜\n新建\n道具与风格\n设计\n素材\n筛选\n选择\n分镜设置\n列设置\n顺序\n镜号\n状态\n内容\n时长 (秒)\n角色\n场景\n备注\n设定\n草稿\n先在世界里添加角色\n未选择场景\n镜头总数 1总时长 0秒",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "http://127.0.0.1:4173/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/e/ep_27f91d47-78d7-4f6b-9d6d-6e89fa86e942/produce",
+          "ms": 219,
+          "text": "审查电影\n故事\n世界\n分镜\n制作\n记忆\n项目设定\n备份项目\n制作与交付\n\n检查当前项目的分镜完整性，并导出按当前顺序整理的交付物。\n\n导出素材交付包\n导出 CSV\n打印故事板\n\n素材交付包包含逐镜头清单与首帧、尾帧、成片原文件，可交给剪辑继续制作。需要恢复整个项目时，请使用顶部「备份项目」。\n\n镜头\n1\n场次\n0\n缺失",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "http://127.0.0.1:4173/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/e/ep_27f91d47-78d7-4f6b-9d6d-6e89fa86e942/storyboard",
+          "ms": 223,
+          "text": "审查电影\n故事\n世界\n分镜\n制作\n记忆\n项目设定\n备份项目\n返回制作\n打印\n\n分镜故事板\n\n审查电影\n1 镜\n0秒\n暂无首帧\n镜 1\n草稿 · 0秒\n\n未分场\n\n未写内容\n\n角色：未选择\n道具：未选择\n风格：无风格（继承项目）",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/e/ep_87d54396-2cdc-4a85-8a73-afff9df55624/shots",
+          "ms": 216,
+          "text": "找不到这一集\n\n返回项目",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "/characters/chr_56649b8a-ec36-4581-86cb-2a26603c6717",
+          "ms": 215,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n角色设定\n角色\n正面\n填写提示词与参考\n侧面\n填写提示词与参考\n背面\n填写提示词与参考\n表情\n填写提示词与参考\n服装\n填写提示词与参考\n名称\n已保存\n简介\n已保存\n外观说明\n已保存\n备注\n已保存\n创作细节 · 选填",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "/scenes/scn_42af1013-4b8d-4934-9d61-3cc355e56e2a",
+          "ms": 212,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n常用场景\n场景\n全景\n填写提示词与参考\n中景\n填写提示词与参考\n细节\n填写提示词与参考\n名称\n已保存\n地点\n已保存\n时段\n已保存\n氛围\n已保存\n备注\n已保存\n创作细节 · 选填",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "/props/prp_dfb634df-71d2-421f-92aa-d8123bcfa257",
+          "ms": 215,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n道具\n道具\n主图\n填写提示词与参考\n细节\n填写提示词与参考\n使用\n填写提示词与参考\n名称\n已保存\n类型\n已保存\n备注\n已保存\n创作细节 · 选填",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        },
+        {
+          "route": "/styles/sty_24a74330-ccc1-4a10-8d0d-a9252280d911",
+          "ms": 213,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n视觉风格\n风格\n画面\n填写提示词与参考\n光色\n填写提示词与参考\n镜头气质\n填写提示词与参考\n名称\n已保存\n备注\n已保存\n创作细节 · 选填",
+          "width": 1440,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440
+        }
+      ]
+    },
+    {
+      "name": "route/viewport smoke 1024",
+      "items": [
+        {
+          "route": "/projects",
+          "ms": 215,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n我的项目\n按修改\n\n创建新项目\n\n本地项目\n\n审\n\n审查电影\n\n更新 9月21日 10:14\n\n审\n\n审查连载\n\n更新 9月21日 10:14",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "/characters",
+          "ms": 227,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n角色设定\n按修改\n\n工作室里的人。创建后留在这里编辑，项目再引用，不跳进某部戏。\n\n创建角色\n\n留在工作室\n\n未\n\n未命名角色\n\n工作室 · 9月21日 10:14",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "/scenes",
+          "ms": 214,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n常用场景\n按修改\n\n工作室里的地。创建后留在这里编辑，项目再引用。\n\n创建场景\n\n留在工作室\n\n未\n\n未命名场景\n\n工作室 · 9月21日 10:14",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "/props",
+          "ms": 213,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n道具\n按修改\n\n衣服、物件、关键道具。添加到项目后可关联分镜，项目中的修改不影响这里。\n\n创建道具\n\n留在工作室\n\n未\n\n未命名道具\n\n工作室 · 9月21日 10:14",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "/styles",
+          "ms": 213,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n视觉风格\n按修改\n\n画风、光色、镜头气质。创建后留在这里，避免每部戏重新发明。\n\n创建风格\n\n留在工作室\n\n未\n\n未命名风格\n\n工作室 · 9月21日 10:14",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "/connectors",
+          "ms": 226,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n连接\n\n密钥仅保存在本机，配置一次后工作室与后续 Agent 共用。不会写入项目备份 ZIP。 具体聊天用哪个模型，在 Agent 对话里选择。\n\nOA\nOpenAI 兼容\n任意兼容 /v1/chat/completions 的服务（OpenAI、代理、本地网关等）\n未连",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "/about",
+          "ms": 226,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n小光点\n\nCuepoint\n\n本地优先的影视创作工作室：项目、分镜、资产与交付，密钥只留在本机。\n\nGitHub · Cuepoint\n数据与隐私\n项目、分镜与资产默认保存在本机浏览器（IndexedDB），不依赖云端用户库。\nAI 连接密钥（BYOK）只存在本机，不会写",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "/agent",
+          "ms": 651,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n还没有可用的连接\n对话需要先配置 OpenAI 兼容连接（Base URL + API Key）。密钥只保存在本机。\n前往连接\n先整理任务",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "/agent/tasks",
+          "ms": 243,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n加载中…",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "/characters/missing",
+          "ms": 223,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n\n找不到这个角色\n\n返回角色库",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "/p/missing",
+          "ms": 213,
+          "text": "找不到这个项目\n\n返回工作室",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/world",
+          "ms": 221,
+          "text": "审查电影\n故事\n世界\n分镜\n制作\n记忆\n项目设定\n备份项目\n世界\n\n设定是这部戏一直为真的东西。角色、场景、道具、风格是能被点名的名册。\n\n设定\n角色 0\n场景 0\n道具 0\n风格 0\n\n设定是这部戏一直为真的东西，不跟某一集走。\n\n已保存\n世界观\n\n这部宇宙怎么运转。时代、力量从哪来、人和世界的关系。\n\n背景\n\n开拍",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/memory",
+          "ms": 219,
+          "text": "审查电影\n故事\n世界\n分镜\n制作\n记忆\n项目设定\n备份项目\n项目知识\n把经验，留给下一次创作。\n\n汇集这个项目的规范、偏好与决策，每一条都经过你的确认。\n\n添加记忆\n全部分类\n项目规范\n创作偏好\n关键决策\n经验教训\n全部状态\n已确认\n已停用\n已被替代\n待复核\n0 条记忆\n0 条已确认\n让好方法留下来\n\n可以手动写下一条",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "http://127.0.0.1:4173/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/e/ep_27f91d47-78d7-4f6b-9d6d-6e89fa86e942",
+          "ms": 221,
+          "text": "审查电影\n故事\n世界\n分镜\n制作\n记忆\n项目设定\n备份项目\n故事\n\n先写这部作品要讲什么。场次可以后补，分镜会从这里长出来。\n\n已保存\n故事标题（可选）\n一句话故事\n剧本\n\n可拖入 .txt / .md，写入正文，不会自动拆场。\n\n场次\n从选中内容建场\n加一场\n\n加一场，分镜里就会出现对应的空场。出场角色和地点从本戏世",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "http://127.0.0.1:4173/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/e/ep_27f91d47-78d7-4f6b-9d6d-6e89fa86e942/shots",
+          "ms": 221,
+          "text": "审查电影\n故事\n世界\n分镜\n制作\n记忆\n项目设定\n备份项目\n制作分镜\n新建\n道具与风格\n设计\n素材\n筛选\n选择\n分镜设置\n列设置\n顺序\n镜号\n状态\n内容\n时长 (秒)\n角色\n场景\n备注\n设定\n草稿\n先在世界里添加角色\n未选择场景\n镜头总数 1总时长 0秒",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "http://127.0.0.1:4173/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/e/ep_27f91d47-78d7-4f6b-9d6d-6e89fa86e942/produce",
+          "ms": 215,
+          "text": "审查电影\n故事\n世界\n分镜\n制作\n记忆\n项目设定\n备份项目\n制作与交付\n\n检查当前项目的分镜完整性，并导出按当前顺序整理的交付物。\n\n导出素材交付包\n导出 CSV\n打印故事板\n\n素材交付包包含逐镜头清单与首帧、尾帧、成片原文件，可交给剪辑继续制作。需要恢复整个项目时，请使用顶部「备份项目」。\n\n镜头\n1\n场次\n0\n缺失",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "http://127.0.0.1:4173/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/e/ep_27f91d47-78d7-4f6b-9d6d-6e89fa86e942/storyboard",
+          "ms": 222,
+          "text": "审查电影\n故事\n世界\n分镜\n制作\n记忆\n项目设定\n备份项目\n返回制作\n打印\n\n分镜故事板\n\n审查电影\n1 镜\n0秒\n暂无首帧\n镜 1\n草稿 · 0秒\n\n未分场\n\n未写内容\n\n角色：未选择\n道具：未选择\n风格：无风格（继承项目）",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/e/ep_87d54396-2cdc-4a85-8a73-afff9df55624/shots",
+          "ms": 218,
+          "text": "找不到这一集\n\n返回项目",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "/characters/chr_56649b8a-ec36-4581-86cb-2a26603c6717",
+          "ms": 226,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n角色设定\n角色\n正面\n填写提示词与参考\n侧面\n填写提示词与参考\n背面\n填写提示词与参考\n表情\n填写提示词与参考\n服装\n填写提示词与参考\n名称\n已保存\n简介\n已保存\n外观说明\n已保存\n备注\n已保存\n创作细节 · 选填",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "/scenes/scn_42af1013-4b8d-4934-9d61-3cc355e56e2a",
+          "ms": 217,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n常用场景\n场景\n全景\n填写提示词与参考\n中景\n填写提示词与参考\n细节\n填写提示词与参考\n名称\n已保存\n地点\n已保存\n时段\n已保存\n氛围\n已保存\n备注\n已保存\n创作细节 · 选填",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "/props/prp_dfb634df-71d2-421f-92aa-d8123bcfa257",
+          "ms": 218,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n道具\n道具\n主图\n填写提示词与参考\n细节\n填写提示词与参考\n使用\n填写提示词与参考\n名称\n已保存\n类型\n已保存\n备注\n已保存\n创作细节 · 选填",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        },
+        {
+          "route": "/styles/sty_24a74330-ccc1-4a10-8d0d-a9252280d911",
+          "ms": 215,
+          "text": "对话\n项目\n角色\n场景\n道具\n风格\n连接\n关于\n视觉风格\n风格\n画面\n填写提示词与参考\n光色\n填写提示词与参考\n镜头气质\n填写提示词与参考\n名称\n已保存\n备注\n已保存\n创作细节 · 选填",
+          "width": 1024,
+          "scrollWidth": 1024,
+          "bodyWidth": 1024
+        }
+      ]
+    },
+    {
+      "name": "route/viewport smoke 390",
+      "items": [
+        {
+          "route": "/projects",
+          "ms": 214,
+          "text": "小光点\n我的项目\n按修改\n\n创建新项目\n\n本地项目\n\n审\n\n审查电影\n\n更新 9月21日 10:14\n\n审\n\n审查连载\n\n更新 9月21日 10:14",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "/characters",
+          "ms": 213,
+          "text": "小光点\n角色设定\n按修改\n\n工作室里的人。创建后留在这里编辑，项目再引用，不跳进某部戏。\n\n创建角色\n\n留在工作室\n\n未\n\n未命名角色\n\n工作室 · 9月21日 10:14",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "/scenes",
+          "ms": 215,
+          "text": "小光点\n常用场景\n按修改\n\n工作室里的地。创建后留在这里编辑，项目再引用。\n\n创建场景\n\n留在工作室\n\n未\n\n未命名场景\n\n工作室 · 9月21日 10:14",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "/props",
+          "ms": 213,
+          "text": "小光点\n道具\n按修改\n\n衣服、物件、关键道具。添加到项目后可关联分镜，项目中的修改不影响这里。\n\n创建道具\n\n留在工作室\n\n未\n\n未命名道具\n\n工作室 · 9月21日 10:14",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "/styles",
+          "ms": 218,
+          "text": "小光点\n视觉风格\n按修改\n\n画风、光色、镜头气质。创建后留在这里，避免每部戏重新发明。\n\n创建风格\n\n留在工作室\n\n未\n\n未命名风格\n\n工作室 · 9月21日 10:14",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "/connectors",
+          "ms": 213,
+          "text": "小光点\n连接\n\n密钥仅保存在本机，配置一次后工作室与后续 Agent 共用。不会写入项目备份 ZIP。 具体聊天用哪个模型，在 Agent 对话里选择。\n\nOA\nOpenAI 兼容\n任意兼容 /v1/chat/completions 的服务（OpenAI、代理、本地网关等）\n未连接\n安装\nDS\nDeepSeek\nDee",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "/about",
+          "ms": 212,
+          "text": "小光点\n小光点\n\nCuepoint\n\n本地优先的影视创作工作室：项目、分镜、资产与交付，密钥只留在本机。\n\nGitHub · Cuepoint\n数据与隐私\n项目、分镜与资产默认保存在本机浏览器（IndexedDB），不依赖云端用户库。\nAI 连接密钥（BYOK）只存在本机，不会写入项目备份 ZIP。\n导出 / 导入由你",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "/agent",
+          "ms": 647,
+          "text": "还没有可用的连接\n对话需要先配置 OpenAI 兼容连接（Base URL + API Key）。密钥只保存在本机。\n前往连接\n先整理任务",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "/agent/tasks",
+          "ms": 218,
+          "text": "加载中…",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "/characters/missing",
+          "ms": 221,
+          "text": "小光点\n\n找不到这个角色\n\n返回角色库",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "/p/missing",
+          "ms": 221,
+          "text": "找不到这个项目\n\n返回工作室",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/world",
+          "ms": 223,
+          "text": "审查电影\n故事\n世界\n分镜\n制作\n记忆\n备份项目\n世界\n\n设定是这部戏一直为真的东西。角色、场景、道具、风格是能被点名的名册。\n\n设定\n角色 0\n场景 0\n道具 0\n风格 0\n\n设定是这部戏一直为真的东西，不跟某一集走。\n\n已保存\n世界观\n\n这部宇宙怎么运转。时代、力量从哪来、人和世界的关系。\n\n背景\n\n开拍之前已经为",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/memory",
+          "ms": 219,
+          "text": "审查电影\n故事\n世界\n分镜\n制作\n记忆\n备份项目\n项目知识\n把经验，留给下一次创作。\n\n汇集这个项目的规范、偏好与决策，每一条都经过你的确认。\n\n添加记忆\n全部分类\n项目规范\n创作偏好\n关键决策\n经验教训\n全部状态\n已确认\n已停用\n已被替代\n待复核\n0 条记忆\n0 条已确认\n让好方法留下来\n\n可以手动写下一条规范，也可",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "http://127.0.0.1:4173/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/e/ep_27f91d47-78d7-4f6b-9d6d-6e89fa86e942",
+          "ms": 218,
+          "text": "审查电影\n故事\n世界\n分镜\n制作\n记忆\n备份项目\n故事\n\n先写这部作品要讲什么。场次可以后补，分镜会从这里长出来。\n\n已保存\n故事标题（可选）\n一句话故事\n剧本\n\n可拖入 .txt / .md，写入正文，不会自动拆场。\n\n场次\n从选中内容建场\n加一场\n\n加一场，分镜里就会出现对应的空场。出场角色和地点从本戏世界选。\n\n",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "http://127.0.0.1:4173/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/e/ep_27f91d47-78d7-4f6b-9d6d-6e89fa86e942/shots",
+          "ms": 222,
+          "text": "审查电影\n故事\n世界\n分镜\n制作\n记忆\n备份项目\n制作分镜\n新建\n道具与风格\n设计\n素材\n筛选\n选择\n分镜设置\n列设置\n顺序\n镜号\n状态\n内容\n时长 (秒)\n角色\n场景\n备注\n设定\n草稿\n先在世界里添加角色\n未选择场景\n镜头总数 1总时长 0秒",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "http://127.0.0.1:4173/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/e/ep_27f91d47-78d7-4f6b-9d6d-6e89fa86e942/produce",
+          "ms": 212,
+          "text": "审查电影\n故事\n世界\n分镜\n制作\n记忆\n备份项目\n制作与交付\n\n检查当前项目的分镜完整性，并导出按当前顺序整理的交付物。\n\n导出素材交付包\n导出 CSV\n打印故事板\n\n素材交付包包含逐镜头清单与首帧、尾帧、成片原文件，可交给剪辑继续制作。需要恢复整个项目时，请使用顶部「备份项目」。\n\n镜头\n1\n场次\n0\n缺失项\n5\n总",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "http://127.0.0.1:4173/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/e/ep_27f91d47-78d7-4f6b-9d6d-6e89fa86e942/storyboard",
+          "ms": 214,
+          "text": "审查电影\n故事\n世界\n分镜\n制作\n记忆\n备份项目\n返回制作\n打印\n\n分镜故事板\n\n审查电影\n1 镜\n0秒\n暂无首帧\n镜 1\n草稿 · 0秒\n\n未分场\n\n未写内容\n\n角色：未选择\n道具：未选择\n风格：无风格（继承项目）",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "/p/prj_94760ead-c977-4120-b49c-6e8744aaab90/e/ep_87d54396-2cdc-4a85-8a73-afff9df55624/shots",
+          "ms": 226,
+          "text": "找不到这一集\n\n返回项目",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "/characters/chr_56649b8a-ec36-4581-86cb-2a26603c6717",
+          "ms": 219,
+          "text": "小光点\n角色设定\n角色\n正面\n填写提示词与参考\n侧面\n填写提示词与参考\n背面\n填写提示词与参考\n表情\n填写提示词与参考\n服装\n填写提示词与参考\n名称\n已保存\n简介\n已保存\n外观说明\n已保存\n备注\n已保存\n创作细节 · 选填",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "/scenes/scn_42af1013-4b8d-4934-9d61-3cc355e56e2a",
+          "ms": 218,
+          "text": "小光点\n常用场景\n场景\n全景\n填写提示词与参考\n中景\n填写提示词与参考\n细节\n填写提示词与参考\n名称\n已保存\n地点\n已保存\n时段\n已保存\n氛围\n已保存\n备注\n已保存\n创作细节 · 选填",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "/props/prp_dfb634df-71d2-421f-92aa-d8123bcfa257",
+          "ms": 219,
+          "text": "小光点\n道具\n道具\n主图\n填写提示词与参考\n细节\n填写提示词与参考\n使用\n填写提示词与参考\n名称\n已保存\n类型\n已保存\n备注\n已保存\n创作细节 · 选填",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        },
+        {
+          "route": "/styles/sty_24a74330-ccc1-4a10-8d0d-a9252280d911",
+          "ms": 211,
+          "text": "小光点\n视觉风格\n风格\n画面\n填写提示词与参考\n光色\n填写提示词与参考\n镜头气质\n填写提示词与参考\n名称\n已保存\n备注\n已保存\n创作细节 · 选填",
+          "width": 390,
+          "scrollWidth": 390,
+          "bodyWidth": 390
+        }
+      ]
+    },
+    {
+      "name": "reference parsing and ZIP roundtrip",
+      "reference": "ready",
+      "cloneId": "prj_347f21d5-36f1-4d23-a2c0-b068817742ca",
+      "refs": 1,
+      "shots": 1,
+      "zipBytes": 4760
+    }
+  ],
+  "errors": []
+}

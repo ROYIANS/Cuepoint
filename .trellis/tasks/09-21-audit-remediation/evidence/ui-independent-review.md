@@ -1,0 +1,10 @@
+# Independent UI remediation review
+
+Reviewed F10/F11/F12/PERF01 code, the shared draft controller integration, regression tests and recorded native browser checks. No additional confirmed blocking issue found in this bounded review.
+
+- Duration input keeps focused raw decimal text separate from the numeric serialized draft. Valid pending/failed numeric changes are retained by the existing draft registry and backup barrier, including viewport unmount. Zero, clear, fractional paste and write failure/retry are covered by browser checks. Invalid text is intentionally not persisted as a numeric value.
+- Shortcut gating yields to native button/link/control descendants before preventDefault. Drag handles therefore retain the DnD keyboard sensor's Space/Arrow behavior. Browser evidence exercises both focused buttons and keyboard drag.
+- Shot row anchors remain mounted for IDs, ordering, filtering and DnD geometry. Active/highlighted/dragging rows keep controls mounted. Offscreen rows use a labelled focusable placeholder; focus activation mounts the row and scrolls it into view, and Tab reaches its controls. This is an intentional additional focus stop, not a demonstrated loss of keyboard access. The first suspicion about absent offscreen drag handles was rejected after tracing focus activation and inspecting explicit browser coverage (placeholder Tab, far-shot deep link, pointer drag across a scroll boundary).
+- Batch navigation blocks while dirty or pending. Save-and-leave calls the revision-checked repository and proceeds only after it resolves. Errors retain local state and navigation; discard is explicit; continue resets the blocker. Recorded browser coverage confirms save, discard and conflict paths.
+
+Review boundaries: did not run new browser automation; assessed the existing reproducible scripts/results plus code. The controller-level and repository tests were run as part of data remediation. Screen-reader semantics beyond ordinary keyboard reachability remain outside these browser assertions.
