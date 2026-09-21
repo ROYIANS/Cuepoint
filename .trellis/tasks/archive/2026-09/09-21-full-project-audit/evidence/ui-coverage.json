@@ -1,0 +1,822 @@
+[
+  {
+    "path": "src/components/agent/AgentChatPage.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/agent/AgentControls.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/agent/AgentGenerationBatches.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/agent/AgentGenerationResults.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/agent/AgentRunDetails.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/agent/ChatWorkspace.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/agent/ContextCompactionDetails.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/agent/ContextParameters.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/agent/ContextUsagePanel.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/agent/FloatingComposer.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/agent/GenerationReview.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/agent/HomeWelcome.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/agent/LobeChatTheme.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/agent/MemoryContextDetails.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/agent/MessageList.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/agent/ModelSelectTrigger.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/agent/ModelSettingsMenu.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/agent/ProjectImageSources.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/agent/ProjectPicker.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/agent/ReferenceAttachments.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/agent/ReferenceLibrary.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/agent/TaskBoard.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/agent/TaskInspector.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/agent/TaskRecords.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/agent/TaskWrapup.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/agent/ThinkingMatrix.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/agent/ThinkingPanel.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/agent/TopicSidebar.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/agent/WebResearchSources.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/agent/agentChat.css",
+    "depth": "static",
+    "notes": "已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。"
+  },
+  {
+    "path": "src/components/agent/agentTheme.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/agent/composerControls.css",
+    "depth": "static",
+    "notes": "已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。"
+  },
+  {
+    "path": "src/components/agent/composerTypes.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/agent/contextParameters.css",
+    "depth": "static",
+    "notes": "已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。"
+  },
+  {
+    "path": "src/components/agent/filterThreadsByTitle.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/agent/generationBatch.css",
+    "depth": "static",
+    "notes": "已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。"
+  },
+  {
+    "path": "src/components/agent/memoryContext.css",
+    "depth": "static",
+    "notes": "已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。"
+  },
+  {
+    "path": "src/components/agent/references.css",
+    "depth": "static",
+    "notes": "已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。"
+  },
+  {
+    "path": "src/components/agent/taskWorkspace.css",
+    "depth": "static",
+    "notes": "已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。"
+  },
+  {
+    "path": "src/components/agent/taskWrapup.css",
+    "depth": "static",
+    "notes": "已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。"
+  },
+  {
+    "path": "src/components/agent/timeGroups.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/agent/useReferenceDraft.ts",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/assets/AssetLibraryPage.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/assets/AssetTextField.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/assets/CharacterDetailPage.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/assets/PropDetailPage.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/assets/SceneDetailPage.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/assets/StyleDetailPage.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/assets/WorldSettingPanel.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/media/MediaPicker.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/media/MediaThumb.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/memory/MemoryEditor.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/memory/MemoryPromotion.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/memory/ProjectMemoryPage.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/memory/memory.css",
+    "depth": "static",
+    "notes": "已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。"
+  },
+  {
+    "path": "src/components/memory/memoryLabels.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/memory/readMemory.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/produce/ProducePage.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/produce/ProductionProposalsPanel.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/produce/StoryboardPrintPage.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/shots/ShotEditorPage.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/slots/GenerationSlotCard.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/story/StoryPage.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/studio/AboutPage.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/studio/AssetLibraryPages.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/studio/ConnectorsPage.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/studio/CoverCard.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/studio/LibraryHeader.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/studio/ProjectGalleryPage.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/studio/PropLibraryPage.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/studio/SearchConnection.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/studio/Still.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/studio/StudioField.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/studio/StudioShell.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/studio/StyleLibraryPage.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/alert-dialog.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/badge.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/button.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/card.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/checkbox.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/click-spark.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/dialog.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/draft-status.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/dropdown-menu.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/field.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/input.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/label.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/popover.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/select.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/separator.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/sheet.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/skeleton.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/sonner.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/tabs.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/textarea.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/ui/tooltip.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/components/workspace/EpisodeListPage.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/workspace/ProjectSettingsPanel.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/components/workspace/WorkspaceChrome.tsx",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/lib/assetLibrary.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/lib/brand.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/lib/chatScroll.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/lib/chatTitle.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/lib/copySelection.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/lib/debouncedDraft.ts",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/lib/formFieldFocus.ts",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/lib/format.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/lib/generationIntent.ts",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/lib/ids.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/lib/library.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/lib/mediaPicker.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/lib/productionContext.ts",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/lib/productionRevision.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/lib/reorderIds.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/lib/shotFilters.ts",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/lib/shotKeyboard.ts",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/lib/shotMedia.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/lib/shotRelations.ts",
+    "depth": "deep",
+    "notes": "已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。"
+  },
+  {
+    "path": "src/lib/thinkingTitle.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/lib/useShotMedia.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/lib/utils.ts",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/__root.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.about.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.agent.$threadId.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.agent.index.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.agent.tasks.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.agent.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.characters.$characterId.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.characters.index.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.characters.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.connectors.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.index.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.projects.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.props.$propId.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.props.index.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.props.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.scenes.$sceneId.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.scenes.index.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.scenes.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.styles.$styleId.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.styles.index.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.styles.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/_studio.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.assets.characters.$characterId.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.assets.index.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.assets.props.$propId.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.assets.scenes.$sceneId.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.assets.styles.$styleId.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.assets.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.e.$episodeId.index.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.e.$episodeId.produce.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.e.$episodeId.shots.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.e.$episodeId.storyboard.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.e.$episodeId.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.index.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.memory.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.plan.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.produce.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.report.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.shots.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.storyboard.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/routes/p.$projectId.world.tsx",
+    "depth": "static",
+    "notes": "已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。"
+  },
+  {
+    "path": "src/styles.css",
+    "depth": "static",
+    "notes": "已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。"
+  }
+]

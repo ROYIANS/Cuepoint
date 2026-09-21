@@ -1,0 +1,363 @@
+path,status,depth,evidence,notes
+.dockerignore,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+.github/workflows/ghcr.yml,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+Dockerfile,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+deploy/nginx.conf,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+docker-compose.yml,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+package.json,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+pnpm-lock.yaml,reviewed,boundary,evidence/baseline.json; evidence/dependency-audit.json,锁文件格式/依赖审计和TypeScript工程引用；未重装依赖
+scripts/model-bank-snapshot.mjs,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/components/agent/AgentChatPage.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/agent/AgentControls.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/agent/AgentGenerationBatches.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/agent/AgentGenerationResults.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/agent/AgentRunDetails.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/agent/ChatWorkspace.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/agent/ContextCompactionDetails.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/agent/ContextParameters.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/agent/ContextUsagePanel.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/agent/FloatingComposer.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/agent/GenerationReview.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/agent/HomeWelcome.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/agent/LobeChatTheme.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/agent/MemoryContextDetails.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/agent/MessageList.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/agent/ModelSelectTrigger.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/agent/ModelSettingsMenu.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/agent/ProjectImageSources.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/agent/ProjectPicker.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/agent/ReferenceAttachments.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/agent/ReferenceLibrary.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/agent/TaskBoard.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/agent/TaskInspector.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/agent/TaskRecords.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/agent/TaskWrapup.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/agent/ThinkingMatrix.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/agent/ThinkingPanel.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/agent/TopicSidebar.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/agent/WebResearchSources.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/agent/agentChat.css,reviewed,static,evidence/ui-coverage.json,已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。
+src/components/agent/agentTheme.ts,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/agent/composerControls.css,reviewed,static,evidence/ui-coverage.json,已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。
+src/components/agent/composerTypes.ts,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/agent/contextParameters.css,reviewed,static,evidence/ui-coverage.json,已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。
+src/components/agent/filterThreadsByTitle.ts,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/agent/generationBatch.css,reviewed,static,evidence/ui-coverage.json,已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。
+src/components/agent/memoryContext.css,reviewed,static,evidence/ui-coverage.json,已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。
+src/components/agent/references.css,reviewed,static,evidence/ui-coverage.json,已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。
+src/components/agent/taskWorkspace.css,reviewed,static,evidence/ui-coverage.json,已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。
+src/components/agent/taskWrapup.css,reviewed,static,evidence/ui-coverage.json,已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。
+src/components/agent/timeGroups.ts,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/agent/useReferenceDraft.ts,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/assets/AssetLibraryPage.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/assets/AssetTextField.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/assets/CharacterDetailPage.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/assets/PropDetailPage.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/assets/SceneDetailPage.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/assets/StyleDetailPage.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/assets/WorldSettingPanel.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/media/MediaPicker.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/media/MediaThumb.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/memory/MemoryEditor.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/memory/MemoryPromotion.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/memory/ProjectMemoryPage.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/memory/memory.css,reviewed,static,evidence/ui-coverage.json,已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。
+src/components/memory/memoryLabels.ts,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/memory/readMemory.ts,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/produce/ProducePage.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/produce/ProductionProposalsPanel.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/produce/StoryboardPrintPage.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/shots/ShotEditorPage.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/slots/GenerationSlotCard.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/story/StoryPage.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/studio/AboutPage.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/studio/AssetLibraryPages.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/studio/ConnectorsPage.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/studio/CoverCard.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/studio/LibraryHeader.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/studio/ProjectGalleryPage.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/studio/PropLibraryPage.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/studio/SearchConnection.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/studio/Still.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/studio/StudioField.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/studio/StudioShell.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/studio/StyleLibraryPage.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/alert-dialog.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/badge.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/button.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/card.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/checkbox.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/click-spark.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/dialog.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/draft-status.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/dropdown-menu.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/field.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/input.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/label.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/popover.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/select.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/separator.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/sheet.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/skeleton.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/sonner.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/tabs.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/textarea.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/ui/tooltip.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/components/workspace/EpisodeListPage.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/workspace/ProjectSettingsPanel.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/components/workspace/WorkspaceChrome.tsx,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/db/agentGeneration.ts,reviewed,deep,evidence/agent-coverage.json,事务、归属、恢复和消费者路径审查
+src/db/agentGenerationBatches.ts,reviewed,deep,evidence/agent-coverage.json,事务、归属、恢复和消费者路径审查
+src/db/agentRuns.ts,reviewed,deep,evidence/agent-coverage.json,事务、归属、恢复和消费者路径审查
+src/db/agentSettings.ts,reviewed,static,evidence/agent-coverage.json,事务、归属、恢复和消费者路径审查
+src/db/agentTaskRecords.ts,reviewed,deep,evidence/agent-coverage.json,事务、归属、恢复和消费者路径审查
+src/db/agentTaskWrapups.ts,reviewed,deep,evidence/agent-coverage.json,事务、归属、恢复和消费者路径审查
+src/db/agentTasks.ts,reviewed,deep,evidence/agent-coverage.json,事务、归属、恢复和消费者路径审查
+src/db/agentToolRecovery.ts,reviewed,deep,evidence/agent-coverage.json,事务、归属、恢复和消费者路径审查
+src/db/agentTools.ts,reviewed,deep,evidence/agent-coverage.json,事务、归属、恢复和消费者路径审查
+src/db/contextSettings.ts,reviewed,deep,evidence/data-coverage.json,全文件：线程与默认设置事务
+src/db/database.ts,reviewed,deep,evidence/data-coverage.json,全文件：表/索引/迁移；真实 v1 升级回归通过
+src/db/generationPreferences.ts,reviewed,deep,evidence/data-coverage.json,全文件：显式偏好/另一模态保留
+src/db/memoryRetrieval.ts,reviewed,deep,evidence/agent-coverage.json,上下文/资料读取边界与消费者审查
+src/db/productionProposals.ts,reviewed,deep,evidence/data-coverage.json,全文件：revision CAS/媒体/应用撤销事务
+src/db/projectMemories.ts,reviewed,deep,evidence/data-coverage.json,全文件：owner/CAS/源总结/版本/替换/删除
+src/db/references.ts,reviewed,deep,evidence/agent-coverage.json,上下文/资料读取边界与消费者审查
+src/db/repo.ts,reviewed,deep,evidence/data-coverage.json,全文件：CRUD/关系/事务/媒体回收/撤销/连接；DATA-02/03
+src/db/searchConnections.ts,reviewed,deep,evidence/data-coverage.json,全文件：key 校验/技能启用/保存删除
+src/domain/agent.ts,reviewed,static,evidence/agent-coverage.json,状态/身份/参数声明与执行路径核对
+src/domain/agentGeneration.ts,reviewed,static,evidence/agent-coverage.json,状态/身份/参数声明与执行路径核对
+src/domain/agentGenerationBatch.ts,reviewed,static,evidence/agent-coverage.json,状态/身份/参数声明与执行路径核对
+src/domain/agentTaskRecords.ts,reviewed,static,evidence/agent-coverage.json,状态/身份/参数声明与执行路径核对
+src/domain/agentTaskWrapup.ts,reviewed,static,evidence/agent-coverage.json,状态/身份/参数声明与执行路径核对
+src/domain/columns.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/domain/context.ts,reviewed,static,evidence/agent-coverage.json,完整读取类型与来源/预算/资料生命周期声明
+src/domain/generationPreferences.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/domain/imageDiscovery.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/domain/memoryRetrieval.ts,reviewed,static,evidence/agent-coverage.json,完整读取类型与来源/预算/资料生命周期声明
+src/domain/output.ts,reviewed,static,evidence/root-coverage.json,主审补读领域模型和生成默认值：正常解析保留未知值、显式校验、参数映射
+src/domain/production.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/domain/projectContext.ts,reviewed,static,evidence/agent-coverage.json,完整读取类型与来源/预算/资料生命周期声明
+src/domain/projectMemory.ts,reviewed,static,evidence/root-coverage.json,主审补读领域模型和生成默认值：正常解析保留未知值、显式校验、参数映射
+src/domain/referenceInput.ts,reviewed,static,evidence/agent-coverage.json,完整读取类型与来源/预算/资料生命周期声明
+src/domain/references.ts,reviewed,static,evidence/agent-coverage.json,完整读取类型与来源/预算/资料生命周期声明
+src/domain/search.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/domain/slot.ts,reviewed,deep,evidence/data-coverage.json,全文件：legacy 合并/媒体收集与重映射
+src/domain/types.ts,reviewed,deep,evidence/data-coverage.json,全文件：owner/episode/slot/filter/status/normalize
+src/lib/agent/businessSchemas.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/businessStore.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/agent/businessToolNames.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/businessTools.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/agent/contextCompaction.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/agent/contextPlanner.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/contextPolicy.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/contextUsage.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/generationBatchRuntime.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/agent/generationMedia.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/generationProfiles.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/generationReview.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/generationReviewDraft.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/generationRuntime.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/agent/generationSelection.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/generationTools.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/imageDiscovery.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/agent/memoryContext.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/agent/memoryToolNames.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/memoryTools.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/agent/projectContext.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/agent/projectScope.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/agent/referenceContext.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/agent/referenceEvidence.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/agent/referenceToolNames.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/referenceTools.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/agent/runChat.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/agent/runOwnership.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/agent/skills.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/taskContext.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/taskState.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/taskTools.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/agent/taskWrapup.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/toolErrors.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/tools.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/webToolNames.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/webTools.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/agent/wrapupEvidence.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/agent/wrapupSchema.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/ai/aihubmix.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/ai/apimart.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/ai/catalog.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/ai/chatModelPolicy.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/ai/chatStream.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/ai/connectors.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/ai/modelBank/README.md,reviewed,static,evidence/agent-coverage.json,模型元数据加载、来源选择和生成文件边界；未逐条审核数据
+src/lib/ai/modelBank/index.ts,reviewed,static,evidence/agent-coverage.json,模型元数据加载、来源选择和生成文件边界；未逐条审核数据
+src/lib/ai/modelBank/lookup.generated.json,verified,generated-boundary,evidence/model-bank.log; evidence/build.log,生成/快照完整性；非逐条外部事实验证
+src/lib/ai/modelBank/models.generated.json,verified,generated-boundary,evidence/model-bank.log; evidence/build.log,生成/快照完整性；非逐条外部事实验证
+src/lib/ai/modelMetadata.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/ai/modelVendors.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/ai/openaiCompatible.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/ai/reasoningPolicy.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/ai/referenceWire.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/ai/responsesStream.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/ai/tavily.ts,reviewed,deep,evidence/agent-coverage.json,关键执行链、状态/归属/输出边界追踪
+src/lib/ai/visionCapability.ts,reviewed,static,evidence/agent-coverage.json,完整读取 helper/声明并核对调用集成；未逐函数独立场景验证
+src/lib/assetLibrary.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/lib/brand.ts,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/lib/chatScroll.ts,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/lib/chatTitle.ts,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/lib/copySelection.ts,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/lib/debouncedDraft.ts,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/lib/draftMedia.ts,reviewed,deep,evidence/data-coverage.json,全文件：owned/pending/save/cancel
+src/lib/episodeDelivery.ts,reviewed,deep,evidence/data-coverage.json,全文件：范围/排序/CSV/派生可用性
+src/lib/formFieldFocus.ts,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/lib/format.ts,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/lib/generationIntent.ts,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/lib/ids.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/lib/library.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/lib/media.ts,reviewed,deep,evidence/data-coverage.json,全文件：上传 MIME/object URL/文件取消
+src/lib/mediaPicker.ts,reviewed,deep,evidence/data-coverage.json,全文件：owner/kind/大小/文件名查找
+src/lib/memory/retrieval.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/lib/memory/schema.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/lib/productionContext.ts,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/lib/productionHandoff.ts,reviewed,deep,evidence/data-coverage.json,全文件：flush/快照/scope/路径/缺失/原始字节
+src/lib/productionRevision.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/lib/projectPackage.ts,reviewed,deep,evidence/data-coverage.json,全文件：包解析/extra/owner/ID/内存快照/事务；DATA-01
+src/lib/references/docx.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/lib/references/docx.worker.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/lib/references/import.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/lib/references/mammoth.d.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/lib/references/package.ts,reviewed,static,evidence/data-coverage.json,完整阅读备份接口与格式/签名校验；完整资料生命周期由其他分工负责
+src/lib/references/parse.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/lib/references/pdf.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/lib/reorderIds.ts,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/lib/shotFilters.ts,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/lib/shotKeyboard.ts,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/lib/shotMedia.ts,reviewed,deep,evidence/data-coverage.json,全文件：有效媒体条件，参与 DATA-01 复现
+src/lib/shotRelations.ts,reviewed,deep,evidence/ui-coverage.json,已阅读实现并追踪状态、持久化或调用边界；动态验证范围见 ui-review.md。
+src/lib/thinkingTitle.ts,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/lib/undo.tsx,reviewed,deep,evidence/data-coverage.json,全文件：单条/过期/异常/防重入
+src/lib/useShotMedia.ts,reviewed,deep,evidence/data-coverage.json,全文件：按引用 ID 查询及旧结果保护
+src/lib/utils.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/main.tsx,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+src/routeTree.gen.ts,verified,generated-boundary,evidence/model-bank.log; evidence/build.log,生成/快照完整性；非逐条外部事实验证
+src/routes/__root.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.about.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.agent.$threadId.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.agent.index.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.agent.tasks.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.agent.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.characters.$characterId.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.characters.index.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.characters.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.connectors.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.index.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.projects.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.props.$propId.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.props.index.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.props.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.scenes.$sceneId.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.scenes.index.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.scenes.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.styles.$styleId.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.styles.index.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.styles.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/_studio.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.assets.characters.$characterId.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.assets.index.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.assets.props.$propId.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.assets.scenes.$sceneId.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.assets.styles.$styleId.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.assets.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.e.$episodeId.index.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.e.$episodeId.produce.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.e.$episodeId.shots.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.e.$episodeId.storyboard.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.e.$episodeId.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.index.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.memory.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.plan.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.produce.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.report.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.shots.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.storyboard.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/routes/p.$projectId.world.tsx,reviewed,static,evidence/ui-coverage.json,已阅读实现/路由参数、归属校验与组件连接；不等于逐交互 E2E。
+src/styles.css,reviewed,static,evidence/ui-coverage.json,已阅读布局、溢出、断点与动效规则；未逐选择器浏览器覆盖。
+src/vite-env.d.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+tests/agentBusiness.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/agentGeneration.test.ts,reviewed,static,evidence/agent-coverage.json,读取 fixture 和与边界相关测试；不声称完整精读此测试文件
+tests/agentGenerationBatch.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/agentGenerationBatchSafety.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/agentGenerationRecovery.test.ts,reviewed,static,evidence/agent-coverage.json,读取 fixture 和与边界相关测试；不声称完整精读此测试文件
+tests/agentGenerationReview.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/agentGenerationReviewTransactions.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/agentMemoryTools.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/agentProjectContext.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/agentReferences.test.ts,reviewed,static,evidence/agent-coverage.json,读取 fixture 和与边界相关测试；不声称完整精读此测试文件
+tests/agentRunReview.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/agentRuns.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/agentSettings.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/agentTaskOrchestration.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/agentTaskOrchestrationReview.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/agentTaskWrapup.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/agentTasks.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/agentToolTransactions.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/agentTools.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/agentToolsReview.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/agentUsage.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/aihubmix.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/apimart.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/aspectPreset.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/assetFoundation.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/assetLibrary.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/catalog.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/chatModelPolicy.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/chatScroll.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/chatStream.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/connectors.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/contextManagement.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/contextUsage.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/copySelection.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/debouncedDraft.test.ts,reviewed,static,evidence/data-coverage.json,前半及 barrier 用例静态阅读
+tests/draftMedia.test.ts,reviewed,static,evidence/data-coverage.json,完整阅读 uploads/cancel/共享媒体/失败重试用例
+tests/episodeDelivery.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/filterThreadsByTitle.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/formFieldFocus.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/generationIntent.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/generationPreferences.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/generationReviewDraft.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/imageDiscovery.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/mediaPicker.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/memoryInclusion.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/memoryRetrieval.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/modelBank.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/modelMetadata.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/modelVendors.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/openaiCompatible.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/output.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/productionContext.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/productionHandoff.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/productionProposals.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/projectMemories.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/projectMemoryPackage.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/projectPackage.test.ts,reviewed,static,evidence/data-coverage.json,前 210 行及 legacy/filters/快照用例静态阅读
+tests/reasoningPolicy.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/referenceEvidence.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/references.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/reorderIds.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/repo.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/repoReliability.test.ts,reviewed,static,evidence/data-coverage.json,v5 filters 迁移用例静态阅读
+tests/responsesStream.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/setup.ts,reviewed,static,evidence/data-coverage.json,完整阅读 fake-indexeddb 重置机制
+tests/shotFilters.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/thinkingMatrix.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/thinkingPanel.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/timeGroups.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/undo.test.ts,reviewed,static,evidence/data-coverage.json,完整阅读单次/过期/替换用例
+tests/useShotMedia.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/webResearch.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tests/webResearchRuntime.test.ts,verified,baseline-execution,evidence/tests.log; evidence/test-map.json,现有测试执行通过及导入映射；未逐条人工核验全部断言
+tsconfig.app.json,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+tsconfig.json,reviewed,boundary,evidence/baseline.json; evidence/dependency-audit.json,锁文件格式/依赖审计和TypeScript工程引用；未重装依赖
+tsconfig.node.json,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+vite.config.ts,reviewed,static,evidence/root-coverage.json,主审读取实现及边界；参考parser另有浏览器worker验证
+vitest.config.ts,reviewed,static,evidence/data-coverage.json,完整阅读 alias/测试发现与 setup
