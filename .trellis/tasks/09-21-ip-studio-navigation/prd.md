@@ -6,9 +6,10 @@ Expose the approved IP-driven creative studio structure while retaining the work
 ## Confirmed product decisions
 - Chat stays the default home.
 - Global navigation: 创作助手 / 我的 IP / 项目 / 素材库 / 任务; utilities: 连接与模型 / 设置与帮助.
-- IP is a long-lived creative identity, not a project type. Projects may be independent.
+- IP is a long-lived creative identity, not a project type. Projects may be independent. Multiple IPs are retained after the follow-up discussion; see evidence/decisions.zh-CN.md for approved derivative-creation decisions and the pending material-library redesign.
 - Five project types: 视频 / 图片 / 文案 / 播客 / 音乐. Type is fixed after creation; no cross-type copy.
 - Future chat creation uses a confirmation card; no automatic project creation from tentative ideas.
+- The material library has two top-level views: 媒体与资料 and 创作设定. The first covers image/video/audio/document media; the second covers structured reusable assets such as characters, scenes, props and styles.
 
 ## This increment
 R1. Implement navigation and useful destination pages. 我的 IP is an honest coming-soon surface describing identity, projects and assets, with no fake profiles or writes.

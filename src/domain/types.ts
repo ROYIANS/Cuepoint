@@ -233,6 +233,7 @@ export function resolutionForAspect(preset: AspectPresetId): {
 }
 
 export interface Project {
+  archivedAt?: string;
   defaultStyleId?: Id;
   generationDefaults?: ProjectGenerationDefaults;
   brief?: string;
@@ -350,6 +351,8 @@ export interface Shot {
 }
 
 export interface MediaRecord {
+  /** Explicit library adoption retained even before attachment to a slot. */
+  libraryRetained?: boolean;
   id: Id;
   projectId: Id;
   mimeType: string;

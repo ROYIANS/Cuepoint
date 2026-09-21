@@ -1,3 +1,5 @@
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { flushPendingDrafts } from "@/lib/debouncedDraft";
 import { useNavigate } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
@@ -26,7 +28,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { db } from "@/db/database";
-import { createProject, deleteProject, renameProject } from "@/db/repo";
+import { createProject, deleteProject, renameProject, setProjectArchived } from "@/db/repo";
 import { formatUpdatedAt } from "@/lib/format";
 import { filterAndSortLibrary, type LibrarySort } from "@/lib/library";
 import {
@@ -43,6 +45,8 @@ import {
   type ProjectMode,
   type Shot,
 } from "@/domain/types";
+import { bindProjectIp } from "@/db/ipProfiles";
+import { ProjectIpPicker } from "./ProjectIpPicker";
 import { Plus } from "lucide-react";
 import { PROJECT_KINDS, ProjectKindPlaceholder, type ProjectKindId } from "./projectKinds";
 import { cn } from "@/lib/utils";
@@ -58,6 +62,14 @@ export function ProjectGalleryPage() {
   const navigate = useNavigate();
   const projects = useLiveQuery(() => db.projects.toArray(), []);
   const shots = useLiveQuery(() => db.shots.toArray(), []) ?? [];
+  const profiles = useLiveQuery(() => db.ipProfiles.toArray(), []) ?? [];
+  const ipLinks = useLiveQuery(() => db.projectIpLinks.toArray(), []) ?? [];
+  const [ipFilter, setIpFilter] = useState("all");
+  const [showArchived, setShowArchived] = useState(false);
+  const [createIpId, setCreateIpId] = useState<string | null>(null);
+  const [binding, setBinding] = useState<{ projectId: string; name: string; ipId: string | null }>();
+  const [bindingBusy, setBindingBusy] = useState(false);
+  const [bindingError, setBindingError] = useState("");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<LibrarySort>("updated");
   const [kindFilter, setKindFilter] = useState<ProjectKindId | "all">("all");
@@ -75,8 +87,11 @@ export function ProjectGalleryPage() {
   const [deleteId, setDeleteId] = useState<string>();
 
   const visible = useMemo(
-    () => filterAndSortLibrary(projects ?? [], query, sort),
-    [projects, query, sort],
+    () => filterAndSortLibrary((projects ?? []).filter((project) => {
+      const ipId = ipLinks.find((link) => link.projectId === project.id)?.ipId;
+      return Boolean(project.archivedAt) === showArchived && (ipFilter === "all" || (ipFilter === "independent" ? !ipId : ipId === ipFilter));
+    }), query, sort),
+    [projects, query, sort, ipLinks, ipFilter, showArchived],
   );
 
 
@@ -85,7 +100,7 @@ export function ProjectGalleryPage() {
     creatingRef.current = true;
     setSubmitting(true);
     try {
-      const project = await createProject(name.trim(), mode, aspectPreset);
+      const project = await createProject(name.trim(), mode, aspectPreset, createIpId);
       setCreating(false);
       setName("未命名项目");
       setMode("film");
@@ -117,11 +132,17 @@ export function ProjectGalleryPage() {
           </button>;
         })}
       </div>
+      <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
+        <label className="flex items-center gap-2">所属 IP
+          <Select value={ipFilter} onValueChange={setIpFilter}><SelectTrigger aria-label="筛选所属 IP" className="max-w-52"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="all">全部</SelectItem><SelectItem value="independent">独立项目</SelectItem>{profiles.map((ip) => <SelectItem key={ip.id} value={ip.id}>{ip.name}{ip.archived ? "（已归档）" : ""}</SelectItem>)}</SelectContent></Select>
+        </label>
+        <label className="flex items-center gap-2"><Checkbox checked={showArchived} onCheckedChange={(checked) => setShowArchived(checked === true)} />查看已归档项目</label>
+      </div>
       <div className="mt-6">
         {filteredKind && !filteredKind.available ? <ProjectKindPlaceholder kind={filteredKind} /> : <>
         {projects === undefined && <p className="text-muted-foreground py-12 text-center text-sm" role="status">加载项目中…</p>}
         {projects !== undefined && !visible.length && <div className="rounded-2xl border border-dashed px-6 py-16 text-center">
-          <h2 className="text-base font-medium">{query.trim() ? "没有找到匹配的项目" : "从第一部作品开始"}</h2>
+          <h2 className="text-base font-medium">{query.trim() || ipFilter !== "all" || showArchived ? "没有找到匹配的项目" : "从第一部作品开始"}</h2>
           <p className="text-muted-foreground mt-2 text-sm">{query.trim() ? "试试其他关键词，或清除搜索。" : "视频创作已开放，其他创作形式将陆续加入。"}</p>
           {query.trim() ? <Button className="mt-5" variant="outline" onClick={() => setQuery("")}>清除搜索</Button> : <Button className="mt-5" variant="outline" onClick={() => { setCreateKind("video"); setCreating(true); }}>新建视频项目</Button>}
         </div>}
@@ -131,12 +152,24 @@ export function ProjectGalleryPage() {
               key={project.id}
               frame="poster"
               title={project.name}
-              subtitle={`视频 · 更新 ${formatUpdatedAt(project.updatedAt)}`}
+              subtitle={`视频 · ${profiles.find((ip) => ip.id === ipLinks.find((link) => link.projectId === project.id)?.ipId)?.name ?? "独立项目"} · ${project.archivedAt ? "已归档" : formatUpdatedAt(project.updatedAt)}`}
               mediaId={project.coverMediaId ?? coverOfProject(shots, project.id)}
               onOpen={() =>
                 void navigate({ to: "/p/$projectId", params: { projectId: project.id } })
               }
               actions={[
+                {
+                  label: "项目素材",
+                  onSelect: () => void navigate({ to: "/assets", search: { project: project.id } }),
+                },
+                {
+                  label: "所属 IP",
+                  onSelect: () => { setBindingError(""); setBinding({ projectId: project.id, name: project.name, ipId: ipLinks.find((link) => link.projectId === project.id)?.ipId ?? null }); },
+                },
+                {
+                  label: project.archivedAt ? "恢复项目" : "归档项目",
+                  onSelect: () => { void setProjectArchived(project.id, !project.archivedAt).catch((error: unknown) => toast.error(error instanceof Error ? error.message : "操作失败")); },
+                },
                 {
                   label: "重命名",
                   onSelect: () => {
@@ -248,7 +281,8 @@ export function ProjectGalleryPage() {
               生成模型与分辨率可在创建后的项目设定中分别配置
             </p>
           </fieldset>
-          <p className="text-muted-foreground text-xs leading-5">项目类型固定为视频。IP 关联将在后续开放，目前可直接独立创作。</p>
+          <div className="space-y-2"><span className="text-sm font-medium">所属 IP</span><ProjectIpPicker value={createIpId} onChange={setCreateIpId} disabled={submitting} /></div>
+          <p className="text-muted-foreground text-xs leading-5">项目类型固定为视频。可选择所属 IP，也可以独立创作。</p>
           </>}
           <DialogFooter>
             <Button disabled={submitting} variant="outline" onClick={() => setCreating(false)}>
@@ -258,6 +292,21 @@ export function ProjectGalleryPage() {
               {submitting ? "创建中…" : selectedKind.available ? "创建项目" : "即将推出"}
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={Boolean(binding)} onOpenChange={(open) => { if (!open && !bindingBusy) setBinding(undefined); }}>
+        <DialogContent><DialogHeader><DialogTitle>项目所属 IP</DialogTitle><DialogDescription>{binding?.name} · 关联仅整理项目归属，不会改写已有内容。</DialogDescription></DialogHeader>
+          <ProjectIpPicker value={binding?.ipId ?? null} onChange={(ipId) => setBinding((value) => value ? { ...value, ipId } : value)} disabled={bindingBusy} />
+          {bindingError && <p role="alert" className="text-destructive text-sm">{bindingError}</p>}
+          <DialogFooter><Button variant="outline" disabled={bindingBusy} onClick={() => setBinding(undefined)}>取消</Button>
+            <Button disabled={bindingBusy} onClick={async () => {
+              if (!binding || bindingBusy) return;
+              setBindingBusy(true); setBindingError("");
+              try { await bindProjectIp(binding.projectId, binding.ipId); setBinding(undefined); }
+              catch (error) { setBindingError(error instanceof Error ? error.message : "保存失败"); }
+              finally { setBindingBusy(false); }
+            }}>{bindingBusy ? "保存中…" : "保存"}</Button></DialogFooter>
         </DialogContent>
       </Dialog>
 

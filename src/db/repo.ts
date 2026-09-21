@@ -56,7 +56,7 @@ import { createId, nowIso } from "@/lib/ids";
 // Media recycling must hold the same lock as every committed slot/cover writer.
 export const PRODUCTION_TABLES = [
   db.projects, db.episodes, db.characters, db.scenes,
-  db.props, db.styles, db.shots, db.media, db.productionProposals, db.agentGenerationJobs, db.agentGenerationBatches, db.agentGenerationBatchItems, db.projectReferences, db.referenceChunks,
+  db.props, db.styles, db.shots, db.media, db.materialUses, db.productionProposals, db.agentGenerationJobs, db.agentGenerationBatches, db.agentGenerationBatchItems, db.projectReferences, db.referenceChunks,
 ];
 
 function pickPatch<T extends object>(patch: T, keys: readonly (keyof T)[]): Partial<T> {
@@ -209,10 +209,16 @@ export async function createProject(
   name: string,
   mode: ProjectMode = "film",
   aspectPreset: AspectPresetId = "16:9",
+  ipId?: Id | null,
 ): Promise<Project> {
   const project = emptyProject(name, mode, aspectPreset);
   const episode = emptyEpisode(project.id, 0);
-  await db.transaction("rw", db.projects, db.episodes, async () => {
+  await db.transaction("rw", [db.projects, db.episodes, ...(ipId ? [db.ipProfiles, db.projectIpLinks] : [])], async () => {
+    if (ipId) {
+      const profile = await db.ipProfiles.get(ipId);
+      if (!profile || profile.archived) throw new Error("请选择未归档的 IP");
+      await db.projectIpLinks.add({ projectId: project.id, ipId, updatedAt: nowIso() });
+    }
     await db.projects.add(project);
     await db.episodes.add(episode);
   });
@@ -262,11 +268,29 @@ export async function patchProjectDetails(
   });
 }
 
+/** Archiving hides a project and its owned library snapshots without altering shared sources. */
+export async function setProjectArchived(id: Id, archived: boolean): Promise<void> {
+  await db.transaction("rw", [db.projects, db.libraryMaterials, db.materialEvents], async () => {
+    const project = await db.projects.get(id);
+    if (!project) throw new Error("项目不存在");
+    await db.projects.update(id, { archivedAt: archived ? nowIso() : undefined, updatedAt: nowIso() });
+    // Restoring a project leaves individually archived materials for explicit review.
+    if (archived) {
+      const rows = await db.libraryMaterials.toArray();
+      for (const row of rows) if (row.scope.kind === "project" && row.scope.id === id && !row.archived) {
+        await db.libraryMaterials.update(row.id, { archived: true, updatedAt: nowIso() });
+        await db.materialEvents.add({ id: createId("mev"), materialId: row.id, action: "archive", detail: "随项目归档", createdAt: nowIso() });
+      }
+    }
+  });
+}
+
 export async function deleteProject(id: Id): Promise<void> {
   await db.transaction(
     "rw",
     [
       db.projects,
+      db.projectIpLinks, db.materialUses, db.libraryMaterials, db.materialEvents,
       db.projectReferences,
       db.referenceChunks,
       db.projectMemories,
@@ -282,6 +306,14 @@ export async function deleteProject(id: Id): Promise<void> {
       db.agentGenerationJobs, db.agentGenerationBatches, db.agentGenerationBatchItems,
     ],
     async () => {
+      await db.projectIpLinks.delete(id);
+      await db.materialUses.where("projectId").equals(id).delete();
+      for (const row of await db.libraryMaterials.toArray()) {
+        if (row.scope.kind === "project" && row.scope.id === id) {
+          await db.libraryMaterials.update(row.id, { archived: true, updatedAt: nowIso() });
+          await db.materialEvents.add({ id: createId("mev"), materialId: row.id, action: "archive", detail: "来源项目已删除，保留素材快照", createdAt: nowIso() });
+        }
+      }
       await db.projectReferences.where("projectId").equals(id).delete();
       await db.referenceChunks.where("projectId").equals(id).delete();
       await db.projectMemories.where("projectId").equals(id).delete();
@@ -557,7 +589,7 @@ export async function reorderEpisodes(projectId: Id, orderedIds: Id[]): Promise<
 }
 
 export async function collectMediaIds(projectId?: Id): Promise<Set<Id>> {
-  const [projects, characters, scenes, props, styles, shots, references] = await Promise.all([
+  const [projects, characters, scenes, props, styles, shots, references, materialUses, retainedMedia] = await Promise.all([
     projectId === undefined ? db.projects.toArray() : db.projects.where("id").equals(projectId).toArray(),
     (projectId === undefined ? db.characters : db.characters.where("projectId").equals(projectId)).toArray(),
     (projectId === undefined ? db.scenes : db.scenes.where("projectId").equals(projectId)).toArray(),
@@ -565,8 +597,12 @@ export async function collectMediaIds(projectId?: Id): Promise<Set<Id>> {
     (projectId === undefined ? db.styles : db.styles.where("projectId").equals(projectId)).toArray(),
     (projectId === undefined ? db.shots : db.shots.where("projectId").equals(projectId)).toArray(),
     (projectId === undefined ? db.projectReferences : db.projectReferences.where("projectId").equals(projectId)).toArray(),
+    (projectId === undefined ? db.materialUses : db.materialUses.where("projectId").equals(projectId)).toArray(),
+    (projectId === undefined ? db.media : db.media.where("projectId").equals(projectId)).filter((media) => media.libraryRetained === true).toArray(),
   ]);
   const ids = new Set<Id>();
+  for (const use of materialUses) for (const mediaId of use.mediaIds) ids.add(mediaId);
+  for (const media of retainedMedia) ids.add(media.id);
   for (const reference of references) if (reference.status !== "unavailable") ids.add(reference.mediaId);
   for (const project of projects) if (project.coverMediaId) ids.add(project.coverMediaId);
   for (const mediaId of collectSlotsMedia([
@@ -579,6 +615,32 @@ export async function collectMediaIds(projectId?: Id): Promise<Set<Id>> {
     ids.add(mediaId);
   }
   return ids;
+}
+
+/** Release only unused project copies. Failure rolls back both the binding and media. */
+export async function releaseMaterialUse(useId: string): Promise<void> {
+  await db.transaction("rw", [...PRODUCTION_TABLES, db.materialEvents], async () => {
+    const use = await db.materialUses.get(useId);
+    if (!use) throw new Error("这条使用记录已不存在，请刷新后重试");
+    const settings = { character: db.characters, scene: db.scenes, prop: db.props, style: db.styles };
+    if (use.targetKind !== "media" && await settings[use.targetKind].get(use.targetId)) {
+      throw new Error("项目中的创作设定仍然存在。请先在项目中删除该设定，再移除使用记录");
+    }
+    await db.materialUses.delete(useId);
+    const otherUses = await db.materialUses.toArray();
+    for (const mediaId of use.mediaIds) {
+      if (otherUses.some((other) => other.mediaIds.includes(mediaId))) {
+        throw new Error("此副本仍有其他素材使用记录，暂时不能移除");
+      }
+      await db.media.update(mediaId, { libraryRetained: false });
+      await deleteMediaIfOrphan(mediaId);
+      if (await db.media.get(mediaId)) {
+        throw new Error("此副本仍被项目封面、创作设定、镜头或任务历史使用，暂时不能移除");
+      }
+    }
+    await db.materialEvents.add({ id: createId("mev"), materialId: use.materialId,
+      action: "release", createdAt: nowIso(), detail: `移除项目 ${use.projectId} 中未使用的 v${use.revision} 副本` });
+  });
 }
 
 async function recycleSlotMedia(

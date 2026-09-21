@@ -143,6 +143,7 @@ function optionalIds(
 }
 
 const PROJECT_KEYS = [
+  "archivedAt",
   "brief",
   "genre",
   "audience",
@@ -178,6 +179,7 @@ function parseProject(
   const project: Project = {
     id: String(raw.id ?? createId("prj")),
     name: String(raw.name ?? fallbackName),
+    archivedAt: optionalText(raw, "archivedAt"),
     brief: optionalText(raw, "brief"),
     genre: optionalText(raw, "genre"),
     audience: optionalText(raw, "audience"),
@@ -679,6 +681,7 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
       db.episodes,
       db.shots,
       db.media,
+      db.materialUses,
       db.projectMemories,
       db.projectMemoryVersions,
       db.projectReferences,
@@ -756,7 +759,7 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
   zip.file("references.json", JSON.stringify(references));
   zip.file("referenceChunks.json", JSON.stringify(referenceChunks));
   zip.file("mediaMetadata.json", JSON.stringify(mediaRecords.map((media) => ({
-    id: media.id, projectId: media.projectId, filename: media.filename, mimeType: media.mimeType,
+    id: media.id, projectId: media.projectId, filename: media.filename, mimeType: media.mimeType, libraryRetained: media.libraryRetained,
   }))));
   for (const media of mediaRecords) {
     const filename = `media/${media.id}.${extFor(media.mimeType, media.filename)}`;
@@ -814,7 +817,7 @@ export async function importProjectZip(file: Blob): Promise<Project> {
   );
   const referencePackage = parseReferencePackage(await readJson("references.json"), await readJson("referenceChunks.json"), projectRaw.id);
   const mediaMetadataRaw = await readJson("mediaMetadata.json");
-  const mediaMetadata = new Map<string, { filename: string; mimeType: string }>();
+  const mediaMetadata = new Map<string, { filename: string; mimeType: string; libraryRetained?: boolean }>();
   if (mediaMetadataRaw !== undefined) {
     for (const raw of asArray(mediaMetadataRaw, "mediaMetadata.json")) {
       const row = asRecord(raw, "mediaMetadata.json");
@@ -823,7 +826,8 @@ export async function importProjectZip(file: Blob): Promise<Project> {
         || typeof row.mimeType !== "string" || !/^[a-zA-Z0-9!#$&^_.+-]+\/[a-zA-Z0-9!#$&^_.+-]+$/.test(row.mimeType)) {
         throw new PackageError("媒体元数据无效、重复或不属于当前项目");
       }
-      mediaMetadata.set(row.id, { filename: row.filename, mimeType: row.mimeType });
+      if (row.libraryRetained !== undefined && typeof row.libraryRetained !== "boolean") throw new PackageError("素材保留标记无效");
+      mediaMetadata.set(row.id, { filename: row.filename, mimeType: row.mimeType, libraryRetained: row.libraryRetained });
     }
   }
   const hasEpisodes = episodesRaw.length > 0;
@@ -869,6 +873,7 @@ export async function importProjectZip(file: Blob): Promise<Project> {
       projectId,
       mimeType,
       filename: metadata?.filename ?? base,
+      libraryRetained: metadata?.libraryRetained,
       blob: new Blob([blob], { type: mimeType }),
     });
   }

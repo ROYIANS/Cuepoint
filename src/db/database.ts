@@ -1,3 +1,4 @@
+import type { IpProfile, ProjectIpLink, LibraryMaterial, MaterialVersion, MaterialUse, MaterialEvent } from "@/domain/materials";
 import type { SearchConnection } from "@/domain/search";
 import type { GenerationBatch, GenerationBatchItem } from "@/domain/agentGenerationBatch";
 import type { ProjectReference, ReferenceChunk } from "@/domain/references";
@@ -27,6 +28,12 @@ import { parseShotPictureSlots } from "@/domain/slot";
 import { createId, nowIso } from "@/lib/ids";
 
 export class AifenjingDB extends Dexie {
+  ipProfiles!: Table<IpProfile, string>;
+  projectIpLinks!: Table<ProjectIpLink, string>;
+  libraryMaterials!: Table<LibraryMaterial, string>;
+  materialVersions!: Table<MaterialVersion, string>;
+  materialUses!: Table<MaterialUse, string>;
+  materialEvents!: Table<MaterialEvent, string>;
   searchConnections!: Table<SearchConnection, string>;
   projectReferences!: Table<ProjectReference, string>;
   referenceChunks!: Table<ReferenceChunk, string>;
@@ -214,6 +221,14 @@ export class AifenjingDB extends Dexie {
       }
     });
     this.version(21).stores({ connectors: "id, &definitionId, updatedAt" });
+    this.version(22).stores({
+      ipProfiles: "id, updatedAt",
+      projectIpLinks: "projectId, ipId",
+      libraryMaterials: "id, kind, scope.kind, scope.id, updatedAt",
+      materialVersions: "id, materialId, &[materialId+revision]",
+      materialUses: "id, materialId, projectId, targetId, [materialId+projectId]",
+      materialEvents: "id, materialId, createdAt",
+    });
   }
 }
 

@@ -3,7 +3,7 @@ import { ProjectSettingsPanel } from "./ProjectSettingsPanel";
 import { flushPendingDrafts } from "@/lib/debouncedDraft";
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
-import { ChevronLeft, Download, Settings2 } from "lucide-react";
+import { ChevronLeft, Download, Library, Settings2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Still } from "@/components/studio/Still";
@@ -258,6 +258,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
           <Link to="/p/$projectId/memory" params={{ projectId }} className={cn("hover:text-foreground", pathname === `/p/${projectId}/memory` && "text-foreground font-medium")}>记忆</Link>
         </nav>
         <div className="col-start-2 row-start-1 flex items-center justify-end gap-1 sm:col-start-3">
+          <Button variant="ghost" size="sm" asChild><Link to="/assets" search={{ project: projectId }} aria-label="项目素材"><Library /><span className="hidden sm:inline">素材</span></Link></Button>
           <Button variant="ghost" size="sm" onClick={() => changeSettingsOpen(true)} aria-label="项目设定">
             <Settings2 /><span className="hidden sm:inline">项目设定</span>
           </Button>

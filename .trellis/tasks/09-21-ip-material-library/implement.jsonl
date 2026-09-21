@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "ownership, compatibility and UI contracts"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "ownership, compatibility and UI contracts"}
+{"file": ".trellis/spec/frontend/asset-output-foundation.md", "reason": "ownership, compatibility and UI contracts"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "ownership, compatibility and UI contracts"}

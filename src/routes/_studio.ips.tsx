@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { IpHomePage } from "@/components/studio/StudioHubPages";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_studio/ips")({ component: IpHomePage });
+export const Route = createFileRoute("/_studio/ips")({ component: Outlet });

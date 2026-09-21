@@ -34,6 +34,7 @@
 | [AI Connectors](./ai-connectors.md) | Provider capabilities, APIMart/AIHubMix generation contracts and discovery | Filled |
 | [Hook Guidelines](./hook-guidelines.md) | Dexie liveQuery loading vs missing | Filled |
 | [State Management](./state-management.md) | IndexedDB owner id, episodes, STUDIO_LIBRARY_ID | Filled |
+| [IP / Material Library](./ip-material-library.md) | Multi-IP profiles, owned immutable snapshots, explicit adoption and retention | Filled |
 | [Asset / Output Foundation](./asset-output-foundation.md) | Optional metadata, prop/style relationships, media reuse and APIMart output profiles | Filled |
 | [Production Contracts](./production-contracts.md) | Handoff ZIP, scoped context, reviewed proposals and Dexie v7 | Filled |
 | [Delivery Export](./delivery-export.md) | Episode-scoped CSV and printable storyboard contracts | Filled |
