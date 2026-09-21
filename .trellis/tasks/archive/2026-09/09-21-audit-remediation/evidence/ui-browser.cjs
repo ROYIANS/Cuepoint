@@ -1,6 +1,6 @@
 const { chromium } = require('/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const assert = require('node:assert/strict'), fs = require('node:fs');
-const out = '.trellis/tasks/09-21-audit-remediation/evidence';
+const out = '.trellis/tasks/archive/2026-09/09-21-audit-remediation/evidence';
 (async () => {
   const browser = await chromium.launch({ executablePath: '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge', headless: true });
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });

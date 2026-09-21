@@ -1,5 +1,5 @@
 const {chromium}=require('/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
-const fs=require('node:fs');const out='.trellis/tasks/09-21-audit-remediation/evidence';
+const fs=require('node:fs');const out='.trellis/tasks/archive/2026-09/09-21-audit-remediation/evidence';
 (async()=>{const browser=await chromium.launch({executablePath:'/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',headless:true});const context=await browser.newContext({viewport:{width:1440,height:900}});const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));const results={browser:browser.version(),checks:[],errors};
 const save=()=>fs.writeFileSync(out+'/route-browser.json',JSON.stringify(results,null,2));
 const check=async(name,fn)=>{try{const r=await fn();results.checks.push({name,...r});console.log(name,JSON.stringify(r));}catch(e){results.checks.push({name,error:e.message});console.log(name,e.message)}save()};

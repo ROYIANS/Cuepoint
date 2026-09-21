@@ -91,7 +91,7 @@
 
 ## 3. `docs: 记录全盘审查修复与验证结果`
 
-- `.trellis/tasks/09-21-audit-remediation/`：任务范围、中文报告、复核结论、复现脚本、性能数据、日志及截图。
+- `.trellis/tasks/archive/2026-09/09-21-audit-remediation/`：任务范围、中文报告、复核结论、复现脚本、性能数据、日志及截图。
 
 ## 保留的先前改动
 
