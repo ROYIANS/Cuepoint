@@ -1,0 +1,14 @@
+{
+  "checks": [
+    "root keeps chat landing",
+    "IP/assets/settings hubs render and exclusive menu current state",
+    "task destination reuses existing task view without chat double-highlight",
+    "all legacy asset libraries and missing detail retain navigation and return to asset hub",
+    "all four upcoming kinds visible in filter and creation; cannot create records",
+    "video create reaches existing episode workspace; empty names rejected; duplicate clicks create once",
+    "existing video rename/search/clear and gallery preserved",
+    "390px hubs without page overflow; mobile seven-item menu navigates and closes",
+    "mobile music placeholder has no writes; dialog Escape and keyboard focus work"
+  ],
+  "errors": []
+}

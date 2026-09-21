@@ -67,3 +67,11 @@ Project world owns project-scoped character, scene, prop, and style detail route
 - Studio create: `src/components/studio/AssetLibraryPages.tsx` → `/characters/$characterId`
 - Studio detail: `src/routes/_studio.characters.$characterId.tsx` passes `back={{ kind: "studio" }}`
 - Project detail: `src/routes/p.$projectId.assets.characters.$characterId.tsx` passes `back={{ kind: "project", projectId }}`
+
+## IP studio navigation foundation (2026-09-21)
+
+- `/` still redirects to `/agent`. StudioShell groups global destinations as chat, `/ips`, projects, `/assets`, and `/agent/tasks`, with connectors/settings below. Task navigation must be exclusive from chat, including ARIA current state (TanStack Link has its own prefix-active behavior).
+- `/ips` is a coming-soon surface, not a persisted project kind. Independent projects remain supported; IP records/context binding are not implemented in this increment.
+- `/assets` groups the existing studio character/scene/prop/style libraries. Preserve their old list/detail URLs and ownership contracts. Shell provides their return-to-hub breadcrumb.
+- `projectKinds.tsx` is a presentation-only availability catalog: video/image/copy/podcast/music. Video uses existing film/series repository behavior. Unavailable kinds may be inspected, but both UI and submit handler must prevent creating a video record on their behalf. Do not treat this catalog as a database migration or infer persisted IP membership.
+- `/settings` links actual existing connections, project backup and about capabilities; do not fabricate preferences or functioning IP forms.

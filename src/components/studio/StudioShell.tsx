@@ -1,13 +1,13 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
-  Box,
+  ArrowLeft,
   Cable,
-  Clapperboard,
-  Info,
-  MapPinned,
+  FolderOpen,
+  ListChecks,
+  Library,
   Menu,
   MessageSquare,
-  Palette,
+  Settings2,
   Upload,
   UserRound,
 } from "lucide-react";
@@ -27,16 +27,37 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-const NAV = [
-  { to: "/agent", label: "对话", icon: MessageSquare, exact: false },
-  { to: "/projects", label: "项目", icon: Clapperboard, exact: true },
-  { to: "/characters", label: "角色", icon: UserRound, exact: false },
-  { to: "/scenes", label: "场景", icon: MapPinned, exact: false },
-  { to: "/props", label: "道具", icon: Box, exact: false },
-  { to: "/styles", label: "风格", icon: Palette, exact: false },
-  { to: "/connectors", label: "连接", icon: Cable, exact: false },
-  { to: "/about", label: "关于", icon: Info, exact: false },
+const ASSET_ROUTES = [
+  { to: "/characters", label: "角色" },
+  { to: "/scenes", label: "场景" },
+  { to: "/props", label: "道具" },
+  { to: "/styles", label: "风格" },
 ] as const;
+
+function matchesPath(pathname: string, target: string) {
+  return pathname === target || pathname.startsWith(`${target}/`);
+}
+
+const NAV = [
+  {
+    to: "/agent", label: "创作助手", icon: MessageSquare,
+    isActive: (path: string) => matchesPath(path, "/agent") && !matchesPath(path, "/agent/tasks"),
+  },
+  { to: "/ips", label: "我的 IP", icon: UserRound, isActive: (path: string) => matchesPath(path, "/ips") },
+  { to: "/projects", label: "项目", icon: FolderOpen, isActive: (path: string) => matchesPath(path, "/projects") },
+  {
+    to: "/assets", label: "素材库", icon: Library,
+    isActive: (path: string) => matchesPath(path, "/assets") || ASSET_ROUTES.some((item) => matchesPath(path, item.to)),
+  },
+  { to: "/agent/tasks", label: "任务", icon: ListChecks, isActive: (path: string) => matchesPath(path, "/agent/tasks") },
+] as const;
+
+const UTILITIES = [
+  { to: "/connectors", label: "连接与模型", icon: Cable, isActive: (path: string) => matchesPath(path, "/connectors") },
+  { to: "/settings", label: "设置与帮助", icon: Settings2, isActive: (path: string) => matchesPath(path, "/settings") || matchesPath(path, "/about") },
+] as const;
+
+const FOCUS = "outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 export function StudioShell({
   onImport,
@@ -49,6 +70,8 @@ export function StudioShell({
   const [navOpen, setNavOpen] = useState(false);
   const onAgent = pathname === "/agent" || pathname.startsWith("/agent/");
 
+  const assetSection = ASSET_ROUTES.find((item) => matchesPath(pathname, item.to));
+
   const closeNav = () => setNavOpen(false);
 
   return (
@@ -60,49 +83,53 @@ export function StudioShell({
       sparkCount={8}
       duration={400}
     >
-      <aside className="studio-navigation hidden h-full w-[76px] shrink-0 flex-col items-center py-4 md:flex">
+      <aside className="studio-navigation hidden h-full w-[76px] shrink-0 flex-col items-center overflow-y-auto py-4 md:flex">
         <Link
           to="/about"
-          className="mb-6 flex size-10 items-center justify-center overflow-visible transition-opacity hover:opacity-90"
+          className={cn("mb-6 flex size-10 shrink-0 items-center justify-center rounded-xl transition-opacity hover:opacity-90", FOCUS)}
           aria-label={PRODUCT_NAME_ZH}
           title={PRODUCT_NAME_ZH}
         >
           <img src={LOGO_SRC} alt="" className="size-10 object-contain drop-shadow-[0_6px_14px_rgb(0_0_0_/_0.55)]" />
         </Link>
-        <nav className="flex flex-1 flex-col gap-1">
-          {NAV.map((item) => {
-            const active = item.exact ? pathname === item.to : pathname.startsWith(item.to);
+        <nav aria-label="工作室导航" className="flex w-full flex-1 flex-col items-center gap-1">
+          {[...NAV, ...UTILITIES].map((item, index) => {
+            const active = item.isActive(pathname);
             const Icon = item.icon;
             return (
               <Link
                 key={item.to}
                 to={item.to}
+                activeOptions={{ exact: true }}
+                aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex w-[60px] flex-col items-center gap-1 rounded-2xl px-1 py-2.5 text-[11px] transition-colors",
+                  "flex w-16 shrink-0 flex-col items-center gap-1 rounded-2xl px-1 py-2.5 text-[11px] whitespace-nowrap transition-colors",
+                  FOCUS,
+                  index === NAV.length && "mt-auto",
                   active
                     ? "bg-brand/15 text-brand"
                     : "text-muted-foreground hover:bg-white/5 hover:text-foreground",
                 )}
               >
-                <Icon className="size-4" strokeWidth={1.75} />
+                <Icon className="size-4" strokeWidth={1.75} aria-hidden />
                 {item.label}
               </Link>
             );
           })}
         </nav>
-        <Tooltip>
+        {onImport ? <Tooltip>
           <TooltipTrigger asChild>
             <button
               type="button"
               onClick={onImport}
-              className="text-muted-foreground hover:bg-white/5 hover:text-foreground mt-auto flex size-10 items-center justify-center rounded-full"
+              className={cn("text-muted-foreground hover:bg-white/5 hover:text-foreground mt-2 flex size-10 shrink-0 items-center justify-center rounded-full", FOCUS)}
               aria-label="导入项目"
             >
               <Upload className="size-4" />
             </button>
           </TooltipTrigger>
           <TooltipContent side="right">从备份导入项目</TooltipContent>
-        </Tooltip>
+        </Tooltip> : null}
       </aside>
 
       <div className="studio-content-surface relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
@@ -119,7 +146,7 @@ export function StudioShell({
           <button
             type="button"
             onClick={() => setNavOpen(true)}
-            className="text-muted-foreground hover:bg-white/5 hover:text-foreground pointer-events-auto flex size-9 items-center justify-center rounded-full"
+            className={cn("text-muted-foreground hover:bg-white/5 hover:text-foreground pointer-events-auto flex size-9 items-center justify-center rounded-full", FOCUS)}
             aria-label="打开导航"
           >
             <Menu className="size-5" strokeWidth={1.75} />
@@ -127,7 +154,7 @@ export function StudioShell({
           {onAgent ? null : (
             <Link
               to="/about"
-              className="flex min-w-0 items-center gap-2 transition-opacity hover:opacity-90"
+              className={cn("flex min-w-0 items-center gap-2 rounded-md transition-opacity hover:opacity-90", FOCUS)}
               aria-label={PRODUCT_NAME_ZH}
             >
               <img src={LOGO_SRC} alt="" className="size-7 object-contain" />
@@ -147,23 +174,27 @@ export function StudioShell({
                 {PRODUCT_NAME_ZH}
               </SheetTitle>
             </SheetHeader>
-            <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-3">
-              {NAV.map((item) => {
-                const active = item.exact ? pathname === item.to : pathname.startsWith(item.to);
+            <nav aria-label="工作室导航" className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto p-3">
+              {[...NAV, ...UTILITIES].map((item, index) => {
+                const active = item.isActive(pathname);
                 const Icon = item.icon;
                 return (
                   <Link
                     key={item.to}
                     to={item.to}
+                    activeOptions={{ exact: true }}
+                    aria-current={active ? "page" : undefined}
                     onClick={closeNav}
                     className={cn(
-                      "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors",
+                      "flex shrink-0 items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors",
+                      FOCUS,
+                      index === NAV.length && "mt-auto",
                       active
                         ? "bg-brand/15 text-brand"
                         : "text-muted-foreground hover:bg-white/5 hover:text-foreground",
                     )}
                   >
-                    <Icon className="size-4 shrink-0" strokeWidth={1.75} />
+                    <Icon className="size-4 shrink-0" strokeWidth={1.75} aria-hidden />
                     {item.label}
                   </Link>
                 );
@@ -177,7 +208,7 @@ export function StudioShell({
                     closeNav();
                     onImport();
                   }}
-                  className="text-muted-foreground hover:bg-white/5 hover:text-foreground flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm"
+                  className={cn("text-muted-foreground hover:bg-white/5 hover:text-foreground flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm", FOCUS)}
                 >
                   <Upload className="size-4 shrink-0" />
                   从备份导入项目
@@ -188,6 +219,16 @@ export function StudioShell({
         </Sheet>
 
         <div className="app-scroll relative min-h-0 min-w-0 flex-1 overflow-auto">
+          {assetSection ? (
+            <nav aria-label="素材库路径" className="flex items-center gap-2 px-4 pt-5 text-sm sm:px-10">
+              <Link to="/assets" className={cn("text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 rounded-sm", FOCUS)}>
+                <ArrowLeft className="size-3.5" aria-hidden />
+                素材库
+              </Link>
+              <span className="text-muted-foreground/50" aria-hidden>/</span>
+              <span className="text-muted-foreground">{assetSection.label}</span>
+            </nav>
+          ) : null}
           {children}
         </div>
       </div>
