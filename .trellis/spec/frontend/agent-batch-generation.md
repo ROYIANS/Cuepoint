@@ -18,6 +18,32 @@ One candidate means one independently tracked paid request. Constants are 20 req
 
 Preparation writes the batch/items/tool result atomically with `submitted:false`; replay returns the saved batch. Confirmation revalidates current owners, targets, connector destination and input-byte revisions outside/inside the appropriate transaction, freezes all included snapshots or none, and preserves failed drafts. No network or Blob hashing inside IndexedDB transactions. Jobs contain no keys, Base64 or transient download URLs. Original batches uniquely own `sourceCallId`; retries retain `originCallId` and use a new batch/item identity.
 
+Preparation preflight (limits, project scope, connector/profile, targets and input
+snapshots) is part of the local failure contract: `prepareGenerationBatch` wraps
+these failures in `AtomicToolRollbackError`, just like the final transaction.
+The runtime returns the actual error as a failed tool result and lets the model
+correct its next call in the same run. Do not classify a preflight rejection as
+unknown paid acceptance. APIMart image aspect ratio belongs in `parameters.size`
+(e.g. `"9:16"`); image requests reject `aspectRatio` and `mode` with correction
+guidance. Never silently rewrite the original tool arguments.
+
+`recoverBatchPreparationCalls(runId)` repairs only unknown, atomic,
+non-high-risk `prepare_generation_batch` bookkeeping records without a saved
+result or recovery/confirmation flags, under the thread Web Lock. A matching,
+complete owned batch restores the preparation result without creating anything.
+An absent batch becomes a failed local preparation result with
+`BATCH_PREPARATION_NOT_COMMITTED` and `submitted:false`; the original lost error
+is not fabricated. A conflicting owner, incomplete batch or associated paid job
+keeps the call unknown. Startup must discover parked failed/interrupted runs as
+well as running ones; it reconciles local records without network or tool calls.
+Cancelled/completed runs are not reopened. Resume still enforces latest-run and
+ownership checks, and unknown network operations still block it.
+
+Regression coverage: `agentBatchPreparationRecovery.test.ts` verifies actual
+model-loop correction, no partial writes, result-ledger rollback, same-thread
+historical recovery, existing-batch reuse, idempotency, foreign evidence,
+network uncertainty, held locks and cancelled history.
+
 ### Queue and recovery
 Hold the existing thread Web Lock throughout dispatch, settling and pending UI actions. A local worker is eligible to host a UI action only after `ownsLock` is true. Merely registering a worker does not grant ownership. Claim item/job atomically and recheck immediately before paid POST. Reuse the shared single-generation transport; intentionally identical candidates may bypass equivalence blocking only within their confirmed batch.
 

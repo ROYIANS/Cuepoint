@@ -4,7 +4,7 @@ import { REFERENCE_TOOL_NAMES } from "@/lib/agent/referenceToolNames";
 import { writeTaskRecord } from "./agentTaskRecords";
 import { generationSubmitSchema } from "@/lib/agent/generationProfiles";
 import { targetRevision } from "@/lib/productionRevision";
-import { interruptedToolState, upgradeLegacyPlanCalls } from "./agentToolRecovery";
+import { interruptedToolState, recoverBatchPreparationCalls, upgradeLegacyPlanCalls } from "./agentToolRecovery";
 import { validateTaskPlan, formatTaskPlan } from "@/lib/agent/taskState";
 import { db } from "@/db/database";
 import { MODEL_STEPS_PER_SEGMENT } from "@/domain/agent";
@@ -26,7 +26,7 @@ async function requireProject(run: AgentRun) {
  const thread = await db.chatThreads.get(run.threadId);
  if (thread?.projectId !== run.projectId || run.projectId && !await db.projects.get(run.projectId)) throw new Error("关联项目已不存在或归属不匹配");
 }
-const tables = () => [db.projects, db.agentRuns, db.agentToolCalls, db.chatThreads, db.chatMessages, db.agentTasks, db.agentGenerationJobs, db.agentTaskRecords, db.agentTaskRecordVersions];
+const tables = () => [db.projects, db.agentRuns, db.agentToolCalls, db.chatThreads, db.chatMessages, db.agentTasks, db.agentGenerationJobs, db.agentTaskRecords, db.agentTaskRecordVersions, db.agentGenerationBatches, db.agentGenerationBatchItems];
 async function requireLatestRun(run: AgentRun): Promise<void> {
   const siblings = await db.agentRuns.where("threadId").equals(run.threadId).toArray();
   const history = await db.chatMessages.where("threadId").equals(run.threadId).toArray();
@@ -123,6 +123,7 @@ export async function resumeAgentRun(runId: string): Promise<AgentRun> {
     if (!canResumeAgentRun(run)) throw new Error("此执行不能继续");
     await requireLatestRun(run);
     await upgradeLegacyPlanCalls(runId);
+    await recoverBatchPreparationCalls(runId);
     const calls = await db.agentToolCalls.where("runId").equals(runId).toArray();
     if (calls.some((call) => call.status === "running" || call.status === "unknown")) throw new Error("有操作结果尚不确定，请先核实，不能自动继续或重跑");
     if (calls.some((call) => call.status === "awaiting_approval")) throw new Error("请先批准或拒绝待处理的操作");

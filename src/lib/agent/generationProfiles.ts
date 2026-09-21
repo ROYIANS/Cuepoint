@@ -36,7 +36,10 @@ export function profileRequest(args: GenerationSubmitArgs, provider: "apimart" |
   const disallow = (...keys: Array<keyof typeof p>) => { if (keys.some((key) => p[key] !== undefined)) throw new Error("当前模型不支持这些生成参数"); };
   if (kind === "image") {
     if (inputs.some((input) => input.role !== "reference-image")) throw new Error("图片槽位仅支持已验证的图片模型与参考图片输入");
-    disallow("duration", "aspectRatio", "mode");
+    if (p.aspectRatio !== undefined || p.mode !== undefined) {
+      throw new Error('图片生成不支持 parameters.aspectRatio 和 parameters.mode；请移除这两个字段。APIMart 图片比例使用 parameters.size（例如 "9:16"），AIHubMix 使用已支持的像素尺寸；修改参数后重新准备草稿，尚未提交生成。');
+    }
+    disallow("duration");
     parameters.n = 1;
     parameters.size = p.size ?? "auto";
     if (provider === "apimart") {

@@ -1,5 +1,5 @@
 import { db } from './database';
-import { executeAtomicTool } from './agentTools';
+import { AtomicToolRollbackError, executeAtomicTool } from './agentTools';
 import { resolveConnector, setCharacterSlot, setSceneSlot, setPropSlot, setStyleSlot, setShotSlot } from './repo';
 import type { AgentGenerationJob } from '@/domain/agentGeneration';
 import { generationEntityKey, generationTargetKey, validateBatchLimits, type GenerationBatch, type GenerationBatchItem, type GenerationSnapshot } from '@/domain/agentGenerationBatch';
@@ -54,6 +54,15 @@ export async function readGenerationBatch(id: string, threadId: string) {
   });
 }
 export async function prepareGenerationBatch(title: string, candidates: GenerationSubmitArgs[], context: AgentToolContext) {
+  try {
+    return await prepareGenerationBatchDraft(title, candidates, context);
+  } catch (error) {
+    // Preparation never submits a remote request. Preflight failures happen before
+    // the atomic batch/items/result write, and transaction failures roll it back.
+    throw new AtomicToolRollbackError(error instanceof Error ? error.message : '批量草稿准备失败，未提交生成');
+  }
+}
+async function prepareGenerationBatchDraft(title: string, candidates: GenerationSubmitArgs[], context: AgentToolContext) {
   const existing = await db.agentGenerationBatches.where('sourceCallId').equals(context.callId).first();
   if (existing) { await ownedGenerationBatch(existing.id, context.threadId, false); return batchDraftSummary(existing, await itemsFor(existing.id)); }
   validateBatchLimits(candidates.map(draft => ({ draft })));
