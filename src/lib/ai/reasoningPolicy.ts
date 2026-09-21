@@ -54,9 +54,3 @@ export function selectAgentProtocol(connector: ReasoningConnector, model: string
   return model.trim() === "gpt-5.6-luna" && hasTools && effort !== "none" &&
     (connector.definitionId === "openai-compatible" || connector.definitionId === "aihubmix") ? "responses" : "chat-completions";
 }
-
-/** Compatibility wrapper; new metadata consumers use resolveModelMetadata. */
-export function getModelContextReference(model: string): Pick<ReasoningPolicy, "contextWindow" | "source"> | undefined {
-  const entry = getModelBankEntry(model);
-  return entry ? { contextWindow: entry.contextWindow, source: entry.sourceUrl } : undefined;
-}

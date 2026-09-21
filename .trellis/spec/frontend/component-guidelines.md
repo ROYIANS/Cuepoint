@@ -91,7 +91,7 @@ Primitives export named functions (not default exports): `Button`, `Field`, `but
 ## Accessibility
 
 - Interactive primitives keep `focus-visible` ring tokens (`focus-visible:ring-ring/50 focus-visible:ring-[3px]` on `Button`, `Input`, `Select`, etc.).
-- Decorative canvases / icons that must not be announced: `aria-hidden` (`StudioField` canvas; `ClickSpark` canvas; shell SVG in `StudioShell`).
+- Decorative canvases / icons that must not be announced: `aria-hidden` (`ClickSpark` canvas; shell SVG in `StudioShell`).
 - Slot tiles expose an accessible name via `ariaLabel` / `title` into `GenerationSlotTile`.
 - Keyboard shortcuts in shot UI must yield when focus is in a form/overlay: gate with `isFormFieldTarget` from `src/lib/formFieldFocus.ts` (see `ShotEditorPage`).
 
@@ -130,9 +130,15 @@ Primitives export named functions (not default exports): `Button`, `Field`, `but
 - `src/components/assets/CharacterDetailPage.tsx`
 - `src/components/slots/GenerationSlotCard.tsx`
 - `src/components/ui/button.tsx`, `field.tsx`
-- `src/components/studio/StudioField.tsx`
 - `src/lib/formFieldFocus.ts`
 - `components.json`
 
 
 Optional creative fields, output settings, props/style dialogs and media reuse follow [Asset / Output Foundation](./asset-output-foundation.md). Do not add duplicate per-provider selectors or make optional metadata required at creation.
+
+## Shot editor interaction and rendering (2026-09-21)
+
+- Duration text retains decimal punctuation while focused; valid numeric drafts use serialized persistence and the project backup barrier. Invalid text remains editable, and failed writes expose retry.
+- Global shot shortcuts yield to native buttons/links/summaries, ARIA button/link controls, inputs, overlays, and DnD handles. Do not cancel an event until the shortcut has a valid target.
+- Shot rows keep 160px anchors and DnD registration for all filtered records. A shared IntersectionObserver mounts editing controls within 640px of the scrollport; active/focused/dragging rows stay mounted. Placeholder focus must reveal controls and preserve Tab access. Deep links scroll directly to the existing anchor; filters, ordering, exports, and selection use the full scoped data.
+- When adjusting this behavior, check last-row deep links, Tab across unloaded rows, keyboard drag, and pointer drag across a scrolling boundary. The ready benchmark measures the complete anchor shell and first editable row, not eagerly mounted offscreen controls.

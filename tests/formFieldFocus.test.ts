@@ -44,10 +44,15 @@ describe("isFormFieldTarget", () => {
     ).toBe(true);
   });
 
+  it("yields to native buttons, links, and nested drag-handle icons", () => {
+    expect(isFormFieldTarget({ tagName: "BUTTON", closest: () => null } as EventTarget)).toBe(true);
+    expect(isFormFieldTarget({ tagName: "SUMMARY" } as EventTarget)).toBe(true);
+    for (const match of ["a[href]", "button", "[role='button']", "[role='link']"]) {
+      expect(isFormFieldTarget({ tagName: "SPAN", closest: (selector: string) => selector.includes(match) ? {} : null } as EventTarget)).toBe(true);
+    }
+  });
+
   it("allows shortcuts on ordinary non-form targets", () => {
-    expect(isFormFieldTarget({ tagName: "BUTTON", closest: () => null } as EventTarget)).toBe(
-      false,
-    );
     expect(isFormFieldTarget({ tagName: "DIV", closest: () => null } as EventTarget)).toBe(false);
     expect(isFormFieldTarget(null)).toBe(false);
   });

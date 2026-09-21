@@ -89,7 +89,7 @@ export async function buildProductionContext(projectId: Id, episodeId: Id, shotI
       style: { source: shot.styleId === undefined ? "project-default" as const : shot.styleId === null ? "none" as const : "shot-override" as const, requestedId: styleId, value: visualStyle },
       assets: { characters: cast, scenes: locations, props: objects },
       output: { source: "project-default" as const,
-        image: image ? { provider: image.provider, model: image.model, profileVersion: image.profileVersion, size: image.size, resolution: image.resolution } : undefined,
+        image: image ? { provider: image.provider, model: image.model, profileVersion: image.profileVersion, size: image.size, resolution: image.resolution, quality: image.quality, version: image.version } : undefined,
         video: video ? { provider: video.provider, model: video.model, profileVersion: video.profileVersion, mode: video.mode, aspectRatio: video.aspectRatio, resolution: video.resolution, duration: video.duration } : undefined },
       media, sourceRevisions, warnings,
     };

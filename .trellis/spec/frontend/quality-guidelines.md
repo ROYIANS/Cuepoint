@@ -65,9 +65,9 @@ Vitest setup: `vitest.config.ts` aliases `@` → `src`; `tests/setup.ts` resets 
 ## Accessibility and UX quality
 
 - Keep focus-visible rings on interactive primitives (`src/components/ui/*`).
-- Mark decorative motion/graphics `aria-hidden` (`StudioField`, `ClickSpark`).
+- Mark decorative motion/graphics `aria-hidden` (`ClickSpark`).
 - Prefer Chinese user-facing strings consistent with existing pages (加载中…, 找不到…).
-- Honor `prefers-reduced-motion` for decorative animation (`StudioField`, `ClickSpark`, `src/styles.css`).
+- Honor `prefers-reduced-motion` for decorative animation (`ClickSpark`, `src/styles.css`).
 
 ---
 
@@ -109,3 +109,7 @@ Vitest setup: `vitest.config.ts` aliases `@` → `src`; `tests/setup.ts` resets 
 - `src/db/repo.ts`
 - `src/lib/formFieldFocus.ts`, `reorderIds.ts`, `shotFilters.ts`, `episodeDelivery.ts`
 - `.trellis/spec/frontend/hook-guidelines.md`, `state-management.md`, `delivery-export.md`
+
+## Release gate
+
+`.github/workflows/ghcr.yml` runs locked dependency installation, TypeScript, the full Vitest suite, model snapshot verification and a production build on main pull requests, main pushes, release tags and manual runs. The Docker publication job depends on successful quality checks; pull requests never publish images. Only the publication job has package write permission. The pnpm setup uses the version pinned by `package.json`.

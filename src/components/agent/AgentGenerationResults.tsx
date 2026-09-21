@@ -1,9 +1,10 @@
+import { generationTargetDestination } from "@/lib/generationTargetDestination";
 import { AgentGenerationBatches } from "./AgentGenerationBatches";
 import { Link } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Check, CircleAlert, Image, LoaderCircle, Video } from "lucide-react";
 import { db } from "@/db/database";
-import type { AgentGenerationJob, AgentGenerationStatus } from "@/domain/agentGeneration";
+import type { AgentGenerationStatus } from "@/domain/agentGeneration";
 import { MediaPreview } from "@/components/media/MediaThumb";
 
 const LABELS: Record<AgentGenerationStatus, string> = {
@@ -12,14 +13,6 @@ const LABELS: Record<AgentGenerationStatus, string> = {
   applied: "已写入目标", conflict: "目标已变化，素材已保留", failed: "生成失败",
 };
 const TARGETS = { character: "角色", scene: "场景", prop: "道具", style: "风格", shot: "分镜" };
-function destination(job: AgentGenerationJob): string {
-  const target = job.target;
-  const project = encodeURIComponent(target.projectId);
-  if (target.kind === "shot") return `/p/${project}/e/${encodeURIComponent(target.episodeId)}/shots`;
-  const section = { character: "characters", scene: "scenes", prop: "props", style: "styles" }[target.kind];
-  return `${target.projectId === "studio" ? "" : `/p/${project}/assets`}/${section}/${encodeURIComponent(target.entityId)}`;
-}
-
 /** Persistent job status stays visible even while the model waits or the run is paused. */
 export function AgentGenerationResults({ runId }: { runId: string }) {
   const jobs = useLiveQuery(() => db.agentGenerationJobs.where("runId").equals(runId).filter(job => !job.batchId).sortBy("createdAt"), [runId]);
@@ -39,7 +32,7 @@ export function AgentGenerationResults({ runId }: { runId: string }) {
         {job.result && <MediaPreview mediaId={job.result.mediaId} inspect label="生成结果预览" className="agent-generation-media" />}
         {job.error && <p className="agent-generation-error">{job.error}</p>}
         {job.status === "unknown" && <p>请先核实供应商任务记录，避免重复提交。</p>}
-        <Link to={destination(job)} className="agent-change-link">查看{TARGETS[job.target.kind]} ↗</Link>
+        <Link {...generationTargetDestination(job.target)} className="agent-change-link">查看{TARGETS[job.target.kind]} ↗</Link>
       </section>;
     })}
   </div></>;

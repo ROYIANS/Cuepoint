@@ -1,5 +1,10 @@
 const FORM_FIELD_SELECTOR = [
   "input",
+  "button",
+  "a[href]",
+  "summary",
+  "[role='button']",
+  "[role='link']",
   "textarea",
   "select",
   "[contenteditable='true']",
@@ -36,7 +41,7 @@ export function isFormFieldTarget(target: EventTarget | null): boolean {
   };
   if (node.isContentEditable) return true;
   const tag = typeof node.tagName === "string" ? node.tagName.toUpperCase() : "";
-  if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return true;
+  if (["INPUT", "TEXTAREA", "SELECT", "BUTTON", "SUMMARY"].includes(tag)) return true;
   if (typeof node.closest === "function") {
     return Boolean(node.closest(FORM_FIELD_SELECTOR));
   }

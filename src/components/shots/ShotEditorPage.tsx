@@ -1,3 +1,5 @@
+import { ShotScrollViewport, useShotRowViewport } from "./ShotRowViewport";
+import { DurationInput } from "./DurationInput";
 import { shotRelations } from "@/lib/shotRelations";
 import { toast } from "sonner";
 import { useShotMedia } from "@/lib/useShotMedia";
@@ -38,6 +40,7 @@ import {
   Users,
 } from "lucide-react";
 import {
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -379,7 +382,7 @@ export function ShotEditorPage({
     const frame = window.requestAnimationFrame(() => {
       document
         .getElementById(`shot-${focusShotId}`)
-        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+        ?.scrollIntoView({ block: "center" });
     });
     const timeout = window.setTimeout(() => setHighlightedShotId(undefined), 3000);
     return () => {
@@ -462,7 +465,7 @@ export function ShotEditorPage({
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
-      if (isFormFieldTarget(event.target)) return;
+      if (event.defaultPrevented || isFormFieldTarget(event.target)) return;
       const ctx = keyboardRef.current;
       const meta = event.metaKey || event.ctrlKey;
       const key = event.key;
@@ -476,10 +479,10 @@ export function ShotEditorPage({
       }
 
       if (event.altKey && (key === "ArrowUp" || key === "ArrowDown")) {
-        event.preventDefault();
-        event.stopPropagation();
         const shotId = ctx.activeShotId;
         if (!shotId) return;
+        event.preventDefault();
+        event.stopPropagation();
         ctx.moveShotByOffset(shotId, key === "ArrowUp" ? -1 : 1);
         return;
       }
@@ -496,10 +499,10 @@ export function ShotEditorPage({
       }
 
       if (key === " " || key === "x" || key === "X") {
-        event.preventDefault();
-        event.stopPropagation();
         const shotId = ctx.activeShotId;
         if (!shotId || !ctx.visibleShotIds.includes(shotId)) return;
+        event.preventDefault();
+        event.stopPropagation();
         ctx.setSelecting(true);
         ctx.setSelected((current) => {
           const next = new Set(current);
@@ -1128,7 +1131,7 @@ export function ShotEditorPage({
       ) : null}
 
       <div className="relative min-h-0 flex-1">
-        <div className="app-scroll h-full overflow-auto">
+        <ShotScrollViewport>
           <div
             className={cn(
               "pb-16",
@@ -1237,7 +1240,7 @@ export function ShotEditorPage({
               />
             ) : null}
           </div>
-        </div>
+        </ShotScrollViewport>
 
         <div className="text-muted-foreground pointer-events-none absolute bottom-3 left-4 text-xs">
           镜头总数 {filtersOn ? `${visibleShots.length}/${shots.length}` : shots.length}
@@ -1476,6 +1479,7 @@ function BeatBlockView({
                 key={shot.id}
                 shot={shot}
                 striped={index % 2 === 1}
+                initiallyVisible={shot.order < 6}
                 projectId={projectId}
                 episodeId={episodeId}
                 selecting={selecting}
@@ -1509,6 +1513,7 @@ function BeatBlockView({
 function ShotRow({
   shot,
   striped,
+  initiallyVisible,
   projectId,
   episodeId,
   selecting,
@@ -1530,6 +1535,7 @@ function ShotRow({
 }: {
   shot: Shot;
   striped: boolean;
+  initiallyVisible: boolean;
   projectId: string;
   episodeId: string;
   selecting: boolean;
@@ -1563,6 +1569,12 @@ function ShotRow({
     opacity: isDragging ? 0.72 : undefined,
     zIndex: isDragging ? 10 : undefined,
   };
+  const { rowRef, nearViewport } = useShotRowViewport(initiallyVisible);
+  const mountedRowRef = useCallback((element: HTMLDivElement | null) => {
+    setNodeRef(element);
+    rowRef(element);
+  }, [setNodeRef, rowRef]);
+  const renderContents = nearViewport || active || isDragging;
   const selectedScene = scenes.find((scene) => scene.id === shot.sceneId);
   const selectedCharacters = characters.filter((character) =>
     shot.characterIds.includes(character.id),
@@ -1571,14 +1583,18 @@ function ShotRow({
   return (
     <div
       id={`shot-${shot.id}`}
-      ref={setNodeRef}
-      style={style}
+      ref={mountedRowRef}
+      style={{ ...style, height: 160 }}
+      tabIndex={renderContents ? undefined : 0}
+      aria-label={renderContents ? undefined : `镜头 ${shot.shotNumber}`}
+      data-shot-mounted={renderContents ? "true" : "false"}
       className={`group relative scroll-m-20 transition-shadow duration-300 ${
         active ? "z-10 overflow-visible" : ""
       }`}
       onMouseDown={onActivate}
       onFocusCapture={onActivate}
     >
+      {renderContents ? <>
       <Button
         type="button"
         variant="outline"
@@ -1596,7 +1612,7 @@ function ShotRow({
       </Button>
       <div
         className={cn(
-          "grid max-h-[160px] items-stretch border-b",
+          "grid h-[160px] items-stretch border-b",
           striped ? "bg-muted/40" : "bg-background",
           active && "ring-2 ring-inset ring-brand",
         )}
@@ -1732,16 +1748,7 @@ function ShotRow({
           <div key={column.id} className="flex h-full min-h-0 min-w-0 border-l">
             {column.id === "durationSec" ? (
               <div className={cn(DESIGN_CELL_CHROME, "w-full")}>
-                <Input
-                  value={String(shot.durationSec || "")}
-                  placeholder={columnPlaceholder("durationSec")}
-                  onChange={(event) =>
-                    void patchShot(shot.id, {
-                      durationSec: Math.max(0, Number(event.target.value) || 0),
-                    })
-                  }
-                  className="h-8 w-full rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent"
-                />
+                <DurationInput projectId={projectId} shotId={shot.id} value={shot.durationSec} />
               </div>
             ) : column.id === "characters" ? (
               <DropdownMenu
@@ -1918,6 +1925,7 @@ function ShotRow({
           <Plus />
         </Button>
       ) : null}
+      </> : null}
     </div>
   );
 }

@@ -74,3 +74,7 @@ await persistPause(); // Surface failure, retaining conservative persisted job s
 ```
 
 Wrong: treat `job.status === 'applied'` or the original prepare tool response as proof of current target output. Correct: validate owned local media and compare the current target slot's media ID, then snapshot that evidence for review.
+
+## Audit remediation contracts (2026-09-21)
+
+Unsaved batch review edits and pending saves block SPA navigation as well as browser unload. An in-app dialog offers continue, discard, and save-before-proceed. Failed revision checks retain the local draft and route. Saving a draft never starts paid generation. Both single and batch result links use `generationTargetDestination`; shot destinations include the exact shot search parameter.

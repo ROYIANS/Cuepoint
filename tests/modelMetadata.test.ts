@@ -1,6 +1,6 @@
-import { getModelContextReference, getReasoningPolicy } from "../src/lib/ai/reasoningPolicy";
+import { getReasoningPolicy } from "../src/lib/ai/reasoningPolicy";
 import { describe, expect, it } from "vitest";
-import { collectModelMetadata, parseModelMetadata } from "../src/lib/ai/modelMetadata";
+import { collectModelMetadata, parseModelMetadata, resolveModelMetadata } from "../src/lib/ai/modelMetadata";
 import { discoverConnectorChatModels } from "../src/lib/ai/connectors";
 
 describe("provider model metadata", () => {
@@ -37,6 +37,6 @@ describe("malformed directory metadata", () => {
 
 it("separates reference capacity from gateway reasoning support without guessing aliases", () => {
   expect(getReasoningPolicy({ definitionId: "apimart", baseUrl: "https://api.apimart.ai/v1" }, "gpt-5.6-luna")).toBeUndefined();
-  expect(getModelContextReference("gpt-5.6-luna")?.contextWindow).toBe(1_050_000);
-  expect(getModelContextReference("custom-gpt-5.6-luna")).toBeUndefined();
+  expect(resolveModelMetadata("gpt-5.6-luna").contextWindow?.tokens).toBe(1_050_000);
+  expect(resolveModelMetadata("custom-gpt-5.6-luna").contextWindow).toBeUndefined();
 });

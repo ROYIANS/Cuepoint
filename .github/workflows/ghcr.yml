@@ -1,17 +1,46 @@
-name: Publish GHCR image
+name: Quality checks and GHCR image
 
 on:
   push:
     branches: [main]
     tags: ["v*"]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
-  packages: write
 
 jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Typecheck
+        run: pnpm lint
+      - name: Test
+        run: pnpm test
+      - name: Verify model snapshot
+        run: pnpm model-bank:verify
+      - name: Build
+        run: pnpm build
+
   docker:
+    needs: quality
+    if: github.event_name != 'pull_request'
+    permissions:
+      contents: read
+      packages: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

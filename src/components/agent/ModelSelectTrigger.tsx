@@ -3,7 +3,7 @@ import { resolveModelMetadata } from "@/lib/ai/modelMetadata";
 import { resolveVisionCapability } from "@/lib/ai/visionCapability";
 import { useLiveQuery } from "dexie-react-hooks";
 import { formatTokenCount } from "@/lib/agent/contextUsage";
-import { ModelIcon, ProviderIcon } from "@lobehub/icons";
+import { ModelIcon, ProviderIcon } from "./ModelIcons";
 import { ActionIcon } from "@lobehub/ui";
 import * as Popover from "@radix-ui/react-popover";
 import { ArrowUp, Check, ChevronDown, Eye, Plug, Square, Wrench } from "lucide-react";

@@ -127,3 +127,9 @@ if (stickToBottom.current) snapChatToBottom(listEl);
 - New `avatar={{ ... }}` object per row per tick (same).
 - `overflow-anchor: auto` on the transcript (browser anchoring fights programmatic `scrollTop` during stream).
 - Porting LobeHub’s spacer / send-scroll animation window — that exists to pin the user turn to the top of the viewport; Cuepoint has not adopted that UX.
+
+## Rich transcript loading
+
+`ChatWorkspace` dynamically loads `MessageList` only when the current thread has messages. The empty welcome/composer and task board must not eagerly load Markdown's diagram/math/syntax dependencies. Suspense occupies the same transcript container with a Chinese loading status. This boundary never remounts `AgentChatPage` or owns a run: generation continues while the transcript module loads. Once mounted, the existing scroll, ResizeObserver and memo contracts above remain unchanged.
+
+The full vendor icon catalog is a separate lazy module behind `ModelIcons`; keep named re-exports in `ModelIconCatalog` so dynamic import does not retain every unrelated package export. The icon fallback reserves the requested dimensions and is decorative. Provider and model names remain visible while icons load.

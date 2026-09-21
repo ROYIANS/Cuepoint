@@ -17,6 +17,28 @@ async function setup(slot: "firstFrame" | "clip" = "firstFrame") {
 const media = (projectId: string, id: string, mimeType = "image/png") => putMedia({ id, projectId, filename: id, mimeType, blob: new Blob(["bytes"]) });
 
 describe("generation intent boundary", () => {
+  it.each([
+    ["gpt-image-2.5-flare", { quality: "max" }],
+    ["gpt-image-2.5-sunburst", { quality: "high" }],
+    ["gpt-image-2.5-ext", { version: "sunburst" }],
+  ] as const)("preserves %s settings from project context into validated intent", async (model, settings) => {
+    const { target } = await setup();
+    const image = { ...defaultImageGeneration("16:9", model), ...settings, extra: { secret: "PRIVATE_EXTRA" } };
+    await patchProjectDetails(target.projectId, { generationDefaults: { image } });
+    const context = await buildProductionContext(target.projectId, target.episodeId, target.entityId);
+    expect(context.output.image).toMatchObject(settings);
+    expect(JSON.stringify(context.output)).not.toContain("PRIVATE_EXTRA");
+    const intent = await prepareGenerationIntent({ context, target, prompt: "镜头" });
+    expect(intent.parameters).toMatchObject(settings);
+    expect(() => validateGenerationIntent({ ...intent, parameters: { ...intent.parameters, ...(model.endsWith("ext") ? { quality: "high" } : { version: "flare" }) } })).toThrow();
+  });
+  it("rejects image-only quality/version parameters on video intents", async () => {
+    const { context, target } = await setup("clip");
+    const intent = await prepareGenerationIntent({ context, target, prompt: "motion" });
+    for (const extra of [{ quality: "high" }, { version: "flare" }]) {
+      expect(() => validateGenerationIntent({ ...intent, parameters: { ...intent.parameters, ...extra } })).toThrow("不兼容");
+    }
+  });
   it("prepares profile-validated explicit parameters without rewriting authored timing or attaching anything", async () => {
     const { context, target } = await setup("clip");
     const intent = await prepareGenerationIntent({ context, target, prompt: "雨夜" });

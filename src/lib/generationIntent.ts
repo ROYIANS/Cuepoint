@@ -8,7 +8,7 @@ import { createId } from "@/lib/ids";
 
 const STATUSES = ["prepared", "submitted", "running", "succeeded", "failed", "cancelled"] as const;
 const ROLES = ["first-frame", "last-frame", "reference-image", "reference-video"] as const;
-const PARAMETER_KEYS = ["prompt", "size", "resolution", "n", "duration", "aspect_ratio", "mode", "profileVersion"];
+const PARAMETER_KEYS = ["prompt", "size", "resolution", "n", "duration", "aspect_ratio", "mode", "profileVersion", "quality", "version"];
 const isVideo = (target: ProductionTarget) => target.kind === "shot" && target.slot === "clip";
 function record(raw: unknown): Record<string, unknown> {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) throw new Error("生成任务格式无效");
@@ -48,11 +48,11 @@ export function validateGenerationIntent(raw: unknown): GenerationIntent {
   const video = isVideo(target);
   const config = video ? { video: { provider, model, profileVersion: parameters.profileVersion, mode: parameters.mode,
     aspectRatio: parameters.mode === "frames" ? "adaptive" : parameters.aspect_ratio, resolution: parameters.resolution, duration: parameters.duration } }
-    : { image: { provider, model, profileVersion: parameters.profileVersion, size: parameters.size, resolution: parameters.resolution } };
+    : { image: { provider, model, profileVersion: parameters.profileVersion, size: parameters.size, resolution: parameters.resolution, quality: parameters.quality, version: parameters.version } };
   const errors = validateGenerationDefaults(config);
   if (errors.length) throw new Error(errors.join("；"));
   if (!video && (parameters.n !== 1 || parameters.mode !== undefined || parameters.duration !== undefined || parameters.aspect_ratio !== undefined)) throw new Error("图片任务参数不兼容");
-  if (video && (parameters.n !== undefined || parameters.size !== undefined || parameters.mode === "frames" && parameters.aspect_ratio !== undefined)) throw new Error("视频任务参数不兼容");
+  if (video && (parameters.n !== undefined || parameters.size !== undefined || parameters.quality !== undefined || parameters.version !== undefined || parameters.mode === "frames" && parameters.aspect_ratio !== undefined)) throw new Error("视频任务参数不兼容");
   if (!Array.isArray(row.inputs)) throw new Error("生成输入素材格式无效");
   const inputs: GenerationMediaInput[] = row.inputs.map((rawInput) => {
     const input = record(rawInput);

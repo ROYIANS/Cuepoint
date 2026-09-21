@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Link } from "@tanstack/react-router";
+import { Link, useBlocker } from "@tanstack/react-router";
 import { ArrowUpRight, Check, ChevronRight, CircleAlert, Copy, Images, LoaderCircle, Maximize2, Pause, Play, Trash2, X } from "lucide-react";
 import { db } from "@/db/database";
+import { resolveConnector } from "@/db/repo";
 import { applyBatchSelections, changeGenerationBatchItems, confirmGenerationBatch, readGenerationBatch, retryFailedBatch, saveGenerationBatchDraft, selectBatchCandidate } from "@/db/agentGenerationBatches";
 import { BATCH_CONCURRENCY, BATCH_REQUEST_LIMIT, BATCH_TARGET_LIMIT, generationKind, type GenerationBatch, type GenerationBatchItem } from "@/domain/agentGenerationBatch";
 import { CHARACTER_SLOTS, SCENE_SLOTS, PROP_SLOTS, STYLE_SLOTS } from "@/domain/types";
@@ -13,6 +14,8 @@ import { getGenerationPreferenceState } from "@/db/generationPreferences";
 import { recommendGenerationSelection } from "@/lib/agent/generationSelection";
 import { applyGenerationSelection } from "@/lib/agent/generationReviewDraft";
 import { batchUserAction, startGenerationBatch, stopGenerationBatch } from "@/lib/agent/generationBatchRuntime";
+import { generationTargetDestination } from "@/lib/generationTargetDestination";
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { MediaPreview } from "@/components/media/MediaThumb";
 import { GenerationConfigurationFields } from "./GenerationReview";
@@ -27,12 +30,6 @@ const JOB_LABELS: Record<AgentGenerationStatus, string> = {
 };
 const WORKING = new Set<AgentGenerationStatus>(["submitting", "submitted", "running", "remote_completed", "downloading"]);
 function message(cause: unknown) { return cause instanceof Error ? cause.message : "操作失败，请重试；当前编辑已保留。"; }
-function destination(item: GenerationBatchItem) {
-  const target = item.baseline.target, project = encodeURIComponent(target.projectId);
-  if (target.kind === "shot") return `/p/${project}/e/${encodeURIComponent(target.episodeId)}/shots`;
-  const section = { character: "characters", scene: "scenes", prop: "props", style: "styles" }[target.kind];
-  return `${target.projectId === "studio" ? "" : `/p/${project}/assets`}/${section}/${encodeURIComponent(target.entityId)}`;
-}
 function targetLabel(item: GenerationBatchItem) {
   const target = item.draft.target;
   const slots = target.kind === "shot" ? [{ id: "firstFrame", label: "首帧" }, { id: "lastFrame", label: "尾帧" }, { id: "clip", label: "视频" }] : { character: CHARACTER_SLOTS, scene: SCENE_SLOTS, prop: PROP_SLOTS, style: STYLE_SLOTS }[target.kind];
@@ -106,12 +103,11 @@ function BatchSurface({ batch, parentReadError }: { batch: GenerationBatch; pare
   }).length;
   const portalRoot = typeof document !== "undefined" ? document.querySelector<HTMLElement>(".agent-chat-root") ?? document.body : undefined;
 
-  useEffect(() => {
-    if (!local) return;
-    const guard = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; };
-    window.addEventListener("beforeunload", guard);
-    return () => window.removeEventListener("beforeunload", guard);
-  }, [local]);
+  const blocker = useBlocker({
+    shouldBlockFn: () => Boolean(local) || pendingRef.current,
+    withResolver: true,
+    enableBeforeUnload: Boolean(local) || pending,
+  });
 
   function edit(item: GenerationBatchItem, patch: Partial<Pick<DraftEdit, "draft" | "included">>) {
     setLocal(value => ({ revision: value?.revision ?? current.revision, edits: (value?.edits ?? edits).map(row => row.id === item.id ? { ...row, ...patch } : row) }));
@@ -190,7 +186,7 @@ function BatchSurface({ batch, parentReadError }: { batch: GenerationBatch; pare
                       <ChevronRight size={16} className={expanded === item.id ? "agent-batch-chevron-open" : ""} aria-hidden /></div>
                   </div>
                   {expanded === item.id && <div id={`batch-fields-${item.id}`} className="agent-batch-fields">
-                    <Link to={destination(item)} className="agent-batch-target">查看目标 · {targetLabel(item)}<ArrowUpRight size={14} aria-hidden /></Link>
+                    <Link {...generationTargetDestination(item.baseline.target)} className="agent-batch-target">查看目标 · {targetLabel(item)}<ArrowUpRight size={14} aria-hidden /></Link>
                     <BatchConfigurationFields draft={value.draft} onChange={(next: GenerationSubmitArgs) => edit(item, { draft: next })} disabled={blocked} />
                     <BatchReferences inputs={value.draft.inputs} /><p className="agent-batch-note">目标和参考素材固定于本次提案。每份候选分别提交一次。</p>
                   </div>}
@@ -204,7 +200,7 @@ function BatchSurface({ batch, parentReadError }: { batch: GenerationBatch; pare
                 const group = items.filter(item => item.targetKey === key), label = targetLabel(group[0]);
                 return <button key={key} type="button" aria-pressed={chosenTarget === key} onClick={() => setTargetKey(key)}>{label}<span>{group.length} 份</span></button>;
               })}</div>
-              {groupItems.length > 0 && <div className="agent-batch-comparison-heading"><strong>{targetLabel(groupItems[0])}</strong><Link to={destination(groupItems[0])}>查看目标<ArrowUpRight size={14} aria-hidden /></Link></div>}
+              {groupItems.length > 0 && <div className="agent-batch-comparison-heading"><strong>{targetLabel(groupItems[0])}</strong><Link {...generationTargetDestination(groupItems[0].baseline.target)}>查看目标<ArrowUpRight size={14} aria-hidden /></Link></div>}
               <div className="agent-batch-candidates" data-video={groupItems.some(item => generationKind(item.draft.target) === "video")}>
                 {groupItems.map((item, index) => {
                   const job = jobs.find(row => row.id === item.jobId), selected = current.selections[item.targetKey] === item.id;
@@ -244,6 +240,23 @@ function BatchSurface({ batch, parentReadError }: { batch: GenerationBatch; pare
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
     </DialogPrimitive.Root>
+    <AlertDialog open={blocker.status === "blocked"} onOpenChange={next => { if (!next && !pending) blocker.reset?.(); }}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>离开前处理批次编辑</AlertDialogTitle>
+          <AlertDialogDescription>{pending ? "操作正在进行，请等待完成后再离开。" : "当前批次有未保存的编辑。保存草稿只会保留配置，不会开始生成。"}</AlertDialogDescription>
+        </AlertDialogHeader>
+        {error && <p role="alert" className="text-destructive text-sm">{error}</p>}
+        <AlertDialogFooter>
+          <Button variant="ghost" disabled={pending} onClick={() => blocker.reset?.()}>继续编辑</Button>
+          <Button variant="outline" disabled={pending} onClick={() => { setLocal(null); blocker.proceed?.(); }}>放弃编辑并离开</Button>
+          <Button disabled={blocked} onClick={() => void action(async () => {
+            await batchUserAction(current.threadId, persist);
+            blocker.proceed?.();
+          })}>保存草稿并离开</Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   </section>;
 }
 
@@ -291,7 +304,7 @@ function BatchReferences({ inputs }: { inputs: GenerationSubmitArgs["inputs"] })
 
 function BatchConfigurationSummary({ draft }: { draft: GenerationSubmitArgs }) {
   const connector = useLiveQuery(async () => {
-    try { const row = await db.connectors.get(draft.connectorId); return { id: draft.connectorId, label: row ? `${row.definitionId === "apimart" ? "APIMart" : row.definitionId === "aihubmix" ? "AIHubMix" : row.definitionId}${row.label ? ` · ${row.label}` : ""}` : "连接已不可用" }; }
+    try { const row = await resolveConnector(draft.connectorId); return { id: draft.connectorId, label: row ? `${row.definitionId === "apimart" ? "APIMart" : row.definitionId === "aihubmix" ? "AIHubMix" : row.definitionId}${row.label ? ` · ${row.label}` : ""}` : "连接已不可用" }; }
     catch { return { id: draft.connectorId, label: "连接读取失败" }; }
   }, [draft.connectorId]);
   const p = draft.parameters;

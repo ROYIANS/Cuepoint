@@ -1,5 +1,5 @@
 import { ReferenceMessageSources } from "./ReferenceAttachments";
-import { ModelIcon } from "@lobehub/icons";
+import { ModelIcon } from "./ModelIcons";
 import { Coins, Gauge } from "lucide-react";
 import { formatTokenCount } from "@/lib/agent/contextUsage";
 import { AgentRunDetails, type RunAction } from "./AgentRunDetails";
