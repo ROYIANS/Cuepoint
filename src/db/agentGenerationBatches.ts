@@ -1,6 +1,6 @@
 import { db } from './database';
 import { executeAtomicTool } from './agentTools';
-import { setCharacterSlot, setSceneSlot, setPropSlot, setStyleSlot, setShotSlot } from './repo';
+import { resolveConnector, setCharacterSlot, setSceneSlot, setPropSlot, setStyleSlot, setShotSlot } from './repo';
 import type { AgentGenerationJob } from '@/domain/agentGeneration';
 import { generationEntityKey, generationTargetKey, validateBatchLimits, type GenerationBatch, type GenerationBatchItem, type GenerationSnapshot } from '@/domain/agentGenerationBatch';
 import { generationSubmitSchema, type GenerationSubmitArgs } from '@/lib/agent/generationProfiles';
@@ -20,7 +20,7 @@ export function frozenGeneration(prepared: Prepared): GenerationSnapshot {
 }
 async function recheck(prepared: Prepared) {
   const current = await readGenerationTarget(prepared.request.target);
-  const config = await db.connectors.get(prepared.config.id);
+  const config = await resolveConnector(prepared.config.id);
   if (current.revision !== prepared.current.revision || !config?.apiKey.trim() || config.baseUrl !== prepared.config.baseUrl || config.definitionId !== prepared.provider) throw new Error('目标或连接配置已变化，请重新检查');
   for (const record of prepared.records) {
     if (!record) throw new Error('输入素材已删除');

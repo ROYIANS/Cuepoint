@@ -1,3 +1,4 @@
+import { upgradeLegacyPlanCalls } from "@/db/agentToolRecovery";
 import { budgetContext } from "./contextPlanner";
 import { continuationExtraTokens } from "./contextCompaction";
 import { refreshRunMemoryContext } from "./memoryContext";
@@ -49,6 +50,7 @@ function effectiveToolInput(call: AgentToolCall) {
 
 /** Pending calls are immutable. Only code-owned definitions decide their effect and risk. */
 async function executePendingTools(run: AgentRun, controller: AbortController, registry: readonly AgentToolDefinition[]): Promise<boolean> {
+  await upgradeLegacyPlanCalls(run.id);
   const calls = (await db.agentToolCalls.where("runId").equals(run.id).toArray()).sort((a, b) => a.step - b.step || a.order - b.order);
   if (run.protocol === "responses") {
     const savedCalls = run.responseItems?.filter((item) => item.type === "function_call");

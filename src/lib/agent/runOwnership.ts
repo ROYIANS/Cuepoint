@@ -1,3 +1,4 @@
+import { isLegacyAtomicPlanCall } from "@/db/agentToolRecovery";
 import { recoverAbandonedGenerationBatches } from "@/db/agentGenerationBatches";
 import { db } from "@/db/database";
 import { interruptThreadRuns } from "@/db/agentRuns";
@@ -25,7 +26,10 @@ export async function withThreadRunLock<T>(threadId: string, execute: () => Prom
 export async function recoverAbandonedRuns(locks: ThreadLockManager = browserLocks()): Promise<void> {
   const active = await db.agentRuns.where("status").equals("running").toArray();
   const batches = await db.agentGenerationBatches.where("status").equals("running").toArray();
-  for (const threadId of new Set([...active, ...batches].map((run) => run.threadId))) {
+  // Older releases already parked these known-atomic calls as unknown. Repair under
+  // the same lock so their Resume action becomes available without running work.
+  const legacyPlans = await db.agentToolCalls.filter(isLegacyAtomicPlanCall).toArray();
+  for (const threadId of new Set([...active, ...batches, ...legacyPlans].map((run) => run.threadId))) {
     await locks.request(`cuepoint:agent:${threadId}`, { ifAvailable: true }, async (lock) => {
       if (lock) { await recoverAbandonedGenerationBatches(threadId); await interruptThreadRuns(threadId); }
     });

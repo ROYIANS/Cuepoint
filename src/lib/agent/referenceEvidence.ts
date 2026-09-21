@@ -66,3 +66,26 @@ export function referenceToolSummary(name: string, result: string | undefined, p
     note: "此处仅记录当时查找或读取的来源身份与覆盖范围，不重放资料正文或图片像素。来源当前是否可用请以独立资料证据为准；读取不代表结论已核实。",
   };
 }
+
+/** Historical source lookups may contain pre-fix nested cached reference bodies.
+ * Re-read their source using current tools instead of recursively trusting old JSON/prose. */
+export function historicalToolSummary(name: string, result: string | undefined, projectId: string): Record<string, unknown> | undefined {
+  const reference = referenceToolSummary(name, result, projectId);
+  if (reference) return reference;
+  if (name === "task_read" || name === "project_history_read") return {
+    kind: "historical_source_lookup", tool: name,
+    note: "历史来源查询的缓存正文不重放；请使用当前任务或项目来源工具重新读取，并重新校验资料可用性。",
+  };
+  return undefined;
+}
+
+/** Upgrade only pre-fix source-lookup outputs at transport time; the immutable
+ * ledger and authored user/assistant messages remain untouched. */
+export function safeHistoricalLookupOutput(name: string | undefined, output: string): string {
+  if (name !== "task_read" && name !== "project_history_read") return output;
+  try {
+    const value: unknown = JSON.parse(output);
+    if (value && typeof value === "object" && "sourceProjectionVersion" in value && value.sourceProjectionVersion === 1) return output;
+  } catch { /* Old opaque lookups cannot certify their source projection. */ }
+  return JSON.stringify(historicalToolSummary(name, output, ""));
+}

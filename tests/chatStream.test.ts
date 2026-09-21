@@ -1,56 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   accumulateStreamDelta,
-  consumeSseBuffer,
   createReasoningAccum,
   finalizeReasoningAccum,
-  parseSseDataPayload,
   streamChatCompletions,
 } from "@/lib/ai/chatStream";
-
-describe("chatStream SSE parse", () => {
-  it("parses delta content from SSE data payloads", () => {
-    expect(parseSseDataPayload("[DONE]")).toBeNull();
-    expect(parseSseDataPayload("")).toBeNull();
-    expect(parseSseDataPayload('{"choices":[{"delta":{"role":"assistant"}}]}')).toBeNull();
-    expect(parseSseDataPayload('{"choices":[{"delta":{"content":"你"}}]}')).toEqual({
-      content: "你",
-    });
-    expect(
-      parseSseDataPayload('{"choices":[{"message":{"content":"完整回复"}}]}'),
-    ).toEqual({ content: "完整回复" });
-    expect(parseSseDataPayload("not-json")).toBeNull();
-  });
-
-  it("parses reasoning_content and reasoning separately from content", () => {
-    expect(
-      parseSseDataPayload(
-        '{"choices":[{"delta":{"reasoning_content":"先想"}}]}',
-      ),
-    ).toEqual({ reasoning: "先想" });
-    expect(
-      parseSseDataPayload('{"choices":[{"delta":{"reasoning":"备选字段"}}]}'),
-    ).toEqual({ reasoning: "备选字段" });
-    expect(
-      parseSseDataPayload(
-        '{"choices":[{"delta":{"reasoning_content":"想","content":"答"}}]}',
-      ),
-    ).toEqual({ content: "答", reasoning: "想" });
-    expect(
-      parseSseDataPayload(
-        '{"choices":[{"message":{"content":"答","reasoning_content":"想完"}}]}',
-      ),
-    ).toEqual({ content: "答", reasoning: "想完" });
-  });
-
-  it("consumes buffered SSE lines and keeps a partial trailing line", () => {
-    const { chunks, rest } = consumeSseBuffer(
-      'data: {"choices":[{"delta":{"content":"Hello"}}]}\n\ndata: {"choices":[{"delta":{"content":" "}}]}\ndata: {"choices":[{"delta":{"content":"wor',
-    );
-    expect(chunks).toEqual([{ content: "Hello" }, { content: " " }]);
-    expect(rest).toBe('data: {"choices":[{"delta":{"content":"wor');
-  });
-});
 
 describe("reasoning lifecycle", () => {
   it("opens on first reasoning and closes on first content", () => {
@@ -477,4 +431,16 @@ describe("bounded tool wire protocol", () => {
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
 
+});
+
+// Exercise the shipped strict decoder, including fragmented reasoning fields.
+it.each(["reasoning_content", "reasoning"])("streams fragmented %s and content through the real transport", async (field) => {
+  const wire = `data: {"choices":[{"delta":{"role":"assistant"}}]}\r\n\r\ndata: ${JSON.stringify({choices:[{delta:{[field]:"先想",content:"答"}}]})}\r\n\r\ndata: [DONE]\r\n\r\n`;
+  const bytes = new TextEncoder().encode(wire);
+  let offset = 0;
+  const stream = new ReadableStream<Uint8Array>({pull(controller) {
+    if (offset === bytes.length) controller.close(); else controller.enqueue(bytes.slice(offset, ++offset));
+  }});
+  const result = await streamChatCompletions({baseUrl:"https://fixture.test/v1",apiKey:"fixture-key",model:"fixture",messages:[{role:"user",content:"test"}]}, {fetchImpl:vi.fn(async()=>new Response(stream,{headers:{"content-type":"text/event-stream"}}))});
+  expect(result).toMatchObject({ok:true,content:"答",reasoning:"先想"});
 });

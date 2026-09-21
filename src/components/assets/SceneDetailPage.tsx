@@ -83,7 +83,7 @@ export function SceneDetailPage({
               label="名称"
               value={scene.name}
               projectId={scene.projectId}
-              persist={(value) => patchScene(scene.id, { name: value })}
+              persist={(value, baseline) => patchScene(scene.id, { name: value }, { name: baseline })}
             />
             <AssetTextField
               key={`${scene.id}:location`}
@@ -91,7 +91,7 @@ export function SceneDetailPage({
               label="地点"
               value={scene.location}
               projectId={scene.projectId}
-              persist={(value) => patchScene(scene.id, { location: value })}
+              persist={(value, baseline) => patchScene(scene.id, { location: value }, { location: baseline })}
             />
             <AssetTextField
               key={`${scene.id}:timeOfDay`}
@@ -99,7 +99,7 @@ export function SceneDetailPage({
               label="时段"
               value={scene.timeOfDay}
               projectId={scene.projectId}
-              persist={(value) => patchScene(scene.id, { timeOfDay: value })}
+              persist={(value, baseline) => patchScene(scene.id, { timeOfDay: value }, { timeOfDay: baseline })}
               placeholder="日 / 夜 / 黄昏"
             />
             <AssetTextField
@@ -108,7 +108,7 @@ export function SceneDetailPage({
               label="氛围"
               value={scene.atmosphere}
               projectId={scene.projectId}
-              persist={(value) => patchScene(scene.id, { atmosphere: value })}
+              persist={(value, baseline) => patchScene(scene.id, { atmosphere: value }, { atmosphere: baseline })}
             />
             <AssetTextField
               key={`${scene.id}:notes`}
@@ -116,7 +116,7 @@ export function SceneDetailPage({
               label="备注"
               value={scene.notes}
               projectId={scene.projectId}
-              persist={(value) => patchScene(scene.id, { notes: value })}
+              persist={(value, baseline) => patchScene(scene.id, { notes: value }, { notes: baseline })}
               multiline
             />
             <details className="rounded-xl border bg-card p-4">
@@ -129,7 +129,7 @@ export function SceneDetailPage({
                   label="空间布局"
                   value={scene.geography ?? ""}
                   projectId={scene.projectId}
-                  persist={(value) => patchScene(scene.id, { geography: value })}
+                  persist={(value, baseline) => patchScene(scene.id, { geography: value }, { geography: baseline })}
                   placeholder="出入口、动线、主要物件之间的位置关系"
                   multiline
                 />
@@ -139,7 +139,7 @@ export function SceneDetailPage({
                   label="光线设计"
                   value={scene.lighting ?? ""}
                   projectId={scene.projectId}
-                  persist={(value) => patchScene(scene.id, { lighting: value })}
+                  persist={(value, baseline) => patchScene(scene.id, { lighting: value }, { lighting: baseline })}
                   placeholder="主光来源、方向、冷暖与明暗层次"
                   multiline
                 />

@@ -79,7 +79,7 @@ export function CharacterDetailPage({
               label="名称"
               value={character.name}
               projectId={character.projectId}
-              persist={(value) => patchCharacter(character.id, { name: value })}
+              persist={(value, baseline) => patchCharacter(character.id, { name: value }, { name: baseline })}
             />
             <AssetTextField
               key={`${character.id}:bio`}
@@ -87,7 +87,7 @@ export function CharacterDetailPage({
               label="简介"
               value={character.bio}
               projectId={character.projectId}
-              persist={(value) => patchCharacter(character.id, { bio: value })}
+              persist={(value, baseline) => patchCharacter(character.id, { bio: value }, { bio: baseline })}
               multiline
             />
             <AssetTextField
@@ -96,7 +96,7 @@ export function CharacterDetailPage({
               label="外观说明"
               value={character.appearance}
               projectId={character.projectId}
-              persist={(value) => patchCharacter(character.id, { appearance: value })}
+              persist={(value, baseline) => patchCharacter(character.id, { appearance: value }, { appearance: baseline })}
               multiline
             />
             <AssetTextField
@@ -105,7 +105,7 @@ export function CharacterDetailPage({
               label="备注"
               value={character.notes}
               projectId={character.projectId}
-              persist={(value) => patchCharacter(character.id, { notes: value })}
+              persist={(value, baseline) => patchCharacter(character.id, { notes: value }, { notes: baseline })}
               multiline
             />
             <details className="rounded-xl border bg-card p-4">
@@ -118,7 +118,7 @@ export function CharacterDetailPage({
                   label="性格与行为"
                   value={character.personality ?? ""}
                   projectId={character.projectId}
-                  persist={(value) => patchCharacter(character.id, { personality: value })}
+                  persist={(value, baseline) => patchCharacter(character.id, { personality: value }, { personality: baseline })}
                   placeholder="说话习惯、待人方式、面对压力的反应"
                   multiline
                 />
@@ -128,7 +128,7 @@ export function CharacterDetailPage({
                   label="动机与目标"
                   value={character.motivation ?? ""}
                   projectId={character.projectId}
-                  persist={(value) => patchCharacter(character.id, { motivation: value })}
+                  persist={(value, baseline) => patchCharacter(character.id, { motivation: value }, { motivation: baseline })}
                   placeholder="想要什么、害怕什么、行动的原因"
                   multiline
                 />
@@ -138,7 +138,7 @@ export function CharacterDetailPage({
                   label="声音与表达"
                   value={character.voice ?? ""}
                   projectId={character.projectId}
-                  persist={(value) => patchCharacter(character.id, { voice: value })}
+                  persist={(value, baseline) => patchCharacter(character.id, { voice: value }, { voice: baseline })}
                   placeholder="音色、语速、口音与表达习惯"
                   multiline
                 />

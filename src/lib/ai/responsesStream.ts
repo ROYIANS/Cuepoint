@@ -1,3 +1,4 @@
+import { redactCredentials } from "./safeError";
 import { materializeResponseItems } from "./referenceWire";
 import type { AgentRequestMessage, AgentResponseItem, AgentTokenUsage, AgentWireToolCall } from "@/domain/agent";
 import type { StreamChatHandlers, StreamChatInput, StreamChatResult } from "@/lib/ai/chatStream";
@@ -84,7 +85,7 @@ export async function streamResponses(input: StreamChatInput & { responseItems?:
   const startedAt = Date.now();
   let firstTokenAt: number | undefined, usage: AgentTokenUsage | undefined;
   let content = "", reasoning = "";
-  const redact = (value: string) => value.split(apiKey || "\0").join("[已隐藏]").replace(/Bearer\s+[^\s"',;]+/gi, "Bearer [已隐藏]").slice(0, 300);
+  const redact = (value: string) => redactCredentials(value, apiKey).slice(0, 300);
   const result = (value: ResponsesResult): ResponsesResult => ({ ...value, ...(usage ? { usage } : {}), metrics: { startedAt, endedAt: Date.now(), ...(firstTokenAt === undefined ? {} : { firstTokenAt }), ...(usage ? { usage } : {}) } });
   const emit = (kind: "content" | "reasoning", value: string, streaming = true) => {
     signal?.throwIfAborted();

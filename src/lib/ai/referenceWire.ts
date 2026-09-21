@@ -1,3 +1,4 @@
+import { safeHistoricalLookupOutput } from "@/lib/agent/referenceEvidence";
 import { db } from "@/db/database";
 import type { AgentRequestMessage, AgentResponseItem } from "@/domain/agent";
 import type { AgentReferenceInput, AgentVisionCapability } from "@/domain/referenceInput";
@@ -38,7 +39,9 @@ async function pixels(inputs: Array<AgentReferenceInput | undefined>, scope: Ref
 }
 export async function materializeChatMessages(messages: AgentRequestMessage[], scope: ReferenceWireScope, signal?: AbortSignal): Promise<unknown[]> {
   const encoded = await pixels(messages.map((message) => message.referenceInput), scope, signal);
+  const toolNames = new Map(messages.flatMap(message => message.role === "assistant" ? (message.tool_calls ?? []).map(call => [call.id, call.function.name] as const) : []));
   return messages.map(({ referenceInput, sourceToolCallId: _source, ...message }) => {
+    if (message.role === "tool") return {...message, content: safeHistoricalLookupOutput(toolNames.get(message.tool_call_id), message.content)};
     if (!referenceInput?.images?.length) return message;
     if (message.role !== "user") throw new Error("图片必须作为用户资料提交");
     return { ...message, content: [{ type: "text", text: message.content }, ...referenceInput.images.map((image) => ({ type: "image_url", image_url: { url: encoded.get(image.mediaId), detail: "auto" } }))] };
@@ -46,7 +49,9 @@ export async function materializeChatMessages(messages: AgentRequestMessage[], s
 }
 export async function materializeResponseItems(items: AgentResponseItem[], scope: ReferenceWireScope, signal?: AbortSignal): Promise<unknown[]> {
   const encoded = await pixels(items.map((item) => item.referenceInput), scope, signal);
+  const toolNames = new Map(items.flatMap(item => item.type === "function_call" ? [[item.call_id, item.name] as const] : []));
   return items.map(({ referenceInput, sourceToolCallId: _source, ...item }) => {
+    if (item.type === "function_call_output") return {...item, output: safeHistoricalLookupOutput(toolNames.get(item.call_id), item.output)};
     if (!referenceInput?.images?.length) return item;
     if (item.type !== "message" || item.role !== "user" || typeof item.content !== "string") throw new Error("图片必须作为用户资料提交");
     return { ...item, content: [{ type: "input_text", text: item.content }, ...referenceInput.images.map((image) => ({ type: "input_image", image_url: encoded.get(image.mediaId), detail: "auto" }))] };

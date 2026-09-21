@@ -83,7 +83,7 @@ export function PropDetailPage({
               label="名称"
               value={prop.name}
               projectId={prop.projectId}
-              persist={(value) => patchProp(prop.id, { name: value })}
+              persist={(value, baseline) => patchProp(prop.id, { name: value }, { name: baseline })}
             />
             <AssetTextField
               key={`${prop.id}:kind`}
@@ -91,7 +91,7 @@ export function PropDetailPage({
               label="类型"
               value={prop.kind}
               projectId={prop.projectId}
-              persist={(value) => patchProp(prop.id, { kind: value })}
+              persist={(value, baseline) => patchProp(prop.id, { kind: value }, { kind: baseline })}
               placeholder="衣服、车、物件…"
             />
             <AssetTextField
@@ -100,7 +100,7 @@ export function PropDetailPage({
               label="备注"
               value={prop.notes}
               projectId={prop.projectId}
-              persist={(value) => patchProp(prop.id, { notes: value })}
+              persist={(value, baseline) => patchProp(prop.id, { notes: value }, { notes: baseline })}
               multiline
             />
             <details className="rounded-xl border bg-card p-4">
@@ -113,7 +113,7 @@ export function PropDetailPage({
                   label="外观特征"
                   value={prop.appearance ?? ""}
                   projectId={prop.projectId}
-                  persist={(value) => patchProp(prop.id, { appearance: value })}
+                  persist={(value, baseline) => patchProp(prop.id, { appearance: value }, { appearance: baseline })}
                   placeholder="形状、颜色、纹理与辨识细节"
                   multiline
                 />
@@ -123,7 +123,7 @@ export function PropDetailPage({
                   label="材质"
                   value={prop.material ?? ""}
                   projectId={prop.projectId}
-                  persist={(value) => patchProp(prop.id, { material: value })}
+                  persist={(value, baseline) => patchProp(prop.id, { material: value }, { material: baseline })}
                   placeholder="金属、木质、织物，以及表面质感"
                   multiline
                 />
@@ -133,7 +133,7 @@ export function PropDetailPage({
                   label="尺寸与比例"
                   value={prop.size ?? ""}
                   projectId={prop.projectId}
-                  persist={(value) => patchProp(prop.id, { size: value })}
+                  persist={(value, baseline) => patchProp(prop.id, { size: value }, { size: baseline })}
                   placeholder="实际尺寸或与人物、环境的相对比例"
                   multiline
                 />
@@ -143,7 +143,7 @@ export function PropDetailPage({
                   label="使用方式"
                   value={prop.usage ?? ""}
                   projectId={prop.projectId}
-                  persist={(value) => patchProp(prop.id, { usage: value })}
+                  persist={(value, baseline) => patchProp(prop.id, { usage: value }, { usage: baseline })}
                   placeholder="谁使用、如何拿取、如何参与动作"
                   multiline
                 />
@@ -153,7 +153,7 @@ export function PropDetailPage({
                   label="连续性要求"
                   value={prop.continuity ?? ""}
                   projectId={prop.projectId}
-                  persist={(value) => patchProp(prop.id, { continuity: value })}
+                  persist={(value, baseline) => patchProp(prop.id, { continuity: value }, { continuity: baseline })}
                   placeholder="磨损、摆放、状态变化及需保持一致的细节"
                   multiline
                 />

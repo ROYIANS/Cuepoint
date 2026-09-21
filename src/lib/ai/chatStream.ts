@@ -1,3 +1,4 @@
+import { redactCredentials } from "./safeError";
 import { materializeChatMessages } from "./referenceWire";
 import type { AgentVisionCapability } from "@/domain/referenceInput";
 import {
@@ -133,42 +134,6 @@ function pickContentText(source: { content?: unknown } | undefined): string | un
   return undefined;
 }
 
-/**
- * Extract assistant content/reasoning from one SSE `data:` JSON payload.
- * Returns null for keep-alives / role-only / incomplete chunks.
- */
-export function parseSseDataPayload(data: string): StreamDelta | null {
-  const trimmed = data.trim();
-  if (!trimmed || trimmed === "[DONE]") return null;
-  try {
-    const { content, reasoning } = decodeCompletion(JSON.parse(trimmed), true).delta;
-    if (!content && !reasoning) return null;
-    const out: StreamDelta = {};
-    if (content) out.content = content;
-    if (reasoning) out.reasoning = reasoning;
-    return out;
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Parse an SSE buffer chunk; returns emitted deltas and leftover incomplete line.
- */
-export function consumeSseBuffer(buffer: string): { chunks: StreamDelta[]; rest: string } {
-  const parts = buffer.split(/\r?\n/);
-  const rest = parts.pop() ?? "";
-  const chunks: StreamDelta[] = [];
-  for (const line of parts) {
-    const trimmed = line.trim();
-    if (!trimmed.startsWith("data:")) continue;
-    const payload = trimmed.slice(5).trimStart();
-    const delta = parseSseDataPayload(payload);
-    if (delta) chunks.push(delta);
-  }
-  return { chunks, rest };
-}
-
 function formatHttpError(status: number, body: string): string {
   const trimmed = body.trim().slice(0, 200);
   if (status === 401 || status === 403) {
@@ -182,9 +147,7 @@ function record(value: unknown): value is Record<string, unknown> {
 }
 
 function redactError(message: string, apiKey: string): string {
-  // Redact before truncating, including provider errors that echo authorization.
-  return message.split(apiKey).join("[已隐藏]")
-    .replace(/Bearer\s+[^\s"',;]+/gi, "Bearer [已隐藏]").slice(0, 300);
+  return redactCredentials(message, apiKey).slice(0, 300);
 }
 
 function readUsage(data: unknown): AgentTokenUsage | undefined {

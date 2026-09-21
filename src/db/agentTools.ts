@@ -3,7 +3,7 @@ import { REFERENCE_TOOL_NAMES } from "@/lib/agent/referenceToolNames";
 import { writeTaskRecord } from "./agentTaskRecords";
 import { generationSubmitSchema } from "@/lib/agent/generationProfiles";
 import { targetRevision } from "@/lib/productionRevision";
-import { interruptedToolState } from "./agentToolRecovery";
+import { interruptedToolState, upgradeLegacyPlanCalls } from "./agentToolRecovery";
 import { validateTaskPlan, formatTaskPlan } from "@/lib/agent/taskState";
 import { db } from "@/db/database";
 import { MODEL_STEPS_PER_SEGMENT } from "@/domain/agent";
@@ -116,6 +116,7 @@ export async function resumeAgentRun(runId: string): Promise<AgentRun> {
     await requireProject(run);
     if (!canResumeAgentRun(run)) throw new Error("此执行不能继续");
     await requireLatestRun(run);
+    await upgradeLegacyPlanCalls(runId);
     const calls = await db.agentToolCalls.where("runId").equals(runId).toArray();
     if (calls.some((call) => call.status === "running" || call.status === "unknown")) throw new Error("有操作结果尚不确定，请先核实，不能自动继续或重跑");
     if (calls.some((call) => call.status === "awaiting_approval")) throw new Error("请先批准或拒绝待处理的操作");
@@ -172,6 +173,8 @@ export async function updateRunPlanAndComplete(runId: string, callId: string, pl
     await db.agentRuns.update(runId, { plan, updatedAt: nowIso() });
     await db.agentToolCalls.update(callId, { status: "completed", result, updatedAt: nowIso() });
     return result;
+  }).catch((error: unknown) => {
+    throw new AtomicToolRollbackError(error instanceof Error ? error.message : "计划更新已回滚");
   });
 }
 export async function cancelAgentRun(runId: string): Promise<void> {

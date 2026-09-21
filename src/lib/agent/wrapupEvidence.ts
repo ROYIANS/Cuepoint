@@ -1,4 +1,4 @@
-import { collectReferenceEvidence, toolReferenceAttachments, referenceToolSummary } from "./referenceEvidence";
+import { collectReferenceEvidence, toolReferenceAttachments, historicalToolSummary } from "./referenceEvidence";
 import { provesCompletedEffect } from "@/db/agentTaskRecords";
 import { db } from "@/db/database";
 import type { AgentTask } from "@/domain/agent";
@@ -37,7 +37,7 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
     const generation=["submit_generation","apply_generation","check_generation"].includes(call.name);
     const failed=call.status!=="completed"||!!value.error||value.ok===false||value.success===false||(!generation&&value.applied===false);
     const outcome:WrapupEvidence['outcome']=unsettled||failed?"unresolved":generation?(value.status==="applied"?"applied":value.status==="downloaded"?"downloaded":"unresolved"):"fact";
-    add({id:`tool:${call.id}`,kind:"tool",label:call.title,body:JSON.stringify({status:call.status,result:referenceToolSummary(call.name, call.result, task.projectId ?? "") ?? value,error:call.error}),outcome,available:true,supportsResult:call.status==="completed"&&provesCompletedEffect(call)},call);
+    add({id:`tool:${call.id}`,kind:"tool",label:call.title,body:JSON.stringify({status:call.status,result:historicalToolSummary(call.name, call.result, task.projectId ?? "") ?? value,error:call.error}),outcome,available:true,supportsResult:call.status==="completed"&&provesCompletedEffect(call)},call);
     const rows=Array.isArray(value.items)?value.items:[value];
     for(const item of rows){const row=json(item);const kind=typeof row.kind==='string'&&kinds.includes(row.kind)?row.kind:typeof args.kind==='string'&&kinds.includes(args.kind)?args.kind:call.name.split('_')[0];
       const id=typeof row.id==='string'?row.id:typeof args.id==='string'?args.id:undefined;

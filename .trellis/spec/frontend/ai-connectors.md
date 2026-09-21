@@ -155,3 +155,7 @@ Correct: expose public discovery separately and test the authenticated task-list
 
 Wrong: pass `content_url` directly to `<img>` or fetch any provider-returned URL with a Bearer header.
 Correct: call the explicit guarded content reader, then let the future media runtime persist or display the Blob.
+
+## Diagnostic redaction
+
+Use the shared `redactCredentials` primitive before truncating provider diagnostics, including failed connection probes and network exceptions. Remove every exact configured key occurrence and Bearer credential; retain the provider-specific status/envelope handling. Boundary-position keys and repeated echoes must not leak through truncation.

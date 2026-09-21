@@ -145,3 +145,7 @@ next request, then let that model describe the image.
 
 Wrong: parse a DOCX or await image encoding inside an IndexedDB write transaction.
 Correct: process outside it, then publish after a short owner/operation CAS check.
+
+## Historical source lookup compatibility
+
+`task_read` index/detail and `project_history_read` must project reference tool results through `historicalToolSummary`; reference identities, revisions and coverage may remain, raw cached source text/pixels may not. Old nested task/history lookups are summarized rather than recursively trusting opaque JSON. Fresh safe lookup results carry the code-owned `sourceProjectionVersion: 1`. At Chat/Responses materialization, correlate tool outputs with their function-call names and downgrade unmarked historical lookup outputs. Do not modify immutable ledger records or authored user/assistant prose. Regression coverage includes withdrawn/revised/foreign sources, index/detail/nested reads, both transports, and old frozen wire arrays.

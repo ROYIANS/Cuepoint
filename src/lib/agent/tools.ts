@@ -47,7 +47,7 @@ export const BUILTIN_TOOLS: readonly AgentToolDefinition[] = [
   },
   { name: "update_run_plan", title: "更新执行计划", description: "维护当前执行及其关联任务的共享计划（最多 30 项），每项有唯一 id、title 和 pending/in_progress/completed 状态。不会修改项目或素材。",
     parameters: { type: "object", additionalProperties: false, required: ["steps"], properties: { reason: { type: "string", minLength: 1, maxLength: 1000 }, steps: { type: "array", maxItems: 30, items: { type: "object", additionalProperties: false, required: ["id", "title", "status"], properties: { id: { type: "string", minLength: 1, maxLength: 80 }, title: { type: "string", minLength: 1, maxLength: 240 }, status: { type: "string", enum: ["pending", "in_progress", "completed"] } } } } } },
-    effect: "bookkeeping", highRisk: () => false, parseArguments: (raw) => planSchema.parse(raw),
+    effect: "bookkeeping", atomic: true, highRisk: () => false, parseArguments: (raw) => planSchema.parse(raw),
     async execute(args, { runId, callId, signal }) { signal.throwIfAborted(); return JSON.parse(await updateRunPlanAndComplete(runId, callId, (args as { steps: AgentPlanItem[] }).steps, (args as { reason?: string }).reason)); },
   },
   ...TASK_TOOLS,

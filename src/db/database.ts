@@ -53,6 +53,8 @@ export class AifenjingDB extends Dexie {
   media!: Table<MediaRecord, string>;
   /** Studio-global AI connectors — never included in project ZIP export. */
   connectors!: Table<ConnectorConfig, string>;
+  /** Retired duplicate IDs remain usable by existing frozen runs/jobs only. */
+  connectorAliases!: Table<ConnectorConfig, string>;
   /** Studio-global Agent chat threads — never included in project ZIP export. */
   agentTaskRecords!: Table<AgentTaskRecord, string>;
   agentTaskRecordVersions!: Table<AgentTaskRecordVersion, string>;
@@ -198,6 +200,20 @@ export class AifenjingDB extends Dexie {
       agentGenerationJobs: "id, &callId, &batchItemId, batchId, runId, threadId, projectId, status, fingerprint, updatedAt",
     });
     this.version(17).stores({ projectReferences: "id, projectId, mediaId, [projectId+digest], updatedAt", referenceChunks: "id, projectId, referenceId, &[referenceId+revision+index]" });
+    // Deduplicate before creating the unique index: preserve old IDs outside the
+    // selectable connector table, without rewriting frozen run/job fingerprints.
+    this.version(20).stores({ connectorAliases: "id, definitionId" }).upgrade(async (tx) => {
+      const connectors = tx.table<ConnectorConfig>("connectors");
+      const rows = await connectors.toArray();
+      rows.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt) || b.id.localeCompare(a.id));
+      const seen = new Set<string>();
+      for (const row of rows) {
+        if (!seen.has(row.definitionId)) { seen.add(row.definitionId); continue; }
+        await tx.table<ConnectorConfig>("connectorAliases").put(row);
+        await connectors.delete(row.id);
+      }
+    });
+    this.version(21).stores({ connectors: "id, &definitionId, updatedAt" });
   }
 }
 

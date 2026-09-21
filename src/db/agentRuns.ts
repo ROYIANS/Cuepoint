@@ -3,7 +3,7 @@ import { selectReferenceContext, referenceSelectionCharacterBudget } from "@/lib
 import { resolveVisionCapability, requireVision } from "@/lib/ai/visionCapability";
 import { getMemorySelection } from "./memoryRetrieval";
 import { filterProjectMemoryTools } from "@/lib/agent/memoryToolNames";
-import { interruptedToolState } from "./agentToolRecovery";
+import { interruptedToolState, upgradeLegacyPlanCalls } from "./agentToolRecovery";
 import { createAgentTaskForThread } from "@/db/agentTasks";
 import { getTaskContext } from "@/lib/agent/taskContext";
 import { db } from "@/db/database";
@@ -167,6 +167,7 @@ export async function interruptThreadRuns(threadId: string): Promise<void> {
   await db.transaction("rw", db.agentRuns, db.agentToolCalls, db.chatMessages, db.contextCompactions, db.agentGenerationJobs, async () => {
     const runs = await db.agentRuns.where("threadId").equals(threadId).toArray();
     for (const run of runs) {
+      await upgradeLegacyPlanCalls(run.id);
       if (run.status !== "running") continue;
       await db.contextCompactions.where("runId").equals(run.id).filter((record) => record.status === "running").modify({ status: "interrupted", error: "整理已中断，未启用未完成的摘要。请手动继续或重新生成。", updatedAt: nowIso() });
       const running = await db.agentToolCalls.where("runId").equals(run.id).filter((call) => call.status === "running").toArray();

@@ -83,7 +83,7 @@ export function StyleDetailPage({
               label="名称"
               value={style.name}
               projectId={style.projectId}
-              persist={(value) => patchStyle(style.id, { name: value })}
+              persist={(value, baseline) => patchStyle(style.id, { name: value }, { name: baseline })}
             />
             <AssetTextField
               key={`${style.id}:notes`}
@@ -91,7 +91,7 @@ export function StyleDetailPage({
               label="备注"
               value={style.notes}
               projectId={style.projectId}
-              persist={(value) => patchStyle(style.id, { notes: value })}
+              persist={(value, baseline) => patchStyle(style.id, { notes: value }, { notes: baseline })}
               multiline
               placeholder="画风、光色、镜头气质"
             />
@@ -105,7 +105,7 @@ export function StyleDetailPage({
                   label="色彩方案"
                   value={style.palette ?? ""}
                   projectId={style.projectId}
-                  persist={(value) => patchStyle(style.id, { palette: value })}
+                  persist={(value, baseline) => patchStyle(style.id, { palette: value }, { palette: baseline })}
                   placeholder="主色、辅助色、饱和度与色彩关系"
                   multiline
                 />
@@ -115,7 +115,7 @@ export function StyleDetailPage({
                   label="光影风格"
                   value={style.lighting ?? ""}
                   projectId={style.projectId}
-                  persist={(value) => patchStyle(style.id, { lighting: value })}
+                  persist={(value, baseline) => patchStyle(style.id, { lighting: value }, { lighting: baseline })}
                   placeholder="柔硬、反差、色温与阴影"
                   multiline
                 />
@@ -125,7 +125,7 @@ export function StyleDetailPage({
                   label="镜头气质"
                   value={style.lens ?? ""}
                   projectId={style.projectId}
-                  persist={(value) => patchStyle(style.id, { lens: value })}
+                  persist={(value, baseline) => patchStyle(style.id, { lens: value }, { lens: baseline })}
                   placeholder="焦段倾向、景深、畸变与颗粒"
                   multiline
                 />
@@ -135,7 +135,7 @@ export function StyleDetailPage({
                   label="构图原则"
                   value={style.composition ?? ""}
                   projectId={style.projectId}
-                  persist={(value) => patchStyle(style.id, { composition: value })}
+                  persist={(value, baseline) => patchStyle(style.id, { composition: value }, { composition: baseline })}
                   placeholder="画面重心、留白、对称与层次"
                   multiline
                 />
@@ -145,7 +145,7 @@ export function StyleDetailPage({
                   label="避免出现"
                   value={style.negativePrompt ?? ""}
                   projectId={style.projectId}
-                  persist={(value) => patchStyle(style.id, { negativePrompt: value })}
+                  persist={(value, baseline) => patchStyle(style.id, { negativePrompt: value }, { negativePrompt: baseline })}
                   placeholder="不希望出现的颜色、质感、构图或元素"
                   multiline
                 />

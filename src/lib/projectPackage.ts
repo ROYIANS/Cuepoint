@@ -112,6 +112,7 @@ function mimeForFilename(filename: string): string {
     png: "image/png",
     jpg: "image/jpeg",
     jpeg: "image/jpeg",
+    jfif: "image/jpeg",
     webp: "image/webp",
     gif: "image/gif",
     mp4: "video/mp4",
@@ -754,6 +755,9 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
   zip.file("memoryVersions.json", JSON.stringify(memoryVersions, null, 2));
   zip.file("references.json", JSON.stringify(references));
   zip.file("referenceChunks.json", JSON.stringify(referenceChunks));
+  zip.file("mediaMetadata.json", JSON.stringify(mediaRecords.map((media) => ({
+    id: media.id, projectId: media.projectId, filename: media.filename, mimeType: media.mimeType,
+  }))));
   for (const media of mediaRecords) {
     const filename = `media/${media.id}.${extFor(media.mimeType, media.filename)}`;
     zip.file(filename, media.blob);
@@ -809,6 +813,19 @@ export async function importProjectZip(file: Blob): Promise<Project> {
     projectRaw.id,
   );
   const referencePackage = parseReferencePackage(await readJson("references.json"), await readJson("referenceChunks.json"), projectRaw.id);
+  const mediaMetadataRaw = await readJson("mediaMetadata.json");
+  const mediaMetadata = new Map<string, { filename: string; mimeType: string }>();
+  if (mediaMetadataRaw !== undefined) {
+    for (const raw of asArray(mediaMetadataRaw, "mediaMetadata.json")) {
+      const row = asRecord(raw, "mediaMetadata.json");
+      if (typeof row.id !== "string" || !row.id || /[/\\]/.test(row.id) || mediaMetadata.has(row.id)
+        || row.projectId !== projectRaw.id || typeof row.filename !== "string" || !row.filename
+        || typeof row.mimeType !== "string" || !/^[a-zA-Z0-9!#$&^_.+-]+\/[a-zA-Z0-9!#$&^_.+-]+$/.test(row.mimeType)) {
+        throw new PackageError("媒体元数据无效、重复或不属于当前项目");
+      }
+      mediaMetadata.set(row.id, { filename: row.filename, mimeType: row.mimeType });
+    }
+  }
   const hasEpisodes = episodesRaw.length > 0;
 
   const project = parseProject(projectRaw, "导入的项目");
@@ -841,17 +858,22 @@ export async function importProjectZip(file: Blob): Promise<Project> {
     if (entry.dir) continue;
     const base = entry.name.split("/").pop() ?? entry.name;
     const oldId = base.replace(/\.[^.]+$/, "");
+    if (mediaMap.has(oldId)) throw new PackageError("项目包中存在重复媒体 ID");
+    const metadata = mediaMetadata.get(oldId);
+    if (mediaMetadataRaw !== undefined && !metadata) throw new PackageError("媒体缺少元数据");
     const newId = remapId(mediaMap, oldId, "med")!;
     const blob = await entry.async("blob");
-    const mimeType = blob.type || mimeForFilename(base);
+    const mimeType = metadata?.mimeType ?? (blob.type || mimeForFilename(base));
     mediaRecords.push({
       id: newId,
       projectId,
       mimeType,
-      filename: base,
-      blob: blob.type ? blob : new Blob([blob], { type: mimeType }),
+      filename: metadata?.filename ?? base,
+      blob: new Blob([blob], { type: mimeType }),
     });
   }
+
+  if ([...mediaMetadata.keys()].some((id) => !mediaMap.has(id))) throw new PackageError("媒体元数据对应的文件缺失");
 
   const { references, chunks: referenceChunks } = await remapReferencePackage(referencePackage, projectId, mediaMap, mediaRecords);
 

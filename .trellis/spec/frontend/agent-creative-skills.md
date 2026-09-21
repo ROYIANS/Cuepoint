@@ -127,3 +127,7 @@ Correct: retain that envelope, atomically record a separately validated confirme
 
 See [Project References](./agent-references.md) for shared source ownership,
 request materialization, withdrawal, source evidence and ZIP lifecycle contracts.
+
+## Final submission boundary
+
+Single and batch generation share `submitClaimedGeneration`. After upload/encoding completes, re-read and hash local inputs outside the Dexie transaction, then recheck the current connector (through `resolveConnector`), exact provider/base URL/API key, caller target/run/batch ownership, and current input records before the paid POST. Upload completion does not authorize a stale config snapshot. Connector deletion, key rotation/empty key, target or input changes must produce zero new generation POSTs in regression tests. This check is separate from monitoring an already-submitted provider task, which must never resubmit.

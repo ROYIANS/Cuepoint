@@ -1,3 +1,4 @@
+import { assertDraftBaseline } from "@/lib/draftConflict";
 import { STUDIO_LIBRARY_ID } from "@/domain/types";
 import { getGeneralAgentConfig } from "./agentSettings";
 import { normalizeContextPolicy } from "@/lib/agent/contextPolicy";
@@ -376,10 +377,11 @@ export async function updateShotSettings(
   });
 }
 
-export async function updateSeriesLogline(id: Id, logline: string): Promise<void> {
+export async function updateSeriesLogline(id: Id, logline: string, baseline?: string): Promise<void> {
   await db.transaction("rw", db.projects, async () => {
     const project = await db.projects.get(id);
     if (!project) throw new Error("项目不存在，无法保存");
+    assertDraftBaseline(normalizeSeriesStory(project.story), { logline }, baseline === undefined ? undefined : { logline: baseline });
     await db.projects.put(touch({
       ...project,
       story: { ...normalizeSeriesStory(project.story), logline },
@@ -390,10 +392,12 @@ export async function updateSeriesLogline(id: Id, logline: string): Promise<void
 export async function updateWorldSetting(
   id: Id,
   patch: Partial<WorldSetting>,
+  baseline?: Partial<WorldSetting>,
 ): Promise<void> {
   await db.transaction("rw", db.projects, async () => {
     const project = await db.projects.get(id);
     if (!project) throw new Error("项目不存在，无法保存");
+    assertDraftBaseline({ ...emptySetting(), ...project.setting }, patch, baseline);
     await db.projects.put(touch({
       ...project,
       setting: { ...emptySetting(), ...project.setting, ...patch },
@@ -452,11 +456,13 @@ export async function updateEpisode(
 export async function updateEpisodeDraft(
   id: Id,
   patch: { title?: string; logline?: string; script?: string },
+  baseline?: { title?: string; logline?: string; script?: string },
 ): Promise<void> {
   await db.transaction("rw", db.episodes, db.projects, async () => {
     const episode = await db.episodes.get(id);
     if (!episode) throw new Error("集不存在，无法保存");
     const story = normalizeEpisodeStory(episode.story);
+    assertDraftBaseline({ title: episode.title, logline: story.logline, script: story.script }, patch, baseline);
     const storyPatch: Partial<Pick<EpisodeStory, "logline" | "script">> = {};
     if (patch.logline !== undefined) storyPatch.logline = patch.logline;
     if (patch.script !== undefined) storyPatch.script = patch.script;
@@ -748,11 +754,13 @@ export async function addCharacter(projectId: Id): Promise<Character> {
 export async function patchCharacter(
   id: Id,
   patch: Partial<Omit<Character, "id" | "projectId" | "createdAt">>,
+  baseline?: Partial<Character>,
 ): Promise<void> {
   await db.transaction("rw", db.projects, db.characters, async () => {
     const character = await db.characters.get(id);
     if (!character) throw new Error("角色不存在，无法保存");
     patch = pickPatch(patch, ["name", "bio", "appearance", "notes", "personality", "motivation", "voice", "slots", "extra"]);
+    assertDraftBaseline(character, patch, baseline);
     await db.characters.put(touch({
       ...character, ...patch,
       ...(patch.slots ? { slots: { ...character.slots, ...patch.slots } } : {}),
@@ -834,11 +842,13 @@ export async function addScene(projectId: Id): Promise<Scene> {
 export async function patchScene(
   id: Id,
   patch: Partial<Omit<Scene, "id" | "projectId" | "createdAt">>,
+  baseline?: Partial<Scene>,
 ): Promise<void> {
   await db.transaction("rw", db.projects, db.scenes, async () => {
     const scene = await db.scenes.get(id);
     if (!scene) throw new Error("场景不存在，无法保存");
     patch = pickPatch(patch, ["name", "location", "timeOfDay", "atmosphere", "notes", "geography", "lighting", "slots", "extra"]);
+    assertDraftBaseline(scene, patch, baseline);
     await db.scenes.put(touch({
       ...scene, ...patch,
       ...(patch.slots ? { slots: { ...scene.slots, ...patch.slots } } : {}),
@@ -900,11 +910,13 @@ export async function addProp(projectId: Id): Promise<Prop> {
 export async function patchProp(
   id: Id,
   patch: Partial<Omit<Prop, "id" | "projectId" | "createdAt">>,
+  baseline?: Partial<Prop>,
 ): Promise<void> {
   await db.transaction("rw", db.projects, db.props, async () => {
     const prop = await db.props.get(id);
     if (!prop) throw new Error("道具不存在，无法保存");
     patch = pickPatch(patch, ["name", "kind", "notes", "appearance", "material", "size", "usage", "continuity", "slots", "extra"]);
+    assertDraftBaseline(prop, patch, baseline);
     await db.props.put(touch({
       ...prop, ...patch,
       ...(patch.slots ? { slots: { ...prop.slots, ...patch.slots } } : {}),
@@ -953,11 +965,13 @@ export async function addStyle(projectId: Id): Promise<VisualStyle> {
 export async function patchStyle(
   id: Id,
   patch: Partial<Omit<VisualStyle, "id" | "projectId" | "createdAt">>,
+  baseline?: Partial<VisualStyle>,
 ): Promise<void> {
   await db.transaction("rw", db.projects, db.styles, async () => {
     const style = await db.styles.get(id);
     if (!style) throw new Error("风格不存在，无法保存");
     patch = pickPatch(patch, ["name", "notes", "palette", "lighting", "lens", "composition", "negativePrompt", "slots", "extra"]);
+    assertDraftBaseline(style, patch, baseline);
     await db.styles.put(touch({
       ...style, ...patch,
       ...(patch.slots ? { slots: { ...style.slots, ...patch.slots } } : {}),
@@ -1195,7 +1209,7 @@ export async function restoreStoryBeat(
     await db.episodes.put(touch({ ...episode, story: { ...story, beats } }));
     for (const shotId of shotIds) {
       const shot = await db.shots.get(shotId);
-      if (shot?.episodeId === episodeId) await db.shots.put({ ...shot, beatId: beat.id });
+      if (shot?.episodeId === episodeId && shot.projectId === episode.projectId && !shot.beatId) await db.shots.put({ ...shot, beatId: beat.id });
     }
     await touchProject(episode.projectId);
   });
@@ -1546,23 +1560,38 @@ export async function upsertConnector(input: UpsertConnectorInput): Promise<Conn
   if (!baseUrl) throw new Error("请填写 Base URL");
   if (!apiKey) throw new Error("请填写 API Key");
 
-  const existing = await getConnectorByDefinition(input.definitionId);
-  const at = nowIso();
-  const record: ConnectorConfig = {
-    id: existing?.id ?? createId("conn"),
-    definitionId: input.definitionId,
-    protocol: input.protocol,
-    label: input.label?.trim() || undefined,
-    baseUrl,
-    apiKey,
-    updatedAt: at,
-  };
-  await db.connectors.put(record);
-  return record;
+  return db.transaction("rw", db.connectors, db.connectorAliases, async () => {
+    const existing = await getConnectorByDefinition(input.definitionId);
+    const record: ConnectorConfig = {
+      id: existing?.id ?? createId("conn"),
+      definitionId: input.definitionId,
+      protocol: input.protocol,
+      label: input.label?.trim() || undefined,
+      baseUrl,
+      apiKey,
+      updatedAt: nowIso(),
+    };
+    await db.connectors.put(record);
+    // Explicit edits (including key rotation) apply to retained historical IDs.
+    await db.connectorAliases.where("definitionId").equals(input.definitionId).modify((alias) => {
+      Object.assign(alias, { ...record, id: alias.id });
+    });
+    return record;
+  });
+}
+
+/** Resolve a frozen historical ID without exposing retired duplicates in pickers. */
+export async function resolveConnector(id: Id): Promise<ConnectorConfig | undefined> {
+  return (await db.connectors.get(id)) ?? db.connectorAliases.get(id);
 }
 
 export async function deleteConnector(id: Id): Promise<void> {
-  await db.connectors.delete(id);
+  await db.transaction("rw", db.connectors, db.connectorAliases, async () => {
+    const config = await resolveConnector(id);
+    if (!config) return;
+    await db.connectors.where("definitionId").equals(config.definitionId).delete();
+    await db.connectorAliases.where("definitionId").equals(config.definitionId).delete();
+  });
 }
 
 export async function listChatThreads(): Promise<ChatThread[]> {

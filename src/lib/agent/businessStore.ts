@@ -93,7 +93,7 @@ export function projection(kind: BusinessKind, row: BusinessRow): Record<string,
     if (row.generationDefaults) {
       const defaults = row.generationDefaults as Record<string, unknown>;
       result.generationDefaults = {
-        ...(defaults.image ? { image: select(defaults.image, ["provider", "model", "profileVersion", "size", "resolution"]) } : {}),
+        ...(defaults.image ? { image: select(defaults.image, ["provider", "model", "profileVersion", "size", "resolution", "quality", "version"]) } : {}),
         ...(defaults.video ? { video: select(defaults.video, ["provider", "model", "profileVersion", "mode", "aspectRatio", "resolution", "duration"]) } : {}),
       };
     }

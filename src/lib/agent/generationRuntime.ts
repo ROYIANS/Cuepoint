@@ -1,9 +1,10 @@
+import { redactCredentials } from "@/lib/ai/safeError";
 import { ownedGenerationBatch } from "@/db/agentGenerationBatches";
 import { assertProjectToolScope } from "./projectScope";
 import { db } from "@/db/database";
 import { claimGenerationJob, generationJobSummary, storeGenerationMedia, updateGenerationJob } from "@/db/agentGeneration";
 import { AtomicToolRollbackError, executeAtomicTool } from "@/db/agentTools";
-import { setCharacterSlot, setPropSlot, setSceneSlot, setShotSlot, setStyleSlot } from "@/db/repo";
+import { resolveConnector, setCharacterSlot, setPropSlot, setSceneSlot, setShotSlot, setStyleSlot } from "@/db/repo";
 import type { AgentGenerationJob } from "@/domain/agentGeneration";
 import type { AgentToolPreview } from "@/domain/agent";
 import type { ProductionTarget } from "@/domain/production";
@@ -45,7 +46,7 @@ export function generationTargetHref(target: ProductionTarget): string {
   return target.projectId === "studio" ? `/${plural}/${id}` : `/p/${encodeURIComponent(target.projectId)}/assets/${plural}/${id}`;
 }
 async function connector(id: string, frozen?: Pick<AgentGenerationJob, "provider" | "baseUrl">) {
-  const item = await db.connectors.get(id);
+  const item = await resolveConnector(id);
   if (!item || (item.definitionId !== "apimart" && item.definitionId !== "aihubmix") || !item.apiKey.trim()) throw new Error("生成供应商尚未配置有效密钥");
   const url = new URL(item.baseUrl);
   if (!/^https?:$/.test(url.protocol) || url.username || url.password || url.search || url.hash || !url.pathname.endsWith("/v1")) throw new Error("供应商 Base URL 无效");
@@ -63,7 +64,7 @@ async function inputRevision(media: MediaRecord) {
 }
 function cleanError(error: unknown, config?: ConnectorConfig) {
   const text = error instanceof Error ? error.message : "生成操作失败";
-  return (config?.apiKey ? text.split(config.apiKey.trim()).join("[已隐藏]") : text).replace(/Bearer\s+[^\s"',;]+/gi,"Bearer [已隐藏]").slice(0,700);
+  return redactCredentials(text, config?.apiKey ?? "").slice(0,700);
 }
 export async function prepareGenerationSnapshot(raw: GenerationSubmitArgs, signal: AbortSignal) {
   signal.throwIfAborted();
@@ -192,7 +193,23 @@ export async function submitClaimedGeneration(job: AgentGenerationJob, config: C
   let postStarted=false;
   try {
     const request=await nativeRequest(job,config,context,options);
-    await beforePost();
+    // Hash inputs outside Dexie after uploads/encoding, then validate current records
+    // and caller ownership together immediately before either provider's paid POST.
+    const inputs = await loadGenerationInputs(job);
+    await db.transaction("r", db.tables, async () => {
+      await beforePost();
+      const latest = await resolveConnector(config.id);
+      if (!latest?.apiKey.trim() || latest.definitionId !== job.provider ||
+        latest.baseUrl !== job.baseUrl || latest.apiKey !== config.apiKey) {
+        throw new Error("供应商配置已变化，尚未付费提交");
+      }
+      for (const input of inputs) {
+        const current = await db.media.get(input.id);
+        if (!current || current.projectId !== input.projectId || current.mimeType !== input.mimeType || current.blob.size !== input.blob.size) {
+          throw new Error("生成输入素材已变化，尚未付费提交");
+        }
+      }
+    });
     context.signal.throwIfAborted();
     postStarted=true;
     if (job.provider === "apimart") {

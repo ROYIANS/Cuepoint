@@ -89,3 +89,7 @@ The home composer exposes only the conversation type (`Agent` / `任务`), the p
 - Home Agent/任务 switch is inside the lower-left toolbar, before plus. Detail's smart/conversation switch is bottom-left; permissions + context are bottom-right. The task board is still deferred and its menu item is labeled accordingly.
 - Interaction mode is persisted per thread and frozen per run. Context preview uses the same empty skill/tool set in conversation mode. Legacy retries must retain empty missing tool snapshots instead of taking current global skills.
 - Reference model capacity is independent of connector-specific reasoning support (e.g. APIMart). Label it as reference; a reported gateway limit still takes precedence. Pricing tiers are not alternate context capacities.
+
+## Legacy atomic plan calls
+
+`update_run_plan` is atomic bookkeeping because the plan mutation and tool result commit in one transaction. Frozen old calls lacking the atomic flag may be upgraded only by the explicit `isLegacyAtomicPlanCall` predicate under the thread lock; startup recovery also inspects previously parked unknown plan calls so Resume becomes available. Do not generalize this repair to arbitrary bookkeeping, network effects or calls with a stored result. Existing completed results stay completed; transaction or result-serialization failures roll back both business state and ledger.

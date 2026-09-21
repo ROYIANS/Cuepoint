@@ -1,3 +1,4 @@
+import { changedDraftFields } from "@/lib/draftConflict";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/database";
 import { updateWorldSetting } from "@/db/repo";
@@ -57,11 +58,11 @@ function WorldSettingEditor({
   projectId: string;
   initialValue: WorldSetting;
 }) {
-  const { draft, setDraft, status, error, retry } = useDebouncedDraft({
+  const { draft, setDraft, status, error, retry, useLatest } = useDebouncedDraft({
     draftKey: `project:${projectId}:world`,
     scope: projectId,
     initialValue: { ...emptySetting(), ...initialValue },
-    persist: (value) => updateWorldSetting(projectId, value),
+    persist: (value, baseline) => updateWorldSetting(projectId, changedDraftFields(value, baseline), baseline),
   });
 
   return (
@@ -70,7 +71,7 @@ function WorldSettingEditor({
         <p className="text-muted-foreground text-xs leading-5">
           设定是这部戏一直为真的东西，不跟某一集走。
         </p>
-        <DraftStatus status={status} error={error} onRetry={() => void retry()} />
+        <DraftStatus status={status} error={error} onRetry={() => void retry()} onUseLatest={useLatest} />
       </div>
       <div className="mt-5 space-y-6">
         {FIELDS.map((field) => (

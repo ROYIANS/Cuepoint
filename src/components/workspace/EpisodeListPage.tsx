@@ -182,17 +182,17 @@ function SeriesLoglineEditor({
   projectId: string;
   initialValue: string;
 }) {
-  const { draft, setDraft, status, error, retry } = useDebouncedDraft({
+  const { draft, setDraft, status, error, retry, useLatest } = useDebouncedDraft({
     draftKey: `project:${projectId}:logline`,
     scope: projectId,
     initialValue,
-    persist: (value) => updateSeriesLogline(projectId, value),
+    persist: (value, baseline) => updateSeriesLogline(projectId, value, baseline),
   });
   return (
     <>
       <div className="mt-6 flex items-end justify-between gap-4">
         <Label>整部戏一句话</Label>
-        <DraftStatus status={status} error={error} onRetry={() => void retry()} />
+        <DraftStatus status={status} error={error} onRetry={() => void retry()} onUseLatest={useLatest} />
       </div>
       <Input
         className="mt-2"

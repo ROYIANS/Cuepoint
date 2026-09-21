@@ -37,6 +37,8 @@ export class DebouncedDraftController<T> {
   private inFlight: Promise<{ revision: number }> | undefined;
   private disposed = false;
   private value: T;
+  private baseline: T;
+  private latestExternal: T;
   private lastError: unknown;
   private status: DraftSaveStatus = "saved";
 
@@ -47,11 +49,49 @@ export class DebouncedDraftController<T> {
     private readonly delay = 400,
   ) {
     this.value = initialValue;
+    this.baseline = initialValue;
+    this.latestExternal = initialValue;
   }
 
-  get snapshot() { return { value: this.value, status: this.status, error: this.lastError }; }
+  get snapshot() { return { value: this.value, baseline: this.baseline, status: this.status, error: this.lastError }; }
   get isSettled() { return this.persistedRevision === this.revision && !this.inFlight; }
   get isDisposed() { return this.disposed; }
+
+  /** Refresh clean fields; dirty fields retain the baseline used for transactional CAS. */
+  rebase(latest: T): boolean {
+    this.latestExternal = latest;
+    if (this.inFlight) return false;
+    if (this.isSettled) {
+      this.value = latest;
+      this.baseline = latest;
+      return true;
+    }
+    if (typeof latest === "object" && latest !== null && typeof this.value === "object" && this.value !== null) {
+      const next = { ...this.value };
+      const baseline = { ...this.baseline };
+      for (const key of Object.keys(latest) as Array<keyof T>) {
+        if (this.value[key] === this.baseline[key]) {
+          next[key] = latest[key];
+          baseline[key] = latest[key];
+        }
+      }
+      this.value = next;
+      this.baseline = baseline;
+    }
+    return true;
+  }
+
+  useLatest(): void {
+    if (this.inFlight) return;
+    if (this.timer) clearTimeout(this.timer);
+    this.timer = undefined;
+    this.value = this.latestExternal;
+    this.baseline = this.latestExternal;
+    this.revision += 1;
+    this.persistedRevision = this.revision;
+    this.lastError = undefined;
+    this.report("saved");
+  }
 
   /** Browser-standard guard; async writes cannot be guaranteed once the user leaves. */
   guardBeforeUnload(event: Pick<BeforeUnloadEvent, "preventDefault" | "returnValue">): void {
@@ -107,6 +147,7 @@ export class DebouncedDraftController<T> {
       () => {
         this.lastError = undefined;
         this.persistedRevision = savingRevision;
+        this.baseline = savingValue;
         if (this.revision === savingRevision) {
           this.report("saved");
         }
@@ -172,7 +213,7 @@ export function useDebouncedDraft<T>({
   draftKey,
 }: {
   initialValue: T;
-  persist: (value: T) => Promise<void>;
+  persist: (value: T, baseline: T) => Promise<void>;
   delay?: number;
   scope?: string;
   /** Stable entity + field identity restores failed navigation drafts on reopening. */
@@ -185,7 +226,7 @@ export function useDebouncedDraft<T>({
     const retained = scope && draftKey ? retainedDrafts.get(scope)?.get(draftKey) : undefined;
     controllerRef.current = retained
       ? retained as DebouncedDraftController<T>
-      : new DebouncedDraftController(initialValue, (value) => persistRef.current(value), () => undefined, delay);
+      : new DebouncedDraftController(initialValue, (value) => persistRef.current(value, controllerRef.current!.snapshot.baseline), () => undefined, delay);
   }
   const controller = controllerRef.current;
   const [draft, setDraftState] = useState(controller.snapshot.value);
@@ -204,9 +245,27 @@ export function useDebouncedDraft<T>({
 
   const flush = useCallback(() => controller.flush(), [controller]);
   const retry = useCallback(() => controller.retry(), [controller]);
+  const useLatest = useCallback(() => controller.useLatest(), [controller]);
+
+  // Live-query values may be new objects on every render. Compare the flat draft
+  // before notifying React to avoid both stale text and an effect/render loop.
+  const externalVersion = useRef<string | undefined>(undefined);
+  useEffect(() => {
+    const version = JSON.stringify(initialValue);
+    if (externalVersion.current === version) return;
+    if (!controller.rebase(initialValue)) return;
+    externalVersion.current = version;
+    const next = controller.snapshot.value;
+    if (JSON.stringify(draftRef.current) !== JSON.stringify(next)) {
+      draftRef.current = next;
+      setDraftState(next);
+    }
+  });
 
   useEffect(() => {
-    controller.resume((value) => persistRef.current(value), (nextStatus, nextError) => {
+    controller.resume((value) => persistRef.current(value, controllerRef.current!.snapshot.baseline), (nextStatus, nextError) => {
+      draftRef.current = controller.snapshot.value;
+      setDraftState(controller.snapshot.value);
       setStatus(nextStatus);
       setError(nextError);
     });
@@ -240,5 +299,5 @@ export function useDebouncedDraft<T>({
     };
   }, [controller, flush, scope, draftKey]);
 
-  return { draft, setDraft, status, error, flush, retry };
+  return { draft, setDraft, status, error, flush, retry, useLatest };
 }

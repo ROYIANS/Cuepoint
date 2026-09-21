@@ -1,3 +1,4 @@
+import { redactCredentials } from "./safeError";
 import { parseModelMetadata, type ChatModelMetadata } from "@/lib/ai/modelMetadata";
 import { normalizeBaseUrl } from "@/lib/ai/openaiCompatible";
 
@@ -98,10 +99,8 @@ function jsonValue(value: unknown): value is ApimartJson {
   if (Array.isArray(value)) return value.every(jsonValue);
   return record(value) && Object.values(value).every(jsonValue);
 }
-function redact(value: string, apiKey: string): string {
-  const key = apiKey.trim();
-  return (key ? value.split(key).join("[已隐藏]") : value)
-    .replace(/Bearer\s+[^\s"',;]+/gi, "Bearer [已隐藏]").slice(0, 300);
+function redact(value: string, key: string): string {
+  return redactCredentials(value, key).slice(0, 300);
 }
 function failure(kind: ApimartFailure["kind"], message: string): ApimartFailure {
   return { ok: false, kind, message };

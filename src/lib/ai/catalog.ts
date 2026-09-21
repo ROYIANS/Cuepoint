@@ -35,7 +35,7 @@ export const CONNECTOR_CATALOG: readonly ConnectorDefinition[] = [
   {
     id: "apimart",
     title: "APIMart",
-    blurb: "统一接入聊天、图像与视频模型；生成入口将在后续开放",
+    blurb: "统一接入聊天、图像与视频模型；可在 Agent 中确认并提交生成任务",
     protocol: "openai-compatible",
     capabilities: ["chat", "image", "video"],
     defaultBaseUrl: "https://api.apimart.ai/v1",
@@ -45,7 +45,7 @@ export const CONNECTOR_CATALOG: readonly ConnectorDefinition[] = [
   {
     id: "aihubmix",
     title: "AIHubMix",
-    blurb: "统一接入聊天、图像与视频模型；生成入口将在后续开放",
+    blurb: "统一接入聊天、图像与视频模型；可在 Agent 中确认并提交生成任务",
     protocol: "openai-compatible",
     capabilities: ["chat", "image", "video"],
     defaultBaseUrl: "https://aihubmix.com/v1",

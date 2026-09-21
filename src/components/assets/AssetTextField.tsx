@@ -10,11 +10,11 @@ export function AssetTextField({ label, value, projectId, draftKey, persist, mul
   value: string;
   projectId: string;
   draftKey: string;
-  persist: (value: string) => Promise<void>;
+  persist: (value: string, baseline: string) => Promise<void>;
   multiline?: boolean;
   placeholder?: string;
 }) {
-  const { draft, setDraft, status, error, retry } = useDebouncedDraft({
+  const { draft, setDraft, status, error, retry, useLatest } = useDebouncedDraft({
     initialValue: value,
     persist,
     scope: projectId,
@@ -26,7 +26,7 @@ export function AssetTextField({ label, value, projectId, draftKey, persist, mul
       <Field label={label}>
         <Control value={draft} placeholder={placeholder} onChange={(event) => setDraft(event.target.value)} />
       </Field>
-      <DraftStatus status={status} error={error} onRetry={() => void retry()} />
+      <DraftStatus status={status} error={error} onRetry={() => void retry()} onUseLatest={useLatest} />
     </div>
   );
 }

@@ -488,3 +488,39 @@ registerUndo({ label: "已删除镜头", restore: async () => restoreDeletedShot
 - `useDebouncedDraft` accepts project `scope` and stable entity-field `draftKey`. Failed/unmounted drafts remain recoverable in the running app; reopening a key must resume it instead of creating an older competing writer. Active editors request browser beforeunload protection while dirty/in-flight/failed and attempt a best-effort flush; pagehide also flushes. Forced termination or confirming leave is not durable persistence. Detached failed drafts are protected by the in-app backup barrier, not a permanent browser unload handler.
 - Backup must await `flushPendingDrafts(projectId)` and abort visibly on errors. `exportProjectZip` reads project rows, referenced media records and Blobs in a single readonly transaction before ZIP compression.
 - Asset multi-copy removes each committed source from the retry selection immediately. Pending copy dialogs cannot close or change selection; failure retains only uncommitted items.
+
+## Audit remediation: concurrent drafts and compatibility (2026-09)
+
+- `useDebouncedDraft` accepts `persist(value, baseline)`. Flat text drafts rebase
+  clean fields from live queries, while dirty fields retain their original baseline.
+  Fingerprint external values so an unchanged, stale live-query render after a
+  successful save cannot roll the editor back. Defer rebase during an in-flight
+  write; serial writes advance their baseline only after acknowledgement.
+- Story/world editors pass only `changedDraftFields(value, baseline)` into the
+  repository. Episode, world, series-logline and asset text writes compare edited
+  fields against current records **inside the write transaction**. Equal final
+  values may converge; a differing current value raises `DraftConflictError` and
+  rolls the entire patch back. Preserve dirty text and the backup/navigation retry
+  barrier. Show the conflict and an explicit adopt-latest action; never silently
+  overwrite a competing edit or discard a failed draft.
+- Beat deletion undo restores captured shot assignments only when the shot still
+  belongs to the original project/episode and remains unassigned. A newer beat
+  assignment wins.
+- Project ZIPs include additive `mediaMetadata.json` (original id, projectId,
+  filename and MIME), exported in the same snapshot as media bytes. Validate owner,
+  unique ID, MIME and one-to-one file mapping before any import write. Remap IDs
+  while retaining filename/MIME and set imported Blob.type. Older ZIPs without the
+  metadata remain readable using extension inference (including `.jfif`).
+- Dexie 20 moves duplicate connector definitions into `connectorAliases`, choosing
+  latest updatedAt then greatest ID deterministically for the active connector.
+  Dexie 21 makes active `definitionId` unique. Atomic upsert includes lookup and
+  write in one transaction. Aliases are recovery-only: selectors list only
+  `connectors`; frozen runs/jobs use `resolveConnector(id)` without changing their
+  IDs or fingerprints. Initial historical alias configs remain intact; an explicit
+  config/key edit updates all aliases for that definition, and disconnect removes
+  both active config and aliases. Transactions resolving historical IDs must include
+  `connectorAliases`. Neither connector table belongs in project ZIPs.
+
+Regression coverage: `draftConcurrency.test.ts`, `debouncedDraft.test.ts`,
+`auditDataIntegrity.test.ts`, `connectorMigration.test.ts`, `mediaMetadata.test.ts`,
+plus the existing repository/project-package/reference suites.

@@ -1,3 +1,4 @@
+import { redactCredentials } from "./safeError";
 import { parseModelMetadata, type ChatModelMetadata } from "@/lib/ai/modelMetadata";
 export type AIHubMixCredentials = { baseUrl: string; apiKey: string };
 export type AIHubMixRequestOptions = { signal?: AbortSignal; fetchImpl?: typeof fetch };
@@ -73,8 +74,7 @@ function jsonValue(value: unknown): value is AIHubMixJson {
   return record(value) && Object.getPrototypeOf(value) === Object.prototype && Object.values(value).every(jsonValue);
 }
 function redact(value: string, key: string): string {
-  return (key.trim() ? value.split(key.trim()).join("[已隐藏]") : value)
-    .replace(/Bearer\s+[^\s"',;]+/gi, "Bearer [已隐藏]").slice(0, 500);
+  return redactCredentials(value, key).slice(0, 500);
 }
 function sanitizedJson(value: AIHubMixJson, key: string): AIHubMixJson {
   if (typeof value === "string") return redact(value, key);

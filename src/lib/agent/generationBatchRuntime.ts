@@ -1,8 +1,9 @@
+import { resolveConnector } from "@/db/repo";
 import { db } from '@/db/database';
 import { assertBatchDispatch, claimBatchItem, controlGenerationBatch, ownedGenerationBatch, readGenerationBatch, settleGenerationBatch } from '@/db/agentGenerationBatches';
 import { updateGenerationJob } from '@/db/agentGeneration';
 import { BATCH_CONCURRENCY } from '@/domain/agentGenerationBatch';
-import { loadGenerationInputs, monitorAgentGeneration, submitClaimedGeneration, type GenerationRuntimeOptions } from './generationRuntime';
+import { monitorAgentGeneration, submitClaimedGeneration, type GenerationRuntimeOptions } from './generationRuntime';
 import { withThreadRunLock, type ThreadLockManager } from './runOwnership';
 
 interface LocalWorker { batchId: string; controller: AbortController; done: Promise<void>; actions: Set<Promise<unknown>>; closing: boolean; ownsLock: boolean }
@@ -66,17 +67,12 @@ export async function startGenerationBatch(id: string, threadId: string, options
           let transportEntered = false;
           try {
             job = await claimBatchItem(id, threadId, item.id); if (!job) continue;
-            const config = await db.connectors.get(job.connectorId);
+            const config = await resolveConnector(job.connectorId);
             if (!config?.apiKey.trim() || config.definitionId !== job.provider || config.baseUrl !== job.baseUrl) throw new Error('供应商配置已变化，尚未付费提交');
             transportEntered = true;
             await submitClaimedGeneration(job, config, context, options, async () => {
-              await loadGenerationInputs(job!);
               if (dispatchPaused) throw new Error('本地队列已暂停，尚未付费提交');
-              await db.transaction('r', db.tables, async () => {
-                await assertBatchDispatch(job!);
-                const latest = await db.connectors.get(config.id);
-                if (!latest?.apiKey.trim() || latest.definitionId !== job!.provider || latest.baseUrl !== job!.baseUrl || latest.apiKey !== config.apiKey) throw new Error('供应商配置已变化，尚未付费提交');
-              });
+              await assertBatchDispatch(job!);
             });
           } catch (error) {
             try {

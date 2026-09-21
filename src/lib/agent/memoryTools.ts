@@ -1,3 +1,4 @@
+import { historicalToolSummary } from "./referenceEvidence";
 import { db } from "@/db/database";
 import { getEligibleProjectMemories } from "@/db/memoryRetrieval";
 import { getMemorySourceState } from "@/db/projectMemories";
@@ -399,7 +400,7 @@ export const MEMORY_TOOLS: readonly AgentToolDefinition[] = [
         )
           return missing();
         content = JSON.stringify({
-          result: publicResult(call.result),
+          result: historicalToolSummary(call.name, call.result, state.projectId) ?? publicResult(call.result),
           hasError: !!call.error,
         });
         metadata = {
@@ -410,6 +411,7 @@ export const MEMORY_TOOLS: readonly AgentToolDefinition[] = [
       }
       return {
         status: "available",
+        sourceProjectionVersion: 1,
         notice: historicalNotice,
         taskId: task.id,
         source: args.source,

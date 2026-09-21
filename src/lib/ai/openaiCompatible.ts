@@ -1,3 +1,4 @@
+import { redactCredentials } from "./safeError";
 import { collectModelMetadata, parseModelMetadata, type ChatModelMetadata } from "@/lib/ai/modelMetadata";
 export function normalizeBaseUrl(baseUrl: string): string {
   return baseUrl.trim().replace(/\/+$/, "");
@@ -35,8 +36,8 @@ export type TestConnectionResult =
   | { ok: true; via: "models" | "chat"; modelCount?: number }
   | { ok: false; message: string };
 
-function formatHttpError(status: number, body: string): string {
-  const trimmed = body.trim().slice(0, 200);
+function formatHttpError(status: number, body: string, apiKey: string): string {
+  const trimmed = redactCredentials(body, apiKey).trim().slice(0, 200);
   if (status === 401 || status === 403) {
     return trimmed ? `鉴权失败（${status}）：${trimmed}` : `鉴权失败（${status}）`;
   }
@@ -66,7 +67,7 @@ export async function listModels(
     });
     if (!res.ok) {
       const text = await res.text().catch(() => "");
-      return { ok: false, message: formatHttpError(res.status, text) };
+      return { ok: false, message: formatHttpError(res.status, text, apiKey) };
     }
     const data = (await res.json().catch(() => null)) as {
       data?: Array<{ id?: unknown }>;
@@ -86,7 +87,7 @@ export async function listModels(
   } catch (err) {
     return {
       ok: false,
-      message: err instanceof Error ? err.message : "网络错误",
+      message: redactCredentials(err instanceof Error ? err.message : "网络错误", apiKey).slice(0, 300),
     };
   }
 }
@@ -115,14 +116,14 @@ export async function testConnection(
     }
     if (modelsRes.status !== 404 && modelsRes.status !== 405) {
       const text = await modelsRes.text().catch(() => "");
-      return { ok: false, message: formatHttpError(modelsRes.status, text) };
+      return { ok: false, message: formatHttpError(modelsRes.status, text, apiKey) };
     }
   } catch (err) {
     // Fall through to chat probe — some proxies reject /models.
     if (!(err instanceof TypeError)) {
       return {
         ok: false,
-        message: err instanceof Error ? err.message : "网络错误",
+        message: redactCredentials(err instanceof Error ? err.message : "网络错误", apiKey).slice(0, 300),
       };
     }
   }
@@ -140,11 +141,11 @@ export async function testConnection(
     });
     if (chatRes.ok) return { ok: true, via: "chat" };
     const text = await chatRes.text().catch(() => "");
-    return { ok: false, message: formatHttpError(chatRes.status, text) };
+    return { ok: false, message: formatHttpError(chatRes.status, text, apiKey) };
   } catch (err) {
     return {
       ok: false,
-      message: err instanceof Error ? err.message : "网络错误",
+      message: redactCredentials(err instanceof Error ? err.message : "网络错误", apiKey).slice(0, 300),
     };
   }
 }

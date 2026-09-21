@@ -1,3 +1,4 @@
+import { changedDraftFields } from "@/lib/draftConflict";
 import { useLiveQuery } from "dexie-react-hooks";
 import { ArrowDown, ArrowUp, Copy, CopyPlus, Plus, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
@@ -79,7 +80,7 @@ function StoryEditor({
   scenes: { id: string; name: string }[];
 }) {
   const initialStory = normalizeEpisodeStory(episode.story);
-  const { draft, setDraft, status, error, retry, flush } = useDebouncedDraft({
+  const { draft, setDraft, status, error, retry, useLatest, flush } = useDebouncedDraft({
     draftKey: `episode:${episode.id}:story`,
     scope: episode.projectId,
     initialValue: {
@@ -87,7 +88,7 @@ function StoryEditor({
       logline: initialStory.logline,
       script: initialStory.script,
     },
-    persist: (value) => updateEpisodeDraft(episode.id, value),
+    persist: (value, baseline) => updateEpisodeDraft(episode.id, changedDraftFields(value, baseline), baseline),
   });
   const [dragging, setDragging] = useState(false);
   const scriptRef = useRef<HTMLTextAreaElement>(null);
@@ -161,7 +162,7 @@ function StoryEditor({
                 {film ? "先写这部作品要讲什么。" : "先写这一集要讲什么。"}场次可以后补，分镜会从这里长出来。
               </p>
             </div>
-            <DraftStatus status={status} error={error} onRetry={() => void retry()} />
+            <DraftStatus status={status} error={error} onRetry={() => void retry()} onUseLatest={useLatest} />
           </div>
           <Label className="mt-6">{film ? "故事标题（可选）" : "集标题（可选）"}</Label>
           <Input

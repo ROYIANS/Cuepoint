@@ -1,3 +1,4 @@
+import { resolveConnector } from "@/db/repo";
 import { pauseThreadGeneration } from "@/lib/agent/generationBatchRuntime";
 import { useReferenceDraft } from "./useReferenceDraft";
 import { TaskBoard } from "./TaskBoard";
@@ -406,7 +407,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
     try {
       const previous = await db.agentRuns.get(runId);
       if (!previous || previous.threadId !== activeThreadId) throw new Error("执行不存在");
-      const connector = await db.connectors.get(previous.connector.id);
+      const connector = await resolveConnector(previous.connector.id);
       if (!connector) throw new Error("原连接已删除，请重新配置后发送新消息");
       assertRetryConnector(previous, connector);
       const checked = await runWithCompatibleChatModel(connector, previous.model, () =>
@@ -452,7 +453,7 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
       const outstanding = await db.agentToolCalls.where("runId").equals(run.id).filter((call) => call.status === "awaiting_approval").count();
       if (outstanding > 0) return;
       if (controller.signal.aborted) return;
-      const connector = await db.connectors.get(run.connector.id);
+      const connector = await resolveConnector(run.connector.id);
       if (!connector) throw new Error("决定已保存。原连接不存在，请恢复连接后继续或结束执行。");
       assertRetryConnector(run, connector);
       const checked = await runWithCompatibleChatModel(connector, run.model, () =>

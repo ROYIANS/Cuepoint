@@ -201,3 +201,44 @@ describe("bounded project references and native same-model vision", () => {
     await expect(read.execute({ ...b }, context)).rejects.toThrow("不属于");
   });
 });
+
+describe("legacy historical source wire projection", () => {
+  const scope = { model: "fixture-model" } as const;
+  const oldNested = JSON.stringify({ result: { nested: { source: "WITHDRAWN_SOURCE_SENTINEL" } }, content: "WITHDRAWN_SOURCE_SENTINEL" });
+  const authored = "AUTHORED_USER_TEXT_MUST_REMAIN";
+  const chatMessages = [
+    { role: "user" as const, content: authored },
+    { role: "assistant" as const, content: "已读取", tool_calls: [{ id: "legacy-call", type: "function" as const, function: { name: "task_read", arguments: "{\"source\":{}}" } }] },
+    { role: "tool" as const, tool_call_id: "legacy-call", content: oldNested },
+  ];
+
+  it("sanitizes an unmarked legacy Chat tool result at the final wire boundary", async () => {
+    const wire = await materializeChatMessages(chatMessages, scope);
+    const serialized = JSON.stringify(wire);
+    expect(serialized).not.toContain("WITHDRAWN_SOURCE_SENTINEL");
+    expect(serialized).toContain(authored);
+    expect(serialized).toContain("historical_source_lookup");
+    expect((wire[2] as { tool_call_id: string }).tool_call_id).toBe("legacy-call");
+  });
+
+  it("sanitizes an unmarked legacy Responses function output without changing the ledger call", async () => {
+    const items = toResponseInput(chatMessages);
+    const wire = await materializeResponseItems(items, scope);
+    const serialized = JSON.stringify(wire);
+    expect(serialized).not.toContain("WITHDRAWN_SOURCE_SENTINEL");
+    expect(serialized).toContain(authored);
+    expect(serialized).toContain("historical_source_lookup");
+    expect((wire[2] as { call_id: string }).call_id).toBe("legacy-call");
+  });
+
+  it("keeps explicitly versioned new projections intact", async () => {
+    const marked = [
+      { role: "assistant" as const, content: "", tool_calls: [{ id: "new-call", type: "function" as const, function: { name: "task_read", arguments: "{}" } }] },
+      { role: "tool" as const, tool_call_id: "new-call", content: JSON.stringify({ sourceProjectionVersion: 1, content: "CURRENT_SOURCE_SUMMARY" }) },
+    ];
+    const chat = await materializeChatMessages(marked, scope);
+    const response = await materializeResponseItems(toResponseInput(marked), scope);
+    expect(JSON.stringify(chat)).toContain("CURRENT_SOURCE_SUMMARY");
+    expect(JSON.stringify(response)).toContain("CURRENT_SOURCE_SUMMARY");
+  });
+});

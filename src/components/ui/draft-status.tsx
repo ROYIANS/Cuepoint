@@ -1,13 +1,16 @@
+import { DraftConflictError } from "@/lib/draftConflict";
 import type { DraftSaveStatus } from "@/lib/debouncedDraft";
 
 export function DraftStatus({
   status,
   error,
   onRetry,
+  onUseLatest,
 }: {
   status: DraftSaveStatus;
   error?: unknown;
   onRetry: () => void;
+  onUseLatest?: () => void;
 }) {
   if (status === "error") {
     return (
@@ -17,6 +20,9 @@ export function DraftStatus({
         <button type="button" className="underline" onClick={onRetry}>
           重试
         </button>
+        {error instanceof DraftConflictError && onUseLatest && <>
+          {" · "}<button type="button" className="underline" onClick={onUseLatest}>采用最新内容</button>
+        </>}
       </span>
     );
   }
