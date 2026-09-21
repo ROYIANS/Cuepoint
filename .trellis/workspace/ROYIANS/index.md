@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 34
-- **Last Active**: 2026-09-20
+- **Total Sessions**: 39
+- **Last Active**: 2026-09-21
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~834 | Active |
+| `journal-1.md` | ~994 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,11 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 39 | 2026-09-21 | AI IP 与素材能力及工具按需加载 | `faf97ae` | `main` |
+| 38 | 2026-09-21 | 多 IP 档案与分层版本素材库落地 | `7c805d4` | `main` |
+| 37 | 2026-09-21 | Agent 执行过程与聊天交互优化 | `e56ebae` | `main` |
+| 36 | 2026-09-21 | 全盘审查修复与验收 | `8fb2a6f`, `3e62493`, `da08ea6` | `main` |
+| 35 | 2026-09-21 | 全盘代码与用户体验审查 | - | `main` |
 | 34 | 2026-09-20 | APIMart GPT Image 2.5 models | `205c7b2`, `c1ba6d7` | `main` |
 | 33 | 2026-09-20 | GHCR Docker release | `2e967bd` | `main` |
 | 32 | 2026-09-19 | Web research and named-project image inspection | `3bbcedc`, `6ba3c83` | `main` |

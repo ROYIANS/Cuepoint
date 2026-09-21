@@ -832,3 +832,163 @@ Added APIMart gpt-image-2.5-flare, sunburst, and ext to image generation pickers
 ### Next Steps
 
 - Optional browser check of four-model picker without paid submit; archive leftover 09-19-agent-workflow-memory if desired
+
+
+## Session 35: 全盘代码与用户体验审查
+
+**Date**: 2026-09-21
+**Task**: 全盘代码与用户体验审查
+**Branch**: `main`
+
+### Summary
+
+完成全量自有源码静态审查、基线和重点浏览器验证，交付中文报告；确认13项功能问题（3 P1/9 P2/1 P3），性能和维护债务另列；无产品修改。
+
+### Main Changes
+
+- 中文报告位于 .trellis/tasks/archive/2026-09/09-21-full-project-audit/report.md；证据与复现均归档。
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] 基线72文件906测试、TypeScript、build、model-bank验证通过；缺陷复现按正确断言失败，移出默认tests。
+- [OK] 真实双标签草稿、Web Locks、22 URL三视口、PDF/DOCX workers、两协议Agent集成和10/200/1000镜头性能验证。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 按报告先修复F01草稿覆盖、F02撤回资料重放、F03失效连接继续提交；未验证环境见报告第10节。
+
+
+## Session 36: 全盘审查修复与验收
+
+**Date**: 2026-09-21
+**Task**: 全盘审查修复与验收
+**Branch**: `main`
+
+### Summary
+
+完成F01–F13、两项性能优化、发布质量门禁和有证据的冗余清理；975项测试及独立复核通过，按用户确认完成本地提交。
+
+### Main Changes
+
+- 中文报告与证据归档至 .trellis/tasks/archive/2026-09/09-21-audit-remediation/report.zh-CN.md；旧审查产物保留。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `8fb2a6f` | (see git log) |
+| `3e62493` | (see git log) |
+| `da08ea6` | (see git log) |
+
+### Testing
+
+- [OK] 79文件975项测试、TypeScript、生产构建、模型快照验证、diff检查通过。
+- [OK] 22路由三视口、并发草稿、批次离开保护、键盘拖拽、双协议Agent及性能复测通过。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 无遗留已确认阻断；未推送或发布。上一轮审查目录及混合会话日志保留为未提交改动。
+
+
+## Session 37: Agent 执行过程与聊天交互优化
+
+**Date**: 2026-09-21
+**Task**: Agent 执行过程与聊天交互优化
+**Branch**: `main`
+
+### Summary
+
+完成执行过程分组折叠、实时用时、持续待办提醒、紧凑左对齐波浪定位栏、footer背景遮罩和工具失败详细诊断；已按用户要求本地提交并归档。
+
+### Main Changes
+
+- 需求、设计、规范、测试与浏览器证据归档至 .trellis/tasks/archive/2026-09/09-21-agent-activity-ui/。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `e56ebae` | (see git log) |
+
+### Testing
+
+- [OK] 85个测试文件、1011项测试通过；类型检查、生产构建与最终13项浏览器交互检查通过。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 本次代码与归档已提交，未推送。为保留此前审查的未提交日志，混合会话日志暂不提交。
+
+
+## Session 38: 多 IP 档案与分层版本素材库落地
+
+**Date**: 2026-09-21
+**Task**: 多 IP 档案与分层版本素材库落地
+**Branch**: `main`
+
+### Summary
+
+实现多 IP 档案、项目可选关联、分层素材库、不可变版本与显式采用；按用户要求统一已有 UI 组件，完成本地提交和任务归档。
+
+### Main Changes
+
+- 任务、中文报告及浏览器证据已归档至 .trellis/tasks/archive/2026-09/09-21-ip-material-library/，可执行合同见 frontend/ip-material-library.md。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `7c805d4` | (see git log) |
+
+### Testing
+
+- [OK] TypeScript、生产构建、87文件1036项全量测试通过；补充数据库升级测试所在5项集成测试通过。
+- [OK] IP、素材、项目关联、390px布局、DOCX构建预览及归属筛选回归均通过。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 未推送。为保留此前审查与Agent任务的未提交日志，本次追加日志暂不提交；本次产品代码与归档均已提交。
+
+
+## Session 39: AI IP 与素材能力及工具按需加载
+
+**Date**: 2026-09-21
+**Task**: AI IP 与素材能力及工具按需加载
+**Branch**: `main`
+
+### Summary
+
+完成 6 个 IP 工具和 10 个素材工具、项目 IP 摘要、真实图片与文档读取、双协议按需工具加载及独立审查。普通首轮工具数降至 3 个，定义和技能估算降低约 91%。已提交并归档任务。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `faf97ae` | (see git log) |
+
+### Testing
+
+- [OK] 94 个测试文件、1082 项测试通过；lint、build、git diff --check 通过；隔离浏览器确认卡和真实内容读取验证通过。
+
+### Status
+
+[OK] **Completed**
