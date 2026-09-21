@@ -1,7 +1,7 @@
 import { ExternalLink } from "lucide-react";
 import {
   GITHUB_URL,
-  LOGO_SRC,
+  LOGO_LOCKUP_SRC,
   PRODUCT_NAME_EN,
   PRODUCT_NAME_ZH,
   PRODUCT_TAGLINE,
@@ -11,14 +11,12 @@ export function AboutPage() {
   return (
     <div className="px-10 py-10">
       <div className="max-w-3xl">
+        <h1 className="sr-only">关于{PRODUCT_NAME_ZH}</h1>
         <img
-          src={LOGO_SRC}
-          alt={PRODUCT_NAME_ZH}
-          className="w-[min(72vw,28rem)] max-w-full object-contain drop-shadow-[0_24px_60px_rgb(0_0_0_/_0.65)]"
+          src={LOGO_LOCKUP_SRC}
+          alt={`${PRODUCT_NAME_ZH} ${PRODUCT_NAME_EN}`}
+          className="w-[min(72vw,28rem)] max-w-full rounded-2xl bg-black object-contain drop-shadow-[0_24px_60px_rgb(0_0_0_/_0.65)]"
         />
-        <h1 className="font-display mt-8 text-[40px] leading-none tracking-tight">{PRODUCT_NAME_ZH}</h1>
-        <p className="text-muted-foreground mt-3 text-base tracking-wide">{PRODUCT_NAME_EN}</p>
-
         <p className="text-muted-foreground mt-6 max-w-xl text-sm leading-6">{PRODUCT_TAGLINE}</p>
 
         <a
