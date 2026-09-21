@@ -1,6 +1,0 @@
-{
-  "expected": "未保存的新提示词 or blocked navigation",
-  "actual": "原始提示词",
-  "confirmedBug": true,
-  "errors": []
-}
