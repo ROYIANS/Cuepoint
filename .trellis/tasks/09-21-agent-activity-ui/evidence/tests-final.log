@@ -1,0 +1,36 @@
+
+> cuepoint@0.1.0 test /Users/xiaomengdao/WebstormProjects/aifenjing
+> vitest run
+
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/agentTools.test.ts (22 tests | 1 failed) 7074ms
+   ❯ durable bounded tool loop (20)
+     × pauses each 32-request segment and resumes without replay or resetting cumulative steps 5046ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/agentTools.test.ts > durable bounded tool loop > pauses each 32-request segment and resumes without replay or resetting cumulative steps
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/agentTools.test.ts:136:3
+    134|     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
+    135|   });
+    136|   it("pauses each 32-request segment and resumes without replay or res…
+       |   ^
+    137|     const run = await begin("full"); const tool = controlled(); let re…
+    138|     const fetcher = vi.fn(async () => toolResponse(tool.name, "{}", `c…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 84 passed (85)
+      Tests  1 failed | 1010 passed (1011)
+   Start at  11:30:55
+   Duration  13.76s (tests 71%, setup 12%, transform 8%, import 8%, worker 1%)
+
+    Isolate  85 workers spawned · ~132ms startup each (spawn + environment, per file)
+             at least ~1.12s faster with isolate: false — reuses workers across files instead of one per file
+
+ ELIFECYCLE  Test failed. See above for more details.

@@ -10,7 +10,7 @@ import type { ChatMessage } from "@/domain/types";
 import { TASK_RECORD_KINDS, TASK_RECORD_CLAIMS, type AgentTaskRecord, type TaskRecordInput } from "@/domain/agentTaskRecords";
 import { listTaskRecords, listTaskRecordVersions, saveTaskRecord } from "@/db/agentTaskRecords";
 import { db } from "@/db/database";
-import { CreatedEntityLinks } from "./AgentRunDetails";
+import { CreatedEntityLinks } from "./CreatedEntityLinks";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";

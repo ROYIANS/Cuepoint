@@ -1,0 +1,54 @@
+/* Execution is a quiet, chronological transcript inside the existing chat surface. */
+/* ChatItem docs exposes avatar then content; only assistant content fills the column. */
+.agent-chat-root .agent-assistant-transcript > :last-child { flex: 1; min-width: 0; }
+.agent-chat-root .agent-execution-activity { margin-block: 4px 12px; }
+.agent-chat-root .agent-execution-summary {
+  width: 100%; gap: 8px; padding-block: 8px 12px !important;
+  border-bottom: 1px solid #ffffff12; font-size: 14px; font-variant-numeric: tabular-nums;
+}
+.agent-chat-root .agent-execution-summary small { margin-left: auto; font-size: 12px; color: #888; }
+.agent-chat-root .agent-execution-timeline { padding-top: 12px !important; min-width: 0; }
+.agent-chat-root .agent-execution-timeline[hidden],
+.agent-chat-root .agent-tool-group-calls[hidden],
+.agent-chat-root .agent-run-step > [hidden] { display: none !important; }
+.agent-chat-root .agent-activity-narrative { margin-block: 0 16px; font-size: 14px; line-height: 1.7; overflow-wrap: anywhere; }
+.agent-chat-root .agent-tool-group { margin-block: 8px 16px; min-width: 0; }
+.agent-chat-root .agent-tool-group-toggle,
+.agent-chat-root .agent-tool-call-toggle {
+  display: flex; align-items: center; gap: 8px; width: 100%; min-width: 0;
+  text-align: left; padding: 4px 0 !important; color: #919191; cursor: pointer; font-size: 12px;
+}
+.agent-chat-root .agent-tool-group-toggle > span,
+.agent-chat-root .agent-tool-call-toggle > span { min-width: 0; overflow-wrap: anywhere; }
+.agent-chat-root .agent-tool-group-toggle > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.agent-chat-root .agent-tool-group-toggle > svg,
+.agent-chat-root .agent-tool-call-toggle > svg { flex-shrink: 0; }
+.agent-chat-root .agent-tool-group-toggle small,
+.agent-chat-root .agent-tool-call-toggle small { font-size: 12px; white-space: nowrap; flex-shrink: 0; color: #888; }
+.agent-chat-root .agent-tool-call-toggle small { margin-left: auto; }
+.agent-chat-root .agent-tool-group-toggle:hover,
+.agent-chat-root .agent-tool-call-toggle:hover { color: #ccc; }
+.agent-chat-root .agent-tool-group-calls { border-left: 1px solid #ffffff16; padding-left: 12px !important; margin: 8px 0 8px 6px; }
+.agent-chat-root .agent-tool-call-toggle { padding-block: 8px !important; }
+.agent-chat-root .agent-execution-activity button:focus-visible,
+.agent-chat-root .agent-execution-activity summary:focus-visible { outline: 2px solid #999; outline-offset: 3px; border-radius: 4px; }
+.agent-chat-root .agent-activity-working { display: flex; align-items: center; gap: 8px; min-height: 24px; margin-block: 12px; color: #888; font-size: 12px; }
+.agent-chat-root .agent-activity-working .agent-thinking-matrix { padding: 0 !important; }
+.agent-chat-root .agent-activity-plan { margin-block: 8px; color: #888; font-size: 12px; }
+.agent-chat-root .agent-activity-plan > summary { display: flex; align-items: center; gap: 8px; cursor: pointer; list-style: none; padding: 4px 0 !important; }
+.agent-chat-root .agent-activity-plan > summary::-webkit-details-marker { display: none; }
+.agent-chat-root .agent-activity-plan[open] > summary > svg { transform: rotate(180deg); }
+.agent-chat-root .agent-execution-activity .agent-thinking-header { gap: 8px; }
+@media (max-width: 480px) {
+  .agent-chat-root .agent-execution-summary { flex-wrap: wrap; }
+  .agent-chat-root .agent-tool-group-calls { padding-left: 8px !important; margin-left: 4px; }
+}
+.agent-chat-root .agent-execution-failure-summary { color: #f59e0b !important; }
+.agent-chat-root .agent-tool-validation-error { margin: 8px 0 12px; padding: 10px 12px !important; border-left: 2px solid #f59e0b; color: #d7d7d7; background: #f59e0b0d; font-size: 12px; line-height: 1.55; }
+.agent-chat-root .agent-tool-validation-error strong { display: block; margin-bottom: 4px; color: #fbbf24; font-weight: 600; }
+.agent-chat-root .agent-tool-validation-error p { margin: 4px 0; color: #c8c8c8; overflow-wrap: anywhere; }
+.agent-chat-root .agent-tool-validation-error ul { margin: 6px 0; padding-left: 18px !important; }
+.agent-chat-root .agent-tool-validation-error code { color: #f0c674; font-size: 11px; }
+.agent-chat-root .agent-tool-validation-error span { color: #aaa; }
+.agent-chat-root .agent-tool-validation-error .agent-tool-validation-recovery { color: #aaa; }
+.agent-chat-root .agent-tool-validation-legacy { color: #999 !important; font-size: 11px; }

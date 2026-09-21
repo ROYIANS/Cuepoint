@@ -93,3 +93,14 @@ The home composer exposes only the conversation type (`Agent` / `任务`), the p
 ## Legacy atomic plan calls
 
 `update_run_plan` is atomic bookkeeping because the plan mutation and tool result commit in one transaction. Frozen old calls lacking the atomic flag may be upgraded only by the explicit `isLegacyAtomicPlanCall` predicate under the thread lock; startup recovery also inspects previously parked unknown plan calls so Resume becomes available. Do not generalize this repair to arbitrary bookkeeping, network effects or calls with a stored result. Existing completed results stay completed; transaction or result-serialization failures roll back both business state and ledger.
+
+
+## Actionable validation failures (2026-09-21)
+
+`validateToolCall` throws `ToolValidationError` for schema/JSON/size rejection. The saved tool result contains `code: INVALID_TOOL_ARGUMENTS`, `executed: false`, bounded `issues` and model-facing recovery guidance. Reject before preparation, approval or execution; preserve the original call/arguments. Safe issue output uses schema-owned field paths, numeric received values and fixed Chinese type labels, never raw input strings, unknown keys or arbitrary thrown messages. Maximum six issues.
+
+`business_read_text` uses a shared readable-path guard before execution. For episode text the script field is `story.script`; `limit` is an integer from 1 to 12000, with `nextOffset` pagination. The screenshot combination of `field: script` and `limit: 24000` returns both errors in one response. No silent argument correction or automatic retry is added. The model may issue a new corrected call; if other evidence suffices it is instructed to disclose the failed operation and relevant impact.
+
+An unparsed local-read snapshot uses `highRisk: false` only for failure presentation; this does not permit execution. A new valid call recomputes its risk and goes through the normal permission matrix. Other effects retain a conservative fallback. Unknown results remain distinct and cannot be automatically replayed.
+
+Error display and legacy revalidation follow [Agent Activity UI](./agent-activity-ui.md).

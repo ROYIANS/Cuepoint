@@ -593,13 +593,41 @@
   bottom: 0;
   left: 0;
   z-index: 11;
+  isolation: isolate;
   padding: 12px var(--agent-chat-safe-x, 16px) 16px;
   pointer-events: none;
-  background: linear-gradient(transparent, rgb(0 0 0 / 35%) 55%);
+  background: transparent;
+}
+
+/*
+ * Keep the bottom controls readable without exposing the last message behind
+ * the footer. This follows the header's background-only mask, with a deeper
+ * reach because the dock has two control rows below the composer card.
+ */
+.agent-chat-root .agent-composer-dock::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: -136px 0 -20px;
+  pointer-events: none;
+  background: #111;
+  -webkit-backdrop-filter: blur(22px);
+  backdrop-filter: blur(22px);
+  -webkit-mask: linear-gradient(to bottom, transparent 0, rgb(0 0 0 / 82%) 38%, #000 65%);
+  mask: linear-gradient(to bottom, transparent 0, rgb(0 0 0 / 82%) 38%, #000 65%);
+}
+
+.agent-chat-root .agent-composer-dock > .agent-content {
+  position: relative;
+  z-index: 1;
 }
 
 .agent-chat-root .agent-composer-dock .agent-content {
   pointer-events: auto;
+}
+
+.agent-chat-root .agent-composer-dock.is-expanded::before {
+  display: none;
 }
 
 /* Empty-streaming thinking: 3×3 square cells (~70% of prior 4×4 size). */

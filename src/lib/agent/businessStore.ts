@@ -144,9 +144,13 @@ export function bounded(value: unknown): { data: unknown; truncated: boolean } {
   if (JSON.stringify(result).length >= 60000) throw new Error("结果过大，请缩小范围或分页读取");
   return { data: result, truncated };
 }
+export function isReadableBusinessFieldPath(kind: BusinessKind, field: string): boolean {
+  const path = field.split(".");
+  return visibleFields[kind].includes(path[0]!) && path.length <= 3 && path.every((part) => part.length > 0 && !["extra", "__proto__", "constructor", "prototype"].includes(part));
+}
 function fieldAt(kind: BusinessKind, row: BusinessRow, field: string): unknown {
   const path = field.split(".");
-  if (!visibleFields[kind].includes(path[0]!) || path.length > 3 || path.some((part) => ["extra", "__proto__", "constructor", "prototype"].includes(part))) throw new Error("不是可读取的创作文本字段");
+  if (!isReadableBusinessFieldPath(kind, field)) throw new Error("不是可读取的创作文本字段");
   let value: unknown = projection(kind, row);
   for (const key of path) {
     if (!value || typeof value !== "object" || !Object.hasOwn(value, key)) throw new Error("文本字段不存在");

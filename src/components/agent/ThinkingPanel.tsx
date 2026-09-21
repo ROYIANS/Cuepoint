@@ -1,6 +1,6 @@
 import { Markdown } from "@lobehub/ui";
 import { ChevronDown } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { formatThinkingTitle } from "@/lib/thinkingTitle";
 
 const THINKING_MARKDOWN_PROPS = { variant: "chat" as const };
@@ -21,6 +21,7 @@ export function ThinkingPanel({
   durationMs?: number;
 }) {
   const [open, setOpen] = useState(active);
+  const panelId = useId();
   const prevActive = useRef(active);
 
   useEffect(() => {
@@ -38,6 +39,7 @@ export function ThinkingPanel({
         type="button"
         className="agent-thinking-header"
         aria-expanded={open}
+        aria-controls={panelId}
         onClick={() => setOpen((v) => !v)}
       >
         <span className="agent-thinking-title">{title}</span>
@@ -52,7 +54,7 @@ export function ThinkingPanel({
         />
       </button>
       {open ? (
-        <div className="agent-thinking-content">
+        <div id={panelId} className="agent-thinking-content">
           <Markdown {...THINKING_MARKDOWN_PROPS} className="agent-thinking-body">
             {reasoning}
           </Markdown>

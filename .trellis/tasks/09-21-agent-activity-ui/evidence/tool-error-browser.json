@@ -1,0 +1,8 @@
+{
+  "checks": [
+    "actual runtime sends both limit and field repair guidance to model, invalid read not high risk",
+    "completed collapsed header flags failure; expanded call explains both parameters without technical JSON",
+    "legacy generic invalid-argument record receives labelled local revalidation details"
+  ],
+  "errors": []
+}

@@ -55,7 +55,7 @@ export function snapChatToBottom(el: { scrollHeight: number; scrollTop: number }
 - **User intent**: `onScroll` updates `stickToBottom` via `isChatNearBottom`. Wheel / drag that leaves more than 300px of room cancels follow until the user returns to the bottom.
 - **Layout settle**: `ResizeObserver` on `.agent-content` re-snaps while pinned (markdown / images growing). One `requestAnimationFrame` snap on thread change covers the first paint.
 - **History isolation**: Dexie `useLiveQuery` will still tick the parent. `AgentChatMessageItem` compares `id/content/status/role/createdAt/reasoning/reasoningDurationMs` so completed rows skip ChatItem + markdown. Hoist `markdownProps` and avatar meta; do not allocate them in the map.
-- **Empty streaming**: while `status === "streaming"` and both `content` and `reasoning` are empty, `renderMessage` swaps in `ThinkingMatrix` (3×3 square cells; per-column length-2 snakes in order 1→2→3, bounce at top, may exit bottom; ~220ms tick); pass `message=""` so EditableMessage does not coerce a React node. Avatar `loading` stays on until the first answer token — ChatItem’s corner badge must be a hollow ring (transparent fill), not a solid `colorPrimary` disc. When `reasoning` is present, show `ThinkingPanel` above the answer instead of the matrix.
+- **Empty streaming**: while `status === "streaming"` and both `content` and `reasoning` are empty, `renderMessage` swaps in `ThinkingMatrix` (3×3 square cells; per-column length-2 snakes in order 1→2→3, bounce at top, may exit bottom; ~220ms tick); pass `message=""` so EditableMessage does not coerce a React node. Avatar `loading` stays on until the first answer token — ChatItem’s corner badge must be a hollow ring (transparent fill), not a solid `colorPrimary` disc. For run-backed messages, the execution process owns the current public reasoning/content and working indicator; the standalone matrix/ThinkingPanel path remains for legacy messages without a run.
 - **Avatars**: user = `boring-avatars` default export, stable `name={PRODUCT_NAME_EN}`; assistant = `LOGO_SRC`. Memo the React node once per list.
 
 ---
@@ -133,3 +133,8 @@ if (stickToBottom.current) snapChatToBottom(listEl);
 `ChatWorkspace` dynamically loads `MessageList` only when the current thread has messages. The empty welcome/composer and task board must not eagerly load Markdown's diagram/math/syntax dependencies. Suspense occupies the same transcript container with a Chinese loading status. This boundary never remounts `AgentChatPage` or owns a run: generation continues while the transcript module loads. Once mounted, the existing scroll, ResizeObserver and memo contracts above remain unchanged.
 
 The full vendor icon catalog is a separate lazy module behind `ModelIcons`; keep named re-exports in `ModelIconCatalog` so dynamic import does not retain every unrelated package export. The icon fallback reserves the requested dimensions and is decorative. Provider and model names remain visible while icons load.
+
+
+## Execution and turn navigation
+
+See [Agent Activity UI](./agent-activity-ui.md). Timers live in a small label component, never the list. Manual disclosure, required-action navigation and turn jumps pause automatic following. The rail derives active position inside its own component; it must not put per-scroll state into MessageList or remount message bodies. Keep batch review surfaces mounted while process content is hidden.

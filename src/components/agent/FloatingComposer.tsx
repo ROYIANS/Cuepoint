@@ -218,7 +218,7 @@ export function FloatingComposer({
 
   return (
     <div className={`agent-composer-stack${expanded ? " is-expanded" : ""}`}>
-      {status && !expanded ? <div className="agent-composer-status">{status}</div> : null}
+      {status ? <div className="agent-composer-status">{status}</div> : null}
     <div className={`agent-composer agent-composer-refined${dragging ? " reference-dragging" : ""}`}
       onDragOver={(event) => { if (event.dataTransfer.types.includes("Files")) { event.preventDefault(); setDragging(true); } }}
       onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDragging(false); }}

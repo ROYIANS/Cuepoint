@@ -11,7 +11,7 @@ import type { AgentToolContext, AgentToolDefinition } from "./tools";
 import type { AgentToolPreview } from "@/domain/agent";
 import * as s from "./businessSchemas";
 import { bounded, getRow, listRows, navigation, projection, summarize, targetRevision, ownerSnapshot, mediaUsage, mediaRetention, assetMediaDependencies,
-  requireOwner, requireEpisode, readTables, textAt, relationsAt, BUSINESS_LABELS, type AssetKind, type BusinessKind, type BusinessRow } from "./businessStore";
+  requireOwner, requireEpisode, readTables, textAt, relationsAt, isReadableBusinessFieldPath, BUSINESS_LABELS, type AssetKind, type BusinessKind, type BusinessRow } from "./businessStore";
 
 type PreviewState = { state: unknown; target?: AgentToolPreview["target"]; changes: string[] };
 const fieldLabels: Record<string, string> = { mode: "作品模式", count: "数量", includeShots: "同时复制镜头", name: "名称", brief: "创作简述", genre: "类型", audience: "受众", tone: "基调", aspectPreset: "画幅", defaultStyleId: "默认风格", generationDefaults: "生成默认参数", logline: "一句话梗概", setting: "世界设定", coverMediaId: "封面", defaultDurationSec: "默认镜头时长", autoIncrementShotNumber: "自动递增镜号", title: "标题", script: "剧本", content: "内容", timeOfDay: "时段", characterIds: "角色", sceneId: "场景", propIds: "道具", styleId: "风格", inheritStyle: "继承项目风格", shotNumber: "镜号", status: "状态", durationSec: "时长（秒）", notes: "备注", category: "类别", sceneCloseup: "景别", sound: "声音", emotion: "情绪", cameraAngle: "机位", cameraGear: "器材", focalLength: "焦距", beatId: "所属场次", bio: "简介", appearance: "外观", personality: "性格", motivation: "动机", voice: "声音表达", location: "地点", atmosphere: "氛围", geography: "空间布局", lighting: "光线", kind: "类型", material: "材质", size: "尺寸", usage: "使用方式", continuity: "连续性", palette: "色彩", lens: "镜头气质", composition: "构图", negativePrompt: "避免出现", prompt: "画面描述", referenceImageIds: "参考图片", referenceVideoIds: "参考视频", result: "结果素材" };
@@ -121,6 +121,16 @@ async function deletePreview(kind: BusinessKind, args: { id: string; ownerId: st
 
 const searchSpec = s.object({ kind: s.entityKind, ownerId: s.optional(s.id), episodeId: s.optional(s.id), query: s.optional(s.text(200)), ...s.page });
 const detailSpec = s.object({ kind: s.entityKind, ownerId: s.optional(s.id), episodeId: s.optional(s.id), id: s.id });
+const readTextBaseSpec = s.object({ kind: s.entityKind, ownerId: s.optional(s.id), episodeId: s.optional(s.id), id: s.id, field: s.text(100, 1), offset: s.optional(s.number(0, 10000000, true)), limit: s.optional(s.number(1, 12000, true)) });
+const readTextSpec = {
+  ...readTextBaseSpec,
+  schema: readTextBaseSpec.schema.superRefine((args, context) => {
+    if (!isReadableBusinessFieldPath(args.kind, args.field)) context.addIssue({
+      code: "custom", path: ["field"], message: "不是可读取的创作文本字段",
+      params: { diagnosticCode: args.kind === "episode" && args.field === "script" ? "episode_script_path" : "business_field_path" },
+    });
+  }),
+};
 const reads = [
   readTool("business_search", "查询创作资料", "按类型、明确归属和关键词查询项目、分集、场次、镜头、角色、场景、道具、风格或素材。除项目列表外必须提供 ownerId，工作室资产用 studio。结果仅候选，不根据同名结果自动操作；offset/limit 分页，最多50项。", searchSpec, async (args, context) => {
     const query = args.query?.trim().toLocaleLowerCase();
@@ -147,7 +157,7 @@ const reads = [
     const ids = relationsAt(args.kind, row, args.field), offset = args.offset ?? 0, limit = args.limit ?? 50;
     return { id: row.id, field: args.field, ids: ids.slice(offset, offset + limit), total: ids.length, nextOffset: offset + limit < ids.length ? offset + limit : null, revision: targetRevision(row) };
   }),
-  readTool("business_read_text", "分段读取创作文本", "读取详情中的文本字段，支持 story.script、story.logline、setting.worldview、slots.front.prompt 等点路径。每次最多12000字符，返回 totalLength/nextOffset；禁止内部扩展与文件字段。", s.object({ kind: s.entityKind, ownerId: s.optional(s.id), episodeId: s.optional(s.id), id: s.id, field: s.text(100, 1), offset: s.optional(s.number(0, 10000000, true)), limit: s.optional(s.number(1, 12000, true)) }), async (args) => {
+  readTool("business_read_text", "分段读取创作文本", "读取详情中的文本字段，支持 story.script、story.logline、setting.worldview、slots.front.prompt 等点路径。分集 episode 的剧本字段是 story.script，不是 script。每次最多12000字符，返回 totalLength/nextOffset；禁止内部扩展与文件字段。", readTextSpec, async (args) => {
     const row = await getRow(args.kind, args.id, args.ownerId, args.episodeId);
     const text = textAt(args.kind, row, args.field), offset = args.offset ?? 0, limit = args.limit ?? 6000;
     return { id: row.id, field: args.field, text: text.slice(offset, offset + limit), totalLength: text.length, nextOffset: offset + limit < text.length ? offset + limit : null, revision: targetRevision(row) };

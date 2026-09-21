@@ -19,6 +19,7 @@ import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFoo
 import { Button } from "@/components/ui/button";
 import { MediaPreview } from "@/components/media/MediaThumb";
 import { GenerationConfigurationFields } from "./GenerationReview";
+import { useAgentActivityNavigation } from "./AgentActivityNavigation";
 import "./generationBatch.css";
 
 type BatchDetail = Awaited<ReturnType<typeof readGenerationBatch>>;
@@ -59,9 +60,13 @@ export function AgentGenerationBatches({ runId }: { runId: string }) {
 }
 
 function BatchSurface({ batch, parentReadError }: { batch: GenerationBatch; parentReadError: boolean }) {
+  const { request } = useAgentActivityNavigation();
   const last = useRef<BatchDetail | undefined>(undefined);
   const [readAttempt, setReadAttempt] = useState(0);
   const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (request?.runId === batch.runId && request.batchId === batch.id) setOpen(true);
+  }, [request, batch.runId, batch.id]);
   const [inspecting, setInspecting] = useState(false);
   const [local, setLocal] = useState<{ revision: number; edits: DraftEdit[] } | null>(null);
   const [expanded, setExpanded] = useState<string>();

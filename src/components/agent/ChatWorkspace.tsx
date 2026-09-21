@@ -1,4 +1,5 @@
 import type { RunAction } from "./AgentRunDetails";
+import { useAgentActivityNavigation } from "./AgentActivityNavigation";
 import type { AgentRun } from "@/domain/agent";
 import { ActionIcon, Flexbox } from "@lobehub/ui";
 import { ChatHeader, ChatHeaderTitle } from "@lobehub/ui/chat";
@@ -96,6 +97,10 @@ export function ChatWorkspace({
   onDeleteThread: (thread: ChatThread) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const { request: activityRequest } = useAgentActivityNavigation();
+  useLayoutEffect(() => {
+    if (activityRequest) setExpanded(false);
+  }, [activityRequest]);
   const dockRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     const dock = dockRef.current;

@@ -6,9 +6,10 @@ import { TASK_TOOLS } from "./taskTools";
 import { GENERATION_TOOLS } from "./generationTools";
 import { BUSINESS_TOOLS } from "./businessTools";
 import { z } from "zod";
+import { ToolValidationError, toolArgumentError } from "./toolErrors";
 import { db } from "@/db/database";
 import { updateRunPlanAndComplete } from "@/db/agentTools";
-import type { AgentPermissionMode, AgentPlanItem, AgentToolEffect, AgentToolSchema, AgentToolPreview } from "@/domain/agent";
+import type { AgentPermissionMode, AgentPlanItem, AgentToolEffect, AgentToolSchema, AgentToolPreview, AgentToolCall } from "@/domain/agent";
 
 export interface AgentToolContext { projectId?: string; runId: string; threadId: string; callId: string; signal: AbortSignal; preview?: AgentToolPreview }
 export interface AgentToolDefinition {
@@ -67,8 +68,16 @@ export function toolSchemas(names: readonly string[], registry: readonly AgentTo
 export function validateToolCall(name: string, raw: string, enabled: readonly string[], registry: readonly AgentToolDefinition[] = BUILTIN_TOOLS) {
   const tool = registry.find((item) => item.name === name);
   if (!enabled.includes(name) || !tool) throw new Error("模型请求了未启用或未知的工具");
-  if (raw.length > 32_768) throw new Error("工具参数超过大小限制");
+  if (raw.length > 32_768) throw new ToolValidationError(tool.title, name, [{ path: "参数", constraint: "工具参数超过大小限制，最多 32768 个字符", received: raw.length }]);
   let args: unknown;
-  try { args = tool.parseArguments(JSON.parse(raw)); } catch { throw new Error(`工具 ${tool.title} 的参数无效`); }
+  let parsed: unknown;
+  try { parsed = JSON.parse(raw); args = tool.parseArguments(parsed); } catch (cause) { throw toolArgumentError(tool.title, name, tool.parameters, parsed, cause); }
   return { tool, args };
+}
+
+/** Supplement known legacy validation failures without rewriting their saved history. */
+export function getLegacyToolValidationFailure(call: Pick<AgentToolCall, "name" | "title" | "status" | "error" | "arguments">) {
+  if (call.status !== "failed" || call.error !== `工具 ${call.title} 的参数无效`) return;
+  try { validateToolCall(call.name, call.arguments, [call.name]); }
+  catch (error) { if (error instanceof ToolValidationError) return error.failure; }
 }

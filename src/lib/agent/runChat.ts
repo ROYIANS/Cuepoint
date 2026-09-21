@@ -4,7 +4,7 @@ import { continuationExtraTokens } from "./contextCompaction";
 import { refreshRunMemoryContext } from "./memoryContext";
 import { refreshRunProjectContext } from "./projectContext";
 import { frozenProjectScope } from "./projectScope";
-import { ToolPendingError } from "./toolErrors";
+import { ToolPendingError, ToolValidationError } from "./toolErrors";
 import { prepareRunContext } from "./contextCompaction";
 import { streamResponses, type ResponsesResult } from "@/lib/ai/responsesStream";
 import { db } from "@/db/database";
@@ -66,7 +66,7 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
     try { await frozenProjectScope({runId:run.id,threadId:run.threadId,callId:call.id,signal:controller.signal,projectId:run.projectId}); validated = validateToolCall(call.name, effectiveToolInput(call).arguments, run.enabledToolNames ?? [], registry); }
     catch (error) {
       const message = error instanceof Error ? error.message : "工具参数无效";
-      await transitionToolCall(run.id, call.id, ["pending", "approved"], "failed", { error: message, result: JSON.stringify({ error: message }) });
+      await transitionToolCall(run.id, call.id, ["pending", "approved"], "failed", { error: message, result: JSON.stringify(error instanceof ToolValidationError ? error.failure : { error: message }) });
       continue;
     }
     const { tool, args } = validated;
@@ -178,11 +178,11 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
       const details = result.toolCalls.map((call) => {
         const tool = registry.find((item) => item.name === call.function.name);
         if (!tool) throw new Error("未知工具");
-        let highRisk = true;
+        let highRisk = tool.effect !== "read";
         try { highRisk = tool.highRisk(tool.parseArguments(JSON.parse(call.function.arguments))); } catch { /* Invalid arguments are recorded then rejected before execution. */ }
         return { title: tool.title, effect: tool.effect, highRisk, ...(tool.atomic ? { atomic: true } : {}), ...(tool.recovery ? { recovery: tool.recovery } : {}), ...(tool.requiresConfirmation ? { requiresConfirmation: true } : {}) };
       });
-      await saveToolRound(run.id, result.content, result.toolCalls, details, result.responseOutput);
+      await saveToolRound(run.id, result.content, result.toolCalls, details, result.responseOutput, output());
       run = (await db.agentRuns.get(run.id))!;
       controller.signal.throwIfAborted();
       if (!await executePendingTools(run, controller, registry)) return;

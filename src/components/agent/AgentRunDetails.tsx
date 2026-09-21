@@ -1,16 +1,24 @@
+import { CreatedEntityLinks } from "./CreatedEntityLinks";
 import { WebResearchSources } from "./WebResearchSources";
 import { ProjectImageSources } from "./ProjectImageSources";
 import { GenerationReview } from "./GenerationReview";
 import { AgentGenerationResults } from "./AgentGenerationResults";
 import { Link } from "@tanstack/react-router";
-import { useId, useState } from "react";
-import { useLiveQuery } from "dexie-react-hooks";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { Markdown } from "@lobehub/ui";
 import { Check, ChevronDown, Circle, CircleAlert, LoaderCircle, ShieldQuestion, Wrench } from "lucide-react";
-import { db } from "@/db/database";
 import { canResumeAgentRun } from "@/db/agentTools";
 import type { AgentRun, AgentToolCall } from "@/domain/agent";
 import { MODEL_STEPS_PER_SEGMENT } from "@/domain/agent";
 import { Button } from "@/components/ui/button";
+import type { ChatMessage } from "@/domain/types";
+import { buildRunActivity, formatRunElapsed, getRunElapsedMs, isPersistedToolRound } from "@/lib/agent/runPresentation";
+import { readToolValidationFailure, type ToolValidationFailure } from "@/lib/agent/toolErrors";
+import { ThinkingPanel } from "./ThinkingPanel";
+import { useAgentActivityNavigation } from "./AgentActivityNavigation";
+import "./executionActivity.css";
+
+const MARKDOWN_PROPS = { variant: "chat" } as const;
 
 export type RunAction = "resume" | "cancel" | "approve" | "reject";
 const STATUS: Record<AgentToolCall["status"], string> = {
@@ -29,94 +37,207 @@ function StepIcon({ status }: { status: AgentToolCall["status"] }) {
   return <Circle size={15} />;
 }
 
-export function CreatedEntityLinks({ call, includePreview = false }: { call: AgentToolCall; includePreview?: boolean }) {
-  if (call.status !== "completed" || call.effect !== "write" || !call.result) return null;
-  let result: unknown;
-  try { result = JSON.parse(call.result); } catch { return null; }
-  if (!result || typeof result !== "object") return null;
-  const items = "items" in result && Array.isArray(result.items) ? result.items : [result];
-  const links = new Map<string, string>();
-  for (const item of items.slice(0, 20)) {
-    if (!item || typeof item !== "object" || !("target" in item)) continue;
-    const target = item.target;
-    if (!target || typeof target !== "object" || !("href" in target) || !("label" in target)) continue;
-    if (typeof target.href !== "string" || !/^\/(?!\/)/.test(target.href) || typeof target.label !== "string") continue;
-    if (includePreview || target.href !== call.preview?.target?.href) links.set(target.href, target.label);
-  }
-  if (!links.size) return null;
-  return <div className="agent-change-results">{[...links].map(([href, label]) => <Link key={href} to={href} className="agent-change-link">查看{label} ↗</Link>)}</div>;
+/** Only this tiny label ticks; historical markdown never rerenders for the clock. */
+function RunElapsed({ run }: { run: AgentRun }) {
+  const [now, setNow] = useState(Date.now);
+  useEffect(() => {
+    if (run.status !== "running") return;
+    setNow(Date.now());
+    const timer = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, [run.status]);
+  return <span title="本轮经过时间，包含等待确认的时间">用时 {formatRunElapsed(getRunElapsedMs(run, now))}</span>;
 }
 
-export function AgentRunDetails({ run, busy, readOnly, onAction }: {
-  run: AgentRun;
-  busy: boolean;
-  readOnly?: boolean;
+function validationFailure(call: AgentToolCall): ToolValidationFailure | undefined {
+  if (call.status !== "failed") return undefined;
+  return readToolValidationFailure(call.result);
+}
+
+function ValidationFailureNotice({ failure, legacy }: { failure: ToolValidationFailure; legacy?: boolean }) {
+  return <div className="agent-tool-validation-error" role="alert">
+    <strong>参数校验失败，操作未执行</strong>
+    {legacy && <p className="agent-tool-validation-legacy">历史记录补充：按当前工具规则复核，以下诊断不代表当时返回内容。</p>}
+    <ul>{failure.issues.map((issue, index) => <li key={`${issue.path}-${index}`}><code>{issue.path}</code>：{issue.constraint}{issue.received !== undefined && <span>（收到 {String(issue.received)}）</span>}</li>)}</ul>
+    <p className="agent-tool-validation-recovery">
+      此次操作未执行，也未产生结果。助手应修正上述参数后重新调用；若依据其他资料回答，需要说明缺失信息对结论的影响。
+      {failure.issues.some((issue) => /limit|offset/i.test(issue.path)) && " 如需读取较长内容，请按 nextOffset 分页读取，每次请求保持在单次上限内。"}
+    </p>
+  </div>;
+}
+
+function ToolCallRow({ run, call, busy, readOnly, unknown, executing, onAction }: {
+  run: AgentRun; call: AgentToolCall; busy: boolean; readOnly?: boolean;
+  unknown: boolean; executing: boolean;
   onAction: (runId: string, action: RunAction, callId?: string) => void;
 }) {
-  const calls = useLiveQuery(() => db.agentToolCalls.where("runId").equals(run.id).toArray(), [run.id]);
-  const [expanded, setExpanded] = useState(false);
+  const { request } = useAgentActivityNavigation();
+  const [open, setOpen] = useState(call.status === "awaiting_approval" || call.status === "unknown");
   const panelId = useId();
-  const ordered = [...(calls ?? [])].sort((a, b) => a.step - b.step || a.order - b.order);
-  const unknown = ordered.some((call) => call.status === "unknown");
-  const executing = ordered.some((call) => call.status === "running");
-  const pendingApproval = ordered.some((call) => call.status === "awaiting_approval");
+  useEffect(() => {
+    if (request?.runId === run.id && request.callId === call.id) setOpen(true);
+  }, [request, run.id, call.id]);
   const recoverable = canResumeAgentRun(run);
-  const needsAttention = pendingApproval || unknown || recoverable || ordered.some((call) => call.status === "failed");
-  const open = expanded || needsAttention;
-  if (!run.hasToolCalls && !run.plan?.length) return null;
-  const completed = ordered.filter((call) => call.status === "completed").length;
-  const budgetPaused = run.status === "interrupted" && run.pauseReason === "model_step_limit";
-  const label = pendingApproval ? "有操作需要你批准" : unknown ? "有操作结果需要核实" : budgetPaused ? `执行已暂停 · 已完成 ${completed} 步` : run.status === "running" ? `正在执行 · ${completed}/${ordered.length} 步` : `已完成 ${completed}/${ordered.length} 步`;
-  return (
-    <section className="agent-run-activity" aria-label="执行步骤">
-      <button type="button" className="agent-run-summary" aria-expanded={open} aria-controls={panelId}
-        aria-disabled={needsAttention} onClick={() => { if (!needsAttention) setExpanded(!expanded); }}>
-        <Wrench size={15} aria-hidden /><span>{label}</span><ChevronDown size={14} className={open ? "rotate-180" : ""} aria-hidden />
-      </button>
-      <AgentGenerationResults runId={run.id} />
-      {open && <div id={panelId} className="agent-run-steps">
-        {run.plan && run.plan.length > 0 && <ol className="agent-run-plan" aria-label="本次执行计划">
-          {run.plan.map((step) => <li key={step.id}>
-            <StepIcon status={step.status === "completed" ? "completed" : step.status === "in_progress" ? "running" : "pending"} />
-            <span>{step.title}<small>{step.status === "completed" ? "已完成" : step.status === "in_progress" ? "进行中" : "待办"}</small></span>
-          </li>)}
-        </ol>}
-        {ordered.map((call) => {
-          const reviewGeneration = !readOnly && call.name === "submit_generation" && call.status === "awaiting_approval" && recoverable && !unknown && !executing;
-          const preview = call.generationOverride?.preview ?? call.preview;
-          return <div key={call.id} className="agent-run-step">
-          <details open={call.status === "awaiting_approval" || call.status === "failed" || call.status === "unknown" ? true : undefined}>
-            <summary><StepIcon status={call.status} /><span>{call.title}</span><small>{STATUS[call.status]}</small><ChevronDown size={12} className="agent-step-chevron" aria-hidden /></summary>
-            <div className="agent-step-payload">
-              <p>{EFFECT[call.effect]}{call.highRisk ? " · 高风险操作" : ""}</p>
-              {reviewGeneration ? <GenerationReview call={call} busy={busy} onAction={onAction} /> : preview && <div className="agent-change-preview">
-                <strong>{preview.summary}</strong>
-                {preview.changes.length > 0 && <ul>{preview.changes.map((change, index) => <li key={index}>{change}</li>)}</ul>}
-                {preview.target && /^\/(?!\/)/.test(preview.target.href) && <Link to={preview.target.href} className="agent-change-link">查看{preview.target.label} ↗</Link>}
-              </div>}
-              <WebResearchSources call={call} />
-              <ProjectImageSources call={call} />
-              <details className="agent-step-technical">
-                <summary>参数与返回结果</summary>
-                <div className="agent-step-payload-label">AI 原始参数</div><pre>{call.arguments}</pre>
-                {call.generationOverride && <><div className="agent-step-payload-label">用户确认的参数</div><pre>{call.generationOverride.arguments}</pre></>}
-                {call.result && <><div className="agent-step-payload-label">返回结果</div><pre>{call.result}</pre></>}
-              </details>
-              {call.error && <p className="text-destructive">{call.error}</p>}
-            </div>
-          </details>
-          <CreatedEntityLinks call={call} />
-          {!readOnly && !reviewGeneration && call.status === "awaiting_approval" && recoverable && !unknown && !executing && <div className="agent-step-actions">
-            <Button size="sm" disabled={busy} onClick={() => onAction(run.id, "approve", call.id)}>批准此次操作</Button>
-            <Button size="sm" variant="outline" disabled={busy} onClick={() => onAction(run.id, "reject", call.id)}>拒绝</Button>
-          </div>}
-        </div>; })}
-        {unknown && <p role="status" className="text-xs text-amber-500">上次操作的结果尚未确认，为避免重复执行，已暂停自动接续。请先核实已有结果，再结束本次执行。</p>}
-        {!readOnly && recoverable && <div className="agent-step-actions">
-          {!unknown && !pendingApproval && <Button size="sm" variant="outline" disabled={busy} onClick={() => onAction(run.id, "resume")}>{budgetPaused ? `继续执行 · 最多 ${MODEL_STEPS_PER_SEGMENT} 轮` : "从已保存的步骤继续"}</Button>}
-          <Button size="sm" variant="ghost" disabled={busy} onClick={() => onAction(run.id, "cancel")}>结束本次执行</Button>
+  const reviewGeneration = !readOnly && call.name === "submit_generation" && call.status === "awaiting_approval" && recoverable && !unknown && !executing;
+  const preview = call.generationOverride?.preview ?? call.preview;
+  const [legacyValidation, setLegacyValidation] = useState<ToolValidationFailure | undefined>();
+  const structuredValidation = useMemo(() => validationFailure(call), [call.status, call.result]);
+  useEffect(() => {
+    let cancelled = false;
+    if (!structuredValidation && call.status === "failed" && call.error?.includes("参数无效")) {
+      void import("@/lib/agent/tools").then(({ getLegacyToolValidationFailure }) => {
+        if (!cancelled) setLegacyValidation(getLegacyToolValidationFailure(call));
+      });
+    } else setLegacyValidation(undefined);
+    return () => { cancelled = true; };
+  }, [call, structuredValidation]);
+  const validation = structuredValidation ?? legacyValidation;
+  const isLegacyValidation = !structuredValidation && Boolean(legacyValidation);
+  return <div className="agent-run-step" data-activity-call={call.id}>
+    <button type="button" className="agent-tool-call-toggle" aria-expanded={open} aria-controls={panelId} onClick={() => setOpen((value) => !value)}>
+      <StepIcon status={call.status} /><span>{call.title}</span><small>{STATUS[call.status]}</small><ChevronDown size={12} className={open ? "rotate-180" : ""} aria-hidden />
+    </button>
+    <div id={panelId} hidden={!open}>
+      <div className="agent-step-payload">
+        <p>{EFFECT[call.effect]}{validation ? " · 未执行" : call.highRisk ? " · 高风险操作" : ""}</p>
+        {validation && <ValidationFailureNotice failure={validation} legacy={isLegacyValidation} />}
+        {reviewGeneration ? <GenerationReview call={call} busy={busy} onAction={onAction} /> : preview && <div className="agent-change-preview">
+          <strong>{preview.summary}</strong>
+          {preview.changes.length > 0 && <ul>{preview.changes.map((change, index) => <li key={index}>{change}</li>)}</ul>}
+          {preview.target && /^\/(?!\/)/.test(preview.target.href) && <Link to={preview.target.href} className="agent-change-link">查看{preview.target.label} ↗</Link>}
         </div>}
+        <WebResearchSources call={call} />
+        <ProjectImageSources call={call} />
+        <details className="agent-step-technical">
+          <summary>参数与返回结果</summary>
+          <div className="agent-step-payload-label">AI 原始参数</div><pre>{call.arguments}</pre>
+          {call.generationOverride && <><div className="agent-step-payload-label">用户确认的参数</div><pre>{call.generationOverride.arguments}</pre></>}
+          {call.result && <><div className="agent-step-payload-label">返回结果</div><pre>{call.result}</pre></>}
+        </details>
+        {call.error && !validation && <p className="text-destructive">{call.error}</p>}
+      </div>
+      <CreatedEntityLinks call={call} />
+      {!readOnly && !reviewGeneration && call.status === "awaiting_approval" && recoverable && !unknown && !executing && <div className="agent-step-actions">
+        <Button size="sm" disabled={busy} onClick={() => onAction(run.id, "approve", call.id)}>批准此次操作</Button>
+        <Button size="sm" variant="outline" disabled={busy} onClick={() => onAction(run.id, "reject", call.id)}>拒绝</Button>
       </div>}
-    </section>
-  );
+    </div>
+  </div>;
+}
+
+function ToolGroup({ calls, ...props }: Omit<Parameters<typeof ToolCallRow>[0], "call"> & { calls: AgentToolCall[] }) {
+  const { request } = useAgentActivityNavigation();
+  const [open, setOpen] = useState(false);
+  const panelId = useId();
+  const handledRequest = useRef<number | undefined>(undefined);
+  useEffect(() => {
+    if (request?.runId === props.run.id && request.callId && calls.some((call) => call.id === request.callId) && handledRequest.current !== request.key) {
+      handledRequest.current = request.key;
+      setOpen(true);
+    }
+  }, [request, props.run.id, calls]);
+  const running = calls.some((call) => call.status === "running");
+  const attention = calls.some((call) => call.status === "awaiting_approval" || call.status === "unknown");
+  const failed = calls.filter((call) => call.status === "failed").length;
+  const titles = [...new Set(calls.map((call) => call.title))];
+  const label = titles.slice(0, 2).join("、") + (titles.length > 2 ? "等" : "");
+  return <div className="agent-tool-group">
+    <button type="button" className="agent-tool-group-toggle" aria-expanded={open} aria-controls={panelId} onClick={() => setOpen((value) => !value)}>
+      {running ? <LoaderCircle size={14} className="animate-spin motion-reduce:animate-none" aria-hidden /> : <Wrench size={14} aria-hidden />}
+      <span>{label}</span><small>{calls.length} 项{attention ? " · 待处理" : failed ? ` · 含 ${failed} 项失败` : running ? " · 执行中" : ""}</small><ChevronDown size={12} className={open ? "rotate-180" : ""} aria-hidden />
+    </button>
+    <div id={panelId} className="agent-tool-group-calls" hidden={!open}>
+      {calls.map((call) => <ToolCallRow key={call.id} {...props} call={call} />)}
+    </div>
+  </div>;
+}
+
+export function AgentRunDetails({ run, message, calls, busy, readOnly, onAction }: {
+  run: AgentRun; message: ChatMessage; calls: AgentToolCall[];
+  busy: boolean; readOnly?: boolean;
+  onAction: (runId: string, action: RunAction, callId?: string) => void;
+}) {
+  const { request } = useAgentActivityNavigation();
+  const [expanded, setExpanded] = useState(run.status === "running");
+  const [hasExpanded, setHasExpanded] = useState(run.status === "running");
+  const previousStatus = useRef(run.status);
+  const sectionRef = useRef<HTMLElement>(null);
+  const positionedRequest = useRef<number | undefined>(undefined);
+  const panelId = useId();
+  const activity = useMemo(() => buildRunActivity(run, calls), [run, calls]);
+  const unknown = calls.some((call) => call.status === "unknown");
+  const executing = calls.some((call) => call.status === "running");
+  const pendingApproval = calls.some((call) => call.status === "awaiting_approval");
+  const recoverable = canResumeAgentRun(run);
+  const persisted = isPersistedToolRound(run, message, calls);
+  const currentReasoning = persisted ? "" : message.reasoning?.trim();
+  const currentContent = run.status === "running" && !persisted ? message.content : "";
+  const reasoningActive = run.status === "running" && !!currentReasoning && !currentContent;
+  const budgetPaused = run.status === "interrupted" && run.pauseReason === "model_step_limit";
+  const failedCount = calls.filter((call) => call.status === "failed").length;
+  const statusLabel = pendingApproval ? "待你批准" : unknown ? "结果待核实" : run.status === "running" ? "处理中" : run.status === "waiting_approval" ? "等待确认" : run.status === "interrupted" ? "已暂停" : run.status === "cancelled" ? "已停止" : run.status === "failed" ? "执行失败" : "";
+
+  useEffect(() => { if (expanded) setHasExpanded(true); }, [expanded]);
+
+  useEffect(() => {
+    if (previousStatus.current !== run.status) {
+      // Transition only: database updates must never undo a manual toggle.
+      if (run.status === "running") setExpanded(true);
+      else if (["completed", "cancelled", "failed", "interrupted"].includes(run.status)) setExpanded(false);
+      previousStatus.current = run.status;
+    }
+  }, [run.status]);
+
+  useEffect(() => {
+    if (request?.runId !== run.id || positionedRequest.current === request.key) return;
+    setExpanded(true);
+    if (request.callId && !calls.some((call) => call.id === request.callId)) return;
+    const frame = requestAnimationFrame(() => {
+      const section = sectionRef.current;
+      if (!section) return;
+      positionedRequest.current = request.key;
+      const target = request.callId
+        ? [...section.querySelectorAll<HTMLElement>("[data-activity-call]")].find((element) => element.dataset.activityCall === request.callId) ?? section
+        : section;
+      const list = section.closest<HTMLElement>(".agent-message-list");
+      if (list) list.scrollTop += target.getBoundingClientRect().top - list.getBoundingClientRect().top - 64;
+      // Batch dialog manages its own focus. Approval/recovery navigation focuses the visible control.
+      if (!request.batchId) target.querySelector<HTMLElement>("button:not([disabled])")?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [request, run.id, calls]);
+
+  return <section ref={sectionRef} className="agent-run-activity agent-execution-activity" aria-label="执行过程" data-activity-run={run.id}>
+    <button type="button" className="agent-run-summary agent-execution-summary" aria-expanded={expanded} aria-controls={panelId} onClick={() => setExpanded((value) => !value)}>
+      <RunElapsed run={run} /><ChevronDown size={14} className={expanded ? "rotate-180" : ""} aria-hidden />
+      {statusLabel && <small>{statusLabel}</small>}
+      {failedCount > 0 && <small className="agent-execution-failure-summary">含 {failedCount} 项失败</small>}
+    </button>
+    <div id={panelId} className="agent-execution-timeline" hidden={!expanded}>
+      {(expanded || hasExpanded) && <>
+      {activity.map((item) => item.kind === "text"
+        ? <Markdown key={item.id} {...MARKDOWN_PROPS} className="agent-activity-narrative">{item.content}</Markdown>
+        : item.kind === "reasoning"
+          ? <ThinkingPanel key={item.id} reasoning={item.content} active={false} durationMs={item.durationMs} />
+          : <ToolGroup key={item.id} calls={item.calls} run={run} busy={busy} readOnly={readOnly} unknown={unknown} executing={executing} onAction={onAction} />)}
+      {currentReasoning && <ThinkingPanel reasoning={currentReasoning} active={reasoningActive} durationMs={message.reasoningDurationMs} />}
+      {currentContent && <Markdown {...MARKDOWN_PROPS} className="agent-activity-narrative">{currentContent}</Markdown>}
+      {run.status === "running" && <div className="agent-activity-working" role="status"><LoaderCircle size={12} className="animate-spin motion-reduce:animate-none" aria-hidden /><span>{executing ? "正在执行工具" : currentContent ? "正在撰写" : "正在思考"}</span></div>}
+      {run.plan && run.plan.length > 0 && <details className="agent-activity-plan">
+        <summary>执行计划 · {run.plan.filter((step) => step.status === "completed").length}/{run.plan.length}<ChevronDown size={12} aria-hidden /></summary>
+        <ol className="agent-run-plan" aria-label="本次执行计划">{run.plan.map((step) => <li key={step.id}>
+          <StepIcon status={step.status === "completed" ? "completed" : step.status === "in_progress" ? "running" : "pending"} />
+          <span>{step.title}<small>{step.status === "completed" ? "已完成" : step.status === "in_progress" ? "进行中" : "待办"}</small></span>
+        </li>)}</ol>
+      </details>}
+      </>}
+      {/* Keep mounted: review dialogs own unsaved drafts and navigation guards. */}
+      <AgentGenerationResults runId={run.id} />
+      {unknown && <p role="status" className="text-xs text-amber-500">上次操作的结果尚未确认，为避免重复执行，已暂停自动接续。请先核实已有结果，再结束本次执行。</p>}
+      {!readOnly && recoverable && <div className="agent-step-actions">
+        {!unknown && !pendingApproval && <Button size="sm" variant="outline" disabled={busy} onClick={() => onAction(run.id, "resume")}>{budgetPaused ? `继续执行 · 最多 ${MODEL_STEPS_PER_SEGMENT} 轮` : "从已保存的步骤继续"}</Button>}
+        <Button size="sm" variant="ghost" disabled={busy} onClick={() => onAction(run.id, "cancel")}>结束本次执行</Button>
+      </div>}
+    </div>
+  </section>;
 }

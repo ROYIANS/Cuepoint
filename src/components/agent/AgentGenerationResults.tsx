@@ -16,9 +16,9 @@ const TARGETS = { character: "角色", scene: "场景", prop: "道具", style: "
 /** Persistent job status stays visible even while the model waits or the run is paused. */
 export function AgentGenerationResults({ runId }: { runId: string }) {
   const jobs = useLiveQuery(() => db.agentGenerationJobs.where("runId").equals(runId).filter(job => !job.batchId).sortBy("createdAt"), [runId]);
-  if (!jobs?.length) return <AgentGenerationBatches runId={runId} />;
-  return <><AgentGenerationBatches runId={runId} /><div className="agent-generation-results" aria-label="生成素材">
-    {jobs.map((job) => {
+  // Keep the batch subtree stable when a single job appears or disappears: it owns review drafts.
+  return <><AgentGenerationBatches runId={runId} />{Boolean(jobs?.length) && <div className="agent-generation-results" aria-label="生成素材">
+    {jobs?.map((job) => {
       const Icon = job.kind === "image" ? Image : Video;
       const attention = ["unknown", "conflict", "failed"].includes(job.status);
       const working = ["submitting", "submitted", "running", "remote_completed", "downloading"].includes(job.status);
@@ -35,5 +35,5 @@ export function AgentGenerationResults({ runId }: { runId: string }) {
         <Link {...generationTargetDestination(job.target)} className="agent-change-link">查看{TARGETS[job.target.kind]} ↗</Link>
       </section>;
     })}
-  </div></>;
+  </div>}</>;
 }

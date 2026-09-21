@@ -1,0 +1,32 @@
+{
+  "checks": [
+    "completed process starts collapsed with final answer visible",
+    "chronological model narrative restored, repeated expand/collapse works",
+    "single-job insertion keeps open batch draft and SPA navigation protection",
+    "completed-run draft remains in composer; shortcut opens hidden batch review",
+    "expanded editor retains reminder and exits to reveal target",
+    "live elapsed increments, completion collapses once, final clock freezes, DB refresh preserves manual expansion",
+    "approval shortcut reveals exact call; awaiting action still permits repeated call/process collapse",
+    "390px reminder visible with no horizontal page overflow",
+    "compact rail shows at most ten ticks and hovered neighbors form graded wave",
+    "all marks left-aligned; active and focused marks return to equal 6px length after hover leaves",
+    "12-turn rail hover previews matching question/answer; click highlights target and new tail does not steal reading position",
+    "rail keyboard Home/Enter/Escape and mobile click/outside-dismiss work without overflow",
+    "rail hidden for four turns and appears exactly at fifth turn"
+  ],
+  "errors": [],
+  "remote": [
+    {
+      "method": "GET",
+      "url": "https://fixture.test/v1/models?expand=category"
+    },
+    {
+      "method": "GET",
+      "url": "https://fixture.test/v1/models?expand=category"
+    },
+    {
+      "method": "GET",
+      "url": "https://fixture.test/v1/models?expand=category"
+    }
+  ]
+}

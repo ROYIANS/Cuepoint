@@ -82,6 +82,14 @@ export interface AgentModelMetrics {
   usage?: AgentTokenUsage;
 }
 
+/** Public model output saved with a tool round; never opaque provider reasoning. */
+export interface AgentActivityStep {
+  step: number;
+  content: string;
+  reasoning?: string;
+  reasoningDurationMs?: number;
+}
+
 /** Frozen execution inputs. Credentials are resolved from the connector at dispatch. */
 export interface AgentRun {
   visionCapability?: AgentVisionCapability;
@@ -106,6 +114,7 @@ export interface AgentRun {
   protocol?: AgentProtocol;
   responseItems?: AgentResponseItem[];
   modelMetrics?: AgentModelMetrics[];
+  activitySteps?: AgentActivityStep[];
   usage?: AgentTokenUsage;
   outputTokensPerSecond?: number;
   connector: Pick<ConnectorConfig, "id" | "definitionId" | "baseUrl">;

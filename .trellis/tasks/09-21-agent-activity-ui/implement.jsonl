@@ -1,0 +1,5 @@
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "本次涉及的行为约束"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "本次涉及的行为约束"}
+{"file": ".trellis/spec/frontend/chat-performance.md", "reason": "本次涉及的行为约束"}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "本次涉及的行为约束"}
+{"file": ".trellis/spec/frontend/agent-batch-generation.md", "reason": "本次涉及的行为约束"}

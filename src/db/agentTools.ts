@@ -7,7 +7,7 @@ import { interruptedToolState, upgradeLegacyPlanCalls } from "./agentToolRecover
 import { validateTaskPlan, formatTaskPlan } from "@/lib/agent/taskState";
 import { db } from "@/db/database";
 import { MODEL_STEPS_PER_SEGMENT } from "@/domain/agent";
-import type { AgentPlanItem, AgentResponseItem, AgentRun, AgentToolCall, AgentWireToolCall, AgentToolPreview } from "@/domain/agent";
+import type { AgentPlanItem, AgentResponseItem, AgentRun, AgentRunOutput, AgentToolCall, AgentWireToolCall, AgentToolPreview } from "@/domain/agent";
 import { toResponseInput } from "@/lib/ai/responsesStream";
 import { createId, nowIso } from "@/lib/ids";
 
@@ -58,7 +58,7 @@ export async function startModelStep(runId: string, limit: number): Promise<Agen
     return next;
   });
 }
-export async function saveToolRound(runId: string, content: string, wireCalls: AgentWireToolCall[], details: Pick<AgentToolCall, "title" | "effect" | "highRisk" | "atomic" | "recovery" | "requiresConfirmation">[], responseOutput?: AgentResponseItem[]): Promise<void> {
+export async function saveToolRound(runId: string, content: string, wireCalls: AgentWireToolCall[], details: Pick<AgentToolCall, "title" | "effect" | "highRisk" | "atomic" | "recovery" | "requiresConfirmation">[], responseOutput?: AgentResponseItem[], publicOutput?: Pick<AgentRunOutput, "reasoning" | "reasoningDurationMs">): Promise<void> {
   await db.transaction("rw", tables(), async () => {
     const run = await requireRun(runId);
     if (run.status !== "running") throw new Error("执行已停止");
@@ -74,7 +74,11 @@ export async function saveToolRound(runId: string, content: string, wireCalls: A
       id: createId("tool"), runId, threadId: run.threadId, providerCallId: call.id, step: run.modelStep ?? 1, order: index,
       name: call.function.name, arguments: call.function.arguments, ...details[index], status: "pending", createdAt: at, updatedAt: at,
     })));
-    await db.agentRuns.update(runId, { ...(responseOutput ? { responseItems: [...(run.responseItems ?? toResponseInput(run.continuationMessages ?? run.requestMessages)), ...responseOutput] } : {}), hasToolCalls: true, continuationMessages: [...(run.continuationMessages ?? run.requestMessages), { role: "assistant", content, tool_calls: wireCalls }], updatedAt: at });
+    await db.agentRuns.update(runId, {
+      activitySteps: [...(run.activitySteps ?? []), { step: run.modelStep ?? 1, content, reasoning: publicOutput?.reasoning, reasoningDurationMs: publicOutput?.reasoningDurationMs }],
+      ...(responseOutput ? { responseItems: [...(run.responseItems ?? toResponseInput(run.continuationMessages ?? run.requestMessages)), ...responseOutput] } : {}),
+      hasToolCalls: true, continuationMessages: [...(run.continuationMessages ?? run.requestMessages), { role: "assistant", content, tool_calls: wireCalls }], updatedAt: at,
+    });
   });
 }
 export async function transitionToolCall(runId: string, callId: string, from: AgentToolCall["status"][], to: AgentToolCall["status"], extra: { result?: string; error?: string } = {}): Promise<boolean> {

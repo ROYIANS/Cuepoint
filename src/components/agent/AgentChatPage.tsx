@@ -3,6 +3,8 @@ import { pauseThreadGeneration } from "@/lib/agent/generationBatchRuntime";
 import { useReferenceDraft } from "./useReferenceDraft";
 import { TaskBoard } from "./TaskBoard";
 import { TaskInspector } from "./TaskInspector";
+import { AgentActivityNavigationProvider } from "./AgentActivityNavigation";
+import { AgentComposerAttention } from "./AgentComposerAttention";
 import { createAgentTaskForThread, setAgentTaskLifecycle } from "@/db/agentTasks";
 import { getTaskDisplayState, TASK_STATE_LABELS } from "@/lib/agent/taskState";
 import type { AgentRun, AgentReasoningEffort } from "@/domain/agent";
@@ -66,7 +68,7 @@ import {
 } from "@/lib/ai/chatModelPolicy";
 
 export function AgentChatPage({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
-  return <AgentChatInner threadId={threadId} view={view} />;
+  return <AgentActivityNavigationProvider threadId={threadId}><AgentChatInner threadId={threadId} view={view} /></AgentActivityNavigationProvider>;
 }
 
 function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
@@ -553,7 +555,8 @@ function AgentChatInner({ threadId, view }: { threadId?: Id; view?: "tasks" }) {
     blocked: projectUnavailable || Boolean(activeTask && activeTask.lifecycle !== "open"),
     readOnly: projectUnavailable,
     blockedReason: projectUnavailable ? "项目不可用 · 历史仍可查看，请新开项目对话" : undefined,
-    status: projectUnavailable || activeTask || activeThread?.taskMode || showRunStatus ? <>
+    status: projectUnavailable || activeTask || activeThread?.taskMode || showRunStatus || activeThreadId ? <>
+      {activeThreadId && <AgentComposerAttention threadId={activeThreadId} runs={runs ?? []} messages={messages ?? []} task={activeTask} projectUnavailable={projectUnavailable} onOpenTask={() => setTaskInspectorOpen(true)} />}
       {projectUnavailable && <div className="agent-composer-run-status"><span>项目不可用 · 对话与记录仍保留</span><button type="button" onClick={() => { setComposerProjectId(undefined); void navigate({ to: "/agent" }); }}>选择项目，开启新对话</button></div>}
       {activeThread?.taskMode && !activeTask && <div className="agent-composer-run-status"><span>需求沟通中 · 明确目标后，助手会建立任务</span></div>}
       {activeTask && <div className="agent-composer-task-summary">
