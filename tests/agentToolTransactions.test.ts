@@ -33,8 +33,11 @@ async function begin(mode: AgentPermissionMode = "full"): Promise<AgentRun> {
   const thread = await createChatThread();
   const run = await beginAgentRun({ threadId: thread.id, connector, model: "fixture-model", content: "创建项目" });
   // Isolate the fixture from the growing default skill registry.
-  await db.agentRuns.update(run.id, { enabledToolNames: [toolName] });
-  return { ...run, enabledToolNames: [toolName] };
+  // Synthetic runtime fixture starts with this one tool already offered.
+  const toolLoading = { version: 1 as const, groups: [], foundationToolNames: [toolName], foundationInstructions: "", loadedGroupIds: [], loadedToolNames: [] };
+  const offeredTools = [{ step: 1, names: [toolName] }];
+  await db.agentRuns.update(run.id, { enabledToolNames: [toolName], toolLoading, offeredTools });
+  return { ...run, enabledToolNames: [toolName], toolLoading, offeredTools };
 }
 
 async function pendingCall(run: AgentRun) {

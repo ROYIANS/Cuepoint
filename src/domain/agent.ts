@@ -73,7 +73,7 @@ export type AgentResponseItem = (
   | { type: "function_call_output"; call_id: string; output: string }) & { referenceInput?: AgentReferenceInput; sourceToolCallId?: string };
 
 /** Provider-reported counts only; absence is unknown, never zero. */
-export interface AgentTokenUsage { inputTokens?: number; outputTokens?: number; totalTokens?: number }
+export interface AgentTokenUsage { cachedInputTokens?: number; inputTokens?: number; outputTokens?: number; totalTokens?: number }
 export interface AgentModelMetrics {
   step: number;
   startedAt: number;
@@ -88,6 +88,22 @@ export interface AgentActivityStep {
   content: string;
   reasoning?: string;
   reasoningDurationMs?: number;
+}
+
+export interface AgentToolGroupSnapshot {
+  id: string;
+  name: string;
+  description: string;
+  instructions: string;
+  toolNames: string[];
+}
+export interface AgentToolLoading {
+  version: 1;
+  groups: AgentToolGroupSnapshot[];
+  foundationToolNames: string[];
+  foundationInstructions: string;
+  loadedGroupIds: string[];
+  loadedToolNames: string[];
 }
 
 /** Frozen execution inputs. Credentials are resolved from the connector at dispatch. */
@@ -124,6 +140,9 @@ export interface AgentRun {
   /** Frozen per-run execution surface. Conversation mode never exposes tools. */
   interactionMode?: AgentInteractionMode;
   enabledToolNames?: string[];
+  /** Absent on legacy runs: retain their original full-tool surface. */
+  toolLoading?: AgentToolLoading;
+  offeredTools?: Array<{ step: number; names: string[] }>;
   skillInstructions?: string;
   continuationMessages?: AgentRequestMessage[];
   modelStep?: number;

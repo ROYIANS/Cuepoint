@@ -1,3 +1,6 @@
+import { IP_TOOLS } from "./ipTools";
+import { MATERIAL_TOOLS } from "./materialTools";
+import { DISCOVERY_TOOLS } from "./toolLoading";
 import { WEB_TOOLS } from "./webTools";
 import { REFERENCE_TOOLS } from "./referenceTools";
 import { MEMORY_TOOLS } from "./memoryTools";
@@ -51,6 +54,9 @@ export const BUILTIN_TOOLS: readonly AgentToolDefinition[] = [
     effect: "bookkeeping", atomic: true, highRisk: () => false, parseArguments: (raw) => planSchema.parse(raw),
     async execute(args, { runId, callId, signal }) { signal.throwIfAborted(); return JSON.parse(await updateRunPlanAndComplete(runId, callId, (args as { steps: AgentPlanItem[] }).steps, (args as { reason?: string }).reason)); },
   },
+  ...IP_TOOLS,
+  ...MATERIAL_TOOLS,
+  ...DISCOVERY_TOOLS,
   ...TASK_TOOLS,
   ...BUSINESS_TOOLS,
   ...GENERATION_TOOLS,

@@ -1,3 +1,4 @@
+import { createToolLoading, DISCOVERY_TOOL_NAME, toolLoadingInstructions } from "@/lib/agent/toolLoading";
 import type { ReferenceAttachment } from "@/domain/references";
 import { selectReferenceContext, referenceSelectionCharacterBudget } from "@/lib/agent/referenceContext";
 import { resolveVisionCapability, requireVision } from "@/lib/ai/visionCapability";
@@ -96,8 +97,10 @@ export async function beginAgentRun(input: {
     const instructions = taskContext.instructions;
     const skills = assembleSkills(agent.enabledSkillIds ?? []);
     const selectedToolNames = interactionMode === "conversation" ? [] : (previous ? previous.enabledToolNames ?? [] : [...new Set([...skills.enabledToolNames, ...taskContext.taskToolNames])]);
-    const enabledToolNames = filterProjectMemoryTools(selectedToolNames,thread.projectId,interactionMode);
-    const skillInstructions = interactionMode === "conversation" ? "" : (previous ? previous.skillInstructions ?? "" : skills.skillInstructions);
+    const allowedToolNames = filterProjectMemoryTools(selectedToolNames,thread.projectId,interactionMode);
+    const toolLoading = previous ? previous.toolLoading : interactionMode === "conversation" ? undefined : createToolLoading(agent.enabledSkillIds ?? [], allowedToolNames);
+    const enabledToolNames = toolLoading ? [...new Set([...allowedToolNames, DISCOVERY_TOOL_NAME])] : allowedToolNames;
+    const skillInstructions = interactionMode === "conversation" ? "" : (previous ? previous.skillInstructions ?? "" : toolLoading ? toolLoadingInstructions(toolLoading) : skills.skillInstructions);
     const policy = normalizeContextPolicy(thread.contextPolicy);
     const selectedHistory = selectContextHistory(history, policy);
     const summary = policy.autoCompress ? findApplicableSummary(selectedHistory, await db.contextCompactions.where("threadId").equals(thread.id).toArray()) : undefined;
@@ -121,6 +124,7 @@ export async function beginAgentRun(input: {
       interactionMode,
       taskMode,
       enabledToolNames,
+      toolLoading,
       skillInstructions,
       status: "running", checkpoint: 0, createdAt: at, updatedAt: at,
     };
@@ -199,7 +203,7 @@ export async function recordAgentModelMetrics(runId: string, metrics: AgentModel
     const modelMetrics = [...(run.modelMetrics ?? []), metrics].sort((a, b) => a.step - b.step);
     const usage: AgentTokenUsage = {};
     const completeSteps = modelMetrics.length === run.modelStep;
-    for (const name of ["inputTokens", "outputTokens", "totalTokens"] as const) {
+    for (const name of ["inputTokens", "outputTokens", "totalTokens", "cachedInputTokens"] as const) {
       if (completeSteps && modelMetrics.every((item) => item.usage?.[name] !== undefined)) {
         const sum = modelMetrics.reduce((total, item) => total + item.usage![name]!, 0);
         if (Number.isSafeInteger(sum)) usage[name] = sum;

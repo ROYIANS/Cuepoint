@@ -20,6 +20,9 @@ function usageOf(value: unknown): AgentTokenUsage | undefined {
     const count = value[wire];
     if (typeof count === "number" && Number.isSafeInteger(count) && count >= 0) usage[name] = count;
   }
+  const details = value.input_tokens_details;
+  const cached = record(details) ? details.cached_tokens : undefined;
+  if (typeof cached === "number" && Number.isSafeInteger(cached) && cached >= 0 && (usage.inputTokens === undefined || cached <= usage.inputTokens)) usage.cachedInputTokens = cached;
   return Object.keys(usage).length ? usage : undefined;
 }
 

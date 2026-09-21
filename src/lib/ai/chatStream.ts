@@ -157,6 +157,9 @@ function readUsage(data: unknown): AgentTokenUsage | undefined {
     const value = data.usage[wire];
     if (typeof value === "number" && Number.isSafeInteger(value) && value >= 0) usage[name] = value;
   }
+  const details = data.usage.prompt_tokens_details;
+  const cached = record(details) ? details.cached_tokens : undefined;
+  if (typeof cached === "number" && Number.isSafeInteger(cached) && cached >= 0 && (usage.inputTokens === undefined || cached <= usage.inputTokens)) usage.cachedInputTokens = cached;
   return Object.keys(usage).length ? usage : undefined;
 }
 

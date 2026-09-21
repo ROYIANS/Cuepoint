@@ -70,6 +70,11 @@ export function referenceToolSummary(name: string, result: string | undefined, p
 /** Historical source lookups may contain pre-fix nested cached reference bodies.
  * Re-read their source using current tools instead of recursively trusting old JSON/prose. */
 export function historicalToolSummary(name: string, result: string | undefined, projectId: string): Record<string, unknown> | undefined {
+  if (name === "material_read_text" || name === "material_read_image") {
+    let value: Record<string, unknown> = {};
+    try { const parsed: unknown = JSON.parse(result ?? "null"); if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) value = parsed as Record<string, unknown>; } catch { /* Legacy invalid read has no reliable identity. */ }
+    return { kind: "historical_material_read", materialId: value.materialId, revision: value.revision, partial: value.partial, nextStart: value.nextStart, extractionCoverage: value.extractionCoverage, note: "只保留当时读取身份和范围，不重放素材正文或像素。请用当前素材工具重新读取，校验现有归属、归档状态与版本。" };
+  }
   const reference = referenceToolSummary(name, result, projectId);
   if (reference) return reference;
   if (name === "task_read" || name === "project_history_read") return {

@@ -89,20 +89,24 @@ describe("bounded project references and native same-model vision", () => {
     const call = { id: "read-call", type: "function", function: { name: "read_project_image", arguments: '{"mediaId":"generated"}' } };
     const fetcher = vi.fn(async (_url, init) => {
       const body = JSON.parse(String(init?.body)); bodies.push(body);
-      if (bodies.length === 1) return protocol === "responses" ? Response.json({ status: "completed", output: [{ type: "reasoning", summary: [], encrypted_content: "keep-opaque" }, { type: "function_call", call_id: call.id, name: call.function.name, arguments: call.function.arguments }] }) : Response.json({ choices: [{ message: { content: "", tool_calls: [call] }, finish_reason: "tool_calls" }] });
+      if (bodies.length === 1) {
+        const load = { id: "load", type: "function", function: { name: "load_tool_groups", arguments: '{"groupIds":["project-references"]}' } };
+        return protocol === "responses" ? Response.json({ status: "completed", output: [{ type: "function_call", call_id: load.id, name: load.function.name, arguments: load.function.arguments }] }) : Response.json({ choices: [{ message: { content: "", tool_calls: [load] }, finish_reason: "tool_calls" }] });
+      }
+      if (bodies.length === 2) return protocol === "responses" ? Response.json({ status: "completed", output: [{ type: "reasoning", summary: [], encrypted_content: "keep-opaque" }, { type: "function_call", call_id: call.id, name: call.function.name, arguments: call.function.arguments }] }) : Response.json({ choices: [{ message: { content: "", tool_calls: [call] }, finish_reason: "tool_calls" }] });
       return protocol === "responses" ? responseAnswer() : chatAnswer();
     });
     await executeChatRun((await db.agentRuns.get(run.id))!, connector.apiKey, new AbortController(), fetcher);
-    expect(fetcher).toHaveBeenCalledTimes(2); expect(bodies.every((body) => body.model === run.model)).toBe(true);
+    expect(fetcher).toHaveBeenCalledTimes(3); expect(bodies.every((body) => body.model === run.model)).toBe(true);
     expect(JSON.stringify(bodies[0])).not.toContain("data:image");
-    expect(JSON.stringify(bodies[1])).toContain("data:image/png;base64,YWN0dWFsLXBpeGVscw==");
+    expect(JSON.stringify(bodies[2])).toContain("data:image/png;base64,YWN0dWFsLXBpeGVscw==");
     if (protocol === "responses") {
-      expect(bodies[1].input).toContainEqual({ type: "reasoning", summary: [], encrypted_content: "keep-opaque" });
-      const outputAt = bodies[1].input.findIndex((item: any) => item.type === "function_call_output" && item.call_id === call.id);
-      expect(bodies[1].input[outputAt + 1].content[1].type).toBe("input_image");
+      expect(bodies[2].input).toContainEqual({ type: "reasoning", summary: [], encrypted_content: "keep-opaque" });
+      const outputAt = bodies[2].input.findIndex((item: any) => item.type === "function_call_output" && item.call_id === call.id);
+      expect(bodies[2].input[outputAt + 1].content[1].type).toBe("input_image");
     } else {
-      const outputAt = bodies[1].messages.findIndex((item: any) => item.role === "tool" && item.tool_call_id === call.id);
-      expect(bodies[1].messages[outputAt + 1].content[1].type).toBe("image_url");
+      const outputAt = bodies[2].messages.findIndex((item: any) => item.role === "tool" && item.tool_call_id === call.id);
+      expect(bodies[2].messages[outputAt + 1].content[1].type).toBe("image_url");
     }
     const saved = (await db.agentRuns.get(run.id))!;
     await db.agentRuns.update(run.id, { status: "running" });

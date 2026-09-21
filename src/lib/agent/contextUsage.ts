@@ -19,12 +19,13 @@ export function estimateContextUsage(input: {
 }): ContextUsage {
   const categories = [
     { id: "assistant", label: "助手指令", tokens: 0, color: "#dc62b6" },
-    { id: "skills", label: "技能与工具", tokens: estimateTokens(input.skillInstructions) + (input.tools.length ? estimateTokens(JSON.stringify(input.tools)) : 0), color: "#5899f5" },
+    { id: "skills", label: "技能说明与能力目录", tokens: estimateTokens(input.skillInstructions), color: "#5899f5" },
     { id: "messages", label: "会话消息", tokens: 0, color: "#edb44d" },
     { id: "summary", label: "历史摘要", tokens: 0, color: "#ce9763" },
     { id: "memory", label: "项目记忆", tokens: 0, color: "#a98bea" },
     { id: "references", label: "参考资料与图片", tokens: 0, color: "#5baea5" },
     { id: "results", label: "工具结果", tokens: 0, color: "#a2c96a" },
+    { id: "tool-schemas", label: "当前工具定义", tokens: input.tools.length ? estimateTokens(JSON.stringify(input.tools)) : 0, color: "#61b7eb" },
   ];
   const system = [input.instructions, input.skillInstructions].filter(Boolean).join("\n");
   input.messages.forEach((message, index) => {

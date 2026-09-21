@@ -1,10 +1,11 @@
+import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { BUSINESS_TOOLS } from "@/lib/agent/businessTools";
 import { recoverAbandonedRuns } from "@/lib/agent/runOwnership";
 import { describe, expect, it, vi } from 'vitest';
 import { db } from '@/db/database';
 import { beginAgentRun, finishAgentRun, interruptThreadRuns } from '@/db/agentRuns';
 import { createAgentTaskForThread } from '@/db/agentTasks';
-import { saveToolRound, transitionToolCall, updateRunPlanAndComplete, AtomicToolRollbackError } from '@/db/agentTools';
+import {  transitionToolCall, updateRunPlanAndComplete, AtomicToolRollbackError } from '@/db/agentTools';
 import { getReferenceSource, removeProjectReference } from '@/db/references';
 import { addCharacter, createChatThread, createProject, putMedia } from '@/db/repo';
 import type { ConnectorConfig } from '@/domain/types';
@@ -19,7 +20,7 @@ import { listModels, testConnection } from '@/lib/ai/openaiCompatible';
 const chat: ConnectorConfig = { id: 'audit-chat', definitionId: 'openai-compatible', baseUrl: 'https://audit.test/v1', apiKey: 'audit-secret-only', updatedAt: '2026-09-21' };
 async function claim(runId: string, threadId: string, name: string, args: unknown): Promise<AgentToolContext> {
   const providerId = `provider-${name}`;
-  await saveToolRound(runId, '', [{ id: providerId, type: 'function', function: { name, arguments: JSON.stringify(args) } }], [{ title: name, effect: name === 'submit_generation' ? 'network' : 'read', highRisk: false }]);
+  await saveFixtureToolRound(runId, '', [{ id: providerId, type: 'function', function: { name, arguments: JSON.stringify(args) } }], [{ title: name, effect: name === 'submit_generation' ? 'network' : 'read', highRisk: false }]);
   const call = (await db.agentToolCalls.where('runId').equals(runId).toArray()).find(row => row.providerCallId === providerId)!;
   await transitionToolCall(runId, call.id, ['pending'], 'running');
   return { runId, threadId, callId: call.id, signal: new AbortController().signal };
@@ -121,7 +122,7 @@ describe('Agent audit boundary regressions', () => {
     const run = await beginAgentRun({ threadId: thread.id, connector: chat, model: 'audit-model', content: 'plan' });
     const tool = BUILTIN_TOOLS.find(item => item.name === 'update_run_plan')!;
     const args = { steps: [{ id: 'step', title: 'Work', status: 'in_progress' }] };
-    await saveToolRound(run.id, '', [{ id: 'plan-call', type: 'function', function: { name: tool.name, arguments: JSON.stringify(args) } }], [{ title: tool.title, effect: tool.effect, highRisk: tool.highRisk(args), atomic: tool.atomic, recovery: tool.recovery }]);
+    await saveFixtureToolRound(run.id, '', [{ id: 'plan-call', type: 'function', function: { name: tool.name, arguments: JSON.stringify(args) } }], [{ title: tool.title, effect: tool.effect, highRisk: tool.highRisk(args), atomic: tool.atomic, recovery: tool.recovery }]);
     const call = (await db.agentToolCalls.where('runId').equals(run.id).toArray())[0];
     await transitionToolCall(run.id, call.id, ['pending'], 'running');
     // Simulate reload between claim and the atomic mutation/result transaction.
@@ -138,7 +139,7 @@ async function oldPlanFixture() {
   const thread = await createChatThread({projectId:project.id});
   const task = await createAgentTaskForThread(thread.id,{title:"Task",goal:"Plan safely"});
   const run = await beginAgentRun({threadId:thread.id,connector:chat,model:"audit-model",content:"plan"});
-  await saveToolRound(run.id,"",[{id:"old-plan",type:"function",function:{name:"update_run_plan",arguments:JSON.stringify(planArgs)}}],[{title:"更新执行计划",effect:"bookkeeping",highRisk:false}]);
+  await saveFixtureToolRound(run.id,"",[{id:"old-plan",type:"function",function:{name:"update_run_plan",arguments:JSON.stringify(planArgs)}}],[{title:"更新执行计划",effect:"bookkeeping",highRisk:false}]);
   const call = (await db.agentToolCalls.where("runId").equals(run.id).first())!;
   return {run,call,task,thread};
 }

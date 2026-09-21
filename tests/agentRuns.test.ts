@@ -60,7 +60,7 @@ describe("durable Agent runs", () => {
   it("does not enable today's skills on a legacy retry with no tool snapshot", async () => {
     const run = await begin();
     await finishAgentRun(run.id, "failed");
-    await db.agentRuns.update(run.id, { enabledToolNames: undefined, skillInstructions: undefined, interactionMode: undefined });
+    await db.agentRuns.update(run.id, { enabledToolNames: undefined, skillInstructions: undefined, interactionMode: undefined, toolLoading: undefined });
     const retry = await beginAgentRun({ threadId: run.threadId, connector, model: "test", retryOfRunId: run.id, interactionMode: "conversation" });
     expect(retry.enabledToolNames).toEqual([]);
     expect(retry.skillInstructions).toBe("");

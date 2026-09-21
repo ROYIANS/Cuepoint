@@ -1,7 +1,8 @@
+import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { beginAgentRun } from "@/db/agentRuns";
-import { saveToolRound, transitionToolCall } from "@/db/agentTools";
+import {  transitionToolCall } from "@/db/agentTools";
 import { addCharacter, addShot, createChatThread, createProject, deleteChatThread, deleteMediaIfOrphan, deleteProject, patchShot, putMedia } from "@/db/repo";
 import { updateGenerationJob } from "@/db/agentGeneration";
 import type { ConnectorConfig } from "@/domain/types";
@@ -30,7 +31,7 @@ async function setup(provider:"apimart"|"aihubmix"="apimart",kind:"image"|"video
 }
 async function toolContext(runId:string,threadId:string,name:string,args:unknown):Promise<AgentToolContext> {
   const providerCallId=`call-${Math.random()}`;
-  await saveToolRound(runId,"",[{id:providerCallId,type:"function",function:{name,arguments:JSON.stringify(args)}}],[{title:name,effect:name === "apply_generation" ? "write":"network",highRisk:false}]);
+  await saveFixtureToolRound(runId,"",[{id:providerCallId,type:"function",function:{name,arguments:JSON.stringify(args)}}],[{title:name,effect:name === "apply_generation" ? "write":"network",highRisk:false}]);
   const call=(await db.agentToolCalls.where("runId").equals(runId).toArray()).find((item)=>item.providerCallId===providerCallId)!;
   await transitionToolCall(runId,call.id,["pending"],"running");
   return {runId,threadId,callId:call.id,signal:new AbortController().signal};

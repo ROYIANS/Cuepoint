@@ -6,7 +6,7 @@ import type { AgentToolContext, AgentToolDefinition } from "./tools";
 import type { AgentReferenceInput } from "@/domain/referenceInput";
 import { frozenProjectScope } from "./projectScope";
 import { imageReference, referenceAttachmentSchema, validateReferenceInput } from "./referenceContext";
-import { requireVision, resolveVisionCapability } from "@/lib/ai/visionCapability";
+import { assertImageQueueCapacity } from "./imageQueue";
 const search = z.object({ query: z.string().trim().max(500), limit: z.number().int().min(1).max(10).optional() }).strict();
 const read = referenceAttachmentSchema.extend({ start: z.number().int().min(0).optional(), limit: z.number().int().min(1).max(8).optional() }).strict();
 const image = z.union([z.object({ mediaId: z.string().min(1).max(200) }).strict(), z.object({ discoveryCallId: z.string().min(1).max(200), candidateId: z.string().min(1).max(200) }).strict()]);
@@ -47,15 +47,7 @@ export const REFERENCE_TOOLS: readonly AgentToolDefinition[] = [
       const projectId = discovered?.candidate.projectId ?? bound;
       if (!projectId) throw new Error("未绑定对话请先用 discover_project_images 查找，再用 discoveryCallId 和 candidateId 读取");
       if (!run) throw new Error("执行不存在");
-      const messages = run.continuationMessages ?? run.requestMessages;
-      let queuedImages = messages.reduce((sum, message) => sum + (message.referenceInput?.images?.length ?? 0), 0);
-      for (const call of await db.agentToolCalls.where("runId").equals(run.id).toArray()) {
-        if (call.name !== "read_project_image" || call.status !== "completed" || !call.result || messages.some((message) => message.sourceToolCallId === call.providerCallId)) continue;
-        const result = JSON.parse(call.result) as { referenceInput?: AgentReferenceInput };
-        queuedImages += result.referenceInput?.images?.length ?? 0;
-      }
-      if (queuedImages >= 10) throw new Error("本次上下文已包含 10 张图片，请先完成当前分析，再开启新对话继续看图");
-      requireVision(run.visionCapability ?? await resolveVisionCapability(run.model, run.connector.definitionId));
+      await assertImageQueueCapacity(context);
       const media = discovered?.media ?? await db.media.get('mediaId' in args ? args.mediaId : '');
       if (!media || media.projectId !== projectId) throw new Error("图片不存在或不属于当前项目");
       const sources = (await db.projectReferences.where("mediaId").equals(media.id).toArray()).filter((row) => row.projectId === projectId);

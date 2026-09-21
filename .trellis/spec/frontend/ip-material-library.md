@@ -2,7 +2,7 @@
 
 ## 1. Scope / Trigger
 
-Multiple long-lived IP identities organize video/image/copy/podcast/music projects. IP is not a project type. Independent projects are supported. Derivative image/emoji/merch creation belongs to future image templates; no separate commerce menu. Current non-video editors remain upcoming. The current increment persists profiles/materials; it does not inject IP facts into agent requests automatically.
+Multiple long-lived IP identities organize video/image/copy/podcast/music projects. IP is not a project type. Independent projects are supported. Derivative image/emoji/merch creation belongs to future image templates; no separate commerce menu. Current non-video editors remain upcoming. Profiles/materials persist independently. Bound-project chat now includes a bounded linked-IP summary and can read full profiles/materials through confirmed, scoped tools; see [Agent Library Tools](./agent-library-tools.md). Generation still uses the explicitly reviewed prompt and parameters.
 
 ## 2. Signatures
 

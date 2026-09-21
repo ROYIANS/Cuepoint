@@ -19,8 +19,11 @@ async function begin(): Promise<AgentRun> {
   await updateGeneralAgentConfig({ permissionMode: "full" });
   const thread = await createChatThread();
   const run = await beginAgentRun({ threadId: thread.id, connector, model: "fixture-model", content: "生成场景" });
-  await db.agentRuns.update(run.id, { enabledToolNames: [name] });
-  return { ...run, enabledToolNames: [name] };
+  // Synthetic runtime fixture starts with this one tool already offered.
+  const toolLoading = { version: 1 as const, groups: [], foundationToolNames: [name], foundationInstructions: "", loadedGroupIds: [], loadedToolNames: [] };
+  const offeredTools = [{ step: 1, names: [name] }];
+  await db.agentRuns.update(run.id, { enabledToolNames: [name], toolLoading, offeredTools });
+  return { ...run, enabledToolNames: [name], toolLoading, offeredTools };
 }
 
 function jobFor(call: Pick<AgentToolCall, "id" | "runId" | "threadId">, patch: Partial<AgentGenerationJob> = {}): AgentGenerationJob {

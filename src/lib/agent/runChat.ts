@@ -1,3 +1,4 @@
+import { getOfferedToolNames, refreshRunToolLoading, toolNamesForCall } from "./toolLoading";
 import { upgradeLegacyPlanCalls } from "@/db/agentToolRecovery";
 import { budgetContext } from "./contextPlanner";
 import { continuationExtraTokens } from "./contextCompaction";
@@ -63,7 +64,7 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
     if (call.status === "unknown" || call.status === "running") throw new Error("有工具结果不确定，不能重跑");
     if (call.status === "awaiting_approval") { waiting = true; continue; }
     let validated: ReturnType<typeof validateToolCall>;
-    try { await frozenProjectScope({runId:run.id,threadId:run.threadId,callId:call.id,signal:controller.signal,projectId:run.projectId}); validated = validateToolCall(call.name, effectiveToolInput(call).arguments, run.enabledToolNames ?? [], registry); }
+    try { await frozenProjectScope({runId:run.id,threadId:run.threadId,callId:call.id,signal:controller.signal,projectId:run.projectId}); validated = validateToolCall(call.name, effectiveToolInput(call).arguments, toolNamesForCall(run, call.step), registry); }
     catch (error) {
       const message = error instanceof Error ? error.message : "工具参数无效";
       await transitionToolCall(run.id, call.id, ["pending", "approved"], "failed", { error: message, result: JSON.stringify(error instanceof ToolValidationError ? error.failure : { error: message }) });
@@ -93,7 +94,7 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
     controller.signal.throwIfAborted();
     const call = await db.agentToolCalls.get(saved.id);
     if (!call || ["completed", "failed", "rejected"].includes(call.status)) continue;
-    const { tool, args } = validateToolCall(call.name, effectiveToolInput(call).arguments, run.enabledToolNames ?? [], registry);
+    const { tool, args } = validateToolCall(call.name, effectiveToolInput(call).arguments, toolNamesForCall(run, call.step), registry);
     if (tool.effect !== call.effect || tool.highRisk(args) !== call.highRisk || Boolean(tool.atomic) !== Boolean(call.atomic) || tool.recovery !== call.recovery || Boolean(tool.requiresConfirmation) !== Boolean(call.requiresConfirmation)) throw new Error("工具定义已变化，请结束本次执行后重新发起任务");
     // Recheck permission immediately before the claim. A global setting cannot change this run's mode.
     if (requiresToolApproval(run.permissionMode ?? "ask", tool, args) && call.status !== "approved") throw new Error("工具尚未获得批准");
@@ -146,12 +147,13 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
     while (true) {
       controller.signal.throwIfAborted();
       if (await pauseAtModelStepLimit(run.id)) return;
+      run = await refreshRunToolLoading(run.id);
       run = await refreshRunProjectContext(run.id);
       run = await refreshRunMemoryContext(run.id);
-      run = await prepareRunContext(run.id, toolSchemas(run.enabledToolNames ?? [], registry), apiKey, controller.signal, fetchImpl);
+      run = await prepareRunContext(run.id, toolSchemas(getOfferedToolNames(run), registry), apiKey, controller.signal, fetchImpl);
       // Compaction may await network; re-read memory once more at the final dispatch boundary.
       run = await refreshRunMemoryContext(run.id);
-      if (budgetContext(run.continuationMessages ?? run.requestMessages, toolSchemas(run.enabledToolNames ?? [], registry), run.context?.capacity, !!run.context?.summaryId, continuationExtraTokens(run)).overBudget) throw new Error("记忆更新后上下文超出安全预算，请减少历史或调整输入后继续");
+      if (budgetContext(run.continuationMessages ?? run.requestMessages, toolSchemas(getOfferedToolNames(run), registry), run.context?.capacity, !!run.context?.summaryId, continuationExtraTokens(run)).overBudget) throw new Error("记忆更新后上下文超出安全预算，请减少历史或调整输入后继续");
       run = await startModelStep(run.id, MAX_MODEL_STEPS);
       controller.signal.throwIfAborted();
       accum = createReasoningAccum();
@@ -162,7 +164,7 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
         writer.push(output());
       };
       const transport = run.protocol === "responses" ? streamResponses : streamChatCompletions;
-      const result: ResponsesResult = await transport({ projectId: run.projectId, runId: run.id, visionCapability: run.visionCapability, responseItems: run.responseItems, baseUrl: run.connector.baseUrl, apiKey, model: run.model, connectorDefinitionId: run.connector.definitionId, reasoningEffort: run.reasoningEffort, messages: run.continuationMessages ?? run.requestMessages, tools: toolSchemas(run.enabledToolNames ?? [], registry) }, {
+      const result: ResponsesResult = await transport({ projectId: run.projectId, runId: run.id, visionCapability: run.visionCapability, responseItems: run.responseItems, baseUrl: run.connector.baseUrl, apiKey, model: run.model, connectorDefinitionId: run.connector.definitionId, reasoningEffort: run.reasoningEffort, messages: run.continuationMessages ?? run.requestMessages, tools: toolSchemas(getOfferedToolNames(run), registry) }, {
         signal: controller.signal, fetchImpl,
         onDelta: (content) => onDelta({ content }), onReasoning: (reasoning) => onDelta({ reasoning }),
       });

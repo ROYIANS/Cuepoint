@@ -165,7 +165,7 @@ describe("durable context compaction", () => {
   });
   it("rechecks after a tool result and never replays the completed tool", async () => {
     const { run } = await begin(4, 900);
-    await db.agentRuns.update(run.id, { enabledToolNames: ["workspace_overview"] });
+    await db.agentRuns.update(run.id, { enabledToolNames: ["workspace_overview"], interactionMode: "smart", toolLoading: undefined, offeredTools: undefined });
     const tool = { ...BUILTIN_TOOLS[0], execute: vi.fn(async () => ({ data: "x".repeat(5000) })) };
     const bodies: Array<{messages: AgentRequestMessage[];tools?: unknown[]}> = [];
     const fetcher = vi.fn(async (_url, init) => {

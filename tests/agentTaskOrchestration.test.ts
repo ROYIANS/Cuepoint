@@ -1,8 +1,9 @@
+import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { createProject, createChatThread, deleteChatThread } from "@/db/repo";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
-import { saveToolRound, transitionToolCall } from "@/db/agentTools";
+import {  transitionToolCall } from "@/db/agentTools";
 import { saveTaskRecord, listTaskRecords, listTaskRecordVersions } from "@/db/agentTaskRecords";
 import { updateAgentTask } from "@/db/agentTasks";
 import { TASK_TOOLS } from "@/lib/agent/taskTools";
@@ -21,7 +22,7 @@ async function start(taskMode=true,interactionMode:"smart"|"conversation"="smart
 let serial=0;
 async function pending(run:AgentRun,name:string,args:unknown){
  const tool=TASK_TOOLS.find((t)=>t.name===name)!;
- await saveToolRound(run.id,"",[{id:`call-${++serial}`,type:"function",function:{name,arguments:JSON.stringify(args)}}],[{title:tool.title,effect:tool.effect,highRisk:false,atomic:true}]);
+ await saveFixtureToolRound(run.id,"",[{id:`call-${++serial}`,type:"function",function:{name,arguments:JSON.stringify(args)}}],[{title:tool.title,effect:tool.effect,highRisk:false,atomic:true}]);
  const calls=await db.agentToolCalls.where("runId").equals(run.id).toArray();
  const call=calls.find((c)=>c.providerCallId===`call-${serial}`)!;
  await transitionToolCall(run.id,call.id,["pending"],"running");
@@ -39,7 +40,7 @@ describe("AI owned task orchestration",()=>{
  });
  it.each([[false,"smart"],[true,"conversation"]] as const)("refuses auto creation outside eligible run %s/%s",async(mode,interaction)=>{
   const run=await start(mode,interaction);expect(run.enabledToolNames).not.toContain("task_create");
-  await expect(invoke(run,"task_create",createArgs(run))).rejects.toThrow("权限");expect(await db.agentTasks.count()).toBe(0);
+  await expect(invoke(run,"task_create",createArgs(run))).rejects.toThrow(/权限|本轮未提供/);expect(await db.agentTasks.count()).toBe(0);
  });
  it("links exactly one task atomically, preserves protocol inputs and reuses different repeated creates",async()=>{
   const run=await start();const original=structuredClone(run.requestMessages);
@@ -100,7 +101,7 @@ describe("AI owned task orchestration",()=>{
   const run=await start();await db.agentRuns.update(run.id,{protocol:"responses"});
   const args=createArgs(run),wire={id:"response-call",type:"function" as const,function:{name:"task_create",arguments:JSON.stringify(args)}};
   const opaque=[{type:"reasoning" as const,id:"reason",summary:[],encrypted_content:"opaque-original"},{type:"function_call" as const,call_id:wire.id,name:wire.function.name,arguments:wire.function.arguments}];
-  await saveToolRound(run.id,"",[wire],[{title:"建立创作任务",effect:"bookkeeping",highRisk:false,atomic:true}],opaque);
+  await saveFixtureToolRound(run.id,"",[wire],[{title:"建立创作任务",effect:"bookkeeping",highRisk:false,atomic:true}],opaque);
   const call=(await db.agentToolCalls.where("runId").equals(run.id).toArray())[0];await transitionToolCall(run.id,call.id,["pending"],"running");
   const before=(await db.agentRuns.get(run.id))!;
   await TASK_TOOLS.find(t=>t.name==="task_create")!.execute(args,{runId:run.id,threadId:run.threadId,callId:call.id,signal:new AbortController().signal});

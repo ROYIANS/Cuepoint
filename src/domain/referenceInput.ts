@@ -19,6 +19,7 @@ export interface AgentReferenceCoverage extends ReferenceAttachment {
   warnings: string[];
 }
 export interface AgentReferenceInput {
+  material?: { kind: "image" | "text"; materialId: string; revision: number; readCallId: string; mediaId?: string; digest: string };
   discovery?: ImageDiscoveryProvenance;
   projectId: string;
   references: ReferenceAttachment[];
@@ -35,5 +36,5 @@ export interface AgentReferenceAudit { step: number; preparedAt: string; inputs:
 
 /** Strip frozen source text from lightweight wire identities and per-step audit records. */
 export function referenceInputOf(selected: AgentSelectedReferences): AgentReferenceInput {
-  return { projectId: selected.projectId, references: selected.references, images: selected.images, coverage: selected.coverage, ...(selected.discovery ? { discovery: selected.discovery } : {}) };
+  return { projectId: selected.projectId, references: selected.references, images: selected.images, coverage: selected.coverage, ...(selected.discovery ? { discovery: selected.discovery } : {}), ...(selected.material ? { material: selected.material } : {}) };
 }

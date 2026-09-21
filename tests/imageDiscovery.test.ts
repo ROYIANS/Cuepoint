@@ -57,10 +57,11 @@ afterEach(() => vi.restoreAllMocks());
 describe('project image discovery and source identity', () => {
   it('unbound reference skill exposes only scoped discovery/reader, while conversation has no tools', async () => {
     const run = await begin();
-    expect(run.enabledToolNames).toEqual(['discover_project_images', 'read_project_image']);
+    expect(run.enabledToolNames).toEqual(['discover_project_images', 'read_project_image', 'load_tool_groups']);
     expect(filterProjectMemoryTools(['memory_read', 'project_reference_read', 'discover_project_images', 'read_project_image'], undefined)).toEqual(['discover_project_images', 'read_project_image']);
     expect(filterProjectMemoryTools(run.enabledToolNames!, undefined, 'conversation')).toEqual([]);
-    expect(run.skillInstructions).toContain('discoveryCallId');
+    expect(run.skillInstructions).toContain('project-references');
+    expect(run.toolLoading?.loadedToolNames).toEqual([]);
   });
   it('requires a named project, rejects studio and bound foreign projects, and handles duplicate names without grants', async () => {
     const { project } = await fixture(), run = await begin();
@@ -180,8 +181,9 @@ describe('natural-language discovery to actual current-model pixels', () => {
     const bodies: string[] = [];
     const model = vi.fn(async (_url, init) => {
       bodies.push(String(init?.body)); let call;
-      if (bodies.length === 1) call = wire('discover_project_images', discoveryArgs);
-      if (bodies.length === 2) {
+      if (bodies.length === 1) call = wire('load_tool_groups', { groupIds: ['project-references'] });
+      if (bodies.length === 2) call = wire('discover_project_images', discoveryArgs);
+      if (bodies.length === 3) {
         const saved = (await db.agentToolCalls.toArray()).find((call) => call.name === 'discover_project_images')!;
         const result = JSON.parse(saved.result!) as ImageDiscoveryResult;
         call = wire('read_project_image', { discoveryCallId: saved.id, candidateId: result.candidates[0].id });
@@ -190,9 +192,10 @@ describe('natural-language discovery to actual current-model pixels', () => {
       return Response.json({ choices: [{ message: call ? { content: '', tool_calls: [call] } : { content: '看到了画面' }, finish_reason: call ? 'tool_calls' : 'stop' }] });
     });
     await executeChatRun((await db.agentRuns.get(run.id))!, connector.apiKey, new AbortController(), model);
-    expect(model).toHaveBeenCalledTimes(3);
+    expect(model).toHaveBeenCalledTimes(4);
     expect(bodies[0]).not.toContain('data:image'); expect(bodies[1]).not.toContain('data:image');
-    expect(bodies[2]).toContain('data:image/png;base64,Y29ycmVjdC1pbWFnZS1waXhlbHM=');
+    expect(bodies[2]).not.toContain('data:image');
+    expect(bodies[3]).toContain('data:image/png;base64,Y29ycmVjdC1pbWFnZS1waXhlbHM=');
     expect((await db.chatThreads.get(run.threadId))?.projectId).toBeUndefined();
     expect((await db.chatMessages.get(run.userMessageId))?.attachments?.length ?? 0).toBe(0);
     expect(JSON.stringify([await db.agentRuns.toArray(), await db.agentToolCalls.toArray()])).not.toContain('data:image');

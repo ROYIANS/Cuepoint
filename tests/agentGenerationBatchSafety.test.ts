@@ -1,10 +1,11 @@
+import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { taskGenerationSource, saveTaskRecord, validateTaskSources } from '@/db/agentTaskRecords';
 import { createAgentTaskForThread } from '@/db/agentTasks';
 import { getTaskWrapupState } from '@/db/agentTaskWrapups';
 import { describe, expect, it, vi } from 'vitest';
 import { db } from '@/db/database';
 import { beginAgentRun, finishAgentRun } from '@/db/agentRuns';
-import { saveToolRound, transitionToolCall } from '@/db/agentTools';
+import {  transitionToolCall } from '@/db/agentTools';
 import { createProject, addShot, createChatThread } from '@/db/repo';
 import { prepareGenerationBatch, readGenerationBatch, confirmGenerationBatch, applyBatchSelections, selectBatchCandidate } from '@/db/agentGenerationBatches';
 import { startGenerationBatch, stopGenerationBatch } from '@/lib/agent/generationBatchRuntime';
@@ -28,7 +29,7 @@ async function fixture(count = 4, provider: 'apimart' | 'aihubmix' = 'apimart', 
   const run = await beginAgentRun({ threadId: thread.id, connector: config, model: 'chat', content: '准备候选' });
   const draft: GenerationSubmitArgs = { connectorId: config.id, model: kind === 'image' ? 'gpt-image-2' : provider === 'apimart' ? 'MiniMax-H3' : 'veo-3.1-fast-generate-preview', prompt: '雨夜车站', parameters: {}, inputs: [], target: { kind: 'shot', projectId: project.id, episodeId: episode.id, entityId: shot.id, slot: 'firstFrame' } };
   const candidates = Array.from({ length: count }, (_, index) => ({ ...draft, target: { ...draft.target, slot: kind === 'video' ? 'clip' : index > 3 ? 'lastFrame' : 'firstFrame' } }));
-  await saveToolRound(run.id, '', [{ id: 'batch-source', type: 'function', function: { name: 'prepare_generation_batch', arguments: JSON.stringify({ title: '候选批次', candidates }) } }], [{ title: '准备批量生成', effect: 'bookkeeping', highRisk: false, atomic: true }]);
+  await saveFixtureToolRound(run.id, '', [{ id: 'batch-source', type: 'function', function: { name: 'prepare_generation_batch', arguments: JSON.stringify({ title: '候选批次', candidates }) } }], [{ title: '准备批量生成', effect: 'bookkeeping', highRisk: false, atomic: true }]);
   const call = (await db.agentToolCalls.where('runId').equals(run.id).first())!;
   await transitionToolCall(run.id, call.id, ['pending'], 'running');
   const context: AgentToolContext = { runId: run.id, threadId: thread.id, callId: call.id, signal: new AbortController().signal };
@@ -55,7 +56,7 @@ describe('batch fault boundaries', () => {
     const definition = BUSINESS_TOOLS.find(tool => tool.name === 'slot_update')!;
     const raw = { kind: 'shot', ownerId: f.project.id, episodeId: f.episode.id, id: f.shot.id, slot: 'firstFrame', patch: { result: state.jobs[0].result } };
     const args = definition.parseArguments(raw);
-    await saveToolRound(runRecord.id, '', [{ id: 'generic-write', type: 'function', function: { name: definition.name, arguments: JSON.stringify(raw) } }], [{ title: definition.title, effect: definition.effect, highRisk: false, atomic: true }]);
+    await saveFixtureToolRound(runRecord.id, '', [{ id: 'generic-write', type: 'function', function: { name: definition.name, arguments: JSON.stringify(raw) } }], [{ title: definition.title, effect: definition.effect, highRisk: false, atomic: true }]);
     const call = (await db.agentToolCalls.where('runId').equals(runRecord.id).first())!;
     await transitionToolCall(runRecord.id, call.id, ['pending'], 'running');
     const context: AgentToolContext = { runId: runRecord.id, threadId: f.thread.id, callId: call.id, signal: new AbortController().signal };

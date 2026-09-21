@@ -1,3 +1,4 @@
+import { preloadFixtureGroups } from "./helpers/toolDispatch";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { beginAgentRun } from "@/db/agentRuns";
@@ -20,7 +21,7 @@ async function pending(mode:AgentPermissionMode="full",protocol:"chat-completion
   await updateGeneralAgentConfig({permissionMode:mode,enabledSkillIds:["media-generation"]});
   await db.connectors.bulkPut([connector,{...connector,id:"apimart",definitionId:"apimart",baseUrl:"https://apimart.test/v1"},{...connector,id:"hub",definitionId:"aihubmix",baseUrl:"https://hub.test/v1"}]);
   const project=await createProject("确认测试");const episode=(await db.episodes.where("projectId").equals(project.id).first())!;const shot=await addShot(project.id,episode.id);
-  const thread=await createChatThread();const run=await beginAgentRun({threadId:thread.id,connector,model:protocol==="responses"?"gpt-5.6-luna":"chat",content:"生成图片"});
+  const thread=await createChatThread();const run = await preloadFixtureGroups(await beginAgentRun({threadId:thread.id,connector,model:protocol==="responses"?"gpt-5.6-luna":"chat",content:"生成图片"}), ["media-generation"]);
   const args:GenerationSubmitArgs={connectorId:"apimart",model:video?"MiniMax-H3":"gpt-image-2",target:{kind:"shot",projectId:project.id,episodeId:episode.id,entityId:shot.id,slot:video?"clip":"firstFrame"},prompt:"AI 原始提示",parameters:video?{duration:5,resolution:"768P"}:{size:"16:9"},inputs:[]};
   const original=JSON.stringify(args);
   const functionCall={type:"function_call",id:"fc1",call_id:"call1",name:"submit_generation",arguments:original,status:"completed"};

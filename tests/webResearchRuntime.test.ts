@@ -1,3 +1,4 @@
+import { preloadFixtureGroups } from "./helpers/toolDispatch";
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { db } from '@/db/database';
 import { beginAgentRun, interruptThreadRuns } from '@/db/agentRuns';
@@ -23,7 +24,7 @@ async function begin(mode: AgentPermissionMode = 'full') {
   await updateGeneralAgentConfig({ permissionMode: mode, enabledSkillIds: [] });
   await saveSearchConnection({ apiKey: secret, enabled: true });
   const thread = await createChatThread();
-  return beginAgentRun({ threadId: thread.id, connector, model: 'fixture', content: 'research' });
+  return preloadFixtureGroups(await beginAgentRun({ threadId: thread.id, connector, model: 'fixture', content: 'research' }), ['web-research']);
 }
 const serviceResult = () => Response.json({ results: [{ title: 'Research', url: 'https://example.com/research', content: 'lighting summary', raw_content: 'lighting extracted text' }] });
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals(); });

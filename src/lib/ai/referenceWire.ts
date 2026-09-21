@@ -1,4 +1,5 @@
 import { safeHistoricalLookupOutput } from "@/lib/agent/referenceEvidence";
+import { resolveMaterialInput } from "@/lib/agent/materialImageInput";
 import { db } from "@/db/database";
 import type { AgentRequestMessage, AgentResponseItem } from "@/domain/agent";
 import type { AgentReferenceInput, AgentVisionCapability } from "@/domain/referenceInput";
@@ -24,7 +25,8 @@ async function pixels(inputs: Array<AgentReferenceInput | undefined>, scope: Ref
   for (const image of images) {
     signal?.throwIfAborted();
     if (encoded.has(image.mediaId)) continue;
-    const media = await db.media.get(image.mediaId);
+    const input = active.find(item => item.images?.some(row => row.mediaId === image.mediaId));
+    const media = input?.material ? await resolveMaterialInput(input, scope.projectId, scope.runId) : await db.media.get(image.mediaId);
     if (!media) throw new Error("图片文件不可用");
     const bytes = new Uint8Array(await media.blob.arrayBuffer());
     let binary = "";

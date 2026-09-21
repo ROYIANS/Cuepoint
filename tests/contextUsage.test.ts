@@ -29,7 +29,8 @@ describe("context preview", () => {
       { role: "tool", content: '{"result":"保存成功"}', tool_call_id: "call" },
     ] });
     expect(withTools.categories[0].tokens).toBe(base.categories[0].tokens);
-    expect(withTools.categories[1].tokens).toBeGreaterThan(base.categories[1].tokens);
+    expect(withTools.categories[1].tokens).toBe(base.categories[1].tokens);
+    expect(withTools.categories.find(item => item.id === "tool-schemas")!.tokens).toBeGreaterThan(0);
     expect(withTools.categories[2].tokens).toBeGreaterThan(4);
     expect(withTools.categories.find((item) => item.id === "results")!.tokens).toBeGreaterThan(4);
     expect(withTools.total).toBe(withTools.categories.reduce((sum, item) => sum + item.tokens, 0));

@@ -1,3 +1,4 @@
+import { createToolLoading, DISCOVERY_TOOL_NAME, getOfferedToolNames, toolLoadingInstructions } from "@/lib/agent/toolLoading";
 import type { ReferenceAttachment } from "@/domain/references";
 import { selectReferenceContext, referenceSelectionCharacterBudget } from "@/lib/agent/referenceContext";
 import { requireVision, resolveVisionCapability } from "@/lib/ai/visionCapability";
@@ -223,9 +224,12 @@ function useContextUsage({
       taskContext?.instructions ??
       config?.instructions ??
       "";
+    const allowedNames = activeRun?.enabledToolNames ?? filterProjectMemoryTools([...new Set([...skills.enabledToolNames, ...(taskContext?.taskToolNames ?? [])])], taskContext?.projectContext?.projectId, interactionMode);
+    const loading = activeRun ? activeRun.toolLoading : createToolLoading(interactionMode === "conversation" ? [] : config?.enabledSkillIds ?? DEFAULT_SKILL_IDS, allowedNames);
+    const offeredNames = activeRun ? getOfferedToolNames(activeRun) : getOfferedToolNames({ enabledToolNames: loading ? [...allowedNames, DISCOVERY_TOOL_NAME] : allowedNames, toolLoading: loading, interactionMode });
     const skillInstructions = activeRun
       ? (activeRun.skillInstructions ?? "")
-      : skills.skillInstructions;
+      : loading ? toolLoadingInstructions(loading) : skills.skillInstructions;
     const memorySelection =
       activeRun?.memorySelection ?? memoryState?.selection;
     const selectedReferences = activeRun ? activeRun.context?.selectedReferences : referenceState?.selection;
@@ -243,20 +247,7 @@ function useContextUsage({
           ),
           memorySelection,
         );
-    const tools = toolSchemas(
-      activeRun
-        ? (activeRun.enabledToolNames ?? [])
-        : filterProjectMemoryTools(
-            [
-              ...new Set([
-                ...skills.enabledToolNames,
-                ...(taskContext?.taskToolNames ?? []),
-              ]),
-            ],
-            taskContext?.projectContext?.projectId,
-            interactionMode,
-          ),
-    );
+    const tools = toolSchemas(offeredNames);
     const budget = budgetContext(
       request,
       tools,
@@ -285,6 +276,9 @@ function useContextUsage({
       ? Math.min(100, (usage.total / capacity) * 100)
       : undefined;
     return {
+      toolCount: offeredNames.length,
+      capabilityCount: loading?.groups.length ?? 0,
+      loadedCapabilities: loading?.groups.filter(group => loading.loadedGroupIds.includes(group.id)).map(group => group.name) ?? [],
       projectContext,
       memorySelection,
       selectedReferences,
@@ -346,6 +340,9 @@ export function ContextUsagePanel({
     memorySelection,
     selectedReferences,
     referencesLoading,
+    toolCount,
+    capabilityCount,
+    loadedCapabilities,
     error,
   } = useContextUsage(props);
   const { model } = props;
@@ -365,6 +362,10 @@ export function ContextUsagePanel({
       </div>
       <div className="agent-context-model" title={activeRun?.model ?? model}>
         {activeRun?.model ?? (model || "尚未选择模型")}
+      </div>
+      <div className="agent-context-project">
+        <strong>当前提供 {toolCount} 个工具{capabilityCount ? ` · ${capabilityCount} 组能力按需加载` : ""}</strong>
+        {capabilityCount > 0 && <small>{loadedCapabilities.length ? `已加载：${loadedCapabilities.join("、")}` : "先提供基础工具与能力目录，业务工具使用时再加载。"}</small>}
       </div>
       {projectContext && (
         <div className="agent-context-project">
@@ -486,7 +487,7 @@ export function ContextUsagePanel({
             <p>
               包含已保存的请求与续接状态；当前输出及未回填的工具结果尚未计入。
               {activeRun.modelMetrics?.at(-1)?.usage?.inputTokens !== undefined
-                ? `最近一次请求实际输入 ${formatTokenCount(activeRun.modelMetrics.at(-1)!.usage!.inputTokens!)} tokens。`
+                ? `最近一次请求实际输入 ${formatTokenCount(activeRun.modelMetrics.at(-1)!.usage!.inputTokens!)} tokens${activeRun.modelMetrics.at(-1)?.usage?.cachedInputTokens !== undefined ? `，其中缓存命中 ${formatTokenCount(activeRun.modelMetrics.at(-1)!.usage!.cachedInputTokens!)}` : ""}。`
                 : ""}
             </p>
           )}

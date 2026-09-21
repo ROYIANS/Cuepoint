@@ -23,7 +23,7 @@ async function parseDocxInWorker(buffer: ArrayBuffer, signal?: AbortSignal): Pro
   });
 }
 
-async function parseFile(buffer: ArrayBuffer, kind: ReferenceKind, mimeType: string, signal?: AbortSignal): Promise<ParsedReference> {
+export async function parseReferenceFile(buffer: ArrayBuffer, kind: ReferenceKind, mimeType: string, signal?: AbortSignal): Promise<ParsedReference> {
   signal?.throwIfAborted();
   if (kind === "text") return parseTextReference(buffer);
   if (kind === "pdf") return (await import("./pdf")).parsePdfReference(buffer, signal);
@@ -42,7 +42,7 @@ async function finishImport(reference: ProjectReference, buffer: ArrayBuffer, op
   options.onProgress?.(reference);
   let parsed: ParsedReference | undefined;
   let error: string | undefined;
-  try { parsed = await parseFile(buffer, reference.kind, reference.mimeType, options.signal); options.signal?.throwIfAborted(); }
+  try { parsed = await parseReferenceFile(buffer, reference.kind, reference.mimeType, options.signal); options.signal?.throwIfAborted(); }
   catch (failure) { error = options.signal?.aborted ? "解析已取消，可以重试" : failure instanceof Error ? failure.message : "解析失败，请重试"; }
   return db.transaction("rw", [db.projects, db.projectReferences, db.referenceChunks], async () => {
     const current = await db.projectReferences.get(reference.id);

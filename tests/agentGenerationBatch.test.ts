@@ -1,10 +1,11 @@
+import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { taskGenerationSource, saveTaskRecord, validateTaskSources } from '@/db/agentTaskRecords';
 import { createAgentTaskForThread } from '@/db/agentTasks';
 import { getTaskWrapupState } from '@/db/agentTaskWrapups';
 import { describe, expect, it, vi } from 'vitest';
 import { db } from '@/db/database';
 import { beginAgentRun } from '@/db/agentRuns';
-import { saveToolRound, transitionToolCall } from '@/db/agentTools';
+import {  transitionToolCall } from '@/db/agentTools';
 import { createProject, addShot, createChatThread, patchShot, deleteChatThread, deleteProject, deleteMediaIfOrphan, putMedia } from '@/db/repo';
 import { prepareGenerationBatch, readGenerationBatch, saveGenerationBatchDraft, changeGenerationBatchItems, confirmGenerationBatch, applyBatchSelections, selectBatchCandidate, retryFailedBatch, controlGenerationBatch, recoverAbandonedGenerationBatches } from '@/db/agentGenerationBatches';
 import { startGenerationBatch, stopGenerationBatch, batchUserAction } from '@/lib/agent/generationBatchRuntime';
@@ -29,7 +30,7 @@ async function fixture(count = 4, provider: 'apimart' | 'aihubmix' = 'apimart') 
   const run = await beginAgentRun({ threadId: thread.id, connector: config, model: 'chat', content: '准备候选' });
   const draft: GenerationSubmitArgs = { connectorId: config.id, model: 'gpt-image-2', prompt: '雨夜车站', parameters: {}, inputs: [], target: { kind: 'shot', projectId: project.id, episodeId: episode.id, entityId: shot.id, slot: 'firstFrame' } };
   const candidates = Array.from({ length: count }, (_, index) => ({ ...draft, target: { ...draft.target, slot: index > 3 ? 'lastFrame' : 'firstFrame' } }));
-  await saveToolRound(run.id, '', [{ id: 'batch-source', type: 'function', function: { name: 'prepare_generation_batch', arguments: JSON.stringify({ title: '候选批次', candidates }) } }], [{ title: '准备批量生成', effect: 'bookkeeping', highRisk: false, atomic: true }]);
+  await saveFixtureToolRound(run.id, '', [{ id: 'batch-source', type: 'function', function: { name: 'prepare_generation_batch', arguments: JSON.stringify({ title: '候选批次', candidates }) } }], [{ title: '准备批量生成', effect: 'bookkeeping', highRisk: false, atomic: true }]);
   const call = (await db.agentToolCalls.where('runId').equals(run.id).first())!;
   await transitionToolCall(run.id, call.id, ['pending'], 'running');
   const context: AgentToolContext = { runId: run.id, threadId: thread.id, callId: call.id, signal: new AbortController().signal };

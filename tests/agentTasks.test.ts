@@ -1,10 +1,11 @@
+import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { createProject as createBoundTestProject } from "@/db/repo";
 import { createManualWrapup, saveWrapup, confirmWrapup } from "@/db/agentTaskWrapups";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { createAgentTask, createAgentTaskForThread, updateAgentTask, setAgentTaskLifecycle, pinAgentTaskResult, unpinAgentTaskResult } from "@/db/agentTasks";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
-import { saveToolRound, transitionToolCall, updateRunPlanAndComplete } from "@/db/agentTools";
+import {  transitionToolCall, updateRunPlanAndComplete } from "@/db/agentTools";
 import { createChatThread, deleteChatThread } from "@/db/repo";
 import { getTaskDisplayState, isTaskBusy } from "@/lib/agent/taskState";
 import { executeChatRun } from "@/lib/agent/runChat";
@@ -101,7 +102,7 @@ describe("unified task workspace", () => {
   it.each(["missing-task", "ledger-write-failure"] as const)("keeps plans and ledger atomic on %s", async (failureKind) => {
     const { task, run } = await runTask();
     const nextPlan: AgentPlanItem[] = [{ ...plan[0], status: "completed" }];
-    await saveToolRound(run.id, "", [{ id: "plan-call", type: "function", function: { name: "update_run_plan", arguments: JSON.stringify({ steps: nextPlan }) } }], [{ title: "更新计划", effect: "bookkeeping", highRisk: false }]);
+    await saveFixtureToolRound(run.id, "", [{ id: "plan-call", type: "function", function: { name: "update_run_plan", arguments: JSON.stringify({ steps: nextPlan }) } }], [{ title: "更新计划", effect: "bookkeeping", highRisk: false }]);
     const call = (await db.agentToolCalls.where("runId").equals(run.id).toArray())[0];
     await transitionToolCall(run.id, call.id, ["pending"], "running");
     if (failureKind === "missing-task") await db.agentTasks.delete(task.id);

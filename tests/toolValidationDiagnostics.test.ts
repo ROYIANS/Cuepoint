@@ -1,3 +1,4 @@
+import { preloadFixtureGroups } from "./helpers/toolDispatch";
 import { describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 import { db } from "@/db/database";
@@ -74,7 +75,7 @@ describe("tool argument diagnostics", () => {
   it.each(["chat-completions", "responses"] as const)("returns actionable error to %s and executes only a new corrected read", async (protocol) => {
     await updateGeneralAgentConfig({ permissionMode: "full", enabledSkillIds: ["business-read"] });
     const thread = await createChatThread();
-    const run = await beginAgentRun({ threadId: thread.id, connector, model: protocol === "responses" ? "gpt-5.6-luna" : "test-model", content: "读取剧本" });
+    const run = await preloadFixtureGroups(await beginAgentRun({ threadId: thread.id, connector, model: protocol === "responses" ? "gpt-5.6-luna" : "test-model", content: "读取剧本" }), ["business-read"]);
     const project = await createProject("诊断项目");
     const episode = (await firstEpisode(project.id))!;
     await updateEpisodeDraft(episode.id, { script: "片段" });

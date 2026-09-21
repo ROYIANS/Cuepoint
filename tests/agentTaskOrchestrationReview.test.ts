@@ -1,10 +1,11 @@
+import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { createProject as createBoundTestProject } from "@/db/repo";
 import { describe, expect, it } from "vitest";
 import { TASK_TOOLS } from "@/lib/agent/taskTools";
 import { db } from "@/db/database";
 import { createAgentTask, updateAgentTask } from "@/db/agentTasks";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
-import { saveToolRound, transitionToolCall, updateRunPlanAndComplete } from "@/db/agentTools";
+import {  transitionToolCall, updateRunPlanAndComplete } from "@/db/agentTools";
 import { validateTaskSources } from "@/db/agentTaskRecords";
 import type { ConnectorConfig } from "@/domain/types";
 const connector:ConnectorConfig={id:"fixture",name:"Fixture",definitionId:"openai-compatible",baseUrl:"https://example.test/v1",apiKey:"fake",updatedAt:"now"};
@@ -14,7 +15,7 @@ async function fixture(){
  return {task,run};
 }
 async function effect(runId:string,name:string,effect:"write"|"network",result:unknown){
- await saveToolRound(runId,"",[{id:name,type:"function",function:{name,arguments:"{}"}}],[{title:name,effect,highRisk:false}]);
+ await saveFixtureToolRound(runId,"",[{id:name,type:"function",function:{name,arguments:"{}"}}],[{title:name,effect,highRisk:false}]);
  const call=(await db.agentToolCalls.where("runId").equals(runId).toArray()).find(call=>call.providerCallId===name)!;
  await db.agentToolCalls.update(call.id,{status:"completed",result:JSON.stringify(result)});
  return [{type:"tool" as const,id:call.id}];
@@ -42,7 +43,7 @@ describe("task orchestration independent boundaries",()=>{
   const tool=TASK_TOOLS.find(tool=>tool.name==="task_read")!;let serial=0;
   const read=async(args:unknown)=>{
     const id=`read-${++serial}`;
-    await saveToolRound(run.id,"",[{id,type:"function",function:{name:tool.name,arguments:JSON.stringify(args)}}],[{title:tool.title,effect:tool.effect,highRisk:false,atomic:true}]);
+    await saveFixtureToolRound(run.id,"",[{id,type:"function",function:{name:tool.name,arguments:JSON.stringify(args)}}],[{title:tool.title,effect:tool.effect,highRisk:false,atomic:true}]);
     const call=(await db.agentToolCalls.where("runId").equals(run.id).toArray()).find(call=>call.providerCallId===id)!;
     await transitionToolCall(run.id,call.id,["pending"],"running");
     return tool.execute(tool.parseArguments(args),{runId:run.id,threadId:run.threadId,callId:call.id,signal:new AbortController().signal});
@@ -62,7 +63,7 @@ describe("task orchestration independent boundaries",()=>{
   const plan=Array.from({length:30},(_,i)=>({id:`${i}`.padEnd(80,"x"),title:"长".repeat(240),status:"pending" as const}));
   const task=await createAgentTask({projectId:(await createBoundTestProject("测试项目")).id,title:"题".repeat(120),goal:"目".repeat(20000),acceptanceCriteria:Array.from({length:20},()=>"标".repeat(500)),plan});
   const run=await beginAgentRun({threadId:task.threadId,connector,model:"fixture",content:"继续"});
-  await saveToolRound(run.id,"",[{id:"plan",type:"function",function:{name:"update_run_plan",arguments:"{}"}}],[{title:"计划",effect:"bookkeeping",highRisk:false}]);
+  await saveFixtureToolRound(run.id,"",[{id:"plan",type:"function",function:{name:"update_run_plan",arguments:"{}"}}],[{title:"计划",effect:"bookkeeping",highRisk:false}]);
   const call=(await db.agentToolCalls.where("runId").equals(run.id).first())!;
   await transitionToolCall(run.id,call.id,["pending"],"running");
   const next=plan.map(step=>({...step,title:"新".repeat(240)}));

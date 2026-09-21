@@ -1,7 +1,8 @@
+import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { beginAgentRun } from "@/db/agentRuns";
-import { saveToolRound } from "@/db/agentTools";
+import {  } from "@/db/agentTools";
 import { updateGeneralAgentConfig } from "@/db/agentSettings";
 import { createChatThread } from "@/db/repo";
 import { executeChatRun } from "@/lib/agent/runChat";
@@ -16,7 +17,7 @@ describe("public tool-round activity persistence", () => {
     const run = await beginAgentRun({ threadId: thread.id, connector, model: "test-model", content: "检查工作区" });
     const failure = vi.spyOn(db.agentRuns, "update").mockRejectedValueOnce(new Error("activity storage failure"));
     try {
-      await expect(saveToolRound(run.id, "准备检查", [{ id: "call", type: "function", function: { name: "workspace_overview", arguments: "{}" } }], [{ title: "检查工作区", effect: "read", highRisk: false }], undefined, { reasoning: "公开思考" })).rejects.toThrow("activity storage failure");
+      await expect(saveFixtureToolRound(run.id, "准备检查", [{ id: "call", type: "function", function: { name: "workspace_overview", arguments: "{}" } }], [{ title: "检查工作区", effect: "read", highRisk: false }], undefined, { reasoning: "公开思考" })).rejects.toThrow("activity storage failure");
     } finally { failure.mockRestore(); }
     expect(await db.agentToolCalls.where("runId").equals(run.id).count()).toBe(0);
     expect(await db.agentRuns.get(run.id)).toEqual(run);

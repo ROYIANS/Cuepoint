@@ -1,3 +1,4 @@
+import { preloadFixtureGroups } from "./helpers/toolDispatch";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { beginAgentRun } from "@/db/agentRuns";
@@ -19,7 +20,7 @@ async function pending() {
   const episode = (await db.episodes.where("projectId").equals(project.id).first())!;
   const shot = await addShot(project.id, episode.id);
   const thread = await createChatThread();
-  const run = await beginAgentRun({ threadId: thread.id, connector, model: "chat", content: "生成图片" });
+  const run = await preloadFixtureGroups(await beginAgentRun({ threadId: thread.id, connector, model: "chat", content: "生成图片" }), ["media-generation"]);
   const args: GenerationSubmitArgs = { connectorId: "hub", model: "gpt-image-2", target: { kind: "shot", projectId: project.id, episodeId: episode.id, entityId: shot.id, slot: "firstFrame" }, prompt: "AI 原始画面", inputs: [], parameters: { size: "auto" } };
   const original = JSON.stringify(args);
   await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => Response.json({ choices: [{ message: { content: "", tool_calls: [{ id: "call", type: "function", function: { name: "submit_generation", arguments: original } }] }, finish_reason: "tool_calls" }] })));

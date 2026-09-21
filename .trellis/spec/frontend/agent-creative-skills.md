@@ -15,7 +15,7 @@ Read before extending creative CRUD, generation profiles, tool previews, recover
 - Dexie v18 `agentGenerationJobs`: sparse unique `callId` for single calls or sparse unique `batchItemId` plus `batchId` for batches; shared owner/status/fingerprint indexes remain. See [Batch Generation](./agent-batch-generation.md) for new batch/item tables.
 
 ## 3. Contracts
-- All six foundational skill groups default on. getGeneralAgentConfig transactionally upgrades legacy configurations without skillDefaultsVersion to version1 and enables all six once (user decision2026-09-19). New configurations persist version1 immediately. Later user switch choices, including an empty list, remain intact. New permissions/skills affect new runs; existing run snapshots and conversation-mode empty tool sets remain unchanged.
+- Settings defaults are versioned. The original version-1 legacy migration enables foundational skills once. Version 2 adds IP/material groups while retaining prior opt-outs and the all-off list; fresh configs use DEFAULT_SKILL_IDS. Existing run permissions stay frozen; see [Agent Library Tools](./agent-library-tools.md).
 - Schemas accept explicit creative fields only. The business schema helper builds JSON and runtime validation together. Tool names in skill allowlists must exactly match the registry. Never expose arbitrary table writes, extra bags, credentials or Blob payloads.
 - Resolve stable IDs with owner scope (`studio` or a real project); episodes and shots require the correct parent. Duplicate/reorder reuse repository semantics. Long content/relationships use bounded pagination; full script replacement is capped at 24,000 characters within the 32,768-character argument envelope.
 - Prepare flushes relevant drafts and binds arguments, target, referenced entities/media or cascade scope to a revision. Execution flushes again before entering the database transaction, checks the revision inside it, and fails on change. Full permission does not bypass these checks.
@@ -53,7 +53,7 @@ Base: ordinary conversation has no tools. Existing installations automatically g
 Bad: infer entity IDs, send dependent writes in the same preflight round, mutate a media Blob under the same ID, or treat remote completion as proof of target application.
 
 ## 6. Tests Required
-- `agentSettings.test.ts`: all-six fresh defaults, one-time legacy upgrade, unrelated preferences retained, later opt-outs survive reload and existing runs remain frozen.
+- `agentSettings.test.ts`: current DEFAULT_SKILL_IDS fresh defaults, one-time legacy upgrade, unrelated preferences retained, later opt-outs survive reload and existing runs remain frozen.
 - `agentBusiness.test.ts`: full entity chain, all asset kinds, owner validation, cascade/references, retained media, complete scalar/relationship reads, stale previews and allowlist parity.
 - `agentToolTransactions.test.ts`: mutation+ledger rollback, abort, replay, ownership, immutable previews and no repeated preparation after approval.
 - `agentGeneration.test.ts`: both providers/image+video, real fixture bytes, exact request mappings, no duplicate POST, crash/stop/download/storage failures, conflict, thread/project deletion, input limits and secret redaction.

@@ -1,0 +1,78 @@
+{
+  "estimator": "local character heuristic; not provider billing",
+  "originalBaseline": {
+    "tools": 50,
+    "schemaTokens": 11865,
+    "instructionTokens": 1951,
+    "combinedTokens": 13816
+  },
+  "snapshots": {
+    "initialUnbound": {
+      "toolCount": 3,
+      "schemaTokens": 484,
+      "instructionTokens": 660,
+      "combinedTokens": 1144,
+      "decreaseFromOriginalBaseline": 0.9171974522292994
+    },
+    "initialBound": {
+      "toolCount": 3,
+      "schemaTokens": 484,
+      "instructionTokens": 708,
+      "combinedTokens": 1192,
+      "decreaseFromOriginalBaseline": 0.9137232194557036
+    },
+    "ip": {
+      "toolCount": 9,
+      "schemaTokens": 1746,
+      "instructionTokens": 874,
+      "combinedTokens": 2620,
+      "decreaseFromOriginalBaseline": 0.8103647944412276
+    },
+    "material": {
+      "toolCount": 13,
+      "schemaTokens": 2732,
+      "instructionTokens": 951,
+      "combinedTokens": 3683,
+      "decreaseFromOriginalBaseline": 0.73342501447597
+    },
+    "ipAndMaterial": {
+      "toolCount": 19,
+      "schemaTokens": 3994,
+      "instructionTokens": 1165,
+      "combinedTokens": 5159,
+      "decreaseFromOriginalBaseline": 0.6265923566878981
+    }
+  },
+  "ipSearch": {
+    "requests": [
+      {
+        "step": 1,
+        "toolCount": 3,
+        "schemaTokens": 484,
+        "messageTokens": 792,
+        "toolResultTokens": 1,
+        "combinedInputTokens": 1276
+      },
+      {
+        "step": 2,
+        "toolCount": 9,
+        "schemaTokens": 1746,
+        "messageTokens": 1158,
+        "toolResultTokens": 110,
+        "combinedInputTokens": 2904
+      },
+      {
+        "step": 3,
+        "toolCount": 9,
+        "schemaTokens": 1746,
+        "messageTokens": 1281,
+        "toolResultTokens": 196,
+        "combinedInputTokens": 3027
+      }
+    ],
+    "totalEstimatedInputTokens": 7207,
+    "discoveryExtraModelRounds": 1,
+    "firstDiscoveryRequestInputTokens": 1276,
+    "note": "3 requests: load IP group -> ip_search -> answer. Includes actual loader and search results in subsequent inputs. Does not include provider output/reasoning/cache and is not a no-discovery A/B billing comparison."
+  }
+}
