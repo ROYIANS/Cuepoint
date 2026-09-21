@@ -1,0 +1,26 @@
+{
+  "checks": [
+    {
+      "name": "real cross-tab Web Lock",
+      "blocked": "此对话正在另一个页面执行，请先在那里停止或等待完成",
+      "released": "entered"
+    },
+    {
+      "name": "500 plain-text messages dev",
+      "readyMs": 1932,
+      "dom": 13658,
+      "scrolling": {
+        "clientHeight": 882,
+        "scrollHeight": 55461,
+        "scrollTop": 54579
+      }
+    },
+    {
+      "name": "200% CSS zoom reflow proxy",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "composer": true
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,29 @@
+{
+  "result": [
+    {
+      "name": "audit.docx",
+      "status": "ready",
+      "chunks": [
+        "真实 Worker 中文正文"
+      ],
+      "warnings": [
+        "DOCX 仅提取文字段落，不包含图片、排版或可靠页码"
+      ]
+    },
+    {
+      "name": "audit.pdf",
+      "status": "ready",
+      "chunks": [
+        "Audit PDF worker text"
+      ],
+      "warnings": [
+        "PDF 按页提取文字，阅读顺序与排版可能与原件不同"
+      ]
+    },
+    {
+      "name": "broken.pdf",
+      "error": "参考资料尚未解析完成，请重试解析"
+    }
+  ],
+  "errors": []
+}

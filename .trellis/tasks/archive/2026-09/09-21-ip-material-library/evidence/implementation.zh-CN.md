@@ -30,4 +30,4 @@
 
 ## 后续维护
 
-可执行合同见 `.trellis/spec/frontend/ip-material-library.md`。任务保留在当前目录，本次未提交或归档。其他会话的首页背景与历史审查/日志改动不属于此任务。
+可执行合同见 `.trellis/spec/frontend/ip-material-library.md`。本次功能已本地提交为 `7c805d4`，任务与证据按用户要求归档，未推送。其他会话的首页背景与历史审查/日志改动不属于此任务。

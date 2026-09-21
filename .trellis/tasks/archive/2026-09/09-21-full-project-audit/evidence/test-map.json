@@ -1,0 +1,955 @@
+[
+  {
+    "test": "tests/agentBusiness.test.ts",
+    "imports": [
+      "@/lib/references/import",
+      "@/lib/agent/businessStore",
+      "@/db/database",
+      "@/db/repo",
+      "@/db/agentTools",
+      "@/db/agentRuns",
+      "@/lib/agent/businessTools",
+      "@/lib/agent/tools",
+      "@/domain/agent",
+      "@/domain/types",
+      "@/lib/debouncedDraft",
+      "@/lib/ids"
+    ],
+    "source_string_assertions": false,
+    "tests": 15
+  },
+  {
+    "test": "tests/copySelection.test.ts",
+    "imports": [
+      "@/lib/copySelection"
+    ],
+    "source_string_assertions": false,
+    "tests": 1
+  },
+  {
+    "test": "tests/aspectPreset.test.ts",
+    "imports": [
+      "@/domain/types"
+    ],
+    "source_string_assertions": false,
+    "tests": 1
+  },
+  {
+    "test": "tests/projectMemoryPackage.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/repo",
+      "@/db/projectMemories",
+      "@/domain/projectMemory",
+      "@/lib/projectPackage"
+    ],
+    "source_string_assertions": false,
+    "tests": 10
+  },
+  {
+    "test": "tests/contextManagement.test.ts",
+    "imports": [
+      "@/db/repo",
+      "@/db/database",
+      "@/db/agentRuns",
+      "@/db/repo",
+      "@/db/contextSettings",
+      "@/db/agentTasks",
+      "@/lib/agent/contextPolicy",
+      "@/lib/agent/contextPlanner",
+      "@/lib/agent/contextCompaction",
+      "@/lib/agent/tools",
+      "@/lib/agent/runChat",
+      "@/lib/ai/responsesStream",
+      "@/domain/types",
+      "@/domain/agent"
+    ],
+    "source_string_assertions": false,
+    "tests": 14
+  },
+  {
+    "test": "tests/agentTools.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/agentRuns",
+      "@/db/agentTools",
+      "@/db/agentSettings",
+      "@/db/repo",
+      "@/lib/agent/runChat",
+      "@/lib/agent/tools",
+      "@/domain/agent",
+      "@/domain/agent",
+      "@/domain/types"
+    ],
+    "source_string_assertions": false,
+    "tests": 22
+  },
+  {
+    "test": "tests/reorderIds.test.ts",
+    "imports": [
+      "@/lib/reorderIds"
+    ],
+    "source_string_assertions": false,
+    "tests": 6
+  },
+  {
+    "test": "tests/generationIntent.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/repo",
+      "@/domain/output",
+      "@/lib/productionContext",
+      "@/lib/generationIntent"
+    ],
+    "source_string_assertions": false,
+    "tests": 7
+  },
+  {
+    "test": "tests/agentRuns.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/agentRuns",
+      "@/db/repo",
+      "@/domain/types",
+      "@/lib/agent/runChat",
+      "@/lib/agent/runOwnership"
+    ],
+    "source_string_assertions": false,
+    "tests": 14
+  },
+  {
+    "test": "tests/agentTasks.test.ts",
+    "imports": [
+      "@/db/repo",
+      "@/db/agentTaskWrapups",
+      "@/db/database",
+      "@/db/agentTasks",
+      "@/db/agentRuns",
+      "@/db/agentTools",
+      "@/db/repo",
+      "@/lib/agent/taskState",
+      "@/lib/agent/runChat",
+      "@/domain/agent",
+      "@/domain/types"
+    ],
+    "source_string_assertions": false,
+    "tests": 9
+  },
+  {
+    "test": "tests/catalog.test.ts",
+    "imports": [
+      "@/lib/ai/catalog"
+    ],
+    "source_string_assertions": false,
+    "tests": 4
+  },
+  {
+    "test": "tests/chatScroll.test.ts",
+    "imports": [
+      "@/lib/chatScroll"
+    ],
+    "source_string_assertions": false,
+    "tests": 3
+  },
+  {
+    "test": "tests/filterThreadsByTitle.test.ts",
+    "imports": [
+      "@/components/agent/filterThreadsByTitle",
+      "@/domain/types"
+    ],
+    "source_string_assertions": false,
+    "tests": 4
+  },
+  {
+    "test": "tests/agentReferences.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/repo",
+      "@/db/agentRuns",
+      "@/db/agentTools",
+      "@/db/agentSettings",
+      "@/db/references",
+      "@/lib/agent/runChat",
+      "@/lib/agent/referenceContext",
+      "@/lib/agent/referenceTools",
+      "@/lib/agent/contextPlanner",
+      "@/lib/ai/referenceWire",
+      "@/lib/ai/visionCapability",
+      "@/lib/ai/responsesStream",
+      "@/domain/types",
+      "@/domain/references",
+      "@/domain/context"
+    ],
+    "source_string_assertions": false,
+    "tests": 12
+  },
+  {
+    "test": "tests/assetFoundation.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/repo",
+      "@/domain/output",
+      "@/domain/types",
+      "@/domain/slot",
+      "@/lib/projectPackage"
+    ],
+    "source_string_assertions": false,
+    "tests": 9
+  },
+  {
+    "test": "tests/responsesStream.test.ts",
+    "imports": [
+      "@/db/agentSettings",
+      "@/lib/ai/responsesStream",
+      "@/db/agentRuns",
+      "@/db/agentTools",
+      "@/db/repo",
+      "@/db/database",
+      "@/lib/agent/runChat",
+      "@/lib/agent/tools",
+      "@/lib/ai/reasoningPolicy",
+      "@/domain/types"
+    ],
+    "source_string_assertions": false,
+    "tests": 13
+  },
+  {
+    "test": "tests/reasoningPolicy.test.ts",
+    "imports": [
+      "@/db/agentSettings",
+      "@/db/database",
+      "@/db/agentRuns",
+      "@/db/agentTools",
+      "@/db/repo",
+      "@/domain/agent",
+      "@/domain/types",
+      "@/lib/ai/reasoningPolicy",
+      "@/lib/ai/chatStream",
+      "@/lib/agent/runChat",
+      "@/lib/agent/tools"
+    ],
+    "source_string_assertions": false,
+    "tests": 7
+  },
+  {
+    "test": "tests/agentTaskWrapup.test.ts",
+    "imports": [
+      "@/db/repo",
+      "@/db/database",
+      "@/db/agentTasks",
+      "@/db/agentTaskWrapups",
+      "@/db/agentRuns",
+      "@/db/agentTaskRecords",
+      "@/db/repo",
+      "@/lib/agent/taskWrapup",
+      "@/lib/agent/runOwnership",
+      "@/domain/types",
+      "@/domain/agentGeneration",
+      "@/domain/agent"
+    ],
+    "source_string_assertions": false,
+    "tests": 16
+  },
+  {
+    "test": "tests/agentGeneration.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/agentRuns",
+      "@/db/agentTools",
+      "@/db/repo",
+      "@/db/agentGeneration",
+      "@/domain/types",
+      "@/lib/agent/generationRuntime",
+      "@/lib/agent/generationProfiles",
+      "@/lib/agent/tools",
+      "@/lib/agent/generationTools",
+      "@/lib/projectPackage"
+    ],
+    "source_string_assertions": false,
+    "tests": 29
+  },
+  {
+    "test": "tests/productionProposals.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/repo",
+      "@/db/productionProposals",
+      "@/domain/slot",
+      "@/lib/productionRevision",
+      "@/domain/production"
+    ],
+    "source_string_assertions": false,
+    "tests": 9
+  },
+  {
+    "test": "tests/agentRunReview.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/agentRuns",
+      "@/db/repo",
+      "@/domain/types"
+    ],
+    "source_string_assertions": false,
+    "tests": 2
+  },
+  {
+    "test": "tests/thinkingPanel.test.ts",
+    "imports": [
+      "@/lib/thinkingTitle"
+    ],
+    "source_string_assertions": false,
+    "tests": 3
+  },
+  {
+    "test": "tests/agentTaskOrchestration.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/repo",
+      "@/db/agentRuns",
+      "@/db/agentTools",
+      "@/db/agentTaskRecords",
+      "@/db/agentTasks",
+      "@/lib/agent/taskTools",
+      "@/lib/agent/taskContext",
+      "@/lib/agent/runChat",
+      "@/domain/types",
+      "@/domain/agent",
+      "@/domain/agentTaskRecords"
+    ],
+    "source_string_assertions": false,
+    "tests": 14
+  },
+  {
+    "test": "tests/agentTaskOrchestrationReview.test.ts",
+    "imports": [
+      "@/db/repo",
+      "@/lib/agent/taskTools",
+      "@/db/database",
+      "@/db/agentTasks",
+      "@/db/agentRuns",
+      "@/db/agentTools",
+      "@/db/agentTaskRecords",
+      "@/domain/types"
+    ],
+    "source_string_assertions": false,
+    "tests": 4
+  },
+  {
+    "test": "tests/agentGenerationReviewTransactions.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/agentRuns",
+      "@/db/agentSettings",
+      "@/db/repo",
+      "@/domain/types",
+      "@/lib/agent/generationReview",
+      "@/lib/agent/runChat",
+      "@/lib/agent/generationProfiles"
+    ],
+    "source_string_assertions": false,
+    "tests": 2
+  },
+  {
+    "test": "tests/agentGenerationBatch.test.ts",
+    "imports": [
+      "@/db/agentTaskRecords",
+      "@/db/agentTasks",
+      "@/db/agentTaskWrapups",
+      "@/db/database",
+      "@/db/agentRuns",
+      "@/db/agentTools",
+      "@/db/repo",
+      "@/db/agentGenerationBatches",
+      "@/lib/agent/generationBatchRuntime",
+      "@/lib/agent/generationRuntime",
+      "@/lib/agent/generationProfiles",
+      "@/domain/types",
+      "@/lib/agent/tools",
+      "@/lib/agent/runOwnership",
+      "@/lib/agent/generationTools"
+    ],
+    "source_string_assertions": false,
+    "tests": 15
+  },
+  {
+    "test": "tests/webResearch.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/searchConnections",
+      "@/db/agentSettings",
+      "@/lib/ai/tavily",
+      "@/domain/search",
+      "@/lib/agent/tools"
+    ],
+    "source_string_assertions": false,
+    "tests": 14
+  },
+  {
+    "test": "tests/modelVendors.test.ts",
+    "imports": [
+      "@/lib/ai/modelVendors"
+    ],
+    "source_string_assertions": false,
+    "tests": 5
+  },
+  {
+    "test": "tests/agentToolsReview.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/agentRuns",
+      "@/db/agentTools",
+      "@/db/agentSettings",
+      "@/db/repo",
+      "@/domain/agent",
+      "@/domain/types",
+      "@/lib/agent/runChat",
+      "@/lib/agent/runOwnership",
+      "@/lib/agent/tools"
+    ],
+    "source_string_assertions": false,
+    "tests": 7
+  },
+  {
+    "test": "tests/openaiCompatible.test.ts",
+    "imports": [
+      "@/lib/ai/openaiCompatible"
+    ],
+    "source_string_assertions": false,
+    "tests": 7
+  },
+  {
+    "test": "tests/apimart.test.ts",
+    "imports": [
+      "@/lib/ai/apimart"
+    ],
+    "source_string_assertions": false,
+    "tests": 25
+  },
+  {
+    "test": "tests/debouncedDraft.test.ts",
+    "imports": [
+      "@/lib/debouncedDraft"
+    ],
+    "source_string_assertions": false,
+    "tests": 13
+  },
+  {
+    "test": "tests/productionContext.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/repo",
+      "@/lib/productionContext",
+      "@/lib/productionRevision",
+      "@/domain/output",
+      "@/domain/slot"
+    ],
+    "source_string_assertions": false,
+    "tests": 7
+  },
+  {
+    "test": "tests/references.test.ts",
+    "imports": [
+      "@/lib/references/package",
+      "@/db/database",
+      "@/db/repo",
+      "@/db/references",
+      "@/lib/references/import",
+      "@/lib/references/parse",
+      "@/lib/references/docx",
+      "@/lib/projectPackage",
+      "@/domain/references",
+      "@/lib/ids"
+    ],
+    "source_string_assertions": false,
+    "tests": 9
+  },
+  {
+    "test": "tests/referenceEvidence.test.ts",
+    "imports": [
+      "@/db/agentRuns",
+      "@/lib/agent/taskWrapup",
+      "@/db/agentTaskRecords",
+      "@/lib/agent/referenceTools",
+      "@/domain/types",
+      "@/lib/agent/runOwnership",
+      "@/db/database",
+      "@/db/repo",
+      "@/db/agentTasks",
+      "@/db/agentTaskWrapups",
+      "@/lib/agent/referenceEvidence",
+      "@/domain/references"
+    ],
+    "source_string_assertions": false,
+    "tests": 4
+  },
+  {
+    "test": "tests/agentUsage.test.ts",
+    "imports": [
+      "@/lib/ai/chatStream",
+      "@/db/agentRuns",
+      "@/db/agentTools",
+      "@/db/repo",
+      "@/db/database",
+      "@/domain/types",
+      "@/lib/agent/runChat"
+    ],
+    "source_string_assertions": false,
+    "tests": 6
+  },
+  {
+    "test": "tests/chatModelPolicy.test.ts",
+    "imports": [
+      "@/lib/ai/chatModelPolicy"
+    ],
+    "source_string_assertions": false,
+    "tests": 6
+  },
+  {
+    "test": "tests/productionHandoff.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/repo",
+      "@/domain/slot",
+      "@/domain/types",
+      "@/lib/debouncedDraft",
+      "@/lib/productionHandoff"
+    ],
+    "source_string_assertions": false,
+    "tests": 9
+  },
+  {
+    "test": "tests/formFieldFocus.test.ts",
+    "imports": [
+      "@/lib/formFieldFocus",
+      "@/lib/shotKeyboard"
+    ],
+    "source_string_assertions": false,
+    "tests": 8
+  },
+  {
+    "test": "tests/agentMemoryTools.test.ts",
+    "imports": [
+      "@/lib/references/import",
+      "@/db/references",
+      "@/lib/agent/referenceToolNames",
+      "@/db/database",
+      "@/db/agentRuns",
+      "@/db/agentTasks",
+      "@/db/agentTaskWrapups",
+      "@/db/agentTaskRecords",
+      "@/db/projectMemories",
+      "@/db/memoryRetrieval",
+      "@/db/repo",
+      "@/domain/agent",
+      "@/domain/types",
+      "@/lib/agent/tools",
+      "@/lib/agent/memoryTools",
+      "@/lib/agent/tools",
+      "@/lib/agent/skills",
+      "@/lib/ids"
+    ],
+    "source_string_assertions": false,
+    "tests": 9
+  },
+  {
+    "test": "tests/agentGenerationReview.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/agentRuns",
+      "@/db/generationPreferences",
+      "@/domain/output",
+      "@/db/agentSettings",
+      "@/db/agentTools",
+      "@/db/repo",
+      "@/domain/agent",
+      "@/domain/types",
+      "@/lib/agent/generationReview",
+      "@/lib/agent/runChat",
+      "@/lib/agent/generationTools",
+      "@/lib/agent/generationProfiles"
+    ],
+    "source_string_assertions": false,
+    "tests": 11
+  },
+  {
+    "test": "tests/generationReviewDraft.test.ts",
+    "imports": [
+      "@/lib/agent/generationReviewDraft",
+      "@/lib/agent/generationProfiles"
+    ],
+    "source_string_assertions": false,
+    "tests": 7
+  },
+  {
+    "test": "tests/repo.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/repo",
+      "@/domain/slot",
+      "@/domain/types"
+    ],
+    "source_string_assertions": false,
+    "tests": 20
+  },
+  {
+    "test": "tests/projectPackage.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/repo",
+      "@/domain/slot",
+      "@/domain/types",
+      "@/lib/projectPackage"
+    ],
+    "source_string_assertions": false,
+    "tests": 13
+  },
+  {
+    "test": "tests/agentProjectContext.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/repo",
+      "@/db/agentRuns",
+      "@/lib/agent/contextCompaction",
+      "@/db/contextSettings",
+      "@/db/agentTaskWrapups",
+      "@/db/agentTasks",
+      "@/db/agentTools",
+      "@/lib/agent/projectContext",
+      "@/lib/agent/businessTools",
+      "@/lib/agent/generationRuntime",
+      "@/lib/agent/tools",
+      "@/domain/agent",
+      "@/domain/types",
+      "@/lib/ids"
+    ],
+    "source_string_assertions": false,
+    "tests": 12
+  },
+  {
+    "test": "tests/memoryRetrieval.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/repo",
+      "@/db/projectMemories",
+      "@/db/memoryRetrieval",
+      "@/lib/memory/retrieval",
+      "@/db/agentRuns",
+      "@/db/agentTools",
+      "@/lib/agent/memoryContext",
+      "@/lib/agent/runChat",
+      "@/lib/ai/responsesStream",
+      "@/lib/agent/contextCompaction",
+      "@/db/contextSettings",
+      "@/lib/agent/contextUsage",
+      "@/domain/projectMemory",
+      "@/domain/types"
+    ],
+    "source_string_assertions": false,
+    "tests": 10
+  },
+  {
+    "test": "tests/agentToolTransactions.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/agentRuns",
+      "@/db/agentSettings",
+      "@/db/agentTools",
+      "@/db/repo",
+      "@/domain/agent",
+      "@/domain/types",
+      "@/lib/agent/runChat",
+      "@/lib/agent/tools"
+    ],
+    "source_string_assertions": false,
+    "tests": 12
+  },
+  {
+    "test": "tests/timeGroups.test.ts",
+    "imports": [
+      "@/components/agent/timeGroups",
+      "@/domain/types"
+    ],
+    "source_string_assertions": false,
+    "tests": 1
+  },
+  {
+    "test": "tests/modelMetadata.test.ts",
+    "imports": [],
+    "source_string_assertions": false,
+    "tests": 6
+  },
+  {
+    "test": "tests/thinkingMatrix.test.ts",
+    "imports": [
+      "@/components/agent/ThinkingMatrix"
+    ],
+    "source_string_assertions": false,
+    "tests": 5
+  },
+  {
+    "test": "tests/agentGenerationRecovery.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/agentRuns",
+      "@/db/agentSettings",
+      "@/db/agentTools",
+      "@/db/repo",
+      "@/domain/agent",
+      "@/domain/agentGeneration",
+      "@/domain/types",
+      "@/lib/agent/runChat",
+      "@/lib/agent/tools",
+      "@/lib/agent/toolErrors"
+    ],
+    "source_string_assertions": false,
+    "tests": 5
+  },
+  {
+    "test": "tests/modelBank.test.ts",
+    "imports": [
+      "@/lib/ai/modelBank",
+      "@/lib/ai/modelMetadata",
+      "@/lib/ai/reasoningPolicy",
+      "@/lib/agent/contextUsage"
+    ],
+    "source_string_assertions": true,
+    "tests": 8
+  },
+  {
+    "test": "tests/projectMemories.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/repo",
+      "@/db/agentTasks",
+      "@/db/agentTaskWrapups",
+      "@/db/projectMemories",
+      "@/domain/projectMemory"
+    ],
+    "source_string_assertions": false,
+    "tests": 9
+  },
+  {
+    "test": "tests/webResearchRuntime.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/agentRuns",
+      "@/db/agentTools",
+      "@/db/searchConnections",
+      "@/db/agentSettings",
+      "@/db/repo",
+      "@/lib/agent/runChat",
+      "@/db/agentTaskRecords",
+      "@/domain/types",
+      "@/domain/agent",
+      "@/db/agentTools"
+    ],
+    "source_string_assertions": false,
+    "tests": 7
+  },
+  {
+    "test": "tests/useShotMedia.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/repo",
+      "@/lib/useShotMedia"
+    ],
+    "source_string_assertions": false,
+    "tests": 1
+  },
+  {
+    "test": "tests/draftMedia.test.ts",
+    "imports": [
+      "@/lib/draftMedia",
+      "@/db/repo",
+      "@/db/database",
+      "@/domain/slot"
+    ],
+    "source_string_assertions": false,
+    "tests": 6
+  },
+  {
+    "test": "tests/output.test.ts",
+    "imports": [
+      "@/domain/output"
+    ],
+    "source_string_assertions": false,
+    "tests": 10
+  },
+  {
+    "test": "tests/mediaPicker.test.ts",
+    "imports": [
+      "@/lib/mediaPicker",
+      "@/domain/types"
+    ],
+    "source_string_assertions": false,
+    "tests": 2
+  },
+  {
+    "test": "tests/agentSettings.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/agentSettings",
+      "@/db/agentRuns",
+      "@/db/repo",
+      "@/domain/agent"
+    ],
+    "source_string_assertions": false,
+    "tests": 4
+  },
+  {
+    "test": "tests/aihubmix.test.ts",
+    "imports": [
+      "@/lib/ai/aihubmix",
+      "@/lib/ai/aihubmix"
+    ],
+    "source_string_assertions": false,
+    "tests": 31
+  },
+  {
+    "test": "tests/contextUsage.test.ts",
+    "imports": [
+      "@/lib/agent/contextPlanner",
+      "@/lib/agent/contextPolicy"
+    ],
+    "source_string_assertions": false,
+    "tests": 3
+  },
+  {
+    "test": "tests/agentGenerationBatchSafety.test.ts",
+    "imports": [
+      "@/db/agentTaskRecords",
+      "@/db/agentTasks",
+      "@/db/agentTaskWrapups",
+      "@/db/database",
+      "@/db/agentRuns",
+      "@/db/agentTools",
+      "@/db/repo",
+      "@/db/agentGenerationBatches",
+      "@/lib/agent/generationBatchRuntime",
+      "@/lib/agent/generationProfiles",
+      "@/domain/types",
+      "@/lib/agent/tools",
+      "@/lib/agent/runOwnership",
+      "@/lib/agent/businessTools"
+    ],
+    "source_string_assertions": false,
+    "tests": 5
+  },
+  {
+    "test": "tests/memoryInclusion.test.ts",
+    "imports": [
+      "@/db/repo",
+      "@/db/projectMemories",
+      "@/lib/projectPackage",
+      "@/lib/memory/schema"
+    ],
+    "source_string_assertions": false,
+    "tests": 2
+  },
+  {
+    "test": "tests/repoReliability.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/repo",
+      "@/domain/slot",
+      "@/domain/types"
+    ],
+    "source_string_assertions": false,
+    "tests": 9
+  },
+  {
+    "test": "tests/chatStream.test.ts",
+    "imports": [
+      "@/lib/ai/chatStream"
+    ],
+    "source_string_assertions": false,
+    "tests": 28
+  },
+  {
+    "test": "tests/imageDiscovery.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/db/repo",
+      "@/db/agentRuns",
+      "@/db/agentSettings",
+      "@/db/agentTools",
+      "@/lib/agent/imageDiscovery",
+      "@/lib/agent/referenceTools",
+      "@/lib/agent/memoryToolNames",
+      "@/lib/agent/runChat",
+      "@/lib/agent/referenceContext",
+      "@/lib/ai/referenceWire",
+      "@/lib/ai/responsesStream",
+      "@/lib/agent/contextPlanner",
+      "@/lib/agent/contextPolicy",
+      "@/domain/agent",
+      "@/domain/referenceInput",
+      "@/domain/imageDiscovery",
+      "@/domain/types",
+      "@/domain/references"
+    ],
+    "source_string_assertions": false,
+    "tests": 12
+  },
+  {
+    "test": "tests/connectors.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/lib/ai/chatStream",
+      "@/db/repo",
+      "@/lib/ai/connectors"
+    ],
+    "source_string_assertions": false,
+    "tests": 15
+  },
+  {
+    "test": "tests/episodeDelivery.test.ts",
+    "imports": [
+      "@/domain/slot",
+      "@/domain/types",
+      "@/lib/episodeDelivery"
+    ],
+    "source_string_assertions": false,
+    "tests": 7
+  },
+  {
+    "test": "tests/generationPreferences.test.ts",
+    "imports": [
+      "@/db/database",
+      "@/domain/agent",
+      "@/domain/output",
+      "@/domain/types",
+      "@/domain/generationPreferences",
+      "@/db/generationPreferences",
+      "@/lib/agent/generationSelection"
+    ],
+    "source_string_assertions": false,
+    "tests": 10
+  },
+  {
+    "test": "tests/shotFilters.test.ts",
+    "imports": [
+      "@/domain/slot",
+      "@/domain/types",
+      "@/lib/shotFilters"
+    ],
+    "source_string_assertions": false,
+    "tests": 5
+  },
+  {
+    "test": "tests/undo.test.ts",
+    "imports": [
+      "@/lib/undo"
+    ],
+    "source_string_assertions": false,
+    "tests": 3
+  },
+  {
+    "test": "tests/assetLibrary.test.ts",
+    "imports": [
+      "@/lib/assetLibrary"
+    ],
+    "source_string_assertions": false,
+    "tests": 2
+  }
+]

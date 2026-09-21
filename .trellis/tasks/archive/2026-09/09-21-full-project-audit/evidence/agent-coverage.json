@@ -1,0 +1,402 @@
+[
+  {
+    "path": "src/lib/agent/businessSchemas.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/businessStore.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/agent/businessToolNames.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/businessTools.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/agent/contextCompaction.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/agent/contextPlanner.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/contextPolicy.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/contextUsage.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/generationBatchRuntime.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/agent/generationMedia.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/generationProfiles.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/generationReview.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/generationReviewDraft.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/generationRuntime.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/agent/generationSelection.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/generationTools.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/imageDiscovery.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/agent/memoryContext.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/agent/memoryToolNames.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/memoryTools.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/agent/projectContext.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/agent/projectScope.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/agent/referenceContext.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/agent/referenceEvidence.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/agent/referenceToolNames.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/referenceTools.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/agent/runChat.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/agent/runOwnership.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/agent/skills.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/taskContext.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/taskState.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/taskTools.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/agent/taskWrapup.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/toolErrors.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/tools.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/webToolNames.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/webTools.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/agent/wrapupEvidence.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/agent/wrapupSchema.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/ai/aihubmix.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/ai/apimart.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/ai/catalog.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/ai/chatModelPolicy.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/ai/chatStream.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/ai/connectors.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/ai/modelMetadata.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/ai/modelVendors.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/ai/openaiCompatible.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/ai/reasoningPolicy.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/lib/ai/referenceWire.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/ai/responsesStream.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/ai/tavily.ts",
+    "depth": "deep",
+    "notes": "关键执行链、状态/归属/输出边界追踪"
+  },
+  {
+    "path": "src/lib/ai/visionCapability.ts",
+    "depth": "static",
+    "notes": "完整读取 helper/声明并核对调用集成；未逐函数独立场景验证"
+  },
+  {
+    "path": "src/db/agentGeneration.ts",
+    "depth": "deep",
+    "notes": "事务、归属、恢复和消费者路径审查"
+  },
+  {
+    "path": "src/db/agentGenerationBatches.ts",
+    "depth": "deep",
+    "notes": "事务、归属、恢复和消费者路径审查"
+  },
+  {
+    "path": "src/db/agentRuns.ts",
+    "depth": "deep",
+    "notes": "事务、归属、恢复和消费者路径审查"
+  },
+  {
+    "path": "src/db/agentSettings.ts",
+    "depth": "static",
+    "notes": "事务、归属、恢复和消费者路径审查"
+  },
+  {
+    "path": "src/db/agentTaskRecords.ts",
+    "depth": "deep",
+    "notes": "事务、归属、恢复和消费者路径审查"
+  },
+  {
+    "path": "src/db/agentTaskWrapups.ts",
+    "depth": "deep",
+    "notes": "事务、归属、恢复和消费者路径审查"
+  },
+  {
+    "path": "src/db/agentTasks.ts",
+    "depth": "deep",
+    "notes": "事务、归属、恢复和消费者路径审查"
+  },
+  {
+    "path": "src/db/agentToolRecovery.ts",
+    "depth": "deep",
+    "notes": "事务、归属、恢复和消费者路径审查"
+  },
+  {
+    "path": "src/db/agentTools.ts",
+    "depth": "deep",
+    "notes": "事务、归属、恢复和消费者路径审查"
+  },
+  {
+    "path": "src/db/memoryRetrieval.ts",
+    "depth": "deep",
+    "notes": "上下文/资料读取边界与消费者审查"
+  },
+  {
+    "path": "src/db/references.ts",
+    "depth": "deep",
+    "notes": "上下文/资料读取边界与消费者审查"
+  },
+  {
+    "path": "src/db/contextSettings.ts",
+    "depth": "static",
+    "notes": "上下文/资料读取边界与消费者审查"
+  },
+  {
+    "path": "src/domain/agent.ts",
+    "depth": "static",
+    "notes": "状态/身份/参数声明与执行路径核对"
+  },
+  {
+    "path": "src/domain/agentGeneration.ts",
+    "depth": "static",
+    "notes": "状态/身份/参数声明与执行路径核对"
+  },
+  {
+    "path": "src/domain/agentGenerationBatch.ts",
+    "depth": "static",
+    "notes": "状态/身份/参数声明与执行路径核对"
+  },
+  {
+    "path": "src/domain/agentTaskRecords.ts",
+    "depth": "static",
+    "notes": "状态/身份/参数声明与执行路径核对"
+  },
+  {
+    "path": "src/domain/agentTaskWrapup.ts",
+    "depth": "static",
+    "notes": "状态/身份/参数声明与执行路径核对"
+  },
+  {
+    "path": "src/domain/context.ts",
+    "depth": "static",
+    "notes": "完整读取类型与来源/预算/资料生命周期声明"
+  },
+  {
+    "path": "src/domain/memoryRetrieval.ts",
+    "depth": "static",
+    "notes": "完整读取类型与来源/预算/资料生命周期声明"
+  },
+  {
+    "path": "src/domain/projectContext.ts",
+    "depth": "static",
+    "notes": "完整读取类型与来源/预算/资料生命周期声明"
+  },
+  {
+    "path": "src/domain/referenceInput.ts",
+    "depth": "static",
+    "notes": "完整读取类型与来源/预算/资料生命周期声明"
+  },
+  {
+    "path": "src/domain/references.ts",
+    "depth": "static",
+    "notes": "完整读取类型与来源/预算/资料生命周期声明"
+  },
+  {
+    "path": "src/lib/ai/modelBank/index.ts",
+    "depth": "static",
+    "notes": "模型元数据加载、来源选择和生成文件边界；未逐条审核数据"
+  },
+  {
+    "path": "src/lib/ai/modelBank/README.md",
+    "depth": "static",
+    "notes": "模型元数据加载、来源选择和生成文件边界；未逐条审核数据"
+  },
+  {
+    "path": "tests/agentGenerationRecovery.test.ts",
+    "depth": "static",
+    "notes": "读取 fixture 和与边界相关测试；不声称完整精读此测试文件"
+  },
+  {
+    "path": "tests/agentGeneration.test.ts",
+    "depth": "static",
+    "notes": "读取 fixture 和与边界相关测试；不声称完整精读此测试文件"
+  },
+  {
+    "path": "tests/agentReferences.test.ts",
+    "depth": "static",
+    "notes": "读取 fixture 和与边界相关测试；不声称完整精读此测试文件"
+  }
+]

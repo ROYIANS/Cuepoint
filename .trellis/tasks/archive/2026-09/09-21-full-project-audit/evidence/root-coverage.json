@@ -1,0 +1,172 @@
+[
+  {
+    "path": "src/main.tsx",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/vite-env.d.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/lib/references/docx.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/lib/references/docx.worker.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/lib/references/import.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/lib/references/package.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/lib/references/parse.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/lib/references/pdf.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/lib/references/mammoth.d.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/domain/generationPreferences.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/domain/columns.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/domain/production.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/domain/imageDiscovery.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/domain/search.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/lib/memory/retrieval.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/lib/memory/schema.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/lib/productionRevision.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/lib/assetLibrary.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/lib/library.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/lib/ids.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/lib/utils.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "scripts/model-bank-snapshot.mjs",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "package.json",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "Dockerfile",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "docker-compose.yml",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "deploy/nginx.conf",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": ".github/workflows/ghcr.yml",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": ".dockerignore",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "vite.config.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "vitest.config.ts",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "tsconfig.app.json",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "tsconfig.node.json",
+    "depth": "static",
+    "notes": "主审读取实现及边界；参考parser另有浏览器worker验证"
+  },
+  {
+    "path": "src/domain/output.ts",
+    "depth": "static",
+    "notes": "主审补读领域模型和生成默认值：正常解析保留未知值、显式校验、参数映射"
+  },
+  {
+    "path": "src/domain/projectMemory.ts",
+    "depth": "static",
+    "notes": "主审补读领域模型和生成默认值：正常解析保留未知值、显式校验、参数映射"
+  }
+]
