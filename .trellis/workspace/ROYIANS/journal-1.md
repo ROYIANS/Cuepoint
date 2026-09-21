@@ -992,3 +992,36 @@ Added APIMart gpt-image-2.5-flare, sunburst, and ext to image generation pickers
 ### Status
 
 [OK] **Completed**
+
+
+## Session 40: 品牌 Logo 更新与关于页组合标志
+
+**Date**: 2026-09-21
+**Task**: 品牌 Logo 更新与关于页组合标志
+**Branch**: `main`
+
+### Summary
+
+完成两轮品牌资源替换，最终采用用户提供的新版星光山形无文字图标；中英文组合版接入关于页，更新 favicon 与缓存版本。本次未建立独立 Trellis 任务，以会话日志完成收尾记录，保留其他进行中任务。
+
+### Main Changes
+
+- 替换全局 WebP 标志及 16、32、256 像素 PNG favicon，保留原始透明通道与构图。
+- 关于页使用独立中英文组合标志，增加纯黑圆角底，移除重复可见名称并保留无障碍 h1。
+- 更新品牌资源说明，记录尺寸、转换方式和关于页透明背景处理。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `4fa7066` | (see git log) |
+| `d7aecbf` | (see git log) |
+
+### Testing
+
+- [OK] TypeScript 检查通过；94 个测试文件、1082 项测试通过。首次与构建并行时有一条 5 秒超时，构建结束后重跑全套通过。
+- [OK] 生产构建通过，保留现有 JS 分块体积提示；图片预览和产物资源一致性检查通过。
+
+### Status
+
+[OK] **Completed**
