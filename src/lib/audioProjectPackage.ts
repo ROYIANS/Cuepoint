@@ -3,6 +3,8 @@ import { db } from "@/db/database";
 import { AUDIO_TABLES } from "@/db/audioShared";
 import { validateAudioChapter, validateAudioSpeaker, validateAudioSegment, validateAudioTake, validateAudioTrack, validateAudioClip, validateAudioExport } from "@/db/audio";
 import { validateMusicDraft, validateMusicWork } from "@/db/music";
+import { mimoSpeechSettingsSchema, validateGenerationInput } from "./audioGeneration/input";
+import { validateSpeechReference } from "./audioGeneration/reference";
 import { createId } from "./ids";
 import type { ProjectKind } from "@/domain/types";
 
@@ -10,19 +12,19 @@ const id = z.string().min(1);
 const number = z.number().finite();
 const base = { id, projectId: id, revision: number.int().positive(), createdAt: z.string(), updatedAt: z.string() };
 const meta = { durationSec: number.positive(), sampleRate: number.int().positive(), channels: number.int().positive() };
-const provenance = z.object({ provider: z.literal("apimart"), model: z.string(), taskId: z.string().optional(), clipId: z.string().optional(), audioIndex: number.int().positive().optional(), jobId: id.optional(), audioUrl: z.string().optional(), coverUrl: z.string().optional() });
+const provenance = z.object({ provider: z.enum(["apimart", "mimo"]), model: z.string(), taskId: z.string().optional(), clipId: z.string().optional(), audioIndex: number.int().positive().optional(), jobId: id.optional(), audioUrl: z.string().optional(), coverUrl: z.string().optional() });
 const settings = z.discriminatedUnion("engine", [
   z.object({ engine: z.literal("flowmusic"), soundPrompt: z.string(), lyrics: z.string(), title: z.string(), bpm: z.string().optional(), lengthSec: number.optional(), seed: z.string().optional() }),
   z.object({ engine: z.literal("suno"), version: z.enum(["v6", "v6-wild", "v6-mini"]), custom: z.boolean(), instrumental: z.boolean(), prompt: z.string(), title: z.string(), style: z.string(), negativeTags: z.string(), durationSec: number.optional() }),
 ]);
 const input = z.discriminatedUnion("kind", [
-  z.object({ kind: z.literal("speech"), text: z.string(), voice: z.string(), speed: number, segmentId: id.optional(), segmentRevision: number.optional() }),
+  z.object({ kind: z.literal("speech"), text: z.string(), voice: z.string(), speed: number, mimo: mimoSpeechSettingsSchema.optional(), segmentId: id.optional(), segmentRevision: number.optional() }),
   z.object({ kind: z.literal("music"), settings, draftId: id.optional(), draftRevision: number.optional() }),
 ]);
 /** Explicit allowlist: credentials, chat permission data and live claims cannot travel. */
 const schemas = {
   audioChapters: z.object({ ...base, title: z.string(), order: number }),
-  audioSpeakers: z.object({ ...base, name: z.string(), voice: z.string().optional(), speed: number.optional() }),
+  audioSpeakers: z.object({ ...base, name: z.string(), voice: z.string().optional(), speed: number.optional(), mimo: mimoSpeechSettingsSchema.optional() }),
   audioSegments: z.object({ ...base, chapterId: id, speakerId: id.optional(), order: number, text: z.string(), notes: z.string(), selectedTakeId: id.optional() }),
   audioTakes: z.object({ ...base, ...meta, segmentId: id.optional(), mediaId: id, name: z.string(), source: z.enum(["recording", "upload", "library", "tts", "music"]), textSnapshot: z.string().optional(), provenance: provenance.optional() }),
   audioTracks: z.object({ ...base, chapterId: id, role: z.enum(["voice", "music", "effects"]), name: z.string(), order: number, gain: number, muted: z.boolean(), solo: z.boolean() }),
@@ -30,7 +32,7 @@ const schemas = {
   audioExports: z.object({ ...base, chapterId: id.optional(), scope: z.enum(["chapter", "project"]).optional(), chapterTitle: z.string().optional(), fingerprint: z.string(), format: z.literal("wav"), mediaId: id, durationSec: number }),
   musicDrafts: z.object({ ...base, settings }),
   musicWorks: z.object({ ...base, ...meta, mediaId: id, title: z.string(), notes: z.string(), favorite: z.boolean(), lyrics: z.string(), settings: settings.optional(), provenance: provenance.optional() }),
-  audioGenerationJobs: z.object({ ...base, intentId: id, input, connector: z.object({ id, provider: z.literal("apimart"), baseUrl: z.string() }), source: z.object({ kind: z.literal("manual") }), status: z.enum(["prepared", "submitting", "uncertain", "submitted", "running", "remote-completed", "downloading", "saved", "failed", "target-conflict"]), taskIds: z.array(z.string()), results: z.array(z.object({ key: id, provenance, title: z.string(), lyrics: z.string().optional(), durationSec: number.optional(), mediaId: id.optional(), takeId: id.optional(), workId: id.optional(), deleted: z.boolean().optional(), error: z.string().optional() })), error: z.string().optional(), dormant: z.literal(true) }),
+  audioGenerationJobs: z.object({ ...base, intentId: id, input, connector: z.object({ id, provider: z.enum(["apimart", "mimo"]), baseUrl: z.string() }), source: z.object({ kind: z.literal("manual") }), status: z.enum(["prepared", "submitting", "uncertain", "submitted", "running", "remote-completed", "downloading", "saved", "failed", "target-conflict"]), taskIds: z.array(z.string()), results: z.array(z.object({ key: id, provenance, title: z.string(), lyrics: z.string().optional(), finalTextPreview: z.string().optional(), durationSec: number.optional(), mediaId: id.optional(), takeId: id.optional(), workId: id.optional(), deleted: z.boolean().optional(), error: z.string().optional() })), error: z.string().optional(), dormant: z.literal(true) }),
 };
 type TableName = keyof typeof schemas;
 const schema = z.object({ version: z.literal(1),
@@ -83,13 +85,15 @@ export function remapAudioPackage(value: AudioPackage | undefined, projectId: st
     if ("trackId" in row) row.trackId = reference(row.trackId);
     if ("takeId" in row) row.takeId = reference(row.takeId);
     if ("mediaId" in row) row.mediaId = media(row.mediaId);
+    if ("mimo" in row && row.mimo?.referenceMediaId) row.mimo.referenceMediaId = media(row.mimo.referenceMediaId);
     if ("provenance" in row && row.provenance?.jobId) row.provenance.jobId = map.get(row.provenance.jobId);
   }
   for (const job of next.audioGenerationJobs) {
     job.intentId = createId("imported");
-    job.connector = { id: "imported", provider: "apimart", baseUrl: "" };
+    job.connector = { id: "imported", provider: job.connector.provider, baseUrl: "" };
     job.source = { kind: "manual" };
     job.dormant = true;
+    if (job.input.kind === "speech" && job.input.mimo?.referenceMediaId) job.input.mimo.referenceMediaId = media(job.input.mimo.referenceMediaId);
     if (job.input.kind === "speech" && job.input.segmentId) job.input.segmentId = map.get(job.input.segmentId);
     if (job.input.kind === "music" && job.input.draftId) job.input.draftId = map.get(job.input.draftId);
     for (const result of job.results) {
@@ -124,6 +128,11 @@ export async function insertAudioPackage(value: AudioPackage | undefined): Promi
   for (const row of value.musicDrafts) await validateMusicDraft(row);
   for (const row of value.musicWorks) await validateMusicWork(row);
   for (const job of value.audioGenerationJobs) {
+    if (job.input.kind === "speech") {
+      if (Boolean(job.input.mimo) !== (job.connector.provider === "mimo")) throw new Error("配音设置与服务商不匹配");
+      if (job.input.mimo) validateGenerationInput(job.input);
+      await validateSpeechReference(job.projectId, job.input);
+    } else if (job.connector.provider !== "apimart") throw new Error("音乐生成服务商无效");
     for (const result of job.results) {
       if (result.mediaId && (await db.media.get(result.mediaId))?.projectId !== job.projectId) throw new Error("生成结果媒体归属无效");
       if (result.takeId && (await db.audioTakes.get(result.takeId))?.projectId !== job.projectId) throw new Error("生成结果配音归属无效");

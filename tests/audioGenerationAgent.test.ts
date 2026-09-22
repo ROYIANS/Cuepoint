@@ -3,7 +3,7 @@ import { db } from "@/db/database";
 import { createAudioMusicProject, createChatThread } from "@/db/repo";
 import { beginAgentRun, interruptThreadRuns } from "@/db/agentRuns";
 import { resolveAgentToolApproval } from "@/db/agentTools";
-import { addAudioSegment } from "@/db/audio";
+import { addAudioSegment, addAudioSpeaker, patchAudioSpeaker } from "@/db/audio";
 import { addMusicDraft, patchMusicDraft } from "@/db/music";
 import { defaultMusicSettings } from "@/domain/music";
 import type { AgentPermissionMode, AgentRun } from "@/domain/agent";
@@ -42,6 +42,61 @@ async function awaiting(run: AgentRun, name: string, args: unknown) {
 afterEach(() => vi.unstubAllGlobals());
 
 describe("paid audio/music Agent approval and recovery", () => {
+  it("advertises configured MiMo as default without silently falling back", async () => {
+    const f = await fixture("audio");
+    const capabilities = AUDIO_GENERATION_TOOLS.find(row => row.name === "audio_generation_capabilities")!;
+    const ctx = { runId: f.run.id, threadId: f.run.threadId, callId: "read", projectId: f.project.id, signal: new AbortController().signal };
+    expect(await capabilities.execute({}, ctx)).toMatchObject({ defaultSpeech: { provider: "mimo", connectorId: null } });
+    const speech = AUDIO_GENERATION_TOOLS.find(row => row.name === f.name)!;
+    await expect(speech.prepare!({ projectId: f.project.id, text: "你好" }, ctx)).rejects.toThrow("MiMo");
+    await db.connectors.put({ ...generationConnector, id: "mimo", definitionId: "mimo", baseUrl: "https://api.xiaomimimo.com/v1" });
+    expect(await capabilities.execute({}, ctx)).toMatchObject({ defaultSpeech: { provider: "mimo", connectorId: "mimo", profile: { voice: "mimo_default" } } });
+    expect(await speech.prepare!({ projectId: f.project.id, text: "你好" }, ctx)).toMatchObject({ summary: "生成配音（付费）" });
+  });
+
+  it("inherits saved segment voice, blocks edits after review, and keeps explicit legacy arguments", async () => {
+    const f = await fixture("audio");
+    await db.connectors.put({ ...generationConnector, id: "mimo", definitionId: "mimo", baseUrl: "https://api.xiaomimimo.com/v1" });
+    const speaker = await addAudioSpeaker(f.project.id, { name: "叙述者", voice: "茉莉", speed: 1, mimo: { mode: "preset", instruction: "轻声" } });
+    const chapter = (await db.audioChapters.where("projectId").equals(f.project.id).first())!;
+    const segment = await addAudioSegment(f.project.id, { chapterId: chapter.id, speakerId: speaker.id, text: "你好", notes: "", order: 0 });
+    const args = { projectId: f.project.id, text: "你好", segmentId: segment.id, segmentRevision: segment.revision };
+    const call = await awaiting(f.run, f.name, args);
+    expect(JSON.stringify(call.preview)).toContain("茉莉");
+    expect(JSON.stringify(call.preview)).toContain("轻声");
+    await patchAudioSpeaker(f.project.id, speaker.id, speaker.revision, { voice: "冰糖" });
+    const paidFetch = vi.fn<typeof fetch>(); vi.stubGlobal("fetch", paidFetch);
+    await resolveAgentToolApproval(f.run.id, call.id, "approve");
+    await resumeChatRun(f.run.id, chatConnector.apiKey, new AbortController(), vi.fn(async () => answer()), AUDIO_GENERATION_TOOLS);
+    expect(paidFetch).not.toHaveBeenCalled();
+    expect((await db.agentToolCalls.get(call.id))?.status).toBe("failed");
+    // A saved MiMo speaker must not reinterpret an explicitly supplied legacy call.
+    const speech = AUDIO_GENERATION_TOOLS.find(row => row.name === f.name)!;
+    const preview = await speech.prepare!({ ...f.args, segmentId: segment.id, segmentRevision: segment.revision }, { runId: f.run.id, threadId: f.run.threadId, callId: "legacy", projectId: f.project.id, signal: new AbortController().signal });
+    expect(JSON.stringify(preview)).toContain("APIMart");
+  });
+
+  it("uses default inherited speaker for generation and recovers after that speaker is deleted", async () => {
+    const f = await fixture("audio");
+    await db.connectors.put({ ...generationConnector, id: "mimo", definitionId: "mimo", baseUrl: "https://api.xiaomimimo.com/v1" });
+    const speaker = await addAudioSpeaker(f.project.id, { name: "叙述者", voice: "茉莉", speed: 1, mimo: { mode: "preset", instruction: "轻声" } });
+    const args = { projectId: f.project.id, text: "你好", speakerId: speaker.id, speakerRevision: speaker.revision };
+    const source = encodePcm16Wav({ length: 48, sampleRate: 48000, numberOfChannels: 1, getChannelData: () => new Float32Array(48) }).blob;
+    vi.stubGlobal("OfflineAudioContext", class { async decodeAudioData() { return { length: 48, duration: .001, numberOfChannels: 2, sampleRate: 48000 }; } });
+    const encoded = Buffer.from(await source.arrayBuffer()).toString("base64");
+    const paidFetch = vi.fn<typeof fetch>(async () => Response.json({ choices: [{ finish_reason: "stop", message: { audio: { data: encoded } } }] }));
+    vi.stubGlobal("fetch", paidFetch);
+    const call = await awaiting(f.run, f.name, args);
+    await resolveAgentToolApproval(f.run.id, call.id, "approve");
+    await resumeChatRun(f.run.id, chatConnector.apiKey, new AbortController(), vi.fn(async () => answer()), AUDIO_GENERATION_TOOLS);
+    expect((await db.audioGenerationJobs.toArray())[0]).toMatchObject({ status: "saved", connector: { id: "mimo" }, input: { voice: "茉莉", mimo: { instruction: "轻声" } } });
+    await db.audioSpeakers.delete(speaker.id);
+    const definition = AUDIO_GENERATION_TOOLS.find(row => row.name === f.name)!;
+    const recovered = await definition.execute(args, { runId: f.run.id, threadId: f.run.threadId, callId: call.id, projectId: f.project.id, signal: new AbortController().signal });
+    expect(recovered).toMatchObject({ status: "saved" });
+    expect(paidFetch).toHaveBeenCalledOnce();
+  });
+
   it("saves approved speech as one take and preserves the completed result across continuation failure", async () => {
     const f = await fixture("audio");
     const source = encodePcm16Wav({ length: 48, sampleRate: 48000, numberOfChannels: 1, getChannelData: () => new Float32Array(48) }).blob;
@@ -60,6 +115,48 @@ describe("paid audio/music Agent approval and recovery", () => {
     expect((await db.audioGenerationJobs.toArray())[0].status).toBe("saved");
     await resumeChatRun(f.run.id, chatConnector.apiKey, new AbortController(), vi.fn(async () => answer()), AUDIO_GENERATION_TOOLS);
     expect(paidFetch).toHaveBeenCalledOnce(); expect(await db.audioTakes.count()).toBe(1);
+  });
+
+  it("reviews MiMo clone reference bytes and rejects a changed sample before POST", async () => {
+    const f = await fixture("audio");
+    await db.connectors.put({ ...generationConnector, id: "mimo", definitionId: "mimo", baseUrl: "https://api.xiaomimimo.com/v1" });
+    const wav = (value: number) => encodePcm16Wav({ length: 48, sampleRate: 48000, numberOfChannels: 1, getChannelData: () => new Float32Array(48).fill(value) }).blob;
+    await db.media.add({ id: "voice-reference", projectId: f.project.id, filename: "角色样本.wav", mimeType: "audio/wav", blob: wav(0) });
+    const args = { ...f.args, connectorId: "mimo", voice: "mimo_default", mimo: { mode: "clone", instruction: "轻声讲述", referenceMediaId: "voice-reference" } };
+    const paidFetch = vi.fn<typeof fetch>(); vi.stubGlobal("fetch", paidFetch);
+    const call = await awaiting(f.run, f.name, args);
+    expect(JSON.stringify(call.preview)).toContain("角色样本.wav");
+    expect(JSON.stringify(call.preview)).toContain("轻声讲述");
+    expect(JSON.stringify(call.preview)).not.toContain("base64");
+    await db.media.update("voice-reference", { blob: wav(.3) });
+    await resolveAgentToolApproval(f.run.id, call.id, "approve");
+    await resumeChatRun(f.run.id, chatConnector.apiKey, new AbortController(), vi.fn(async () => answer()), AUDIO_GENERATION_TOOLS);
+    expect(paidFetch).not.toHaveBeenCalled();
+    expect((await db.agentToolCalls.get(call.id))?.status).toBe("failed");
+  });
+
+  it("submits approved MiMo design once and keeps optimized speech separate from manuscript", async () => {
+    const f = await fixture("audio");
+    await db.connectors.put({ ...generationConnector, id: "mimo", definitionId: "mimo", baseUrl: "https://api.xiaomimimo.com/v1" });
+    const chapter = await db.audioChapters.where("projectId").equals(f.project.id).first();
+    const segment = await addAudioSegment(f.project.id, { chapterId: chapter!.id, text: "原文", notes: "", order: 0 });
+    const source = encodePcm16Wav({ length: 48, sampleRate: 48000, numberOfChannels: 1, getChannelData: () => new Float32Array(48) }).blob;
+    vi.stubGlobal("OfflineAudioContext", class { async decodeAudioData() { return { length: 48, duration: .001, numberOfChannels: 2, sampleRate: 48000 }; } });
+    const encoded = Buffer.from(await source.arrayBuffer()).toString("base64");
+    const paidFetch = vi.fn<typeof fetch>(async () => Response.json({ choices: [{ finish_reason: "stop", message: { audio: { data: encoded }, final_text_preview: "润色后的播报" } }] }));
+    vi.stubGlobal("fetch", paidFetch);
+    const args = { ...f.args, connectorId: "mimo", text: "原文", voice: "mimo_default", segmentId: segment.id, segmentRevision: segment.revision, mimo: { mode: "design", instruction: "温柔女声", optimizeTextPreview: true } };
+    const call = await awaiting(f.run, f.name, args);
+    expect(JSON.stringify(call.preview)).toContain("允许智能润色");
+    await resolveAgentToolApproval(f.run.id, call.id, "approve");
+    await resumeChatRun(f.run.id, chatConnector.apiKey, new AbortController(), vi.fn(async () => answer()), AUDIO_GENERATION_TOOLS);
+    expect((await db.agentToolCalls.get(call.id))?.status).toBe("completed");
+    expect((await db.audioSegments.get(segment.id))?.text).toBe("原文");
+    expect((await db.audioTakes.toArray())[0].textSnapshot).toBe("润色后的播报");
+    expect(paidFetch).toHaveBeenCalledOnce();
+    const body = JSON.parse(String(paidFetch.mock.calls[0][1]?.body));
+    expect(body.model).toBe("mimo-v2.5-tts-voicedesign");
+    expect(body.messages).toEqual([{ role: "user", content: "温柔女声" }, { role: "assistant", content: "原文" }]);
   });
 
   it.each(["ask", "assist", "full"] as const)("requires review for both music and speech before effects in %s mode", async (mode) => {

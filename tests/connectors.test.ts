@@ -227,3 +227,30 @@ describe("AIHubMix catalog compatibility and read-only probe", () => {
     expect(fetchImpl.mock.calls[0][1]?.method).toBe("GET");
   });
 });
+
+const mimo = { definitionId: "mimo" as const, baseUrl: "https://api.xiaomimimo.com/v1", apiKey: "test-key" };
+describe("MiMo connector", () => {
+  it("discovers speech models for connection checks but excludes documented media models in chat", async () => {
+    const fetchImpl = vi.fn<typeof fetch>().mockImplementation(async () => Response.json({ data: ["mimo-v2.5", "mimo-v2.5-tts", "mimo-v2.5-tts-voicedesign", "mimo-v2.5-tts-voiceclone", "mimo-v2.5-asr"].map(id => ({ id })) }));
+    expect(await listConnectorModels(mimo, "all", fetchImpl)).toMatchObject({ ok: true, models: expect.arrayContaining(["mimo-v2.5-tts"]) });
+    expect(await listConnectorModels(mimo, "chat", fetchImpl)).toEqual({ ok: true, models: ["mimo-v2.5"] });
+    expect(await testConnectorConnection(mimo, fetchImpl)).toEqual({ ok: true, via: "models", modelCount: 5 });
+  });
+  it.each([401, 403, 404, 405, 500])("never uses paid fallback for failed model probe %s", async status => {
+    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(new Response("error", { status }));
+    expect(await testConnectorConnection(mimo, fetchImpl)).toMatchObject({ ok: false });
+    expect(fetchImpl).toHaveBeenCalledOnce();
+    expect(fetchImpl.mock.calls[0][1]?.method).toBe("GET");
+  });
+  it.each(["mimo-v2.5-tts", "mimo-v2.5-tts-voicedesign", "mimo-v2.5-tts-voiceclone", "mimo-v2.5-asr"])("blocks manually saved %s before any network or mutation", async model => {
+    const action = vi.fn(), fetchImpl = vi.fn<typeof fetch>();
+    expect(await runWithCompatibleChatModel(mimo, model, action, { fetchImpl })).toMatchObject({ ok: false });
+    expect(action).not.toHaveBeenCalled(); expect(fetchImpl).not.toHaveBeenCalled();
+  });
+  it("persists MiMo proxy URL and rotated credentials across reload", async () => {
+    const saved = await upsertConnector({ ...mimo, protocol: "openai-compatible", baseUrl: "https://proxy.test/mimo/v1/" });
+    const edited = await upsertConnector({ ...mimo, protocol: "openai-compatible", baseUrl: saved.baseUrl, apiKey: "rotated" });
+    db.close(); await db.open();
+    expect(await db.connectors.get(saved.id)).toMatchObject({ id: edited.id, definitionId: "mimo", apiKey: "rotated", baseUrl: "https://proxy.test/mimo/v1" });
+  });
+});

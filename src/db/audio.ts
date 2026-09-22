@@ -3,6 +3,8 @@ import type { AudioChapter, AudioSpeaker, AudioSegment, AudioTake, AudioTrack, A
 import type { MediaRecord } from "@/domain/types";
 import type { Table } from "dexie";
 import { AUDIO_TRANSACTION_TABLES, detachAudioGenerationResult, assertAudioProject, finiteAudioNumber, ownedAudioRow, assertAudioRevision, newAudioRow, patchAudioRow, touchAudioProject, validateAudioMetadata, assertOwnedAudioMedia } from "./audioShared";
+import { validateSpeechReference } from "@/lib/audioGeneration/reference";
+import { validateMimoSpeech } from "@/lib/audioGeneration/input";
 import { nowIso } from "@/lib/ids";
 
 export async function validateAudioChapter(row: AudioChapter) {
@@ -14,6 +16,10 @@ export async function validateAudioSpeaker(row: AudioSpeaker) {
   await assertAudioProject(row.projectId, "audio");
   if (typeof row.name !== "string" || !row.name.trim()) throw new Error("说话人名称不能为空");
   if (row.speed !== undefined) finiteAudioNumber(row.speed, "语速", 0.25, 4);
+  if (row.mimo) {
+    validateMimoSpeech({ text: "音色配置", voice: row.voice ?? "mimo_default", speed: row.speed ?? 1, mimo: row.mimo });
+    await validateSpeechReference(row.projectId, row);
+  }
 }
 export async function validateAudioSegment(row: AudioSegment) {
   await assertAudioProject(row.projectId, "audio");
@@ -86,7 +92,7 @@ export const addAudioTrack = (projectId: string, input: AudioInput<AudioTrack>) 
 export const addAudioClip = (projectId: string, input: AudioInput<AudioClip>) => add(db.audioClips, "acl", projectId, input, validateAudioClip);
 export const addAudioExport = (projectId: string, input: AudioInput<AudioExport>, media?: MediaRecord) => add(db.audioExports, "aex", projectId, { ...input, scope: input.chapterId ? "chapter" : "project" }, validateAudioExport, media);
 export const patchAudioChapter = (projectId: string, id: string, revision: number, patch: AudioPatch<AudioChapter>) => patchAudioRow(db.audioChapters, projectId, id, revision, patch, ["title", "order"], validateAudioChapter);
-export const patchAudioSpeaker = (projectId: string, id: string, revision: number, patch: AudioPatch<AudioSpeaker>) => patchAudioRow(db.audioSpeakers, projectId, id, revision, patch, ["name", "voice", "speed"], validateAudioSpeaker);
+export const patchAudioSpeaker = (projectId: string, id: string, revision: number, patch: AudioPatch<AudioSpeaker>) => patchAudioRow(db.audioSpeakers, projectId, id, revision, patch, ["name", "voice", "speed", "mimo"], validateAudioSpeaker);
 export const patchAudioSegment = (projectId: string, id: string, revision: number, patch: AudioPatch<AudioSegment>) => patchAudioRow(db.audioSegments, projectId, id, revision, patch, ["speakerId", "order", "text", "notes", "selectedTakeId"], validateAudioSegment);
 export const patchAudioTrack = (projectId: string, id: string, revision: number, patch: AudioPatch<AudioTrack>) => patchAudioRow(db.audioTracks, projectId, id, revision, patch, ["name", "role", "order", "gain", "muted", "solo"], validateAudioTrack);
 export const patchAudioClip = (projectId: string, id: string, revision: number, patch: AudioPatch<AudioClip>) => patchAudioRow(db.audioClips, projectId, id, revision, patch, ["trackId", "takeId", "startSec", "trimStartSec", "trimEndSec", "gain", "fadeInSec", "fadeOutSec"], validateAudioClip);

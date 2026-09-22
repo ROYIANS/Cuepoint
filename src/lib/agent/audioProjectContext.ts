@@ -22,8 +22,9 @@ export async function getAudioMusicProjectContext(project: Project): Promise<Pro
     id: projectId, kind, name: text(project.name, 200), brief: text(project.brief, 600),
     ip: ip && !ip.archived ? { id: ip.id, revision: ip.revision, name: text(ip.name, 160), positioning: text(ip.positioning, 240), expression: text(ip.expression, 240), voice: text(ip.voice, 240) } : null,
     ...(kind === "audio" ? {
+      speechDefaults: { provider: "mimo", voice: "mimo_default", speed: 1, note: "可继承段落角色音色；audio_create(kind=speaker) 创建音色，audio_generate_speech 经确认试音。连接配置通过 audio_generation_capabilities 读取。" },
       chapters: limited(chapters, 20).map(r => ({ id: r.id, revision: r.revision, title: text(r.title, 100), order: r.order })),
-      speakers: limited(speakers, 20).map(r => ({ id: r.id, revision: r.revision, name: text(r.name, 100), voice: text(r.voice, 80), speed: r.speed })),
+      speakers: limited(speakers, 20).map(r => ({ id: r.id, revision: r.revision, name: text(r.name, 100), voice: text(r.voice, 80), speed: r.speed, mimo: r.mimo ? { ...r.mimo, instruction: text(r.mimo.instruction, 160) } : undefined })),
       segments: limited(segments, 30).map(r => ({ id: r.id, revision: r.revision, chapterId: r.chapterId, speakerId: r.speakerId, text: text(r.text, 160), selectedTakeId: r.selectedTakeId })),
       tracks: limited(tracks, 20).map(r => ({ id: r.id, chapterId: r.chapterId, revision: r.revision, name: text(r.name, 100), role: r.role, muted: r.muted, solo: r.solo })),
       takeCount: takes.length, clipCount: clips.length,

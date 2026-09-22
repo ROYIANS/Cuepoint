@@ -115,7 +115,7 @@ export function ConnectorsPage() {
           result.via === "models" && result.modelCount != null
             ? `（${result.modelCount} 个模型）`
             : "";
-        toast.success(result.via === "authenticated-read" ? "鉴权读取成功；具体模型权限以实际调用为准" : `连接成功${detail}`);
+        toast.success(editor.definition.id === "mimo" ? `模型目录读取成功${detail}；配音权限以实际生成为准` : result.via === "authenticated-read" ? "鉴权读取成功；具体模型权限以实际调用为准" : `连接成功${detail}`);
         if (result.via === "models") {
           const listed = await listConnectorModels({
             definitionId: editor.definition.id,
@@ -244,7 +244,9 @@ export function ConnectorsPage() {
           <DialogHeader>
             <DialogTitle>{editor?.existing ? "编辑连接" : "安装连接"}</DialogTitle>
             <DialogDescription>
-              {editor?.definition.id === "aihubmix"
+              {editor?.definition.id === "mimo"
+                ? "MiMo · 聊天和配音共用此连接。支持预置音色、音色设计与声音克隆；测试连接只读取模型目录，不发起生成。"
+                : editor?.definition.id === "aihubmix"
                 ? "AIHubMix · 聊天、图像与视频共用此连接。模型目录公开可读；测试连接仅验证任务列表读取权限，不发起生成。"
                 : editor?.definition.id === "apimart"
                 ? "APIMart · 聊天、图像与视频共用此连接。测试连接仅查询模型，不发起生成。"

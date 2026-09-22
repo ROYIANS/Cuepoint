@@ -1,3 +1,4 @@
+import { MIMO_NON_CHAT_MODELS } from "./mimoSpeech";
 import type { ChatModelMetadata } from "./modelMetadata";
 import type { ConnectorConfig } from "@/domain/types";
 
@@ -15,7 +16,7 @@ export type ChatModelPolicy = {
 };
 
 export function requiresChatModelVerification(connector: ChatModelConnector | undefined): boolean {
-  return connector?.definitionId === "apimart" || connector?.definitionId === "aihubmix";
+  return connector?.definitionId === "apimart" || connector?.definitionId === "aihubmix" || connector?.definitionId === "mimo";
 }
 
 /** Credentials are compared in memory only; never use a key-bearing serialized cache key. */
@@ -29,6 +30,7 @@ export function getChatModelPolicy(
   catalog: ChatModelCatalog | undefined,
 ): ChatModelPolicy {
   if (!requiresChatModelVerification(connector)) return { verified: true, incompatibleModels: [] };
+  if (connector?.definitionId === "mimo") return { verified: true, incompatibleModels: MIMO_NON_CHAT_MODELS };
   if (!catalog || !sameChatModelConnector(connector, catalog.connector)) return { verified: false, incompatibleModels: [] };
   return { verified: catalog.status === "ready", incompatibleModels: catalog.incompatibleModels };
 }

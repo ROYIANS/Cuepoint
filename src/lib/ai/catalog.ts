@@ -5,7 +5,7 @@ export type ConnectorDefinition = {
   title: string;
   blurb: string;
   protocol: ConnectorProtocol;
-  capabilities: readonly ("chat" | "image" | "video")[];
+  capabilities: readonly ("chat" | "image" | "video" | "audio")[];
   defaultBaseUrl: string;
   defaultModel: string;
   mark: string;
@@ -52,6 +52,16 @@ export const CONNECTOR_CATALOG: readonly ConnectorDefinition[] = [
     defaultModel: "",
     mark: "AH",
   },
+  {
+    id: "mimo",
+    title: "MiMo",
+    blurb: "小米 MiMo：聊天、语音合成、音色设计与声音克隆",
+    protocol: "openai-compatible",
+    capabilities: ["chat", "audio"],
+    defaultBaseUrl: "https://api.xiaomimimo.com/v1",
+    defaultModel: "",
+    mark: "Mi",
+  },
 ] as const;
 
 export function getConnectorDefinition(
@@ -69,6 +79,7 @@ export function connectorDisplayName(connector: {
 }
 
 export function connectorProviderKey(definitionId: ConnectorDefinitionId): string {
+  if (definitionId === "mimo") return "xiaomimimo";
   if (definitionId === "aihubmix") return "aihubmix";
   if (definitionId === "apimart") return "apimart";
   return definitionId === "deepseek" ? "deepseek" : "openai";

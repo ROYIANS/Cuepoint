@@ -159,3 +159,12 @@ Correct: call the explicit guarded content reader, then let the future media run
 ## Diagnostic redaction
 
 Use the shared `redactCredentials` primitive before truncating provider diagnostics, including failed connection probes and network exceptions. Remove every exact configured key occurrence and Bearer credential; retain the provider-specific status/envelope handling. Boundary-position keys and repeated echoes must not leak through truncation.
+
+
+## MiMo connector
+
+`mimo` uses OpenAI-compatible chat protocol and dedicated `mimoSpeech.ts` audio transport. Default base is `https://api.xiaomimimo.com/v1`; custom proxy prefixes ending /v1 remain supported. Bearer auth is sufficient. Probe/discovery is authenticated GET /models, never a generation POST fallback; successful listing does not promise TTS permissions or balance. The three documented MiMo-V2.5-TTS model IDs and MiMo-V2.5-ASR are audio-only and blocked from manual/saved chat send paths. No model-bank edits are needed.
+
+Speech POST uses fixed /chat/completions, assistant content for spoken text, user content for instruction/design, `stream:false`, and WAV output. Clone serializes a WAV/MP3 sample as a data URI only inside transport, max 10 MiB encoded including prefix. Design omits voice; explicit optimize_text_preview enables altered/automatic text and requires returned final_text_preview. Require stop completion, base64 WAV signature, then runtime checkpoint/decode. Redact credentials before truncating errors and never auto retry.
+
+Official sources: https://mimo.mi.com/docs/zh-CN/api/model/list-models and https://mimo.mi.com/docs/zh-CN/quick-start/usage-guide/audio/speech-synthesis-v2.5, checked 2026-09-22.

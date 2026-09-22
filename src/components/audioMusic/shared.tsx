@@ -37,13 +37,15 @@ export function SavedText({ projectId, rowId, field, value, label, multiline = f
     const props = { value: draft, placeholder, "aria-label": label, onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setDraft(e.target.value) };
     return <div className="aw-saved-field">{multiline ? <Textarea {...props} rows={4}/> : <Input {...props}/>}<DraftStatus status={status} error={error} onRetry={() => void retry()} onUseLatest={useLatest}/></div>;
 }
-export function ConnectionSelect({ value, onChange }: {
+export function ConnectionSelect({ value, onChange, usage = "music", disabled = false }: {
     value: string;
     onChange: (id: string) => void;
+    usage?: "music" | "speech";
+    disabled?: boolean;
 }) {
     const connections = useLiveQuery(() => db.connectors.toArray());
-    const choices = (connections ?? []).filter((item) => item.definitionId === "apimart" && item.apiKey.trim());
-    return <Field label="生成连接"><WorkspaceSelect value={value} onValueChange={(value) => onChange(value)}><SelectOption value="">选择 APIMart 连接</SelectOption>{choices.map((item) => <SelectOption value={item.id} key={item.id}>{item.label || "APIMart"}</SelectOption>)}</WorkspaceSelect>{choices.length === 0 && <small>请在连接与模型中添加 APIMart 连接后生成。</small>}</Field>;
+    const choices = (connections ?? []).filter((item) => (item.definitionId === "apimart" || usage === "speech" && item.definitionId === "mimo") && item.apiKey.trim());
+    return <Field label="生成连接"><WorkspaceSelect disabled={disabled} value={value} onValueChange={(value) => onChange(value)}><SelectOption value="">{usage === "speech" ? "选择配音连接" : "选择 APIMart 连接"}</SelectOption>{choices.map((item) => <SelectOption value={item.id} key={item.id}>{item.label || (item.definitionId === "mimo" ? "MiMo" : "APIMart")}</SelectOption>)}</WorkspaceSelect>{choices.length === 0 && <small>请在连接与模型中添加{usage === "speech" ? " MiMo 或 APIMart " : " APIMart "}连接后生成。</small>}</Field>;
 }
 export function AudioPlayer({ mediaId, title, compact = false, autoplay = false, ...playback }: {
     mediaId?: string;

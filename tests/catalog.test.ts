@@ -37,3 +37,8 @@ it("exposes APIMart media capabilities independently of compatible chat protocol
 it("registers AIHubMix with a compatible chat base and media capabilities", () => {
   expect(getConnectorDefinition("aihubmix")).toMatchObject({ title: "AIHubMix", defaultBaseUrl: "https://aihubmix.com/v1", protocol: "openai-compatible", capabilities: ["chat", "image", "video"] });
 });
+
+it("registers MiMo speech and chat with its official v1 base", () => {
+  expect(getConnectorDefinition("mimo")).toMatchObject({ title: "MiMo", defaultBaseUrl: "https://api.xiaomimimo.com/v1", protocol: "openai-compatible", capabilities: ["chat", "audio"] });
+  expect(connectorDisplayName({ definitionId: "mimo" })).toBe("MiMo");
+});

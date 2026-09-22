@@ -10,13 +10,17 @@ import { targetRevision } from "@/lib/productionRevision";
 import { prepareAudioGeneration, submitAudioGeneration, refreshAudioGeneration, audioJobSummary } from "@/lib/audioGeneration/runtime";
 import { validateGenerationInput } from "@/lib/audioGeneration/input";
 import { SPEECH_VOICES } from "@/lib/ai/apimartAudio";
+import { MIMO_VOICES, MIMO_MODELS } from "@/lib/ai/mimoSpeech";
+import { mimoSpeechSpec } from "./mimoSpeechSpec";
+import { defaultMimoConnector, speakerSpeechProfile } from "@/lib/audioGeneration/defaults";
+import { validateSpeechReference } from "@/lib/audioGeneration/reference";
 import * as s from "./businessSchemas";
 
 const base = { projectId: s.id, connectorId: s.id };
-const speech = s.object({ ...base, text: s.text(8192, 1), voice: s.choice(SPEECH_VOICES), speed: s.number(.25, 4), segmentId: s.optional(s.id), segmentRevision: s.optional(s.number(1, 1e9, true)) });
+const speech = s.object({ projectId: s.id, connectorId: s.optional(s.id), text: s.text(8192), voice: s.optional(s.choice([...SPEECH_VOICES, ...MIMO_VOICES])), speed: s.optional(s.number(.25, 4)), mimo: s.optional(mimoSpeechSpec), speakerId: s.optional(s.id), speakerRevision: s.optional(s.number(1, 1e9, true)), segmentId: s.optional(s.id), segmentRevision: s.optional(s.number(1, 1e9, true)) });
 const music = s.object({ ...base, draftId: s.id, draftRevision: s.number(1, 1e9, true) });
 const jobSpec = s.object({ projectId: s.id, jobId: s.id });
-type Submission = { projectId: string; connectorId: string; input: AudioGenerationInput };
+type Submission = { projectId: string; connectorId: string; input: AudioGenerationInput; speakerId?: string; speakerRevision?: number };
 async function scope(projectId: string, context: AgentToolContext) {
   context.signal.throwIfAborted();
   const bound = await frozenProjectScope(context);
@@ -26,8 +30,12 @@ async function scope(projectId: string, context: AgentToolContext) {
 async function inputState(args: Submission, context: AgentToolContext) {
   await scope(args.projectId, context);
   validateGenerationInput(args.input);
+  let speaker;
+  if (args.speakerId) { speaker = await ownedAudioRow(db.audioSpeakers, args.projectId, args.speakerId); if (args.speakerRevision === undefined) throw new Error("指定说话人时必须提供当前版本"); assertAudioRevision(speaker, args.speakerRevision); }
   const connector = await resolveConnector(args.connectorId);
-  if (!connector || connector.definitionId !== "apimart" || !connector.apiKey.trim()) throw new Error("需要已配置的 APIMart 连接");
+  const provider = args.input.kind === "speech" && args.input.mimo ? "mimo" : "apimart";
+  if (!connector || connector.definitionId !== provider || !connector.apiKey.trim()) throw new Error(`需要已配置的 ${provider === "mimo" ? "MiMo" : "APIMart"} 连接`);
+  const reference = args.input.kind === "speech" ? await validateSpeechReference(args.projectId, args.input) : undefined;
   let target: unknown;
   if (args.input.kind === "speech") {
     await assertAudioProject(args.projectId, "audio");
@@ -44,22 +52,23 @@ async function inputState(args: Submission, context: AgentToolContext) {
     assertAudioRevision(row, args.input.draftRevision);
     target = row;
   }
-  return { revision: targetRevision({ args, target, connector: { id: connector.id, definitionId: connector.definitionId, baseUrl: connector.baseUrl, credentialRevision: targetRevision(connector.apiKey) } }), connector };
+  return { revision: targetRevision({ args, target: { target, speaker }, reference: reference ? { mediaId: reference.mediaId, fingerprint: reference.fingerprint, filename: reference.filename } : undefined, connector: { id: connector.id, definitionId: connector.definitionId, baseUrl: connector.baseUrl, credentialRevision: targetRevision(connector.apiKey) } }), connector, reference };
 }
 async function preview(args: Submission, context: AgentToolContext) {
   const state = await inputState(args, context);
   const changes = args.input.kind === "speech"
-    ? [`APIMart · gpt-4o-mini-tts · ${args.input.voice} · ${args.input.speed} 倍速`, `文字：${args.input.text.slice(0, 1600)}`, "生成一个新配音版本，保留当前选用和时间线。"]
+    ? [args.input.mimo ? `MiMo · ${MIMO_MODELS[args.input.mimo.mode]} · ${args.input.mimo.mode === "preset" ? args.input.voice : args.input.mimo.mode === "design" ? "设计音色" : "克隆音色"}` : `APIMart · gpt-4o-mini-tts · ${args.input.voice} · ${args.input.speed} 倍速`,
+      ...(args.input.mimo ? [`音色与演绎指导：${args.input.mimo.instruction}`, ...(state.reference ? [`参考声音：${state.reference.filename}（${state.reference.mediaId}）`] : []), ...(args.input.mimo.optimizeTextPreview ? ["允许智能润色或自动生成播报文本；稿件原文保留。"] : [])] : []), `文字：${args.input.text.slice(0, 1600)}`, "生成一个新配音版本，保留当前选用和时间线。"]
     : [`APIMart · ${args.input.settings.engine}`, `创作设置：${JSON.stringify(args.input.settings).slice(0, 1600)}`, "生成结果保存到音乐项目；不覆盖已有作品。"];
   return { summary: args.input.kind === "speech" ? "生成配音（付费）" : "生成音乐（付费）", revision: state.revision, changes,
     target: { label: "打开作品项目", href: `/p/${encodeURIComponent(args.projectId)}` } };
 }
-async function runSubmission(args: Submission, context: AgentToolContext) {
+async function runSubmission(args: Submission, context: AgentToolContext, resolveCurrent?: () => Promise<Submission>) {
   const intentId = `agent-audio:${context.callId}`;
   const validate = async () => {
     const call = await db.agentToolCalls.get(context.callId), run = await db.agentRuns.get(context.runId);
     if (!call || call.runId !== context.runId || call.threadId !== context.threadId || call.status !== "running" || call.decision !== "approve" || !call.requiresConfirmation || run?.status !== "running") throw new AtomicToolRollbackError("生成请求尚未得到有效确认或执行已停止");
-    if (!context.preview?.revision || context.preview.revision !== (await inputState(args, context)).revision) throw new AtomicToolRollbackError("生成目标、参数或连接已变化，请重新准备并确认");
+    if (!context.preview?.revision || context.preview.revision !== (await inputState(resolveCurrent ? await resolveCurrent() : args, context)).revision) throw new AtomicToolRollbackError("生成目标、参数或连接已变化，请重新准备并确认");
   };
   try {
     await scope(args.projectId, context);
@@ -80,10 +89,35 @@ async function runSubmission(args: Submission, context: AgentToolContext) {
     throw new AtomicToolRollbackError(error instanceof Error ? error.message : "生成准备失败");
   }
 }
-const speechArgs = (raw: unknown): Submission => {
+async function speechArgs(raw: unknown, context: AgentToolContext, recover = false): Promise<Submission> {
   const args = speech.schema.parse(raw);
-  return { projectId: args.projectId, connectorId: args.connectorId, input: { kind: "speech", text: args.text, voice: args.voice, speed: args.speed, segmentId: args.segmentId, segmentRevision: args.segmentRevision } };
-};
+  await scope(args.projectId, context);
+  if (recover) {
+    const existing = await db.audioGenerationJobs.where("intentId").equals(`agent-audio:${context.callId}`).first();
+    if (existing && existing.status !== "prepared" && existing.projectId === args.projectId && existing.source.kind === "agent" && existing.source.callId === context.callId && existing.source.runId === context.runId) {
+      return { projectId: args.projectId, connectorId: existing.connector.id, input: existing.input };
+    }
+  }
+  let speakerId = args.speakerId;
+  if (args.segmentId) {
+    const segment = await ownedAudioRow(db.audioSegments, args.projectId, args.segmentId);
+    if (speakerId && segment.speakerId && speakerId !== segment.speakerId) throw new Error("说话人与段落绑定不一致");
+    speakerId ??= segment.speakerId;
+  }
+  if (args.speakerRevision !== undefined && !speakerId) throw new Error("说话人版本需要指定说话人");
+  const speaker = speakerId ? await ownedAudioRow(db.audioSpeakers, args.projectId, speakerId) : undefined;
+  if (speaker && args.speakerRevision !== undefined) assertAudioRevision(speaker, args.speakerRevision);
+  const inherited = speakerSpeechProfile(speaker);
+  const explicitApimart = !args.mimo && args.voice !== undefined && (SPEECH_VOICES as readonly string[]).includes(args.voice);
+  const explicitMimoPreset = !args.mimo && args.voice !== undefined && (MIMO_VOICES as readonly string[]).includes(args.voice);
+  const mimo = explicitApimart ? undefined : args.mimo ?? (explicitMimoPreset ? { mode: "preset" as const, instruction: "" } : inherited.mimo);
+  const voice = args.voice ?? (args.mimo ? "mimo_default" : inherited.voice);
+  const speed = args.speed ?? (mimo ? 1 : inherited.speed);
+  const connectorId = args.connectorId ?? defaultMimoConnector(await db.connectors.toArray())?.id;
+  if (!connectorId) throw new Error("请先配置 MiMo 连接，或明确提供 APIMart 连接");
+  return { projectId: args.projectId, connectorId, ...(speaker ? { speakerId: speaker.id, speakerRevision: speaker.revision } : {}),
+    input: { kind: "speech", text: args.text, voice, speed, ...(mimo ? { mimo } : {}), segmentId: args.segmentId, segmentRevision: args.segmentRevision } };
+}
 async function musicArgs(raw: unknown, context?: AgentToolContext): Promise<Submission> {
   const args = music.schema.parse(raw);
   if (context) {
@@ -99,14 +133,19 @@ async function musicArgs(raw: unknown, context?: AgentToolContext): Promise<Subm
 }
 export const AUDIO_GENERATION_TOOL_NAMES = ["audio_generation_capabilities", "audio_generate_speech", "music_generate", "audio_generation_check"] as const;
 export const AUDIO_GENERATION_TOOLS: readonly AgentToolDefinition[] = [
-  { name: "audio_generation_capabilities", title: "查看声音生成能力", description: "列出 APIMart 音频/音乐连接与已支持能力，不探测付费接口，不保证余额。", effect: "read", highRisk: () => false,
+  { name: "audio_generation_capabilities", title: "查看声音生成能力", description: "列出 MiMo/APIMart 音频和音乐连接与已支持能力，不探测付费接口，不保证余额。", effect: "read", highRisk: () => false,
     parameters: { type: "object", properties: {}, additionalProperties: false }, parseArguments: raw => z.object({}).strict().parse(raw),
-    async execute(_args, context) { const projectId = await frozenProjectScope(context); if (!projectId) throw new Error("请先绑定项目"); await scope(projectId, context); return {
-      connectors: (await db.connectors.where("definitionId").equals("apimart").toArray()).map(c => ({ id: c.id, label: c.label, configured: !!c.apiKey.trim() })),
-      speech: { model: "gpt-4o-mini-tts", voices: SPEECH_VOICES, maxCharacters: 4096, speed: [.25, 4] }, music: { engines: ["flowmusic", "suno"], sunoVersions: ["v6", "v6-wild", "v6-mini"] }, note: "先保存音乐草稿再 music_generate。付费请求必须经用户确认；不支持编曲或音频听取。",
+    async execute(_args, context) { const projectId = await frozenProjectScope(context); if (!projectId) throw new Error("请先绑定项目"); await scope(projectId, context); const connections = await db.connectors.where("definitionId").anyOf("apimart", "mimo").toArray(); return {
+      defaultSpeech: { provider: "mimo", connectorId: defaultMimoConnector(connections)?.id ?? null, profile: speakerSpeechProfile(), note: "未配置 MiMo 时请先添加连接，不自动改用 APIMart；保存的角色音色优先。" },
+      connectors: connections.map(c => ({ id: c.id, label: c.label, provider: c.definitionId, configured: !!c.apiKey.trim() })),
+      mimo: { models: MIMO_MODELS, voices: MIMO_VOICES, speed: 1, reference: "clone requires an owned WAV/MP3 media ID; encoded sample <=10 MB", design: "instruction required; optimizeTextPreview explicitly permits text rewrite or empty-text audition" },
+      speech: { provider: "apimart", model: "gpt-4o-mini-tts", voices: SPEECH_VOICES, maxCharacters: 4096, speed: [.25, 4] }, music: { provider: "apimart", engines: ["flowmusic", "suno"], sunoVersions: ["v6", "v6-wild", "v6-mini"] }, note: "先保存音乐草稿再 music_generate。付费请求必须经用户确认；不支持编曲或音频听取。",
     }; } },
-  { name: "audio_generate_speech", title: "生成配音", description: "为当前音频项目生成一个新配音版本；提供真实段落 ID 和版本，先确认音色/文字。保留已有版本与时间线。", effect: "network", recovery: "repeatable", requiresConfirmation: true, highRisk: () => false,
-    parameters: speech.json, parseArguments: raw => speech.schema.parse(raw), prepare: (raw, context) => preview(speechArgs(raw), context), execute: (raw, context) => runSubmission(speechArgs(raw), context) },
+  { name: "audio_generate_speech", title: "生成配音", description: "生成配音或音色试音；默认 MiMo，connectorId/voice/speed 可省略。speakerId 或段落绑定角色可继承已保存的音色；提供段落时需 segmentRevision。明确的 APIMart 参数仍可使用；MiMo 克隆用项目内参考 mediaId，设计默认不改写文本。必须确认后才生成。", effect: "network", recovery: "repeatable", requiresConfirmation: true, highRisk: () => false,
+    parameters: speech.json, parseArguments: raw => speech.schema.parse(raw), prepare: async (raw, context) => preview(await speechArgs(raw, context), context), execute: async (raw, context) => {
+      try { return await runSubmission(await speechArgs(raw, context, true), context, () => speechArgs(raw, context)); }
+      catch (error) { throw new AtomicToolRollbackError(error instanceof Error ? error.message : "配音准备失败"); }
+    } },
   { name: "music_generate", title: "生成音乐", description: "提交当前已保存音乐草稿的指定版本；先用音乐草稿工具准备参数。经用户确认后提交一次，后续只查询已有任务。", effect: "network", recovery: "repeatable", requiresConfirmation: true, highRisk: () => false,
     parameters: music.json, parseArguments: raw => music.schema.parse(raw), prepare: async (raw, context) => preview(await musicArgs(raw), context),
     async execute(raw, context) {

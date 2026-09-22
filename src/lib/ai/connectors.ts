@@ -1,3 +1,4 @@
+import { listMimoModels, MIMO_NON_CHAT_MODELS } from "./mimoSpeech";
 import { collectModelMetadata, type ChatModelMetadata } from "@/lib/ai/modelMetadata";
 import type { ConnectorConfig } from "@/domain/types";
 import { listApimartModels, testApimartConnection } from "@/lib/ai/apimart";
@@ -22,6 +23,10 @@ export async function discoverConnectorChatModels(
   connector: ConnectorAccess,
   options: { fetchImpl?: typeof fetch; signal?: AbortSignal } = {},
 ): Promise<ChatModelDiscoveryResult> {
+  if (connector.definitionId === "mimo") {
+    const result = await listMimoModels(connector, options);
+    return result.ok ? { ...result, models: result.models.filter(id => !MIMO_NON_CHAT_MODELS.includes(id)), incompatibleModels: [...MIMO_NON_CHAT_MODELS] } : result;
+  }
   if (connector.definitionId === "aihubmix") {
     const result = await listAIHubMixModels(connector, options);
     if (!result.ok) return result;
@@ -74,6 +79,10 @@ export async function runWithCompatibleChatModel<T>(
   if (!connector.baseUrl.trim() || !connector.apiKey.trim()) return { ok: false, message: "请先完善连接的 Base URL 和 API Key" };
   const stale = () => options.signal?.aborted || options.isCurrent?.() === false;
   if (stale()) return { ok: false, message: "模型或连接已变更，请重新发送", aborted: true };
+  if (connector.definitionId === "mimo") {
+    const issue = chatModelIssue(model, { verified: true, incompatibleModels: MIMO_NON_CHAT_MODELS });
+    if (issue) return { ok: false, message: issue };
+  }
   if (requiresChatModelVerification(connector)) {
     const result = await discoverConnectorChatModels(connector, options);
     if (stale()) return { ok: false, message: "模型或连接已变更，请重新发送", aborted: true };
@@ -90,6 +99,7 @@ export async function listConnectorModels(
   usage: "all" | "chat" = "all",
   fetchImpl: typeof fetch = fetch,
 ): Promise<ListModelsResult> {
+  if (connector.definitionId === "mimo" && usage === "all") return listMimoModels(connector, { fetchImpl });
   if (usage === "chat") {
     const result = await discoverConnectorChatModels(connector, { fetchImpl });
     return result.ok ? { ok: true, models: result.models } : result;
@@ -115,6 +125,10 @@ export async function testConnectorConnection(
   connector: ConnectorAccess,
   fetchImpl: typeof fetch = fetch,
 ): Promise<ConnectorTestResult> {
+  if (connector.definitionId === "mimo") {
+    const result = await listMimoModels(connector, { fetchImpl });
+    return result.ok ? { ok: true, via: "models", modelCount: result.models.length } : result;
+  }
   if (connector.definitionId === "aihubmix") {
     const result = await testAIHubMixConnection(connector, { fetchImpl });
     return result.ok ? { ok: true, via: "authenticated-read" } : result;

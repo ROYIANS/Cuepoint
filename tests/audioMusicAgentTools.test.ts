@@ -43,6 +43,21 @@ describe("audio/music Agent local tools", () => {
     expect(() => tool("music_save_draft").parseArguments({ projectId: "p", settings: { ...defaultMusicSettings("flowmusic"), instrumental: true } })).toThrow();
   });
 
+  it("creates MiMo voices by default while preserving explicit APIMart profiles", async () => {
+    const project = await createAudioMusicProject("音色", "audio");
+    for (const [name, fields] of [["默认", {}], ["旧音色", { voice: "alloy", speed: 1.2 }], ["MiMo 预置", { voice: "茉莉" }]] as const) {
+      const run = await begin(project.id);
+      const call = await prepareCall(run, "audio_create", { projectId: project.id, kind: "speaker", name, ...fields });
+      await call.definition.execute(call.args, call.ctx);
+    }
+    const rows = await db.audioSpeakers.where("projectId").equals(project.id).toArray();
+    expect(rows.find(row => row.name === "默认")).toMatchObject({ voice: "mimo_default", speed: 1, mimo: { mode: "preset", instruction: "" } });
+    expect(rows.find(row => row.name === "MiMo 预置")).toMatchObject({ voice: "茉莉", mimo: { mode: "preset", instruction: "" } });
+    const legacy = rows.find(row => row.name === "旧音色")!;
+    expect(legacy).toMatchObject({ voice: "alloy", speed: 1.2 });
+    expect(legacy.mimo).toBeUndefined();
+  });
+
   it("creates script and ledger atomically, and replay does not duplicate records", async () => {
     const project = await createAudioMusicProject("配音", "audio"), run = await begin(project.id);
     const chapter = (await getAudioProjectSnapshot(project.id)).chapters[0];
@@ -51,6 +66,23 @@ describe("audio/music Agent local tools", () => {
     expect(await call.definition.execute(call.args, call.ctx)).toEqual(result);
     expect(await db.audioSegments.count()).toBe(1);
     expect(await db.agentToolCalls.get(call.call.id)).toMatchObject({ status: "completed" });
+  });
+
+  it("creates and clears a reusable MiMo speaker profile through the tool ledger", async () => {
+    const project = await createAudioMusicProject("配音", "audio"), run = await begin(project.id);
+    const call = await prepareCall(run, "audio_create", { projectId: project.id, kind: "speaker", name: "旁白", voice: "mimo_default", speed: 1, mimo: { mode: "design", instruction: "沉稳磁性的男声".repeat(500) } });
+    await call.definition.execute(call.args, call.ctx);
+    const speaker = (await db.audioSpeakers.toArray())[0];
+    expect(speaker.mimo).toEqual({ mode: "design", instruction: "沉稳磁性的男声".repeat(500) });
+    const reader = tool("audio_read");
+    const page = await reader.execute(reader.parseArguments({ projectId: project.id, kind: "speakers" }), context(run));
+    expect(JSON.stringify(page).length).toBeLessThan(1500);
+    const full = await reader.execute(reader.parseArguments({ projectId: project.id, kind: "speakers", id: speaker.id, field: "instruction", textOffset: 300 }), context(run));
+    expect(full).toMatchObject({ text: speaker.mimo!.instruction.slice(300, 4300), totalLength: speaker.mimo!.instruction.length });
+    const updateRun = await begin(project.id);
+    const update = await prepareCall(updateRun, "audio_update", { projectId: project.id, id: speaker.id, revision: speaker.revision, kind: "speaker", patch: { voice: "alloy", mimo: null } });
+    await update.definition.execute(update.args, update.ctx);
+    expect((await db.audioSpeakers.get(speaker.id))?.mimo).toBeUndefined();
   });
 
   it("rolls back domain changes when tool ledger persistence fails", async () => {

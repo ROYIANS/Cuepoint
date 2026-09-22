@@ -7,6 +7,8 @@ import { AUDIO_TRANSACTION_TABLES, assertAudioProject, ownedAudioRow, assertAudi
 import type { AudioGenerationInput, AudioGenerationJob, AudioGenerationResult, AudioGenerationStatus } from "@/domain/audioGeneration";
 import type { AudioSourceMetadata } from "@/domain/audio";
 import { generateApimartSpeech, submitApimartMusic, getApimartMusicTask, downloadApimartAudio } from "@/lib/ai/apimartAudio";
+import { generateMimoSpeech, MIMO_MODELS } from "@/lib/ai/mimoSpeech";
+import { validateSpeechReference } from "./reference";
 import type { ApimartRequestOptions } from "@/lib/ai/apimart";
 import { normalizeBaseUrl } from "@/lib/ai/openaiCompatible";
 import { audioBufferMetadata, decodeAudioBlob } from "@/lib/audio/engine";
@@ -31,7 +33,7 @@ const readJob = (projectId: string, id: string) => ownedAudioRow(db.audioGenerat
 const change = (job: AudioGenerationJob, patch: Parameters<typeof patchAudioGenerationJob>[3]) => patchAudioGenerationJob(job.projectId, job.id, job.revision, patch);
 async function connection(job: Pick<AudioGenerationJob, "connector">) {
   const value = await resolveConnector(job.connector.id);
-  if (!value || value.definitionId !== "apimart" || !value.apiKey.trim() || normalizeBaseUrl(value.baseUrl) !== normalizeBaseUrl(job.connector.baseUrl)) throw new Error("APIMart 连接已删除或地址发生变化，请恢复原连接后继续查询");
+  if (!value || value.definitionId !== job.connector.provider || !value.apiKey.trim() || normalizeBaseUrl(value.baseUrl) !== normalizeBaseUrl(job.connector.baseUrl)) throw new Error("生成连接已删除或地址发生变化，请恢复原连接后继续查询");
   return value;
 }
 async function validateTarget(projectId: string, input: AudioGenerationInput) {
@@ -50,10 +52,12 @@ export async function prepareAudioGeneration(args: {
 }): Promise<AudioGenerationJob> {
   const input = validateGenerationInput(args.input);
   await validateTarget(args.projectId, input);
+  const reference = input.kind === "speech" ? await validateSpeechReference(args.projectId, input) : undefined;
+  const provider = input.kind === "speech" && input.mimo ? "mimo" : "apimart";
   const connector = await resolveConnector(args.connectorId);
-  if (!connector || connector.definitionId !== "apimart" || !connector.apiKey.trim()) throw new Error("请先选择已配置密钥的 APIMart 连接");
+  if (!connector || connector.definitionId !== provider || !connector.apiKey.trim()) throw new Error(`请先选择已配置密钥的 ${provider === "mimo" ? "MiMo" : "APIMart"} 连接`);
   return prepareAudioGenerationJob(args.projectId, { intentId: args.intentId ?? createId("audio-intent"), input,
-    connector: { id: connector.id, provider: "apimart", baseUrl: normalizeBaseUrl(connector.baseUrl) }, source: args.source ?? { kind: "manual" } });
+    connector: { id: connector.id, provider, baseUrl: normalizeBaseUrl(connector.baseUrl) }, source: args.source ?? { kind: "manual" }, ...(reference ? { referenceFingerprint: reference.fingerprint } : {}) });
 }
 async function persistResult(job: AudioGenerationJob, result: AudioGenerationResult, blob: Blob, options: AudioGenerationOptions) {
   const metadata = await (options.decode ?? (async audio => audioBufferMetadata(await decodeAudioBlob(audio))))(blob);
@@ -69,7 +73,7 @@ async function persistResult(job: AudioGenerationJob, result: AudioGenerationRes
     let saved: AudioGenerationResult;
     if (latest.input.kind === "speech") {
       const segment = latest.input.segmentId ? await db.audioSegments.get(latest.input.segmentId) : undefined;
-      const take = await addAudioTake(job.projectId, { ...metadata, mediaId, name: result.title, source: "tts", textSnapshot: latest.input.text,
+      const take = await addAudioTake(job.projectId, { ...metadata, mediaId, name: result.title, source: "tts", textSnapshot: result.finalTextPreview ?? latest.input.text,
         ...(segment?.projectId === job.projectId ? { segmentId: segment.id } : {}), provenance: result.provenance }, media);
       saved = { ...result, mediaId, takeId: take.id, durationSec: metadata.durationSec, error: undefined };
     } else {
@@ -115,6 +119,8 @@ export async function submitAudioGeneration(projectId: string, jobId: string, op
     if (job.source.kind === "agent" && !options.beforeSubmit) throw new Error("助手生成需要通过已确认的工具调用提交");
     validateGenerationInput(job.input);
     await validateTarget(projectId, job.input);
+    let reference = job.input.kind === "speech" ? await validateSpeechReference(projectId, job.input) : undefined;
+    if (job.referenceFingerprint && reference?.fingerprint !== job.referenceFingerprint) throw new Error("克隆参考音频已变化，请重新准备生成");
     const credentials = await connection(job);
     options.signal?.throwIfAborted();
     await options.beforeSubmit?.();
@@ -124,12 +130,17 @@ export async function submitAudioGeneration(projectId: string, jobId: string, op
       const current = await connection(job);
       if (current.apiKey !== credentials.apiKey) throw new Error("连接密钥已变化，请重新准备生成");
       await options.beforeSubmit?.();
+      reference = job.input.kind === "speech" ? await validateSpeechReference(projectId, job.input) : undefined;
+      if (job.referenceFingerprint && reference?.fingerprint !== job.referenceFingerprint) throw new Error("克隆参考音频已变化，请重新准备生成");
       options.signal?.throwIfAborted();
     } catch (error) { return change(job, { status: "failed", error: error instanceof Error ? error.message : "提交前检查失败" }); }
     if (job.input.kind === "speech") {
-      const response = await generateApimartSpeech(credentials, speechWireInput(job.input), options);
+      const response = job.input.mimo
+        ? await generateMimoSpeech(credentials, { text: job.input.text, voice: job.input.voice, mimo: job.input.mimo, referenceBlob: reference?.blob }, options)
+        : await generateApimartSpeech(credentials, speechWireInput(job.input), options);
       if (!response.ok) return change(job, { status: ["network", "aborted", "protocol"].includes(response.kind) ? "uncertain" : "failed", error: response.message });
-      const result: AudioGenerationResult = { key: `${job.id}:speech`, title: job.input.text.slice(0, 24) || "配音", provenance: { provider: "apimart", model: "gpt-4o-mini-tts", jobId: job.id } };
+      const result: AudioGenerationResult = { key: `${job.id}:speech`, title: job.input.text.slice(0, 24) || "配音", provenance: { provider: job.connector.provider, model: job.input.mimo ? MIMO_MODELS[job.input.mimo.mode] : "gpt-4o-mini-tts", jobId: job.id },
+        ...("finalTextPreview" in response && typeof response.finalTextPreview === "string" ? { finalTextPreview: response.finalTextPreview } : {}) };
       // Persist returned bytes before decoding, so interrupted local processing can recover without another paid request.
       job = await db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => {
         await assertAudioProject(projectId);

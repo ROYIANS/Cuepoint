@@ -2,21 +2,30 @@ import { db } from "./database";
 import type { AudioGenerationJob, AudioGenerationStatus } from "@/domain/audioGeneration";
 import { AUDIO_TRANSACTION_TABLES, assertAudioProject, assertAudioRevision, finiteAudioNumber, newAudioRow, ownedAudioRow, touchAudioProject } from "./audioShared";
 import { validateMusicSettings } from "./music";
+import { validateGenerationInput } from "@/lib/audioGeneration/input";
+import { validateSpeechReference } from "@/lib/audioGeneration/reference";
 import { nowIso } from "@/lib/ids";
 
 export async function validateAudioGenerationJob(row: AudioGenerationJob) {
   await assertAudioProject(row.projectId, row.input.kind === "speech" ? "audio" : "music");
-  if (!row.intentId || !row.connector.id || row.connector.provider !== "apimart") throw new Error("生成任务标识无效");
+  if (!row.intentId || !row.connector.id || !["apimart", "mimo"].includes(row.connector.provider)) throw new Error("生成任务标识无效");
   if (row.input.kind === "speech") {
-    if (!row.input.text.trim() || [...row.input.text].length > 4096) throw new Error("配音文本需要 1–4096 个字符");
+    if (Boolean(row.input.mimo) !== (row.connector.provider === "mimo")) throw new Error("配音设置与服务商不匹配");
+    if (row.input.mimo) {
+      validateGenerationInput(row.input);
+      const reference = await validateSpeechReference(row.projectId, row.input);
+      if (row.referenceFingerprint && row.referenceFingerprint !== reference?.fingerprint) throw new Error("克隆参考音频已变化，请重新准备生成");
+    }
+    if (!row.input.mimo && (!row.input.text.trim() || [...row.input.text].length > 4096)) throw new Error("配音文本需要 1–4096 个字符");
     finiteAudioNumber(row.input.speed, "语速", 0.25, 4);
     if (row.input.segmentId) await ownedAudioRow(db.audioSegments, row.projectId, row.input.segmentId);
   } else {
+    if (row.connector.provider !== "apimart") throw new Error("音乐生成仅支持 APIMart");
     validateMusicSettings(row.input.settings);
     if (row.input.draftId) await ownedAudioRow(db.musicDrafts, row.projectId, row.input.draftId);
   }
 }
-export async function prepareAudioGenerationJob(projectId: string, input: Pick<AudioGenerationJob, "intentId" | "input" | "connector" | "source">): Promise<AudioGenerationJob> {
+export async function prepareAudioGenerationJob(projectId: string, input: Pick<AudioGenerationJob, "intentId" | "input" | "connector" | "source" | "referenceFingerprint">): Promise<AudioGenerationJob> {
   return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => {
     const existing = await db.audioGenerationJobs.where("intentId").equals(input.intentId).first();
     if (existing) {
@@ -26,6 +35,9 @@ export async function prepareAudioGenerationJob(projectId: string, input: Pick<A
     }
     const row = newAudioRow<AudioGenerationJob>(projectId, "agj", { ...input, status: "prepared", taskIds: [], results: [] });
     await validateAudioGenerationJob(row);
+    if (row.input.kind === "speech" && row.input.mimo?.mode === "clone") {
+      row.referenceFingerprint = (await validateSpeechReference(projectId, row.input))!.fingerprint;
+    }
     await db.audioGenerationJobs.add(row);
     await touchAudioProject(projectId);
     return row;

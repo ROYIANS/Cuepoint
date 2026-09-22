@@ -8,10 +8,17 @@ export interface AudioRow {
   updatedAt: string;
 }
 export interface AudioChapter extends AudioRow { title: string; order: number }
+export interface MimoSpeechSettings {
+  mode: "preset" | "design" | "clone";
+  instruction: string;
+  referenceMediaId?: Id;
+  optimizeTextPreview?: boolean;
+}
 export interface AudioSpeaker extends AudioRow {
   name: string;
   voice?: string;
   speed?: number;
+  mimo?: MimoSpeechSettings;
 }
 export interface AudioSegment extends AudioRow {
   chapterId: Id;
@@ -23,7 +30,7 @@ export interface AudioSegment extends AudioRow {
 }
 export interface AudioSourceMetadata { durationSec: number; sampleRate: number; channels: number }
 export interface AudioProvenance {
-  provider: "apimart";
+  provider: "apimart" | "mimo";
   model: string;
   taskId?: string;
   clipId?: string;

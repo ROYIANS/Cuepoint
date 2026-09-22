@@ -9,7 +9,7 @@ Audio production must work through recording/upload without a connector or Agent
 
 The first release supports multitrack voice/music/effects editing, PCM WAV mixing, APIMart
 TTS, Flow Music and Suno music generation. Arrangement, continuation, covers, stems, MIDI,
-voice cloning and professional signal processing are not implemented contracts. Agent tools
+professional signal processing are not implemented contracts. MiMo voice design and cloning follow the additive contract below. Agent tools
 do not start a microphone/file picker or claim to have listened to audio. Export is currently
 a workbench action, not an Agent export tool.
 
@@ -246,3 +246,24 @@ await db.audioClips.put({ ...staleClip, startSec: nextPosition });
 await patchAudioClip(projectId, clip.id, clip.revision, { startSec: nextPosition });
 // For split/delete/undo: replaceAudioClips(projectId, chapterId, expected, next).
 ```
+
+
+## MiMo speech and reusable voices (2026-09-22)
+
+Speech input optionally carries `mimo: {mode, instruction, referenceMediaId?, optimizeTextPreview?}`. Absence preserves APIMart legacy speech. The same configuration can be saved on a project speaker; no hosted voice ID is invented. MiMo numeric speed is 1; natural-language instructions control performance. Preset uses documented voice IDs; design requires instruction, omits voice on wire and only rewrites text after explicit optimize flag; clone requires an owned WAV/MP3 reference and omits optimization.
+
+Reference files remain owned media, not base64 in jobs or tool arguments. Shared reference validation checks actual container, encoded size including prefix (10 MiB), ownership and SHA-256 bytes. Prepare freezes sample fingerprint; claim/preflight and Agent approval detect changes. Speakers and generation jobs retain reference files in media collection; ZIP remaps IDs and makes imported jobs dormant. Optional fields need no schema version bump.
+
+Nonstreaming MiMo WAV output is checkpointed before decode like APIMart speech. `finalTextPreview` is stored on the result and becomes the take text snapshot; original manuscript is never rewritten. Recovery processes stored bytes without replaying a POST. A failed/unknown submission remains visible, never auto-retried.
+
+UI uses the existing contextual voice panel with preset/design/clone tabs. Optional performance guidance and text optimization are disclosures. Users explicitly save profiles to speakers. Project takes, uploaded WAV/MP3 and decoded WAV copies of recordings can be clone references; selecting a reference does not send it. Actual send occurs on Generate or approved Agent tool. Design output can be selected as a clone reference for reuse.
+
+Regression coverage: mimoSpeech.test.ts, mimoRuntime.test.ts, audioGenerationAgent.test.ts and audioMusicAgentTools.test.ts cover wire roles, scoped bytes, replay, text provenance, ZIP/GC and reviewed tools.
+
+
+### MiMo-first voice workflow
+New unassigned speech and new Agent-created speakers default to MiMo preset `mimo_default`. Shared `defaultMimoConnector` never silently selects APIMart if MiMo is missing. Explicit legacy APIMart speaker profiles remain valid without rewriting historical data.
+
+Project toolbar exposes Voices and Dubbing directly; manuscript gutter only selects a role or opens the voice library, no nested role configuration forms. `VoiceLibrary` edits existing AudioSpeaker records with a captured revision and creates named preset/design/clone configurations shared with Agent. Audition uses the same durable speech runtime without a manuscript target; save is a separate local operation, and a design audition can explicitly become a clone reference. Normal paragraph controls show voice selection and Generate, plus optional delivery guidance. First-use MiMo setup is inline and saves only through the studio connector repository. The library is mounted once outside responsive inspectors so opening it from a Sheet does not duplicate modal state.
+
+Voice dialog close/navigation are blocked during active audition/reference import/save. Named edits use captured revision CAS, and paragraph voice assignment verifies current owner/profile binding after draft flush. Credentials and raw sample bytes do not enter speaker/tool records. Browser visual verification remains separate from deterministic code checks.

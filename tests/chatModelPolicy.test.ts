@@ -60,3 +60,9 @@ describe.each(["apimart", "aihubmix"] as const)("%s shared chat model selection 
     expect(buildChatModelOptions([], "old-choice", "new-choice", policy)).toEqual([]);
   });
 });
+
+it("excludes documented MiMo audio models from manual and saved options before discovery", () => {
+  const policy = getChatModelPolicy({ definitionId: "mimo", baseUrl: "https://api.xiaomimimo.com/v1", apiKey: "key" }, undefined);
+  expect(buildChatModelOptions(["mimo-v2.5", "mimo-v2.5-tts"], "mimo-v2.5-tts-voiceclone", "mimo-v2.5-tts-voicedesign", policy)).toEqual(["mimo-v2.5"]);
+  expect(chatModelIssue("mimo-v2.5-tts", policy)).toContain("无法用于对话");
+});
