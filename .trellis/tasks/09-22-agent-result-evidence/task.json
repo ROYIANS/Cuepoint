@@ -15,12 +15,12 @@
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "1b158aa",
   "pr_url": null,
   "subtasks": [],
   "children": [],
   "parent": "09-22-agent-creative-experience",
   "relatedFiles": [],
-  "notes": "",
+  "notes": "Delivered write receipts, music observations and current sound output/task evidence (e5b486d,ca8c986,1b158aa). Remaining: free-text fact checking, per-output partial-result sources and integrated/live acceptance.",
   "meta": {}
 }

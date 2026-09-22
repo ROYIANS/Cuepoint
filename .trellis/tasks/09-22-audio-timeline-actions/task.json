@@ -15,12 +15,12 @@
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "9f42067",
   "pr_url": null,
   "subtasks": [],
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "",
+  "notes": "Context actions, touch alternatives, shortcuts, CAS and undo delivered; regression/type/build checks passed. Visual follow-up retained in parent release acceptance.",
   "meta": {}
 }

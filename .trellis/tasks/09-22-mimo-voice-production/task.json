@@ -15,12 +15,12 @@
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "01f61a7",
   "pr_url": null,
   "subtasks": [],
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "MiMo integration and MiMo-first voice UX checkpoint authorized by user. 112 files /1253 tests, TypeScript/build/model verify passed. Visual/live-provider verification remains pending.",
+  "notes": "Connector, TTS/design/clone and MiMo-first voice UX delivered; required deterministic checks passed. Live paid testing was explicitly not required. Visual and live-provider verification remain disclosed parent release checks.",
   "meta": {}
 }

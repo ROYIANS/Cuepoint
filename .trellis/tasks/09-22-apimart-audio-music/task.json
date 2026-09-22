@@ -15,7 +15,7 @@
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
-  "commit": "cfc3cd7",
+  "commit": "f6b3e9c",
   "pr_url": null,
   "subtasks": [],
   "children": [
@@ -26,6 +26,6 @@
   ],
   "parent": null,
   "relatedFiles": [],
-  "notes": "Agent audio/music project creation and simpler Suno-inspired music UX implemented. 109 files / 1199 tests, TypeScript, build, model-bank verify and diff check passed. Browser visual recheck pending because automation connection was unavailable. User authorized a checkpoint commit for this follow-up; visual recheck remains pending.",
+  "notes": "Core delivery completed; foundation/audio/music checkpoints archived. Keep this release parent and integration child for consolidated remaining acceptance; see remaining-acceptance.md.",
   "meta": {}
 }

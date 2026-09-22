@@ -3,7 +3,7 @@
   "name": "music-generation-review",
   "title": "音乐生成版本确认体验",
   "description": "Readable immutable music-generation review with current draft/connector validation, full submitted inputs and existing paid approval.",
-  "status": "in_progress",
+  "status": "review",
   "dev_type": null,
   "scope": null,
   "package": null,
@@ -15,12 +15,12 @@
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "d325988",
   "pr_url": null,
   "subtasks": [],
   "children": [],
   "parent": "09-22-agent-creative-experience",
   "relatedFiles": [],
-  "notes": "Implemented R8 readable version-bound music confirmation. See validation.md/check.md. Structured vocal intent and broader parent work remain pending; batch commit authorized.",
+  "notes": "Readable immutable version review completed with full automated gate and desktop/390px browser fixture. Structured vocalist intent is outside this task and remains parent R8 follow-up.",
   "meta": {}
 }

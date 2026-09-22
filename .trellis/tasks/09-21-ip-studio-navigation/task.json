@@ -3,7 +3,7 @@
   "name": "ip-studio-navigation",
   "title": "搭建 IP 创作工作室导航与五类项目占位",
   "description": "IP studio navigation and five creative project type placeholders; keep working video flow and chat landing.",
-  "status": "in_progress",
+  "status": "review",
   "dev_type": null,
   "scope": null,
   "package": null,
@@ -15,12 +15,12 @@
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "1447c9f",
   "pr_url": null,
   "subtasks": [],
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "Implementation and validation complete. User authorized a baseline commit; task remains open for incremental UX refinement. Five kinds include music; IP/new editors are placeholders. 85 files/1011 tests, typecheck, build and nine browser groups pass. No push.",
+  "notes": "Approved placeholder navigation increment delivered and browser-verified. Subsequent real IP/audio/music implementation belongs to later tasks, not this baseline.",
   "meta": {}
 }

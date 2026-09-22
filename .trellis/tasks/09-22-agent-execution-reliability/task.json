@@ -15,12 +15,12 @@
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "25ea68e",
   "pr_url": null,
   "subtasks": [],
   "children": [],
   "parent": "09-22-agent-creative-experience",
   "relatedFiles": [],
-  "notes": "First delivery implemented: ready tools plus owned-ledger stop summaries. 115 files / 1344 tests passed. Browser/live-model acceptance pending; no claim of full R1 acceptance. Uncommitted.",
+  "notes": "Delivered readiness, truthful stop summaries and guarded creation continuity (f03fe2b,25ea68e). Remaining: real-model/no-call behavior acceptance, contextual owner defaults and structured recovery. See validation.md.",
   "meta": {}
 }

@@ -15,12 +15,12 @@
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "3c81722",
   "pr_url": null,
   "subtasks": [],
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "Implementation and validation complete. Scoped commit authorized by the user. No publication, repository variable update, or deployment performed. See implement.md verification.",
+  "notes": "Code/configuration acceptance passed. Real deployment, repository variables and live ingestion are operator follow-ups requiring actual service settings; no deployment is claimed.",
   "meta": {}
 }
