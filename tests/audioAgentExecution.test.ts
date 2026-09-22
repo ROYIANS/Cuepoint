@@ -143,7 +143,7 @@ describe("bound sound project execution readiness", () => {
         expect(result.items).toHaveLength(1);
         return reply(protocol, [call("audio_create", { projectId: result.projectId, kind: "segment", chapterId: result.items[0].id, text: "大家午安，欢迎来到今天的电台。", order: 0 }, "write-script")]);
       }
-      expect(toolResult(body, protocol, "write-script")).toMatchObject({ projectId: project.id, text: "大家午安，欢迎来到今天的电台。" });
+      expect(toolResult(body, protocol, "write-script")).toMatchObject({ projectId: project.id, text: "大家午安，欢迎来到今天的电台。", writeReceipt: { version: 1, entries: [{ kind: "audio_segment", operation: "created", ownerId: project.id }] } });
       return reply(protocol);
     });
     await executeChatRun(run, connector.apiKey, new AbortController(), fetcher);

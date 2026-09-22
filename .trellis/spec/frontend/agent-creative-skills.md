@@ -1,5 +1,7 @@
 # Creative business tools and durable generation
 
+Direct local write receipts and normalized returns follow [Agent Write Evidence](./agent-write-evidence.md).
+
 ## 1. Scope / Trigger
 Read before extending creative CRUD, generation profiles, tool previews, recovery or media cleanup. This builds on [Agent tools](./agent-tools.md), [production contracts](./production-contracts.md) and [provider adapters](./ai-connectors.md). Connector/credential/configuration CRUD is outside the business tool surface.
 

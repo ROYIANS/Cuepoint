@@ -1,3 +1,4 @@
+import { soundWriteReceipt } from "./soundWriteReceipt";
 import { db } from "@/db/database";
 import { addMusicDraft, patchMusicDraft, patchMusicWork } from "@/db/music";
 import { assertAudioRevision, ownedAudioRow } from "@/db/audioShared";
@@ -35,18 +36,18 @@ export const MUSIC_TOOLS: readonly AgentToolDefinition[] = [
         return { id: row.id, revision: row.revision, ...(args.id ? { settings: row.settings } : { engine: row.settings.engine, title: row.settings.title.slice(0, 300) }) };
       }), total: rows.length, nextOffset: offset + limit < rows.length ? offset + limit : null, note: "仅读取作品资料与参数，未听取音频。" };
     } }),
-  libraryWriteTool({ name: "music_save_draft", title: "保存音乐创作草稿", description: "保存完整引擎参数；新建省略 id/revision，更新须同时给当前 id/revision。只保存草稿、不计费；生成需另行确认。切换引擎替换全部参数，不混入另一引擎字段。", scope, owners: (args) => [args.projectId],
+  libraryWriteTool({ name: "music_save_draft", receipt: (args, result) => soundWriteReceipt("music_draft", args.id ? "updated" : "created", args, result), title: "保存音乐创作草稿", description: "保存完整引擎参数；新建省略 id/revision，更新须同时给当前 id/revision。只保存草稿、不计费；生成需另行确认。切换引擎替换全部参数，不混入另一引擎字段。", scope, owners: (args) => [args.projectId],
     spec: s.object({ ...base, id: s.optional(s.id), revision: s.optional(audioMusicRevision), settings }),
     async prepare(args) {
       if (Boolean(args.id) !== (args.revision !== undefined)) throw new Error("更新草稿必须同时提供 id 和 revision");
       if (args.id) assertAudioRevision(await ownedAudioRow(db.musicDrafts, args.projectId, args.id), args.revision!);
       return { state: await state(args.projectId), target: audioMusicTarget(args.projectId), changes: [`${args.id ? "更新" : "创建"} ${args.settings.engine} 草稿：${JSON.stringify(args.settings).slice(0, 2000)}`, "仅保存创作参数，不提交生成。"] };
     }, execute: (args) => args.id ? patchMusicDraft(args.projectId, args.id, args.revision!, { settings: args.settings }) : addMusicDraft(args.projectId, { settings: args.settings }) }),
-  libraryWriteTool({ name: "music_update_work", title: "整理音乐作品", description: "按 revision 修改已存在作品的名称、备注或收藏，不改变音乐源文件与原始生成参数。", scope, owners: (args) => [args.projectId],
+  libraryWriteTool({ name: "music_update_work", receipt: (args, result) => soundWriteReceipt("music_work", "updated", args, result), title: "整理音乐作品", description: "按 revision 修改已存在作品的名称、备注或收藏，不改变音乐源文件与原始生成参数。", scope, owners: (args) => [args.projectId],
     spec: s.object({ ...identity, patch: s.nonempty(s.object({ title: s.optional(s.text(300, 1)), notes: s.optional(s.text(8000)), favorite: s.optional(s.bool) })) }),
     async prepare(args) { const row = await ownedAudioRow(db.musicWorks, args.projectId, args.id); assertAudioRevision(row, args.revision); return { state: row, target: audioMusicTarget(args.projectId), changes: [`作品修改：${JSON.stringify(args.patch).slice(0, 1800)}`] }; },
     execute: (args) => patchMusicWork(args.projectId, args.id, args.revision, args.patch) }),
-  libraryWriteTool({ name: "music_reuse_work", title: "复用音乐参数", description: "将指定作品的实际生成参数另存为新草稿，保留原作品；后续可编辑和经确认生成。没有参数的上传音频不能复用生成设置。", scope, owners: (args) => [args.projectId], spec: s.object(identity),
+  libraryWriteTool({ name: "music_reuse_work", receipt: (args, result) => soundWriteReceipt("music_draft", "created", args, result), title: "复用音乐参数", description: "将指定作品的实际生成参数另存为新草稿，保留原作品；后续可编辑和经确认生成。没有参数的上传音频不能复用生成设置。", scope, owners: (args) => [args.projectId], spec: s.object(identity),
     async prepare(args) { const work = await ownedAudioRow(db.musicWorks, args.projectId, args.id); assertAudioRevision(work, args.revision); if (!work.settings) throw new Error("此作品没有可复用的生成参数"); return { state: work, target: audioMusicTarget(args.projectId), changes: [`复用「${work.title.slice(0, 300)}」的参数新建音乐草稿，不生成音乐。`] }; },
     async execute(args) { const work = await ownedAudioRow(db.musicWorks, args.projectId, args.id); assertAudioRevision(work, args.revision); if (!work.settings) throw new Error("此作品没有生成参数"); return addMusicDraft(args.projectId, { settings: work.settings }); } }),
 ];

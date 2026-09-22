@@ -1,0 +1,31 @@
+{
+  "id": "agent-creative-experience",
+  "name": "agent-creative-experience",
+  "title": "Agent 创作执行体验专项",
+  "description": "Improve action follow-through, evidence-backed outcomes, batch audio production and timeline UX.",
+  "status": "in_progress",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P0",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-09-22",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [
+    "09-22-agent-execution-reliability",
+    "09-22-agent-result-evidence",
+    "09-22-audio-batch-experience",
+    "09-22-audio-arrangement-experience"
+  ],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "",
+  "meta": {}
+}

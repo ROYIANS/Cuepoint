@@ -13,6 +13,8 @@ import { registerPendingDraft } from "@/lib/debouncedDraft";
 import { createId } from "@/lib/ids";
 import { assembleSkills } from "@/lib/agent/skills";
 import { createToolLoading, MAX_LOADED_TOOLS } from "@/lib/agent/toolLoading";
+import { readWriteReceipt } from "@/lib/agent/writeReceipt";
+import * as receipts from "@/lib/agent/writeReceipt";
 
 const connector: ConnectorConfig = { id: "fixture", definitionId: "openai-compatible", baseUrl: "https://fixture.invalid/v1", apiKey: "not-real", updatedAt: "2026-09-19" };
 function tool(name: string) { const result = BUSINESS_TOOLS.find((item) => item.name === name); if (!result) throw new Error(`Missing ${name}`); return result; }
@@ -36,6 +38,138 @@ async function read(name: string, args: unknown) {
   const definition = tool(name), run=await begin();
   return definition.execute(definition.parseArguments(args), { runId: run.id, threadId: run.threadId, callId: "read", signal: new AbortController().signal }) as Promise<Record<string, unknown>>;
 }
+
+describe("committed business write receipts", () => {
+  it.each(["video", "audio", "music"] as const)("records actual %s project seeds and replays the exact saved receipt", async (kind) => {
+    const pending = await prepare("project_create", { name: "长".repeat(200), kind });
+    const result = await pending.execute();
+    const receipt = readWriteReceipt(result.writeReceipt)!;
+    expect(receipt.coverage).toBe("direct_targets");
+    expect(receipt.entries.map((item) => item.kind)).toEqual(kind === "video" ? ["project", "episode"] : kind === "audio" ? ["project", "audio_chapter", "audio_track"] : ["project", "music_draft"]);
+    expect(receipt.entries.every((item) => item.operation === "created" && item.ownerId === result.id && item.revision)).toBe(true);
+    expect(receipt.entries[0]?.label).toHaveLength(160);
+    const seedIds = [result.firstEpisodeId, result.firstChapterId, result.firstTrackId, result.firstDraftId].filter(Boolean);
+    expect(receipt.entries.slice(1).map((item) => item.id)).toEqual(seedIds);
+    for (const [seedKind, table] of [["audio_chapter", db.audioChapters], ["audio_track", db.audioTracks], ["music_draft", db.musicDrafts]] as const) {
+      const seed = receipt.entries.find((item) => item.kind === seedKind);
+      if (!seed) continue;
+      const saved = await table.get(seed.id);
+      expect(typeof seed.revision).toBe("number");
+      expect(seed.revision).toBe(saved!.revision);
+    }
+    expect(result.record).toMatchObject({ id: result.id, kind });
+    expect(await pending.execute()).toEqual(result);
+    expect(JSON.parse((await db.agentToolCalls.get(pending.context.callId))!.result!)).toEqual(result);
+    expect(await db.projects.count()).toBe(1);
+  });
+
+  it("returns stored shot associations and distinguishes inherited, explicit and disabled style", async () => {
+    const scope = await fixture();
+    const character = await repo.addCharacter(scope.ownerId), scene = await repo.addScene(scope.ownerId), prop = await repo.addProp(scope.ownerId);
+    const style = await repo.addStyle(scope.ownerId);
+    await repo.patchStyle(style.id, { name: "柔光" });
+    await execute("project_update", { id: scope.ownerId, patch: { defaultStyleId: style.id, defaultDurationSec: 7 } });
+    const beat = await execute("beat_create", { ...scope, fields: { characterIds: [character.id], sceneId: scene.id } });
+    const created = await execute("shot_create", { ...scope, beatId: beat.id, fields: { propIds: [prop.id], content: "列车远去" } });
+    const shot = (created.items as Array<Record<string, unknown>>)[0]!;
+    expect(shot.record).toMatchObject({ characterIds: [character.id], sceneId: scene.id, propIds: [prop.id], beatId: beat.id, durationSec: 7, content: "列车远去", effectiveStyle: { source: "inherit", id: style.id, label: "柔光" } });
+    expect(readWriteReceipt(created.writeReceipt)?.entries).toEqual([expect.objectContaining({ kind: "shot", operation: "created", id: shot.id, ownerId: scope.ownerId })]);
+    for (const [patch, effectiveStyle] of [
+      [{ styleId: style.id }, { source: "explicit", id: style.id, label: "柔光" }],
+      [{ styleId: null, sceneId: null, beatId: null }, { source: "none", id: null, label: null }],
+      [{ inheritStyle: true }, { source: "inherit", id: style.id, label: "柔光" }],
+    ]) {
+      const result = await execute("shot_update", { ...scope, id: shot.id, patch });
+      expect(result.record).toMatchObject({ effectiveStyle });
+      expect(readWriteReceipt(result.writeReceipt)?.entries[0]?.operation).toBe("updated");
+    }
+    await execute("project_update", { id: scope.ownerId, patch: { defaultStyleId: null } });
+    const noDefault = await execute("shot_update", { ...scope, id: shot.id, patch: { notes: "无默认风格" } });
+    expect(noDefault.record).toMatchObject({ effectiveStyle: { source: "inherit", id: null, label: null } });
+    expect((noDefault.record as Record<string, unknown>).sceneId).toBeUndefined();
+    expect((noDefault.record as Record<string, unknown>).beatId).toBeUndefined();
+  });
+
+  it.each(["character", "scene", "prop", "style"] as const)("receipts %s writes with only whitelisted saved fields and a direct-target deletion", async (kind) => {
+    const created = await execute(`${kind}_create`, { ownerId: "studio", fields: { name: "初稿", notes: "保存内容" } });
+    expect(created.record).toMatchObject({ id: created.id, projectId: "studio", name: "初稿", notes: "保存内容" });
+    const table = db.table(kind === "character" ? "characters" : `${kind}s`);
+    await table.update(String(created.id), { extra: { apiKey: "hidden-secret" } });
+    const updated = await execute(`${kind}_update`, { ownerId: "studio", id: created.id, patch: { name: "终稿" } });
+    expect(updated.record).toMatchObject({ name: "终稿" });
+    expect(JSON.stringify(updated)).not.toContain("hidden-secret");
+    expect(readWriteReceipt(updated.writeReceipt)?.entries[0]).toMatchObject({ kind, operation: "updated", ownerId: "studio", label: "终稿" });
+    const deleted = await execute(`${kind}_delete`, { ownerId: "studio", id: created.id });
+    expect(deleted.deletedId).toBe(created.id);
+    expect(readWriteReceipt(deleted.writeReceipt)?.entries).toEqual([expect.objectContaining({ id: created.id, kind, operation: "deleted", label: "终稿" })]);
+    expect(await table.get(String(created.id))).toBeUndefined();
+  });
+
+  it("bounds a full 20-shot result including exact receipts and preserves saved full text", async () => {
+    const scope = await fixture();
+    const long = '\\"文'.repeat(1000);
+    const args = { ...scope, count: 20, fields: { content: long, notes: long, sound: long, emotion: long } };
+    expect(JSON.stringify(args).length).toBeLessThan(32768);
+    const created = await execute("shot_create", args);
+    const items = created.items as Array<{ id: string; record: { content: string }; recordTruncated: boolean }>;
+    expect(items).toHaveLength(20);
+    expect(items.every((item) => item.recordTruncated && item.record.content.length < long.length)).toBe(true);
+    expect(JSON.stringify(created).length).toBeLessThan(65536);
+    expect(readWriteReceipt(created.writeReceipt)?.entries.map((item) => item.id)).toEqual(items.map((item) => item.id));
+    expect((await db.shots.get(items[19]!.id))?.content).toBe(long);
+    const episode = await execute("episode_update", { ownerId: scope.ownerId, id: scope.episodeId, patch: { script: "长剧本".repeat(8000) } });
+    expect(episode.recordTruncated).toBe(true);
+    expect(readWriteReceipt(episode.writeReceipt)?.entries[0]).toMatchObject({ kind: "episode", operation: "updated", id: scope.episodeId });
+    expect(JSON.stringify(episode).length).toBeLessThan(65536);
+  });
+
+  it("records only direct targets for cascading deletes, with no unsupported-tool evidence", async () => {
+    const scope = await fixture();
+    const beat = await execute("beat_create", { ...scope, fields: { title: "车站" } });
+    const changed = await execute("beat_update", { ...scope, id: beat.id, patch: { content: "末班车" } });
+    expect(changed.record).toMatchObject({ title: "车站", content: "末班车" });
+    const shots = await execute("shot_create", { ...scope, count: 2, beatId: beat.id });
+    const ids = (shots.items as Array<{ id: string }>).map((item) => item.id);
+    const reordered = await execute("creative_reorder", { ...scope, kind: "shot", orderedIds: ids.slice().reverse() });
+    expect(reordered.writeReceipt).toBeUndefined();
+    const deletedBeat = await execute("beat_delete", { ...scope, id: beat.id });
+    expect(readWriteReceipt(deletedBeat.writeReceipt)?.entries).toHaveLength(1);
+    expect((await db.shots.get(ids[0]!))?.beatId).toBeUndefined();
+    const episode = await execute("episode_create", { ownerId: scope.ownerId, fields: { title: "第二集" } });
+    expect(episode.record).toMatchObject({ title: "第二集" });
+    const deletedEpisode = await execute("episode_delete", { ownerId: scope.ownerId, id: scope.episodeId });
+    expect(readWriteReceipt(deletedEpisode.writeReceipt)?.entries).toHaveLength(1);
+    expect(await db.shots.count()).toBe(0);
+    const project = await execute("project_delete", { id: scope.ownerId });
+    expect(readWriteReceipt(project.writeReceipt)?.entries).toEqual([expect.objectContaining({ kind: "project", id: scope.ownerId, operation: "deleted" })]);
+  });
+
+  it("leaves no receipt or business effect after a failed ledger, foreign scope or rejected call", async () => {
+    const scope = await fixture(), other = await fixture();
+    const pending = await prepare("character_create", { ownerId: scope.ownerId, fields: { name: "不可提交" } });
+    const spy = vi.spyOn(db.agentToolCalls, "update").mockRejectedValueOnce(new Error("receipt ledger failed"));
+    try { await expect(pending.execute()).rejects.toThrow("receipt ledger failed"); } finally { spy.mockRestore(); }
+    expect(await db.characters.count()).toBe(0);
+    expect((await db.agentToolCalls.get(pending.context.callId))?.result).toBeUndefined();
+    const rejected = await prepare("character_create", { ownerId: scope.ownerId });
+    await db.agentToolCalls.update(rejected.context.callId, { status: "rejected", result: JSON.stringify({ error: "拒绝" }) });
+    await expect(rejected.execute()).rejects.toThrow();
+    expect((await db.agentToolCalls.get(rejected.context.callId))?.result).not.toContain("writeReceipt");
+    const foreign = await repo.addCharacter(other.ownerId);
+    await expect(prepare("character_update", { ownerId: scope.ownerId, id: foreign.id, patch: { name: "错误归属" } })).rejects.toThrow();
+    expect((await db.characters.get(foreign.id))?.name).not.toBe("错误归属");
+  });
+
+  it("rolls back business writes when receipt construction fails", async () => {
+    const pending = await prepare("project_create", { name: "事务回滚", kind: "audio" });
+    const spy = vi.spyOn(receipts, "createWriteReceipt").mockImplementationOnce(() => { throw new Error("receipt invalid"); });
+    try { await expect(pending.execute()).rejects.toBeInstanceOf(AtomicToolRollbackError); } finally { spy.mockRestore(); }
+    expect(await db.projects.count()).toBe(0);
+    expect(await db.audioChapters.count()).toBe(0);
+    expect(await db.audioTracks.count()).toBe(0);
+    expect((await db.agentToolCalls.get(pending.context.callId))?.result).toBeUndefined();
+  });
+});
 
 describe("business operation schemas and permissions", () => {
   it("has distinct strict read, mutation and high-risk deletion tools, no administrative access", () => {

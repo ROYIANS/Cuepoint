@@ -10,6 +10,7 @@ import { CHARACTER_SLOTS, SCENE_SLOTS, PROP_SLOTS, STYLE_SLOTS, STUDIO_LIBRARY_I
 import type { AgentToolContext, AgentToolDefinition } from "./tools";
 import type { AgentToolPreview } from "@/domain/agent";
 import * as s from "./businessSchemas";
+import { captureBusinessDeletion, withBusinessWriteReceipt } from "./businessWriteReceipt";
 import { bounded, getRow, listRows, navigation, projection, summarize, targetRevision, ownerSnapshot, mediaUsage, mediaRetention, assetMediaDependencies,
   requireOwner, requireEpisode, readTables, textAt, relationsAt, isReadableBusinessFieldPath, BUSINESS_LABELS, type AssetKind, type BusinessKind, type BusinessRow } from "./businessStore";
 
@@ -59,7 +60,9 @@ function writeTool<T>(name: string, title: string, description: string, spec: s.
         context.signal.throwIfAborted();
         await assertProjectToolScope(context,name,args,true);
         if (!context.preview?.revision || context.preview.revision !== (await preview(args)).revision) throw new Error("目标或影响范围已变化，请重新读取并提出操作，原批准不能覆盖新的内容");
-        return execute(args);
+        const deleted = await captureBusinessDeletion(name, args);
+        const result = await execute(args);
+        return withBusinessWriteReceipt(name, args, result, deleted);
       });
     },
   };

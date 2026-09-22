@@ -1,3 +1,4 @@
+import { describeRunWrites } from "@/lib/agent/runWriteOutcomes";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { createAudioMusicProject, createChatThread } from "@/db/repo";
@@ -37,6 +38,22 @@ async function prepareCall(run: AgentRun, name: string, raw: unknown) {
 }
 
 describe("audio/music Agent local tools", () => {
+  it("persists a receipt with real script changes and replays it without a second write", async () => {
+    const project = await createAudioMusicProject("配音", "audio"), run = await begin(project.id);
+    const chapter = (await getAudioProjectSnapshot(project.id)).chapters[0];
+    const call = await prepareCall(run, "audio_create", { projectId: project.id, kind: "segment", chapterId: chapter.id, text: "午安", order: 0 });
+    const result = await call.definition.execute(call.args, call.ctx);
+    const segment = (await db.audioSegments.toArray())[0];
+    expect(result).toMatchObject({ writeReceipt: { version: 1, entries: [{ kind: "audio_segment", operation: "created", id: segment.id, ownerId: project.id, revision: segment.revision }] } });
+    expect(await call.definition.execute(call.args, call.ctx)).toEqual(result);
+    expect(await db.audioSegments.count()).toBe(1);
+    const saved = (await db.agentToolCalls.get(call.call.id))!;
+    expect(JSON.parse(saved.result!)).toEqual(result);
+    expect(describeRunWrites(run, [saved])).toMatchObject({ total: 1, uncoveredCalls: 0, groups: [{ label: "新增脚本段落", count: 1 }] });
+    expect(await db.audioTakes.count()).toBe(0);
+    expect(await db.audioClips.count()).toBe(0);
+  });
+
   it("resolves omitted audio project IDs from durable binding in lists and text pages", async () => {
     const project = await createAudioMusicProject("配音", "audio"), run = await begin(project.id);
     const chapter = (await getAudioProjectSnapshot(project.id)).chapters[0];
@@ -188,6 +205,7 @@ describe("audio/music Agent local tools", () => {
     try { await expect(call.definition.execute(call.args, call.ctx)).rejects.toThrow("disk full"); }
     finally { failure.mockRestore(); }
     expect(await db.audioSpeakers.count()).toBe(0);
+    expect((await db.agentToolCalls.get(call.call.id))?.result).toBeUndefined();
   });
 
   it("rejects wrong project and stale preview while preserving the latest manual edit", async () => {
@@ -218,6 +236,7 @@ describe("audio/music Agent local tools", () => {
     await call.definition.execute(call.args, call.ctx);
     expect((await db.musicDrafts.where("projectId").equals(project.id).toArray()).some((draft) => draft.settings.engine === "flowmusic")).toBe(true);
     expect(await db.musicWorks.count()).toBe(0); expect(await db.audioGenerationJobs.count()).toBe(0);
+    expect(describeRunWrites(run, await db.agentToolCalls.where("runId").equals(run.id).toArray())).toMatchObject({ total: 1, groups: [{ label: "新增音乐草稿", count: 1 }] });
     await expect(tool("audio_read").execute({ projectId: project.id, kind: "segments" }, context(run))).rejects.toThrow();
     await expect(tool("music_save_draft").prepare!({ projectId: project.id, id: "missing-revision", settings: defaultMusicSettings() }, context(run))).rejects.toThrow("同时提供");
   });

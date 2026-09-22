@@ -1,3 +1,4 @@
+import { soundWriteReceipt } from "./soundWriteReceipt";
 import { z } from "zod";
 import { db } from "@/db/database";
 import { addAudioChapter, addAudioSpeaker, addAudioSegment, addAudioTrack, addAudioClip, getAudioProjectSnapshot, patchAudioChapter, patchAudioSpeaker, patchAudioSegment, patchAudioTrack, patchAudioClip, replaceAudioClips, deleteAudioClip } from "@/db/audio";
@@ -86,7 +87,7 @@ export const AUDIO_TOOLS: readonly AgentToolDefinition[] = [
       });
       return { projectId, items, total: all.length, nextOffset: offset + limit < all.length ? offset + limit : null, note: "音频仅提供元信息，未听取声音。" };
     } }),
-  libraryWriteTool({ name: "audio_create", title: "组织配音项目", description: "创建章节、角色音色、脚本段落或轨道。kind=speaker 可命名并保存 MiMo 预置/设计/克隆音色，省略音色配置时默认 MiMo；显式 APIMart voice 保留兼容。此工具只保存音色配置，试音使用 audio_generate_speech 经确认生成。", spec: createSpec, scope, owners: (args) => [args.projectId],
+  libraryWriteTool({ name: "audio_create", receipt: (args, result) => soundWriteReceipt(`audio_${args.kind}`, "created", args, result), title: "组织配音项目", description: "创建章节、角色音色、脚本段落或轨道。kind=speaker 可命名并保存 MiMo 预置/设计/克隆音色，省略音色配置时默认 MiMo；显式 APIMart voice 保留兼容。此工具只保存音色配置，试音使用 audio_generate_speech 经确认生成。", spec: createSpec, scope, owners: (args) => [args.projectId],
     prepare: (args) => previewState(args, [`创建${args.kind}：${JSON.stringify(args).slice(0, 1800)}`]),
     async execute(args) {
       const { projectId, kind, ...input } = args;
@@ -97,7 +98,7 @@ export const AUDIO_TOOLS: readonly AgentToolDefinition[] = [
         case "track": { const row = args as Extract<typeof args, { kind: "track" }>; return addAudioTrack(projectId, { chapterId: row.chapterId, name: row.name, role: row.role, order: row.order, gain: 1, muted: false, solo: false }); }
       }
     } }),
-  libraryWriteTool({ name: "audio_update", title: "修改配音内容", description: "按读取到的 revision 修改章节、说话人、脚本或轨道。段落 selectedTakeId 只选择版本，不替换时间线声音；null 清除选用/说话人。修改脚本不会自动重新生成。", spec: updateSpec, scope, owners: (args) => [args.projectId],
+  libraryWriteTool({ name: "audio_update", receipt: (args, result) => soundWriteReceipt(`audio_${args.kind}`, "updated", args, result), title: "修改配音内容", description: "按读取到的 revision 修改章节、说话人、脚本或轨道。段落 selectedTakeId 只选择版本，不替换时间线声音；null 清除选用/说话人。修改脚本不会自动重新生成。", spec: updateSpec, scope, owners: (args) => [args.projectId],
     async prepare(args) { await editable(args); return previewState(args, [`修改${args.kind}：${JSON.stringify(args.patch).slice(0, 1800)}`]); },
     async execute(args) {
       switch (args.kind) {
@@ -110,11 +111,11 @@ export const AUDIO_TOOLS: readonly AgentToolDefinition[] = [
         }
       }
     } }),
-  libraryWriteTool({ name: "audio_place_take", title: "将配音放入时间线", description: "把已存在的真实 takeId 明确放入当前章节轨道；不会改变已放置片段。startSec 是时间线位置，trim 为原始声音秒数。", scope, owners: (args) => [args.projectId],
+  libraryWriteTool({ name: "audio_place_take", receipt: (args, result) => soundWriteReceipt("audio_clip", "created", args, result), title: "将配音放入时间线", description: "把已存在的真实 takeId 明确放入当前章节轨道；不会改变已放置片段。startSec 是时间线位置，trim 为原始声音秒数。", scope, owners: (args) => [args.projectId],
     spec: s.object({ ...base, chapterId: s.id, trackId: s.id, takeId: s.id, startSec: sec, trimStartSec: sec, trimEndSec: sec }),
     prepare: (args) => previewState(args, [`将版本 ${args.takeId} 放入轨道 ${args.trackId}，位置 ${args.startSec} 秒，来源 ${args.trimStartSec}–${args.trimEndSec} 秒。`]),
     execute: (args) => addAudioClip(args.projectId, { chapterId: args.chapterId, trackId: args.trackId, takeId: args.takeId, startSec: args.startSec, trimStartSec: args.trimStartSec, trimEndSec: args.trimEndSec, gain: 1, fadeInSec: 0, fadeOutSec: 0 }) }),
-  libraryWriteTool({ name: "audio_edit_clip", title: "编辑声音片段", description: "按 revision 调整位置、原始裁剪边界、音量或淡入淡出；不修改原始媒体，不替换 take。", scope, owners: (args) => [args.projectId],
+  libraryWriteTool({ name: "audio_edit_clip", receipt: (args, result) => soundWriteReceipt("audio_clip", "updated", args, result), title: "编辑声音片段", description: "按 revision 调整位置、原始裁剪边界、音量或淡入淡出；不修改原始媒体，不替换 take。", scope, owners: (args) => [args.projectId],
     spec: s.object({ ...identity, patch: s.nonempty(s.object({ startSec: s.optional(sec), trimStartSec: s.optional(sec), trimEndSec: s.optional(sec), gain: s.optional(s.number(0, 4)), fadeInSec: s.optional(sec), fadeOutSec: s.optional(sec) })) }),
     prepare: (args) => clipState(args, [`片段修改：${JSON.stringify(args.patch)}`]), execute: (args) => patchAudioClip(args.projectId, args.id, args.revision, args.patch) }),
   libraryWriteTool({ name: "audio_split_clip", title: "分割声音片段", description: "按时间线绝对秒数分割片段，保留来源且不移动后续声音；分割点必须在片段内部及淡入淡出区外。", scope, owners: (args) => [args.projectId],
@@ -126,6 +127,6 @@ export const AUDIO_TOOLS: readonly AgentToolDefinition[] = [
       const result = await replaceAudioClips(args.projectId, clip.chapterId, current, current.flatMap((row) => row.id === clip.id ? parts : [row]));
       return result.filter((row) => parts.some((part) => part.id === row.id));
     } }),
-  libraryWriteTool({ name: "audio_remove_clip", title: "移除时间线片段", description: "明确移除一个时间线片段，保留原始配音版本和媒体；不会删除脚本。", highRisk: true, scope, owners: (args) => [args.projectId], spec: s.object(identity),
+  libraryWriteTool({ name: "audio_remove_clip", receipt: (args, result) => soundWriteReceipt("audio_clip", "deleted", args, result), title: "移除时间线片段", description: "明确移除一个时间线片段，保留原始配音版本和媒体；不会删除脚本。", highRisk: true, scope, owners: (args) => [args.projectId], spec: s.object(identity),
     prepare: (args) => clipState(args, [`移除片段 ${args.id}，保留声音来源。`]), async execute(args) { await deleteAudioClip(args.projectId, args.id, args.revision); return { removedClipId: args.id }; } }),
 ];

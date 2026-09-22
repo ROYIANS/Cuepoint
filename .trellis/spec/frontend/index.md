@@ -31,6 +31,7 @@
 | [Agent Context](./agent-context.md) | History policy, shared budgets and durable compaction | Filled |
 | [Agent Execution](./agent-execution.md) | Durable runs, ordered checkpoints, explicit retry and cross-tab recovery | Filled |
 | [Agent Activity UI](./agent-activity-ui.md) | Chronological execution, persistent action reminders and turn navigation | Filled |
+| [Agent Write Evidence](./agent-write-evidence.md) | Atomic direct-write receipts, normalized results and bounded historical outcome display | Filled |
 | [Chat Performance](./chat-performance.md) | Agent transcript scroll + memo vs LobeHub virtua | Filled |
 | [AI Connectors](./ai-connectors.md) | Provider capabilities, APIMart/AIHubMix generation contracts and discovery | Filled |
 | [Hook Guidelines](./hook-guidelines.md) | Dexie liveQuery loading vs missing | Filled |

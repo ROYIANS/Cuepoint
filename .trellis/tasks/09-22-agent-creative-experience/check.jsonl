@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Execution and recovery contract"}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Permissions and durable tool results"}
+{"file": ".trellis/spec/frontend/agent-task-wrapup.md", "reason": "Existing evidence-backed outcomes"}
+{"file": ".trellis/spec/frontend/audio-music.md", "reason": "Audio generation and timeline invariants"}

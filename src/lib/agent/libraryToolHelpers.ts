@@ -6,6 +6,7 @@ import type { AgentToolPreview } from '@/domain/agent';
 import type { AgentToolContext, AgentToolDefinition } from './tools';
 import type { Spec } from './businessSchemas';
 import { frozenProjectScope } from './projectScope';
+import type { WriteReceipt } from './writeReceipt';
 
 export interface LibraryPreviewState { state: unknown; target?: AgentToolPreview['target']; changes: string[] }
 interface LibraryToolOptions<T> {
@@ -38,6 +39,7 @@ export function libraryWriteTool<T>(options: LibraryToolOptions<T> & {
   owners?: (args: T) => string[] | Promise<string[]>;
   highRisk?: boolean;
   requiresConfirmation?: boolean;
+  receipt?: (args: T, result: unknown) => WriteReceipt;
 }): AgentToolDefinition {
   async function check(args: T, context: AgentToolContext) {
     context.signal.throwIfAborted();
@@ -72,7 +74,10 @@ export function libraryWriteTool<T>(options: LibraryToolOptions<T> & {
       return executeAtomicTool(context, async () => {
         if (!context.preview?.revision || context.preview.revision !== (await preview(args, context)).revision)
           throw new Error('目标或影响范围已变化，请重新读取并提出操作，原批准不能覆盖新的内容');
-        return options.execute(args, context);
+        const result = await options.execute(args, context);
+        if (!options.receipt) return result;
+        if (!result || typeof result !== 'object' || Array.isArray(result)) throw new Error('写入记录需要对象结果');
+        return { ...result, writeReceipt: options.receipt(args, result) };
       });
     },
   };
