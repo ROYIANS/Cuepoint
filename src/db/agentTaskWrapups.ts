@@ -5,6 +5,7 @@ import { emptyWrapupContent, validateWrapupContent } from "@/lib/agent/wrapupSch
 import type { AgentTask } from "@/domain/agent";
 import type { AgentTaskWrapup, TaskWrapupState, WrapupContent } from "@/domain/agentTaskWrapup";
 import { createId, nowIso } from "@/lib/ids";
+import { ownedTaskAudioGenerationJob } from "./taskAudioGenerationEvidence";
 
 async function owned(taskId:string){const task=await db.agentTasks.get(taskId);if(!task||!await db.chatThreads.get(task.threadId))throw new Error('任务或关联对话不存在');return task;}
 async function ready(taskId:string,except?:string){
@@ -36,6 +37,11 @@ async function completionBlockers(task:AgentTask,confirmed:AgentTaskWrapup|undef
  if(isTaskBusy(await db.agentRuns.where('threadId').equals(task.threadId).toArray()))reasons.push('请先处理当前执行');
  if((await db.agentTaskWrapups.where('taskId').equals(task.id).toArray()).some(w=>w.status==='preparing'))reasons.push('总结仍在整理');
  if(task.plan.some(p=>p.status!=='completed'))reasons.push('还有未完成的 Todo');
+ for (const job of await db.audioGenerationJobs.where("projectId").equals(task.projectId).toArray()) {
+  if (["submitting", "uncertain", "submitted", "running", "remote-completed", "downloading"].includes(job.status) && await Promise.resolve(ownedTaskAudioGenerationJob(task, job))) {
+   reasons.push("声音生成仍有进行中或待核实结果"); break;
+  }
+ }
  const ownedBatches=await db.agentGenerationBatches.where('taskId').equals(task.id).toArray();
  for(const batch of ownedBatches){
   const items=await db.agentGenerationBatchItems.where('batchId').equals(batch.id).toArray();

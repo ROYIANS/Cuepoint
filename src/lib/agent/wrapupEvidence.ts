@@ -1,5 +1,6 @@
 import { collectReferenceEvidence, toolReferenceAttachments, historicalToolSummary } from "./referenceEvidence";
 import { provesCompletedEffect } from "@/db/agentTaskRecords";
+import { ownedTaskAudioGenerationJob, SOUND_GENERATION_TOOLS, taskAudioGenerationSource, taskAudioToolSource } from "@/db/taskAudioGenerationEvidence";
 import { db } from "@/db/database";
 import type { AgentTask } from "@/domain/agent";
 import type { WrapupEvidence, WrapupSnapshot } from "@/domain/agentTaskWrapup";
@@ -38,6 +39,16 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
     const failed=call.status!=="completed"||!!value.error||value.ok===false||value.success===false||(!generation&&value.applied===false);
     const outcome:WrapupEvidence['outcome']=unsettled||failed?"unresolved":generation?(value.status==="applied"?"applied":value.status==="downloaded"?"downloaded":"unresolved"):"fact";
     add({id:`tool:${call.id}`,kind:"tool",label:call.title,body:JSON.stringify({status:call.status,result:historicalToolSummary(call.name, call.result, task.projectId ?? "") ?? value,error:call.error}),outcome,available:true,supportsResult:call.status==="completed"&&provesCompletedEffect(call)},call);
+    if ((SOUND_GENERATION_TOOLS as readonly string[]).includes(call.name)) {
+      const current = call.status === "completed" ? await Promise.resolve(taskAudioToolSource(task, call)) : undefined;
+      const source = evidence.at(-1)!;
+      source.supportsResult = current?.supportsResult === true;
+      source.outcome = current?.supportsResult ? current.applied ? "applied" : "downloaded" : "unresolved";
+      source.available = current?.available === true;
+      source.body = current?.body.slice(0, 1800) ?? "当前声音成果不可核实；原工具返回只记录当时事实，不能证明文件仍可交付。";
+      source.truncated = !!current && current.body.length > 1800;
+      fingerprints.push([source.id, current?.body ?? null]);
+    }
     const rows=Array.isArray(value.items)?value.items:[value];
     for(const item of rows){const row=json(item);const kind=typeof row.kind==='string'&&kinds.includes(row.kind)?row.kind:typeof args.kind==='string'&&kinds.includes(args.kind)?args.kind:call.name.split('_')[0];
       const id=typeof row.id==='string'?row.id:typeof args.id==='string'?args.id:undefined;
@@ -71,6 +82,14 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
       if(source){source.supportsResult=status!=="unresolved";source.outcome=status;source.available=!!media;source.body=`${source.body}\n当前输出状态：${status}；原工具返回只记录当时事实。`;}
     }
     add({id:`generation:${job.id}`,kind:"generation",label:`${job.kind==='image'?'图片':'视频'} · ${job.model}`,body:JSON.stringify({status:job.status,currentOutcome:status,target:job.target,result:job.result,mediaAvailable:!!media,appliedToCurrentTarget:applied,error:job.error}),outcome:status,available:!!media,supportsResult:status!=="unresolved",href}, {...job,media:media?{id:media.id,projectId:media.projectId,mimeType:media.mimeType,size:media.blob.size}:null,currentApplied:applied});
+  }
+  for (const job of await db.audioGenerationJobs.where("projectId").equals(task.projectId).toArray()) {
+    if (!await Promise.resolve(ownedTaskAudioGenerationJob(task, job))) continue;
+    const source = await Promise.resolve(taskAudioGenerationSource(task, job));
+    add({ id: `generation:${job.id}`, kind: "generation", label: source.label, body: source.body,
+      outcome: source.supportsResult ? source.applied ? "applied" : "downloaded" : "unresolved",
+      available: source.available, supportsResult: source.supportsResult,
+      href: source.available ? `/p/${encodeURIComponent(job.projectId)}` : undefined }, { jobRevision: job.revision, source: source.body });
   }
   for(const record of records)add({id:`record:${record.id}`,kind:"record",label:record.title,body:JSON.stringify({kind:record.kind,claim:record.claim,author:record.author,body:record.body,sources:record.sources}),outcome:record.kind==='question'?'unresolved':'fact',available:true},record);
   for(const message of messages)add({id:`message:${message.id}`,kind:"message",label:message.role==='user'?'用户要求与反馈':'AI 回复（待核实）',body:message.content,outcome:message.role==='assistant'&&message.status!=='complete'?'unresolved':'fact',available:true},message);

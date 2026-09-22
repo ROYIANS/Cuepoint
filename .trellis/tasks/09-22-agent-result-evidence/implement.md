@@ -14,3 +14,9 @@ Ownership: root owns shared receipt contracts, audio/music adapter hook, pure UI
 2. Add shared truthful UI/Agent status projection, source and checked-time metadata; audit ZIP and polling compatibility.
 3. Test pending/processing/unknown/query failures, last verified observation, partial sibling results, completed-with-download-failure, recovery and legacy records.
 4. Review, run full tests/typecheck/build, document missing live/browser evidence, and commit this delivery separately (user authorized batched commits).
+
+## Third delivery execution
+1. Implement read-only bounded current audio output inspection and expose it in sound generation tool results.
+2. Extend task generation source ownership/validation/listing and wrap-up fingerprints/completion checks to sound jobs; connect existing records source picker.
+3. Verify missing/deleted/foreign/empty media, raw responses, valid speech selection/timeline, partial completion, stale summaries, bounded coverage and no network effects.
+4. Independent review, focused/full tests, typecheck/build, document actual verification limits and commit this batch under existing user authorization.

@@ -131,3 +131,76 @@ resolve current source status, and disable unavailable navigation.
 
 See [Project References](./agent-references.md) for shared source ownership,
 request materialization, withdrawal, source evidence and ZIP lifecycle contracts.
+
+## Sound generation outcome evidence
+
+### 1. Scope / Trigger
+Use this contract for audio/music generation summaries, task sources, record validation,
+wrap-up freshness and task completion. Provider query observations remain specified in
+[audio-music.md](./audio-music.md).
+
+### 2. Signatures
+- `inspectAudioGenerationOutputs(job): Promise<AudioOutputEvidence>` reads current local
+  output ownership, media metadata and speech selection/placement. Caller supplies a
+  current job within a consistent transaction.
+- `readAudioJobSummary(projectId, jobId)` reloads job and outputs together in a read-only
+  audio transaction, returning original summary fields plus `outputs` and `inspectedAt`.
+- `taskGenerationSource(task, jobId)` accepts owned sound jobs in addition to existing
+  image/video batch sources. `listTaskGenerationSources(task)` feeds task tools and the
+  existing records source picker.
+
+### 3. Contracts
+`outputs.results` includes up to 100 whitelisted entries: key/title/IDs, availability,
+available, saved output revision, media size/MIME/decoded metadata, selected status,
+valid timeline clip IDs/count and placement fingerprint. Total/included/omitted disclose
+coverage; `allAvailable` covers known listed results only, not remote task completion.
+No URLs, raw media, credentials, or fresh audio decoding enter evidence. File presence
+and saved decoder metadata do not establish current playback or acoustic quality.
+
+A sound generation source requires its original approved submission call and run to
+belong to the current task, thread and project. A later query cannot adopt a foreign or
+manual origin. Imported dormant jobs are historical project data, not task effects.
+Complete-result eligibility additionally requires all known outputs locally available
+and a saved/target-conflict lifecycle. Partial healthy outputs remain inspectable
+observations and cannot certify the aggregate generation as complete.
+
+Task `result` writes and wrap-up tool sources resolve current job evidence rather than
+trusting historical saved JSON. Selection and timeline placement are distinct fields.
+Wrap-up fingerprints include current output and placement facts, so deletion, selection
+changes and clip/track edits invalidate previous review. Active/uncertain sound jobs block
+completion; an abandoned unpaid prepared intent remains observation-only and is not a
+permanent blocker once its execution has settled. Source inventories use consistent read
+transactions, and storage failures propagate instead of being treated as missing placements. AI prose and plan status remain
+separate from this structural verification; arbitrary final chat text is not classified.
+
+### 4. Validation & Error Matrix
+| Condition | Outcome |
+| --- | --- |
+| Downloaded raw speech response with no take | Missing output; not deliverable |
+| Remote completion without local work/media | Observation only |
+| Tombstone or missing work/take/file | Historical save loses current eligibility |
+| Foreign media, wrong output-media/job link | Unverified |
+| Empty/non-audio blob or invalid decoder metadata | Invalid media |
+| Saved take without selection/clip | Available; neither selected nor placed |
+| Partial healthy results | Inspectable; aggregate result remains unresolved |
+| Manual/foreign/dormant/unapproved origin | Excluded from task result evidence |
+| Output or placement edited after review | Summary stale |
+
+### 5. Good / Base / Bad Cases
+Good: a saved song has an owned work and nonempty local audio file; its source may support
+local-delivery evidence while audition remains unverified. Base: a query fails but earlier
+saved siblings remain inspectable. Bad: a remote completed status or stale media ID is
+used as proof of a currently usable song.
+
+### 6. Tests Required
+`audioOutputEvidence.test.ts` covers raw-vs-saved media, missing/empty/foreign outputs,
+selection/placement, deleted history, coverage and no extra network traffic.
+`audioTaskEvidence.test.ts` covers source ownership, current task reads, aggregate result
+rejection, stale summaries and completion. `audioGenerationAgent.test.ts` verifies actual
+ledger results include inspected output evidence. Preserve existing task/film batch tests.
+Native browser transactions and live provider/acoustic tests are separate acceptance.
+
+### 7. Wrong vs Correct
+Wrong: mark a result complete because historical `status === "saved"` contains a media ID.
+Correct: read current owned output and media, preserve original submission provenance,
+and report independently whether it is saved, selected, placed, or still unverified.

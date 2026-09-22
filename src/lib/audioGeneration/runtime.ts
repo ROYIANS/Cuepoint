@@ -17,6 +17,7 @@ import { createId, nowIso } from "@/lib/ids";
 import { detectAudioMime, audioMimeExtension } from "@/lib/audio/mime";
 import { musicWireInput, speechWireInput, validateGenerationInput } from "./input";
 import { observeAudioTask } from "./observations";
+import { inspectAudioGenerationOutputs } from "./outputEvidence";
 
 export interface AudioGenerationOptions extends ApimartRequestOptions {
   /** Test seam; production always validates through a real audio decoder. */
@@ -235,4 +236,13 @@ export function audioJobSummary(job: AudioGenerationJob) {
     error: job.error, taskIds: job.taskIds,
     results: job.results.map(({ title, takeId, workId, mediaId, deleted, error }) => ({ title, takeId, workId, mediaId, deleted, error })),
     note: "这是该任务的状态快照；source 表示原始提交来源，查询不代表本轮新提交。服务商状态以 taskObservations 的查询时间为准；历史 lastVerified 不代表当前状态。远端完成、本地保存与实际试听是不同阶段，未试听。" };
+}
+
+/** Reload job and current local outputs together; historical IDs alone prove no delivery. */
+export async function readAudioJobSummary(projectId: string, jobId: string) {
+  return db.transaction("r", AUDIO_TRANSACTION_TABLES, async () => {
+    const job = await readJob(projectId, jobId);
+    const outputs = await inspectAudioGenerationOutputs(job);
+    return { ...audioJobSummary(job), outputs, inspectedAt: nowIso() };
+  });
 }

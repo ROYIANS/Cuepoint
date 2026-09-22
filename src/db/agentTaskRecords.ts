@@ -5,6 +5,7 @@ import type { AgentTaskRecord, TaskRecordInput, TaskRecordSource } from "@/domai
 import { TASK_RECORD_KINDS, TASK_RECORD_CLAIMS } from "@/domain/agentTaskRecords";
 import type { AgentTask, AgentToolCall } from "@/domain/agent";
 import { createId, nowIso } from "@/lib/ids";
+import { ownedTaskAudioGenerationJob, SOUND_GENERATION_TOOLS, taskAudioGenerationSource, taskAudioToolSource } from "./taskAudioGenerationEvidence";
 
 export async function listTaskRecords(taskId: string): Promise<AgentTaskRecord[]> {
   return db.agentTaskRecords.where("taskId").equals(taskId).sortBy("updatedAt");
@@ -42,10 +43,13 @@ export async function validateTaskSources(task: Pick<AgentTask, "id" | "threadId
       const call = await db.agentToolCalls.get(source.id);
       const run = call && await db.agentRuns.get(call.runId);
       if (!call || !run || call.threadId !== task.threadId || run.threadId !== task.threadId || run.taskId !== task.id || call.status !== "completed" || !call.result || call.effect === "bookkeeping") throw new Error("来源不是当前任务已完成的业务工具结果");
-      completedEffect ||= provesCompletedEffect(call);
+      if ((SOUND_GENERATION_TOOLS as readonly string[]).includes(call.name)) {
+        const evidence = await taskAudioToolSource(task, call);
+        completedEffect ||= evidence?.supportsResult === true;
+      } else completedEffect ||= provesCompletedEffect(call);
     } else if (source.type === "generation") {
       const evidence = await taskGenerationSource(task, source.id);
-      completedEffect ||= evidence.available;
+      completedEffect ||= evidence.supportsResult;
     } else throw new Error("来源类型无效");
   }
   if (author === "ai" && claim === "decision" && !userEvidence) throw new Error("确认决策必须引用用户消息");
@@ -80,6 +84,8 @@ export async function saveTaskRecord(taskId: string, input: TaskRecordInput, opt
 
 /** Genuine generation evidence is owned by the task and reflects current local media/slot state. */
 export async function taskGenerationSource(task: Pick<AgentTask, "id" | "threadId">, jobId: string) {
+  const soundJob = await db.audioGenerationJobs.get(jobId);
+  if (soundJob) return taskAudioGenerationSource(task, soundJob);
   const job = await db.agentGenerationJobs.get(jobId);
   const run = job && await db.agentRuns.get(job.runId);
   if (!job || !run || run.taskId !== task.id || job.threadId !== task.threadId || run.threadId !== task.threadId || !job.batchId) throw new Error("生成结果不属于当前任务批次");
@@ -89,5 +95,24 @@ export async function taskGenerationSource(task: Pick<AgentTask, "id" | "threadI
   const available = !!media && media.projectId === job.projectId && !!media.blob.size && media.mimeType.startsWith(`${job.kind}/`) && ['downloaded','applied','conflict'].includes(job.status);
   let applied = false;
   try { applied = available && (await readGenerationTarget(job.target)).slot.result?.mediaId === media!.id; } catch { /* Downloaded output survives target deletion. */ }
-  return { id: job.id, label: `${job.kind === 'image' ? '图片' : '视频'} · ${job.model}`, available, applied, body: JSON.stringify({ jobId: job.id, batchId: job.batchId, status: job.status, target: job.target, result: available ? job.result : undefined, available, applied, error: job.error }) };
+  return { id: job.id, batchId: job.batchId, status: job.status, result: job.result, label: `${job.kind === 'image' ? '图片' : '视频'} · ${job.model}`, available, applied, supportsResult: available, body: JSON.stringify({ jobId: job.id, batchId: job.batchId, status: job.status, target: job.target, result: available ? job.result : undefined, available, applied, error: job.error }) };
+}
+
+/** Shared source inventory; no remote refresh and no attribution to reading runs. */
+export async function listTaskGenerationSources(task: AgentTask) {
+  return db.transaction("r", db.tables, async () => {
+    const sources: Awaited<ReturnType<typeof taskGenerationSource>>[] = [];
+    const runs = await db.agentRuns.where("taskId").equals(task.id).toArray();
+    const runIds = new Set(runs.filter(run => run.threadId === task.threadId).map(run => run.id));
+    const jobs = await db.agentGenerationJobs.where("threadId").equals(task.threadId).toArray();
+    for (const job of jobs.filter(job => job.batchId && runIds.has(job.runId))) {
+      const batch = await db.agentGenerationBatches.get(job.batchId!);
+      if (batch?.taskId === task.id && batch.threadId === task.threadId) sources.push(await Promise.resolve(taskGenerationSource(task, job.id)));
+    }
+    const soundJobs = await db.audioGenerationJobs.where("projectId").equals(task.projectId).toArray();
+    for (const job of soundJobs) {
+      if (await Promise.resolve(ownedTaskAudioGenerationJob(task, job))) sources.push(await Promise.resolve(taskAudioGenerationSource(task, job)));
+    }
+    return sources;
+  });
 }

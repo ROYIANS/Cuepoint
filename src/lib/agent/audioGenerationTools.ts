@@ -7,7 +7,7 @@ import type { AgentToolContext, AgentToolDefinition } from "./tools";
 import type { AudioGenerationInput } from "@/domain/audioGeneration";
 import { requireBoundProjectScope } from "./projectScope";
 import { targetRevision } from "@/lib/productionRevision";
-import { prepareAudioGeneration, submitAudioGeneration, refreshAudioGeneration, audioJobSummary } from "@/lib/audioGeneration/runtime";
+import { prepareAudioGeneration, submitAudioGeneration, refreshAudioGeneration, readAudioJobSummary } from "@/lib/audioGeneration/runtime";
 import { validateGenerationInput } from "@/lib/audioGeneration/input";
 import { SPEECH_VOICES } from "@/lib/ai/apimartAudio";
 import { MIMO_VOICES, MIMO_MODELS } from "@/lib/ai/mimoSpeech";
@@ -75,16 +75,20 @@ async function runSubmission(args: Submission, context: AgentToolContext, resolv
     if (existing) {
       if (existing.projectId !== args.projectId || existing.source.kind !== "agent" || existing.source.callId !== context.callId || existing.source.runId !== context.runId) throw new Error("生成任务归属不匹配");
       // A recovery repeats only local lookup / GET, never the paid submission.
-      if (existing.status !== "prepared") return audioJobSummary(await refreshAudioGeneration(args.projectId, existing.id, { signal: context.signal }));
+      if (existing.status !== "prepared") {
+        await refreshAudioGeneration(args.projectId, existing.id, { signal: context.signal });
+        return readAudioJobSummary(args.projectId, existing.id);
+      }
     }
     await validate();
     const job = existing ?? await prepareAudioGeneration({ ...args, intentId, source: { kind: "agent", callId: context.callId, runId: context.runId } });
-    return audioJobSummary(await submitAudioGeneration(args.projectId, job.id, { signal: context.signal, beforeSubmit: validate }));
+    await submitAudioGeneration(args.projectId, job.id, { signal: context.signal, beforeSubmit: validate });
+    return readAudioJobSummary(args.projectId, job.id);
   } catch (error) {
     if (error instanceof AtomicToolRollbackError) throw error;
     // The durable job describes uncertainty if a POST started; preflight errors have no effect.
     const job = await db.audioGenerationJobs.where("intentId").equals(intentId).first();
-    if (job && job.status !== "prepared") return { ...audioJobSummary(job), error: job.error ?? (error instanceof Error ? error.message : "生成未完成") };
+    if (job && job.status !== "prepared") return { ...await readAudioJobSummary(args.projectId, job.id), error: job.error ?? (error instanceof Error ? error.message : "生成未完成") };
     throw new AtomicToolRollbackError(error instanceof Error ? error.message : "生成准备失败");
   }
 }
@@ -160,5 +164,5 @@ export const AUDIO_GENERATION_TOOLS: readonly AgentToolDefinition[] = [
       return runSubmission(args, context);
     } },
   { name: "audio_generation_check", title: "查询声音生成结果", description: "对当前项目已存在的任务查询一次并保存可用结果；不会重新生成。pending/running 不等于成品，不要密集循环查询。", effect: "network", recovery: "repeatable", highRisk: () => false,
-    parameters: jobSpec.json, parseArguments: raw => jobSpec.schema.parse(raw), async execute(raw, context) { const args = jobSpec.schema.parse(raw); await scope(args.projectId, context); return audioJobSummary(await refreshAudioGeneration(args.projectId, args.jobId, { signal: context.signal })); } },
+    parameters: jobSpec.json, parseArguments: raw => jobSpec.schema.parse(raw), async execute(raw, context) { const args = jobSpec.schema.parse(raw); await scope(args.projectId, context); await refreshAudioGeneration(args.projectId, args.jobId, { signal: context.signal }); return readAudioJobSummary(args.projectId, args.jobId); } },
 ];

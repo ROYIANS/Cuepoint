@@ -296,3 +296,13 @@ Regression coverage: audioTimelineShortcuts.test.ts guard matrix and audioEngine
 `describeAudioGeneration` supplies shared labels and per-state counts for workspace and Agent summaries. Legacy running without observations is unverified. A partial query checkpoint retaining older sibling processing while lifecycle is submitted displays partially unverified progress; counts are labelled per-task recent records rather than a single simultaneous fresh snapshot. The most recent query time is shown, while each provider task retains its own time. `audioJobSummary` includes job revision, originating source call/run, submitted draft revision, observations and deleted-output flags, but no signed result URLs/credentials. Querying an old job is not a current-run submission. Provider complete, local saved and audition are separate assertions.
 
 Regression: audioGenerationRuntime.test.ts observation transition/failure/partial/abort cases; audioGenerationPresentation.test.ts shared labels, stale/legacy evidence and source metadata; audioGenerationRecoveryAudit.test.ts no replay, sibling results, dormant ZIP roundtrip. These mocked tests do not verify a live provider or acoustic quality.
+
+## Current output inspection
+
+Sound Agent tools now use `readAudioJobSummary(projectId, jobId)` to reload job and
+local output evidence together. Existing lifecycle status is historical persistence
+state; `outputs` separately reports current owned works/takes and nonempty audio files,
+saved decoder metadata, deleted/unavailable results, manuscript selection and valid
+clip placement. Inspecting a file does not decode or audition it. Task sources consume
+the same inspector; see [sound outcome evidence](./agent-task-wrapup.md#sound-generation-outcome-evidence)
+for source ownership, record eligibility and wrap-up freshness rules.

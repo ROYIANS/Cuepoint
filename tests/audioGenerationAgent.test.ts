@@ -156,6 +156,9 @@ describe("paid audio/music Agent approval and recovery", () => {
     await resolveAgentToolApproval(f.run.id, call.id, "approve");
     await resumeChatRun(f.run.id, chatConnector.apiKey, new AbortController(), vi.fn(async () => new Response("unavailable", { status: 500 })), AUDIO_GENERATION_TOOLS);
     expect((await db.agentToolCalls.get(call.id))?.status).toBe("completed");
+    const receipt = JSON.parse((await db.agentToolCalls.get(call.id))!.result!);
+    expect(receipt.outputs).toMatchObject({ availableCount: 1, allAvailable: true, selectedCount: 0, timelineClipCount: 0 });
+    expect(receipt.inspectedAt).toBeTruthy();
     expect(await db.audioTakes.count()).toBe(1);
     expect((await db.audioGenerationJobs.toArray())[0].status).toBe("saved");
     await resumeChatRun(f.run.id, chatConnector.apiKey, new AbortController(), vi.fn(async () => answer()), AUDIO_GENERATION_TOOLS);

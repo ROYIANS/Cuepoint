@@ -38,3 +38,42 @@ Per-task status observations, last verified historical facts, corrected unresolv
 
 ## Scope retained for follow-up
 Full current media-availability and task-record generation evidence, structured confirmation UI, semantic final-reply validation, binding continuity and batch tools remain subsequent work. Prior f03fe2b/e5b486d deliveries are committed. User authorized this delivery as a further separate commit.
+
+# Third delivery — current sound output and task evidence
+
+## Delivered
+- Shared bounded local output inspection for sound job summaries: project/work/take/media
+  ownership, generation linkage, nonempty audio bytes and saved decoder metadata.
+  Speech selection and valid timeline placement are independent facts; no audition claim.
+- Audio/music jobs are discoverable generation sources for task records and wrap-up.
+  Original approved submission run/call/project is required; querying cannot adopt a
+  manual, foreign or dormant imported job. Historical successful tool JSON alone no
+  longer establishes current sound delivery.
+- Current output and placement fingerprints stale prior summaries after relevant edits.
+  Live/uncertain sound generation blocks task completion; abandoned unpaid prepared
+  intentions do not permanently block after execution settles.
+- Existing image/video task_read fields retained; source inventory uses a consistent
+  read transaction and storage failures remain errors rather than empty inventories.
+
+## Verification and review
+- Final independent review: full Vitest **120 files / 1453 tests passed**, lint/typecheck
+  and whitespace checks passed.
+- Focused output/Agent tests initially passed 2 files / 28 tests; task/source/wrap-up
+  regressions also passed. Final full suite includes all review refinements.
+- Review fixed original image/video field compatibility, inventory consistency, unpaid
+  prepared-state completion deadlock and swallowed timeline storage failures.
+- Final production build passed after all review refinements (15.55 seconds). Existing
+  large chunk warnings remain.
+- Context manifests validated with 8 entries each.
+- Browser recovered for a basic localhost /agent and /agent/tasks smoke check. This
+  browser profile showed no configured model connection and zero tasks; no fixture-based
+  native transaction, narrow-screen, live-model or acoustic acceptance was performed.
+  Temporary browser tab closed. No paid provider request or user project mutation.
+
+## Remaining acceptance
+Task remains in progress. Partial successful sound jobs are inspectable observations;
+per-output result source IDs are deferred, preserving conservative aggregate eligibility.
+File presence and metadata checks do not re-decode, play or verify audio quality. Semantic
+final-chat claim checks, readable music confirmation, creation/binding continuity and
+batch/arrangement workflows remain separate follow-ups. This delivery follows the user's
+existing authorization to continue optimization and commit in coherent batches.

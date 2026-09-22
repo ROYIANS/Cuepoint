@@ -1,4 +1,4 @@
-import { taskGenerationSource } from "@/db/agentTaskRecords";
+import { listTaskGenerationSources } from "@/db/agentTaskRecords";
 import { ReferenceSourceLink } from "./ReferenceAttachments";
 import { toolReferenceAttachments } from "@/lib/agent/referenceEvidence";
 import { useRef, useState } from "react";
@@ -29,12 +29,7 @@ export function TaskRecords({ task, messages, editable }: Props) {
     const owned = new Set(runs.filter((run) => run.threadId === task.threadId).map((run) => run.id));
     return (await db.agentToolCalls.where("threadId").equals(task.threadId).toArray()).filter((call) => owned.has(call.runId));
   }, [task.id, task.threadId]);
-  const generationEvidence = useLiveQuery(async () => {
-    const jobs = await db.agentGenerationJobs.where("threadId").equals(task.threadId).toArray();
-    const evidence: Awaited<ReturnType<typeof taskGenerationSource>>[] = [];
-    for (const job of jobs.filter(job => job.batchId)) { try { evidence.push(await taskGenerationSource(task, job.id)); } catch { /* Other task ownership is excluded. */ } }
-    return evidence;
-  }, [task.id, task.threadId]);
+  const generationEvidence = useLiveQuery(() => listTaskGenerationSources(task), [task.id, task.threadId, task.projectId]);
   const [filter, setFilter] = useState<TaskRecordInput["kind"] | "all">("all");
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<{ record?: AgentTaskRecord; input: TaskRecordInput }>();
