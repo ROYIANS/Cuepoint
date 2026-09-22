@@ -9,3 +9,5 @@ Delivery audit: eight completed increments can be archived. Seven active records
 5. Cross-project desktop/narrow and live-path acceptance: tracked in audio-music-agent-integration / parent remaining-acceptance.md, coordinated with R1/R2. Browser authentication currently unavailable; not passed by inference.
 
 Recommended delivery sequence: first R1/R2 validation and truthful finish behavior, then R3, then R4, then integrated acceptance. This is approximately four delivery batches, not a calendar estimate. R6/R7 film batching/synchronization and R8 structured music vocal intent are later backlog and do not keep the completed music-confirmation increment open.
+
+Current R1 increment: implement a one-use unfinished-plan finishing checkpoint with actual ledger/receipt context. This narrows the plan-then-stop case; it does not close R1/R2 or justify archival before live-model/browser acceptance and remaining semantic gaps. Full no-plan intent detection is deliberately not inferred from keywords.

@@ -4,3 +4,5 @@
 {"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Required verification"}
 {"file": ".trellis/spec/frontend/agent-project-context.md", "reason": "One-time created-project binding and immutable historical requests"}
 {"file": ".trellis/tasks/09-22-agent-execution-reliability/research/creation-continuity.md", "reason": "Scope transition risks and regression cases"}
+{"file": ".trellis/tasks/09-22-agent-execution-reliability/research/prefinish-checkpoint.md", "reason": "Bounded unfinished-plan checkpoint, protocol and intent limits"}
+{"file": ".trellis/spec/frontend/agent-write-evidence.md", "reason": "Historical receipt projection cannot certify current completion"}

@@ -21,6 +21,6 @@
   "children": [],
   "parent": "09-22-agent-creative-experience",
   "relatedFiles": [],
-  "notes": "Delivered readiness, truthful stop summaries and guarded creation continuity (f03fe2b,25ea68e). Remaining: real-model/no-call behavior acceptance, contextual owner defaults and structured recovery. See validation.md.",
+  "notes": "Delivered readiness, truthful stop summaries and guarded creation continuity (f03fe2b,25ea68e). Third increment adds bounded current-run unfinished-plan finishing checkpoint with historical ledger evidence. Remaining: real-model/no-plan behavior acceptance, contextual owner defaults and structured recovery. See validation.md.",
   "meta": {}
 }

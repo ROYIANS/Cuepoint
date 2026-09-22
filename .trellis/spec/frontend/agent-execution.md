@@ -56,3 +56,36 @@ Correct: push snapshots into the serialized writer, await `flush()`, then atomic
 
 Wrong: `setTimeout` decides a background tab died and starts its request again.
 Correct: probe the thread's Web Lock; if unavailable leave it alone; if available mark unfinished local execution interrupted without network traffic.
+
+## Unfinished-plan finishing checkpoint
+
+### Scope and signatures
+At a successful tool-free reply boundary, `saveAgentFinishingCheck(runId, expectedStep, output, responseOutput?, signal?): Promise<boolean>` may retain that reply as a process step and continue the normal loop once. `AgentRun.finishingCheck?: { step: number; createdAt: string }` is a code-owned durable one-use marker, not a verified-completion flag. `buildFinishingCheckPrompt(run, calls)` projects bounded owned historical evidence.
+
+### Contract
+Require a running smart run with enabled tools, a valid current unfinished plan and a matching owned completed atomic `update_run_plan` result from this run. An inherited task plan alone is insufficient. All ledger calls must be completed, and another model request must fit within the current segment. Persist marker, public candidate activity, assistant continuation and fixed system checkpoint in one transaction. Keep original requests/base context unchanged. Responses retains its validated output envelope including opaque reasoning; public activity never includes encrypted content. Existing request metrics, context budget, permission gates, Stop and explicit resume apply normally.
+
+Reuse `describeRunWrites`; up to 20 receipt entries include source call IDs and historical revisions, excluding labels, arbitrary result payloads and plan text. Count uncovered/omitted writes explicitly. Completed network calls do not certify saved outputs. Instructions permit advice-only, missing-input and genuine blocked replies to finish, prohibit replaying submissions and distinguish prior facts from new effects. No forced tool choice or automatic generation retry.
+
+### Validation and error matrix
+| Condition | Outcome |
+| --- | --- |
+| No current-run saved plan, complete plan, conversation or no enabled tools | Normal final reply |
+| Failed/rejected/unsettled/foreign call, inconsistent plan | No finishing checkpoint |
+| Checkpoint already saved, including after explicit resume | No second checkpoint |
+| Candidate at final segment step | Normal final reply; do not manufacture a budget pause |
+| Valid checkpoint and remaining step budget | Continue through ordinary model loop |
+| Abort or local save failure | No new dispatch; preserve ordinary interruption/error handling |
+| Responses output differs from candidate or includes functions | Reject checkpoint before mutation |
+
+### Good/base/bad cases
+Good: save an execution plan, emit premature prose, receive the one-time ledger reminder, then use a real business tool in the same user turn. Base: a planning-only request can finish with an explanation after the checkpoint without any business write. Bad: force mutations merely to tick a plan, count bookkeeping as completed work, or infer generated audio from a returned network call.
+
+### Required tests
+`agentFinishingCheckPrompt.test.ts` checks ownership, validated receipt provenance, historical/unknown distinctions, omission bounds and exclusion of arbitrary payloads. Runtime/repository tests cover both protocols, once-only persistence, candidate history, interrupted resume, inherited plans, final-step behavior and approval preservation. Existing transport no-fallback tests remain valid: this is an additional explicit model round, not an HTTP retry.
+
+### Wrong versus correct
+Wrong: every tool-free reply means the user must type “continue”, or every unfinished plan forces more writes.
+Correct: use one evidence-backed self-check only for a freshly saved unfinished plan, allow the model to explain a genuine boundary, and retain actual results independently of its prose.
+
+This checkpoint adds at most one check request per run; any subsequent tool work consumes the existing segment budget. It is not a semantic truth filter. The candidate already streamed and remains in history. No-plan promises, false all-complete plans and unsupported free-text claims require separate acceptance and are not solved by this mechanism.

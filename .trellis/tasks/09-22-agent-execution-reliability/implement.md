@@ -15,3 +15,9 @@ Use explicit local pnpm path. No model calls with production credentials for ver
 3. Update creation result UI and outcome projection, plus Chat/Responses create/read/edit regression with no repeated user message.
 4. Cover same-round cross-project calls, old approvals, rollback, duplicate execution, Stop, deleted owner, disabled tools and conversation mode. Run independent review, full gate, isolated browser fixture where available.
 5. Record evidence/remaining live-model and semantic-stop gaps, update specs and commit this batch under existing user authorization.
+
+## Third delivery
+1. Add bounded evidence prompt using owned ledger counts and existing receipt parser; preserve historical/unknown distinctions.
+2. Implement atomic one-use unfinished-plan checkpoint, complete protocol envelopes, candidate activity retention and normal loop continuation.
+3. Test Chat/Responses plan → premature text → real tools → final; advice/no current plan, inherited plan, denied/failed/unknown calls, Stop/reload, duplicate checkpoint, request budget and Responses reasoning integrity.
+4. Independent check, full suite with four workers, typecheck/build, update specs and commit under ongoing batch authorization. No paid real-provider test or unsupported full semantic claim.

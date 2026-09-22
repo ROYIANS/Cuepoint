@@ -37,3 +37,20 @@ R1 remains in progress for real-model and browser acceptance. R2 semantic outcom
 
 ## Remaining boundary
 Scope-pinned references, same-round reference outputs, earlier current-run foreign writes/uncertain effects and prior thread generation jobs/batches block automatic binding before project creation. Explicit create-only remains available. General project switching, contextual owner defaults, broader typed recovery, free-text completion verification and semantic no-call continuation are not delivered. The original promise-only symptom remains a live-model acceptance item, not a solved claim.
+
+# Third delivery — one-use unfinished-plan finishing checkpoint
+
+## Delivered
+- A successful tool-free reply now receives one additional check only when this run actually saved a matching unfinished plan through the atomic plan tool, all calls completed, and model budget remains. Inherited plans, no-plan advice, conversation mode, unsettled/failing calls and final-segment-step replies preserve their previous behavior.
+- One transaction preserves candidate public activity, original protocol output and the generated bounded historical receipt/ledger reminder. The marker survives explicit resume and context compaction; no automatic replay of writes or generation is introduced.
+- The model may continue authorized tools or finish with an honest advice/input/blocker explanation. Stop, paid confirmation and model-step budget retain precedence. No public encrypted reasoning, plan-as-proof, or arbitrary result payload in the generated system facts.
+
+## Evidence and limits
+- Independent focused coverage: 57 tests across the two new files, including both protocols doing real local project creation after a premature text response, once-only CAS, Stop/reload/resume, final-step budget, paid confirmation, ownership, malformed envelopes and actual context compaction.
+- Browser inventory was retried and again returned `Codex auth token is unavailable`. No browser acceptance or real model trace was available; no paid provider request was made.
+- This is a bounded unfinished-plan self-check, not a semantic false-claim detector. Candidate text has already streamed and remains in history. No-plan promises, falsely completed plans and unsupported final prose remain possible. R1 and R2 therefore stay in progress.
+
+## Final gate
+- Full Vitest with four workers: 125 files / 1559 tests passed (9.85s).
+- TypeScript (`pnpm lint`) passed; production build passed (16.30s), retaining existing large-chunk warnings. Whitespace check passed.
+- An existing reasoning-policy fixture initially expected three requests despite its saved unfinished plan. Updated it to require the fourth finishing-check request, identical frozen effort on every request, and exactly one business execution. Focused three-file gate passed 64 tests before the final full rerun. No product behavior was weakened to satisfy the old assertion.

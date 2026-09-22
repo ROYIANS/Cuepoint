@@ -81,7 +81,7 @@ describe("durable reasoning configuration", () => {
     expect(await db.chatMessages.count()).toBe(0);
     expect(await db.agentRuns.count()).toBe(0);
   });
-  it("keeps frozen effort through tool rounds and approval resume", async () => {
+  it("keeps frozen effort through tool rounds, approval resume and the finishing checkpoint", async () => {
     await updateGeneralAgentConfig({ enabledSkillIds: ["workspace", "planning"] });
     const thread = await createChatThread();
     const run = await beginAgentRun({ threadId: thread.id, connector, model: "gpt-5", content: "hi", reasoningEffort: "high" });
@@ -102,10 +102,10 @@ describe("durable reasoning configuration", () => {
     const call = (await db.agentToolCalls.toArray()).find((item) => item.status === "awaiting_approval")!;
     await resolveAgentToolApproval(run.id, call.id, "approve");
     await resumeChatRun(run.id, connector.apiKey, new AbortController(), fetcher, registry);
-    expect(bodies).toHaveLength(3);
-    expect(bodies.map((body) => body.reasoning_effort)).toEqual(["high", "high", "high"]);
+    expect(bodies).toHaveLength(4);
+    expect(bodies.map((body) => body.reasoning_effort)).toEqual(["high", "high", "high", "high"]);
     expect(controlled.execute).toHaveBeenCalledTimes(1);
-    expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
+    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "completed", finishingCheck: { step: 3 } });
   });
 });
 

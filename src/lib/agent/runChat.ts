@@ -1,4 +1,5 @@
 import { getOfferedToolNames, refreshRunToolLoading, toolNamesForCall } from "./toolLoading";
+import { saveAgentFinishingCheck } from "@/db/agentFinishingCheck";
 import { upgradeLegacyPlanCalls } from "@/db/agentToolRecovery";
 import { budgetContext } from "./contextPlanner";
 import { continuationExtraTokens } from "./contextCompaction";
@@ -178,7 +179,10 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
         return;
       }
       if (!result.ok) { await finishAgentRun(run.id, "failed", output(), result.message, result.finishReason); return; }
-      if (!result.toolCalls?.length) { await finishAgentRun(run.id, "completed", output(), undefined, result.finishReason); return; }
+      if (!result.toolCalls?.length) {
+        if (await saveAgentFinishingCheck(run.id, run.modelStep!, output(), result.responseOutput, controller.signal)) continue;
+        await finishAgentRun(run.id, "completed", output(), undefined, result.finishReason); return;
+      }
       const details = result.toolCalls.map((call) => {
         const tool = registry.find((item) => item.name === call.function.name);
         if (!tool) throw new Error("未知工具");

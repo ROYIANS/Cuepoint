@@ -36,7 +36,7 @@ export function toResponseInput(messages: readonly AgentRequestMessage[]): Agent
 }
 
 /** Final output is authoritative. Incomplete argument deltas never dispatch a tool. */
-function decodeOutput(output: unknown, tools: StreamChatInput["tools"]): { items: AgentResponseItem[]; content: string; reasoning: string; calls: AgentWireToolCall[] } {
+export function decodeResponseOutput(output: unknown, tools: StreamChatInput["tools"]): { items: AgentResponseItem[]; content: string; reasoning: string; calls: AgentWireToolCall[] } {
   if (!Array.isArray(output) || output.length > 256 || JSON.stringify(output).length > MAX_ENVELOPE_SIZE) throw new Error("Responses 输出信封无效或超过限制");
   let content = "", reasoning = "";
   const calls: AgentWireToolCall[] = [];
@@ -105,7 +105,7 @@ export async function streamResponses(input: StreamChatInput & { responseItems?:
       const detail = record(response.error) && typeof response.error.message === "string" ? response.error.message : response.status === "incomplete" ? "回复达到限制或被过滤，内容未完成" : "Responses 执行失败或尚未完成";
       return result({ ok: false, message: redact(detail), finishReason: typeof response.status === "string" ? response.status : undefined });
     }
-    const parsed = decodeOutput(response.output, input.tools);
+    const parsed = decodeResponseOutput(response.output, input.tools);
     if (!parsed.content.startsWith(content) || !parsed.reasoning.startsWith(reasoning)) throw new Error("Responses 最终内容与流事件不一致");
     // A terminal envelope is a complete payload, not evidence of first-token
     // latency. Only actual delta events establish streaming throughput timing.

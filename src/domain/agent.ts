@@ -127,6 +127,8 @@ export interface AgentRun {
   projectContext?: ProjectContextSnapshot;
   /** Code-owned one-time creation origin; original request/history remain immutable. */
   createdProjectBinding?: { projectId: Id; callId: Id };
+  /** One bounded unfinished-plan check per run, preserved across explicit resumes. */
+  finishingCheck?: { step: number; createdAt: string };
   /** Frozen task-intake eligibility; never inferred from model arguments. */
   taskMode?: boolean;
   context?: ContextSnapshot;
