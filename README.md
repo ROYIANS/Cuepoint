@@ -56,6 +56,40 @@ docker build -t ghcr.io/royians/cuepoint:latest .
 docker compose up -d
 ```
 
+### Umami analytics (optional)
+
+Connect an existing Umami instance by opening **GitHub repository → Settings → Secrets and variables → Actions → Variables** and adding these repository variables:
+
+| Repository variable | Value from the Umami website's tracking code |
+| --- | --- |
+| `VITE_UMAMI_SCRIPT_URL` | The full script `src`, for example `https://analytics.example.com/script.js` |
+| `VITE_UMAMI_WEBSITE_ID` | The `data-website-id` for this website |
+
+Use the exact script URL from Umami, including any custom script filename. Use HTTPS when Cuepoint is served over HTTPS. Both values are public and embedded in the browser bundle; never put an Umami admin password or API token here.
+
+After setting or changing the variables, run **Actions → Quality checks and GHCR image → Run workflow** on `main` (or push to `main`). Wait for the image publication to finish, then update your deployment:
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+The workflow passes the variables to both the production build and Docker build. Docker Compose needs no analytics configuration. These are **build-time** values: changing repository variables or adding container environment variables does not update an already-built image. To disable analytics, clear either repository variable, rebuild/publish, then pull and recreate the container.
+
+Tracking runs only in production builds and only when both values are present. The script loads asynchronously once; Umami automatically tracks SPA page navigation. This integration adds no custom business events and sends no project contents, prompts, or provider credentials. Umami's standard pageview metadata includes the page URL, title, and referrer. See the official [tracker configuration](https://docs.umami.is/docs/tracker-configuration) and [SPA guide](https://docs.umami.is/docs/guides/track-single-page-apps).
+
+For local production builds, copy [`.env.example`](.env.example) to `.env.local`, fill both values, and run `pnpm build` followed by `pnpm preview`. `pnpm dev` does not load the tracker. Local environment files are excluded from Git and Docker build contexts; local Docker builds receive values explicitly:
+
+```bash
+docker build \
+  --build-arg VITE_UMAMI_SCRIPT_URL=https://analytics.example.com/script.js \
+  --build-arg VITE_UMAMI_WEBSITE_ID=YOUR_WEBSITE_ID \
+  -t ghcr.io/royians/cuepoint:latest .
+docker compose up -d
+```
+
+To verify a deployment, open browser DevTools → Network, confirm the configured script loads, then navigate between pages and check for successful requests to Umami's collection endpoint (normally `/api/send`). Confirm visits appear under the matching website in Umami. Content blockers can prevent the tracker from loading.
+
 ## 感谢
 
 感谢以下项目及其贡献者，为小光点提供基础能力与实现参考：

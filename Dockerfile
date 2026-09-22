@@ -7,6 +7,8 @@ RUN corepack enable
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 COPY . .
+ARG VITE_UMAMI_SCRIPT_URL=""
+ARG VITE_UMAMI_WEBSITE_ID=""
 RUN pnpm build
 
 FROM nginx:1.27-alpine

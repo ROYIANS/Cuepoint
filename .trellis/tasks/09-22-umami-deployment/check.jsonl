@@ -1,0 +1,2 @@
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Typecheck/test/release and optional analytics contracts"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Strict TypeScript and environment boundary conventions"}

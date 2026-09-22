@@ -34,6 +34,9 @@ jobs:
         run: pnpm model-bank:verify
       - name: Build
         run: pnpm build
+        env:
+          VITE_UMAMI_SCRIPT_URL: ${{ vars.VITE_UMAMI_SCRIPT_URL }}
+          VITE_UMAMI_WEBSITE_ID: ${{ vars.VITE_UMAMI_WEBSITE_ID }}
 
   docker:
     needs: quality
@@ -74,5 +77,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VITE_UMAMI_SCRIPT_URL=${{ vars.VITE_UMAMI_SCRIPT_URL }}
+            VITE_UMAMI_WEBSITE_ID=${{ vars.VITE_UMAMI_WEBSITE_ID }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

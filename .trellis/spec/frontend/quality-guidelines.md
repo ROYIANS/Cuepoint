@@ -113,3 +113,9 @@ Vitest setup: `vitest.config.ts` aliases `@` → `src`; `tests/setup.ts` resets 
 ## Release gate
 
 `.github/workflows/ghcr.yml` runs locked dependency installation, TypeScript, the full Vitest suite, model snapshot verification and a production build on main pull requests, main pushes, release tags and manual runs. The Docker publication job depends on successful quality checks; pull requests never publish images. Only the publication job has package write permission. The pnpm setup uses the version pinned by `package.json`.
+
+## Optional analytics deployment
+
+`VITE_UMAMI_SCRIPT_URL` and `VITE_UMAMI_WEBSITE_ID` are public build-time settings supplied by GitHub Actions repository variables. Keep the workflow's Vite build environment and Docker build arguments aligned. The Docker arguments belong only to the build stage; Compose and the Nginx runtime need no analytics environment variables. Local `.env` files are excluded from Git and Docker contexts, with `.env.example` as the documented template.
+
+Initialize Umami once from `src/main.tsx` outside React lifecycles, only for production builds with both settings. Use the tracker’s own SPA pageviews; adding router listeners or manual pageview calls would duplicate visits. Analytics loading must not block React rendering. Do not attach project contents, prompts, or provider credentials to analytics events. Clearing configuration takes effect only after rebuilding and redeploying the image.
