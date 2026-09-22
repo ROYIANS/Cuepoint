@@ -1,3 +1,4 @@
+import { MUSIC_REVIEW_MAX_BYTES, parseMusicGenerationReview } from "@/lib/agent/musicGenerationReviewSnapshot";
 import { getOfferedToolNames, toolNamesForCall } from "@/lib/agent/toolLoading";
 import type { AgentReferenceInput } from "@/domain/referenceInput";
 import { REFERENCE_TOOL_NAMES } from "@/lib/agent/referenceToolNames";
@@ -209,11 +210,14 @@ export async function markRunningToolsUnknown(runId: string): Promise<void> {
 export class AtomicToolRollbackError extends Error {}
 
 export async function saveToolPreview(runId: string, callId: string, preview: AgentToolPreview): Promise<void> {
-  if (!preview.summary.trim() || preview.summary.length > 1000 || preview.changes.length > 100 || preview.changes.some((item) => item.length > 2000) || JSON.stringify(preview).length > 32768) throw new Error("操作预览超出限制");
+  const { music, ...generic } = preview;
+  if (!preview.summary.trim() || preview.summary.length > 1000 || preview.changes.length > 100 || preview.changes.some((item) => item.length > 2000) || JSON.stringify(generic).length > 32768 ||
+      (music !== undefined && (!parseMusicGenerationReview(music) || new TextEncoder().encode(JSON.stringify(preview)).byteLength > MUSIC_REVIEW_MAX_BYTES))) throw new Error("操作预览超出限制或音乐确认内容无效");
   await db.transaction("rw", tables(), async () => {
     const run = await requireRun(runId);
     const call = await db.agentToolCalls.get(callId);
     if (run.status !== "running" || !call || call.runId !== runId || call.threadId !== run.threadId || call.status !== "pending") throw new Error("操作预览状态已变化");
+    if ((call.name === "music_generate") !== (music !== undefined)) throw new Error("音乐确认快照与工具不匹配，请重新准备请求");
     if (call.preview) throw new Error("不能替换已保存的操作预览");
     await db.agentToolCalls.update(callId, { preview, updatedAt: nowIso() });
   });

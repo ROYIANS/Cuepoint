@@ -1,0 +1,5 @@
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Existing primitive and theme conventions"}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Frozen previews and paid approval"}
+{"file": ".trellis/spec/frontend/audio-music.md", "reason": "Music wire mapping and recovery"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Validation gate"}
+{"file": ".trellis/tasks/09-22-agent-creative-experience/music-feedback.md", "reason": "R8 source and boundaries"}

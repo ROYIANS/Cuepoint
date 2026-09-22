@@ -160,6 +160,42 @@ before submission. Manual Generate is its own direct intent; it does not enter A
 Recovery of an existing call reads/polls its existing job without another POST. Project
 context and read tools provide bounded text and metadata, not raw audio or secret keys.
 
+### Readable music generation review
+
+Trigger: an Agent `music_generate` call awaits paid approval. `prepare` persists a version-1
+`AgentToolPreview.music` snapshot of project/draft identity, draft revision, connector label
+and complete `MusicSettings`. The strict parser validates settings against `musicWireInput`;
+only music previews get a 128 KiB UTF-8 byte allowance. Generic preview limits stay unchanged.
+No endpoint or credentials belong in the readable snapshot.
+
+- `readMusicGenerationReview(call): Promise<{ status: "ready" | "stale" | "unavailable"; message?: string }>` reads current state without changing the proposal.
+- `approveMusicGenerationReview(call): Promise<void>` revalidates call/run/thread/assistant ownership, latest execution, unresolved calls, no prior intent job, arguments and fresh prepared revision, then invokes durable approval within the same transaction.
+- Local async preparation uses `Dexie.waitFor` to keep IndexedDB transactions alive. Do not put provider fetches inside this transaction. Submission still checks the frozen revision before POST.
+
+| Condition | Review behavior |
+| --- | --- |
+| Matching complete snapshot | Enable confirmation; approve only that call/version |
+| Draft, connector or proposal changed/deleted | Keep old displayed contents; disable confirmation; cancel and prepare again |
+| Legacy/malformed/missing snapshot | No generic approval fallback; cancel and prepare again |
+| Later user turn/run or uncertain/running operation | Do not approve this old/potentially conflicting request |
+| Duplicate confirmation race | Only one durable approval succeeds |
+
+`MusicGenerationReview` shows title, engine, mode, saved revision and charge disclosure;
+full lyrics/style and wire parameters remain available through disclosure buttons. Derive
+labels/values from `musicWireInput`, not every field stored in the draft: Suno simple mode
+ignores custom-only title/style/duration, and instrumental prompts must not be labeled sung
+lyrics. No precise vocalist routing or fixed cost is promised. IDs stay in details.
+
+Good: complete frozen lyrics can be expanded before approving the same revision. Base:
+compact summary uses existing shadcn buttons and wraps at narrow widths. Bad: silently
+refreshing the preview to newer lyrics, approving a legacy truncated JSON proposal, or
+showing saved duration as submitted when simple-mode wire omits it.
+
+Required regressions: long Unicode content and exact byte limits; stale/deleted draft and
+connector; forged args/snapshot/ownership; duplicate approval and concurrent draft edit;
+zero provider calls during local review/approval; simple/custom/instrumental/Flow mapping.
+Browser-check narrow layout, complete-text disclosure and stale-state button disabling.
+
 **ZIP and retention.** `audioProject.json` is an explicit version-1 allowlist, included with
 the existing project package. `audioProjectPackage.ts` validates shape, duplicates, owner,
 references and timeline bounds; project import inserts and validates in one rollback-capable

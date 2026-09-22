@@ -31,7 +31,18 @@ export type AgentRequestMessage = (
 export interface AgentPlanItem { id: string; title: string; status: "pending" | "in_progress" | "completed" }
 export type AgentToolCallStatus = "pending" | "awaiting_approval" | "approved" | "running" | "completed" | "failed" | "rejected" | "unknown";
 export type AgentToolEffect = "read" | "write" | "network" | "bookkeeping";
+export interface MusicGenerationReviewSnapshot {
+  version: 1;
+  projectId: string;
+  projectName: string;
+  draftId: string;
+  draftRevision: number;
+  connectorId: string;
+  connectorLabel: string;
+  settings: import("./music").MusicSettings;
+}
 export interface AgentToolPreview {
+  music?: MusicGenerationReviewSnapshot;
   summary: string;
   changes: string[];
   revision?: string;

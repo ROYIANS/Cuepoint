@@ -22,7 +22,7 @@ Users can ask the creative Agent to do a clear job, see actual progress, handle 
 | R5 | P0 | Concise, accessible desktop and narrow-screen UX shared by manual and Agent paths | All children |
 | R6 | P1 | Create heterogeneous film shots with validated references, explicit batch semantics and duplicate-safe recovery | Parent film backlog; child not yet activated |
 | R7 | P2 | Make script/source-range invalidation and structured beat/shot synchronization behavior explicit | Parent film backlog; child not yet activated |
-| R8 | P0/P1 | Make saved-version music confirmation readable and faithfully map creative intent to supported generation parameters | Parent music UX backlog; coordinate R2, detailed child pending |
+| R8 | P0/P1 | Make saved-version music confirmation readable and faithfully map creative intent to supported generation parameters | music-generation-review delivers readable version confirmation; structured creative intent remains follow-up |
 
 Source-feedback mapping: suggestions 1/2/7/10 -> R2; 6 and promise-only screenshot -> R1; 3/8 -> R3; 4/5 -> R4; 9 -> deferred tag assistance.
 

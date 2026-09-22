@@ -43,4 +43,4 @@ Do not add a large vocalist form now. If structured intent is later useful, keep
 8. Confirmation has readable complete inputs on desktop/narrow layouts without form walls; unsupported vocal-role constraints and unknown cost remain clear.
 
 ## Status
-Merged into planning only. No music runtime fix, confirmation UI change, semantic checker or multi-track feature is implemented by this feedback review. R2 next iteration prioritizes accurate generation state/evidence before broader creative controls; R8 stays parent-owned pending a dedicated implementation plan.
+The initial feedback review was planning only. Subsequent music-observation and sound-evidence deliveries implement truthful query observations and local output/task evidence. R8 readable confirmation is now implemented in `../09-22-music-generation-review`: full immutable snapshot, concise review, actual wire semantics, stale-state detection and atomic version-bound approval. Semantic final-reply verification, structured vocalist intent and multi-track production remain undelivered. See each child validation report for the scope and test evidence.

@@ -3,6 +3,7 @@ import { AgentWriteOutcomes } from "./AgentWriteOutcomes";
 import { WebResearchSources } from "./WebResearchSources";
 import { ProjectImageSources } from "./ProjectImageSources";
 import { GenerationReview } from "./GenerationReview";
+import { MusicGenerationReview } from "./MusicGenerationReview";
 import { AgentGenerationResults } from "./AgentGenerationResults";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
@@ -82,6 +83,8 @@ function ToolCallRow({ run, call, busy, readOnly, unknown, executing, onAction }
   }, [request, run.id, call.id]);
   const recoverable = canResumeAgentRun(run);
   const reviewGeneration = !readOnly && call.name === "submit_generation" && call.status === "awaiting_approval" && recoverable && !unknown && !executing;
+  const musicReview = call.name === "music_generate";
+  const activeMusicReview = musicReview && !readOnly && call.status === "awaiting_approval" && recoverable && !unknown && !executing;
   const preview = call.generationOverride?.preview ?? call.preview;
   const [legacyValidation, setLegacyValidation] = useState<ToolValidationFailure | undefined>();
   const structuredValidation = useMemo(() => validationFailure(call), [call.status, call.result]);
@@ -104,7 +107,7 @@ function ToolCallRow({ run, call, busy, readOnly, unknown, executing, onAction }
       <div className="agent-step-payload">
         <p>{EFFECT[call.effect]}{validation ? " · 未执行" : call.highRisk ? " · 高风险操作" : ""}</p>
         {validation && <ValidationFailureNotice failure={validation} legacy={isLegacyValidation} />}
-        {reviewGeneration ? <GenerationReview call={call} busy={busy} onAction={onAction} /> : preview && <div className="agent-change-preview">
+        {musicReview ? <MusicGenerationReview key={call.id} call={call} busy={busy} active={activeMusicReview} onAction={onAction} /> : reviewGeneration ? <GenerationReview call={call} busy={busy} onAction={onAction} /> : preview && <div className="agent-change-preview">
           <strong>{preview.summary}</strong>
           {preview.changes.length > 0 && <ul>{preview.changes.map((change, index) => <li key={index}>{change}</li>)}</ul>}
           {preview.target && /^\/(?!\/)/.test(preview.target.href) && <Link to={preview.target.href} className="agent-change-link">查看{preview.target.label} ↗</Link>}
@@ -120,7 +123,7 @@ function ToolCallRow({ run, call, busy, readOnly, unknown, executing, onAction }
         {call.error && !validation && <p className="text-destructive">{call.error}</p>}
       </div>
       {call.name !== "project_create" && <CreatedEntityLinks call={call} />}
-      {!readOnly && !reviewGeneration && call.status === "awaiting_approval" && recoverable && !unknown && !executing && <div className="agent-step-actions">
+      {!readOnly && !reviewGeneration && !musicReview && call.status === "awaiting_approval" && recoverable && !unknown && !executing && <div className="agent-step-actions">
         <Button size="sm" disabled={busy} onClick={() => onAction(run.id, "approve", call.id)}>批准此次操作</Button>
         <Button size="sm" variant="outline" disabled={busy} onClick={() => onAction(run.id, "reject", call.id)}>拒绝</Button>
       </div>}

@@ -3,6 +3,7 @@ import { db } from "@/db/database";
 import { resolveConnector } from "@/db/repo";
 import { assertAudioProject, ownedAudioRow, assertAudioRevision } from "@/db/audioShared";
 import { AtomicToolRollbackError } from "@/db/agentTools";
+import type { AgentToolPreview } from "@/domain/agent";
 import type { AgentToolContext, AgentToolDefinition } from "./tools";
 import type { AudioGenerationInput } from "@/domain/audioGeneration";
 import { requireBoundProjectScope } from "./projectScope";
@@ -53,13 +54,15 @@ async function inputState(args: Submission, context: AgentToolContext) {
   }
   return { revision: targetRevision({ args, target: { target, speaker }, reference: reference ? { mediaId: reference.mediaId, fingerprint: reference.fingerprint, filename: reference.filename } : undefined, connector: { id: connector.id, definitionId: connector.definitionId, baseUrl: connector.baseUrl, credentialRevision: targetRevision(connector.apiKey) } }), connector, reference };
 }
-async function preview(args: Submission, context: AgentToolContext) {
+async function preview(args: Submission, context: AgentToolContext): Promise<AgentToolPreview> {
   const state = await inputState(args, context);
   const changes = args.input.kind === "speech"
     ? [args.input.mimo ? `MiMo · ${MIMO_MODELS[args.input.mimo.mode]} · ${args.input.mimo.mode === "preset" ? args.input.voice : args.input.mimo.mode === "design" ? "设计音色" : "克隆音色"}` : `APIMart · gpt-4o-mini-tts · ${args.input.voice} · ${args.input.speed} 倍速`,
       ...(args.input.mimo ? [`音色与演绎指导：${args.input.mimo.instruction}`, ...(state.reference ? [`参考声音：${state.reference.filename}（${state.reference.mediaId}）`] : []), ...(args.input.mimo.optimizeTextPreview ? ["允许智能润色或自动生成播报文本；稿件原文保留。"] : [])] : []), `文字：${args.input.text.slice(0, 1600)}`, "生成一个新配音版本，保留当前选用和时间线。"]
-    : [`APIMart · ${args.input.settings.engine}`, `创作设置：${JSON.stringify(args.input.settings).slice(0, 1600)}`, "生成结果保存到音乐项目；不覆盖已有作品。"];
+    : [`APIMart · ${args.input.settings.engine}`, "完整歌词和生成参数见本次音乐确认", "生成结果保存到音乐项目；不覆盖已有作品。"];
   return { summary: args.input.kind === "speech" ? "生成配音（付费）" : "生成音乐（付费）", revision: state.revision, changes,
+    ...(args.input.kind === "music" ? { music: { version: 1 as const, projectId: args.projectId, projectName: (await db.projects.get(args.projectId))!.name,
+      draftId: args.input.draftId!, draftRevision: args.input.draftRevision!, connectorId: args.connectorId, connectorLabel: state.connector.label || "APIMart", settings: args.input.settings } } : {}),
     target: { label: "打开作品项目", href: `/p/${encodeURIComponent(args.projectId)}` } };
 }
 async function runSubmission(args: Submission, context: AgentToolContext, resolveCurrent?: () => Promise<Submission>) {
