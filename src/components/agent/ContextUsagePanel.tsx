@@ -225,7 +225,7 @@ function useContextUsage({
       config?.instructions ??
       "";
     const allowedNames = activeRun?.enabledToolNames ?? filterProjectMemoryTools([...new Set([...skills.enabledToolNames, ...(taskContext?.taskToolNames ?? [])])], taskContext?.projectContext?.projectId, interactionMode);
-    const loading = activeRun ? activeRun.toolLoading : createToolLoading(interactionMode === "conversation" ? [] : config?.enabledSkillIds ?? DEFAULT_SKILL_IDS, allowedNames);
+    const loading = activeRun ? activeRun.toolLoading : createToolLoading(interactionMode === "conversation" ? [] : config?.enabledSkillIds ?? DEFAULT_SKILL_IDS, allowedNames, taskContext?.projectKind);
     const offeredNames = activeRun ? getOfferedToolNames(activeRun) : getOfferedToolNames({ enabledToolNames: loading ? [...allowedNames, DISCOVERY_TOOL_NAME] : allowedNames, toolLoading: loading, interactionMode });
     const skillInstructions = activeRun
       ? (activeRun.skillInstructions ?? "")

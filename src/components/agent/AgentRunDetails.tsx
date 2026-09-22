@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import type { ChatMessage } from "@/domain/types";
 import { buildRunActivity, formatRunElapsed, getRunElapsedMs, isPersistedToolRound } from "@/lib/agent/runPresentation";
 import { readToolValidationFailure, type ToolValidationFailure } from "@/lib/agent/toolErrors";
+import { describeRunExecution } from "@/lib/agent/executionSummary";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ThinkingPanel } from "./ThinkingPanel";
 import { useAgentActivityNavigation } from "./AgentActivityNavigation";
 import "./executionActivity.css";
@@ -165,18 +167,20 @@ export function AgentRunDetails({ run, message, calls, busy, readOnly, onAction 
   const sectionRef = useRef<HTMLElement>(null);
   const positionedRequest = useRef<number | undefined>(undefined);
   const panelId = useId();
-  const activity = useMemo(() => buildRunActivity(run, calls), [run, calls]);
-  const unknown = calls.some((call) => call.status === "unknown");
-  const executing = calls.some((call) => call.status === "running");
-  const pendingApproval = calls.some((call) => call.status === "awaiting_approval");
+  const ownedCalls = useMemo(() => calls.filter((call) => call.runId === run.id && call.threadId === run.threadId), [run.id, run.threadId, calls]);
+  const activity = useMemo(() => buildRunActivity(run, ownedCalls), [run, ownedCalls]);
+  const unknown = ownedCalls.some((call) => call.status === "unknown");
+  const executing = ownedCalls.some((call) => call.status === "running");
+  const pendingApproval = ownedCalls.some((call) => call.status === "awaiting_approval");
   const recoverable = canResumeAgentRun(run);
-  const persisted = isPersistedToolRound(run, message, calls);
+  const persisted = isPersistedToolRound(run, message, ownedCalls);
   const currentReasoning = persisted ? "" : message.reasoning?.trim();
   const currentContent = run.status === "running" && !persisted ? message.content : "";
   const reasoningActive = run.status === "running" && !!currentReasoning && !currentContent;
   const budgetPaused = run.status === "interrupted" && run.pauseReason === "model_step_limit";
-  const failedCount = calls.filter((call) => call.status === "failed").length;
-  const statusLabel = pendingApproval ? "待你批准" : unknown ? "结果待核实" : run.status === "running" ? "处理中" : run.status === "waiting_approval" ? "等待确认" : run.status === "interrupted" ? "已暂停" : run.status === "cancelled" ? "已停止" : run.status === "failed" ? "执行失败" : "";
+  const failedCount = ownedCalls.filter((call) => call.status === "failed").length;
+  const execution = useMemo(() => describeRunExecution(run, ownedCalls), [run, ownedCalls]);
+  const missingLedger = Boolean(run.hasToolCalls && !ownedCalls.length);
 
   useEffect(() => { if (expanded) setHasExpanded(true); }, [expanded]);
 
@@ -209,13 +213,30 @@ export function AgentRunDetails({ run, message, calls, busy, readOnly, onAction 
   }, [request, run.id, calls]);
 
   return <section ref={sectionRef} className="agent-run-activity agent-execution-activity" aria-label="执行过程" data-activity-run={run.id}>
-    <button type="button" className="agent-run-summary agent-execution-summary" aria-expanded={expanded} aria-controls={panelId} onClick={() => setExpanded((value) => !value)}>
+    <Button variant="ghost" className="agent-run-summary agent-execution-summary h-auto justify-start rounded-none" aria-expanded={expanded} aria-controls={panelId} onClick={() => setExpanded((value) => !value)}>
       <RunElapsed run={run} /><ChevronDown size={14} className={expanded ? "rotate-180" : ""} aria-hidden />
-      {statusLabel && <small>{statusLabel}</small>}
+      <small>{execution.label}</small>
       {failedCount > 0 && <small className="agent-execution-failure-summary">含 {failedCount} 项失败</small>}
-    </button>
+    </Button>
     <div id={panelId} className="agent-execution-timeline" hidden={!expanded}>
       {(expanded || hasExpanded) && <>
+      <div className="agent-execution-explanation">
+        <p>{execution.detail}</p>
+        <Popover><PopoverTrigger asChild><Button variant="ghost" size="sm" className="h-auto px-0 py-1 text-xs text-muted-foreground">执行记录</Button></PopoverTrigger>
+          <PopoverContent align="start" className="w-72 text-xs">
+            <p className="mb-3 text-muted-foreground">以下为本次执行记录，不代表作品已制作完成。</p>
+            <dl className="grid grid-cols-2 gap-x-3 gap-y-2">
+              <dt>模型请求</dt><dd>{execution.modelSteps ?? "未记录"}</dd>
+              <dt>工具调用</dt><dd>{missingLedger ? "记录不完整" : `${execution.counts.total} 项`}</dd>
+              <dt>调用已返回</dt><dd>{missingLedger ? "未记录" : `${execution.counts.completed} 项`}</dd>
+              <dt>失败 / 拒绝</dt><dd>{missingLedger ? "未记录" : `${execution.counts.failed} / ${execution.counts.rejected}`}</dd>
+              <dt>等待批准 / 待核实</dt><dd>{missingLedger ? "未记录" : `${execution.counts.waiting} / ${execution.counts.unknown}`}</dd>
+              <dt>最后请求提供的工具</dt><dd>{execution.offeredTools ?? "未记录"}</dd>
+              <dt>请求协议</dt><dd>{execution.protocol ?? "未记录"}</dd>
+            </dl>
+          </PopoverContent>
+        </Popover>
+      </div>
       {activity.map((item) => item.kind === "text"
         ? <Markdown key={item.id} {...MARKDOWN_PROPS} className="agent-activity-narrative">{item.content}</Markdown>
         : item.kind === "reasoning"

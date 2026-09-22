@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Durable lifecycle"}
+{"file": ".trellis/spec/frontend/agent-activity-ui.md", "reason": "Process UI and truthful states"}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Approval and ownership"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Required verification"}

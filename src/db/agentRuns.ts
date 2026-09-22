@@ -98,7 +98,7 @@ export async function beginAgentRun(input: {
     const skills = assembleSkills(agent.enabledSkillIds ?? []);
     const selectedToolNames = interactionMode === "conversation" ? [] : (previous ? previous.enabledToolNames ?? [] : [...new Set([...skills.enabledToolNames, ...taskContext.taskToolNames])]);
     const allowedToolNames = filterProjectMemoryTools(selectedToolNames,thread.projectId,interactionMode);
-    const toolLoading = previous ? previous.toolLoading : interactionMode === "conversation" ? undefined : createToolLoading(agent.enabledSkillIds ?? [], allowedToolNames);
+    const toolLoading = previous ? previous.toolLoading : interactionMode === "conversation" ? undefined : createToolLoading(agent.enabledSkillIds ?? [], allowedToolNames, taskContext.projectKind);
     const enabledToolNames = toolLoading ? [...new Set([...allowedToolNames, DISCOVERY_TOOL_NAME])] : allowedToolNames;
     const skillInstructions = interactionMode === "conversation" ? "" : (previous ? previous.skillInstructions ?? "" : toolLoading ? toolLoadingInstructions(toolLoading) : skills.skillInstructions);
     const policy = normalizeContextPolicy(thread.contextPolicy);

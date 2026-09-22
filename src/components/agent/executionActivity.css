@@ -8,6 +8,10 @@
 }
 .agent-chat-root .agent-execution-summary small { margin-left: auto; font-size: 12px; color: #888; }
 .agent-chat-root .agent-execution-timeline { padding-top: 12px !important; min-width: 0; }
+.agent-chat-root .agent-execution-explanation { margin-bottom: 12px; color: #999; font-size: 12px; line-height: 1.6; }
+.agent-chat-root .agent-execution-explanation p { white-space: normal; overflow-wrap: anywhere; }
+.agent-chat-root .agent-execution-summary { white-space: normal; text-align: left; }
+.agent-chat-root .agent-execution-summary > svg { flex-shrink: 0; }
 .agent-chat-root .agent-execution-timeline[hidden],
 .agent-chat-root .agent-tool-group-calls[hidden],
 .agent-chat-root .agent-run-step > [hidden] { display: none !important; }

@@ -6,7 +6,7 @@ Chat can operate existing IP/material repositories through strict adapters. This
 
 ## 2. Signatures
 
-- `createToolLoading(skillIds, allowedNames)`, `getOfferedToolNames(run)`, `toolNamesForCall(run, step)`, `toolLoadingInstructions(state)` in `lib/agent/toolLoading.ts`.
+- `createToolLoading(skillIds, allowedNames, projectKind?)`, `getOfferedToolNames(run)`, `toolNamesForCall(run, step)`, `toolLoadingInstructions(state)` in `lib/agent/toolLoading.ts`.
 - `load_tool_groups({groupIds: string[], query?: string})`: at most two authorized groups; empty IDs query the catalog without clearing prior groups. Selected groups replace the prior selection on the next request.
 - `ip_search`, `ip_read`, `ip_create`, `ip_update`, `ip_set_archived`, `project_bind_ip` in `ipTools.ts`.
 - `material_search/read/read_text/read_image/update_metadata/promote/use/update_use/archive/release` in `materialTools.ts`.
@@ -17,6 +17,21 @@ Chat can operate existing IP/material repositories through strict adapters. This
 `AgentRun.enabledToolNames` remains the frozen permission ceiling. Optional `toolLoading` holds frozen capability descriptions, instructions, base tools and loaded groups/names. `offeredTools[{step,names}]` records actual per-request definitions; saving and executing calls enforce both this record and the ceiling. Legacy runs without this state retain their original tools. Conversation mode offers none. Base tools are workspace, plan, applicable task bookkeeping and the loader. At most 36 tools are loaded; pending calls retain their definitions and guidance until settled.
 
 Request building, budgeting and the context panel use `getOfferedToolNames`. Refresh only the next system skill envelope, keeping immutable dispatched input and paired continuation items. Old ledger tests can seed a simulated offer through `tests/helpers/toolDispatch.ts`; runtime tests must exercise discovery or explicitly declare a preloaded fixture. Never weaken production authorization for old tests.
+
+New bound audio/music runs preload only their matching enabled group, intersected with
+the frozen allowed names and within the 36-tool cap. Durable project kind comes from
+the shared task-context assembly; the context inspector uses the same initializer.
+Video/projectless runs retain discovery. Conversation mode and disabled skills never
+gain tools. Retries reuse the original loading snapshot, not today's project defaults.
+
+Shared smart execution guidance applies before and after discovery, including
+foundation-only configurations. “Next round” means the next model request in the same
+execution, not another user message. Clear action requests should progress through
+actual calls; loading/planning alone is not completion. Paid tools open the existing
+confirmation flow; a textual “start” does not approve a paid call. Advice-only requests,
+missing necessary information, rejection, uncertainty and Stop retain their boundaries.
+This is guidance and capability readiness, not a semantic completion validator or a
+guarantee that a model will call tools. No forced no-call retry loop is introduced.
 
 IP creation, shared edits, archive/restore and project binding always require readable confirmation. `libraryWriteTool` checks scope before flushing drafts; preview hashes arguments and affected state, then recomputes inside the atomic transaction before repository mutation and ledger completion. Material adoption/update/release follow existing permission modes. Shared metadata/archive/promotion always require confirmation. Promotion creates an independent snapshot; project adoption fixes the revision and does not update slots automatically.
 

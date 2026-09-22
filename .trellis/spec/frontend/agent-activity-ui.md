@@ -68,3 +68,24 @@ A failed parse must not label a local read as high-risk solely because argument 
 ## Composer footer occlusion
 
 The bottom composer dock owns both the input card and its control footer. Its background-only `::before` mask reaches above the dock farther than the header mask and applies backdrop blur, so scrolled transcript text cannot remain legible behind the footer. Dock content stays in a higher stacking layer and remains interactive. Full-screen composer mode disables this pseudo-element so editing is not blurred.
+
+## Execution ending is not business completion
+
+`describeRunExecution(run, calls)` derives presentation from owned durable rows (both
+runId and threadId). It distinguishes reply-only, bookkeeping-only, read-only, returned
+tool calls, failures/rejections, approvals, unknown outcomes, step-budget pause and
+stopped/failed execution. No prose or error-message keyword detection decides whether
+the requested job is complete. `completed` network calls may return pending or failed
+jobs, so the summary must not imply saved assets or acoustic acceptance.
+
+Use the compact existing process heading and explanatory text inside its disclosure.
+The shadcn execution-record popover exposes bounded diagnostic counts and actual saved
+model-step/offer/protocol facts only. Absent legacy diagnostics remain unrecorded;
+hasToolCalls with no ledger is incomplete, not proof of zero calls. Never expose raw
+prompts, credentials, private reasoning or full tool payloads in this summary.
+Conversation mode retains a neutral reply-ended label. The summary does not authorize
+new work or offer generic automatic retry; existing approval/recovery controls remain.
+
+Tests: `agentExecutionSummary.test.ts` covers ownership and state precedence;
+`audioAgentExecution.test.ts` exercises both protocols with promise-only replies,
+loader-only completion, failed reads and actual read/write progression.

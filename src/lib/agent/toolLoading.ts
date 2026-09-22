@@ -3,7 +3,8 @@ import { db } from "@/db/database";
 import { executeAtomicTool } from "@/db/agentTools";
 import type { AgentRun, AgentToolLoading, AgentToolCall } from "@/domain/agent";
 import { toResponseInput } from "@/lib/ai/responsesStream";
-import { AGENT_SKILLS } from "./skills";
+import { AGENT_SKILLS, SMART_EXECUTION_INSTRUCTIONS } from "./skills";
+import type { ProjectKind } from "@/domain/types";
 import type { AgentToolDefinition } from "./tools";
 
 export const DISCOVERY_TOOL_NAME = "load_tool_groups";
@@ -12,16 +13,21 @@ const settled = (call: AgentToolCall) => ["completed", "failed", "rejected"].inc
 const foundation = (name: string) => name === "workspace_overview" || name === "update_run_plan" || name.startsWith("task_");
 
 /** Freeze descriptions, instructions and permission-filtered names at run creation. */
-export function createToolLoading(skillIds: readonly string[], allowedNames: readonly string[]): AgentToolLoading | undefined {
+export function createToolLoading(skillIds: readonly string[], allowedNames: readonly string[], projectKind?: ProjectKind): AgentToolLoading | undefined {
   const groups = AGENT_SKILLS.filter((skill) => skillIds.includes(skill.id)).map((skill) => ({ ...skill, toolNames: skill.toolNames.filter((name) => allowedNames.includes(name)) })).filter((skill) => skill.toolNames.length);
   const deferred = groups.filter((skill) => skill.toolNames.some((name) => !foundation(name)));
   if (!deferred.length) return undefined;
+  const foundationToolNames = [...new Set([...allowedNames.filter(foundation), DISCOVERY_TOOL_NAME])];
+  const preferred = projectKind === "audio" ? "audio-production" : projectKind === "music" ? "music-creation" : undefined;
+  const initial = deferred.find((group) => group.id === preferred);
+  const loadedToolNames = initial ? [...new Set(initial.toolNames)] : [];
+  const preload = new Set([...foundationToolNames, ...loadedToolNames]).size <= MAX_LOADED_TOOLS;
   return {
     version: 1,
     groups: deferred,
-    foundationToolNames: [...new Set([...allowedNames.filter(foundation), DISCOVERY_TOOL_NAME])],
+    foundationToolNames,
     foundationInstructions: groups.filter((skill) => skill.toolNames.every(foundation)).map((skill) => skill.instructions).join("\n"),
-    loadedGroupIds: [], loadedToolNames: [],
+    loadedGroupIds: initial && preload ? [initial.id] : [], loadedToolNames: preload ? loadedToolNames : [],
   };
 }
 export function getOfferedToolNames(run: Pick<AgentRun, "enabledToolNames" | "toolLoading" | "interactionMode">): string[] {
@@ -37,15 +43,16 @@ export function toolNamesForCall(run: AgentRun, step: number): string[] {
 }
 export function toolLoadingInstructions(state: AgentToolLoading): string {
   return [
+    SMART_EXECUTION_INSTRUCTIONS,
     state.foundationInstructions,
-    "按需工具：当前未提供的业务工具须先调用 load_tool_groups，下一轮收到定义后才能使用。groupIds 为要保留的完整分组列表（最多 2 组，替换上次加载）；空列表配合 query 只查目录，不执行业务。发现与加载不改变授权。依赖上一步结果的操作放到下一轮。",
+    "按需工具：已提供定义的业务工具可以直接调用，不必重复加载。当前未提供的工具须先调用 load_tool_groups，系统在同一次执行的下一次模型请求提供定义，收到结果后立即继续，不需要用户发送继续。groupIds 为要保留的完整分组列表（最多 2 组，替换上次加载）；空列表配合 query 只查目录，不执行业务。发现与加载不改变授权。依赖上一步结果的操作放到收到结果后的下一次模型请求。",
     "可用能力目录：\n" + state.groups.map((group) => `${group.id}｜${group.name}：${group.description}`).join("\n"),
     ...state.groups.filter((group) => state.loadedGroupIds.includes(group.id)).map((group) => group.instructions),
   ].filter(Boolean).join("\n");
 }
 const loadingSchema = z.object({ groupIds: z.array(z.string().min(1).max(80)).max(2), query: z.string().trim().max(100).optional() }).strict();
 export const DISCOVERY_TOOLS: readonly AgentToolDefinition[] = [{
-  name: DISCOVERY_TOOL_NAME, title: "加载创作工具", description: "按能力目录加载最多两组已授权工具，替换之前的业务组；下一轮获得完整定义。groupIds=[] 时仅按 query 查询目录，不执行业务。",
+  name: DISCOVERY_TOOL_NAME, title: "加载创作工具", description: "按能力目录加载最多两组已授权工具，替换之前的业务组；同次执行的下一次模型请求获得完整定义，无需用户再次发送消息。groupIds=[] 时仅按 query 查询目录，不执行业务。",
   parameters: { type: "object", additionalProperties: false, required: ["groupIds"], properties: { groupIds: { type: "array", maxItems: 2, items: { type: "string", minLength: 1, maxLength: 80 } }, query: { type: "string", maxLength: 100 } } },
   effect: "bookkeeping", atomic: true, highRisk: () => false,
   parseArguments: (raw) => loadingSchema.parse(raw),
@@ -60,7 +67,7 @@ export const DISCOVERY_TOOLS: readonly AgentToolDefinition[] = [{
       const selected = state.groups.filter((group) => args.groupIds.includes(group.id));
       if (!selected.length) {
         const query = args.query?.toLocaleLowerCase();
-        return { groups: state.groups.filter((group) => !query || `${group.id} ${group.name} ${group.description}`.toLocaleLowerCase().includes(query)).map(({ id, name, description }) => ({ id, name, description })), loadedGroupIds: state.loadedGroupIds, note: "仅查询目录；选择 groupIds 后下一轮加载，不代表业务已执行。" };
+        return { groups: state.groups.filter((group) => !query || `${group.id} ${group.name} ${group.description}`.toLocaleLowerCase().includes(query)).map(({ id, name, description }) => ({ id, name, description })), loadedGroupIds: state.loadedGroupIds, note: "仅查询目录；请接着选择 groupIds，系统将在同次执行的下一次模型请求加载定义；不代表业务已执行。" };
       }
       const pending = (await db.agentToolCalls.where("runId").equals(run.id).toArray()).filter((row) => !settled(row));
       const pinned = pending.map((row) => row.name).filter((name) => !state.foundationToolNames.includes(name));
@@ -68,7 +75,7 @@ export const DISCOVERY_TOOLS: readonly AgentToolDefinition[] = [{
       if (new Set([...state.foundationToolNames, ...loadedToolNames]).size > MAX_LOADED_TOOLS) throw new Error(`同时加载的工具超过 ${MAX_LOADED_TOOLS} 个，请一次选择一个分组，待当前调用完成后再切换。`);
       const next = { ...state, loadedGroupIds: [...new Set([...selected.map((group) => group.id), ...state.loadedGroupIds.filter((id) => state.groups.find((group) => group.id === id)?.toolNames.some((name) => pinned.includes(name)))])], loadedToolNames };
       await db.agentRuns.update(run.id, { toolLoading: next });
-      return { loadedGroupIds: next.loadedGroupIds, toolNames: loadedToolNames, effectiveFromStep: (run.modelStep ?? 0) + 1, note: "下一轮提供这些工具的完整参数。此操作只加载能力，没有执行任何业务。" };
+      return { loadedGroupIds: next.loadedGroupIds, toolNames: loadedToolNames, effectiveFromStep: (run.modelStep ?? 0) + 1, note: "工具已准备好，系统会在同一次执行的下一次模型请求提供完整参数；请接着调用所需业务工具，无需用户再发送开始或继续。此操作只加载能力，没有执行任何业务。" };
     });
   },
 }];
