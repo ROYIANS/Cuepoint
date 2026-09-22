@@ -1048,3 +1048,28 @@ Audited 15 active tasks against delivery commits and validation; archived eight 
 ### Status
 
 [OK] **Completed**
+
+
+## Session 42: Agent 未完成计划收尾检查
+
+**Date**: 2026-09-22
+**Task**: Agent 未完成计划收尾检查
+**Branch**: `main`
+
+### Summary
+
+Added a durable once-per-run finishing checkpoint for current-run unfinished plans, historical receipt evidence and Chat/Responses continuation. Full 125 files/1559 tests, lint and build passed. Browser auth unavailable; no live model or paid generation. R1/R2 remain active for semantic and real-model acceptance.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `26f69c7` | (see git log) |
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Continue real-model/no-plan acceptance and remaining R2 claim handling; batch voice and arrangement remain next independent delivery tracks.
