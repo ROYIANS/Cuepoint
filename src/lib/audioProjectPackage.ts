@@ -1,3 +1,5 @@
+import { validateAudioTaskObservations } from "./audioGeneration/observations";
+import type { AudioTaskObservation } from "@/domain/audioGeneration";
 import { z } from "zod";
 import { db } from "@/db/database";
 import { AUDIO_TABLES } from "@/db/audioShared";
@@ -32,7 +34,7 @@ const schemas = {
   audioExports: z.object({ ...base, chapterId: id.optional(), scope: z.enum(["chapter", "project"]).optional(), chapterTitle: z.string().optional(), fingerprint: z.string(), format: z.literal("wav"), mediaId: id, durationSec: number }),
   musicDrafts: z.object({ ...base, settings }),
   musicWorks: z.object({ ...base, ...meta, mediaId: id, title: z.string(), notes: z.string(), favorite: z.boolean(), lyrics: z.string(), settings: settings.optional(), provenance: provenance.optional() }),
-  audioGenerationJobs: z.object({ ...base, intentId: id, input, connector: z.object({ id, provider: z.enum(["apimart", "mimo"]), baseUrl: z.string() }), source: z.object({ kind: z.literal("manual") }), status: z.enum(["prepared", "submitting", "uncertain", "submitted", "running", "remote-completed", "downloading", "saved", "failed", "target-conflict"]), taskIds: z.array(z.string()), results: z.array(z.object({ key: id, provenance, title: z.string(), lyrics: z.string().optional(), finalTextPreview: z.string().optional(), durationSec: number.optional(), mediaId: id.optional(), takeId: id.optional(), workId: id.optional(), deleted: z.boolean().optional(), error: z.string().optional() })), error: z.string().optional(), dormant: z.literal(true) }),
+  audioGenerationJobs: z.object({ ...base, intentId: id, input, connector: z.object({ id, provider: z.enum(["apimart", "mimo"]), baseUrl: z.string() }), source: z.object({ kind: z.literal("manual") }), status: z.enum(["prepared", "submitting", "uncertain", "submitted", "running", "remote-completed", "downloading", "saved", "failed", "target-conflict"]), taskIds: z.array(z.string()), taskObservations: z.custom<AudioTaskObservation[]>().optional(), results: z.array(z.object({ key: id, provenance, title: z.string(), lyrics: z.string().optional(), finalTextPreview: z.string().optional(), durationSec: number.optional(), mediaId: id.optional(), takeId: id.optional(), workId: id.optional(), deleted: z.boolean().optional(), error: z.string().optional() })), error: z.string().optional(), dormant: z.literal(true) }),
 };
 type TableName = keyof typeof schemas;
 const schema = z.object({ version: z.literal(1),
@@ -43,7 +45,9 @@ export async function snapshotAudioPackage(projectId: string): Promise<AudioPack
   const entries = await Promise.all(AUDIO_TABLES.map(async (table) => [table.name, await table.where("projectId").equals(projectId).toArray()]));
   const raw = Object.fromEntries(entries);
   raw.audioGenerationJobs = (await db.audioGenerationJobs.where("projectId").equals(projectId).toArray()).map((job) => ({ ...job, source: { kind: "manual" }, dormant: true, claim: undefined }));
-  return schema.parse({ version: 1, ...raw });
+  const value = schema.parse({ version: 1, ...raw });
+  for (const job of value.audioGenerationJobs) validateAudioTaskObservations(job.taskObservations, job.taskIds);
+  return value;
 }
 export function parseAudioPackage(raw: unknown, projectId: unknown, kind: ProjectKind): AudioPackage | undefined {
   if (raw === undefined) {
@@ -51,6 +55,7 @@ export function parseAudioPackage(raw: unknown, projectId: unknown, kind: Projec
     return undefined;
   }
   const value = schema.parse(raw);
+  for (const job of value.audioGenerationJobs) validateAudioTaskObservations(job.taskObservations, job.taskIds);
   const seen = new Set<string>();
   for (const name of Object.keys(schemas) as TableName[]) for (const row of value[name]) {
     if (row.projectId !== projectId || seen.has(row.id)) throw new Error("音频项目记录重复或所有者不匹配");

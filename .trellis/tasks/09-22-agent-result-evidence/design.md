@@ -15,3 +15,12 @@ Render one small disclosure outside the existing auto-collapsed process details 
 
 ## Compatibility and rollback
 Preserve permissions, scope, preview revisions, Stop, paid approval and result limits. Code-owned receipts are additive for object results; legacy array-only/unsupported mutations remain uncovered rather than changing their shape. Rollback presentation/receipt production without rewriting historical results. No automatic retries or paid validation.
+
+## Second delivery: trustworthy music observations
+Gap: refresh currently maps nonterminal, failed-query and unknown provider responses to local running. Reuse job lifecycle but add optional per-provider-task observation metadata: taskId, checkedAt, status (pending/processing/completed/failed/unknown/query-failed), lastVerified {status, observedAt}? retained across query failures/unknown. No credentials/raw payloads. Runtime may set running only when a current verified task is processing; otherwise unresolved tasks use submitted. Terminal successful tasks still download/save separately; mixed pending/failed/unknown siblings preserve individual state and saved results. Failed reads never imply provider failure. No repeat POST or approval changes.
+
+A shared pure presentation helper derives user-facing status from observation coverage and local phases; missing legacy observation renders running conservatively as unverified, never fabricated processing. Model summary exposes persisted job/draft/source identities and observation time alongside distinct lifecycle status. UI shows concise status, optional last query time and existing error/retry actions. Original current-run vs prior-job attribution remains explicit via source metadata; full task-record generation evidence is a later delivery.
+
+Optional fields need no database migration; repository validates observations against taskIds and safe timestamp/status schema. Project export/import audit must retain safe historical metadata or deliberately discard it; dormant imports never poll. Production state remains authoritative and projections expose no transient URLs or credentials. Shared UI and Agent consume the same status interpretation. No semantic final-text rewrite or extra model loop is added.
+
+Files: runtime/domain/repository plus dedicated regressions owned by implement agent; root owns pure presentation helper/UI/summary integration tests and import compatibility audit. Implementation avoids new UI forms or provider parameters.

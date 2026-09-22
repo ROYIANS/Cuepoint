@@ -110,6 +110,11 @@ describe("audio generation recovery integration audit", () => {
     const imported = await importProjectZip(await exportProjectZip(project.id));
     const history = (await db.audioGenerationJobs.where("projectId").equals(imported.id).first())!;
     expect(history.results[0]).toMatchObject({ deleted: true });
+    expect(history.taskObservations).toEqual(recovered.taskObservations);
+    expect(history.dormant).toBe(true);
+    const historicalFetch = vi.fn<typeof fetch>();
+    await refreshAudioGeneration(imported.id, history.id, { fetchImpl: historicalFetch });
+    expect(historicalFetch).not.toHaveBeenCalled();
     expect(history.results[0].workId).toBeUndefined();
     expect(await db.musicWorks.where("projectId").equals(imported.id).count()).toBe(1);
   });

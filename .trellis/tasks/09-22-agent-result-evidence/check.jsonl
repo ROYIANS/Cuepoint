@@ -3,3 +3,4 @@
 {"file": ".trellis/spec/frontend/agent-activity-ui.md", "reason": "Compact evidence presentation"}
 {"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Validation"}
 {"file": ".trellis/spec/frontend/agent-write-evidence.md", "reason": "Direct-write receipt contract"}
+{"file": ".trellis/spec/frontend/audio-music.md", "reason": "Music lifecycle and query observation contracts"}

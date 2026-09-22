@@ -5,13 +5,13 @@ import { db } from "@/db/database";
 import { useMedia } from "@/lib/media";
 import { downloadBlob } from "@/lib/projectPackage";
 import { refreshAudioGeneration } from "@/lib/audioGeneration/runtime";
+import { describeAudioGeneration } from "@/lib/audioGeneration/presentation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { DraftStatus } from "@/components/ui/draft-status";
 import { useDebouncedDraft } from "@/lib/debouncedDraft";
 import { Download, LoaderCircle, RefreshCw, Volume2 } from "lucide-react";
-import type { AudioGenerationStatus } from "@/domain/audioGeneration";
 import "./workspace.css";
 export function errorText(error: unknown) { return error instanceof Error ? error.message : "操作失败，请重试"; }
 export function timeLabel(seconds: number) { return `${Math.floor(seconds / 60).toString().padStart(2, "0")}:${(seconds % 60).toFixed(1).padStart(4, "0")}`; }
@@ -61,7 +61,6 @@ export function AudioPlayer({ mediaId, title, compact = false, autoplay = false,
         downloadBlob(record.blob, record.filename); })}><Download size={16}/></Button>}
   </div>;
 }
-const statuses: Record<AudioGenerationStatus, string> = { prepared: "已准备", submitting: "正在提交", uncertain: "提交结果待确认", submitted: "排队中", running: "生成中", "remote-completed": "等待下载", downloading: "保存音频中", saved: "已保存到项目", failed: "生成失败", "target-conflict": "结果已保留，请重新选择目标" };
 const pausedJobIds = new Set<string>();
 /** Mounted by each project workspace, independent of collapsed or sheet-based panels. */
 export function useProjectAudioJobs(projectId: string) {
@@ -93,7 +92,10 @@ export function GenerationJobs({ projectId, mode = "disclosure" }: {
     const [error, setError] = useState("");
     const [busy, setBusy] = useState<string>();
     if (!jobs?.length) return null;
-    const renderJob = (job: (typeof jobs)[number]) => <div className="aw-job" key={job.id}><div><strong>{job.input.kind === "speech" ? "文字转语音" : job.input.settings.title || (job.input.settings.engine === "suno" ? "Suno" : "Flow Music")}</strong><small>{statuses[job.status]}{job.dormant ? " · 导入的历史记录" : ""}</small>{job.error && <p className="aw-error">{job.error}</p>}{job.status === "uncertain" && <p className="aw-muted">请在服务商侧确认提交状态。系统不会重复提交此请求。</p>}</div>{(job.taskIds.length > 0 || job.results.length > 0 || ["uncertain", "submitting"].includes(job.status)) && job.status !== "saved" && !job.dormant && <Button disabled={busy === job.id} size="icon-sm" variant="ghost" aria-label="刷新任务或重试下载" onClick={() => { setBusy(job.id); pausedJobIds.delete(job.id); setError(""); void refreshAudioGeneration(projectId, job.id).catch((e: unknown) => setError(errorText(e))).finally(() => setBusy(undefined)); }}>{busy === job.id ? <LoaderCircle className="animate-spin"/> : <RefreshCw />}</Button>}</div>;
+    const renderJob = (job: (typeof jobs)[number]) => {
+        const observation = describeAudioGeneration(job);
+        return <div className="aw-job" key={job.id}><div><strong>{job.input.kind === "speech" ? "文字转语音" : job.input.settings.title || (job.input.settings.engine === "suno" ? "Suno" : "Flow Music")}</strong><small>{observation.label}{job.dormant ? " · 导入的历史记录" : ""}</small>{observation.detail && <small>{observation.detail}</small>}{observation.checkedAt && <small>最近查询：<time dateTime={observation.checkedAt}>{new Date(observation.checkedAt).toLocaleString()}</time></small>}{job.error && <p className="aw-error">{job.error}</p>}{job.status === "uncertain" && <p className="aw-muted">请在服务商侧确认提交状态。系统不会重复提交此请求。</p>}</div>{(job.taskIds.length > 0 || job.results.length > 0 || ["uncertain", "submitting"].includes(job.status)) && job.status !== "saved" && !job.dormant && <Button disabled={busy === job.id} size="icon-sm" variant="ghost" aria-label="刷新任务或重试下载" onClick={() => { setBusy(job.id); pausedJobIds.delete(job.id); setError(""); void refreshAudioGeneration(projectId, job.id).catch((e: unknown) => setError(errorText(e))).finally(() => setBusy(undefined)); }}>{busy === job.id ? <LoaderCircle className="animate-spin"/> : <RefreshCw />}</Button>}</div>;
+    };
     if (mode === "activity") {
         const active = jobs.filter((job) => !job.dormant && job.status !== "saved");
         const history = jobs.filter((job) => job.dormant || job.status === "saved");

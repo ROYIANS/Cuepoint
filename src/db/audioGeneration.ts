@@ -5,8 +5,10 @@ import { validateMusicSettings } from "./music";
 import { validateGenerationInput } from "@/lib/audioGeneration/input";
 import { validateSpeechReference } from "@/lib/audioGeneration/reference";
 import { nowIso } from "@/lib/ids";
+import { validateAudioTaskObservations } from "@/lib/audioGeneration/observations";
 
 export async function validateAudioGenerationJob(row: AudioGenerationJob) {
+  validateAudioTaskObservations(row.taskObservations, row.taskIds);
   await assertAudioProject(row.projectId, row.input.kind === "speech" ? "audio" : "music");
   if (!row.intentId || !row.connector.id || !["apimart", "mimo"].includes(row.connector.provider)) throw new Error("生成任务标识无效");
   if (row.input.kind === "speech") {
@@ -59,11 +61,11 @@ export async function claimAudioGenerationJob(projectId: string, id: string, rev
 }
 const NEXT: Record<AudioGenerationStatus, readonly AudioGenerationStatus[]> = {
   prepared: ["failed"], submitting: ["uncertain", "submitted", "remote-completed", "downloading", "failed"],
-  uncertain: ["submitted", "remote-completed", "failed"], submitted: ["running", "downloading", "remote-completed", "failed"],
-  running: ["downloading", "remote-completed", "failed"], "remote-completed": ["downloading", "saved", "target-conflict", "failed"],
-  downloading: ["running", "remote-completed", "saved", "target-conflict", "failed"], saved: [], failed: ["downloading", "running", "remote-completed"], "target-conflict": ["saved", "downloading"],
+  uncertain: ["submitted", "running", "remote-completed", "failed"], submitted: ["running", "downloading", "remote-completed", "failed"],
+  running: ["submitted", "downloading", "remote-completed", "failed"], "remote-completed": ["downloading", "saved", "target-conflict", "failed"],
+  downloading: ["submitted", "running", "remote-completed", "saved", "target-conflict", "failed"], saved: [], failed: ["submitted", "downloading", "running", "remote-completed"], "target-conflict": ["submitted", "running", "remote-completed", "failed", "saved", "downloading"],
 };
-export async function patchAudioGenerationJob(projectId: string, id: string, revision: number, patch: Partial<Pick<AudioGenerationJob, "status" | "taskIds" | "results" | "error">>): Promise<AudioGenerationJob> {
+export async function patchAudioGenerationJob(projectId: string, id: string, revision: number, patch: Partial<Pick<AudioGenerationJob, "status" | "taskIds" | "taskObservations" | "results" | "error">>): Promise<AudioGenerationJob> {
   return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => {
     await assertAudioProject(projectId);
     const row = await ownedAudioRow(db.audioGenerationJobs, projectId, id);
@@ -71,6 +73,7 @@ export async function patchAudioGenerationJob(projectId: string, id: string, rev
     if (row.dormant) throw new Error("导入的历史任务不能继续生成");
     if (patch.status && patch.status !== row.status && !NEXT[row.status].includes(patch.status)) throw new Error("生成任务状态转换无效");
     const next: AudioGenerationJob = { ...row, ...patch, revision: row.revision + 1, updatedAt: nowIso() };
+    validateAudioTaskObservations(next.taskObservations, next.taskIds);
     if (new Set(next.results.map((r) => r.key)).size !== next.results.length) throw new Error("生成结果标识重复");
     for (const result of next.results) {
       if (result.mediaId) await ownedAudioRow(db.media, projectId, result.mediaId);

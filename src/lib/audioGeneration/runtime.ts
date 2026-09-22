@@ -1,10 +1,11 @@
+import { describeAudioGeneration } from "./presentation";
 import { db } from "@/db/database";
 import { resolveConnector } from "@/db/repo";
 import { addAudioTake } from "@/db/audio";
 import { addMusicWork } from "@/db/music";
 import { claimAudioGenerationJob, patchAudioGenerationJob, prepareAudioGenerationJob } from "@/db/audioGeneration";
 import { AUDIO_TRANSACTION_TABLES, assertAudioProject, ownedAudioRow, assertAudioRevision } from "@/db/audioShared";
-import type { AudioGenerationInput, AudioGenerationJob, AudioGenerationResult, AudioGenerationStatus } from "@/domain/audioGeneration";
+import type { AudioGenerationInput, AudioGenerationJob, AudioGenerationResult, AudioGenerationStatus, AudioTaskObservation } from "@/domain/audioGeneration";
 import type { AudioSourceMetadata } from "@/domain/audio";
 import { generateApimartSpeech, submitApimartMusic, getApimartMusicTask, downloadApimartAudio } from "@/lib/ai/apimartAudio";
 import { generateMimoSpeech, MIMO_MODELS } from "@/lib/ai/mimoSpeech";
@@ -12,9 +13,10 @@ import { validateSpeechReference } from "./reference";
 import type { ApimartRequestOptions } from "@/lib/ai/apimart";
 import { normalizeBaseUrl } from "@/lib/ai/openaiCompatible";
 import { audioBufferMetadata, decodeAudioBlob } from "@/lib/audio/engine";
-import { createId } from "@/lib/ids";
+import { createId, nowIso } from "@/lib/ids";
 import { detectAudioMime, audioMimeExtension } from "@/lib/audio/mime";
 import { musicWireInput, speechWireInput, validateGenerationInput } from "./input";
+import { observeAudioTask } from "./observations";
 
 export interface AudioGenerationOptions extends ApimartRequestOptions {
   /** Test seam; production always validates through a real audio decoder. */
@@ -164,35 +166,73 @@ export async function refreshAudioGeneration(projectId: string, jobId: string, o
     if (job.status === "submitting") return change(job, { status: "uncertain", error: "提交过程已中断，结果尚不确定；请核实后再创建新的生成" });
     if ((job.status === "remote-completed" || job.status === "downloading" && job.input.kind === "speech") && job.results.length) return downloadResults(job, options);
     if (!job.taskIds.length) return job;
-    const credentials = await connection(job);
     const results: AudioGenerationResult[] = [...job.results];
     const errors: string[] = [];
-    let allTerminal = true;
-    for (const taskId of job.taskIds) {
-      options.signal?.throwIfAborted();
-      const response = await getApimartMusicTask(credentials, taskId, options);
-      if (!response.ok) { errors.push(response.message); allTerminal = false; continue; }
-      if (response.task.status === "failed") { errors.push(response.task.error ?? "音乐生成失败"); continue; }
-      if (response.task.status === "unknown") { errors.push(`服务商返回未知状态：${response.task.providerStatus.slice(0, 80)}，请手动查询确认`); allTerminal = false; continue; }
-      if (response.task.status !== "completed") { allTerminal = false; continue; }
-      if (response.task.error) errors.push(response.task.error);
-      for (const track of response.task.tracks) {
-        const key = `${taskId}:${track.audioIndex}`;
-        if (results.some(row => row.key === key)) continue;
-        results.push({ key, title: track.title, lyrics: track.lyrics, durationSec: track.duration,
-          provenance: { provider: "apimart", model: job.input.kind === "music" ? job.input.settings.engine : "gpt-4o-mini-tts", jobId,
-            taskId, audioIndex: track.audioIndex, clipId: track.clipId, audioUrl: track.audioUrl, coverUrl: track.imageUrl } });
-      }
+    const observed: AudioTaskObservation[] = [];
+    const observe = (taskId: string, status: AudioTaskObservation["status"]) => {
+      const row = observeAudioTask(taskId, status, nowIso(), job.taskObservations?.find(item => item.taskId === taskId));
+      observed.push(row);
+      return row;
+    };
+    const persistObservations = async () => {
+      // During a partial pass, only this pass's verified processing can set running.
+      const taskObservations = job.taskIds.flatMap(taskId => {
+        const row = observed.find(item => item.taskId === taskId) ?? job.taskObservations?.find(item => item.taskId === taskId);
+        return row ? [row] : [];
+      });
+      job = await change(job, { taskObservations, results: [...results], status: observed.some(row => row.status === "processing") ? "running" : "submitted",
+        error: errors.join("；") || undefined });
+    };
+    let credentials: Awaited<ReturnType<typeof connection>>;
+    try { credentials = await connection(job); }
+    catch (error) {
+      for (const taskId of job.taskIds) observe(taskId, "query-failed");
+      errors.push(error instanceof Error ? error.message : "查询连接不可用，请恢复连接后重试查询");
+      await persistObservations();
+      return job;
     }
-    const status = allTerminal ? errors.length ? "failed" : "remote-completed" : "running";
-    job = await change(job, { status, results, error: errors.join("；") || undefined });
-    if (!results.length) return job;
-    return downloadResults(job, options, allTerminal ? errors.length ? "failed" : "saved" : "running", job.error);
+    for (const taskId of job.taskIds) {
+      if (options.signal?.aborted) {
+        // Preserve completed sibling responses; interrupted checks provide no new provider fact.
+        for (const remaining of job.taskIds.filter(id => !observed.some(row => row.taskId === id))) observe(remaining, "query-failed");
+        errors.push("查询已停止，未检查的任务状态尚未核实");
+        await persistObservations();
+        return job;
+      }
+      const response = await getApimartMusicTask(credentials, taskId, options);
+      observe(taskId, response.ok ? response.task.status : "query-failed");
+      if (!response.ok) errors.push(response.message);
+      else if (response.task.status === "failed") errors.push(response.task.error ?? "音乐生成失败");
+      else if (response.task.status === "unknown") errors.push("服务商返回未知状态，请稍后重新查询确认");
+      else if (response.task.status === "completed") {
+        if (response.task.error) errors.push(response.task.error);
+        for (const track of response.task.tracks) {
+          const key = `${taskId}:${track.audioIndex}`;
+          if (results.some(row => row.key === key)) continue;
+          results.push({ key, title: track.title, lyrics: track.lyrics, durationSec: track.duration,
+            provenance: { provider: "apimart", model: job.input.kind === "music" ? job.input.settings.engine : "gpt-4o-mini-tts", jobId,
+              taskId, audioIndex: track.audioIndex, clipId: track.clipId, audioUrl: track.audioUrl, coverUrl: track.imageUrl } });
+        }
+      }
+      // Save every response before the next request; reload/Stop never discards earlier siblings.
+      await persistObservations();
+    }
+    const allTerminal = observed.every(row => row.status === "completed" || row.status === "failed");
+    const unresolvedStatus = observed.some(row => row.status === "processing") ? "running" : "submitted";
+    const status = allTerminal ? errors.length ? "failed" : "remote-completed" : unresolvedStatus;
+    job = await change(job, { status, error: errors.join("；") || undefined });
+    if (!results.length || options.signal?.aborted) return job;
+    return downloadResults(job, options, allTerminal ? errors.length ? "failed" : "saved" : unresolvedStatus, job.error);
   });
 }
 
 export function audioJobSummary(job: AudioGenerationJob) {
-  return { id: job.id, projectId: job.projectId, status: job.status, error: job.error, taskIds: job.taskIds,
-    results: job.results.map(({ title, takeId, workId, mediaId, error }) => ({ title, takeId, workId, mediaId, error })),
-    note: job.status === "saved" ? "音频已保存在项目中；配音版本仍需明确选用和放入时间线。" : "这是任务状态，不代表已有可用成品。" };
+  const observation = describeAudioGeneration(job);
+  return { id: job.id, projectId: job.projectId, revision: job.revision, status: job.status,
+    statusLabel: observation.label, taskCounts: observation.counts, checkedAt: observation.checkedAt,
+    taskObservations: job.taskObservations ?? [], source: job.source,
+    ...(job.input.kind === "music" ? { draftId: job.input.draftId, draftRevision: job.input.draftRevision } : {}),
+    error: job.error, taskIds: job.taskIds,
+    results: job.results.map(({ title, takeId, workId, mediaId, deleted, error }) => ({ title, takeId, workId, mediaId, deleted, error })),
+    note: "这是该任务的状态快照；source 表示原始提交来源，查询不代表本轮新提交。服务商状态以 taskObservations 的查询时间为准；历史 lastVerified 不代表当前状态。远端完成、本地保存与实际试听是不同阶段，未试听。" };
 }

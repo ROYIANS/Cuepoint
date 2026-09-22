@@ -285,3 +285,14 @@ Clip right-click and keyboard context-menu key/Shift+F10 open the same shadcn Dr
 `resolveTimelineShortcut` requires timeline focus and yields to inputs, controls, menus, dialogs, composition, repeat, busy state and drag. Delete/Backspace removes, Cmd/Ctrl+D duplicates, S splits, Space plays, Cmd/Ctrl+Z undoes, Cmd/Ctrl+Shift+Z or Ctrl+Y redoes. Availability gates prevent consuming unsupported operations. Ctrl-click does not start dragging so macOS secondary click can open context actions.
 
 Regression coverage: audioTimelineShortcuts.test.ts guard matrix and audioEngineCommands.test.ts duplicate/source retention/undo-redo/stale and concurrent edits.
+
+
+## Music query observations (2026-09-22)
+
+`AudioGenerationJob.taskObservations?` stores one bounded validated record per provider task: taskId, checkedAt, status pending/processing/completed/failed/unknown/query-failed, and lastVerified {status, observedAt} where available. Unknown/query-failed observations retain previous verified facts as history. They do not prove the provider is processing or failed. Repository and project-package boundaries validate unique owned task IDs, canonical timestamps and whitelisted fields; imported observations remain dormant history and cannot initiate queries or submissions.
+
+`refreshAudioGeneration` persists each checked sibling before moving on, preserving results across Stop/reload. Current verified processing may set local running; other unresolved tasks use submitted. Pending, failed query and unknown state never create processing evidence. Terminal siblings download independently; failure or pending elsewhere must not lose their saved outputs. Re-querying never repeats a paid POST. Local lifecycle (downloading/saved/etc.) is separate from provider observation.
+
+`describeAudioGeneration` supplies shared labels and per-state counts for workspace and Agent summaries. Legacy running without observations is unverified. A partial query checkpoint retaining older sibling processing while lifecycle is submitted displays partially unverified progress; counts are labelled per-task recent records rather than a single simultaneous fresh snapshot. The most recent query time is shown, while each provider task retains its own time. `audioJobSummary` includes job revision, originating source call/run, submitted draft revision, observations and deleted-output flags, but no signed result URLs/credentials. Querying an old job is not a current-run submission. Provider complete, local saved and audition are separate assertions.
+
+Regression: audioGenerationRuntime.test.ts observation transition/failure/partial/abort cases; audioGenerationPresentation.test.ts shared labels, stale/legacy evidence and source metadata; audioGenerationRecoveryAudit.test.ts no replay, sibling results, dormant ZIP roundtrip. These mocked tests do not verify a live provider or acoustic quality.

@@ -18,4 +18,4 @@
 ## Limitations and acceptance
 Browser inventory on this turn returned `Codex auth token is unavailable`. No desktop/narrow visual acceptance or live-model request trace was available. No paid API request was made. Automated tests do not establish live model obedience, nor that the original screenshot was caused by transport rather than model choice.
 
-R1 remains in progress for real-model and browser acceptance. R2 semantic outcome evidence, batch generation and arrangement are not delivered by this patch. Changes remain uncommitted.
+R1 remains in progress for real-model and browser acceptance. R2 semantic outcome evidence, batch generation and arrangement are not delivered by this patch. First delivery committed as f03fe2b.
