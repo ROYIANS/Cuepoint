@@ -42,6 +42,51 @@ async function awaiting(run: AgentRun, name: string, args: unknown) {
 afterEach(() => vi.unstubAllGlobals());
 
 describe("paid audio/music Agent approval and recovery", () => {
+  it.each(["audio", "music"] as const)("rejects wrong %s generation scope before review, jobs or network effects", async (kind) => {
+    const f = await fixture(kind), other = await createAudioMusicProject("其他作品", kind);
+    const definition = AUDIO_GENERATION_TOOLS.find(row => row.name === f.name)!;
+    const args = definition.parseArguments({ ...f.args, projectId: other.id });
+    const ctx = { runId: f.run.id, threadId: f.run.threadId, callId: "wrong-scope", projectId: f.project.id, signal: new AbortController().signal };
+    const paidFetch = vi.fn<typeof fetch>(); vi.stubGlobal("fetch", paidFetch);
+    for (const operation of [definition.prepare!, definition.execute]) {
+      const error = await operation(args, ctx).catch((reason: Error) => reason);
+      expect(error).toBeInstanceOf(Error);
+      expect((error as Error).message).toContain(f.project.id);
+      expect((error as Error).message).toContain("projectId");
+      expect((error as Error).message).not.toContain("请在目标项目绑定的对话");
+    }
+    expect(args).toMatchObject({ projectId: other.id });
+    expect(paidFetch).not.toHaveBeenCalled();
+    expect(await db.audioGenerationJobs.count()).toBe(0);
+    expect(await db.agentToolCalls.count()).toBe(0);
+    // Correcting only the explicit target restores normal paid review.
+    expect(await definition.prepare!(definition.parseArguments(f.args), ctx)).toMatchObject({ summary: expect.stringContaining("付费") });
+    expect(paidFetch).not.toHaveBeenCalled();
+  });
+
+  it.each(["audio", "music"] as const)("rejects unbound, forged and deleted %s generation scopes before paid effects", async (kind) => {
+    const f = await fixture(kind), other = await createAudioMusicProject("其他作品", kind);
+    const thread = await createChatThread();
+    const unbound = await beginAgentRun({ threadId: thread.id, connector: chatConnector, model: "fixture", content: "生成声音" });
+    const definition = AUDIO_GENERATION_TOOLS.find(row => row.name === f.name)!;
+    const args = definition.parseArguments(f.args);
+    const ctx = { runId: f.run.id, threadId: f.run.threadId, callId: "scope-guard", projectId: f.project.id, signal: new AbortController().signal };
+    const paidFetch = vi.fn<typeof fetch>(); vi.stubGlobal("fetch", paidFetch);
+    for (const [candidate, error] of [
+      [{ ...ctx, runId: unbound.id, threadId: thread.id, projectId: undefined }, "当前对话尚未绑定项目"],
+      [{ ...ctx, projectId: other.id }, "归属不匹配"],
+      [{ ...ctx, threadId: thread.id }, "归属不匹配"],
+    ] as const) {
+      await expect(definition.prepare!(args, candidate)).rejects.toThrow(error);
+      await expect(definition.execute(args, candidate)).rejects.toThrow(error);
+    }
+    await db.projects.delete(f.project.id);
+    await expect(definition.prepare!(args, ctx)).rejects.toThrow("不存在");
+    await expect(definition.execute(args, ctx)).rejects.toThrow("不存在");
+    expect(paidFetch).not.toHaveBeenCalled();
+    expect(await db.audioGenerationJobs.count()).toBe(0);
+  });
+
   it("advertises configured MiMo as default without silently falling back", async () => {
     const f = await fixture("audio");
     const capabilities = AUDIO_GENERATION_TOOLS.find(row => row.name === "audio_generation_capabilities")!;

@@ -3,7 +3,8 @@ import { db } from "@/db/database";
 import { createAudioMusicProject, createChatThread } from "@/db/repo";
 import { beginAgentRun } from "@/db/agentRuns";
 import { saveToolPreview, saveToolRound, transitionToolCall } from "@/db/agentTools";
-import { addAudioSegment, getAudioProjectSnapshot, patchAudioSegment } from "@/db/audio";
+import { addAudioSegment, addAudioSpeaker, getAudioProjectSnapshot, patchAudioSegment } from "@/db/audio";
+import { addMusicWork } from "@/db/music";
 import { AUDIO_TOOLS } from "@/lib/agent/audioTools";
 import { MUSIC_TOOLS } from "@/lib/agent/musicTools";
 import { AUDIO_TOOL_NAMES, MUSIC_TOOL_NAMES } from "@/lib/agent/audioMusicToolNames";
@@ -16,7 +17,7 @@ import { defaultMusicSettings } from "@/domain/music";
 const registry = [...AUDIO_TOOLS, ...MUSIC_TOOLS];
 const tool = (name: string) => registry.find((entry) => entry.name === name)!;
 const connector: ConnectorConfig = { id: "test", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "test", updatedAt: "2026-09-22" };
-async function begin(projectId: string) {
+async function begin(projectId?: string) {
   const thread = await createChatThread({ projectId });
   const run = await beginAgentRun({ threadId: thread.id, connector, model: "fixture", content: "制作配音" });
   const ready = { ...run, permissionMode: "full" as const, enabledToolNames: registry.map((entry) => entry.name), toolLoading: undefined };
@@ -36,6 +37,101 @@ async function prepareCall(run: AgentRun, name: string, raw: unknown) {
 }
 
 describe("audio/music Agent local tools", () => {
+  it("resolves omitted audio project IDs from durable binding in lists and text pages", async () => {
+    const project = await createAudioMusicProject("配音", "audio"), run = await begin(project.id);
+    const chapter = (await getAudioProjectSnapshot(project.id)).chapters[0];
+    const segment = await addAudioSegment(project.id, { chapterId: chapter.id, text: "当前项目的台词", notes: "轻声", order: 0 });
+    const speaker = await addAudioSpeaker(project.id, { name: "旁白", voice: "茉莉", speed: 1, mimo: { mode: "preset", instruction: "自然讲述" } });
+    const reader = tool("audio_read"), ctx = { ...context(run), projectId: undefined };
+    for (const kind of ["chapters", "speakers", "segments", "takes", "tracks", "clips"]) {
+      const raw = { kind };
+      const args = reader.parseArguments(raw);
+      expect(await reader.execute(args, ctx)).toMatchObject({ projectId: project.id });
+      expect(args).not.toHaveProperty("projectId");
+      expect(raw).toEqual({ kind });
+    }
+    for (const [field, text] of [["text", segment.text], ["notes", segment.notes]] as const) {
+      expect(await reader.execute(reader.parseArguments({ kind: "segments", id: segment.id, field }), ctx))
+        .toMatchObject({ projectId: project.id, id: segment.id, text });
+    }
+    expect(await reader.execute(reader.parseArguments({ kind: "speakers", id: speaker.id, field: "instruction" }), ctx))
+      .toMatchObject({ projectId: project.id, id: speaker.id, text: "自然讲述" });
+  });
+
+  it("returns music project identity for optional list, detail and lyric reads", async () => {
+    const project = await createAudioMusicProject("音乐", "music"), run = await begin(project.id);
+    const work = await addMusicWork(project.id, { title: "晚安", notes: "轻柔", lyrics: "夜色渐深", favorite: false, mediaId: "music-sample", durationSec: 1, sampleRate: 48000, channels: 1 },
+      { id: "music-sample", projectId: project.id, filename: "music.wav", mimeType: "audio/wav", blob: new Blob(["sample"]) });
+    const reader = tool("music_read"), ctx = { ...context(run), projectId: undefined };
+    for (const kind of ["drafts", "works"]) {
+      expect(await reader.execute(reader.parseArguments({ kind }), ctx)).toMatchObject({ projectId: project.id });
+    }
+    expect(await reader.execute(reader.parseArguments({ kind: "works", id: work.id }), ctx))
+      .toMatchObject({ projectId: project.id, items: [{ id: work.id }] });
+    for (const [field, text] of [["lyrics", work.lyrics], ["notes", work.notes]] as const) {
+      expect(await reader.execute(reader.parseArguments({ kind: "works", id: work.id, field }), ctx))
+        .toMatchObject({ projectId: project.id, id: work.id, text });
+    }
+  });
+
+  it.each(["audio", "music"] as const)("recovers from an explicit wrong %s project ID without reopening the conversation", async (kind) => {
+    const project = await createAudioMusicProject("当前作品", kind), other = await createAudioMusicProject("其他作品", kind), run = await begin(project.id);
+    const reader = tool(`${kind}_read`), readKind = kind === "audio" ? "chapters" : "drafts";
+    const wrong = reader.parseArguments({ projectId: other.id, kind: readKind });
+    const error = await reader.execute(wrong, context(run)).catch((reason: Error) => reason);
+    expect(error).toBeInstanceOf(Error);
+    expect((error as Error).message).toContain(project.id);
+    expect((error as Error).message).toContain("projectId");
+    expect((error as Error).message).toContain("当前对话已绑定项目");
+    expect((error as Error).message).toContain("无需重新打开");
+    expect((error as Error).message).not.toMatch(/请重新打开|请重新进入|目标项目绑定的对话/);
+    expect(wrong).toMatchObject({ projectId: other.id });
+    const result = await reader.execute(reader.parseArguments({ projectId: project.id, kind: readKind }), context(run)) as { projectId: string; items: { id: string; revision: number }[] };
+    expect(result.projectId).toBe(project.id);
+    if (kind === "audio") {
+      const chapter = result.items[0];
+      const args = { projectId: result.projectId, kind: "chapter", id: chapter.id, revision: chapter.revision, patch: { title: "恢复后编辑" } };
+      await expect(tool("audio_update").prepare!({ ...args, projectId: other.id }, context(run))).rejects.toThrow(project.id);
+      const call = await prepareCall(run, "audio_update", args);
+      await call.definition.execute(call.args, call.ctx);
+      expect((await db.audioChapters.get(chapter.id))?.title).toBe("恢复后编辑");
+      expect((await getAudioProjectSnapshot(other.id)).chapters[0].title).not.toBe("恢复后编辑");
+    } else {
+      const args = { projectId: result.projectId, settings: { ...defaultMusicSettings("flowmusic"), soundPrompt: "恢复后的钢琴" } };
+      await expect(tool("music_save_draft").prepare!({ ...args, projectId: other.id }, context(run))).rejects.toThrow(project.id);
+      const call = await prepareCall(run, "music_save_draft", args);
+      await call.definition.execute(call.args, call.ctx);
+      expect((await db.musicDrafts.where("projectId").equals(project.id).toArray()).some(row => row.settings.engine === "flowmusic" && row.settings.soundPrompt === "恢复后的钢琴")).toBe(true);
+      expect((await db.musicDrafts.where("projectId").equals(other.id).toArray()).some(row => row.settings.engine === "flowmusic" && row.settings.soundPrompt === "恢复后的钢琴")).toBe(false);
+    }
+  });
+
+  it.each(["audio", "music"] as const)("keeps %s reads and edits guarded for unbound, forged and deleted scopes", async (kind) => {
+    const project = await createAudioMusicProject("当前作品", kind), other = await createAudioMusicProject("其他作品", kind);
+    const run = await begin(project.id), unbound = await begin();
+    const reader = tool(`${kind}_read`), readArgs = reader.parseArguments({ kind: kind === "audio" ? "chapters" : "drafts" });
+    const writer = tool(kind === "audio" ? "audio_create" : "music_save_draft");
+    const writeArgs = writer.parseArguments(kind === "audio" ? { projectId: project.id, kind: "speaker", name: "旁白" } : { projectId: project.id, settings: defaultMusicSettings() });
+    const cases = [
+      { ctx: context(unbound), error: "当前对话尚未绑定项目" },
+      { ctx: { ...context(run), projectId: other.id }, error: "归属不匹配" },
+      { ctx: { ...context(run), threadId: unbound.threadId }, error: "归属不匹配" },
+      { ctx: { ...context(run), runId: "missing-run" }, error: "归属不匹配" },
+    ];
+    for (const { ctx, error } of cases) {
+      await expect(reader.execute(readArgs, ctx)).rejects.toThrow(error);
+      await expect(writer.prepare!(writeArgs, ctx)).rejects.toThrow(error);
+      await expect(writer.execute(writeArgs, ctx)).rejects.toThrow(error);
+    }
+    // A model-supplied ID cannot grant authority to an unbound conversation.
+    await expect(reader.execute({ ...readArgs as object, projectId: project.id }, context(unbound))).rejects.toThrow("当前对话尚未绑定项目");
+    await db.projects.delete(project.id);
+    await expect(reader.execute(readArgs, context(run))).rejects.toThrow("不存在");
+    await expect(writer.prepare!(writeArgs, context(run))).rejects.toThrow("不存在");
+    await expect(writer.execute(writeArgs, context(run))).rejects.toThrow("不存在");
+    expect(await db.audioSpeakers.count()).toBe(0);
+  });
+
   it("has complete compact allowlists and rejects arbitrary schema fields", () => {
     for (const name of new Set([...AUDIO_TOOL_NAMES, ...MUSIC_TOOL_NAMES])) expect(BUILTIN_TOOLS.some((entry) => entry.name === name), name).toBe(true);
     expect(new Set([...AUDIO_TOOL_NAMES, ...MUSIC_TOOL_NAMES]).size + 8).toBeLessThanOrEqual(36);

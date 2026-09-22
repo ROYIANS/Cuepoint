@@ -145,6 +145,13 @@ cannot recreate the project. Independent library snapshots and music-to-audio co
 source-project deletion.
 
 **Agent approval.** `audio-production` and `music-creation` skills use compact catalogs.
+`audio_read` and `music_read` may omit `projectId`; resolve it only from the validated
+durable run/thread binding and include it in every read result, including text pages.
+Explicit foreign IDs still reject. `requireBoundProjectScope` distinguishes a missing
+binding from a mismatched argument: the latter supplies the current bound ID for a
+corrected read and must not tell the user to reopen an already bound conversation.
+Edits and paid generation retain explicit targets, frozen previews and all ownership
+checks; never silently replace a foreign target with the current project.
 `audio_generate_speech` and `music_generate` set `requiresConfirmation: true`, including in
 full permission mode. `audioGenerationTools.ts` binds every operation to `frozenProjectScope`,
 checks durable run/call identity and approved running status, and compares the saved preview

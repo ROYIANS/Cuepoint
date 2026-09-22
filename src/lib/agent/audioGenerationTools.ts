@@ -5,7 +5,7 @@ import { assertAudioProject, ownedAudioRow, assertAudioRevision } from "@/db/aud
 import { AtomicToolRollbackError } from "@/db/agentTools";
 import type { AgentToolContext, AgentToolDefinition } from "./tools";
 import type { AudioGenerationInput } from "@/domain/audioGeneration";
-import { frozenProjectScope } from "./projectScope";
+import { requireBoundProjectScope } from "./projectScope";
 import { targetRevision } from "@/lib/productionRevision";
 import { prepareAudioGeneration, submitAudioGeneration, refreshAudioGeneration, audioJobSummary } from "@/lib/audioGeneration/runtime";
 import { validateGenerationInput } from "@/lib/audioGeneration/input";
@@ -23,8 +23,7 @@ const jobSpec = s.object({ projectId: s.id, jobId: s.id });
 type Submission = { projectId: string; connectorId: string; input: AudioGenerationInput; speakerId?: string; speakerRevision?: number };
 async function scope(projectId: string, context: AgentToolContext) {
   context.signal.throwIfAborted();
-  const bound = await frozenProjectScope(context);
-  if (!bound || bound !== projectId) throw new Error("请在目标项目绑定的对话中操作声音作品");
+  await requireBoundProjectScope(context, projectId);
   await assertAudioProject(projectId);
 }
 async function inputState(args: Submission, context: AgentToolContext) {
@@ -135,7 +134,7 @@ export const AUDIO_GENERATION_TOOL_NAMES = ["audio_generation_capabilities", "au
 export const AUDIO_GENERATION_TOOLS: readonly AgentToolDefinition[] = [
   { name: "audio_generation_capabilities", title: "查看声音生成能力", description: "列出 MiMo/APIMart 音频和音乐连接与已支持能力，不探测付费接口，不保证余额。", effect: "read", highRisk: () => false,
     parameters: { type: "object", properties: {}, additionalProperties: false }, parseArguments: raw => z.object({}).strict().parse(raw),
-    async execute(_args, context) { const projectId = await frozenProjectScope(context); if (!projectId) throw new Error("请先绑定项目"); await scope(projectId, context); const connections = await db.connectors.where("definitionId").anyOf("apimart", "mimo").toArray(); return {
+    async execute(_args, context) { const projectId = await requireBoundProjectScope(context); await scope(projectId, context); const connections = await db.connectors.where("definitionId").anyOf("apimart", "mimo").toArray(); return {
       defaultSpeech: { provider: "mimo", connectorId: defaultMimoConnector(connections)?.id ?? null, profile: speakerSpeechProfile(), note: "未配置 MiMo 时请先添加连接，不自动改用 APIMart；保存的角色音色优先。" },
       connectors: connections.map(c => ({ id: c.id, label: c.label, provider: c.definitionId, configured: !!c.apiKey.trim() })),
       mimo: { models: MIMO_MODELS, voices: MIMO_VOICES, speed: 1, reference: "clone requires an owned WAV/MP3 media ID; encoded sample <=10 MB", design: "instruction required; optimizeTextPreview explicitly permits text rewrite or empty-text audition" },
@@ -147,7 +146,11 @@ export const AUDIO_GENERATION_TOOLS: readonly AgentToolDefinition[] = [
       catch (error) { throw new AtomicToolRollbackError(error instanceof Error ? error.message : "配音准备失败"); }
     } },
   { name: "music_generate", title: "生成音乐", description: "提交当前已保存音乐草稿的指定版本；先用音乐草稿工具准备参数。经用户确认后提交一次，后续只查询已有任务。", effect: "network", recovery: "repeatable", requiresConfirmation: true, highRisk: () => false,
-    parameters: music.json, parseArguments: raw => music.schema.parse(raw), prepare: async (raw, context) => preview(await musicArgs(raw), context),
+    parameters: music.json, parseArguments: raw => music.schema.parse(raw), prepare: async (raw, context) => {
+      const args = music.schema.parse(raw);
+      await scope(args.projectId, context);
+      return preview(await musicArgs(args), context);
+    },
     async execute(raw, context) {
       let args: Submission;
       // Resolving local draft state has no network side effect. A stale draft

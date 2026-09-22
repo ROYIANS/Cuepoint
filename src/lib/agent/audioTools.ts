@@ -6,17 +6,17 @@ import { splitAudioClip } from "@/lib/audio/commands";
 import type { AgentToolContext, AgentToolDefinition } from "./tools";
 import type { Spec } from "./businessSchemas";
 import { libraryReadTool, libraryWriteTool } from "./libraryToolHelpers";
-import { frozenProjectScope } from "./projectScope";
+import { requireBoundProjectScope } from "./projectScope";
 import { SPEECH_VOICES } from "@/lib/ai/apimartAudio";
 import { MIMO_VOICES } from "@/lib/ai/mimoSpeech";
 import { mimoSpeechSpec } from "./mimoSpeechSpec";
 import { speakerSpeechProfile } from "@/lib/audioGeneration/defaults";
 import * as s from "./businessSchemas";
 
-export async function assertAudioMusicToolScope(projectId: string, context: AgentToolContext, kind: "audio" | "music") {
-  const bound = await frozenProjectScope(context);
-  if (!bound || bound !== projectId) throw new Error("请在目标项目绑定的对话中操作声音作品");
-  await assertAudioProject(projectId, kind);
+export async function assertAudioMusicToolScope(projectId: string | undefined, context: AgentToolContext, kind: "audio" | "music") {
+  const bound = await requireBoundProjectScope(context, projectId);
+  await assertAudioProject(bound, kind);
+  return bound;
 }
 export const audioMusicRevision = s.number(1, 1e12, true);
 export const audioMusicTarget = (projectId: string) => ({ label: "打开作品项目", href: `/p/${encodeURIComponent(projectId)}` });
@@ -27,7 +27,7 @@ export function boundedAudioText(value: string, limit = 1600) { return { text: v
 const base = { projectId: s.id };
 const identity = { ...base, id: s.id, revision: audioMusicRevision };
 const sec = s.number(0, 86400);
-const scope = (args: { projectId: string }, context: AgentToolContext) => assertAudioMusicToolScope(args.projectId, context, "audio");
+const scope = async (args: { projectId: string }, context: AgentToolContext) => { await assertAudioMusicToolScope(args.projectId, context, "audio"); };
 const createSpec = audioMusicUnion(
   s.object({ ...base, kind: s.choice(["chapter"]), title: s.text(300, 1), order: s.number(0, 10000, true) }),
   s.object({ ...base, kind: s.choice(["speaker"]), name: s.text(300, 1), voice: s.optional(s.choice([...SPEECH_VOICES, ...MIMO_VOICES])), speed: s.optional(s.number(0.25, 4)), mimo: s.optional(mimoSpeechSpec) }),
@@ -57,10 +57,11 @@ async function clipState(args: { projectId: string; id: string; revision: number
 }
 
 export const AUDIO_TOOLS: readonly AgentToolDefinition[] = [
-  libraryReadTool({ name: "audio_read", title: "读取音频项目", description: "分页读取当前音频项目章节、说话人、脚本、配音版本、轨道或片段。id 可读指定项，field+textOffset 可分段读脚本/备注；speakers 使用 field=instruction 读取完整演绎指导。不听取声音，不返回音频字节。", scope,
-    spec: s.object({ ...base, kind: s.choice(["chapters", "speakers", "segments", "takes", "tracks", "clips"]), id: s.optional(s.id), chapterId: s.optional(s.id), field: s.optional(s.choice(["text", "notes", "instruction"])), textOffset: s.optional(s.number(0, 1e7, true)), ...s.page }),
-    async execute(args) {
-      const snapshot = await getAudioProjectSnapshot(args.projectId);
+  libraryReadTool({ name: "audio_read", title: "读取音频项目", description: "分页读取当前绑定的音频项目。projectId 可省略，自动使用当前对话项目；显式指定时必须一致。返回 projectId 供后续编辑使用。id 可读指定项，field+textOffset 可分段读脚本/备注；speakers 使用 field=instruction 读取完整演绎指导。不听取声音，不返回音频字节。",
+    spec: s.object({ projectId: s.optional(s.id), kind: s.choice(["chapters", "speakers", "segments", "takes", "tracks", "clips"]), id: s.optional(s.id), chapterId: s.optional(s.id), field: s.optional(s.choice(["text", "notes", "instruction"])), textOffset: s.optional(s.number(0, 1e7, true)), ...s.page }),
+    async execute(args, context) {
+      const projectId = await assertAudioMusicToolScope(args.projectId, context, "audio");
+      const snapshot = await getAudioProjectSnapshot(projectId);
       const all = snapshot[args.kind].filter((row) => (!args.id || row.id === args.id) && (!args.chapterId || ("chapterId" in row && row.chapterId === args.chapterId)));
       if (args.id && !all.length) throw new Error("找不到当前项目中的内容");
       const offset = args.offset ?? 0, limit = args.limit ?? 20;
@@ -68,13 +69,13 @@ export const AUDIO_TOOLS: readonly AgentToolDefinition[] = [
         if (!args.id || args.kind !== "speakers") throw new Error("演绎指导分页需要指定说话人 ID");
         const row = snapshot.speakers.find(item => item.id === args.id)!;
         const value = row.mimo?.instruction ?? "", start = args.textOffset ?? 0;
-        return { id: row.id, revision: row.revision, field: args.field, text: value.slice(start, start + 4000), totalLength: value.length, nextOffset: start + 4000 < value.length ? start + 4000 : null };
+        return { projectId, id: row.id, revision: row.revision, field: args.field, text: value.slice(start, start + 4000), totalLength: value.length, nextOffset: start + 4000 < value.length ? start + 4000 : null };
       }
       if (args.field) {
         if (!args.id || args.kind !== "segments") throw new Error("文本分页需要指定脚本段落 ID");
         const row = snapshot.segments.find((segment) => segment.id === args.id)!;
         const value = row[args.field], start = args.textOffset ?? 0;
-        return { id: row.id, revision: row.revision, field: args.field, text: value.slice(start, start + 4000), totalLength: value.length, nextOffset: start + 4000 < value.length ? start + 4000 : null };
+        return { projectId, id: row.id, revision: row.revision, field: args.field, text: value.slice(start, start + 4000), totalLength: value.length, nextOffset: start + 4000 < value.length ? start + 4000 : null };
       }
       const items = all.slice(offset, offset + limit).map((row) => {
         if ("text" in row) return { ...row, text: boundedAudioText(row.text, 300), notes: boundedAudioText(row.notes, 100) };
@@ -83,7 +84,7 @@ export const AUDIO_TOOLS: readonly AgentToolDefinition[] = [
         if ("name" in row) return { ...row, name: row.name.slice(0, 300), ...("mimo" in row && row.mimo ? { mimo: { ...row.mimo, instruction: boundedAudioText(row.mimo.instruction, 300) } } : {}) };
         return row;
       });
-      return { items, total: all.length, nextOffset: offset + limit < all.length ? offset + limit : null, note: "音频仅提供元信息，未听取声音。" };
+      return { projectId, items, total: all.length, nextOffset: offset + limit < all.length ? offset + limit : null, note: "音频仅提供元信息，未听取声音。" };
     } }),
   libraryWriteTool({ name: "audio_create", title: "组织配音项目", description: "创建章节、角色音色、脚本段落或轨道。kind=speaker 可命名并保存 MiMo 预置/设计/克隆音色，省略音色配置时默认 MiMo；显式 APIMart voice 保留兼容。此工具只保存音色配置，试音使用 audio_generate_speech 经确认生成。", spec: createSpec, scope, owners: (args) => [args.projectId],
     prepare: (args) => previewState(args, [`创建${args.kind}：${JSON.stringify(args).slice(0, 1800)}`]),

@@ -8,7 +8,7 @@ import * as s from "./businessSchemas";
 
 const base = { projectId: s.id };
 const identity = { ...base, id: s.id, revision: audioMusicRevision };
-const scope = (args: { projectId: string }, context: AgentToolContext) => assertAudioMusicToolScope(args.projectId, context, "music");
+const scope = async (args: { projectId: string }, context: AgentToolContext) => { await assertAudioMusicToolScope(args.projectId, context, "music"); };
 const settings = audioMusicUnion(
   s.object({ engine: s.choice(["flowmusic"]), soundPrompt: s.text(12000), lyrics: s.text(12000), title: s.text(300), bpm: s.optional(s.text(20)), lengthSec: s.optional(s.number(1, 240)), seed: s.optional(s.text(100)) }),
   s.object({ engine: s.choice(["suno"]), version: s.choice(["v6", "v6-wild", "v6-mini"]), custom: s.bool, instrumental: s.bool, prompt: s.text(10000), title: s.text(160), style: s.text(2000), negativeTags: s.text(2000), durationSec: s.optional(s.number(10, 360)) }),
@@ -17,19 +17,20 @@ async function state(projectId: string) {
   return { drafts: await db.musicDrafts.where("projectId").equals(projectId).toArray(), works: await db.musicWorks.where("projectId").equals(projectId).toArray() };
 }
 export const MUSIC_TOOLS: readonly AgentToolDefinition[] = [
-  libraryReadTool({ name: "music_read", title: "读取音乐作品", description: "分页读取音乐草稿和作品元信息；指定 id 可读取当前生成参数。field 可分页读取作品歌词/备注。未听取声音，不从标题推断声音内容。", scope,
-    spec: s.object({ ...base, kind: s.choice(["drafts", "works"]), id: s.optional(s.id), field: s.optional(s.choice(["lyrics", "notes"])), textOffset: s.optional(s.number(0, 1e7, true)), ...s.page }),
-    async execute(args) {
-      const data = await state(args.projectId); const rows = data[args.kind].filter((row) => !args.id || row.id === args.id);
+  libraryReadTool({ name: "music_read", title: "读取音乐作品", description: "分页读取当前绑定的音乐项目。projectId 可省略，自动使用当前对话项目；显式指定时必须一致。返回 projectId 供后续编辑使用。指定 id 可读取当前生成参数。field 可分页读取作品歌词/备注。未听取声音，不从标题推断声音内容。",
+    spec: s.object({ projectId: s.optional(s.id), kind: s.choice(["drafts", "works"]), id: s.optional(s.id), field: s.optional(s.choice(["lyrics", "notes"])), textOffset: s.optional(s.number(0, 1e7, true)), ...s.page }),
+    async execute(args, context) {
+      const projectId = await assertAudioMusicToolScope(args.projectId, context, "music");
+      const data = await state(projectId); const rows = data[args.kind].filter((row) => !args.id || row.id === args.id);
       if (args.id && !rows.length) throw new Error("找不到当前项目中的音乐内容");
       const offset = args.offset ?? 0, limit = args.limit ?? 20;
       if (args.field) {
         if (!args.id || args.kind !== "works") throw new Error("文本分页需要指定作品 ID");
         const work = data.works.find((row) => row.id === args.id)!;
         const value = work[args.field], start = args.textOffset ?? 0;
-        return { id: work.id, revision: work.revision, field: args.field, text: value.slice(start, start + 4000), totalLength: value.length, nextOffset: start + 4000 < value.length ? start + 4000 : null };
+        return { projectId, id: work.id, revision: work.revision, field: args.field, text: value.slice(start, start + 4000), totalLength: value.length, nextOffset: start + 4000 < value.length ? start + 4000 : null };
       }
-      return { items: rows.slice(offset, offset + limit).map((row) => {
+      return { projectId, items: rows.slice(offset, offset + limit).map((row) => {
         if ("mediaId" in row) return { id: row.id, revision: row.revision, title: row.title.slice(0, 300), notes: boundedAudioText(row.notes, 300), lyrics: boundedAudioText(row.lyrics, 300), durationSec: row.durationSec, favorite: row.favorite, mediaId: row.mediaId, ...(args.id ? { settings: row.settings } : { engine: row.settings?.engine }), provenance: row.provenance ? { provider: row.provenance.provider, model: row.provenance.model, taskId: row.provenance.taskId, clipId: row.provenance.clipId, audioIndex: row.provenance.audioIndex } : undefined };
         return { id: row.id, revision: row.revision, ...(args.id ? { settings: row.settings } : { engine: row.settings.engine, title: row.settings.title.slice(0, 300) }) };
       }), total: rows.length, nextOffset: offset + limit < rows.length ? offset + limit : null, note: "仅读取作品资料与参数，未听取音频。" };

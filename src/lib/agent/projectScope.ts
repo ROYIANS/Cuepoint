@@ -8,6 +8,16 @@ export async function frozenProjectScope(context:AgentToolContext):Promise<strin
  if(run.projectId&&!(await db.projects.get(run.projectId)))throw new Error('关联项目已不存在，无法继续执行');
  return run.projectId;
 }
+/** A missing read target means the current project, never an inferred or foreign owner. */
+export async function requireBoundProjectScope(context: AgentToolContext, requestedProjectId?: string): Promise<string> {
+ context.signal.throwIfAborted();
+ const projectId = await frozenProjectScope(context);
+ if (!projectId) throw new Error('当前对话尚未绑定项目，请从目标项目的“在此项目继续创作”入口开启对话。此次操作未执行。');
+ if (requestedProjectId !== undefined && requestedProjectId !== projectId) {
+  throw new Error(`当前对话已绑定项目，调用参数 projectId 与绑定项目不一致。当前 projectId：${projectId}。此次操作未执行；若要操作当前项目，请使用此 ID 重新读取，再根据读取结果继续。无需重新打开当前项目对话；不要重复原来的错误参数，也不要将其他项目的修改目标改到此项目。`);
+ }
+ return projectId;
+}
 export async function assertProjectToolScope(context:AgentToolContext,name:string,raw:unknown,write:boolean){
  const projectId=await frozenProjectScope(context);if(!projectId)return;
  const args=raw as Record<string,unknown>;
