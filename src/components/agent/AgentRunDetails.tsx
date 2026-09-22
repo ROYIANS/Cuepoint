@@ -116,12 +116,13 @@ function ToolCallRow({ run, call, busy, readOnly, unknown, executing, onAction }
         </details>
         {call.error && !validation && <p className="text-destructive">{call.error}</p>}
       </div>
-      <CreatedEntityLinks call={call} />
+      {call.name !== "project_create" && <CreatedEntityLinks call={call} />}
       {!readOnly && !reviewGeneration && call.status === "awaiting_approval" && recoverable && !unknown && !executing && <div className="agent-step-actions">
         <Button size="sm" disabled={busy} onClick={() => onAction(run.id, "approve", call.id)}>批准此次操作</Button>
         <Button size="sm" variant="outline" disabled={busy} onClick={() => onAction(run.id, "reject", call.id)}>拒绝</Button>
       </div>}
     </div>
+    {call.name === "project_create" && <CreatedEntityLinks call={call} allowProjectConversation={!readOnly} />}
   </div>;
 }
 

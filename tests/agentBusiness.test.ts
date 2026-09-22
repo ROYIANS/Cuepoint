@@ -11,6 +11,8 @@ import type { AgentRun, AgentToolCall } from "@/domain/agent";
 import type { ConnectorConfig } from "@/domain/types";
 import { registerPendingDraft } from "@/lib/debouncedDraft";
 import { createId } from "@/lib/ids";
+import { assembleSkills } from "@/lib/agent/skills";
+import { createToolLoading, MAX_LOADED_TOOLS } from "@/lib/agent/toolLoading";
 
 const connector: ConnectorConfig = { id: "fixture", definitionId: "openai-compatible", baseUrl: "https://fixture.invalid/v1", apiKey: "not-real", updatedAt: "2026-09-19" };
 function tool(name: string) { const result = BUSINESS_TOOLS.find((item) => item.name === name); if (!result) throw new Error(`Missing ${name}`); return result; }
@@ -51,6 +53,77 @@ describe("business operation schemas and permissions", () => {
     expect(() => tool("shot_create").parseArguments({ ownerId: "p", episodeId: "e", count: 21 })).toThrow();
     expect(() => tool("project_create").parseArguments({ name: "   " })).toThrow();
     expect(() => tool("shot_update").parseArguments({ ownerId: "p", episodeId: "e", id: "s", patch: {} })).toThrow();
+  });
+});
+
+describe("Agent creates every supported project kind", () => {
+  it.each(["audio-production", "music-creation"])("makes project creation discoverable from %s alone", (skill) => {
+    const enabled = assembleSkills([skill]);
+    expect(enabled.enabledToolNames).toContain("project_create");
+    const loading = createToolLoading([skill], enabled.enabledToolNames);
+    expect(loading?.groups).toContainEqual(expect.objectContaining({ id: skill, toolNames: expect.arrayContaining(["project_create"]) }));
+    expect(enabled.enabledToolNames.length + 8).toBeLessThanOrEqual(MAX_LOADED_TOOLS);
+  });
+
+  it("advertises video/audio/music and retains legacy video defaults", async () => {
+    expect(tool("project_create").parameters).toMatchObject({ properties: { kind: { enum: ["video", "audio", "music"] } }, required: ["name"] });
+    const legacy = await execute("project_create", { name: "旧版参数", mode: "series", aspectPreset: "9:16" });
+    expect(await db.projects.get(String(legacy.id))).toMatchObject({ mode: "series", aspectPreset: "9:16" });
+    expect(await db.episodes.get(String(legacy.firstEpisodeId))).toMatchObject({ projectId: legacy.id });
+    const explicit = await execute("project_create", { name: "新视频", kind: "video" });
+    expect(explicit.projectKind).toBe("video");
+    expect(explicit.firstEpisodeId).toBeTruthy();
+  });
+
+  it.each(["audio", "music"] as const)("creates seeded %s with an atomic replayable result and unchanged conversation", async (kind) => {
+    const call = await prepare("project_create", { name: "声音创作", kind });
+    expect(call.context.preview?.changes).toContain(`类型：${kind === "audio" ? "音频" : "音乐"}`);
+    const result = await call.execute();
+    expect(result).toMatchObject({ kind: "project", projectKind: kind, target: { href: `/p/${result.id}` }, continuation: { projectId: result.id, action: "new_project_conversation" } });
+    expect(result.firstEpisodeId).toBeUndefined();
+    expect(await db.projects.get(String(result.id))).toMatchObject({ kind });
+    expect(await db.episodes.count()).toBe(0);
+    if (kind === "audio") {
+      expect(await db.audioChapters.get(String(result.firstChapterId))).toMatchObject({ projectId: result.id, order: 0 });
+      expect(await db.audioTracks.get(String(result.firstTrackId))).toMatchObject({ projectId: result.id, chapterId: result.firstChapterId, role: "voice" });
+      expect(await db.musicDrafts.count()).toBe(0);
+    } else {
+      expect(await db.musicDrafts.get(String(result.firstDraftId))).toMatchObject({ projectId: result.id });
+      expect(await db.audioChapters.count()).toBe(0);
+    }
+    expect((await db.chatThreads.get(call.context.threadId))?.projectId).toBeUndefined();
+    expect((await db.agentRuns.get(call.context.runId))?.projectId).toBeUndefined();
+    db.close(); await db.open();
+    expect(await call.execute()).toEqual(result);
+    expect(await db.projects.count()).toBe(1);
+    expect(await db.agentToolCalls.get(call.context.callId)).toMatchObject({ status: "completed", result: JSON.stringify(result) });
+  });
+
+  it.each(["audio", "music"] as const)("rolls back %s seeds if saving its tool result fails", async (kind) => {
+    const call = await prepare("project_create", { name: "应回滚", kind });
+    const failure = vi.spyOn(db.agentToolCalls, "update").mockRejectedValueOnce(new Error("ledger failure"));
+    try { await expect(call.execute()).rejects.toBeInstanceOf(AtomicToolRollbackError); }
+    finally { failure.mockRestore(); }
+    expect(await db.projects.count()).toBe(0);
+    expect(await db.audioChapters.count()).toBe(0);
+    expect(await db.audioTracks.count()).toBe(0);
+    expect(await db.musicDrafts.count()).toBe(0);
+    expect(await db.episodes.count()).toBe(0);
+  });
+
+  it("rejects incompatible kinds, video-only parameters and rebinding a project conversation", async () => {
+    for (const args of [
+      { name: "声音", kind: "audio", mode: "film" },
+      { name: "歌曲", kind: "music", aspectPreset: "16:9" },
+      { name: "错误", kind: "podcast" },
+      { name: "越权", kind: "audio", projectId: "other" },
+    ]) expect(() => tool("project_create").parseArguments(args)).toThrow();
+    const project = await repo.createAudioMusicProject("已绑定", "audio");
+    const thread = await repo.createChatThread({ projectId: project.id });
+    const run = await beginAgentRun({ threadId: thread.id, connector, model: "fixture-model", content: "新建音乐" });
+    await expect(prepare("project_create", { name: "另一个", kind: "music" }, run)).rejects.toThrow("项目绑定对话");
+    expect((await db.chatThreads.get(thread.id))?.projectId).toBe(project.id);
+    expect(await db.projects.count()).toBe(1);
   });
 });
 

@@ -2,8 +2,12 @@ import * as Popover from "@radix-ui/react-popover";
 import { Check, ChevronDown, Folder, Plus, Search, X, ArrowLeft } from "lucide-react";
 import { useId, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import type { Id, Project } from "@/domain/types";
-import { createProject } from "@/db/repo";
+import type { Id, Project, ProjectKind } from "@/domain/types";
+import { createAudioMusicProject, createProject } from "@/db/repo";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export function ProjectPicker({ projects, projectId, required, locked, onChange, allowClear = true, allLabel }: {
   projects: Project[]; projectId?: Id; required?: boolean; locked?: boolean;
@@ -14,6 +18,7 @@ export function ProjectPicker({ projects, projectId, required, locked, onChange,
   const [query, setQuery] = useState("");
   const [creating, setCreating] = useState(false);
   const [name, setName] = useState("");
+  const [kind, setKind] = useState<ProjectKind>("video");
   const [pending, setPending] = useState(false);
   const saveLock = useRef(false);
   const trigger = useRef<HTMLButtonElement>(null);
@@ -33,7 +38,7 @@ export function ProjectPicker({ projects, projectId, required, locked, onChange,
   async function create() {
     if (locked || saveLock.current || !name.trim()) return;
     saveLock.current = true; setPending(true);
-    try { const project = await createProject(name.trim()); await onChange(project.id); setCreating(false); setOpen(false); setName(""); }
+    try { const project = kind === "video" ? await createProject(name.trim()) : await createAudioMusicProject(name.trim(), kind); await onChange(project.id); setCreating(false); setOpen(false); setName(""); }
     catch (error) { toast.error(error instanceof Error ? error.message : "创建项目失败"); }
     finally { saveLock.current = false; setPending(false); }
   }
@@ -52,10 +57,11 @@ export function ProjectPicker({ projects, projectId, required, locked, onChange,
         }
       }}>
         {creating ? <div className="agent-project-create-form">
-          <button type="button" onClick={() => setCreating(false)} disabled={pending}><ArrowLeft size={14} />返回项目</button>
+          <Button type="button" variant="ghost" size="sm" onClick={() => setCreating(false)} disabled={pending}><ArrowLeft size={14} />返回项目</Button>
           <h3>给创作一个空间</h3><p>先起一个名字，创作设定可以稍后补充。</p>
-          <input autoFocus value={name} onChange={(event) => setName(event.target.value)} maxLength={120} placeholder="项目名称" aria-label="项目名称" disabled={pending} onKeyDown={(event) => { if (event.key === "Enter" && !event.nativeEvent.isComposing) { event.preventDefault(); event.stopPropagation(); void create(); } }} />
-          <button type="button" className="agent-project-create-submit" disabled={pending || !name.trim()} onClick={() => void create()}>{pending ? "创建中…" : "创建并选择"}</button>
+          <Tabs value={kind} onValueChange={(value) => { if (value === "video" || value === "audio" || value === "music") setKind(value); }}><TabsList className="mb-3 w-full" aria-label="项目类型"><TabsTrigger value="video" disabled={pending}>视频</TabsTrigger><TabsTrigger value="audio" disabled={pending}>音频</TabsTrigger><TabsTrigger value="music" disabled={pending}>音乐</TabsTrigger></TabsList></Tabs>
+          <Input autoFocus value={name} onChange={(event) => setName(event.target.value)} maxLength={120} placeholder="项目名称" aria-label="项目名称" disabled={pending} onKeyDown={(event) => { if (event.key === "Enter" && !event.nativeEvent.isComposing) { event.preventDefault(); event.stopPropagation(); void create(); } }} />
+          <Button type="button" className="mt-4 w-full" disabled={pending || !name.trim()} onClick={() => void create()}>{pending ? "创建中…" : "创建并选择"}</Button>
         </div> : <>
           <div className="agent-project-picker-search"><Search size={15} aria-hidden /><input autoFocus value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索项目" aria-label="搜索项目" aria-controls={listId} onKeyDown={(event) => { if (event.key === "Enter" && !event.nativeEvent.isComposing && filtered.length) { event.preventDefault(); event.stopPropagation(); void choose(filtered[0].id); } }} /></div>
           <div id={listId} className="agent-project-picker-list" role="listbox" aria-label="项目列表">

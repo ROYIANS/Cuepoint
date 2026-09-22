@@ -408,9 +408,6 @@
 .agent-project-create-form > button:first-child { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #999; }
 .agent-project-create-form h3 { margin: 20px 0 8px; font-size: 16px; }
 .agent-project-create-form p { font-size: 12px; color: #999; line-height: 1.7; margin-bottom: 16px; }
-.agent-project-create-form input { width: 100%; background: #ffffff07; border: 1px solid #ffffff18; border-radius: 8px; padding: 10px; outline-color: #b4c4b9; }
-.agent-project-create-submit { display: block; width: 100%; background: #ddd; color: #171717; border-radius: 8px; padding: 9px; margin-top: 16px; font-size: 14px; }
-.agent-project-create-submit:disabled { opacity: .4; }
 .agent-task-card-project { display: block; color: #a29e94; margin: 12px 0; font-size: 12px; }
 
 .agent-context-project { display: flex; flex-direction: column; gap: 5px; padding: 12px 0; border-bottom: 1px solid #ffffff10; margin-bottom: 12px; font-size: 12px; }

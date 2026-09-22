@@ -67,3 +67,15 @@ The user rejected paragraph form cards after the initial Fish-inspired pass. The
 ## User-requested checkpoint commit
 
 Implementation committed as `cfc3cd7` after explicit user authorization. The validation above describes pre-commit verification; no source changes occurred after those passing checks. Task remains available for subsequent UX optimization. No push, deployment or task archive.
+
+
+## Agent creation and music UX follow-up (2026-09-22)
+
+- Agent `project_create` supports video/audio/music, preserving video as the default and rejecting video-only settings for sound projects. Creation seeds real audio chapter/voice-track or music draft records inside the existing atomic tool transaction. Existing bound conversations keep their project scope; creation results offer an explicit new conversation bound to the created project.
+- Music uses a compact creator, work list, optional detail panel/Sheet and shared persistent player. Simple description and Custom lyrics live in separate durable drafts; variant links contain IDs only and validate project ownership and mode before reuse.
+- Search, favorite filtering, date grouping, playback queue and responsive Creation/Works navigation are implemented. Generation activity and failures remain visible. Submission locks draft/engine switching, and thrown submission errors retain the visible Creation panel.
+- Read-only integration review covered tool discovery/scope/atomic replay, variant persistence, submission concurrency and player state. Both reported issues were fixed: Simple title is labeled as a draft name, and mobile switches to Works only after submission returns.
+- Integrated tests: **109 files / 1199 tests passed**. Final TypeScript, production build, model-bank verify (197 files / 85 providers / 1855 models), and `git diff --check` passed. Build retains the existing large-chunk advisory.
+- The earlier browser evidence above applies to the previous checkpoint. **This follow-up has not been visually reverified in a browser or on a physical phone**: in-app browser automation could not connect, and the user's active production browser was left undisturbed. Responsive behavior has code review coverage only this round.
+- No paid APIMart request or live LLM end-to-end request was made; provider and Agent tests use deterministic fixtures. No provider wire contract, database schema or dependencies changed.
+- User explicitly authorized a checkpoint commit for this follow-up after the checks above. Browser visual recheck remains pending. No push, deployment or task archive.

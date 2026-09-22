@@ -145,7 +145,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
   }
 
   return (
-    <div className={cn("workspace-shell bg-background flex flex-col", kind === "audio" ? "h-dvh overflow-hidden" : "h-screen")}>
+    <div className={cn("workspace-shell bg-background flex flex-col", kind !== "video" ? "h-dvh overflow-hidden" : "h-screen")}>
       <header className="workspace-header grid min-h-14 shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-2 border-b px-3 py-2 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4">
         <div className="col-start-1 row-start-1 flex min-w-0 items-center gap-1">
           {backToStudio ? (

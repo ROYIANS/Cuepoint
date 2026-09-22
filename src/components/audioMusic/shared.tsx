@@ -1,4 +1,4 @@
-import { WorkspaceSelect, SelectOption, Disclosure, DisclosureTitle, SourcePlayer } from "@/components/audioMusic/controls";
+import { WorkspaceSelect, SelectOption, Disclosure, DisclosureTitle, SourcePlayer, type AudioPlaybackActions } from "@/components/audioMusic/controls";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/database";
@@ -45,16 +45,16 @@ export function ConnectionSelect({ value, onChange }: {
     const choices = (connections ?? []).filter((item) => item.definitionId === "apimart" && item.apiKey.trim());
     return <Field label="生成连接"><WorkspaceSelect value={value} onValueChange={(value) => onChange(value)}><SelectOption value="">选择 APIMart 连接</SelectOption>{choices.map((item) => <SelectOption value={item.id} key={item.id}>{item.label || "APIMart"}</SelectOption>)}</WorkspaceSelect>{choices.length === 0 && <small>请在连接与模型中添加 APIMart 连接后生成。</small>}</Field>;
 }
-export function AudioPlayer({ mediaId, title, compact = false, autoplay = false }: {
+export function AudioPlayer({ mediaId, title, compact = false, autoplay = false, ...playback }: {
     mediaId?: string;
     title: string;
     compact?: boolean;
     autoplay?: boolean;
-}) {
+} & AudioPlaybackActions) {
     const media = useMedia(mediaId);
     return <div className={compact ? "aw-audition" : "aw-player"}>
     {!compact && <div className="aw-player-title"><Volume2 size={18}/><div><strong>{title || "试听作品"}</strong><small>{mediaId ? "本地音频" : "选择一个版本或作品开始试听"}</small></div></div>}
-    {media ? <SourcePlayer src={media.url} title={title} autoplay={autoplay} /> : <span className="aw-muted">{mediaId ? "音频加载中或已不可用" : "尚未选择音频"}</span>}
+    {media ? <SourcePlayer key={mediaId} src={media.url} title={title} autoplay={autoplay} {...playback} /> : <span className="aw-muted">{mediaId ? "音频加载中或已不可用" : "尚未选择音频"}</span>}
     {mediaId && !compact && <Button variant="ghost" size="icon" aria-label="下载原始音频" onClick={() => void db.media.get(mediaId).then((record) => { if (record)
         downloadBlob(record.blob, record.filename); })}><Download size={16}/></Button>}
   </div>;
@@ -83,13 +83,23 @@ export function useProjectAudioJobs(projectId: string) {
         return () => window.clearInterval(timer);
     }, [projectId]);
 }
-export function GenerationJobs({ projectId }: {
+export function GenerationJobs({ projectId, mode = "disclosure" }: {
     projectId: string;
+    mode?: "disclosure" | "activity";
 }) {
     const jobs = useLiveQuery(() => db.audioGenerationJobs.where("projectId").equals(projectId).reverse().sortBy("createdAt"), [projectId]);
     const [error, setError] = useState("");
     const [busy, setBusy] = useState<string>();
-    if (!jobs?.length)
-        return null;
-    return <Disclosure className="aw-jobs" defaultOpen={jobs.some((job) => !["saved", "failed"].includes(job.status))}><DisclosureTitle>生成任务 <span>{jobs.length}</span></DisclosureTitle>{error && <p role="alert" className="aw-error">{error}</p>}{jobs.map((job) => <div className="aw-job" key={job.id}><div><strong>{job.input.kind === "speech" ? "文字转语音" : job.input.settings.engine === "suno" ? "Suno" : "Flow Music"}</strong><small>{statuses[job.status]}{job.dormant ? " · 导入的历史记录" : ""}</small>{job.error && <p className="aw-error">{job.error}</p>}{job.status === "uncertain" && <p className="aw-muted">请在服务商侧确认提交状态。系统不会重复提交此请求。</p>}</div>{(job.taskIds.length > 0 || job.results.length > 0 || ["uncertain", "submitting"].includes(job.status)) && job.status !== "saved" && !job.dormant && <Button disabled={busy === job.id} size="icon-sm" variant="ghost" aria-label="刷新任务或重试下载" onClick={() => { setBusy(job.id); pausedJobIds.delete(job.id); setError(""); void refreshAudioGeneration(projectId, job.id).catch((e: unknown) => setError(errorText(e))).finally(() => setBusy(undefined)); }}>{busy === job.id ? <LoaderCircle className="animate-spin"/> : <RefreshCw />}</Button>}</div>)}</Disclosure>;
+    if (!jobs?.length) return null;
+    const renderJob = (job: (typeof jobs)[number]) => <div className="aw-job" key={job.id}><div><strong>{job.input.kind === "speech" ? "文字转语音" : job.input.settings.title || (job.input.settings.engine === "suno" ? "Suno" : "Flow Music")}</strong><small>{statuses[job.status]}{job.dormant ? " · 导入的历史记录" : ""}</small>{job.error && <p className="aw-error">{job.error}</p>}{job.status === "uncertain" && <p className="aw-muted">请在服务商侧确认提交状态。系统不会重复提交此请求。</p>}</div>{(job.taskIds.length > 0 || job.results.length > 0 || ["uncertain", "submitting"].includes(job.status)) && job.status !== "saved" && !job.dormant && <Button disabled={busy === job.id} size="icon-sm" variant="ghost" aria-label="刷新任务或重试下载" onClick={() => { setBusy(job.id); pausedJobIds.delete(job.id); setError(""); void refreshAudioGeneration(projectId, job.id).catch((e: unknown) => setError(errorText(e))).finally(() => setBusy(undefined)); }}>{busy === job.id ? <LoaderCircle className="animate-spin"/> : <RefreshCw />}</Button>}</div>;
+    if (mode === "activity") {
+        const active = jobs.filter((job) => !job.dormant && job.status !== "saved");
+        const history = jobs.filter((job) => job.dormant || job.status === "saved");
+        return <section className="aw-jobs aw-job-activity" aria-label="音乐生成任务">
+            {error && <p role="alert" className="aw-error">{error}</p>}
+            {active.map(renderJob)}
+            {history.length > 0 && <Disclosure><DisclosureTitle>生成记录 <span>{history.length}</span></DisclosureTitle>{history.map(renderJob)}</Disclosure>}
+        </section>;
+    }
+    return <Disclosure className="aw-jobs" defaultOpen={jobs.some((job) => !["saved", "failed"].includes(job.status))}><DisclosureTitle>生成任务 <span>{jobs.length}</span></DisclosureTitle>{error && <p role="alert" className="aw-error">{error}</p>}{jobs.map(renderJob)}</Disclosure>;
 }

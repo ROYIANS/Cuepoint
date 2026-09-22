@@ -84,3 +84,18 @@ Retain original Blobs and legacy defaults. Roll back UI availability or code, no
 ## Completion
 
 Use trellis-check and required project finish workflow; update relevant executable specs for new contracts and retain validation evidence. Report completed behavior, test evidence and actual provider/browser limitations. Follow existing authorization for commits/pushes; do not publish or deploy merely because implementation is complete.
+
+
+## Follow-up: Agent project creation and music UX (2026-09-22)
+
+User requests filling Agent audio/music project creation and simplifying the music workspace against their Suno screenshot. Implementation authorized; preserve existing shadcn defaults and APIMart-only capabilities.
+
+Behavior gaps: project_create is video-only and must create the requested kind with correct seeded records and no video-only arguments for audio/music. Preserve frozen project scope: creation must not silently rebind an existing conversation. Expose a concrete continuation path to the created project. Music currently stacks engine/mode/title/lyrics/settings/connection forms and permanently reserves empty details.
+
+Change boundary: Agent business tool schema/creation repository call, its capability/preview/result and project-picker affordance if needed; MusicWorkspacePage and extracted creation/details/list CSS; existing shared player may gain queue navigation through optional callbacks. No provider/schema migration, new arrangement features, mock artwork or paid live calls. Root owns shared player and validation; workers own Agent and music UI separately.
+
+UI contract: compact Simple/Custom switch and engine/model selection; Simple starts with one useful idea input. Custom exposes lyrics/style, optional controls collapsed. Draft selection compact; generation control remains reachable. Main area is works/search/filter with inline pending jobs, no permanent empty detail panel. Selecting details opens contextual aside/Sheet. Persistent player supports useful previous/next if available; independent active playback vs detail selection. Narrow switches creation/works and opens details Sheet without losing edits. Preserve engine/mode drafts and never reinterpret a description as lyrics on a mode switch. Only documented APIMart controls.
+
+Sources: user screenshot; https://help.suno.com/en/articles/2462273 (Simple description), https://help.suno.com/en/articles/2415873 (Custom lyrics). Adopt information hierarchy, not every Suno parameter.
+
+Validation: project_create legacy/new kinds/schema/atomic replay/scope tests; music mode/persistence tests; lint/full test/build; real desktop and 390px browser validation, no paid POSTs.

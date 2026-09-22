@@ -1,6 +1,6 @@
 import { Children as ReactChildren, createContext, isValidElement, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { Slider } from "@/components/ui/slider";
-import { ChevronRight, Pause, Play, Volume2, VolumeX } from "lucide-react";
+import { ChevronRight, Pause, Play, SkipBack, SkipForward, Volume2, VolumeX } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
@@ -31,7 +31,14 @@ export function WorkspaceSlider({ value, defaultValue, min = 0, max = 1, step = 
     aria-label={label} disabled={disabled}
   />;
 }
-export function SourcePlayer({ src, title, autoplay = false }: { src: string; title: string; autoplay?: boolean }) {
+export type AudioPlaybackActions = {
+  onPrevious?: () => void;
+  onNext?: () => void;
+  onEnded?: () => void;
+  onPlayingChange?: (playing: boolean) => void;
+  toggleRequest?: number;
+};
+export function SourcePlayer({ src, title, autoplay = false, onPrevious, onNext, onEnded, onPlayingChange, toggleRequest }: { src: string; title: string; autoplay?: boolean } & AudioPlaybackActions) {
   const audio = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   const [position, setPosition] = useState(0);
@@ -45,10 +52,21 @@ export function SourcePlayer({ src, title, autoplay = false }: { src: string; ti
     return () => { document.removeEventListener("play", stop, true); element?.pause(); };
   }, []);
   useEffect(() => { setPosition(0); setDuration(0); setPlaying(false); setError(""); }, [src]);
+  const lastToggle = useRef(toggleRequest);
+  useEffect(() => {
+    if (toggleRequest === lastToggle.current) return;
+    lastToggle.current = toggleRequest;
+    const element = audio.current;
+    if (!element) return;
+    if (!element.paused) element.pause();
+    else void element.play().catch(() => setError("播放被浏览器阻止，请再次点击播放。"));
+  }, [toggleRequest]);
   const format = (seconds: number) => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
   return <div className="aw-custom-player">
-    <audio ref={audio} src={src} autoPlay={autoplay} preload="metadata" onLoadedMetadata={(e) => setDuration(Number.isFinite(e.currentTarget.duration) ? e.currentTarget.duration : 0)} onDurationChange={(e) => setDuration(Number.isFinite(e.currentTarget.duration) ? e.currentTarget.duration : 0)} onTimeUpdate={(e) => setPosition(e.currentTarget.currentTime)} onPlay={() => { setPlaying(true); document.dispatchEvent(new CustomEvent("audio-workspace-audition")); }} onPause={() => setPlaying(false)} onEnded={() => setPlaying(false)} onError={() => setError("此音频无法播放，请检查文件格式或重新导入。")} />
+    <audio ref={audio} src={src} autoPlay={autoplay} preload="metadata" onLoadedMetadata={(e) => setDuration(Number.isFinite(e.currentTarget.duration) ? e.currentTarget.duration : 0)} onDurationChange={(e) => setDuration(Number.isFinite(e.currentTarget.duration) ? e.currentTarget.duration : 0)} onTimeUpdate={(e) => setPosition(e.currentTarget.currentTime)} onPlay={() => { setPlaying(true); onPlayingChange?.(true); document.dispatchEvent(new CustomEvent("audio-workspace-audition")); }} onPause={() => { setPlaying(false); onPlayingChange?.(false); }} onEnded={() => { setPlaying(false); onPlayingChange?.(false); onEnded?.(); }} onError={() => setError("此音频无法播放，请检查文件格式或重新导入。")} />
+    {(onPrevious || onNext) && <Button size="icon-sm" variant="ghost" aria-label="上一首" disabled={!onPrevious} onClick={onPrevious}><SkipBack size={16} /></Button>}
     <Button size="icon-sm" variant="ghost" aria-label={`${playing ? "暂停" : "播放"} ${title}`} onClick={() => { if (playing) audio.current?.pause(); else void audio.current?.play().catch(() => setError("播放被浏览器阻止，请再次点击播放。")); }}>{playing ? <Pause size={16} /> : <Play size={16} />}</Button>
+    {(onPrevious || onNext) && <Button size="icon-sm" variant="ghost" aria-label="下一首" disabled={!onNext} onClick={onNext}><SkipForward size={16} /></Button>}
     <span className="aw-time">{format(position)}</span>
     <WorkspaceSlider label={`${title} 播放进度`} className="aw-playback-slider" value={Math.min(position, duration)} max={duration || 1} disabled={!duration} step={0.01} onChange={(seconds) => { if (audio.current) audio.current.currentTime = seconds; setPosition(seconds); }} />
     <span className="aw-time aw-muted">{format(duration)}</span>

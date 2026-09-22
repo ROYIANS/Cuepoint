@@ -131,3 +131,10 @@ request materialization, withdrawal, source evidence and ZIP lifecycle contracts
 ## Final submission boundary
 
 Single and batch generation share `submitClaimedGeneration`. After upload/encoding completes, re-read and hash local inputs outside the Dexie transaction, then recheck the current connector (through `resolveConnector`), exact provider/base URL/API key, caller target/run/batch ownership, and current input records before the paid POST. Upload completion does not authorize a stale config snapshot. Connector deletion, key rotation/empty key, target or input changes must produce zero new generation POSTs in regression tests. This check is separate from monitoring an already-submitted provider task, which must never resubmit.
+
+
+## Project creation kinds
+
+`project_create` accepts optional `kind: video | audio | music`; omitted kind retains video compatibility. Audio/music reject video-only mode/aspect parameters and use `createAudioMusicProject` to seed their real chapter/track or draft in the existing atomic tool transaction. Return actual seed IDs and project kind. The audio/music skill allowlists also expose creation, so those skills do not depend on the video story group.
+
+Creation retains frozen scope: a bound conversation cannot create another project. Successful projectless creation exposes an explicit result action to open a new project-bound conversation, inheriting selected model/connector but not rewriting history or sending a new message automatically. Manual Agent project-picker creation supports the same three types.

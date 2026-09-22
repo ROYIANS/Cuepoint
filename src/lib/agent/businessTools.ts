@@ -19,7 +19,7 @@ function changes(patch: object): string[] {
   return Object.entries(patch).map(([key, value]) => {
     const enumLabels: Record<string, Record<string, string>> = {
       mode: { film: "电影", series: "剧集" }, status: SHOT_STATUS_LABELS,
-      kind: { image: "图片", video: "视频", character: "角色", scene: "场景", prop: "道具", style: "风格", shot: "镜头", beat: "场次", episode: "分集", project: "项目" },
+      kind: { audio: "音频", music: "音乐", image: "图片", video: "视频", character: "角色", scene: "场景", prop: "道具", style: "风格", shot: "镜头", beat: "场次", episode: "分集", project: "项目" },
     };
     const text = value === null ? "清除" : typeof value === "boolean" ? value ? "是" : "否" : typeof value === "string" ? enumLabels[key]?.[value] ?? (value || "清空文本") : JSON.stringify(value);
     return `${fieldLabels[key] ?? key}：${text.length > 600 ? `${text.slice(0, 600)}…（共 ${text.length} 字符，可展开完整参数）` : text}`;
@@ -164,12 +164,31 @@ const reads = [
   }),
 ];
 
-const projectCreate = s.object({ name: s.text(200, 1), mode: s.optional(s.choice(["film", "series"])), aspectPreset: s.optional(s.choice(["21:9", "16:9", "4:3", "1:1", "3:4", "9:16"])) });
+const projectCreateBase = s.object({ kind: s.optional(s.choice(["video", "audio", "music"])), name: s.text(200, 1), mode: s.optional(s.choice(["film", "series"])), aspectPreset: s.optional(s.choice(["21:9", "16:9", "4:3", "1:1", "3:4", "9:16"])) });
+const projectCreate = {
+  ...projectCreateBase,
+  schema: projectCreateBase.schema.superRefine((args, context) => {
+    if (args.kind === "audio" || args.kind === "music") {
+      for (const field of ["mode", "aspectPreset"] as const) if (args[field] !== undefined) {
+        context.addIssue({ code: "custom", path: [field], message: "音频和音乐项目不接受视频模式或画幅" });
+      }
+    }
+  }),
+};
 const projectUpdate = s.object({ id: s.id, patch: s.nonempty(s.object(s.projectFields)) });
 const projectTools = [
-  writeTool("project_create", "创建项目", "创建电影或剧集项目及首个分集，返回两个稳定 ID；后续操作须使用返回 ID。", projectCreate, () => [], async (args) => ({ state: {}, changes: changes(args) }), async (args) => {
-    const project = await repo.createProject(args.name, args.mode, args.aspectPreset);
-    return { ...rowResult("project", { ...project }), firstEpisodeId: (await repo.firstEpisode(project.id))!.id };
+  writeTool("project_create", "创建项目", "创建视频、音频或音乐项目。kind 缺省为 video；mode/aspectPreset 仅用于视频。音频种子为首章和人声轨，音乐种子为创作草稿；返回真实 ID。仅未绑定项目的对话可创建，创建不会自动绑定当前对话；音频/音乐须通过结果中的入口新开项目对话后继续编辑。", projectCreate, () => [], async (args) => ({ state: {}, changes: [
+    ...changes({ ...args, kind: args.kind ?? "video" }),
+    args.kind === "audio" ? "初始化第一章和人声轨" : args.kind === "music" ? "初始化音乐创作草稿" : "初始化首个分集",
+    "当前对话的项目归属保持不变；可从结果入口开启项目对话。",
+  ] }), async (args) => {
+    const kind = args.kind ?? "video";
+    const project = kind === "video" ? await repo.createProject(args.name, args.mode, args.aspectPreset) : await repo.createAudioMusicProject(args.name, kind);
+    const result = { ...rowResult("project", { ...project }), projectKind: kind,
+      continuation: { projectId: project.id, action: "new_project_conversation", note: "当前对话未自动绑定。使用结果卡片中的“在此项目继续创作”开启绑定项目的新对话；音频/音乐编辑需要该绑定。" } };
+    if (kind === "audio") return { ...result, firstChapterId: (await db.audioChapters.where("projectId").equals(project.id).first())!.id, firstTrackId: (await db.audioTracks.where("projectId").equals(project.id).first())!.id };
+    if (kind === "music") return { ...result, firstDraftId: (await db.musicDrafts.where("projectId").equals(project.id).first())!.id };
+    return { ...result, firstEpisodeId: (await repo.firstEpisode(project.id))!.id };
   }),
   writeTool("project_update", "修改项目资料", "修改明确项目的创作信息、梗概、世界设定、默认风格和经过验证的生成默认参数；不修改已有镜头。null 清除默认风格/封面/生成配置。", projectUpdate, (args) => [args.id], async (args) => {
     const row = await getRow("project", args.id);
