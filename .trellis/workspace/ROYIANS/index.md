@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 40
-- **Last Active**: 2026-09-21
+- **Total Sessions**: 41
+- **Last Active**: 2026-09-22
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~1027 | Active |
+| `journal-1.md` | ~1050 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 41 | 2026-09-22 | Archive delivered increments and consolidate Agent backlog | `d325988`, `25ea68e`, `32f0c07` | `main` |
 | 40 | 2026-09-21 | 品牌 Logo 更新与关于页组合标志 | `4fa7066`, `d7aecbf` | `main` |
 | 39 | 2026-09-21 | AI IP 与素材能力及工具按需加载 | `faf97ae` | `main` |
 | 38 | 2026-09-21 | 多 IP 档案与分层版本素材库落地 | `7c805d4` | `main` |
