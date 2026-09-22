@@ -1,0 +1,31 @@
+{
+  "id": "apimart-audio-music",
+  "name": "apimart-audio-music",
+  "title": "APIMart 音频与音乐生成",
+  "description": "",
+  "status": "review",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-09-22",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": "cfc3cd7",
+  "pr_url": null,
+  "subtasks": [],
+  "children": [
+    "09-22-audio-music-foundation",
+    "09-22-audio-production-workspace",
+    "09-22-music-creation-workspace",
+    "09-22-audio-music-agent-integration"
+  ],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "Current implementation committed as checkpoint cfc3cd7 at user request. Full gate 108 files / 1186 tests passed; audio manuscript verified at 1440/1024/390. Keep task for further UX refinement; not archived or deployed.",
+  "meta": {}
+}
