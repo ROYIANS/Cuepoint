@@ -1,4 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { SettingsHelpPage } from "@/components/studio/StudioHubPages";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_studio/settings")({ component: SettingsHelpPage });
+export const Route = createFileRoute("/_studio/settings")({
+  beforeLoad: () => {
+    throw redirect({ to: "/about", replace: true });
+  },
+});

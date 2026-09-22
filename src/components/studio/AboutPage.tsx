@@ -1,4 +1,13 @@
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Heart, QrCode } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   GITHUB_URL,
   LOGO_LOCKUP_SRC,
@@ -9,7 +18,7 @@ import {
 
 export function AboutPage() {
   return (
-    <div className="px-10 py-10">
+    <div className="px-5 py-8 sm:px-10 sm:py-10">
       <div className="max-w-3xl">
         <h1 className="sr-only">关于{PRODUCT_NAME_ZH}</h1>
         <img
@@ -28,6 +37,45 @@ export function AboutPage() {
           GitHub · {PRODUCT_NAME_EN}
           <ExternalLink className="size-3.5 opacity-80" aria-hidden />
         </a>
+
+        <section className="mt-10 border-y py-8" aria-labelledby="support-heading">
+          <div className="flex items-center gap-2">
+            <Heart className="size-4 text-muted-foreground" aria-hidden />
+            <h2 id="support-heading" className="font-display text-lg tracking-tight">支持小光点</h2>
+          </div>
+          <p className="text-muted-foreground mt-3 max-w-xl text-sm leading-6">
+            如果小光点帮你完成了创作，欢迎请开发者喝杯咖啡，支持项目继续打磨。感谢每一份使用、反馈与支持。
+          </p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <Button asChild>
+              <a href="https://afdian.com/a/ROYIANS" target="_blank" rel="noopener noreferrer">
+                在爱发电支持
+                <ExternalLink aria-hidden />
+              </a>
+            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline"><QrCode aria-hidden />微信赞赏码</Button>
+              </DialogTrigger>
+              <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>感谢支持小光点</DialogTitle>
+                  <DialogDescription>使用微信扫一扫，或保存图片后在微信中识别赞赏码。</DialogDescription>
+                </DialogHeader>
+                <img
+                  src="/brand/sponsor-wechat.jpg"
+                  alt="不完美小孩的微信赞赏码"
+                  width={1152}
+                  height={1152}
+                  className="h-auto w-full rounded-md"
+                />
+                <Button asChild variant="outline">
+                  <a href="/brand/sponsor-wechat.jpg" download="小光点-微信赞赏码.jpg">保存赞赏码</a>
+                </Button>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </section>
 
         <section className="mt-10 space-y-3">
           <h2 className="font-display text-lg tracking-tight">数据与隐私</h2>

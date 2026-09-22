@@ -8,6 +8,9 @@ star, spectral mountain, and reflection; do not reconstruct the mark.
 - `logo-lockup.webp`: 1254 × 1254 artwork with the Chinese and English names,
   used on the About page and reserved for larger brand placements. Use the
   symbol for small UI placements.
+- `sponsor-wechat.jpg`: user-supplied 1152 × 1152 appreciation-code artwork,
+  preserved without modification. The About page displays it in a dialog and
+  offers the original image for download; do not redraw or alter the code.
 
 WebP assets use quality 95. The supplied 1254 × 1254 symbol is resized to
 1024 × 1024 with Lanczos before deriving the PNG variants. All assets preserve

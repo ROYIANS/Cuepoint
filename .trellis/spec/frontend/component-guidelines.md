@@ -94,6 +94,8 @@ Primitives export named functions (not default exports): `Button`, `Field`, `but
 
 ## Accessibility
 
+- Studio utility navigation opens `/about` directly with the label 关于 on both desktop and mobile. The legacy `/settings` route redirects to `/about`. About owns sponsorship links and the original appreciation-code image, shown through the shared Dialog with a download link.
+
 - Interactive primitives keep `focus-visible` ring tokens (`focus-visible:ring-ring/50 focus-visible:ring-[3px]` on `Button`, `Input`, `Select`, etc.).
 - Decorative canvases / icons that must not be announced: `aria-hidden` (`ClickSpark` canvas; shell SVG in `StudioShell`).
 - Slot tiles expose an accessible name via `ariaLabel` / `title` into `GenerationSlotTile`.

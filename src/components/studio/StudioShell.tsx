@@ -7,7 +7,7 @@ import {
   Library,
   Menu,
   MessageSquare,
-  Settings2,
+  Info,
   Upload,
   UserRound,
 } from "lucide-react";
@@ -54,7 +54,7 @@ const NAV = [
 
 const UTILITIES = [
   { to: "/connectors", label: "连接与模型", icon: Cable, isActive: (path: string) => matchesPath(path, "/connectors") },
-  { to: "/settings", label: "设置与帮助", icon: Settings2, isActive: (path: string) => matchesPath(path, "/settings") || matchesPath(path, "/about") },
+  { to: "/about", label: "关于", icon: Info, isActive: (path: string) => matchesPath(path, "/about") },
 ] as const;
 
 const FOCUS = "outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
