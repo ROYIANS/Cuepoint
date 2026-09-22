@@ -16,7 +16,7 @@ Foundation and the shared job/coordinator contract from the Audio child. This or
 
 ## Validation
 
-Use the [parent gate/command plan](../09-22-apimart-audio-music/implement.md), with the explicit local pnpm path. Add meaningful tests for this child's listed acceptance behavior rather than implementation-mirroring assertions. Run focused tests and typecheck after changed code; use the integrated full gate at the final child.
+Use the [parent gate/command plan](../../../09-22-apimart-audio-music/implement.md), with the explicit local pnpm path. Add meaningful tests for this child's listed acceptance behavior rather than implementation-mirroring assertions. Run focused tests and typecheck after changed code; use the integrated full gate at the final child.
 
 - Exact wire fixtures verify Flow fields/BPM/duration and Suno custom/inspiration/instrumental/version rules without ignored cross-engine fields.
 - One, two and more-than-two results are preserved; original Suno one-based source indexes survive UI sorting.
@@ -31,4 +31,4 @@ Affected ownership: src/lib/ai/apimartAudio.ts and its focused helpers; shared g
 
 ## Integrated delivery evidence
 
-Implementation complete and in review. See [parent validation](../09-22-apimart-audio-music/validation.md) for the full automated/browser evidence and explicit live-provider/hardware limits. Final UI retains existing shadcn defaults. No Git commit/push or archive has been performed.
+Implementation complete and in review. See [parent validation](../../../09-22-apimart-audio-music/validation.md) for the full automated/browser evidence and explicit live-provider/hardware limits. Final UI retains existing shadcn defaults. No Git commit/push or archive has been performed.

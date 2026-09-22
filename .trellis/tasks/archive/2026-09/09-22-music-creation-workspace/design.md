@@ -1,6 +1,6 @@
 # APIMart Music Creation Workspace: Design
 
-The [parent design](../09-22-apimart-audio-music/design.md) is authoritative for cross-child contracts. This document identifies this child's concrete implementation boundaries.
+The [parent design](../../../09-22-apimart-audio-music/design.md) is authoritative for cross-child contracts. This document identifies this child's concrete implementation boundaries.
 
 ## Owned modules
 

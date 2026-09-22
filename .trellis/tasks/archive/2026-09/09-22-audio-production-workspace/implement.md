@@ -17,7 +17,7 @@ Foundation complete. Establish the shared generation coordinator/job contract be
 
 ## Validation
 
-Use the [parent gate/command plan](../09-22-apimart-audio-music/implement.md), with the explicit local pnpm path. Add meaningful tests for this child's listed acceptance behavior rather than implementation-mirroring assertions. Run focused tests and typecheck after changed code; use the integrated full gate at the final child.
+Use the [parent gate/command plan](../../../09-22-apimart-audio-music/implement.md), with the explicit local pnpm path. Add meaningful tests for this child's listed acceptance behavior rather than implementation-mirroring assertions. Run focused tests and typecheck after changed code; use the integrated full gate at the final child.
 
 - Complete a recording/import -> edit -> mix -> WAV export flow without Agent or API credentials.
 - Mic denial, device loss, late permission resolution and final recorder chunks are handled without leaked capture or a falsely saved take.
@@ -32,4 +32,4 @@ Affected ownership: src/components/audio/; src/lib/audio/; audio repository edit
 
 ## Integrated delivery evidence
 
-Implementation complete and in review. See [parent validation](../09-22-apimart-audio-music/validation.md) for the full automated/browser evidence and explicit live-provider/hardware limits. Final UI retains existing shadcn defaults. No Git commit/push or archive has been performed.
+Implementation complete and in review. See [parent validation](../../../09-22-apimart-audio-music/validation.md) for the full automated/browser evidence and explicit live-provider/hardware limits. Final UI retains existing shadcn defaults. No Git commit/push or archive has been performed.

@@ -2,7 +2,7 @@
 
 ## Goal
 
-Deliver the assigned portion of [the parent requirements](../09-22-apimart-audio-music/prd.md) as an independently verifiable checkpoint of the same release.
+Deliver the assigned portion of [the parent requirements](../../../09-22-apimart-audio-music/prd.md) as an independently verifiable checkpoint of the same release.
 
 ## Scope and requirements
 
@@ -31,7 +31,7 @@ Covers AC7, AC8, music portions of AC9/AC12.
 
 ## Out of scope
 
-Do not expand the [parent exclusions](../09-22-apimart-audio-music/prd.md). Other children's primary deliverables remain with their owning task; necessary shared-contract changes must be reflected in the parent design.
+Do not expand the [parent exclusions](../../../09-22-apimart-audio-music/prd.md). Other children's primary deliverables remain with their owning task; necessary shared-contract changes must be reflected in the parent design.
 
 ## Status
 

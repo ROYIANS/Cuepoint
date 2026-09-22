@@ -16,7 +16,7 @@ None. This child establishes the contracts consumed by all other children.
 
 ## Validation
 
-Use the [parent gate/command plan](../09-22-apimart-audio-music/implement.md), with the explicit local pnpm path. Add meaningful tests for this child's listed acceptance behavior rather than implementation-mirroring assertions. Run focused tests and typecheck after changed code; use the integrated full gate at the final child.
+Use the [parent gate/command plan](../../../09-22-apimart-audio-music/implement.md), with the explicit local pnpm path. Add meaningful tests for this child's listed acceptance behavior rather than implementation-mirroring assertions. Run focused tests and typecheck after changed code; use the integrated full gate at the final child.
 
 - Legacy video records and old ZIP fixtures preserve navigation and episode behavior.
 - Cross-project/chapter/source references and nonfinite/invalid timeline fields reject atomically.
@@ -39,4 +39,4 @@ Affected ownership: src/domain/types.ts and new audio/music domain modules; src/
 
 ## Integrated delivery evidence
 
-Implementation complete and in review. See [parent validation](../09-22-apimart-audio-music/validation.md) for the full automated/browser evidence and explicit live-provider/hardware limits. Final UI retains existing shadcn defaults. No Git commit/push or archive has been performed.
+Implementation complete and in review. See [parent validation](../../../09-22-apimart-audio-music/validation.md) for the full automated/browser evidence and explicit live-provider/hardware limits. Final UI retains existing shadcn defaults. No Git commit/push or archive has been performed.
