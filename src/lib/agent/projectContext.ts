@@ -2,13 +2,16 @@ import { projection } from './businessStore';
 import { db } from '@/db/database';
 import { targetRevision } from '@/lib/productionRevision';
 import type { ProjectContextSnapshot } from '@/domain/projectContext';
-import { normalizeEpisodeStory } from '@/domain/types';
+import { normalizeEpisodeStory, getProjectKind } from '@/domain/types';
+import { getAudioMusicProjectContext } from './audioProjectContext';
+import { AUDIO_TABLES } from '@/db/audioShared';
 import { toResponseInput } from '@/lib/ai/responsesStream';
 
-export const projectContextTables = () => [db.projects,db.episodes,db.characters,db.scenes,db.props,db.styles,db.shots,db.ipProfiles,db.projectIpLinks];
+export const projectContextTables = () => [db.projects,db.episodes,db.characters,db.scenes,db.props,db.styles,db.shots,db.ipProfiles,db.projectIpLinks,...AUDIO_TABLES];
 export async function getProjectContext(projectId:string):Promise<ProjectContextSnapshot>{
  return db.transaction('r',projectContextTables(),async()=>{
   const project=await db.projects.get(projectId);if(!project||projectId==='studio')throw new Error('关联项目已不存在，请在其他项目开启新对话');
+  if(getProjectKind(project)!=='video')return getAudioMusicProjectContext(project);
   const episodes=(await db.episodes.where('projectId').equals(projectId).sortBy('order'));
   const assets=(await Promise.all(([['character',db.characters],['scene',db.scenes],['prop',db.props],['style',db.styles]] as const).map(async([kind,table])=>(await table.where('projectId').equals(projectId).toArray()).map(row=>({kind,id:row.id,name:row.name,updatedAt:row.updatedAt,revision:targetRevision(row)}))))).flat();
   const shots=await db.shots.where('projectId').equals(projectId).toArray();

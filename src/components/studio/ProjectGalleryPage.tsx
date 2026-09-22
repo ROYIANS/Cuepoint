@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { db } from "@/db/database";
-import { createProject, deleteProject, renameProject, setProjectArchived } from "@/db/repo";
+import { createAudioMusicProject, createProject, deleteProject, renameProject, setProjectArchived } from "@/db/repo";
 import { formatUpdatedAt } from "@/lib/format";
 import { filterAndSortLibrary, type LibrarySort } from "@/lib/library";
 import {
@@ -89,9 +89,9 @@ export function ProjectGalleryPage() {
   const visible = useMemo(
     () => filterAndSortLibrary((projects ?? []).filter((project) => {
       const ipId = ipLinks.find((link) => link.projectId === project.id)?.ipId;
-      return Boolean(project.archivedAt) === showArchived && (ipFilter === "all" || (ipFilter === "independent" ? !ipId : ipId === ipFilter));
+      return (kindFilter === "all" || (project.kind ?? "video") === kindFilter) && Boolean(project.archivedAt) === showArchived && (ipFilter === "all" || (ipFilter === "independent" ? !ipId : ipId === ipFilter));
     }), query, sort),
-    [projects, query, sort, ipLinks, ipFilter, showArchived],
+    [projects, query, sort, ipLinks, ipFilter, showArchived, kindFilter],
   );
 
 
@@ -100,7 +100,9 @@ export function ProjectGalleryPage() {
     creatingRef.current = true;
     setSubmitting(true);
     try {
-      const project = await createProject(name.trim(), mode, aspectPreset, createIpId);
+      const project = createKind === "audio" || createKind === "music"
+        ? await createAudioMusicProject(name.trim(), createKind, createIpId)
+        : await createProject(name.trim(), mode, aspectPreset, createIpId);
       setCreating(false);
       setName("未命名项目");
       setMode("film");
@@ -143,8 +145,8 @@ export function ProjectGalleryPage() {
         {projects === undefined && <p className="text-muted-foreground py-12 text-center text-sm" role="status">加载项目中…</p>}
         {projects !== undefined && !visible.length && <div className="rounded-2xl border border-dashed px-6 py-16 text-center">
           <h2 className="text-base font-medium">{query.trim() || ipFilter !== "all" || showArchived ? "没有找到匹配的项目" : "从第一部作品开始"}</h2>
-          <p className="text-muted-foreground mt-2 text-sm">{query.trim() ? "试试其他关键词，或清除搜索。" : "视频创作已开放，其他创作形式将陆续加入。"}</p>
-          {query.trim() ? <Button className="mt-5" variant="outline" onClick={() => setQuery("")}>清除搜索</Button> : <Button className="mt-5" variant="outline" onClick={() => { setCreateKind("video"); setCreating(true); }}>新建视频项目</Button>}
+          <p className="text-muted-foreground mt-2 text-sm">{query.trim() ? "试试其他关键词，或清除搜索。" : "视频、音频与音乐创作已开放，选择类型开始制作。"}</p>
+          {query.trim() ? <Button className="mt-5" variant="outline" onClick={() => setQuery("")}>清除搜索</Button> : <Button className="mt-5" variant="outline" onClick={() => { setCreateKind(kindFilter === "all" ? "video" : kindFilter); setCreating(true); }}>新建项目</Button>}
         </div>}
         <LibraryGrid>
           {visible.map((project) => (
@@ -152,7 +154,7 @@ export function ProjectGalleryPage() {
               key={project.id}
               frame="poster"
               title={project.name}
-              subtitle={`视频 · ${profiles.find((ip) => ip.id === ipLinks.find((link) => link.projectId === project.id)?.ipId)?.name ?? "独立项目"} · ${project.archivedAt ? "已归档" : formatUpdatedAt(project.updatedAt)}`}
+              subtitle={`${PROJECT_KINDS.find((kind) => kind.id === (project.kind ?? "video"))?.label ?? "未知类型"} · ${profiles.find((ip) => ip.id === ipLinks.find((link) => link.projectId === project.id)?.ipId)?.name ?? "独立项目"} · ${project.archivedAt ? "已归档" : formatUpdatedAt(project.updatedAt)}`}
               mediaId={project.coverMediaId ?? coverOfProject(shots, project.id)}
               onOpen={() =>
                 void navigate({ to: "/p/$projectId", params: { projectId: project.id } })
@@ -204,7 +206,7 @@ export function ProjectGalleryPage() {
         <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-xl">
           <DialogHeader>
             <DialogTitle>新建项目</DialogTitle>
-            <DialogDescription>选择创作类型。视频已开放，其他类型将陆续加入。</DialogDescription>
+            <DialogDescription>选择视频、音频或音乐项目，也可以关联已有 IP。</DialogDescription>
           </DialogHeader>
           <fieldset disabled={submitting}>
             <legend className="text-sm font-medium">创作类型</legend>
@@ -228,6 +230,7 @@ export function ProjectGalleryPage() {
             onChange={(event) => setName(event.target.value)}
             placeholder="项目名称"
           />
+          {createKind === "video" && <>
           <fieldset disabled={submitting}>
             <legend className="text-sm font-medium">视频形式</legend>
             <div className="mt-2 grid grid-cols-2 gap-3">
@@ -281,8 +284,9 @@ export function ProjectGalleryPage() {
               生成模型与分辨率可在创建后的项目设定中分别配置
             </p>
           </fieldset>
+          </>}
           <div className="space-y-2"><span className="text-sm font-medium">所属 IP</span><ProjectIpPicker value={createIpId} onChange={setCreateIpId} disabled={submitting} /></div>
-          <p className="text-muted-foreground text-xs leading-5">项目类型固定为视频。可选择所属 IP，也可以独立创作。</p>
+          <p className="text-muted-foreground text-xs leading-5">项目类型创建后固定。可选择所属 IP，也可以独立创作。</p>
           </>}
           <DialogFooter>
             <Button disabled={submitting} variant="outline" onClick={() => setCreating(false)}>

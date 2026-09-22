@@ -1,4 +1,7 @@
 import { IP_TOOLS } from "./ipTools";
+import { AUDIO_TOOLS } from "./audioTools";
+import { MUSIC_TOOLS } from "./musicTools";
+import { AUDIO_GENERATION_TOOLS } from "./audioGenerationTools";
 import { MATERIAL_TOOLS } from "./materialTools";
 import { DISCOVERY_TOOLS } from "./toolLoading";
 import { WEB_TOOLS } from "./webTools";
@@ -55,6 +58,9 @@ export const BUILTIN_TOOLS: readonly AgentToolDefinition[] = [
     async execute(args, { runId, callId, signal }) { signal.throwIfAborted(); return JSON.parse(await updateRunPlanAndComplete(runId, callId, (args as { steps: AgentPlanItem[] }).steps, (args as { reason?: string }).reason)); },
   },
   ...IP_TOOLS,
+  ...AUDIO_TOOLS,
+  ...MUSIC_TOOLS,
+  ...AUDIO_GENERATION_TOOLS,
   ...MATERIAL_TOOLS,
   ...DISCOVERY_TOOLS,
   ...TASK_TOOLS,

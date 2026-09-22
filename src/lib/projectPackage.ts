@@ -1,3 +1,6 @@
+import { AUDIO_TABLES } from "@/db/audioShared";
+import { snapshotAudioPackage, parseAudioPackage, remapAudioPackage, insertAudioPackage } from "./audioProjectPackage";
+import { getProjectKind, type ProjectKind } from "@/domain/types";
 import { parseReferencePackage, remapReferencePackage } from "./references/package";
 import type {
   ProjectMemory,
@@ -102,6 +105,14 @@ function extFor(mimeType: string, filename: string): string {
   if (mimeType.includes("mp4")) return "mp4";
   if (mimeType.includes("webm")) return "webm";
   if (mimeType.includes("quicktime")) return "mov";
+  if (mimeType.startsWith("audio/")) {
+    if (mimeType.includes("wav")) return "wav";
+    if (mimeType.includes("mpeg")) return "mp3";
+    if (mimeType.includes("ogg")) return "ogg";
+    if (mimeType.includes("flac")) return "flac";
+    if (mimeType.includes("aac")) return "aac";
+    return "audio";
+  }
   if (mimeType.startsWith("video/")) return "mp4";
   return "jpg";
 }
@@ -109,6 +120,7 @@ function extFor(mimeType: string, filename: string): string {
 function mimeForFilename(filename: string): string {
   const extension = filename.split(".").pop()?.toLowerCase();
   const known: Record<string, string> = {
+    wav: "audio/wav", mp3: "audio/mpeg", ogg: "audio/ogg", opus: "audio/ogg", flac: "audio/flac", aac: "audio/aac", m4a: "audio/mp4",
     png: "image/png",
     jpg: "image/jpeg",
     jpeg: "image/jpeg",
@@ -143,6 +155,7 @@ function optionalIds(
 }
 
 const PROJECT_KEYS = [
+  "kind",
   "archivedAt",
   "brief",
   "genre",
@@ -176,7 +189,9 @@ function parseProject(
     raw.coverMediaId != null && String(raw.coverMediaId).trim()
       ? String(raw.coverMediaId)
       : undefined;
+  getProjectKind({ kind: raw.kind as ProjectKind | undefined });
   const project: Project = {
+    kind: raw.kind as ProjectKind | undefined,
     id: String(raw.id ?? createId("prj")),
     name: String(raw.name ?? fallbackName),
     archivedAt: optionalText(raw, "archivedAt"),
@@ -658,6 +673,7 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
   // Snapshot all JSON rows and referenced Blobs under one read transaction.
   // Compression happens after the transaction closes; no external awaits hold it open.
   const {
+    audioPackage,
     project,
     characters,
     scenes,
@@ -673,6 +689,7 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
   } = await db.transaction(
     "r",
     [
+      ...AUDIO_TABLES,
       db.projects,
       db.characters,
       db.scenes,
@@ -718,7 +735,9 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
         (media): media is MediaRecord =>
           media !== undefined && media.projectId === projectId,
       );
+      if (getProjectKind(project) !== "video" && mediaRecords.length !== mediaIds.size) throw new PackageError("音频项目存在缺失或归属错误的文件，请恢复文件后再备份");
       return {
+        audioPackage: await snapshotAudioPackage(projectId),
         project,
         characters,
         scenes,
@@ -747,6 +766,7 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
       2,
     ),
   );
+  if (getProjectKind(project) !== "video") zip.file("audioProject.json", JSON.stringify(audioPackage));
   zip.file("project.json", JSON.stringify(project, null, 2));
   zip.file("characters.json", JSON.stringify(characters, null, 2));
   zip.file("scenes.json", JSON.stringify(scenes, null, 2));
@@ -823,7 +843,7 @@ export async function importProjectZip(file: Blob): Promise<Project> {
       const row = asRecord(raw, "mediaMetadata.json");
       if (typeof row.id !== "string" || !row.id || /[/\\]/.test(row.id) || mediaMetadata.has(row.id)
         || row.projectId !== projectRaw.id || typeof row.filename !== "string" || !row.filename
-        || typeof row.mimeType !== "string" || !/^[a-zA-Z0-9!#$&^_.+-]+\/[a-zA-Z0-9!#$&^_.+-]+$/.test(row.mimeType)) {
+        || typeof row.mimeType !== "string" || !/^[a-zA-Z0-9!#$&^_.+-]+\/[a-zA-Z0-9!#$&^_.+-]+(?:;[a-zA-Z0-9=._ ,"+-]+)*$/.test(row.mimeType)) {
         throw new PackageError("媒体元数据无效、重复或不属于当前项目");
       }
       if (row.libraryRetained !== undefined && typeof row.libraryRetained !== "boolean") throw new PackageError("素材保留标记无效");
@@ -833,6 +853,8 @@ export async function importProjectZip(file: Blob): Promise<Project> {
   const hasEpisodes = episodesRaw.length > 0;
 
   const project = parseProject(projectRaw, "导入的项目");
+  const audioPackage = parseAudioPackage(await readJson("audioProject.json"), projectRaw.id, getProjectKind(project));
+  if (getProjectKind(project) !== "video" && (episodesRaw.length || shotsRaw.length || charactersRaw.length || scenesRaw.length || propsRaw.length || stylesRaw.length)) throw new PackageError("音频或音乐项目不能包含视频记录");
   const projectId = createId("prj");
   const at = nowIso();
   project.id = projectId;
@@ -880,6 +902,7 @@ export async function importProjectZip(file: Blob): Promise<Project> {
 
   if ([...mediaMetadata.keys()].some((id) => !mediaMap.has(id))) throw new PackageError("媒体元数据对应的文件缺失");
 
+  const remappedAudioPackage = remapAudioPackage(audioPackage, projectId, mediaMap);
   const { references, chunks: referenceChunks } = await remapReferencePackage(referencePackage, projectId, mediaMap, mediaRecords);
 
   const mapMedia = (id?: string) => (id ? mediaMap.get(id) : undefined);
@@ -944,7 +967,7 @@ export async function importProjectZip(file: Blob): Promise<Project> {
   if (project.defaultStyleId !== undefined)
     project.defaultStyleId = styleMap.get(project.defaultStyleId);
 
-  const parsedEpisodes = hasEpisodes
+  const parsedEpisodes = getProjectKind(project) !== "video" ? [] : hasEpisodes
     ? episodesRaw.map((raw, index) => parseEpisode(raw, projectId, index))
     : [synthesizeFirstEpisode(project, projectRaw)];
 
@@ -1013,6 +1036,7 @@ export async function importProjectZip(file: Blob): Promise<Project> {
     await db.transaction(
       "rw",
       [
+        ...AUDIO_TABLES,
         db.projects,
         db.characters,
         db.scenes,
@@ -1035,6 +1059,7 @@ export async function importProjectZip(file: Blob): Promise<Project> {
         if (episodes.length) await db.episodes.bulkAdd(episodes);
         if (shots.length) await db.shots.bulkAdd(shots);
         if (mediaRecords.length) await db.media.bulkAdd(mediaRecords);
+        await insertAudioPackage(remappedAudioPackage);
         if (references.length) await db.projectReferences.bulkAdd(references);
         if (referenceChunks.length) await db.referenceChunks.bulkAdd(referenceChunks);
         if (memories.length) await db.projectMemories.bulkAdd(memories);

@@ -1,3 +1,5 @@
+import { AudioWorkspacePage } from "@/components/audio/AudioWorkspacePage";
+import { MusicWorkspacePage } from "@/components/music/MusicWorkspacePage";
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useEffect, useState } from "react";
@@ -27,6 +29,7 @@ function SeriesHomeRoute() {
   useEffect(() => {
     if (
       !project ||
+      (project.kind !== undefined && project.kind !== "video") ||
       normalizeProjectMode(project.mode) !== "film" ||
       episode !== null ||
       repairing ||
@@ -41,6 +44,10 @@ function SeriesHomeRoute() {
       })
       .finally(() => setRepairing(false));
   }, [episode, project, projectId, repairError, repairing]);
+
+  if (project?.kind === "audio") return <AudioWorkspacePage key={projectId} projectId={projectId} />;
+  if (project?.kind === "music") return <MusicWorkspacePage key={projectId} projectId={projectId} />;
+  if (project?.kind !== undefined && project.kind !== "video") return <div role="alert" className="p-8">不支持的项目类型</div>;
 
   if (project && normalizeProjectMode(project.mode) === "film") {
     if (episode) {

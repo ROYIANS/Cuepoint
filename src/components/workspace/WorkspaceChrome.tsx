@@ -1,7 +1,7 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { ProjectSettingsPanel } from "./ProjectSettingsPanel";
 import { flushPendingDrafts } from "@/lib/debouncedDraft";
-import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Link, Navigate, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { ChevronLeft, Download, Library, Settings2 } from "lucide-react";
 import { useState } from "react";
@@ -24,6 +24,7 @@ import {
 import { IMAGE_ACCEPT, pickMediaFile, uploadMediaFile } from "@/lib/media";
 import { downloadBlob, exportProjectZip } from "@/lib/projectPackage";
 import { cn } from "@/lib/utils";
+import { shouldRedirectAudioMusicChild } from "@/lib/audio/workspaceRoute";
 
 const SERIES_STEPS = [
   { id: "episodes", label: "集", to: "/p/$projectId" as const, exact: true },
@@ -90,8 +91,12 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
     );
   }
 
+  const kind = project.kind ?? "video";
+  if (!["video", "audio", "music"].includes(kind)) return <div role="alert" className="p-8">不支持的项目类型</div>;
   const mode = normalizeProjectMode(project.mode);
   const projectHome = pathname === `/p/${projectId}` || pathname === `/p/${projectId}/`;
+
+  if (shouldRedirectAudioMusicChild(kind, projectId, pathname)) return <Navigate to="/p/$projectId" params={{ projectId }} replace />;
 
   if (episodeId && currentEpisode === null) {
     return (
@@ -104,7 +109,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
     );
   }
 
-  if (mode === "film" && firstProjectEpisode === null && !projectHome && pathname !== `/p/${projectId}/memory`) {
+  if (kind === "video" && mode === "film" && firstProjectEpisode === null && !projectHome && pathname !== `/p/${projectId}/memory`) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-3">
         <p>这个单片项目缺少内部集</p>
@@ -116,7 +121,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
   }
 
   const episode = currentEpisode || undefined;
-  const filmEpisode = mode === "film" ? firstProjectEpisode || undefined : undefined;
+  const filmEpisode = kind === "video" && mode === "film" ? firstProjectEpisode || undefined : undefined;
   const title = mode === "film" ? project.name : episode ? episodeLabel(episode) : project.name;
   const backToStudio = mode === "film" || !episode;
 
@@ -140,7 +145,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
   }
 
   return (
-    <div className="workspace-shell bg-background flex h-screen flex-col">
+    <div className={cn("workspace-shell bg-background flex flex-col", kind === "audio" ? "h-dvh overflow-hidden" : "h-screen")}>
       <header className="workspace-header grid min-h-14 shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-2 border-b px-3 py-2 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4">
         <div className="col-start-1 row-start-1 flex min-w-0 items-center gap-1">
           {backToStudio ? (
@@ -159,7 +164,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
           <span className="truncate text-[15px] font-medium">{title}</span>
         </div>
         <nav className="text-muted-foreground col-span-2 row-start-2 flex items-center justify-center gap-6 text-[13px] sm:col-span-1 sm:col-start-2 sm:row-start-1">
-          {filmEpisode ? (
+          {kind !== "video" ? <Link to="/p/$projectId" params={{ projectId }} className={cn("hover:text-foreground", projectHome && "text-foreground font-medium")}>{kind === "audio" ? "音频制作" : "音乐创作"}</Link> : filmEpisode ? (
             <>
               <Link
                 to="/p/$projectId/e/$episodeId"
@@ -311,7 +316,7 @@ export function WorkspaceChrome({ projectId }: { projectId: string }) {
                   </Button>
                 ) : (
                   <p className="text-muted-foreground text-xs leading-5">
-                    未设置时，项目库会用最早镜头的首帧作封面。
+                    {kind === "video" ? "未设置时，项目库会用最早镜头的首帧作封面。" : "为项目上传一张封面，方便在项目库中识别。"}
                   </p>
                 )}
               </div>

@@ -232,7 +232,14 @@ export function resolutionForAspect(preset: AspectPresetId): {
   return { width, height };
 }
 
+export type ProjectKind = "video" | "audio" | "music";
+export function getProjectKind(project: Pick<Project, "kind">): ProjectKind {
+  if (project.kind === undefined) return "video";
+  if (project.kind === "video" || project.kind === "audio" || project.kind === "music") return project.kind;
+  throw new Error("不支持的项目类型");
+}
 export interface Project {
+  kind?: ProjectKind;
   archivedAt?: string;
   defaultStyleId?: Id;
   generationDefaults?: ProjectGenerationDefaults;

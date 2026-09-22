@@ -75,6 +75,10 @@ Primitives export named functions (not default exports): `Button`, `Field`, `but
 
 ## Styling Patterns
 
+- Explicit user preference (2026-09-22): build new audio/music and other workspaces with the existing `src/components/ui/` component library and shared theme tokens. Avoid a parallel visual system for one feature.
+- Do not use decorative left-border accent strips on panels, script rows, cards or selected list items. Communicate grouping/selection with typography, spacing, neutral separators and restrained surface changes. Functional track colors and visible keyboard focus remain meaningful UI.
+- Avoid excessive nested rounded rectangles and oversized corner radii by reducing redundant card wrappers. Keep the existing shadcn Button/Input/Textarea/Select default radius, borders, shadows and focus styling; do not flatten controls into sharp rectangles or override all controls with feature-level radius rules. User clarified this explicitly on 2026-09-22. Existing application-shell geometry remains its own contract.
+
 - Tailwind v4 + CSS variables in `src/styles.css`. Merge classes with `cn` from `src/lib/utils.ts`.
 - Variants via `cva` on primitives (`buttonVariants` in `button.tsx`). Pass `className` through `cn(buttonVariants({ variant, size, className }))`.
 - Icons: `lucide-react` (e.g. `ChevronLeft` on detail back links).

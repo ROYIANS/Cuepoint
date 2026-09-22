@@ -1,3 +1,6 @@
+import type { AudioChapter, AudioSpeaker, AudioSegment, AudioTake, AudioTrack, AudioClip, AudioExport } from "@/domain/audio";
+import type { MusicDraft, MusicWork } from "@/domain/music";
+import type { AudioGenerationJob } from "@/domain/audioGeneration";
 import type { IpProfile, ProjectIpLink, LibraryMaterial, MaterialVersion, MaterialUse, MaterialEvent } from "@/domain/materials";
 import type { SearchConnection } from "@/domain/search";
 import type { GenerationBatch, GenerationBatchItem } from "@/domain/agentGenerationBatch";
@@ -28,6 +31,16 @@ import { parseShotPictureSlots } from "@/domain/slot";
 import { createId, nowIso } from "@/lib/ids";
 
 export class AifenjingDB extends Dexie {
+  audioChapters!: Table<AudioChapter, string>;
+  audioSpeakers!: Table<AudioSpeaker, string>;
+  audioSegments!: Table<AudioSegment, string>;
+  audioTakes!: Table<AudioTake, string>;
+  audioTracks!: Table<AudioTrack, string>;
+  audioClips!: Table<AudioClip, string>;
+  audioExports!: Table<AudioExport, string>;
+  musicDrafts!: Table<MusicDraft, string>;
+  musicWorks!: Table<MusicWork, string>;
+  audioGenerationJobs!: Table<AudioGenerationJob, string>;
   ipProfiles!: Table<IpProfile, string>;
   projectIpLinks!: Table<ProjectIpLink, string>;
   libraryMaterials!: Table<LibraryMaterial, string>;
@@ -228,6 +241,19 @@ export class AifenjingDB extends Dexie {
       materialVersions: "id, materialId, &[materialId+revision]",
       materialUses: "id, materialId, projectId, targetId, [materialId+projectId]",
       materialEvents: "id, materialId, createdAt",
+    });
+    this.version(23).stores({
+      projects: "id, kind, updatedAt",
+      audioChapters: "id, projectId, order",
+      audioSpeakers: "id, projectId",
+      audioSegments: "id, projectId, chapterId, speakerId, order",
+      audioTakes: "id, projectId, segmentId, mediaId",
+      audioTracks: "id, projectId, chapterId, order",
+      audioClips: "id, projectId, chapterId, trackId, takeId",
+      audioExports: "id, projectId, mediaId",
+      musicDrafts: "id, projectId",
+      musicWorks: "id, projectId, mediaId",
+      audioGenerationJobs: "id, projectId, &intentId, status, updatedAt",
     });
   }
 }

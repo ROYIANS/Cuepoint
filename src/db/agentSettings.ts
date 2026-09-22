@@ -3,7 +3,7 @@ import { GENERAL_AGENT_ID, type AgentConfig, type AgentPermissionMode } from "@/
 import { DEFAULT_SKILL_IDS, assembleSkills } from "@/lib/agent/skills";
 import { nowIso } from "@/lib/ids";
 
-const SKILL_DEFAULTS_VERSION = 2;
+const SKILL_DEFAULTS_VERSION = 3;
 
 /** May also run in the transaction that creates a run. */
 export async function getGeneralAgentConfig(): Promise<AgentConfig> {
@@ -13,8 +13,15 @@ export async function getGeneralAgentConfig(): Promise<AgentConfig> {
       // Enable the foundational creative skills once for existing installations.
       // A saved version prevents later reads from undoing the user's switch choices.
       if ((existing.skillDefaultsVersion ?? 0) < SKILL_DEFAULTS_VERSION) {
+        const version = existing.skillDefaultsVersion ?? 0;
+        let enabledSkillIds = existing.enabledSkillIds?.length === 0 ? []
+          : version < 1 ? [...DEFAULT_SKILL_IDS] : [...(existing.enabledSkillIds ?? DEFAULT_SKILL_IDS)];
+        if (enabledSkillIds.length) {
+          if (version < 2) enabledSkillIds.push("ip-management", "material-library");
+          if (version < 3) enabledSkillIds.push("audio-production", "music-creation");
+        }
         const migrated: AgentConfig = { ...existing, permissionMode: existing.permissionMode ?? "ask",
-          enabledSkillIds: (existing.skillDefaultsVersion ?? 0) < 1 ? [...DEFAULT_SKILL_IDS] : existing.enabledSkillIds?.length === 0 ? [] : [...new Set([...(existing.enabledSkillIds ?? DEFAULT_SKILL_IDS), "ip-management", "material-library"])], skillDefaultsVersion: SKILL_DEFAULTS_VERSION, updatedAt: nowIso() };
+          enabledSkillIds: [...new Set(enabledSkillIds)], skillDefaultsVersion: SKILL_DEFAULTS_VERSION, updatedAt: nowIso() };
         await db.agents.put(migrated);
         return migrated;
       }

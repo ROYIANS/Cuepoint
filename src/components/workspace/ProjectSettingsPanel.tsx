@@ -3,7 +3,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { toast } from "sonner";
 import { db } from "@/db/database";
 import { patchProjectDetails } from "@/db/repo";
-import { ASPECT_PRESET_IDS, type AspectPresetId, type Project } from "@/domain/types";
+import { getProjectKind, ASPECT_PRESET_IDS, type AspectPresetId, type Project } from "@/domain/types";
 import {
   APIMART_IMAGE_MODELS, apimartImageSizes, defaultImageGeneration, defaultVideoGeneration,
   IMAGE_EXT_VERSIONS, IMAGE_QUALITIES, IMAGE_RESOLUTIONS, isApimartImage25, isApimartImageExt,
@@ -56,13 +56,13 @@ export function ProjectSettingsPanel({ project, onOutputState }: { project: Proj
       <AssetTextField key={`${project.id}:name`} draftKey={`${project.id}:name`} projectId={project.id}
         label="项目名称" value={project.name} persist={(name) => patchProjectDetails(project.id, { name })} />
       <AssetTextField key={`${project.id}:brief`} draftKey={`${project.id}:brief`} projectId={project.id}
-        label="创作简述" value={project.brief ?? ""} multiline placeholder="想讲什么，为什么值得拍出来" persist={(brief) => patchProjectDetails(project.id, { brief })} />
+        label="创作简述" value={project.brief ?? ""} multiline placeholder="想表达什么，希望作品带来什么感受" persist={(brief) => patchProjectDetails(project.id, { brief })} />
       <details className="rounded-xl border p-4">
         <summary className="cursor-pointer text-sm font-medium">补充创作信息 <span className="text-muted-foreground text-xs font-normal">· 可选</span></summary>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           {([
             ["genre", "类型 / 题材", "如：悬疑、都市、成长"],
-            ["audience", "目标观众", "希望谁看到这部作品"],
+            ["audience", "目标观众", "希望作品面向哪些人"],
             ["tone", "叙事基调", "如：克制、温暖、荒诞"],
           ] as const).map(([field, label, placeholder]) => <AssetTextField key={`${project.id}:${field}`} draftKey={`${project.id}:${field}`}
             projectId={project.id} label={label} placeholder={placeholder} value={project[field] ?? ""}
@@ -70,6 +70,7 @@ export function ProjectSettingsPanel({ project, onOutputState }: { project: Proj
         </div>
       </details>
     </div>
+    {getProjectKind(project) === "video" && <>
     <Section title="默认视觉风格" description="镜头默认跟随这里的风格；镜头中单独选择的风格会保留。可先在世界 → 风格中建立本项目的风格。">
       <SettingSelect label="项目风格" value={project.defaultStyleId ?? "none"} disabled={styles === undefined || stylePending}
         options={[{ value: "none", label: "暂不设置" }, ...(styles ?? []).map((style) => ({ value: style.id, label: style.name || "未命名风格" }))]}
@@ -77,6 +78,7 @@ export function ProjectSettingsPanel({ project, onOutputState }: { project: Proj
       {stylePending && <p role="status" className="text-muted-foreground text-xs">正在保存风格…</p>}
     </Section>
     <ProjectOutputSettings key={project.id} project={project} onOutputState={onOutputState} />
+    </>}
   </div>;
 }
 

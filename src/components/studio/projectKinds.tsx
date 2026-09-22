@@ -5,8 +5,8 @@ export const PROJECT_KINDS = [
   { id: "video", label: "视频", icon: Clapperboard, description: "从故事、分镜到画面制作，让想法成为影像。", examples: "短片 · 剧集 · 广告 · MV", available: true },
   { id: "image", label: "图片", icon: Image, description: "围绕一个主题，创作有一致风格的图片与视觉内容。", examples: "摄影 · 插画 · 海报 · 图集", available: false },
   { id: "copy", label: "文案", icon: PenLine, description: "整理思路、打磨表达，写下属于你的内容。", examples: "文章 · 社交文案 · 剧本 · 故事", available: false },
-  { id: "podcast", label: "播客", icon: Mic2, description: "从一个话题出发，用声音分享观点与故事。", examples: "单口 · 对谈 · 访谈 · 系列节目", available: false },
-  { id: "music", label: "音乐", icon: Music2, description: "记录旋律与情绪，逐步完成歌曲和配乐。", examples: "歌曲 · 配乐 · 器乐 · 编曲", available: false },
+  { id: "audio", label: "音频", icon: Mic2, description: "组织脚本、录制声音与多轨制作，完成配音和音频作品。", examples: "配音 · 朗读 · 播客 · 声音设计", available: true },
+  { id: "music", label: "音乐", icon: Music2, description: "记录旋律与情绪，逐步完成歌曲和配乐。", examples: "歌曲 · 配乐 · 器乐 · 灵感创作", available: true },
 ] as const;
 
 export type ProjectKindOption = (typeof PROJECT_KINDS)[number];

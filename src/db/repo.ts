@@ -1,3 +1,7 @@
+import { AUDIO_TABLES, newAudioRow } from "./audioShared";
+import type { AudioChapter, AudioTrack } from "@/domain/audio";
+import { defaultMusicSettings, type MusicDraft } from "@/domain/music";
+import { getProjectKind } from "@/domain/types";
 import { assertDraftBaseline } from "@/lib/draftConflict";
 import { STUDIO_LIBRARY_ID } from "@/domain/types";
 import { getGeneralAgentConfig } from "./agentSettings";
@@ -55,6 +59,7 @@ import { createId, nowIso } from "@/lib/ids";
 
 // Media recycling must hold the same lock as every committed slot/cover writer.
 export const PRODUCTION_TABLES = [
+  ...AUDIO_TABLES,
   db.projects, db.episodes, db.characters, db.scenes,
   db.props, db.styles, db.shots, db.media, db.materialUses, db.productionProposals, db.agentGenerationJobs, db.agentGenerationBatches, db.agentGenerationBatchItems, db.projectReferences, db.referenceChunks,
 ];
@@ -290,6 +295,7 @@ export async function deleteProject(id: Id): Promise<void> {
     "rw",
     [
       db.projects,
+      ...AUDIO_TABLES,
       db.projectIpLinks, db.materialUses, db.libraryMaterials, db.materialEvents,
       db.projectReferences,
       db.referenceChunks,
@@ -306,6 +312,7 @@ export async function deleteProject(id: Id): Promise<void> {
       db.agentGenerationJobs, db.agentGenerationBatches, db.agentGenerationBatchItems,
     ],
     async () => {
+      for (const table of AUDIO_TABLES) await table.where("projectId").equals(id).delete();
       await db.projectIpLinks.delete(id);
       await db.materialUses.where("projectId").equals(id).delete();
       for (const row of await db.libraryMaterials.toArray()) {
@@ -397,6 +404,7 @@ export async function updateShotSettings(
   patch: Partial<ShotSettings>,
 ): Promise<void> {
   await db.transaction("rw", db.projects, async () => {
+    await assertVideoProject(id);
     const project = await db.projects.get(id);
     if (!project) throw new Error("项目不存在，无法保存");
     const definedPatch = Object.fromEntries(
@@ -411,6 +419,7 @@ export async function updateShotSettings(
 
 export async function updateSeriesLogline(id: Id, logline: string, baseline?: string): Promise<void> {
   await db.transaction("rw", db.projects, async () => {
+    await assertVideoProject(id);
     const project = await db.projects.get(id);
     if (!project) throw new Error("项目不存在，无法保存");
     assertDraftBaseline(normalizeSeriesStory(project.story), { logline }, baseline === undefined ? undefined : { logline: baseline });
@@ -427,6 +436,7 @@ export async function updateWorldSetting(
   baseline?: Partial<WorldSetting>,
 ): Promise<void> {
   await db.transaction("rw", db.projects, async () => {
+    await assertVideoProject(id);
     const project = await db.projects.get(id);
     if (!project) throw new Error("项目不存在，无法保存");
     assertDraftBaseline({ ...emptySetting(), ...project.setting }, patch, baseline);
@@ -449,6 +459,7 @@ export async function firstEpisode(projectId: Id): Promise<Episode | undefined> 
 
 export async function ensureFirstEpisode(projectId: Id): Promise<Episode> {
   return db.transaction("rw", db.projects, db.episodes, async () => {
+    await assertVideoProject(projectId);
     const project = await db.projects.get(projectId);
     if (!project) throw new Error("项目不存在");
     const existing = await firstEpisode(projectId);
@@ -462,6 +473,7 @@ export async function ensureFirstEpisode(projectId: Id): Promise<Episode> {
 
 export async function addEpisode(projectId: Id): Promise<Episode> {
   return db.transaction("rw", db.projects, db.episodes, async () => {
+    await assertVideoProject(projectId);
     const project = await db.projects.get(projectId);
     if (!project) throw new Error("项目不存在");
     const existing = await listEpisodes(projectId);
@@ -480,6 +492,7 @@ export async function updateEpisode(
   await db.transaction("rw", db.projects, db.episodes, async () => {
     const episode = await db.episodes.get(id);
     if (!episode) throw new Error("集不存在，无法保存");
+    await assertVideoProject(episode.projectId);
     await db.episodes.put(touch({ ...episode, ...patch }));
     await touchProject(episode.projectId);
   });
@@ -493,6 +506,7 @@ export async function updateEpisodeDraft(
   await db.transaction("rw", db.episodes, db.projects, async () => {
     const episode = await db.episodes.get(id);
     if (!episode) throw new Error("集不存在，无法保存");
+    await assertVideoProject(episode.projectId);
     const story = normalizeEpisodeStory(episode.story);
     assertDraftBaseline({ title: episode.title, logline: story.logline, script: story.script }, patch, baseline);
     const storyPatch: Partial<Pick<EpisodeStory, "logline" | "script">> = {};
@@ -577,6 +591,7 @@ function assertCompleteOrder(actualIds: Id[], orderedIds: Id[]): void {
 
 export async function reorderEpisodes(projectId: Id, orderedIds: Id[]): Promise<void> {
   await db.transaction("rw", db.episodes, db.projects, async () => {
+    await assertVideoProject(projectId);
     if (!(await db.projects.get(projectId))) throw new Error("项目不存在");
     const episodes = await db.episodes.where("projectId").equals(projectId).toArray();
     assertCompleteOrder(episodes.map((episode) => episode.id), orderedIds);
@@ -601,6 +616,12 @@ export async function collectMediaIds(projectId?: Id): Promise<Set<Id>> {
     (projectId === undefined ? db.media : db.media.where("projectId").equals(projectId)).filter((media) => media.libraryRetained === true).toArray(),
   ]);
   const ids = new Set<Id>();
+  for (const table of [db.audioTakes, db.musicWorks, db.audioExports]) {
+    const rows = await (projectId === undefined ? table : table.where("projectId").equals(projectId)).toArray();
+    for (const row of rows) ids.add(row.mediaId);
+  }
+  const audioJobs = await (projectId === undefined ? db.audioGenerationJobs : db.audioGenerationJobs.where("projectId").equals(projectId)).toArray();
+  for (const job of audioJobs) for (const result of job.results) if (result.mediaId) ids.add(result.mediaId);
   for (const use of materialUses) for (const mediaId of use.mediaIds) ids.add(mediaId);
   for (const media of retainedMedia) ids.add(media.id);
   for (const reference of references) if (reference.status !== "unavailable") ids.add(reference.mediaId);
@@ -1117,6 +1138,7 @@ export async function addStoryBeat(
   return db.transaction("rw", db.episodes, db.projects, async () => {
     const episode = await db.episodes.get(episodeId);
     if (!episode) throw new Error("集不存在");
+    await assertVideoProject(episode.projectId);
     const story = normalizeEpisodeStory(episode.story);
     const requestedRange = options?.scriptRange;
     const validRange =
@@ -1175,6 +1197,7 @@ export async function reorderBeats(episodeId: Id, orderedIds: Id[]): Promise<voi
   await db.transaction("rw", db.episodes, db.shots, db.projects, async () => {
     const episode = await db.episodes.get(episodeId);
     if (!episode) throw new Error("集不存在");
+    await assertVideoProject(episode.projectId);
     const story = normalizeEpisodeStory(episode.story);
     assertCompleteOrder(story.beats.map((beat) => beat.id), orderedIds);
     const byId = new Map(story.beats.map((beat) => [beat.id, beat]));
@@ -1208,6 +1231,7 @@ export async function duplicateBeat(
   return db.transaction("rw", PRODUCTION_TABLES, async () => {
     const episode = await db.episodes.get(episodeId);
     if (!episode) throw new Error("集不存在");
+    await assertVideoProject(episode.projectId);
     const story = normalizeEpisodeStory(episode.story);
     const sourceIndex = story.beats.findIndex((beat) => beat.id === beatId);
     if (sourceIndex < 0) throw new Error("场次不存在");
@@ -1263,6 +1287,7 @@ export async function restoreStoryBeat(
   await db.transaction("rw", PRODUCTION_TABLES, async () => {
     const episode = await db.episodes.get(episodeId);
     if (!episode) throw new Error("集不存在");
+    await assertVideoProject(episode.projectId);
     await assertAssetReferences(episode.projectId, beat);
     const story = normalizeEpisodeStory(episode.story);
     if (story.beats.some((item) => item.id === beat.id)) return;
@@ -1296,6 +1321,7 @@ export async function updateEpisodeShotFilters(episodeId: Id, patch: Partial<Sho
   await db.transaction("rw", db.episodes, db.projects, async () => {
     const episode = await db.episodes.get(episodeId);
     if (!episode) throw new Error("集不存在");
+    await assertVideoProject(episode.projectId);
     const project = await db.projects.get(episode.projectId);
     const definedPatch = Object.fromEntries(Object.entries(patch).filter(([, value]) => value !== undefined));
     const shotFilters = getEpisodeShotFilters({
@@ -1325,6 +1351,7 @@ async function assertAssetReferences(
 }
 
 async function assertShotReferences(shot: Shot): Promise<void> {
+  await assertVideoProject(shot.projectId);
   const episode = await db.episodes.get(shot.episodeId);
   if (!episode || episode.projectId !== shot.projectId) throw new Error("镜头与集不属于同一项目");
   if (shot.beatId !== undefined && !normalizeEpisodeStory(episode.story).beats.some((beat) => beat.id === shot.beatId)) throw new Error("场次不属于当前集");
@@ -1339,6 +1366,7 @@ export async function addShots(
 ): Promise<Shot[]> {
   if (count <= 0) return [];
   return db.transaction("rw", PRODUCTION_TABLES, async () => {
+    await assertVideoProject(projectId);
     const episode = await db.episodes.get(episodeId);
     if (!episode || episode.projectId !== projectId) return [];
     const project = await db.projects.get(projectId);
@@ -1422,6 +1450,7 @@ export async function patchEpisodeShots(
   await db.transaction("rw", PRODUCTION_TABLES, async () => {
     const episode = await db.episodes.get(episodeId);
     if (!episode) throw new Error("集不存在");
+    await assertVideoProject(episode.projectId);
     if (new Set(ids).size !== ids.length) throw new Error("镜头列表包含重复记录");
     const shots = await db.shots.bulkGet(ids);
     if (
@@ -1458,6 +1487,7 @@ export async function reorderShots(episodeId: Id, orderedIds: Id[]): Promise<voi
   await db.transaction("rw", db.shots, db.episodes, db.projects, async () => {
     const episode = await db.episodes.get(episodeId);
     if (!episode) throw new Error("集不存在");
+    await assertVideoProject(episode.projectId);
     const shots = await db.shots.where("episodeId").equals(episodeId).toArray();
     if (shots.some((shot) => shot.projectId !== episode.projectId)) {
       throw new Error("镜头与集不属于同一项目");
@@ -1508,6 +1538,7 @@ export async function restoreShots(shots: Shot[], media: MediaRecord[] = []): Pr
     for (const episodeId of episodeIds) {
       const episode = await db.episodes.get(episodeId);
       if (!episode) throw new Error("集不存在");
+      await assertVideoProject(episode.projectId);
       const scoped = shots
         .filter((shot) => shot.episodeId === episodeId)
         .sort((left, right) => left.order - right.order);
@@ -1576,6 +1607,7 @@ export async function deleteEpisodeShots(episodeId: Id, ids: Id[]): Promise<void
     if (ids.length === 0) return;
     const episode = await db.episodes.get(episodeId);
     if (!episode) throw new Error("集不存在");
+    await assertVideoProject(episode.projectId);
     if (new Set(ids).size !== ids.length) throw new Error("镜头列表包含重复记录");
     const shots = await db.shots.bulkGet(ids);
     if (
@@ -1792,4 +1824,30 @@ export async function bindChatThreadProject(threadId: string, projectId: string,
     if (thread.projectId || await db.agentRuns.where("threadId").equals(threadId).count() || await db.chatMessages.where("threadId").equals(threadId).count() || await db.agentTasks.where("threadId").equals(threadId).count()) throw new Error("已有对话不能切换项目，请新建对话");
     await db.chatThreads.update(threadId, { projectId, updatedAt: nowIso() });
   });
+}
+
+export async function assertVideoProject(projectId: Id): Promise<Project> {
+  const project = await db.projects.get(projectId);
+  if (!project) throw new Error("项目不存在");
+  if (getProjectKind(project) !== "video") throw new Error("此操作仅适用于视频项目");
+  return project;
+}
+
+export async function createAudioMusicProject(name: string, kind: "audio" | "music", ipId?: Id | null): Promise<Project> {
+  if (kind !== "audio" && kind !== "music") throw new Error("不支持的项目类型");
+  const project = { ...emptyProject(name), kind };
+  await db.transaction("rw", [db.projects, ...AUDIO_TABLES, db.ipProfiles, db.projectIpLinks], async () => {
+    if (ipId) {
+      const profile = await db.ipProfiles.get(ipId);
+      if (!profile || profile.archived) throw new Error("请选择未归档的 IP");
+      await db.projectIpLinks.add({ projectId: project.id, ipId, updatedAt: nowIso() });
+    }
+    await db.projects.add(project);
+    if (kind === "audio") {
+      const chapter = newAudioRow<AudioChapter>(project.id, "ach", { title: "第一章", order: 0 });
+      await db.audioChapters.add(chapter);
+      await db.audioTracks.add(newAudioRow<AudioTrack>(project.id, "atr", { chapterId: chapter.id, role: "voice", name: "人声", order: 0, gain: 1, muted: false, solo: false }));
+    } else await db.musicDrafts.add(newAudioRow<MusicDraft>(project.id, "mdr", { settings: defaultMusicSettings() }));
+  });
+  return project;
 }

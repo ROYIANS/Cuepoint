@@ -34,6 +34,7 @@
 | [Chat Performance](./chat-performance.md) | Agent transcript scroll + memo vs LobeHub virtua | Filled |
 | [AI Connectors](./ai-connectors.md) | Provider capabilities, APIMart/AIHubMix generation contracts and discovery | Filled |
 | [Hook Guidelines](./hook-guidelines.md) | Dexie liveQuery loading vs missing | Filled |
+| [Audio / Music Workspaces](./audio-music.md) | Project kinds, v23 audio records, CAS editing, generation recovery/approval, MIME and ZIP | Filled |
 | [State Management](./state-management.md) | IndexedDB owner id, episodes, STUDIO_LIBRARY_ID | Filled |
 | [IP / Material Library](./ip-material-library.md) | Multi-IP profiles, owned immutable snapshots, explicit adoption and retention | Filled |
 | [Asset / Output Foundation](./asset-output-foundation.md) | Optional metadata, prop/style relationships, media reuse and APIMart output profiles | Filled |
@@ -49,7 +50,7 @@
 - [ ] Studio asset create stays on `/characters|scenes|props|styles/$id` with `STUDIO_LIBRARY_ID`
 - [ ] Detail `useLiveQuery` uses `get(id) ?? null` so missing ids are not stuck on 加载中
 - [ ] `touchProject` no-ops for `isStudioLibrary`
-- [ ] Project landing is the episode list; story/shots/produce take `episodeId`
+- [ ] Project landing dispatches by kind: video film/series uses episodes, audio/music use their workspaces; video story/shots/produce take `episodeId`
 - [ ] Agent list scroll uses `snapChatToBottom` / `isChatNearBottom` (`src/lib/chatScroll.ts`), not `scrollIntoView` smooth
 
 ## Quality Check
@@ -57,7 +58,7 @@
 - [ ] Studio create does not open a project picker or `/p/$projectId/...`
 - [ ] `/characters/$missing` shows 找不到, not 加载中
 - [ ] Dexie v2 `props` / `styles` tables stay in `collectMediaIds` / delete cascade
-- [ ] `/p/$projectId` is the episode list; story/shots/produce live under `/p/$projectId/e/$episodeId`
+- [ ] `/p/$projectId` dispatches by kind; video story/shots/produce live under `/p/$projectId/e/$episodeId`; non-video projects never run episode repair
 - [ ] Shot queries and create/delete use `episodeId`, not the whole project table
 - [ ] Delivery exports filter by both project and episode and wait for live queries to load
 - [ ] Shot `status` defaults to draft; filters live on `Episode.shotFilters` (v6 migrates legacy project filters) (empty arrays = all)

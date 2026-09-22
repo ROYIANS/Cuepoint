@@ -21,7 +21,7 @@ function filePayload(blob: Blob, filename: string, mime: string): { kind: Materi
   const extension = filename.split('.').pop()?.toLowerCase() ?? '';
   if (['svg', 'html', 'htm', 'js', 'exe', 'xml'].includes(extension)) throw new Error('不支持此文件格式，请使用图片、视频、音频、TXT、Markdown、PDF 或 DOCX');
   const mimeType = (mime || EXT_MIME[extension] || '').toLowerCase();
-  const kind = MIME_KINDS[mimeType];
+  const kind = MIME_KINDS[mimeType.split(";")[0].trim()];
   if (!kind) throw new Error('不支持此文件格式，请使用图片、视频、音频、TXT、Markdown、PDF 或 DOCX');
   return { kind, payload: { type: 'file', blob: blob.slice(0, blob.size, mimeType), filename, mimeType } };
 }
