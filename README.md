@@ -1,84 +1,253 @@
 # 小光点 Cuepoint
 
-本地优先的影视分镜工作台：从剧本场次到镜头表、资产与制作交付，面向 AI 辅助成片的前期与中期流程。
+**本地优先的 AI 创作工作室，让故事、画面、声音和音乐在同一个项目中逐步成形。**
 
-## 能做什么
+**简体中文** · [English](README.en.md)
 
-- **工作室资产库**：角色、场景、道具、风格资产库；可快照进项目
-- **单片或连载**：电影式单集，或系列多集共用世界
-- **故事 → 分镜 → 制作**：场次与镜头编辑、状态与筛选、拖拽/键盘排序
-- **交付**：集级 CSV 导出与可打印故事板
-- **备份**：项目 ZIP 导入导出（格式 `aifenjing-project-v1`，本地 IndexedDB）
+小光点将创作助手、影视分镜、音频制作、音乐生成与可复用的 IP／素材库放在一个浏览器工作室里。你可以手动编辑，也可以让助手结合项目资料拆解任务、调用创作工具，再检查实际保存的成果。
 
-项目数据与会话保存在本机浏览器的 IndexedDB 中，无需自建后端。使用 AI 功能时，请求会发送到你配置的服务供应商。
+项目数据保存在当前浏览器的 IndexedDB 中；AI 使用你自己配置的服务和 API Key（BYOK）。应用可以作为静态网站部署，也可以直接运行提供的 Docker 镜像，不需要为 Cuepoint 配置应用数据库。
 
-## 技术栈
+> 当前可创建视频、音频和音乐项目。图片与文案的独立项目工作台仍为「即将推出」；现有视频项目内的图像生成和文本编辑已经可用。应用界面目前以中文为主，英文 README 不代表应用已提供完整英文界面。
 
-Vite · React · TypeScript · TanStack Router · Dexie · Tailwind · Vitest
+## 目录
 
-## 开发
+- [功能概览](#功能概览)
+- [第一次使用](#第一次使用)
+- [创作工作流](#创作工作流)
+- [AI 连接与模型](#ai-连接与模型)
+- [数据、隐私与备份](#数据隐私与备份)
+- [本地开发](#本地开发)
+- [部署](#部署)
+- [Umami 访问统计](#umami-访问统计)
+- [技术栈与代码结构](#技术栈与代码结构)
+- [质量检查与贡献](#质量检查与贡献)
+- [常见问题](#常见问题)
+- [文档与实现范围](#文档与实现范围)
+- [感谢](#感谢)
+- [许可](#许可)
 
-需要 Node.js 与 [pnpm](https://pnpm.io)。
+## 功能概览
+
+| 模块 | 当前能力 |
+| --- | --- |
+| 创作助手 | 流式对话、项目绑定、任务计划、工具执行、权限控制、执行记录与成果展示 |
+| 视频项目 | 单片／剧集、世界设定、故事与场次、镜头表、资产关联、画面生成与制作交付 |
+| 音频项目 | 章节与稿件、说话人和音色、语音生成、麦克风录音、音源试听、多轨剪辑、WAV 混音导出 |
+| 音乐项目 | 创作草稿、Suno／Flow Music 生成、作品试听与收藏、参数复用、下载及转入音频项目 |
+| 我的 IP | 多个长期 IP 档案、项目关联、IP 范围的素材管理 |
+| 素材库 | 图片、视频、音频、文档，以及角色／场景／道具／风格设定；版本与项目采用记录 |
+| 项目记忆 | 管理创作约定、偏好、决定和经验，保留版本与来源，按项目用于后续创作 |
+| 参考资料 | 本地解析图片、TXT／Markdown、文本 PDF 和 DOCX，供助手按需检索和阅读 |
+| 联网研究 | 配置独立 Tavily 连接后搜索网页、提取页面正文并展示来源 |
+| 交付与迁移 | 项目 ZIP 导入导出、分集 CSV、可打印分镜板、制作素材交付包、音频成品下载 |
+
+## 第一次使用
+
+1. 按[部署](#部署)运行镜像，或按[本地开发](#本地开发)启动开发服务。
+2. 在「连接与模型」中添加需要的 AI 服务，填写 Base URL 和 API Key，测试连接并查看模型。
+3. 在「项目」中新建视频、音频或音乐项目。项目可以独立存在，也可以关联「我的 IP」中的档案。
+4. 手动整理稿件和素材，或打开「创作助手」，选择连接与聊天模型，再绑定目标项目。
+5. 使用工具和生成能力时检查权限与生成配置，在相应工作台查看保存结果。
+6. 定期从项目菜单导出 ZIP。换浏览器、换设备或更换部署域名前，先备份需要迁移的项目。
+
+不使用 AI 时，无需填写 API Key 即可进行本地项目编辑、素材管理和支持的导出操作。AI 生成、聊天和联网研究需要对应服务可用。
+
+## 创作工作流
+
+### 视频：故事 → 分镜 → 制作 → 交付
+
+- **组织项目**：单片使用一个内部集；剧集支持多集共享项目设定与资产。
+- **建立设定**：维护世界观、角色、场景、道具和视觉风格；将工作室中的资产副本用于当前项目。
+- **整理故事**：编辑剧本与场次，将内容落实到具体镜头。
+- **编辑镜头**：调整镜头顺序、时长、状态、提示词及资产关系，使用筛选、拖拽和快捷操作整理镜头表。
+- **制作画面**：通过助手中的生成流程确认供应商、模型、提示词与输出目标；查看候选结果并按需采用到镜头或资产。
+- **检查交付**：在制作页查看资料与媒体缺口，导出当前集的 CSV、可打印分镜板或素材交付 ZIP。
+
+制作交付包用于移交镜头和素材；项目备份 ZIP 用于重新导入 Cuepoint。当前应用不提供完整视频时间线剪辑、转场合成或自动渲染整部影片的能力。
+
+### 音频：稿件 → 声音 → 多轨 → 成品
+
+- 按章节编写稿件，按段落分配说话人，粘贴多行稿件时拆分为段落。
+- 在音色库中配置 MiMo 预设音色、自然语言音色设计或参考声音克隆，并试听、保存为可复用的说话人配置。
+- 为稿件生成配音，或导入音频、通过麦克风录制音源。录音由用户操作触发，需要浏览器权限。
+- 保留不同音源版本，试听后选择使用的版本并加入时间线。
+- 进行多轨排列、移动、裁切、分割、复制、增益与淡入淡出调整，使用静音／独奏检查混音。
+- 导出当前章节或完整项目的 WAV，并在导出记录中区分历史成品与当前编辑状态。
+
+新配音默认走 MiMo 配置；已有 APIMart 配音配置仍可使用。音乐作品可以明确加入音频项目，作为新的音源继续编排。
+
+### 音乐：创作草稿 → 生成版本 → 作品库
+
+- 在草稿中填写音乐描述、歌词、风格等参数，按引擎选择简单、自定义或 Flow 创作形式。
+- 通过 APIMart 提交 Suno／Flow Music 任务，保留供应商任务标识和生成结果。
+- 在作品库中搜索、试听、收藏和下载作品，复用已有作品的参数创建新草稿。
+- 将作品保存到素材库，或加入音频项目进一步编辑。
+
+可用模型、参数、账户权限、额度和收费由供应商决定。供应商完成生成、音频下载到本地和用户试听是不同步骤。
+
+### 助手：围绕项目执行并核对成果
+
+助手可以结合绑定项目、参考资料和项目记忆，组织计划、读取项目、编辑创作数据，并调用已启用的生成或研究工具。普通对话与工具执行模式有明确区分；工具能力和权限会影响它能完成的操作。
+
+| 权限模式 | 行为 |
+| --- | --- |
+| 请求批准 | 编辑业务数据或使用互联网工具前询问 |
+| 帮我批准 | 常规操作自动执行，高风险操作和付费生成询问 |
+| 完全访问 | 自主执行已启用工具；付费生成仍需确认配置 |
+
+执行记录展示工具调用、待处理操作、停止原因和实际写入结果。生成流程会保留任务和候选结果；用户可以检查、采用和继续处理，模型的一句「完成」不替代工作台中的实际成果。
+
+项目记忆可以手动维护，也可以从已确认的任务总结中提炼。参考文档在浏览器本地提取文本；选中的内容或图片会在相关 AI 请求中发送给所选供应商。扫描 PDF 没有 OCR 保证，图片理解需要所选模型具备相应能力。
+
+### IP 与素材复用
+
+IP 是长期创作身份或世界设定的组织方式，不是另一种项目类型。素材可以属于全局、某个 IP 或某个项目。项目采用素材时创建项目拥有的副本，并记录采用版本；共享素材新增版本不会悄悄替换已经使用的画面或设定。
+
+## AI 连接与模型
+
+连接保存在工作室范围，不必为每个项目重复填写密钥。聊天模型在助手中选择，生成模型与参数在对应生成流程中确认。
+
+| 连接 | 当前项目中的用途 |
+| --- | --- |
+| OpenAI 兼容 | 连接兼容聊天接口的服务、代理或本地网关 |
+| DeepSeek | 使用预设入口配置兼容聊天服务 |
+| APIMart | 聊天、图像／视频生成，以及音频／音乐相关适配 |
+| AIHubMix | 聊天、图像／视频生成 |
+| MiMo | 聊天、语音合成、音色设计与声音克隆 |
+| Tavily（独立搜索连接） | 助手网页搜索与页面正文提取 |
+
+模型列表与能力提示来自供应商信息及项目内的 Model Bank 快照，不能代替账户权限检查。「获取模型」也不一定意味着密钥已通过验证；连接测试、公开模型查询和真实生成是不同操作。
+
+通用 OpenAI 兼容连接测试优先读取模型列表；接口不支持或遇到部分网络错误时，可能使用最小聊天请求进行探测，因此可能产生少量供应商用量。专用连接器按各自协议测试。
+
+浏览器直接访问供应商，因此服务必须允许相应的跨域请求（CORS）。如果需要代理，请配置自己的兼容网关；当前仓库不提供应用后端代理。使用 HTTPS 网站时，模型入口也应支持 HTTPS。
+
+## 数据、隐私与备份
+
+### 数据存放在哪里
+
+| 数据／操作 | 位置或去向 |
+| --- | --- |
+| 项目、稿件、镜头、素材、音频、会话、任务和记忆 | 当前浏览器的 IndexedDB，部分界面偏好使用本地存储 |
+| AI 连接与搜索密钥 | 当前浏览器本地；发送请求时用于对应供应商认证 |
+| AI 对话、生成描述、选用的参考文字／图片／音频 | 使用相关功能时发送给已配置的服务 |
+| 网页研究查询与待提取 URL | 使用研究工具时发送给 Tavily |
+| 网站资源 | 从部署站点加载；页面也会请求 Google Fonts |
+| 可选访问统计 | 仅在生产构建配置 Umami 后发送标准页面访问数据 |
+
+「本地优先」指项目存储架构，不代表所有功能离线，也不代表浏览器存储是系统钥匙串。当前没有内置的账号登录、跨设备自动同步或多人实时协作服务。
+
+数据按浏览器配置文件和站点来源隔离。更改域名、协议或端口，换浏览器、使用隐私窗口或清理站点数据，都可能使原来的项目不可见或丢失。服务器容器与数据卷不会替你备份访问者浏览器中的项目。
+
+### 项目 ZIP 的范围
+
+从项目菜单导出，在工作室侧栏通过「导入项目」恢复。当前包格式标识为 `aifenjing-project-v1`，保留历史命名以兼容已有备份。
+
+| 包含 | 不包含 |
+| --- | --- |
+| 项目设置、视频的集与镜头、项目拥有的角色／场景／道具／风格 | AI 连接和 API Key、Tavily 密钥 |
+| 项目引用并保留的媒体、参考资料与文本块 | 完整 Agent 会话、执行账本和任务历史 |
+| 项目记忆及版本历史 | 整个工作室的 IP 档案和全部共享素材库 |
+| 音频／音乐项目记录及其相关媒体 | 尚未被项目采用的工作室素材快照 |
+
+导入会创建独立的项目与资源标识。导入的记忆需要复核，历史生成任务不会因为导入而自动重新提交付费请求。项目 ZIP 是项目迁移与备份方式，不是整个浏览器工作室的完整镜像。
+
+## 本地开发
+
+### 环境准备
+
+使用与 CI 一致的 **Node.js 22** 环境。包管理器版本以 [`package.json`](package.json) 的 `packageManager` 为准，当前为 **pnpm 10.15.0**。在已有开发环境中遵循仓库 [`AGENTS.md`](AGENTS.md) 及本机包管理器约定，避免混用版本重建依赖。
 
 ```bash
-pnpm install
+git clone https://github.com/ROYIANS/Cuepoint.git
+cd Cuepoint
+corepack enable
+pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-| 命令 | 说明 |
+打开终端显示的开发地址，通常为 `http://localhost:5173`。基本启动不需要 `.env` 文件，也不需要数据库、Redis 或服务端 AI 密钥。
+
+### 常用命令
+
+| 命令 | 作用 |
 | --- | --- |
-| `pnpm dev` | 本地开发 |
-| `pnpm build` | 生产构建 |
-| `pnpm preview` | 预览构建结果 |
-| `pnpm test` | 单元测试 |
-| `pnpm lint` | TypeScript 检查 |
+| `pnpm dev` | 启动 Vite 开发服务 |
+| `pnpm build` | 生成 `dist/` 生产静态文件 |
+| `pnpm preview` | 本地预览生产构建 |
+| `pnpm lint` | 运行 `tsc -b`，即 TypeScript 类型检查 |
+| `pnpm test` | 运行完整 Vitest 测试集 |
+| `pnpm exec vitest run tests/umami.test.ts` | 运行指定测试文件 |
+| `pnpm model-bank:verify` | 校验供应商模型快照与生成数据 |
+| `pnpm model-bank:compare` | 当前与快照校验命令相同 |
+| `pnpm model-bank:sync /path/to/lobehub` | 从本地 LobeHub checkout 同步快照并生成数据；复核差异与许可 |
 
 ## 部署
 
-镜像发布在 [GHCR](https://github.com/ROYIANS/Cuepoint/pkgs/container/cuepoint)：`ghcr.io/royians/cuepoint`。
+### 使用 Docker Compose
 
-推送到 `main` 会打 `latest`；打 `v*` 标签会再推 semver。仓库需开启 Actions 写 Packages 权限（Settings → Actions → General → Workflow permissions → Read and write）。
+镜像：`ghcr.io/royians/cuepoint`，查看 [GHCR 包页面](https://github.com/ROYIANS/Cuepoint/pkgs/container/cuepoint)。获取仓库中的 [`docker-compose.yml`](docker-compose.yml) 后，在它所在的目录运行：
 
 ```bash
-# 私有包需要登录；公开包可跳过
-echo "$GITHUB_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
+# 仅在镜像包为私有时需要登录
+printf '%s' "$GITHUB_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
 
 docker compose pull
 docker compose up -d
 ```
 
-浏览器打开 http://localhost:8080 。数据仍在访问者浏览器的 IndexedDB，容器里不存项目和密钥。
+打开 `http://localhost:8080`。Compose 将主机 `8080` 端口映射到容器 Nginx 的 `80` 端口，并配置 `unless-stopped` 重启策略。对外提供 HTTPS 时，在站点前配置 TLS 反向代理；录音功能需要 HTTPS 或本机安全上下文。
 
-本机构建（不拉 GHCR）：
+更新镜像仍使用 `docker compose pull` 和 `docker compose up -d`。如需固定发布版本，可将 Compose 的 `latest` 标签改为已发布的版本号。
+
+### 本地构建镜像
 
 ```bash
 docker build -t ghcr.io/royians/cuepoint:latest .
 docker compose up -d
 ```
 
-### Umami analytics (optional)
+Dockerfile 先在 Node 构建阶段安装锁定依赖、构建前端，再将 `dist/` 放入 Nginx 镜像。运行阶段不需要 Node 或应用数据库。项目数据不保存在容器里。
 
-Connect an existing Umami instance by opening **GitHub repository → Settings → Secrets and variables → Actions → Variables** and adding these repository variables:
+### 静态托管
 
-| Repository variable | Value from the Umami website's tracking code |
+运行 `pnpm build` 后部署 `dist/`。托管服务必须支持 SPA 回退：实际文件不存在时返回 `index.html`，否则直接打开或刷新项目详情地址会出现 404。当前路由和资源按站点根路径部署，子目录托管需要另行调整与验证。
+
+仓库的 [`deploy/nginx.conf`](deploy/nginx.conf) 已配置路由回退、gzip、静态资源缓存和入口 HTML 的重新校验。`pnpm preview` 用于本地验收，生产托管应使用正式静态服务器或平台。
+
+### GitHub Actions 发布
+
+[发布工作流](.github/workflows/ghcr.yml) 在 `main` 推送、`v*` 标签、面向 `main` 的 PR 和手动触发时运行。质量任务执行锁定依赖安装、类型检查、测试、模型快照校验和生产构建；镜像发布依赖质量任务成功，PR 不发布镜像。
+
+默认分支发布 `latest`，版本标签产生 semver 标签，镜像同时带提交 SHA 标签。工作流使用 `GITHUB_TOKEN`，发布任务声明 `packages: write` 权限；仓库或组织策略需要允许该权限。
+
+Fork 到自己的仓库时，需同步修改工作流中的固定镜像地址和 Compose／本地构建命令中的标签。
+
+## Umami 访问统计
+
+接入已有 Umami 即可，无需在 Compose 中新增统计服务或环境变量。
+
+### 在 GitHub 配置
+
+进入 **仓库 → Settings → Secrets and variables → Actions → Variables**，添加两个 Repository variables：
+
+| 变量 | 内容 |
 | --- | --- |
-| `VITE_UMAMI_SCRIPT_URL` | The full script `src`, for example `https://analytics.example.com/script.js` |
-| `VITE_UMAMI_WEBSITE_ID` | The `data-website-id` for this website |
+| `VITE_UMAMI_SCRIPT_URL` | Umami 追踪代码中的完整 `src`，如 `https://analytics.example.com/script.js` |
+| `VITE_UMAMI_WEBSITE_ID` | 同一追踪代码中的 `data-website-id` |
 
-Use the exact script URL from Umami, including any custom script filename. Use HTTPS when Cuepoint is served over HTTPS. Both values are public and embedded in the browser bundle; never put an Umami admin password or API token here.
+必须同时填写，脚本地址支持完整 HTTP(S) URL；HTTPS 网站请使用 HTTPS 脚本。这些值会公开嵌入前端，使用 Variables 即可，不要填写管理员密码或 API Token。
 
-After setting or changing the variables, run **Actions → Quality checks and GHCR image → Run workflow** on `main` (or push to `main`). Wait for the image publication to finish, then update your deployment:
+保存后，在 `main` 上运行 **Actions → Quality checks and GHCR image → Run workflow**，或推送新提交。等待镜像发布成功，再在服务器拉取并重建容器。
 
-```bash
-docker compose pull
-docker compose up -d
-```
+配置在**构建时**生效。只修改 GitHub 变量或给已有容器添加环境变量不会改变旧镜像。关闭统计时，清空任意一个变量，重新构建发布并部署。
 
-The workflow passes the variables to both the production build and Docker build. Docker Compose needs no analytics configuration. These are **build-time** values: changing repository variables or adding container environment variables does not update an already-built image. To disable analytics, clear either repository variable, rebuild/publish, then pull and recreate the container.
+### 本地构建与验证
 
-Tracking runs only in production builds and only when both values are present. The script loads asynchronously once; Umami automatically tracks SPA page navigation. This integration adds no custom business events and sends no project contents, prompts, or provider credentials. Umami's standard pageview metadata includes the page URL, title, and referrer. See the official [tracker configuration](https://docs.umami.is/docs/tracker-configuration) and [SPA guide](https://docs.umami.is/docs/guides/track-single-page-apps).
+本地生产构建可复制 [`.env.example`](.env.example) 为 `.env.local`，填写两个值后运行 `pnpm build`、`pnpm preview`。`pnpm dev` 不加载统计。
 
-For local production builds, copy [`.env.example`](.env.example) to `.env.local`, fill both values, and run `pnpm build` followed by `pnpm preview`. `pnpm dev` does not load the tracker. Local environment files are excluded from Git and Docker build contexts; local Docker builds receive values explicitly:
+本地环境文件不会进入 Git 或 Docker 构建上下文；Docker 构建需显式传参：
 
 ```bash
 docker build \
@@ -88,7 +257,106 @@ docker build \
 docker compose up -d
 ```
 
-To verify a deployment, open browser DevTools → Network, confirm the configured script loads, then navigate between pages and check for successful requests to Umami's collection endpoint (normally `/api/send`). Confirm visits appear under the matching website in Umami. Content blockers can prevent the tracker from loading.
+脚本异步加载一次，由 Umami 处理 SPA 页面跳转。当前接入不添加业务事件，也不主动附带项目正文、提示词或供应商密钥；标准访问数据仍包含页面 URL、标题和来源等信息。
+
+部署后在浏览器 Network 中确认脚本加载，切换页面检查采集请求（通常为 `/api/send`），再在对应 Umami 网站中查看访问。内容拦截器可能阻止统计。行为参考 [Umami 配置文档](https://docs.umami.is/docs/tracker-configuration)与 [SPA 指南](https://docs.umami.is/docs/guides/track-single-page-apps)。
+
+## 技术栈与代码结构
+
+| 层 | 技术与职责 |
+| --- | --- |
+| 前端 | React 19、TypeScript、Vite 7 |
+| 路由 | TanStack Router 文件路由与自动代码拆分 |
+| 本地数据 | Dexie／IndexedDB、`dexie-react-hooks` 实时查询 |
+| 界面 | Tailwind CSS 4、Radix UI、Ant Design、Lobe UI、Lucide、Motion |
+| AI | 浏览器端供应商适配、Agent 工具运行时、Model Bank 元数据 |
+| 文档与媒体 | PDF.js、Mammoth、JSZip、Web Audio、MediaRecorder |
+| 验证与部署 | Vitest、fake-indexeddb、TypeScript、GitHub Actions、Docker／Nginx |
+
+```text
+src/
+├── routes/                 # 工作室和项目文件路由
+├── components/
+│   ├── studio/             # 导航、项目、IP、素材、连接
+│   ├── agent/              # 对话、任务、参考资料、执行与成果展示
+│   ├── story/ & shots/     # 故事与镜头编辑
+│   ├── assets/ & produce/  # 设定资产、制作检查与交付
+│   ├── audio/ & music/     # 音频和音乐工作台
+│   ├── memory/             # 项目记忆管理
+│   └── ui/                 # 通用界面组件
+├── db/                     # 数据库版本、持久化读写与事务边界
+├── domain/                 # 项目、Agent、音频、音乐等类型与规则
+└── lib/
+    ├── ai/                 # 模型目录、协议和供应商客户端
+    ├── agent/              # 工具、上下文、执行和生成流程
+    ├── audio/              # 录音、播放、剪辑、混音和 WAV
+    ├── audioGeneration/    # 音频／音乐生成任务运行时
+    └── references/         # 资料导入、解析与打包
+public/brand/               # 产品标识与图标
+tests/                      # 单元与数据层／运行时测试
+vendor/lobehub/             # Model Bank 上游快照与许可
+scripts/                    # 模型快照维护
+deploy/                     # Nginx 配置
+.github/workflows/          # 质量门禁与镜像发布
+docs/                       # 产品和架构规划
+.trellis/                   # 开发规范、任务与会话记录
+```
+
+## 质量检查与贡献
+
+开始修改前阅读 [`AGENTS.md`](AGENTS.md) 和相关 [Trellis 开发规范](.trellis/spec/frontend/index.md)。项目数据写入通过 `src/db/` 中的仓储函数和事务完成；新增功能应保持项目归属、版本冲突检查和导入导出兼容。
+
+提交前按改动范围验证，完整发布门禁为：
+
+```bash
+pnpm lint
+pnpm test
+pnpm model-bank:verify
+pnpm build
+```
+
+`lint` 当前是类型检查，不是 ESLint。测试以纯逻辑、数据层和运行时为主；录音、浏览器跨域、实际模型质量及付费生成还需要独立的真实环境验证。请在变更说明中区分模拟测试和真实供应商验证，并保留第三方许可与快照来源。
+
+## 常见问题
+
+**换地址后为什么项目不见了？**
+
+浏览器按来源隔离数据，`http://localhost:8080` 与正式 HTTPS 域名不是同一个数据库。回原地址导出项目 ZIP，再到新地址导入。
+
+**关闭页面后，助手还能继续工作吗？**
+
+浏览器内的多步执行不会在关页后作为后台服务持续运行。已提交到供应商的异步生成可能继续，重新打开后可根据本地任务记录查询或恢复后续处理；停止本地等待不等于取消远端生成或收费。
+
+**配置好 Key，为什么还是连接失败？**
+
+检查 Base URL、模型权限、余额、HTTPS 和 CORS。公开模型目录可访问并不能证明 Key 有效。应用没有内置代理，需由供应商允许浏览器访问，或使用你自己的兼容网关。
+
+**为什么图片／文案项目无法创建？**
+
+这两类独立工作台尚未开放。视频项目里的图片生成、剧本和提示词编辑不受此限制。
+
+**为什么录音不可用？**
+
+检查是否通过 HTTPS 或 localhost 访问、浏览器是否支持 MediaRecorder、是否允许麦克风，以及设备是否可用。
+
+**项目 ZIP 能恢复整个工作室吗？**
+
+不能。它不包含完整聊天历史、全局连接、全部 IP 或整个素材库，具体范围见[备份说明](#项目-zip-的范围)。
+
+**改了 Umami 变量为什么没有统计？**
+
+需要重新构建和部署镜像，同时填写脚本地址与 Website ID；本地开发不启用统计。还需检查脚本是否被拦截、HTTPS 是否匹配，以及 Umami 中的网站是否对应。
+
+## 文档与实现范围
+
+- [产品与架构文档索引](docs/README.md)：包含早期方向记录，部分规划不代表当前已实现。
+- [AI 连接器设计](docs/product/ai-connectors.md)：连接和协议适配的背景。
+- [影视 Agent 工作流](docs/product/film-agent-workflow.md)：任务与工作流设计。
+- [运行时选项](docs/architecture/runtime-options.md)：静态 Web、可选代理、桌面和同步方案的讨论。
+- [前端开发规范](.trellis/spec/frontend/index.md)：代码约定及具体模块契约。
+- [第三方声明](THIRD_PARTY_NOTICES.md)：依赖、数据快照和文档解析器许可。
+
+当前交付形态是浏览器静态应用。桌面壳、原生 MCP、服务器后台 Agent、跨设备自动同步和多人实时协作不属于已实现能力；功能范围应以当前代码和可操作界面为准。
 
 ## 感谢
 
