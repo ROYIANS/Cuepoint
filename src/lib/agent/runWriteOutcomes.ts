@@ -33,7 +33,7 @@ export interface RunWriteOutcomes {
 }
 
 /** Saved tool receipts describe historical direct effects, never the current state or goal completion. */
-export function describeRunWrites(run: Pick<AgentRun, "id" | "threadId" | "projectId">, calls: readonly AgentToolCall[]): RunWriteOutcomes {
+export function describeRunWrites(run: Pick<AgentRun, "id" | "threadId" | "projectId" | "createdProjectBinding">, calls: readonly AgentToolCall[]): RunWriteOutcomes {
   const entries: RunWriteOutcome[] = [];
   const counts = new Map<string, number>();
   const seenCalls = new Set<string>();
@@ -58,7 +58,7 @@ export function describeRunWrites(run: Pick<AgentRun, "id" | "threadId" | "proje
       if (seenEntries.has(identity)) return false;
       seenEntries.add(identity);
       if (!permitsEntry(call.name, entry) || (run.projectId && entry.ownerId !== run.projectId)) return false;
-      if (call.name === "project_create" && (run.projectId || typeof result?.id !== "string" || entry.ownerId !== result.id)) return false;
+      if (call.name === "project_create" && ((run.projectId && (run.createdProjectBinding?.projectId !== run.projectId || run.createdProjectBinding.callId !== call.id)) || typeof result?.id !== "string" || entry.ownerId !== result.id)) return false;
       if (entry.kind === "project" && entry.ownerId !== entry.id) return false;
       return entry.operation === "deleted" || entry.revision !== undefined;
     });

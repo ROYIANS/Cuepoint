@@ -10,7 +10,8 @@ source of current facts. Durable memory retrieval uses a separate layer describe
   intentionally remain projectless. `AgentTask.projectId: Id` is required.
 - `createChatThread({ projectId?, taskMode?, ... })`; Task mode requires a real project.
 - `bindChatThreadProject(threadId, projectId, expectedProjectId?)`: CAS, once, before
-  messages/runs exist. Bound chats cannot move to another project.
+  messages/runs exist. Bound chats cannot move to another project. The narrow Agent
+  creation exception below does not relax this general API.
 - `createAgentTask({ projectId, title, goal, ... })`; AI/manual task-from-thread inherits
   the thread binding; model arguments cannot select a different owner.
 - `getProjectContext(projectId): Promise<ProjectContextSnapshot>` with projectId, name,
@@ -59,11 +60,41 @@ compaction checks project existence/binding before each POST and before activati
 no late response can activate a summary after deletion. UI is read-only, including old
 approval/generation/recovery controls. No automatic reassignment or compatibility flow.
 
+### One-time continuation into a newly created project
+
+`project_create` accepts `continueInProject?: boolean` (default true). The preview discloses
+binding the current conversation; explicit false creates only and retains the separate-chat
+entry. A dedicated repository guard permits only the latest ordinary smart, unbound run.
+Create the project and seeds, set both thread/run projectId, record
+`createdProjectBinding: { projectId, callId }`, and persist the completed tool receipt in
+one transaction. Rollback leaves neither project nor binding. Never bind to a model-supplied
+existing project or move an already bound thread. A changed creation-contract revision
+invalidates old previews prepared under create-only semantics.
+
+Before auto-binding, reject active references pinned to the old scope, completed sibling
+reference results not yet appended to continuation, preceding foreign writes/unresolved
+effects and existing generation jobs/batches owned by the thread (including earlier runs).
+Report the explicit create-only path without silently changing
+scope or stripping references. Replaying the exact completed creation returns its saved
+result, not another project. Validate ownership and input identity before that replay.
+
+Original dispatched requests, preceding runs and offered-tool histories stay immutable.
+The next settled boundary supplies new project facts and memory. Only an already enabled
+matching sound group may preload; no disabled capability is granted by binding. Re-read
+current durable scope before subsequent calls, including siblings in the creation round;
+pre-binding approvals cannot authorize mutations outside the new project. Existing paid
+confirmation, Stop, unknown-effect and request-budget behavior remains unchanged.
+
+Result UI checks the code-owned origin plus current thread/run binding before saying the
+project is associated with this conversation. Legacy/create-only results retain their
+separate-chat entry. Creation receipts remain valid for this exact origin call after
+binding; other bound project_create results do not gain a general exception.
+
 ## 4. Validation & Error Matrix
 | Condition | Expected behavior |
 | --- | --- |
 | Task mode without project / studio as project | Reject before messages or run creation |
-| Existing binding, messages or run on bind | Reject; start a new conversation |
+| General bind with existing binding, messages or run | Reject; dedicated new-project creation is the only in-run exception |
 | Stale project picker/model probe | Refuse stale send; preserve draft |
 | Foreign project/studio write | Reject before effects; explicit studio copy allowed |
 | Unchanged visible snapshot | Refresh fingerprint without another model message |

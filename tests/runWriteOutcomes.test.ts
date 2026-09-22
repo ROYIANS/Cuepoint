@@ -47,6 +47,10 @@ describe("direct-write receipt evidence", () => {
     const creation = call({ name: "project_create", result: JSON.stringify({ id: "new-project", writeReceipt: createWriteReceipt([entry({ kind: "project", id: "new-project", ownerId: "new-project" }), entry({ kind: "episode", id: "episode", ownerId: "new-project" })]) }) });
     expect(describeRunWrites({ ...run, projectId: undefined }, [creation]).total).toBe(2);
     expect(describeRunWrites(run, [creation]).total).toBe(0);
+    const bound = { ...run, projectId: "new-project", createdProjectBinding: { projectId: "new-project", callId: creation.id } };
+    expect(describeRunWrites(bound, [creation]).total).toBe(2);
+    expect(describeRunWrites({ ...bound, createdProjectBinding: { projectId: "new-project", callId: "foreign-call" } }, [creation]).total).toBe(0);
+    expect(describeRunWrites({ ...bound, createdProjectBinding: { projectId: "foreign-project", callId: creation.id } }, [creation]).total).toBe(0);
   });
   it("bounds displayed entries but discloses exact remaining operation coverage", () => {
     const rows = Array.from({ length: 80 }, (_, i) => call({ id: `call-${i}`, step: i, result: result([entry({ id: `shot-${i}` })]) }));

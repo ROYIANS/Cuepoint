@@ -94,14 +94,16 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
     controller.signal.throwIfAborted();
     const call = await db.agentToolCalls.get(saved.id);
     if (!call || ["completed", "failed", "rejected"].includes(call.status)) continue;
-    const { tool, args } = validateToolCall(call.name, effectiveToolInput(call).arguments, toolNamesForCall(run, call.step), registry);
+    const currentRun = await db.agentRuns.get(run.id);
+    if (!currentRun || currentRun.status !== "running") throw new Error("执行已停止");
+    const { tool, args } = validateToolCall(call.name, effectiveToolInput(call).arguments, toolNamesForCall(currentRun, call.step), registry);
     if (tool.effect !== call.effect || tool.highRisk(args) !== call.highRisk || Boolean(tool.atomic) !== Boolean(call.atomic) || tool.recovery !== call.recovery || Boolean(tool.requiresConfirmation) !== Boolean(call.requiresConfirmation)) throw new Error("工具定义已变化，请结束本次执行后重新发起任务");
     // Recheck permission immediately before the claim. A global setting cannot change this run's mode.
     if (requiresToolApproval(run.permissionMode ?? "ask", tool, args) && call.status !== "approved") throw new Error("工具尚未获得批准");
     if (!await transitionToolCall(run.id, call.id, ["pending", "approved"], "running")) throw new Error("工具已被其他执行领取");
     controller.signal.throwIfAborted();
     try {
-      const value = await tool.execute(args, { projectId: run.projectId, runId: run.id, threadId: run.threadId, callId: call.id, signal: controller.signal, preview: effectiveToolInput(call).preview });
+      const value = await tool.execute(args, { projectId: currentRun.projectId, runId: run.id, threadId: run.threadId, callId: call.id, signal: controller.signal, preview: effectiveToolInput(call).preview });
       const result = JSON.stringify(value);
       if (result === undefined || result.length > 65_536) throw new Error("工具结果无效或超过大小限制");
       // Save a known completed result even if Stop was clicked while the operation settled.

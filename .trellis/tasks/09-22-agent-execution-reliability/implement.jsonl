@@ -2,3 +2,5 @@
 {"file": ".trellis/spec/frontend/agent-activity-ui.md", "reason": "Process UI and truthful states"}
 {"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Approval and ownership"}
 {"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Required verification"}
+{"file": ".trellis/spec/frontend/agent-project-context.md", "reason": "One-time created-project binding and immutable historical requests"}
+{"file": ".trellis/tasks/09-22-agent-execution-reliability/research/creation-continuity.md", "reason": "Scope transition risks and regression cases"}

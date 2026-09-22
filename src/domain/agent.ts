@@ -125,6 +125,8 @@ export interface AgentRun {
   memoryAudit?: MemoryDispatchAudit[];
   projectId?: Id;
   projectContext?: ProjectContextSnapshot;
+  /** Code-owned one-time creation origin; original request/history remain immutable. */
+  createdProjectBinding?: { projectId: Id; callId: Id };
   /** Frozen task-intake eligibility; never inferred from model arguments. */
   taskMode?: boolean;
   context?: ContextSnapshot;

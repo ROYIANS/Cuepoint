@@ -85,9 +85,11 @@ export async function refreshRunToolLoading(runId: string): Promise<AgentRun> {
   return db.transaction("rw", [db.agentRuns, db.agentToolCalls], async () => {
     const run = await db.agentRuns.get(runId);
     if (!run || run.status !== "running") throw new Error("执行已停止");
-    if (!run.toolLoading) return run;
+    if (!run.toolLoading && !run.createdProjectBinding) return run;
     if ((await db.agentToolCalls.where("runId").equals(runId).toArray()).some((call) => !settled(call))) throw new Error("请先处理工具步骤，再切换能力");
-    const skillInstructions = toolLoadingInstructions(run.toolLoading);
+    const bindingNotice = "当前执行已通过创建项目工具一次性绑定新项目。请以最新项目事实与创建结果中的真实 ID 在同次执行继续用户要求的创作；不需要新开对话或请用户再次发送开始。此说明取代旧技能中创建后必须新开项目对话的指引。原有付费确认、权限和停止边界继续生效。";
+    let skillInstructions = run.toolLoading ? toolLoadingInstructions(run.toolLoading) : run.skillInstructions ?? "";
+    if (run.createdProjectBinding?.projectId === run.projectId && !skillInstructions.includes(bindingNotice)) skillInstructions += `\n${bindingNotice}`;
     if (skillInstructions === run.skillInstructions) return run;
     const messages = run.continuationMessages ?? run.requestMessages;
     const oldBase = run.context?.baseMessages ?? [messages[0]];

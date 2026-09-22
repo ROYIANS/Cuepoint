@@ -32,4 +32,4 @@ Reported project: 最后一班电车, `prj_8bed45ef-e8ad-4a4c-8eef-98ed2e493a1a`
 6. Keep IDs, technical error codes and full receipts in details; show a concise next action and actual outcome in the main flow using existing components.
 
 ## Status
-Feedback incorporated into planning and source-checked on 2026-09-22. No historical run/database verification or product implementation is claimed by this document. R1 first delivery remains separate from these follow-ups; R6/R7 are parent-owned backlog until dedicated child design and execution plans exist.
+Feedback was initially planning and source-checking only. R1 second delivery now implements a guarded create-and-continue transition for clean unbound smart runs; see agent-execution-reliability design and validation. Prior foreign effects/references retain explicit create-only recovery. Contextual owner defaults, generalized structured recovery and R6/R7 remain follow-ups. Historical reported executions have not been independently audited.

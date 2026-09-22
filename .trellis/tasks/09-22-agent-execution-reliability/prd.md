@@ -20,3 +20,6 @@ Existing source evidence does not establish whether the screenshot response cont
 
 ## Constraints and status
 Parent UX, authorization, evidence and compatibility constraints apply. Implementation authorized by the user on 2026-09-22. Detailed design and execution plan are now present. Runtime-only presentation is not semantic outcome verification; live acceptance remains required. Existing related work is linked in the parent background, not counted as this child's completed acceptance.
+
+## Current delivery acceptance: create and continue
+A clean projectless smart conversation requesting creation plus editing creates its video/audio/music project, retains the same user goal and run, and invokes the next scoped tool without an extra user message. Create-only remains explicit. Atomic rollback/replay and source provenance, frozen original requests, current-scope validation, approvals and Stop must all hold. Existing cross-scope references or prior foreign effects block automatic binding before creation, with an explicit create-only recovery path. This is one bounded part of R1; no-call semantic continuation and real-model obedience remain separate acceptance.

@@ -1,4 +1,5 @@
 import { assertProjectToolScope, frozenProjectScope } from "./projectScope";
+import { assertAgentProjectCreation, bindCreatedAgentProject } from "@/db/agentProjectCreation";
 import * as repo from "@/db/repo";
 import { db } from "@/db/database";
 import { executeAtomicTool, AtomicToolRollbackError } from "@/db/agentTools";
@@ -15,7 +16,7 @@ import { bounded, getRow, listRows, navigation, projection, summarize, targetRev
   requireOwner, requireEpisode, readTables, textAt, relationsAt, isReadableBusinessFieldPath, BUSINESS_LABELS, type AssetKind, type BusinessKind, type BusinessRow } from "./businessStore";
 
 type PreviewState = { state: unknown; target?: AgentToolPreview["target"]; changes: string[] };
-const fieldLabels: Record<string, string> = { mode: "作品模式", count: "数量", includeShots: "同时复制镜头", name: "名称", brief: "创作简述", genre: "类型", audience: "受众", tone: "基调", aspectPreset: "画幅", defaultStyleId: "默认风格", generationDefaults: "生成默认参数", logline: "一句话梗概", setting: "世界设定", coverMediaId: "封面", defaultDurationSec: "默认镜头时长", autoIncrementShotNumber: "自动递增镜号", title: "标题", script: "剧本", content: "内容", timeOfDay: "时段", characterIds: "角色", sceneId: "场景", propIds: "道具", styleId: "风格", inheritStyle: "继承项目风格", shotNumber: "镜号", status: "状态", durationSec: "时长（秒）", notes: "备注", category: "类别", sceneCloseup: "景别", sound: "声音", emotion: "情绪", cameraAngle: "机位", cameraGear: "器材", focalLength: "焦距", beatId: "所属场次", bio: "简介", appearance: "外观", personality: "性格", motivation: "动机", voice: "声音表达", location: "地点", atmosphere: "氛围", geography: "空间布局", lighting: "光线", kind: "类型", material: "材质", size: "尺寸", usage: "使用方式", continuity: "连续性", palette: "色彩", lens: "镜头气质", composition: "构图", negativePrompt: "避免出现", prompt: "画面描述", referenceImageIds: "参考图片", referenceVideoIds: "参考视频", result: "结果素材" };
+const fieldLabels: Record<string, string> = { continueInProject: "在当前对话继续创作", mode: "作品模式", count: "数量", includeShots: "同时复制镜头", name: "名称", brief: "创作简述", genre: "类型", audience: "受众", tone: "基调", aspectPreset: "画幅", defaultStyleId: "默认风格", generationDefaults: "生成默认参数", logline: "一句话梗概", setting: "世界设定", coverMediaId: "封面", defaultDurationSec: "默认镜头时长", autoIncrementShotNumber: "自动递增镜号", title: "标题", script: "剧本", content: "内容", timeOfDay: "时段", characterIds: "角色", sceneId: "场景", propIds: "道具", styleId: "风格", inheritStyle: "继承项目风格", shotNumber: "镜号", status: "状态", durationSec: "时长（秒）", notes: "备注", category: "类别", sceneCloseup: "景别", sound: "声音", emotion: "情绪", cameraAngle: "机位", cameraGear: "器材", focalLength: "焦距", beatId: "所属场次", bio: "简介", appearance: "外观", personality: "性格", motivation: "动机", voice: "声音表达", location: "地点", atmosphere: "氛围", geography: "空间布局", lighting: "光线", kind: "类型", material: "材质", size: "尺寸", usage: "使用方式", continuity: "连续性", palette: "色彩", lens: "镜头气质", composition: "构图", negativePrompt: "避免出现", prompt: "画面描述", referenceImageIds: "参考图片", referenceVideoIds: "参考视频", result: "结果素材" };
 function changes(patch: object): string[] {
   return Object.entries(patch).map(([key, value]) => {
     const enumLabels: Record<string, Record<string, string>> = {
@@ -36,7 +37,7 @@ function readTool<T>(name: string, title: string, description: string, spec: s.S
   };
 }
 function writeTool<T>(name: string, title: string, description: string, spec: s.Spec<T>,
-  scope: (args: T) => string[], prepare: (args: T) => Promise<PreviewState>, execute: (args: T) => Promise<unknown>, highRisk = false): AgentToolDefinition {
+  scope: (args: T) => string[], prepare: (args: T) => Promise<PreviewState>, execute: (args: T, context: AgentToolContext) => Promise<unknown>, highRisk = false): AgentToolDefinition {
   async function preview(args: T): Promise<AgentToolPreview> {
     const info = await prepare(args);
     return { summary: title, changes: info.changes, target: info.target, revision: targetRevision({ tool: name, args, state: info.state }) };
@@ -50,18 +51,40 @@ function writeTool<T>(name: string, title: string, description: string, spec: s.
     parseArguments: (raw) => spec.schema.parse(raw),
     async prepare(raw, context) {
       const args = spec.schema.parse(raw); await assertProjectToolScope(context,name,args,true); await flush(args, context);
-      return db.transaction("r", readTables(), async () => await preview(args));
+      return db.transaction("r", name === "project_create" ? db.tables : readTables(), async () => {
+        if (name === "project_create") await assertAgentProjectCreation(context, (args as { continueInProject?: boolean }).continueInProject !== false);
+        return preview(args);
+      });
     },
     async execute(raw, context) {
       const args = spec.schema.parse(raw);
-      try { await assertProjectToolScope(context,name,args,true); await flush(args, context); }
+      try {
+        if (name === "project_create") {
+          const replay = await db.transaction("rw", db.tables, async () => {
+            const call = await db.agentToolCalls.get(context.callId);
+            if (call?.status !== "completed") return undefined;
+            if (call.name !== name || targetRevision(spec.schema.parse(JSON.parse(call.arguments))) !== targetRevision(args)) throw new Error("创建项目的重放参数与原调用不匹配");
+            const result = call.result ? JSON.parse(call.result) : undefined;
+            const run = await db.agentRuns.get(context.runId);
+            const continued = (args as { continueInProject?: boolean }).continueInProject !== false;
+            if (!result?.id || !await db.projects.get(result.id) || (context.projectId !== undefined && context.projectId !== result.id) ||
+                (continued && (run?.createdProjectBinding?.callId !== call.id || run.createdProjectBinding.projectId !== result.id || run.projectId !== result.id)) ||
+                (!continued && run?.projectId)) throw new Error("已创建项目不存在或来源不匹配，不能重放");
+            return { value: await executeAtomicTool(context, async () => { throw new Error("创建项目重放状态已变化"); }) };
+          });
+          if (replay) return replay.value;
+        }
+        await assertProjectToolScope(context,name,args,true);
+        await flush(args, context);
+      }
       catch (error) { throw new AtomicToolRollbackError(error instanceof Error ? error.message : "草稿保存失败，业务操作尚未开始"); }
       return executeAtomicTool(context, async () => {
         context.signal.throwIfAborted();
         await assertProjectToolScope(context,name,args,true);
         if (!context.preview?.revision || context.preview.revision !== (await preview(args)).revision) throw new Error("目标或影响范围已变化，请重新读取并提出操作，原批准不能覆盖新的内容");
+        if (name === "project_create") await assertAgentProjectCreation(context, (args as { continueInProject?: boolean }).continueInProject !== false, true);
         const deleted = await captureBusinessDeletion(name, args);
-        const result = await execute(args);
+        const result = await execute(args, context);
         return withBusinessWriteReceipt(name, args, result, deleted);
       });
     },
@@ -167,7 +190,7 @@ const reads = [
   }),
 ];
 
-const projectCreateBase = s.object({ kind: s.optional(s.choice(["video", "audio", "music"])), name: s.text(200, 1), mode: s.optional(s.choice(["film", "series"])), aspectPreset: s.optional(s.choice(["21:9", "16:9", "4:3", "1:1", "3:4", "9:16"])) });
+const projectCreateBase = s.object({ continueInProject: s.optional(s.bool), kind: s.optional(s.choice(["video", "audio", "music"])), name: s.text(200, 1), mode: s.optional(s.choice(["film", "series"])), aspectPreset: s.optional(s.choice(["21:9", "16:9", "4:3", "1:1", "3:4", "9:16"])) });
 const projectCreate = {
   ...projectCreateBase,
   schema: projectCreateBase.schema.superRefine((args, context) => {
@@ -180,15 +203,16 @@ const projectCreate = {
 };
 const projectUpdate = s.object({ id: s.id, patch: s.nonempty(s.object(s.projectFields)) });
 const projectTools = [
-  writeTool("project_create", "创建项目", "创建视频、音频或音乐项目。kind 缺省为 video；mode/aspectPreset 仅用于视频。音频种子为首章和人声轨，音乐种子为创作草稿；返回真实 ID。仅未绑定项目的对话可创建，创建不会自动绑定当前对话；音频/音乐须通过结果中的入口新开项目对话后继续编辑。", projectCreate, () => [], async (args) => ({ state: {}, changes: [
+  writeTool("project_create", "创建项目", "创建视频、音频或音乐项目。kind 缺省为 video；mode/aspectPreset 仅用于视频。返回真实 ID。仅未绑定普通智能对话可创建；默认绑定新项目并继续创作，continueInProject=false 则仅创建、不绑定。", projectCreate, () => [], async (args) => ({ state: { creationContract: 2, continueInProject: args.continueInProject !== false }, changes: [
     ...changes({ ...args, kind: args.kind ?? "video" }),
     args.kind === "audio" ? "初始化第一章和人声轨" : args.kind === "music" ? "初始化音乐创作草稿" : "初始化首个分集",
-    "当前对话的项目归属保持不变；可从结果入口开启项目对话。",
-  ] }), async (args) => {
+    args.continueInProject === false ? "仅创建项目，当前对话保持未绑定；可从结果入口开启项目对话。" : "创建后将此对话绑定新项目，并在当前执行中继续创作。",
+  ] }), async (args, context) => {
     const kind = args.kind ?? "video";
     const project = kind === "video" ? await repo.createProject(args.name, args.mode, args.aspectPreset) : await repo.createAudioMusicProject(args.name, kind);
+    if (args.continueInProject !== false) await bindCreatedAgentProject(context, project.id);
     const result = { ...rowResult("project", { ...project }), projectKind: kind,
-      continuation: { projectId: project.id, action: "new_project_conversation", note: "当前对话未自动绑定。使用结果卡片中的“在此项目继续创作”开启绑定项目的新对话；音频/音乐编辑需要该绑定。" } };
+      continuation: { projectId: project.id, action: args.continueInProject === false ? "new_project_conversation" : "current_project_conversation", note: args.continueInProject === false ? "当前对话未绑定，可从结果入口开启项目对话。" : "当前对话已绑定这个新项目。请立即在同一次执行的下一轮读取项目并继续用户已要求的创作，无需再让用户发送开始或继续。" } };
     if (kind === "audio") return { ...result, firstChapterId: (await db.audioChapters.where("projectId").equals(project.id).first())!.id, firstTrackId: (await db.audioTracks.where("projectId").equals(project.id).first())!.id };
     if (kind === "music") return { ...result, firstDraftId: (await db.musicDrafts.where("projectId").equals(project.id).first())!.id };
     return { ...result, firstEpisodeId: (await repo.firstEpisode(project.id))!.id };

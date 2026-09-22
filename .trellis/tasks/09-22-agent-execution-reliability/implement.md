@@ -8,3 +8,10 @@
 6. Update specs and task evidence. No automatic commit or deployment.
 
 Use explicit local pnpm path. No model calls with production credentials for verification.
+
+## Second delivery
+1. Implement atomic create-and-continue with explicit create-only opt-out, approval revision migration, exact origin provenance and stable replay.
+2. Integrate settled tool/context refresh and current-scope execution; preserve request/history and frozen capability/permission limits.
+3. Update creation result UI and outcome projection, plus Chat/Responses create/read/edit regression with no repeated user message.
+4. Cover same-round cross-project calls, old approvals, rollback, duplicate execution, Stop, deleted owner, disabled tools and conversation mode. Run independent review, full gate, isolated browser fixture where available.
+5. Record evidence/remaining live-model and semantic-stop gaps, update specs and commit this batch under existing user authorization.

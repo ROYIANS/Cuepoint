@@ -18,7 +18,7 @@ import * as receipts from "@/lib/agent/writeReceipt";
 
 const connector: ConnectorConfig = { id: "fixture", definitionId: "openai-compatible", baseUrl: "https://fixture.invalid/v1", apiKey: "not-real", updatedAt: "2026-09-19" };
 function tool(name: string) { const result = BUSINESS_TOOLS.find((item) => item.name === name); if (!result) throw new Error(`Missing ${name}`); return result; }
-async function begin() { const thread = await repo.createChatThread(); return beginAgentRun({ threadId: thread.id, connector, model: "fixture-model", content: "维护创作数据" }); }
+async function begin() { const thread = await repo.createChatThread(); const initial = await beginAgentRun({ threadId: thread.id, connector, model: "fixture-model", content: "维护创作数据" }); const run = { ...initial, permissionMode: "full" as const, toolLoading: undefined }; await db.agentRuns.put(run); return run; }
 async function prepare(name: string, raw: unknown, run?: AgentRun) {
   run ??= await begin();
   const definition = tool(name), args = definition.parseArguments(raw);
@@ -209,11 +209,11 @@ describe("Agent creates every supported project kind", () => {
     expect(explicit.firstEpisodeId).toBeTruthy();
   });
 
-  it.each(["audio", "music"] as const)("creates seeded %s with an atomic replayable result and unchanged conversation", async (kind) => {
+  it.each(["audio", "music"] as const)("creates seeded %s with an atomic replayable result and bound conversation", async (kind) => {
     const call = await prepare("project_create", { name: "声音创作", kind });
     expect(call.context.preview?.changes).toContain(`类型：${kind === "audio" ? "音频" : "音乐"}`);
     const result = await call.execute();
-    expect(result).toMatchObject({ kind: "project", projectKind: kind, target: { href: `/p/${result.id}` }, continuation: { projectId: result.id, action: "new_project_conversation" } });
+    expect(result).toMatchObject({ kind: "project", projectKind: kind, target: { href: `/p/${result.id}` }, continuation: { projectId: result.id, action: "current_project_conversation" } });
     expect(result.firstEpisodeId).toBeUndefined();
     expect(await db.projects.get(String(result.id))).toMatchObject({ kind });
     expect(await db.episodes.count()).toBe(0);
@@ -225,8 +225,8 @@ describe("Agent creates every supported project kind", () => {
       expect(await db.musicDrafts.get(String(result.firstDraftId))).toMatchObject({ projectId: result.id });
       expect(await db.audioChapters.count()).toBe(0);
     }
-    expect((await db.chatThreads.get(call.context.threadId))?.projectId).toBeUndefined();
-    expect((await db.agentRuns.get(call.context.runId))?.projectId).toBeUndefined();
+    expect((await db.chatThreads.get(call.context.threadId))?.projectId).toBe(result.id);
+    expect((await db.agentRuns.get(call.context.runId))?.projectId).toBe(result.id);
     db.close(); await db.open();
     expect(await call.execute()).toEqual(result);
     expect(await db.projects.count()).toBe(1);
