@@ -77,3 +77,5 @@
   .at-dock[data-mobile-mode=timeline] .at-zoom{display:flex!important;order:11;flex:1 1 calc(50% - 8px);justify-content:flex-end;gap:3px;border-top:1px solid var(--at-line);padding-top:6px;margin-top:2px}
   .at-dock[data-mobile-mode=timeline] .at-zoom button{min-width:32px;height:32px}
 }
+
+@media(max-width:799px){.at-dock[data-mobile-mode=script] .at-quick-delete{display:none}.at-clock>span:last-child{display:none}.at-footer>span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}

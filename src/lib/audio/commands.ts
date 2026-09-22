@@ -63,6 +63,12 @@ export class AudioClipHistory {
   split(clip: AudioClip, absoluteTime: number) {
     return this.execute(clip, (rows) => rows.flatMap((row) => row.id === clip.id ? splitAudioClip(row, absoluteTime) : [row]));
   }
+  duplicate(clip: AudioClip): Promise<AudioClip[]> {
+    return this.execute(clip, (rows) => {
+      const source = rows.find((row) => row.id === clip.id)!;
+      return [...rows, { ...source, id: createId("acl"), startSec: source.startSec + source.trimEndSec - source.trimStartSec }];
+    });
+  }
   remove(clip: AudioClip) { return this.execute(clip, (rows) => rows.filter((row) => row.id !== clip.id)); }
   async undo() {
     return this.exclusive(async () => {

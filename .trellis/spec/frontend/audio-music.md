@@ -267,3 +267,14 @@ New unassigned speech and new Agent-created speakers default to MiMo preset `mim
 Project toolbar exposes Voices and Dubbing directly; manuscript gutter only selects a role or opens the voice library, no nested role configuration forms. `VoiceLibrary` edits existing AudioSpeaker records with a captured revision and creates named preset/design/clone configurations shared with Agent. Audition uses the same durable speech runtime without a manuscript target; save is a separate local operation, and a design audition can explicitly become a clone reference. Normal paragraph controls show voice selection and Generate, plus optional delivery guidance. First-use MiMo setup is inline and saves only through the studio connector repository. The library is mounted once outside responsive inspectors so opening it from a Sheet does not duplicate modal state.
 
 Voice dialog close/navigation are blocked during active audition/reference import/save. Named edits use captured revision CAS, and paragraph voice assignment verifies current owner/profile binding after draft flush. Credentials and raw sample bytes do not enter speaker/tool records. Browser visual verification remains separate from deterministic code checks.
+
+
+## Timeline direct actions
+
+Clip right-click and keyboard context-menu key/Shift+F10 open the same shadcn DropdownMenu as the visible More button. Capture clip/track records on open; mutating actions use their observed revisions. Menu supports playback from clip start, duplicate after source, split at playhead, move to another existing track, properties and remove. Track context menu exposes mute/solo; existing track controls remain available to touch users. No native browser context menu. A fixed pointer-position trigger lets Radix own focus, dismissal, collision handling and submenus.
+
+`AudioClipHistory.duplicate` appends a new ID at the source end, retaining take/trim/fades/gain/track and using chapter CAS; all clip edits including remove remain undoable. Removal never deletes the source take or media. No ripple deletion or implicit overlap rearrangement.
+
+`resolveTimelineShortcut` requires timeline focus and yields to inputs, controls, menus, dialogs, composition, repeat, busy state and drag. Delete/Backspace removes, Cmd/Ctrl+D duplicates, S splits, Space plays, Cmd/Ctrl+Z undoes, Cmd/Ctrl+Shift+Z or Ctrl+Y redoes. Availability gates prevent consuming unsupported operations. Ctrl-click does not start dragging so macOS secondary click can open context actions.
+
+Regression coverage: audioTimelineShortcuts.test.ts guard matrix and audioEngineCommands.test.ts duplicate/source retention/undo-redo/stale and concurrent edits.

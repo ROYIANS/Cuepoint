@@ -1,6 +1,6 @@
 import { WorkspaceSelect, SelectOption, WorkspaceSlider } from "@/components/audioMusic/controls";
 import { useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
-import { ChevronDown, ChevronUp, Download, Expand, Magnet, Music2, Pause, Play, Plus, RotateCcw, RotateCw, Scissors, SkipBack, SlidersHorizontal, Trash2, Volume2, X, ZoomIn, ZoomOut } from "lucide-react";
+import { ChevronDown, ChevronUp, Copy, MoreHorizontal, Download, Expand, Magnet, Music2, Pause, Play, Plus, RotateCcw, RotateCw, Scissors, SkipBack, SlidersHorizontal, Trash2, Volume2, X, ZoomIn, ZoomOut } from "lucide-react";
 import type { AudioClip, AudioProjectSnapshot, AudioTake, AudioTrack } from "@/domain/audio";
 import { db } from "@/db/database";
 import { addAudioExport, addAudioTrack, getAudioProjectSnapshot, patchAudioTrack } from "@/db/audio";
@@ -17,6 +17,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Field, errorText, timeLabel } from "@/components/audioMusic/shared";
+import { resolveTimelineShortcut } from "@/lib/audio/shortcuts";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent } from "@/components/ui/dropdown-menu";
 import { AudioClipHistory } from "@/lib/audio/commands";
 import "./timeline.css";
 
@@ -68,6 +70,7 @@ export function AudioTimeline({ projectId, projectName, chapterId, snapshot, sel
   const mounted = useRef(true);
   const [exportScope, setExportScope] = useState("chapter");
   const [inspector, setInspector] = useState(false);
+  const [menu, setMenu] = useState<{ x: number; y: number; clip?: AudioClip; track?: AudioTrack }>();
   const [drag, setDrag] = useState<DragState>();
   const dragRef = useRef<DragState | undefined>(undefined);
   const scrubRef = useRef<{ resume: boolean } | undefined>(undefined);
@@ -78,7 +81,8 @@ export function AudioTimeline({ projectId, projectName, chapterId, snapshot, sel
   const contentDuration = Math.max(0, ...clips.map((clip) => clip.startSec + clip.trimEndSec - clip.trimStartSec));
   const geometry = timelineGeometry(contentDuration, viewportWidth, zoom);
   const compositionKey = JSON.stringify([clips, tracks]);
-  const splitAvailable = Boolean(selected && position > selected.startSec && position < selected.startSec + selected.trimEndSec - selected.trimStartSec);
+  const canSplit = (clip: AudioClip) => position > clip.startSec && position < clip.startSec + clip.trimEndSec - clip.trimStartSec && position - clip.startSec >= clip.fadeInSec && position - clip.startSec <= clip.trimEndSec - clip.trimStartSec - clip.fadeOutSec;
+  const splitAvailable = Boolean(selected && canSplit(selected));
 
   function updatePosition(seconds: number) {
     positionRef.current = seconds; setPosition(seconds); onPosition.current?.(seconds);
@@ -96,7 +100,7 @@ export function AudioTimeline({ projectId, projectName, chapterId, snapshot, sel
     return () => { mounted.current = false; playEpoch.current++; clearInterval(timer); document.removeEventListener("audio-workspace-audition", pause); void instance.dispose(); player.current = null; };
   }, [projectId]);
   const playingRef = useRef(false);
-  useEffect(() => { playEpoch.current++; player.current?.pause(); updatePosition(0); setPlaying(false); setInspector(false); setZoom(1); }, [chapterId]);
+  useEffect(() => { playEpoch.current++; player.current?.pause(); updatePosition(0); setPlaying(false); setInspector(false); setMenu(undefined); dragRef.current = undefined; setDrag(undefined); setZoom(1); }, [chapterId]);
   useEffect(() => { playEpoch.current++; player.current?.pause(); setPlaying(false); }, [compositionKey]);
   useEffect(() => {
     if (!root.current) return;
@@ -152,20 +156,35 @@ export function AudioTimeline({ projectId, projectName, chapterId, snapshot, sel
     downloadBlob(result.blob, filename);
     setNotice(result.attenuation < 1 ? `已导出 WAV；为避免削波，整体降低 ${Math.abs(result.attenuationDb).toFixed(1)} dB。` : "WAV 已保存到项目并开始下载。");
   }
-  const shortcuts = useRef({ play, action, selected, history, position, splitAvailable });
-  shortcuts.current = { play, action, selected, history, position, splitAvailable };
+  async function removeClip(clip: AudioClip) { await history.remove(clip); onSelect(""); setInspector(false); root.current?.focus({ preventScroll: true }); }
+  async function duplicateClip(clip: AudioClip) {
+    const rows = await history.duplicate(clip);
+    const copy = rows.at(-1); // History appends the new copy after the persisted chapter rows.
+    if (copy) onSelect(copy.id);
+    root.current?.focus({ preventScroll: true });
+  }
+  function openClipMenu(clip: AudioClip, x: number, y: number) {
+    if (busyRef.current || dragRef.current) return;
+    onSelect(clip.id); setMenu({ clip, x, y });
+  }
+  const shortcuts = useRef({ play, action, selected, history, position, splitAvailable, removeClip, duplicateClip, menu });
+  shortcuts.current = { play, action, selected, history, position, splitAvailable, removeClip, duplicateClip, menu };
   useEffect(() => {
     const handle = (event: KeyboardEvent) => {
-      if (event.defaultPrevented || event.repeat || event.isComposing || isFormFieldTarget(event.target)) return;
       const latest = shortcuts.current;
-      const command = event.metaKey || event.ctrlKey;
-      let task: (() => Promise<unknown>) | undefined;
-      if (event.code === "Space" && !command && !event.altKey) task = latest.play;
-      else if (command && event.key.toLowerCase() === "z") task = event.shiftKey ? () => latest.history.redo() : () => latest.history.undo();
-      else if (command && event.key.toLowerCase() === "y") task = () => latest.history.redo();
-      else if (event.key === "Delete" && latest.selected && !command) task = () => latest.history.remove(latest.selected!);
-      else if (event.key.toLowerCase() === "s" && !command && !event.altKey && latest.splitAvailable) task = () => latest.history.split(latest.selected!, latest.position);
-      if (task) { event.preventDefault(); void latest.action(task); }
+      const command = resolveTimelineShortcut(event, {
+        focused: Boolean(root.current?.contains(document.activeElement)),
+        blocked: busyRef.current || Boolean(dragRef.current) || Boolean(latest.menu) || isFormFieldTarget(event.target),
+        hasSelection: Boolean(latest.selected), canSplit: latest.splitAvailable,
+        canUndo: latest.history.canUndo, canRedo: latest.history.canRedo,
+      });
+      if (!command) return;
+      const tasks = {
+        play: latest.play, undo: () => latest.history.undo(), redo: () => latest.history.redo(),
+        remove: () => latest.removeClip(latest.selected!), duplicate: () => latest.duplicateClip(latest.selected!),
+        split: () => latest.history.split(latest.selected!, latest.position),
+      };
+      event.preventDefault(); void latest.action(tasks[command]);
     };
     window.addEventListener("keydown", handle); return () => window.removeEventListener("keydown", handle);
   }, []);
@@ -175,7 +194,7 @@ export function AudioTimeline({ projectId, projectName, chapterId, snapshot, sel
     seek((event.clientX - rect.left) / geometry.pixelsPerSecond);
   }
   function beginDrag(event: PointerEvent, clip: AudioClip, kind: DragState["kind"]) {
-    event.stopPropagation(); if (event.button !== 0 || busyRef.current) return;
+    event.stopPropagation(); if (event.button !== 0 || event.ctrlKey || busyRef.current) return;
     event.preventDefault(); root.current?.focus({ preventScroll: true }); playEpoch.current++;
     onSelect(clip.id); player.current?.pause(); setPlaying(false);
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -217,9 +236,24 @@ export function AudioTimeline({ projectId, projectName, chapterId, snapshot, sel
       <Button className="at-play" size="icon-sm" aria-label={playing ? "暂停" : "播放章节"} title="播放 / 暂停 · Space" disabled={busy || !clips.length} onClick={() => void action(play)}>{playing ? <Pause /> : <Play />}</Button>
       <Popover><PopoverTrigger asChild><Button variant="ghost" className="at-clock" aria-label="精确定位播放位置"><span>{timeLabel(position)}</span><span>/ {timeLabel(contentDuration)}</span></Button></PopoverTrigger><PopoverContent side="top" className="at-position-popover"><Field label="播放位置（秒）"><Input aria-label="播放位置（秒）" type="number" min={0} max={contentDuration} step={.1} value={Number(position.toFixed(1))} onChange={(event) => seek(Number(event.target.value) || 0)} /></Field></PopoverContent></Popover>
       <div className="at-edit-actions"><span className="at-divider"/><Button size="icon-sm" variant="ghost" disabled={busy || !history.canUndo} aria-label="撤销时间线编辑" title="撤销 · ⌘/Ctrl Z" onClick={() => void action(() => history.undo())}><RotateCcw /></Button><Button size="icon-sm" variant="ghost" disabled={busy || !history.canRedo} aria-label="重做时间线编辑" title="重做 · ⌘/Ctrl Shift Z" onClick={() => void action(() => history.redo())}><RotateCw /></Button><Button size="icon-sm" variant="ghost" disabled={busy || !splitAvailable} aria-label="在播放位置分割" title="在播放位置分割 · S" onClick={() => selected && void action(() => history.split(selected, position))}><Scissors /></Button></div>
+      <Button size="icon-sm" variant="ghost" disabled={busy || !selected} className="at-quick-delete" aria-label="删除选中片段" title="删除片段 · Delete / Backspace（可撤销）" onClick={() => selected && void action(() => removeClip(selected))}><Trash2/></Button>
+      <Button size="icon-sm" variant="ghost" disabled={busy || !selected} aria-label="片段更多操作" title="片段更多操作 / 右键菜单" onClick={(event) => { if (!selected) return; const bounds = event.currentTarget.getBoundingClientRect(); openClipMenu(selected, bounds.left, bounds.bottom); }}><MoreHorizontal/></Button>
+      <DropdownMenu open={Boolean(menu)} onOpenChange={(open) => { if (!open) setMenu(undefined); }}><DropdownMenuTrigger asChild><Button aria-hidden tabIndex={-1} className="pointer-events-none fixed size-px opacity-0 p-0" style={{ left: menu?.x ?? 0, top: menu?.y ?? 0 }} /></DropdownMenuTrigger>
+        <DropdownMenuContent aria-label={menu?.track ? "音轨操作" : "片段操作"} className="w-60" align="start" sideOffset={0} collisionPadding={8} onCloseAutoFocus={(event) => { event.preventDefault(); root.current?.focus({ preventScroll: true }); }}>
+          {menu?.clip && <><DropdownMenuLabel className="max-w-56 truncate">{timelineClipLabel(menu.clip, snapshot).title}</DropdownMenuLabel><DropdownMenuSeparator/>
+            <DropdownMenuItem disabled={busy} onSelect={() => { const clip = menu.clip!; seek(clip.startSec); void action(() => startPlayback(clip.startSec)); }}><Play/>从片段起点播放</DropdownMenuItem>
+            <DropdownMenuItem disabled={busy} onSelect={() => void action(() => duplicateClip(menu.clip!))}><Copy/>复制到片段后方<DropdownMenuShortcut>⌘/Ctrl D</DropdownMenuShortcut></DropdownMenuItem>
+            <DropdownMenuItem disabled={busy || !canSplit(menu.clip)} onSelect={() => void action(() => history.split(menu.clip!, position))}><Scissors/>在播放头处分割<DropdownMenuShortcut>S</DropdownMenuShortcut></DropdownMenuItem>
+            <DropdownMenuSub><DropdownMenuSubTrigger disabled={busy}>移到其他音轨</DropdownMenuSubTrigger><DropdownMenuSubContent>{tracks.map(track => <DropdownMenuItem key={track.id} disabled={track.id === menu.clip!.trackId} onSelect={() => void action(() => history.executePatch(menu.clip!, { trackId: track.id }))}>{track.name}</DropdownMenuItem>)}</DropdownMenuSubContent></DropdownMenuSub>
+            <DropdownMenuItem disabled={busy} onSelect={() => setInspector(true)}><SlidersHorizontal/>片段属性</DropdownMenuItem><DropdownMenuSeparator/>
+            <DropdownMenuItem variant="destructive" disabled={busy} onSelect={() => void action(() => removeClip(menu.clip!))}><Trash2/>删除片段<DropdownMenuShortcut>⌫ / Del</DropdownMenuShortcut></DropdownMenuItem>
+          </>}
+          {menu?.track && <><DropdownMenuLabel>{menu.track.name}</DropdownMenuLabel><DropdownMenuSeparator/><DropdownMenuItem disabled={busy} onSelect={() => void action(() => patchAudioTrack(projectId, menu.track!.id, menu.track!.revision, { muted: !menu.track!.muted }))}>{menu.track.muted ? "取消静音" : "静音音轨"}</DropdownMenuItem><DropdownMenuItem disabled={busy} onSelect={() => void action(() => patchAudioTrack(projectId, menu.track!.id, menu.track!.revision, { solo: !menu.track!.solo }))}>{menu.track.solo ? "取消独听" : "独听音轨"}</DropdownMenuItem></>}
+        </DropdownMenuContent>
+      </DropdownMenu>
       <div className="at-transport-space"/>
       <div className="at-zoom"><Button variant="ghost" size="icon-sm" aria-label="缩小时间线" disabled={zoom <= .5} onClick={() => setZoom(Math.max(.5, zoom / 1.5))}><ZoomOut /></Button><Button variant="ghost" size="sm" title="完整显示当前章节" onClick={() => { setZoom(1); if (scroll.current) scroll.current.scrollLeft = 0; }}><Expand size={13}/><span>适应</span></Button><Button variant="ghost" size="icon-sm" aria-label="放大时间线" disabled={zoom >= 12} onClick={() => setZoom(Math.min(12, zoom * 1.5))}><ZoomIn /></Button></div>
-      <Popover open={inspector && Boolean(selected)} onOpenChange={setInspector}><PopoverTrigger asChild><Button size="icon-sm" variant={inspector ? "secondary" : "ghost"} disabled={!selected} aria-label="片段属性" title="片段属性"><SlidersHorizontal /></Button></PopoverTrigger><PopoverContent side="top" align="end" className="at-inspector-popover">{selected && <ClipInspector key={`${selected.id}:${selected.revision}`} clip={selected} tracks={tracks} title={timelineClipLabel(selected, snapshot).title} busy={busy} save={(patch) => action(() => history.executePatch(selected, patch))} remove={() => action(async () => { await history.remove(selected); setInspector(false); })}/>}</PopoverContent></Popover>
+      <Popover open={inspector && Boolean(selected)} onOpenChange={setInspector}><PopoverTrigger asChild><Button size="icon-sm" variant={inspector ? "secondary" : "ghost"} disabled={!selected} aria-label="片段属性" title="片段属性"><SlidersHorizontal /></Button></PopoverTrigger><PopoverContent side="top" align="end" className="at-inspector-popover">{selected && <ClipInspector key={`${selected.id}:${selected.revision}`} clip={selected} tracks={tracks} title={timelineClipLabel(selected, snapshot).title} busy={busy} save={(patch) => action(() => history.executePatch(selected, patch))} remove={() => action(async () => { await removeClip(selected); })}/>}</PopoverContent></Popover>
       <Popover><PopoverTrigger asChild><Button variant="outline" size="sm" className="at-export" disabled={busy || !snapshot.clips.length}><Download size={14}/><span>{busy ? "处理中" : "导出"}</span></Button></PopoverTrigger><PopoverContent side="top" align="end" className="at-export-popover"><strong>导出声音作品</strong><p>48 kHz · 立体声 · WAV</p><Field label="导出范围"><WorkspaceSelect value={exportScope} onValueChange={setExportScope}><SelectOption value="chapter">当前章节</SelectOption><SelectOption value="project">完整项目</SelectOption></WorkspaceSelect></Field><Button className="w-full" disabled={busy} onClick={() => void action(exportMix)}><Download size={14}/>{busy ? "正在混合音频…" : "导出 WAV"}</Button></PopoverContent></Popover>
     </div>
     <div className="at-editor">
@@ -228,15 +262,15 @@ export function AudioTimeline({ projectId, projectName, chapterId, snapshot, sel
         <div className="at-ruler-row"><div className="at-ruler-label">秒</div><div className="at-ruler" style={{ width: geometry.width }} role="slider" tabIndex={0} aria-label="时间标尺，左右方向键定位" aria-valuemin={0} aria-valuemax={contentDuration} aria-valuenow={Math.min(position, contentDuration)} onKeyDown={(event) => { if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) { event.preventDefault(); seek(event.key === "Home" ? 0 : event.key === "End" ? contentDuration : position + (event.key === "ArrowLeft" ? -1 : 1) * (event.shiftKey ? 1 : .1)); } }} onPointerDown={(event) => { if (event.button !== 0 || busy) return; scrubRef.current = { resume: Boolean(player.current?.playing) }; event.currentTarget.setPointerCapture(event.pointerId); scrub(event); }} onPointerMove={(event) => { if (scrubRef.current) scrub(event); }} onPointerUp={() => { const resume = scrubRef.current?.resume; scrubRef.current = undefined; if (resume) void action(() => startPlayback(positionRef.current)); }} onPointerCancel={() => { scrubRef.current = undefined; }}>
           {geometry.ticks.map((tick) => <span key={tick} className="at-tick" style={{ left: tick * geometry.pixelsPerSecond }}>{formatTimelineTick(tick, geometry.step)}</span>)}<div className="at-ruler-head" style={{ left: position * geometry.pixelsPerSecond }} />
         </div></div>
-        {tracks.map((track) => <div className="at-track-row" key={track.id}><div className="at-track-label" data-role={track.role}><strong title={track.name}>{track.name}</strong><div className="at-track-controls"><Button size="icon-sm" variant={track.muted ? "secondary" : "ghost"} aria-label={`${track.name} 静音`} aria-pressed={track.muted} disabled={busy} onClick={() => void action(() => patchAudioTrack(projectId, track.id, track.revision, { muted: !track.muted }))}>M</Button><Button size="icon-sm" variant={track.solo ? "secondary" : "ghost"} aria-label={`${track.name} 独听`} aria-pressed={track.solo} disabled={busy} onClick={() => void action(() => patchAudioTrack(projectId, track.id, track.revision, { solo: !track.solo }))}>S</Button><Popover><PopoverTrigger asChild><Button size="icon-sm" variant="ghost" aria-label={`${track.name} 音量`}><Volume2 size={12}/></Button></PopoverTrigger><PopoverContent side="top" className="at-volume-popover"><Field label={`${track.name} · 音量`}><WorkspaceSlider label={`${track.name} 音量`} min={0} max={2} step={.05} defaultValue={track.gain} key={`${track.id}:${track.gain}`} onCommit={(gain) => void action(() => patchAudioTrack(projectId, track.id, track.revision, { gain }))}/></Field></PopoverContent></Popover></div></div><div className="at-lane" style={{ width: geometry.width, backgroundSize: `${geometry.step * geometry.pixelsPerSecond}px 100%` }} onPointerDown={(event) => { if (event.target !== event.currentTarget) return; seek((event.clientX - event.currentTarget.getBoundingClientRect().left) / geometry.pixelsPerSecond); root.current?.focus({ preventScroll: true }); }}>
+        {tracks.map((track) => <div className="at-track-row" key={track.id}><div className="at-track-label" data-role={track.role} onContextMenu={(event) => { event.preventDefault(); if (!busyRef.current) setMenu({ track, x: event.clientX, y: event.clientY }); }}><strong title={track.name}>{track.name}</strong><div className="at-track-controls"><Button size="icon-sm" variant={track.muted ? "secondary" : "ghost"} aria-label={`${track.name} 静音`} aria-pressed={track.muted} disabled={busy} onClick={() => void action(() => patchAudioTrack(projectId, track.id, track.revision, { muted: !track.muted }))}>M</Button><Button size="icon-sm" variant={track.solo ? "secondary" : "ghost"} aria-label={`${track.name} 独听`} aria-pressed={track.solo} disabled={busy} onClick={() => void action(() => patchAudioTrack(projectId, track.id, track.revision, { solo: !track.solo }))}>S</Button><Popover><PopoverTrigger asChild><Button size="icon-sm" variant="ghost" aria-label={`${track.name} 音量`}><Volume2 size={12}/></Button></PopoverTrigger><PopoverContent side="top" className="at-volume-popover"><Field label={`${track.name} · 音量`}><WorkspaceSlider label={`${track.name} 音量`} min={0} max={2} step={.05} defaultValue={track.gain} key={`${track.id}:${track.gain}`} onCommit={(gain) => void action(() => patchAudioTrack(projectId, track.id, track.revision, { gain }))}/></Field></PopoverContent></Popover></div></div><div className="at-lane" style={{ width: geometry.width, backgroundSize: `${geometry.step * geometry.pixelsPerSecond}px 100%` }} onPointerDown={(event) => { if (event.button !== 0 || event.target !== event.currentTarget) return; seek((event.clientX - event.currentTarget.getBoundingClientRect().left) / geometry.pixelsPerSecond); root.current?.focus({ preventScroll: true }); }}>
           <div className="at-playhead" style={{ left: position * geometry.pixelsPerSecond }}/>
-          {clips.filter((clip) => clip.trackId === track.id).map((clip) => { const take = snapshot.takes.find((row) => row.id === clip.takeId); const display = drag?.clip.id === clip.id ? { ...clip, startSec: drag.startSec, trimStartSec: drag.trimStartSec, trimEndSec: drag.trimEndSec } : clip; const label = timelineClipLabel(clip, snapshot); return <div key={clip.id} className="at-clip" data-role={track.role} data-selected={selectedId === clip.id} data-muted={track.muted} role="group" aria-label={`${label.speaker}：${label.title}，起点 ${clip.startSec.toFixed(1)} 秒`} style={{ left: display.startSec * geometry.pixelsPerSecond, width: Math.max(14, (display.trimEndSec - display.trimStartSec) * geometry.pixelsPerSecond) }} onPointerDown={(event) => beginDrag(event, clip, "move")} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={cancelDrag} onDoubleClick={() => { onSelect(clip.id); setInspector(true); }}>
-            <Button variant="ghost" className="at-clip-select" aria-pressed={selectedId === clip.id} aria-label={`选择 ${label.speaker}：${label.title}`} title={`${label.speaker} · ${label.title}`} onClick={() => { onSelect(clip.id); root.current?.focus({ preventScroll: true }); }}><span className="at-clip-title"><b>{label.speaker}</b>{label.title}</span>{take && <Waveform take={take} clip={display}/>}</Button>
+          {clips.filter((clip) => clip.trackId === track.id).map((clip) => { const take = snapshot.takes.find((row) => row.id === clip.takeId); const display = drag?.clip.id === clip.id ? { ...clip, startSec: drag.startSec, trimStartSec: drag.trimStartSec, trimEndSec: drag.trimEndSec } : clip; const label = timelineClipLabel(clip, snapshot); return <div key={clip.id} className="at-clip" data-role={track.role} data-selected={selectedId === clip.id} data-muted={track.muted} role="group" aria-label={`${label.speaker}：${label.title}，起点 ${clip.startSec.toFixed(1)} 秒`} style={{ left: display.startSec * geometry.pixelsPerSecond, width: Math.max(14, (display.trimEndSec - display.trimStartSec) * geometry.pixelsPerSecond) }} onPointerDown={(event) => beginDrag(event, clip, "move")} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={cancelDrag} onContextMenu={(event) => { event.preventDefault(); event.stopPropagation(); openClipMenu(clip, event.clientX, event.clientY); }} onDoubleClick={() => { onSelect(clip.id); setInspector(true); }}>
+            <Button variant="ghost" className="at-clip-select" aria-pressed={selectedId === clip.id} aria-label={`选择 ${label.speaker}：${label.title}`} title={`${label.speaker} · ${label.title}`} onKeyDown={(event) => { if (event.key === "ContextMenu" || event.shiftKey && event.key === "F10") { event.preventDefault(); const bounds = event.currentTarget.getBoundingClientRect(); openClipMenu(clip, bounds.left, bounds.bottom); } }} onClick={() => { onSelect(clip.id); root.current?.focus({ preventScroll: true }); }}><span className="at-clip-title"><b>{label.speaker}</b>{label.title}</span>{take && <Waveform take={take} clip={display}/>}</Button>
             {(["start", "end"] as const).map((side) => <Button key={side} variant="ghost" className={`at-trim at-trim-${side}`} aria-label={side === "start" ? "拖动裁剪起点" : "拖动裁剪终点"} title="拖动裁剪；双击片段打开精确属性" disabled={busy} onPointerDown={(event) => beginDrag(event, clip, side)} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={cancelDrag}><span/></Button>)}
           </div>; })}
         </div></div>)}
       </div></div>}
-      <div className="at-footer"><span>{selected ? "拖动移动 · 两端裁剪 · 双击编辑属性" : "选择片段开始剪辑"}</span><span>Space 播放<span className="at-desktop-hint"> · S 分割 · ⌘/Ctrl Z 撤销</span></span></div>
+      <div className="at-footer"><span>{selected ? "拖动移动 · 右键更多操作 · Delete / ⌫ 删除" : "选择片段开始剪辑"}</span><span>Space 播放<span className="at-desktop-hint"> · S 分割 · ⌘/Ctrl D 复制 · ⌘/Ctrl Z 撤销</span></span></div>
     </div>
     {(error || notice) && <div className="at-message" data-error={Boolean(error)} role={error ? "alert" : "status"}><span>{error || notice}</span><Button variant="ghost" size="icon-sm" aria-label="关闭提示" onClick={() => { setError(""); setNotice(""); }}><X size={12}/></Button></div>}
   </section>;
