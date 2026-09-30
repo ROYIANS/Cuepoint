@@ -249,7 +249,7 @@ describe("AIHubMix failure and abort boundaries", () => {
   it("recognizes abort during JSON and binary consumption", async () => {
     const jsonResponse = new Response(); vi.spyOn(jsonResponse, "json").mockRejectedValue(new DOMException("abort", "AbortError"));
     expect(await testAIHubMixConnection(credentials, { fetchImpl: async () => jsonResponse })).toMatchObject({ ok: false, kind: "aborted" });
-    const binaryResponse = new Response("x"); vi.spyOn(binaryResponse, "blob").mockRejectedValue(new DOMException("abort", "AbortError"));
+    const binaryResponse = new Response(new ReadableStream({pull() {throw new DOMException("abort", "AbortError");}}));
     const task = completedTask();
     expect(await downloadAIHubMixResult(credentials, task, task.outputs[0]!, { fetchImpl: async () => binaryResponse })).toMatchObject({ ok: false, kind: "aborted" });
   });

@@ -1,3 +1,5 @@
+import {readResponseBlob} from "@/lib/ai/boundedResponse";
+import {MAX_MEDIA_DOWNLOAD_BYTES} from "@/lib/resource/limits";
 import {redactCredentials} from "@/lib/ai/safeError";
 import {ownedGenerationBatch} from "@/db/agentGenerationBatches";
 import {assertProjectToolScope} from "./projectScope";
@@ -499,7 +501,7 @@ export async function checkAgentGeneration(jobId: string, context: Pick<AgentToo
             redirect: "error"
         });
         if (!download.ok) throw new Error(`结果下载失败（${download.status}），请检查过期时间、网络和跨域限制`);
-        const blob = await download.blob();
+        const blob = await readResponseBlob(download, MAX_MEDIA_DOWNLOAD_BYTES, context.signal);
         context.signal.throwIfAborted();
         return await saveBlob(job, blob);
     } catch (error) {

@@ -196,14 +196,40 @@ describe("truthful music task observations", () => {
     const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
       if (init?.method === "POST") return Response.json({ code: 200, data: [{ task_id: "first" }, { task_id: "second" }] });
       expect(String(url)).toContain("/music/tasks/first");
+      return taskResponse("first", "completed");
+    });
+    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+    // Stop after a complete response has been observed, while its checkpoint is written.
+    const stopAfterObservation = (changes: Record<string, unknown>) => {
+      const rows = changes.taskObservations as AudioTaskObservation[] | undefined;
+      if (rows?.some(row => row.taskId === "first" && row.status === "completed")) controller.abort();
+    };
+    db.audioGenerationJobs.hook("updating", stopAfterObservation);
+    let stopped;
+    try {
+      stopped = await refreshAudioGeneration(project.id, job.id, { fetchImpl, signal: controller.signal });
+    } finally {
+      db.audioGenerationJobs.hook("updating").unsubscribe(stopAfterObservation);
+    }
+    expect(stopped.status).toBe("submitted");
+    expect(stopped.taskObservations?.map(row => row.status)).toEqual(["completed", "query-failed"]);
+    expect(stopped.results).toHaveLength(1);
+    expect(await db.musicWorks.count()).toBe(0);
+    expect(fetchImpl).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not confirm an unread task response when Stop happens before body reading", async () => {
+    const { project, job } = await musicJob();
+    const controller = new AbortController();
+    const fetchImpl = vi.fn<typeof fetch>(async (_url, init) => {
+      if (init?.method === "POST") return Response.json({ code: 200, data: [{ task_id: "first" }, { task_id: "second" }] });
       controller.abort();
       return taskResponse("first", "completed");
     });
     await submitAudioGeneration(project.id, job.id, { fetchImpl });
     const stopped = await refreshAudioGeneration(project.id, job.id, { fetchImpl, signal: controller.signal });
-    expect(stopped.status).toBe("submitted");
-    expect(stopped.taskObservations?.map(row => row.status)).toEqual(["completed", "query-failed"]);
-    expect(stopped.results).toHaveLength(1);
+    expect(stopped.taskObservations?.map(row => row.status)).toEqual(["query-failed", "query-failed"]);
+    expect(stopped.results).toHaveLength(0);
     expect(await db.musicWorks.count()).toBe(0);
     expect(fetchImpl).toHaveBeenCalledTimes(2);
   });

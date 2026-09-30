@@ -1,3 +1,5 @@
+import {readResponseBlob, readResponseJson, ResponseLimitError} from "./boundedResponse";
+import {MAX_MEDIA_DOWNLOAD_BYTES, MAX_JSON_BYTES, MAX_ERROR_BYTES} from "@/lib/resource/limits";
 import {redactCredentials} from "./safeError";
 import {type ChatModelMetadata, parseModelMetadata} from "@/lib/ai/modelMetadata";
 
@@ -385,16 +387,18 @@ export async function downloadAIHubMixResult(credentials: AIHubMixCredentials, t
         if (!result.response.ok || result.response.headers.get("Content-Type")?.includes("application/json")) {
             let body: unknown;
             try {
-                body = await result.response.json();
+                body = await readResponseJson(result.response, result.response.ok ? MAX_JSON_BYTES : MAX_ERROR_BYTES, options.signal);
             } catch (error) {
                 if (isAbort(error, options)) return aborted();
             }
             return result.response.ok && !(record(body) && body.error != null) ? protocol(task.id) : responseFailure(result.response, body, credentials.apiKey);
         }
-        const blob = await result.response.blob();
+        const blob = await readResponseBlob(result.response, MAX_MEDIA_DOWNLOAD_BYTES, options.signal);
         if (options.signal?.aborted) return aborted();
         return blob.size > 0 ? {ok: true, blob} : protocol(task.id);
     } catch (error) {
-        return isAbort(error, options) ? aborted() : failure("network", "AIHubMix 结果读取失败，请检查网络和浏览器跨域限制");
+        if (isAbort(error, options)) return aborted();
+        if (error instanceof ResponseLimitError) return failure("protocol", "AIHubMix 图片/视频下载超过本地 256 MiB 限制，已停止读取；保留任务记录，不会重新生成");
+        return failure("network", "AIHubMix 结果读取失败，请检查网络和浏览器跨域限制");
     }
 }

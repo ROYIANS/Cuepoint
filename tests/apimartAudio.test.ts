@@ -112,13 +112,12 @@ describe("audio body cancellation", () => {
   it.each(["submit", "detail"] as const)("classifies %s JSON cancellation independently of signal state", async operation => {
     for (const mode of ["signal", "error", "dom", "malformed"] as const) {
       const controller = new AbortController();
-      const response = Response.json({});
-      vi.spyOn(response, "json").mockImplementation(async () => {
+      const response = new Response(new ReadableStream({pull() {
         if (mode === "signal") controller.abort();
         if (mode === "dom") throw new DOMException("cancelled", "AbortError");
         if (mode === "error") throw Object.assign(new Error("cancelled"), { name: "AbortError" });
         throw new SyntaxError("broken JSON");
-      });
+      }}));
       const fetchImpl = vi.fn<typeof fetch>(async () => response);
       const options = { fetchImpl, signal: controller.signal };
       const result = operation === "submit"
@@ -131,8 +130,9 @@ describe("audio body cancellation", () => {
 
   it("keeps malformed HTTP error bodies as HTTP failures and classifies cancelled bodies as aborted", async () => {
     for (const cancelled of [true, false]) {
-      const response = new Response(null, { status: 403 });
-      vi.spyOn(response, "json").mockRejectedValue(cancelled ? new DOMException("cancelled", "AbortError") : new SyntaxError("broken JSON"));
+      const response = new Response(new ReadableStream({pull() {
+        throw cancelled ? new DOMException("cancelled", "AbortError") : new SyntaxError("broken JSON");
+      }}), { status: 403 });
       const fetchImpl = vi.fn<typeof fetch>(async () => response);
       expect(await submitApimartMusic(credentials, { model: "flowmusic", sound_prompt: "piano" }, { fetchImpl })).toMatchObject({ ok: false, kind: cancelled ? "aborted" : "http" });
       expect(fetchImpl).toHaveBeenCalledOnce();
@@ -142,8 +142,7 @@ describe("audio body cancellation", () => {
   it.each(["speech", "cdn"] as const)("classifies %s binary read and fetch AbortError without an aborted signal", async operation => {
     for (const stage of ["fetch", "body"] as const) {
       for (const error of [new DOMException("cancelled", "AbortError"), Object.assign(new Error("cancelled"), { name: "AbortError" })]) {
-        const response = new Response(new Uint8Array([1]), { headers: { "Content-Type": "audio/wav" } });
-        vi.spyOn(response, "blob").mockRejectedValue(error);
+        const response = new Response(new ReadableStream({pull() {throw error;}}), { headers: { "Content-Type": "audio/wav" } });
         const fetchImpl = vi.fn<typeof fetch>(async () => {
           if (stage === "fetch") throw error;
           return response;

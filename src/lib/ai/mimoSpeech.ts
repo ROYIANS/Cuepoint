@@ -1,3 +1,5 @@
+import {isReadAbort, readErrorText, readResponseText, ResponseLimitError} from "./boundedResponse";
+import {MAX_AUDIO_BYTES, MAX_JSON_BYTES, MAX_ERROR_BYTES, MAX_SPEECH_ENVELOPE_BYTES} from "@/lib/resource/limits";
 import type {MimoSpeechSettings} from "@/domain/audio";
 import {detectAudioMime} from "@/lib/audio/mime";
 import {collectModelMetadata, parseModelMetadata} from "./modelMetadata";
@@ -33,6 +35,29 @@ function connection(credentials: MimoCredentials): { base: string; key: string }
     }
 }
 
+/** Classify the bounded body without losing observed HTTP failures or reader aborts. */
+async function readMimoResponse(response: Response, limit: number, key: string, signal?: AbortSignal): Promise<{ok: true; data: unknown} | MimoFailure> {
+    let text: string;
+    try {
+        text = response.ok
+            ? await readResponseText(response, limit, signal)
+            : await readErrorText(response, MAX_ERROR_BYTES, signal);
+    } catch (error) {
+        if (isReadAbort(error, signal)) throw error;
+        return error instanceof ResponseLimitError ? fail("protocol", error.message) : protocol();
+    }
+    let data: unknown;
+    try {
+        data = JSON.parse(text);
+    } catch { /* Preserve HTTP status, otherwise protocol failure. */
+    }
+    if (!response.ok || (record(data) && data.error != null)) {
+        const detail = record(data) && record(data.error) && typeof data.error.message === "string" ? data.error.message : text;
+        return fail(response.ok ? "provider" : "http", `MiMo 请求失败${response.ok ? "" : `（${response.status}）`}：${redactCredentials(detail, key).slice(0, 300) || "请检查连接权限、余额和参数"}`);
+    }
+    return {ok: true, data};
+}
+
 async function request(credentials: MimoCredentials, path: "/models" | "/chat/completions", body: unknown | undefined, options: MimoRequestOptions): Promise<{
     ok: true;
     data: unknown
@@ -49,19 +74,10 @@ async function request(credentials: MimoCredentials, path: "/models" | "/chat/co
             credentials: "omit",
             redirect: "error",
         });
-        const text = await response.text();
-        let data: unknown;
-        try {
-            data = JSON.parse(text);
-        } catch { /* Preserve HTTP status, otherwise protocol failure. */
-        }
-        if (!response.ok || (record(data) && data.error != null)) {
-            const detail = record(data) && record(data.error) && typeof data.error.message === "string" ? data.error.message : text;
-            return fail(response.ok ? "provider" : "http", `MiMo 请求失败${response.ok ? "" : `（${response.status}）`}：${redactCredentials(detail, config.key).slice(0, 300) || "请检查连接权限、余额和参数"}`);
-        }
-        return {ok: true, data};
+        return await readMimoResponse(response, path === "/models" ? MAX_JSON_BYTES : MAX_SPEECH_ENVELOPE_BYTES, config.key, options.signal);
     } catch (error) {
-        if (options.signal?.aborted) return fail("aborted", "请求已停止；远端生成不会因此取消");
+        if (isReadAbort(error, options.signal)) return fail("aborted", "请求已停止；远端生成不会因此取消");
+        if (error instanceof ResponseLimitError) return protocol();
         const detail = redactCredentials(error instanceof Error ? error.message : "网络错误", config.key).slice(0, 200);
         return fail("network", `MiMo 请求未完成：${detail}；不会自动重复提交`);
     }
@@ -149,10 +165,15 @@ export async function generateMimoSpeech(credentials: MimoCredentials, input: {
     if (!record(choice) || choice.finish_reason !== "stop" || !record(choice.message) || !record(choice.message.audio)) return protocol();
     const message = choice.message, encoded = choice.message.audio.data;
     if (typeof encoded !== "string" || !encoded || encoded.length % 4 !== 0 || !/^[A-Za-z0-9+/]*={0,2}$/.test(encoded)) return protocol();
+    let padding = 0;
+    if (encoded.endsWith("=")) padding = 1;
+    if (encoded.endsWith("==")) padding = 2;
+    if (encoded.length / 4 * 3 - padding > MAX_AUDIO_BYTES) return fail("protocol", "MiMo 配音超过本地 32 MiB 音频限制；不会自动重新生成");
     try {
         const decoded = atob(encoded), bytes = Uint8Array.from(decoded, char => char.charCodeAt(0));
         // Validate a WAV container; the runtime performs the complete audio decode after checkpointing.
         const blob = new Blob([bytes], {type: "audio/wav"});
+        if (blob.size > MAX_AUDIO_BYTES) return fail("protocol", "MiMo 配音超过本地 32 MiB 音频限制；不会自动重新生成");
         if (await detectAudioMime(blob.slice(0, 64, "")) !== "audio/wav") return protocol();
         const preview = message.final_text_preview;
         if (mimo.optimizeTextPreview && (typeof preview !== "string" || !preview.trim())) return protocol();

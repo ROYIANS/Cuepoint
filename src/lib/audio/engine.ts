@@ -1,3 +1,4 @@
+import {MAX_AUDIO_BYTES} from "@/lib/resource/limits";
 import type {AudioSourceMetadata} from "@/domain/audio";
 import type {AudioSchedule, ScheduledAudioClip} from "./schedule";
 import {seekAudioSchedule} from "./schedule";
@@ -11,7 +12,7 @@ export function audioBufferMetadata(buffer: AudioBuffer): AudioSourceMetadata {
 
 export async function decodeAudioBlob(blob: Blob): Promise<AudioBuffer> {
     if (!blob.size) throw new Error("音频文件为空");
-    if (blob.size > 32 * 1024 * 1024) throw new Error("单个文件超过 32 MB，请先拆分音频后导入");
+    if (blob.size > MAX_AUDIO_BYTES) throw new Error("单个文件超过 32 MB，请先拆分音频后导入");
     const context = new OfflineAudioContext(2, 1, MIX_SAMPLE_RATE);
     let buffer: AudioBuffer;
     try {

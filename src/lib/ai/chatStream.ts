@@ -1,3 +1,6 @@
+import {appendedUtf8Bytes, assertResponseBytes, isReadAbort, readErrorText, readResponseJson, utf8Bytes} from "./boundedResponse";
+import {readSseEvents} from "./boundedSse";
+import {MAX_JSON_BYTES, MAX_ERROR_BYTES} from "@/lib/resource/limits";
 import {redactCredentials} from "./safeError";
 import {materializeChatMessages} from "./referenceWire";
 import type {AgentVisionCapability} from "@/domain/referenceInput";
@@ -164,6 +167,17 @@ function redactError(message: string, apiKey: string): string {
     return redactCredentials(message, apiKey).slice(0, 300);
 }
 
+function streamErrorMessage(data: string): string {
+    try {
+        const value: unknown = JSON.parse(data);
+        if (record(value)) {
+            const error = record(value.error) ? value.error : value;
+            if (typeof error.message === "string") return error.message;
+        }
+    } catch { /* Providers may use plain-text error events. */ }
+    return data || "模型服务返回错误";
+}
+
 function readUsage(data: unknown): AgentTokenUsage | undefined {
     if (!record(data) || !record(data.usage)) return undefined;
     const usage: AgentTokenUsage = {};
@@ -220,6 +234,8 @@ function decodeCompletion(data: unknown, stream: boolean): {
 /** Assemble bounded provider fragments; execution still validates strict tool arguments. */
 function createToolAccumulator(tools?: AgentToolSchema[]) {
     const calls = new Map<number, { id: string; name: string; arguments: string }>();
+    let retainedBytes = 0;
+    const callBytes = (call: {id: string; name: string; arguments: string}) => utf8Bytes(call.id) + utf8Bytes(call.name) + utf8Bytes(call.arguments);
     return {
         push(fragments: unknown[] | undefined, streaming: boolean) {
             if (!fragments?.length) return;
@@ -228,7 +244,8 @@ function createToolAccumulator(tools?: AgentToolSchema[]) {
                 if (!record(fragment)) throw new Error("工具调用格式无效");
                 const index = streaming ? fragment.index : position;
                 if (typeof index !== "number" || !Number.isInteger(index) || index < 0 || index >= 16) throw new Error("工具调用索引无效或超过限制");
-                const call = calls.get(index) ?? {id: "", name: "", arguments: ""};
+                const call = {...(calls.get(index) ?? {id: "", name: "", arguments: ""})};
+                const beforeBytes = callBytes(call);
                 if (fragment.type != null && fragment.type !== "function") throw new Error("不支持的工具调用类型");
                 if (fragment.id != null) {
                     if (typeof fragment.id !== "string" || (call.id && call.id !== fragment.id)) throw new Error("工具调用标识冲突");
@@ -243,8 +260,12 @@ function createToolAccumulator(tools?: AgentToolSchema[]) {
                     }
                 }
                 if (call.arguments.length > 32768 || call.name.length > 128 || call.id.length > 256) throw new Error("工具调用超过大小限制");
+                retainedBytes += callBytes(call) - beforeBytes;
                 calls.set(index, call);
             }
+        },
+        retainedBytes(): number {
+            return retainedBytes;
         },
         finish(): AgentWireToolCall[] | undefined {
             if (!calls.size) return undefined;
@@ -353,56 +374,35 @@ export async function streamChatCompletions(
         });
         signal?.throwIfAborted();
         if (!res.ok) {
-            const body = await res.text().catch(() => "");
+            const body = await readErrorText(res, MAX_ERROR_BYTES, signal);
             signal?.throwIfAborted();
             return withMetrics({ok: false, message: formatHttpError(res.status, redactError(body, apiKey))});
         }
 
         const contentType = res.headers.get("content-type") ?? "";
         if (!contentType.toLowerCase().includes("text/event-stream")) {
-            const data: unknown = await res.json().catch(() => null);
+            const data = await readResponseJson(res, MAX_JSON_BYTES, signal);
             signal?.throwIfAborted();
             usage = readUsage(data);
             const {delta, finishReason, toolFragments} = decodeCompletion(data, false);
             const calls = createToolAccumulator(input.tools);
             calls.push(toolFragments, false);
             const acc = {content: "", reasoning: ""};
+            assertResponseBytes(utf8Bytes(delta.content ?? "") + utf8Bytes(delta.reasoning ?? "") + calls.retainedBytes(), MAX_JSON_BYTES);
             applyDeltaHandlers(handlers, delta, acc);
             signal?.throwIfAborted();
             return withMetrics(completionResult(acc.content, acc.reasoning, "json", finishReason ? redactError(finishReason, apiKey) : undefined, calls.finish()));
         }
         if (!res.body) throw new Error("模型返回了空的响应流");
 
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder("utf-8", {fatal: true});
         const calls = createToolAccumulator(input.tools);
-        let buffer = "";
-        let eventData: string[] = [];
-        let eventType = "";
         let completed = false;
         let finishReason: string | undefined;
+        let outputBytes = 0;
         const acc = {content: "", reasoning: ""};
-        const dispatchEvent = () => {
-            if (eventData.length === 0 && eventType !== "error") {
-                eventType = "";
-                return;
-            }
-            const data = eventData.join("\n");
-            eventData = [];
-            const type = eventType;
-            eventType = "";
-            if (type === "error") {
-                let detail = data;
-                try {
-                    const value: unknown = JSON.parse(data);
-                    if (record(value)) {
-                        const error = record(value.error) ? value.error : value;
-                        if (typeof error.message === "string") detail = error.message;
-                    }
-                } catch { /* Some providers use plain-text error events. */
-                }
-                throw new Error(detail || "模型服务返回错误");
-            }
+        const dispatchEvent = (data: string, type: string) => {
+            if (!data && type !== "error") return;
+            if (type === "error") throw new Error(streamErrorMessage(data));
             if (data.trim() === "[DONE]") {
                 completed = true;
                 return;
@@ -420,62 +420,21 @@ export async function streamChatCompletions(
                 throw new Error("模型在结束状态后继续返回内容");
             }
             calls.push(frame.toolFragments, true);
+            const nextBytes = outputBytes + appendedUtf8Bytes(acc.content, frame.delta.content ?? "") + appendedUtf8Bytes(acc.reasoning, frame.delta.reasoning ?? "");
+            assertResponseBytes(nextBytes + calls.retainedBytes(), MAX_JSON_BYTES);
+            outputBytes = nextBytes;
             applyDeltaHandlers(handlers, frame.delta, acc);
             if (frame.finishReason) finishReason = redactError(frame.finishReason, apiKey);
         };
-        const consumeLine = (line: string) => {
-            if (line === "") {
-                dispatchEvent();
-                return;
-            }
-            if (line.startsWith(":")) return;
-            const colon = line.indexOf(":");
-            const field = colon < 0 ? line : line.slice(0, colon);
-            const value = colon < 0 ? "" : line.slice(colon + 1).replace(/^ /, "");
-            if (field === "data") eventData.push(value);
-            if (field === "event") eventType = value;
-        };
-        const consumeBuffer = (eof = false) => {
-            // Preserve a trailing CR between reads so a split CRLF remains one newline.
-            while (!completed) {
-                const match = /[\r\n]/.exec(buffer);
-                if (!match) break;
-                const index = match.index;
-                if (!eof && buffer[index] === "\r" && index === buffer.length - 1) break;
-                const length = buffer[index] === "\r" && buffer[index + 1] === "\n" ? 2 : 1;
-                const line = buffer.slice(0, index);
-                buffer = buffer.slice(index + length);
-                signal?.throwIfAborted();
-                consumeLine(line);
-            }
-        };
-        const onAbort = () => {
-            void reader.cancel().catch(() => undefined);
-        };
-        signal?.addEventListener("abort", onAbort, {once: true});
-        try {
-            while (!completed) {
-                signal?.throwIfAborted();
-                const {done, value} = await reader.read();
-                signal?.throwIfAborted();
-                buffer += done ? decoder.decode() : decoder.decode(value, {stream: true});
-                consumeBuffer(done);
-                if (done) break;
-            }
-            signal?.throwIfAborted();
-            // Undelimited trailing events cannot certify completion; SSE dispatch requires a blank line.
-            if (!completed && (buffer.trim() || eventData.length || eventType)) {
-                throw new Error("回复流意外中断，已保留收到的内容");
-            }
-            if (!completed && !finishReason) throw new Error("回复流意外中断，已保留收到的内容");
-            return withMetrics(completionResult(acc.content, acc.reasoning, "stream", finishReason, calls.finish()));
-        } finally {
-            signal?.removeEventListener("abort", onAbort);
-            void reader.cancel().catch(() => undefined);
-            reader.releaseLock();
+        for await (const event of readSseEvents(res, signal)) {
+            dispatchEvent(event.data, event.event);
+            if (completed) break;
         }
+        signal?.throwIfAborted();
+        if (!completed && !finishReason) throw new Error("回复流意外中断，已保留收到的内容");
+        return withMetrics(completionResult(acc.content, acc.reasoning, "stream", finishReason, calls.finish()));
     } catch (err) {
-        if (signal?.aborted || (err instanceof DOMException && err.name === "AbortError")) {
+        if (isReadAbort(err, signal)) {
             return withMetrics({ok: false, message: "已停止", aborted: true});
         }
         return withMetrics({ok: false, message: redactError(err instanceof Error ? err.message : "网络错误", apiKey)});

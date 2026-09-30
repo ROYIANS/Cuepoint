@@ -1,3 +1,4 @@
+import {MAX_AUDIO_BYTES} from "@/lib/resource/limits";
 export type RecordingState =
     "idle"
     | "requesting"
@@ -129,7 +130,7 @@ export class MicrophoneRecorder {
             recorder.ondataavailable = (event) => {
                 if (epoch !== this.epoch || !event.data.size) return;
                 this.chunkBytes += event.data.size;
-                if (this.chunkBytes > 32 * 1024 * 1024) {
+                if (this.chunkBytes > MAX_AUDIO_BYTES) {
                     this.fail(new Error("本次录音超过 32 MB，请分段录制"));
                     return;
                 }

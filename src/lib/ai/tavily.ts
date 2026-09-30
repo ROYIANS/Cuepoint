@@ -1,3 +1,4 @@
+import {readResponseJson, ResponseLimitError} from "./boundedResponse";
 import {db} from '@/db/database';
 import {publicWebUrl, type WebFailure, type WebFailureCode, type WebResult, type WebSource} from '@/domain/search';
 import {nowIso} from '@/lib/ids';
@@ -18,35 +19,6 @@ const MAX_RESPONSE_BYTES = 2 * 1024 * 1024;
 
 export function webFailure(code: WebFailureCode, message: string, serviceMayHaveRun = false): WebFailure {
     return {ok: false, code, message, serviceMayHaveRun, retrievedAt: nowIso()};
-}
-
-class ResponseLimitError extends Error {
-}
-
-async function boundedJson(response: Response): Promise<unknown> {
-    if (Number(response.headers.get('content-length')) > MAX_RESPONSE_BYTES) {
-        await response.body?.cancel();
-        throw new ResponseLimitError();
-    }
-    if (!response.body) throw new Error('empty');
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let bytes = 0, text = '';
-    try {
-        while (true) {
-            const chunk = await reader.read();
-            if (chunk.done) break;
-            bytes += chunk.value.byteLength;
-            if (bytes > MAX_RESPONSE_BYTES) {
-                await reader.cancel();
-                throw new ResponseLimitError();
-            }
-            text += decoder.decode(chunk.value, {stream: true});
-        }
-        return JSON.parse(text + decoder.decode());
-    } finally {
-        reader.releaseLock();
-    }
 }
 
 const record = (value: unknown): Record<string, unknown> | undefined => value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : undefined;
@@ -88,7 +60,7 @@ async function request(path: 'search' | 'extract' | 'usage', key: string, body: 
             return webFailure(code, message, mayHaveRun);
         }
         try {
-            return {ok: true, value: await boundedJson(response)};
+            return {ok: true, value: await readResponseJson(response, MAX_RESPONSE_BYTES, controller.signal, false)};
         } catch (error) {
             if (controller.signal.aborted) throw error;
             return error instanceof ResponseLimitError ? webFailure('response_too_large', '服务响应超过 2 MiB，未读取超限内容', mayHaveRun) : webFailure('invalid_response', '搜索服务返回了无法解析的数据', mayHaveRun);

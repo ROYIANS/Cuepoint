@@ -1,3 +1,6 @@
+import {appendedUtf8Bytes, assertResponseBytes, isReadAbort, readErrorText, readResponseJson, utf8Bytes} from "./boundedResponse";
+import {readSseEvents} from "./boundedSse";
+import {MAX_JSON_BYTES, MAX_ERROR_BYTES} from "@/lib/resource/limits";
 import {redactCredentials} from "./safeError";
 import {materializeResponseItems} from "./referenceWire";
 import type {AgentRequestMessage, AgentResponseItem, AgentTokenUsage, AgentWireToolCall} from "@/domain/agent";
@@ -6,7 +9,7 @@ import {authHeaders, normalizeBaseUrl} from "@/lib/ai/openaiCompatible";
 import {assertReasoningEffort} from "@/lib/ai/reasoningPolicy";
 
 export type ResponsesResult = StreamChatResult & { responseOutput?: AgentResponseItem[] };
-const MAX_ENVELOPE_SIZE = 4_194_304;
+const MAX_ENVELOPE_SIZE = MAX_JSON_BYTES;
 const RESPONSE_STATUSES = new Set(["completed", "failed", "incomplete", "in_progress", "queued", "cancelled"]);
 
 function record(value: unknown): value is Record<string, unknown> {
@@ -138,7 +141,7 @@ export async function streamResponses(input: StreamChatInput & {
     const signal = handlers.signal;
     const startedAt = Date.now();
     let firstTokenAt: number | undefined, usage: AgentTokenUsage | undefined;
-    let content = "", reasoning = "";
+    let content = "", reasoning = "", outputBytes = 0;
     const redact = (value: string) => redactCredentials(value, apiKey).slice(0, 300);
     const result = (value: ResponsesResult): ResponsesResult => ({
         ...value, ...(usage ? {usage} : {}),
@@ -150,6 +153,10 @@ export async function streamResponses(input: StreamChatInput & {
     const emit = (kind: "content" | "reasoning", value: string, streaming = true) => {
         signal?.throwIfAborted();
         if (!value) return;
+        const nextBytes = outputBytes + appendedUtf8Bytes(kind === "content" ? content : reasoning, value);
+        assertResponseBytes(nextBytes, MAX_ENVELOPE_SIZE);
+        if (content.length + reasoning.length + value.length > MAX_ENVELOPE_SIZE) throw new Error("Responses 输出超过限制");
+        outputBytes = nextBytes;
         if (streaming && firstTokenAt === undefined) firstTokenAt = Date.now();
         if (kind === "content") {
             content += value;
@@ -173,6 +180,7 @@ export async function streamResponses(input: StreamChatInput & {
             });
         }
         const parsed = decodeResponseOutput(response.output, input.tools);
+        assertResponseBytes(utf8Bytes(JSON.stringify(response.output)), MAX_ENVELOPE_SIZE);
         if (!parsed.content.startsWith(content) || !parsed.reasoning.startsWith(reasoning)) throw new Error("Responses 最终内容与流事件不一致");
         // A terminal envelope is a complete payload, not evidence of first-token
         // latency. Only actual delta events establish streaming throughput timing.
@@ -222,18 +230,12 @@ export async function streamResponses(input: StreamChatInput & {
         }
         if (!res.ok) return result({
             ok: false,
-            message: `请求失败（${res.status}）：${redact(await res.text().catch(() => ""))}`
+            message: `请求失败（${res.status}）：${redact(await readErrorText(res, MAX_ERROR_BYTES, signal))}`
         });
-        if (!(res.headers.get("content-type") ?? "").includes("text/event-stream")) return finish(await res.json(), "json");
+        if (!(res.headers.get("content-type") ?? "").includes("text/event-stream")) return finish(await readResponseJson(res, MAX_JSON_BYTES, signal), "json");
         if (!res.body) throw new Error("Responses 返回了空的响应流");
-        const reader = res.body.getReader(), decoder = new TextDecoder("utf-8", {fatal: true});
-        let buffer = "", lines: string[] = [], eventName = "", terminal: ResponsesResult | undefined;
-        const dispatch = () => {
-            if (!lines.length && !eventName) return;
-            const data = lines.join("\n");
-            lines = [];
-            const name = eventName;
-            eventName = "";
+        let terminal: ResponsesResult | undefined;
+        const dispatch = (data: string, name: string) => {
             if (!data || data.trim() === "[DONE]") return;
             const value: unknown = JSON.parse(data);
             if (!record(value) || typeof value.type !== "string") throw new Error("Responses 流事件无效");
@@ -250,51 +252,15 @@ export async function streamResponses(input: StreamChatInput & {
             // fragments are accepted only via the complete terminal output envelope.
             if (content.length + reasoning.length > MAX_ENVELOPE_SIZE) throw new Error("Responses 输出超过限制");
         };
-        const consume = (eof = false) => {
-            while (!terminal) {
-                const match = /[\r\n]/.exec(buffer);
-                if (!match) break;
-                const at = match.index;
-                if (!eof && buffer[at] === "\r" && at === buffer.length - 1) break;
-                const size = buffer[at] === "\r" && buffer[at + 1] === "\n" ? 2 : 1;
-                const line = buffer.slice(0, at);
-                buffer = buffer.slice(at + size);
-                if (!line) {
-                    dispatch();
-                    continue;
-                }
-                if (line.startsWith(":")) continue;
-                const colon = line.indexOf(":");
-                const field = colon < 0 ? line : line.slice(0, colon);
-                const value = colon < 0 ? "" : line.slice(colon + 1).replace(/^ /, "");
-                if (field === "data") lines.push(value);
-                if (field === "event") eventName = value;
-            }
-        };
-        const abort = () => {
-            void reader.cancel().catch(() => undefined);
-        };
-        signal?.addEventListener("abort", abort, {once: true});
-        try {
-            while (!terminal) {
-                signal?.throwIfAborted();
-                const next = await reader.read();
-                signal?.throwIfAborted();
-                buffer += next.done ? decoder.decode() : decoder.decode(next.value, {stream: true});
-                if (buffer.length + lines.reduce((sum, line) => sum + line.length, 0) > MAX_ENVELOPE_SIZE) throw new Error("Responses 流事件超过限制");
-                consume(next.done);
-                if (next.done) break;
-            }
-            signal?.throwIfAborted();
-            if (!terminal) throw new Error("Responses 回复流意外中断，已保留收到的内容");
-            return terminal;
-        } finally {
-            signal?.removeEventListener("abort", abort);
-            void reader.cancel().catch(() => undefined);
-            reader.releaseLock();
+        for await (const event of readSseEvents(res, signal)) {
+            dispatch(event.data, event.event);
+            if (terminal) break;
         }
+        signal?.throwIfAborted();
+        if (!terminal) throw new Error("Responses 回复流意外中断，已保留收到的内容");
+        return terminal;
     } catch (error) {
-        return result(signal?.aborted || (error instanceof DOMException && error.name === "AbortError") ? {
+        return result(isReadAbort(error, signal) ? {
             ok: false,
             message: "已停止",
             aborted: true
