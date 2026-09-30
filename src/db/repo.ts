@@ -48,13 +48,13 @@ import {
     type VisualStyle,
     type WorldSetting
 } from "@/domain/types";
-import {assertDraftBaseline} from "@/lib/draftConflict";
+import {assertDraftBaseline, DraftConflictError, sameDraftStructure} from "@/lib/draftConflict";
 import {getGeneralAgentConfig} from "./agentSettings";
 import {normalizeContextPolicy} from "@/lib/agent/contextPolicy";
 import {validateGenerationDefaults} from "@/domain/output";
 import {db} from "./database";
 import {normalizeBaseUrl} from "@/lib/ai/openaiCompatible";
-import {collectSlotsMedia, emptySlot, SHOT_PICTURE_FIELDS, slotMediaIds} from "@/domain/slot";
+import {collectSlotsMedia, emptySlot, SHOT_PICTURE_FIELDS, slotMediaIds, sameSlotValue} from "@/domain/slot";
 import {createId, nowIso} from "@/lib/ids";
 
 // Media recycling must hold the same lock as every committed slot/cover writer.
@@ -239,9 +239,25 @@ export async function renameProject(id: Id, name: string): Promise<void> {
 }
 
 /** Optional project metadata uses explicit undefined to clear saved defaults. */
+type ProjectDetailsPatch = Partial<Pick<Project, "name" | "brief" | "genre" | "audience" | "tone" | "aspectPreset" | "defaultStyleId" | "generationDefaults">>;
+
+function assertProjectDetailsBaseline(project: Project, next: Project, patch: ProjectDetailsPatch, baseline?: Partial<Project>): void {
+    if (!baseline) return;
+    for (const key of Object.keys(patch) as Array<keyof ProjectDetailsPatch>) {
+        if (key === "generationDefaults") {
+            if (!sameDraftStructure(project[key] ?? {}, baseline[key] ?? {}) &&
+                !sameDraftStructure(project[key] ?? {}, next[key] ?? {})) throw new DraftConflictError();
+        } else if (key === "aspectPreset") {
+            if (normalizeAspectPreset(project[key]) !== normalizeAspectPreset(baseline[key]) &&
+                normalizeAspectPreset(project[key]) !== next[key]) throw new DraftConflictError();
+        } else assertDraftBaseline(project, {[key]: next[key]}, baseline);
+    }
+}
+
 export async function patchProjectDetails(
     id: Id,
-    patch: Partial<Pick<Project, "name" | "brief" | "genre" | "audience" | "tone" | "aspectPreset" | "defaultStyleId" | "generationDefaults">>,
+    patch: ProjectDetailsPatch,
+    baseline?: Partial<Project>,
 ): Promise<void> {
     await db.transaction("rw", db.projects, db.styles, async () => {
         const project = await db.projects.get(id);
@@ -268,6 +284,7 @@ export async function patchProjectDetails(
             if (errors.length) throw new Error(errors.join("；"));
             next.generationDefaults = patch.generationDefaults;
         }
+        assertProjectDetailsBaseline(project, next, patch, baseline);
         await db.projects.put(touch(next));
     });
 }
@@ -888,10 +905,12 @@ export async function setCharacterSlot(
     id: Id,
     slotKey: CharacterImageSlot,
     slot: GenerationSlot,
+    baseline?: GenerationSlot,
 ): Promise<void> {
     await db.transaction("rw", PRODUCTION_TABLES, async () => {
         const character = await db.characters.get(id);
         if (!character) throw new Error("角色不存在，无法保存");
+        if (baseline && !sameSlotValue(character.slots[slotKey], baseline) && !sameSlotValue(character.slots[slotKey], slot)) throw new DraftConflictError();
         await assertSlotMedia(character.projectId, slot);
         const previous = character.slots[slotKey];
         await db.characters.put(
@@ -962,10 +981,12 @@ export async function setSceneSlot(
     id: Id,
     slotKey: SceneImageSlot,
     slot: GenerationSlot,
+    baseline?: GenerationSlot,
 ): Promise<void> {
     await db.transaction("rw", PRODUCTION_TABLES, async () => {
         const scene = await db.scenes.get(id);
         if (!scene) throw new Error("场景不存在，无法保存");
+        if (baseline && !sameSlotValue(scene.slots[slotKey], baseline) && !sameSlotValue(scene.slots[slotKey], slot)) throw new DraftConflictError();
         await assertSlotMedia(scene.projectId, slot);
         const previous = scene.slots[slotKey];
         await db.scenes.put(touch({...scene, slots: {...scene.slots, [slotKey]: slot}}));
@@ -1030,10 +1051,12 @@ export async function setPropSlot(
     id: Id,
     slotKey: PropImageSlot,
     slot: GenerationSlot,
+    baseline?: GenerationSlot,
 ): Promise<void> {
     await db.transaction("rw", PRODUCTION_TABLES, async () => {
         const prop = await db.props.get(id);
         if (!prop) throw new Error("道具不存在，无法保存");
+        if (baseline && !sameSlotValue(prop.slots[slotKey], baseline) && !sameSlotValue(prop.slots[slotKey], slot)) throw new DraftConflictError();
         await assertSlotMedia(prop.projectId, slot);
         const previous = prop.slots[slotKey];
         await db.props.put(touch({...prop, slots: {...prop.slots, [slotKey]: slot}}));
@@ -1085,10 +1108,12 @@ export async function setStyleSlot(
     id: Id,
     slotKey: StyleImageSlot,
     slot: GenerationSlot,
+    baseline?: GenerationSlot,
 ): Promise<void> {
     await db.transaction("rw", PRODUCTION_TABLES, async () => {
         const style = await db.styles.get(id);
         if (!style) throw new Error("风格不存在，无法保存");
+        if (baseline && !sameSlotValue(style.slots[slotKey], baseline) && !sameSlotValue(style.slots[slotKey], slot)) throw new DraftConflictError();
         await assertSlotMedia(style.projectId, slot);
         const previous = style.slots[slotKey];
         await db.styles.put(touch({...style, slots: {...style.slots, [slotKey]: slot}}));
@@ -1452,11 +1477,20 @@ export async function addShot(
 export async function patchShot(
     id: Id,
     patch: Partial<Omit<Shot, "id" | "projectId" | "episodeId">>,
+    baseline?: Partial<Shot>,
 ): Promise<void> {
     await db.transaction("rw", PRODUCTION_TABLES, async () => {
         const shot = await db.shots.get(id);
         if (!shot) throw new Error("镜头不存在，无法保存");
         patch = pickPatch(patch, ["order", "shotNumber", "status", "firstFrame", "lastFrame", "clip", "category", "durationSec", "content", "notes", "sceneCloseup", "sound", "emotion", "cameraAngle", "cameraGear", "focalLength", "characterIds", "sceneId", "beatId", "propIds", "styleId", "extra"]);
+        if (baseline) {
+            for (const key of Object.keys(patch) as Array<keyof typeof patch>) {
+                const current = key === "durationSec" ? shot.durationSec ?? 0 : shot[key] ?? "";
+                const original = key === "durationSec" ? baseline.durationSec ?? 0 : baseline[key] ?? "";
+                const final = key === "durationSec" ? patch.durationSec ?? 0 : patch[key] ?? "";
+                if (!sameDraftStructure(current, original) && !sameDraftStructure(current, final)) throw new DraftConflictError();
+            }
+        }
         await assertShotReferences({...shot, ...patch});
         await db.shots.put({...shot, ...patch});
         await touchProject(shot.projectId);
@@ -1467,45 +1501,110 @@ export type EpisodeShotBulkPatch = Partial<
     Pick<Shot, "beatId" | "durationSec" | "status" | "characterIds" | "sceneId" | "propIds" | "styleId" | "notes">
 >;
 
+const SHOT_BULK_FIELDS = ["beatId", "durationSec", "status", "characterIds", "sceneId", "propIds", "styleId", "notes"] as const;
+type ShotBulkField = (typeof SHOT_BULK_FIELDS)[number];
+
+export interface EpisodeShotBulkUndo {
+    projectId: Id;
+    episodeId: Id;
+    shots: Array<{ id: Id; before: EpisodeShotBulkPatch; after: EpisodeShotBulkPatch }>;
+}
+
+function shotBulkSnapshot(shot: Shot, fields: readonly ShotBulkField[]): EpisodeShotBulkPatch {
+    // Include absent optional values so undo can explicitly clear a newly assigned reference.
+    return structuredClone(pickPatch({
+        beatId: shot.beatId, durationSec: shot.durationSec, status: shot.status,
+        characterIds: shot.characterIds, sceneId: shot.sceneId, propIds: shot.propIds,
+        styleId: shot.styleId, notes: shot.notes,
+    }, fields));
+}
+
+function sameShotBulkValue(left: EpisodeShotBulkPatch[ShotBulkField], right: EpisodeShotBulkPatch[ShotBulkField]): boolean {
+    if (Array.isArray(left) && Array.isArray(right)) {
+        return left.length === right.length && left.every((id, index) => id === right[index]);
+    }
+    return left === right;
+}
+
 export async function patchEpisodeShots(
     episodeId: Id,
     ids: Id[],
     patch: EpisodeShotBulkPatch,
-): Promise<void> {
+): Promise<EpisodeShotBulkUndo | undefined> {
     if (ids.length === 0) return;
-    await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    ids = [...ids];
+    patch = structuredClone(pickPatch(patch, SHOT_BULK_FIELDS));
+    return db.transaction("rw", PRODUCTION_TABLES, async () => {
         const episode = await db.episodes.get(episodeId);
         if (!episode) throw new Error("集不存在");
         await assertVideoProject(episode.projectId);
         if (new Set(ids).size !== ids.length) throw new Error("镜头列表包含重复记录");
-        const shots = await db.shots.bulkGet(ids);
-        if (
-            shots.some(
-                (shot) =>
-                    !shot || shot.episodeId !== episodeId || shot.projectId !== episode.projectId,
-            )
-        ) {
-            throw new Error("所选镜头不属于当前集");
+        const rows = await db.shots.bulkGet(ids);
+        const shots: Shot[] = [];
+        for (const shot of rows) {
+            if (!shot || shot.episodeId !== episodeId || shot.projectId !== episode.projectId) {
+                throw new Error("所选镜头不属于当前集");
+            }
+            shots.push(shot);
         }
-        if (
-            patch.beatId !== undefined &&
-            !normalizeEpisodeStory(episode.story).beats.some((beat) => beat.id === patch.beatId)
-        ) {
-            throw new Error("场次不属于当前集");
-        }
-        patch = pickPatch(patch, ["beatId", "durationSec", "status", "characterIds", "sceneId", "propIds", "styleId", "notes"]);
+        const fields = SHOT_BULK_FIELDS.filter((key) => Object.hasOwn(patch, key));
+        if (fields.length === 0) return;
         const nextPatch: EpisodeShotBulkPatch = {...patch};
-        if ("status" in patch) {
-            nextPatch.status = normalizeShotStatus(patch.status);
-        }
+        if ("status" in patch) nextPatch.status = normalizeShotStatus(patch.status);
         if ("characterIds" in patch) {
-            nextPatch.characterIds = Array.isArray(patch.characterIds)
-                ? [...patch.characterIds]
-                : [];
+            nextPatch.characterIds = Array.isArray(patch.characterIds) ? [...patch.characterIds] : [];
         }
-        for (const shot of shots) await assertShotReferences({...shot!, ...nextPatch});
-        await Promise.all(shots.map((shot) => db.shots.put({...shot!, ...nextPatch})));
+        const updated = shots.map((shot) => ({...shot, ...nextPatch}));
+        for (const shot of updated) await assertShotReferences(shot);
+        const undo: EpisodeShotBulkUndo = {
+            projectId: episode.projectId, episodeId,
+            shots: shots.map((shot, index) => ({
+                id: shot.id,
+                before: shotBulkSnapshot(shot, fields),
+                after: shotBulkSnapshot(updated[index], fields),
+            })),
+        };
+        await db.shots.bulkPut(updated);
         await touchProject(episode.projectId);
+        return undo;
+    });
+}
+
+export async function undoEpisodeShotBulkPatch(undo: EpisodeShotBulkUndo): Promise<void> {
+    if (undo.shots.length === 0) return;
+    undo = structuredClone(undo);
+    await db.transaction("rw", PRODUCTION_TABLES, async () => {
+        const episode = await db.episodes.get(undo.episodeId);
+        if (!episode || episode.projectId !== undo.projectId) throw new Error("撤销的集不属于当前项目");
+        await assertVideoProject(undo.projectId);
+        const ids = undo.shots.map((entry) => entry.id);
+        if (new Set(ids).size !== ids.length) throw new Error("镜头列表包含重复记录");
+        const shots = await db.shots.bulkGet(ids);
+        const restored: Shot[] = [];
+        for (const [index, entry] of undo.shots.entries()) {
+            const shot = shots[index];
+            if (!shot || shot.projectId !== undo.projectId || shot.episodeId !== undo.episodeId) {
+                throw new Error("所选镜头不属于当前集，无法撤销");
+            }
+            const fields = SHOT_BULK_FIELDS.filter((key) => Object.hasOwn(entry.after, key));
+            if (fields.length === 0 || fields.length !== Object.keys(entry.after).length ||
+                fields.length !== Object.keys(entry.before).length || fields.some((key) => !Object.hasOwn(entry.before, key))) {
+                throw new Error("批量撤销字段无效");
+            }
+            for (const key of fields) {
+                // A field already restored to before can converge; any third value is a conflict.
+                if (!sameShotBulkValue(shot[key], entry.after[key]) && !sameShotBulkValue(shot[key], entry.before[key])) {
+                    throw new Error("镜头已被再次修改，无法撤销批量修改。后续修改已保留。");
+                }
+            }
+            const next = {...shot, ...entry.before};
+            await assertShotReferences(shot);
+            await assertShotReferences(next);
+            restored.push(next);
+        }
+        // Validate every target and relationship before the first write, then commit as one group.
+        await db.shots.bulkPut(restored);
+        await touchProject(undo.projectId);
     });
 }
 
@@ -1592,10 +1691,12 @@ export async function setShotSlot(
     id: Id,
     field: ShotPictureField,
     slot: GenerationSlot,
+    baseline?: GenerationSlot,
 ): Promise<void> {
     await db.transaction("rw", PRODUCTION_TABLES, async () => {
         const shot = await db.shots.get(id);
         if (!shot) throw new Error("镜头不存在，无法保存");
+        if (baseline && !sameSlotValue(shot[field], baseline) && !sameSlotValue(shot[field], slot)) throw new DraftConflictError();
         await assertSlotMedia(shot.projectId, slot);
         const previous = shot[field];
         await db.shots.put({...shot, [field]: slot});
@@ -1628,23 +1729,37 @@ export async function deleteShots(ids: Id[]): Promise<void> {
     });
 }
 
-export async function deleteEpisodeShots(episodeId: Id, ids: Id[]): Promise<void> {
-    await db.transaction("rw", PRODUCTION_TABLES, async () => {
+export interface DeletedShotsSnapshot {
+    projectId: Id;
+    episodeId: Id;
+    shots: Shot[];
+    media: MediaRecord[];
+}
+
+export async function deleteEpisodeShots(episodeId: Id, ids: Id[]): Promise<DeletedShotsSnapshot | undefined> {
+    return db.transaction("rw", PRODUCTION_TABLES, async () => {
         if (ids.length === 0) return;
         const episode = await db.episodes.get(episodeId);
         if (!episode) throw new Error("集不存在");
         await assertVideoProject(episode.projectId);
         if (new Set(ids).size !== ids.length) throw new Error("镜头列表包含重复记录");
-        const shots = await db.shots.bulkGet(ids);
-        if (
-            shots.some(
-                (shot) =>
-                    !shot || shot.episodeId !== episodeId || shot.projectId !== episode.projectId,
-            )
-        ) {
-            throw new Error("所选镜头不属于当前集");
+        const rows = await db.shots.bulkGet(ids);
+        const shots: Shot[] = [];
+        for (const shot of rows) {
+            if (!shot || shot.episodeId !== episodeId || shot.projectId !== episode.projectId) {
+                throw new Error("所选镜头不属于当前集");
+            }
+            shots.push(shot);
         }
+        const mediaIds = [...new Set(shots.flatMap((shot) =>
+            SHOT_PICTURE_FIELDS.flatMap((field) => slotMediaIds(shot[field])),
+        ))];
+        const media = (await db.media.bulkGet(mediaIds)).filter(
+            (record): record is MediaRecord => record !== undefined,
+        );
+        // Snapshot and nested deletion share the production lock through cleanup and commit.
         await deleteShots(ids);
+        return {projectId: episode.projectId, episodeId, shots, media};
     });
 }
 

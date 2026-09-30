@@ -168,3 +168,37 @@ Use the shared `redactCredentials` primitive before truncating provider diagnost
 Speech POST uses fixed /chat/completions, assistant content for spoken text, user content for instruction/design, `stream:false`, and WAV output. Clone serializes a WAV/MP3 sample as a data URI only inside transport, max 10 MiB encoded including prefix. Design omits voice; explicit optimize_text_preview enables altered/automatic text and requires returned final_text_preview. Require stop completion, base64 WAV signature, then runtime checkpoint/decode. Redact credentials before truncating errors and never auto retry.
 
 Official sources: https://mimo.mi.com/docs/zh-CN/api/model/list-models and https://mimo.mi.com/docs/zh-CN/quick-start/usage-guide/audio/speech-synthesis-v2.5, checked 2026-09-22.
+
+
+## Responses saved diagnostic status contract (A01 / PM-01, 2026-09-30)
+
+### Scope / trigger
+Responses adapters return diagnostic metadata that `runChat` passes to `finishAgentRun`; saved diagnostics have the same credential boundary as visible errors.
+
+### Signatures
+`streamResponses(input, handlers): Promise<ResponsesResult>` and `finishAgentRun(..., error?, finishReason?)` retain their existing signatures. Failed results may omit `finishReason`.
+
+### Contracts
+- A JSON failure can retain only these exact known statuses as `finishReason`: `completed`, `failed`, `incomplete`, `in_progress`, `queued`, `cancelled`. Unknown provider strings, including long strings, are omitted; do not persist them as status text.
+- Error `message` uses the shared credential redactor before truncation. Never treat protecting message alone as protecting the whole saved result.
+- Success keeps `stop` or `tool_calls`. A response with an error remains failure even if its recognized status is `completed`.
+- SSE terminal event/type consistency remains mandatory. A mismatching unknown status is rejected before finish; this path differs from JSON failure handling.
+- A protocol failure never triggers an automatic second POST.
+
+### Validation / error matrix
+| Input | Required result |
+|---|---|
+| Unknown JSON status containing configured key/Bearer text | `ok:false`, redacted message, omitted finishReason; saved run/message contain neither key |
+| Known JSON status plus error | `ok:false`, exact known finishReason, redacted message |
+| SSE response.failed with mismatching status | Explicit terminal-consistency failure, no arbitrary finishReason |
+| Legal failed/incomplete SSE error | Known finishReason and redacted message |
+| Complete content/tool result | Existing stop/tool_calls success |
+
+### Good / base / bad cases
+Base: failed status and ordinary provider error stay readable. Good: long unknown status is discarded while useful redacted error survives. Bad: copying unknown status through to run metadata because the visible message was already redacted.
+
+### Required tests
+`tests/responsesStream.test.ts` tests short/long fake-key JSON status, actual `finishAgentRun` persistence, known-status compatibility, SSE rejection/redaction, successful stop/tool_calls, and exactly one fetch. The vulnerability assertions must fail against the original raw-status implementation.
+
+### Wrong / correct
+Wrong: `finishReason = response.status` for any string. Correct: retain only recognized diagnostic statuses; separately redact the error and assert the complete persisted result has no credentials.

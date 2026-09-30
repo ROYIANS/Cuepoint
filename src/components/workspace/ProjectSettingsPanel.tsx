@@ -1,4 +1,4 @@
-import {type ReactNode, useEffect, useState} from "react";
+import {type ReactNode, useEffect, useRef, useState} from "react";
 import {useLiveQuery} from "dexie-react-hooks";
 import {toast} from "sonner";
 import {db} from "@/db/database";
@@ -22,6 +22,7 @@ import {
     VIDEO_RATIOS,
     VIDEO_RESOLUTIONS,
 } from "@/domain/output";
+import {acknowledgeOutputDraft, outputDraftPatch, projectOutputValue, rebaseOutputDraft, type ProjectOutputDraft} from "@/lib/projectOutputDraft";
 import {AssetTextField} from "@/components/assets/AssetTextField";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
@@ -66,7 +67,7 @@ export function ProjectSettingsPanel({project, onOutputState}: {
     async function setStyle(value: string) {
         setStylePending(true);
         try {
-            await patchProjectDetails(project.id, {defaultStyleId: value === "none" ? undefined : value});
+            await patchProjectDetails(project.id, {defaultStyleId: value === "none" ? undefined : value}, {defaultStyleId: project.defaultStyleId});
         } catch (error) {
             toast.error(error instanceof Error ? error.message : "风格保存失败");
         } finally {
@@ -78,11 +79,11 @@ export function ProjectSettingsPanel({project, onOutputState}: {
         <div className="space-y-4">
             <AssetTextField key={`${project.id}:name`} draftKey={`${project.id}:name`} projectId={project.id}
                             label="项目名称" value={project.name}
-                            persist={(name) => patchProjectDetails(project.id, {name})}/>
+                            persist={(name, baseline) => patchProjectDetails(project.id, {name}, {name: baseline})}/>
             <AssetTextField key={`${project.id}:brief`} draftKey={`${project.id}:brief`} projectId={project.id}
                             label="创作简述" value={project.brief ?? ""} multiline
                             placeholder="想表达什么，希望作品带来什么感受"
-                            persist={(brief) => patchProjectDetails(project.id, {brief})}/>
+                            persist={(brief, baseline) => patchProjectDetails(project.id, {brief}, {brief: baseline})}/>
             <details className="rounded-xl border p-4">
                 <summary className="cursor-pointer text-sm font-medium">补充创作信息 <span
                     className="text-muted-foreground text-xs font-normal">· 可选</span></summary>
@@ -97,7 +98,7 @@ export function ProjectSettingsPanel({project, onOutputState}: {
                                                                                      label={label}
                                                                                      placeholder={placeholder}
                                                                                      value={project[field] ?? ""}
-                                                                                     persist={(value) => patchProjectDetails(project.id, {[field]: value})}/>)}
+                                                                                     persist={(value, baseline) => patchProjectDetails(project.id, {[field]: value}, {[field]: baseline})}/>)}
                 </div>
             </details>
         </div>
@@ -132,12 +133,29 @@ function ProjectOutputSettings({project, onOutputState}: {
     project: Project;
     onOutputState: (state: { dirty: boolean; saving: boolean }) => void
 }) {
-    const [ratio, setRatio] = useState<AspectPresetId>(project.aspectPreset);
-    const [draft, setDraft] = useState<ProjectGenerationDefaults>(project.generationDefaults ?? {});
+    const [output, setOutput] = useState<ProjectOutputDraft>(() => {
+        const value = projectOutputValue(project);
+        return {value, baseline: structuredClone(value), observed: value};
+    });
+    const {aspectPreset: ratio, generationDefaults: draft} = output.value;
+    const setRatio = (aspectPreset: AspectPresetId) => setOutput(current => ({...current, value: {...current.value, aspectPreset}}));
+    const setDraft = (generationDefaults: ProjectGenerationDefaults) => setOutput(current => ({...current, value: {...current.value, generationDefaults}}));
     const [saving, setSaving] = useState(false);
+    const saveBusy = useRef(false);
+    const latestProject = useRef(project);
+    latestProject.current = project;
+    const patch = outputDraftPatch(output);
+    const ratioDirty = "aspectPreset" in patch;
+    const defaultsDirty = "generationDefaults" in patch;
+    const liveRatio = project.aspectPreset;
+    const liveDefaults = project.generationDefaults;
+    useEffect(() => {
+        if (saving) return;
+        setOutput(current => rebaseOutputDraft(current, projectOutputValue({aspectPreset: liveRatio, generationDefaults: liveDefaults})));
+    }, [liveRatio, liveDefaults, saving, ratioDirty, defaultsDirty]);
     const [saveError, setSaveError] = useState<string>();
     const errors = validateGenerationDefaults(draft);
-    const dirty = ratio !== project.aspectPreset || JSON.stringify(draft) !== JSON.stringify(project.generationDefaults ?? {});
+    const dirty = ratioDirty || defaultsDirty;
     useEffect(() => {
         onOutputState({dirty, saving});
     }, [dirty, saving, onOutputState]);
@@ -163,15 +181,23 @@ function ProjectOutputSettings({project, onOutputState}: {
     };
 
     async function save() {
-        if (errors.length || saving) return;
+        if (errors.length || saveBusy.current) return;
+        saveBusy.current = true;
         setSaving(true);
         setSaveError(undefined);
         try {
-            await patchProjectDetails(project.id, {aspectPreset: ratio, generationDefaults: draft});
+            const patch = outputDraftPatch(output);
+            await patchProjectDetails(project.id, patch, output.baseline);
+            const currentProject = await db.projects.get(project.id);
+            if (!currentProject) throw new Error("项目不存在，无法确认输出配置");
+            const latest = projectOutputValue(latestProject.current);
+            const authoritative = projectOutputValue(currentProject);
+            setOutput(current => acknowledgeOutputDraft(current, patch, latest, authoritative));
             toast.success("输出配置已保存");
         } catch (error) {
             setSaveError(error instanceof Error ? error.message : "输出配置保存失败，请重试");
         } finally {
+            saveBusy.current = false;
             setSaving(false);
         }
     }
@@ -271,10 +297,10 @@ function ProjectOutputSettings({project, onOutputState}: {
                className="text-muted-foreground text-xs">{saving ? "正在保存…" : dirty ? "输出配置尚未保存" : "输出配置已保存"}</p>
             <div className="flex gap-2">
                 <Button variant="ghost" size="sm" disabled={!dirty || saving} onClick={() => {
-                    setDraft(project.generationDefaults ?? {});
-                    setRatio(project.aspectPreset);
+                    const value = projectOutputValue(project);
+                    setOutput({value, baseline: structuredClone(value), observed: value});
                     setSaveError(undefined);
-                }}>撤销修改</Button>
+                }}>{saveError ? "采用最新内容" : "撤销修改"}</Button>
                 <Button size="sm" disabled={!dirty || saving || errors.length > 0}
                         onClick={() => void save()}>保存输出配置</Button>
             </div>

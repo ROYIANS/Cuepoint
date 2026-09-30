@@ -71,6 +71,89 @@ describe("Responses transport", () => {
     expect(JSON.stringify(result)).not.toContain("secret");
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
+  it.each(["short", "long"])("does not expose or persist a %s unknown JSON status containing credentials", async (length) => {
+    const apiKey = "sk-audit-fixture";
+    const bearerKey = "sk-other-fixture";
+    const status = `${length === "long" ? "x".repeat(10_000) : "failed"} invalid key ${apiKey} Bearer ${bearerKey}`;
+    const fetcher = vi.fn(async () => Response.json({ ...response([call]), status, error: { message: `invalid key ${apiKey}; Bearer ${bearerKey}` } }));
+    const result = await streamResponses({ ...input, apiKey }, { fetchImpl: fetcher });
+    expect(result).toMatchObject({ ok: false, message: "invalid key [已隐藏]; Bearer [已隐藏]", usage: { totalTokens: 8 } });
+    expect(result).not.toHaveProperty("toolCalls");
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    if (result.ok) throw new Error("Expected a failed Responses result");
+
+    const thread = await createChatThread();
+    const run = await beginAgentRun({ threadId: thread.id, connector: { ...connector, apiKey }, model: input.model, content: "hi" });
+    await finishAgentRun(run.id, "failed", { content: "" }, result.message, result.finishReason);
+    const savedRun = await db.agentRuns.get(run.id);
+    const savedMessage = await db.chatMessages.get(run.assistantMessageId);
+    expect(savedRun).toMatchObject({ status: "failed", error: result.message });
+    expect(savedMessage).toMatchObject({ status: "error", error: result.message });
+    for (const value of [result, savedRun, savedMessage]) {
+      const serialized = JSON.stringify(value);
+      expect(serialized).not.toContain(apiKey);
+      expect(serialized).not.toContain(bearerKey);
+      expect(serialized).not.toContain(status);
+    }
+    expect(result.finishReason).toBeUndefined();
+    expect(savedRun?.finishReason).toBeUndefined();
+  });
+  it.each(["configured", "bearer"])("redacts a long JSON message before truncation and persistence (%s credential)", async (kind) => {
+    const apiKey = `sk-audit-${"k".repeat(320)}-fixture`;
+    const bearerKey = `sk-other-${"b".repeat(320)}-fixture`;
+    const prefix = "x".repeat(285);
+    const credential = kind === "configured" ? apiKey : `Bearer ${bearerKey}`;
+    const expectedMessage = `${prefix}${kind === "configured" ? "[已隐藏]" : "Bearer [已隐藏]"}; diagnostic tail`.slice(0, 300);
+    const fetcher = vi.fn(async () => Response.json({ ...response([call]), status: "failed", error: { message: `${prefix}${credential}; diagnostic tail` } }));
+    const result = await streamResponses({ ...input, apiKey }, { fetchImpl: fetcher });
+    expect(result).toMatchObject({ ok: false, message: expectedMessage, finishReason: "failed" });
+    expect(result).not.toHaveProperty("toolCalls");
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    if (result.ok) throw new Error("Expected a failed Responses result");
+
+    const thread = await createChatThread();
+    const run = await beginAgentRun({ threadId: thread.id, connector: { ...connector, apiKey }, model: input.model, content: "hi" });
+    await finishAgentRun(run.id, "failed", { content: "" }, result.message, result.finishReason);
+    const savedRun = await db.agentRuns.get(run.id);
+    const savedMessage = await db.chatMessages.get(run.assistantMessageId);
+    expect(savedRun).toMatchObject({ status: "failed", error: expectedMessage, finishReason: "failed" });
+    expect(savedMessage).toMatchObject({ status: "error", error: expectedMessage });
+    for (const value of [result, savedRun, savedMessage]) {
+      const serialized = JSON.stringify(value);
+      expect(serialized).not.toContain(apiKey.slice(0, 20));
+      expect(serialized).not.toContain(bearerKey.slice(0, 20));
+    }
+  });
+  it.each(["completed", "failed", "incomplete", "in_progress", "queued", "cancelled"])("preserves known JSON status %s and redacts its error", async (status) => {
+    const fetcher = vi.fn(async () => Response.json({ ...response([call]), status, error: { message: "invalid key secret; Bearer sk-other-fixture" } }));
+    const result = await streamResponses(input, { fetchImpl: fetcher });
+    expect(result).toMatchObject({ ok: false, finishReason: status, message: "invalid key [已隐藏]; Bearer [已隐藏]", usage: { totalTokens: 8 } });
+    expect(result).not.toHaveProperty("toolCalls");
+    expect(JSON.stringify(result)).not.toContain("secret");
+    expect(JSON.stringify(result)).not.toContain("sk-other-fixture");
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+  it.each(["short", "long"])("rejects a %s unknown SSE terminal status without exposing credentials", async (length) => {
+    const apiKey = "sk-audit-fixture";
+    const status = `${length === "long" ? "x".repeat(10_000) : "failed"} invalid key ${apiKey}`;
+    const fetcher = vi.fn(async () => new Response(sse([{ type: "response.failed", response: { ...response([call]), status, error: { message: `invalid key ${apiKey}` } } }]), { headers: { "Content-Type": "text/event-stream" } }));
+    const result = await streamResponses({ ...input, apiKey }, { fetchImpl: fetcher });
+    expect(result).toMatchObject({ ok: false, message: "Responses 结束事件状态不一致" });
+    expect(result.finishReason).toBeUndefined();
+    expect(result).not.toHaveProperty("toolCalls");
+    expect(JSON.stringify(result)).not.toContain(apiKey);
+    expect(JSON.stringify(result)).not.toContain(status);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+  it.each(["failed", "incomplete"])("preserves legal SSE terminal status %s and redacts its error", async (status) => {
+    const fetcher = vi.fn(async () => new Response(sse([{ type: `response.${status}`, response: { ...response([call]), status, error: { message: "invalid key secret; Bearer sk-other-fixture" } } }]), { headers: { "Content-Type": "text/event-stream" } }));
+    const result = await streamResponses(input, { fetchImpl: fetcher });
+    expect(result).toMatchObject({ ok: false, finishReason: status, message: "invalid key [已隐藏]; Bearer [已隐藏]", usage: { totalTokens: 8 } });
+    expect(result).not.toHaveProperty("toolCalls");
+    expect(JSON.stringify(result)).not.toContain("secret");
+    expect(JSON.stringify(result)).not.toContain("sk-other-fixture");
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
   it("stops pending reads and never executes after cancellation", async () => {
     const controller = new AbortController();
     const cancel = vi.fn();
@@ -91,15 +174,16 @@ describe("Responses transport", () => {
       expect(result).not.toHaveProperty("toolCalls");
     }
     const result = await streamResponses(input, { fetchImpl: vi.fn(async () => new Response(sse([{ type: "response.completed", response: response([reasoning, call]) }]), { headers: { "Content-Type": "text/event-stream" } })) });
-    expect(result).toMatchObject({ ok: true, toolCalls: [{ id: "call-1" }] });
+    expect(result).toMatchObject({ ok: true, finishReason: "tool_calls", toolCalls: [{ id: "call-1" }] });
     expect(result.metrics).not.toHaveProperty("firstTokenAt");
     const terminalAnswer = await streamResponses(input, { fetchImpl: vi.fn(async () => new Response(sse([{ type: "response.completed", response: response() }]), { headers: { "Content-Type": "text/event-stream" } })) });
-    expect(terminalAnswer).toMatchObject({ ok: true, content: "完成" });
+    expect(terminalAnswer).toMatchObject({ ok: true, content: "完成", finishReason: "stop" });
     expect(terminalAnswer.metrics).not.toHaveProperty("firstTokenAt");
   });
   it("converts wire calls/results and strips id-only reasoning during stateless replay", async () => {
     expect(toResponseInput([{ role: "assistant", content: "", tool_calls: [{ id: "c", type: "function", function: { name: "f", arguments: "{}" } }] }, { role: "tool", tool_call_id: "c", content: "ok" }])).toEqual([{ type: "function_call", call_id: "c", name: "f", arguments: "{}" }, { type: "function_call_output", call_id: "c", output: "ok" }]);
     const result = await streamResponses(input, { fetchImpl: vi.fn(async () => Response.json(response([{ type: "reasoning", id: "not-stored", summary: [] }, message]))) });
+    expect(result).toMatchObject({ ok: true, finishReason: "stop" });
     expect(result.responseOutput?.[0]).toEqual({ type: "reasoning", summary: [] });
   });
 });

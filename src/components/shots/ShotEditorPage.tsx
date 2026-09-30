@@ -60,6 +60,7 @@ import {
     duplicateShot,
     type EpisodeShotBulkPatch,
     patchEpisodeShots,
+    undoEpisodeShotBulkPatch,
     patchShot,
     patchStoryBeat,
     reorderBeats,
@@ -72,7 +73,7 @@ import {
     updateShotSettings,
 } from "@/db/repo";
 import {type ColumnDef, normalizeVisibleColumns, SHOT_COLUMNS} from "@/domain/columns";
-import {emptySlot, slotMediaIds} from "@/domain/slot";
+import {emptySlot} from "@/domain/slot";
 import {
     type Character,
     type GenerationSlot,
@@ -587,50 +588,19 @@ export function ShotEditorPage({
     }
 
     async function removeSelectedShots() {
-        const snapshot = shots.filter((shot) => selected.has(shot.id));
-        const mediaIds = new Set(
-            snapshot.flatMap((shot) => [
-                ...slotMediaIds(shot.firstFrame),
-                ...slotMediaIds(shot.lastFrame),
-                ...slotMediaIds(shot.clip),
-            ]),
-        );
-        const media = (await db.media.bulkGet([...mediaIds])).filter((item) => item !== undefined);
-        await deleteEpisodeShots(episodeId, snapshot.map((shot) => shot.id));
+        const snapshot = await deleteEpisodeShots(episodeId, [...selected]);
+        if (!snapshot?.shots.length) return;
         registerUndo({
-            label: `已删除 ${snapshot.length} 个镜头`,
-            restore: () => restoreShots(snapshot, media),
+            label: `已删除 ${snapshot.shots.length} 个镜头`,
+            restore: () => restoreShots(snapshot.shots, snapshot.media),
         });
         setSelected(new Set());
     }
 
     async function applyBulkPatch(label: string, patch: EpisodeShotBulkPatch) {
-        const snapshot = shots.filter((shot) => selected.has(shot.id));
-        if (snapshot.length === 0) return;
-        await patchEpisodeShots(
-            episodeId,
-            snapshot.map((shot) => shot.id),
-            patch,
-        );
-        registerUndo({
-            label,
-            restore: async () => {
-                await Promise.all(
-                    snapshot.map((shot) => {
-                        const previous: EpisodeShotBulkPatch = {};
-                        if ("beatId" in patch) previous.beatId = shot.beatId;
-                        if ("durationSec" in patch) previous.durationSec = shot.durationSec;
-                        if ("status" in patch) previous.status = normalizeShotStatus(shot.status);
-                        if ("characterIds" in patch) {
-                            previous.characterIds = [...(shot.characterIds ?? [])];
-                        }
-                        if ("sceneId" in patch) previous.sceneId = shot.sceneId;
-                        if ("notes" in patch) previous.notes = shot.notes;
-                        return patchShot(shot.id, previous);
-                    }),
-                );
-            },
-        });
+        const inverse = await patchEpisodeShots(episodeId, [...selected], patch);
+        if (!inverse) return;
+        registerUndo({label, restore: () => undoEpisodeShotBulkPatch(inverse)});
     }
 
     async function assignSelectedBeat(beatId: string | undefined) {
@@ -1710,31 +1680,34 @@ function ShotRow({
                             <div className={cn(DESIGN_CELL_CHROME, "w-full")}>
                                 <EditableGenerationSlot
                                     projectId={projectId}
+                                    targetKey={JSON.stringify([projectId, "shot", shot.id, "firstFrame"])}
                                     slot={shot.firstFrame ?? emptySlot()}
                                     variant="frame"
                                     size="row"
                                     title={`镜头 ${shot.shotNumber} · 首帧`}
-                                    onSave={(slot) => setShotSlot(shot.id, "firstFrame", slot)}
+                                    onSave={(slot, baseline) => setShotSlot(shot.id, "firstFrame", slot, baseline)}
                                 />
                             </div>
                             <div className={cn(DESIGN_CELL_CHROME, "w-full border-l")}>
                                 <EditableGenerationSlot
                                     projectId={projectId}
+                                    targetKey={JSON.stringify([projectId, "shot", shot.id, "lastFrame"])}
                                     slot={shot.lastFrame ?? emptySlot()}
                                     variant="frame"
                                     size="row"
                                     title={`镜头 ${shot.shotNumber} · 尾帧`}
-                                    onSave={(slot) => setShotSlot(shot.id, "lastFrame", slot)}
+                                    onSave={(slot, baseline) => setShotSlot(shot.id, "lastFrame", slot, baseline)}
                                 />
                             </div>
                             <div className={cn(DESIGN_CELL_CHROME, "w-full border-l")}>
                                 <EditableGenerationSlot
                                     projectId={projectId}
+                                    targetKey={JSON.stringify([projectId, "shot", shot.id, "clip"])}
                                     slot={shot.clip ?? emptySlot()}
                                     variant="clip"
                                     size="row"
                                     title={`镜头 ${shot.shotNumber} · 成片`}
-                                    onSave={(slot) => setShotSlot(shot.id, "clip", slot)}
+                                    onSave={(slot, baseline) => setShotSlot(shot.id, "clip", slot, baseline)}
                                 />
                             </div>
                             <div className="flex h-full min-w-0 border-l">

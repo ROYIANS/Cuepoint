@@ -262,7 +262,7 @@ interface StoryBeat {
 - Drag-and-drop reorder must call the same `reorderBeats` / `reorderShots` APIs as arrow moves. Shot drag stays within a beat group and must not change `beatId`. Selection mode disables drag activators.
 - Shot editor document shortcuts (j/k/arrows, Space/x, Cmd/Ctrl+A, n, Backspace, Alt+↑/↓) must no-op when focus is in a form field, Radix overlay content, or checkbox/option/menu control (`isFormFieldTarget`).
 - Cmd/Ctrl+A and toolbar「全选可见」select only the current filtered visible shot ids. When filters change, drop selected ids that are no longer visible before any bulk write.
-- Bulk character edits replace the entire `characterIds` array; each bulk write registers one short-lived undo snapshot of the previous field values.
+- Bulk character edits replace the entire `characterIds` array; each bulk write registers the transaction-returned affected-field before/after inverse payload. Undo validates all targets before atomically restoring only those fields.
 
 ### 4. Validation & Error Matrix
 
@@ -421,14 +421,17 @@ UndoController.clear(): void
 
 - Only the latest action is retained.
 - Registration replaces and expires the previous action.
-- Undo clears the action before awaiting restore, preventing duplicate execution.
+- Undo keeps the action while restoring and clears it only after success. Concurrent attempts for the same action share one in-flight operation. A failed restore remains retryable until its original expiry, with a visible error. Completion of an older operation must not change a newly registered action.
 - Text input continues to use native editor undo; this controller is not an edit log.
 
 ### 4. Validation & Error Matrix
 
 | Condition | Behavior |
 | --- | --- |
-| Undo before expiry | Execute restore once and return `true` |
+| Undo before expiry | Execute restore once; retain pending action; clear on success and return `true` |
+| Restore fails | Reject to caller; show error; keep retry until original expiry |
+| Concurrent undo of the same action | Share one operation; do not call restore twice |
+| Register B while A restores | B keeps its action, timer and error; A settlement cannot clear B |
 | Undo after expiry | Do nothing and return `false` |
 | Register a second action | Replace the first action |
 | Component outside provider calls `useUndo` | Throw a clear provider error |
@@ -524,3 +527,198 @@ registerUndo({ label: "已删除镜头", restore: async () => restoreDeletedShot
 Regression coverage: `draftConcurrency.test.ts`, `debouncedDraft.test.ts`,
 `auditDataIntegrity.test.ts`, `connectorMigration.test.ts`, `mediaMetadata.test.ts`,
 plus the existing repository/project-package/reference suites.
+
+## Scenario: Atomic shot bulk inverse (A02 / PU-01, SS-05; 2026-09-30)
+
+### 1. Scope / Trigger
+
+All manual multi-shot field edits in ShotEditorPage. The forward transaction, rather than the page render, owns the inverse snapshot. The shared short-lived controller also handles retry for delete/reorder actions.
+
+### 2. Signatures
+
+```ts
+type EpisodeShotBulkPatch = Partial<Pick<Shot,
+  "beatId" | "durationSec" | "status" | "characterIds" |
+  "sceneId" | "propIds" | "styleId" | "notes">>;
+interface EpisodeShotBulkUndo {
+  projectId: Id;
+  episodeId: Id;
+  shots: Array<{ id: Id; before: EpisodeShotBulkPatch; after: EpisodeShotBulkPatch }>;
+}
+patchEpisodeShots(episodeId: Id, ids: Id[], patch: EpisodeShotBulkPatch): Promise<EpisodeShotBulkUndo | undefined>;
+undoEpisodeShotBulkPatch(inverse: EpisodeShotBulkUndo): Promise<void>;
+```
+
+### 3. Contracts
+
+- Empty selection or an empty allowed patch returns no inverse and creates no undo action. Existing callers may ignore the new return value.
+- `before` reads the latest committed rows inside the forward write transaction; `after` records actual normalized values. Both contain exactly the affected allowed fields, including explicit undefined for clearing optional references. Arrays are snapshot copies.
+- Undo reads and validates every selected row, scope, current affected value and restored relationship inside one write transaction before writing. Current values must equal captured after or already equal before; compare ordered ID arrays by contents. Any third value rejects the entire inverse.
+- Restore only before fields on top of current rows, preserving independent content, slot and other field edits. Status normalization and all existing owner/media/relationship checks remain active.
+- `UndoController.getCurrent()` exposes pending and optional error. Provider disables the pending button, displays failure and offers retry. Programmatic callers receive the rejection; the button handles rejection without discarding the action.
+
+### 4. Validation & Error Matrix
+
+| Condition | Behavior |
+| --- | --- |
+| Missing, duplicate, foreign or moved target | Reject; no row partially restored |
+| One touched field changed again | Reject entire group; retain newer values |
+| Independent field or other slot changed | Preserve it while restoring touched fields |
+| Touched fields already restored | Permit convergence after scope/reference checks |
+| Invalid inverse keys or mismatched before/after key sets | Reject before writes |
+| Restore write fails | Transaction rolls back; undo remains retryable before expiry |
+| Action expires or is cleared during restore | Settlement cannot resurrect it |
+| New action registered during restore | Older settlement cannot clear or add error to it |
+
+### 5. Good/Base/Bad Cases
+
+Good: reverse duration and prop/style assignments together while preserving later content edits. Base: empty selection produces no action. Bad: capture stale rendered rows, then restore via independent Promise.all writes that overwrite later edits or partially succeed.
+
+### 6. Tests Required
+
+Actual repository tests must cover all eight fields, latest before values, normalized after values, copied arrays, optional clears, all-target conflicts, missing/foreign/duplicate targets, independent updates, already-before convergence and rollback on storage failure. Controller tests cover duplicate/reentrant invocation, failed retry, original expiry, clear and replacement while pending, plus synchronous restore failures.
+
+### 7. Wrong vs Correct
+
+```ts
+// Wrong: stale page snapshot and several independently committed reverse writes.
+registerUndo({label, restore: () => Promise.all(snapshot.map(s => patchShot(s.id, oldPatch(s)))).then(() => {})});
+
+// Correct: actual transaction snapshot and one atomic guarded inverse.
+const inverse = await patchEpisodeShots(episodeId, [...selected], patch);
+if (inverse) registerUndo({label, restore: () => undoEpisodeShotBulkPatch(inverse)});
+```
+
+## Scenario: Deletion returns its committed shot snapshot (A03 / PD-02; 2026-09-30)
+
+### 1. Scope / Trigger
+
+Manual episode-scoped shot deletion followed by short-lived undo. Rendered data can be older than the data actually deleted; only the deletion transaction owns the recovery snapshot.
+
+### 2. Signatures
+
+```ts
+interface DeletedShotsSnapshot {
+  projectId: Id;
+  episodeId: Id;
+  shots: Shot[];
+  media: MediaRecord[];
+}
+deleteEpisodeShots(episodeId: Id, ids: Id[]): Promise<DeletedShotsSnapshot | undefined>;
+restoreShots(shots: Shot[], media?: MediaRecord[]): Promise<void>;
+```
+
+### 3. Contracts
+
+- Same `PRODUCTION_TABLES` write transaction reads and validates all current selected rows, collects all firstFrame/lastFrame/clip reference and result media records including Blobs, performs deletion, reindexes siblings and cleans orphan media. Nested `deleteShots` participates in this transaction.
+- Return scoped snapshot only after transaction success. Preserve selection order in the snapshot; restoration derives positions from captured shot order rather than selection order. Existing callers may ignore the return value.
+- UI passes selected IDs, then registers `restoreShots(snapshot.shots, snapshot.media)` only when a nonempty snapshot returns. Do not build recovery data from rendered shots or a pre-deletion asynchronous media query.
+- Shared media remains retained by global reference checks. Recovery snapshots still include referenced media needed if its last remaining reference disappears later. `restoreShots` retains parent/owner/reference, existing-ID, ordering and atomic rollback checks.
+
+### 4. Validation & Error Matrix
+
+| Condition | Behavior |
+| --- | --- |
+| Empty selection | Return undefined; no undo action |
+| Missing/foreign/duplicate target or missing episode | Reject; no partial deletion |
+| Text or media committed after the page render | Snapshot the latest values actually deleted |
+| Shared media remains referenced | Keep committed media |
+| Delete/reindex/touch/cleanup fails | Roll back rows, order, project and media; no successful snapshot |
+| Restored ID already exists | Reject restore atomically; do not overwrite it |
+
+### 5. Good/Base/Bad Cases
+
+Good: new text and image committed between render and deletion are present after undo. Base: empty selection does nothing. Bad: deleting the latest row but restoring an earlier rendered row, or retaining its obsolete media IDs.
+
+### 6. Tests Required
+
+Use actual repository transactions to verify latest text/all slot references/Blob recovery, capture under the same deletion transaction, shared-media retention/final-reference deletion, selection-order independence, scope/duplicate/missing rejection, rollback for each write stage and existing-ID restore rejection.
+
+### 7. Wrong vs Correct
+
+```ts
+// Wrong: rendered snapshot and separate async media read precede actual deletion.
+const oldRows = shots.filter(s => selected.has(s.id));
+const oldMedia = await db.media.bulkGet(idsFrom(oldRows));
+await deleteEpisodeShots(episodeId, oldRows.map(s => s.id));
+
+// Correct: consume the recovery snapshot returned by the committed deletion.
+const snapshot = await deleteEpisodeShots(episodeId, [...selected]);
+if (snapshot) registerUndo({
+  label: `已删除 ${snapshot.shots.length} 个镜头`,
+  restore: () => restoreShots(snapshot.shots, snapshot.media),
+});
+```
+
+## Scenario: Manual field/slot compare-and-save (A04 / PU-02, PU-03, SS-02; 2026-09-30)
+
+### 1. Scope / Trigger
+
+Hand-edited asset/shot slots, numeric shot duration, project text/style and explicitly saved output settings. A draft's target and baseline belong to one editor session; another page must not silently replace its content or save target.
+
+### 2. Signatures
+
+```ts
+// Each set*Slot retains its existing ID/slot union; baseline is optional for
+// compatibility with callers that already enforce independent atomic/CAS guards.
+setCharacterSlot(id: Id, key: CharacterImageSlot, slot: GenerationSlot, baseline?: GenerationSlot): Promise<void>;
+setSceneSlot(id: Id, key: SceneImageSlot, slot: GenerationSlot, baseline?: GenerationSlot): Promise<void>;
+setPropSlot(id: Id, key: PropImageSlot, slot: GenerationSlot, baseline?: GenerationSlot): Promise<void>;
+setStyleSlot(id: Id, key: StyleImageSlot, slot: GenerationSlot, baseline?: GenerationSlot): Promise<void>;
+setShotSlot(id: Id, field: ShotPictureField, slot: GenerationSlot, baseline?: GenerationSlot): Promise<void>;
+patchShot(id: Id, patch: Partial<Omit<Shot, "id" | "projectId" | "episodeId">>, baseline?: Partial<Shot>): Promise<void>;
+patchProjectDetails(id: Id, patch: Partial<Pick<Project,
+  "name" | "brief" | "genre" | "audience" | "tone" |
+  "aspectPreset" | "defaultStyleId" | "generationDefaults">>, baseline?: Partial<Project>): Promise<void>;
+
+// Every manual EditableGenerationSlot consumer supplies owner+entity+slot identity.
+// Editor initialization freezes target, owner, title, allowed result kinds,
+// cloned baseline and the persistence callback as one SlotEditSession.
+onSave(draft: GenerationSlot, baseline: GenerationSlot): Promise<void>;
+```
+
+### 3. Contracts
+
+- Baseline comparisons run against the latest row inside the actual write transaction. Compare only touched fields/target slot. Current equal to baseline permits writing; current already equal to requested normalized final value permits convergence; a third value raises `DraftConflictError` and leaves all rows/media unchanged.
+- Slot equality uses prompt, ordered image/video reference IDs and result mediaId/kind. Undefined slot equals emptySlot. Independent slots and entity text never cause conflicts or get overwritten. All owner/Blob/MIME/reference checks and committed orphan collection still apply.
+- Text uses the existing optional-empty normalization. Duration uses `durationSec ?? 0`, consistent with the numeric editor. Project name compares the trimmed final value; aspect uses normalized presets; generationDefaults uses plain JSON-shaped structural comparison independent of property insertion order and undefined optional keys. Missing defaults and empty object share the editor representation.
+- `DurationInput` and all five project text callbacks pass the baseline delivered by `useDebouncedDraft`; immediate style selection passes the rendered field baseline. Optional repository parameters do not excuse dropping a baseline from a manual caller.
+- `SlotEditSession` clones its baseline and freezes its save callback and owner. New live data cannot rebind this session. If current targetKey differs, reject before persistence and preserve the draft/owned media; uploads/pickers retain the original owner. An older save completion must not close a newer target's editor.
+- CAS/storage failure keeps DraftMediaSession ownership and draft for retry. Success alone releases committed owned media. Explicit cancel cleans only session-owned orphan uploads, preserving shared references.
+- ProjectOutputSettings keeps value, baseline and last observed live value. Clean fields follow changed live values; dirty fields keep original baselines. Submit only changed aspectPreset/generationDefaults; defer live rebase while saving, then read the current project once after the write succeeds and acknowledge saved fields from that authoritative snapshot. This distinguishes a genuinely later same-field commit (including a return to the old baseline) from stale live props. Ignore a repeated stale live fingerprint after acknowledgement. Failure keeps draft and original baseline and provides an explicit adopt-latest action. Keep explicit save and unload protection.
+
+### 4. Validation & Error Matrix
+
+| Condition | Behavior |
+| --- | --- |
+| Same edited field or slot has a third value | Reject transaction; preserve latest committed value and local draft |
+| Different field/slot changes | Save requested field; preserve independent change |
+| Current equals normalized requested value | Allow convergence after existing validation |
+| Same baseline contents in another target | Identity mismatch rejects; value equality never authorizes switching target |
+| Invalid/deleted/foreign referenced media | Reject; no committed slot or cleanup change |
+| Media cleanup or storage failure | Roll back row, project touch and media deletion together |
+| Output field is clean when another page changes it | Rebase value and baseline; do not manufacture a dirty old value |
+| Output field is dirty during external update | Preserve draft/baseline; compare inside txn at save |
+| Save acknowledged before live query catches up | Confirm current storage once; repeated stale props cannot roll it back |
+| Another writer commits the same field after this write, before acknowledgement | Adopt authoritative latest value for the saved field; do not remain stale and falsely clean |
+| Save fails | Keep local values and expose retry/adopt-latest; do not silently reset |
+
+### 5. Good/Base/Bad Cases
+
+Good: save a character front image while another tab edits side image/name; all three updates survive. Base: absent empty slots/defaults compare as editor empties. Bad: pass a new slot without its original baseline, compare entire entity updatedAt, or retain A's text while rebinding onSave to B.
+
+### 6. Tests Required
+
+Actual DB regressions cover same-field conflict and all-or-nothing project patch; every set*Slot guard; ordered references, deleted/foreign media and cleanup rollback; independent slot/text fields; trimmed-name/equal-final convergence; missing duration/defaults normalization and property-order equality. Executable manual session/callback checks cover frozen baseline/owner/target, target switch, failed owned-media save and retry. Output draft tests cover clean live rebase, dirty baseline retention, partial saves, deferred/acknowledged save with stale props, later same-field writes including old-baseline return, and adopt-latest. Inspect every manual consumer's actual callback path in independent review; pure database tests alone do not prove UI wiring.
+
+### 7. Wrong vs Correct
+
+```ts
+// Wrong: the draft component supplied a baseline but the persistence callback dropped it.
+persist={(durationSec) => patchShot(shotId, {durationSec})}
+onSave={(slot) => setCharacterSlot(character.id, key, slot)}
+
+// Correct: transaction checks the exact field/slot seen by this editing session.
+persist={(durationSec, baseline) => patchShot(shotId, {durationSec}, {durationSec: baseline})}
+onSave={(slot, baseline) => setCharacterSlot(character.id, key, slot, baseline)}
+```

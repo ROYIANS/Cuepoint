@@ -72,11 +72,12 @@ export function PropDetailPage({
                             <EditableGenerationSlot
                                 key={slot.id}
                                 projectId={prop.projectId}
+                                targetKey={JSON.stringify([prop.projectId, "prop", prop.id, slot.id])}
                                 label={slot.label}
                                 title={`道具 · ${slot.label}`}
                                 variant="asset"
                                 slot={prop.slots?.[slot.id]}
-                                onSave={(value) => setPropSlot(prop.id, slot.id, value)}
+                                onSave={(value, baseline) => setPropSlot(prop.id, slot.id, value, baseline)}
                             />
                         ))}
                     </div>

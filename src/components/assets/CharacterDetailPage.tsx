@@ -64,11 +64,12 @@ export function CharacterDetailPage({
                             <EditableGenerationSlot
                                 key={slot.id}
                                 projectId={character.projectId}
+                                targetKey={JSON.stringify([character.projectId, "character", character.id, slot.id])}
                                 label={slot.label}
                                 title={`角色 · ${slot.label}`}
                                 variant="asset"
                                 slot={character.slots?.[slot.id]}
-                                onSave={(value) => setCharacterSlot(character.id, slot.id, value)}
+                                onSave={(value, baseline) => setCharacterSlot(character.id, slot.id, value, baseline)}
                             />
                         ))}
                     </div>

@@ -7,6 +7,7 @@ import {assertReasoningEffort} from "@/lib/ai/reasoningPolicy";
 
 export type ResponsesResult = StreamChatResult & { responseOutput?: AgentResponseItem[] };
 const MAX_ENVELOPE_SIZE = 4_194_304;
+const RESPONSE_STATUSES = new Set(["completed", "failed", "incomplete", "in_progress", "queued", "cancelled"]);
 
 function record(value: unknown): value is Record<string, unknown> {
     return !!value && typeof value === "object" && !Array.isArray(value);
@@ -167,7 +168,8 @@ export async function streamResponses(input: StreamChatInput & {
             return result({
                 ok: false,
                 message: redact(detail),
-                finishReason: typeof response.status === "string" ? response.status : undefined
+                // Status is diagnostic metadata: never copy arbitrary provider text into saved runs.
+                finishReason: typeof response.status === "string" && RESPONSE_STATUSES.has(response.status) ? response.status : undefined
             });
         }
         const parsed = decodeResponseOutput(response.output, input.tools);

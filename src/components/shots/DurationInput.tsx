@@ -10,7 +10,7 @@ export function DurationInput({projectId, shotId, value}: { projectId: string; s
     const [raw, setRaw] = useState<string | null>(null);
     const {draft, setDraft, status, error, retry, useLatest} = useDebouncedDraft({
         initialValue: value ?? 0,
-        persist: durationSec => patchShot(shotId, {durationSec}),
+        persist: (durationSec, baseline) => patchShot(shotId, {durationSec}, {durationSec: baseline}),
         scope: projectId,
         draftKey: `shot:${shotId}:durationSec`,
     });

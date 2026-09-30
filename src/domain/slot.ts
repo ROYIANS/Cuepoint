@@ -8,6 +8,16 @@ export function emptySlot(): GenerationSlot {
     };
 }
 
+/** Only the editable slot fields participate; absent slots use the empty editor value. */
+export function sameSlotValue(left?: GenerationSlot, right?: GenerationSlot): boolean {
+    const a = left ?? emptySlot();
+    const b = right ?? emptySlot();
+    const sameIds = (x: Id[], y: Id[]) => x.length === y.length && x.every((id, index) => id === y[index]);
+    return a.prompt === b.prompt && sameIds(a.referenceImageIds, b.referenceImageIds) &&
+        sameIds(a.referenceVideoIds, b.referenceVideoIds) &&
+        a.result?.mediaId === b.result?.mediaId && a.result?.kind === b.result?.kind;
+}
+
 export function parseGenerationSlot(
     raw: unknown,
     legacyMediaId?: unknown,

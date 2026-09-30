@@ -20,3 +20,19 @@ export function assertDraftBaseline<T extends object>(current: T, patch: Partial
         if ((current[key] ?? "") !== (baseline[key] ?? "") && current[key] !== patch[key]) throw new DraftConflictError();
     }
 }
+
+/** JSON-shaped draft values: ordered arrays, plain objects, absent optional properties. */
+export function sameDraftStructure(left: unknown, right: unknown): boolean {
+    if (left === right) return true;
+    if (Array.isArray(left) || Array.isArray(right)) {
+        return Array.isArray(left) && Array.isArray(right) && left.length === right.length &&
+            left.every((item, index) => sameDraftStructure(item, right[index]));
+    }
+    if (!left || !right || typeof left !== "object" || typeof right !== "object") return false;
+    if (Object.getPrototypeOf(left) !== Object.prototype || Object.getPrototypeOf(right) !== Object.prototype) return false;
+    const a = left as Record<string, unknown>;
+    const b = right as Record<string, unknown>;
+    const keys = Object.keys(a).filter(key => a[key] !== undefined);
+    return keys.length === Object.keys(b).filter(key => b[key] !== undefined).length &&
+        keys.every(key => Object.hasOwn(b, key) && sameDraftStructure(a[key], b[key]));
+}

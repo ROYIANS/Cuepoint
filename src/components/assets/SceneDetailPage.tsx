@@ -72,11 +72,12 @@ export function SceneDetailPage({
                             <EditableGenerationSlot
                                 key={slot.id}
                                 projectId={scene.projectId}
+                                targetKey={JSON.stringify([scene.projectId, "scene", scene.id, slot.id])}
                                 label={slot.label}
                                 title={`场景 · ${slot.label}`}
                                 variant="asset"
                                 slot={scene.slots?.[slot.id]}
-                                onSave={(value) => setSceneSlot(scene.id, slot.id, value)}
+                                onSave={(value, baseline) => setSceneSlot(scene.id, slot.id, value, baseline)}
                             />
                         ))}
                     </div>

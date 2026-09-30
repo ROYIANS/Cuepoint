@@ -2,6 +2,7 @@ import {Library, Plus, Trash2, Type} from "lucide-react";
 import {useEffect, useId, useRef, useState} from "react";
 import {toast} from "sonner";
 import {deleteMediaIfOrphan} from "@/db/repo";
+import {SlotEditSession} from "@/lib/slotEditSession";
 import {DraftMediaSession} from "@/lib/draftMedia";
 import {emptySlot, slotHasBody} from "@/domain/slot";
 import type {GenerationSlot, Id, MediaKind, MediaRecord} from "@/domain/types";
@@ -161,6 +162,7 @@ function RefStrip({
 
 export function GenerationSlotEditor({
                                          open,
+                                         targetKey,
                                          title,
                                          projectId,
                                          value,
@@ -169,14 +171,19 @@ export function GenerationSlotEditor({
                                          resultKinds = ["image", "video"],
                                      }: {
     open: boolean;
+    targetKey: string;
     resultKinds?: readonly MediaKind[];
     title: string;
     projectId: Id;
     value: GenerationSlot;
     onClose: () => void;
-    onSave: (slot: GenerationSlot) => Promise<void>;
+    onSave: (slot: GenerationSlot, baseline: GenerationSlot) => Promise<void>;
 }) {
-    const [draft, setDraft] = useState(value);
+    const [editSession] = useState(() => new SlotEditSession(targetKey, projectId, title, value, resultKinds, onSave));
+    const [draft, setDraft] = useState(() => structuredClone(editSession.baseline));
+    const targetChanged = targetKey !== editSession.targetKey;
+    const currentTarget = useRef(targetKey);
+    currentTarget.current = targetKey;
     const [pickerTarget, setPickerTarget] = useState<"image" | "video" | "result" | null>(null);
     const [pending, setPending] = useState<"upload" | "save" | "close" | null>(null);
     const [error, setError] = useState<string>();
@@ -208,20 +215,20 @@ export function GenerationSlotEditor({
     };
 
     async function upload(kind: "image" | "video" | "result", retryFile?: File) {
-        if (busy.current || cancelled) return;
+        if (busy.current || cancelled || targetChanged) return;
         busy.current = true;
         setPending("upload");
         setError(undefined);
         try {
             const uploaded = await session.upload(async () => {
-                const file = retryFile ?? await pickMediaFile(kind === "result" ? (resultKinds.length === 1 ? IMAGE_ACCEPT : MEDIA_ACCEPT) : kind === "video" ? VIDEO_ACCEPT : IMAGE_ACCEPT);
+                const file = retryFile ?? await pickMediaFile(kind === "result" ? (editSession.resultKinds.length === 1 ? IMAGE_ACCEPT : MEDIA_ACCEPT) : kind === "video" ? VIDEO_ACCEPT : IMAGE_ACCEPT);
                 if (!file) throw new Error("未选择文件");
-                const allowedKinds = kind === "result" ? resultKinds : [kind];
+                const allowedKinds = kind === "result" ? editSession.resultKinds : [kind];
                 if (!allowedKinds.some((allowed) => file.type.startsWith(`${allowed}/`))) {
                     throw new Error(kind === "video" ? "请选择视频文件" : "请选择支持的图片文件");
                 }
                 failedUpload.current = {kind, file};
-                return uploadMediaFile(projectId, file);
+                return uploadMediaFile(editSession.projectId, file);
             });
             if (!uploaded || !mounted.current) return;
             failedUpload.current = null;
@@ -241,9 +248,9 @@ export function GenerationSlotEditor({
     }
 
     async function selectExisting(record: MediaRecord) {
-        if (busy.current || cancelled || !pickerTarget || record.projectId !== projectId) return;
+        if (busy.current || cancelled || targetChanged || !pickerTarget || record.projectId !== editSession.projectId) return;
         const kind: MediaKind = record.mimeType.startsWith("video/") ? "video" : "image";
-        const allowedKinds = pickerTarget === "result" ? resultKinds : [pickerTarget];
+        const allowedKinds = pickerTarget === "result" ? editSession.resultKinds : [pickerTarget];
         if (!allowedKinds.includes(kind) || record.blob.size === 0) return;
         const next = pickerTarget === "result"
             ? {...draft, result: {mediaId: record.id, kind}}
@@ -274,9 +281,9 @@ export function GenerationSlotEditor({
         return (
             <MediaPicker
                 key={target}
-                projectId={projectId}
-                kinds={target === "result" ? resultKinds : [target]}
-                disabled={pending !== null || cancelled}
+                projectId={editSession.projectId}
+                kinds={target === "result" ? editSession.resultKinds : [target]}
+                disabled={pending !== null || cancelled || targetChanged}
                 selectedIds={selectedIds}
                 onSelect={(record) => void selectExisting(record)}
                 onClose={() => setPickerTarget(null)}
@@ -304,8 +311,9 @@ export function GenerationSlotEditor({
         setPending("save");
         setError(undefined);
         try {
-            await session.save(mediaIds(draft), () => onSave(draft));
-            onClose();
+            editSession.assertTarget(currentTarget.current);
+            await session.save(mediaIds(draft), () => editSession.save(draft, currentTarget.current));
+            if (mounted.current && currentTarget.current === editSession.targetKey) onClose();
         } catch (reason) {
             fail(reason);
         } finally {
@@ -318,7 +326,7 @@ export function GenerationSlotEditor({
         <Dialog open={open} onOpenChange={(next) => !next && void close()}>
             <DialogContent className="flex max-h-[90vh] max-w-2xl flex-col overflow-hidden sm:max-w-2xl">
                 <DialogHeader>
-                    <DialogTitle>{title}</DialogTitle>
+                    <DialogTitle>{editSession.title}</DialogTitle>
                     <DialogDescription>填写画面描述、添加参考，或上传、复用已有素材。保存后可用于分镜和交付。</DialogDescription>
                 </DialogHeader>
                 <div className="app-scroll space-y-5 overflow-auto pr-1">
@@ -328,6 +336,7 @@ export function GenerationSlotEditor({
                             autoFocus
                             id={promptId}
                             disabled={pending !== null || cancelled}
+                            readOnly={targetChanged}
                             value={draft.prompt}
                             onChange={(event) => setDraft({...draft, prompt: event.target.value})}
                             placeholder="描述画面内容、动作、光线或镜头…"
@@ -337,13 +346,13 @@ export function GenerationSlotEditor({
                     <div className="grid gap-2">
                         <div className="flex flex-wrap items-center justify-between gap-2">
                             <div id={refImageId} className="text-sm font-medium">参考图</div>
-                            <Button type="button" variant="ghost" size="sm" disabled={pending !== null || cancelled}
+                            <Button type="button" variant="ghost" size="sm" disabled={pending !== null || cancelled || targetChanged}
                                     onClick={() => setPickerTarget(pickerTarget === "image" ? null : "image")}>
                                 <Library/> 选择已有参考图
                             </Button>
                         </div>
                         <RefStrip
-                            disabled={pending !== null || cancelled}
+                            disabled={pending !== null || cancelled || targetChanged}
                             labelledBy={refImageId}
                             ids={draft.referenceImageIds}
                             addLabel="添加图片"
@@ -360,13 +369,13 @@ export function GenerationSlotEditor({
                     <div className="grid gap-2">
                         <div className="flex flex-wrap items-center justify-between gap-2">
                             <div id={refVideoId} className="text-sm font-medium">参考视频</div>
-                            <Button type="button" variant="ghost" size="sm" disabled={pending !== null || cancelled}
+                            <Button type="button" variant="ghost" size="sm" disabled={pending !== null || cancelled || targetChanged}
                                     onClick={() => setPickerTarget(pickerTarget === "video" ? null : "video")}>
                                 <Library/> 选择已有参考视频
                             </Button>
                         </div>
                         <RefStrip
-                            disabled={pending !== null || cancelled}
+                            disabled={pending !== null || cancelled || targetChanged}
                             labelledBy={refVideoId}
                             ids={draft.referenceVideoIds}
                             addLabel="添加视频"
@@ -385,16 +394,16 @@ export function GenerationSlotEditor({
                             <div>
                                 <div className="text-sm font-medium">成片 / 画面素材</div>
                                 <div className="text-muted-foreground text-[11px]">
-                                    {resultKinds.length === 1 ? "支持图片素材，可复用已有画面" : "支持已有图片或视频，视频可直接播放检查"}
+                                    {editSession.resultKinds.length === 1 ? "支持图片素材，可复用已有画面" : "支持已有图片或视频，视频可直接播放检查"}
                                 </div>
                             </div>
                             <div className="flex flex-wrap gap-2">
                                 <Button type="button" size="sm" variant="outline"
-                                        disabled={pending !== null || cancelled}
+                                        disabled={pending !== null || cancelled || targetChanged}
                                         onClick={() => setPickerTarget(pickerTarget === "result" ? null : "result")}>
                                     <Library/> 选择已有素材
                                 </Button>
-                                <Button size="sm" variant="outline" disabled={pending !== null || cancelled}
+                                <Button size="sm" variant="outline" disabled={pending !== null || cancelled || targetChanged}
                                         onClick={() => void upload("result")}>
                                     上传素材
                                 </Button>
@@ -402,7 +411,7 @@ export function GenerationSlotEditor({
                                     <Button
                                         size="sm"
                                         variant="ghost"
-                                        disabled={pending !== null || cancelled}
+                                        disabled={pending !== null || cancelled || targetChanged}
                                         onClick={() => setDraft({...draft, result: undefined})}
                                     >
                                         清除
@@ -421,6 +430,9 @@ export function GenerationSlotEditor({
                         {renderPicker("result")}
                     </div>
                 </div>
+                {targetChanged ? <p role="alert" className="text-destructive text-sm">
+                    编辑目标已切换，当前仍是「{editSession.title}」的草稿。请关闭后重新打开目标槽位。
+                </p> : null}
                 {error ? (
                     <div role="alert" className="text-destructive text-sm">
                         <p>{error}。{cancelled ? "请再次取消以重试清理。" : "内容已保留，可重试或取消。"}</p>
@@ -439,7 +451,7 @@ export function GenerationSlotEditor({
                     </Button>
                     <Button
                         variant="brand"
-                        disabled={pending !== null || cancelled}
+                        disabled={pending !== null || cancelled || targetChanged}
                         onClick={() => void save()}
                     >
                         {pending === "save" ? "保存中…" : pending === "upload" ? "上传中…" : error && !failedUpload.current ? "重试保存" : "保存"}
@@ -452,6 +464,7 @@ export function GenerationSlotEditor({
 
 export function EditableGenerationSlot({
                                            projectId,
+                                           targetKey,
                                            slot,
                                            variant,
                                            label,
@@ -460,11 +473,12 @@ export function EditableGenerationSlot({
                                            size = "default",
                                        }: {
     projectId: Id;
+    targetKey: string;
     slot?: GenerationSlot;
     variant: TileVariant;
     label?: string;
     title: string;
-    onSave: (slot: GenerationSlot) => Promise<void>;
+    onSave: (slot: GenerationSlot, baseline: GenerationSlot) => Promise<void>;
     size?: TileSize;
 }) {
     const value = slot ?? emptySlot();
@@ -482,6 +496,7 @@ export function EditableGenerationSlot({
             {open ? (
                 <GenerationSlotEditor
                     open={open}
+                    targetKey={targetKey}
                     title={title}
                     projectId={projectId}
                     value={value}

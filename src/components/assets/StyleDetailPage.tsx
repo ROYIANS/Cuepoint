@@ -72,11 +72,12 @@ export function StyleDetailPage({
                             <EditableGenerationSlot
                                 key={slot.id}
                                 projectId={style.projectId}
+                                targetKey={JSON.stringify([style.projectId, "style", style.id, slot.id])}
                                 label={slot.label}
                                 title={`风格 · ${slot.label}`}
                                 variant="asset"
                                 slot={style.slots?.[slot.id]}
-                                onSave={(value) => setStyleSlot(style.id, slot.id, value)}
+                                onSave={(value, baseline) => setStyleSlot(style.id, slot.id, value, baseline)}
                             />
                         ))}
                     </div>
