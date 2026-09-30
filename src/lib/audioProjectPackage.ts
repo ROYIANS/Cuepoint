@@ -12,11 +12,12 @@ import {
     validateAudioTake,
     validateAudioTrack
 } from "@/db/audio";
-import {validateMusicDraft, validateMusicWork} from "@/db/music";
+import {validateLegacyMusicDraft, validateLegacyMusicWork} from "@/db/music";
 import {mimoSpeechSettingsSchema, validateGenerationInput} from "./audioGeneration/input";
 import {validateSpeechReference} from "./audioGeneration/reference";
 import {createId} from "./ids";
 import type {ProjectKind} from "@/domain/types";
+import {preserveAudioExportFreshness, remapAudioExportFingerprint} from "@/lib/audio/fingerprint";
 
 const id = z.string().min(1);
 const number = z.number().finite();
@@ -179,6 +180,21 @@ const schema = z.object({
 });
 export type AudioPackage = z.infer<typeof schema>;
 
+// Only the comparison sees future source fields; the returned package still
+// follows its explicit allowlist. Object key order is immaterial to freshness.
+const fingerprintPackageSchema = schema.extend({
+    audioTakes: z.array(schemas.audioTakes.passthrough().extend({provenance: provenance.passthrough().optional()}))
+});
+function parseAudioPackageData(raw: unknown): AudioPackage {
+    const original = fingerprintPackageSchema.parse(raw);
+    const snapshot = {
+        chapters: original.audioChapters, tracks: original.audioTracks, takes: original.audioTakes, clips: original.audioClips
+    };
+    return schema.parse({...original, audioExports: original.audioExports.map(row => ({
+        ...row, fingerprint: preserveAudioExportFreshness(row, snapshot)
+    }))});
+}
+
 export async function snapshotAudioPackage(projectId: string): Promise<AudioPackage> {
     const entries = await Promise.all(AUDIO_TABLES.map(async (table) => [table.name, await table.where("projectId").equals(projectId).toArray()]));
     const raw = Object.fromEntries(entries);
@@ -188,7 +204,7 @@ export async function snapshotAudioPackage(projectId: string): Promise<AudioPack
         dormant: true,
         claim: undefined
     }));
-    const value = schema.parse({version: 1, ...raw});
+    const value = parseAudioPackageData({version: 1, ...raw});
     for (const job of value.audioGenerationJobs) validateAudioTaskObservations(job.taskObservations, job.taskIds);
     return value;
 }
@@ -198,7 +214,7 @@ export function parseAudioPackage(raw: unknown, projectId: unknown, kind: Projec
         if (kind !== "video") throw new Error("缺少音频或音乐项目数据");
         return undefined;
     }
-    const value = schema.parse(raw);
+    const value = parseAudioPackageData(raw);
     for (const job of value.audioGenerationJobs) validateAudioTaskObservations(job.taskObservations, job.taskIds);
     const seen = new Set<string>();
     for (const name of Object.keys(schemas) as TableName[]) for (const row of value[name]) {
@@ -224,7 +240,14 @@ export function remapAudioPackage(value: AudioPackage | undefined, projectId: st
         if (!next) throw new Error("音频项目引用的文件缺失");
         return next;
     };
+    const fingerprintInput = {
+        chapters: value.audioChapters, tracks: value.audioTracks, takes: value.audioTakes, clips: value.audioClips
+    };
     const next = structuredClone(value);
+    next.audioExports = next.audioExports.map((row) => ({
+        ...row,
+        fingerprint: remapAudioExportFingerprint(row, fingerprintInput, {records: map, media: mediaMap, projectId})
+    }));
     for (const name of Object.keys(schemas) as TableName[]) for (const row of next[name]) {
         row.id = reference(row.id);
         row.projectId = projectId;
@@ -276,8 +299,8 @@ export async function insertAudioPackage(value: AudioPackage | undefined): Promi
     for (const row of value.audioTracks) await validateAudioTrack(row);
     for (const row of value.audioClips) await validateAudioClip(row);
     for (const row of value.audioExports) await validateAudioExport(row);
-    for (const row of value.musicDrafts) await validateMusicDraft(row);
-    for (const row of value.musicWorks) await validateMusicWork(row);
+    for (const row of value.musicDrafts) await validateLegacyMusicDraft(row);
+    for (const row of value.musicWorks) await validateLegacyMusicWork(row);
     for (const job of value.audioGenerationJobs) {
         if (job.input.kind === "speech") {
             if (Boolean(job.input.mimo) !== (job.connector.provider === "mimo")) throw new Error("配音设置与服务商不匹配");

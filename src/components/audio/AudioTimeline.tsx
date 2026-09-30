@@ -28,6 +28,7 @@ import {db} from "@/db/database";
 import {addAudioExport, addAudioTrack, getAudioProjectSnapshot, patchAudioTrack} from "@/db/audio";
 import {AudioBufferCache, AudioPreviewPlayer, decodeAudioBlob, renderAudioMix} from "@/lib/audio/engine";
 import {type AudioSchedule, buildAudioSchedule} from "@/lib/audio/schedule";
+import {createAudioExportFingerprint} from "@/lib/audio/fingerprint";
 import {preflightAudioRender} from "@/lib/audio/wav";
 import {createWaveformPeaks} from "@/lib/audio/waveform";
 import {formatTimelineTick, snapTimelinePosition, timelineClipLabel, timelineGeometry} from "@/lib/audio/timeline";
@@ -267,7 +268,7 @@ export function AudioTimeline({
             chapterId: exportScope === "chapter" ? chapterId : undefined,
             scope: exportScope === "chapter" ? "chapter" : "project",
             chapterTitle: exportScope === "chapter" ? chapter?.title : undefined,
-            fingerprint: JSON.stringify(schedule),
+            fingerprint: createAudioExportFingerprint(schedule),
             format: "wav",
             mediaId,
             durationSec: result.durationSec

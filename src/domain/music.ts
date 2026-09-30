@@ -1,6 +1,12 @@
 import type {AudioProvenance, AudioRow, AudioSourceMetadata} from "./audio";
 import type {Id} from "./types";
 
+// Optional generation duration, in whole seconds; decoded audio duration remains fractional.
+export const MUSIC_DURATION_LIMITS = {
+    flowmusic: {min: 1, max: 240},
+    suno: {min: 10, max: 360},
+} as const;
+
 export type MusicSettings =
     | {
     engine: "flowmusic";

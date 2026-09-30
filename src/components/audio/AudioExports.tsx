@@ -2,7 +2,7 @@ import {useState} from "react";
 import {Download, Play} from "lucide-react";
 import {db} from "@/db/database";
 import type {AudioProjectSnapshot} from "@/domain/audio";
-import {buildAudioSchedule} from "@/lib/audio/schedule";
+import {getAudioExportFreshness} from "@/lib/audio/fingerprint";
 import {downloadBlob} from "@/lib/projectPackage";
 import {Button} from "@/components/ui/button";
 import {Disclosure, DisclosureTitle, SourcePlayer} from "@/components/audioMusic/controls";
@@ -19,11 +19,7 @@ export function AudioExports({snapshot}: { snapshot: AudioProjectSnapshot }) {
         <div
             className="aw-source-list">{[...snapshot.exports].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).map((item) => {
             const chapterExport = item.scope === "chapter" || Boolean(item.chapterId);
-            let current = false;
-            try {
-                current = !(chapterExport && !item.chapterId) && item.fingerprint === JSON.stringify(buildAudioSchedule(snapshot, item.chapterId));
-            } catch { /* Missing sources make this an older snapshot. */
-            }
+            const current = getAudioExportFreshness(item, snapshot) === "current";
             const title = chapterExport ? snapshot.chapters.find((chapter) => chapter.id === item.chapterId)?.title ?? item.chapterTitle ?? "原章节成品" : "完整项目";
             return <div key={item.id} className="aw-source"><strong>{title} ·
                 WAV</strong><small>{new Date(item.createdAt).toLocaleString("zh-CN")} · {timeLabel(item.durationSec)}</small>

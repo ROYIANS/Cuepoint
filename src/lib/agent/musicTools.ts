@@ -1,6 +1,6 @@
 import {soundWriteReceipt} from "./soundWriteReceipt";
 import {db} from "@/db/database";
-import {addMusicDraft, patchMusicDraft, patchMusicWork} from "@/db/music";
+import {addMusicDraft, patchMusicDraft, patchMusicWork, validateMusicSettings} from "@/db/music";
 import {assertAudioRevision, ownedAudioRow} from "@/db/audioShared";
 import {libraryReadTool, libraryWriteTool} from "./libraryToolHelpers";
 import {
@@ -12,6 +12,7 @@ import {
 } from "./audioTools";
 import type {AgentToolContext, AgentToolDefinition} from "./tools";
 import * as s from "./businessSchemas";
+import {MUSIC_DURATION_LIMITS} from "@/domain/music";
 
 const base = {projectId: s.id};
 const identity = {...base, id: s.id, revision: audioMusicRevision};
@@ -25,7 +26,7 @@ const settings = audioMusicUnion(
         lyrics: s.text(12000),
         title: s.text(300),
         bpm: s.optional(s.text(20)),
-        lengthSec: s.optional(s.number(1, 240)),
+        lengthSec: s.optional(s.number(MUSIC_DURATION_LIMITS.flowmusic.min, MUSIC_DURATION_LIMITS.flowmusic.max, true)),
         seed: s.optional(s.text(100))
     }),
     s.object({
@@ -37,7 +38,7 @@ const settings = audioMusicUnion(
         title: s.text(160),
         style: s.text(2000),
         negativeTags: s.text(2000),
-        durationSec: s.optional(s.number(10, 360))
+        durationSec: s.optional(s.number(MUSIC_DURATION_LIMITS.suno.min, MUSIC_DURATION_LIMITS.suno.max, true))
     }),
 );
 
@@ -171,6 +172,7 @@ export const MUSIC_TOOLS: readonly AgentToolDefinition[] = [
             const work = await ownedAudioRow(db.musicWorks, args.projectId, args.id);
             assertAudioRevision(work, args.revision);
             if (!work.settings) throw new Error("此作品没有可复用的生成参数");
+            validateMusicSettings(work.settings);
             return {
                 state: work,
                 target: audioMusicTarget(args.projectId),

@@ -1,7 +1,7 @@
 import {z} from "zod";
 import type {AudioGenerationInput} from "@/domain/audioGeneration";
 import {MIMO_VOICES} from "@/lib/ai/mimoSpeech";
-import type {MusicSettings} from "@/domain/music";
+import {MUSIC_DURATION_LIMITS, type MusicSettings} from "@/domain/music";
 import {type MusicInput, musicInputSchema, type SpeechInput, speechInputSchema} from "@/lib/ai/apimartAudio";
 
 export const mimoSpeechSettingsSchema = z.object({
@@ -37,7 +37,7 @@ export const musicSettingsSchema = z.discriminatedUnion("engine", [
         lyrics: z.string().max(20000),
         title: z.string().max(1000),
         bpm: z.string().optional(),
-        lengthSec: z.number().int().min(1).max(240).optional(),
+        lengthSec: z.number().int("音乐时长必须为整数秒").min(MUSIC_DURATION_LIMITS.flowmusic.min).max(MUSIC_DURATION_LIMITS.flowmusic.max).optional(),
         seed: z.string().optional()
     }).strict(),
     z.object({
@@ -49,7 +49,7 @@ export const musicSettingsSchema = z.discriminatedUnion("engine", [
         title: z.string().max(160),
         style: z.string().max(2000),
         negativeTags: z.string().max(2000),
-        durationSec: z.number().int().min(10).max(360).optional()
+        durationSec: z.number().int("音乐时长必须为整数秒").min(MUSIC_DURATION_LIMITS.suno.min).max(MUSIC_DURATION_LIMITS.suno.max).optional()
     }).strict(),
 ]);
 export const audioGenerationInputSchema = z.discriminatedUnion("kind", [

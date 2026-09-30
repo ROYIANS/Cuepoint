@@ -94,6 +94,8 @@ export function MusicCreation({
                     Music</SelectOption></WorkspaceSelect>
             </div>
             {draft.engine === "suno" ? <>
+                <SimpleMusicDurationRepair settings={draft} busy={busy} switching={switching}
+                                           onClear={() => update({durationSec: undefined})}/>
                 {draft.custom && draft.instrumental ?
                     <p className="mw-instrumental-note">已填写的歌词会保留，切回歌曲后可继续编辑。用下方风格描述这首纯音乐。</p> :
                     <Field label={draft.custom ? "歌词" : "描述你想听到的音乐"}><Textarea disabled={busy || switching}
@@ -149,5 +151,19 @@ export function MusicCreation({
             className="w-full" disabled={!connectorId || busy || switching || status === "error"}
             onClick={() => void generate()}><Sparkles/>{busy ? "提交生成中…" : "生成音乐"}</Button><p>使用所选 APIMart
             账户计费</p>{error && <p role="alert" className="aw-error">{error}</p>}</div>
+    </div>;
+}
+
+function SimpleMusicDurationRepair({settings, busy, switching, onClear}: {
+    settings: MusicSettings;
+    busy: boolean;
+    switching: boolean;
+    onClear: () => void;
+}) {
+    if (settings.engine !== "suno" || settings.custom || settings.durationSec === undefined) return null;
+    return <div className="space-y-2">
+        <p className="text-sm text-muted-foreground">此草稿保留了历史时长 {String(settings.durationSec)} 秒；简单模式不支持指定时长。</p>
+        <Button type="button" variant="outline" size="sm" disabled={busy || switching}
+                onClick={onClear}>清除历史时长</Button>
     </div>;
 }

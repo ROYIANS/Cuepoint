@@ -1,6 +1,6 @@
 import {db} from "./database";
 import type {AudioInput} from "@/domain/audio";
-import type {MusicDraft, MusicSettings, MusicWork} from "@/domain/music";
+import {MUSIC_DURATION_LIMITS, type MusicDraft, type MusicSettings, type MusicWork} from "@/domain/music";
 import type {MediaRecord} from "@/domain/types";
 import {
     assertAudioProject,
@@ -16,15 +16,26 @@ import {
     validateAudioMetadata
 } from "./audioShared";
 
-export function validateMusicSettings(settings: MusicSettings) {
+function validateMusicDuration(engine: MusicSettings["engine"], duration: number | undefined, allowLegacyFraction: boolean) {
+    if (duration === undefined) return;
+    const {min, max} = MUSIC_DURATION_LIMITS[engine];
+    finiteAudioNumber(duration, "音乐时长", min, max);
+    if (!allowLegacyFraction && !Number.isInteger(duration)) throw new Error("音乐时长必须为整数秒");
+}
+
+function validateStoredMusicSettings(settings: MusicSettings, allowLegacyFraction: boolean) {
     if (settings.engine === "flowmusic") {
-        if (settings.lengthSec !== undefined) finiteAudioNumber(settings.lengthSec, "音乐时长", 1, 240);
+        validateMusicDuration(settings.engine, settings.lengthSec, allowLegacyFraction);
         if (settings.bpm !== undefined && settings.bpm !== "" && (!/^\d+(\.\d+)?$/.test(settings.bpm) || Number(settings.bpm) < 1)) throw new Error("BPM 必须大于等于 1");
     } else if (settings.engine === "suno") {
         if (!["v6", "v6-wild", "v6-mini"].includes(settings.version)) throw new Error("不支持的 Suno 版本");
-        if (settings.durationSec !== undefined) finiteAudioNumber(settings.durationSec, "音乐时长", 10, 360);
+        validateMusicDuration(settings.engine, settings.durationSec, allowLegacyFraction);
         if ([...settings.prompt].length > (settings.custom ? 5000 : 3000) || [...settings.title].length > 80 || [...settings.style].length > 1000) throw new Error("音乐描述、歌词或风格超过长度限制");
     } else throw new Error("不支持的音乐引擎");
+}
+
+export function validateMusicSettings(settings: MusicSettings) {
+    validateStoredMusicSettings(settings, false);
 }
 
 export async function validateMusicDraft(row: MusicDraft) {
@@ -32,12 +43,27 @@ export async function validateMusicDraft(row: MusicDraft) {
     validateMusicSettings(row.settings);
 }
 
-export async function validateMusicWork(row: MusicWork) {
+/** Package history keeps fractional parameters readable for an explicit draft repair. */
+export async function validateLegacyMusicDraft(row: MusicDraft) {
+    await assertAudioProject(row.projectId, "music");
+    validateStoredMusicSettings(row.settings, true);
+}
+
+async function validateStoredMusicWork(row: MusicWork, allowLegacyFraction: boolean) {
     await assertAudioProject(row.projectId, "music");
     await assertOwnedAudioMedia(row.projectId, row.mediaId);
     validateAudioMetadata(row);
-    if (row.settings) validateMusicSettings(row.settings);
+    if (row.settings) validateStoredMusicSettings(row.settings, allowLegacyFraction);
     if (typeof row.title !== "string" || typeof row.notes !== "string" || typeof row.lyrics !== "string" || typeof row.favorite !== "boolean") throw new Error("音乐作品信息无效");
+}
+
+export async function validateMusicWork(row: MusicWork) {
+    await validateStoredMusicWork(row, false);
+}
+
+/** Only imported history or metadata edits of existing immutable settings use this path. */
+export async function validateLegacyMusicWork(row: MusicWork) {
+    await validateStoredMusicWork(row, true);
 }
 
 export async function addMusicDraft(projectId: string, input: AudioInput<MusicDraft>): Promise<MusicDraft> {
@@ -67,7 +93,7 @@ export async function addMusicWork(projectId: string, input: AudioInput<MusicWor
     });
 }
 
-export const patchMusicWork = (projectId: string, id: string, revision: number, patch: Partial<Pick<MusicWork, "title" | "notes" | "favorite">>) => patchAudioRow(db.musicWorks, projectId, id, revision, patch, ["title", "notes", "favorite"], validateMusicWork);
+export const patchMusicWork = (projectId: string, id: string, revision: number, patch: Partial<Pick<MusicWork, "title" | "notes" | "favorite">>) => patchAudioRow(db.musicWorks, projectId, id, revision, patch, ["title", "notes", "favorite"], validateLegacyMusicWork);
 
 export async function deleteMusicDraft(projectId: string, id: string, revision: number) {
     return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => {
