@@ -1,0 +1,3098 @@
+{
+  "group": "agent-ui",
+  "warning": "Raw signals need validation; hooks may flag non-hook functions named useX; Knip declarations/CSS can be false positives; complexity is not proof of bug",
+  "eslint": [
+    {
+      "file": "src/components/agent/AgentChatPage.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'AgentChatInner' has a complexity of 133. Maximum allowed is 20.",
+          "line": 57,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 57,
+          "endColumn": 24
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 64 to the 20 allowed.",
+          "line": 57,
+          "column": 10,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 57,
+          "endColumn": 24
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "The 'threadList' logical expression could make the dependencies of useMemo Hook (at line 157) change on every render. To fix this, wrap the initialization of 'threadList' in its own useMemo() Hook.",
+          "line": 113,
+          "column": 11,
+          "nodeType": "VariableDeclarator",
+          "endLine": 113,
+          "endColumn": 37
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "The 'connectorList' logical expression could make the dependencies of useMemo Hook (at line 207) change on every render. To fix this, wrap the initialization of 'connectorList' in its own useMemo() Hook.",
+          "line": 114,
+          "column": 11,
+          "nodeType": "VariableDeclarator",
+          "endLine": 114,
+          "endColumn": 43
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "React Hook useEffect has a missing dependency: 'activeThread'. Either include it or remove the dependency array.",
+          "line": 200,
+          "column": 8,
+          "nodeType": "ArrayExpression",
+          "endLine": 200,
+          "endColumn": 97,
+          "suggestions": [
+            {
+              "desc": "Update the dependencies array to be: [loaded, activeThread.id, activeThread.connectorId, activeThread.model, connectorList, activeThread]",
+              "fix": {
+                "range": [
+                  9156,
+                  9245
+                ],
+                "text": "[loaded, activeThread.id, activeThread.connectorId, activeThread.model, connectorList, activeThread]"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "React Hook useEffect has a missing dependency: 'selectedConnector'. Either include it or remove the dependency array.",
+          "line": 253,
+          "column": 8,
+          "nodeType": "ArrayExpression",
+          "endLine": 253,
+          "endColumn": 119,
+          "suggestions": [
+            {
+              "desc": "Update the dependencies array to be: [selectedConnector.id, selectedConnector.definitionId, selectedConnector.baseUrl, selectedConnector.apiKey, selectedConnector]",
+              "fix": {
+                "range": [
+                  12474,
+                  12585
+                ],
+                "text": "[selectedConnector.id, selectedConnector.definitionId, selectedConnector.baseUrl, selectedConnector.apiKey, selectedConnector]"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "React Hook useCallback has missing dependencies: 'catalogMatches' and 'modelCatalog?.metadata'. Either include them or remove the dependency array.",
+          "line": 427,
+          "column": 8,
+          "nodeType": "ArrayExpression",
+          "endLine": 427,
+          "endColumn": 190,
+          "suggestions": [
+            {
+              "desc": "Update the dependencies array to be: [draft, references, projectRequired, projectUnavailable, selectedConnector, modelValue, activeThreadId, activeThread, chatMode, projectId, interactionMode, reasoningEffort, catalogMatches, modelCatalog?.metadata, navigate]",
+              "fix": {
+                "range": [
+                  19666,
+                  19848
+                ],
+                "text": "[draft, references, projectRequired, projectUnavailable, selectedConnector, modelValue, activeThreadId, activeThread, chatMode, projectId, interactionMode, reasoningEffort, catalogMatches, modelCatalog?.metadata, navigate]"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 635,
+          "column": 32,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 635,
+          "endColumn": 315
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 635,
+          "column": 134,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 635,
+          "endColumn": 315
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 635,
+          "column": 189,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 635,
+          "endColumn": 315
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 671,
+          "column": 23,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 675,
+          "endColumn": 24
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 695,
+          "column": 14,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 726,
+          "endColumn": 14
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/AgentControls.tsx",
+      "messages": [
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 23 to the 20 allowed.",
+          "line": 240,
+          "column": 29,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 240,
+          "endColumn": 31
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 240,
+          "column": 53,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 297,
+          "endColumn": 19
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 266,
+          "column": 80,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 272,
+          "endColumn": 86
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/AgentGenerationBatches.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 104,
+          "column": 12,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 104,
+          "endColumn": 112
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 104,
+          "column": 49,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 104,
+          "endColumn": 112
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'BatchSurface' has a complexity of 67. Maximum allowed is 20.",
+          "line": 129,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 129,
+          "endColumn": 22
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 22 to the 20 allowed.",
+          "line": 129,
+          "column": 10,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 129,
+          "endColumn": 22
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Arrow function has a complexity of 31. Maximum allowed is 20.",
+          "line": 372,
+          "column": 63,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 372,
+          "endColumn": 65
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 381,
+          "column": 74,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 383,
+          "endColumn": 103
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 382,
+          "column": 128,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 383,
+          "endColumn": 103
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 388,
+          "column": 87,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 392,
+          "endColumn": 82
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 439,
+          "column": 120,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 439,
+          "endColumn": 163
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 579,
+          "column": 33,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 579,
+          "endColumn": 141
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'BatchConfigurationFields' has a complexity of 24. Maximum allowed is 20.",
+          "line": 591,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 591,
+          "endColumn": 34
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/AgentGenerationResults.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 34,
+          "column": 26,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 36,
+          "endColumn": 59
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/AgentRunDetails.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'ToolCallRow' has a complexity of 39. Maximum allowed is 20.",
+          "line": 76,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 76,
+          "endColumn": 21
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "React Hook useMemo has a missing dependency: 'call'. Either include it or remove the dependency array.",
+          "line": 93,
+          "column": 73,
+          "nodeType": "ArrayExpression",
+          "endLine": 93,
+          "endColumn": 99,
+          "suggestions": [
+            {
+              "desc": "Update the dependencies array to be: [call]",
+              "fix": {
+                "range": [
+                  5251,
+                  5277
+                ],
+                "text": "[call]"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 115,
+          "column": 42,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 115,
+          "endColumn": 97
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 117,
+          "column": 18,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 126,
+          "endColumn": 27
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 178,
+          "column": 57,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 178,
+          "endColumn": 135
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 178,
+          "column": 80,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 178,
+          "endColumn": 135
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'AgentRunDetails' has a complexity of 33. Maximum allowed is 20.",
+          "line": 187,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 187,
+          "endColumn": 32
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 282,
+          "column": 41,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 289,
+          "endColumn": 99
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 297,
+          "column": 109,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 297,
+          "endColumn": 164
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 305,
+          "column": 37,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 305,
+          "endColumn": 134
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 306,
+          "column": 51,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 306,
+          "endColumn": 133
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/ChatWorkspace.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 250,
+          "column": 22,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 267,
+          "endColumn": 95
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/ContextCompactionDetails.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 7,
+          "column": 18,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 7,
+          "endColumn": 71
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 10,
+          "column": 75,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 10,
+          "endColumn": 167
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 10,
+          "column": 99,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 10,
+          "endColumn": 167
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 13,
+          "column": 17,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 13,
+          "endColumn": 251
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 20,
+          "column": 25,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 20,
+          "endColumn": 99
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/ContextUsagePanel.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'useContextUsage' has a complexity of 40. Maximum allowed is 20.",
+          "line": 51,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 51,
+          "endColumn": 25
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 24 to the 20 allowed.",
+          "line": 190,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 190,
+          "endColumn": 25
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Arrow function has a complexity of 84. Maximum allowed is 20.",
+          "line": 190,
+          "column": 23,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 190,
+          "endColumn": 25
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 232,
+          "column": 35,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 234,
+          "endColumn": 84
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'ContextUsagePanel' has a complexity of 41. Maximum allowed is 20.",
+          "line": 326,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 326,
+          "endColumn": 34
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 33 to the 20 allowed.",
+          "line": 326,
+          "column": 17,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 326,
+          "endColumn": 34
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 473,
+          "column": 30,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 479,
+          "endColumn": 44
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 474,
+          "column": 35,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 478,
+          "endColumn": 51
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/CreatedEntityLinks.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'CreatedEntityLinks' has a complexity of 33. Maximum allowed is 20.",
+          "line": 60,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 60,
+          "endColumn": 35
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-assignment",
+          "severity": 2,
+          "message": "Unsafe assignment of an `any` value.",
+          "line": 77,
+          "column": 15,
+          "nodeType": "VariableDeclarator",
+          "messageId": "anyAssignment",
+          "endLine": 77,
+          "endColumn": 35
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .target on an `any` value.",
+          "line": 77,
+          "column": 29,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 77,
+          "endColumn": 35
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .href on an `any` value.",
+          "line": 79,
+          "column": 27,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 79,
+          "endColumn": 31
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-argument",
+          "severity": 2,
+          "message": "Unsafe argument of type `any` assigned to a parameter of type `string`.",
+          "line": 79,
+          "column": 66,
+          "nodeType": "MemberExpression",
+          "messageId": "unsafeArgument",
+          "endLine": 79,
+          "endColumn": 77
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .href on an `any` value.",
+          "line": 79,
+          "column": 73,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 79,
+          "endColumn": 77
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .label on an `any` value.",
+          "line": 79,
+          "column": 96,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 79,
+          "endColumn": 101
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .href on an `any` value.",
+          "line": 80,
+          "column": 38,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 80,
+          "endColumn": 42
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-argument",
+          "severity": 2,
+          "message": "Unsafe argument of type `any` assigned to a parameter of type `string`.",
+          "line": 80,
+          "column": 85,
+          "nodeType": "MemberExpression",
+          "messageId": "unsafeArgument",
+          "endLine": 80,
+          "endColumn": 96
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .href on an `any` value.",
+          "line": 80,
+          "column": 92,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 80,
+          "endColumn": 96
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-argument",
+          "severity": 2,
+          "message": "Unsafe argument of type `any` assigned to a parameter of type `string`.",
+          "line": 80,
+          "column": 98,
+          "nodeType": "MemberExpression",
+          "messageId": "unsafeArgument",
+          "endLine": 80,
+          "endColumn": 110
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .label on an `any` value.",
+          "line": 80,
+          "column": 105,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 80,
+          "endColumn": 110
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/FloatingComposer.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'FloatingComposer' has a complexity of 48. Maximum allowed is 20.",
+          "line": 142,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 142,
+          "endColumn": 33
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 35 to the 20 allowed.",
+          "line": 142,
+          "column": 17,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 142,
+          "endColumn": 33
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 358,
+          "column": 34,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 358,
+          "endColumn": 199
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 358,
+          "column": 78,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 358,
+          "endColumn": 199
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/GenerationReview.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'GenerationReviewForm' has a complexity of 42. Maximum allowed is 20.",
+          "line": 65,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 65,
+          "endColumn": 30
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'GenerationConfigurationFields' has a complexity of 49. Maximum allowed is 20.",
+          "line": 187,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 187,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 47 to the 20 allowed.",
+          "line": 187,
+          "column": 17,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 187,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 285,
+          "column": 42,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 285,
+          "endColumn": 137
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 289,
+          "column": 42,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 289,
+          "endColumn": 185
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/Grainient.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Arrow function has a complexity of 25. Maximum allowed is 20.",
+          "line": 169,
+          "column": 39,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 169,
+          "endColumn": 41
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-assignment",
+          "severity": 2,
+          "message": "Unsafe assignment of an `any` value.",
+          "line": 235,
+          "column": 19,
+          "nodeType": "VariableDeclarator",
+          "messageId": "anyAssignment",
+          "endLine": 235,
+          "endColumn": 59
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 235,
+          "column": 54,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 235,
+          "endColumn": 59
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access [0] on an `any` value.",
+          "line": 236,
+          "column": 17,
+          "nodeType": "Literal",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 236,
+          "endColumn": 18
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access [1] on an `any` value.",
+          "line": 237,
+          "column": 17,
+          "nodeType": "Literal",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 237,
+          "endColumn": 18
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 252,
+          "column": 36,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 252,
+          "endColumn": 41
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unused-expressions",
+          "severity": 2,
+          "message": "Expected an assignment or function call and instead saw an expression.",
+          "line": 276,
+          "column": 17,
+          "nodeType": "ExpressionStatement",
+          "messageId": "unusedExpression",
+          "endLine": 276,
+          "endColumn": 52
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unused-expressions",
+          "severity": 2,
+          "message": "Expected an assignment or function call and instead saw an expression.",
+          "line": 284,
+          "column": 13,
+          "nodeType": "ExpressionStatement",
+          "messageId": "unusedExpression",
+          "endLine": 284,
+          "endColumn": 52
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 313,
+          "column": 22,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 313,
+          "endColumn": 27
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 314,
+          "column": 25,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 314,
+          "endColumn": 30
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 315,
+          "column": 25,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 315,
+          "endColumn": 30
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 316,
+          "column": 26,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 316,
+          "endColumn": 31
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 317,
+          "column": 22,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 317,
+          "endColumn": 27
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 318,
+          "column": 26,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 318,
+          "endColumn": 31
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 319,
+          "column": 23,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 319,
+          "endColumn": 28
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 320,
+          "column": 26,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 320,
+          "endColumn": 31
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 321,
+          "column": 27,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 321,
+          "endColumn": 32
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 322,
+          "column": 23,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 322,
+          "endColumn": 28
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 323,
+          "column": 24,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 323,
+          "endColumn": 29
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 324,
+          "column": 23,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 324,
+          "endColumn": 28
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 325,
+          "column": 26,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 325,
+          "endColumn": 31
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 326,
+          "column": 21,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 326,
+          "endColumn": 26
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 327,
+          "column": 18,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 327,
+          "endColumn": 23
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 328,
+          "column": 23,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 328,
+          "endColumn": 28
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 329,
+          "column": 25,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 329,
+          "endColumn": 30
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 330,
+          "column": 17,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 330,
+          "endColumn": 22
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 331,
+          "column": 19,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 331,
+          "endColumn": 24
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 332,
+          "column": 19,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 332,
+          "endColumn": 24
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 333,
+          "column": 19,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 333,
+          "endColumn": 24
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .value on an `any` value.",
+          "line": 334,
+          "column": 22,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 334,
+          "endColumn": 27
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/HomeWelcome.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 33,
+          "column": 9,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 33,
+          "endColumn": 93
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 33,
+          "column": 28,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 33,
+          "endColumn": 93
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 33,
+          "column": 48,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 33,
+          "endColumn": 93
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 77,
+          "column": 22,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 144,
+          "endColumn": 29
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 84,
+          "column": 45,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 84,
+          "endColumn": 203
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/MemoryContextDetails.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'MemoryContextContent' has a complexity of 37. Maximum allowed is 20.",
+          "line": 49,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 49,
+          "endColumn": 30
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 152,
+          "column": 30,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 156,
+          "endColumn": 64
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Arrow function has a complexity of 22. Maximum allowed is 20.",
+          "line": 162,
+          "column": 55,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 162,
+          "endColumn": 57
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 188,
+          "column": 46,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 192,
+          "endColumn": 85
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 194,
+          "column": 50,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 200,
+          "endColumn": 65
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 196,
+          "column": 55,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 200,
+          "endColumn": 65
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 220,
+          "column": 54,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 224,
+          "endColumn": 70
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/MessageList.tsx",
+      "messages": [
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 27 to the 20 allowed.",
+          "line": 154,
+          "column": 5,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 154,
+          "endColumn": 13
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'AgentChatMessageItem' has a complexity of 59. Maximum allowed is 20.",
+          "line": 154,
+          "column": 5,
+          "nodeType": "FunctionExpression",
+          "messageId": "complex",
+          "endLine": 154,
+          "endColumn": 34
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 194,
+          "column": 29,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 194,
+          "endColumn": 211
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 194,
+          "column": 67,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 194,
+          "endColumn": 211
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Arrow function has a complexity of 57. Maximum allowed is 20.",
+          "line": 240,
+          "column": 18,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 240,
+          "endColumn": 20
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/ModelSelectTrigger.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'ModelDetail' has a complexity of 30. Maximum allowed is 20.",
+          "line": 21,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 21,
+          "endColumn": 21
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 23 to the 20 allowed.",
+          "line": 21,
+          "column": 10,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 21,
+          "endColumn": 21
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 55,
+          "column": 31,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 55,
+          "endColumn": 126
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 75,
+          "column": 52,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 75,
+          "endColumn": 154
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 75,
+          "column": 72,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 75,
+          "endColumn": 154
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 191,
+          "column": 60,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 191,
+          "endColumn": 142
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 251,
+          "column": 12,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 251,
+          "endColumn": 79
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/MusicGenerationReview.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'MusicGenerationReview' has a complexity of 23. Maximum allowed is 20.",
+          "line": 30,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 30,
+          "endColumn": 38
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/ProjectImageSources.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 15,
+          "column": 79,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 15,
+          "endColumn": 165
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/ProjectPicker.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'ProjectPicker' has a complexity of 29. Maximum allowed is 20.",
+          "line": 12,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 12,
+          "endColumn": 30
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 77,
+          "column": 28,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 77,
+          "endColumn": 107
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 79,
+          "column": 64,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 79,
+          "endColumn": 146
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 92,
+          "column": 51,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 92,
+          "endColumn": 155
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/ReferenceAttachments.tsx",
+      "messages": [
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "React Hook useEffect has a missing dependency: 'source'. Either include it or remove the dependency array.",
+          "line": 46,
+          "column": 8,
+          "nodeType": "ArrayExpression",
+          "endLine": 46,
+          "endColumn": 52,
+          "suggestions": [
+            {
+              "desc": "Update the dependencies array to be: [source, source.media.blob, source.reference.kind]",
+              "fix": {
+                "range": [
+                  2001,
+                  2045
+                ],
+                "text": "[source, source.media.blob, source.reference.kind]"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 66,
+          "column": 14,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 74,
+          "endColumn": 35
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 152,
+          "column": 89,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 152,
+          "endColumn": 457
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "React Hook useEffect has a missing dependency: 'media'. Either include it or remove the dependency array.",
+          "line": 177,
+          "column": 8,
+          "nodeType": "ArrayExpression",
+          "endLine": 177,
+          "endColumn": 21,
+          "suggestions": [
+            {
+              "desc": "Update the dependencies array to be: [media, media.blob]",
+              "fix": {
+                "range": [
+                  10473,
+                  10486
+                ],
+                "text": "[media, media.blob]"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 184,
+          "column": 49,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 186,
+          "endColumn": 62
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/ReferenceLibrary.tsx",
+      "messages": [
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 22 to the 20 allowed.",
+          "line": 23,
+          "column": 17,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 23,
+          "endColumn": 33
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 113,
+          "column": 14,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 145,
+          "endColumn": 19
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 113,
+          "column": 34,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 120,
+          "endColumn": 92
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 120,
+          "column": 95,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 145,
+          "endColumn": 19
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 121,
+          "column": 45,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 145,
+          "endColumn": 19
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/TaskBoard.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 114,
+          "column": 10,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 152,
+          "endColumn": 23
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/TaskInspector.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'TaskInspectorContent' has a complexity of 50. Maximum allowed is 20.",
+          "line": 68,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 68,
+          "endColumn": 30
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 214,
+          "column": 71,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 216,
+          "endColumn": 94
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/TaskRecords.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'TaskRecords' has a complexity of 23. Maximum allowed is 20.",
+          "line": 47,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 47,
+          "endColumn": 28
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 137,
+          "column": 10,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 180,
+          "endColumn": 24
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/TaskWrapup.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'TaskWrapup' has a complexity of 73. Maximum allowed is 20.",
+          "line": 125,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 125,
+          "endColumn": 27
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 51 to the 20 allowed.",
+          "line": 125,
+          "column": 17,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 125,
+          "endColumn": 27
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "React Hook useEffect has missing dependencies: 'candidate' and 'draft'. Either include them or remove the dependency array.",
+          "line": 171,
+          "column": 8,
+          "nodeType": "ArrayExpression",
+          "endLine": 171,
+          "endColumn": 47,
+          "suggestions": [
+            {
+              "desc": "Update the dependencies array to be: [candidate, draft, onEditingChange]",
+              "fix": {
+                "range": [
+                  8940,
+                  8979
+                ],
+                "text": "[candidate, draft, onEditingChange]"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked.",
+          "line": 171,
+          "column": 9,
+          "nodeType": "UnaryExpression",
+          "endLine": 171,
+          "endColumn": 16
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked.",
+          "line": 171,
+          "column": 18,
+          "nodeType": "UnaryExpression",
+          "endLine": 171,
+          "endColumn": 29
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 257,
+          "column": 22,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 257,
+          "endColumn": 116
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 279,
+          "column": 28,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 279,
+          "endColumn": 165
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 279,
+          "column": 57,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 279,
+          "endColumn": 165
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 279,
+          "column": 77,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 279,
+          "endColumn": 165
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 435,
+          "column": 28,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 435,
+          "endColumn": 135
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 435,
+          "column": 58,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 435,
+          "endColumn": 135
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/TopicSidebar.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 221,
+          "column": 18,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 261,
+          "endColumn": 25
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/useReferenceDraft.ts",
+      "messages": [
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "The ref value 'controllers.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'controllers.current' to a variable inside the effect, and use that variable in the cleanup function.",
+          "line": 25,
+          "column": 50,
+          "nodeType": "Identifier",
+          "endLine": 25,
+          "endColumn": 57
+        }
+      ]
+    },
+    {
+      "file": "src/components/memory/MemoryEditor.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'MemoryEditor' has a complexity of 37. Maximum allowed is 20.",
+          "line": 41,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 41,
+          "endColumn": 29
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 193,
+          "column": 30,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 193,
+          "endColumn": 77
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 389,
+          "column": 34,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 389,
+          "endColumn": 78
+        }
+      ]
+    },
+    {
+      "file": "src/components/memory/ProjectMemoryPage.tsx",
+      "messages": [
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+          "line": 33,
+          "column": 17,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 33,
+          "endColumn": 34
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 128,
+          "column": 26,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 178,
+          "endColumn": 26
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 132,
+          "column": 29,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 178,
+          "endColumn": 26
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'MemoryDetail' has a complexity of 38. Maximum allowed is 20.",
+          "line": 219,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 219,
+          "endColumn": 22
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 449,
+          "column": 30,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 453,
+          "endColumn": 59
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 473,
+          "column": 30,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 477,
+          "endColumn": 45
+        }
+      ]
+    },
+    {
+      "file": "src/components/memory/memoryLabels.ts",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 23,
+          "column": 5,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 27,
+          "endColumn": 21
+        }
+      ]
+    }
+  ],
+  "knipFiles": [],
+  "knipIssues": [
+    {
+      "file": "src/components/agent/ContextUsagePanel.tsx",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "ContextUsagePanel",
+          "line": 326,
+          "col": 17,
+          "pos": 13130
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/components/agent/agentTheme.ts",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "SIDEBAR_BG",
+          "line": 6,
+          "col": 14,
+          "pos": 231
+        },
+        {
+          "name": "SURFACE",
+          "line": 7,
+          "col": 14,
+          "pos": 268
+        },
+        {
+          "name": "ACCENT",
+          "line": 10,
+          "col": 14,
+          "pos": 400
+        },
+        {
+          "name": "BORDER",
+          "line": 11,
+          "col": 14,
+          "pos": 433
+        },
+        {
+          "name": "BORDER_SUBTLE",
+          "line": 12,
+          "col": 14,
+          "pos": 466
+        },
+        {
+          "name": "TEXT_SECONDARY",
+          "line": 14,
+          "col": 14,
+          "pos": 537
+        },
+        {
+          "name": "MUTED",
+          "line": 16,
+          "col": 14,
+          "pos": 618
+        },
+        {
+          "name": "SPACE",
+          "line": 19,
+          "col": 14,
+          "pos": 734
+        },
+        {
+          "name": "RADIUS",
+          "line": 29,
+          "col": 14,
+          "pos": 855
+        },
+        {
+          "name": "CONTROL",
+          "line": 36,
+          "col": 14,
+          "pos": 937
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          {
+            "name": "TEXT_TERTIARY",
+            "line": 15,
+            "col": 13,
+            "pos": 577
+          },
+          {
+            "name": "MUTED",
+            "line": 16,
+            "col": 21,
+            "pos": 625
+          }
+        ]
+      ],
+      "catalog": []
+    },
+    {
+      "file": "src/components/agent/ReferenceAttachments.tsx",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "ReferenceIcon",
+          "line": 20,
+          "col": 17,
+          "pos": 837
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/components/memory/MemoryEditor.tsx",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "EMPTY_MEMORY",
+          "line": 32,
+          "col": 14,
+          "pos": 1087
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/components/agent/AgentActivityNavigation.tsx",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        {
+          "name": "AgentActivityTarget",
+          "line": 3,
+          "col": 13,
+          "pos": 129
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    }
+  ],
+  "ast": [
+    {
+      "file": "src/components/agent/AgentActivityNavigation.tsx",
+      "lines": 26,
+      "functions": 6,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/AgentChatPage.tsx",
+      "lines": 794,
+      "functions": 112,
+      "anyKeywords": [],
+      "typeAssertions": [
+        61,
+        127,
+        127
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        611,
+        633,
+        635,
+        635,
+        635,
+        671,
+        695,
+        697,
+        731
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/AgentComposerAttention.tsx",
+      "lines": 61,
+      "functions": 4,
+      "anyKeywords": [],
+      "typeAssertions": [
+        31
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/AgentControls.tsx",
+      "lines": 307,
+      "functions": 41,
+      "anyKeywords": [],
+      "typeAssertions": [
+        99
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        193,
+        240,
+        244,
+        251,
+        266
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/AgentGenerationBatches.tsx",
+      "lines": 649,
+      "functions": 113,
+      "anyKeywords": [],
+      "typeAssertions": [
+        115,
+        154,
+        606
+      ],
+      "nonNullAssertions": [
+        417,
+        641
+      ],
+      "nestedTernaries": [
+        104,
+        104,
+        300,
+        381,
+        382,
+        384,
+        388,
+        423,
+        439,
+        447,
+        579,
+        579,
+        639
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/AgentGenerationResults.tsx",
+      "lines": 49,
+      "functions": 4,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        34
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/AgentRunDetails.tsx",
+      "lines": 323,
+      "functions": 53,
+      "anyKeywords": [],
+      "typeAssertions": [
+        25
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        115,
+        117,
+        178,
+        178,
+        282,
+        297,
+        305,
+        306
+      ],
+      "emptyCatches": [],
+      "dynamicImports": [
+        {
+          "line": 97,
+          "literal": "@/lib/agent/tools"
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/AgentWriteOutcomes.tsx",
+      "lines": 42,
+      "functions": 6,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        18
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/ChatWorkspace.tsx",
+      "lines": 278,
+      "functions": 18,
+      "anyKeywords": [],
+      "typeAssertions": [
+        134
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        250
+      ],
+      "emptyCatches": [
+        36
+      ],
+      "dynamicImports": [
+        {
+          "line": 23,
+          "literal": "./MessageList"
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/ContextCompactionDetails.tsx",
+      "lines": 26,
+      "functions": 2,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        7,
+        10,
+        10,
+        13,
+        20
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/ContextParameters.tsx",
+      "lines": 73,
+      "functions": 13,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/ContextUsagePanel.tsx",
+      "lines": 586,
+      "functions": 24,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [
+        469,
+        493,
+        493,
+        493,
+        493,
+        493,
+        493
+      ],
+      "nestedTernaries": [
+        226,
+        227,
+        232,
+        404,
+        412,
+        473,
+        474,
+        492
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/CreatedEntityLinks.tsx",
+      "lines": 88,
+      "functions": 7,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/FloatingComposer.tsx",
+      "lines": 491,
+      "functions": 48,
+      "anyKeywords": [],
+      "typeAssertions": [
+        45,
+        45,
+        83,
+        125,
+        320,
+        456
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        358,
+        358,
+        359,
+        398,
+        424,
+        433
+      ],
+      "emptyCatches": [
+        459
+      ],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/GenerationReview.tsx",
+      "lines": 304,
+      "functions": 49,
+      "anyKeywords": [],
+      "typeAssertions": [
+        226,
+        271,
+        277,
+        281
+      ],
+      "nonNullAssertions": [
+        113,
+        113,
+        143
+      ],
+      "nestedTernaries": [
+        141,
+        229,
+        261,
+        264,
+        266,
+        285,
+        289,
+        294,
+        300
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/Grainient.tsx",
+      "lines": 348,
+      "functions": 12,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/HomeWelcome.tsx",
+      "lines": 150,
+      "functions": 11,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        33,
+        33,
+        33,
+        77,
+        84
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/LobeChatTheme.tsx",
+      "lines": 62,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/MemoryContextDetails.tsx",
+      "lines": 329,
+      "functions": 18,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        143,
+        152,
+        161,
+        188,
+        194,
+        196,
+        220
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/MessageList.tsx",
+      "lines": 267,
+      "functions": 25,
+      "anyKeywords": [],
+      "typeAssertions": [
+        25
+      ],
+      "nonNullAssertions": [
+        232
+      ],
+      "nestedTernaries": [
+        189,
+        194,
+        194,
+        215
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/ModelIconCatalog.ts",
+      "lines": 4,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/ModelIcons.tsx",
+      "lines": 20,
+      "functions": 7,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": [
+        {
+          "line": 6,
+          "literal": "./ModelIconCatalog"
+        },
+        {
+          "line": 7,
+          "literal": "./ModelIconCatalog"
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/ModelSelectTrigger.tsx",
+      "lines": 321,
+      "functions": 26,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        55,
+        74,
+        75,
+        75,
+        165,
+        189,
+        191,
+        239,
+        251
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/ModelSettingsMenu.tsx",
+      "lines": 57,
+      "functions": 5,
+      "anyKeywords": [],
+      "typeAssertions": [
+        35,
+        45
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        20
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/MusicGenerationReview.tsx",
+      "lines": 135,
+      "functions": 14,
+      "anyKeywords": [],
+      "typeAssertions": [
+        46
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/ProjectImageSources.tsx",
+      "lines": 19,
+      "functions": 2,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        15
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/ProjectPicker.tsx",
+      "lines": 156,
+      "functions": 19,
+      "anyKeywords": [],
+      "typeAssertions": [
+        91
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        77,
+        79,
+        79,
+        92,
+        99
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/ReferenceAttachments.tsx",
+      "lines": 189,
+      "functions": 37,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        66,
+        67,
+        152,
+        184
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/ReferenceLibrary.tsx",
+      "lines": 167,
+      "functions": 27,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        113,
+        113,
+        120,
+        121,
+        123
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/TaskBoard.tsx",
+      "lines": 182,
+      "functions": 24,
+      "anyKeywords": [],
+      "typeAssertions": [
+        100
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        114,
+        115,
+        129
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/TaskInspector.tsx",
+      "lines": 315,
+      "functions": 61,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        201,
+        210,
+        214,
+        269
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/TaskRecords.tsx",
+      "lines": 244,
+      "functions": 54,
+      "anyKeywords": [],
+      "typeAssertions": [
+        65,
+        71,
+        77,
+        191,
+        194
+      ],
+      "nonNullAssertions": [
+        80
+      ],
+      "nestedTernaries": [
+        137,
+        137,
+        233
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/TaskWrapup.tsx",
+      "lines": 442,
+      "functions": 75,
+      "anyKeywords": [],
+      "typeAssertions": [
+        322
+      ],
+      "nonNullAssertions": [
+        275,
+        391
+      ],
+      "nestedTernaries": [
+        71,
+        71,
+        110,
+        257,
+        270,
+        279,
+        279,
+        279,
+        299,
+        314,
+        435,
+        435
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/ThinkingMatrix.tsx",
+      "lines": 113,
+      "functions": 13,
+      "anyKeywords": [],
+      "typeAssertions": [
+        57
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/ThinkingPanel.tsx",
+      "lines": 66,
+      "functions": 4,
+      "anyKeywords": [],
+      "typeAssertions": [
+        6
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/TopicSidebar.tsx",
+      "lines": 332,
+      "functions": 25,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        221,
+        227
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/TurnNavigation.tsx",
+      "lines": 149,
+      "functions": 24,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [
+        123
+      ],
+      "nestedTernaries": [
+        101
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/WebResearchSources.tsx",
+      "lines": 20,
+      "functions": 2,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/agentTheme.ts",
+      "lines": 49,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [
+        19,
+        29,
+        36
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/composerTypes.ts",
+      "lines": 54,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/filterThreadsByTitle.ts",
+      "lines": 18,
+      "functions": 2,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/timeGroups.ts",
+      "lines": 55,
+      "functions": 6,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/agent/useReferenceDraft.ts",
+      "lines": 130,
+      "functions": 32,
+      "anyKeywords": [],
+      "typeAssertions": [
+        50
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        86
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/memory/MemoryEditor.tsx",
+      "lines": 428,
+      "functions": 34,
+      "anyKeywords": [],
+      "typeAssertions": [
+        223,
+        257
+      ],
+      "nonNullAssertions": [
+        148
+      ],
+      "nestedTernaries": [
+        193,
+        389
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/memory/MemoryPromotion.tsx",
+      "lines": 57,
+      "functions": 4,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/memory/ProjectMemoryPage.tsx",
+      "lines": 521,
+      "functions": 42,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        128,
+        132,
+        136,
+        182,
+        444,
+        449,
+        473
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/memory/memoryLabels.ts",
+      "lines": 28,
+      "functions": 2,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        23
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/memory/readMemory.ts",
+      "lines": 13,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    }
+  ]
+}

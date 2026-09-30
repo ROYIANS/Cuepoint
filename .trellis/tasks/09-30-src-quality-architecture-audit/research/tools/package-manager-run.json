@@ -1,0 +1,10 @@
+{
+  "tool": "package-manager",
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "--version"
+  ],
+  "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+  "exit": 0,
+  "seconds": 0.52
+}

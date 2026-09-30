@@ -1,0 +1,20 @@
+{
+  "path": [
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/src"
+  ],
+  "pattern": "**/*.{ts,tsx,css}",
+  "ignore": [
+    "**/routeTree.gen.ts",
+    "**/*.generated.json"
+  ],
+  "minLines": 10,
+  "minTokens": 80,
+  "maxLines": 10000,
+  "maxSize": "2mb",
+  "mode": "weak",
+  "reporters": [
+    "json"
+  ],
+  "output": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-quality-architecture-audit/research/tools/jscpd",
+  "silent": true
+}

@@ -1,0 +1,41 @@
+{
+  "method": "jscpd v4 exact token clones min80tokens/10lines; JSX fragments can have invalid line coordinates; validate source before treating as duplication",
+  "clones": [
+    {
+      "format": "typescript",
+      "lines": 14,
+      "fragment": "const episode = await db.episodes.get(episodeId);\n        if (!episode) throw new Error(\"集不存在\");\n        await assertVideoProject(episode.projectId);\n        if (new Set(ids).size !== ids.length) throw new Error(\"镜头列表包含重复记录\");\n        const shots = await db.shots.bulkGet(ids);\n        if (\n            shots.some(\n                (shot) =>\n                    !shot || shot.episodeId !== episodeId || shot.projectId !== episode.projectId,\n            )\n        ) {\n            throw new Error(\"所选镜头不属于当前集\");\n        }\n        await",
+      "tokens": 164,
+      "firstFile": {
+        "name": "src/db/repo.ts",
+        "start": 1634,
+        "end": 1647,
+        "startLoc": {
+          "line": 1634,
+          "column": 9,
+          "position": 21643
+        },
+        "endLoc": {
+          "line": 1647,
+          "column": 14,
+          "position": 21807
+        }
+      },
+      "secondFile": {
+        "name": "src/db/repo.ts",
+        "start": 1477,
+        "end": 1490,
+        "startLoc": {
+          "line": 1477,
+          "column": 9,
+          "position": 19463
+        },
+        "endLoc": {
+          "line": 1490,
+          "column": 11,
+          "position": 19627
+        }
+      }
+    }
+  ]
+}

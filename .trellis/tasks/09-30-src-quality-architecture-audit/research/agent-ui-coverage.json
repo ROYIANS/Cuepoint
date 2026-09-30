@@ -1,0 +1,416 @@
+[
+  {
+    "path": "src/components/agent/AgentActivityNavigation.tsx",
+    "status": "reviewed",
+    "note": "按thread重置的活动定位Context；不承担执行授权或运行状态机。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/AgentChatPage.tsx",
+    "status": "reviewed",
+    "note": "入口查询、选择镜像与发送/重试/审批编排；复核取消、Web Lock、线程身份、草稿作用域及回调依赖。",
+    "findings": [
+      "AU-02",
+      "AU-08",
+      "AU-10"
+    ]
+  },
+  {
+    "path": "src/components/agent/AgentComposerAttention.tsx",
+    "status": "reviewed",
+    "note": "按线程聚合待处理工具/批次/任务提示；仅导航提醒，实际动作仍在执行层校验。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/AgentControls.tsx",
+    "status": "reviewed",
+    "note": "助手配置与权限说明、技能开关及菜单焦点；说明针对新运行，实际权限使用冻结快照。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/AgentGenerationBatches.tsx",
+    "status": "reviewed",
+    "note": "逐段核对批次读取身份、revision、同步pending锁、SPA blocker、预览与队列动作；共享生成字段承载规则矩阵。",
+    "findings": [
+      "AU-07"
+    ]
+  },
+  {
+    "path": "src/components/agent/AgentGenerationResults.tsx",
+    "status": "reviewed",
+    "note": "单次结果与持久批次组合；批次子树稳定，不因单次job列表出现而重挂。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/AgentRunDetails.tsx",
+    "status": "reviewed",
+    "note": "工具/运行过程展示、审批和恢复入口、按归属过滤工具；RunAction为类型边，富Markdown进入懒加载消息图。",
+    "findings": [
+      "AU-09"
+    ]
+  },
+  {
+    "path": "src/components/agent/AgentWriteOutcomes.tsx",
+    "status": "reviewed",
+    "note": "消费已规范化写入回执；区分历史写入结果与当前对象可用性。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/ChatWorkspace.tsx",
+    "status": "reviewed",
+    "note": "布局、composer安全留白、侧栏及MessageList lazy；工作区key不能重置父层文本草稿。",
+    "findings": [
+      "AU-05",
+      "AU-09",
+      "AU-10"
+    ]
+  },
+  {
+    "path": "src/components/agent/ContextCompactionDetails.tsx",
+    "status": "reviewed",
+    "note": "压缩记录展示与详情展开；不发起压缩或改写历史消息。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/ContextParameters.tsx",
+    "status": "reviewed",
+    "note": "参数控件局部互斥有效，但局部patch展开为旧快照整对象再持久化。",
+    "findings": [
+      "AU-03"
+    ]
+  },
+  {
+    "path": "src/components/agent/ContextUsagePanel.tsx",
+    "status": "reviewed",
+    "note": "核对范围身份、冻结运行与下次请求预览、预算和工具组装；触发器及弹层各自调用整套查询Hook。",
+    "findings": [
+      "AU-06",
+      "AU-09"
+    ]
+  },
+  {
+    "path": "src/components/agent/CreatedEntityLinks.tsx",
+    "status": "reviewed",
+    "note": "工具结果链接规范化与项目续聊；只接受站内路径并检查关联项目/线程。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/FloatingComposer.tsx",
+    "status": "reviewed",
+    "note": "输入、发送快捷键、语音和扩展面板；Effect清理与IME判断已读，文本由父层供给。",
+    "findings": [
+      "AU-10"
+    ]
+  },
+  {
+    "path": "src/components/agent/GenerationReview.tsx",
+    "status": "reviewed",
+    "note": "单次提案编辑、批准前校验和保存默认值；共享字段中仍内嵌供应商能力/时长等规则。",
+    "findings": [
+      "AU-07"
+    ]
+  },
+  {
+    "path": "src/components/agent/Grainient.tsx",
+    "status": "reviewed",
+    "note": "完整读取shader及WebGL生命周期；资源释放、不可用回退、可见性/降动效逻辑均已核对。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/HomeWelcome.tsx",
+    "status": "reviewed",
+    "note": "欢迎页、近期线程与任务入口；复用composer，不负责运行持久化。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/LobeChatTheme.tsx",
+    "status": "reviewed",
+    "note": "聊天范围的Lobe/antd主题与CSS入口；未导入全局antd reset。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/MemoryContextDetails.tsx",
+    "status": "reviewed",
+    "note": "当前预览和历史冻结记忆/参考来源、排除操作及可用性；观察显示与真实历史请求分开。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/MessageList.tsx",
+    "status": "reviewed",
+    "note": "逐行读消息memo、滚动意图、ResizeObserver、工具归属过滤及稳定批次子树；富渲染包体风险。",
+    "findings": [
+      "AU-09"
+    ]
+  },
+  {
+    "path": "src/components/agent/ModelIconCatalog.ts",
+    "status": "reviewed",
+    "note": "普通手写的三行命名重导出；不是生成文件，动态边界仍连接完整模型/供应商匹配图。",
+    "findings": [
+      "AU-09"
+    ]
+  },
+  {
+    "path": "src/components/agent/ModelIcons.tsx",
+    "status": "reviewed",
+    "note": "两个named lazy共享Catalog模块，Suspense占位固定尺寸；lazy不等于缩小目录模块。",
+    "findings": [
+      "AU-09"
+    ]
+  },
+  {
+    "path": "src/components/agent/ModelSelectTrigger.tsx",
+    "status": "reviewed",
+    "note": "连接/模型菜单、能力说明、搜索及图标；已选模型的常驻chip就会触发Catalog加载。",
+    "findings": [
+      "AU-09"
+    ]
+  },
+  {
+    "path": "src/components/agent/ModelSettingsMenu.tsx",
+    "status": "reviewed",
+    "note": "模型/推理设置菜单；只提交选择，不负责权限或执行调度。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/MusicGenerationReview.tsx",
+    "status": "reviewed",
+    "note": "音乐提案快照、准备状态、批准前复核和费用提示；RunAction为import type。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/ProjectImageSources.tsx",
+    "status": "reviewed",
+    "note": "消费规范化项目图片来源并展示原始依据；不将URL标签当图片真实性证据。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/ProjectPicker.tsx",
+    "status": "reviewed",
+    "note": "项目选择/创建、同步互斥和错误反馈；页面级repository调用符合现有规范。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/ReferenceAttachments.tsx",
+    "status": "reviewed",
+    "note": "附件、来源预览与消息引用；blob URL清理依赖资源身份，未把整对象缺失告警直接判为失效。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/ReferenceLibrary.tsx",
+    "status": "reviewed",
+    "note": "作用域内来源读取、导入重试和选择；异步选择闭包仍携带旧scope，未证实跨线程误附。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/TaskBoard.tsx",
+    "status": "reviewed",
+    "note": "任务分组、筛选和创建；纯UI分组与repository事务分离。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/TaskInspector.tsx",
+    "status": "reviewed",
+    "note": "任务概览编辑、状态动作与总结锁联动；记录编辑状态未上报，route key变化仍会卸载编辑器。",
+    "findings": [
+      "AU-02"
+    ]
+  },
+  {
+    "path": "src/components/agent/TaskRecords.tsx",
+    "status": "reviewed",
+    "note": "记录/工具/生成依据聚合和手动记录表单；关闭直接丢弃，未提供SPA或unload草稿保护。",
+    "findings": [
+      "AU-02"
+    ]
+  },
+  {
+    "path": "src/components/agent/TaskWrapup.tsx",
+    "status": "reviewed",
+    "note": "总结读取保留最后有效值、CAS、取消/恢复和记忆提升；路由离开草稿保护及候选身份存在缺口。",
+    "findings": [
+      "AU-01",
+      "AU-02"
+    ]
+  },
+  {
+    "path": "src/components/agent/ThinkingMatrix.tsx",
+    "status": "reviewed",
+    "note": "空流动画、计时器和卸载清理；动画行数/复杂度没有直接作为缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/ThinkingPanel.tsx",
+    "status": "reviewed",
+    "note": "思考文本、展开状态与完成状态联动；展示组件不改变运行判断。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/TopicSidebar.tsx",
+    "status": "reviewed",
+    "note": "标题筛选、时间组与主题动作；子动作键盘事件被行级Enter/Space处理截获。",
+    "findings": [
+      "AU-04"
+    ]
+  },
+  {
+    "path": "src/components/agent/TurnNavigation.tsx",
+    "status": "reviewed",
+    "note": "回合定位、滚动/resize监听和清理；导航能力不进入执行状态机。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/WebResearchSources.tsx",
+    "status": "reviewed",
+    "note": "消费规范化网络检索来源和摘要；未直接信任未解析工具结果。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/agentChat.css",
+    "status": "reviewed",
+    "note": "全文读取全部1623行，含全部media规则；窄屏规则随后被同优先级基础规则及shorthand覆盖。",
+    "findings": [
+      "AU-05"
+    ]
+  },
+  {
+    "path": "src/components/agent/agentTheme.ts",
+    "status": "reviewed",
+    "note": "布局常量与预留tokens；CHAT_SAFE_X=16支持CSS覆盖证据，未用导出/行数告警推断运行故障。",
+    "findings": [
+      "AU-05"
+    ]
+  },
+  {
+    "path": "src/components/agent/composerAttention.css",
+    "status": "reviewed",
+    "note": "全文读取提示条、动作与窄屏样式；未确认独立缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/composerControls.css",
+    "status": "reviewed",
+    "note": "全文读取模型/权限/plus面板和扩展编辑器样式、响应式与交互态；未确认独立缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/composerTypes.ts",
+    "status": "reviewed",
+    "note": "composer输入/回调契约；类型导入不产生运行时依赖边。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/contextParameters.css",
+    "status": "reviewed",
+    "note": "全文读取参数表单、开关、高级预算及反馈样式；数据覆盖问题不归因于CSS。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/executionActivity.css",
+    "status": "reviewed",
+    "note": "全文读取时间线、审批控件、结果面板与响应式状态；未确认独立缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/filterThreadsByTitle.ts",
+    "status": "reviewed",
+    "note": "纯标题筛选；归一化输入与原数组顺序逻辑已读。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/generationBatch.css",
+    "status": "reviewed",
+    "note": "全文读取批次配置/候选/状态/预览与移动布局；未以选择器或行数告警判为业务故障。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/homeGrainient.css",
+    "status": "reviewed",
+    "note": "全文读取装饰画布定位、遮罩与交互隔离；未确认独立缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/memoryContext.css",
+    "status": "reviewed",
+    "note": "全文读取记忆详情sheet、来源和预算状态布局；未确认独立缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/references.css",
+    "status": "reviewed",
+    "note": "全文读取参考来源库、附件、媒体与文本预览规则；未确认独立缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/taskWorkspace.css",
+    "status": "reviewed",
+    "note": "全文读取任务board/inspector/dialog及窄屏布局；草稿损失根因在状态/卸载边界。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/taskWrapup.css",
+    "status": "reviewed",
+    "note": "全文读取总结编辑、依据、历史和冲突反馈样式；未确认独立CSS缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/timeGroups.ts",
+    "status": "reviewed",
+    "note": "纯时间分组及标签，逐函数核对；不拥有任务生命周期。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/turnNavigation.css",
+    "status": "reviewed",
+    "note": "全文读取回合导航、hover/focus和移动留白；该样式的左侧额外留白不修复composer底部safe-area覆盖。",
+    "findings": []
+  },
+  {
+    "path": "src/components/agent/useReferenceDraft.ts",
+    "status": "reviewed",
+    "note": "按scope保存附件/导入草稿，异步返回作用域捕获和卸载abort；与父层单字符串文本作用域不同。",
+    "findings": [
+      "AU-10"
+    ]
+  },
+  {
+    "path": "src/components/memory/MemoryEditor.tsx",
+    "status": "reviewed",
+    "note": "记忆CAS、冲突读取、dirty blocker均已读；初始化draft固定但来源props可被候选并发更新替换。",
+    "findings": [
+      "AU-01"
+    ]
+  },
+  {
+    "path": "src/components/memory/MemoryPromotion.tsx",
+    "status": "reviewed",
+    "note": "逐条异步读取确认总结候选；每条独立pending，不协调父层候选请求身份。",
+    "findings": [
+      "AU-01"
+    ]
+  },
+  {
+    "path": "src/components/memory/ProjectMemoryPage.tsx",
+    "status": "reviewed",
+    "note": "记忆列表/详情/历史及编辑流程完整阅读；路由key正确覆盖project与memory深链身份。",
+    "findings": []
+  },
+  {
+    "path": "src/components/memory/memory.css",
+    "status": "reviewed",
+    "note": "全文读取记忆页/编辑/冲突/来源及全部media规则；未确认独立样式缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/components/memory/memoryLabels.ts",
+    "status": "reviewed",
+    "note": "纯分类/来源标签映射；未把presentation helper提升为业务层。",
+    "findings": []
+  },
+  {
+    "path": "src/components/memory/readMemory.ts",
+    "status": "reviewed",
+    "note": "将读取失败显式包装data/error；未当作缺失数据悄然继续写。",
+    "findings": []
+  }
+]

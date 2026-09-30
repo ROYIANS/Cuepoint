@@ -1,0 +1,16 @@
+{
+  "tool": "knip-production",
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+    "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-source-audit-n21f357d/node_modules/knip/bin/knip.js",
+    "--config",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-quality-architecture-audit/research/tools/knip-production.json",
+    "--production",
+    "--reporter",
+    "json",
+    "--no-progress"
+  ],
+  "exit": 1,
+  "seconds": 1.54,
+  "valid": true
+}

@@ -1,0 +1,337 @@
+[
+  {
+    "path": "src/db/agentFinishingCheck.ts",
+    "status": "reviewed",
+    "note": "收尾 checkpoint 的 step/plan/ledger/响应信封与权限校验；unknown JSON try-catch 已核验，不直接采用 unsafe warning。",
+    "findings": []
+  },
+  {
+    "path": "src/db/agentGeneration.ts",
+    "status": "reviewed",
+    "note": "付费请求 claim、防重复 fingerprint、迟到状态/媒体发布与项目删除守卫；与 runtime 调用对照。",
+    "findings": []
+  },
+  {
+    "path": "src/db/agentGenerationBatches.ts",
+    "status": "reviewed",
+    "note": "逐个核验准备、草稿 CAS、确认、claim/dispatch、暂停/取消、选择/应用 revision 链、重试和恢复；值循环与宽事务归入结构债务。",
+    "findings": [
+      "PD-04",
+      "PD-05"
+    ]
+  },
+  {
+    "path": "src/db/agentProjectCreation.ts",
+    "status": "reviewed",
+    "note": "普通无项目对话创建例外、工具批准、参考输入/写入/生成历史阻断与一次绑定；类型依赖不按值循环误报。",
+    "findings": []
+  },
+  {
+    "path": "src/db/agentRuns.ts",
+    "status": "reviewed",
+    "note": "begin 冻结请求/历史、retry、checkpoint、finish、Web Lock 前提恢复、metrics；项目删后历史保留为合理契约。",
+    "findings": [
+      "PD-06"
+    ]
+  },
+  {
+    "path": "src/db/agentSettings.ts",
+    "status": "reviewed",
+    "note": "稳定单例/skillDefaultsVersion 迁移、空技能选择保留、权限更新与嵌套事务。",
+    "findings": []
+  },
+  {
+    "path": "src/db/agentTaskRecords.ts",
+    "status": "reviewed",
+    "note": "记录来源/实际 effect、revision/history/去重、工具结果和任务 generation 当前事实；与 tasks/runtime 值循环。",
+    "findings": [
+      "PD-04"
+    ]
+  },
+  {
+    "path": "src/db/agentTaskWrapups.ts",
+    "status": "reviewed",
+    "note": "准备/发布/停止/确认 revision、最新 family、证据 fingerprint 与完成阻断；保留历史及 native Promise 浏览器限度。",
+    "findings": [
+      "PD-04",
+      "PD-06"
+    ]
+  },
+  {
+    "path": "src/db/agentTasks.ts",
+    "status": "reviewed",
+    "note": "线程唯一任务、项目绑定、editable/busy、计划/记录原子变更、lifecycle/wrapup 验收与 pin 归属。",
+    "findings": [
+      "PD-04"
+    ]
+  },
+  {
+    "path": "src/db/agentToolRecovery.ts",
+    "status": "reviewed",
+    "note": "仅特定 atomic preparation/legacy plan 恢复；generation 未知不重发；所属及完整证据核验。",
+    "findings": []
+  },
+  {
+    "path": "src/db/agentTools.ts",
+    "status": "reviewed",
+    "note": "工具步骤/审批/恢复/结果信封、计划/ledger 原子写、取消、preview、生成 override CAS；纯选择规则反向依赖。",
+    "findings": [
+      "PD-04"
+    ]
+  },
+  {
+    "path": "src/db/audio.ts",
+    "status": "reviewed",
+    "note": "全部 validate/add/patch/delete、章节级联保留、snapshot、批量 clip CAS、音乐跨项目独立复制；音频不强行与视频归一。",
+    "findings": []
+  },
+  {
+    "path": "src/db/audioGeneration.ts",
+    "status": "reviewed",
+    "note": "intent 唯一/claim revision、引用 fingerprint、转换 NEXT、结果所属、dormant 历史禁止执行。",
+    "findings": []
+  },
+  {
+    "path": "src/db/audioShared.ts",
+    "status": "reviewed",
+    "note": "表范围、project kind、metadata、owned/revision、共享 patch、历史结果 detach；add 新 ID CAS 合理。",
+    "findings": []
+  },
+  {
+    "path": "src/db/contextSettings.ts",
+    "status": "reviewed",
+    "note": "thread/default/reset/saved context policy 的规范化与原子事务；嵌套 get config scope 完整。",
+    "findings": []
+  },
+  {
+    "path": "src/db/database.ts",
+    "status": "reviewed",
+    "note": "46 表、v1–23 index/upgrade；legacy episode/slot/filter、v20 alias/v21 unique connector 升级与实际迁移测试。",
+    "findings": [
+      "PD-05",
+      "PD-06"
+    ]
+  },
+  {
+    "path": "src/db/generationPreferences.ts",
+    "status": "reviewed",
+    "note": "只读未初始化、失效选项显式 issue、save/clear 单 modality 保留另一侧，config 默认事务。",
+    "findings": []
+  },
+  {
+    "path": "src/db/ipProfiles.ts",
+    "status": "reviewed",
+    "note": "文本边界、revision CAS、归档、关联项目 scope，IP 归档保留关联为现有契约。",
+    "findings": []
+  },
+  {
+    "path": "src/db/materials.ts",
+    "status": "reviewed",
+    "note": "文件类型/大小、scope、snapshot/version、archive/delete、adopt remap、旧副本/指纹 guard、use 幂等；unused usage export 仅维护项。",
+    "findings": [
+      "PD-05",
+      "PD-08"
+    ]
+  },
+  {
+    "path": "src/db/memoryRetrieval.ts",
+    "status": "reviewed",
+    "note": "project/thread scope、active+reviewed+exclude 选择、thread exclusion 类型与归属检查；readonly 嵌套完整。",
+    "findings": []
+  },
+  {
+    "path": "src/db/music.ts",
+    "status": "reviewed",
+    "note": "settings discriminant/参数、media owner、draft/work add/patch/CAS/delete、detach job output；引用媒体保留策略核验。",
+    "findings": []
+  },
+  {
+    "path": "src/db/productionProposals.ts",
+    "status": "reviewed",
+    "note": "target/source/change 验证、创建/应用/撤销 full entity revision、旧/新 result 保留；宽 repo 耦合关联。",
+    "findings": [
+      "PD-05"
+    ]
+  },
+  {
+    "path": "src/db/projectMemories.ts",
+    "status": "reviewed",
+    "note": "全文件 create/promote/update/disable/replace/delete、sameContent/source 去重、topic conflicts、revision/history/source summary 归属；宽事务。",
+    "findings": [
+      "PD-06"
+    ]
+  },
+  {
+    "path": "src/db/references.ts",
+    "status": "reviewed",
+    "note": "原始文件与 chunk 同 snapshot、revision/scope/status、whole chunk budget、search/remove/媒体回收；级联策略。",
+    "findings": [
+      "PD-05"
+    ]
+  },
+  {
+    "path": "src/db/repo.ts",
+    "status": "reviewed",
+    "note": "全 1887 行所有函数；父子、delete/restore/order、slots/media、studio copy、材料释放、connector aliases、chat cascade、audio seed；两个隔离确认缺陷与 API 风险；clone 按契约核验。",
+    "findings": [
+      "PD-01",
+      "PD-02",
+      "PD-03",
+      "PD-05",
+      "PD-07",
+      "PD-08"
+    ]
+  },
+  {
+    "path": "src/db/searchConnections.ts",
+    "status": "reviewed",
+    "note": "Tavily key/revision local-only、启用技能原子更新、移除/读取状态；无凭据输出。",
+    "findings": []
+  },
+  {
+    "path": "src/db/taskAudioGenerationEvidence.ts",
+    "status": "reviewed",
+    "note": "原提交 task/run/call/project 归属、批准快照、当前可用结果/采用证据、check 不转移归属。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/agent.ts",
+    "status": "reviewed",
+    "note": "run/tool/permission/continuation/metrics/task 全类型、冻结凭据与输入边界，type-only 互依不等于运行时环。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/agentGeneration.ts",
+    "status": "reviewed",
+    "note": "single call vs batch/item 判别联合、provider identity、no key、状态与结果字段。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/agentGenerationBatch.ts",
+    "status": "reviewed",
+    "note": "batch/item/snapshot/request 类型、target/entity key、20/4/同 owner 限制；lib 参数依赖为 type-only，迁移有序建议。",
+    "findings": [
+      "PD-04"
+    ]
+  },
+  {
+    "path": "src/domain/agentTaskRecords.ts",
+    "status": "reviewed",
+    "note": "kind/claim/source union、record/version 身份与 revision；持久化 schema 对照。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/agentTaskWrapup.ts",
+    "status": "reviewed",
+    "note": "content/evidence/snapshot/status/current-family/history 类型与 repository/证据流程对照。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/audio.ts",
+    "status": "reviewed",
+    "note": "AudioRow revision、segment selection 与 timeline placement 分离、不可变 take/metadata、export scope、input/patch 类型。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/audioGeneration.ts",
+    "status": "reviewed",
+    "note": "speech/music 判别输入、独立状态机、provider observation、result deleted、origin/dormant/claim 类型。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/columns.ts",
+    "status": "reviewed",
+    "note": "列定义/可见列兼容归一；合法 UI 列状态，不以少量重复字面量报错。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/context.ts",
+    "status": "reviewed",
+    "note": "policy/snapshot/source/compaction、reference memory 分层与 frozen request type 对照。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/generationPreferences.ts",
+    "status": "reviewed",
+    "note": "selection vs preference（mode 不落默认值）、失效 issue 模型；与读取/更新入口核验。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/imageDiscovery.ts",
+    "status": "reviewed",
+    "note": "locator/provenance/result 类型及 persisted source UI decoder，有限展示与 /p/ 链接限制；无利用证据不报漏洞。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/materials.ts",
+    "status": "reviewed",
+    "note": "scope/setting/file discriminant、immutable version snapshot、pinned MaterialUse/supersededBy 与 event。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/memoryRetrieval.ts",
+    "status": "reviewed",
+    "note": "选中 memory entry/revision/source、审计、预算/遗漏统计与 query option 类型。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/music.ts",
+    "status": "reviewed",
+    "note": "Flow/Suno 判别 settings、独立 draft/work、source metadata/provenance 与默认字段。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/output.ts",
+    "status": "reviewed",
+    "note": "provider profile/constants、shape 保留未知/extra 与可用参数 validate 分层；未做最新远端模型规格查询。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/production.ts",
+    "status": "reviewed",
+    "note": "typed target slot/change/source/revision/proposal/generationIntent 的不同生命周期语义；不强行合并 generation job。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/projectContext.ts",
+    "status": "reviewed",
+    "note": "project snapshot/fingerprint/content 与 video/audio coverage 类型，无运行依赖。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/projectMemory.ts",
+    "status": "reviewed",
+    "note": "memory status/source/imported history/replacement/options/schema 对照；topic/content 去重是明确不同业务契约。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/referenceInput.ts",
+    "status": "reviewed",
+    "note": "wire identity/coverage/vision/audit/material/discovery 类型、referenceInputOf 去 envelope，媒体字节不持久化在身份字段。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/references.ts",
+    "status": "reviewed",
+    "note": "source attachment/revision/status/chunk/locator/coverage limits 及标签 helper；与 db source readonly 事务对照。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/search.ts",
+    "status": "reviewed",
+    "note": "public URL canonicalization/IP 范围和 persisted source bounded decoder；仅本地规则审查，无 DNS/proxy 端到端安全结论。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/slot.ts",
+    "status": "reviewed",
+    "note": "empty/parse/collect/remap/legacy merge/shot slots 全函数；与 migration/import/retention 对照，兼容 parse 不冒充严格输入校验。",
+    "findings": []
+  },
+  {
+    "path": "src/domain/types.ts",
+    "status": "reviewed",
+    "note": "全 571 行实体/状态/filter/setting/story/aspect/kind/connector/chat 类型和 normalizers；legacy 宽容解析与严格 owner/输入边界分开。",
+    "findings": []
+  }
+]

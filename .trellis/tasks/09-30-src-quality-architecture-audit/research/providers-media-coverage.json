@@ -1,0 +1,324 @@
+[
+  {
+    "path": "src/lib/ai/aihubmix.ts",
+    "status": "reviewed",
+    "note": "原文件完整阅读；public discovery/鉴权分离、native task identity、输出索引与 protected content 路径校验；入站 blob 上限风险。 jscpd clone 源码已核对：record/nonempty/finite 同语义；jsonValue 函数体不相同（plain prototype guard），隔离行为比较见报告，未机械合并。",
+    "findings": [
+      "PM-05",
+      "PM-07"
+    ]
+  },
+  {
+    "path": "src/lib/ai/apimart.ts",
+    "status": "reviewed",
+    "note": "原文件完整阅读；200/202 envelope、Ext header/idempotency、native payload、upload/query、key 脱敏与不重试；基础请求 guard 复制。 jscpd clone 源码已核对：record/nonempty/finite 同语义；jsonValue 函数体不相同（plain prototype guard），隔离行为比较见报告，未机械合并。",
+    "findings": [
+      "PM-07"
+    ]
+  },
+  {
+    "path": "src/lib/ai/apimartAudio.ts",
+    "status": "reviewed",
+    "note": "原文件完整阅读；speech/music schema、task 数组与原始 audioIndex、body/下载边界；已复现重复 ID、点段路由与取消分类。",
+    "findings": [
+      "PM-03",
+      "PM-04",
+      "PM-05",
+      "PM-06",
+      "PM-07"
+    ]
+  },
+  {
+    "path": "src/lib/ai/catalog.ts",
+    "status": "reviewed",
+    "note": "完整阅读能力目录、默认连接与 provider key 映射；未确认独立缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/ai/chatModelPolicy.ts",
+    "status": "reviewed",
+    "note": "完整阅读 connector 身份/credential 内存比较、兼容检查与所有 options 来源；MiMo 常量耦合见职责建议，无独立已证行为 bug。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/ai/chatStream.ts",
+    "status": "reviewed",
+    "note": "完整阅读 reasoning 状态、strict tool accumulator、SSE CRLF/EOF/结束、取消与 metrics；回答/event 无总量上限风险。",
+    "findings": [
+      "PM-05"
+    ]
+  },
+  {
+    "path": "src/lib/ai/connectors.ts",
+    "status": "reviewed",
+    "note": "完整阅读 provider dispatch、known media block、catalog freshness/isCurrent 与发送前检查；通用探测缺陷及 signal 丢失已核验。",
+    "findings": [
+      "PM-02",
+      "PM-07"
+    ]
+  },
+  {
+    "path": "src/lib/ai/mimoSpeech.ts",
+    "status": "reviewed",
+    "note": "完整阅读 preset/design/clone、10 MiB encoded reference、固定 /models 与 /chat/completions、base64 WAV 和 preview；入站完整 text/base64 分配风险。",
+    "findings": [
+      "PM-05",
+      "PM-07"
+    ]
+  },
+  {
+    "path": "src/lib/ai/modelBank/README.md",
+    "status": "reviewed",
+    "note": "完整阅读 provenance、full/lazy dataset、exact provider-ID fallback、生成/verify 与 upstream 不改契约。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/ai/modelBank/index.ts",
+    "status": "reviewed",
+    "note": "完整阅读 limit lookup 与 full lazy 数据接入、original vendor/conflict fallback、vision derive；模型 ID 结构检查与现有 tests 通过。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/ai/modelBank/lookup.generated.json",
+    "status": "generated-verified",
+    "note": "生成文件未人工逐行审核；已全量 JSON 解析、结构/provider/ID 检查、源 manifest 与 license SHA-256 核验，读取 README/adapter/生成脚本，独立 node scripts/model-bank-snapshot.mjs verify 精确再生成比对通过（197 files/85 providers/1855 models）；modelBank 接入 tests 通过。本文件为全部 source path 与每 provider 模型 token limit 索引。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/ai/modelBank/models.generated.json",
+    "status": "generated-verified",
+    "note": "生成文件未人工逐行审核；已全量 JSON 解析、结构/provider/ID 检查、源 manifest 与 license SHA-256 核验，读取 README/adapter/生成脚本，独立 node scripts/model-bank-snapshot.mjs verify 精确再生成比对通过（197 files/85 providers/1855 models）；modelBank 接入 tests 通过。本文件为完整字段/provider records 的 lazy dataset。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/ai/modelMetadata.ts",
+    "status": "reviewed",
+    "note": "完整阅读显式正整数、field-by-field provider 优先与 provenance、duplicate 最小 limit；未确认独立缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/ai/modelVendors.ts",
+    "status": "reviewed",
+    "note": "完整阅读展示分组/name/hints heuristic；与 authoritative vision/wire policy 区分，未发现此处授权付费能力。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/ai/openaiCompatible.ts",
+    "status": "reviewed",
+    "note": "完整阅读 URL/auth/mask、listModels/probe/fallback、错误脱敏；已复现 HTTP 200 HTML/error 被误判成功。",
+    "findings": [
+      "PM-02",
+      "PM-07"
+    ]
+  },
+  {
+    "path": "src/lib/ai/reasoningPolicy.ts",
+    "status": "reviewed",
+    "note": "完整阅读 explicit wire allowlist、provider effort 策略与 Chat/Responses dispatch；没有把 model-bank 作为 wire 授权。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/ai/referenceWire.ts",
+    "status": "reviewed",
+    "note": "完整阅读真实像素、project/run/reference 归属、编码后重验、历史 tool 输出投影、两种 wire；目录 orchestration 建议见报告，无独立缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/ai/responsesStream.ts",
+    "status": "reviewed",
+    "note": "完整阅读 stateless input/output、strict final tool、opaque reasoning、SSE 4 MiB/terminal/cancel；已复现 finishReason 绕过脱敏。",
+    "findings": [
+      "PM-01"
+    ]
+  },
+  {
+    "path": "src/lib/ai/safeError.ts",
+    "status": "reviewed",
+    "note": "完整阅读 exact key/Bearer 脱敏，确认截断前处理；无独立已确认缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/ai/tavily.ts",
+    "status": "reviewed",
+    "note": "完整阅读 fixed URL、key/revision、30s abort、2 MiB stream cap、source/redaction/total budgets；基础请求 guard 与其他 adapter 策略差异。",
+    "findings": [
+      "PM-07"
+    ]
+  },
+  {
+    "path": "src/lib/ai/visionCapability.ts",
+    "status": "reviewed",
+    "note": "完整阅读 explicit provider metadata 优先、exact bank fallback 与 fail-closed requireVision。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/audio/commands.ts",
+    "status": "reviewed",
+    "note": "完整阅读 split fade 限制、immutable source、chapter-document CAS undo/redo/duplicate/remove 和 50-entry history。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/audio/engine.ts",
+    "status": "reviewed",
+    "note": "完整阅读 decode/32 MiB/64 MiB、LRU、schedule shared graph、player epoch/dispose、offline preflight/取消丢弃；限制晚于入站读取。",
+    "findings": [
+      "PM-05"
+    ]
+  },
+  {
+    "path": "src/lib/audio/mime.ts",
+    "status": "reviewed",
+    "note": "完整阅读 container signature、declared codec fallback、extension；所有相关调用者需 decode，未将 fallback 当作 signature proof。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/audio/recorder.ts",
+    "status": "reviewed",
+    "note": "完整阅读 getUserMedia epoch、final chunks/stop、32 MiB 限制、错误/舍弃/dispose、track/node/context 清理；已有 recorder tests 通过。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/audio/schedule.ts",
+    "status": "reviewed",
+    "note": "完整阅读 ownership inputs、gain/fades、audible chapter 拼接、trim 与 seek envelope；mute 改 duration 为已有显式测试契约，排除误报。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/audio/scriptImport.ts",
+    "status": "reviewed",
+    "note": "完整阅读最多 200 逻辑行、原子 append、baseline/selection 检查、fractional order 插入与 repository ownership/CAS。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/audio/shortcuts.ts",
+    "status": "reviewed",
+    "note": "完整阅读焦点/blocked/composition/repeat/modifier 与 availability gating；未确认独立缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/audio/timeline.ts",
+    "status": "reviewed",
+    "note": "完整阅读 geometry、bounded ticks、snap、label 与 formatter；依赖 UI 传入有限有效几何值，未证明用户路径异常。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/audio/wav.ts",
+    "status": "reviewed",
+    "note": "完整阅读 stereo PCM16 headers、sample 校验、全局 attenuation、输出字节/解码工作副本预算；现有回归通过。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/audio/waveform.ts",
+    "status": "reviewed",
+    "note": "完整阅读多通道 extrema 与 count 上限/末样本；无需新的策略抽象。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/audio/workspaceRoute.ts",
+    "status": "reviewed",
+    "note": "完整阅读 audio/music child 路由与离开过程 pathname guard；未确认独立缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/audioGeneration/defaults.ts",
+    "status": "reviewed",
+    "note": "完整阅读已配置 MiMo 默认与旧 APIMart speaker profile 保留；无静默 provider fallback。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/audioGeneration/input.ts",
+    "status": "reviewed",
+    "note": "完整阅读 strict tagged domain schema、MiMo 模式、music/speech native mapping 与 limits；中立常量/schema 归属建议见报告。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/audioGeneration/observations.ts",
+    "status": "reviewed",
+    "note": "完整阅读 unique owned task ID、timestamp/lastVerified whitelist 与 observed 状态；反证提交重复 ID 不符合 checkpoint 契约。",
+    "findings": [
+      "PM-03"
+    ]
+  },
+  {
+    "path": "src/lib/audioGeneration/outputEvidence.ts",
+    "status": "reviewed",
+    "note": "完整阅读 100-result cap、current owned media/output、metadata、selected/timeline placement 与 honest 未试听说明；已有 evidence tests 通过。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/audioGeneration/presentation.ts",
+    "status": "reviewed",
+    "note": "完整阅读 provider observations 与 local lifecycle 分离、unobserved/partial/legacy、deleted saved 显示；未确认独立缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/audioGeneration/reference.ts",
+    "status": "reviewed",
+    "note": "完整阅读 owned clone Blob、encoded MIME/limit、SHA-256 fingerprint 与 Dexie.waitFor；未宣称持久化 base64。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/audioGeneration/runtime.ts",
+    "status": "reviewed",
+    "note": "完整阅读 prepare/claim、Web/local locks、no replay、raw speech checkpoint、GET siblings/downloading/recovery、output summary；复现重复 ID checkpoint 失败，入站限制晚于 raw checkpoint。",
+    "findings": [
+      "PM-03",
+      "PM-05",
+      "PM-07"
+    ]
+  },
+  {
+    "path": "src/lib/memory/retrieval.ts",
+    "status": "reviewed",
+    "note": "完整阅读 lexical rank、reviewed/project/exclusion、whole-entry <=4096/8预算、source envelope/fingerprint；已有 tests 验证过大整条 omission。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/memory/schema.ts",
+    "status": "reviewed",
+    "note": "完整阅读 strict inputs/source/version、NFKC topic/tag 去重与文本上限；未确认独立缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/references/docx.ts",
+    "status": "reviewed",
+    "note": "完整阅读 central-directory preflight、actual streaming decompress 64 MiB、STORE repack、Mammoth rawtext 与 coverage；峰值 memory 仅疑似未实测。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/references/docx.worker.ts",
+    "status": "reviewed",
+    "note": "完整阅读 lazy worker 接入与 result/error message；与 import 的 timeout/terminate 配合。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/references/import.ts",
+    "status": "reviewed",
+    "note": "完整阅读 limits/hash、worker cancel、image close、短事务 operationId CAS、同项目 digest dedup、retry 与 generated image reuse。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/references/mammoth.d.ts",
+    "status": "reviewed",
+    "note": "完整阅读 ambient browser module 声明；TypeChecker 证实 docx import 使用，内存排除后 TS7016，Knip unused 为误报。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/references/package.ts",
+    "status": "reviewed",
+    "note": "完整阅读 source/chunk/coverage/status/owner/revision 一致性与 blob digest/remap；不重复登记 projectPackage 调用者。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/references/parse.ts",
+    "status": "reviewed",
+    "note": "完整阅读识别/limits/signature/UTF decoding、chunk coverage 与插入 separator计数；empty text 与 parse error 分开。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/references/pdf.ts",
+    "status": "reviewed",
+    "note": "完整阅读 local Worker/CMap/fonts、禁 eval/system fonts、page cap/cleanup/timeout/destroy、partial 页证据；单页内存峰值仅疑似。",
+    "findings": []
+  }
+]

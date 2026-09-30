@@ -1,0 +1,2 @@
+JSON report saved to /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-quality-architecture-audit/research/tools/jscpd/jscpd-report.json
+Duplications detection: Found 5 exact clones with 91(0.12%) duplicated lines in 490 (4 formats) files.

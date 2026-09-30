@@ -1,0 +1,421 @@
+[
+  {
+    "path": "src/lib/agent/activityAttention.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。汇总任务活动提示、注意力和显示优先级；核验终态与等待确认分支，不以展示函数代替持久化状态约束。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/audioGenerationTools.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。音频生成工具的参数、预览、确认及执行适配；核验收费确认、当前草稿校验及项目归属。AR-03 的生成侧整数约束是下游契约证据。",
+    "findings": [
+      "AR-03"
+    ]
+  },
+  {
+    "path": "src/lib/agent/audioMusicToolNames.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。音乐工具名常量；与音乐工具实现、技能目录及加载注册表核对。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/audioProjectContext.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。音频项目和音乐草稿的模型上下文投影；核验范围及缺失信息展示，不承担执行授权。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/audioTools.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。语音、音效等音频业务写工具；核验预览、任务写权限、事务写入及回执。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/businessSchemas.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。业务工具参数 schema 与枚举约束；核验整数、可选项、更新字段及模型 schema 对应关系。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/businessStore.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。按实体类别定位、读取、写入业务对象并核验项目；动态 BusinessRow 边界导致字段类型关系擦除，见 AR-05。",
+    "findings": [
+      "AR-05"
+    ]
+  },
+  {
+    "path": "src/lib/agent/businessToolNames.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。业务工具名清单；与实现注册、技能组和发现目录逐项核对。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/businessTools.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。业务 CRUD、关联与资源写工具；核验跨项目检查、执行事务、预览和结果回执。动态 patch 与多层参数断言见 AR-05。",
+    "findings": [
+      "AR-05"
+    ]
+  },
+  {
+    "path": "src/lib/agent/businessWriteReceipt.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。业务写回执构造及前后状态变化投影；核验创建、更新、删除和非变更分支。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/chatTurns.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。消息轮次归组和有效上下文选择；核验工具结果与模型消息配对。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/contextCompaction.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。历史上下文压缩、边界及摘要消息组织；核验保留当前轮次和工具调用关联。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/contextPlanner.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。上下文预算和选取顺序；核验可裁剪部分及最低保留量。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/contextPolicy.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。上下文策略常量及预算边界；未把固定阈值本身作为缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/contextUsage.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。上下文使用量估算与展示统计；区分估算预算和供应商实际 token 用量。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/executionSummary.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。工具/运行执行结果的摘要和状态汇总；核验成功、失败、等待确认等语义。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/finishingCheck.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。完成前检查及未解决工作提示；核验其与独立总结/持久化完成门禁的职责边界。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/generationBatchRuntime.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。生成批次同步、恢复和目标应用协调；核验批次状态来源与必要事务约束。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/generationMedia.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。生成媒体元信息与格式识别辅助；区分头部识别与完整解码，不声称已验证实际可播放性。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/generationProfiles.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。生成模型配置、能力及参数规格；核验模型选取和参数限制映射。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/generationReview.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。生成审核结果和确认信息的类型/辅助契约；与持久化审核和执行侧核对。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/generationReviewDraft.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。生成审核草稿转换与当前审核数据组织；核验可选字段和未确认状态。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/generationRuntime.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。生成提交、恢复、下载、应用、收费门禁和终态持久化；核验取消/失联不推断远端退款或回滚，值循环见 AR-04。",
+    "findings": [
+      "AR-04"
+    ]
+  },
+  {
+    "path": "src/lib/agent/generationSelection.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。图片/视频生成目标选择及项目边界；核验角色、镜头等实体解析和缺失目标处理。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/generationTools.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。图片/视频生成工具 schema、预览和执行适配；核验任务权限、付费确认与可恢复 job 契约；类型擦除适配见 AR-05。",
+    "findings": [
+      "AR-05"
+    ]
+  },
+  {
+    "path": "src/lib/agent/imageDiscovery.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。可用图片来源发现与当前目标匹配；核验归属、选择和证据展示，未假设发现即授权应用。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/imageQueue.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。图片操作排队和串行协调；核验任务失败后的队列继续语义。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/ipToolNames.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。IP 工具名常量；核对技能组、注册和加载目录。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/ipTools.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。IP 资源工具参数、预览和读写操作；核验资源归属、复用和任务写门禁。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/libraryToolHelpers.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。共享库工具定位、权限和辅助读取；核验项目范围与复用边界。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/materialContent.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。素材内容组织、读取及安全投影；核验文本/媒体种类和缺失内容处理。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/materialImageInput.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。素材图片输入解析和转换；核验类型、媒体归属及有效输入边界。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/materialToolNames.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。素材工具名常量；与素材实现、共享技能和加载表核对。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/materialTools.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。素材库搜索、读取、保存和应用工具；核验预览与执行两次检查、项目归属及事务回执。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/memoryContext.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。记忆读取和模型上下文组织；核验当前项目/任务范围及事务内读取限制。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/memoryToolNames.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。记忆工具名目录；与实现、技能范围及运行时注册核对。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/memoryTools.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。记忆查询、创建、修改和清理工具；核验范围、验证、写门禁及回执，未以内部导出告警认定死代码。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/mimoSpeechSpec.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。语音模型参数约束；核验范围和调用侧使用契约。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/musicGenerationReview.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。音乐生成审核、草稿快照及提交前校验；核验付费确认绑定当前输入。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/musicGenerationReviewSnapshot.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。音乐审核输入快照构造；核验序列化字段和比较契约。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/musicReviewPresentation.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。音乐审核的人类可读展示；区分显示字段与执行校验字段。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/musicTools.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。音乐草稿保存和读取工具；实际执行可完成保存 30.5 秒但后续生成拒绝，见 AR-03。",
+    "findings": [
+      "AR-03"
+    ]
+  },
+  {
+    "path": "src/lib/agent/projectContext.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。项目故事、角色和镜头等模型上下文；核验数据范围与上下文职责，不将模型可见内容视作写授权。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/projectScope.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。任务与当前项目的一致性检查；核验缺失任务和跨项目拒绝。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/referenceContext.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。参考资料的模型上下文组织；核验选择、来源标记及缺失引用。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/referenceEvidence.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。参考资料来源、定位及可引用证据；核验引用资格和不可用来源处理。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/referenceToolNames.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。参考工具名常量；核对技能、发现和运行时实现。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/referenceTools.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。参考资料查询和读取工具；核验输入解析、范围、结果与证据回执。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/runChat.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。模型流、工具调度、加载、停止和运行归属协调；核验快照两次校验及停止后的持久化门禁，未把 AbortSignal 当作远端任务撤销。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/runOwnership.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。运行所有权与任务当前 run 核验；与数据库 CAS 写门禁及异步恢复调用关系核对。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/runPresentation.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。运行状态和工具结果展示；核验中断、等待确认、失败和终态语义。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/runWriteOutcomes.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。任务写结果和实体回执解析；核验成功/失败和部分结果处理，不替代执行授权。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/skills.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。技能目录、工具组和提示配置；与全部 89 个内建工具和任务/发现目录集合核对，无缺失或重复。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/soundWriteReceipt.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。声音业务写回执；核验资源标识、变更及上下文反馈。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/taskContext.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。任务计划、记录和当前状态上下文；核验读取与摘要边界。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/taskState.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。任务状态、计划转换和步骤标识处理；空白 ID 与更新规范化差异单列待核验，完整记录关联复现未成立。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/taskTools.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。任务创建、计划/记录/总结工具；核验当前任务权限和事务；步骤 ID 空白差异仅作待核验，未登记确认缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/taskWrapup.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。总结提示、来源快照和模型结果验证编排；作为 AR-01/AR-02 的外部消费链核验，根因在证据投影。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/toolErrors.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。工具错误分类、提示和重试语义；核验可重试标识不自动授权重复付费执行。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/toolLoading.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。内建工具注册、按技能发现/加载、限制和持久化加载协同；实际 89/89 对齐，单组未超过 36，值循环见 AR-04。",
+    "findings": [
+      "AR-04"
+    ]
+  },
+  {
+    "path": "src/lib/agent/tools.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。公共工具参数接口、默认预览和执行调度辅助；核验写权限及参数解析，unknown 与 prepare/execute 的关系擦除见 AR-05。",
+    "findings": [
+      "AR-05"
+    ]
+  },
+  {
+    "path": "src/lib/agent/webToolNames.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。网络搜索工具名常量；与技能和加载注册核对。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/webTools.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。网络工具输入、请求和响应适配；核验项目配置及错误反馈，未进行真实联网调用。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/agent/wrapupEvidence.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。任务一致性快照、工具/生成/音频/记录证据投影；当前媒体资格风险 AR-01、拒绝调用被升级 AR-02 和 DB 值循环 AR-04。",
+    "findings": [
+      "AR-01",
+      "AR-02",
+      "AR-04"
+    ]
+  },
+  {
+    "path": "src/lib/agent/wrapupSchema.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。总结结构校验和来源资格检查；AR-01/AR-02 中信任上游 supportsResult 字段的消费证据。",
+    "findings": [
+      "AR-01",
+      "AR-02"
+    ]
+  },
+  {
+    "path": "src/lib/agent/writeReceipt.ts",
+    "status": "reviewed",
+    "note": "已完整阅读。通用写回执和变更信息转换；核验返回结构、状态和调用侧消费。",
+    "findings": []
+  }
+]

@@ -1,0 +1,2291 @@
+{
+  "group": "persistence-domain",
+  "warning": "Raw signals need validation; hooks may flag non-hook functions named useX; Knip declarations/CSS can be false positives; complexity is not proof of bug",
+  "eslint": [
+    {
+      "file": "src/db/agentFinishingCheck.ts",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-argument",
+          "severity": 2,
+          "message": "Unsafe argument of type `any[]` assigned to a parameter of type `AgentPlanItem[]`.",
+          "line": 13,
+          "column": 41,
+          "nodeType": "Identifier",
+          "messageId": "unsafeArgument",
+          "endLine": 13,
+          "endColumn": 44
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+          "line": 27,
+          "column": 138,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 27,
+          "endColumn": 140
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 66. Maximum allowed is 20.",
+          "line": 27,
+          "column": 138,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 27,
+          "endColumn": 140
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-assignment",
+          "severity": 2,
+          "message": "Unsafe assignment of an `any` value.",
+          "line": 52,
+          "column": 19,
+          "nodeType": "VariableDeclarator",
+          "messageId": "anyAssignment",
+          "endLine": 52,
+          "endColumn": 52
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .plan on an `any` value.",
+          "line": 53,
+          "column": 46,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 53,
+          "endColumn": 50
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .steps on an `any` value.",
+          "line": 54,
+          "column": 69,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 54,
+          "endColumn": 74
+        }
+      ]
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'ownedGenerationBatch' has a complexity of 23. Maximum allowed is 20.",
+          "line": 52,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 52,
+          "endColumn": 43
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 285,
+          "column": 21,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 285,
+          "endColumn": 143
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 24. Maximum allowed is 20.",
+          "line": 377,
+          "column": 60,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 377,
+          "endColumn": 62
+        }
+      ]
+    },
+    {
+      "file": "src/db/agentProjectCreation.ts",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'assertAgentProjectCreation' has a complexity of 48. Maximum allowed is 20.",
+          "line": 8,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 8,
+          "endColumn": 49
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .referenceInput on an `any` value.",
+          "line": 34,
+          "column": 48,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 34,
+          "endColumn": 62
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 57,
+          "column": 23,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 57,
+          "endColumn": 148
+        }
+      ]
+    },
+    {
+      "file": "src/db/agentRuns.ts",
+      "messages": [
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 55 to the 20 allowed.",
+          "line": 68,
+          "column": 53,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 68,
+          "endColumn": 55
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 106. Maximum allowed is 20.",
+          "line": 68,
+          "column": 53,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 68,
+          "endColumn": 55
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 110,
+          "column": 35,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 110,
+          "endColumn": 196
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 112,
+          "column": 29,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 112,
+          "endColumn": 201
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 114,
+          "column": 35,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 114,
+          "endColumn": 202
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 114,
+          "column": 78,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 114,
+          "endColumn": 201
+        }
+      ]
+    },
+    {
+      "file": "src/db/agentSettings.ts",
+      "messages": [
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+          "line": 10,
+          "column": 53,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 10,
+          "endColumn": 55
+        },
+        {
+          "ruleId": "prefer-const",
+          "severity": 2,
+          "message": "'enabledSkillIds' is never reassigned. Use 'const' instead.",
+          "line": 17,
+          "column": 21,
+          "nodeType": "Identifier",
+          "messageId": "useConst",
+          "endLine": 17,
+          "endColumn": 36,
+          "fix": {
+            "range": [
+              886,
+              1066
+            ],
+            "text": "const enabledSkillIds = existing.enabledSkillIds?.length === 0 ? []\n                    : version < 1 ? [...DEFAULT_SKILL_IDS] : [...(existing.enabledSkillIds ?? DEFAULT_SKILL_IDS)];"
+          }
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 17,
+          "column": 39,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 18,
+          "endColumn": 114
+        }
+      ]
+    },
+    {
+      "file": "src/db/agentTaskRecords.ts",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'validateTaskSources' has a complexity of 38. Maximum allowed is 20.",
+          "line": 45,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 45,
+          "endColumn": 42
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 27 to the 20 allowed.",
+          "line": 45,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 45,
+          "endColumn": 42
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'writeTaskRecord' has a complexity of 28. Maximum allowed is 20.",
+          "line": 73,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 73,
+          "endColumn": 38
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'taskGenerationSource' has a complexity of 22. Maximum allowed is 20.",
+          "line": 126,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 126,
+          "endColumn": 43
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 138,
+          "column": 98,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 138,
+          "endColumn": 104,
+          "fix": {
+            "range": [
+              8213,
+              8214
+            ],
+            "text": ""
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/db/agentTaskWrapups.ts",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'completionBlockers' has a complexity of 23. Maximum allowed is 20.",
+          "line": 58,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 58,
+          "endColumn": 34
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 22 to the 20 allowed.",
+          "line": 58,
+          "column": 16,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 58,
+          "endColumn": 34
+        }
+      ]
+    },
+    {
+      "file": "src/db/agentToolRecovery.ts",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 95,
+          "column": 17,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 95,
+          "endColumn": 95
+        }
+      ]
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 22. Maximum allowed is 20.",
+          "line": 106,
+          "column": 51,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 106,
+          "endColumn": 53
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 26 to the 20 allowed.",
+          "line": 216,
+          "column": 51,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 216,
+          "endColumn": 53
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 27. Maximum allowed is 20.",
+          "line": 216,
+          "column": 51,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 216,
+          "endColumn": 53
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+          "line": 238,
+          "column": 129,
+          "nodeType": "TSAsExpression",
+          "messageId": "contextuallyUnnecessary",
+          "endLine": 238,
+          "endColumn": 177,
+          "fix": {
+            "range": [
+              13669,
+              13708
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-return",
+          "severity": 2,
+          "message": "Unsafe return of a value of type `any`.",
+          "line": 354,
+          "column": 61,
+          "nodeType": "ReturnStatement",
+          "messageId": "unsafeReturn",
+          "endLine": 354,
+          "endColumn": 92
+        }
+      ]
+    },
+    {
+      "file": "src/db/audioGeneration.ts",
+      "messages": [
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+          "line": 18,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 18,
+          "endColumn": 49
+        }
+      ]
+    },
+    {
+      "file": "src/db/database.ts",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-argument",
+          "severity": 2,
+          "message": "Unsafe argument of type `any` assigned to a parameter of type `IndexableType`.",
+          "line": 141,
+          "column": 84,
+          "nodeType": "MemberExpression",
+          "messageId": "unsafeArgument",
+          "endLine": 141,
+          "endColumn": 94
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .id on an `any` value.",
+          "line": 141,
+          "column": 92,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 141,
+          "endColumn": 94
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .story on an `any` value.",
+          "line": 145,
+          "column": 33,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 145,
+          "endColumn": 38
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .story on an `any` value.",
+          "line": 145,
+          "column": 57,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 145,
+          "endColumn": 62
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .story on an `any` value.",
+          "line": 146,
+          "column": 40,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 146,
+          "endColumn": 45
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-assignment",
+          "severity": 2,
+          "message": "Unsafe assignment of an `any` value.",
+          "line": 152,
+          "column": 25,
+          "nodeType": "Property",
+          "messageId": "anyAssignment",
+          "endLine": 152,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .id on an `any` value.",
+          "line": 152,
+          "column": 44,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 152,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .createdAt on an `any` value.",
+          "line": 156,
+          "column": 51,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 156,
+          "endColumn": 60
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-argument",
+          "severity": 2,
+          "message": "Unsafe argument of type `any` assigned to a parameter of type `IndexableType`.",
+          "line": 165,
+          "column": 78,
+          "nodeType": "MemberExpression",
+          "messageId": "unsafeArgument",
+          "endLine": 165,
+          "endColumn": 88
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .id on an `any` value.",
+          "line": 165,
+          "column": 86,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 165,
+          "endColumn": 88
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'record.episodeId ?? episodeId' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 175,
+          "column": 47,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 175,
+          "endColumn": 76
+        }
+      ]
+    },
+    {
+      "file": "src/db/materials.ts",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 141,
+          "column": 13,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 141,
+          "endColumn": 121
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 141,
+          "column": 52,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 141,
+          "endColumn": 121
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 30 to the 20 allowed.",
+          "line": 148,
+          "column": 16,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 148,
+          "endColumn": 31
+        },
+        {
+          "ruleId": "max-depth",
+          "severity": 1,
+          "message": "Blocks are nested too deeply (5). Maximum allowed is 4.",
+          "line": 161,
+          "column": 17,
+          "nodeType": "IfStatement",
+          "messageId": "tooDeeply",
+          "endLine": 161,
+          "endColumn": 106
+        },
+        {
+          "ruleId": "max-depth",
+          "severity": 1,
+          "message": "Blocks are nested too deeply (5). Maximum allowed is 4.",
+          "line": 162,
+          "column": 17,
+          "nodeType": "IfStatement",
+          "messageId": "tooDeeply",
+          "endLine": 162,
+          "endColumn": 131
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 273,
+          "column": 49,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 273,
+          "endColumn": 259
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 334,
+          "column": 140,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 334,
+          "endColumn": 145,
+          "fix": {
+            "range": [
+              15444,
+              15445
+            ],
+            "text": ""
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/db/productionProposals.ts",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 20,
+          "column": 20,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 23,
+          "endColumn": 118
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 21,
+          "column": 11,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 23,
+          "endColumn": 118
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 22,
+          "column": 15,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 23,
+          "endColumn": 118
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'normalizeChange' has a complexity of 21. Maximum allowed is 20.",
+          "line": 43,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 43,
+          "endColumn": 25
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 24 to the 20 allowed.",
+          "line": 43,
+          "column": 10,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 43,
+          "endColumn": 25
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 28 to the 20 allowed.",
+          "line": 146,
+          "column": 61,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 146,
+          "endColumn": 63
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 149,
+          "column": 27,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 149,
+          "endColumn": 104
+        }
+      ]
+    },
+    {
+      "file": "src/db/repo.ts",
+      "messages": [
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 24 to the 20 allowed.",
+          "line": 246,
+          "column": 65,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 246,
+          "endColumn": 67
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'collectMediaIds' has a complexity of 32. Maximum allowed is 20.",
+          "line": 617,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 617,
+          "endColumn": 38
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 39 to the 20 allowed.",
+          "line": 617,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 617,
+          "endColumn": 38
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 33 to the 20 allowed.",
+          "line": 744,
+          "column": 18,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 744,
+          "endColumn": 20
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 23. Maximum allowed is 20.",
+          "line": 744,
+          "column": 18,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 744,
+          "endColumn": 20
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 749,
+          "column": 17,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 755,
+          "endColumn": 60
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 751,
+          "column": 23,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 755,
+          "endColumn": 60
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 761,
+          "column": 17,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 767,
+          "endColumn": 93
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 763,
+          "column": 23,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 767,
+          "endColumn": 93
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 1256,
+          "column": 24,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 1256,
+          "endColumn": 49,
+          "fix": {
+            "range": [
+              51167,
+              51168
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 21. Maximum allowed is 20.",
+          "line": 1394,
+          "column": 61,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 1394,
+          "endColumn": 63
+        }
+      ]
+    },
+    {
+      "file": "src/db/taskAudioGenerationEvidence.ts",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'ownedTaskAudioGenerationJob' has a complexity of 23. Maximum allowed is 20.",
+          "line": 11,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 11,
+          "endColumn": 50
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'taskAudioToolSource' has a complexity of 21. Maximum allowed is 20.",
+          "line": 70,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 70,
+          "endColumn": 42
+        }
+      ]
+    },
+    {
+      "file": "src/domain/imageDiscovery.ts",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 61,
+          "column": 22,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 61,
+          "endColumn": 112
+        }
+      ]
+    },
+    {
+      "file": "src/domain/output.ts",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 62,
+          "column": 16,
+          "nodeType": "TSAsExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 62,
+          "endColumn": 42,
+          "fix": {
+            "range": [
+              2511,
+              2532
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'validateGenerationDefaults' has a complexity of 37. Maximum allowed is 20.",
+          "line": 138,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 138,
+          "endColumn": 43
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 67 to the 20 allowed.",
+          "line": 138,
+          "column": 17,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 138,
+          "endColumn": 43
+        }
+      ]
+    },
+    {
+      "file": "src/domain/references.ts",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 72,
+          "column": 18,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 72,
+          "endColumn": 86
+        }
+      ]
+    },
+    {
+      "file": "src/domain/search.ts",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'publicWebUrl' has a complexity of 29. Maximum allowed is 20.",
+          "line": 73,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 73,
+          "endColumn": 29
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'webResultSources' has a complexity of 21. Maximum allowed is 20.",
+          "line": 94,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 94,
+          "endColumn": 33
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 26 to the 20 allowed.",
+          "line": 94,
+          "column": 17,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 94,
+          "endColumn": 33
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 129,
+          "column": 103,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 129,
+          "endColumn": 227
+        }
+      ]
+    },
+    {
+      "file": "src/domain/slot.ts",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'record.prompt ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 18,
+          "column": 30,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 18,
+          "endColumn": 49
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'result.mediaId' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 30,
+          "column": 33,
+          "nodeType": "MemberExpression",
+          "messageId": "baseToString",
+          "endLine": 30,
+          "endColumn": 47
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'legacyMediaId' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 36,
+          "column": 40,
+          "nodeType": "Identifier",
+          "messageId": "baseToString",
+          "endLine": 36,
+          "endColumn": 53
+        }
+      ]
+    },
+    {
+      "file": "src/domain/types.ts",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'record.logline ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 424,
+          "column": 28,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 424,
+          "endColumn": 48
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'beat.id ?? `beat_${index}`' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 436,
+          "column": 20,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 436,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'beat.title ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 437,
+          "column": 23,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 437,
+          "endColumn": 39
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'beat.content ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 438,
+          "column": 25,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 438,
+          "endColumn": 43
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'beat.sceneId' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 442,
+          "column": 40,
+          "nodeType": "MemberExpression",
+          "messageId": "baseToString",
+          "endLine": 442,
+          "endColumn": 52
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'beat.timeOfDay ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 443,
+          "column": 27,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 443,
+          "endColumn": 47
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'range.excerpt ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 449,
+          "column": 32,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 449,
+          "endColumn": 51
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'record.logline ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 467,
+          "column": 28,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 467,
+          "endColumn": 48
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'record.script ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 468,
+          "column": 27,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 468,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'record.worldview ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 499,
+          "column": 32,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 499,
+          "endColumn": 54
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'record.background ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 500,
+          "column": 33,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 500,
+          "endColumn": 56
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'record.rules ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 501,
+          "column": 28,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 501,
+          "endColumn": 46
+        }
+      ]
+    }
+  ],
+  "knipFiles": [],
+  "knipIssues": [
+    {
+      "file": "src/db/database.ts",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "AifenjingDB",
+          "line": 53,
+          "col": 14,
+          "pos": 1671
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/db/repo.ts",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "emptyCharacter",
+          "line": 103,
+          "col": 17,
+          "pos": 3303
+        },
+        {
+          "name": "emptyScene",
+          "line": 118,
+          "col": 17,
+          "pos": 3613
+        },
+        {
+          "name": "emptyProp",
+          "line": 134,
+          "col": 17,
+          "pos": 3943
+        },
+        {
+          "name": "emptyStyle",
+          "line": 148,
+          "col": 17,
+          "pos": 4220
+        },
+        {
+          "name": "emptyEpisode",
+          "line": 161,
+          "col": 17,
+          "pos": 4487
+        },
+        {
+          "name": "listProjects",
+          "line": 208,
+          "col": 23,
+          "pos": 5524
+        },
+        {
+          "name": "listEpisodes",
+          "line": 461,
+          "col": 23,
+          "pos": 16034
+        },
+        {
+          "name": "getConnectorByDefinition",
+          "line": 1662,
+          "col": 23,
+          "pos": 68288
+        },
+        {
+          "name": "listChatThreads",
+          "line": 1717,
+          "col": 23,
+          "pos": 70489
+        },
+        {
+          "name": "getChatThread",
+          "line": 1721,
+          "col": 23,
+          "pos": 70625
+        },
+        {
+          "name": "listChatMessages",
+          "line": 1804,
+          "col": 23,
+          "pos": 74888
+        },
+        {
+          "name": "updateChatMessage",
+          "line": 1832,
+          "col": 23,
+          "pos": 75803
+        },
+        {
+          "name": "assertVideoProject",
+          "line": 1855,
+          "col": 23,
+          "pos": 77216
+        }
+      ],
+      "types": [
+        {
+          "name": "DeletedEpisodeSnapshot",
+          "line": 536,
+          "col": 18,
+          "pos": 19222
+        },
+        {
+          "name": "UpsertConnectorInput",
+          "line": 1668,
+          "col": 13,
+          "pos": 68489
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/domain/types.ts",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "normalizeShotWorkspaceView",
+          "line": 59,
+          "col": 17,
+          "pos": 1332
+        },
+        {
+          "name": "normalizeStoryBeat",
+          "line": 432,
+          "col": 17,
+          "pos": 11454
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "frozenGeneration",
+          "line": 24,
+          "col": 17,
+          "pos": 1191
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/db/materials.ts",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "listMaterialUsage",
+          "line": 389,
+          "col": 23,
+          "pos": 18387
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/domain/slot.ts",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "mergeLegacyReferenceIntoFirstFrame",
+          "line": 103,
+          "col": 17,
+          "pos": 3074
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/db/audio.ts",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "deleteAudioTrack",
+          "line": 153,
+          "col": 14,
+          "pos": 8409
+        },
+        {
+          "name": "deleteAudioSpeaker",
+          "line": 156,
+          "col": 14,
+          "pos": 8622
+        },
+        {
+          "name": "deleteAudioChapter",
+          "line": 175,
+          "col": 14,
+          "pos": 9777
+        },
+        {
+          "name": "editAudioClips",
+          "line": 208,
+          "col": 23,
+          "pos": 11844
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/db/audioGeneration.ts",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "validateAudioGenerationJob",
+          "line": 18,
+          "col": 23,
+          "pos": 641
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/db/music.ts",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "deleteMusicDraft",
+          "line": 72,
+          "col": 23,
+          "pos": 3484
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/db/agentTasks.ts",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        {
+          "name": "TaskInput",
+          "line": 11,
+          "col": 13,
+          "pos": 553
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/domain/agentGeneration.ts",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        {
+          "name": "AgentGenerationInput",
+          "line": 16,
+          "col": 18,
+          "pos": 383
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    }
+  ],
+  "ast": [
+    {
+      "file": "src/db/agentFinishingCheck.ts",
+      "lines": 89,
+      "functions": 9,
+      "anyKeywords": [],
+      "typeAssertions": [
+        69
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/agentGeneration.ts",
+      "lines": 91,
+      "functions": 8,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "lines": 512,
+      "functions": 60,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [
+        107,
+        373,
+        387,
+        396,
+        455
+      ],
+      "nestedTernaries": [
+        285
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/agentProjectCreation.ts",
+      "lines": 71,
+      "functions": 12,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        57
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/agentRuns.ts",
+      "lines": 295,
+      "functions": 32,
+      "anyKeywords": [],
+      "typeAssertions": [
+        224,
+        277
+      ],
+      "nonNullAssertions": [
+        279,
+        279
+      ],
+      "nestedTernaries": [
+        110,
+        112,
+        114,
+        114
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/agentSettings.ts",
+      "lines": 64,
+      "functions": 4,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        17
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/agentTaskRecords.ts",
+      "lines": 181,
+      "functions": 15,
+      "anyKeywords": [],
+      "typeAssertions": [
+        34,
+        37,
+        58
+      ],
+      "nonNullAssertions": [
+        138,
+        171
+      ],
+      "nestedTernaries": [],
+      "emptyCatches": [
+        139
+      ],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/agentTaskWrapups.ts",
+      "lines": 220,
+      "functions": 45,
+      "anyKeywords": [],
+      "typeAssertions": [
+        113
+      ],
+      "nonNullAssertions": [
+        45,
+        45,
+        97,
+        97
+      ],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/agentTasks.ts",
+      "lines": 155,
+      "functions": 21,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/agentToolRecovery.ts",
+      "lines": 100,
+      "functions": 9,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        76,
+        95
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "lines": 421,
+      "functions": 63,
+      "anyKeywords": [],
+      "typeAssertions": [
+        204,
+        238,
+        239,
+        244
+      ],
+      "nonNullAssertions": [
+        239
+      ],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/audio.ts",
+      "lines": 271,
+      "functions": 55,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/audioGeneration.ts",
+      "lines": 117,
+      "functions": 8,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [
+        55
+      ],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/audioShared.ts",
+      "lines": 85,
+      "functions": 18,
+      "anyKeywords": [],
+      "typeAssertions": [
+        43,
+        55
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/contextSettings.ts",
+      "lines": 34,
+      "functions": 6,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/database.ts",
+      "lines": 304,
+      "functions": 7,
+      "anyKeywords": [],
+      "typeAssertions": [
+        146,
+        167
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/generationPreferences.ts",
+      "lines": 47,
+      "functions": 5,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/ipProfiles.ts",
+      "lines": 74,
+      "functions": 8,
+      "anyKeywords": [],
+      "typeAssertions": [
+        5
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/materials.ts",
+      "lines": 392,
+      "functions": 46,
+      "anyKeywords": [],
+      "typeAssertions": [
+        141,
+        158
+      ],
+      "nonNullAssertions": [
+        167,
+        334
+      ],
+      "nestedTernaries": [
+        141,
+        141,
+        273
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/memoryRetrieval.ts",
+      "lines": 85,
+      "functions": 10,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/music.ts",
+      "lines": 90,
+      "functions": 13,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/productionProposals.ts",
+      "lines": 181,
+      "functions": 15,
+      "anyKeywords": [],
+      "typeAssertions": [
+        47,
+        110,
+        163
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        20,
+        21,
+        22,
+        149
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/projectMemories.ts",
+      "lines": 493,
+      "functions": 49,
+      "anyKeywords": [],
+      "typeAssertions": [
+        146,
+        146,
+        257,
+        466
+      ],
+      "nonNullAssertions": [
+        302
+      ],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/references.ts",
+      "lines": 92,
+      "functions": 14,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/repo.ts",
+      "lines": 1888,
+      "functions": 248,
+      "anyKeywords": [],
+      "typeAssertions": [
+        68,
+        250,
+        421,
+        809,
+        809,
+        822,
+        823,
+        824,
+        825,
+        875,
+        876,
+        1365
+      ],
+      "nonNullAssertions": [
+        611,
+        802,
+        1235,
+        1256,
+        1506,
+        1507,
+        1524
+      ],
+      "nestedTernaries": [
+        749,
+        751,
+        761,
+        763
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/searchConnections.ts",
+      "lines": 37,
+      "functions": 4,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/db/taskAudioGenerationEvidence.ts",
+      "lines": 93,
+      "functions": 4,
+      "anyKeywords": [],
+      "typeAssertions": [
+        8,
+        71
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/agent.ts",
+      "lines": 253,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/agentGeneration.ts",
+      "lines": 54,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/agentGenerationBatch.ts",
+      "lines": 89,
+      "functions": 4,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [
+        85
+      ],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/agentTaskRecords.ts",
+      "lines": 28,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [
+        1,
+        2
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/agentTaskWrapup.ts",
+      "lines": 69,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/audio.ts",
+      "lines": 110,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/audioGeneration.ts",
+      "lines": 67,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/columns.ts",
+      "lines": 33,
+      "functions": 3,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/context.ts",
+      "lines": 54,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/generationPreferences.ts",
+      "lines": 38,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/imageDiscovery.ts",
+      "lines": 72,
+      "functions": 3,
+      "anyKeywords": [],
+      "typeAssertions": [
+        60,
+        65
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        61
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/materials.ts",
+      "lines": 80,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/memoryRetrieval.ts",
+      "lines": 44,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/music.ts",
+      "lines": 54,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/output.ts",
+      "lines": 206,
+      "functions": 13,
+      "anyKeywords": [],
+      "typeAssertions": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        14,
+        62,
+        74,
+        82,
+        154,
+        156,
+        160,
+        172,
+        177
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/production.ts",
+      "lines": 72,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/projectContext.ts",
+      "lines": 13,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/projectMemory.ts",
+      "lines": 99,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/referenceInput.ts",
+      "lines": 65,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/references.ts",
+      "lines": 75,
+      "functions": 2,
+      "anyKeywords": [],
+      "typeAssertions": [
+        59
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        72
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/search.ts",
+      "lines": 135,
+      "functions": 2,
+      "anyKeywords": [],
+      "typeAssertions": [
+        97
+      ],
+      "nonNullAssertions": [
+        116,
+        124
+      ],
+      "nestedTernaries": [
+        129
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/slot.ts",
+      "lines": 151,
+      "functions": 16,
+      "anyKeywords": [],
+      "typeAssertions": [
+        17,
+        25
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/domain/types.ts",
+      "lines": 572,
+      "functions": 29,
+      "anyKeywords": [],
+      "typeAssertions": [
+        6,
+        8,
+        63,
+        82,
+        82,
+        87,
+        103,
+        107,
+        205,
+        222,
+        223,
+        407,
+        423,
+        434,
+        446,
+        466,
+        498
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    }
+  ]
+}

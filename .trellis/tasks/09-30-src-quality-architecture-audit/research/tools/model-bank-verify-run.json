@@ -1,0 +1,10 @@
+{
+  "tool": "model-bank-verify",
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "model-bank:verify"
+  ],
+  "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+  "exit": 0,
+  "seconds": 1.48
+}

@@ -1,0 +1,113 @@
+{
+  "method": "jscpd v4 exact token clones min80tokens/10lines; JSX fragments can have invalid line coordinates; validate source before treating as duplication",
+  "clones": [
+    {
+      "format": "tsx",
+      "lines": 14,
+      "fragment": ": string;\n}) {\n    const project = useLiveQuery(\n        async () => (await db.projects.get(projectId)) ?? null,\n        [projectId],\n    );\n    const episode = useLiveQuery(\n        async () => (await db.episodes.get(episodeId)) ?? null,\n        [episodeId],\n    );\n    const shots = useLiveQuery(\n        () => db.shots.where(\"episodeId\").equals(episodeId).sortBy(\"order\"),\n        [episodeId],\n    );",
+      "tokens": 148,
+      "firstFile": {
+        "name": "src/components/produce/StoryboardPrintPage.tsx",
+        "start": 17,
+        "end": 30,
+        "startLoc": {
+          "line": 17,
+          "column": 14,
+          "position": 148
+        },
+        "endLoc": {
+          "line": 30,
+          "column": 7,
+          "position": 296
+        }
+      },
+      "secondFile": {
+        "name": "src/components/shots/ShotEditorPage.tsx",
+        "start": 239,
+        "end": 253,
+        "startLoc": {
+          "line": 239,
+          "column": 17,
+          "position": 1503
+        },
+        "endLoc": {
+          "line": 253,
+          "column": 12,
+          "position": 1653
+        }
+      }
+    },
+    {
+      "format": "tsx",
+      "lines": 11,
+      "fragment": ";\n\n    const relationAssets = useLiveQuery(async () => ({\n        projectId,\n        props: await db.props.where(\"projectId\").equals(projectId).toArray(),\n        styles: await db.styles.where(\"projectId\").equals(projectId).toArray(),\n    }), [projectId]);\n    const props = relationAssets?.projectId === projectId ? relationAssets.props : undefined;\n    const styles = relationAssets?.projectId === projectId ? relationAssets.styles : undefined;\n\n    const media",
+      "tokens": 145,
+      "firstFile": {
+        "name": "src/components/produce/StoryboardPrintPage.tsx",
+        "start": 38,
+        "end": 48,
+        "startLoc": {
+          "line": 38,
+          "column": 6,
+          "position": 386
+        },
+        "endLoc": {
+          "line": 48,
+          "column": 16,
+          "position": 531
+        }
+      },
+      "secondFile": {
+        "name": "src/components/shots/ShotEditorPage.tsx",
+        "start": 263,
+        "end": 272,
+        "startLoc": {
+          "line": 263,
+          "column": 16,
+          "position": 1762
+        },
+        "endLoc": {
+          "line": 272,
+          "column": 12,
+          "position": 1906
+        }
+      }
+    },
+    {
+      "format": "tsx",
+      "lines": 42,
+      "fragment": "const project = useLiveQuery(\n        async () => (await db.projects.get(projectId)) ?? null,\n        [projectId],\n    );\n    const episode = useLiveQuery(\n        async () => (await db.episodes.get(episodeId)) ?? null,\n        [episodeId],\n    );\n    const shots = useLiveQuery(\n        () => db.shots.where(\"episodeId\").equals(episodeId).sortBy(\"order\"),\n        [episodeId],\n    );\n    const characters = useLiveQuery(\n        () => db.characters.where(\"projectId\").equals(projectId).toArray(),\n        [projectId],\n    );\n    const scenes = useLiveQuery(\n        () => db.scenes.where(\"projectId\").equals(projectId).toArray(),\n        [projectId],\n    );\n\n    const relationAssets = useLiveQuery(async () => ({\n        projectId,\n        props: await db.props.where(\"projectId\").equals(projectId).toArray(),\n        styles: await db.styles.where(\"projectId\").equals(projectId).toArray(),\n    }), [projectId]);\n    const props = relationAssets?.projectId === projectId ? relationAssets.props : undefined;\n    const styles = relationAssets?.projectId === projectId ? relationAssets.styles : undefined;\n\n    const media = useShotMedia(shots);\n\n    if (\n        media === undefined ||\n        project === undefined ||\n        episode === undefined ||\n        shots === undefined ||\n        characters === undefined ||\n        props === undefined ||\n        styles === undefined ||\n        scenes === undefined\n    ) {\n        return <div className=\"text-muted-foreground p-8 text-sm",
+      "tokens": 472,
+      "firstFile": {
+        "name": "src/components/produce/ProducePage.tsx",
+        "start": 63,
+        "end": 104,
+        "startLoc": {
+          "line": 63,
+          "column": 5,
+          "position": 553
+        },
+        "endLoc": {
+          "line": 104,
+          "column": 65,
+          "position": 1025
+        }
+      },
+      "secondFile": {
+        "name": "src/components/shots/ShotEditorPage.tsx",
+        "start": 241,
+        "end": 60,
+        "startLoc": {
+          "line": 241,
+          "column": 5,
+          "position": 1514
+        },
+        "endLoc": {
+          "line": 60,
+          "column": 43,
+          "position": 631
+        }
+      }
+    }
+  ]
+}

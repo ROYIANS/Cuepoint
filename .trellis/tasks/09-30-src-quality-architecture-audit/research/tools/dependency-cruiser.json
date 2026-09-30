@@ -1,0 +1,27 @@
+{
+  "forbidden": [
+    {
+      "name": "no-circular-values",
+      "severity": "error",
+      "from": {
+        "path": "^src/"
+      },
+      "to": {
+        "circular": true,
+        "dependencyTypesNot": [
+          "type-only"
+        ]
+      }
+    }
+  ],
+  "options": {
+    "doNotFollow": {
+      "path": "node_modules"
+    },
+    "includeOnly": "^src/",
+    "tsConfig": {
+      "fileName": "tsconfig.app.json"
+    },
+    "tsPreCompilationDeps": true
+  }
+}

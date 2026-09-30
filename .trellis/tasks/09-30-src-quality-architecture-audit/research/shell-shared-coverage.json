@@ -1,0 +1,834 @@
+[
+  {
+    "path": "src/components/studio/AboutPage.tsx",
+    "status": "reviewed",
+    "note": "已读产品信息、外链、赞赏 Dialog 和隐私说明；产品包不含本机 connector 的现状与代码一致。",
+    "findings": []
+  },
+  {
+    "path": "src/components/studio/AssetLibraryPages.tsx",
+    "status": "reviewed",
+    "note": "已读四库查询、studio 所有者、搜索/封面/导航/创建删除；四库共同订阅与 Promise 拒绝出口见报告。",
+    "findings": [
+      "SS-06",
+      "SS-09"
+    ]
+  },
+  {
+    "path": "src/components/studio/ConnectorsPage.tsx",
+    "status": "reviewed",
+    "note": "已读配置/测试/拉模型/保存/断开与共享弹窗；旧请求写回新会话风险，复杂度告警未直接登记。",
+    "findings": [
+      "SS-07"
+    ]
+  },
+  {
+    "path": "src/components/studio/CoverCard.tsx",
+    "status": "reviewed",
+    "note": "已读宽幅/海报、卡片打开、菜单、CreateTile/Grid；props 回调职责合理，不把相似卡片外观当业务重复。",
+    "findings": []
+  },
+  {
+    "path": "src/components/studio/IpProfileEditor.tsx",
+    "status": "reviewed",
+    "note": "已读 frozen baseline、revision CAS、pendingRef、router blocker、保存失败及放弃表单；保留设计。",
+    "findings": []
+  },
+  {
+    "path": "src/components/studio/IpProfilesPage.tsx",
+    "status": "reviewed",
+    "note": "已读列表/详情查询、ipId 身份、tabs/关联项目/素材入口、归档/恢复；错误出口和身份 guard 合理。",
+    "findings": []
+  },
+  {
+    "path": "src/components/studio/LibraryHeader.tsx",
+    "status": "reviewed",
+    "note": "已读 title/sort/query 的展示与回调；保持简单受控 UI，不承担业务持久化。",
+    "findings": []
+  },
+  {
+    "path": "src/components/studio/MaterialLibraryPage.tsx",
+    "status": "reviewed",
+    "note": "已读 scope/view/search/filter、版本与 legacy、导入/详情接入；默认共享范围不读取全部项目原始 Blob。",
+    "findings": []
+  },
+  {
+    "path": "src/components/studio/ProjectGalleryPage.tsx",
+    "status": "reviewed",
+    "note": "已读创建/筛选/IP绑定/归档/备份/重命名/删除；341 async事件有catch，真正遗漏在rename/delete；全镜头订阅与cover派生。",
+    "findings": [
+      "SS-06",
+      "SS-09"
+    ]
+  },
+  {
+    "path": "src/components/studio/ProjectIpPicker.tsx",
+    "status": "reviewed",
+    "note": "已读选择与提交分离、加载/错误、归档IP保留原关联与无效owner占位。",
+    "findings": []
+  },
+  {
+    "path": "src/components/studio/SearchConnection.tsx",
+    "status": "reviewed",
+    "note": "已读本机Tavily状态/测试/保存/移除；busy输入和close guard、catch/finally已存在。",
+    "findings": []
+  },
+  {
+    "path": "src/components/studio/Still.tsx",
+    "status": "reviewed",
+    "note": "已读media预览委托与名称渐变占位；object URL生命周期由media hook承担。",
+    "findings": []
+  },
+  {
+    "path": "src/components/studio/StudioShell.tsx",
+    "status": "reviewed",
+    "note": "已读desktop/mobile共用NAV、chat/tasks互斥、素材路径、Sheet与导入；长期挂载对话布局合理。",
+    "findings": []
+  },
+  {
+    "path": "src/components/studio/ipProfiles.css",
+    "status": "reviewed",
+    "note": "746行按连续区间全部阅读；列表截断/详情全文、1100/640断点、弹窗滚动、focus与reduced-motion；无长度规则问题。",
+    "findings": []
+  },
+  {
+    "path": "src/components/studio/materials/LegacyMaterialSources.tsx",
+    "status": "reviewed",
+    "note": "已读明确owner查询、setting/media快照、提升与原编辑链接；全量读取仅显式all，scope与归属由repo再校验。",
+    "findings": []
+  },
+  {
+    "path": "src/components/studio/materials/MaterialControls.tsx",
+    "status": "reviewed",
+    "note": "已读类型标签、scope parse、Radix选择与draft guard；展示选择器留feature，pending/dirty离开保护。",
+    "findings": []
+  },
+  {
+    "path": "src/components/studio/materials/MaterialDetailPanel.tsx",
+    "status": "reviewed",
+    "note": "已读版本预览、metadata CAS、提升/采用/更新/释放/归档删除；useMaterialInProject为普通async误报；依赖变更旧material需身份guard。",
+    "findings": [
+      "SS-01"
+    ]
+  },
+  {
+    "path": "src/components/studio/materials/MaterialDocumentPreview.tsx",
+    "status": "reviewed",
+    "note": "已读大小/signature/AbortController、动态PDF与DOCX Worker、timeout/terminate；仅展示plain text。",
+    "findings": []
+  },
+  {
+    "path": "src/components/studio/materials/MaterialImportDialog.tsx",
+    "status": "reviewed",
+    "note": "已读文件选择/scope/逐文件提交/pendingRef/部分成功移除与retry/离开guard；不重复已提交文件。",
+    "findings": []
+  },
+  {
+    "path": "src/components/studio/materials/MaterialPreview.tsx",
+    "status": "reviewed",
+    "note": "已读image/video/audio/document/setting分支、object URL cleanup、纯文本预览和原件下载；拒绝嵌入活跃文档HTML。",
+    "findings": []
+  },
+  {
+    "path": "src/components/studio/materials/materialLibrary.css",
+    "status": "reviewed",
+    "note": "9627字符连续两段全部阅读（9行压缩CSS）；card block覆盖、tabs/select覆盖、640断点、scroll/focus/reduced-motion有实际接入。",
+    "findings": []
+  },
+  {
+    "path": "src/components/studio/projectKinds.tsx",
+    "status": "reviewed",
+    "note": "已读presentation catalog，video/audio/music开放、image/copy占位；create handler同步校验available。",
+    "findings": []
+  },
+  {
+    "path": "src/components/ui/alert-dialog.tsx",
+    "status": "reviewed",
+    "note": "已读Radix Root/Portal/Overlay/Content与Button variants；无Dexie；整套wrapper export不自动判冗余。",
+    "findings": []
+  },
+  {
+    "path": "src/components/ui/badge.tsx",
+    "status": "reviewed",
+    "note": "已读CVA变体、Slot和props透传；展示职责清楚。",
+    "findings": []
+  },
+  {
+    "path": "src/components/ui/button.tsx",
+    "status": "reviewed",
+    "note": "已读CVA variants/sizes、asChild、disabled和focus token；保持通用primitive。",
+    "findings": []
+  },
+  {
+    "path": "src/components/ui/card.tsx",
+    "status": "reviewed",
+    "note": "已读header/title/action/content/footer；容器结构合理，未用整套API不直接判业务故障。",
+    "findings": []
+  },
+  {
+    "path": "src/components/ui/checkbox.tsx",
+    "status": "reviewed",
+    "note": "已读Radix Indicator、checked/disabled/focus样式透传。",
+    "findings": []
+  },
+  {
+    "path": "src/components/ui/click-spark.tsx",
+    "status": "reviewed",
+    "note": "154行全读；ResizeObserver与RAF cleanup、aria-hidden和click motion guard合理；空闲持续RAF可按需调度。",
+    "findings": [
+      "SS-11"
+    ]
+  },
+  {
+    "path": "src/components/ui/dialog.tsx",
+    "status": "reviewed",
+    "note": "已读Radix portal/focus overlay、Content/showCloseButton与header/footer；关闭保护由调用者承担。",
+    "findings": []
+  },
+  {
+    "path": "src/components/ui/draft-status.tsx",
+    "status": "reviewed",
+    "note": "已读saved/saving/error与DraftConflictError重试/采用最新；与baseline调用契约一致。",
+    "findings": []
+  },
+  {
+    "path": "src/components/ui/dropdown-menu.tsx",
+    "status": "reviewed",
+    "note": "226行全读并补读截断段；Radix group/item/check/radio/submenu、portal、data-slot/variant/inset。",
+    "findings": []
+  },
+  {
+    "path": "src/components/ui/field.tsx",
+    "status": "reviewed",
+    "note": "已读useId、Label htmlFor与cloneElement关联id；无业务数据依赖。",
+    "findings": []
+  },
+  {
+    "path": "src/components/ui/input.tsx",
+    "status": "reviewed",
+    "note": "已读input props/type透传、focus/invalid/disabled tokens。",
+    "findings": []
+  },
+  {
+    "path": "src/components/ui/label.tsx",
+    "status": "reviewed",
+    "note": "已读Radix Label与disabled样式；保持语义关联。",
+    "findings": []
+  },
+  {
+    "path": "src/components/ui/popover.tsx",
+    "status": "reviewed",
+    "note": "已读Radix Portal/Content位置参数与Anchor；无新增业务职责。",
+    "findings": []
+  },
+  {
+    "path": "src/components/ui/select.tsx",
+    "status": "reviewed",
+    "note": "170行全读并补读Content函数开头；scroll按钮、item、portal、disabled/focus行为委托Radix。",
+    "findings": []
+  },
+  {
+    "path": "src/components/ui/separator.tsx",
+    "status": "reviewed",
+    "note": "已读orientation/decorative的Radix包装；全src无消费者，生产Knip一致，可低优先级清理。",
+    "findings": [
+      "SS-10"
+    ]
+  },
+  {
+    "path": "src/components/ui/sheet.tsx",
+    "status": "reviewed",
+    "note": "144行全读；side variants、portal/overlay、close、header/footer/description；业务pending guard在调用者。",
+    "findings": []
+  },
+  {
+    "path": "src/components/ui/skeleton.tsx",
+    "status": "reviewed",
+    "note": "已读简单animate-pulse容器；全src无消费者，低影响可清理。",
+    "findings": [
+      "SS-10"
+    ]
+  },
+  {
+    "path": "src/components/ui/slider.tsx",
+    "status": "reviewed",
+    "note": "已读受控/默认值、multiple thumbs、aria label和轨道/范围；不把嵌套ternary当缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/components/ui/sonner.tsx",
+    "status": "reviewed",
+    "note": "已读theme与CSS变量到Sonner props透传；全局RootLayout挂载。",
+    "findings": []
+  },
+  {
+    "path": "src/components/ui/tabs.tsx",
+    "status": "reviewed",
+    "note": "已读Radix Root/List/Trigger/Content与focus/active tokens；素材CSS有特定覆盖。",
+    "findings": []
+  },
+  {
+    "path": "src/components/ui/textarea.tsx",
+    "status": "reviewed",
+    "note": "已读文本框属性、field-sizing、resize/focus/invalid/disabled；业务保存在调用者。",
+    "findings": []
+  },
+  {
+    "path": "src/components/ui/tooltip.tsx",
+    "status": "reviewed",
+    "note": "已读Provider/Root/Trigger/Portal/Content/Arrow；不会把未用导出当生产故障。",
+    "findings": []
+  },
+  {
+    "path": "src/components/workspace/EpisodeListPage.tsx",
+    "status": "reviewed",
+    "note": "已读项目/分集/镜头查询、创建/重排/删除/restore和logline baseline；重排缺catch、undo失败入口见报告。",
+    "findings": [
+      "SS-05",
+      "SS-06"
+    ]
+  },
+  {
+    "path": "src/components/workspace/ProjectSettingsPanel.tsx",
+    "status": "reviewed",
+    "note": "已读项目信息、风格/output配置、draft/dirty/save；自动保存忽略baseline，显式输出缺CAS的同类风险。",
+    "findings": [
+      "SS-02"
+    ]
+  },
+  {
+    "path": "src/components/workspace/WorkspaceChrome.tsx",
+    "status": "reviewed",
+    "note": "已读项目/集导航、非video child保护、film缺集、cover、backup barrier、settings close；复用查询旧身份SSR确认。",
+    "findings": [
+      "SS-01"
+    ]
+  },
+  {
+    "path": "src/lib/assetLibrary.ts",
+    "status": "reviewed",
+    "note": "已读WorldTab解析及authored string搜索；domain展示纯函数。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/audioProjectPackage.ts",
+    "status": "reviewed",
+    "note": "293行逐段全读；allowlist/owner/duplicate/观察校验、ID/media/provenance remap、dormant及insert事务验证；fingerprint失配已复现。",
+    "findings": [
+      "SS-03",
+      "SS-08"
+    ]
+  },
+  {
+    "path": "src/lib/brand.ts",
+    "status": "reviewed",
+    "note": "已读身份与资源常量；LOGO_FAVICON_SRC无产品消费者，低影响清理。",
+    "findings": [
+      "SS-10"
+    ]
+  },
+  {
+    "path": "src/lib/chatScroll.ts",
+    "status": "reviewed",
+    "note": "已读bottom distance/threshold/snap纯计算；保持scroll策略共享。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/chatTitle.ts",
+    "status": "reviewed",
+    "note": "已读空白折叠、空默认、24字符标题截断；局部纯函数。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/copySelection.ts",
+    "status": "reviewed",
+    "note": "已读逐个committed回报、alreadyCopied及partial retry；合理共享行为。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/debouncedDraft.ts",
+    "status": "reviewed",
+    "note": "313行全部阅读；serial writes/rebase/baseline、failed retained、scope barrier、unmount/reopen、visibility/unload；SS-02根因在调用者。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/draftConflict.ts",
+    "status": "reviewed",
+    "note": "已读changed字段和baseline CAS，空optional文本等价及同值幂等；项目设置未使用该契约。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/draftMedia.ts",
+    "status": "reviewed",
+    "note": "已读session owned uploads/pending/closed/saving、discard/commit/cancel；既有共享media不归session回收。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/durationInput.ts",
+    "status": "reviewed",
+    "note": "已读decimal string保留与finite/非负解析；不直接修改无效草稿。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/episodeDelivery.ts",
+    "status": "reviewed",
+    "note": "197行全读；project+episode scope/order、status/gaps/relations、visual fallback、全列CSV/BOM/quote/filename下载。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/formFieldFocus.ts",
+    "status": "reviewed",
+    "note": "已读原生/ARIA/overlay/contenteditable shortcut yield selector与closest gate。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/format.ts",
+    "status": "reviewed",
+    "note": "已读duration非负round及非法日期返回空；展示格式化。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/generationIntent.ts",
+    "status": "reviewed",
+    "note": "224行全读；参数/role/status/revision/media/preflight/proposal纯准备；当前只有tests消费，legacy契约应明确。",
+    "findings": [
+      "SS-08"
+    ]
+  },
+  {
+    "path": "src/lib/generationTargetDestination.ts",
+    "status": "reviewed",
+    "note": "已读统一shot精确deep link和asset路径encode；各生成入口目标导航可复用。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/ids.ts",
+    "status": "reviewed",
+    "note": "已读crypto UUID fallback与ISO时间；小型基础函数。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/library.ts",
+    "status": "reviewed",
+    "note": "已读filter/sort/pickZipFile/stillTone；package入口的file cancel行为不作未经浏览器验证的确认缺陷。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/media.ts",
+    "status": "reviewed",
+    "note": "已读live query record identity/object URL cleanup、image/video upload和file cancel；media实际保存在repo。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/mediaPicker.ts",
+    "status": "reviewed",
+    "note": "已读owner/MIME/nonempty/query过滤；不允许跨owner媒体复用。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/productionContext.ts",
+    "status": "reviewed",
+    "note": "239行全读；draft barrier、scoped snapshot、fields whitelist/media metadata/warnings/revisions/output；当前仅tests使用。",
+    "findings": [
+      "SS-08"
+    ]
+  },
+  {
+    "path": "src/lib/productionHandoff.ts",
+    "status": "reviewed",
+    "note": "253行全读；scoped read transaction、选中media检查/sanitize/unique folders/full text/warnings/STORE；仍有产品入口。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/productionRevision.ts",
+    "status": "reviewed",
+    "note": "77行全读；canonical编码与同步SHA256、合法target/slots；仍有产品调用，不能随legacy intent清理。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/projectPackage.ts",
+    "status": "reviewed",
+    "note": "1092行逐段全读；legacy parse/extra、memory/reference、事务snapshot、MIME metadata、remap/rollback；现代分集引用错误fallback复现。",
+    "findings": [
+      "SS-04",
+      "SS-08"
+    ]
+  },
+  {
+    "path": "src/lib/reorderIds.ts",
+    "status": "reviewed",
+    "note": "已读id移动、same order与局部分组在全序列重排；纯函数约定由repo验证作用域。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/shotFilters.ts",
+    "status": "reviewed",
+    "note": "已读status/beat/validmedia gap筛选；shotBeatFilterId只有内部调用，可收窄export。",
+    "findings": [
+      "SS-10"
+    ]
+  },
+  {
+    "path": "src/lib/shotKeyboard.ts",
+    "status": "reviewed",
+    "note": "已读active step、beat group、retain visible selection；保留纯helper与UI焦点策略分离。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/shotMedia.ts",
+    "status": "reviewed",
+    "note": "已读validShotMediaId owner/type/empty Blob检查；ID不是可交付证据。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/shotRelations.ts",
+    "status": "reviewed",
+    "note": "已读project-owned props/style、undefined继承/null无风格、unknown label；交付复用。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/thinkingTitle.ts",
+    "status": "reviewed",
+    "note": "已读active/finite duration标题格式；纯展示函数。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/umami.ts",
+    "status": "reviewed",
+    "note": "已读仅prod/双配置/合法http URL/idempotent async script；不添加重复router pageview。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/undo.tsx",
+    "status": "reviewed",
+    "note": "91行全读；listener/timer/expiry/provider；restore之前clear且UI void丢拒绝，隔离复现失去retry。",
+    "findings": [
+      "SS-05"
+    ]
+  },
+  {
+    "path": "src/lib/useShotMedia.ts",
+    "status": "reviewed",
+    "note": "已读去重排序idsKey、referenced-only bulkGet与result identity guard；可用于修正SS-01的同类查询。",
+    "findings": []
+  },
+  {
+    "path": "src/lib/utils.ts",
+    "status": "reviewed",
+    "note": "已读clsx+twMerge cn；仅class组合基础职责。",
+    "findings": []
+  },
+  {
+    "path": "src/main.tsx",
+    "status": "reviewed",
+    "note": "已读一次analytics初始化、routeTree/createRouter/Register/root/StrictMode；生成树真实接入。",
+    "findings": []
+  },
+  {
+    "path": "src/routeTree.gen.ts",
+    "status": "generated-verified",
+    "note": "生成来源与接入核验：Vite TanStack plugin；47 source imports/46 child update身份及父子树、types/root；生成与基准非trivia token完全相同；主会话恢复格式基准后重新核验sha256与manifest一致，参见tools/route-regeneration.json。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/__root.tsx",
+    "status": "reviewed",
+    "note": "全读RootLayout的TooltipProvider/UndoProvider/Outlet/Toaster和全局CSS入口。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.about.tsx",
+    "status": "reviewed",
+    "note": "全读About薄路由，仅挂feature。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.agent.$threadId.tsx",
+    "status": "reviewed",
+    "note": "全读thread URL叶子返回null，对话runtime由parent持续挂载。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.agent.index.tsx",
+    "status": "reviewed",
+    "note": "全读agent URL索引叶子不remount对话UI。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.agent.tasks.tsx",
+    "status": "reviewed",
+    "note": "全读tasks URL叶子；parent决定任务视图。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.agent.tsx",
+    "status": "reviewed",
+    "note": "全读layout从location/params给AgentChatPage与Theme；保留长期runtime设计。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.assets.tsx",
+    "status": "reviewed",
+    "note": "全读scope/ip/project/view URL校验和MaterialLibraryPage接入。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.characters.$characterId.tsx",
+    "status": "reviewed",
+    "note": "全读characterId和studio back discriminant；所有权由shared详情再次校验。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.characters.index.tsx",
+    "status": "reviewed",
+    "note": "全读CharacterLibraryPage薄入口，创建保持studio。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.characters.tsx",
+    "status": "reviewed",
+    "note": "全读角色库Outlet布局，list/detail分离。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.connectors.tsx",
+    "status": "reviewed",
+    "note": "全读ConnectorsPage薄入口。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.index.tsx",
+    "status": "reviewed",
+    "note": "全读根路径redirect→agent；throw redirect为框架约定。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.ips.$ipId.tsx",
+    "status": "reviewed",
+    "note": "全读ipId keyed详情路由；防复用旧draft。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.ips.index.tsx",
+    "status": "reviewed",
+    "note": "全读IP列表薄入口。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.ips.tsx",
+    "status": "reviewed",
+    "note": "全读IP Outlet布局。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.projects.tsx",
+    "status": "reviewed",
+    "note": "全读ProjectGalleryPage薄入口。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.props.$propId.tsx",
+    "status": "reviewed",
+    "note": "全读propId传shared详情；默认studio back契约由详情处理。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.props.index.tsx",
+    "status": "reviewed",
+    "note": "全读PropLibraryPage薄入口。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.props.tsx",
+    "status": "reviewed",
+    "note": "全读道具Outlet布局。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.scenes.$sceneId.tsx",
+    "status": "reviewed",
+    "note": "全读sceneId+studio back传shared详情。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.scenes.index.tsx",
+    "status": "reviewed",
+    "note": "全读SceneLibraryPage薄入口。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.scenes.tsx",
+    "status": "reviewed",
+    "note": "全读场景Outlet布局。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.settings.tsx",
+    "status": "reviewed",
+    "note": "全读legacy settings redirect→about replace；无虚构设置。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.styles.$styleId.tsx",
+    "status": "reviewed",
+    "note": "全读styleId给shared详情；默认studio上下文。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.styles.index.tsx",
+    "status": "reviewed",
+    "note": "全读StyleLibraryPage薄入口。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.styles.tsx",
+    "status": "reviewed",
+    "note": "全读风格Outlet布局。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/_studio.tsx",
+    "status": "reviewed",
+    "note": "全读StudioShell/Outlet、pickZipFile/import/navigation；route依赖Gallery的导入编排可归位。",
+    "findings": [
+      "SS-08"
+    ]
+  },
+  {
+    "path": "src/routes/p.$projectId.assets.characters.$characterId.tsx",
+    "status": "reviewed",
+    "note": "全读project/character params和project back；shared editor校验owner。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/p.$projectId.assets.index.tsx",
+    "status": "reviewed",
+    "note": "全读legacy assets index redirect→world；保留链接兼容。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/p.$projectId.assets.props.$propId.tsx",
+    "status": "reviewed",
+    "note": "全读project/prop params与project back。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/p.$projectId.assets.scenes.$sceneId.tsx",
+    "status": "reviewed",
+    "note": "全读project/scene params与project back。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/p.$projectId.assets.styles.$styleId.tsx",
+    "status": "reviewed",
+    "note": "全读project/style params与project back。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/p.$projectId.assets.tsx",
+    "status": "reviewed",
+    "note": "全读项目assets Outlet布局。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/p.$projectId.e.$episodeId.index.tsx",
+    "status": "reviewed",
+    "note": "全读episode keyed StoryPage薄入口。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/p.$projectId.e.$episodeId.produce.tsx",
+    "status": "reviewed",
+    "note": "全读project/episode给ProducePage；feature负责scoped状态。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/p.$projectId.e.$episodeId.shots.tsx",
+    "status": "reviewed",
+    "note": "全读shot search窄化、project/episode/focusShotId接入。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/p.$projectId.e.$episodeId.storyboard.tsx",
+    "status": "reviewed",
+    "note": "全读project/episode传StoryboardPrintPage，print使用当集。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/p.$projectId.e.$episodeId.tsx",
+    "status": "reviewed",
+    "note": "全读episode Outlet布局。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/p.$projectId.index.tsx",
+    "status": "reviewed",
+    "note": "77行全读；kind dispatch/film修复/redirect；旧episode与新project参数混合SSR复现，landing编排可归feature。",
+    "findings": [
+      "SS-01",
+      "SS-08"
+    ]
+  },
+  {
+    "path": "src/routes/p.$projectId.memory.tsx",
+    "status": "reviewed",
+    "note": "全读memory search/params、project+memory key重置UI。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/p.$projectId.plan.tsx",
+    "status": "reviewed",
+    "note": "全读legacy firstEpisode redirect→produce与缺集home；与其他旧入口重复是兼容契约。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/p.$projectId.produce.tsx",
+    "status": "reviewed",
+    "note": "全读legacy produce firstEpisode redirect，保持历史路径。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/p.$projectId.report.tsx",
+    "status": "reviewed",
+    "note": "全读legacy report firstEpisode redirect→produce，保持兼容。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/p.$projectId.shots.tsx",
+    "status": "reviewed",
+    "note": "全读legacy firstEpisode redirect→shots、清focus shot search。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/p.$projectId.storyboard.tsx",
+    "status": "reviewed",
+    "note": "全读legacy storyboard redirect→project home。",
+    "findings": []
+  },
+  {
+    "path": "src/routes/p.$projectId.tsx",
+    "status": "reviewed",
+    "note": "全读WorkspaceChrome params适配；缺projectId挂载key且查询未guard身份。",
+    "findings": [
+      "SS-01"
+    ]
+  },
+  {
+    "path": "src/routes/p.$projectId.world.tsx",
+    "status": "reviewed",
+    "note": "全读WorldTab search parse与受控tab URL回写；feature负责资产范围。",
+    "findings": []
+  },
+  {
+    "path": "src/styles.css",
+    "status": "reviewed",
+    "note": "245行全读；tailwindcss/tw-animate-css真实@import、theme/base/studio断点、motion与A4 print chrome隐藏；CSS依赖非unused。",
+    "findings": []
+  },
+  {
+    "path": "src/vite-env.d.ts",
+    "status": "reviewed",
+    "note": "已读Vite ambient env及公开Umami构建配置声明；没有秘密字段或runtime职责。",
+    "findings": []
+  }
+]

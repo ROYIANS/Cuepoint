@@ -1,0 +1,26 @@
+{
+  "entry": [
+    "src/main.tsx",
+    "src/routes/**/*.{ts,tsx}",
+    "vite.config.ts",
+    "vitest.config.ts",
+    "tests/**/*.test.{ts,tsx}"
+  ],
+  "project": [
+    "src/**/*.{ts,tsx}",
+    "tests/**/*.{ts,tsx}",
+    "vite.config.ts",
+    "vitest.config.ts"
+  ],
+  "paths": {
+    "@/*": [
+      "./src/*"
+    ]
+  },
+  "ignore": [
+    "src/routeTree.gen.ts"
+  ],
+  "ignoreWorkspaces": [
+    "vendor/**"
+  ]
+}

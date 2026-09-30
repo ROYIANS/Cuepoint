@@ -119,3 +119,24 @@ Vitest setup: `vitest.config.ts` aliases `@` → `src`; `tests/setup.ts` resets 
 `VITE_UMAMI_SCRIPT_URL` and `VITE_UMAMI_WEBSITE_ID` are public build-time settings supplied by GitHub Actions repository variables. Keep the workflow's Vite build environment and Docker build arguments aligned. The Docker arguments belong only to the build stage; Compose and the Nginx runtime need no analytics environment variables. Local `.env` files are excluded from Git and Docker contexts, with `.env.example` as the documented template.
 
 Initialize Umami once from `src/main.tsx` outside React lifecycles, only for production builds with both settings. Use the tracker’s own SPA pageviews; adding router listeners or manual pageview calls would duplicate visits. Analytics loading must not block React rendering. Do not attach project contents, prompts, or provider credentials to analytics events. Clearing configuration takes effect only after rebuilding and redeploying the image.
+
+
+## Audit evidence contract (2026-09-30)
+
+A full-source audit must maintain a fixed file manifest and an explicit review ledger.
+Tool success, passing tests and long-file inspection alone do not establish full coverage.
+
+- Manifest records `baseRevision`, every scoped path and its content `sha256`; detect source changes before finalizing findings.
+- Per-file coverage uses `{ path, status, note, findings }`. Status is `reviewed`, `generated-verified`, or `blocked`; a blocked or missing file prevents a claim of complete coverage.
+- Review ordinary code in full. For generated data/code, state the generator/source and exact verification performed; do not claim manual line review of generated JSON.
+- Confirmed findings need location, triggering input/call sequence, mechanism, impact, recommendation and behavior validation. Label untested runtime/browser concerns as risk; structural debt alone does not prove a current failure.
+- Separate type-only edges from value imports when reporting cycles. A cycle reporter may filter its first edge yet include type edges later in the path; validate the complete value cycle.
+- Knip export/file candidates require entry-point, ambient declaration, CSS import and test-only usage checks. In this project `src/lib/references/mammoth.d.ts` contributes the declaration for the browser import and must not be removed solely because no runtime import points at it.
+- React rule matches for ordinary business functions named `useX` require inspecting whether they actually call React Hooks; naming matches alone are not runtime Hook evidence.
+- Clone/complexity counts are locating signals. Compare business contracts before consolidating retries, validators or CRUD; do not reduce complexity by removing safety checks or adding forwarding abstractions.
+- Preserve raw commands, versions, exit status and diagnostics. JSON reporters can exit zero while their summary contains violations; inspect both.
+- An audit report is not a product fix. State whether tools/rules were merely run, permanently configured, or connected to CI; recommendations do not imply adoption.
+
+The 2026-09-30 source audit and proposed architecture/tool gates are recorded in
+`.trellis/tasks/09-30-src-quality-architecture-audit/`. The existing project quality
+commands above remain the installed gates until a subsequent implementation changes them.

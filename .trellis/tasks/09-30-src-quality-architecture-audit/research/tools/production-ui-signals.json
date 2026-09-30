@@ -1,0 +1,1750 @@
+{
+  "group": "production-ui",
+  "warning": "Raw signals need validation; hooks may flag non-hook functions named useX; Knip declarations/CSS can be false positives; complexity is not proof of bug",
+  "eslint": [
+    {
+      "file": "src/components/assets/AssetLibraryPage.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 208,
+          "column": 18,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 226,
+          "endColumn": 18
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 210,
+          "column": 21,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 226,
+          "endColumn": 18
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 300,
+          "column": 14,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 332,
+          "endColumn": 14
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 308,
+          "column": 17,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 332,
+          "endColumn": 14
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 366,
+          "column": 17,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 372,
+          "endColumn": 40
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 368,
+          "column": 23,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 372,
+          "endColumn": 40
+        }
+      ]
+    },
+    {
+      "file": "src/components/audio/AudioInspector.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'AudioInspector' has a complexity of 39. Maximum allowed is 20.",
+          "line": 17,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 17,
+          "endColumn": 31
+        }
+      ]
+    },
+    {
+      "file": "src/components/audio/AudioSources.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 192,
+          "column": 35,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 192,
+          "endColumn": 117
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 232,
+          "column": 68,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 256,
+          "endColumn": 38
+        },
+        {
+          "ruleId": "react-hooks/rules-of-hooks",
+          "severity": 2,
+          "message": "React Hook \"useMaterialInProject\" cannot be called inside a callback. React Hooks must be called in a React function component or a custom React Hook function.",
+          "line": 242,
+          "column": 43,
+          "nodeType": "Identifier",
+          "endLine": 242,
+          "endColumn": 63
+        }
+      ]
+    },
+    {
+      "file": "src/components/audio/AudioTimeline.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'AudioTimeline' has a complexity of 41. Maximum allowed is 20.",
+          "line": 98,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 98,
+          "endColumn": 30
+        },
+        {
+          "ruleId": "sonarjs/no-duplicated-branches",
+          "severity": 1,
+          "message": "This branch's code block is the same as the block for the branch on line 156.",
+          "line": 157,
+          "column": 42,
+          "nodeType": "ExpressionStatement",
+          "messageId": "sameConditionalBlock",
+          "endLine": 157,
+          "endColumn": 79
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "The ref value 'playEpoch.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'playEpoch.current' to a variable inside the effect, and use that variable in the cleanup function.",
+          "line": 169,
+          "column": 23,
+          "nodeType": "Identifier",
+          "endLine": 169,
+          "endColumn": 30
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "React Hook useEffect has missing dependencies: 'geometry.pixelsPerSecond', 'seekRequest', and 'viewportWidth'. Either include them or remove the dependency array.",
+          "line": 206,
+          "column": 8,
+          "nodeType": "ArrayExpression",
+          "endLine": 206,
+          "endColumn": 25,
+          "suggestions": [
+            {
+              "desc": "Update the dependencies array to be: [geometry.pixelsPerSecond, seekRequest, seekRequest.id, viewportWidth]",
+              "fix": {
+                "range": [
+                  8213,
+                  8230
+                ],
+                "text": "[geometry.pixelsPerSecond, seekRequest, seekRequest.id, viewportWidth]"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "prefer-const",
+          "severity": 2,
+          "message": "'next' is never reassigned. Use 'const' instead.",
+          "line": 372,
+          "column": 13,
+          "nodeType": "Identifier",
+          "messageId": "useConst",
+          "endLine": 372,
+          "endColumn": 17,
+          "fix": {
+            "range": [
+              15413,
+              15437
+            ],
+            "text": "const next = {...current};"
+          }
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 411,
+          "column": 19,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 411,
+          "endColumn": 79
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 544,
+          "column": 66,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 544,
+          "endColumn": 130
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 560,
+          "column": 38,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 560,
+          "endColumn": 180
+        }
+      ]
+    },
+    {
+      "file": "src/components/audio/AudioWorkspacePage.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'AudioWorkspacePage' has a complexity of 21. Maximum allowed is 20.",
+          "line": 51,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 51,
+          "endColumn": 35
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 105,
+          "column": 23,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 105,
+          "endColumn": 32,
+          "fix": {
+            "range": [
+              4245,
+              4246
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 108,
+          "column": 22,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 108,
+          "endColumn": 31,
+          "fix": {
+            "range": [
+              4459,
+              4460
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 108,
+          "column": 121,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 108,
+          "endColumn": 130,
+          "fix": {
+            "range": [
+              4558,
+              4559
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 115,
+          "column": 22,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 115,
+          "endColumn": 31,
+          "fix": {
+            "range": [
+              4890,
+              4891
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 116,
+          "column": 22,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 116,
+          "endColumn": 31,
+          "fix": {
+            "range": [
+              4957,
+              4958
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 125,
+          "column": 22,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 125,
+          "endColumn": 31,
+          "fix": {
+            "range": [
+              5212,
+              5213
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 126,
+          "column": 23,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 126,
+          "endColumn": 32,
+          "fix": {
+            "range": [
+              5280,
+              5281
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 131,
+          "column": 22,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 131,
+          "endColumn": 31,
+          "fix": {
+            "range": [
+              5496,
+              5497
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 147,
+          "column": 27,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 147,
+          "endColumn": 36,
+          "fix": {
+            "range": [
+              6093,
+              6094
+            ],
+            "text": ""
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/components/audio/ScriptDocument.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 186,
+          "column": 68,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 186,
+          "endColumn": 199
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 186,
+          "column": 79,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 186,
+          "endColumn": 176
+        }
+      ]
+    },
+    {
+      "file": "src/components/audio/SpeechControls.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 94,
+          "column": 10,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 99,
+          "endColumn": 35
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 94,
+          "column": 75,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 99,
+          "endColumn": 35
+        }
+      ]
+    },
+    {
+      "file": "src/components/audio/VoiceLibrary.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 23,
+          "column": 12,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 23,
+          "endColumn": 155
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 23,
+          "column": 54,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 23,
+          "endColumn": 155
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 53,
+          "column": 37,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 53,
+          "endColumn": 90
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'VoiceEditor' has a complexity of 42. Maximum allowed is 20.",
+          "line": 80,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 80,
+          "endColumn": 21
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 104,
+          "column": 19,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 104,
+          "endColumn": 113
+        }
+      ]
+    },
+    {
+      "file": "src/components/audioMusic/controls.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 181,
+          "column": 80,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 181,
+          "endColumn": 165
+        }
+      ]
+    },
+    {
+      "file": "src/components/media/MediaPicker.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 27,
+          "column": 117,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 27,
+          "endColumn": 184
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 33,
+          "column": 14,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 48,
+          "endColumn": 23
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 46,
+          "column": 92,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 46,
+          "endColumn": 184
+        }
+      ]
+    },
+    {
+      "file": "src/components/music/MusicCreation.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'MusicCreation' has a complexity of 40. Maximum allowed is 20.",
+          "line": 19,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 19,
+          "endColumn": 30
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 27 to the 20 allowed.",
+          "line": 19,
+          "column": 17,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 19,
+          "endColumn": 30
+        }
+      ]
+    },
+    {
+      "file": "src/components/music/MusicWorkspacePage.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'MusicWorkspace' has a complexity of 34. Maximum allowed is 20.",
+          "line": 42,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 42,
+          "endColumn": 24
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 153,
+          "column": 81,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 153,
+          "endColumn": 162
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 201,
+          "column": 124,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 201,
+          "endColumn": 278
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 201,
+          "column": 303,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 201,
+          "endColumn": 435
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 247,
+          "column": 66,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 247,
+          "endColumn": 196
+        }
+      ]
+    },
+    {
+      "file": "src/components/music/draftVariants.ts",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 6,
+          "column": 12,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 6,
+          "endColumn": 107
+        }
+      ]
+    },
+    {
+      "file": "src/components/produce/ProducePage.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'ScopedProducePage' has a complexity of 26. Maximum allowed is 20.",
+          "line": 36,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 36,
+          "endColumn": 27
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 178,
+          "column": 30,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 182,
+          "endColumn": 73
+        }
+      ]
+    },
+    {
+      "file": "src/components/produce/ProductionProposalsPanel.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 60,
+          "column": 31,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 60,
+          "endColumn": 147
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 62,
+          "column": 27,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 62,
+          "endColumn": 99
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 79,
+          "column": 10,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 115,
+          "endColumn": 25
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 87,
+          "column": 98,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 87,
+          "endColumn": 237
+        }
+      ]
+    },
+    {
+      "file": "src/components/shots/ShotEditorPage.tsx",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/switch-exhaustiveness-check",
+          "severity": 2,
+          "message": "Switch is not exhaustive. Cases not matched: \"cameraAngle\" | \"cameraGear\" | \"category\" | \"emotion\" | \"focalLength\" | \"sceneCloseup\" | \"sound\"",
+          "line": 138,
+          "column": 13,
+          "nodeType": "Identifier",
+          "messageId": "switchIsNotExhaustive",
+          "endLine": 138,
+          "endColumn": 15,
+          "suggestions": [
+            {
+              "messageId": "addMissingCases",
+              "fix": {
+                "range": [
+                  4020,
+                  4020
+                ],
+                "text": "case \"cameraAngle\": { throw new Error('Not implemented yet: \"cameraAngle\" case') }\n        case \"cameraGear\": { throw new Error('Not implemented yet: \"cameraGear\" case') }\n        case \"category\": { throw new Error('Not implemented yet: \"category\" case') }\n        case \"emotion\": { throw new Error('Not implemented yet: \"emotion\" case') }\n        case \"focalLength\": { throw new Error('Not implemented yet: \"focalLength\" case') }\n        case \"sceneCloseup\": { throw new Error('Not implemented yet: \"sceneCloseup\" case') }\n        case \"sound\": { throw new Error('Not implemented yet: \"sound\" case') }\n        "
+              },
+              "desc": "Add branches for missing cases."
+            }
+          ]
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'ShotEditorPage' has a complexity of 51. Maximum allowed is 20.",
+          "line": 232,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 232,
+          "endColumn": 31
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 30 to the 20 allowed.",
+          "line": 232,
+          "column": 17,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 232,
+          "endColumn": 31
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "The 'shots' logical expression could make the dependencies of useMemo Hook (at line 290) change on every render. To fix this, wrap the initialization of 'shots' in its own useMemo() Hook.",
+          "line": 249,
+          "column": 11,
+          "nodeType": "VariableDeclarator",
+          "endLine": 253,
+          "endColumn": 16
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'onKeyDown' has a complexity of 30. Maximum allowed is 20.",
+          "line": 459,
+          "column": 9,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 459,
+          "endColumn": 27
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 955,
+          "column": 37,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 955,
+          "endColumn": 110
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 25 to the 20 allowed.",
+          "line": 1749,
+          "column": 50,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 1749,
+          "endColumn": 52
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 1751,
+          "column": 30,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 1914,
+          "endColumn": 30
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 1755,
+          "column": 33,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 1914,
+          "endColumn": 30
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 1771,
+          "column": 24,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 1805,
+          "endColumn": 24
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 1773,
+          "column": 27,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 1805,
+          "endColumn": 24
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 1835,
+          "column": 77,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 1839,
+          "endColumn": 124
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'shot[column.id as keyof Shot] ?? \"\"' may use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 1908,
+          "column": 51,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 1908,
+          "endColumn": 86
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+          "line": 1911,
+          "column": 65,
+          "nodeType": "TSAsExpression",
+          "messageId": "contextuallyUnnecessary",
+          "endLine": 1911,
+          "endColumn": 102,
+          "fix": {
+            "range": [
+              86919,
+              86936
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 1947,
+          "column": 24,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 1947,
+          "endColumn": 110
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 1976,
+          "column": 71,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 1976,
+          "endColumn": 136
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 2017,
+          "column": 18,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 2030,
+          "endColumn": 28
+        }
+      ]
+    },
+    {
+      "file": "src/components/slots/GenerationSlotCard.tsx",
+      "messages": [
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 22 to the 20 allowed.",
+          "line": 40,
+          "column": 17,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 40,
+          "endColumn": 35
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 63,
+          "column": 17,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 67,
+          "endColumn": 65
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 77,
+          "column": 21,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 81,
+          "endColumn": 78
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 84,
+          "column": 18,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 105,
+          "endColumn": 18
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 86,
+          "column": 21,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 105,
+          "endColumn": 18
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 93,
+          "column": 21,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 105,
+          "endColumn": 18
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'GenerationSlotEditor' has a complexity of 24. Maximum allowed is 20.",
+          "line": 162,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 162,
+          "endColumn": 37
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 217,
+          "column": 63,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 217,
+          "endColumn": 188
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 228,
+          "column": 26,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 232,
+          "endColumn": 95
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 248,
+          "column": 22,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 252,
+          "endColumn": 103
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 271,
+          "column": 29,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 273,
+          "endColumn": 85
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 445,
+          "column": 26,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 445,
+          "endColumn": 134
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 445,
+          "column": 56,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 445,
+          "endColumn": 134
+        }
+      ]
+    },
+    {
+      "file": "src/components/story/StoryPage.tsx",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 118,
+          "column": 40,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 118,
+          "endColumn": 53,
+          "fix": {
+            "range": [
+              4624,
+              4625
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 118,
+          "column": 55,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 118,
+          "endColumn": 67,
+          "fix": {
+            "range": [
+              4638,
+              4639
+            ],
+            "text": ""
+          }
+        }
+      ]
+    }
+  ],
+  "knipFiles": [],
+  "knipIssues": [
+    {
+      "file": "src/components/slots/GenerationSlotCard.tsx",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "GenerationSlotTile",
+          "line": 40,
+          "col": 17,
+          "pos": 1458
+        },
+        {
+          "name": "GenerationSlotEditor",
+          "line": 162,
+          "col": 17,
+          "pos": 6151
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/components/audio/AudioTimeline.tsx",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        {
+          "name": "AudioTimelineProps",
+          "line": 85,
+          "col": 18,
+          "pos": 2841
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    }
+  ],
+  "ast": [
+    {
+      "file": "src/components/assets/AssetLibraryPage.tsx",
+      "lines": 484,
+      "functions": 40,
+      "anyKeywords": [],
+      "typeAssertions": [
+        78,
+        82,
+        86,
+        89,
+        94,
+        96,
+        99,
+        192
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        208,
+        210,
+        300,
+        308,
+        366,
+        368,
+        420
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/assets/AssetTextField.tsx",
+      "lines": 33,
+      "functions": 3,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/assets/CharacterDetailPage.tsx",
+      "lines": 161,
+      "functions": 13,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/assets/PropDetailPage.tsx",
+      "lines": 172,
+      "functions": 13,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/assets/SceneDetailPage.tsx",
+      "lines": 158,
+      "functions": 12,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/assets/StyleDetailPage.tsx",
+      "lines": 164,
+      "functions": 12,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/assets/WorldSettingPanel.tsx",
+      "lines": 95,
+      "functions": 8,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/audio/AudioExports.tsx",
+      "lines": 46,
+      "functions": 8,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [
+        25
+      ],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/audio/AudioInspector.tsx",
+      "lines": 139,
+      "functions": 30,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        62
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/audio/AudioSources.tsx",
+      "lines": 258,
+      "functions": 47,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        90,
+        192,
+        232
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/audio/AudioTimeline.tsx",
+      "lines": 755,
+      "functions": 135,
+      "anyKeywords": [],
+      "typeAssertions": [
+        542,
+        654,
+        724,
+        734,
+        738
+      ],
+      "nonNullAssertions": [
+        325,
+        326,
+        327,
+        475,
+        479,
+        482,
+        485,
+        486,
+        489,
+        495,
+        495,
+        495,
+        497,
+        497,
+        497
+      ],
+      "nestedTernaries": [
+        411,
+        544,
+        547,
+        560,
+        560
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/audio/AudioWorkspacePage.tsx",
+      "lines": 276,
+      "functions": 47,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [
+        105,
+        108,
+        108,
+        115,
+        116,
+        125,
+        126,
+        131,
+        147
+      ],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/audio/MimoConnection.tsx",
+      "lines": 42,
+      "functions": 7,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/audio/ScriptDocument.tsx",
+      "lines": 256,
+      "functions": 52,
+      "anyKeywords": [],
+      "typeAssertions": [
+        35
+      ],
+      "nonNullAssertions": [
+        247
+      ],
+      "nestedTernaries": [
+        186,
+        186
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/audio/SpeechControls.tsx",
+      "lines": 104,
+      "functions": 12,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        53,
+        94,
+        94
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/audio/VoiceLibrary.tsx",
+      "lines": 206,
+      "functions": 32,
+      "anyKeywords": [],
+      "typeAssertions": [
+        129
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        23,
+        23,
+        53,
+        54,
+        104
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/audio/VoiceReferencePicker.tsx",
+      "lines": 82,
+      "functions": 11,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/audioMusic/controls.tsx",
+      "lines": 190,
+      "functions": 32,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        181
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/audioMusic/shared.tsx",
+      "lines": 186,
+      "functions": 34,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        103,
+        157
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/media/MediaPicker.tsx",
+      "lines": 52,
+      "functions": 5,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        27,
+        33,
+        34,
+        46
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/media/MediaThumb.tsx",
+      "lines": 40,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/music/MusicCreation.tsx",
+      "lines": 154,
+      "functions": 21,
+      "anyKeywords": [],
+      "typeAssertions": [
+        47,
+        79,
+        88
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        96,
+        97
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/music/MusicWorkspacePage.tsx",
+      "lines": 300,
+      "functions": 59,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        153,
+        185,
+        201,
+        201,
+        247,
+        290
+      ],
+      "emptyCatches": [
+        125
+      ],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/music/draftVariants.ts",
+      "lines": 58,
+      "functions": 4,
+      "anyKeywords": [],
+      "typeAssertions": [
+        33,
+        34
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        6
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/produce/ProducePage.tsx",
+      "lines": 259,
+      "functions": 17,
+      "anyKeywords": [],
+      "typeAssertions": [
+        16
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        178,
+        190
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/produce/ProductionProposalsPanel.tsx",
+      "lines": 257,
+      "functions": 39,
+      "anyKeywords": [],
+      "typeAssertions": [
+        92,
+        215
+      ],
+      "nonNullAssertions": [
+        189
+      ],
+      "nestedTernaries": [
+        60,
+        62,
+        79,
+        80,
+        87,
+        105,
+        109,
+        220,
+        230
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/produce/StoryboardPrintPage.tsx",
+      "lines": 170,
+      "functions": 10,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        105
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/shots/DurationInput.tsx",
+      "lines": 45,
+      "functions": 6,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/shots/ShotEditorPage.tsx",
+      "lines": 2035,
+      "functions": 210,
+      "anyKeywords": [],
+      "typeAssertions": [
+        1908,
+        1911
+      ],
+      "nonNullAssertions": [
+        1268
+      ],
+      "nestedTernaries": [
+        955,
+        972,
+        1052,
+        1397,
+        1415,
+        1457,
+        1596,
+        1708,
+        1751,
+        1755,
+        1771,
+        1773,
+        1811,
+        1835,
+        1856,
+        1947,
+        1976,
+        2017
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/shots/ShotRowViewport.tsx",
+      "lines": 41,
+      "functions": 10,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/slots/GenerationSlotCard.tsx",
+      "lines": 496,
+      "functions": 45,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        63,
+        77,
+        84,
+        86,
+        93,
+        106,
+        217,
+        228,
+        248,
+        271,
+        424,
+        445,
+        445,
+        482
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/story/StoryPage.tsx",
+      "lines": 355,
+      "functions": 49,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [
+        118,
+        118
+      ],
+      "nestedTernaries": [
+        229,
+        295
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    }
+  ]
+}

@@ -1,0 +1,268 @@
+[
+  {
+    "path": "src/components/assets/AssetLibraryPage.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–483；四类资产查询、创建/删除、studio snapshot批量复制、搜索；copySelection与busy close保留失败选择。",
+    "findings": []
+  },
+  {
+    "path": "src/components/assets/AssetTextField.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–32；字段级draftKey、project scope、baseline persist、错误/重试/采用最新；合理保留。",
+    "findings": []
+  },
+  {
+    "path": "src/components/assets/CharacterDetailPage.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–160；owner/missing、字段CAS、slot接线、return tab；槽target和同owner ID切换需隔离。",
+    "findings": [
+      "PU-02",
+      "PU-05"
+    ]
+  },
+  {
+    "path": "src/components/assets/PropDetailPage.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–171；studio默认back、owner、可选文本字段CAS、slot接线、return tab。",
+    "findings": [
+      "PU-02",
+      "PU-05"
+    ]
+  },
+  {
+    "path": "src/components/assets/SceneDetailPage.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–157；owner/missing、文本字段CAS、lighting/geography、slot与return tab。",
+    "findings": [
+      "PU-02",
+      "PU-05"
+    ]
+  },
+  {
+    "path": "src/components/assets/StyleDetailPage.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–163；owner/missing、palette/lens/negativePrompt字段CAS、slot接线。",
+    "findings": [
+      "PU-02",
+      "PU-05"
+    ]
+  },
+  {
+    "path": "src/components/assets/WorldSettingPanel.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–94；project keyed editor、setting normalize、changedDraftFields/baseline草稿与错误恢复；合理保留。",
+    "findings": []
+  },
+  {
+    "path": "src/components/audio/AudioExports.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–45；export history、schedule fingerprint、旧章节标签、预览/下载错误；现场播放未测。",
+    "findings": []
+  },
+  {
+    "path": "src/components/audio/AudioInspector.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–138；voice/source/export、版本选择/adoption、track append/pause校验、take删除保护、keyed notes；仓库再校验关系。",
+    "findings": [
+      "PU-08"
+    ]
+  },
+  {
+    "path": "src/components/audio/AudioSources.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–257；upload段落冻结、decode/MIME、录音生命周期/关闭保护/URL清理、library adopt；useMaterialInProject为plain async，Hook告警排除。",
+    "findings": []
+  },
+  {
+    "path": "src/components/audio/AudioTimeline.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–754；buffer、playEpoch/composition/chapter生命周期、history、drag/snap/scrub/shortcuts、export snapshot、Waveform cancel、属性；engine有resume后generation校验。",
+    "findings": [
+      "PU-08"
+    ]
+  },
+  {
+    "path": "src/components/audio/AudioWorkspacePage.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–275；snapshot identity、三种选择联动、chapter事务、Voices/source/Sheet/timeline；外部route已按projectId加key。",
+    "findings": [
+      "PU-08"
+    ]
+  },
+  {
+    "path": "src/components/audio/MimoConnection.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–41；显式保存连接、URL校验、busy/error、凭据仅入connector repository；合理保留。",
+    "findings": []
+  },
+  {
+    "path": "src/components/audio/ScriptDocument.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–255；段落草稿CAS、resize清理、split/paste基线、空行backspace、ordering/role/试听；未全面验证IME。",
+    "findings": []
+  },
+  {
+    "path": "src/components/audio/SpeechControls.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–103；默认profile/connector、flush后段落/speaker重验、显式生成/voice修改、mimo direction/optimize；合理保留。",
+    "findings": []
+  },
+  {
+    "path": "src/components/audio/VoiceLibrary.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–205；音色编辑/试音/保存分离、revision CAS、referenceBusy、MiMo迁移；未保存配置dirty退出风险。",
+    "findings": [
+      "PU-10"
+    ]
+  },
+  {
+    "path": "src/components/audio/VoiceReferencePicker.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–81；媒体owner、容器/大小校验、必要WAV副本、busy传播/试听；显式参考上传持久化合理。",
+    "findings": []
+  },
+  {
+    "path": "src/components/audio/story-workspace.css",
+    "status": "reviewed",
+    "note": "完整阅读1–758全部CSS规则/声明与media/cascade；连续稿件后段覆盖、inspector/Sheet/窄屏；旧heading/reading规则无当前消费者。",
+    "findings": [
+      "PU-09"
+    ]
+  },
+  {
+    "path": "src/components/audio/timeline.css",
+    "status": "reviewed",
+    "note": "完整阅读1–718全部CSS规则/声明与media/cascade；at transport/track/clip/trim/focus及移动编辑模式；功能性音轨颜色合理，未视觉回归。",
+    "findings": []
+  },
+  {
+    "path": "src/components/audioMusic/controls.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–189；empty select sentinel、scalar slider adapter、SourcePlayer事件/互斥/src变化、Disclosure；当前契约合理，避免泛化工厂。",
+    "findings": []
+  },
+  {
+    "path": "src/components/audioMusic/shared.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–185；SavedText、connector filtering、AudioPlayer、project job轮询/paused集合/manual refresh/activity；不因useX命名判Hook错误。",
+    "findings": []
+  },
+  {
+    "path": "src/components/audioMusic/workspace.css",
+    "status": "reviewed",
+    "note": "完整阅读1–919全部CSS规则/声明与响应式；真实aw共享控件及无消费者旧aw timeline/music整页规则；未视觉回归。",
+    "findings": [
+      "PU-09"
+    ]
+  },
+  {
+    "path": "src/components/media/MediaPicker.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–51；same-owner query、reusableMedia kind/nonempty、复用ID不获upload所有权；提交校验合理保留。",
+    "findings": []
+  },
+  {
+    "path": "src/components/media/MediaThumb.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–39；useMedia、image/video tile与inspect controls、placeholder/object fit；合理保留。",
+    "findings": []
+  },
+  {
+    "path": "src/components/music/MusicCreation.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–153；settings草稿CAS、flush后准备/显式生成、分模式字段/disabled；Partial union断言仅局部类型改进，未确认非法组合。",
+    "findings": [
+      "PU-08"
+    ]
+  },
+  {
+    "path": "src/components/music/MusicWorkspacePage.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–299；keyed project、variant links/真实draft、action/submission mutex、works/queue/详情、audio独立副本；无文本第二存储。",
+    "findings": [
+      "PU-08"
+    ]
+  },
+  {
+    "path": "src/components/music/draftVariants.ts",
+    "status": "reviewed",
+    "note": "完整阅读1–57；simple/custom/Flow独立draft、description不作为lyrics、ID-only links parse/link；丢链接新增draft是已接受降级。",
+    "findings": []
+  },
+  {
+    "path": "src/components/music/music-workspace.css",
+    "status": "reviewed",
+    "note": "完整阅读1–421全部CSS规则/声明与响应式；mw布局/控件/作品/详情/移动播放器、断点/shared cascade；无确认独立缺陷，未视觉回归。",
+    "findings": []
+  },
+  {
+    "path": "src/components/produce/ProducePage.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–258；project+episode keyed inner、media等待、shared deriveDelivery、handoff/CSV/print/proposals；重复查询接线可按契约收敛，不用倒置clone坐标作证。",
+    "findings": [
+      "PU-08"
+    ]
+  },
+  {
+    "path": "src/components/produce/ProductionProposalsPanel.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–256；revision冻结/preview/apply/undo/cancel、dirty close/target/mode切换、busy/media picker；guarded仓库与合理UI边界。",
+    "findings": []
+  },
+  {
+    "path": "src/components/produce/StoryboardPrintPage.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–169；query门、shared deriveDelivery、素材fallback/full prose/print；同项目换集风险；有效clone仅为scope query与relation query接线。",
+    "findings": [
+      "PU-05",
+      "PU-08"
+    ]
+  },
+  {
+    "path": "src/components/shots/DurationInput.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–44；raw decimal/parse/稳定key/序列化/error恢复正确；persist忽略baseline已隔离复现。",
+    "findings": [
+      "PU-03"
+    ]
+  },
+  {
+    "path": "src/components/shots/ShotEditorPage.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–2034含bulk/undo/keyboard/DnD/BeatBlock/ShotRow/relations全部内容；逆补丁、同快照角色、scope、直写草稿/职责；default switch非bug。",
+    "findings": [
+      "PU-01",
+      "PU-02",
+      "PU-04",
+      "PU-05",
+      "PU-06",
+      "PU-08"
+    ]
+  },
+  {
+    "path": "src/components/shots/ShotRowViewport.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–40；共享IntersectionObserver/rootMargin/listener cleanup与row anchor；合理保留完整排序/深链/Tab，未浏览器验证。",
+    "findings": []
+  },
+  {
+    "path": "src/components/slots/GenerationSlotCard.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–495；tile/ref/editor/upload/save/close/cleanup/retry、owned uploads与复用正确；整槽CAS与target/session隔离缺口。",
+    "findings": [
+      "PU-02",
+      "PU-05"
+    ]
+  },
+  {
+    "path": "src/components/story/StoryPage.tsx",
+    "status": "reviewed",
+    "note": "完整阅读1–354；episode keyed story草稿CAS、file.text、scriptRange、beat reorder/duplicate/delete undo、直写场次/角色；外部repo仅核实。",
+    "findings": [
+      "PU-04",
+      "PU-05",
+      "PU-06",
+      "PU-07"
+    ]
+  }
+]

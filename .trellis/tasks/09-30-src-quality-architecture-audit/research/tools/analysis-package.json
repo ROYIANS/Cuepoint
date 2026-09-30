@@ -1,0 +1,16 @@
+{
+  "name": "cuepoint-source-audit-tools",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@eslint/js": "^9.0.0",
+    "dependency-cruiser": "^17.0.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-react-hooks": "^7.0.0",
+    "eslint-plugin-sonarjs": "^3.0.0",
+    "jscpd": "^4.3.0",
+    "knip": "^5.0.0",
+    "typescript": "5.9.2",
+    "typescript-eslint": "^8.0.0"
+  }
+}

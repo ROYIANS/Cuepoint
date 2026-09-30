@@ -1,0 +1,16 @@
+
+> cuepoint@0.1.0 test /Users/xiaomengdao/WebstormProjects/aifenjing
+> vitest run
+
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+
+ Test Files  125 passed (125)
+      Tests  1559 passed (1559)
+   Start at  10:19:42
+   Duration  14.75s (tests 72%, transform 10%, setup 9%, import 8%)
+
+    Isolate  125 workers spawned · ~85ms startup each (spawn + environment, per file)
+             at least ~1.10s faster with isolate: false — reuses workers across files instead of one per file
+

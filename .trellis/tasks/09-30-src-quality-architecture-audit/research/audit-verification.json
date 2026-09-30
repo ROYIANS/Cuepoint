@@ -1,0 +1,49 @@
+{
+  "baseRevision": "2fc0e9523e62a5258a488cc3d0274d24c8967c6f",
+  "expectedFiles": 392,
+  "coveredFiles": 392,
+  "groups": {
+    "agent-runtime": {
+      "files": 66,
+      "statuses": {
+        "reviewed": 66
+      }
+    },
+    "persistence-domain": {
+      "files": 50,
+      "statuses": {
+        "reviewed": 50
+      }
+    },
+    "agent-ui": {
+      "files": 61,
+      "statuses": {
+        "reviewed": 61
+      }
+    },
+    "production-ui": {
+      "files": 36,
+      "statuses": {
+        "reviewed": 36
+      }
+    },
+    "providers-media": {
+      "files": 48,
+      "statuses": {
+        "reviewed": 46,
+        "generated-verified": 2
+      }
+    },
+    "shell-shared": {
+      "files": 131,
+      "statuses": {
+        "reviewed": 130,
+        "generated-verified": 1
+      }
+    }
+  },
+  "sourceHashesUnchanged": true,
+  "concreteLocationsChecked": 201,
+  "errors": [],
+  "passed": true
+}

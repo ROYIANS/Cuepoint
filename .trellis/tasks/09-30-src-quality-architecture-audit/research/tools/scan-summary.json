@@ -1,0 +1,62 @@
+{
+  "baseRevision": "2fc0e9523e62a5258a488cc3d0274d24c8967c6f",
+  "scopeFiles": 392,
+  "scopeLines": 133288,
+  "nonGeneratedCodeFiles": 388,
+  "generatedDataFiles": [
+    {
+      "path": "src/lib/ai/modelBank/lookup.generated.json",
+      "lines": 8346,
+      "sha256": "32fada89336efd78ff6b29e047a77a96d3ac183c1f903273e77b7838418fd4e0"
+    },
+    {
+      "path": "src/lib/ai/modelBank/models.generated.json",
+      "lines": 62660,
+      "sha256": "3e40587fb97060af77928bee358b1a880e2b2fc25efccde511d48fa7f8c0e10e"
+    }
+  ],
+  "astFiles": 369,
+  "astParseErrors": 0,
+  "valueSccs": [
+    [
+      "src/db/agentGenerationBatches.ts",
+      "src/db/agentTaskRecords.ts",
+      "src/db/agentTaskWrapups.ts",
+      "src/db/agentTasks.ts",
+      "src/db/agentTools.ts",
+      "src/lib/agent/generationRuntime.ts",
+      "src/lib/agent/toolLoading.ts",
+      "src/lib/agent/wrapupEvidence.ts"
+    ]
+  ],
+  "eslintAnalyzedFiles": 368,
+  "eslintErrors": 248,
+  "eslintWarnings": 544,
+  "eslintFatal": 0,
+  "reviewGroups": {
+    "agent-runtime": {
+      "files": 66,
+      "lines": 9394
+    },
+    "persistence-domain": {
+      "files": 50,
+      "lines": 8865
+    },
+    "agent-ui": {
+      "files": 61,
+      "lines": 15998
+    },
+    "production-ui": {
+      "files": 36,
+      "lines": 10853
+    },
+    "providers-media": {
+      "files": 48,
+      "lines": 76727
+    },
+    "shell-shared": {
+      "files": 131,
+      "lines": 11451
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "source-untracked",
+  "command": [
+    "git",
+    "ls-files",
+    "--others",
+    "--exclude-standard",
+    "src"
+  ],
+  "exit": 0,
+  "stdout": "",
+  "stderr": ""
+}

@@ -1,0 +1,765 @@
+{
+  "summary": {
+    "baseRevision": "2fc0e9523e62a5258a488cc3d0274d24c8967c6f",
+    "fileCount": 392,
+    "statuses": {
+      "reviewed": 389,
+      "generated-verified": 3
+    },
+    "groups": [
+      {
+        "group": "agent-runtime",
+        "label": "Agent 执行与工具机制",
+        "files": 66,
+        "statuses": {
+          "reviewed": 66
+        },
+        "report": "research/agent-runtime.md"
+      },
+      {
+        "group": "persistence-domain",
+        "label": "数据与领域规则",
+        "files": 50,
+        "statuses": {
+          "reviewed": 50
+        },
+        "report": "research/persistence-domain.md"
+      },
+      {
+        "group": "agent-ui",
+        "label": "Agent 与记忆 UI",
+        "files": 61,
+        "statuses": {
+          "reviewed": 61
+        },
+        "report": "research/agent-ui.md"
+      },
+      {
+        "group": "production-ui",
+        "label": "创作 UI",
+        "files": 36,
+        "statuses": {
+          "reviewed": 36
+        },
+        "report": "research/production-ui.md"
+      },
+      {
+        "group": "providers-media",
+        "label": "模型、媒体、音频与参考接入",
+        "files": 48,
+        "statuses": {
+          "reviewed": 46,
+          "generated-verified": 2
+        },
+        "report": "research/providers-media.md"
+      },
+      {
+        "group": "shell-shared",
+        "label": "路由、壳与共享能力",
+        "files": 131,
+        "statuses": {
+          "reviewed": 130,
+          "generated-verified": 1
+        },
+        "report": "research/shell-shared.md"
+      }
+    ],
+    "moduleFindings": 51,
+    "classificationCounts": {
+      "risk": 9,
+      "confirmed-bug": 24,
+      "structural-debt": 18
+    },
+    "priorityCounts": {
+      "P2": 35,
+      "P3": 9,
+      "P1": 7
+    },
+    "duplicateRootCauseNote": "Module findings can share root causes; counts are not independent bugs and raw tool diagnostics are excluded."
+  },
+  "findings": [
+    {
+      "id": "AR-01",
+      "priority": "P2",
+      "classification": "risk",
+      "title": "图片/视频总结缺少当前媒体有效性检查",
+      "group": "agent-runtime",
+      "report": "research/agent-runtime.md",
+      "locations": [
+        "src/lib/agent/wrapupEvidence.ts:147",
+        "src/lib/agent/wrapupSchema.ts:29",
+        "src/db/agentTaskWrapups.ts:42",
+        "src/lib/agent/taskWrapup.ts:44",
+        "src/db/agentTaskRecords.ts:135",
+        "src/lib/agent/generationRuntime.ts:605"
+      ]
+    },
+    {
+      "id": "AR-02",
+      "priority": "P2",
+      "classification": "confirmed-bug",
+      "title": "拒绝/失败调用被已有生成输出升级为成果来源",
+      "group": "agent-runtime",
+      "report": "research/agent-runtime.md",
+      "locations": [
+        "src/lib/agent/wrapupEvidence.ts:79",
+        "src/lib/agent/wrapupSchema.ts:30",
+        "src/db/agentTaskRecords.ts:57"
+      ]
+    },
+    {
+      "id": "AR-03",
+      "priority": "P2",
+      "classification": "confirmed-bug",
+      "title": "音乐时长规则在保存和生成间漂移",
+      "group": "agent-runtime",
+      "report": "research/agent-runtime.md",
+      "locations": [
+        "src/lib/agent/musicTools.ts:28",
+        "src/lib/agent/audioGenerationTools.ts:56",
+        "src/db/music.ts:19",
+        "src/lib/audioGeneration/input.ts:40"
+      ]
+    },
+    {
+      "id": "AR-04",
+      "priority": "P2",
+      "classification": "structural-debt",
+      "title": "执行、加载、证据和仓库互相引用成值循环",
+      "group": "agent-runtime",
+      "report": "research/agent-runtime.md",
+      "locations": [
+        "src/lib/agent/generationRuntime.ts:2",
+        "src/lib/agent/toolLoading.ts:3",
+        "src/lib/agent/wrapupEvidence.ts:2",
+        "src/db/agentGenerationBatches.ts:14",
+        "src/db/agentTools.ts:2"
+      ]
+    },
+    {
+      "id": "AR-05",
+      "priority": "P3",
+      "classification": "structural-debt",
+      "title": "工具边界的类型关系与 schema 同步依赖手工约定",
+      "group": "agent-runtime",
+      "report": "research/agent-runtime.md",
+      "locations": [
+        "src/lib/agent/tools.ts:36",
+        "src/lib/agent/generationTools.ts:197",
+        "src/lib/agent/tools.ts:143",
+        "src/lib/agent/businessStore.ts:17"
+      ]
+    },
+    {
+      "id": "PD-01",
+      "priority": "P2",
+      "classification": "confirmed-bug",
+      "title": "项目已删除后仍能创建资产和媒体",
+      "group": "persistence-domain",
+      "report": "research/persistence-domain.md",
+      "locations": [
+        "src/db/repo.ts:848",
+        "src/components/assets/AssetLibraryPage.tsx:138",
+        "src/components/studio/AssetLibraryPages.tsx:130"
+      ]
+    },
+    {
+      "id": "PD-02",
+      "priority": "P1",
+      "classification": "confirmed-bug",
+      "title": "镜头删除/撤销快照可落后于真实删除时刻",
+      "group": "persistence-domain",
+      "report": "research/persistence-domain.md",
+      "locations": [
+        "src/db/repo.ts:1631",
+        "src/components/shots/ShotEditorPage.tsx:589",
+        "src/db/repo.ts:542"
+      ]
+    },
+    {
+      "id": "PD-03",
+      "priority": "P2",
+      "classification": "risk",
+      "title": "宽 patch 与严格槽位 API 的契约不同，存在绕过风险",
+      "group": "persistence-domain",
+      "report": "research/persistence-domain.md",
+      "locations": [
+        "src/db/repo.ts:855"
+      ]
+    },
+    {
+      "id": "PD-04",
+      "priority": "P2",
+      "classification": "structural-debt",
+      "title": "db/lib 值循环与混合职责",
+      "group": "persistence-domain",
+      "report": "research/persistence-domain.md",
+      "locations": [
+        "src/db/agentGenerationBatches.ts:14",
+        "src/lib/agent/generationRuntime.ts:2",
+        "src/db/agentTools.ts:2",
+        "src/lib/agent/toolLoading.ts:3",
+        "src/db/agentTasks.ts:2",
+        "src/db/agentTaskRecords.ts:3"
+      ]
+    },
+    {
+      "id": "PD-05",
+      "priority": "P2",
+      "classification": "structural-debt",
+      "title": "repository 职责实际耦合，不能只按表拆文件",
+      "group": "persistence-domain",
+      "report": "research/persistence-domain.md",
+      "locations": [
+        "src/db/repo.ts:61"
+      ]
+    },
+    {
+      "id": "PD-06",
+      "priority": "P2",
+      "classification": "structural-debt",
+      "title": "全表写事务扩大耦合与锁竞争",
+      "group": "persistence-domain",
+      "report": "research/persistence-domain.md",
+      "locations": [
+        "src/db/projectMemories.ts:340",
+        "src/db/agentRuns.ts:68",
+        "src/db/agentTaskWrapups.ts:104"
+      ]
+    },
+    {
+      "id": "PD-07",
+      "priority": "P2",
+      "classification": "structural-debt",
+      "title": "媒体逐条回收重复全库扫描",
+      "group": "persistence-domain",
+      "report": "research/persistence-domain.md",
+      "locations": [
+        "src/db/repo.ts:617"
+      ]
+    },
+    {
+      "id": "PD-08",
+      "priority": "P3",
+      "classification": "structural-debt",
+      "title": "无调用的导出收窄（可选）",
+      "group": "persistence-domain",
+      "report": "research/persistence-domain.md",
+      "locations": [
+        "src/db/repo.ts:208",
+        "src/db/materials.ts:389",
+        "src/components/agent/AgentChatPage.tsx:59",
+        "src/domain/agentGenerationBatch.ts:2"
+      ]
+    },
+    {
+      "id": "AU-01",
+      "priority": "P2",
+      "classification": "confirmed-bug",
+      "title": "记忆候选请求并发导致正文与来源错配",
+      "group": "agent-ui",
+      "report": "research/agent-ui.md",
+      "locations": [
+        "src/components/memory/MemoryPromotion.tsx:17",
+        "src/components/agent/TaskWrapup.tsx:113",
+        "src/components/memory/MemoryEditor.tsx:60",
+        "src/db/projectMemories.ts:117"
+      ]
+    },
+    {
+      "id": "AU-02",
+      "priority": "P2",
+      "classification": "confirmed-bug",
+      "title": "工作记录/总结草稿的离开保护不完整",
+      "group": "agent-ui",
+      "report": "research/agent-ui.md",
+      "locations": [
+        "src/components/agent/TaskRecords.tsx:57",
+        "src/components/agent/TaskWrapup.tsx:146",
+        "src/components/agent/TaskInspector.tsx:142",
+        "src/components/agent/AgentChatPage.tsx:728",
+        "src/components/ui/sheet.tsx:69",
+        "src/routes/_studio.agent.tsx:15"
+      ]
+    },
+    {
+      "id": "AU-03",
+      "priority": "P2",
+      "classification": "confirmed-bug",
+      "title": "参数局部 patch 以旧完整快照写回",
+      "group": "agent-ui",
+      "report": "research/agent-ui.md",
+      "locations": [
+        "src/components/agent/ContextParameters.tsx:14",
+        "src/db/contextSettings.ts:7"
+      ]
+    },
+    {
+      "id": "AU-04",
+      "priority": "P2",
+      "classification": "confirmed-bug",
+      "title": "主题行截获子动作的键盘事件",
+      "group": "agent-ui",
+      "report": "research/agent-ui.md",
+      "locations": [
+        "src/components/agent/TopicSidebar.tsx:308"
+      ]
+    },
+    {
+      "id": "AU-05",
+      "priority": "P3",
+      "classification": "confirmed-bug",
+      "title": "窄屏 CSS 被后置基础规则覆盖",
+      "group": "agent-ui",
+      "report": "research/agent-ui.md",
+      "locations": [
+        "src/components/agent/agentChat.css:503",
+        "src/components/agent/ChatWorkspace.tsx:140",
+        "src/components/agent/agentTheme.ts:45"
+      ]
+    },
+    {
+      "id": "AU-06",
+      "priority": "P2",
+      "classification": "structural-debt",
+      "title": "上下文入口与明细重复订阅和组装",
+      "group": "agent-ui",
+      "report": "research/agent-ui.md",
+      "locations": [
+        "src/components/agent/ContextUsagePanel.tsx:51"
+      ]
+    },
+    {
+      "id": "AU-07",
+      "priority": "P2",
+      "classification": "structural-debt",
+      "title": "生成表单再次编码能力矩阵",
+      "group": "agent-ui",
+      "report": "research/agent-ui.md",
+      "locations": [
+        "src/components/agent/GenerationReview.tsx:194",
+        "src/components/agent/AgentGenerationBatches.tsx:591",
+        "src/lib/agent/generationProfiles.ts:38",
+        "src/lib/agent/generationReviewDraft.ts:5"
+      ]
+    },
+    {
+      "id": "AU-08",
+      "priority": "P3",
+      "classification": "structural-debt",
+      "title": "页面承担重复执行收尾与选择镜像",
+      "group": "agent-ui",
+      "report": "research/agent-ui.md",
+      "locations": [
+        "src/components/agent/AgentChatPage.tsx:73",
+        "src/lib/agent/runOwnership.ts:19"
+      ]
+    },
+    {
+      "id": "AU-09",
+      "priority": "P2",
+      "classification": "risk",
+      "title": "lazy边界仍承载大目录和富消息依赖",
+      "group": "agent-ui",
+      "report": "research/agent-ui.md",
+      "locations": [
+        "src/components/agent/ChatWorkspace.tsx:23",
+        "src/components/agent/ModelIcons.tsx:6",
+        "src/components/agent/ModelIconCatalog.ts:3",
+        "src/components/agent/ModelSelectTrigger.tsx:243",
+        "src/components/agent/MessageList.tsx:13",
+        "src/components/agent/AgentRunDetails.tsx:10",
+        "src/components/agent/ContextUsagePanel.tsx:34"
+      ]
+    },
+    {
+      "id": "AU-10",
+      "priority": "P2",
+      "classification": "risk",
+      "title": "文本草稿与附件作用域不一致",
+      "group": "agent-ui",
+      "report": "research/agent-ui.md",
+      "locations": [
+        "src/components/agent/AgentChatPage.tsx:71",
+        "src/components/agent/useReferenceDraft.ts:17",
+        "src/components/agent/FloatingComposer.tsx:190",
+        "src/routes/_studio.agent.$threadId.tsx:7",
+        "src/lib/agent/runOwnership.ts:19",
+        "src/db/agentTools.ts:28",
+        "src/lib/agent/tools.ts:55",
+        "src/lib/agent/runChat.ts:149"
+      ]
+    },
+    {
+      "id": "PU-01",
+      "priority": "P1",
+      "classification": "confirmed-bug",
+      "title": "批量撤销无冲突保护，也不是一个原子操作",
+      "group": "production-ui",
+      "report": "research/production-ui.md",
+      "locations": [
+        "src/components/shots/ShotEditorPage.tsx:607",
+        "src/db/repo.ts:1452",
+        "src/db/repo.ts:1470",
+        "src/lib/undo.tsx:37"
+      ]
+    },
+    {
+      "id": "PU-02",
+      "priority": "P1",
+      "classification": "confirmed-bug",
+      "title": "媒体槽编辑的上传所有权正确，但整槽快照缺少 CAS",
+      "group": "production-ui",
+      "report": "research/production-ui.md",
+      "locations": [
+        "src/components/slots/GenerationSlotCard.tsx:179",
+        "src/components/shots/ShotEditorPage.tsx:1717",
+        "src/components/assets/CharacterDetailPage.tsx:71",
+        "src/db/repo.ts:1591"
+      ]
+    },
+    {
+      "id": "PU-03",
+      "priority": "P2",
+      "classification": "confirmed-bug",
+      "title": "时长草稿接入了序列化保存，但没有使用冲突基线",
+      "group": "production-ui",
+      "report": "research/production-ui.md",
+      "locations": [
+        "src/components/shots/DurationInput.tsx:11",
+        "src/components/assets/AssetTextField.tsx:17",
+        "src/lib/debouncedDraft.ts:68"
+      ]
+    },
+    {
+      "id": "PU-04",
+      "priority": "P2",
+      "classification": "confirmed-bug",
+      "title": "多选的整数组补丁丢掉前一项尚未回读的选择",
+      "group": "production-ui",
+      "report": "research/production-ui.md",
+      "locations": [
+        "src/components/shots/ShotEditorPage.tsx:1829",
+        "src/components/story/StoryPage.tsx:300"
+      ]
+    },
+    {
+      "id": "PU-05",
+      "priority": "P1",
+      "classification": "risk",
+      "title": "参数变化时旧查询和槽草稿的 target 未完整隔离",
+      "group": "production-ui",
+      "report": "research/production-ui.md",
+      "locations": [
+        "src/components/shots/ShotEditorPage.tsx:241",
+        "src/components/story/StoryPage.tsx:35",
+        "src/components/produce/StoryboardPrintPage.tsx:19",
+        "src/routes/p.$projectId.e.$episodeId.shots.tsx:14",
+        "src/main.tsx:9",
+        "src/routes/p.$projectId.index.tsx:48"
+      ]
+    },
+    {
+      "id": "PU-06",
+      "priority": "P2",
+      "classification": "structural-debt",
+      "title": "镜头/场次文本编辑的错误和草稿恢复协议分裂",
+      "group": "production-ui",
+      "report": "research/production-ui.md",
+      "locations": []
+    },
+    {
+      "id": "PU-07",
+      "priority": "P2",
+      "classification": "risk",
+      "title": "异步剧本文件读取没有新旧请求和本地编辑保护",
+      "group": "production-ui",
+      "report": "research/production-ui.md",
+      "locations": [
+        "src/components/story/StoryPage.tsx:96"
+      ]
+    },
+    {
+      "id": "PU-08",
+      "priority": "P2",
+      "classification": "structural-debt",
+      "title": "页面的交互和持久化编排缺少可独立验证的边界",
+      "group": "production-ui",
+      "report": "research/production-ui.md",
+      "locations": [
+        "src/domain/columns.ts:11"
+      ]
+    },
+    {
+      "id": "PU-09",
+      "priority": "P3",
+      "classification": "structural-debt",
+      "title": "CSS 保留已退出当前渲染树的旧工作台规则",
+      "group": "production-ui",
+      "report": "research/production-ui.md",
+      "locations": [
+        "src/components/audioMusic/workspace.css:314",
+        "src/components/audio/story-workspace.css:71"
+      ]
+    },
+    {
+      "id": "PU-10",
+      "priority": "P3",
+      "classification": "risk",
+      "title": "音色未保存配置缺少 dirty 退出语义",
+      "group": "production-ui",
+      "report": "research/production-ui.md",
+      "locations": [
+        "src/components/audio/VoiceLibrary.tsx:38",
+        "src/db/materials.ts:348"
+      ]
+    },
+    {
+      "id": "PM-01",
+      "priority": "P1",
+      "classification": "confirmed-bug",
+      "title": "Responses 的状态字段绕过诊断脱敏",
+      "group": "providers-media",
+      "report": "research/providers-media.md",
+      "locations": [
+        "src/lib/ai/responsesStream.ts:165",
+        "src/lib/agent/runChat.ts:286",
+        "src/db/agentRuns.ts:231",
+        "src/lib/ai/chatStream.ts:424"
+      ]
+    },
+    {
+      "id": "PM-02",
+      "priority": "P2",
+      "classification": "confirmed-bug",
+      "title": "错误响应被转换为空模型成功或探测成功",
+      "group": "providers-media",
+      "report": "research/providers-media.md",
+      "locations": [
+        "src/lib/ai/openaiCompatible.ts:73",
+        "src/lib/ai/connectors.ts:55"
+      ]
+    },
+    {
+      "id": "PM-03",
+      "priority": "P2",
+      "classification": "confirmed-bug",
+      "title": "音乐任务 ID 集合未保持唯一，恢复路径确定失败",
+      "group": "providers-media",
+      "report": "research/providers-media.md",
+      "locations": [
+        "src/lib/ai/apimartAudio.ts:181",
+        "src/lib/audioGeneration/runtime.ts:240",
+        "src/lib/audioGeneration/observations.ts:14"
+      ]
+    },
+    {
+      "id": "PM-04",
+      "priority": "P2",
+      "classification": "confirmed-bug",
+      "title": "音乐任务 ID 的点段绕过固定路径约束",
+      "group": "providers-media",
+      "report": "research/providers-media.md",
+      "locations": [
+        "src/lib/ai/apimartAudio.ts:188",
+        "src/lib/ai/apimart.ts:376",
+        "src/lib/ai/aihubmix.ts:129"
+      ]
+    },
+    {
+      "id": "PM-05",
+      "priority": "P2",
+      "classification": "risk",
+      "title": "入站音频与 Chat 流无大小上限，资源检查太晚",
+      "group": "providers-media",
+      "report": "research/providers-media.md",
+      "locations": [
+        "src/lib/ai/apimartAudio.ts:156",
+        "src/lib/ai/mimoSpeech.ts:53",
+        "src/lib/ai/aihubmix.ts:392",
+        "src/lib/ai/chatStream.ts:461",
+        "src/lib/audioGeneration/runtime.ts:219",
+        "src/lib/audio/engine.ts:14"
+      ]
+    },
+    {
+      "id": "PM-06",
+      "priority": "P3",
+      "classification": "confirmed-bug",
+      "title": "音乐 body 取消被当作协议格式错误",
+      "group": "providers-media",
+      "report": "research/providers-media.md",
+      "locations": [
+        "src/lib/ai/apimartAudio.ts:135"
+      ]
+    },
+    {
+      "id": "PM-07",
+      "priority": "P2",
+      "classification": "structural-debt",
+      "title": "请求基础边界被复制并发生策略漂移",
+      "group": "providers-media",
+      "report": "research/providers-media.md",
+      "locations": [
+        "src/lib/ai/apimart.ts:141",
+        "src/lib/ai/apimartAudio.ts:92",
+        "src/lib/ai/aihubmix.ts:151",
+        "src/lib/ai/mimoSpeech.ts:36",
+        "src/lib/ai/openaiCompatible.ts:54",
+        "src/lib/ai/tavily.ts:63",
+        "src/lib/ai/connectors.ts:55",
+        "src/lib/audioGeneration/runtime.ts:42",
+        "src/lib/references/docx.ts:2",
+        "src/lib/ai/aihubmix.ts:67",
+        "src/lib/ai/apimart.ts:87"
+      ]
+    },
+    {
+      "id": "SS-01",
+      "priority": "P1",
+      "classification": "confirmed-bug",
+      "title": "项目 route 复用期间消费上一所有者的数据",
+      "group": "shell-shared",
+      "report": "research/shell-shared.md",
+      "locations": [
+        "src/routes/p.$projectId.tsx:10",
+        "src/components/workspace/WorkspaceChrome.tsx:50",
+        "src/routes/p.$projectId.index.tsx:18",
+        "src/main.tsx:9",
+        "src/components/studio/materials/MaterialDetailPanel.tsx:47"
+      ]
+    },
+    {
+      "id": "SS-02",
+      "priority": "P1",
+      "classification": "confirmed-bug",
+      "title": "项目设定自动保存没有并发保护",
+      "group": "shell-shared",
+      "report": "research/shell-shared.md",
+      "locations": [
+        "src/components/workspace/ProjectSettingsPanel.tsx:81",
+        "src/components/assets/AssetTextField.tsx:14",
+        "src/lib/debouncedDraft.ts:224",
+        "src/db/repo.ts:242",
+        "src/components/workspace/ProjectSettingsPanel.tsx:170"
+      ]
+    },
+    {
+      "id": "SS-03",
+      "priority": "P2",
+      "classification": "confirmed-bug",
+      "title": "音频成品状态在 ZIP 导入后产生假“后续编辑”",
+      "group": "shell-shared",
+      "report": "research/shell-shared.md",
+      "locations": [
+        "src/lib/audioProjectPackage.ts:124",
+        "src/components/audio/AudioExports.tsx:24",
+        "src/components/audio/AudioTimeline.tsx:270",
+        "src/lib/audio/schedule.ts:22"
+      ]
+    },
+    {
+      "id": "SS-04",
+      "priority": "P2",
+      "classification": "confirmed-bug",
+      "title": "现代视频包的错误分集引用被静默修复成另一集",
+      "group": "shell-shared",
+      "report": "research/shell-shared.md",
+      "locations": [
+        "src/lib/projectPackage.ts:856"
+      ]
+    },
+    {
+      "id": "SS-05",
+      "priority": "P2",
+      "classification": "confirmed-bug",
+      "title": "恢复失败丢弃 undo，无法重试",
+      "group": "shell-shared",
+      "report": "research/shell-shared.md",
+      "locations": [
+        "src/lib/undo.tsx:37",
+        "src/components/workspace/EpisodeListPage.tsx:68",
+        "src/db/repo.ts:565"
+      ]
+    },
+    {
+      "id": "SS-06",
+      "priority": "P2",
+      "classification": "confirmed-bug",
+      "title": "部分业务写入没有错误出口",
+      "group": "shell-shared",
+      "report": "research/shell-shared.md",
+      "locations": [
+        "src/components/studio/ProjectGalleryPage.tsx:373",
+        "src/components/studio/AssetLibraryPages.tsx:187",
+        "src/components/workspace/EpisodeListPage.tsx:126"
+      ]
+    },
+    {
+      "id": "SS-07",
+      "priority": "P2",
+      "classification": "risk",
+      "title": "连接请求跨编辑会话的回写风险",
+      "group": "shell-shared",
+      "report": "research/shell-shared.md",
+      "locations": [
+        "src/components/studio/ConnectorsPage.tsx:50"
+      ]
+    },
+    {
+      "id": "SS-08",
+      "priority": "P2",
+      "classification": "structural-debt",
+      "title": "领域编排与旧契约的职责边界需要显式化",
+      "group": "shell-shared",
+      "report": "research/shell-shared.md",
+      "locations": [
+        "src/lib/generationIntent.ts:54",
+        "src/lib/productionContext.ts:27",
+        "src/lib/projectPackage.ts:41",
+        "src/lib/audioProjectPackage.ts:182",
+        "src/routes/_studio.tsx:3"
+      ]
+    },
+    {
+      "id": "SS-09",
+      "priority": "P2",
+      "classification": "structural-debt",
+      "title": "library 订阅及派生范围可收窄",
+      "group": "shell-shared",
+      "report": "research/shell-shared.md",
+      "locations": [
+        "src/components/studio/ProjectGalleryPage.tsx:49",
+        "src/components/studio/AssetLibraryPages.tsx:110"
+      ]
+    },
+    {
+      "id": "SS-10",
+      "priority": "P3",
+      "classification": "structural-debt",
+      "title": "低影响清理项与误报",
+      "group": "shell-shared",
+      "report": "research/shell-shared.md",
+      "locations": [
+        "src/components/ui/separator.tsx:6",
+        "src/components/ui/skeleton.tsx:3",
+        "src/lib/brand.ts:8",
+        "src/lib/shotFilters.ts:4",
+        "src/styles.css:2",
+        "src/lib/references/docx.ts:2",
+        "src/db/materials.ts:348"
+      ]
+    },
+    {
+      "id": "SS-11",
+      "priority": "P3",
+      "classification": "structural-debt",
+      "title": "装饰 canvas 可按需调度",
+      "group": "shell-shared",
+      "report": "research/shell-shared.md",
+      "locations": [
+        "src/components/ui/click-spark.tsx:83"
+      ]
+    }
+  ]
+}

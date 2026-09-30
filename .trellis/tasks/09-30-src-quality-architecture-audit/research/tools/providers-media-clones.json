@@ -1,0 +1,41 @@
+{
+  "method": "jscpd v4 exact token clones min80tokens/10lines; JSX fragments can have invalid line coordinates; validate source before treating as duplication",
+  "clones": [
+    {
+      "format": "typescript",
+      "lines": 15,
+      "fragment": "};\n\nfunction record(value: unknown): value is Record<string, unknown> {\n    return typeof value === \"object\" && value !== null && !Array.isArray(value);\n}\n\nfunction nonempty(value: unknown): value is string {\n    return typeof value === \"string\" && value.trim().length > 0;\n}\n\nfunction finite(value: unknown): value is number {\n    return typeof value === \"number\" && Number.isFinite(value);\n}\n\nfunction jsonValue(value: unknown): value is AIHubMixJson",
+      "tokens": 168,
+      "firstFile": {
+        "name": "src/lib/ai/aihubmix.ts",
+        "start": 65,
+        "end": 79,
+        "startLoc": {
+          "line": 65,
+          "column": 117,
+          "position": 807
+        },
+        "endLoc": {
+          "line": 79,
+          "column": 58,
+          "position": 975
+        }
+      },
+      "secondFile": {
+        "name": "src/lib/ai/apimart.ts",
+        "start": 85,
+        "end": 99,
+        "startLoc": {
+          "line": 85,
+          "column": 1,
+          "position": 907
+        },
+        "endLoc": {
+          "line": 99,
+          "column": 57,
+          "position": 1075
+        }
+      }
+    }
+  ]
+}

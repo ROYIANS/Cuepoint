@@ -1,0 +1,4396 @@
+{
+  "group": "shell-shared",
+  "warning": "Raw signals need validation; hooks may flag non-hook functions named useX; Knip declarations/CSS can be false positives; complexity is not proof of bug",
+  "eslint": [
+    {
+      "file": "src/components/studio/AssetLibraryPages.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 119,
+          "column": 9,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 125,
+          "endColumn": 29
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 121,
+          "column": 15,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 125,
+          "endColumn": 29
+        }
+      ]
+    },
+    {
+      "file": "src/components/studio/ConnectorsPage.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'ConnectorsPage' has a complexity of 32. Maximum allowed is 20.",
+          "line": 32,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 32,
+          "endColumn": 31
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "The 'connectors' logical expression could make the dependencies of useMemo Hook (at line 40) change on every render. Move it inside the useMemo callback. Alternatively, wrap the initialization of 'connectors' in its own useMemo() Hook.",
+          "line": 33,
+          "column": 11,
+          "nodeType": "VariableDeclarator",
+          "endLine": 33,
+          "endColumn": 77
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 86,
+          "column": 17,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 90,
+          "endColumn": 44
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 111,
+          "column": 31,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 111,
+          "endColumn": 177
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 240,
+          "column": 30,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 246,
+          "endColumn": 110
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 242,
+          "column": 35,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 246,
+          "endColumn": 110
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 301,
+          "column": 34,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 301,
+          "endColumn": 111
+        }
+      ]
+    },
+    {
+      "file": "src/components/studio/IpProfileEditor.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 165,
+          "column": 58,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 165,
+          "endColumn": 104
+        }
+      ]
+    },
+    {
+      "file": "src/components/studio/IpProfilesPage.tsx",
+      "messages": [
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 24 to the 20 allowed.",
+          "line": 48,
+          "column": 17,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 48,
+          "endColumn": 31
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 82,
+          "column": 10,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 104,
+          "endColumn": 26
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 82,
+          "column": 76,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 104,
+          "endColumn": 26
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 85,
+          "column": 26,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 85,
+          "endColumn": 85
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 86,
+          "column": 25,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 86,
+          "endColumn": 124
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'IpProfilePage' has a complexity of 26. Maximum allowed is 20.",
+          "line": 113,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 113,
+          "endColumn": 30
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 243,
+          "column": 38,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 243,
+          "endColumn": 93
+        }
+      ]
+    },
+    {
+      "file": "src/components/studio/MaterialLibraryPage.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'MaterialLibraryPage' has a complexity of 23. Maximum allowed is 20.",
+          "line": 24,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 24,
+          "endColumn": 36
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 27,
+          "column": 19,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 27,
+          "endColumn": 147
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 38,
+          "column": 28,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 38,
+          "endColumn": 354
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 38,
+          "column": 78,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 38,
+          "endColumn": 354
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 46,
+          "column": 46,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 48,
+          "endColumn": 96
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 60,
+          "column": 16,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 60,
+          "endColumn": 202
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 104,
+          "column": 14,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 112,
+          "endColumn": 109
+        }
+      ]
+    },
+    {
+      "file": "src/components/studio/ProjectGalleryPage.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'ProjectGalleryPage' has a complexity of 27. Maximum allowed is 20.",
+          "line": 56,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 56,
+          "endColumn": 35
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "The 'ipLinks' logical expression could make the dependencies of useMemo Hook (at line 89) change on every render. To fix this, wrap the initialization of 'ipLinks' in its own useMemo() Hook.",
+          "line": 61,
+          "column": 11,
+          "nodeType": "VariableDeclarator",
+          "endLine": 61,
+          "endColumn": 78
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 324,
+          "column": 30,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 324,
+          "endColumn": 92
+        },
+        {
+          "ruleId": "@typescript-eslint/no-misused-promises",
+          "severity": 2,
+          "message": "Promise-returning function provided to attribute where a void return was expected.",
+          "line": 341,
+          "column": 64,
+          "nodeType": "JSXExpressionContainer",
+          "messageId": "voidReturnAttribute",
+          "endLine": 353,
+          "endColumn": 27
+        }
+      ]
+    },
+    {
+      "file": "src/components/studio/SearchConnection.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 52,
+          "column": 65,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 52,
+          "endColumn": 134
+        }
+      ]
+    },
+    {
+      "file": "src/components/studio/materials/LegacyMaterialSources.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 25,
+          "column": 12,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 25,
+          "endColumn": 166
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 25,
+          "column": 60,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 25,
+          "endColumn": 166
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 46,
+          "column": 13,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 46,
+          "endColumn": 139
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 47,
+          "column": 13,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 47,
+          "endColumn": 131
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 48,
+          "column": 13,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 48,
+          "endColumn": 129
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 49,
+          "column": 13,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 49,
+          "endColumn": 131
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 99,
+          "column": 10,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 110,
+          "endColumn": 30
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 128,
+          "column": 24,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 128,
+          "endColumn": 140
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 128,
+          "column": 66,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 128,
+          "endColumn": 140
+        }
+      ]
+    },
+    {
+      "file": "src/components/studio/materials/MaterialDetailPanel.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'MaterialEditor' has a complexity of 69. Maximum allowed is 20.",
+          "line": 55,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 55,
+          "endColumn": 24
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 115,
+          "column": 24,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 115,
+          "endColumn": 266
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 160,
+          "column": 68,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 160,
+          "endColumn": 164
+        },
+        {
+          "ruleId": "react-hooks/rules-of-hooks",
+          "severity": 2,
+          "message": "React Hook \"useMaterialInProject\" cannot be called inside a callback. React Hooks must be called in a React function component or a custom React Hook function.",
+          "line": 203,
+          "column": 54,
+          "nodeType": "Identifier",
+          "endLine": 203,
+          "endColumn": 74
+        }
+      ]
+    },
+    {
+      "file": "src/components/studio/materials/MaterialDocumentPreview.tsx",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/prefer-promise-reject-errors",
+          "severity": 2,
+          "message": "Expected the Promise rejection reason to be an Error.",
+          "line": 54,
+          "column": 24,
+          "nodeType": "CallExpression",
+          "messageId": "rejectAnError",
+          "endLine": 54,
+          "endColumn": 37
+        }
+      ]
+    },
+    {
+      "file": "src/components/studio/materials/MaterialPreview.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'MaterialPreview' has a complexity of 33. Maximum allowed is 20.",
+          "line": 6,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 6,
+          "endColumn": 32
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 35 to the 20 allowed.",
+          "line": 6,
+          "column": 17,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 6,
+          "endColumn": 32
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 36,
+          "column": 14,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 49,
+          "endColumn": 101
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 38,
+          "column": 19,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 49,
+          "endColumn": 101
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 41,
+          "column": 23,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 49,
+          "endColumn": 101
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 43,
+          "column": 27,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 49,
+          "endColumn": 101
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/click-spark.tsx",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/switch-exhaustiveness-check",
+          "severity": 2,
+          "message": "Switch is not exhaustive. Cases not matched: \"ease-out\"",
+          "line": 74,
+          "column": 21,
+          "nodeType": "Identifier",
+          "messageId": "switchIsNotExhaustive",
+          "endLine": 74,
+          "endColumn": 27,
+          "suggestions": [
+            {
+              "messageId": "addMissingCases",
+              "fix": {
+                "range": [
+                  2596,
+                  2596
+                ],
+                "text": "case \"ease-out\": { throw new Error('Not implemented yet: \"ease-out\" case') }\n                "
+              },
+              "desc": "Add branches for missing cases."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/slider.tsx",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 15,
+          "column": 15,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 15,
+          "endColumn": 101
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 45,
+          "column": 33,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 45,
+          "endColumn": 116
+        }
+      ]
+    },
+    {
+      "file": "src/components/workspace/EpisodeListPage.tsx",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 63,
+          "column": 40,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 63,
+          "endColumn": 53,
+          "fix": {
+            "range": [
+              2493,
+              2494
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 63,
+          "column": 55,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 63,
+          "endColumn": 67,
+          "fix": {
+            "range": [
+              2507,
+              2508
+            ],
+            "text": ""
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/components/workspace/ProjectSettingsPanel.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'ProjectOutputSettings' has a complexity of 40. Maximum allowed is 20.",
+          "line": 131,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 131,
+          "endColumn": 31
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 23 to the 20 allowed.",
+          "line": 131,
+          "column": 10,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 131,
+          "endColumn": 31
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 186,
+          "column": 52,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 186,
+          "endColumn": 112
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 225,
+          "column": 52,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 225,
+          "endColumn": 113
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 245,
+          "column": 88,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 251,
+          "endColumn": 42
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 271,
+          "column": 59,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 271,
+          "endColumn": 108
+        }
+      ]
+    },
+    {
+      "file": "src/components/workspace/WorkspaceChrome.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'WorkspaceChrome' has a complexity of 45. Maximum allowed is 20.",
+          "line": 46,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 46,
+          "endColumn": 32
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 40 to the 20 allowed.",
+          "line": 46,
+          "column": 17,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 46,
+          "endColumn": 32
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 130,
+          "column": 19,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 130,
+          "endColumn": 98
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 175,
+          "column": 22,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 271,
+          "endColumn": 22
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 176,
+          "column": 179,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 271,
+          "endColumn": 22
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 227,
+          "column": 25,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 271,
+          "endColumn": 22
+        }
+      ]
+    },
+    {
+      "file": "src/lib/audioProjectPackage.ts",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-assignment",
+          "severity": 2,
+          "message": "Unsafe assignment of an `any` value.",
+          "line": 184,
+          "column": 11,
+          "nodeType": "VariableDeclarator",
+          "messageId": "anyAssignment",
+          "endLine": 184,
+          "endColumn": 44
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .audioGenerationJobs on an `any` value.",
+          "line": 185,
+          "column": 9,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 185,
+          "endColumn": 28
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'remapAudioPackage' has a complexity of 36. Maximum allowed is 20.",
+          "line": 213,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 213,
+          "endColumn": 34
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 64 to the 20 allowed.",
+          "line": 213,
+          "column": 17,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 213,
+          "endColumn": 34
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'insertAudioPackage' has a complexity of 26. Maximum allowed is 20.",
+          "line": 260,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 260,
+          "endColumn": 41
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 34 to the 20 allowed.",
+          "line": 260,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 260,
+          "endColumn": 41
+        }
+      ]
+    },
+    {
+      "file": "src/lib/debouncedDraft.ts",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/prefer-promise-reject-errors",
+          "severity": 2,
+          "message": "Expected the Promise rejection reason to be an Error.",
+          "line": 139,
+          "column": 21,
+          "nodeType": "CallExpression",
+          "messageId": "rejectAnError",
+          "endLine": 139,
+          "endColumn": 42
+        },
+        {
+          "ruleId": "@typescript-eslint/only-throw-error",
+          "severity": 2,
+          "message": "Expected an error object to be thrown.",
+          "line": 181,
+          "column": 23,
+          "nodeType": "MemberExpression",
+          "messageId": "object",
+          "endLine": 181,
+          "endColumn": 37
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "React Hook useEffect contains a call to 'setDraftState'. Without a list of dependencies, this can lead to an infinite chain of updates. To fix this, pass [initialValue, controller] as a second argument to the useEffect Hook.",
+          "line": 261,
+          "column": 5,
+          "nodeType": "Identifier",
+          "endLine": 261,
+          "endColumn": 14,
+          "suggestions": [
+            {
+              "desc": "Add dependencies array: [initialValue, controller]",
+              "fix": {
+                "range": [
+                  9865,
+                  9865
+                ],
+                "text": ", [initialValue, controller]"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-argument",
+          "severity": 2,
+          "message": "Unsafe argument of type `Map<any, any>` assigned to a parameter of type `Map<string, unknown>`.",
+          "line": 283,
+          "column": 39,
+          "nodeType": "Identifier",
+          "messageId": "unsafeArgument",
+          "endLine": 283,
+          "endColumn": 47
+        }
+      ]
+    },
+    {
+      "file": "src/lib/episodeDelivery.ts",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'shot[column.id as keyof Shot] ?? \"\"' may use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 92,
+          "column": 60,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 92,
+          "endColumn": 95
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'value ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 136,
+          "column": 25,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 136,
+          "endColumn": 36
+        }
+      ]
+    },
+    {
+      "file": "src/lib/generationIntent.ts",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'validateGenerationIntent' has a complexity of 60. Maximum allowed is 20.",
+          "line": 54,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 54,
+          "endColumn": 41
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 53 to the 20 allowed.",
+          "line": 54,
+          "column": 17,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 54,
+          "endColumn": 41
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+          "line": 130,
+          "column": 135,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 130,
+          "endColumn": 137
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 22. Maximum allowed is 20.",
+          "line": 130,
+          "column": 135,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 130,
+          "endColumn": 137
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 133,
+          "column": 24,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 133,
+          "endColumn": 324
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 133,
+          "column": 87,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 133,
+          "endColumn": 324
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 133,
+          "column": 160,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 133,
+          "endColumn": 324
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 147,
+          "column": 114,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 147,
+          "endColumn": 131,
+          "fix": {
+            "range": [
+              8974,
+              8975
+            ],
+            "text": ""
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/lib/productionContext.ts",
+      "messages": [
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 26 to the 20 allowed.",
+          "line": 29,
+          "column": 136,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 29,
+          "endColumn": 138
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 47. Maximum allowed is 20.",
+          "line": 29,
+          "column": 136,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 29,
+          "endColumn": 138
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 136,
+          "column": 26,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 136,
+          "endColumn": 135
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 208,
+          "column": 25,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 208,
+          "endColumn": 149
+        }
+      ]
+    },
+    {
+      "file": "src/lib/productionHandoff.ts",
+      "messages": [
+        {
+          "ruleId": "no-control-regex",
+          "severity": 2,
+          "message": "Unexpected control character(s) in regular expression: \\x00, \\x1f.",
+          "line": 30,
+          "column": 18,
+          "nodeType": "Literal",
+          "messageId": "unexpected",
+          "endLine": 30,
+          "endColumn": 52
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Arrow function has a complexity of 21. Maximum allowed is 20.",
+          "line": 147,
+          "column": 49,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 147,
+          "endColumn": 51
+        }
+      ]
+    },
+    {
+      "file": "src/lib/productionRevision.ts",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 35,
+          "column": 23,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 35,
+          "endColumn": 37,
+          "fix": {
+            "range": [
+              2800,
+              2801
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 36,
+          "column": 23,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 36,
+          "endColumn": 36,
+          "fix": {
+            "range": [
+              2837,
+              2838
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 37,
+          "column": 24,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 37,
+          "endColumn": 38,
+          "fix": {
+            "range": [
+              2876,
+              2877
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 37,
+          "column": 86,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 37,
+          "endColumn": 99,
+          "fix": {
+            "range": [
+              2937,
+              2938
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 41,
+          "column": 101,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 41,
+          "endColumn": 106,
+          "fix": {
+            "range": [
+              3253,
+              3254
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 41,
+          "column": 109,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 41,
+          "endColumn": 118,
+          "fix": {
+            "range": [
+              3265,
+              3266
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 52,
+          "column": 80,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 52,
+          "endColumn": 88,
+          "fix": {
+            "range": [
+              3653,
+              3654
+            ],
+            "text": ""
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/lib/projectPackage.ts",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+          "line": 62,
+          "column": 12,
+          "nodeType": "TSAsExpression",
+          "messageId": "contextuallyUnnecessary",
+          "endLine": 62,
+          "endColumn": 50,
+          "fix": {
+            "range": [
+              1984,
+              2011
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.coverMediaId' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 184,
+          "column": 44,
+          "nodeType": "MemberExpression",
+          "messageId": "baseToString",
+          "endLine": 184,
+          "endColumn": 60
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.coverMediaId' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 185,
+          "column": 22,
+          "nodeType": "MemberExpression",
+          "messageId": "baseToString",
+          "endLine": 185,
+          "endColumn": 38
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.id ?? createId(\"prj\")' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 190,
+          "column": 20,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 190,
+          "endColumn": 45
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.name ?? fallbackName' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 191,
+          "column": 22,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 191,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 201,
+          "column": 27,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 201,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 202,
+          "column": 27,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 202,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 206,
+          "column": 24,
+          "nodeType": "TSAsExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 206,
+          "endColumn": 49,
+          "fix": {
+            "range": [
+              6719,
+              6737
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.id ?? createId(\"chr\")' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 264,
+          "column": 20,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 264,
+          "endColumn": 45
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.name ?? \"未命名角色\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 269,
+          "column": 22,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 269,
+          "endColumn": 41
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.bio ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 270,
+          "column": 21,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 270,
+          "endColumn": 34
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.appearance ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 271,
+          "column": 28,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 271,
+          "endColumn": 48
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 272,
+          "column": 23,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 272,
+          "endColumn": 38
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 274,
+          "column": 27,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 274,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 275,
+          "column": 27,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 275,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.id ?? createId(\"scn\")' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 300,
+          "column": 20,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 300,
+          "endColumn": 45
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.name ?? \"未命名场景\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 304,
+          "column": 22,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 304,
+          "endColumn": 41
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.location ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 305,
+          "column": 26,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 305,
+          "endColumn": 44
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.timeOfDay ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 306,
+          "column": 27,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 306,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.atmosphere ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 307,
+          "column": 28,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 307,
+          "endColumn": 48
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 308,
+          "column": 23,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 308,
+          "endColumn": 38
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 310,
+          "column": 27,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 310,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 311,
+          "column": 27,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 311,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.id ?? createId(\"prp\")' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 336,
+          "column": 20,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 336,
+          "endColumn": 45
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.name ?? \"未命名道具\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 343,
+          "column": 22,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 343,
+          "endColumn": 41
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.kind ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 344,
+          "column": 22,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 344,
+          "endColumn": 36
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 345,
+          "column": 23,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 345,
+          "endColumn": 38
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 347,
+          "column": 27,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 347,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 348,
+          "column": 27,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 348,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.id ?? createId(\"sty\")' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 372,
+          "column": 20,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 372,
+          "endColumn": 45
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.name ?? \"未命名风格\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 379,
+          "column": 22,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 379,
+          "endColumn": 41
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 380,
+          "column": 23,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 380,
+          "endColumn": 38
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 382,
+          "column": 27,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 382,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 383,
+          "column": 27,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 383,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.id ?? createId(\"ep\")' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 407,
+          "column": 20,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 407,
+          "endColumn": 44
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.title ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 410,
+          "column": 23,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 410,
+          "endColumn": 38
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 415,
+          "column": 27,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 415,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 416,
+          "column": 27,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 416,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'parseShot' has a complexity of 21. Maximum allowed is 20.",
+          "line": 468,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 468,
+          "endColumn": 19
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.id ?? createId(\"sht\")' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 476,
+          "column": 20,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 476,
+          "endColumn": 45
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.episodeId ?? episodeId' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 478,
+          "column": 27,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 478,
+          "endColumn": 53
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.shotNumber ?? index + 1' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 480,
+          "column": 28,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 480,
+          "endColumn": 55
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.category ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 487,
+          "column": 26,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 487,
+          "endColumn": 44
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.content ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 489,
+          "column": 25,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 489,
+          "endColumn": 42
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 490,
+          "column": 23,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 490,
+          "endColumn": 38
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.sceneCloseup ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 491,
+          "column": 30,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 491,
+          "endColumn": 52
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.sound ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 492,
+          "column": 23,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 492,
+          "endColumn": 38
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.emotion ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 493,
+          "column": 25,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 493,
+          "endColumn": 42
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.cameraAngle ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 494,
+          "column": 29,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 494,
+          "endColumn": 50
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.cameraGear ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 495,
+          "column": 28,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 495,
+          "endColumn": 48
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.focalLength ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 496,
+          "column": 29,
+          "nodeType": "LogicalExpression",
+          "messageId": "baseToString",
+          "endLine": 496,
+          "endColumn": 50
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.sceneId' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 500,
+          "column": 39,
+          "nodeType": "MemberExpression",
+          "messageId": "baseToString",
+          "endLine": 500,
+          "endColumn": 50
+        },
+        {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.beatId' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 501,
+          "column": 37,
+          "nodeType": "MemberExpression",
+          "messageId": "baseToString",
+          "endLine": 501,
+          "endColumn": 47
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'parseMemoryPackage' has a complexity of 26. Maximum allowed is 20.",
+          "line": 525,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 525,
+          "endColumn": 28
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+          "line": 525,
+          "column": 10,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 525,
+          "endColumn": 28
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'importProjectZip' has a complexity of 47. Maximum allowed is 20.",
+          "line": 790,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 790,
+          "endColumn": 39
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 36 to the 20 allowed.",
+          "line": 790,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 790,
+          "endColumn": 39
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+          "line": 952,
+          "column": 22,
+          "nodeType": "TSAsExpression",
+          "messageId": "contextuallyUnnecessary",
+          "endLine": 957,
+          "endColumn": 27,
+          "fix": {
+            "range": [
+              32469,
+              32486
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+          "line": 964,
+          "column": 23,
+          "nodeType": "TSAsExpression",
+          "messageId": "contextuallyUnnecessary",
+          "endLine": 969,
+          "endColumn": 34,
+          "fix": {
+            "range": [
+              32882,
+              32906
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 976,
+          "column": 28,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 978,
+          "endColumn": 56
+        }
+      ]
+    },
+    {
+      "file": "src/lib/reorderIds.ts",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 36,
+          "column": 59,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 36,
+          "endColumn": 78,
+          "fix": {
+            "range": [
+              1281,
+              1282
+            ],
+            "text": ""
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/lib/shotRelations.ts",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 16,
+          "column": 22,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 16,
+          "endColumn": 100
+        }
+      ]
+    },
+    {
+      "file": "src/routes/_studio.index.tsx",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/only-throw-error",
+          "severity": 2,
+          "message": "Expected an error object to be thrown.",
+          "line": 5,
+          "column": 15,
+          "nodeType": "CallExpression",
+          "messageId": "object",
+          "endLine": 5,
+          "endColumn": 39
+        }
+      ]
+    },
+    {
+      "file": "src/routes/_studio.settings.tsx",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/only-throw-error",
+          "severity": 2,
+          "message": "Expected an error object to be thrown.",
+          "line": 5,
+          "column": 15,
+          "nodeType": "CallExpression",
+          "messageId": "object",
+          "endLine": 5,
+          "endColumn": 54
+        }
+      ]
+    },
+    {
+      "file": "src/routes/p.$projectId.assets.index.tsx",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/only-throw-error",
+          "severity": 2,
+          "message": "Expected an error object to be thrown.",
+          "line": 5,
+          "column": 15,
+          "nodeType": "CallExpression",
+          "messageId": "object",
+          "endLine": 5,
+          "endColumn": 60
+        }
+      ]
+    },
+    {
+      "file": "src/routes/p.$projectId.plan.tsx",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/only-throw-error",
+          "severity": 2,
+          "message": "Expected an error object to be thrown.",
+          "line": 8,
+          "column": 19,
+          "nodeType": "CallExpression",
+          "messageId": "object",
+          "endLine": 8,
+          "endColumn": 58
+        },
+        {
+          "ruleId": "@typescript-eslint/only-throw-error",
+          "severity": 2,
+          "message": "Expected an error object to be thrown.",
+          "line": 10,
+          "column": 15,
+          "nodeType": "CallExpression",
+          "messageId": "object",
+          "endLine": 13,
+          "endColumn": 11
+        }
+      ]
+    },
+    {
+      "file": "src/routes/p.$projectId.produce.tsx",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/only-throw-error",
+          "severity": 2,
+          "message": "Expected an error object to be thrown.",
+          "line": 8,
+          "column": 19,
+          "nodeType": "CallExpression",
+          "messageId": "object",
+          "endLine": 8,
+          "endColumn": 58
+        },
+        {
+          "ruleId": "@typescript-eslint/only-throw-error",
+          "severity": 2,
+          "message": "Expected an error object to be thrown.",
+          "line": 10,
+          "column": 15,
+          "nodeType": "CallExpression",
+          "messageId": "object",
+          "endLine": 13,
+          "endColumn": 11
+        }
+      ]
+    },
+    {
+      "file": "src/routes/p.$projectId.report.tsx",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/only-throw-error",
+          "severity": 2,
+          "message": "Expected an error object to be thrown.",
+          "line": 8,
+          "column": 19,
+          "nodeType": "CallExpression",
+          "messageId": "object",
+          "endLine": 8,
+          "endColumn": 58
+        },
+        {
+          "ruleId": "@typescript-eslint/only-throw-error",
+          "severity": 2,
+          "message": "Expected an error object to be thrown.",
+          "line": 10,
+          "column": 15,
+          "nodeType": "CallExpression",
+          "messageId": "object",
+          "endLine": 13,
+          "endColumn": 11
+        }
+      ]
+    },
+    {
+      "file": "src/routes/p.$projectId.shots.tsx",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/only-throw-error",
+          "severity": 2,
+          "message": "Expected an error object to be thrown.",
+          "line": 8,
+          "column": 19,
+          "nodeType": "CallExpression",
+          "messageId": "object",
+          "endLine": 8,
+          "endColumn": 58
+        },
+        {
+          "ruleId": "@typescript-eslint/only-throw-error",
+          "severity": 2,
+          "message": "Expected an error object to be thrown.",
+          "line": 10,
+          "column": 15,
+          "nodeType": "CallExpression",
+          "messageId": "object",
+          "endLine": 14,
+          "endColumn": 11
+        }
+      ]
+    },
+    {
+      "file": "src/routes/p.$projectId.storyboard.tsx",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/only-throw-error",
+          "severity": 2,
+          "message": "Expected an error object to be thrown.",
+          "line": 5,
+          "column": 15,
+          "nodeType": "CallExpression",
+          "messageId": "object",
+          "endLine": 5,
+          "endColumn": 54
+        }
+      ]
+    }
+  ],
+  "knipFiles": [
+    "src/components/ui/separator.tsx",
+    "src/components/ui/skeleton.tsx"
+  ],
+  "knipIssues": [
+    {
+      "file": "src/lib/shotFilters.ts",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "shotBeatFilterId",
+          "line": 4,
+          "col": 17,
+          "pos": 192
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/lib/brand.ts",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "LOGO_FAVICON_SRC",
+          "line": 8,
+          "col": 14,
+          "pos": 357
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/components/ui/alert-dialog.tsx",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "AlertDialogOverlay",
+          "line": 131,
+          "col": 5,
+          "pos": 4589
+        },
+        {
+          "name": "AlertDialogPortal",
+          "line": 132,
+          "col": 5,
+          "pos": 4613
+        },
+        {
+          "name": "AlertDialogTrigger",
+          "line": 134,
+          "col": 5,
+          "pos": 4658
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/components/ui/dialog.tsx",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "DialogClose",
+          "line": 118,
+          "col": 5,
+          "pos": 4448
+        },
+        {
+          "name": "DialogOverlay",
+          "line": 123,
+          "col": 5,
+          "pos": 4543
+        },
+        {
+          "name": "DialogPortal",
+          "line": 124,
+          "col": 5,
+          "pos": 4562
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/components/ui/dropdown-menu.tsx",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "DropdownMenuPortal",
+          "line": 212,
+          "col": 5,
+          "pos": 9748
+        },
+        {
+          "name": "DropdownMenuGroup",
+          "line": 215,
+          "col": 5,
+          "pos": 9822
+        },
+        {
+          "name": "DropdownMenuRadioGroup",
+          "line": 219,
+          "col": 5,
+          "pos": 9920
+        },
+        {
+          "name": "DropdownMenuRadioItem",
+          "line": 220,
+          "col": 5,
+          "pos": 9948
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/components/ui/popover.tsx",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "PopoverAnchor",
+          "line": 46,
+          "col": 50,
+          "pos": 1962
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/components/ui/sheet.tsx",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "SheetTrigger",
+          "line": 137,
+          "col": 5,
+          "pos": 4971
+        },
+        {
+          "name": "SheetClose",
+          "line": 138,
+          "col": 5,
+          "pos": 4989
+        },
+        {
+          "name": "SheetFooter",
+          "line": 141,
+          "col": 5,
+          "pos": 5040
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/components/ui/select.tsx",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "SelectScrollDownButton",
+          "line": 165,
+          "col": 5,
+          "pos": 7258
+        },
+        {
+          "name": "SelectScrollUpButton",
+          "line": 166,
+          "col": 5,
+          "pos": 7286
+        },
+        {
+          "name": "SelectSeparator",
+          "line": 167,
+          "col": 5,
+          "pos": 7312
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/components/ui/badge.tsx",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "badgeVariants",
+          "line": 39,
+          "col": 16,
+          "pos": 1757
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/components/ui/card.tsx",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "CardContent",
+          "line": 75,
+          "col": 79,
+          "pos": 2122
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/lib/episodeDelivery.ts",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        {
+          "name": "EpisodeDeliveryColumn",
+          "line": 32,
+          "col": 18,
+          "pos": 664
+        },
+        {
+          "name": "EpisodeDeliveryRow",
+          "line": 37,
+          "col": 18,
+          "pos": 743
+        },
+        {
+          "name": "EpisodeDelivery",
+          "line": 57,
+          "col": 18,
+          "pos": 1219
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/lib/productionContext.ts",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        {
+          "name": "ProductionMediaMetadata",
+          "line": 19,
+          "col": 18,
+          "pos": 637
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/lib/undo.tsx",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        {
+          "name": "UndoAction",
+          "line": 4,
+          "col": 18,
+          "pos": 174
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/lib/audioProjectPackage.ts",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        {
+          "name": "AudioPackage",
+          "line": 180,
+          "col": 13,
+          "pos": 6182
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/lib/media.ts",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        {
+          "name": "MediaView",
+          "line": 13,
+          "col": 18,
+          "pos": 524
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/components/studio/CoverCard.tsx",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        {
+          "name": "CoverFrame",
+          "line": 9,
+          "col": 13,
+          "pos": 385
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    }
+  ],
+  "ast": [
+    {
+      "file": "src/components/studio/AboutPage.tsx",
+      "lines": 88,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/studio/AssetLibraryPages.tsx",
+      "lines": 238,
+      "functions": 31,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        119,
+        121
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/studio/ConnectorsPage.tsx",
+      "lines": 324,
+      "functions": 20,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [
+        289
+      ],
+      "nestedTernaries": [
+        86,
+        111,
+        240,
+        242,
+        271,
+        301
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/studio/CoverCard.tsx",
+      "lines": 125,
+      "functions": 5,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        54
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/studio/IpProfileEditor.tsx",
+      "lines": 192,
+      "functions": 19,
+      "anyKeywords": [],
+      "typeAssertions": [
+        19,
+        86
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        165
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/studio/IpProfilesPage.tsx",
+      "lines": 245,
+      "functions": 42,
+      "anyKeywords": [],
+      "typeAssertions": [
+        148
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        82,
+        82,
+        83,
+        85,
+        86,
+        167,
+        243
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/studio/LibraryHeader.tsx",
+      "lines": 53,
+      "functions": 3,
+      "anyKeywords": [],
+      "typeAssertions": [
+        28
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/studio/MaterialLibraryPage.tsx",
+      "lines": 139,
+      "functions": 24,
+      "anyKeywords": [],
+      "typeAssertions": [
+        68,
+        72,
+        93
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        27,
+        38,
+        38,
+        46,
+        47,
+        60,
+        104,
+        104
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/studio/ProjectGalleryPage.tsx",
+      "lines": 417,
+      "functions": 61,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [
+        74
+      ],
+      "nestedTernaries": [
+        150,
+        157,
+        249,
+        324
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/studio/ProjectIpPicker.tsx",
+      "lines": 37,
+      "functions": 6,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/studio/SearchConnection.tsx",
+      "lines": 92,
+      "functions": 9,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        52
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/studio/Still.tsx",
+      "lines": 33,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/studio/StudioShell.tsx",
+      "lines": 237,
+      "functions": 17,
+      "anyKeywords": [],
+      "typeAssertions": [
+        21,
+        32,
+        51
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/studio/materials/LegacyMaterialSources.tsx",
+      "lines": 134,
+      "functions": 19,
+      "anyKeywords": [],
+      "typeAssertions": [
+        42,
+        42,
+        60,
+        63,
+        66,
+        67
+      ],
+      "nonNullAssertions": [
+        75
+      ],
+      "nestedTernaries": [
+        25,
+        25,
+        46,
+        47,
+        48,
+        49,
+        52,
+        99,
+        99,
+        128,
+        128
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/studio/materials/MaterialControls.tsx",
+      "lines": 121,
+      "functions": 17,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/studio/materials/MaterialDetailPanel.tsx",
+      "lines": 272,
+      "functions": 54,
+      "anyKeywords": [],
+      "typeAssertions": [
+        224
+      ],
+      "nonNullAssertions": [
+        268
+      ],
+      "nestedTernaries": [
+        48,
+        115,
+        160,
+        160
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/studio/materials/MaterialDocumentPreview.tsx",
+      "lines": 67,
+      "functions": 13,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [
+        54
+      ],
+      "nestedTernaries": [
+        40
+      ],
+      "emptyCatches": [],
+      "dynamicImports": [
+        {
+          "line": 28,
+          "literal": "@/lib/references/pdf"
+        }
+      ]
+    },
+    {
+      "file": "src/components/studio/materials/MaterialImportDialog.tsx",
+      "lines": 80,
+      "functions": 8,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        77
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/studio/materials/MaterialPreview.tsx",
+      "lines": 82,
+      "functions": 10,
+      "anyKeywords": [],
+      "typeAssertions": [
+        56
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        36,
+        38,
+        41,
+        43,
+        45
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/studio/projectKinds.tsx",
+      "lines": 64,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [
+        4
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/alert-dialog.tsx",
+      "lines": 136,
+      "functions": 11,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/badge.tsx",
+      "lines": 40,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/button.tsx",
+      "lines": 60,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/card.tsx",
+      "lines": 76,
+      "functions": 7,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/checkbox.tsx",
+      "lines": 28,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/click-spark.tsx",
+      "lines": 155,
+      "functions": 13,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/dialog.tsx",
+      "lines": 128,
+      "functions": 10,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/draft-status.tsx",
+      "lines": 36,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/dropdown-menu.tsx",
+      "lines": 227,
+      "functions": 15,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/field.tsx",
+      "lines": 21,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/input.tsx",
+      "lines": 22,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/label.tsx",
+      "lines": 20,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/popover.tsx",
+      "lines": 47,
+      "functions": 4,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/select.tsx",
+      "lines": 171,
+      "functions": 10,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/separator.tsx",
+      "lines": 27,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/sheet.tsx",
+      "lines": 145,
+      "functions": 10,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/skeleton.tsx",
+      "lines": 14,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/slider.tsx",
+      "lines": 54,
+      "functions": 3,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        15,
+        45
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/sonner.tsx",
+      "lines": 22,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [
+        10
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/tabs.tsx",
+      "lines": 53,
+      "functions": 4,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/textarea.tsx",
+      "lines": 19,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/ui/tooltip.tsx",
+      "lines": 57,
+      "functions": 4,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/workspace/EpisodeListPage.tsx",
+      "lines": 200,
+      "functions": 27,
+      "anyKeywords": [],
+      "typeAssertions": [
+        132
+      ],
+      "nonNullAssertions": [
+        63,
+        63
+      ],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/workspace/ProjectSettingsPanel.tsx",
+      "lines": 284,
+      "functions": 37,
+      "anyKeywords": [],
+      "typeAssertions": [
+        90,
+        183,
+        199
+      ],
+      "nonNullAssertions": [
+        157
+      ],
+      "nestedTernaries": [
+        186,
+        225,
+        245,
+        271
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/components/workspace/WorkspaceChrome.tsx",
+      "lines": 364,
+      "functions": 24,
+      "anyKeywords": [],
+      "typeAssertions": [
+        30,
+        31,
+        35,
+        36,
+        37
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        130,
+        175,
+        176,
+        227,
+        227,
+        326
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/assetLibrary.ts",
+      "lines": 18,
+      "functions": 3,
+      "anyKeywords": [],
+      "typeAssertions": [
+        1,
+        5,
+        6
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/audioProjectPackage.ts",
+      "lines": 294,
+      "functions": 8,
+      "anyKeywords": [],
+      "typeAssertions": [
+        204,
+        216,
+        228
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/brand.ts",
+      "lines": 10,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/chatScroll.ts",
+      "lines": 22,
+      "functions": 3,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/chatTitle.ts",
+      "lines": 6,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/copySelection.ts",
+      "lines": 18,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/debouncedDraft.ts",
+      "lines": 314,
+      "functions": 37,
+      "anyKeywords": [],
+      "typeAssertions": [
+        80,
+        236,
+        247
+      ],
+      "nonNullAssertions": [
+        237,
+        274
+      ],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/draftConflict.ts",
+      "lines": 23,
+      "functions": 4,
+      "anyKeywords": [],
+      "typeAssertions": [
+        11,
+        12,
+        12,
+        13,
+        18
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/draftMedia.ts",
+      "lines": 59,
+      "functions": 6,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/durationInput.ts",
+      "lines": 9,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/episodeDelivery.ts",
+      "lines": 198,
+      "functions": 20,
+      "anyKeywords": [],
+      "typeAssertions": [
+        92
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/formFieldFocus.ts",
+      "lines": 50,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [
+        37
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/format.ts",
+      "lines": 19,
+      "functions": 2,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/generationIntent.ts",
+      "lines": 225,
+      "functions": 25,
+      "anyKeywords": [],
+      "typeAssertions": [
+        21,
+        22,
+        28,
+        95,
+        96,
+        103,
+        109,
+        110,
+        122,
+        124
+      ],
+      "nonNullAssertions": [
+        147,
+        176
+      ],
+      "nestedTernaries": [
+        66,
+        133,
+        133,
+        133
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/generationTargetDestination.ts",
+      "lines": 16,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [
+        6
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/ids.ts",
+      "lines": 12,
+      "functions": 2,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/library.ts",
+      "lines": 36,
+      "functions": 7,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/media.ts",
+      "lines": 75,
+      "functions": 9,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/mediaPicker.ts",
+      "lines": 9,
+      "functions": 3,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/productionContext.ts",
+      "lines": 240,
+      "functions": 18,
+      "anyKeywords": [],
+      "typeAssertions": [
+        71,
+        71,
+        77,
+        78,
+        153,
+        195,
+        208,
+        208,
+        208,
+        214
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        136,
+        173,
+        208
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/productionHandoff.ts",
+      "lines": 254,
+      "functions": 33,
+      "anyKeywords": [],
+      "typeAssertions": [
+        10,
+        110,
+        110,
+        146,
+        151
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/productionRevision.ts",
+      "lines": 78,
+      "functions": 7,
+      "anyKeywords": [],
+      "typeAssertions": [
+        11,
+        39,
+        59,
+        63,
+        63,
+        66,
+        69,
+        74,
+        76
+      ],
+      "nonNullAssertions": [
+        35,
+        36,
+        37,
+        37,
+        41,
+        41,
+        52
+      ],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/projectPackage.ts",
+      "lines": 1093,
+      "functions": 61,
+      "anyKeywords": [],
+      "typeAssertions": [
+        62,
+        78,
+        149,
+        180,
+        187,
+        189,
+        206,
+        242,
+        244,
+        249,
+        251,
+        252,
+        643,
+        796,
+        811,
+        930,
+        943,
+        952,
+        964
+      ],
+      "nonNullAssertions": [
+        628,
+        636,
+        893,
+        924,
+        938,
+        951,
+        963,
+        983,
+        991,
+        1020
+      ],
+      "nestedTernaries": [
+        976
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/reorderIds.ts",
+      "lines": 38,
+      "functions": 5,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [
+        36
+      ],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/shotFilters.ts",
+      "lines": 44,
+      "functions": 4,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/shotKeyboard.ts",
+      "lines": 54,
+      "functions": 6,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/shotMedia.ts",
+      "lines": 19,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/shotRelations.ts",
+      "lines": 19,
+      "functions": 5,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [
+        16
+      ],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/thinkingTitle.ts",
+      "lines": 9,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/umami.ts",
+      "lines": 26,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/undo.tsx",
+      "lines": 92,
+      "functions": 18,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/useShotMedia.ts",
+      "lines": 20,
+      "functions": 5,
+      "anyKeywords": [],
+      "typeAssertions": [
+        13,
+        14
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/lib/utils.ts",
+      "lines": 7,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/main.tsx",
+      "lines": 25,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routeTree.gen.ts",
+      "lines": 1098,
+      "functions": 46,
+      "anyKeywords": [
+        64,
+        69,
+        74,
+        79,
+        84,
+        89,
+        94,
+        99,
+        104,
+        109,
+        114,
+        119,
+        124,
+        129,
+        134,
+        139,
+        144,
+        149,
+        155,
+        160,
+        165,
+        170,
+        175,
+        180,
+        185,
+        190,
+        195,
+        200,
+        205,
+        210,
+        215,
+        220,
+        225,
+        230,
+        235,
+        240,
+        245,
+        250,
+        256,
+        262,
+        268,
+        274,
+        280,
+        286,
+        292,
+        298
+      ],
+      "typeAssertions": [
+        61,
+        65,
+        70,
+        75,
+        80,
+        85,
+        90,
+        95,
+        100,
+        105,
+        110,
+        115,
+        120,
+        125,
+        130,
+        135,
+        140,
+        145,
+        151,
+        156,
+        161,
+        166,
+        171,
+        176,
+        181,
+        186,
+        191,
+        196,
+        201,
+        206,
+        211,
+        216,
+        221,
+        226,
+        231,
+        236,
+        241,
+        246,
+        252,
+        258,
+        264,
+        270,
+        276,
+        282,
+        288,
+        294
+      ],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/__root.tsx",
+      "lines": 21,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.about.tsx",
+      "lines": 7,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.agent.$threadId.tsx",
+      "lines": 11,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.agent.index.tsx",
+      "lines": 11,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.agent.tasks.tsx",
+      "lines": 5,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.agent.tsx",
+      "lines": 19,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.assets.tsx",
+      "lines": 17,
+      "functions": 2,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.characters.$characterId.tsx",
+      "lines": 12,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.characters.index.tsx",
+      "lines": 7,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.characters.tsx",
+      "lines": 6,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.connectors.tsx",
+      "lines": 7,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.index.tsx",
+      "lines": 8,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.ips.$ipId.tsx",
+      "lines": 10,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.ips.index.tsx",
+      "lines": 5,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.ips.tsx",
+      "lines": 4,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.projects.tsx",
+      "lines": 7,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.props.$propId.tsx",
+      "lines": 12,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.props.index.tsx",
+      "lines": 7,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.props.tsx",
+      "lines": 6,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.scenes.$sceneId.tsx",
+      "lines": 12,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.scenes.index.tsx",
+      "lines": 7,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.scenes.tsx",
+      "lines": 6,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.settings.tsx",
+      "lines": 8,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.styles.$styleId.tsx",
+      "lines": 12,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.styles.index.tsx",
+      "lines": 7,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.styles.tsx",
+      "lines": 6,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/_studio.tsx",
+      "lines": 30,
+      "functions": 3,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.assets.characters.$characterId.tsx",
+      "lines": 12,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.assets.index.tsx",
+      "lines": 8,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.assets.props.$propId.tsx",
+      "lines": 12,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.assets.scenes.$sceneId.tsx",
+      "lines": 12,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.assets.styles.$styleId.tsx",
+      "lines": 12,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.assets.tsx",
+      "lines": 6,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.e.$episodeId.index.tsx",
+      "lines": 12,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.e.$episodeId.produce.tsx",
+      "lines": 12,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.e.$episodeId.shots.tsx",
+      "lines": 16,
+      "functions": 2,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.e.$episodeId.storyboard.tsx",
+      "lines": 12,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.e.$episodeId.tsx",
+      "lines": 10,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.index.tsx",
+      "lines": 78,
+      "functions": 7,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.memory.tsx",
+      "lines": 22,
+      "functions": 2,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.plan.tsx",
+      "lines": 16,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.produce.tsx",
+      "lines": 16,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.report.tsx",
+      "lines": 16,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.shots.tsx",
+      "lines": 17,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.storyboard.tsx",
+      "lines": 8,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.tsx",
+      "lines": 12,
+      "functions": 1,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/routes/p.$projectId.world.tsx",
+      "lines": 18,
+      "functions": 3,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    },
+    {
+      "file": "src/vite-env.d.ts",
+      "lines": 7,
+      "functions": 0,
+      "anyKeywords": [],
+      "typeAssertions": [],
+      "nonNullAssertions": [],
+      "nestedTernaries": [],
+      "emptyCatches": [],
+      "dynamicImports": []
+    }
+  ]
+}

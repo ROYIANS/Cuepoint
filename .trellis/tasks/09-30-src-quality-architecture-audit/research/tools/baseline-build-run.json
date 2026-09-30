@@ -1,0 +1,9 @@
+{
+  "tool": "baseline-build",
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "build"
+  ],
+  "exit": 0,
+  "seconds": 25.88
+}

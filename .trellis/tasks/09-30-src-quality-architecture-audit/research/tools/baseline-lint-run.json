@@ -1,0 +1,9 @@
+{
+  "tool": "baseline-lint",
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "lint"
+  ],
+  "exit": 0,
+  "seconds": 17.07
+}

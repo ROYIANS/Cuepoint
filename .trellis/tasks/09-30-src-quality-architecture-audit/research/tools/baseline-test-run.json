@@ -1,0 +1,9 @@
+{
+  "tool": "baseline-test",
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "test"
+  ],
+  "exit": 0,
+  "seconds": 15.32
+}

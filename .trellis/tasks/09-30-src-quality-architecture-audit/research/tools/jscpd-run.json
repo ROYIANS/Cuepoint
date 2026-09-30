@@ -1,0 +1,11 @@
+{
+  "tool": "jscpd",
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+    "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-source-audit-n21f357d/node_modules/jscpd/bin/jscpd",
+    "--config",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-quality-architecture-audit/research/tools/jscpd.json"
+  ],
+  "exit": 0,
+  "seconds": 3.78
+}

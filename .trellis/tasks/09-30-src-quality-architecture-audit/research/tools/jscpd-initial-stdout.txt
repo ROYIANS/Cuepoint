@@ -1,0 +1,16 @@
+Error: ENOENT: no such file or directory, lstat '/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-quality-architecture-audit/research/tools/src'
+    at realpathSync (node:fs:2776:29)
+    at /private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-source-audit-n21f357d/node_modules/.pnpm/@jscpd+finder@4.3.0/node_modules/@jscpd/finder/dist/index.js:364:47
+    at Array.map (<anonymous>)
+    at getFilesToDetect (/private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-source-audit-n21f357d/node_modules/.pnpm/@jscpd+finder@4.3.0/node_modules/@jscpd/finder/dist/index.js:363:45)
+    at detectClones (/private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-source-audit-n21f357d/node_modules/.pnpm/jscpd@4.3.0/node_modules/jscpd/dist/chunk-RJJ75QFW.js:371:42)
+    at jscpd (/private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-source-audit-n21f357d/node_modules/.pnpm/jscpd@4.3.0/node_modules/jscpd/dist/chunk-RJJ75QFW.js:439:12)
+    at /private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-source-audit-n21f357d/node_modules/.pnpm/jscpd@4.3.0/node_modules/jscpd/dist/bin/jscpd.js:10:34
+    at Object.<anonymous> (/private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-source-audit-n21f357d/node_modules/.pnpm/jscpd@4.3.0/node_modules/jscpd/dist/bin/jscpd.js:15:3)
+    at Module._compile (node:internal/modules/cjs/loader:1760:14)
+    at Object..js (node:internal/modules/cjs/loader:1893:10) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'lstat',
+  path: '/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-quality-architecture-audit/research/tools/src'
+}

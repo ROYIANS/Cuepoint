@@ -1,0 +1,26 @@
+{
+  "method": "Original source transpiled in memory; no live network/DB. Metadata, references and reasoning helpers stubbed because absent in these fixtures; no assertion about full integration.",
+  "checks": {
+    "responseMessageRedacted": true,
+    "responseFinishReasonLeaksFixtureKey": true,
+    "invalidHtmlDiscoveryAccepted": true,
+    "invalidHtmlProbeAccepted": true
+  },
+  "responseResult": {
+    "ok": false,
+    "message": "invalid key [已隐藏]",
+    "finishReason": "failed invalid key sk-audit-fixture",
+    "metrics": {
+      "startedAt": 1790735529869,
+      "endedAt": 1790735529870
+    }
+  },
+  "discovery": {
+    "ok": true,
+    "models": []
+  },
+  "probe": {
+    "ok": true,
+    "via": "models"
+  }
+}

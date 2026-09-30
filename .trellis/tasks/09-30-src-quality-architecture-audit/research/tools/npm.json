@@ -1,0 +1,10 @@
+{
+  "name": "npm",
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/npm",
+    "--version"
+  ],
+  "exit": 0,
+  "stdout": "11.6.1\n",
+  "stderr": ""
+}
