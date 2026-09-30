@@ -1,0 +1,141 @@
+[
+  {
+    "file": "src/components/assets/CharacterDetailPage.tsx",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/components/assets/PropDetailPage.tsx",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/components/assets/SceneDetailPage.tsx",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/components/assets/StyleDetailPage.tsx",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/components/shots/DurationInput.tsx",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/components/shots/ShotEditorPage.tsx",
+    "before": 17,
+    "after": 17,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/components/slots/GenerationSlotCard.tsx",
+    "before": 13,
+    "after": 13,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Function 'GenerationSlotEditor' has a complexity of 33. Maximum allowed is 20.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "complexity",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/components/workspace/ProjectSettingsPanel.tsx",
+    "before": 6,
+    "after": 6,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Function 'ProjectOutputSettings' has a complexity of 38. Maximum allowed is 20.",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 24 to the 20 allowed.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "complexity",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/db/repo.ts",
+    "before": 11,
+    "after": 11,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/domain/slot.ts",
+    "before": 3,
+    "after": 3,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/ai/responsesStream.ts",
+    "before": 7,
+    "after": 7,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/draftConflict.ts",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/projectOutputDraft.ts",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/slotEditSession.ts",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/undo.tsx",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  }
+]

@@ -18,7 +18,9 @@
   "commit": null,
   "pr_url": null,
   "subtasks": [],
-  "children": [],
+  "children": [
+    "09-30-src-quality-remediation"
+  ],
   "parent": null,
   "relatedFiles": [
     "audit-report.md",

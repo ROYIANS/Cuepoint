@@ -1,0 +1,7 @@
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "严格类型边界"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "回归与证据"}
+{"file": ".trellis/spec/frontend/ai-connectors.md", "reason": "provider错误脱敏及固定请求边界"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "草稿/撤销/冲突规则"}
+{"file": ".trellis/tasks/09-30-src-quality-architecture-audit/research/production-ui.md", "reason": "PU-01/02/03"}
+{"file": ".trellis/tasks/09-30-src-quality-architecture-audit/research/shell-shared.md", "reason": "SS-02/05"}
+{"file": ".trellis/tasks/09-30-src-remediation-a/research/B01-scope-preparation.md", "reason": "A04固定slot target会话，B01后续query身份边界；只读研究不提前实现"}

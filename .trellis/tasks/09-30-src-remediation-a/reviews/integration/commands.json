@@ -1,0 +1,39 @@
+[
+  {
+    "name": "typecheck",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "lint"
+    ],
+    "exit": 0,
+    "seconds": 5.94
+  },
+  {
+    "name": "tests",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "test",
+      "--reporter=dot"
+    ],
+    "exit": 0,
+    "seconds": 11.2
+  },
+  {
+    "name": "models",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "model-bank:verify"
+    ],
+    "exit": 0,
+    "seconds": 0.73
+  },
+  {
+    "name": "build",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "build"
+    ],
+    "exit": 0,
+    "seconds": 16.1
+  }
+]

@@ -1,0 +1,30 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+    "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-source-audit-n21f357d/node_modules/eslint/bin/eslint.js",
+    "src/components/assets/CharacterDetailPage.tsx",
+    "src/components/assets/PropDetailPage.tsx",
+    "src/components/assets/SceneDetailPage.tsx",
+    "src/components/assets/StyleDetailPage.tsx",
+    "src/components/shots/DurationInput.tsx",
+    "src/components/shots/ShotEditorPage.tsx",
+    "src/components/slots/GenerationSlotCard.tsx",
+    "src/components/workspace/ProjectSettingsPanel.tsx",
+    "src/db/repo.ts",
+    "src/domain/slot.ts",
+    "src/lib/ai/responsesStream.ts",
+    "src/lib/draftConflict.ts",
+    "src/lib/projectOutputDraft.ts",
+    "src/lib/slotEditSession.ts",
+    "src/lib/undo.tsx",
+    "--config",
+    "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-source-audit-n21f357d/eslint.config.mjs",
+    "--format",
+    "json",
+    "--output-file",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-remediation-a/reviews/integration/eslint-results.json"
+  ],
+  "exit": 1,
+  "seconds": 7.74,
+  "stderr": ""
+}

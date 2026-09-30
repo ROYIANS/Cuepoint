@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+    "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-source-audit-n21f357d/node_modules/eslint/bin/eslint.js",
+    "src/db/repo.ts",
+    "src/components/shots/ShotEditorPage.tsx",
+    "src/lib/undo.tsx",
+    "src/lib/ai/responsesStream.ts",
+    "--config",
+    "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-source-audit-n21f357d/eslint.config.mjs",
+    "--format",
+    "json",
+    "--output-file",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-remediation-a/reviews/A02-eslint-results.json"
+  ],
+  "exit": 1,
+  "seconds": 4.03,
+  "stderr": ""
+}

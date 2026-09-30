@@ -1,0 +1,49 @@
+# A批设计与窄变更边界
+
+## A01（当前）
+行为差距：Responses错误状态为任意远端字符串，被finishAgentRun原样保存。修复在responsesStream边界，采用限定状态或脱敏有界值；不能只遮UI。预期文件responsesStream.ts、responsesStream.test.ts；必要时补agentRuns保存路径测试；不做provider重试/缓存/目录迁移。
+
+## A02
+逆操作由repository负责，输入per-shot受影响字段before/after及project/episode scope。在单一事务读最新、validate全部、compare全部，只有全部成立才恢复before。已恢复一致值可合流，不覆盖独立字段。UI注册实际before/after快照，controller清除只在成功/过期/取消；失败保持current动作并有错误出口。
+
+## A03
+删除snapshot包含shots及全部需要恢复的媒体，由scoped删除事务读取并返回。UI从返回值注册undo，不在事务前先读。保留全局引用保留与父子排序契约。
+
+## A04
+复用DraftConflictError/assertDraftBaseline。文字/时长比较编辑字段；槽比较目标槽，不比较整行。editor冻结original baseline，失败retain DraftMediaSession，onSave携带baseline并防止异步目标切换。
+
+同repo的写入串行，每单元回归、typecheck和check后再推进；不借局部修复一次拆repo。A批末完整test/build，生成路由纯格式变化只经token一致比对后恢复。
+
+
+## A02 调用关系核对补充
+patchEpisodeShots现有白名单有8字段：beatId/durationSec/status/characterIds/sceneId/propIds/styleId/notes。现UI逆补丁只处理6字段，新的逆协议应覆盖完整受影响集合。
+正向写入本身返回同一事务采集的before与规范化后的after；避免UI旧渲染快照早于实际正向写入。无选中项保留无操作契约。
+撤销payload包含projectId/episodeId与每行id、before/after字段补丁。事务内重验全部target/owner/关系及受影响字段，再一次提交；独立字段更新不阻断，受影响字段变更则整组拒绝。
+UndoController并发重复点击至多调用一次restore；等待期间新注册动作不能被旧完成清除，过期/clear/新register的行为有测试。失败保留未过期动作和可见错误；不为失败无限延长用户原始撤销窗口。
+
+
+## A03/A04 核对补充
+已有deleteEpisode返回事务内episode/shots/media快照，可作为scoped镜头删除的契约范例。restoreShots已有owner/排序/已存在ID保护，不能删除。
+槽位写入保留baseline为可选参数以兼容已在atomic审批/CAS保护下的Agent入口，但所有手工GenerationSlotEditor消费必须传冻结baseline。资产空槽用emptySlot统一比较；不能让缺省槽与emptySlot制造假冲突。槽值结构比较包括prompt/reference数组/result，并保护其他槽及实体文本独立修改。
+ProjectSettingsPanel的output配置显式保存也有快照覆盖风险；本A04若需要安全覆盖SS-02，应包括对应baseline，同时不借机重构整个组件。补丁只比较实际改变字段，避免名称等无关编辑阻断output保存。
+
+## A04 输出配置草稿基线补充
+ProjectOutputSettings目前ratio/draft仅useState(project.*)一次初始化，却直接拿最新props判dirty；后台更新本来未编辑的配置后，旧本地值会被判脏，整份提交可覆盖并发配置。
+正确协议应保存会话baseline、仅提交用户实际改变的aspectPreset/generationDefaults，保存时传对应baseline；干净字段跟随live值，脏字段及原baseline不被live变化覆盖。成功保存更新本次基线；失败保留草稿、展示冲突、提供采用最新入口。generationDefaults按结构语义比较，undefined与空defaults的手工编辑值等价；不得将宽assertDraftBaseline直接用于对象引用比较。画幅和defaults视为两个独立保存字段；defaults内部是否细分不在本单元额外重构。
+ProjectSettingsPanel即时defaultStyleId选择应传当前渲染所见目标字段baseline；其他项目文本回调传useDebouncedDraft提供的baseline。所有手工EditableGenerationSlot及其包装器onSave传冻结目标槽baseline。baseline为可选参数保持非手工/现有独立CAS调用兼容；必须有测试证明手工入口实际接线，不仅db函数测试。
+
+## A03 回归矩阵与实现范围
+修改repo.ts的deleteEpisodeShots返回DeletedShotsSnapshot | undefined（空选择不创建undo）；snapshot含scope、shots、media，由原删除事务采集。不增加先读事务，也不拆原deleteShots/reindex/orphan事务。
+ShotEditorPage removeSelectedShots仅从selection取ids，await返回snapshot后才registerUndo；取消页前旧shot内容、旧slot和媒体不能参与snapshot。复用restoreShots保持既有owner、refs、ID不存在和排序校验。
+新增实际DB用例：视图旧shot后提交新文字/slot/media，delete返回最新值并能恢复新Blob；跨镜头共用media在删除部分时保留、删除全部后能恢复；不存在/跨集/重复选择无部分删除；写入/cleanup失败原子回滚；既有排序恢复；restore已存在ID拒绝。只有删除成功且返回非空snapshot才注册。
+
+## A04 与B01身份边界
+B01研究已落盘 research/B01-scope-preparation.md；CharacterDetailPage浏览器内存spy证明换同owner资产后旧槽草稿可能传给新id。A04至少应让slot editor原baseline和保存target同属冻结session：显式entity+slot身份；身份变化时不得把旧draft传给最新onSave，不得无提示保存另一目标。可拒绝并保留草稿/提示，或绑定原会话并阻止误保存。完整页query identity、路由key/导航保护在B01进行，A04不提前批量改route。仅baseline相同的空槽不能判别不同实体，所以仅db槽值CAS不够。
+DurationInput实现在独立文件src/components/shots/DurationInput.tsx，不能仅改ShotEditorPage行内调用。
+
+## A04 比较值与兼容对照
+DurationInput以value??0呈现时，transaction比较同样用durationSec??0，避免原记录缺省秒数与编辑值0产生假冲突。项目text缺省与空字符串按现有flat draft协议等价；name修剪/画幅规范化先确定实际写入值，再允许当前已等于最终值合流。defaults比较采用规范化字段形状，不能依赖对象identity或属性插入顺序；空defaults与缺省用编辑值一致的表示。槽比较prompt、有序referenceImageIds/referenceVideoIds、result mediaId/kind，缺省槽与emptySlot等价。冲突时原行及媒体回收均无改动；独立slot/text changes保持。
+
+## A04 保存会话实现提示
+优先窄修改而非新注册/工厂系统。槽wrapper/editor可增加必须targetKey（owner+entity+slot），在挂载时固定baseline、owner、title与保存callback，targetKey不匹配时拒绝保存并明确提示；不能只固定baseline而继续使用最新onSave。上传/picker仍属于原owner session，目标切换不能向新owner上传或显示新标题但保存旧target。失配时保留已有文本/owned媒体直到用户明确关闭，失败不cancel session。全页导航/重挂载策略留B01。
+比较对象时用明确槽字段顺序与有序数组；输出defaults若用公共structural helper，处理插入顺序/undefined与缺省等价且不要新增策略/registry。类型受约束、helper应为多处真实用途，测试它实际运行的组件或轻量可执行保存session，避免只grep源码证明baseline。
