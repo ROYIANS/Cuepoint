@@ -1,0 +1,177 @@
+{
+  "status": "integration-gates-passed-awaiting-fullscope-independent-check",
+  "commands": [
+    {
+      "name": "typecheck",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "lint"
+      ],
+      "exit": 0,
+      "seconds": 6.33
+    },
+    {
+      "name": "tests",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "test",
+        "--reporter=dot"
+      ],
+      "exit": 0,
+      "seconds": 12.95
+    },
+    {
+      "name": "b01-browser",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "scripts/b01-browser-regression.mjs"
+      ],
+      "exit": 0,
+      "seconds": 20.79
+    },
+    {
+      "name": "b07-browser",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "scripts/b07-browser-regression.mjs"
+      ],
+      "exit": 0,
+      "seconds": 3.62
+    },
+    {
+      "name": "c01-browser",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "scripts/c01-browser-regression.mjs"
+      ],
+      "exit": 0,
+      "seconds": 2.57
+    },
+    {
+      "name": "c02-browser",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "scripts/c02-browser-regression.mjs"
+      ],
+      "exit": 0,
+      "seconds": 2.85
+    },
+    {
+      "name": "models",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "model-bank:verify"
+      ],
+      "exit": 0,
+      "seconds": 0.72
+    },
+    {
+      "name": "build",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "build"
+      ],
+      "exit": 0,
+      "seconds": 16.18
+    }
+  ],
+  "sourceTestAndBrowserScriptHashes": 561,
+  "reviewedChangedFiles": 51,
+  "testSummary": [
+    "Test Files  144 passed (144)",
+    "Tests  2402 passed (2402)"
+  ],
+  "staticSourceFiles": 26,
+  "newNoncomplexityDiagnostics": [],
+  "changedComplexityDiagnostics": [
+    {
+      "file": "src/db/agentTaskRecords.ts",
+      "rule": "complexity",
+      "severity": 1,
+      "message": "Async function 'validateTaskSources' has a complexity of 41. Maximum allowed is 20.",
+      "count": 1
+    },
+    {
+      "file": "src/db/agentTaskRecords.ts",
+      "rule": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 28 to the 20 allowed.",
+      "count": 1
+    },
+    {
+      "file": "src/lib/agent/wrapupEvidence.ts",
+      "rule": "complexity",
+      "severity": 1,
+      "message": "Async function 'collectWrapupSnapshot' has a complexity of 91. Maximum allowed is 20.",
+      "count": 1
+    },
+    {
+      "file": "src/lib/agent/wrapupEvidence.ts",
+      "rule": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 139 to the 20 allowed.",
+      "count": 1
+    },
+    {
+      "file": "src/lib/ai/aihubmix.ts",
+      "rule": "complexity",
+      "severity": 1,
+      "message": "Async function 'downloadAIHubMixResult' has a complexity of 35. Maximum allowed is 20.",
+      "count": 1
+    },
+    {
+      "file": "src/lib/ai/aihubmix.ts",
+      "rule": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 26 to the 20 allowed.",
+      "count": 1
+    },
+    {
+      "file": "src/lib/ai/chatStream.ts",
+      "rule": "complexity",
+      "severity": 1,
+      "message": "Async function 'streamChatCompletions' has a complexity of 33. Maximum allowed is 20.",
+      "count": 1
+    },
+    {
+      "file": "src/lib/ai/chatStream.ts",
+      "rule": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 25 to the 20 allowed.",
+      "count": 1
+    },
+    {
+      "file": "src/lib/ai/mimoSpeech.ts",
+      "rule": "complexity",
+      "severity": 1,
+      "message": "Async function 'generateMimoSpeech' has a complexity of 53. Maximum allowed is 20.",
+      "count": 1
+    },
+    {
+      "file": "src/lib/ai/mimoSpeech.ts",
+      "rule": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 37 to the 20 allowed.",
+      "count": 1
+    },
+    {
+      "file": "src/lib/ai/responsesStream.ts",
+      "rule": "complexity",
+      "severity": 1,
+      "message": "Async function 'streamResponses' has a complexity of 31. Maximum allowed is 20.",
+      "count": 1
+    },
+    {
+      "file": "src/lib/ai/responsesStream.ts",
+      "rule": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 22 to the 20 allowed.",
+      "count": 1
+    }
+  ],
+  "limitations": "Existing static debt remains; browser runs cover local fixtures, not live providers/full product. This tool does not replace independent full-scope review.",
+  "staticDiagnosticCounts": {
+    "errors": 71,
+    "warnings": 98
+  }
+}

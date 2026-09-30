@@ -1,0 +1,33 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/audioFingerprint.test.ts (11 tests | 2 failed) 194ms
+   ❯ C04 full-row audio export fingerprints (11)
+     × keeps v0 stale when package allowlisting drops newer source metadata 12ms
+     × keeps v1 stale when package allowlisting drops newer source metadata 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/audioFingerprint.test.ts > C04 full-row audio export fingerprints > keeps v0 stale when package allowlisting drops newer source metadata
+ FAIL  tests/audioFingerprint.test.ts > C04 full-row audio export fingerprints > keeps v1 stale when package allowlisting drops newer source metadata
+AssertionError: expected 'current' to be 'stale' // Object.is equality
+
+Expected: "stale"
+Received: "current"
+
+ ❯ tests/audioFingerprint.test.ts:177:110
+    175|         for (let pass = 0; pass < 2; pass++) {
+    176|             const imported = await roundtrip(projectId);
+    177|             expect(getAudioExportFreshness(await findExport(imported.s…
+       |                                                                                                              ^
+    178|             projectId = imported.projectId;
+    179|         }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 9 passed (11)
+   Start at  22:06:42
+   Duration  490ms (tests 44%, transform 36%, import 10%, setup 9%)
+

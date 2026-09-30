@@ -1,0 +1,183 @@
+{
+  "scope": "C01 independent checker; 9 implementation/test/browser files",
+  "startedAt": "2026-09-30T19:52:32.332952+08:00",
+  "files": [
+    {
+      "path": "src/db/taskGenerationEvidence.ts",
+      "beforeSha256": "088f056e842dfd60d141dc603e5dc0bd020e56a69452e9130eed6e7cbf9e8970",
+      "afterSha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+      "changedByChecker": true,
+      "sha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312"
+    },
+    {
+      "path": "src/db/agentTaskRecords.ts",
+      "beforeSha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+      "afterSha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+      "changedByChecker": false,
+      "sha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25"
+    },
+    {
+      "path": "src/lib/agent/wrapupEvidence.ts",
+      "beforeSha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "afterSha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "changedByChecker": false,
+      "sha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17"
+    },
+    {
+      "path": "tests/agentGenerationEvidence.test.ts",
+      "beforeSha256": "37fda40ee5b1d29c5f354aab77f915e2ba2604f47e33005a4a1b6b1395b4b9a4",
+      "afterSha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+      "changedByChecker": true,
+      "sha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678"
+    },
+    {
+      "path": "tests/agentTaskWrapup.test.ts",
+      "beforeSha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+      "afterSha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+      "changedByChecker": false,
+      "sha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a"
+    },
+    {
+      "path": "tests/agentTaskOrchestrationReview.test.ts",
+      "beforeSha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+      "afterSha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+      "changedByChecker": false,
+      "sha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8"
+    },
+    {
+      "path": "scripts/c01-browser-regression.mjs",
+      "beforeSha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+      "afterSha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+      "changedByChecker": false,
+      "sha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6"
+    },
+    {
+      "path": "tests/fixtures/c01/harness.ts",
+      "beforeSha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+      "afterSha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+      "changedByChecker": false,
+      "sha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502"
+    },
+    {
+      "path": "tests/fixtures/c01/index.html",
+      "beforeSha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+      "afterSha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+      "changedByChecker": false,
+      "sha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47"
+    }
+  ],
+  "checkerCorrections": [
+    {
+      "files": [
+        "src/db/taskGenerationEvidence.ts",
+        "tests/agentGenerationEvidence.test.ts"
+      ],
+      "issue": "A submit call with matching callId but another owned run was incorrectly certified as job origin. Actual submitAgentGeneration requires saved job runId and threadId to match its context.",
+      "correction": "Require submit job.runId === call.runId in addition to job.callId === call.id. Check calls retain later-owned-run support.",
+      "regressions": "Two real database cases cover false submit and valid later-run check; publish rejection, rw record/version rollback and immutable calls/jobs.",
+      "redLog": "C01-check-origin-run-red.log"
+    }
+  ],
+  "status": "PASS",
+  "schemaVersion": 1,
+  "completedAt": "2026-09-30T20:03:45.458840+08:00",
+  "baseline": "028e60070c14552025a3493e65f032350fdba8b5",
+  "remainingActualBlockers": [],
+  "schemaFiles": [
+    "src/db/taskGenerationEvidence.ts",
+    "src/db/agentTaskRecords.ts",
+    "src/lib/agent/wrapupEvidence.ts",
+    "tests/agentGenerationEvidence.test.ts",
+    "tests/agentTaskWrapup.test.ts",
+    "tests/agentTaskOrchestrationReview.test.ts",
+    "scripts/c01-browser-regression.mjs",
+    "tests/fixtures/c01/harness.ts",
+    "tests/fixtures/c01/index.html"
+  ],
+  "validation": {
+    "beforeCorrection": {
+      "testFiles": 14,
+      "tests": 260,
+      "exit": 0
+    },
+    "afterCorrection": {
+      "testFiles": 14,
+      "tests": 262,
+      "newEvidenceTests": 81,
+      "exit": 0,
+      "log": "C01-check-vitest-final.log"
+    },
+    "lint": {
+      "exit": 0,
+      "log": "C01-check-lint-final.log"
+    },
+    "nativeBrowser": {
+      "checks": 6,
+      "generations": 160,
+      "calls": 161,
+      "externalRequests": 0,
+      "exit": 0,
+      "log": "C01-check-native-browser-final.log"
+    },
+    "static": {
+      "newLeafDiagnostics": 0,
+      "existingSourceErrors": 3,
+      "existingSourceWarnings": 15,
+      "rawLog": "C01-check-static-final.log",
+      "finalJson": "C01-check-static-final.json",
+      "baselineJson": "C01-check-static-baseline.json",
+      "wholeSourceScanClean": false
+    },
+    "extra": {
+      "exit": 0,
+      "log": "C01-check-extra.log"
+    }
+  },
+  "limitations": [
+    "fake-indexeddb repository tests plus Chromium native IndexedDB only",
+    "Synthetic nonempty media: no pixel/audio/video decoding or real provider requests, no full product UI validation",
+    "Whole repository test/model/build and other C units remain batch-main responsibility"
+  ],
+  "nativeBrowserHandoff": {
+    "path": ".trellis/tasks/09-30-src-remediation-c/research/C01-native-browser-handoff.json",
+    "files": {
+      "scripts/c01-browser-regression.mjs": {
+        "expectedSha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+        "afterSha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+        "match": true
+      },
+      "tests/fixtures/c01/harness.ts": {
+        "expectedSha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+        "afterSha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+        "match": true
+      },
+      "tests/fixtures/c01/index.html": {
+        "expectedSha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+        "afterSha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+        "match": true
+      }
+    }
+  },
+  "before": {
+    "src/db/taskGenerationEvidence.ts": "088f056e842dfd60d141dc603e5dc0bd020e56a69452e9130eed6e7cbf9e8970",
+    "src/db/agentTaskRecords.ts": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+    "src/lib/agent/wrapupEvidence.ts": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+    "tests/agentGenerationEvidence.test.ts": "37fda40ee5b1d29c5f354aab77f915e2ba2604f47e33005a4a1b6b1395b4b9a4",
+    "tests/agentTaskWrapup.test.ts": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+    "tests/agentTaskOrchestrationReview.test.ts": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+    "scripts/c01-browser-regression.mjs": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+    "tests/fixtures/c01/harness.ts": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+    "tests/fixtures/c01/index.html": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47"
+  },
+  "after": {
+    "src/db/taskGenerationEvidence.ts": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+    "src/db/agentTaskRecords.ts": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+    "src/lib/agent/wrapupEvidence.ts": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+    "tests/agentGenerationEvidence.test.ts": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+    "tests/agentTaskWrapup.test.ts": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+    "tests/agentTaskOrchestrationReview.test.ts": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+    "scripts/c01-browser-regression.mjs": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+    "tests/fixtures/c01/harness.ts": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+    "tests/fixtures/c01/index.html": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47"
+  }
+}

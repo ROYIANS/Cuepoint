@@ -1,0 +1,85 @@
+
+> cuepoint@0.1.0 test /Users/xiaomengdao/WebstormProjects/aifenjing
+> vitest run tests/projectPackageRelations.test.ts
+
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/projectPackageRelations.test.ts (18 tests | 1 failed) 133ms
+   ❯ modern ZIP original episode and beat relationships (16)
+     × rejects synthesized beat ID colliding with an e… without changing any existing table 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/projectPackageRelations.test.ts > modern ZIP original episode and beat relationships > rejects synthesized beat ID colliding with an e… without changing any existing table
+AssertionError: promise resolved "{ kind: undefined, …(18) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "archivedAt": undefined,
++   "aspectPreset": "16:9",
++   "audience": undefined,
++   "brief": undefined,
++   "columnSettings": {
++     "visible": [
++       "durationSec",
++       "content",
++       "characters",
++       "scene",
++       "notes",
++     ],
++   },
++   "createdAt": "2026-09-30T13:36:16.705Z",
++   "defaultStyleId": undefined,
++   "extra": {
++     "unknownProject": 42,
++   },
++   "generationDefaults": undefined,
++   "genre": undefined,
++   "id": "prj_25abf544-e405-4809-844f-139e1a546d99",
++   "kind": undefined,
++   "mode": "series",
++   "name": "relation test",
++   "setting": {
++     "background": "",
++     "rules": "",
++     "worldview": "",
++   },
++   "shotSettings": {
++     "autoIncrementShotNumber": true,
++     "defaultDurationSec": 0,
++     "filters": {
++       "beatIds": [],
++       "gaps": [],
++       "statuses": [],
++     },
++     "workspaceView": "design",
++   },
++   "story": {
++     "logline": "",
++   },
++   "tone": undefined,
++   "updatedAt": "2026-09-30T13:36:16.705Z",
+  }
+
+ ❯ tests/projectPackageRelations.test.ts:77:70
+     75|     const { episodes, shots } = modernRecords();
+     76|     mutate(episodes, shots);
+     77|     await expect(importProjectZip(await packageBlob(episodes, shots)))…
+       |                                                                      ^
+     78|     expect(await snapshot()).toEqual(before);
+     79|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 17 passed (18)
+   Start at  21:36:16
+   Duration  404ms (transform 40%, tests 37%, import 12%, setup 10%)
+
+ ELIFECYCLE  Test failed. See above for more details.

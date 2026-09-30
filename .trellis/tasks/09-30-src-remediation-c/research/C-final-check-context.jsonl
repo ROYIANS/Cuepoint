@@ -1,0 +1,22 @@
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "C whole-scope final Quality Check"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "C whole-scope final Quality Check"}
+{"file": ".trellis/spec/frontend/agent-task-wrapup.md", "reason": "C whole-scope final Quality Check"}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "C whole-scope final Quality Check"}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "C whole-scope final Quality Check"}
+{"file": ".trellis/spec/frontend/agent-web-research.md", "reason": "C whole-scope final Quality Check"}
+{"file": ".trellis/spec/frontend/audio-music.md", "reason": "C whole-scope final Quality Check"}
+{"file": ".trellis/spec/frontend/ai-connectors.md", "reason": "C whole-scope final Quality Check"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "C whole-scope final Quality Check"}
+{"file": ".trellis/spec/frontend/production-contracts.md", "reason": "C whole-scope final Quality Check"}
+{"file": ".trellis/spec/frontend/asset-output-foundation.md", "reason": "C whole-scope final Quality Check"}
+{"file": ".trellis/spec/frontend/ip-material-library.md", "reason": "C whole-scope final Quality Check"}
+{"file": ".trellis/spec/frontend/index.md", "reason": "Only affected spec layer: frontend; read Quality Check"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "C shared boundary checks"}
+{"file": ".trellis/tasks/09-30-src-remediation-c/research/C-final-check-scope.md", "reason": "Exact final acceptance scope"}
+{"file": ".trellis/tasks/09-30-src-remediation-c/reviews/C01-check.md", "reason": "C01 complete independent evidence; requires completed file"}
+{"file": ".trellis/tasks/09-30-src-remediation-c/reviews/C02-check.md", "reason": "C02 complete independent evidence; requires completed file"}
+{"file": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check.md", "reason": "C03 complete independent evidence; requires completed file"}
+{"file": ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check.md", "reason": "C04 complete independent evidence; requires completed file"}
+{"file": ".trellis/tasks/09-30-src-remediation-c/reviews/C05-check.md", "reason": "C05 complete independent evidence; requires completed file"}
+{"file": ".trellis/tasks/09-30-src-remediation-c/reviews/C06-check.md", "reason": "C06 complete independent evidence; requires completed file"}
+{"file": ".trellis/tasks/09-30-src-remediation-c/research/C-gate-command-policy.md", "reason": "Actual scoped versus whole-suite commands and proof limitations"}

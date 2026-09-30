@@ -1,0 +1,182 @@
+{
+  "startedAt": "2026-09-30T13:31:17.445697+00:00",
+  "files": [
+    {
+      "path": "src/db/repo.ts",
+      "beforeSha256": "f87b802e9b9eea8a4642e60bd8ed9180d1f1b9113c3de42d2e6717176f2792cd",
+      "afterSha256": "346e54a274405562deba97a67357a6c4d65b441de47ae1ef7253ce871367d7a1",
+      "baselineVerifiedSha256": "f87b802e9b9eea8a4642e60bd8ed9180d1f1b9113c3de42d2e6717176f2792cd",
+      "checkEntrySha256": "346e54a274405562deba97a67357a6c4d65b441de47ae1ef7253ce871367d7a1"
+    },
+    {
+      "path": "src/lib/projectPackage.ts",
+      "beforeSha256": "1e07966b6ac71077c8afac7dd739beec3b92323129dc48c766dbd653e18104ad",
+      "afterSha256": "7486c9fb56bdf01cdf9f86b06115ec14103d8a5b11ee9f2cee449c23de6a4679",
+      "baselineVerifiedSha256": "1e07966b6ac71077c8afac7dd739beec3b92323129dc48c766dbd653e18104ad",
+      "checkEntrySha256": "7486c9fb56bdf01cdf9f86b06115ec14103d8a5b11ee9f2cee449c23de6a4679"
+    },
+    {
+      "path": "tests/parentProjectWrites.test.ts",
+      "beforeSha256": null,
+      "afterSha256": "49219fb616c63e1021dec6280e6ffb1db1f4d789e99336d1ea78a68ccb09240d",
+      "baselineVerifiedSha256": null,
+      "checkEntrySha256": "49219fb616c63e1021dec6280e6ffb1db1f4d789e99336d1ea78a68ccb09240d"
+    },
+    {
+      "path": "tests/projectPackageRelations.test.ts",
+      "beforeSha256": null,
+      "afterSha256": "7f6fb9be98d45c868919a24c36636d425258a632f4709eda4de1e50d4de51da1",
+      "baselineVerifiedSha256": null,
+      "checkEntrySha256": "7f6fb9be98d45c868919a24c36636d425258a632f4709eda4de1e50d4de51da1"
+    }
+  ],
+  "priorReviewedFiles": [
+    {
+      "path": "src/db/taskGenerationEvidence.ts",
+      "reviewedSha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+      "entrySha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+      "unit": "C01",
+      "checkEntrySha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312"
+    },
+    {
+      "path": "src/db/agentTaskRecords.ts",
+      "reviewedSha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+      "entrySha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+      "unit": "C01",
+      "checkEntrySha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25"
+    },
+    {
+      "path": "src/lib/agent/wrapupEvidence.ts",
+      "reviewedSha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "entrySha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "unit": "C01",
+      "checkEntrySha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17"
+    },
+    {
+      "path": "tests/agentGenerationEvidence.test.ts",
+      "reviewedSha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+      "entrySha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+      "unit": "C01",
+      "checkEntrySha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678"
+    },
+    {
+      "path": "tests/agentTaskWrapup.test.ts",
+      "reviewedSha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+      "entrySha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+      "unit": "C01",
+      "checkEntrySha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a"
+    },
+    {
+      "path": "tests/agentTaskOrchestrationReview.test.ts",
+      "reviewedSha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+      "entrySha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+      "unit": "C01",
+      "checkEntrySha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8"
+    },
+    {
+      "path": "scripts/c01-browser-regression.mjs",
+      "reviewedSha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+      "entrySha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+      "unit": "C01",
+      "checkEntrySha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6"
+    },
+    {
+      "path": "tests/fixtures/c01/harness.ts",
+      "reviewedSha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+      "entrySha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+      "unit": "C01",
+      "checkEntrySha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502"
+    },
+    {
+      "path": "tests/fixtures/c01/index.html",
+      "reviewedSha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+      "entrySha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+      "unit": "C01",
+      "checkEntrySha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47"
+    },
+    {
+      "path": "src/domain/music.ts",
+      "reviewedSha256": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+      "entrySha256": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+      "unit": "C02",
+      "checkEntrySha256": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da"
+    },
+    {
+      "path": "src/db/music.ts",
+      "reviewedSha256": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+      "entrySha256": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+      "unit": "C02",
+      "checkEntrySha256": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54"
+    },
+    {
+      "path": "src/lib/agent/musicTools.ts",
+      "reviewedSha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+      "entrySha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+      "unit": "C02",
+      "checkEntrySha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87"
+    },
+    {
+      "path": "src/lib/audioGeneration/input.ts",
+      "reviewedSha256": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+      "entrySha256": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+      "unit": "C02",
+      "checkEntrySha256": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62"
+    },
+    {
+      "path": "src/lib/ai/apimartAudio.ts",
+      "reviewedSha256": "8cb50863b0aab40e1ddfe9b956b938125eba4f170bcd463f2cce24e7e5eb2c59",
+      "entrySha256": "8cb50863b0aab40e1ddfe9b956b938125eba4f170bcd463f2cce24e7e5eb2c59",
+      "unit": "C02",
+      "checkEntrySha256": "8cb50863b0aab40e1ddfe9b956b938125eba4f170bcd463f2cce24e7e5eb2c59"
+    },
+    {
+      "path": "src/lib/audioProjectPackage.ts",
+      "reviewedSha256": "12a0c856dceccf6ce249c1b367e4b3ea0d4f67d315427adfcd57bd1e0d1691bc",
+      "entrySha256": "12a0c856dceccf6ce249c1b367e4b3ea0d4f67d315427adfcd57bd1e0d1691bc",
+      "unit": "C02",
+      "checkEntrySha256": "12a0c856dceccf6ce249c1b367e4b3ea0d4f67d315427adfcd57bd1e0d1691bc"
+    },
+    {
+      "path": "src/components/music/MusicCreation.tsx",
+      "reviewedSha256": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c",
+      "entrySha256": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c",
+      "unit": "C02",
+      "checkEntrySha256": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c"
+    },
+    {
+      "path": "tests/musicDurationContract.test.ts",
+      "reviewedSha256": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399",
+      "entrySha256": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399",
+      "unit": "C02",
+      "checkEntrySha256": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399"
+    },
+    {
+      "path": "tests/musicLegacyDurationRepair.test.ts",
+      "reviewedSha256": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e",
+      "entrySha256": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e",
+      "unit": "C02",
+      "checkEntrySha256": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e"
+    },
+    {
+      "path": "scripts/c02-browser-regression.mjs",
+      "reviewedSha256": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+      "entrySha256": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+      "unit": "C02",
+      "checkEntrySha256": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84"
+    },
+    {
+      "path": "tests/fixtures/c02/harness.tsx",
+      "reviewedSha256": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+      "entrySha256": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+      "unit": "C02",
+      "checkEntrySha256": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22"
+    },
+    {
+      "path": "tests/fixtures/c02/index.html",
+      "reviewedSha256": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8",
+      "entrySha256": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8",
+      "unit": "C02",
+      "checkEntrySha256": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8"
+    }
+  ]
+}

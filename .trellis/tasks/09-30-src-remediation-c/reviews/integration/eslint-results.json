@@ -1,0 +1,2263 @@
+[
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/AudioExports.tsx",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/AudioTimeline.tsx",
+    "messages": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'AudioTimeline' has a complexity of 41. Maximum allowed is 20.",
+        "line": 99,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 99,
+        "endColumn": 30
+      },
+      {
+        "ruleId": "sonarjs/no-duplicated-branches",
+        "severity": 1,
+        "message": "This branch's code block is the same as the block for the branch on line 157.",
+        "line": 158,
+        "column": 42,
+        "nodeType": "ExpressionStatement",
+        "messageId": "sameConditionalBlock",
+        "endLine": 158,
+        "endColumn": 79
+      },
+      {
+        "ruleId": "react-hooks/exhaustive-deps",
+        "severity": 1,
+        "message": "The ref value 'playEpoch.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'playEpoch.current' to a variable inside the effect, and use that variable in the cleanup function.",
+        "line": 170,
+        "column": 23,
+        "nodeType": "Identifier",
+        "endLine": 170,
+        "endColumn": 30
+      },
+      {
+        "ruleId": "react-hooks/exhaustive-deps",
+        "severity": 1,
+        "message": "React Hook useEffect has missing dependencies: 'geometry.pixelsPerSecond', 'seekRequest', and 'viewportWidth'. Either include them or remove the dependency array.",
+        "line": 207,
+        "column": 8,
+        "nodeType": "ArrayExpression",
+        "endLine": 207,
+        "endColumn": 25,
+        "suggestions": [
+          {
+            "desc": "Update the dependencies array to be: [geometry.pixelsPerSecond, seekRequest, seekRequest.id, viewportWidth]",
+            "fix": {
+              "range": [
+                8283,
+                8300
+              ],
+              "text": "[geometry.pixelsPerSecond, seekRequest, seekRequest.id, viewportWidth]"
+            }
+          }
+        ]
+      },
+      {
+        "ruleId": "prefer-const",
+        "severity": 2,
+        "message": "'next' is never reassigned. Use 'const' instead.",
+        "line": 373,
+        "column": 13,
+        "nodeType": "Identifier",
+        "messageId": "useConst",
+        "endLine": 373,
+        "endColumn": 17,
+        "fix": {
+          "range": [
+            15497,
+            15521
+          ],
+          "text": "const next = {...current};"
+        }
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 412,
+        "column": 19,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 412,
+        "endColumn": 79
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 545,
+        "column": 66,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 545,
+        "endColumn": 130
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 561,
+        "column": 38,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 561,
+        "endColumn": 180
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 0,
+    "warningCount": 7,
+    "fixableErrorCount": 1,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/music/MusicCreation.tsx",
+    "messages": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'MusicCreation' has a complexity of 40. Maximum allowed is 20.",
+        "line": 19,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 19,
+        "endColumn": 30
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 27 to the 20 allowed.",
+        "line": 19,
+        "column": 17,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 19,
+        "endColumn": 30
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 2,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTaskRecords.ts",
+    "messages": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'validateTaskSources' has a complexity of 41. Maximum allowed is 20.",
+        "line": 41,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 41,
+        "endColumn": 42
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 28 to the 20 allowed.",
+        "line": 41,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 41,
+        "endColumn": 42
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'writeTaskRecord' has a complexity of 28. Maximum allowed is 20.",
+        "line": 72,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 72,
+        "endColumn": 38
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 3,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/music.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/repo.ts",
+    "messages": [
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 24 to the 20 allowed.",
+        "line": 273,
+        "column": 65,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 273,
+        "endColumn": 67
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'collectMediaIds' has a complexity of 32. Maximum allowed is 20.",
+        "line": 648,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 648,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 39 to the 20 allowed.",
+        "line": 648,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 648,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 33 to the 20 allowed.",
+        "line": 776,
+        "column": 18,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 776,
+        "endColumn": 20
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async arrow function has a complexity of 23. Maximum allowed is 20.",
+        "line": 776,
+        "column": 18,
+        "nodeType": "ArrowFunctionExpression",
+        "messageId": "complex",
+        "endLine": 776,
+        "endColumn": 20
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 781,
+        "column": 17,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 787,
+        "endColumn": 60
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 783,
+        "column": 23,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 787,
+        "endColumn": 60
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 793,
+        "column": 17,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 799,
+        "endColumn": 93
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 795,
+        "column": 23,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 799,
+        "endColumn": 93
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since it does not change the type of the expression.",
+        "line": 1303,
+        "column": 24,
+        "nodeType": "TSNonNullExpression",
+        "messageId": "unnecessaryAssertion",
+        "endLine": 1303,
+        "endColumn": 49,
+        "fix": {
+          "range": [
+            54032,
+            54033
+          ],
+          "text": ""
+        }
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async arrow function has a complexity of 21. Maximum allowed is 20.",
+        "line": 1441,
+        "column": 61,
+        "nodeType": "ArrowFunctionExpression",
+        "messageId": "complex",
+        "endLine": 1441,
+        "endColumn": 63
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 0,
+    "warningCount": 10,
+    "fixableErrorCount": 1,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/taskGenerationEvidence.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/domain/music.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/generationRuntime.ts",
+    "messages": [
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+        "line": 58,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 58,
+        "endColumn": 43
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 60,
+        "column": 20,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 61,
+        "endColumn": 175
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 60,
+        "column": 83,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 61,
+        "endColumn": 175
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 61,
+        "column": 11,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 61,
+        "endColumn": 175
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 68,
+        "column": 18,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 69,
+        "endColumn": 70
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since it does not change the type of the expression.",
+        "line": 69,
+        "column": 43,
+        "nodeType": "TSNonNullExpression",
+        "messageId": "unnecessaryAssertion",
+        "endLine": 69,
+        "endColumn": 55,
+        "fix": {
+          "range": [
+            3400,
+            3401
+          ],
+          "text": ""
+        }
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 81,
+        "column": 20,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 81,
+        "endColumn": 145
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 81,
+        "column": 65,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 81,
+        "endColumn": 145
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'prepareGenerationSnapshot' has a complexity of 22. Maximum allowed is 20.",
+        "line": 112,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 112,
+        "endColumn": 48
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 22 to the 20 allowed.",
+        "line": 112,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 112,
+        "endColumn": 48
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 24 to the 20 allowed.",
+        "line": 191,
+        "column": 16,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 191,
+        "endColumn": 29
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'submitClaimedGeneration' has a complexity of 25. Maximum allowed is 20.",
+        "line": 289,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 289,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 46 to the 20 allowed.",
+        "line": 289,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 289,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 347,
+        "column": 29,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 347,
+        "endColumn": 208
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 364,
+        "column": 21,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 364,
+        "endColumn": 97
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'checkAgentGeneration' has a complexity of 26. Maximum allowed is 20.",
+        "line": 442,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 442,
+        "endColumn": 43
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 23 to the 20 allowed.",
+        "line": 442,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 442,
+        "endColumn": 43
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async arrow function has a complexity of 23. Maximum allowed is 20.",
+        "line": 583,
+        "column": 48,
+        "nodeType": "ArrowFunctionExpression",
+        "messageId": "complex",
+        "endLine": 583,
+        "endColumn": 50
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 0,
+    "warningCount": 17,
+    "fixableErrorCount": 1,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/musicTools.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/wrapupEvidence.ts",
+    "messages": [
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-assignment",
+        "severity": 2,
+        "message": "Unsafe assignment of an `any` value.",
+        "line": 20,
+        "column": 15,
+        "nodeType": "VariableDeclarator",
+        "messageId": "anyAssignment",
+        "endLine": 20,
+        "endColumn": 77
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-return",
+        "severity": 2,
+        "message": "Unsafe return of a value of type `any`.",
+        "line": 21,
+        "column": 9,
+        "nodeType": "ReturnStatement",
+        "messageId": "unsafeReturn",
+        "endLine": 21,
+        "endColumn": 93
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'collectWrapupSnapshot' has a complexity of 91. Maximum allowed is 20.",
+        "line": 28,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 28,
+        "endColumn": 44
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 139 to the 20 allowed.",
+        "line": 28,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 28,
+        "endColumn": 44
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 80,
+        "column": 52,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 80,
+        "endColumn": 213
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 80,
+        "column": 89,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 80,
+        "endColumn": 213
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 80,
+        "column": 103,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 80,
+        "endColumn": 203
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 110,
+        "column": 30,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 110,
+        "endColumn": 113
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 119,
+        "column": 26,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 119,
+        "endColumn": 192
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 120,
+        "column": 24,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 120,
+        "endColumn": 111
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 122,
+        "column": 72,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 122,
+        "endColumn": 179
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 122,
+        "column": 181,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 122,
+        "endColumn": 296
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 169,
+        "column": 24,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 169,
+        "endColumn": 85
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 204,
+        "column": 22,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 204,
+        "endColumn": 102
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since it does not change the type of the expression.",
+        "line": 234,
+        "column": 120,
+        "nodeType": "TSNonNullExpression",
+        "messageId": "unnecessaryAssertion",
+        "endLine": 234,
+        "endColumn": 135,
+        "fix": {
+          "range": [
+            12811,
+            12812
+          ],
+          "text": ""
+        }
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 3,
+    "fatalErrorCount": 0,
+    "warningCount": 12,
+    "fixableErrorCount": 1,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/aihubmix.ts",
+    "messages": [
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 134,
+        "column": 15,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 134,
+        "endColumn": 117
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since it does not change the type of the expression.",
+        "line": 224,
+        "column": 96,
+        "nodeType": "TSNonNullExpression",
+        "messageId": "unnecessaryAssertion",
+        "endLine": 224,
+        "endColumn": 115,
+        "fix": {
+          "range": [
+            10569,
+            10570
+          ],
+          "text": ""
+        }
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 230,
+        "column": 29,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 230,
+        "endColumn": 90
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since it does not change the type of the expression.",
+        "line": 268,
+        "column": 23,
+        "nodeType": "TSNonNullExpression",
+        "messageId": "unnecessaryAssertion",
+        "endLine": 268,
+        "endColumn": 37,
+        "fix": {
+          "range": [
+            13232,
+            13233
+          ],
+          "text": ""
+        }
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'parseTask' has a complexity of 31. Maximum allowed is 20.",
+        "line": 273,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 273,
+        "endColumn": 19
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 28 to the 20 allowed.",
+        "line": 273,
+        "column": 10,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 273,
+        "endColumn": 19
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 303,
+        "column": 43,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 303,
+        "endColumn": 100
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since it does not change the type of the expression.",
+        "line": 309,
+        "column": 63,
+        "nodeType": "TSNonNullExpression",
+        "messageId": "unnecessaryAssertion",
+        "endLine": 309,
+        "endColumn": 88,
+        "fix": {
+          "range": [
+            15827,
+            15828
+          ],
+          "text": ""
+        }
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'downloadAIHubMixResult' has a complexity of 35. Maximum allowed is 20.",
+        "line": 362,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 362,
+        "endColumn": 45
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 26 to the 20 allowed.",
+        "line": 362,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 362,
+        "endColumn": 45
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 3,
+    "fatalErrorCount": 0,
+    "warningCount": 7,
+    "fixableErrorCount": 3,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/apimartAudio.ts",
+    "messages": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'getApimartMusicTask' has a complexity of 32. Maximum allowed is 20.",
+        "line": 206,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 206,
+        "endColumn": 42
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 46 to the 20 allowed.",
+        "line": 206,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 206,
+        "endColumn": 42
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 243,
+        "column": 17,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 243,
+        "endColumn": 216
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 3,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/boundedResponse.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/boundedSse.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/chatStream.ts",
+    "messages": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'decodeCompletion' has a complexity of 27. Maximum allowed is 20.",
+        "line": 194,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 194,
+        "endColumn": 26
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 27 to the 20 allowed.",
+        "line": 194,
+        "column": 10,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 194,
+        "endColumn": 26
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 202,
+        "column": 25,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 203,
+        "endColumn": 77
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-assignment",
+        "severity": 2,
+        "message": "Unsafe assignment of an `any` value.",
+        "line": 207,
+        "column": 11,
+        "nodeType": "VariableDeclarator",
+        "messageId": "anyAssignment",
+        "endLine": 207,
+        "endColumn": 35
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 37 to the 20 allowed.",
+        "line": 240,
+        "column": 9,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 240,
+        "endColumn": 13
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Method 'push' has a complexity of 28. Maximum allowed is 20.",
+        "line": 240,
+        "column": 9,
+        "nodeType": "FunctionExpression",
+        "messageId": "complex",
+        "endLine": 240,
+        "endColumn": 13
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 302,
+        "column": 25,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 306,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 303,
+        "column": 15,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 306,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'streamChatCompletions' has a complexity of 33. Maximum allowed is 20.",
+        "line": 331,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 331,
+        "endColumn": 44
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 25 to the 20 allowed.",
+        "line": 331,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 331,
+        "endColumn": 44
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 370,
+        "column": 28,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 370,
+        "endColumn": 174
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 0,
+    "warningCount": 10,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/mimoSpeech.ts",
+    "messages": [
+      {
+        "ruleId": "@typescript-eslint/no-redundant-type-constituents",
+        "severity": 2,
+        "message": "'unknown' overrides all other types in this union type.",
+        "line": 61,
+        "column": 99,
+        "nodeType": "TSUnknownKeyword",
+        "messageId": "overrides",
+        "endLine": 61,
+        "endColumn": 106
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'generateMimoSpeech' has a complexity of 53. Maximum allowed is 20.",
+        "line": 128,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 128,
+        "endColumn": 41
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 37 to the 20 allowed.",
+        "line": 128,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 128,
+        "endColumn": 41
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-assignment",
+        "severity": 2,
+        "message": "Unsafe assignment of an `any` value.",
+        "line": 164,
+        "column": 11,
+        "nodeType": "VariableDeclarator",
+        "messageId": "anyAssignment",
+        "endLine": 164,
+        "endColumn": 93
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 2,
+    "fatalErrorCount": 0,
+    "warningCount": 2,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/responsesStream.ts",
+    "messages": [
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 33 to the 20 allowed.",
+        "line": 76,
+        "column": 56,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 76,
+        "endColumn": 58
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Arrow function has a complexity of 27. Maximum allowed is 20.",
+        "line": 76,
+        "column": 56,
+        "nodeType": "ArrowFunctionExpression",
+        "messageId": "complex",
+        "endLine": 76,
+        "endColumn": 58
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'streamResponses' has a complexity of 31. Maximum allowed is 20.",
+        "line": 137,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 137,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 22 to the 20 allowed.",
+        "line": 137,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 137,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 174,
+        "column": 28,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 174,
+        "endColumn": 201
+      },
+      {
+        "ruleId": "@typescript-eslint/restrict-template-expressions",
+        "severity": 2,
+        "message": "Invalid type \"unknown\" of template literal expression.",
+        "line": 245,
+        "column": 75,
+        "nodeType": "MemberExpression",
+        "messageId": "invalidType",
+        "endLine": 245,
+        "endColumn": 96
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 0,
+    "warningCount": 5,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/tavily.ts",
+    "messages": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'request' has a complexity of 29. Maximum allowed is 20.",
+        "line": 36,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 36,
+        "endColumn": 23
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 39 to the 20 allowed.",
+        "line": 36,
+        "column": 16,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 36,
+        "endColumn": 23
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 58,
+        "column": 26,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 58,
+        "endColumn": 199
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 58,
+        "column": 98,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 58,
+        "endColumn": 199
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 59,
+        "column": 29,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 59,
+        "endColumn": 206
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 59,
+        "column": 85,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 59,
+        "endColumn": 206
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 69,
+        "column": 27,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 69,
+        "endColumn": 101
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 69,
+        "column": 103,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 69,
+        "endColumn": 238
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'executeWebRequest' has a complexity of 34. Maximum allowed is 20.",
+        "line": 77,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 77,
+        "endColumn": 40
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 29 to the 20 allowed.",
+        "line": 77,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 77,
+        "endColumn": 40
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 10,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audio/engine.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audio/fingerprint.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audio/recorder.ts",
+    "messages": [
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since it does not change the type of the expression.",
+        "line": 118,
+        "column": 29,
+        "nodeType": "TSNonNullExpression",
+        "messageId": "unnecessaryAssertion",
+        "endLine": 118,
+        "endColumn": 42,
+        "fix": {
+          "range": [
+            4953,
+            4954
+          ],
+          "text": ""
+        }
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since it does not change the type of the expression.",
+        "line": 121,
+        "column": 35,
+        "nodeType": "TSNonNullExpression",
+        "messageId": "unnecessaryAssertion",
+        "endLine": 121,
+        "endColumn": 48,
+        "fix": {
+          "range": [
+            5131,
+            5132
+          ],
+          "text": ""
+        }
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 2,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 2,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/input.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioProjectPackage.ts",
+    "messages": [
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-assignment",
+        "severity": 2,
+        "message": "Unsafe assignment of an `any` value.",
+        "line": 200,
+        "column": 11,
+        "nodeType": "VariableDeclarator",
+        "messageId": "anyAssignment",
+        "endLine": 200,
+        "endColumn": 44
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-member-access",
+        "severity": 2,
+        "message": "Unsafe member access .audioGenerationJobs on an `any` value.",
+        "line": 201,
+        "column": 9,
+        "nodeType": "Identifier",
+        "messageId": "unsafeMemberExpression",
+        "endLine": 201,
+        "endColumn": 28
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'remapAudioPackage' has a complexity of 36. Maximum allowed is 20.",
+        "line": 229,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 229,
+        "endColumn": 34
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 64 to the 20 allowed.",
+        "line": 229,
+        "column": 17,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 229,
+        "endColumn": 34
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'insertAudioPackage' has a complexity of 26. Maximum allowed is 20.",
+        "line": 283,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 283,
+        "endColumn": 41
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 34 to the 20 allowed.",
+        "line": 283,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 283,
+        "endColumn": 41
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 2,
+    "fatalErrorCount": 0,
+    "warningCount": 4,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/projectPackage.ts",
+    "messages": [
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+        "line": 62,
+        "column": 12,
+        "nodeType": "TSAsExpression",
+        "messageId": "contextuallyUnnecessary",
+        "endLine": 62,
+        "endColumn": 50,
+        "fix": {
+          "range": [
+            1984,
+            2011
+          ],
+          "text": ""
+        }
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.coverMediaId' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 184,
+        "column": 44,
+        "nodeType": "MemberExpression",
+        "messageId": "baseToString",
+        "endLine": 184,
+        "endColumn": 60
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.coverMediaId' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 185,
+        "column": 22,
+        "nodeType": "MemberExpression",
+        "messageId": "baseToString",
+        "endLine": 185,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"prj\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 190,
+        "column": 20,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 190,
+        "endColumn": 45
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.name ?? fallbackName' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 191,
+        "column": 22,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 191,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 201,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 201,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 202,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 202,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since it does not change the type of the expression.",
+        "line": 206,
+        "column": 24,
+        "nodeType": "TSAsExpression",
+        "messageId": "unnecessaryAssertion",
+        "endLine": 206,
+        "endColumn": 49,
+        "fix": {
+          "range": [
+            6719,
+            6737
+          ],
+          "text": ""
+        }
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"chr\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 264,
+        "column": 20,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 264,
+        "endColumn": 45
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.name ?? \"未命名角色\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 269,
+        "column": 22,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 269,
+        "endColumn": 41
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.bio ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 270,
+        "column": 21,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 270,
+        "endColumn": 34
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.appearance ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 271,
+        "column": 28,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 271,
+        "endColumn": 48
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 272,
+        "column": 23,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 272,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 274,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 274,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 275,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 275,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"scn\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 300,
+        "column": 20,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 300,
+        "endColumn": 45
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.name ?? \"未命名场景\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 304,
+        "column": 22,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 304,
+        "endColumn": 41
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.location ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 305,
+        "column": 26,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 305,
+        "endColumn": 44
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.timeOfDay ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 306,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 306,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.atmosphere ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 307,
+        "column": 28,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 307,
+        "endColumn": 48
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 308,
+        "column": 23,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 308,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 310,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 310,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 311,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 311,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"prp\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 336,
+        "column": 20,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 336,
+        "endColumn": 45
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.name ?? \"未命名道具\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 343,
+        "column": 22,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 343,
+        "endColumn": 41
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.kind ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 344,
+        "column": 22,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 344,
+        "endColumn": 36
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 345,
+        "column": 23,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 345,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 347,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 347,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 348,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 348,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"sty\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 372,
+        "column": 20,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 372,
+        "endColumn": 45
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.name ?? \"未命名风格\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 379,
+        "column": 22,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 379,
+        "endColumn": 41
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 380,
+        "column": 23,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 380,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 382,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 382,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 383,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 383,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"ep\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 462,
+        "column": 20,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 462,
+        "endColumn": 44
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.title ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 465,
+        "column": 23,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 465,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 470,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 470,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 471,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 471,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'parseShot' has a complexity of 21. Maximum allowed is 20.",
+        "line": 523,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 523,
+        "endColumn": 19
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"sht\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 531,
+        "column": 20,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 531,
+        "endColumn": 45
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.episodeId ?? episodeId' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 533,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 533,
+        "endColumn": 53
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.shotNumber ?? index + 1' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 535,
+        "column": 28,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 535,
+        "endColumn": 55
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.category ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 542,
+        "column": 26,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 542,
+        "endColumn": 44
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.content ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 544,
+        "column": 25,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 544,
+        "endColumn": 42
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 545,
+        "column": 23,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 545,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.sceneCloseup ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 546,
+        "column": 30,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 546,
+        "endColumn": 52
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.sound ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 547,
+        "column": 23,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 547,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.emotion ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 548,
+        "column": 25,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 548,
+        "endColumn": 42
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.cameraAngle ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 549,
+        "column": 29,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 549,
+        "endColumn": 50
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.cameraGear ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 550,
+        "column": 28,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 550,
+        "endColumn": 48
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.focalLength ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 551,
+        "column": 29,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 551,
+        "endColumn": 50
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.sceneId' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 555,
+        "column": 39,
+        "nodeType": "MemberExpression",
+        "messageId": "baseToString",
+        "endLine": 555,
+        "endColumn": 50
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.beatId' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 556,
+        "column": 37,
+        "nodeType": "MemberExpression",
+        "messageId": "baseToString",
+        "endLine": 556,
+        "endColumn": 47
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'parseMemoryPackage' has a complexity of 26. Maximum allowed is 20.",
+        "line": 603,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 603,
+        "endColumn": 28
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+        "line": 603,
+        "column": 10,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 603,
+        "endColumn": 28
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'importProjectZip' has a complexity of 47. Maximum allowed is 20.",
+        "line": 868,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 868,
+        "endColumn": 39
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 36 to the 20 allowed.",
+        "line": 868,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 868,
+        "endColumn": 39
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+        "line": 1031,
+        "column": 22,
+        "nodeType": "TSAsExpression",
+        "messageId": "contextuallyUnnecessary",
+        "endLine": 1036,
+        "endColumn": 27,
+        "fix": {
+          "range": [
+            35837,
+            35854
+          ],
+          "text": ""
+        }
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+        "line": 1043,
+        "column": 23,
+        "nodeType": "TSAsExpression",
+        "messageId": "contextuallyUnnecessary",
+        "endLine": 1048,
+        "endColumn": 34,
+        "fix": {
+          "range": [
+            36250,
+            36274
+          ],
+          "text": ""
+        }
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 1055,
+        "column": 28,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 1057,
+        "endColumn": 56
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 54,
+    "fatalErrorCount": 0,
+    "warningCount": 6,
+    "fixableErrorCount": 4,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/resource/limits.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  }
+]

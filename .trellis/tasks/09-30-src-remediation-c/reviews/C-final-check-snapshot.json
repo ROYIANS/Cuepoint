@@ -1,0 +1,1196 @@
+{
+  "schemaVersion": 1,
+  "role": "trellis-check",
+  "unit": "WHOLE-C",
+  "status": "PASS",
+  "completedAt": "2026-09-30T23:44:57.326972+08:00",
+  "baselineRevision": "028e60070c14552025a3493e65f032350fdba8b5",
+  "scope": [
+    "scripts/c01-browser-regression.mjs",
+    "scripts/c02-browser-regression.mjs",
+    "src/components/audio/AudioExports.tsx",
+    "src/components/audio/AudioTimeline.tsx",
+    "src/components/music/MusicCreation.tsx",
+    "src/db/agentTaskRecords.ts",
+    "src/db/music.ts",
+    "src/db/repo.ts",
+    "src/db/taskGenerationEvidence.ts",
+    "src/domain/music.ts",
+    "src/lib/agent/generationRuntime.ts",
+    "src/lib/agent/musicTools.ts",
+    "src/lib/agent/wrapupEvidence.ts",
+    "src/lib/ai/aihubmix.ts",
+    "src/lib/ai/apimartAudio.ts",
+    "src/lib/ai/boundedResponse.ts",
+    "src/lib/ai/boundedSse.ts",
+    "src/lib/ai/chatStream.ts",
+    "src/lib/ai/mimoSpeech.ts",
+    "src/lib/ai/responsesStream.ts",
+    "src/lib/ai/tavily.ts",
+    "src/lib/audio/engine.ts",
+    "src/lib/audio/fingerprint.ts",
+    "src/lib/audio/recorder.ts",
+    "src/lib/audioGeneration/input.ts",
+    "src/lib/audioProjectPackage.ts",
+    "src/lib/projectPackage.ts",
+    "src/lib/resource/limits.ts",
+    "tests/agentGenerationEvidence.test.ts",
+    "tests/agentTaskOrchestrationReview.test.ts",
+    "tests/agentTaskWrapup.test.ts",
+    "tests/aihubmix.test.ts",
+    "tests/apimartAudio.test.ts",
+    "tests/audioFingerprint.test.ts",
+    "tests/audioGenerationRuntime.test.ts",
+    "tests/b03IntentBoundaries.test.ts",
+    "tests/boundedAudioRuntime.test.ts",
+    "tests/boundedChatInput.test.ts",
+    "tests/boundedInput.test.ts",
+    "tests/fixtures/c01/harness.ts",
+    "tests/fixtures/c01/index.html",
+    "tests/fixtures/c02/harness.tsx",
+    "tests/fixtures/c02/index.html",
+    "tests/mediaPatchBoundary.test.ts",
+    "tests/musicDurationContract.test.ts",
+    "tests/musicLegacyDurationRepair.test.ts",
+    "tests/parentProjectWrites.test.ts",
+    "tests/productionContext.test.ts",
+    "tests/projectPackage.test.ts",
+    "tests/projectPackageRelations.test.ts",
+    "tests/repo.test.ts"
+  ],
+  "scopeCount": 51,
+  "beforeMeaning": "SHA-256 of each product file at B baselineRevision; null means absent/new.",
+  "afterMeaning": "Final product SHA-256, equal to final review input, latest independent unit attribution and immutable gate.",
+  "before": {
+    "scripts/c01-browser-regression.mjs": null,
+    "scripts/c02-browser-regression.mjs": null,
+    "src/components/audio/AudioExports.tsx": "7ef73d447762d1323a7d6e993acb43d5e73f4577fa544cc51ceacaeddfe70604",
+    "src/components/audio/AudioTimeline.tsx": "9fd89a8534e9cbca8dd2f6027875ffdf8066292457c9e9a45c6ef1705fb74c7d",
+    "src/components/music/MusicCreation.tsx": "50d329e47704379ecc18471db94df1e0e2c666c0fb0b78c4eed95d69f8a84c18",
+    "src/db/agentTaskRecords.ts": "3fc791ec6956a6f0614be5bd4e65c1dd1696bc752cc4870efcaad9c3e8abd39b",
+    "src/db/music.ts": "8e5f0a9024fdf2088f33589c0f29dbc6d3d56081d48eba1e468079b9b6db6c66",
+    "src/db/repo.ts": "f87b802e9b9eea8a4642e60bd8ed9180d1f1b9113c3de42d2e6717176f2792cd",
+    "src/db/taskGenerationEvidence.ts": null,
+    "src/domain/music.ts": "2de36b872009f620cb5c7a0d4a603db339cb151d7938ecd87b6b118cbacd6bfd",
+    "src/lib/agent/generationRuntime.ts": "3ac7a47e0562eb4463b342e755cb56a8b88adcd2b2da82b694311d15bd3e1a17",
+    "src/lib/agent/musicTools.ts": "3fcad6e83c1dd598a90bec73c56d304873ef531c5ae2955d3511a33bb75d0a8f",
+    "src/lib/agent/wrapupEvidence.ts": "aec3a8feadc5918a8661ca20ab5bc396748a302b4e303f0c2a9eeff93003d1b3",
+    "src/lib/ai/aihubmix.ts": "16064fc1be6405aaa48cdfd9cb234742890865aabf345fa72018f7bbde453c8f",
+    "src/lib/ai/apimartAudio.ts": "072ef52ecadf96230346389a22bb14e3f630cc0ac590a9e538abdb0d7caa3611",
+    "src/lib/ai/boundedResponse.ts": null,
+    "src/lib/ai/boundedSse.ts": null,
+    "src/lib/ai/chatStream.ts": "f888c390808ee1ec5bfe9f40e27431da7609bcfe9ce5dca9e60c331c6a2e2537",
+    "src/lib/ai/mimoSpeech.ts": "ad4c12a6c597b639f99f4b9e3c2d15a6c358c976b6795ef6834ba6e3d7db2e49",
+    "src/lib/ai/responsesStream.ts": "3c6af3e7aa342ade6f314ffd3ea28411a89850399dab8002b96ef89dcce4af72",
+    "src/lib/ai/tavily.ts": "c07e7593f3acead8a5ae50aa473b6158da55aba2d5f93b5891416b8a0e47243e",
+    "src/lib/audio/engine.ts": "b078307b4294dd4a6a07ec05478508e18185e9c675b828f2e2ab3972f51f2d77",
+    "src/lib/audio/fingerprint.ts": null,
+    "src/lib/audio/recorder.ts": "76116bfb267ae29d294c9fda17383708fd485f7c668a1b328aa6ddfeafcb203b",
+    "src/lib/audioGeneration/input.ts": "fa5aa467fcaccee5e91006d1291d92cdfab8ab53b09d4d23ca923f515166d2e2",
+    "src/lib/audioProjectPackage.ts": "3f14040e3545ed08de7778ea2722e6c9f497023ecf7dd3984a6f63bbc50655ca",
+    "src/lib/projectPackage.ts": "1e07966b6ac71077c8afac7dd739beec3b92323129dc48c766dbd653e18104ad",
+    "src/lib/resource/limits.ts": null,
+    "tests/agentGenerationEvidence.test.ts": null,
+    "tests/agentTaskOrchestrationReview.test.ts": "e82331b92695434c37f9b8d2b86b06e8bfd3d16728d034772039c2beb7dd25af",
+    "tests/agentTaskWrapup.test.ts": "7d583c56ed87f1e8f5be35bd0a72bf713edc8abf06618c381def4ddecdbd1740",
+    "tests/aihubmix.test.ts": "a4f464d2e8d031c9afc0e361bc897d4717453ffd32671bb86b2be356104c282f",
+    "tests/apimartAudio.test.ts": "b109ec2bd706dac444166ce939572ad7fa954cb432e245f646075d7598acbbcd",
+    "tests/audioFingerprint.test.ts": null,
+    "tests/audioGenerationRuntime.test.ts": "ce2114f93c02f15de71c2d4c57b997a1db9983f4f2a5c84d09c20c7e648c7c96",
+    "tests/b03IntentBoundaries.test.ts": "c4619b7cf76ea84b42945777df36e96d8a360d57a342585be9784dd25432d528",
+    "tests/boundedAudioRuntime.test.ts": null,
+    "tests/boundedChatInput.test.ts": null,
+    "tests/boundedInput.test.ts": null,
+    "tests/fixtures/c01/harness.ts": null,
+    "tests/fixtures/c01/index.html": null,
+    "tests/fixtures/c02/harness.tsx": null,
+    "tests/fixtures/c02/index.html": null,
+    "tests/mediaPatchBoundary.test.ts": null,
+    "tests/musicDurationContract.test.ts": null,
+    "tests/musicLegacyDurationRepair.test.ts": null,
+    "tests/parentProjectWrites.test.ts": null,
+    "tests/productionContext.test.ts": "c4318ab029f7b77fedbd20ede6b22387af1b3654ad5044e336036d4bcb2513fc",
+    "tests/projectPackage.test.ts": "a9a5a7675f2d38e1ab51c1148a1eca6bb9dd4b72ec2915460337d724d96a50c3",
+    "tests/projectPackageRelations.test.ts": null,
+    "tests/repo.test.ts": "90e63020910f37c32a833a8876d4ee96c8334af35dd3c895ff6490c42016c753"
+  },
+  "checkerEntry": {
+    "scripts/c01-browser-regression.mjs": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+    "scripts/c02-browser-regression.mjs": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+    "src/components/audio/AudioExports.tsx": "45fb461bff60e6fabad1eae899a51be95786722edc3b04bc9204ff5e514a4d75",
+    "src/components/audio/AudioTimeline.tsx": "607778048835edc4aae79c144a9c86f8a43733707aeabc5f3d602a4d6d3a84b2",
+    "src/components/music/MusicCreation.tsx": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c",
+    "src/db/agentTaskRecords.ts": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+    "src/db/music.ts": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+    "src/db/repo.ts": "614201eb96fce410aebabb18b7f9f6a5864596952f5716e4bda94d5ac5b5a33f",
+    "src/db/taskGenerationEvidence.ts": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+    "src/domain/music.ts": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+    "src/lib/agent/generationRuntime.ts": "3b8666ffe35474cd811cc34ae55290526a11ca14b9ac0b212d6d19ee49b6fb86",
+    "src/lib/agent/musicTools.ts": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+    "src/lib/agent/wrapupEvidence.ts": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+    "src/lib/ai/aihubmix.ts": "c6a66b5fdb0904d1765b70f04b38769f55ec5a6c70feae757396adffbb4233c9",
+    "src/lib/ai/apimartAudio.ts": "b039e073947defcfc5b69a1e33fd2b7a39779c33159ba4eb65cd632509362d9e",
+    "src/lib/ai/boundedResponse.ts": "92cc47f78623f8c1c8e7d864a9f4af655c5b498077f8b0e93de25eefc9be8384",
+    "src/lib/ai/boundedSse.ts": "8626015eebd251a1956992f6274d679f8e3cd6af556e2e4acb9acf72fe925894",
+    "src/lib/ai/chatStream.ts": "ede7b8806f165128a864f948435defc700c226a4656041c6a485c0f3342cdf6d",
+    "src/lib/ai/mimoSpeech.ts": "0be180a9ed8767321126cc7b49ba3f16836e625466e3d43c105c46e9dcaf62c8",
+    "src/lib/ai/responsesStream.ts": "7a641a8da7404523939998ea6618989e9823bb1f63e24dec9aad5076e2eabee7",
+    "src/lib/ai/tavily.ts": "b24c36e3ef77e85585b6d72ca684b40e2f7c7e5d758696abea5ea945a0c98ae4",
+    "src/lib/audio/engine.ts": "d7729b85c481dbd05ed4850862c64e5bf8c6ad9297064e142fe0fdaa05679e28",
+    "src/lib/audio/fingerprint.ts": "2e75f9a80cc117c5f9a2b0aa0528f9f28be1e5d00cc3826376e1fedcabb4ef59",
+    "src/lib/audio/recorder.ts": "3b9eadfeec03eed1a9f5a3424457cdc588f5a54ae83fc77f1e8bf7f97293935a",
+    "src/lib/audioGeneration/input.ts": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+    "src/lib/audioProjectPackage.ts": "8412440a2fc31960d444d71e6a3d5b5cd8c3e4dd2c713d03db3be6bb95737331",
+    "src/lib/projectPackage.ts": "ee0ef3c984a4454f5d90e9ac7b8c0570f919024fb2078d9862fad93efc2cb555",
+    "src/lib/resource/limits.ts": "aaed95b303a65539344a27c6fbee1670171248995a4e2da3fe4dc9cc4307bb17",
+    "tests/agentGenerationEvidence.test.ts": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+    "tests/agentTaskOrchestrationReview.test.ts": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+    "tests/agentTaskWrapup.test.ts": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+    "tests/aihubmix.test.ts": "d38b3432f297af0905ea84ff4fe12b81bb06e7cb345b8270c684351a9c2e1d9f",
+    "tests/apimartAudio.test.ts": "7d5258fd38910415c82184d68bd547535016a146d21cd56ee9fcb5b70d8d3c24",
+    "tests/audioFingerprint.test.ts": "82fe247fe9cf046979e0696a8ef2ccdb2d628d38f14fa1c25f1c15e3c3efc5ae",
+    "tests/audioGenerationRuntime.test.ts": "0ff056a4fe2c1dde7819b92f5999450894b38afd6c83c8d7df819edc93992fd9",
+    "tests/b03IntentBoundaries.test.ts": "69edaf87e96e60da8390cb03d8302eaad26c89ff7e0eb0d629da7586377fdedc",
+    "tests/boundedAudioRuntime.test.ts": "4ae19c1df51503a2074049ac5a5a8d2a8c31451d4170b659a47d2b57d98dd85d",
+    "tests/boundedChatInput.test.ts": "531dd752e588c2864bba348c8f346d4e03247dd4ed3d4fe331c21ac4ae303769",
+    "tests/boundedInput.test.ts": "e8b8b385012157a718eebb8a46a26048f93094c1003621dd15fb58f6a3a1b761",
+    "tests/fixtures/c01/harness.ts": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+    "tests/fixtures/c01/index.html": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+    "tests/fixtures/c02/harness.tsx": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+    "tests/fixtures/c02/index.html": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8",
+    "tests/mediaPatchBoundary.test.ts": "0800f65c6ec9acb901689b9514a5cdc8285a38111700fe2f82f8c1caae8165cc",
+    "tests/musicDurationContract.test.ts": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399",
+    "tests/musicLegacyDurationRepair.test.ts": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e",
+    "tests/parentProjectWrites.test.ts": "49219fb616c63e1021dec6280e6ffb1db1f4d789e99336d1ea78a68ccb09240d",
+    "tests/productionContext.test.ts": "1bc781d890beb53709d8a866c75d4d96bcd7eec5b2b85092208555152c504f8e",
+    "tests/projectPackage.test.ts": "9a7bd3e1d9dafb17b620b4fda7750848364c5158b7d05365db45434e4872f35c",
+    "tests/projectPackageRelations.test.ts": "89e20d9f6f573b3cea4a82c4413e240c918d7ccc8227f8f665a532fe674ecd8a",
+    "tests/repo.test.ts": "305b814e209ac5283c65b315b52bb68d0302800cc889854ada22437d8ffea275"
+  },
+  "after": {
+    "scripts/c01-browser-regression.mjs": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+    "scripts/c02-browser-regression.mjs": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+    "src/components/audio/AudioExports.tsx": "45fb461bff60e6fabad1eae899a51be95786722edc3b04bc9204ff5e514a4d75",
+    "src/components/audio/AudioTimeline.tsx": "607778048835edc4aae79c144a9c86f8a43733707aeabc5f3d602a4d6d3a84b2",
+    "src/components/music/MusicCreation.tsx": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c",
+    "src/db/agentTaskRecords.ts": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+    "src/db/music.ts": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+    "src/db/repo.ts": "614201eb96fce410aebabb18b7f9f6a5864596952f5716e4bda94d5ac5b5a33f",
+    "src/db/taskGenerationEvidence.ts": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+    "src/domain/music.ts": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+    "src/lib/agent/generationRuntime.ts": "3b8666ffe35474cd811cc34ae55290526a11ca14b9ac0b212d6d19ee49b6fb86",
+    "src/lib/agent/musicTools.ts": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+    "src/lib/agent/wrapupEvidence.ts": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+    "src/lib/ai/aihubmix.ts": "c6a66b5fdb0904d1765b70f04b38769f55ec5a6c70feae757396adffbb4233c9",
+    "src/lib/ai/apimartAudio.ts": "b039e073947defcfc5b69a1e33fd2b7a39779c33159ba4eb65cd632509362d9e",
+    "src/lib/ai/boundedResponse.ts": "92cc47f78623f8c1c8e7d864a9f4af655c5b498077f8b0e93de25eefc9be8384",
+    "src/lib/ai/boundedSse.ts": "8626015eebd251a1956992f6274d679f8e3cd6af556e2e4acb9acf72fe925894",
+    "src/lib/ai/chatStream.ts": "ede7b8806f165128a864f948435defc700c226a4656041c6a485c0f3342cdf6d",
+    "src/lib/ai/mimoSpeech.ts": "0be180a9ed8767321126cc7b49ba3f16836e625466e3d43c105c46e9dcaf62c8",
+    "src/lib/ai/responsesStream.ts": "7a641a8da7404523939998ea6618989e9823bb1f63e24dec9aad5076e2eabee7",
+    "src/lib/ai/tavily.ts": "b24c36e3ef77e85585b6d72ca684b40e2f7c7e5d758696abea5ea945a0c98ae4",
+    "src/lib/audio/engine.ts": "d7729b85c481dbd05ed4850862c64e5bf8c6ad9297064e142fe0fdaa05679e28",
+    "src/lib/audio/fingerprint.ts": "2e75f9a80cc117c5f9a2b0aa0528f9f28be1e5d00cc3826376e1fedcabb4ef59",
+    "src/lib/audio/recorder.ts": "3b9eadfeec03eed1a9f5a3424457cdc588f5a54ae83fc77f1e8bf7f97293935a",
+    "src/lib/audioGeneration/input.ts": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+    "src/lib/audioProjectPackage.ts": "8412440a2fc31960d444d71e6a3d5b5cd8c3e4dd2c713d03db3be6bb95737331",
+    "src/lib/projectPackage.ts": "ee0ef3c984a4454f5d90e9ac7b8c0570f919024fb2078d9862fad93efc2cb555",
+    "src/lib/resource/limits.ts": "aaed95b303a65539344a27c6fbee1670171248995a4e2da3fe4dc9cc4307bb17",
+    "tests/agentGenerationEvidence.test.ts": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+    "tests/agentTaskOrchestrationReview.test.ts": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+    "tests/agentTaskWrapup.test.ts": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+    "tests/aihubmix.test.ts": "d38b3432f297af0905ea84ff4fe12b81bb06e7cb345b8270c684351a9c2e1d9f",
+    "tests/apimartAudio.test.ts": "7d5258fd38910415c82184d68bd547535016a146d21cd56ee9fcb5b70d8d3c24",
+    "tests/audioFingerprint.test.ts": "82fe247fe9cf046979e0696a8ef2ccdb2d628d38f14fa1c25f1c15e3c3efc5ae",
+    "tests/audioGenerationRuntime.test.ts": "0ff056a4fe2c1dde7819b92f5999450894b38afd6c83c8d7df819edc93992fd9",
+    "tests/b03IntentBoundaries.test.ts": "69edaf87e96e60da8390cb03d8302eaad26c89ff7e0eb0d629da7586377fdedc",
+    "tests/boundedAudioRuntime.test.ts": "4ae19c1df51503a2074049ac5a5a8d2a8c31451d4170b659a47d2b57d98dd85d",
+    "tests/boundedChatInput.test.ts": "531dd752e588c2864bba348c8f346d4e03247dd4ed3d4fe331c21ac4ae303769",
+    "tests/boundedInput.test.ts": "e8b8b385012157a718eebb8a46a26048f93094c1003621dd15fb58f6a3a1b761",
+    "tests/fixtures/c01/harness.ts": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+    "tests/fixtures/c01/index.html": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+    "tests/fixtures/c02/harness.tsx": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+    "tests/fixtures/c02/index.html": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8",
+    "tests/mediaPatchBoundary.test.ts": "0800f65c6ec9acb901689b9514a5cdc8285a38111700fe2f82f8c1caae8165cc",
+    "tests/musicDurationContract.test.ts": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399",
+    "tests/musicLegacyDurationRepair.test.ts": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e",
+    "tests/parentProjectWrites.test.ts": "49219fb616c63e1021dec6280e6ffb1db1f4d789e99336d1ea78a68ccb09240d",
+    "tests/productionContext.test.ts": "1bc781d890beb53709d8a866c75d4d96bcd7eec5b2b85092208555152c504f8e",
+    "tests/projectPackage.test.ts": "9a7bd3e1d9dafb17b620b4fda7750848364c5158b7d05365db45434e4872f35c",
+    "tests/projectPackageRelations.test.ts": "89e20d9f6f573b3cea4a82c4413e240c918d7ccc8227f8f665a532fe674ecd8a",
+    "tests/repo.test.ts": "305b814e209ac5283c65b315b52bb68d0302800cc889854ada22437d8ffea275"
+  },
+  "unitAttribution": {
+    "scripts/c01-browser-regression.mjs": "C01",
+    "scripts/c02-browser-regression.mjs": "C02",
+    "src/components/audio/AudioExports.tsx": "C04",
+    "src/components/audio/AudioTimeline.tsx": "C04",
+    "src/components/music/MusicCreation.tsx": "C02",
+    "src/db/agentTaskRecords.ts": "C01",
+    "src/db/music.ts": "C02",
+    "src/db/repo.ts": "C05",
+    "src/db/taskGenerationEvidence.ts": "C01",
+    "src/domain/music.ts": "C02",
+    "src/lib/agent/generationRuntime.ts": "C06",
+    "src/lib/agent/musicTools.ts": "C02",
+    "src/lib/agent/wrapupEvidence.ts": "C01",
+    "src/lib/ai/aihubmix.ts": "C06",
+    "src/lib/ai/apimartAudio.ts": "C06",
+    "src/lib/ai/boundedResponse.ts": "C06",
+    "src/lib/ai/boundedSse.ts": "C06",
+    "src/lib/ai/chatStream.ts": "C06",
+    "src/lib/ai/mimoSpeech.ts": "C06",
+    "src/lib/ai/responsesStream.ts": "C06",
+    "src/lib/ai/tavily.ts": "C06",
+    "src/lib/audio/engine.ts": "C06",
+    "src/lib/audio/fingerprint.ts": "C04",
+    "src/lib/audio/recorder.ts": "C06",
+    "src/lib/audioGeneration/input.ts": "C02",
+    "src/lib/audioProjectPackage.ts": "C04",
+    "src/lib/projectPackage.ts": "C03",
+    "src/lib/resource/limits.ts": "C06",
+    "tests/agentGenerationEvidence.test.ts": "C01",
+    "tests/agentTaskOrchestrationReview.test.ts": "C01",
+    "tests/agentTaskWrapup.test.ts": "C01",
+    "tests/aihubmix.test.ts": "C06",
+    "tests/apimartAudio.test.ts": "C06",
+    "tests/audioFingerprint.test.ts": "C04",
+    "tests/audioGenerationRuntime.test.ts": "C06",
+    "tests/b03IntentBoundaries.test.ts": "C05",
+    "tests/boundedAudioRuntime.test.ts": "C06",
+    "tests/boundedChatInput.test.ts": "C06",
+    "tests/boundedInput.test.ts": "C06",
+    "tests/fixtures/c01/harness.ts": "C01",
+    "tests/fixtures/c01/index.html": "C01",
+    "tests/fixtures/c02/harness.tsx": "C02",
+    "tests/fixtures/c02/index.html": "C02",
+    "tests/mediaPatchBoundary.test.ts": "C05",
+    "tests/musicDurationContract.test.ts": "C02",
+    "tests/musicLegacyDurationRepair.test.ts": "C02",
+    "tests/parentProjectWrites.test.ts": "C03",
+    "tests/productionContext.test.ts": "C05",
+    "tests/projectPackage.test.ts": "C05",
+    "tests/projectPackageRelations.test.ts": "C03",
+    "tests/repo.test.ts": "C05"
+  },
+  "latestUnitEvidence": {
+    "src/db/taskGenerationEvidence.ts": {
+      "unit": "C01",
+      "sha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312"
+    },
+    "src/db/agentTaskRecords.ts": {
+      "unit": "C01",
+      "sha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25"
+    },
+    "src/lib/agent/wrapupEvidence.ts": {
+      "unit": "C01",
+      "sha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17"
+    },
+    "tests/agentGenerationEvidence.test.ts": {
+      "unit": "C01",
+      "sha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678"
+    },
+    "tests/agentTaskWrapup.test.ts": {
+      "unit": "C01",
+      "sha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a"
+    },
+    "tests/agentTaskOrchestrationReview.test.ts": {
+      "unit": "C01",
+      "sha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8"
+    },
+    "scripts/c01-browser-regression.mjs": {
+      "unit": "C01",
+      "sha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6"
+    },
+    "tests/fixtures/c01/harness.ts": {
+      "unit": "C01",
+      "sha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502"
+    },
+    "tests/fixtures/c01/index.html": {
+      "unit": "C01",
+      "sha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47"
+    },
+    "src/domain/music.ts": {
+      "unit": "C02",
+      "sha256": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da"
+    },
+    "src/db/music.ts": {
+      "unit": "C02",
+      "sha256": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54"
+    },
+    "src/lib/agent/musicTools.ts": {
+      "unit": "C02",
+      "sha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87"
+    },
+    "src/lib/audioGeneration/input.ts": {
+      "unit": "C02",
+      "sha256": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62"
+    },
+    "src/lib/ai/apimartAudio.ts": {
+      "unit": "C06",
+      "sha256": "b039e073947defcfc5b69a1e33fd2b7a39779c33159ba4eb65cd632509362d9e"
+    },
+    "src/lib/audioProjectPackage.ts": {
+      "unit": "C04",
+      "sha256": "8412440a2fc31960d444d71e6a3d5b5cd8c3e4dd2c713d03db3be6bb95737331"
+    },
+    "src/components/music/MusicCreation.tsx": {
+      "unit": "C02",
+      "sha256": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c"
+    },
+    "tests/musicDurationContract.test.ts": {
+      "unit": "C02",
+      "sha256": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399"
+    },
+    "tests/musicLegacyDurationRepair.test.ts": {
+      "unit": "C02",
+      "sha256": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e"
+    },
+    "scripts/c02-browser-regression.mjs": {
+      "unit": "C02",
+      "sha256": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84"
+    },
+    "tests/fixtures/c02/harness.tsx": {
+      "unit": "C02",
+      "sha256": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22"
+    },
+    "tests/fixtures/c02/index.html": {
+      "unit": "C02",
+      "sha256": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8"
+    },
+    "src/db/repo.ts": {
+      "unit": "C05",
+      "sha256": "614201eb96fce410aebabb18b7f9f6a5864596952f5716e4bda94d5ac5b5a33f"
+    },
+    "src/lib/projectPackage.ts": {
+      "unit": "C03",
+      "sha256": "ee0ef3c984a4454f5d90e9ac7b8c0570f919024fb2078d9862fad93efc2cb555"
+    },
+    "tests/parentProjectWrites.test.ts": {
+      "unit": "C03",
+      "sha256": "49219fb616c63e1021dec6280e6ffb1db1f4d789e99336d1ea78a68ccb09240d"
+    },
+    "tests/projectPackageRelations.test.ts": {
+      "unit": "C03",
+      "sha256": "89e20d9f6f573b3cea4a82c4413e240c918d7ccc8227f8f665a532fe674ecd8a"
+    },
+    "src/components/audio/AudioTimeline.tsx": {
+      "unit": "C04",
+      "sha256": "607778048835edc4aae79c144a9c86f8a43733707aeabc5f3d602a4d6d3a84b2"
+    },
+    "src/components/audio/AudioExports.tsx": {
+      "unit": "C04",
+      "sha256": "45fb461bff60e6fabad1eae899a51be95786722edc3b04bc9204ff5e514a4d75"
+    },
+    "src/lib/audio/fingerprint.ts": {
+      "unit": "C04",
+      "sha256": "2e75f9a80cc117c5f9a2b0aa0528f9f28be1e5d00cc3826376e1fedcabb4ef59"
+    },
+    "tests/audioFingerprint.test.ts": {
+      "unit": "C04",
+      "sha256": "82fe247fe9cf046979e0696a8ef2ccdb2d628d38f14fa1c25f1c15e3c3efc5ae"
+    },
+    "tests/repo.test.ts": {
+      "unit": "C05",
+      "sha256": "305b814e209ac5283c65b315b52bb68d0302800cc889854ada22437d8ffea275"
+    },
+    "tests/projectPackage.test.ts": {
+      "unit": "C05",
+      "sha256": "9a7bd3e1d9dafb17b620b4fda7750848364c5158b7d05365db45434e4872f35c"
+    },
+    "tests/productionContext.test.ts": {
+      "unit": "C05",
+      "sha256": "1bc781d890beb53709d8a866c75d4d96bcd7eec5b2b85092208555152c504f8e"
+    },
+    "tests/b03IntentBoundaries.test.ts": {
+      "unit": "C05",
+      "sha256": "69edaf87e96e60da8390cb03d8302eaad26c89ff7e0eb0d629da7586377fdedc"
+    },
+    "tests/mediaPatchBoundary.test.ts": {
+      "unit": "C05",
+      "sha256": "0800f65c6ec9acb901689b9514a5cdc8285a38111700fe2f82f8c1caae8165cc"
+    },
+    "src/lib/ai/mimoSpeech.ts": {
+      "unit": "C06",
+      "sha256": "0be180a9ed8767321126cc7b49ba3f16836e625466e3d43c105c46e9dcaf62c8"
+    },
+    "src/lib/ai/aihubmix.ts": {
+      "unit": "C06",
+      "sha256": "c6a66b5fdb0904d1765b70f04b38769f55ec5a6c70feae757396adffbb4233c9"
+    },
+    "src/lib/ai/chatStream.ts": {
+      "unit": "C06",
+      "sha256": "ede7b8806f165128a864f948435defc700c226a4656041c6a485c0f3342cdf6d"
+    },
+    "src/lib/ai/responsesStream.ts": {
+      "unit": "C06",
+      "sha256": "7a641a8da7404523939998ea6618989e9823bb1f63e24dec9aad5076e2eabee7"
+    },
+    "src/lib/ai/tavily.ts": {
+      "unit": "C06",
+      "sha256": "b24c36e3ef77e85585b6d72ca684b40e2f7c7e5d758696abea5ea945a0c98ae4"
+    },
+    "src/lib/audio/engine.ts": {
+      "unit": "C06",
+      "sha256": "d7729b85c481dbd05ed4850862c64e5bf8c6ad9297064e142fe0fdaa05679e28"
+    },
+    "src/lib/audio/recorder.ts": {
+      "unit": "C06",
+      "sha256": "3b9eadfeec03eed1a9f5a3424457cdc588f5a54ae83fc77f1e8bf7f97293935a"
+    },
+    "src/lib/agent/generationRuntime.ts": {
+      "unit": "C06",
+      "sha256": "3b8666ffe35474cd811cc34ae55290526a11ca14b9ac0b212d6d19ee49b6fb86"
+    },
+    "tests/apimartAudio.test.ts": {
+      "unit": "C06",
+      "sha256": "7d5258fd38910415c82184d68bd547535016a146d21cd56ee9fcb5b70d8d3c24"
+    },
+    "tests/aihubmix.test.ts": {
+      "unit": "C06",
+      "sha256": "d38b3432f297af0905ea84ff4fe12b81bb06e7cb345b8270c684351a9c2e1d9f"
+    },
+    "tests/audioGenerationRuntime.test.ts": {
+      "unit": "C06",
+      "sha256": "0ff056a4fe2c1dde7819b92f5999450894b38afd6c83c8d7df819edc93992fd9"
+    },
+    "src/lib/resource/limits.ts": {
+      "unit": "C06",
+      "sha256": "aaed95b303a65539344a27c6fbee1670171248995a4e2da3fe4dc9cc4307bb17"
+    },
+    "src/lib/ai/boundedResponse.ts": {
+      "unit": "C06",
+      "sha256": "92cc47f78623f8c1c8e7d864a9f4af655c5b498077f8b0e93de25eefc9be8384"
+    },
+    "src/lib/ai/boundedSse.ts": {
+      "unit": "C06",
+      "sha256": "8626015eebd251a1956992f6274d679f8e3cd6af556e2e4acb9acf72fe925894"
+    },
+    "tests/boundedInput.test.ts": {
+      "unit": "C06",
+      "sha256": "e8b8b385012157a718eebb8a46a26048f93094c1003621dd15fb58f6a3a1b761"
+    },
+    "tests/boundedChatInput.test.ts": {
+      "unit": "C06",
+      "sha256": "531dd752e588c2864bba348c8f346d4e03247dd4ed3d4fe331c21ac4ae303769"
+    },
+    "tests/boundedAudioRuntime.test.ts": {
+      "unit": "C06",
+      "sha256": "4ae19c1df51503a2074049ac5a5a8d2a8c31451d4170b659a47d2b57d98dd85d"
+    }
+  },
+  "unitEvidence": {
+    "C01": {
+      "status": "PASS",
+      "report": ".trellis/tasks/09-30-src-remediation-c/reviews/C01-check.md",
+      "snapshot": ".trellis/tasks/09-30-src-remediation-c/reviews/C01-check-snapshot.json",
+      "reviewedPathCount": 9
+    },
+    "C02": {
+      "status": "PASS",
+      "report": ".trellis/tasks/09-30-src-remediation-c/reviews/C02-check.md",
+      "snapshot": ".trellis/tasks/09-30-src-remediation-c/reviews/C02-check-snapshot.json",
+      "reviewedPathCount": 12
+    },
+    "C03": {
+      "status": "PASS",
+      "report": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check.md",
+      "snapshot": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-snapshot.json",
+      "reviewedPathCount": 4
+    },
+    "C04": {
+      "status": "PASS",
+      "report": ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check.md",
+      "snapshot": ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check-snapshot.json",
+      "reviewedPathCount": 5
+    },
+    "C05": {
+      "status": "PASS",
+      "report": ".trellis/tasks/09-30-src-remediation-c/reviews/C05-check.md",
+      "snapshot": ".trellis/tasks/09-30-src-remediation-c/reviews/C05-check-snapshot.json",
+      "reviewedPathCount": 6
+    },
+    "C06": {
+      "status": "PASS",
+      "report": ".trellis/tasks/09-30-src-remediation-c/reviews/C06-check.md",
+      "snapshot": ".trellis/tasks/09-30-src-remediation-c/reviews/C06-check-snapshot.json",
+      "reviewedPathCount": 18
+    }
+  },
+  "coverage": [
+    {
+      "path": "scripts/c01-browser-regression.mjs",
+      "status": "reviewed",
+      "unit": "C01",
+      "note": "Historical successful generation provenance, submit origin run/call, current owned media/application, immutable ledger and transactional record/wrap-up rejection; native fixture.",
+      "findings": []
+    },
+    {
+      "path": "scripts/c02-browser-regression.mjs",
+      "status": "reviewed",
+      "unit": "C02",
+      "note": "New integer duration rules across repository/tool/generation/wire; bounded historical fractions, explicit Simple repair, dirty text, CAS and ZIP compatibility; native fixture.",
+      "findings": []
+    },
+    {
+      "path": "src/components/audio/AudioExports.tsx",
+      "status": "reviewed",
+      "unit": "C04",
+      "note": "Full-row v0/v1 fingerprint semantics, metadata before package allowlisting, sticky stale/unknown preservation, scope and IDs; two real ZIP roundtrips and retained bytes.",
+      "findings": []
+    },
+    {
+      "path": "src/components/audio/AudioTimeline.tsx",
+      "status": "reviewed",
+      "unit": "C04",
+      "note": "Full-row v0/v1 fingerprint semantics, metadata before package allowlisting, sticky stale/unknown preservation, scope and IDs; two real ZIP roundtrips and retained bytes.",
+      "findings": []
+    },
+    {
+      "path": "src/components/music/MusicCreation.tsx",
+      "status": "reviewed",
+      "unit": "C02",
+      "note": "New integer duration rules across repository/tool/generation/wire; bounded historical fractions, explicit Simple repair, dirty text, CAS and ZIP compatibility; native fixture.",
+      "findings": []
+    },
+    {
+      "path": "src/db/agentTaskRecords.ts",
+      "status": "reviewed",
+      "unit": "C01",
+      "note": "Historical successful generation provenance, submit origin run/call, current owned media/application, immutable ledger and transactional record/wrap-up rejection; native fixture.",
+      "findings": []
+    },
+    {
+      "path": "src/db/music.ts",
+      "status": "reviewed",
+      "unit": "C02",
+      "note": "New integer duration rules across repository/tool/generation/wire; bounded historical fractions, explicit Simple repair, dirty text, CAS and ZIP compatibility; native fixture.",
+      "findings": []
+    },
+    {
+      "path": "src/db/repo.ts",
+      "status": "reviewed",
+      "unit": "C05",
+      "note": "Runtime own-property media rejection, dedicated media kinds and cover validation; atomic write/touch/recycling, shared/history retention, CAS/undo and six fixture setter migrations.",
+      "findings": []
+    },
+    {
+      "path": "src/db/taskGenerationEvidence.ts",
+      "status": "reviewed",
+      "unit": "C01",
+      "note": "Historical successful generation provenance, submit origin run/call, current owned media/application, immutable ledger and transactional record/wrap-up rejection; native fixture.",
+      "findings": []
+    },
+    {
+      "path": "src/domain/music.ts",
+      "status": "reviewed",
+      "unit": "C02",
+      "note": "New integer duration rules across repository/tool/generation/wire; bounded historical fractions, explicit Simple repair, dirty text, CAS and ZIP compatibility; native fixture.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/agent/generationRuntime.ts",
+      "status": "reviewed",
+      "unit": "C06",
+      "note": "Actual inbound byte limits, reader cancellation/release, AbortError/status/redaction, no paid replay and GET recovery; SSE event/retained output budgets, UTF-16 pairing and retained tool counter.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/agent/musicTools.ts",
+      "status": "reviewed",
+      "unit": "C02",
+      "note": "New integer duration rules across repository/tool/generation/wire; bounded historical fractions, explicit Simple repair, dirty text, CAS and ZIP compatibility; native fixture.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/agent/wrapupEvidence.ts",
+      "status": "reviewed",
+      "unit": "C01",
+      "note": "Historical successful generation provenance, submit origin run/call, current owned media/application, immutable ledger and transactional record/wrap-up rejection; native fixture.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/ai/aihubmix.ts",
+      "status": "reviewed",
+      "unit": "C06",
+      "note": "Actual inbound byte limits, reader cancellation/release, AbortError/status/redaction, no paid replay and GET recovery; SSE event/retained output budgets, UTF-16 pairing and retained tool counter.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/ai/apimartAudio.ts",
+      "status": "reviewed",
+      "unit": "C06",
+      "note": "Actual inbound byte limits, reader cancellation/release, AbortError/status/redaction, no paid replay and GET recovery; SSE event/retained output budgets, UTF-16 pairing and retained tool counter.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/ai/boundedResponse.ts",
+      "status": "reviewed",
+      "unit": "C06",
+      "note": "Actual inbound byte limits, reader cancellation/release, AbortError/status/redaction, no paid replay and GET recovery; SSE event/retained output budgets, UTF-16 pairing and retained tool counter.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/ai/boundedSse.ts",
+      "status": "reviewed",
+      "unit": "C06",
+      "note": "Actual inbound byte limits, reader cancellation/release, AbortError/status/redaction, no paid replay and GET recovery; SSE event/retained output budgets, UTF-16 pairing and retained tool counter.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/ai/chatStream.ts",
+      "status": "reviewed",
+      "unit": "C06",
+      "note": "Actual inbound byte limits, reader cancellation/release, AbortError/status/redaction, no paid replay and GET recovery; SSE event/retained output budgets, UTF-16 pairing and retained tool counter.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/ai/mimoSpeech.ts",
+      "status": "reviewed",
+      "unit": "C06",
+      "note": "Actual inbound byte limits, reader cancellation/release, AbortError/status/redaction, no paid replay and GET recovery; SSE event/retained output budgets, UTF-16 pairing and retained tool counter.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/ai/responsesStream.ts",
+      "status": "reviewed",
+      "unit": "C06",
+      "note": "Actual inbound byte limits, reader cancellation/release, AbortError/status/redaction, no paid replay and GET recovery; SSE event/retained output budgets, UTF-16 pairing and retained tool counter.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/ai/tavily.ts",
+      "status": "reviewed",
+      "unit": "C06",
+      "note": "Actual inbound byte limits, reader cancellation/release, AbortError/status/redaction, no paid replay and GET recovery; SSE event/retained output budgets, UTF-16 pairing and retained tool counter.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/audio/engine.ts",
+      "status": "reviewed",
+      "unit": "C06",
+      "note": "Actual inbound byte limits, reader cancellation/release, AbortError/status/redaction, no paid replay and GET recovery; SSE event/retained output budgets, UTF-16 pairing and retained tool counter.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/audio/fingerprint.ts",
+      "status": "reviewed",
+      "unit": "C04",
+      "note": "Full-row v0/v1 fingerprint semantics, metadata before package allowlisting, sticky stale/unknown preservation, scope and IDs; two real ZIP roundtrips and retained bytes.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/audio/recorder.ts",
+      "status": "reviewed",
+      "unit": "C06",
+      "note": "Actual inbound byte limits, reader cancellation/release, AbortError/status/redaction, no paid replay and GET recovery; SSE event/retained output budgets, UTF-16 pairing and retained tool counter.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/audioGeneration/input.ts",
+      "status": "reviewed",
+      "unit": "C02",
+      "note": "New integer duration rules across repository/tool/generation/wire; bounded historical fractions, explicit Simple repair, dirty text, CAS and ZIP compatibility; native fixture.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/audioProjectPackage.ts",
+      "status": "reviewed",
+      "unit": "C04",
+      "note": "Full-row v0/v1 fingerprint semantics, metadata before package allowlisting, sticky stale/unknown preservation, scope and IDs; two real ZIP roundtrips and retained bytes.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/projectPackage.ts",
+      "status": "reviewed",
+      "unit": "C03",
+      "note": "Parent read/create/touch atomicity, studio/nested transactions; original modern episode/beat FK and normalized identity collision validation before remapping; explicit legacy branch and ZIP rollback.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/resource/limits.ts",
+      "status": "reviewed",
+      "unit": "C06",
+      "note": "Actual inbound byte limits, reader cancellation/release, AbortError/status/redaction, no paid replay and GET recovery; SSE event/retained output budgets, UTF-16 pairing and retained tool counter.",
+      "findings": []
+    },
+    {
+      "path": "tests/agentGenerationEvidence.test.ts",
+      "status": "reviewed",
+      "unit": "C01",
+      "note": "Historical successful generation provenance, submit origin run/call, current owned media/application, immutable ledger and transactional record/wrap-up rejection; native fixture.",
+      "findings": []
+    },
+    {
+      "path": "tests/agentTaskOrchestrationReview.test.ts",
+      "status": "reviewed",
+      "unit": "C01",
+      "note": "Historical successful generation provenance, submit origin run/call, current owned media/application, immutable ledger and transactional record/wrap-up rejection; native fixture.",
+      "findings": []
+    },
+    {
+      "path": "tests/agentTaskWrapup.test.ts",
+      "status": "reviewed",
+      "unit": "C01",
+      "note": "Historical successful generation provenance, submit origin run/call, current owned media/application, immutable ledger and transactional record/wrap-up rejection; native fixture.",
+      "findings": []
+    },
+    {
+      "path": "tests/aihubmix.test.ts",
+      "status": "reviewed",
+      "unit": "C06",
+      "note": "Actual inbound byte limits, reader cancellation/release, AbortError/status/redaction, no paid replay and GET recovery; SSE event/retained output budgets, UTF-16 pairing and retained tool counter.",
+      "findings": []
+    },
+    {
+      "path": "tests/apimartAudio.test.ts",
+      "status": "reviewed",
+      "unit": "C06",
+      "note": "Actual inbound byte limits, reader cancellation/release, AbortError/status/redaction, no paid replay and GET recovery; SSE event/retained output budgets, UTF-16 pairing and retained tool counter.",
+      "findings": []
+    },
+    {
+      "path": "tests/audioFingerprint.test.ts",
+      "status": "reviewed",
+      "unit": "C04",
+      "note": "Full-row v0/v1 fingerprint semantics, metadata before package allowlisting, sticky stale/unknown preservation, scope and IDs; two real ZIP roundtrips and retained bytes.",
+      "findings": []
+    },
+    {
+      "path": "tests/audioGenerationRuntime.test.ts",
+      "status": "reviewed",
+      "unit": "C06",
+      "note": "Actual inbound byte limits, reader cancellation/release, AbortError/status/redaction, no paid replay and GET recovery; SSE event/retained output budgets, UTF-16 pairing and retained tool counter.",
+      "findings": []
+    },
+    {
+      "path": "tests/b03IntentBoundaries.test.ts",
+      "status": "reviewed",
+      "unit": "C05",
+      "note": "Runtime own-property media rejection, dedicated media kinds and cover validation; atomic write/touch/recycling, shared/history retention, CAS/undo and six fixture setter migrations.",
+      "findings": []
+    },
+    {
+      "path": "tests/boundedAudioRuntime.test.ts",
+      "status": "reviewed",
+      "unit": "C06",
+      "note": "Actual inbound byte limits, reader cancellation/release, AbortError/status/redaction, no paid replay and GET recovery; SSE event/retained output budgets, UTF-16 pairing and retained tool counter.",
+      "findings": []
+    },
+    {
+      "path": "tests/boundedChatInput.test.ts",
+      "status": "reviewed",
+      "unit": "C06",
+      "note": "Actual inbound byte limits, reader cancellation/release, AbortError/status/redaction, no paid replay and GET recovery; SSE event/retained output budgets, UTF-16 pairing and retained tool counter.",
+      "findings": []
+    },
+    {
+      "path": "tests/boundedInput.test.ts",
+      "status": "reviewed",
+      "unit": "C06",
+      "note": "Actual inbound byte limits, reader cancellation/release, AbortError/status/redaction, no paid replay and GET recovery; SSE event/retained output budgets, UTF-16 pairing and retained tool counter.",
+      "findings": []
+    },
+    {
+      "path": "tests/fixtures/c01/harness.ts",
+      "status": "reviewed",
+      "unit": "C01",
+      "note": "Historical successful generation provenance, submit origin run/call, current owned media/application, immutable ledger and transactional record/wrap-up rejection; native fixture.",
+      "findings": []
+    },
+    {
+      "path": "tests/fixtures/c01/index.html",
+      "status": "reviewed",
+      "unit": "C01",
+      "note": "Historical successful generation provenance, submit origin run/call, current owned media/application, immutable ledger and transactional record/wrap-up rejection; native fixture.",
+      "findings": []
+    },
+    {
+      "path": "tests/fixtures/c02/harness.tsx",
+      "status": "reviewed",
+      "unit": "C02",
+      "note": "New integer duration rules across repository/tool/generation/wire; bounded historical fractions, explicit Simple repair, dirty text, CAS and ZIP compatibility; native fixture.",
+      "findings": []
+    },
+    {
+      "path": "tests/fixtures/c02/index.html",
+      "status": "reviewed",
+      "unit": "C02",
+      "note": "New integer duration rules across repository/tool/generation/wire; bounded historical fractions, explicit Simple repair, dirty text, CAS and ZIP compatibility; native fixture.",
+      "findings": []
+    },
+    {
+      "path": "tests/mediaPatchBoundary.test.ts",
+      "status": "reviewed",
+      "unit": "C05",
+      "note": "Runtime own-property media rejection, dedicated media kinds and cover validation; atomic write/touch/recycling, shared/history retention, CAS/undo and six fixture setter migrations.",
+      "findings": []
+    },
+    {
+      "path": "tests/musicDurationContract.test.ts",
+      "status": "reviewed",
+      "unit": "C02",
+      "note": "New integer duration rules across repository/tool/generation/wire; bounded historical fractions, explicit Simple repair, dirty text, CAS and ZIP compatibility; native fixture.",
+      "findings": []
+    },
+    {
+      "path": "tests/musicLegacyDurationRepair.test.ts",
+      "status": "reviewed",
+      "unit": "C02",
+      "note": "New integer duration rules across repository/tool/generation/wire; bounded historical fractions, explicit Simple repair, dirty text, CAS and ZIP compatibility; native fixture.",
+      "findings": []
+    },
+    {
+      "path": "tests/parentProjectWrites.test.ts",
+      "status": "reviewed",
+      "unit": "C03",
+      "note": "Parent read/create/touch atomicity, studio/nested transactions; original modern episode/beat FK and normalized identity collision validation before remapping; explicit legacy branch and ZIP rollback.",
+      "findings": []
+    },
+    {
+      "path": "tests/productionContext.test.ts",
+      "status": "reviewed",
+      "unit": "C05",
+      "note": "Runtime own-property media rejection, dedicated media kinds and cover validation; atomic write/touch/recycling, shared/history retention, CAS/undo and six fixture setter migrations.",
+      "findings": []
+    },
+    {
+      "path": "tests/projectPackage.test.ts",
+      "status": "reviewed",
+      "unit": "C05",
+      "note": "Runtime own-property media rejection, dedicated media kinds and cover validation; atomic write/touch/recycling, shared/history retention, CAS/undo and six fixture setter migrations.",
+      "findings": []
+    },
+    {
+      "path": "tests/projectPackageRelations.test.ts",
+      "status": "reviewed",
+      "unit": "C03",
+      "note": "Parent read/create/touch atomicity, studio/nested transactions; original modern episode/beat FK and normalized identity collision validation before remapping; explicit legacy branch and ZIP rollback.",
+      "findings": []
+    },
+    {
+      "path": "tests/repo.test.ts",
+      "status": "reviewed",
+      "unit": "C05",
+      "note": "Runtime own-property media rejection, dedicated media kinds and cover validation; atomic write/touch/recycling, shared/history retention, CAS/undo and six fixture setter migrations.",
+      "findings": []
+    }
+  ],
+  "unitUpdates": {},
+  "checkerCorrections": [],
+  "remainingActualBlockers": [],
+  "sourceChangesByChecker": [],
+  "verification": {
+    "scopeMatchesAllChangedProductPaths": true,
+    "all51FinalInputHashesMatch": true,
+    "all51LatestUnitHashesMatch": true,
+    "all51CoveredByGate": true,
+    "prePostAndCurrent561HashesMatch": true,
+    "noGateRerunRequired": true,
+    "checksRunThisReview": [
+      "Latest-unit reviewed-files verifier (51 matched)",
+      "Read-only final scope/hash/evidence consistency assertions"
+    ]
+  },
+  "gate": {
+    "summary": ".trellis/tasks/09-30-src-remediation-c/reviews/integration/gate-summary.json",
+    "commands": [
+      {
+        "name": "typecheck",
+        "command": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+          "lint"
+        ],
+        "exit": 0,
+        "seconds": 6.33
+      },
+      {
+        "name": "tests",
+        "command": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+          "test",
+          "--reporter=dot"
+        ],
+        "exit": 0,
+        "seconds": 12.95
+      },
+      {
+        "name": "b01-browser",
+        "command": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/b01-browser-regression.mjs"
+        ],
+        "exit": 0,
+        "seconds": 20.79
+      },
+      {
+        "name": "b07-browser",
+        "command": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/b07-browser-regression.mjs"
+        ],
+        "exit": 0,
+        "seconds": 3.62
+      },
+      {
+        "name": "c01-browser",
+        "command": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/c01-browser-regression.mjs"
+        ],
+        "exit": 0,
+        "seconds": 2.57
+      },
+      {
+        "name": "c02-browser",
+        "command": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/c02-browser-regression.mjs"
+        ],
+        "exit": 0,
+        "seconds": 2.85
+      },
+      {
+        "name": "models",
+        "command": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+          "model-bank:verify"
+        ],
+        "exit": 0,
+        "seconds": 0.72
+      },
+      {
+        "name": "build",
+        "command": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+          "build"
+        ],
+        "exit": 0,
+        "seconds": 16.18
+      }
+    ],
+    "testFiles": 144,
+    "tests": 2402,
+    "browserCases": {
+      "B01": 19,
+      "B07": 5,
+      "C01": 6,
+      "C02": 3
+    },
+    "sourceHashCount": 561,
+    "preHashes": ".trellis/tasks/09-30-src-remediation-c/reviews/integration/pre-gate-source-hashes.json",
+    "postHashes": ".trellis/tasks/09-30-src-remediation-c/reviews/integration/post-gate-source-hashes.json",
+    "generatedRoute": {
+      "changed": true,
+      "beforeSha256": "f1572df02731d204a1ef38e4b744a39aa5b2c9dc7a3d85d1d6d3d3b6b6b09d65",
+      "buildSha256": "0df423ad2603ed30010d0c28c127b7b7d5a59c3bb0a1c24ddc39f55933cd4efd",
+      "formatRestored": true,
+      "tokenComparison": "{\"same\":true,\"beforeTokens\":3995,\"afterTokens\":3995}"
+    },
+    "firstBrowserAttemptRetained": true,
+    "browserFailureDiagnosis": "Concurrent dev-server/HMR interference is an inference; same-hash serial rerun passed, no product edits.",
+    "diffCheckOutput": "",
+    "static": {
+      "sources": 26,
+      "errors": 71,
+      "warnings": 98,
+      "eslintExit": 1,
+      "newNoncomplexityDiagnostics": [],
+      "newHelperDiagnostics": 0,
+      "newHelpers": [
+        "src/db/taskGenerationEvidence.ts",
+        "src/lib/audio/fingerprint.ts",
+        "src/lib/ai/boundedResponse.ts",
+        "src/lib/ai/boundedSse.ts",
+        "src/lib/resource/limits.ts"
+      ],
+      "changedExistingComplexityDiagnostics": [
+        {
+          "file": "src/db/agentTaskRecords.ts",
+          "rule": "complexity",
+          "severity": 1,
+          "message": "Async function 'validateTaskSources' has a complexity of 41. Maximum allowed is 20.",
+          "count": 1
+        },
+        {
+          "file": "src/db/agentTaskRecords.ts",
+          "rule": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 28 to the 20 allowed.",
+          "count": 1
+        },
+        {
+          "file": "src/lib/agent/wrapupEvidence.ts",
+          "rule": "complexity",
+          "severity": 1,
+          "message": "Async function 'collectWrapupSnapshot' has a complexity of 91. Maximum allowed is 20.",
+          "count": 1
+        },
+        {
+          "file": "src/lib/agent/wrapupEvidence.ts",
+          "rule": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 139 to the 20 allowed.",
+          "count": 1
+        },
+        {
+          "file": "src/lib/ai/aihubmix.ts",
+          "rule": "complexity",
+          "severity": 1,
+          "message": "Async function 'downloadAIHubMixResult' has a complexity of 35. Maximum allowed is 20.",
+          "count": 1
+        },
+        {
+          "file": "src/lib/ai/aihubmix.ts",
+          "rule": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 26 to the 20 allowed.",
+          "count": 1
+        },
+        {
+          "file": "src/lib/ai/chatStream.ts",
+          "rule": "complexity",
+          "severity": 1,
+          "message": "Async function 'streamChatCompletions' has a complexity of 33. Maximum allowed is 20.",
+          "count": 1
+        },
+        {
+          "file": "src/lib/ai/chatStream.ts",
+          "rule": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 25 to the 20 allowed.",
+          "count": 1
+        },
+        {
+          "file": "src/lib/ai/mimoSpeech.ts",
+          "rule": "complexity",
+          "severity": 1,
+          "message": "Async function 'generateMimoSpeech' has a complexity of 53. Maximum allowed is 20.",
+          "count": 1
+        },
+        {
+          "file": "src/lib/ai/mimoSpeech.ts",
+          "rule": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 37 to the 20 allowed.",
+          "count": 1
+        },
+        {
+          "file": "src/lib/ai/responsesStream.ts",
+          "rule": "complexity",
+          "severity": 1,
+          "message": "Async function 'streamResponses' has a complexity of 31. Maximum allowed is 20.",
+          "count": 1
+        },
+        {
+          "file": "src/lib/ai/responsesStream.ts",
+          "rule": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 22 to the 20 allowed.",
+          "count": 1
+        }
+      ],
+      "blanketLintClean": false
+    },
+    "ast": {
+      "files": 379,
+      "edges": 2233,
+      "parseErrors": 0,
+      "staticValueCycles": [
+        [
+          "src/db/agentTaskRecords.ts",
+          "src/db/agentTaskWrapups.ts",
+          "src/db/agentTasks.ts",
+          "src/lib/agent/wrapupEvidence.ts"
+        ],
+        [
+          "src/db/agentTools.ts",
+          "src/lib/agent/toolLoading.ts"
+        ],
+        [
+          "src/db/agentGenerationBatches.ts",
+          "src/lib/agent/generationRuntime.ts"
+        ]
+      ],
+      "totals": {
+        "anyKeywords": 46,
+        "typeAssertions": 472,
+        "nonNullAssertions": 209,
+        "nestedTernaries": 449,
+        "emptyCatches": 16,
+        "dynamicImports": 8
+      }
+    }
+  },
+  "evidenceHashes": {
+    ".trellis/tasks/09-30-src-remediation-c/research/C-current-ast-results.json": "941bce58990ddce48a6ce9e07afaec7f46249aeb54968c06c436580ddfe5c961",
+    ".trellis/tasks/09-30-src-remediation-c/research/C-current-ast-summary.json": "1fda08b628f6a1430aa10346f72153a8fd5bbb4a6b464b8d312f2904071f4549",
+    ".trellis/tasks/09-30-src-remediation-c/research/C-final-check-scope.md": "bcd2051651551f6fa2c0a4dda08fbcd161784f98a8d4d98570e2962b637737f5",
+    ".trellis/tasks/09-30-src-remediation-c/research/C-gate-command-policy.md": "9dd420ec4778d3bba6c6f803d9e2ff07a6e4b7a16988ca0544ab3861a8b59b7f",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C-final-review-input.json": "116dbc979dc9a199bbfe0ee9bbc77c9d14ec51e2e2a1bf97a3fe83ad5f11523a",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C01-check-snapshot.json": "ed0f28f969025c33876427d74ee8370986561ae8e65c1d5417e7ad4249c9a9b4",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C01-check.md": "4c8bfd49234691a6e18d63bbbce16b45135f92f8368c93d3b776362888eb5f81",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C02-check-snapshot.json": "b5b11676d5e350b92e12e8d498e5d3aa0a48d086ee7f1715dd6e84aafc0dbda7",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C02-check.md": "bb5c8b68d67ff81ff2ea5ea526768c3364b5469f1e8db4154fb7fa9421ee7ab5",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-snapshot.json": "71c8f99b8a1dd187ce0fad86a651e7680f7b004b848d9205d34eff63be0ab068",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check.md": "ff17e5ce52f56ab9043873d30dd4b8053f32ac8423f3f50693b6531bacc76d30",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check-snapshot.json": "e0126eee2da0ba374f4a135c9957e0f80ba7c0a4479f739f0ea9c5ac1f5c5531",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check.md": "b8bfd6b117061912e9d6e65597cb3febc1025c3da5b52ac6c4b4e674ff595c7c",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C05-check-snapshot.json": "f5e186546ee7601f73fd3c3da768a97fc0215cf9bb53525fa74ad60eaedadb20",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C05-check.md": "c13a47c0f102dadbf99b689b088b7030f05d6446054aa0409ce04e2e0c31ee7c",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C06-check-snapshot.json": "feaaef4fc96d97eb75d9b9176b39c0c52da5704327abd6e36356260f967afba3",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C06-check.md": "9e2cf64da88336fb6b7acd1a4ff6e794210b356760557ec4697e05c33912e52d",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/b01-browser-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/b01-browser-stdout.txt": "67cc9a338b31a25d2ab7ff7c6ce548d9c38ebe2588d165813824aba16716424b",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/b07-browser-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/b07-browser-stdout.txt": "5a1df656a62fde7f5f415a593a74c86a492fa9ae6d74897b745eda8bcde2853c",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/browser-first-attempt-note.md": "c6f240be91c0351dfc1ebff5bf02b88068559d4281752364870dadd5d8555ce5",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/build-stderr.txt": "ccb6bf354a0674eeb1e49df9a880a000b75240079fdb849282bb899d81eeb58c",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/build-stdout.txt": "e8893f9b9f55b20d883a8609d0908520f9d97d24f05ac42c4a1839b61e63b426",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/c01-browser-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/c01-browser-stdout.txt": "e594b3783a910e583df3c4354861fa6b9d1b1c5ba693e4ebb9ab51137e901a46",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/c02-browser-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/c02-browser-stdout.txt": "6eb1954aafd10c84faff9914d8dcad62681c8e039f8f40a8680c227dea0f1c18",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/commands.json": "331e93e44668f7475626f032677aaba5c542f298f9a3ff97e12215624b0890df",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/diffcheck.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/eslint-results.json": "e9548b87b836884bae659c9678b15a57e805c22fc1009e780d66bb0357f1e69e",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/eslint-run.json": "7a06d596e9005e6ec1c6826977b02c9e4c4e53be5c684db2db757383377dd237",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/eslint-summary.json": "c39b9c6c7d0b060dedcc8ea78edfa5d793c664d2350d9fc5d27fe505d0e8265e",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/first-attempt-b01-browser-stderr.txt": "f0b47e5710c50aa06e696fc56a72bdcec03eaaf5209e8abf23f8e253c589c4bc",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/first-attempt-b01-browser-stdout.txt": "e1224bccd60613db51d812ffafe4a17439fe91d5c87b7fb28f88ac01bb441abe",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/first-attempt-b01-failure.html": "833d20a4c85990979677a2e24a783603671cb51185b2a7d1757e84c38c4cb3ea",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/first-attempt-b01-failure.png": "c87d6f295f623a001fd04da0611226f9783b61f7bff5caae4f87357881249276",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/first-attempt-commands.json": "912acda4fdbb7772fbf0815493898e094ecaba5ba2aa5507c0f80294f0916c05",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/first-diffcheck.txt": "612a214600df20f36a554c041d00962390ec779caf03027bf8b53d28f641a2ab",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/gate-summary.json": "8cf122bd1534db220896778fd492977d5af1b7170789c12daa919cc32d9af2bd",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/generated-route.json": "648266f17edcc696fb098bfcba7beec98476b2134915eba6d2921684462bdfc4",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/models-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/models-stdout.txt": "f58b777b746a7ebd4198b0b7f1a3fcd25d51250f9683c34e11da47c7468cd87d",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/post-gate-source-hashes.json": "cd11fcf75868134f2824d2f514b2e7f0c0966b974247e2724dd017eab0f2155a",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/pre-gate-source-hashes.json": "cd11fcf75868134f2824d2f514b2e7f0c0966b974247e2724dd017eab0f2155a",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/review-file-coverage.json": "98931c7e48f050cdc50c5dd9ff7823d436ef49eab61189ef6c15373e849697df",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/static-scan-stdout.txt": "c39b9c6c7d0b060dedcc8ea78edfa5d793c664d2350d9fc5d27fe505d0e8265e",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/tests-stderr.txt": "41848a85e3abaf75af8375eefa12ab8d9b220f2c5f735efbdeb9fa2fc36651e9",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/tests-stdout.txt": "c80a1e67e7bf689719a31bc05a74ee28e30837366dc340088e1b743b66c7c3f3",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/typecheck-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/integration/typecheck-stdout.txt": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+    ".trellis/tasks/09-30-src-remediation-c/tools/verify-batch.py": "74b3e9814ab89b39149875c88d46e527d8e600bd60cb8cdb7a4e6274d3493760",
+    ".trellis/tasks/09-30-src-remediation-c/tools/verify-reviewed-files.py": "b08480b57f7fdd5c6ad82554f9b344cd81e004a46022af170b038259fd0d56fc"
+  },
+  "reportSha256": "cdb0d10bdde712bae7a8794a6b4cc35a406667f1bd907fc030ec7ac14370bc8d",
+  "limitations": [
+    "Finite local mocked transport and fake/native IndexedDB evidence; no live-provider/full-product UI/acoustic or decoder certification.",
+    "No peak-memory/OOM measurements; generic inline image JSON is outside C06 scoped caps.",
+    "Existing static diagnostics and remaining value SCCs persist.",
+    "First browser failure causation is inferred, not experimentally isolated."
+  ],
+  "excludedWork": [
+    "D01",
+    "other D/E",
+    "EX01",
+    "QG01",
+    "spec/ledger updates",
+    "commit/push/archive"
+  ],
+  "commitApproval": false
+}

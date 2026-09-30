@@ -1,0 +1,27 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/mediaPatchBoundary.test.ts (78 tests | 1 failed) 566ms
+   ❯ generic patches explicitly reject media fields (8)
+     × preserves text, relationships, extra and field baselines 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/mediaPatchBoundary.test.ts > generic patches explicitly reject media fields > preserves text, relationships, extra and field baselines
+DraftConflictError: 其他页面已修改此内容。你的草稿已保留；请复制需要保留的文字，再采用最新内容后合并。
+ ❯ Transaction.<anonymous> src/db/repo.ts:1514:106
+    1512|                 const original = key === "durationSec" ? baseline.dura…
+    1513|                 const final = key === "durationSec" ? patch.durationSe…
+    1514|                 if (!sameDraftStructure(current, original) && !sameDra…
+       |                                                                                                          ^
+    1515|             }
+    1516|         }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 77 passed (78)
+   Start at  22:24:04
+   Duration  810ms (tests 76%, transform 16%, setup 6%, import 2%)
+

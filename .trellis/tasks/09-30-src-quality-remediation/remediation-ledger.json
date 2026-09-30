@@ -3,7 +3,7 @@
   "startRevision": "bbc8200e67ab828cf45201f5fa9208ac92e02e04",
   "auditTask": ".trellis/tasks/09-30-src-quality-architecture-audit",
   "approvedSequence": "A→B→C→D→E",
-  "currentUnit": "C01",
+  "currentUnit": "D01",
   "units": [
     {
       "id": "A01",
@@ -300,10 +300,25 @@
         "AR-01",
         "AR-02"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        "src/db/taskGenerationEvidence.ts",
+        "src/db/agentTaskRecords.ts",
+        "src/lib/agent/wrapupEvidence.ts",
+        "tests/agentGenerationEvidence.test.ts",
+        "tests/agentTaskWrapup.test.ts",
+        "tests/agentTaskOrchestrationReview.test.ts",
+        "scripts/c01-browser-regression.mjs",
+        "tests/fixtures/c01/harness.ts",
+        "tests/fixtures/c01/index.html"
+      ],
+      "checks": [
+        "14 files / 262 tests passed, including 81 actual current-evidence regressions",
+        "typecheck passed",
+        "Native Chromium IndexedDB: 6 checks / 160 jobs / 161 calls / 0 external requests",
+        "New evidence leaf static diagnostics zero; whole changed-file review coverage 9/9"
+      ],
+      "review": ".trellis/tasks/09-30-src-remediation-c/reviews/C01-check.md"
     },
     {
       "id": "C02",
@@ -312,10 +327,28 @@
       "findings": [
         "AR-03"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        "src/domain/music.ts",
+        "src/db/music.ts",
+        "src/lib/agent/musicTools.ts",
+        "src/lib/audioGeneration/input.ts",
+        "src/lib/ai/apimartAudio.ts",
+        "src/lib/audioProjectPackage.ts",
+        "src/components/music/MusicCreation.tsx",
+        "tests/musicDurationContract.test.ts",
+        "tests/musicLegacyDurationRepair.test.ts",
+        "scripts/c02-browser-regression.mjs",
+        "tests/fixtures/c02/harness.tsx",
+        "tests/fixtures/c02/index.html"
+      ],
+      "checks": [
+        "12 files / 248 tests passed",
+        "typecheck passed",
+        "Native React/Radix/IndexedDB: 3 cases / 0 external requests",
+        "Seven sources static 0 new diagnostics; C01 final 9 hashes unchanged"
+      ],
+      "review": ".trellis/tasks/09-30-src-remediation-c/reviews/C02-check.md"
     },
     {
       "id": "C03",
@@ -325,10 +358,19 @@
         "PD-01",
         "SS-04"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        "src/db/repo.ts",
+        "src/lib/projectPackage.ts",
+        "tests/parentProjectWrites.test.ts",
+        "tests/projectPackageRelations.test.ts"
+      ],
+      "checks": [
+        "13 files /185 tests passed;41 new C03 regressions",
+        "Typecheck and native C01 6 checks passed",
+        "Two sources static 0 added;21 prior C files unchanged"
+      ],
+      "review": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check.md"
     },
     {
       "id": "C04",
@@ -337,10 +379,20 @@
       "findings": [
         "SS-03"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        "src/components/audio/AudioExports.tsx",
+        "src/components/audio/AudioTimeline.tsx",
+        "src/lib/audio/fingerprint.ts",
+        "src/lib/audioProjectPackage.ts",
+        "tests/audioFingerprint.test.ts"
+      ],
+      "checks": [
+        "4 files /67 tests passed; real ZIP twice/full AudioTake/media bytes",
+        "Typecheck passed",
+        "4 sources static 0 added; new helper 0; prior files unchanged except owned package"
+      ],
+      "review": ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check.md"
     },
     {
       "id": "C05",
@@ -349,10 +401,21 @@
       "findings": [
         "PD-03"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        "src/db/repo.ts",
+        "tests/b03IntentBoundaries.test.ts",
+        "tests/mediaPatchBoundary.test.ts",
+        "tests/productionContext.test.ts",
+        "tests/projectPackage.test.ts",
+        "tests/repo.test.ts"
+      ],
+      "checks": [
+        "12 files /260 tests passed;82 direct repository media boundary cases",
+        "Typecheck passed",
+        "repo static 11→11 zero added; six reviewed final hashes match"
+      ],
+      "review": ".trellis/tasks/09-30-src-remediation-c/reviews/C05-check.md"
     },
     {
       "id": "C06",
@@ -361,10 +424,33 @@
       "findings": [
         "PM-05"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        "src/lib/agent/generationRuntime.ts",
+        "src/lib/ai/aihubmix.ts",
+        "src/lib/ai/apimartAudio.ts",
+        "src/lib/ai/boundedResponse.ts",
+        "src/lib/ai/boundedSse.ts",
+        "src/lib/ai/chatStream.ts",
+        "src/lib/ai/mimoSpeech.ts",
+        "src/lib/ai/responsesStream.ts",
+        "src/lib/ai/tavily.ts",
+        "src/lib/audio/engine.ts",
+        "src/lib/audio/recorder.ts",
+        "src/lib/resource/limits.ts",
+        "tests/aihubmix.test.ts",
+        "tests/apimartAudio.test.ts",
+        "tests/audioGenerationRuntime.test.ts",
+        "tests/boundedAudioRuntime.test.ts",
+        "tests/boundedChatInput.test.ts",
+        "tests/boundedInput.test.ts"
+      ],
+      "checks": [
+        "16 files /452 tests passed; actual bytes/cancel/abort/uncertain/GET recovery",
+        "Typecheck passed",
+        "12 sources static zero new noncomplexity;3 new helpers0;MiMo5→4"
+      ],
+      "review": ".trellis/tasks/09-30-src-remediation-c/reviews/C06-check.md"
     },
     {
       "id": "D01",
@@ -572,10 +658,15 @@
         "src/db/agentTaskRecords.ts:135",
         "src/lib/agent/generationRuntime.ts:605"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "C01",
-      "resolution": null,
-      "evidence": []
+      "resolution": "共享当前owned媒体/合法应用校验；历史工具成功与独立旧文件分开，submit来源校验callId和runId。AR01保持防御风险分类，未宣称正常UI触发或decode。",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-c/reviews/C01-check.md",
+        ".trellis/tasks/09-30-src-remediation-c/reviews/C01-check-snapshot.json",
+        ".trellis/tasks/09-30-src-remediation-c/research/C01-implement-handoff.md",
+        ".trellis/tasks/09-30-src-remediation-c/reviews/C01-browser-red.log"
+      ]
     },
     {
       "id": "AR-02",
@@ -589,10 +680,15 @@
         "src/lib/agent/wrapupSchema.ts:30",
         "src/db/agentTaskRecords.ts:57"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "C01",
-      "resolution": null,
-      "evidence": []
+      "resolution": "共享当前owned媒体/合法应用校验；历史工具成功与独立旧文件分开，submit来源校验callId和runId。AR01保持防御风险分类，未宣称正常UI触发或decode。",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-c/reviews/C01-check.md",
+        ".trellis/tasks/09-30-src-remediation-c/reviews/C01-check-snapshot.json",
+        ".trellis/tasks/09-30-src-remediation-c/research/C01-implement-handoff.md",
+        ".trellis/tasks/09-30-src-remediation-c/reviews/C01-browser-red.log"
+      ]
     },
     {
       "id": "AR-03",
@@ -607,10 +703,15 @@
         "src/db/music.ts:19",
         "src/lib/audioGeneration/input.ts:40"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "C02",
-      "resolution": null,
-      "evidence": []
+      "resolution": "统一两引擎可选整数时长和范围；历史fraction仅在导入及不可变work metadata允许读取保留，严格新保存/生成/reuse；Simple UI显式清除历史时长，dirty文字/CAS保持。",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-c/reviews/C02-check.md",
+        ".trellis/tasks/09-30-src-remediation-c/reviews/C02-check-snapshot.json",
+        ".trellis/tasks/09-30-src-remediation-c/research/C02-implement-handoff.md",
+        ".trellis/tasks/09-30-src-remediation-c/research/C02-native-browser-handoff.json"
+      ]
     },
     {
       "id": "AR-04",
@@ -661,10 +762,13 @@
         "src/components/assets/AssetLibraryPage.tsx:138",
         "src/components/studio/AssetLibraryPages.tsx:130"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "C03",
-      "resolution": null,
-      "evidence": []
+      "resolution": "最小事务验证父项目并原子创建/touch；Studio兼容。现代原始FK/重复ID及规范化合成beat冲突在remap前拒绝，缺失/空episodes保持旧兼容。",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check.md",
+        ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-snapshot.json"
+      ]
     },
     {
       "id": "PD-02",
@@ -698,10 +802,13 @@
       "locations": [
         "src/db/repo.ts:855"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "C05",
-      "resolution": null,
-      "evidence": []
+      "resolution": "通用资产/分镜patch类型收窄并运行时显式拒绝媒体字段含undefined；专用槽位校验目标kind及owned非空MIME，clip允许图片占位/视频；封面同事务严格校验及原引用保护回收。",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-c/reviews/C05-check.md",
+        ".trellis/tasks/09-30-src-remediation-c/reviews/C05-check-snapshot.json"
+      ]
     },
     {
       "id": "PD-04",
@@ -1276,10 +1383,13 @@
         "src/lib/audioGeneration/runtime.ts:219",
         "src/lib/audio/engine.ts:14"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "C06",
-      "resolution": null,
-      "evidence": []
+      "resolution": "共享actual-byte有界读取/SSE事件及输出预算；音频32MiB、媒体下载256MiB本地策略、JSON4MiB/error64KiB/MiMo精确base64。HTTP/abort/redaction保持，超限提交uncertain无paid replay、音乐checkpoint GET恢复；split代理对实际增量计数。",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-c/reviews/C06-check.md",
+        ".trellis/tasks/09-30-src-remediation-c/reviews/C06-check-snapshot.json"
+      ]
     },
     {
       "id": "PM-06",
@@ -1387,10 +1497,13 @@
         "src/components/audio/AudioTimeline.tsx:270",
         "src/lib/audio/schedule.ts:22"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "C04",
-      "resolution": null,
-      "evidence": []
+      "resolution": "三消费者共用v0/v1指纹识别、canonical对象顺序及完整metadata映射；原stale保留，ZIP快照/解析过滤前捕获历史过期，未知串/删除章节历史保持。",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check.md",
+        ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check-snapshot.json"
+      ]
     },
     {
       "id": "SS-04",
@@ -1402,10 +1515,13 @@
       "locations": [
         "src/lib/projectPackage.ts:856"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "C03",
-      "resolution": null,
-      "evidence": []
+      "resolution": "最小事务验证父项目并原子创建/touch；Studio兼容。现代原始FK/重复ID及规范化合成beat冲突在remap前拒绝，缺失/空episodes保持旧兼容。",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check.md",
+        ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-snapshot.json"
+      ]
     },
     {
       "id": "SS-05",

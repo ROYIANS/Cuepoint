@@ -1,0 +1,75 @@
+[
+  {
+    "file": "src/db/agentTaskRecords.ts",
+    "before": 5,
+    "after": 3,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Async function 'validateTaskSources' has a complexity of 41. Maximum allowed is 20.",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 28 to the 20 allowed.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "complexity",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "count": 1
+      },
+      {
+        "rule": "complexity",
+        "count": 1
+      },
+      {
+        "rule": "@typescript-eslint/no-unnecessary-type-assertion",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/db/taskGenerationEvidence.ts",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/agent/wrapupEvidence.ts",
+    "before": 15,
+    "after": 15,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Async function 'collectWrapupSnapshot' has a complexity of 91. Maximum allowed is 20.",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 139 to the 20 allowed.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "complexity",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "count": 1
+      }
+    ]
+  }
+]

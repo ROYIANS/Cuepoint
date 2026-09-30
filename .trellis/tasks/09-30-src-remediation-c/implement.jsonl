@@ -1,0 +1,11 @@
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Types and unknown boundaries"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Actual regression checks"}
+{"file": ".trellis/spec/frontend/ai-connectors.md", "reason": "Adapters and inbound protocol"}
+{"file": ".trellis/spec/frontend/audio-music.md", "reason": "Decoder limits and paid recovery"}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Completion and preserved stream output"}
+{"file": ".trellis/spec/frontend/agent-web-research.md", "reason": "Existing bounded inbound read patterns"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "Shared boundaries"}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "One owner for rules"}
+{"file": ".trellis/tasks/09-30-src-remediation-c/research/C06-bounded-input-contract.md", "reason": "C06 refreshed contract"}
+{"file": ".trellis/tasks/09-30-src-remediation-c/research/C06-stream-reader-followup.md", "reason": "Handler ordering and actual provider media policy"}
+{"file": ".trellis/tasks/09-30-src-quality-architecture-audit/research/providers-media.md", "reason": "Original PM05 exact locations and risk classification"}

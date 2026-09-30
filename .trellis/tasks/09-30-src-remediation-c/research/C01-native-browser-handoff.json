@@ -1,0 +1,12 @@
+{
+  "files": {
+    "scripts/c01-browser-regression.mjs": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+    "tests/fixtures/c01/harness.ts": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+    "tests/fixtures/c01/index.html": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47"
+  },
+  "red": "reviews/C01-browser-red.log",
+  "green": "reviews/C01-browser-green.log",
+  "baseline": "reviews/C01-browser-red-baseline.json",
+  "bootstrapNotProductRed": "reviews/C01-browser-bootstrap-note.md",
+  "scope": "Actual Dexie native browser transaction with 160 jobs/161 calls, tool eligibility and actual publish rejection; no production UI or external provider/pixel decoding"
+}

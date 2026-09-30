@@ -1,0 +1,10 @@
+COMMAND: ["python3", ".trellis/tasks/09-30-src-remediation-c/tools/verify-reviewed-files.py"]
+{
+  "reviewUnits": [
+    "C01"
+  ],
+  "changedFiles": 9,
+  "missingOrChanged": []
+}
+
+EXIT: 0

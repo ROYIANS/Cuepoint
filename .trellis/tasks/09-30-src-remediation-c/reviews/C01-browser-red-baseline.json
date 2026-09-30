@@ -1,0 +1,8 @@
+{
+  "baseRevision": "028e60070c14552025a3493e65f032350fdba8b5",
+  "root": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/c01-native-baseline-qtre8pnk",
+  "sha256": {
+    "src/db/agentTaskRecords.ts": "3fc791ec6956a6f0614be5bd4e65c1dd1696bc752cc4870efcaad9c3e8abd39b",
+    "src/lib/agent/wrapupEvidence.ts": "aec3a8feadc5918a8661ca20ab5bc396748a302b4e303f0c2a9eeff93003d1b3"
+  }
+}

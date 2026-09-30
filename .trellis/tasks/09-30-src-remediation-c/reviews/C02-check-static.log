@@ -1,0 +1,47 @@
+COMMAND ["node", ".trellis/tasks/09-30-src-remediation-c/reviews/C02-check-static.mjs"]
+[
+  {
+    "file": "src/domain/music.ts",
+    "currentDiagnostics": 0,
+    "baselineDiagnostics": 0,
+    "added": []
+  },
+  {
+    "file": "src/db/music.ts",
+    "currentDiagnostics": 0,
+    "baselineDiagnostics": 0,
+    "added": []
+  },
+  {
+    "file": "src/lib/agent/musicTools.ts",
+    "currentDiagnostics": 0,
+    "baselineDiagnostics": 0,
+    "added": []
+  },
+  {
+    "file": "src/lib/audioGeneration/input.ts",
+    "currentDiagnostics": 0,
+    "baselineDiagnostics": 0,
+    "added": []
+  },
+  {
+    "file": "src/lib/ai/apimartAudio.ts",
+    "currentDiagnostics": 3,
+    "baselineDiagnostics": 3,
+    "added": []
+  },
+  {
+    "file": "src/lib/audioProjectPackage.ts",
+    "currentDiagnostics": 6,
+    "baselineDiagnostics": 6,
+    "added": []
+  },
+  {
+    "file": "src/components/music/MusicCreation.tsx",
+    "currentDiagnostics": 2,
+    "baselineDiagnostics": 2,
+    "added": []
+  }
+]
+
+EXIT_CODE=0

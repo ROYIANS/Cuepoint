@@ -1,0 +1,361 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/mediaPatchBoundary.test.ts (78 tests | 24 failed) 468ms
+   ❯ generic patches explicitly reject media fields (8)
+     × character rejects slots including own undefined without partial text writes 22ms
+     × scene rejects slots including own undefined without partial text writes 9ms
+     × prop rejects slots including own undefined without partial text writes 7ms
+     × style rejects slots including own undefined without partial text writes 8ms
+     × shot rejects firstFrame including own undefined 7ms
+     × shot rejects lastFrame including own undefined 6ms
+     × shot rejects clip including own undefined 6ms
+     × preserves text, relationships, extra and field baselines 10ms
+   ❯ dedicated slot media validation and target kinds (60)
+     × character rejects owned video result but accepts image plus video references 6ms
+     × character studio copies remain owned and reject wrong target kind 7ms
+     × scene rejects owned video result but accepts image plus video references 5ms
+     × scene studio copies remain owned and reject wrong target kind 7ms
+     × prop rejects owned video result but accepts image plus video references 4ms
+     × prop studio copies remain owned and reject wrong target kind 5ms
+     × style rejects owned video result but accepts image plus video references 4ms
+     × style studio copies remain owned and reject wrong target kind 5ms
+     × firstFrame enforces target kind and guarded replacement 5ms
+     × lastFrame enforces target kind and guarded replacement 5ms
+   ❯ project cover validation and recycling (10)
+     × rejects foreign before changing aspect or cover 4ms
+     × rejects missing before changing aspect or cover 4ms
+     × rejects empty before changing aspect or cover 4ms
+     × rejects wrong MIME before changing aspect or cover 4ms
+     × rejects wrong declared kind before changing aspect or cover 4ms
+     × rejects an empty identifier and recycles true orphans on replace and clear 4ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 24 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/mediaPatchBoundary.test.ts > generic patches explicitly reject media fields > character rejects slots including own undefined without partial text writes
+ FAIL  tests/mediaPatchBoundary.test.ts > generic patches explicitly reject media fields > scene rejects slots including own undefined without partial text writes
+ FAIL  tests/mediaPatchBoundary.test.ts > generic patches explicitly reject media fields > prop rejects slots including own undefined without partial text writes
+ FAIL  tests/mediaPatchBoundary.test.ts > generic patches explicitly reject media fields > style rejects slots including own undefined without partial text writes
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ tests/mediaPatchBoundary.test.ts:61:52
+     59|         for (const slots of [{front: resultSlot(id)}, undefined]) {
+     60|             const patch = {notes: "must roll back", slots};
+     61|             await expect(api.patch(asset.id, patch)).rejects.toThrow("…
+       |                                                    ^
+     62|             expect(await snapshot()).toEqual(before);
+     63|         }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/24]⎯
+
+ FAIL  tests/mediaPatchBoundary.test.ts > generic patches explicitly reject media fields > shot rejects firstFrame including own undefined
+ FAIL  tests/mediaPatchBoundary.test.ts > generic patches explicitly reject media fields > shot rejects lastFrame including own undefined
+ FAIL  tests/mediaPatchBoundary.test.ts > generic patches explicitly reject media fields > shot rejects clip including own undefined
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ tests/mediaPatchBoundary.test.ts:73:51
+     71|         for (const value of [resultSlot(id), undefined]) {
+     72|             const patch = {notes: "must roll back", [field]: value};
+     73|             await expect(patchShot(shot.id, patch)).rejects.toThrow("专…
+       |                                                   ^
+     74|             expect(await snapshot()).toEqual(before);
+     75|         }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/24]⎯
+
+ FAIL  tests/mediaPatchBoundary.test.ts > generic patches explicitly reject media fields > preserves text, relationships, extra and field baselines
+DraftConflictError: 其他页面已修改此内容。你的草稿已保留；请复制需要保留的文字，再采用最新内容后合并。
+ ❯ Transaction.<anonymous> src/db/repo.ts:1509:106
+    1507|                 const original = key === "durationSec" ? baseline.dura…
+    1508|                 const final = key === "durationSec" ? patch.durationSe…
+    1509|                 if (!sameDraftStructure(current, original) && !sameDra…
+       |                                                                                                          ^
+    1510|             }
+    1511|         }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/24]⎯
+
+ FAIL  tests/mediaPatchBoundary.test.ts > dedicated slot media validation and target kinds > character rejects owned video result but accepts image plus video references
+ FAIL  tests/mediaPatchBoundary.test.ts > dedicated slot media validation and target kinds > scene rejects owned video result but accepts image plus video references
+ FAIL  tests/mediaPatchBoundary.test.ts > dedicated slot media validation and target kinds > prop rejects owned video result but accepts image plus video references
+ FAIL  tests/mediaPatchBoundary.test.ts > dedicated slot media validation and target kinds > style rejects owned video result but accepts image plus video references
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ tests/mediaPatchBoundary.test.ts:115:71
+    113|             const video = await media(project.id, "video", "video/mp4"…
+    114|             const before = await snapshot();
+    115|             await expect(api.set(asset.id, resultSlot(video, "video"))…
+       |                                                                       ^
+    116|             expect(await snapshot()).toEqual(before);
+    117|             await api.set(asset.id, {...resultSlot(image), referenceVi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/24]⎯
+
+ FAIL  tests/mediaPatchBoundary.test.ts > dedicated slot media validation and target kinds > character studio copies remain owned and reject wrong target kind
+AssertionError: promise resolved "{ …(10) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "appearance": "",
++   "bio": "",
++   "createdAt": "2026-09-30T14:22:57.586Z",
++   "extra": {
++     "sourceAssetId": "chr_0130d589-301b-4c3d-9329-aab948bba674",
++   },
++   "id": "chr_0e458803-5275-497b-8326-44f385e041e9",
++   "name": "未命名角色",
++   "notes": "",
++   "projectId": "prj_42fa5b14-df2c-4d7f-b3df-1fe619529e38",
++   "slots": {
++     "front": {
++       "prompt": "",
++       "referenceImageIds": [],
++       "referenceVideoIds": [],
++       "result": {
++         "kind": "video",
++         "mediaId": "med_6d9f9c20-10ca-4f62-898f-008f60022ef1",
++       },
++     },
++   },
++   "updatedAt": "2026-09-30T14:22:57.586Z",
+  }
+
+ ❯ tests/mediaPatchBoundary.test.ts:136:60
+    134|             await table.update(asset.id, {slots: {[key]: resultSlot(vi…
+    135|             const destination = await createProject("reject copy"), be…
+    136|             await expect(api.copy(destination.id, asset.id)).rejects.t…
+       |                                                            ^
+    137|             expect(await snapshot()).toEqual(before);
+    138|         });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/24]⎯
+
+ FAIL  tests/mediaPatchBoundary.test.ts > dedicated slot media validation and target kinds > scene studio copies remain owned and reject wrong target kind
+AssertionError: promise resolved "{ …(11) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "atmosphere": "",
++   "createdAt": "2026-09-30T14:22:57.638Z",
++   "extra": {
++     "sourceAssetId": "scn_1c8435e1-baca-4e48-b170-132d181fa811",
++   },
++   "id": "scn_c95b08a4-de33-44db-8ead-3985eb13154c",
++   "location": "",
++   "name": "未命名场景",
++   "notes": "",
++   "projectId": "prj_37d47382-33a3-4a15-bc93-dc8a7e55ba0a",
++   "slots": {
++     "wide": {
++       "prompt": "",
++       "referenceImageIds": [],
++       "referenceVideoIds": [],
++       "result": {
++         "kind": "video",
++         "mediaId": "med_acedbbf5-2333-469c-8d38-755b01338894",
++       },
++     },
++   },
++   "timeOfDay": "",
++   "updatedAt": "2026-09-30T14:22:57.638Z",
+  }
+
+ ❯ tests/mediaPatchBoundary.test.ts:136:60
+    134|             await table.update(asset.id, {slots: {[key]: resultSlot(vi…
+    135|             const destination = await createProject("reject copy"), be…
+    136|             await expect(api.copy(destination.id, asset.id)).rejects.t…
+       |                                                            ^
+    137|             expect(await snapshot()).toEqual(before);
+    138|         });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/24]⎯
+
+ FAIL  tests/mediaPatchBoundary.test.ts > dedicated slot media validation and target kinds > prop studio copies remain owned and reject wrong target kind
+AssertionError: promise resolved "{ …(9) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "createdAt": "2026-09-30T14:22:57.681Z",
++   "extra": {
++     "sourceAssetId": "prp_71c82cfb-b7fb-4c8a-9fac-2fd7b3cb7702",
++   },
++   "id": "prp_3b720ebe-4122-4468-8fd1-0db973a86a69",
++   "kind": "",
++   "name": "未命名道具",
++   "notes": "",
++   "projectId": "prj_50b2ef80-154f-4a8a-b33b-b78ca0be5805",
++   "slots": {
++     "hero": {
++       "prompt": "",
++       "referenceImageIds": [],
++       "referenceVideoIds": [],
++       "result": {
++         "kind": "video",
++         "mediaId": "med_4dc73d44-f3d9-43bd-a565-8a621006f693",
++       },
++     },
++   },
++   "updatedAt": "2026-09-30T14:22:57.681Z",
+  }
+
+ ❯ tests/mediaPatchBoundary.test.ts:136:60
+    134|             await table.update(asset.id, {slots: {[key]: resultSlot(vi…
+    135|             const destination = await createProject("reject copy"), be…
+    136|             await expect(api.copy(destination.id, asset.id)).rejects.t…
+       |                                                            ^
+    137|             expect(await snapshot()).toEqual(before);
+    138|         });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/24]⎯
+
+ FAIL  tests/mediaPatchBoundary.test.ts > dedicated slot media validation and target kinds > style studio copies remain owned and reject wrong target kind
+AssertionError: promise resolved "{ …(8) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "createdAt": "2026-09-30T14:22:57.730Z",
++   "extra": {
++     "sourceAssetId": "sty_852c28e5-8bd2-4eb4-b13a-2df4a772359b",
++   },
++   "id": "sty_1d0eda5e-967f-4751-be08-00405f3499bb",
++   "name": "未命名风格",
++   "notes": "",
++   "projectId": "prj_0fc0758e-817d-4baa-a58a-02fdfa37bf43",
++   "slots": {
++     "look": {
++       "prompt": "",
++       "referenceImageIds": [],
++       "referenceVideoIds": [],
++       "result": {
++         "kind": "video",
++         "mediaId": "med_3a29dbeb-a14a-4eee-918c-a6d68f8553f6",
++       },
++     },
++   },
++   "updatedAt": "2026-09-30T14:22:57.730Z",
+  }
+
+ ❯ tests/mediaPatchBoundary.test.ts:136:60
+    134|             await table.update(asset.id, {slots: {[key]: resultSlot(vi…
+    135|             const destination = await createProject("reject copy"), be…
+    136|             await expect(api.copy(destination.id, asset.id)).rejects.t…
+       |                                                            ^
+    137|             expect(await snapshot()).toEqual(before);
+    138|         });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/24]⎯
+
+ FAIL  tests/mediaPatchBoundary.test.ts > dedicated slot media validation and target kinds > firstFrame enforces target kind and guarded replacement
+ FAIL  tests/mediaPatchBoundary.test.ts > dedicated slot media validation and target kinds > lastFrame enforces target kind and guarded replacement
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ tests/mediaPatchBoundary.test.ts:154:85
+    152|             } else {
+    153|                 const before = await snapshot();
+    154|                 await expect(setShotSlot(shot.id, field, resultSlot(vi…
+       |                                                                                     ^
+    155|                 expect(await snapshot()).toEqual(before);
+    156|             }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/24]⎯
+
+ FAIL  tests/mediaPatchBoundary.test.ts > project cover validation and recycling > rejects foreign before changing aspect or cover
+ FAIL  tests/mediaPatchBoundary.test.ts > project cover validation and recycling > rejects missing before changing aspect or cover
+ FAIL  tests/mediaPatchBoundary.test.ts > project cover validation and recycling > rejects empty before changing aspect or cover
+ FAIL  tests/mediaPatchBoundary.test.ts > project cover validation and recycling > rejects wrong MIME before changing aspect or cover
+ FAIL  tests/mediaPatchBoundary.test.ts > project cover validation and recycling > rejects wrong declared kind before changing aspect or cover
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ tests/mediaPatchBoundary.test.ts:172:112
+    170|         const {project} = await fixture(), slot = await invalidSlot(pr…
+    171|         const before = await snapshot();
+    172|         await expect(patchProjectOutput(project.id, {aspectPreset: "9:…
+       |                                                                                                                ^
+    173|         expect(await snapshot()).toEqual(before);
+    174|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/24]⎯
+
+ FAIL  tests/mediaPatchBoundary.test.ts > project cover validation and recycling > rejects an empty identifier and recycles true orphans on replace and clear
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ tests/mediaPatchBoundary.test.ts:178:72
+    176|         const {project} = await fixture(), first = await media(project…
+    177|         const before = await snapshot();
+    178|         await expect(patchProjectOutput(project.id, {coverMediaId: ""}…
+       |                                                                        ^
+    179|         expect(await snapshot()).toEqual(before);
+    180|         await patchProjectOutput(project.id, {coverMediaId: first});
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/24]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  24 failed | 54 passed (78)
+   Start at  22:22:57
+   Duration  714ms (tests 72%, transform 19%, setup 6%, import 3%)
+

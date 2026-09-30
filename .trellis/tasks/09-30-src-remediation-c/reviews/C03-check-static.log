@@ -1,0 +1,15 @@
+COMMAND ["/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node", ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-static.mjs"]
+[
+  {
+    "file": "src/db/repo.ts",
+    "baselineDiagnostics": 11,
+    "currentDiagnostics": 11,
+    "added": []
+  },
+  {
+    "file": "src/lib/projectPackage.ts",
+    "baselineDiagnostics": 60,
+    "currentDiagnostics": 60,
+    "added": []
+  }
+]

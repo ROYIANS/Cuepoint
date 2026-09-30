@@ -1,0 +1,7 @@
+COMMAND: ["/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm", "lint"]
+
+> cuepoint@0.1.0 lint /Users/xiaomengdao/WebstormProjects/aifenjing
+> tsc -b --pretty false
+
+
+EXIT: 0

@@ -1,0 +1,13 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.evaluate: Error: rejected query became result source
+    at check (http://127.0.0.1:5173/tests/fixtures/c01/harness.ts:8:21)
+    at Object.run (http://127.0.0.1:5173/tests/fixtures/c01/harness.ts:33:3)
+    at async <anonymous>:337:30
+    at /Users/xiaomengdao/WebstormProjects/aifenjing/scripts/c01-browser-regression.mjs:23:31 {
+  log: []
+}
+
+Node.js v24.11.0

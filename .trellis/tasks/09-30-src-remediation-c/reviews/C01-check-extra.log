@@ -1,0 +1,10 @@
+COMMAND: ["git", "diff", "--check", "--", "src/db/taskGenerationEvidence.ts", "src/db/agentTaskRecords.ts", "src/lib/agent/wrapupEvidence.ts", "tests/agentGenerationEvidence.test.ts", "tests/agentTaskWrapup.test.ts", "tests/agentTaskOrchestrationReview.test.ts", "scripts/c01-browser-regression.mjs", "tests/fixtures/c01/harness.ts", "tests/fixtures/c01/index.html"]
+
+
+EXIT: 0
+All 9 tracked/new source/test/browser files checked for trailing whitespace: PASS
+COMMAND: ["/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node", "--check", "scripts/c01-browser-regression.mjs"]
+
+
+EXIT: 0
+Native red baseline independently matches committed B: {"src/db/agentTaskRecords.ts": {"expected": "3fc791ec6956a6f0614be5bd4e65c1dd1696bc752cc4870efcaad9c3e8abd39b", "actual": "3fc791ec6956a6f0614be5bd4e65c1dd1696bc752cc4870efcaad9c3e8abd39b", "match": true}, "src/lib/agent/wrapupEvidence.ts": {"expected": "aec3a8feadc5918a8661ca20ab5bc396748a302b4e303f0c2a9eeff93003d1b3", "actual": "aec3a8feadc5918a8661ca20ab5bc396748a302b4e303f0c2a9eeff93003d1b3", "match": true}}

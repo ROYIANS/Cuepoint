@@ -1,0 +1,25 @@
+
+ RUN  v5.0.1 /var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-old-source-ih1gk2f7
+
+ ❯ tests/musicDurationContract.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/musicDurationContract.test.ts [ tests/musicDurationContract.test.ts ]
+Error: Cannot find module '../../../../vendor/lobehub/manifest.json' imported from /private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-old-source-ih1gk2f7/src/lib/ai/modelBank/index.ts
+ ❯ ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-old-source-ih1gk2f7/src/lib/ai/modelBank/index.ts:2:1
+      1| import lookup from "./lookup.generated.json";
+      2| import manifest from "../../../../vendor/lobehub/manifest.json";
+       | ^
+      3|
+      4| export const MODEL_BANK_REVISION = manifest.revision;
+ ❯ ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-old-source-ih1gk2f7/src/lib/ai/modelMetadata.ts:1:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  20:18:45
+   Duration  220ms (setup 54%, transform 44%, worker 3%)
+

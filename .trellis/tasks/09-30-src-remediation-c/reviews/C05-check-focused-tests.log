@@ -1,0 +1,13 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+
+ Test Files  12 passed (12)
+      Tests  260 passed (260)
+   Start at  22:34:31
+   Duration  1.87s (tests 52%, transform 28%, setup 13%, import 6%, worker 1%)
+
+  Transform  transforming modules took 3.21s · 28% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

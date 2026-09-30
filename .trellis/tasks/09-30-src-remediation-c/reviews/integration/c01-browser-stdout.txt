@@ -1,0 +1,2 @@
+11:28:57 PM [vite] (client) Re-optimizing dependencies because vite config has changed
+{"checks":6,"generations":160,"calls":161,"nativeIndexedDB":true,"provenanceRefused":true,"externalRequests":0,"browser":"Chromium native IndexedDB","limitation":"Synthetic nonempty media metadata, no pixel decode, external provider or full product UI"}

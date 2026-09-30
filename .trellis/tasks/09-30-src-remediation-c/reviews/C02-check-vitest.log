@@ -1,0 +1,16 @@
+COMMAND ["/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm", "exec", "vitest", "run", "tests/musicDurationContract.test.ts", "tests/musicLegacyDurationRepair.test.ts", "tests/musicDraftVariants.test.ts", "tests/audioMusicAgentTools.test.ts", "tests/musicGenerationReview.test.ts", "tests/musicReviewPresentation.test.ts", "tests/audioFoundation.test.ts", "tests/audioGenerationRuntime.test.ts", "tests/audioGenerationRecoveryAudit.test.ts", "tests/audioGenerationAgent.test.ts", "tests/apimartAudio.test.ts", "tests/projectPackage.test.ts"]
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+
+ Test Files  12 passed (12)
+      Tests  248 passed (248)
+   Start at  20:51:06
+   Duration  2.77s (tests 46%, transform 39%, setup 8%, import 8%)
+
+  Transform  transforming modules took 6.94s · 39% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+
+EXIT_CODE=0

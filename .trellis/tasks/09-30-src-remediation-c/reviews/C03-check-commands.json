@@ -1,0 +1,83 @@
+{
+  "tests": {
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "test",
+      "tests/parentProjectWrites.test.ts",
+      "tests/projectPackageRelations.test.ts",
+      "tests/projectPackage.test.ts",
+      "tests/repoReliability.test.ts",
+      "tests/repo.test.ts",
+      "tests/assetFoundation.test.ts",
+      "tests/agentToolTransactions.test.ts",
+      "tests/runWriteOutcomes.test.ts",
+      "tests/shotDeleteUndo.test.ts",
+      "tests/draftMedia.test.ts",
+      "tests/productionProposals.test.ts",
+      "tests/agentGenerationBatchSafety.test.ts",
+      "tests/agentGenerationRecovery.test.ts"
+    ],
+    "exitCode": 0,
+    "log": "reviews/C03-check-tests.log",
+    "invocation": "local pnpm test script with 13 explicit file arguments",
+    "packageScript": "vitest run",
+    "effectiveCommand": [
+      "vitest",
+      "run",
+      "tests/parentProjectWrites.test.ts",
+      "tests/projectPackageRelations.test.ts",
+      "tests/projectPackage.test.ts",
+      "tests/repoReliability.test.ts",
+      "tests/repo.test.ts",
+      "tests/assetFoundation.test.ts",
+      "tests/agentToolTransactions.test.ts",
+      "tests/runWriteOutcomes.test.ts",
+      "tests/shotDeleteUndo.test.ts",
+      "tests/draftMedia.test.ts",
+      "tests/productionProposals.test.ts",
+      "tests/agentGenerationBatchSafety.test.ts",
+      "tests/agentGenerationRecovery.test.ts"
+    ],
+    "actualFiles": 13,
+    "actualPassed": 185,
+    "wholeSuiteRun": false
+  },
+  "lint": {
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "lint"
+    ],
+    "exitCode": 0,
+    "log": "reviews/C03-check-lint.log"
+  },
+  "static": {
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-static.mjs"
+    ],
+    "exitCode": 0,
+    "log": "reviews/C03-check-static.log"
+  },
+  "native-browser": {
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/c01-browser-regression.mjs"
+    ],
+    "exitCode": 0,
+    "log": "reviews/C03-check-native-browser.log"
+  },
+  "whitespace": {
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "src/db/repo.ts",
+      "src/lib/projectPackage.ts",
+      "tests/parentProjectWrites.test.ts",
+      "tests/projectPackageRelations.test.ts"
+    ],
+    "exitCode": 0,
+    "log": "reviews/C03-check-whitespace.log"
+  }
+}

@@ -1,0 +1,171 @@
+
+> cuepoint@0.1.0 test /Users/xiaomengdao/WebstormProjects/aifenjing
+> vitest run -- tests/musicDurationContract.test.ts
+
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/musicDurationContract.test.ts (26 tests | 5 failed) 918ms
+   ❯ C02 integer music settings across real consumers (20)
+     × advertises optional integer durations with the engine's exact bounds 17ms
+     × rejects flowmusic/30.5 before domain writes, ledger or network 77ms
+     × rejects suno/30.5 before domain writes, ledger or network 41ms
+   ❯ C02 history remains readable and repairable (6)
+     × preserves fractional flowmusic draft/work history through actual ZIP and permits repair/metadata 32ms
+     × preserves fractional suno draft/work history through actual ZIP and permits repair/metadata 21ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/musicDurationContract.test.ts > C02 integer music settings across real consumers > advertises optional integer durations with the engine's exact bounds
+AssertionError: expected { type: 'number', minimum: 1, …(1) } to deeply equal { type: 'integer', minimum: 1, …(1) }
+
+- Expected
++ Received
+
+  {
+    "maximum": 240,
+    "minimum": 1,
+-   "type": "integer",
++   "type": "number",
+  }
+
+ ❯ tests/musicDurationContract.test.ts:67:43
+     65|         const parameters = tool("music_save_draft").parameters as {pro…
+     66|         const [flow, suno] = parameters.properties.settings.anyOf;
+     67|         expect(flow.properties.lengthSec).toEqual({type: "integer", mi…
+       |                                           ^
+     68|         expect(suno.properties.durationSec).toEqual({type: "integer", …
+     69|         expect(flow.required).not.toContain("lengthSec");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/musicDurationContract.test.ts > C02 integer music settings across real consumers > rejects flowmusic/30.5 before domain writes, ledger or network
+AssertionError: promise resolved "{ settings: { …(5) }, …(5) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "createdAt": "2026-09-30T12:13:33.445Z",
++   "id": "mdr_bc803d6a-8fae-4c09-9bc6-a790f894adf7",
++   "projectId": "prj_14fbf251-df8d-43f7-a045-728313f27033",
++   "revision": 1,
++   "settings": {
++     "engine": "flowmusic",
++     "lengthSec": 30.5,
++     "lyrics": "",
++     "soundPrompt": "钢琴",
++     "title": "歌",
++   },
++   "updatedAt": "2026-09-30T12:13:33.445Z",
+  }
+
+ ❯ tests/musicDurationContract.test.ts:100:64
+     98|         const raw = {projectId: project.id, id: draft.id, revision: dr…
+     99|         const before = await snapshot();
+    100|         await expect(addMusicDraft(project.id, {settings: bad})).rejec…
+       |                                                                ^
+    101|         await expect(patchMusicDraft(project.id, draft.id, draft.revis…
+    102|         await expect(work(project.id, bad)).rejects.toThrow();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/musicDurationContract.test.ts > C02 integer music settings across real consumers > rejects suno/30.5 before domain writes, ledger or network
+AssertionError: promise resolved "{ …(6) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "createdAt": "2026-09-30T12:13:33.649Z",
++   "id": "mdr_03b87da8-19e0-46e4-ab8c-27bca9f877cf",
++   "projectId": "prj_06d8dded-74fe-43de-ae08-8e3963d6c53f",
++   "revision": 1,
++   "settings": {
++     "custom": true,
++     "durationSec": 30.5,
++     "engine": "suno",
++     "instrumental": false,
++     "negativeTags": "",
++     "prompt": "歌词",
++     "style": "钢琴",
++     "title": "歌",
++     "version": "v6",
++   },
++   "updatedAt": "2026-09-30T12:13:33.649Z",
+  }
+
+ ❯ tests/musicDurationContract.test.ts:100:64
+     98|         const raw = {projectId: project.id, id: draft.id, revision: dr…
+     99|         const before = await snapshot();
+    100|         await expect(addMusicDraft(project.id, {settings: bad})).rejec…
+       |                                                                ^
+    101|         await expect(patchMusicDraft(project.id, draft.id, draft.revis…
+    102|         await expect(work(project.id, bad)).rejects.toThrow();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/musicDurationContract.test.ts > C02 history remains readable and repairable > preserves fractional flowmusic draft/work history through actual ZIP and permits repair/metadata
+AssertionError: promise resolved "{ summary: '复用音乐参数', …(3) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "changes": [
++     "复用「歌」的参数新建音乐草稿，不生成音乐。",
++   ],
++   "revision": "sha256-v1:65133769de7680c2b790f3c62128518b2811b06dd477da4b97ac565a483efaa3",
++   "summary": "复用音乐参数",
++   "target": {
++     "href": "/p/prj_ed7e910e-d4ea-400a-b712-a17abaf11c6a",
++     "label": "打开作品项目",
++   },
+  }
+
+ ❯ tests/musicDurationContract.test.ts:150:148
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/musicDurationContract.test.ts > C02 history remains readable and repairable > preserves fractional suno draft/work history through actual ZIP and permits repair/metadata
+AssertionError: promise resolved "{ summary: '复用音乐参数', …(3) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "changes": [
++     "复用「歌」的参数新建音乐草稿，不生成音乐。",
++   ],
++   "revision": "sha256-v1:98f0b0cc0d31024a39ab515583ec3745d2b41c4eace585a83374f46dda34bb9a",
++   "summary": "复用音乐参数",
++   "target": {
++     "href": "/p/prj_ca225a9a-83dc-432c-a144-a5936bc169dd",
++     "label": "打开作品项目",
++   },
+  }
+
+ ❯ tests/musicDurationContract.test.ts:150:148
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed | 135 passed (136)
+      Tests  5 failed | 2201 passed (2206)
+   Start at  20:13:27
+   Duration  10.78s (tests 71%, transform 10%, import 9%, setup 9%)
+
+    Isolate  136 workers spawned · ~68ms startup each (spawn + environment, per file)
+             at least ~962ms faster with isolate: false — reuses workers across files instead of one per file
+
+ ELIFECYCLE  Test failed. See above for more details.

@@ -1,0 +1,23 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--check",
+    "--",
+    "src/domain/music.ts",
+    "src/db/music.ts",
+    "src/lib/agent/musicTools.ts",
+    "src/lib/audioGeneration/input.ts",
+    "src/lib/ai/apimartAudio.ts",
+    "src/lib/audioProjectPackage.ts",
+    "src/components/music/MusicCreation.tsx",
+    "tests/musicDurationContract.test.ts",
+    "tests/musicLegacyDurationRepair.test.ts",
+    "scripts/c02-browser-regression.mjs",
+    "tests/fixtures/c02/harness.tsx",
+    "tests/fixtures/c02/index.html"
+  ],
+  "exitCode": 0,
+  "output": "",
+  "trailingWhitespace": []
+}

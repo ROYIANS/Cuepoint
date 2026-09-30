@@ -1,0 +1,69 @@
+COMMAND ["rg", "-n", "validate(Legacy)?Music(Draft|Work|Settings)|MUSIC_DURATION_LIMITS|addMusicDraft|patchMusicDraft|addMusicWork|patchMusicWork", "src"]
+src/domain/music.ts:5:export const MUSIC_DURATION_LIMITS = {
+src/db/music.ts:3:import {MUSIC_DURATION_LIMITS, type MusicDraft, type MusicSettings, type MusicWork} from "@/domain/music";
+src/db/music.ts:21:    const {min, max} = MUSIC_DURATION_LIMITS[engine];
+src/db/music.ts:37:export function validateMusicSettings(settings: MusicSettings) {
+src/db/music.ts:41:export async function validateMusicDraft(row: MusicDraft) {
+src/db/music.ts:43:    validateMusicSettings(row.settings);
+src/db/music.ts:47:export async function validateLegacyMusicDraft(row: MusicDraft) {
+src/db/music.ts:60:export async function validateMusicWork(row: MusicWork) {
+src/db/music.ts:65:export async function validateLegacyMusicWork(row: MusicWork) {
+src/db/music.ts:69:export async function addMusicDraft(projectId: string, input: AudioInput<MusicDraft>): Promise<MusicDraft> {
+src/db/music.ts:72:        await validateMusicDraft(row);
+src/db/music.ts:79:export const patchMusicDraft = (projectId: string, id: string, revision: number, patch: Partial<AudioInput<MusicDraft>>) => patchAudioRow(db.musicDrafts, projectId, id, revision, patch, ["settings"], validateMusicDraft);
+src/db/music.ts:81:export async function addMusicWork(projectId: string, input: AudioInput<MusicWork>, media?: MediaRecord): Promise<MusicWork> {
+src/db/music.ts:89:        await validateMusicWork(row);
+src/db/music.ts:96:export const patchMusicWork = (projectId: string, id: string, revision: number, patch: Partial<Pick<MusicWork, "title" | "notes" | "favorite">>) => patchAudioRow(db.musicWorks, projectId, id, revision, patch, ["title", "notes", "favorite"], validateLegacyMusicWork);
+src/db/audioGeneration.ts:12:import {validateMusicSettings} from "./music";
+src/db/audioGeneration.ts:34:        validateMusicSettings(row.input.settings);
+src/components/music/MusicCreation.tsx:4:import {patchMusicDraft} from "@/db/music";
+src/components/music/MusicCreation.tsx:44:            await patchMusicDraft(record.projectId, current.id, current.revision, {settings});
+src/components/music/MusicWorkspacePage.tsx:6:import {addMusicDraft, patchMusicWork} from "@/db/music";
+src/components/music/MusicWorkspacePage.tsx:121:        const row = retained?.projectId === projectId && musicVariant(retained.settings) === target ? retained : await addMusicDraft(projectId, {settings: newVariantSettings(current.settings, target)});
+src/components/music/MusicWorkspacePage.tsx:134:                                                  const row = await addMusicDraft(projectId, {settings: structuredClone(selected.settings)});
+src/components/music/MusicWorkspacePage.tsx:157:                        const row = await addMusicDraft(projectId, {settings: defaultMusicSettings()});
+src/components/music/MusicWorkspacePage.tsx:167:                    const row = await addMusicDraft(projectId, {settings: defaultMusicSettings()});
+src/components/music/MusicWorkspacePage.tsx:205:                            onClick={() => void action(() => patchMusicWork(projectId, work.id, work.revision, {favorite: !work.favorite}))}><Heart
+src/components/music/MusicWorkspacePage.tsx:243:        await patchMusicWork(work.projectId, work.id, current.revision, {[field]: text});
+src/lib/ai/apimartAudio.ts:3:import {MUSIC_DURATION_LIMITS} from "@/domain/music";
+src/lib/ai/apimartAudio.ts:21:    length: z.number().int("音乐时长必须为整数秒").min(MUSIC_DURATION_LIMITS.flowmusic.min).max(MUSIC_DURATION_LIMITS.flowmusic.max).optional(),
+src/lib/ai/apimartAudio.ts:41:    duration: z.number().int("音乐时长必须为整数秒").min(MUSIC_DURATION_LIMITS.suno.min).max(MUSIC_DURATION_LIMITS.suno.max).optional(),
+src/lib/audioProjectPackage.ts:15:import {validateLegacyMusicDraft, validateLegacyMusicWork} from "@/db/music";
+src/lib/audioProjectPackage.ts:279:    for (const row of value.musicDrafts) await validateLegacyMusicDraft(row);
+src/lib/audioProjectPackage.ts:280:    for (const row of value.musicWorks) await validateLegacyMusicWork(row);
+src/lib/audioGeneration/runtime.ts:5:import {addMusicWork} from "@/db/music";
+src/lib/audioGeneration/runtime.ts:128:            const work = await addMusicWork(job.projectId, {
+src/lib/agent/musicTools.ts:3:import {addMusicDraft, patchMusicDraft, patchMusicWork, validateMusicSettings} from "@/db/music";
+src/lib/agent/musicTools.ts:15:import {MUSIC_DURATION_LIMITS} from "@/domain/music";
+src/lib/agent/musicTools.ts:29:        lengthSec: s.optional(s.number(MUSIC_DURATION_LIMITS.flowmusic.min, MUSIC_DURATION_LIMITS.flowmusic.max, true)),
+src/lib/agent/musicTools.ts:41:        durationSec: s.optional(s.number(MUSIC_DURATION_LIMITS.suno.min, MUSIC_DURATION_LIMITS.suno.max, true))
+src/lib/agent/musicTools.ts:135:        execute: (args) => args.id ? patchMusicDraft(args.projectId, args.id, args.revision!, {settings: args.settings}) : addMusicDraft(args.projectId, {settings: args.settings})
+src/lib/agent/musicTools.ts:161:        execute: (args) => patchMusicWork(args.projectId, args.id, args.revision, args.patch)
+src/lib/agent/musicTools.ts:175:            validateMusicSettings(work.settings);
+src/lib/agent/musicTools.ts:186:            return addMusicDraft(args.projectId, {settings: work.settings});
+src/lib/audioGeneration/input.ts:4:import {MUSIC_DURATION_LIMITS, type MusicSettings} from "@/domain/music";
+src/lib/audioGeneration/input.ts:40:        lengthSec: z.number().int("音乐时长必须为整数秒").min(MUSIC_DURATION_LIMITS.flowmusic.min).max(MUSIC_DURATION_LIMITS.flowmusic.max).optional(),
+src/lib/audioGeneration/input.ts:52:        durationSec: z.number().int("音乐时长必须为整数秒").min(MUSIC_DURATION_LIMITS.suno.min).max(MUSIC_DURATION_LIMITS.suno.max).optional()
+EXIT_CODE=0
+COMMAND ["rg", "-n", "lengthSec|durationSec|musicWireInput|validateGenerationInput", "src/lib/audioGeneration/runtime.ts", "src/db/audioGeneration.ts", "src/lib/agent/audioGenerationTools.ts", "src/lib/audioProjectPackage.ts"]
+src/lib/audioProjectPackage.ts:16:import {mimoSpeechSettingsSchema, validateGenerationInput} from "./audioGeneration/input";
+src/lib/audioProjectPackage.ts:24:const meta = {durationSec: number.positive(), sampleRate: number.int().positive(), channels: number.int().positive()};
+src/lib/audioProjectPackage.ts:42:        lengthSec: number.optional(),
+src/lib/audioProjectPackage.ts:54:        durationSec: number.optional()
+src/lib/audioProjectPackage.ts:127:        durationSec: number
+src/lib/audioProjectPackage.ts:155:            durationSec: number.optional(),
+src/lib/audioProjectPackage.ts:284:            if (job.input.mimo) validateGenerationInput(job.input);
+src/db/audioGeneration.ts:13:import {validateGenerationInput} from "@/lib/audioGeneration/input";
+src/db/audioGeneration.ts:25:            validateGenerationInput(row.input);
+src/lib/agent/audioGenerationTools.ts:17:import {validateGenerationInput} from "@/lib/audioGeneration/input";
+src/lib/agent/audioGenerationTools.ts:56:    validateGenerationInput(args.input);
+src/lib/audioGeneration/runtime.ts:29:import {musicWireInput, speechWireInput, validateGenerationInput} from "./input";
+src/lib/audioGeneration/runtime.ts:83:    const input = validateGenerationInput(args.input);
+src/lib/audioGeneration/runtime.ts:126:            saved = {...result, mediaId, takeId: take.id, durationSec: metadata.durationSec, error: undefined};
+src/lib/audioGeneration/runtime.ts:132:            saved = {...result, mediaId, workId: work.id, durationSec: metadata.durationSec, error: undefined};
+src/lib/audioGeneration/runtime.ts:179:        validateGenerationInput(job.input);
+src/lib/audioGeneration/runtime.ts:236:        const response = await submitApimartMusic(credentials, musicWireInput(job.input.settings), options);
+src/lib/audioGeneration/runtime.ts:310:                        key, title: track.title, lyrics: track.lyrics, durationSec: track.duration,
+EXIT_CODE=0
+COMMAND ["rg", "-n", "Math\\.(round|floor|ceil|trunc)|parseInt|eslint-disable|@ts-ignore|@ts-nocheck", "src/domain/music.ts", "src/db/music.ts", "src/lib/agent/musicTools.ts", "src/lib/audioGeneration/input.ts", "src/lib/ai/apimartAudio.ts", "src/lib/audioProjectPackage.ts", "src/components/music/MusicCreation.tsx"]
+EXIT_CODE=1

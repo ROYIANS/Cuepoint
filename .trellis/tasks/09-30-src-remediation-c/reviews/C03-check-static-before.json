@@ -1,0 +1,844 @@
+[
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/repo.ts",
+    "messages": [
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 24 to the 20 allowed.",
+        "line": 262,
+        "column": 65,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 262,
+        "endColumn": 67
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'collectMediaIds' has a complexity of 32. Maximum allowed is 20.",
+        "line": 634,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 634,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 39 to the 20 allowed.",
+        "line": 634,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 634,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 33 to the 20 allowed.",
+        "line": 761,
+        "column": 18,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 761,
+        "endColumn": 20
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async arrow function has a complexity of 23. Maximum allowed is 20.",
+        "line": 761,
+        "column": 18,
+        "nodeType": "ArrowFunctionExpression",
+        "messageId": "complex",
+        "endLine": 761,
+        "endColumn": 20
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 766,
+        "column": 17,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 772,
+        "endColumn": 60
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 768,
+        "column": 23,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 772,
+        "endColumn": 60
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 778,
+        "column": 17,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 784,
+        "endColumn": 93
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 780,
+        "column": 23,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 784,
+        "endColumn": 93
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since it does not change the type of the expression.",
+        "line": 1281,
+        "column": 24,
+        "nodeType": "TSNonNullExpression",
+        "messageId": "unnecessaryAssertion",
+        "endLine": 1281,
+        "endColumn": 49,
+        "fix": {
+          "range": [
+            52901,
+            52902
+          ],
+          "text": ""
+        }
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async arrow function has a complexity of 21. Maximum allowed is 20.",
+        "line": 1419,
+        "column": 61,
+        "nodeType": "ArrowFunctionExpression",
+        "messageId": "complex",
+        "endLine": 1419,
+        "endColumn": 63
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 0,
+    "warningCount": 10,
+    "fixableErrorCount": 1,
+    "fixableWarningCount": 0,
+    "source": "import {AUDIO_TABLES, newAudioRow} from \"./audioShared\";\nimport type {AudioChapter, AudioTrack} from \"@/domain/audio\";\nimport {defaultMusicSettings, type MusicDraft} from \"@/domain/music\";\nimport {\n    type AspectPresetId,\n    type Character,\n    type CharacterImageSlot,\n    type ChatMessage,\n    type ChatMessageRole,\n    type ChatMessageStatus,\n    type ChatThread,\n    type ConnectorConfig,\n    type ConnectorDefinitionId,\n    type ConnectorProtocol,\n    DEFAULT_SHOT_SETTINGS,\n    DEFAULT_VISIBLE_COLUMNS,\n    emptyEpisodeStory,\n    emptySeriesStory,\n    emptySetting,\n    type Episode,\n    type EpisodeStory,\n    type GenerationSlot,\n    getEpisodeShotFilters,\n    getProjectKind,\n    type Id,\n    isStudioLibrary,\n    type MediaRecord,\n    normalizeAspectPreset,\n    normalizeEpisodeStory,\n    normalizeSeriesStory,\n    normalizeShotFilters,\n    normalizeShotSettings,\n    normalizeShotStatus,\n    type Project,\n    type ProjectMode,\n    type Prop,\n    type PropImageSlot,\n    type Scene,\n    type SceneImageSlot,\n    type Shot,\n    type ShotColumnId,\n    type ShotFilters,\n    type ShotPictureField,\n    type ShotSettings,\n    type StoryBeat,\n    STUDIO_LIBRARY_ID,\n    type StyleImageSlot,\n    type VisualStyle,\n    type WorldSetting\n} from \"@/domain/types\";\nimport {assertDraftBaseline, DraftConflictError, sameDraftStructure} from \"@/lib/draftConflict\";\nimport {getGeneralAgentConfig} from \"./agentSettings\";\nimport {normalizeContextPolicy} from \"@/lib/agent/contextPolicy\";\nimport {validateGenerationDefaults} from \"@/domain/output\";\nimport {db} from \"./database\";\nimport {normalizeBaseUrl} from \"@/lib/ai/openaiCompatible\";\nimport {collectSlotsMedia, emptySlot, SHOT_PICTURE_FIELDS, slotMediaIds, sameSlotValue} from \"@/domain/slot\";\nimport {createId, nowIso} from \"@/lib/ids\";\n\n// Media recycling must hold the same lock as every committed slot/cover writer.\nexport const PRODUCTION_TABLES = [\n    ...AUDIO_TABLES,\n    db.projects, db.episodes, db.characters, db.scenes,\n    db.props, db.styles, db.shots, db.media, db.materialUses, db.productionProposals, db.agentGenerationJobs, db.agentGenerationBatches, db.agentGenerationBatchItems, db.projectReferences, db.referenceChunks,\n];\n\nfunction pickPatch<T extends object>(patch: T, keys: readonly (keyof T)[]): Partial<T> {\n    return Object.fromEntries(keys.filter((key) => Object.hasOwn(patch, key)).map((key) => [key, patch[key]])) as Partial<T>;\n}\n\nfunction touch<T extends { updatedAt: string }>(record: T): T {\n    return {...record, updatedAt: nowIso()};\n}\n\nexport async function touchProject(projectId: Id): Promise<void> {\n    if (isStudioLibrary(projectId)) return;\n    await db.projects.update(projectId, {updatedAt: nowIso()});\n}\n\nexport function emptyProject(\n    name: string,\n    mode: ProjectMode = \"film\",\n    aspectPreset: AspectPresetId = \"16:9\",\n): Project {\n    const at = nowIso();\n    return {\n        id: createId(\"prj\"),\n        name: name.trim() || \"未命名项目\",\n        mode,\n        aspectPreset: normalizeAspectPreset(aspectPreset),\n        createdAt: at,\n        updatedAt: at,\n        columnSettings: {visible: [...DEFAULT_VISIBLE_COLUMNS]},\n        shotSettings: {\n            ...DEFAULT_SHOT_SETTINGS,\n            filters: {statuses: [], beatIds: [], gaps: []},\n        },\n        story: emptySeriesStory(),\n        setting: emptySetting(),\n    };\n}\n\nexport function emptyCharacter(projectId: Id, name = \"未命名角色\"): Character {\n    const at = nowIso();\n    return {\n        id: createId(\"chr\"),\n        projectId,\n        name,\n        bio: \"\",\n        appearance: \"\",\n        notes: \"\",\n        slots: {},\n        createdAt: at,\n        updatedAt: at,\n    };\n}\n\nexport function emptyScene(projectId: Id, name = \"未命名场景\"): Scene {\n    const at = nowIso();\n    return {\n        id: createId(\"scn\"),\n        projectId,\n        name,\n        location: \"\",\n        timeOfDay: \"\",\n        atmosphere: \"\",\n        notes: \"\",\n        slots: {},\n        createdAt: at,\n        updatedAt: at,\n    };\n}\n\nexport function emptyProp(projectId: Id, name = \"未命名道具\"): Prop {\n    const at = nowIso();\n    return {\n        id: createId(\"prp\"),\n        projectId,\n        name,\n        kind: \"\",\n        notes: \"\",\n        slots: {},\n        createdAt: at,\n        updatedAt: at,\n    };\n}\n\nexport function emptyStyle(projectId: Id, name = \"未命名风格\"): VisualStyle {\n    const at = nowIso();\n    return {\n        id: createId(\"sty\"),\n        projectId,\n        name,\n        notes: \"\",\n        slots: {},\n        createdAt: at,\n        updatedAt: at,\n    };\n}\n\nexport function emptyEpisode(projectId: Id, order: number, title = \"\"): Episode {\n    const at = nowIso();\n    return {\n        id: createId(\"ep\"),\n        projectId,\n        order,\n        title,\n        story: emptyEpisodeStory(),\n        shotFilters: normalizeShotFilters(undefined),\n        createdAt: at,\n        updatedAt: at,\n    };\n}\n\nexport function emptyShot(\n    projectId: Id,\n    episodeId: Id,\n    order: number,\n    shotNumber: string,\n    durationSec: number,\n    beatId?: Id,\n): Shot {\n    return {\n        id: createId(\"sht\"),\n        projectId,\n        episodeId,\n        order,\n        shotNumber,\n        status: \"draft\",\n        firstFrame: emptySlot(),\n        lastFrame: emptySlot(),\n        clip: emptySlot(),\n        category: \"\",\n        durationSec,\n        content: \"\",\n        notes: \"\",\n        sceneCloseup: \"\",\n        sound: \"\",\n        emotion: \"\",\n        cameraAngle: \"\",\n        cameraGear: \"\",\n        focalLength: \"\",\n        characterIds: [],\n        ...(beatId ? {beatId} : {}),\n    };\n}\n\nexport async function listProjects(): Promise<Project[]> {\n    const rows = await db.projects.toArray();\n    return rows.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));\n}\n\nexport async function createProject(\n    name: string,\n    mode: ProjectMode = \"film\",\n    aspectPreset: AspectPresetId = \"16:9\",\n    ipId?: Id | null,\n): Promise<Project> {\n    const project = emptyProject(name, mode, aspectPreset);\n    const episode = emptyEpisode(project.id, 0);\n    await db.transaction(\"rw\", [db.projects, db.episodes, ...(ipId ? [db.ipProfiles, db.projectIpLinks] : [])], async () => {\n        if (ipId) {\n            const profile = await db.ipProfiles.get(ipId);\n            if (!profile || profile.archived) throw new Error(\"请选择未归档的 IP\");\n            await db.projectIpLinks.add({projectId: project.id, ipId, updatedAt: nowIso()});\n        }\n        await db.projects.add(project);\n        await db.episodes.add(episode);\n    });\n    return project;\n}\n\nexport async function renameProject(id: Id, name: string): Promise<void> {\n    await db.transaction(\"rw\", db.projects, async () => {\n        const project = await db.projects.get(id);\n        if (!project) throw new Error(\"项目不存在，无法保存\");\n        await db.projects.put(touch({...project, name: name.trim() || project.name}));\n    });\n}\n\n/** Optional project metadata uses explicit undefined to clear saved defaults. */\ntype ProjectDetailsPatch = Partial<Pick<Project, \"name\" | \"brief\" | \"genre\" | \"audience\" | \"tone\" | \"aspectPreset\" | \"defaultStyleId\" | \"generationDefaults\">>;\n\nfunction assertProjectDetailsBaseline(project: Project, next: Project, patch: ProjectDetailsPatch, baseline?: Partial<Project>): void {\n    if (!baseline) return;\n    for (const key of Object.keys(patch) as Array<keyof ProjectDetailsPatch>) {\n        if (key === \"generationDefaults\") {\n            if (!sameDraftStructure(project[key] ?? {}, baseline[key] ?? {}) &&\n                !sameDraftStructure(project[key] ?? {}, next[key] ?? {})) throw new DraftConflictError();\n        } else if (key === \"aspectPreset\") {\n            if (normalizeAspectPreset(project[key]) !== normalizeAspectPreset(baseline[key]) &&\n                normalizeAspectPreset(project[key]) !== next[key]) throw new DraftConflictError();\n        } else assertDraftBaseline(project, {[key]: next[key]}, baseline);\n    }\n}\n\nexport async function patchProjectDetails(\n    id: Id,\n    patch: ProjectDetailsPatch,\n    baseline?: Partial<Project>,\n): Promise<void> {\n    await db.transaction(\"rw\", db.projects, db.styles, async () => {\n        const project = await db.projects.get(id);\n        if (!project) throw new Error(\"项目不存在，无法保存\");\n        const next = {...project};\n        for (const key of [\"name\", \"brief\", \"genre\", \"audience\", \"tone\"] as const) {\n            if (key in patch) {\n                if (patch[key] !== undefined && typeof patch[key] !== \"string\") throw new Error(\"项目信息必须是文本\");\n                if (key === \"name\") {\n                    if (!patch.name?.trim()) throw new Error(\"项目名称不能为空\");\n                    next.name = patch.name.trim();\n                } else next[key] = patch[key];\n            }\n        }\n        if (\"aspectPreset\" in patch) next.aspectPreset = normalizeAspectPreset(patch.aspectPreset);\n        if (\"defaultStyleId\" in patch) {\n            if (patch.defaultStyleId !== undefined && (await db.styles.get(patch.defaultStyleId))?.projectId !== id) {\n                throw new Error(\"风格不属于当前项目\");\n            }\n            next.defaultStyleId = patch.defaultStyleId;\n        }\n        if (\"generationDefaults\" in patch) {\n            const errors = validateGenerationDefaults(patch.generationDefaults);\n            if (errors.length) throw new Error(errors.join(\"；\"));\n            next.generationDefaults = patch.generationDefaults;\n        }\n        assertProjectDetailsBaseline(project, next, patch, baseline);\n        await db.projects.put(touch(next));\n    });\n}\n\n/** Archiving hides a project and its owned library snapshots without altering shared sources. */\nexport async function setProjectArchived(id: Id, archived: boolean): Promise<void> {\n    await db.transaction(\"rw\", [db.projects, db.libraryMaterials, db.materialEvents], async () => {\n        const project = await db.projects.get(id);\n        if (!project) throw new Error(\"项目不存在\");\n        await db.projects.update(id, {archivedAt: archived ? nowIso() : undefined, updatedAt: nowIso()});\n        // Restoring a project leaves individually archived materials for explicit review.\n        if (archived) {\n            const rows = await db.libraryMaterials.toArray();\n            for (const row of rows) if (row.scope.kind === \"project\" && row.scope.id === id && !row.archived) {\n                await db.libraryMaterials.update(row.id, {archived: true, updatedAt: nowIso()});\n                await db.materialEvents.add({\n                    id: createId(\"mev\"),\n                    materialId: row.id,\n                    action: \"archive\",\n                    detail: \"随项目归档\",\n                    createdAt: nowIso()\n                });\n            }\n        }\n    });\n}\n\nexport async function deleteProject(id: Id): Promise<void> {\n    await db.transaction(\n        \"rw\",\n        [\n            db.projects,\n            ...AUDIO_TABLES,\n            db.projectIpLinks, db.materialUses, db.libraryMaterials, db.materialEvents,\n            db.projectReferences,\n            db.referenceChunks,\n            db.projectMemories,\n            db.projectMemoryVersions,\n            db.characters,\n            db.scenes,\n            db.props,\n            db.styles,\n            db.episodes,\n            db.shots,\n            db.media,\n            db.productionProposals,\n            db.agentGenerationJobs, db.agentGenerationBatches, db.agentGenerationBatchItems,\n        ],\n        async () => {\n            for (const table of AUDIO_TABLES) await table.where(\"projectId\").equals(id).delete();\n            await db.projectIpLinks.delete(id);\n            await db.materialUses.where(\"projectId\").equals(id).delete();\n            for (const row of await db.libraryMaterials.toArray()) {\n                if (row.scope.kind === \"project\" && row.scope.id === id) {\n                    await db.libraryMaterials.update(row.id, {archived: true, updatedAt: nowIso()});\n                    await db.materialEvents.add({\n                        id: createId(\"mev\"),\n                        materialId: row.id,\n                        action: \"archive\",\n                        detail: \"来源项目已删除，保留素材快照\",\n                        createdAt: nowIso()\n                    });\n                }\n            }\n            await db.projectReferences.where(\"projectId\").equals(id).delete();\n            await db.referenceChunks.where(\"projectId\").equals(id).delete();\n            await db.projectMemories.where(\"projectId\").equals(id).delete();\n            await db.projectMemoryVersions.where(\"projectId\").equals(id).delete();\n            await db.agentGenerationBatches.where(\"projectId\").equals(id).delete();\n            await db.agentGenerationBatchItems.where(\"projectId\").equals(id).delete();\n            await db.agentGenerationJobs.where(\"projectId\").equals(id).delete();\n            await db.productionProposals.where(\"projectId\").equals(id).delete();\n            await db.characters.where(\"projectId\").equals(id).delete();\n            await db.scenes.where(\"projectId\").equals(id).delete();\n            await db.props.where(\"projectId\").equals(id).delete();\n            await db.styles.where(\"projectId\").equals(id).delete();\n            await db.episodes.where(\"projectId\").equals(id).delete();\n            await db.shots.where(\"projectId\").equals(id).delete();\n            await db.media.where(\"projectId\").equals(id).delete();\n            await db.projects.delete(id);\n        },\n    );\n}\n\nexport async function updateProject(\n    id: Id,\n    patch: Partial<\n        Pick<\n            Project,\n            | \"name\"\n            | \"mode\"\n            | \"aspectPreset\"\n            | \"coverMediaId\"\n            | \"columnSettings\"\n            | \"shotSettings\"\n            | \"story\"\n            | \"setting\"\n        >\n    >,\n): Promise<void> {\n    await db.transaction(\"rw\", db.projects, async () => {\n        const project = await db.projects.get(id);\n        if (!project) throw new Error(\"项目不存在，无法保存\");\n        const next = {...project, ...patch};\n        if (patch.aspectPreset !== undefined) {\n            next.aspectPreset = normalizeAspectPreset(patch.aspectPreset);\n        }\n        await db.projects.put(touch(next));\n    });\n}\n\nexport async function patchProjectOutput(\n    id: Id,\n    patch: {\n        aspectPreset?: AspectPresetId;\n        /** Pass `null` to clear the cover. */\n        coverMediaId?: Id | null;\n    },\n): Promise<void> {\n    await db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        const project = await db.projects.get(id);\n        if (!project) throw new Error(\"项目不存在，无法保存\");\n        const previousCover = project.coverMediaId;\n        const next: Project = {\n            ...project,\n            aspectPreset:\n                patch.aspectPreset !== undefined\n                    ? normalizeAspectPreset(patch.aspectPreset)\n                    : normalizeAspectPreset(project.aspectPreset),\n        };\n        if (patch.coverMediaId === null) {\n            delete next.coverMediaId;\n        } else if (patch.coverMediaId !== undefined) {\n            next.coverMediaId = patch.coverMediaId;\n        }\n        await db.projects.put(touch(next));\n        if (previousCover && previousCover !== next.coverMediaId) {\n            await deleteMediaIfOrphan(previousCover);\n        }\n    });\n}\n\nexport async function updateShotSettings(\n    id: Id,\n    patch: Partial<ShotSettings>,\n): Promise<void> {\n    await db.transaction(\"rw\", db.projects, async () => {\n        await assertVideoProject(id);\n        const project = await db.projects.get(id);\n        if (!project) throw new Error(\"项目不存在，无法保存\");\n        const definedPatch = Object.fromEntries(\n            Object.entries(patch).filter(([, value]) => value !== undefined),\n        ) as Partial<ShotSettings>;\n        await db.projects.put(touch({\n            ...project,\n            shotSettings: {...normalizeShotSettings(project.shotSettings), ...definedPatch},\n        }));\n    });\n}\n\nexport async function updateSeriesLogline(id: Id, logline: string, baseline?: string): Promise<void> {\n    await db.transaction(\"rw\", db.projects, async () => {\n        await assertVideoProject(id);\n        const project = await db.projects.get(id);\n        if (!project) throw new Error(\"项目不存在，无法保存\");\n        assertDraftBaseline(normalizeSeriesStory(project.story), {logline}, baseline === undefined ? undefined : {logline: baseline});\n        await db.projects.put(touch({\n            ...project,\n            story: {...normalizeSeriesStory(project.story), logline},\n        }));\n    });\n}\n\nexport async function updateWorldSetting(\n    id: Id,\n    patch: Partial<WorldSetting>,\n    baseline?: Partial<WorldSetting>,\n): Promise<void> {\n    await db.transaction(\"rw\", db.projects, async () => {\n        await assertVideoProject(id);\n        const project = await db.projects.get(id);\n        if (!project) throw new Error(\"项目不存在，无法保存\");\n        assertDraftBaseline({...emptySetting(), ...project.setting}, patch, baseline);\n        await db.projects.put(touch({\n            ...project,\n            setting: {...emptySetting(), ...project.setting, ...patch},\n        }));\n    });\n}\n\nexport async function listEpisodes(projectId: Id): Promise<Episode[]> {\n    const rows = await db.episodes.where(\"projectId\").equals(projectId).toArray();\n    return rows.sort((a, b) => a.order - b.order);\n}\n\nexport async function firstEpisode(projectId: Id): Promise<Episode | undefined> {\n    const episodes = await listEpisodes(projectId);\n    return episodes[0];\n}\n\nexport async function ensureFirstEpisode(projectId: Id): Promise<Episode> {\n    return db.transaction(\"rw\", db.projects, db.episodes, async () => {\n        await assertVideoProject(projectId);\n        const project = await db.projects.get(projectId);\n        if (!project) throw new Error(\"项目不存在\");\n        const existing = await firstEpisode(projectId);\n        if (existing) return existing;\n        const episode = emptyEpisode(projectId, 0);\n        await db.episodes.add(episode);\n        await db.projects.put(touch(project));\n        return episode;\n    });\n}\n\nexport async function addEpisode(projectId: Id): Promise<Episode> {\n    return db.transaction(\"rw\", db.projects, db.episodes, async () => {\n        await assertVideoProject(projectId);\n        const project = await db.projects.get(projectId);\n        if (!project) throw new Error(\"项目不存在\");\n        const existing = await listEpisodes(projectId);\n        const nextOrder = existing.reduce((max, episode) => Math.max(max, episode.order), -1) + 1;\n        const episode = emptyEpisode(projectId, nextOrder);\n        await db.episodes.add(episode);\n        await touchProject(projectId);\n        return episode;\n    });\n}\n\nexport async function updateEpisode(\n    id: Id,\n    patch: Partial<Pick<Episode, \"title\" | \"story\" | \"order\">>,\n): Promise<void> {\n    await db.transaction(\"rw\", db.projects, db.episodes, async () => {\n        const episode = await db.episodes.get(id);\n        if (!episode) throw new Error(\"集不存在，无法保存\");\n        await assertVideoProject(episode.projectId);\n        await db.episodes.put(touch({...episode, ...patch}));\n        await touchProject(episode.projectId);\n    });\n}\n\nexport async function updateEpisodeDraft(\n    id: Id,\n    patch: { title?: string; logline?: string; script?: string },\n    baseline?: { title?: string; logline?: string; script?: string },\n): Promise<void> {\n    await db.transaction(\"rw\", db.episodes, db.projects, async () => {\n        const episode = await db.episodes.get(id);\n        if (!episode) throw new Error(\"集不存在，无法保存\");\n        await assertVideoProject(episode.projectId);\n        const story = normalizeEpisodeStory(episode.story);\n        assertDraftBaseline({title: episode.title, logline: story.logline, script: story.script}, patch, baseline);\n        const storyPatch: Partial<Pick<EpisodeStory, \"logline\" | \"script\">> = {};\n        if (patch.logline !== undefined) storyPatch.logline = patch.logline;\n        if (patch.script !== undefined) storyPatch.script = patch.script;\n        const nextStory = normalizeEpisodeStory({...story, ...storyPatch});\n        await db.episodes.put(touch({\n            ...episode,\n            ...(patch.title === undefined ? {} : {title: patch.title}),\n            story: nextStory,\n        }));\n        await touchProject(episode.projectId);\n    });\n}\n\nexport interface DeletedEpisodeSnapshot {\n    episode: Episode;\n    shots: Shot[];\n    media: MediaRecord[];\n}\n\nexport async function deleteEpisode(id: Id): Promise<DeletedEpisodeSnapshot | undefined> {\n    return db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        const episode = await db.episodes.get(id);\n        if (!episode) return undefined;\n        const siblings = await listEpisodes(episode.projectId);\n        if (siblings.length <= 1) throw new Error(\"不能删除最后一集\");\n        const shots = await db.shots.where(\"episodeId\").equals(id).toArray();\n        const mediaIds = [...new Set(shots.flatMap((shot) =>\n            slotMediaIds(shot.firstFrame).concat(slotMediaIds(shot.lastFrame), slotMediaIds(shot.clip)),\n        ))];\n        const media = (await db.media.bulkGet(mediaIds)).filter(\n            (record): record is MediaRecord => record !== undefined,\n        );\n        await db.shots.where(\"episodeId\").equals(id).delete();\n        await db.episodes.delete(id);\n        const remaining = await listEpisodes(episode.projectId);\n        await Promise.all(remaining.map((item, order) => db.episodes.update(item.id, {order})));\n        await touchProject(episode.projectId);\n        for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);\n        return {episode, shots, media};\n    });\n}\n\nexport async function restoreEpisode(snapshot: DeletedEpisodeSnapshot): Promise<void> {\n    const {episode, shots, media} = snapshot;\n    await db.transaction(\n        \"rw\",\n        PRODUCTION_TABLES,\n        async () => {\n            if (await db.episodes.get(episode.id)) return;\n            if (!(await db.projects.get(episode.projectId))) throw new Error(\"项目不存在\");\n            for (const beat of normalizeEpisodeStory(episode.story).beats) await assertAssetReferences(episode.projectId, beat);\n            const siblings = await db.episodes.where(\"projectId\").equals(episode.projectId).toArray();\n            for (const sibling of siblings) {\n                if (sibling.order >= episode.order) {\n                    await db.episodes.put({...sibling, order: sibling.order + 1});\n                }\n            }\n            await db.episodes.add(episode);\n            for (const shot of shots) {\n                if (shot.episodeId !== episode.id || shot.projectId !== episode.projectId) throw new Error(\"镜头与集不属于同一项目\");\n                await assertShotReferences(shot);\n                if (await db.shots.get(shot.id)) throw new Error(\"镜头已存在，无法恢复\");\n            }\n            if (shots.length > 0) await db.shots.bulkPut(shots);\n            if (media.length > 0) await db.media.bulkPut(media);\n            await touchProject(episode.projectId);\n        },\n    );\n}\n\nfunction assertCompleteOrder(actualIds: Id[], orderedIds: Id[]): void {\n    if (\n        orderedIds.length !== actualIds.length ||\n        new Set(orderedIds).size !== orderedIds.length ||\n        actualIds.some((id) => !orderedIds.includes(id))\n    ) {\n        throw new Error(\"排序列表必须包含同一范围内的全部且唯一记录\");\n    }\n}\n\nexport async function reorderEpisodes(projectId: Id, orderedIds: Id[]): Promise<void> {\n    await db.transaction(\"rw\", db.episodes, db.projects, async () => {\n        await assertVideoProject(projectId);\n        if (!(await db.projects.get(projectId))) throw new Error(\"项目不存在\");\n        const episodes = await db.episodes.where(\"projectId\").equals(projectId).toArray();\n        assertCompleteOrder(episodes.map((episode) => episode.id), orderedIds);\n        const byId = new Map(episodes.map((episode) => [episode.id, episode]));\n        await Promise.all(\n            orderedIds.map((id, order) => db.episodes.put(touch({...byId.get(id)!, order}))),\n        );\n        await touchProject(projectId);\n    });\n}\n\nexport async function collectMediaIds(projectId?: Id): Promise<Set<Id>> {\n    const [projects, characters, scenes, props, styles, shots, references, materialUses, retainedMedia] = await Promise.all([\n        projectId === undefined ? db.projects.toArray() : db.projects.where(\"id\").equals(projectId).toArray(),\n        (projectId === undefined ? db.characters : db.characters.where(\"projectId\").equals(projectId)).toArray(),\n        (projectId === undefined ? db.scenes : db.scenes.where(\"projectId\").equals(projectId)).toArray(),\n        (projectId === undefined ? db.props : db.props.where(\"projectId\").equals(projectId)).toArray(),\n        (projectId === undefined ? db.styles : db.styles.where(\"projectId\").equals(projectId)).toArray(),\n        (projectId === undefined ? db.shots : db.shots.where(\"projectId\").equals(projectId)).toArray(),\n        (projectId === undefined ? db.projectReferences : db.projectReferences.where(\"projectId\").equals(projectId)).toArray(),\n        (projectId === undefined ? db.materialUses : db.materialUses.where(\"projectId\").equals(projectId)).toArray(),\n        (projectId === undefined ? db.media : db.media.where(\"projectId\").equals(projectId)).filter((media) => media.libraryRetained === true).toArray(),\n    ]);\n    const ids = new Set<Id>();\n    for (const table of [db.audioTakes, db.musicWorks, db.audioExports]) {\n        const rows = await (projectId === undefined ? table : table.where(\"projectId\").equals(projectId)).toArray();\n        for (const row of rows) ids.add(row.mediaId);\n    }\n    const audioJobs = await (projectId === undefined ? db.audioGenerationJobs : db.audioGenerationJobs.where(\"projectId\").equals(projectId)).toArray();\n    for (const job of audioJobs) {\n        if (job.input.kind === \"speech\" && job.input.mimo?.referenceMediaId) ids.add(job.input.mimo.referenceMediaId);\n        for (const result of job.results) if (result.mediaId) ids.add(result.mediaId);\n    }\n    const speakers = await (projectId === undefined ? db.audioSpeakers : db.audioSpeakers.where(\"projectId\").equals(projectId)).toArray();\n    for (const speaker of speakers) if (speaker.mimo?.referenceMediaId) ids.add(speaker.mimo.referenceMediaId);\n    for (const use of materialUses) for (const mediaId of use.mediaIds) ids.add(mediaId);\n    for (const media of retainedMedia) ids.add(media.id);\n    for (const reference of references) if (reference.status !== \"unavailable\") ids.add(reference.mediaId);\n    for (const project of projects) if (project.coverMediaId) ids.add(project.coverMediaId);\n    for (const mediaId of collectSlotsMedia([\n        ...characters.flatMap((character) => Object.values(character.slots ?? {})),\n        ...scenes.flatMap((scene) => Object.values(scene.slots ?? {})),\n        ...props.flatMap((prop) => Object.values(prop.slots ?? {})),\n        ...styles.flatMap((style) => Object.values(style.slots ?? {})),\n        ...shots.flatMap((shot) => SHOT_PICTURE_FIELDS.map((field) => shot[field])),\n    ])) {\n        ids.add(mediaId);\n    }\n    return ids;\n}\n\n/** Release only unused project copies. Failure rolls back both the binding and media. */\nexport async function releaseMaterialUse(useId: string): Promise<void> {\n    await db.transaction(\"rw\", [...PRODUCTION_TABLES, db.materialEvents], async () => {\n        const use = await db.materialUses.get(useId);\n        if (!use) throw new Error(\"这条使用记录已不存在，请刷新后重试\");\n        const settings = {character: db.characters, scene: db.scenes, prop: db.props, style: db.styles};\n        if (use.targetKind !== \"media\" && await settings[use.targetKind].get(use.targetId)) {\n            throw new Error(\"项目中的创作设定仍然存在。请先在项目中删除该设定，再移除使用记录\");\n        }\n        await db.materialUses.delete(useId);\n        const otherUses = await db.materialUses.toArray();\n        for (const mediaId of use.mediaIds) {\n            if (otherUses.some((other) => other.mediaIds.includes(mediaId))) {\n                throw new Error(\"此副本仍有其他素材使用记录，暂时不能移除\");\n            }\n            await db.media.update(mediaId, {libraryRetained: false});\n            await deleteMediaIfOrphan(mediaId);\n            if (await db.media.get(mediaId)) {\n                throw new Error(\"此副本仍被项目封面、创作设定、镜头或任务历史使用，暂时不能移除\");\n            }\n        }\n        await db.materialEvents.add({\n            id: createId(\"mev\"), materialId: use.materialId,\n            action: \"release\", createdAt: nowIso(), detail: `移除项目 ${use.projectId} 中未使用的 v${use.revision} 副本`\n        });\n    });\n}\n\nasync function recycleSlotMedia(\n    previous: GenerationSlot | undefined,\n    next: GenerationSlot | undefined,\n): Promise<void> {\n    const kept = new Set(slotMediaIds(next));\n    for (const mediaId of slotMediaIds(previous)) {\n        if (!kept.has(mediaId)) await deleteMediaIfOrphan(mediaId);\n    }\n}\n\nexport async function putMedia(record: MediaRecord): Promise<Id> {\n    return db.transaction(\"rw\", db.media, db.projects, async () => {\n        // Physical replacement is a new record; immutable IDs keep pending previews valid.\n        await db.media.add(record);\n        await touchProject(record.projectId);\n        return record.id;\n    });\n}\n\nexport async function deleteMediaIfOrphan(mediaId: Id | undefined): Promise<void> {\n    await db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        if (!mediaId) return;\n        const record = await db.media.get(mediaId);\n        if (!record) return;\n        const used = await collectMediaIds();\n        // Local proposal history retains both results so guarded undo remains possible.\n        const proposals = await db.productionProposals.where(\"projectId\").equals(record.projectId).toArray();\n        const retained = proposals.some((proposal) => proposal.before.result?.mediaId === mediaId ||\n            (proposal.change.kind === \"slot-result\" && proposal.change.result.mediaId === mediaId));\n        const jobs = await db.agentGenerationJobs.where(\"projectId\").equals(record.projectId).toArray();\n        const jobRetained = jobs.some((job) => job.result?.mediaId === mediaId || job.inputs.some((input) => input.mediaId === mediaId));\n        const batches = await db.agentGenerationBatches.where(\"projectId\").equals(record.projectId).toArray();\n        const items = await db.agentGenerationBatchItems.where(\"projectId\").equals(record.projectId).toArray();\n        const batchRetained = items.some(item => item.draft.inputs.some(input => input.mediaId === mediaId)) || batches.some(batch => batch.applications.some(a => a.before?.mediaId === mediaId || a.result.mediaId === mediaId));\n        if (!used.has(mediaId) && !retained && !jobRetained && !batchRetained) {\n            await db.media.delete(mediaId);\n        }\n    });\n}\n\ntype SnapshotAsset = Character | Scene | Prop | VisualStyle;\ntype SnapshotKind = \"character\" | \"scene\" | \"prop\" | \"style\";\n\nconst SNAPSHOT_PREFIX: Record<SnapshotKind, string> = {\n    character: \"chr\",\n    scene: \"scn\",\n    prop: \"prp\",\n    style: \"sty\",\n};\n\nasync function copyStudioSnapshot<T extends SnapshotAsset>(\n    projectId: Id,\n    kind: SnapshotKind,\n    sourceId: Id,\n): Promise<T> {\n    if (isStudioLibrary(projectId)) throw new Error(\"目标必须是项目\");\n    return db.transaction(\n        \"rw\",\n        [db.projects, db.characters, db.scenes, db.props, db.styles, db.media],\n        async () => {\n            const project = await db.projects.get(projectId);\n            if (!project) throw new Error(\"项目不存在\");\n\n            const source =\n                kind === \"character\"\n                    ? await db.characters.get(sourceId)\n                    : kind === \"scene\"\n                        ? await db.scenes.get(sourceId)\n                        : kind === \"prop\"\n                            ? await db.props.get(sourceId)\n                            : await db.styles.get(sourceId);\n            if (!source || !isStudioLibrary(source.projectId)) {\n                throw new Error(\"工作室资产不存在\");\n            }\n\n            const destinationAssets =\n                kind === \"character\"\n                    ? await db.characters.where(\"projectId\").equals(projectId).toArray()\n                    : kind === \"scene\"\n                        ? await db.scenes.where(\"projectId\").equals(projectId).toArray()\n                        : kind === \"prop\"\n                            ? await db.props.where(\"projectId\").equals(projectId).toArray()\n                            : await db.styles.where(\"projectId\").equals(projectId).toArray();\n            if (destinationAssets.some((asset) => asset.extra?.sourceAssetId === sourceId)) {\n                throw new Error(\"该工作室资产已添加到项目\");\n            }\n\n            const mediaMap = new Map<Id, Id>();\n            const slots: Record<string, GenerationSlot> = {};\n            for (const [slotKey, slot] of Object.entries(source.slots ?? {})) {\n                if (!slot) continue;\n                await assertSlotMedia(source.projectId, slot);\n                for (const oldMediaId of new Set(slotMediaIds(slot))) {\n                    if (mediaMap.has(oldMediaId)) continue;\n                    const media = await db.media.get(oldMediaId);\n                    if (!media) throw new Error(\"来源素材已失效，请重新选择\");\n                    const newMediaId = createId(\"med\");\n                    mediaMap.set(oldMediaId, newMediaId);\n                    await db.media.add({\n                        ...media,\n                        id: newMediaId,\n                        projectId,\n                    });\n                }\n                const mapMedia = (id?: Id) => (id ? mediaMap.get(id) : undefined);\n                slots[slotKey] = {\n                    prompt: slot.prompt,\n                    referenceImageIds: slot.referenceImageIds\n                        .map(mapMedia)\n                        .filter((id): id is Id => Boolean(id)),\n                    referenceVideoIds: slot.referenceVideoIds\n                        .map(mapMedia)\n                        .filter((id): id is Id => Boolean(id)),\n                    result:\n                        slot.result && mapMedia(slot.result.mediaId)\n                            ? {\n                                ...slot.result,\n                                mediaId: mapMedia(slot.result.mediaId)!,\n                            }\n                            : undefined,\n                };\n            }\n\n            const at = nowIso();\n            const copy = {\n                ...structuredClone(source),\n                id: createId(SNAPSHOT_PREFIX[kind]),\n                projectId,\n                slots,\n                createdAt: at,\n                updatedAt: at,\n                extra: {\n                    ...(source.extra ?? {}),\n                    sourceAssetId: source.id,\n                },\n            } as unknown as T;\n\n            if (kind === \"character\") await db.characters.add(copy as Character);\n            else if (kind === \"scene\") await db.scenes.add(copy as Scene);\n            else if (kind === \"prop\") await db.props.add(copy as Prop);\n            else await db.styles.add(copy as VisualStyle);\n            await db.projects.put(touch(project));\n            return copy;\n        },\n    );\n}\n\nexport function copyStudioCharacter(projectId: Id, sourceId: Id): Promise<Character> {\n    return copyStudioSnapshot<Character>(projectId, \"character\", sourceId);\n}\n\nexport function copyStudioScene(projectId: Id, sourceId: Id): Promise<Scene> {\n    return copyStudioSnapshot<Scene>(projectId, \"scene\", sourceId);\n}\n\nexport function copyStudioProp(projectId: Id, sourceId: Id): Promise<Prop> {\n    return copyStudioSnapshot<Prop>(projectId, \"prop\", sourceId);\n}\n\nexport function copyStudioStyle(projectId: Id, sourceId: Id): Promise<VisualStyle> {\n    return copyStudioSnapshot<VisualStyle>(projectId, \"style\", sourceId);\n}\n\nexport async function addCharacter(projectId: Id): Promise<Character> {\n    const character = emptyCharacter(projectId);\n    await db.characters.add(character);\n    await touchProject(projectId);\n    return character;\n}\n\nexport async function patchCharacter(\n    id: Id,\n    patch: Partial<Omit<Character, \"id\" | \"projectId\" | \"createdAt\">>,\n    baseline?: Partial<Character>,\n): Promise<void> {\n    await db.transaction(\"rw\", db.projects, db.characters, async () => {\n        const character = await db.characters.get(id);\n        if (!character) throw new Error(\"角色不存在，无法保存\");\n        patch = pickPatch(patch, [\"name\", \"bio\", \"appearance\", \"notes\", \"personality\", \"motivation\", \"voice\", \"slots\", \"extra\"]);\n        assertDraftBaseline(character, patch, baseline);\n        await db.characters.put(touch({\n            ...character, ...patch,\n            ...(patch.slots ? {slots: {...character.slots, ...patch.slots}} : {}),\n        }));\n        await touchProject(character.projectId);\n    });\n}\n\nasync function assertSlotMedia(projectId: Id, slot: GenerationSlot): Promise<void> {\n    const expected = [\n        ...slot.referenceImageIds.map((id) => ({id, kind: \"image\" as const})),\n        ...slot.referenceVideoIds.map((id) => ({id, kind: \"video\" as const})),\n        ...(slot.result ? [{id: slot.result.mediaId, kind: slot.result.kind}] : []),\n    ];\n    for (const {id, kind} of expected) {\n        const media = await db.media.get(id);\n        if (!media || media.projectId !== projectId || media.blob.size === 0 || !media.mimeType.startsWith(`${kind}/`)) {\n            throw new Error(\"素材已失效、类型不符或不属于当前项目，请重新选择\");\n        }\n    }\n}\n\nexport async function setCharacterSlot(\n    id: Id,\n    slotKey: CharacterImageSlot,\n    slot: GenerationSlot,\n    baseline?: GenerationSlot,\n): Promise<void> {\n    await db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        const character = await db.characters.get(id);\n        if (!character) throw new Error(\"角色不存在，无法保存\");\n        if (baseline && !sameSlotValue(character.slots[slotKey], baseline) && !sameSlotValue(character.slots[slotKey], slot)) throw new DraftConflictError();\n        await assertSlotMedia(character.projectId, slot);\n        const previous = character.slots[slotKey];\n        await db.characters.put(\n            touch({...character, slots: {...character.slots, [slotKey]: slot}}),\n        );\n        await touchProject(character.projectId);\n        await recycleSlotMedia(previous, slot);\n    });\n}\n\nexport async function deleteCharacter(id: Id): Promise<void> {\n    await db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        const character = await db.characters.get(id);\n        if (!character) return;\n        const mediaIds = collectSlotsMedia(Object.values(character.slots));\n        await db.characters.delete(id);\n        const shots = await db.shots.where(\"projectId\").equals(character.projectId).toArray();\n        for (const shot of shots) {\n            if (shot.characterIds.includes(id)) {\n                await db.shots.put({\n                    ...shot,\n                    characterIds: shot.characterIds.filter((item) => item !== id),\n                });\n            }\n        }\n        const episodes = await db.episodes.where(\"projectId\").equals(character.projectId).toArray();\n        for (const episode of episodes) {\n            const story = normalizeEpisodeStory(episode.story);\n            const beats = story.beats.map((beat) => ({\n                ...beat,\n                characterIds: beat.characterIds.filter((item) => item !== id),\n            }));\n            if (beats.some((beat, index) => beat.characterIds.length !== story.beats[index]?.characterIds.length)) {\n                await db.episodes.put(touch({...episode, story: {...story, beats}}));\n            }\n        }\n        await touchProject(character.projectId);\n        for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);\n    });\n}\n\nexport async function addScene(projectId: Id): Promise<Scene> {\n    const scene = emptyScene(projectId);\n    await db.scenes.add(scene);\n    await touchProject(projectId);\n    return scene;\n}\n\nexport async function patchScene(\n    id: Id,\n    patch: Partial<Omit<Scene, \"id\" | \"projectId\" | \"createdAt\">>,\n    baseline?: Partial<Scene>,\n): Promise<void> {\n    await db.transaction(\"rw\", db.projects, db.scenes, async () => {\n        const scene = await db.scenes.get(id);\n        if (!scene) throw new Error(\"场景不存在，无法保存\");\n        patch = pickPatch(patch, [\"name\", \"location\", \"timeOfDay\", \"atmosphere\", \"notes\", \"geography\", \"lighting\", \"slots\", \"extra\"]);\n        assertDraftBaseline(scene, patch, baseline);\n        await db.scenes.put(touch({\n            ...scene, ...patch,\n            ...(patch.slots ? {slots: {...scene.slots, ...patch.slots}} : {}),\n        }));\n        await touchProject(scene.projectId);\n    });\n}\n\nexport async function setSceneSlot(\n    id: Id,\n    slotKey: SceneImageSlot,\n    slot: GenerationSlot,\n    baseline?: GenerationSlot,\n): Promise<void> {\n    await db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        const scene = await db.scenes.get(id);\n        if (!scene) throw new Error(\"场景不存在，无法保存\");\n        if (baseline && !sameSlotValue(scene.slots[slotKey], baseline) && !sameSlotValue(scene.slots[slotKey], slot)) throw new DraftConflictError();\n        await assertSlotMedia(scene.projectId, slot);\n        const previous = scene.slots[slotKey];\n        await db.scenes.put(touch({...scene, slots: {...scene.slots, [slotKey]: slot}}));\n        await touchProject(scene.projectId);\n        await recycleSlotMedia(previous, slot);\n    });\n}\n\nexport async function deleteScene(id: Id): Promise<void> {\n    await db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        const scene = await db.scenes.get(id);\n        if (!scene) return;\n        const mediaIds = collectSlotsMedia(Object.values(scene.slots));\n        await db.scenes.delete(id);\n        const shots = await db.shots.where(\"projectId\").equals(scene.projectId).toArray();\n        for (const shot of shots) {\n            if (shot.sceneId === id) {\n                await db.shots.put({...shot, sceneId: undefined});\n            }\n        }\n        const episodes = await db.episodes.where(\"projectId\").equals(scene.projectId).toArray();\n        for (const episode of episodes) {\n            const story = normalizeEpisodeStory(episode.story);\n            const beats = story.beats.map((beat) =>\n                beat.sceneId === id ? {...beat, sceneId: undefined} : beat,\n            );\n            if (beats.some((beat, index) => beat.sceneId !== story.beats[index]?.sceneId)) {\n                await db.episodes.put(touch({...episode, story: {...story, beats}}));\n            }\n        }\n        await touchProject(scene.projectId);\n        for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);\n    });\n}\n\nexport async function addProp(projectId: Id): Promise<Prop> {\n    const prop = emptyProp(projectId);\n    await db.props.add(prop);\n    await touchProject(projectId);\n    return prop;\n}\n\nexport async function patchProp(\n    id: Id,\n    patch: Partial<Omit<Prop, \"id\" | \"projectId\" | \"createdAt\">>,\n    baseline?: Partial<Prop>,\n): Promise<void> {\n    await db.transaction(\"rw\", db.projects, db.props, async () => {\n        const prop = await db.props.get(id);\n        if (!prop) throw new Error(\"道具不存在，无法保存\");\n        patch = pickPatch(patch, [\"name\", \"kind\", \"notes\", \"appearance\", \"material\", \"size\", \"usage\", \"continuity\", \"slots\", \"extra\"]);\n        assertDraftBaseline(prop, patch, baseline);\n        await db.props.put(touch({\n            ...prop, ...patch,\n            ...(patch.slots ? {slots: {...prop.slots, ...patch.slots}} : {}),\n        }));\n        await touchProject(prop.projectId);\n    });\n}\n\nexport async function setPropSlot(\n    id: Id,\n    slotKey: PropImageSlot,\n    slot: GenerationSlot,\n    baseline?: GenerationSlot,\n): Promise<void> {\n    await db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        const prop = await db.props.get(id);\n        if (!prop) throw new Error(\"道具不存在，无法保存\");\n        if (baseline && !sameSlotValue(prop.slots[slotKey], baseline) && !sameSlotValue(prop.slots[slotKey], slot)) throw new DraftConflictError();\n        await assertSlotMedia(prop.projectId, slot);\n        const previous = prop.slots[slotKey];\n        await db.props.put(touch({...prop, slots: {...prop.slots, [slotKey]: slot}}));\n        await touchProject(prop.projectId);\n        await recycleSlotMedia(previous, slot);\n    });\n}\n\nexport async function deleteProp(id: Id): Promise<void> {\n    await db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        const prop = await db.props.get(id);\n        if (!prop) return;\n        const mediaIds = collectSlotsMedia(Object.values(prop.slots));\n        await db.props.delete(id);\n        await db.shots.where(\"projectId\").equals(prop.projectId).modify((shot) => {\n            if (shot.propIds?.includes(id)) shot.propIds = shot.propIds.filter((value) => value !== id);\n        });\n        await touchProject(prop.projectId);\n        for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);\n    });\n}\n\nexport async function addStyle(projectId: Id): Promise<VisualStyle> {\n    const style = emptyStyle(projectId);\n    await db.styles.add(style);\n    await touchProject(projectId);\n    return style;\n}\n\nexport async function patchStyle(\n    id: Id,\n    patch: Partial<Omit<VisualStyle, \"id\" | \"projectId\" | \"createdAt\">>,\n    baseline?: Partial<VisualStyle>,\n): Promise<void> {\n    await db.transaction(\"rw\", db.projects, db.styles, async () => {\n        const style = await db.styles.get(id);\n        if (!style) throw new Error(\"风格不存在，无法保存\");\n        patch = pickPatch(patch, [\"name\", \"notes\", \"palette\", \"lighting\", \"lens\", \"composition\", \"negativePrompt\", \"slots\", \"extra\"]);\n        assertDraftBaseline(style, patch, baseline);\n        await db.styles.put(touch({\n            ...style, ...patch,\n            ...(patch.slots ? {slots: {...style.slots, ...patch.slots}} : {}),\n        }));\n        await touchProject(style.projectId);\n    });\n}\n\nexport async function setStyleSlot(\n    id: Id,\n    slotKey: StyleImageSlot,\n    slot: GenerationSlot,\n    baseline?: GenerationSlot,\n): Promise<void> {\n    await db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        const style = await db.styles.get(id);\n        if (!style) throw new Error(\"风格不存在，无法保存\");\n        if (baseline && !sameSlotValue(style.slots[slotKey], baseline) && !sameSlotValue(style.slots[slotKey], slot)) throw new DraftConflictError();\n        await assertSlotMedia(style.projectId, slot);\n        const previous = style.slots[slotKey];\n        await db.styles.put(touch({...style, slots: {...style.slots, [slotKey]: slot}}));\n        await touchProject(style.projectId);\n        await recycleSlotMedia(previous, slot);\n    });\n}\n\nexport async function deleteStyle(id: Id): Promise<void> {\n    await db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        const style = await db.styles.get(id);\n        if (!style) return;\n        const mediaIds = collectSlotsMedia(Object.values(style.slots));\n        await db.styles.delete(id);\n        const project = await db.projects.get(style.projectId);\n        if (project?.defaultStyleId === id) await db.projects.update(project.id, {defaultStyleId: undefined});\n        await db.shots.where(\"projectId\").equals(style.projectId).modify((shot) => {\n            if (shot.styleId === id) shot.styleId = null;\n        });\n        await touchProject(style.projectId);\n        for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);\n    });\n}\n\nasync function nextShotNumber(episodeId: Id): Promise<string> {\n    const shots = await db.shots.where(\"episodeId\").equals(episodeId).toArray();\n    const max = shots.reduce((current, shot) => {\n        const value = Number.parseInt(shot.shotNumber, 10);\n        return Number.isFinite(value) ? Math.max(current, value) : current;\n    }, 0);\n    return String(max + 1);\n}\n\nasync function reindexShots(episodeId: Id): Promise<void> {\n    const shots = (await db.shots.where(\"episodeId\").equals(episodeId).toArray()).sort(\n        (a, b) => a.order - b.order,\n    );\n    await Promise.all(\n        shots.map((shot, index) => db.shots.put({...shot, order: index + 1})),\n    );\n}\n\nfunction beatRank(beats: StoryBeat[], beatId: Id | undefined): number {\n    if (!beatId) return Number.POSITIVE_INFINITY;\n    const index = beats.findIndex((beat) => beat.id === beatId);\n    return index === -1 ? Number.POSITIVE_INFINITY : index;\n}\n\nfunction insertOrderForBeat(beats: StoryBeat[], shots: Shot[], beatId?: Id): number {\n    const sorted = [...shots].sort((a, b) => a.order - b.order);\n    if (sorted.length === 0) return 1;\n    const target = beatRank(beats, beatId);\n    let lastLeq = 0;\n    for (const shot of sorted) {\n        if (beatRank(beats, shot.beatId) <= target) lastLeq = shot.order;\n    }\n    if (lastLeq === 0) return sorted[0]?.order ?? 1;\n    return lastLeq + 1;\n}\n\nexport async function addStoryBeat(\n    episodeId: Id,\n    options?: { scriptRange?: StoryBeat[\"scriptRange\"] },\n): Promise<StoryBeat> {\n    return db.transaction(\"rw\", db.episodes, db.projects, async () => {\n        const episode = await db.episodes.get(episodeId);\n        if (!episode) throw new Error(\"集不存在\");\n        await assertVideoProject(episode.projectId);\n        const story = normalizeEpisodeStory(episode.story);\n        const requestedRange = options?.scriptRange;\n        const validRange =\n            requestedRange &&\n            Number.isInteger(requestedRange.start) &&\n            Number.isInteger(requestedRange.end) &&\n            requestedRange.start >= 0 &&\n            requestedRange.end > requestedRange.start &&\n            story.script.slice(requestedRange.start, requestedRange.end) === requestedRange.excerpt\n                ? requestedRange\n                : undefined;\n        const beat: StoryBeat = {\n            id: createId(\"beat\"),\n            title: `场 ${story.beats.length + 1}`,\n            content: requestedRange?.excerpt ?? \"\",\n            characterIds: [],\n            timeOfDay: \"\",\n            ...(validRange ? {scriptRange: validRange} : {}),\n        };\n        await db.episodes.put(touch({\n            ...episode,\n            story: {...story, beats: [...story.beats, beat]},\n        }));\n        await touchProject(episode.projectId);\n        return beat;\n    });\n}\n\nexport async function patchStoryBeat(\n    episodeId: Id,\n    beatId: Id,\n    patch: Partial<\n        Pick<\n            StoryBeat,\n            \"title\" | \"content\" | \"characterIds\" | \"sceneId\" | \"timeOfDay\" | \"scriptRange\"\n        >\n    >,\n): Promise<void> {\n    await db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        const episode = await db.episodes.get(episodeId);\n        if (!episode) return;\n        await assertAssetReferences(episode.projectId, patch);\n        const story = normalizeEpisodeStory(episode.story);\n        await db.episodes.put(touch({\n            ...episode,\n            story: {\n                ...story,\n                beats: story.beats.map((beat) => (beat.id === beatId ? {...beat, ...patch} : beat)),\n            },\n        }));\n        await touchProject(episode.projectId);\n    });\n}\n\nexport async function reorderBeats(episodeId: Id, orderedIds: Id[]): Promise<void> {\n    await db.transaction(\"rw\", db.episodes, db.shots, db.projects, async () => {\n        const episode = await db.episodes.get(episodeId);\n        if (!episode) throw new Error(\"集不存在\");\n        await assertVideoProject(episode.projectId);\n        const story = normalizeEpisodeStory(episode.story);\n        assertCompleteOrder(story.beats.map((beat) => beat.id), orderedIds);\n        const byId = new Map(story.beats.map((beat) => [beat.id, beat]));\n        const shots = await db.shots.where(\"episodeId\").equals(episodeId).toArray();\n        if (shots.some((shot) => shot.projectId !== episode.projectId)) {\n            throw new Error(\"镜头与集不属于同一项目\");\n        }\n        const rank = new Map(orderedIds.map((id, index) => [id, index]));\n        shots.sort(\n            (left, right) =>\n                (rank.get(left.beatId ?? \"\") ?? Number.POSITIVE_INFINITY) -\n                (rank.get(right.beatId ?? \"\") ?? Number.POSITIVE_INFINITY) ||\n                left.order - right.order,\n        );\n        await db.episodes.put(touch({\n            ...episode,\n            story: {...story, beats: orderedIds.map((id) => byId.get(id)!)},\n        }));\n        await Promise.all(\n            shots.map((shot, index) => db.shots.put({...shot, order: index + 1})),\n        );\n        await touchProject(episode.projectId);\n    });\n}\n\nexport async function duplicateBeat(\n    episodeId: Id,\n    beatId: Id,\n    options?: { includeShots?: boolean },\n): Promise<{ beat: StoryBeat; shots: Shot[] }> {\n    return db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        const episode = await db.episodes.get(episodeId);\n        if (!episode) throw new Error(\"集不存在\");\n        await assertVideoProject(episode.projectId);\n        const story = normalizeEpisodeStory(episode.story);\n        const sourceIndex = story.beats.findIndex((beat) => beat.id === beatId);\n        if (sourceIndex < 0) throw new Error(\"场次不存在\");\n        const source = story.beats[sourceIndex]!;\n        const beat: StoryBeat = structuredClone({\n            ...source,\n            id: createId(\"beat\"),\n            title: `${source.title} 副本`,\n        });\n        await assertAssetReferences(episode.projectId, beat);\n        story.beats.splice(sourceIndex + 1, 0, beat);\n\n        const created: Shot[] = [];\n        if (options?.includeShots) {\n            const shots = (await db.shots.where(\"episodeId\").equals(episodeId).toArray()).sort(\n                (left, right) => left.order - right.order,\n            );\n            if (shots.some((shot) => shot.projectId !== episode.projectId)) {\n                throw new Error(\"镜头与集不属于同一项目\");\n            }\n            const sourceShots = shots.filter((shot) => shot.beatId === beatId);\n            const lastSourceOrder = sourceShots.at(-1)?.order ?? shots.length;\n            for (const shot of shots) {\n                if (shot.order > lastSourceOrder) {\n                    await db.shots.put({...shot, order: shot.order + sourceShots.length});\n                }\n            }\n            for (const [index, sourceShot] of sourceShots.entries()) {\n                const copy = structuredClone({\n                    ...sourceShot,\n                    id: createId(\"sht\"),\n                    beatId: beat.id,\n                    order: lastSourceOrder + index + 1,\n                });\n                await assertShotReferences(sourceShot);\n                await db.shots.add(copy);\n                created.push(copy);\n            }\n        }\n\n        await db.episodes.put(touch({...episode, story}));\n        await touchProject(episode.projectId);\n        return {beat, shots: created};\n    });\n}\n\nexport async function restoreStoryBeat(\n    episodeId: Id,\n    beat: StoryBeat,\n    index: number,\n    shotIds: Id[] = [],\n): Promise<void> {\n    await db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        const episode = await db.episodes.get(episodeId);\n        if (!episode) throw new Error(\"集不存在\");\n        await assertVideoProject(episode.projectId);\n        await assertAssetReferences(episode.projectId, beat);\n        const story = normalizeEpisodeStory(episode.story);\n        if (story.beats.some((item) => item.id === beat.id)) return;\n        const beats = [...story.beats];\n        beats.splice(Math.max(0, Math.min(index, beats.length)), 0, beat);\n        await db.episodes.put(touch({...episode, story: {...story, beats}}));\n        for (const shotId of shotIds) {\n            const shot = await db.shots.get(shotId);\n            if (shot?.episodeId === episodeId && shot.projectId === episode.projectId && !shot.beatId) await db.shots.put({\n                ...shot,\n                beatId: beat.id\n            });\n        }\n        await touchProject(episode.projectId);\n    });\n}\n\nexport async function deleteStoryBeat(episodeId: Id, beatId: Id): Promise<void> {\n    await db.transaction(\"rw\", db.episodes, db.shots, db.projects, async () => {\n        const episode = await db.episodes.get(episodeId);\n        if (!episode) return;\n        const project = await db.projects.get(episode.projectId);\n        const story = normalizeEpisodeStory(episode.story);\n        const next = {...episode, story: {...story, beats: story.beats.filter((beat) => beat.id !== beatId)}};\n        next.shotFilters = getEpisodeShotFilters({\n            ...next,\n            shotFilters: getEpisodeShotFilters(episode, project)\n        }, project);\n        await db.episodes.put(touch(next));\n        await db.shots.where(\"episodeId\").equals(episodeId).filter((shot) => shot.beatId === beatId)\n            .modify((shot) => {\n                delete shot.beatId;\n            });\n        await touchProject(episode.projectId);\n    });\n}\n\nexport async function updateEpisodeShotFilters(episodeId: Id, patch: Partial<ShotFilters>): Promise<void> {\n    await db.transaction(\"rw\", db.episodes, db.projects, async () => {\n        const episode = await db.episodes.get(episodeId);\n        if (!episode) throw new Error(\"集不存在\");\n        await assertVideoProject(episode.projectId);\n        const project = await db.projects.get(episode.projectId);\n        const definedPatch = Object.fromEntries(Object.entries(patch).filter(([, value]) => value !== undefined));\n        const shotFilters = getEpisodeShotFilters({\n            ...episode, shotFilters: {...getEpisodeShotFilters(episode, project), ...definedPatch},\n        }, project);\n        await db.episodes.update(episodeId, {shotFilters, updatedAt: nowIso()});\n        await touchProject(episode.projectId);\n    });\n}\n\nasync function assertAssetReferences(\n    projectId: Id,\n    fields: { characterIds?: Id[]; sceneId?: Id; propIds?: Id[]; styleId?: Id | null },\n): Promise<void> {\n    for (const [ids, table, label] of [\n        [fields.characterIds, db.characters, \"角色\"],\n        [fields.propIds, db.props, \"道具\"],\n    ] as const) {\n        if (ids !== undefined) {\n            if (!Array.isArray(ids) || ids.some((id) => typeof id !== \"string\")) throw new Error(`${label}引用无效`);\n            const rows = await table.bulkGet(ids);\n            if (rows.some((row) => !row || row.projectId !== projectId)) throw new Error(`${label}不属于当前项目`);\n        }\n    }\n    if (fields.sceneId !== undefined && (await db.scenes.get(fields.sceneId))?.projectId !== projectId) throw new Error(\"场景不属于当前项目\");\n    if (fields.styleId !== undefined && fields.styleId !== null && (await db.styles.get(fields.styleId))?.projectId !== projectId) throw new Error(\"风格不属于当前项目\");\n}\n\nasync function assertShotReferences(shot: Shot): Promise<void> {\n    await assertVideoProject(shot.projectId);\n    const episode = await db.episodes.get(shot.episodeId);\n    if (!episode || episode.projectId !== shot.projectId) throw new Error(\"镜头与集不属于同一项目\");\n    if (shot.beatId !== undefined && !normalizeEpisodeStory(episode.story).beats.some((beat) => beat.id === shot.beatId)) throw new Error(\"场次不属于当前集\");\n    await assertAssetReferences(shot.projectId, shot);\n}\n\nexport async function addShots(\n    projectId: Id,\n    episodeId: Id,\n    count: number,\n    options?: { atOrder?: number; beatId?: Id },\n): Promise<Shot[]> {\n    if (count <= 0) return [];\n    return db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        await assertVideoProject(projectId);\n        const episode = await db.episodes.get(episodeId);\n        if (!episode || episode.projectId !== projectId) return [];\n        const project = await db.projects.get(projectId);\n        if (!project) return [];\n        const beats = normalizeEpisodeStory(episode.story).beats;\n        const beat = options?.beatId === undefined ? undefined : beats.find((item) => item.id === options.beatId);\n        if (options?.beatId !== undefined && !beat) throw new Error(\"场次不属于当前集\");\n        if (beat) await assertAssetReferences(projectId, beat);\n        const shots = (await db.shots.where(\"episodeId\").equals(episodeId).toArray()).sort(\n            (a, b) => a.order - b.order,\n        );\n        const insertAt = options?.atOrder ?? insertOrderForBeat(beats, shots, options?.beatId);\n        for (const shot of shots) {\n            if (shot.order >= insertAt) {\n                await db.shots.put({...shot, order: shot.order + count});\n            }\n        }\n        const created: Shot[] = [];\n        const shotSettings = normalizeShotSettings(project.shotSettings);\n        const nextNumber = shotSettings.autoIncrementShotNumber\n            ? Number.parseInt(await nextShotNumber(episodeId), 10) || shots.length + 1\n            : insertAt;\n        for (let index = 0; index < count; index += 1) {\n            const shotNumber = shotSettings.autoIncrementShotNumber\n                ? String(nextNumber + index)\n                : String(insertAt + index);\n            const shot = emptyShot(\n                projectId,\n                episodeId,\n                insertAt + index,\n                shotNumber,\n                shotSettings.defaultDurationSec,\n                options?.beatId,\n            );\n            if (beat) {\n                shot.characterIds = [...beat.characterIds];\n                shot.sceneId = beat.sceneId;\n            }\n            await db.shots.add(shot);\n            created.push(shot);\n        }\n        await touchProject(projectId);\n        return created;\n    });\n}\n\nexport async function addShot(\n    projectId: Id,\n    episodeId: Id,\n    options?: { atOrder?: number; beatId?: Id },\n): Promise<Shot> {\n    const [shot] = await addShots(projectId, episodeId, 1, options);\n    if (!shot) throw new Error(\"项目或集不存在\");\n    return shot;\n}\n\nexport async function patchShot(\n    id: Id,\n    patch: Partial<Omit<Shot, \"id\" | \"projectId\" | \"episodeId\">>,\n    baseline?: Partial<Shot>,\n): Promise<void> {\n    await db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        const shot = await db.shots.get(id);\n        if (!shot) throw new Error(\"镜头不存在，无法保存\");\n        patch = pickPatch(patch, [\"order\", \"shotNumber\", \"status\", \"firstFrame\", \"lastFrame\", \"clip\", \"category\", \"durationSec\", \"content\", \"notes\", \"sceneCloseup\", \"sound\", \"emotion\", \"cameraAngle\", \"cameraGear\", \"focalLength\", \"characterIds\", \"sceneId\", \"beatId\", \"propIds\", \"styleId\", \"extra\"]);\n        if (baseline) {\n            for (const key of Object.keys(patch) as Array<keyof typeof patch>) {\n                const current = key === \"durationSec\" ? shot.durationSec ?? 0 : shot[key] ?? \"\";\n                const original = key === \"durationSec\" ? baseline.durationSec ?? 0 : baseline[key] ?? \"\";\n                const final = key === \"durationSec\" ? patch.durationSec ?? 0 : patch[key] ?? \"\";\n                if (!sameDraftStructure(current, original) && !sameDraftStructure(current, final)) throw new DraftConflictError();\n            }\n        }\n        await assertShotReferences({...shot, ...patch});\n        await db.shots.put({...shot, ...patch});\n        await touchProject(shot.projectId);\n    });\n}\n\n/** Apply one checkbox intention to the latest membership, preserving other edits. */\nexport async function setShotCharacterSelected(id: Id, characterId: Id, selected: boolean): Promise<void> {\n    await db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        const shot = await db.shots.get(id);\n        if (!shot) throw new Error(\"镜头不存在，无法保存\");\n        const character = await db.characters.get(characterId);\n        if ((selected && !character) || (character && character.projectId !== shot.projectId)) {\n            throw new Error(\"角色不属于当前项目\");\n        }\n        // Removing a deleted reference is permitted only if all remaining\n        // references validate. Selecting it can never resurrect the old row.\n        let characterIds = shot.characterIds;\n        if (selected) {\n            if (!characterIds.includes(characterId)) characterIds = [...characterIds, characterId];\n        } else {\n            characterIds = characterIds.filter((item) => item !== characterId);\n        }\n        const next = {...shot, characterIds};\n        await assertShotReferences(next);\n        await db.shots.put(next);\n        await touchProject(shot.projectId);\n    });\n}\n\nexport type EpisodeShotBulkPatch = Partial<\n    Pick<Shot, \"beatId\" | \"durationSec\" | \"status\" | \"characterIds\" | \"sceneId\" | \"propIds\" | \"styleId\" | \"notes\">\n>;\n\nconst SHOT_BULK_FIELDS = [\"beatId\", \"durationSec\", \"status\", \"characterIds\", \"sceneId\", \"propIds\", \"styleId\", \"notes\"] as const;\ntype ShotBulkField = (typeof SHOT_BULK_FIELDS)[number];\n\nexport interface EpisodeShotBulkUndo {\n    projectId: Id;\n    episodeId: Id;\n    shots: Array<{ id: Id; before: EpisodeShotBulkPatch; after: EpisodeShotBulkPatch }>;\n}\n\nfunction shotBulkSnapshot(shot: Shot, fields: readonly ShotBulkField[]): EpisodeShotBulkPatch {\n    // Include absent optional values so undo can explicitly clear a newly assigned reference.\n    return structuredClone(pickPatch({\n        beatId: shot.beatId, durationSec: shot.durationSec, status: shot.status,\n        characterIds: shot.characterIds, sceneId: shot.sceneId, propIds: shot.propIds,\n        styleId: shot.styleId, notes: shot.notes,\n    }, fields));\n}\n\nfunction sameShotBulkValue(left: EpisodeShotBulkPatch[ShotBulkField], right: EpisodeShotBulkPatch[ShotBulkField]): boolean {\n    if (Array.isArray(left) && Array.isArray(right)) {\n        return left.length === right.length && left.every((id, index) => id === right[index]);\n    }\n    return left === right;\n}\n\nexport async function patchEpisodeShots(\n    episodeId: Id,\n    ids: Id[],\n    patch: EpisodeShotBulkPatch,\n): Promise<EpisodeShotBulkUndo | undefined> {\n    if (ids.length === 0) return;\n    ids = [...ids];\n    patch = structuredClone(pickPatch(patch, SHOT_BULK_FIELDS));\n    return db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        const episode = await db.episodes.get(episodeId);\n        if (!episode) throw new Error(\"集不存在\");\n        await assertVideoProject(episode.projectId);\n        if (new Set(ids).size !== ids.length) throw new Error(\"镜头列表包含重复记录\");\n        const rows = await db.shots.bulkGet(ids);\n        const shots: Shot[] = [];\n        for (const shot of rows) {\n            if (!shot || shot.episodeId !== episodeId || shot.projectId !== episode.projectId) {\n                throw new Error(\"所选镜头不属于当前集\");\n            }\n            shots.push(shot);\n        }\n        const fields = SHOT_BULK_FIELDS.filter((key) => Object.hasOwn(patch, key));\n        if (fields.length === 0) return;\n        const nextPatch: EpisodeShotBulkPatch = {...patch};\n        if (\"status\" in patch) nextPatch.status = normalizeShotStatus(patch.status);\n        if (\"characterIds\" in patch) {\n            nextPatch.characterIds = Array.isArray(patch.characterIds) ? [...patch.characterIds] : [];\n        }\n        const updated = shots.map((shot) => ({...shot, ...nextPatch}));\n        for (const shot of updated) await assertShotReferences(shot);\n        const undo: EpisodeShotBulkUndo = {\n            projectId: episode.projectId, episodeId,\n            shots: shots.map((shot, index) => ({\n                id: shot.id,\n                before: shotBulkSnapshot(shot, fields),\n                after: shotBulkSnapshot(updated[index], fields),\n            })),\n        };\n        await db.shots.bulkPut(updated);\n        await touchProject(episode.projectId);\n        return undo;\n    });\n}\n\nexport async function undoEpisodeShotBulkPatch(undo: EpisodeShotBulkUndo): Promise<void> {\n    if (undo.shots.length === 0) return;\n    undo = structuredClone(undo);\n    await db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        const episode = await db.episodes.get(undo.episodeId);\n        if (!episode || episode.projectId !== undo.projectId) throw new Error(\"撤销的集不属于当前项目\");\n        await assertVideoProject(undo.projectId);\n        const ids = undo.shots.map((entry) => entry.id);\n        if (new Set(ids).size !== ids.length) throw new Error(\"镜头列表包含重复记录\");\n        const shots = await db.shots.bulkGet(ids);\n        const restored: Shot[] = [];\n        for (const [index, entry] of undo.shots.entries()) {\n            const shot = shots[index];\n            if (!shot || shot.projectId !== undo.projectId || shot.episodeId !== undo.episodeId) {\n                throw new Error(\"所选镜头不属于当前集，无法撤销\");\n            }\n            const fields = SHOT_BULK_FIELDS.filter((key) => Object.hasOwn(entry.after, key));\n            if (fields.length === 0 || fields.length !== Object.keys(entry.after).length ||\n                fields.length !== Object.keys(entry.before).length || fields.some((key) => !Object.hasOwn(entry.before, key))) {\n                throw new Error(\"批量撤销字段无效\");\n            }\n            for (const key of fields) {\n                // A field already restored to before can converge; any third value is a conflict.\n                if (!sameShotBulkValue(shot[key], entry.after[key]) && !sameShotBulkValue(shot[key], entry.before[key])) {\n                    throw new Error(\"镜头已被再次修改，无法撤销批量修改。后续修改已保留。\");\n                }\n            }\n            const next = {...shot, ...entry.before};\n            await assertShotReferences(shot);\n            await assertShotReferences(next);\n            restored.push(next);\n        }\n        // Validate every target and relationship before the first write, then commit as one group.\n        await db.shots.bulkPut(restored);\n        await touchProject(undo.projectId);\n    });\n}\n\nexport async function reorderShots(episodeId: Id, orderedIds: Id[]): Promise<void> {\n    await db.transaction(\"rw\", db.shots, db.episodes, db.projects, async () => {\n        const episode = await db.episodes.get(episodeId);\n        if (!episode) throw new Error(\"集不存在\");\n        await assertVideoProject(episode.projectId);\n        const shots = await db.shots.where(\"episodeId\").equals(episodeId).toArray();\n        if (shots.some((shot) => shot.projectId !== episode.projectId)) {\n            throw new Error(\"镜头与集不属于同一项目\");\n        }\n        assertCompleteOrder(shots.map((shot) => shot.id), orderedIds);\n        const byId = new Map(shots.map((shot) => [shot.id, shot]));\n        await Promise.all(\n            orderedIds.map((id, index) => db.shots.put({...byId.get(id)!, order: index + 1})),\n        );\n        await touchProject(episode.projectId);\n    });\n}\n\nexport async function duplicateShot(id: Id): Promise<Shot> {\n    return db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        const source = await db.shots.get(id);\n        if (!source) throw new Error(\"镜头不存在\");\n        const episode = await db.episodes.get(source.episodeId);\n        if (!episode || episode.projectId !== source.projectId) {\n            throw new Error(\"镜头与集不属于同一项目\");\n        }\n        const siblings = await db.shots.where(\"episodeId\").equals(source.episodeId).toArray();\n        if (siblings.some((shot) => shot.projectId !== episode.projectId)) {\n            throw new Error(\"镜头与集不属于同一项目\");\n        }\n        for (const shot of siblings) {\n            if (shot.order > source.order) {\n                await db.shots.put({...shot, order: shot.order + 1});\n            }\n        }\n        const copy = structuredClone({\n            ...source,\n            id: createId(\"sht\"),\n            order: source.order + 1,\n        });\n        await assertShotReferences(copy);\n        await db.shots.add(copy);\n        await touchProject(source.projectId);\n        return copy;\n    });\n}\n\nexport async function restoreShots(shots: Shot[], media: MediaRecord[] = []): Promise<void> {\n    if (shots.length === 0) return;\n    await db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        if (media.length > 0) await db.media.bulkPut(media);\n        const episodeIds = new Set(shots.map((shot) => shot.episodeId));\n        for (const episodeId of episodeIds) {\n            const episode = await db.episodes.get(episodeId);\n            if (!episode) throw new Error(\"集不存在\");\n            await assertVideoProject(episode.projectId);\n            const scoped = shots\n                .filter((shot) => shot.episodeId === episodeId)\n                .sort((left, right) => left.order - right.order);\n            if (scoped.some((shot) => shot.projectId !== episode.projectId)) {\n                throw new Error(\"镜头与集不属于同一项目\");\n            }\n            const all = (await db.shots.where(\"episodeId\").equals(episodeId).toArray()).sort(\n                (left, right) => left.order - right.order,\n            );\n            for (const shot of scoped) {\n                await assertShotReferences(shot);\n                const existing = await db.shots.get(shot.id);\n                if (existing) throw new Error(\"镜头已存在，无法恢复\");\n                all.splice(Math.max(0, Math.min(shot.order - 1, all.length)), 0, shot);\n            }\n            await Promise.all(\n                all.map((shot, index) => db.shots.put({...shot, order: index + 1})),\n            );\n            await touchProject(episode.projectId);\n        }\n    });\n}\n\nexport async function setShotSlot(\n    id: Id,\n    field: ShotPictureField,\n    slot: GenerationSlot,\n    baseline?: GenerationSlot,\n): Promise<void> {\n    await db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        const shot = await db.shots.get(id);\n        if (!shot) throw new Error(\"镜头不存在，无法保存\");\n        if (baseline && !sameSlotValue(shot[field], baseline) && !sameSlotValue(shot[field], slot)) throw new DraftConflictError();\n        await assertSlotMedia(shot.projectId, slot);\n        const previous = shot[field];\n        await db.shots.put({...shot, [field]: slot});\n        await touchProject(shot.projectId);\n        await recycleSlotMedia(previous, slot);\n    });\n}\n\nexport async function deleteShots(ids: Id[]): Promise<void> {\n    await db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        if (ids.length === 0) return;\n        const affected = new Map<Id, Id>();\n        const mediaIds: Id[] = [];\n        for (const id of ids) {\n            const shot = await db.shots.get(id);\n            if (!shot) continue;\n            affected.set(shot.episodeId, shot.projectId);\n            mediaIds.push(\n                ...slotMediaIds(shot.firstFrame),\n                ...slotMediaIds(shot.lastFrame),\n                ...slotMediaIds(shot.clip),\n            );\n            await db.shots.delete(id);\n        }\n        for (const [episodeId, projectId] of affected) {\n            await reindexShots(episodeId);\n            await touchProject(projectId);\n        }\n        for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);\n    });\n}\n\nexport interface DeletedShotsSnapshot {\n    projectId: Id;\n    episodeId: Id;\n    shots: Shot[];\n    media: MediaRecord[];\n}\n\nexport async function deleteEpisodeShots(episodeId: Id, ids: Id[]): Promise<DeletedShotsSnapshot | undefined> {\n    return db.transaction(\"rw\", PRODUCTION_TABLES, async () => {\n        if (ids.length === 0) return;\n        const episode = await db.episodes.get(episodeId);\n        if (!episode) throw new Error(\"集不存在\");\n        await assertVideoProject(episode.projectId);\n        if (new Set(ids).size !== ids.length) throw new Error(\"镜头列表包含重复记录\");\n        const rows = await db.shots.bulkGet(ids);\n        const shots: Shot[] = [];\n        for (const shot of rows) {\n            if (!shot || shot.episodeId !== episodeId || shot.projectId !== episode.projectId) {\n                throw new Error(\"所选镜头不属于当前集\");\n            }\n            shots.push(shot);\n        }\n        const mediaIds = [...new Set(shots.flatMap((shot) =>\n            SHOT_PICTURE_FIELDS.flatMap((field) => slotMediaIds(shot[field])),\n        ))];\n        const media = (await db.media.bulkGet(mediaIds)).filter(\n            (record): record is MediaRecord => record !== undefined,\n        );\n        // Snapshot and nested deletion share the production lock through cleanup and commit.\n        await deleteShots(ids);\n        return {projectId: episode.projectId, episodeId, shots, media};\n    });\n}\n\nexport async function setVisibleColumns(\n    projectId: Id,\n    visible: ShotColumnId[],\n): Promise<void> {\n    await updateProject(projectId, {columnSettings: {visible}});\n}\n\nexport async function listConnectors(): Promise<ConnectorConfig[]> {\n    return db.connectors.orderBy(\"updatedAt\").reverse().toArray();\n}\n\nexport async function getConnectorByDefinition(\n    definitionId: ConnectorDefinitionId,\n): Promise<ConnectorConfig | undefined> {\n    return db.connectors.where(\"definitionId\").equals(definitionId).first();\n}\n\nexport type UpsertConnectorInput = {\n    definitionId: ConnectorDefinitionId;\n    protocol: ConnectorProtocol;\n    baseUrl: string;\n    apiKey: string;\n    label?: string;\n};\n\n/** One saved config per catalog definitionId. */\nexport async function upsertConnector(input: UpsertConnectorInput): Promise<ConnectorConfig> {\n    const baseUrl = normalizeBaseUrl(input.baseUrl);\n    const apiKey = input.apiKey.trim();\n    if (!baseUrl) throw new Error(\"请填写 Base URL\");\n    if (!apiKey) throw new Error(\"请填写 API Key\");\n\n    return db.transaction(\"rw\", db.connectors, db.connectorAliases, async () => {\n        const existing = await getConnectorByDefinition(input.definitionId);\n        const record: ConnectorConfig = {\n            id: existing?.id ?? createId(\"conn\"),\n            definitionId: input.definitionId,\n            protocol: input.protocol,\n            label: input.label?.trim() || undefined,\n            baseUrl,\n            apiKey,\n            updatedAt: nowIso(),\n        };\n        await db.connectors.put(record);\n        // Explicit edits (including key rotation) apply to retained historical IDs.\n        await db.connectorAliases.where(\"definitionId\").equals(input.definitionId).modify((alias) => {\n            Object.assign(alias, {...record, id: alias.id});\n        });\n        return record;\n    });\n}\n\n/** Resolve a frozen historical ID without exposing retired duplicates in pickers. */\nexport async function resolveConnector(id: Id): Promise<ConnectorConfig | undefined> {\n    return (await db.connectors.get(id)) ?? db.connectorAliases.get(id);\n}\n\nexport async function deleteConnector(id: Id): Promise<void> {\n    await db.transaction(\"rw\", db.connectors, db.connectorAliases, async () => {\n        const config = await resolveConnector(id);\n        if (!config) return;\n        await db.connectors.where(\"definitionId\").equals(config.definitionId).delete();\n        await db.connectorAliases.where(\"definitionId\").equals(config.definitionId).delete();\n    });\n}\n\nexport async function listChatThreads(): Promise<ChatThread[]> {\n    return db.chatThreads.orderBy(\"updatedAt\").reverse().toArray();\n}\n\nexport async function getChatThread(id: Id): Promise<ChatThread | undefined> {\n    return db.chatThreads.get(id);\n}\n\nexport async function createChatThread(options?: {\n    projectId?: Id;\n    taskMode?: boolean;\n    title?: string;\n    connectorId?: Id;\n    model?: string;\n}): Promise<ChatThread> {\n    const at = nowIso();\n    const thread: ChatThread = {\n        contextPolicy: normalizeContextPolicy((await getGeneralAgentConfig()).contextPolicy),\n        id: createId(\"cth\"),\n        title: options?.title?.trim() || \"新对话\",\n        taskMode: options?.taskMode === true,\n        projectId: options?.projectId,\n        connectorId: options?.connectorId,\n        model: options?.model?.trim() || undefined,\n        createdAt: at,\n        updatedAt: at,\n    };\n    await db.transaction(\"rw\", [db.chatThreads, db.projects], async () => {\n        if (thread.projectId && (thread.projectId === STUDIO_LIBRARY_ID || !await db.projects.get(thread.projectId))) throw new Error(\"请选择可用项目\");\n        await db.chatThreads.add(thread);\n    });\n    return thread;\n}\n\nexport async function updateChatThread(\n    id: Id,\n    patch: Partial<Pick<ChatThread, \"title\" | \"connectorId\" | \"model\" | \"reasoningSelection\" | \"interactionMode\">>,\n): Promise<void> {\n    await db.transaction(\"rw\", db.chatThreads, async () => {\n        const existing = await db.chatThreads.get(id);\n        if (!existing) return;\n        const next: ChatThread = {\n            ...existing,\n            updatedAt: nowIso(),\n        };\n        if (patch.title !== undefined) {\n            const title = patch.title.trim();\n            next.title = title || existing.title;\n        }\n        if (patch.connectorId !== undefined) {\n            next.connectorId = patch.connectorId || undefined;\n        }\n        if (patch.model !== undefined) {\n            const model = patch.model.trim();\n            next.model = model || undefined;\n        }\n        if (patch.interactionMode !== undefined) next.interactionMode = patch.interactionMode;\n        if (patch.reasoningSelection !== undefined) next.reasoningSelection = patch.reasoningSelection;\n        await db.chatThreads.put(next);\n    });\n}\n\nexport async function deleteChatThread(id: Id): Promise<void> {\n    await db.transaction(\"rw\", [...PRODUCTION_TABLES, db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, db.agentTasks, db.contextCompactions, db.agentTaskRecords, db.agentTaskRecordVersions, db.agentTaskWrapups, db.agentTaskWrapupVersions], async () => {\n        const jobs = await db.agentGenerationJobs.where(\"threadId\").equals(id).toArray();\n        const batches = await db.agentGenerationBatches.where(\"threadId\").equals(id).toArray();\n        const items = await db.agentGenerationBatchItems.where(\"threadId\").equals(id).toArray();\n        const jobMedia = new Set([...jobs.flatMap(job => [...job.inputs.map(input => input.mediaId), ...(job.result ? [job.result.mediaId] : [])]), ...items.flatMap(item => item.draft.inputs.map(input => input.mediaId)), ...batches.flatMap(batch => batch.applications.flatMap(a => [a.result.mediaId, ...(a.before ? [a.before.mediaId] : [])]))]);\n        await db.agentGenerationBatches.where(\"threadId\").equals(id).delete();\n        await db.agentGenerationBatchItems.where(\"threadId\").equals(id).delete();\n        await db.agentGenerationJobs.where(\"threadId\").equals(id).delete();\n        await db.contextCompactions.where(\"threadId\").equals(id).delete();\n        for (const task of await db.agentTasks.where(\"threadId\").equals(id).toArray()) {\n            await db.agentTaskWrapups.where(\"taskId\").equals(task.id).delete();\n            await db.agentTaskWrapupVersions.where(\"taskId\").equals(task.id).delete();\n            await db.agentTaskRecords.where(\"taskId\").equals(task.id).delete();\n            await db.agentTaskRecordVersions.where(\"taskId\").equals(task.id).delete();\n        }\n        await db.agentTasks.where(\"threadId\").equals(id).delete();\n        await db.agentToolCalls.where(\"threadId\").equals(id).delete();\n        await db.agentRuns.where(\"threadId\").equals(id).delete();\n        await db.chatMessages.where(\"threadId\").equals(id).delete();\n        await db.chatThreads.delete(id);\n        for (const mediaId of jobMedia) await deleteMediaIfOrphan(mediaId);\n    });\n}\n\nexport async function listChatMessages(threadId: Id): Promise<ChatMessage[]> {\n    return db.chatMessages.where(\"threadId\").equals(threadId).sortBy(\"createdAt\");\n}\n\nexport async function appendChatMessage(input: {\n    threadId: Id;\n    role: ChatMessageRole;\n    content?: string;\n    status?: ChatMessageStatus;\n}): Promise<ChatMessage> {\n    const at = nowIso();\n    const message: ChatMessage = {\n        id: createId(\"cmsg\"),\n        threadId: input.threadId,\n        role: input.role,\n        content: input.content ?? \"\",\n        createdAt: at,\n        status: input.status,\n    };\n    await db.transaction(\"rw\", db.chatThreads, db.chatMessages, async () => {\n        const thread = await db.chatThreads.get(input.threadId);\n        if (!thread) throw new Error(\"对话不存在\");\n        await db.chatMessages.put(message);\n        await db.chatThreads.put({...thread, updatedAt: at});\n    });\n    return message;\n}\n\nexport async function updateChatMessage(\n    id: Id,\n    patch: Partial<Pick<ChatMessage, \"content\" | \"status\" | \"reasoning\" | \"reasoningDurationMs\">>,\n): Promise<void> {\n    await db.transaction(\"rw\", db.chatMessages, async () => {\n        const existing = await db.chatMessages.get(id);\n        if (!existing || existing.runId) return;\n        await db.chatMessages.update(id, patch);\n    });\n}\n\n/** Bind once before any conversation execution; changing projects starts a new thread. */\nexport async function bindChatThreadProject(threadId: string, projectId: string, expectedProjectId?: string): Promise<void> {\n    await db.transaction(\"rw\", [db.chatThreads, db.projects, db.agentRuns, db.chatMessages, db.agentTasks], async () => {\n        const thread = await db.chatThreads.get(threadId);\n        if (!thread || thread.projectId !== expectedProjectId) throw new Error(\"对话项目已变化，请重新读取\");\n        if (projectId === STUDIO_LIBRARY_ID || !await db.projects.get(projectId)) throw new Error(\"请选择可用项目\");\n        if (thread.projectId === projectId) return;\n        if (thread.projectId || await db.agentRuns.where(\"threadId\").equals(threadId).count() || await db.chatMessages.where(\"threadId\").equals(threadId).count() || await db.agentTasks.where(\"threadId\").equals(threadId).count()) throw new Error(\"已有对话不能切换项目，请新建对话\");\n        await db.chatThreads.update(threadId, {projectId, updatedAt: nowIso()});\n    });\n}\n\nexport async function assertVideoProject(projectId: Id): Promise<Project> {\n    const project = await db.projects.get(projectId);\n    if (!project) throw new Error(\"项目不存在\");\n    if (getProjectKind(project) !== \"video\") throw new Error(\"此操作仅适用于视频项目\");\n    return project;\n}\n\nexport async function createAudioMusicProject(name: string, kind: \"audio\" | \"music\", ipId?: Id | null): Promise<Project> {\n    if (kind !== \"audio\" && kind !== \"music\") throw new Error(\"不支持的项目类型\");\n    const project = {...emptyProject(name), kind};\n    await db.transaction(\"rw\", [db.projects, ...AUDIO_TABLES, db.ipProfiles, db.projectIpLinks], async () => {\n        if (ipId) {\n            const profile = await db.ipProfiles.get(ipId);\n            if (!profile || profile.archived) throw new Error(\"请选择未归档的 IP\");\n            await db.projectIpLinks.add({projectId: project.id, ipId, updatedAt: nowIso()});\n        }\n        await db.projects.add(project);\n        if (kind === \"audio\") {\n            const chapter = newAudioRow<AudioChapter>(project.id, \"ach\", {title: \"第一章\", order: 0});\n            await db.audioChapters.add(chapter);\n            await db.audioTracks.add(newAudioRow<AudioTrack>(project.id, \"atr\", {\n                chapterId: chapter.id,\n                role: \"voice\",\n                name: \"人声\",\n                order: 0,\n                gain: 1,\n                muted: false,\n                solo: false\n            }));\n        } else await db.musicDrafts.add(newAudioRow<MusicDraft>(project.id, \"mdr\", {settings: defaultMusicSettings()}));\n    });\n    return project;\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/projectPackage.ts",
+    "messages": [
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+        "line": 62,
+        "column": 12,
+        "nodeType": "TSAsExpression",
+        "messageId": "contextuallyUnnecessary",
+        "endLine": 62,
+        "endColumn": 50,
+        "fix": {
+          "range": [
+            1984,
+            2011
+          ],
+          "text": ""
+        }
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.coverMediaId' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 184,
+        "column": 44,
+        "nodeType": "MemberExpression",
+        "messageId": "baseToString",
+        "endLine": 184,
+        "endColumn": 60
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.coverMediaId' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 185,
+        "column": 22,
+        "nodeType": "MemberExpression",
+        "messageId": "baseToString",
+        "endLine": 185,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"prj\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 190,
+        "column": 20,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 190,
+        "endColumn": 45
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.name ?? fallbackName' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 191,
+        "column": 22,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 191,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 201,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 201,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 202,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 202,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since it does not change the type of the expression.",
+        "line": 206,
+        "column": 24,
+        "nodeType": "TSAsExpression",
+        "messageId": "unnecessaryAssertion",
+        "endLine": 206,
+        "endColumn": 49,
+        "fix": {
+          "range": [
+            6719,
+            6737
+          ],
+          "text": ""
+        }
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"chr\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 264,
+        "column": 20,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 264,
+        "endColumn": 45
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.name ?? \"未命名角色\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 269,
+        "column": 22,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 269,
+        "endColumn": 41
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.bio ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 270,
+        "column": 21,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 270,
+        "endColumn": 34
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.appearance ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 271,
+        "column": 28,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 271,
+        "endColumn": 48
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 272,
+        "column": 23,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 272,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 274,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 274,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 275,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 275,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"scn\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 300,
+        "column": 20,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 300,
+        "endColumn": 45
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.name ?? \"未命名场景\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 304,
+        "column": 22,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 304,
+        "endColumn": 41
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.location ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 305,
+        "column": 26,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 305,
+        "endColumn": 44
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.timeOfDay ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 306,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 306,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.atmosphere ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 307,
+        "column": 28,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 307,
+        "endColumn": 48
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 308,
+        "column": 23,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 308,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 310,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 310,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 311,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 311,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"prp\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 336,
+        "column": 20,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 336,
+        "endColumn": 45
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.name ?? \"未命名道具\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 343,
+        "column": 22,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 343,
+        "endColumn": 41
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.kind ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 344,
+        "column": 22,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 344,
+        "endColumn": 36
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 345,
+        "column": 23,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 345,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 347,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 347,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 348,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 348,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"sty\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 372,
+        "column": 20,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 372,
+        "endColumn": 45
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.name ?? \"未命名风格\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 379,
+        "column": 22,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 379,
+        "endColumn": 41
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 380,
+        "column": 23,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 380,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 382,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 382,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 383,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 383,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"ep\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 407,
+        "column": 20,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 407,
+        "endColumn": 44
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.title ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 410,
+        "column": 23,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 410,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 415,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 415,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 416,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 416,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'parseShot' has a complexity of 21. Maximum allowed is 20.",
+        "line": 468,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 468,
+        "endColumn": 19
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"sht\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 476,
+        "column": 20,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 476,
+        "endColumn": 45
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.episodeId ?? episodeId' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 478,
+        "column": 27,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 478,
+        "endColumn": 53
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.shotNumber ?? index + 1' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 480,
+        "column": 28,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 480,
+        "endColumn": 55
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.category ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 487,
+        "column": 26,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 487,
+        "endColumn": 44
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.content ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 489,
+        "column": 25,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 489,
+        "endColumn": 42
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 490,
+        "column": 23,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 490,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.sceneCloseup ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 491,
+        "column": 30,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 491,
+        "endColumn": 52
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.sound ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 492,
+        "column": 23,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 492,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.emotion ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 493,
+        "column": 25,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 493,
+        "endColumn": 42
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.cameraAngle ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 494,
+        "column": 29,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 494,
+        "endColumn": 50
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.cameraGear ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 495,
+        "column": 28,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 495,
+        "endColumn": 48
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.focalLength ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 496,
+        "column": 29,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 496,
+        "endColumn": 50
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.sceneId' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 500,
+        "column": 39,
+        "nodeType": "MemberExpression",
+        "messageId": "baseToString",
+        "endLine": 500,
+        "endColumn": 50
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'raw.beatId' will use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 501,
+        "column": 37,
+        "nodeType": "MemberExpression",
+        "messageId": "baseToString",
+        "endLine": 501,
+        "endColumn": 47
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'parseMemoryPackage' has a complexity of 26. Maximum allowed is 20.",
+        "line": 525,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 525,
+        "endColumn": 28
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+        "line": 525,
+        "column": 10,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 525,
+        "endColumn": 28
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'importProjectZip' has a complexity of 47. Maximum allowed is 20.",
+        "line": 790,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 790,
+        "endColumn": 39
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 36 to the 20 allowed.",
+        "line": 790,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 790,
+        "endColumn": 39
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+        "line": 952,
+        "column": 22,
+        "nodeType": "TSAsExpression",
+        "messageId": "contextuallyUnnecessary",
+        "endLine": 957,
+        "endColumn": 27,
+        "fix": {
+          "range": [
+            32469,
+            32486
+          ],
+          "text": ""
+        }
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+        "line": 964,
+        "column": 23,
+        "nodeType": "TSAsExpression",
+        "messageId": "contextuallyUnnecessary",
+        "endLine": 969,
+        "endColumn": 34,
+        "fix": {
+          "range": [
+            32882,
+            32906
+          ],
+          "text": ""
+        }
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 976,
+        "column": 28,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 978,
+        "endColumn": 56
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 54,
+    "fatalErrorCount": 0,
+    "warningCount": 6,
+    "fixableErrorCount": 4,
+    "fixableWarningCount": 0,
+    "source": "import {AUDIO_TABLES} from \"@/db/audioShared\";\nimport {insertAudioPackage, parseAudioPackage, remapAudioPackage, snapshotAudioPackage} from \"./audioProjectPackage\";\nimport {\n    type Character,\n    type CharacterImageSlot,\n    DEFAULT_VISIBLE_COLUMNS,\n    type Episode,\n    type GenerationSlot,\n    getEpisodeShotFilters,\n    getProjectKind,\n    type Id,\n    type MediaRecord,\n    normalizeAspectPreset,\n    normalizeEpisodeStory,\n    normalizeProjectMode,\n    normalizeSeriesStory,\n    normalizeSetting,\n    normalizeShotFilters,\n    normalizeShotSettings,\n    normalizeShotStatus,\n    PACKAGE_FORMAT,\n    type Project,\n    type ProjectKind,\n    type Prop,\n    type PropImageSlot,\n    type Scene,\n    type SceneImageSlot,\n    type Shot,\n    SHOT_UNASSIGNED_BEAT,\n    type ShotColumnId,\n    type StyleImageSlot,\n    type VisualStyle\n} from \"@/domain/types\";\nimport {parseReferencePackage, remapReferencePackage} from \"./references/package\";\nimport type {MemorySource, ProjectMemory, ProjectMemoryVersion,} from \"@/domain/projectMemory\";\nimport {normalizeMemoryText, projectMemorySchema, projectMemoryVersionSchema,} from \"@/lib/memory/schema\";\nimport {parseGenerationDefaults} from \"@/domain/output\";\nimport JSZip from \"jszip\";\nimport {z} from \"zod\";\nimport {db} from \"@/db/database\";\nimport {collectMediaIds} from \"@/db/repo\";\nimport {parseGenerationSlot, parseShotPictureSlots, remapSlot,} from \"@/domain/slot\";\nimport {createId, nowIso} from \"./ids\";\n\nconst recordSchema = z.object({}).passthrough();\n\nconst manifestSchema = z.object({\n    format: z.literal(PACKAGE_FORMAT),\n    exportedAt: z.string().optional(),\n});\n\nexport class PackageError extends Error {\n    constructor(message: string) {\n        super(message);\n        this.name = \"PackageError\";\n    }\n}\n\nfunction asRecord(value: unknown, label: string): Record<string, unknown> {\n    const parsed = recordSchema.safeParse(value);\n    if (!parsed.success) throw new PackageError(`${label} 不是有效对象`);\n    return parsed.data as Record<string, unknown>;\n}\n\nfunction asArray(value: unknown, label: string): Record<string, unknown>[] {\n    if (value == null) return [];\n    if (!Array.isArray(value)) throw new PackageError(`${label} 必须是数组`);\n    return value.map((item, index) => asRecord(item, `${label}[${index}]`));\n}\n\nfunction pickExtra(\n    raw: Record<string, unknown>,\n    known: string[],\n): Record<string, unknown> | undefined {\n    const nested = raw.extra;\n    const extra: Record<string, unknown> =\n        nested && typeof nested === \"object\" && !Array.isArray(nested)\n            ? {...(nested as Record<string, unknown>)}\n            : {};\n    const knownSet = new Set(known);\n    for (const [key, value] of Object.entries(raw)) {\n        if (key !== \"extra\" && !knownSet.has(key)) extra[key] = value;\n    }\n    return Object.keys(extra).length > 0 ? extra : undefined;\n}\n\nfunction extFor(mimeType: string, filename: string): string {\n    const fromName = filename.split(\".\").pop();\n    if (fromName && fromName !== filename && fromName.length <= 5)\n        return fromName;\n    if (mimeType.includes(\"png\")) return \"png\";\n    if (mimeType.includes(\"webp\")) return \"webp\";\n    if (mimeType.includes(\"gif\")) return \"gif\";\n    if (mimeType.includes(\"mp4\")) return \"mp4\";\n    if (mimeType.includes(\"webm\")) return \"webm\";\n    if (mimeType.includes(\"quicktime\")) return \"mov\";\n    if (mimeType.startsWith(\"audio/\")) {\n        if (mimeType.includes(\"wav\")) return \"wav\";\n        if (mimeType.includes(\"mpeg\")) return \"mp3\";\n        if (mimeType.includes(\"ogg\")) return \"ogg\";\n        if (mimeType.includes(\"flac\")) return \"flac\";\n        if (mimeType.includes(\"aac\")) return \"aac\";\n        return \"audio\";\n    }\n    if (mimeType.startsWith(\"video/\")) return \"mp4\";\n    return \"jpg\";\n}\n\nfunction mimeForFilename(filename: string): string {\n    const extension = filename.split(\".\").pop()?.toLowerCase();\n    const known: Record<string, string> = {\n        wav: \"audio/wav\",\n        mp3: \"audio/mpeg\",\n        ogg: \"audio/ogg\",\n        opus: \"audio/ogg\",\n        flac: \"audio/flac\",\n        aac: \"audio/aac\",\n        m4a: \"audio/mp4\",\n        png: \"image/png\",\n        jpg: \"image/jpeg\",\n        jpeg: \"image/jpeg\",\n        jfif: \"image/jpeg\",\n        webp: \"image/webp\",\n        gif: \"image/gif\",\n        mp4: \"video/mp4\",\n        webm: \"video/webm\",\n        mov: \"video/quicktime\",\n    };\n    return (extension && known[extension]) || \"application/octet-stream\";\n}\n\nfunction optionalText(\n    raw: Record<string, unknown>,\n    key: string,\n): string | undefined {\n    if (raw[key] === undefined) return undefined;\n    if (typeof raw[key] !== \"string\") throw new PackageError(`${key} 必须是文本`);\n    return raw[key];\n}\n\nfunction optionalIds(\n    raw: Record<string, unknown>,\n    key: string,\n): Id[] | undefined {\n    const value = raw[key];\n    if (value === undefined) return undefined;\n    if (!Array.isArray(value) || value.some((id) => typeof id !== \"string\"))\n        throw new PackageError(`${key} 必须是 ID 数组`);\n    return [...new Set(value as string[])];\n}\n\nconst PROJECT_KEYS = [\n    \"kind\",\n    \"archivedAt\",\n    \"brief\",\n    \"genre\",\n    \"audience\",\n    \"tone\",\n    \"defaultStyleId\",\n    \"generationDefaults\",\n    \"id\",\n    \"name\",\n    \"mode\",\n    \"aspectPreset\",\n    \"coverMediaId\",\n    \"createdAt\",\n    \"updatedAt\",\n    \"columnSettings\",\n    \"shotSettings\",\n    \"story\",\n    \"setting\",\n    \"extra\",\n];\n\nfunction parseProject(\n    raw: Record<string, unknown>,\n    fallbackName: string,\n): Project {\n    const visible = (\n        raw.columnSettings as { visible?: ShotColumnId[] } | undefined\n    )?.visible;\n    const at = nowIso();\n    const coverMediaId =\n        raw.coverMediaId != null && String(raw.coverMediaId).trim()\n            ? String(raw.coverMediaId)\n            : undefined;\n    getProjectKind({kind: raw.kind as ProjectKind | undefined});\n    const project: Project = {\n        kind: raw.kind as ProjectKind | undefined,\n        id: String(raw.id ?? createId(\"prj\")),\n        name: String(raw.name ?? fallbackName),\n        archivedAt: optionalText(raw, \"archivedAt\"),\n        brief: optionalText(raw, \"brief\"),\n        genre: optionalText(raw, \"genre\"),\n        audience: optionalText(raw, \"audience\"),\n        tone: optionalText(raw, \"tone\"),\n        defaultStyleId: optionalText(raw, \"defaultStyleId\"),\n        generationDefaults: parseGenerationDefaults(raw.generationDefaults),\n        mode: normalizeProjectMode(raw.mode),\n        aspectPreset: normalizeAspectPreset(raw.aspectPreset),\n        createdAt: String(raw.createdAt ?? at),\n        updatedAt: String(raw.updatedAt ?? at),\n        columnSettings: {\n            visible:\n                Array.isArray(visible) && visible.length > 0\n                    ? (visible as ShotColumnId[])\n                    : [...DEFAULT_VISIBLE_COLUMNS],\n        },\n        shotSettings: normalizeShotSettings(raw.shotSettings),\n        story: normalizeSeriesStory(raw.story),\n        setting: normalizeSetting(raw.setting),\n        extra: pickExtra(raw, PROJECT_KEYS),\n    };\n    if (coverMediaId) project.coverMediaId = coverMediaId;\n    return project;\n}\n\nconst CHARACTER_KEYS = [\n    \"personality\",\n    \"motivation\",\n    \"voice\",\n    \"id\",\n    \"projectId\",\n    \"name\",\n    \"bio\",\n    \"appearance\",\n    \"notes\",\n    \"slots\",\n    \"images\",\n    \"createdAt\",\n    \"updatedAt\",\n    \"extra\",\n];\n\nfunction parseNamedSlots<K extends string>(\n    rawSlots: unknown,\n    legacyImages: unknown,\n): Partial<Record<K, GenerationSlot>> {\n    const slots: Partial<Record<K, GenerationSlot>> = {};\n    if (rawSlots && typeof rawSlots === \"object\") {\n        for (const [key, value] of Object.entries(\n            rawSlots as Record<string, unknown>,\n        )) {\n            slots[key as K] = parseGenerationSlot(value);\n        }\n    }\n    if (legacyImages && typeof legacyImages === \"object\") {\n        for (const [key, value] of Object.entries(\n            legacyImages as Record<string, unknown>,\n        )) {\n            if (!slots[key as K])\n                slots[key as K] = parseGenerationSlot(undefined, value);\n        }\n    }\n    return slots;\n}\n\nfunction parseCharacter(\n    raw: Record<string, unknown>,\n    projectId: Id,\n): Character {\n    const at = nowIso();\n    return {\n        id: String(raw.id ?? createId(\"chr\")),\n        projectId,\n        personality: optionalText(raw, \"personality\"),\n        motivation: optionalText(raw, \"motivation\"),\n        voice: optionalText(raw, \"voice\"),\n        name: String(raw.name ?? \"未命名角色\"),\n        bio: String(raw.bio ?? \"\"),\n        appearance: String(raw.appearance ?? \"\"),\n        notes: String(raw.notes ?? \"\"),\n        slots: parseNamedSlots<CharacterImageSlot>(raw.slots, raw.images),\n        createdAt: String(raw.createdAt ?? at),\n        updatedAt: String(raw.updatedAt ?? at),\n        extra: pickExtra(raw, CHARACTER_KEYS),\n    };\n}\n\nconst SCENE_KEYS = [\n    \"geography\",\n    \"lighting\",\n    \"id\",\n    \"projectId\",\n    \"name\",\n    \"location\",\n    \"timeOfDay\",\n    \"atmosphere\",\n    \"notes\",\n    \"slots\",\n    \"images\",\n    \"createdAt\",\n    \"updatedAt\",\n    \"extra\",\n];\n\nfunction parseScene(raw: Record<string, unknown>, projectId: Id): Scene {\n    const at = nowIso();\n    return {\n        id: String(raw.id ?? createId(\"scn\")),\n        projectId,\n        geography: optionalText(raw, \"geography\"),\n        lighting: optionalText(raw, \"lighting\"),\n        name: String(raw.name ?? \"未命名场景\"),\n        location: String(raw.location ?? \"\"),\n        timeOfDay: String(raw.timeOfDay ?? \"\"),\n        atmosphere: String(raw.atmosphere ?? \"\"),\n        notes: String(raw.notes ?? \"\"),\n        slots: parseNamedSlots<SceneImageSlot>(raw.slots, raw.images),\n        createdAt: String(raw.createdAt ?? at),\n        updatedAt: String(raw.updatedAt ?? at),\n        extra: pickExtra(raw, SCENE_KEYS),\n    };\n}\n\nconst PROP_KEYS = [\n    \"appearance\",\n    \"material\",\n    \"size\",\n    \"usage\",\n    \"continuity\",\n    \"id\",\n    \"projectId\",\n    \"name\",\n    \"kind\",\n    \"notes\",\n    \"slots\",\n    \"createdAt\",\n    \"updatedAt\",\n    \"extra\",\n];\n\nfunction parseProp(raw: Record<string, unknown>, projectId: Id): Prop {\n    const at = nowIso();\n    return {\n        id: String(raw.id ?? createId(\"prp\")),\n        projectId,\n        appearance: optionalText(raw, \"appearance\"),\n        material: optionalText(raw, \"material\"),\n        size: optionalText(raw, \"size\"),\n        usage: optionalText(raw, \"usage\"),\n        continuity: optionalText(raw, \"continuity\"),\n        name: String(raw.name ?? \"未命名道具\"),\n        kind: String(raw.kind ?? \"\"),\n        notes: String(raw.notes ?? \"\"),\n        slots: parseNamedSlots<PropImageSlot>(raw.slots, undefined),\n        createdAt: String(raw.createdAt ?? at),\n        updatedAt: String(raw.updatedAt ?? at),\n        extra: pickExtra(raw, PROP_KEYS),\n    };\n}\n\nconst STYLE_KEYS = [\n    \"palette\",\n    \"lighting\",\n    \"lens\",\n    \"composition\",\n    \"negativePrompt\",\n    \"id\",\n    \"projectId\",\n    \"name\",\n    \"notes\",\n    \"slots\",\n    \"createdAt\",\n    \"updatedAt\",\n    \"extra\",\n];\n\nfunction parseStyle(raw: Record<string, unknown>, projectId: Id): VisualStyle {\n    const at = nowIso();\n    return {\n        id: String(raw.id ?? createId(\"sty\")),\n        projectId,\n        palette: optionalText(raw, \"palette\"),\n        lighting: optionalText(raw, \"lighting\"),\n        lens: optionalText(raw, \"lens\"),\n        composition: optionalText(raw, \"composition\"),\n        negativePrompt: optionalText(raw, \"negativePrompt\"),\n        name: String(raw.name ?? \"未命名风格\"),\n        notes: String(raw.notes ?? \"\"),\n        slots: parseNamedSlots<StyleImageSlot>(raw.slots, undefined),\n        createdAt: String(raw.createdAt ?? at),\n        updatedAt: String(raw.updatedAt ?? at),\n        extra: pickExtra(raw, STYLE_KEYS),\n    };\n}\n\nconst EPISODE_KEYS = [\n    \"shotFilters\",\n    \"id\",\n    \"projectId\",\n    \"order\",\n    \"title\",\n    \"story\",\n    \"createdAt\",\n    \"updatedAt\",\n    \"extra\",\n];\n\nfunction parseEpisode(\n    raw: Record<string, unknown>,\n    projectId: Id,\n    index: number,\n): Episode {\n    const at = nowIso();\n    return {\n        id: String(raw.id ?? createId(\"ep\")),\n        projectId,\n        order: Number.isFinite(Number(raw.order)) ? Number(raw.order) : index,\n        title: String(raw.title ?? \"\"),\n        story: normalizeEpisodeStory(raw.story),\n        ...(raw.shotFilters === undefined\n            ? {}\n            : {shotFilters: normalizeShotFilters(raw.shotFilters)}),\n        createdAt: String(raw.createdAt ?? at),\n        updatedAt: String(raw.updatedAt ?? at),\n        extra: pickExtra(raw, EPISODE_KEYS),\n    };\n}\n\nfunction synthesizeFirstEpisode(\n    project: Project,\n    projectRaw: Record<string, unknown>,\n): Episode {\n    return {\n        id: createId(\"ep\"),\n        projectId: project.id,\n        order: 0,\n        title: \"\",\n        story: normalizeEpisodeStory(projectRaw.story),\n        createdAt: project.createdAt,\n        updatedAt: project.updatedAt,\n    };\n}\n\nconst SHOT_KEYS = [\n    \"propIds\",\n    \"styleId\",\n    \"id\",\n    \"projectId\",\n    \"episodeId\",\n    \"order\",\n    \"shotNumber\",\n    \"status\",\n    \"firstFrame\",\n    \"lastFrame\",\n    \"clip\",\n    \"frame\",\n    \"reference\",\n    \"frameMediaId\",\n    \"referenceMediaId\",\n    \"category\",\n    \"durationSec\",\n    \"content\",\n    \"notes\",\n    \"sceneCloseup\",\n    \"sound\",\n    \"emotion\",\n    \"cameraAngle\",\n    \"cameraGear\",\n    \"focalLength\",\n    \"characterIds\",\n    \"sceneId\",\n    \"beatId\",\n    \"extra\",\n];\n\nfunction parseShot(\n    raw: Record<string, unknown>,\n    projectId: Id,\n    episodeId: Id,\n    index: number,\n): Shot {\n    const slots = parseShotPictureSlots(raw);\n    return {\n        id: String(raw.id ?? createId(\"sht\")),\n        projectId,\n        episodeId: String(raw.episodeId ?? episodeId),\n        order: Number(raw.order ?? index + 1) || index + 1,\n        shotNumber: String(raw.shotNumber ?? index + 1),\n        status: normalizeShotStatus(raw.status),\n        propIds: optionalIds(raw, \"propIds\"),\n        styleId: raw.styleId === null ? null : optionalText(raw, \"styleId\"),\n        firstFrame: slots.firstFrame,\n        lastFrame: slots.lastFrame,\n        clip: slots.clip,\n        category: String(raw.category ?? \"\"),\n        durationSec: Number(raw.durationSec ?? 0) || 0,\n        content: String(raw.content ?? \"\"),\n        notes: String(raw.notes ?? \"\"),\n        sceneCloseup: String(raw.sceneCloseup ?? \"\"),\n        sound: String(raw.sound ?? \"\"),\n        emotion: String(raw.emotion ?? \"\"),\n        cameraAngle: String(raw.cameraAngle ?? \"\"),\n        cameraGear: String(raw.cameraGear ?? \"\"),\n        focalLength: String(raw.focalLength ?? \"\"),\n        characterIds: Array.isArray(raw.characterIds)\n            ? raw.characterIds.map((id) => String(id))\n            : [],\n        sceneId: raw.sceneId ? String(raw.sceneId) : undefined,\n        beatId: raw.beatId ? String(raw.beatId) : undefined,\n        extra: pickExtra(raw, SHOT_KEYS),\n    };\n}\n\nfunction remapId(\n    map: Map<string, string>,\n    oldId: string | undefined,\n    prefix: string,\n) {\n    if (!oldId) return undefined;\n    const existing = map.get(oldId);\n    if (existing) return existing;\n    const next = createId(prefix);\n    map.set(oldId, next);\n    return next;\n}\n\ntype MemoryPackage = {\n    memories: ProjectMemory[];\n    memoryVersions: ProjectMemoryVersion[];\n};\n\n/** Validate the whole aggregate before any imported project or media is persisted. */\nfunction parseMemoryPackage(\n    rawRows: unknown,\n    rawVersions: unknown,\n    projectId: unknown,\n): MemoryPackage {\n    const rows = z\n        .array(projectMemorySchema)\n        .safeParse(rawRows === undefined ? [] : rawRows);\n    const versions = z\n        .array(projectMemoryVersionSchema)\n        .safeParse(rawVersions === undefined ? [] : rawVersions);\n    if (!rows.success || !versions.success)\n        throw new PackageError(\"项目记忆或历史版本格式无效\");\n    const memories = rows.data;\n    const memoryVersions = versions.data;\n    const fail = () => {\n        throw new PackageError(\"项目记忆的归属、替代关系或版本链无效\");\n    };\n    const byId = new Map(memories.map((row) => [row.id, row]));\n    if (\n        byId.size !== memories.length ||\n        new Set(memoryVersions.map((row) => row.versionId)).size !==\n        memoryVersions.length\n    )\n        fail();\n    const chains = new Map<string, ProjectMemoryVersion[]>();\n    for (const version of memoryVersions) {\n        if (\n            !byId.has(version.memoryId) ||\n            version.projectId !== projectId ||\n            version.snapshot.id !== version.memoryId ||\n            version.snapshot.projectId !== projectId ||\n            version.snapshot.revision !== version.revision\n        )\n            fail();\n        const chain = chains.get(version.memoryId) ?? [];\n        chain.push(version);\n        chains.set(version.memoryId, chain);\n    }\n    const validateSnapshot = (row: ProjectMemory) => {\n        if (row.projectId !== projectId || row.projectId === \"studio\") fail();\n        if (row.source.kind === \"summary\" && row.source.projectId !== projectId)\n            fail();\n        if (row.supersededBy === row.id) fail();\n    };\n    for (const row of memories) {\n        validateSnapshot(row);\n        const chain = (chains.get(row.id) ?? []).sort(\n            (a, b) => a.revision - b.revision,\n        );\n        if (\n            chain.length !== row.revision ||\n            chain.some((v, index) => v.revision !== index + 1)\n        )\n            fail();\n        if (JSON.stringify(chain.at(-1)?.snapshot) !== JSON.stringify(row)) fail();\n        for (const version of chain) validateSnapshot(version.snapshot);\n        const visited = new Set<string>([row.id]);\n        let next = row.supersededBy;\n        while (next) {\n            if (visited.has(next)) fail();\n            visited.add(next);\n            next = byId.get(next)?.supersededBy;\n        }\n    }\n    // Match CRUD topic identity after validating the original chain, so normalization\n    // cannot conceal inconsistent source snapshots or bypass same-topic conflicts.\n    for (const row of memories) row.topicKey = normalizeMemoryText(row.topicKey);\n    for (const version of memoryVersions) {\n        version.snapshot.topicKey = normalizeMemoryText(version.snapshot.topicKey);\n    }\n    return {memories, memoryVersions};\n}\n\nfunction detachedMemorySource(row: ProjectMemory): MemorySource {\n    const source = row.source;\n    if (source.kind === \"imported\") return {...source};\n    return {\n        kind: \"imported\",\n        originProjectId: row.projectId,\n        originMemoryId: row.id,\n        originalKind: source.kind,\n        excerpt:\n            source.kind === \"summary\" ? source.excerpt : row.body.slice(0, 3000),\n        ...(source.kind === \"summary\"\n            ? {\n                taskTitle: source.taskTitle,\n                summaryId: source.summaryId,\n                summaryRevision: source.summaryRevision,\n                evidence: source.evidence,\n            }\n            : {}),\n    };\n}\n\nfunction remapMemoryPackage(\n    input: MemoryPackage,\n    projectId: Id,\n    at: string,\n): MemoryPackage {\n    const ids = new Map(input.memories.map((row) => [row.id, createId(\"pm\")]));\n    const snapshot = (row: ProjectMemory): ProjectMemory => ({\n        ...row,\n        id: ids.get(row.id)!,\n        projectId,\n        source: detachedMemorySource(row),\n        supersededBy: row.supersededBy ? ids.get(row.supersededBy) : undefined,\n    });\n    const memoryVersions = input.memoryVersions.map((version) => ({\n        ...version,\n        versionId: createId(\"pmv\"),\n        memoryId: ids.get(version.memoryId)!,\n        projectId,\n        snapshot: snapshot(version.snapshot),\n    }));\n    const memories = input.memories.map((row) => {\n        const current = {\n            ...snapshot(row),\n            status: \"pending_review\" as const,\n            revision: row.revision + 1,\n            updatedAt: at,\n        };\n        delete current.reviewedAt;\n        const detachedReplacement = input.memoryVersions.some(\n            (version) =>\n                version.memoryId === row.id &&\n                version.snapshot.supersededBy &&\n                !ids.has(version.snapshot.supersededBy),\n        );\n        memoryVersions.push({\n            versionId: createId(\"pmv\"),\n            memoryId: current.id,\n            projectId,\n            revision: current.revision,\n            reason: `导入项目备份，等待重新审核${detachedReplacement ? \"；原替代条目已删除，已解除关联\" : \"\"}`,\n            snapshot: current,\n        });\n        return current;\n    });\n    return {memories, memoryVersions};\n}\n\nexport async function exportProjectZip(projectId: Id): Promise<Blob> {\n    // Snapshot all JSON rows and referenced Blobs under one read transaction.\n    // Compression happens after the transaction closes; no external awaits hold it open.\n    const {\n        audioPackage,\n        project,\n        characters,\n        scenes,\n        props,\n        styles,\n        episodes,\n        shots,\n        mediaRecords,\n        memories,\n        memoryVersions,\n        references,\n        referenceChunks,\n    } = await db.transaction(\n        \"r\",\n        [\n            ...AUDIO_TABLES,\n            db.projects,\n            db.characters,\n            db.scenes,\n            db.props,\n            db.styles,\n            db.episodes,\n            db.shots,\n            db.media,\n            db.materialUses,\n            db.projectMemories,\n            db.projectMemoryVersions,\n            db.projectReferences,\n            db.referenceChunks,\n        ],\n        async () => {\n            const project = await db.projects.get(projectId);\n            if (!project) throw new PackageError(\"项目不存在\");\n            const [\n                characters,\n                scenes,\n                props,\n                styles,\n                episodes,\n                shots,\n                memories,\n                memoryVersions,\n                references,\n                referenceChunks,\n            ] = await Promise.all([\n                db.characters.where(\"projectId\").equals(projectId).toArray(),\n                db.scenes.where(\"projectId\").equals(projectId).toArray(),\n                db.props.where(\"projectId\").equals(projectId).toArray(),\n                db.styles.where(\"projectId\").equals(projectId).toArray(),\n                db.episodes.where(\"projectId\").equals(projectId).sortBy(\"order\"),\n                db.shots.where(\"projectId\").equals(projectId).sortBy(\"order\"),\n                db.projectMemories.where(\"projectId\").equals(projectId).toArray(),\n                db.projectMemoryVersions.where(\"projectId\").equals(projectId).toArray(),\n                db.projectReferences.where(\"projectId\").equals(projectId).toArray(),\n                db.referenceChunks.where(\"projectId\").equals(projectId).toArray(),\n            ]);\n            const mediaIds = await collectMediaIds(projectId);\n            const mediaRecords = (await db.media.bulkGet([...mediaIds])).filter(\n                (media): media is MediaRecord =>\n                    media !== undefined && media.projectId === projectId,\n            );\n            if (getProjectKind(project) !== \"video\" && mediaRecords.length !== mediaIds.size) throw new PackageError(\"音频项目存在缺失或归属错误的文件，请恢复文件后再备份\");\n            return {\n                audioPackage: await snapshotAudioPackage(projectId),\n                project,\n                characters,\n                scenes,\n                props,\n                styles,\n                episodes,\n                shots,\n                mediaRecords,\n                memories,\n                memoryVersions,\n                references,\n                referenceChunks,\n            };\n        },\n    );\n    const zip = new JSZip();\n    zip.file(\n        \"manifest.json\",\n        JSON.stringify(\n            {\n                format: PACKAGE_FORMAT,\n                exportedAt: nowIso(),\n                projectName: project.name,\n            },\n            null,\n            2,\n        ),\n    );\n    if (getProjectKind(project) !== \"video\") zip.file(\"audioProject.json\", JSON.stringify(audioPackage));\n    zip.file(\"project.json\", JSON.stringify(project, null, 2));\n    zip.file(\"characters.json\", JSON.stringify(characters, null, 2));\n    zip.file(\"scenes.json\", JSON.stringify(scenes, null, 2));\n    zip.file(\"props.json\", JSON.stringify(props, null, 2));\n    zip.file(\"styles.json\", JSON.stringify(styles, null, 2));\n    zip.file(\"episodes.json\", JSON.stringify(episodes, null, 2));\n    zip.file(\"shots.json\", JSON.stringify(shots, null, 2));\n    zip.file(\"memories.json\", JSON.stringify(memories, null, 2));\n    zip.file(\"memoryVersions.json\", JSON.stringify(memoryVersions, null, 2));\n    zip.file(\"references.json\", JSON.stringify(references));\n    zip.file(\"referenceChunks.json\", JSON.stringify(referenceChunks));\n    zip.file(\"mediaMetadata.json\", JSON.stringify(mediaRecords.map((media) => ({\n        id: media.id,\n        projectId: media.projectId,\n        filename: media.filename,\n        mimeType: media.mimeType,\n        libraryRetained: media.libraryRetained,\n    }))));\n    for (const media of mediaRecords) {\n        const filename = `media/${media.id}.${extFor(media.mimeType, media.filename)}`;\n        zip.file(filename, media.blob);\n    }\n    return zip.generateAsync({type: \"blob\"});\n}\n\nexport async function importProjectZip(file: Blob): Promise<Project> {\n    const zip = await JSZip.loadAsync(file).catch(() => {\n        throw new PackageError(\"无法读取 zip 文件\");\n    });\n    const manifestFile = zip.file(\"manifest.json\");\n    if (!manifestFile) throw new PackageError(\"缺少 manifest.json\");\n    const manifestJson = JSON.parse(\n        await manifestFile.async(\"string\"),\n    ) as unknown;\n    const manifest = manifestSchema.safeParse(manifestJson);\n    if (!manifest.success) {\n        throw new PackageError(\"不是小光点项目包（manifest.format 不匹配）\");\n    }\n\n    const readJson = async (name: string, required = false) => {\n        const entry = zip.file(name);\n        if (!entry) {\n            if (required) throw new PackageError(`缺少 ${name}`);\n            return undefined;\n        }\n        try {\n            return JSON.parse(await entry.async(\"string\")) as unknown;\n        } catch {\n            throw new PackageError(`${name} 不是合法 JSON`);\n        }\n    };\n\n    const projectRaw = asRecord(\n        await readJson(\"project.json\", true),\n        \"project.json\",\n    );\n    const charactersRaw = asArray(\n        await readJson(\"characters.json\"),\n        \"characters.json\",\n    );\n    const scenesRaw = asArray(await readJson(\"scenes.json\"), \"scenes.json\");\n    const propsRaw = asArray(await readJson(\"props.json\"), \"props.json\");\n    const stylesRaw = asArray(await readJson(\"styles.json\"), \"styles.json\");\n    const episodesFile = await readJson(\"episodes.json\");\n    const episodesRaw =\n        episodesFile == null ? [] : asArray(episodesFile, \"episodes.json\");\n    const shotsRaw = asArray(await readJson(\"shots.json\"), \"shots.json\");\n    const memoryPackage = parseMemoryPackage(\n        await readJson(\"memories.json\"),\n        await readJson(\"memoryVersions.json\"),\n        projectRaw.id,\n    );\n    const referencePackage = parseReferencePackage(await readJson(\"references.json\"), await readJson(\"referenceChunks.json\"), projectRaw.id);\n    const mediaMetadataRaw = await readJson(\"mediaMetadata.json\");\n    const mediaMetadata = new Map<string, { filename: string; mimeType: string; libraryRetained?: boolean }>();\n    if (mediaMetadataRaw !== undefined) {\n        for (const raw of asArray(mediaMetadataRaw, \"mediaMetadata.json\")) {\n            const row = asRecord(raw, \"mediaMetadata.json\");\n            if (typeof row.id !== \"string\" || !row.id || /[/\\\\]/.test(row.id) || mediaMetadata.has(row.id)\n                || row.projectId !== projectRaw.id || typeof row.filename !== \"string\" || !row.filename\n                || typeof row.mimeType !== \"string\" || !/^[a-zA-Z0-9!#$&^_.+-]+\\/[a-zA-Z0-9!#$&^_.+-]+(?:;[a-zA-Z0-9=._ ,\"+-]+)*$/.test(row.mimeType)) {\n                throw new PackageError(\"媒体元数据无效、重复或不属于当前项目\");\n            }\n            if (row.libraryRetained !== undefined && typeof row.libraryRetained !== \"boolean\") throw new PackageError(\"素材保留标记无效\");\n            mediaMetadata.set(row.id, {\n                filename: row.filename,\n                mimeType: row.mimeType,\n                libraryRetained: row.libraryRetained\n            });\n        }\n    }\n    const hasEpisodes = episodesRaw.length > 0;\n\n    const project = parseProject(projectRaw, \"导入的项目\");\n    const audioPackage = parseAudioPackage(await readJson(\"audioProject.json\"), projectRaw.id, getProjectKind(project));\n    if (getProjectKind(project) !== \"video\" && (episodesRaw.length || shotsRaw.length || charactersRaw.length || scenesRaw.length || propsRaw.length || stylesRaw.length)) throw new PackageError(\"音频或音乐项目不能包含视频记录\");\n    const projectId = createId(\"prj\");\n    const at = nowIso();\n    project.id = projectId;\n    project.createdAt = at;\n    project.updatedAt = at;\n    const {memories, memoryVersions} = remapMemoryPackage(\n        memoryPackage,\n        projectId,\n        at,\n    );\n    if (!hasEpisodes) {\n        project.columnSettings = {visible: [...DEFAULT_VISIBLE_COLUMNS]};\n    }\n\n    const mediaMap = new Map<string, string>();\n    const characterMap = new Map<string, string>();\n    const sceneMap = new Map<string, string>();\n    const propMap = new Map<string, string>();\n    const styleMap = new Map<string, string>();\n    const episodeMap = new Map<string, string>();\n    const beatMaps = new Map<string, Map<string, string>>();\n    const shotMap = new Map<string, string>();\n\n    const mediaRecords: MediaRecord[] = [];\n    const mediaFiles = zip.file(/^media\\//);\n    for (const entry of mediaFiles) {\n        if (entry.dir) continue;\n        const base = entry.name.split(\"/\").pop() ?? entry.name;\n        const oldId = base.replace(/\\.[^.]+$/, \"\");\n        if (mediaMap.has(oldId)) throw new PackageError(\"项目包中存在重复媒体 ID\");\n        const metadata = mediaMetadata.get(oldId);\n        if (mediaMetadataRaw !== undefined && !metadata) throw new PackageError(\"媒体缺少元数据\");\n        const newId = remapId(mediaMap, oldId, \"med\")!;\n        const blob = await entry.async(\"blob\");\n        const mimeType = metadata?.mimeType ?? (blob.type || mimeForFilename(base));\n        mediaRecords.push({\n            id: newId,\n            projectId,\n            mimeType,\n            filename: metadata?.filename ?? base,\n            libraryRetained: metadata?.libraryRetained,\n            blob: new Blob([blob], {type: mimeType}),\n        });\n    }\n\n    if ([...mediaMetadata.keys()].some((id) => !mediaMap.has(id))) throw new PackageError(\"媒体元数据对应的文件缺失\");\n\n    const remappedAudioPackage = remapAudioPackage(audioPackage, projectId, mediaMap);\n    const {\n        references,\n        chunks: referenceChunks\n    } = await remapReferencePackage(referencePackage, projectId, mediaMap, mediaRecords);\n\n    const mapMedia = (id?: string) => (id ? mediaMap.get(id) : undefined);\n\n    if (project.coverMediaId) {\n        const mappedCover = mapMedia(project.coverMediaId);\n        if (mappedCover) project.coverMediaId = mappedCover;\n        else delete project.coverMediaId;\n    }\n\n    const characters = charactersRaw.map((raw) => {\n        const character = parseCharacter(raw, projectId);\n        const newId = remapId(characterMap, character.id, \"chr\")!;\n        character.id = newId;\n        character.projectId = projectId;\n        const images: Character[\"slots\"] = {};\n        for (const [slot, value] of Object.entries(character.slots)) {\n            if (!value) continue;\n            images[slot as keyof Character[\"slots\"]] = remapSlot(value, mapMedia);\n        }\n        character.slots = images;\n        return character;\n    });\n\n    const scenes = scenesRaw.map((raw) => {\n        const scene = parseScene(raw, projectId);\n        scene.id = remapId(sceneMap, scene.id, \"scn\")!;\n        scene.projectId = projectId;\n        const images: Scene[\"slots\"] = {};\n        for (const [slot, value] of Object.entries(scene.slots)) {\n            if (!value) continue;\n            images[slot as keyof Scene[\"slots\"]] = remapSlot(value, mapMedia);\n        }\n        scene.slots = images;\n        return scene;\n    });\n\n    const props = propsRaw.map((raw) => {\n        const prop = parseProp(raw, projectId);\n        prop.id = remapId(propMap, prop.id, \"prp\")!;\n        prop.slots = Object.fromEntries(\n            Object.entries(prop.slots).map(([slot, value]) => [\n                slot,\n                value ? remapSlot(value, mapMedia) : value,\n            ]),\n        ) as Prop[\"slots\"];\n        return prop;\n    });\n\n    const styles = stylesRaw.map((raw) => {\n        const style = parseStyle(raw, projectId);\n        style.id = remapId(styleMap, style.id, \"sty\")!;\n        style.slots = Object.fromEntries(\n            Object.entries(style.slots).map(([slot, value]) => [\n                slot,\n                value ? remapSlot(value, mapMedia) : value,\n            ]),\n        ) as VisualStyle[\"slots\"];\n        return style;\n    });\n\n    if (project.defaultStyleId !== undefined)\n        project.defaultStyleId = styleMap.get(project.defaultStyleId);\n\n    const parsedEpisodes = getProjectKind(project) !== \"video\" ? [] : hasEpisodes\n        ? episodesRaw.map((raw, index) => parseEpisode(raw, projectId, index))\n        : [synthesizeFirstEpisode(project, projectRaw)];\n\n    const episodes = parsedEpisodes.map((episode) => {\n        const filters = getEpisodeShotFilters(episode, project);\n        const oldEpisodeId = episode.id;\n        const newId = remapId(episodeMap, oldEpisodeId, \"ep\")!;\n        const beatMap = new Map<string, string>();\n        beatMaps.set(oldEpisodeId, beatMap);\n        episode.id = newId;\n        episode.projectId = projectId;\n        episode.story = {\n            ...episode.story,\n            beats: episode.story.beats.map((beat) => {\n                const newBeatId = remapId(beatMap, beat.id, \"beat\")!;\n                return {\n                    ...beat,\n                    id: newBeatId,\n                    characterIds: beat.characterIds\n                        .map((id) => characterMap.get(id))\n                        .filter((id): id is string => Boolean(id)),\n                    sceneId: beat.sceneId ? sceneMap.get(beat.sceneId) : undefined,\n                };\n            }),\n        };\n        episode.shotFilters = {\n            ...filters,\n            beatIds: filters.beatIds.flatMap((id) => {\n                if (id === SHOT_UNASSIGNED_BEAT) return [id];\n                const mapped = beatMap.get(id);\n                return mapped ? [mapped] : [];\n            }),\n        };\n        return episode;\n    });\n    // Legacy filters have been migrated per episode; never retain obsolete beat IDs.\n    project.shotSettings.filters = normalizeShotFilters(undefined);\n\n    const fallbackEpisodeId = episodes[0]?.id ?? createId(\"ep\");\n\n    const shots = shotsRaw.map((raw, index) => {\n        const shot = parseShot(raw, projectId, fallbackEpisodeId, index);\n        const oldEpisodeId = shot.episodeId;\n        shot.id = remapId(shotMap, shot.id, \"sht\")!;\n        shot.projectId = projectId;\n        shot.episodeId = episodeMap.get(oldEpisodeId) ?? fallbackEpisodeId;\n        shot.firstFrame = remapSlot(shot.firstFrame, mapMedia);\n        shot.lastFrame = remapSlot(shot.lastFrame, mapMedia);\n        shot.clip = remapSlot(shot.clip, mapMedia);\n        shot.characterIds = shot.characterIds\n            .map((id) => characterMap.get(id))\n            .filter((id): id is string => Boolean(id));\n        shot.sceneId = shot.sceneId ? sceneMap.get(shot.sceneId) : undefined;\n        if (shot.propIds !== undefined)\n            shot.propIds = shot.propIds.flatMap((id) => propMap.get(id) ?? []);\n        // A missing explicit style must not unexpectedly inherit a different default.\n        if (typeof shot.styleId === \"string\")\n            shot.styleId = styleMap.get(shot.styleId) ?? null;\n        const beatMap =\n            beatMaps.get(oldEpisodeId) ?? beatMaps.values().next().value;\n        shot.beatId = shot.beatId ? beatMap?.get(shot.beatId) : undefined;\n        return shot;\n    });\n\n    try {\n        await db.transaction(\n            \"rw\",\n            [\n                ...AUDIO_TABLES,\n                db.projects,\n                db.characters,\n                db.scenes,\n                db.props,\n                db.styles,\n                db.episodes,\n                db.shots,\n                db.media,\n                db.projectMemories,\n                db.projectMemoryVersions,\n                db.projectReferences,\n                db.referenceChunks,\n            ],\n            async () => {\n                await db.projects.add(project);\n                if (characters.length) await db.characters.bulkAdd(characters);\n                if (scenes.length) await db.scenes.bulkAdd(scenes);\n                if (props.length) await db.props.bulkAdd(props);\n                if (styles.length) await db.styles.bulkAdd(styles);\n                if (episodes.length) await db.episodes.bulkAdd(episodes);\n                if (shots.length) await db.shots.bulkAdd(shots);\n                if (mediaRecords.length) await db.media.bulkAdd(mediaRecords);\n                await insertAudioPackage(remappedAudioPackage);\n                if (references.length) await db.projectReferences.bulkAdd(references);\n                if (referenceChunks.length) await db.referenceChunks.bulkAdd(referenceChunks);\n                if (memories.length) await db.projectMemories.bulkAdd(memories);\n                if (memoryVersions.length)\n                    await db.projectMemoryVersions.bulkAdd(memoryVersions);\n            },\n        );\n    } catch (error) {\n        throw new PackageError(\n            error instanceof Error ? `导入失败：${error.message}` : \"导入失败\",\n        );\n    }\n\n    return project;\n}\n\nexport function downloadBlob(blob: Blob, filename: string) {\n    const url = URL.createObjectURL(blob);\n    const anchor = document.createElement(\"a\");\n    anchor.href = url;\n    anchor.download = filename;\n    anchor.click();\n    URL.revokeObjectURL(url);\n}\n",
+    "usedDeprecatedRules": []
+  }
+]

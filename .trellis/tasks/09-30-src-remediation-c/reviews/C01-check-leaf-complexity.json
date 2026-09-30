@@ -1,0 +1,290 @@
+[
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/taskGenerationEvidence.ts",
+    "messages": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'objectJson' has a complexity of 6. Maximum allowed is 0.",
+        "line": 14,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 14,
+        "endColumn": 20
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 3 to the 0 allowed.",
+        "line": 14,
+        "column": 10,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 14,
+        "endColumn": 20
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'isGenerationResult' has a complexity of 8. Maximum allowed is 0.",
+        "line": 23,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 23,
+        "endColumn": 28
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 3 to the 0 allowed.",
+        "line": 23,
+        "column": 10,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 23,
+        "endColumn": 28
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'provesCompletedGeneration' has a complexity of 11. Maximum allowed is 0.",
+        "line": 30,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 30,
+        "endColumn": 42
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 6 to the 0 allowed.",
+        "line": 30,
+        "column": 17,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 30,
+        "endColumn": 42
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'ownsGenerationRun' has a complexity of 4. Maximum allowed is 0.",
+        "line": 40,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 40,
+        "endColumn": 27
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 1 to the 0 allowed.",
+        "line": 40,
+        "column": 10,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 40,
+        "endColumn": 27
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'ownedTaskGenerationJob' has a complexity of 11. Maximum allowed is 0.",
+        "line": 44,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 44,
+        "endColumn": 45
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 4 to the 0 allowed.",
+        "line": 44,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 44,
+        "endColumn": 45
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'hasDownloadedGenerationResult' has a complexity of 4. Maximum allowed is 0.",
+        "line": 53,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 53,
+        "endColumn": 39
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 2 to the 0 allowed.",
+        "line": 53,
+        "column": 10,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 53,
+        "endColumn": 39
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'hasAvailableGenerationMedia' has a complexity of 7. Maximum allowed is 0.",
+        "line": 59,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 59,
+        "endColumn": 37
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 4 to the 0 allowed.",
+        "line": 59,
+        "column": 10,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 59,
+        "endColumn": 37
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'readCurrentShotSlot' has a complexity of 10. Maximum allowed is 0.",
+        "line": 67,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 67,
+        "endColumn": 35
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 5 to the 0 allowed.",
+        "line": 67,
+        "column": 16,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 67,
+        "endColumn": 35
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'currentAssetSlot' has a complexity of 7. Maximum allowed is 0.",
+        "line": 78,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 78,
+        "endColumn": 26
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 3 to the 0 allowed.",
+        "line": 78,
+        "column": 10,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 78,
+        "endColumn": 26
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Arrow function has a complexity of 1. Maximum allowed is 0.",
+        "line": 79,
+        "column": 50,
+        "nodeType": "ArrowFunctionExpression",
+        "messageId": "complex",
+        "endLine": 79,
+        "endColumn": 52
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'readCurrentGenerationSlot' has a complexity of 10. Maximum allowed is 0.",
+        "line": 85,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 85,
+        "endColumn": 41
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 4 to the 0 allowed.",
+        "line": 85,
+        "column": 16,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 85,
+        "endColumn": 41
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'inspectTaskGenerationOutput' has a complexity of 7. Maximum allowed is 0.",
+        "line": 106,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 106,
+        "endColumn": 50
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 4 to the 0 allowed.",
+        "line": 106,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 106,
+        "endColumn": 50
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'taskGenerationToolSource' has a complexity of 17. Maximum allowed is 0.",
+        "line": 120,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 120,
+        "endColumn": 47
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 11 to the 0 allowed.",
+        "line": 120,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 120,
+        "endColumn": 47
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 25,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import type {AgentRun, AgentTask, AgentToolCall} from \"@/domain/agent\";\nimport type {AgentGenerationJob} from \"@/domain/agentGeneration\";\nimport type {ProductionTarget} from \"@/domain/production\";\nimport {parseGenerationSlot} from \"@/domain/slot\";\nimport {\n    CHARACTER_SLOTS, PROP_SLOTS, SCENE_SLOTS, STUDIO_LIBRARY_ID, STYLE_SLOTS,\n    type GenerationResult, type MediaRecord\n} from \"@/domain/types\";\nimport {db} from \"./database\";\n\ntype TaskOwner = Pick<AgentTask, \"id\" | \"threadId\">;\nexport const PICTURE_GENERATION_TOOLS = [\"submit_generation\", \"check_generation\", \"apply_generation\"] as const;\n\nfunction objectJson(text: string | undefined): Record<string, unknown> {\n    try {\n        const value: unknown = JSON.parse(text ?? \"null\");\n        return value && typeof value === \"object\" && !Array.isArray(value) ? value as Record<string, unknown> : {};\n    } catch {\n        return {};\n    }\n}\n\nfunction isGenerationResult(value: unknown): value is GenerationResult {\n    if (!value || typeof value !== \"object\") return false;\n    if (!(\"mediaId\" in value) || typeof value.mediaId !== \"string\" || !value.mediaId) return false;\n    return \"kind\" in value && (value.kind === \"image\" || value.kind === \"video\");\n}\n\n/** Historical success is necessary, but does not establish current deliverability. */\nexport function provesCompletedGeneration(call: AgentToolCall): boolean {\n    if (call.status !== \"completed\" || call.error) return false;\n    if (!(PICTURE_GENERATION_TOOLS as readonly string[]).includes(call.name)) return false;\n    const value = objectJson(call.result);\n    if (value.error || value.ok === false || value.success === false) return false;\n    if (!isGenerationResult(value.result)) return false;\n    if (call.name === \"apply_generation\") return value.status === \"applied\" && value.applied === true;\n    return value.status === \"downloaded\" || value.status === \"applied\";\n}\n\nfunction ownsGenerationRun(task: TaskOwner, job: AgentGenerationJob, run: AgentRun | undefined): boolean {\n    return !!run && run.taskId === task.id && run.threadId === task.threadId && run.projectId === job.projectId;\n}\n\nexport async function ownedTaskGenerationJob(task: TaskOwner, job: AgentGenerationJob): Promise<boolean> {\n    const current = await db.agentTasks.get(task.id);\n    if (!current || current.threadId !== task.threadId || current.projectId !== job.projectId || job.threadId !== task.threadId) return false;\n    if (!ownsGenerationRun(task, job, await db.agentRuns.get(job.runId))) return false;\n    if (!job.batchId) return true;\n    const batch = await db.agentGenerationBatches.get(job.batchId);\n    return !!batch && batch.taskId === task.id && batch.threadId === task.threadId && batch.projectId === job.projectId && batch.runId === job.runId;\n}\n\nfunction hasDownloadedGenerationResult(job: AgentGenerationJob): boolean {\n    if (job.target.projectId !== job.projectId || !isGenerationResult(job.result)) return false;\n    if (job.result.kind !== job.kind) return false;\n    return [\"downloaded\", \"applied\", \"conflict\"].includes(job.status);\n}\n\nfunction hasAvailableGenerationMedia(job: AgentGenerationJob, media: MediaRecord | undefined): media is MediaRecord {\n    if (!media || media.projectId !== job.projectId) return false;\n    if (!(media.blob instanceof Blob) || media.blob.size === 0) return false;\n    if (typeof media.mimeType !== \"string\") return false;\n    const prefix = `${job.kind}/`;\n    return media.mimeType.startsWith(prefix) && media.mimeType.length > prefix.length;\n}\n\nasync function readCurrentShotSlot(job: AgentGenerationJob, target: Extract<ProductionTarget, {kind: \"shot\"}>) {\n    if (!target.slot || ![\"firstFrame\", \"lastFrame\", \"clip\"].includes(target.slot)) return undefined;\n    const expectedKind = target.slot === \"clip\" ? \"video\" : \"image\";\n    if (job.kind !== expectedKind) return undefined;\n    const shot = await db.shots.get(target.entityId);\n    if (!shot || shot.projectId !== target.projectId || shot.episodeId !== target.episodeId) return undefined;\n    const episode = await db.episodes.get(target.episodeId);\n    if (!episode || episode.projectId !== target.projectId) return undefined;\n    return shot[target.slot];\n}\n\nfunction currentAssetSlot(job: AgentGenerationJob, entity: {projectId: string; slots?: unknown} | undefined, slots: readonly {id: string}[]): unknown {\n    if (job.kind !== \"image\" || !slots.some(slot => slot.id === job.target.slot)) return undefined;\n    if (!entity || entity.projectId !== job.target.projectId) return undefined;\n    if (!entity.slots || typeof entity.slots !== \"object\") return undefined;\n    return (entity.slots as Record<string, unknown>)[job.target.slot!];\n}\n\nasync function readCurrentGenerationSlot(job: AgentGenerationJob): Promise<unknown> {\n    const target = job.target;\n    if (!target.slot || target.projectId !== job.projectId) return undefined;\n    if (target.projectId !== STUDIO_LIBRARY_ID && !await db.projects.get(target.projectId)) return undefined;\n    switch (target.kind) {\n        case \"shot\":\n            return Promise.resolve(readCurrentShotSlot(job, target));\n        case \"character\":\n            return currentAssetSlot(job, await db.characters.get(target.entityId), CHARACTER_SLOTS);\n        case \"scene\":\n            return currentAssetSlot(job, await db.scenes.get(target.entityId), SCENE_SLOTS);\n        case \"prop\":\n            return currentAssetSlot(job, await db.props.get(target.entityId), PROP_SLOTS);\n        case \"style\":\n            return currentAssetSlot(job, await db.styles.get(target.entityId), STYLE_SLOTS);\n        default:\n            return undefined;\n    }\n}\n\n/** File availability survives target deletion; application requires a currently legal slot. */\nexport async function inspectTaskGenerationOutput(job: AgentGenerationJob) {\n    let media: MediaRecord | undefined;\n    if (isGenerationResult(job.result)) media = await db.media.get(job.result.mediaId);\n    const available = hasDownloadedGenerationResult(job) && hasAvailableGenerationMedia(job, media);\n    let applied = false;\n    if (available) {\n        const result = parseGenerationSlot(await Promise.resolve(readCurrentGenerationSlot(job))).result;\n        applied = !!result && result.mediaId === media?.id && result.kind === job.kind;\n    }\n    return {media, available, applied, supportsResult: available};\n}\n\n/** Callers adopt native helper promises with Promise.resolve inside Dexie transactions.\n * A successful call must identify the same owned job and output it actually returned. */\nexport async function taskGenerationToolSource(task: TaskOwner, call: AgentToolCall) {\n    if (!provesCompletedGeneration(call)) return undefined;\n    const value = objectJson(call.result), args = objectJson(call.arguments);\n    if (typeof value.jobId !== \"string\" || !isGenerationResult(value.result)) return undefined;\n    const job = await db.agentGenerationJobs.get(value.jobId);\n    if (!job || !await Promise.resolve(ownedTaskGenerationJob(task, job)) || call.threadId !== task.threadId) return undefined;\n    if (!ownsGenerationRun(task, job, await db.agentRuns.get(call.runId))) return undefined;\n    if (call.name === \"submit_generation\") {\n        if (job.callId !== call.id || job.runId !== call.runId) return undefined;\n    } else if (args.jobId !== job.id) return undefined;\n    if (call.name === \"apply_generation\" && job.batchId) return undefined;\n    if (value.result.mediaId !== job.result?.mediaId || value.result.kind !== job.kind) return undefined;\n    return {jobId: job.id, ...await Promise.resolve(inspectTaskGenerationOutput(job))};\n}\n",
+    "usedDeprecatedRules": []
+  }
+]

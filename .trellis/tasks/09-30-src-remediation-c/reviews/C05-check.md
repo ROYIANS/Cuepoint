@@ -1,0 +1,13 @@
+# C05 independent check — PASS
+
+No blocker. No source changes by checker. Reviewed all six owned files against C05 entry backups and the full combined repository diff, including preserved C03 owner checks/transactions. Direct six-file before/after maps (new boundary test has entry `null`), all changed-source maps and prior 29-file attribution are in `C05-check-snapshot.json`. All implementation hashes match; only authorized prior drift is `src/db/repo.ts`.
+
+Acceptance: asset patch types omit slots; shot patch omits picture fields. `Object.hasOwn` rejects media keys including own `undefined` before `pickPatch` and writes. Dedicated media validation retains owner/existence/nonempty/MIME checks; asset/still results are image-only, clip accepts image planning placeholders or video, valid video references and studio copy remain supported. Explicit kind predicate also rejects arbitrary runtime declared kinds for otherwise expected GenerationSlot inputs.
+
+Cover validation precedes mutation in the same `PRODUCTION_TABLES` transaction. Genuine orphans recycle; shared media and proposal/job/batch history remain. Tests compare production rows, timestamps and Blob bytes, prove rollback after actual media deletion followed by cleanup failure and after project-touch failure, and preserve CAS/undo. Existing provenance/history/recycling paths are unchanged.
+
+Manually followed strict agent schemas and asset dispatch, dynamic ShotEditor text columns/relationship payloads, and normalized proposal apply/undo alongside the 43-call / 4-reference AST inventory. Production callers remain legitimate text/relationship paths. All six fixture call migrations across four files use dedicated setters; assertions remain, including shared studio remapping, package snapshot consistency and concurrent membership/text/slot preservation. The formerly illegal asset video result is now a legal video reference with imported-ID assertion.
+
+Independent checks: **12 files / 260 tests passed** (boundary 82), explicit local pnpm `lint` exit 0, existing audit ESLint **11 → 11 / zero added including complexity**, scoped `git diff --check` exit 0. Logs: `C05-check-focused-tests.log`, `C05-check-lint.log`, `C05-check-static-summary.json`.
+
+Old-entry red evidence is 23 actual boundary failures plus one excluded incomplete-baseline fixture failure (24 total); first patched run retained only that fixture failure. Corrected captured baseline preserves production CAS. PD-03 remains a repository-boundary risk; no normal UI exploit demonstrated. No full suite/browser, commits, spec/ledger updates or C06 work performed. Coordinator may proceed to C05 closure and C06.

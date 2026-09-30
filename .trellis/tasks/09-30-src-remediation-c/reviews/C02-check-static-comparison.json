@@ -1,0 +1,135 @@
+[
+  {
+    "path": "src/domain/music.ts",
+    "baselineCount": 0,
+    "currentCount": 0,
+    "diagnostics": []
+  },
+  {
+    "path": "src/db/music.ts",
+    "baselineCount": 0,
+    "currentCount": 0,
+    "diagnostics": []
+  },
+  {
+    "path": "src/lib/agent/musicTools.ts",
+    "baselineCount": 0,
+    "currentCount": 0,
+    "diagnostics": []
+  },
+  {
+    "path": "src/lib/audioGeneration/input.ts",
+    "baselineCount": 0,
+    "currentCount": 0,
+    "diagnostics": []
+  },
+  {
+    "path": "src/lib/ai/apimartAudio.ts",
+    "baselineCount": 3,
+    "currentCount": 3,
+    "diagnostics": [
+      {
+        "ruleId": "complexity",
+        "message": "Async function 'getApimartMusicTask' has a complexity of 32. Maximum allowed is 20.",
+        "severity": 1,
+        "baselineLine": 194,
+        "currentLine": 195,
+        "matchesBaseline": true
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 46 to the 20 allowed.",
+        "severity": 1,
+        "baselineLine": 194,
+        "currentLine": 195,
+        "matchesBaseline": true
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "message": "Do not nest ternary expressions.",
+        "severity": 1,
+        "baselineLine": 231,
+        "currentLine": 232,
+        "matchesBaseline": true
+      }
+    ]
+  },
+  {
+    "path": "src/lib/audioProjectPackage.ts",
+    "baselineCount": 6,
+    "currentCount": 6,
+    "diagnostics": [
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-assignment",
+        "message": "Unsafe assignment of an `any` value.",
+        "severity": 2,
+        "baselineLine": 184,
+        "currentLine": 184,
+        "matchesBaseline": true
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-member-access",
+        "message": "Unsafe member access .audioGenerationJobs on an `any` value.",
+        "severity": 2,
+        "baselineLine": 185,
+        "currentLine": 185,
+        "matchesBaseline": true
+      },
+      {
+        "ruleId": "complexity",
+        "message": "Function 'remapAudioPackage' has a complexity of 36. Maximum allowed is 20.",
+        "severity": 1,
+        "baselineLine": 213,
+        "currentLine": 213,
+        "matchesBaseline": true
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 64 to the 20 allowed.",
+        "severity": 1,
+        "baselineLine": 213,
+        "currentLine": 213,
+        "matchesBaseline": true
+      },
+      {
+        "ruleId": "complexity",
+        "message": "Async function 'insertAudioPackage' has a complexity of 26. Maximum allowed is 20.",
+        "severity": 1,
+        "baselineLine": 260,
+        "currentLine": 260,
+        "matchesBaseline": true
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 34 to the 20 allowed.",
+        "severity": 1,
+        "baselineLine": 260,
+        "currentLine": 260,
+        "matchesBaseline": true
+      }
+    ]
+  },
+  {
+    "path": "src/components/music/MusicCreation.tsx",
+    "baselineCount": 2,
+    "currentCount": 2,
+    "diagnostics": [
+      {
+        "ruleId": "complexity",
+        "message": "Function 'MusicCreation' has a complexity of 40. Maximum allowed is 20.",
+        "severity": 1,
+        "baselineLine": 19,
+        "currentLine": 19,
+        "matchesBaseline": true
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 27 to the 20 allowed.",
+        "severity": 1,
+        "baselineLine": 19,
+        "currentLine": 19,
+        "matchesBaseline": true
+      }
+    ]
+  }
+]

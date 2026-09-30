@@ -1,0 +1,16 @@
+[
+  {
+    "kind": "duration",
+    "root": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-old-source-ih1gk2f7",
+    "mismatchedSourceFiles": [
+      "src/components/music/MusicCreation.tsx"
+    ],
+    "focusedTestMatches": true
+  },
+  {
+    "kind": "ui",
+    "root": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-ui-old-source-5ml5c478",
+    "mismatchedSourceFiles": [],
+    "focusedTestMatches": true
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "module": "src/domain/music.ts",
+  "emittedContainsImports": false,
+  "emittedJavaScript": "// Optional generation duration, in whole seconds; decoded audio duration remains fractional.\nexport const MUSIC_DURATION_LIMITS = {\n    flowmusic: { min: 1, max: 240 },\n    suno: { min: 10, max: 360 },\n};\nexport function defaultMusicSettings(engine = \"suno\") {\n    return engine === \"flowmusic\"\n        ? { engine, soundPrompt: \"\", lyrics: \"\", title: \"\" }\n        : {\n            engine,\n            version: \"v6\",\n            custom: false,\n            instrumental: false,\n            prompt: \"\",\n            title: \"\",\n            style: \"\",\n            negativeTags: \"\"\n        };\n}\n",
+  "newValueConsumers": [
+    "src/db/music.ts",
+    "src/lib/agent/musicTools.ts",
+    "src/lib/audioGeneration/input.ts",
+    "src/lib/ai/apimartAudio.ts"
+  ],
+  "reason": "Domain module already exports defaultMusicSettings; its audio/types imports remain type-only and erase. Added consumers load the constant from a dependency-free runtime module, so these edges cannot introduce a cycle back from the domain module."
+}

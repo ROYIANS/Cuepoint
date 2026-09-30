@@ -1,0 +1,11 @@
+# C06 independent acceptance
+
+Trace actualadapters/runtime/UI savedfailure states, everyboundedread beforetext/json/blob/base64/decode/persistence. GuardactualUint8Array bytes notonlyheaders; cancellation/releaseonerrorandabort.32MiBrawanddecodedbase64coordinatedengineconstant, exactboundarypaddingcalculate; separateordinary4MiBJSON/MiMoapprox44MiB/errorlimits. Reasonableresponsebody synthetic tests includefake/missinglength/crosschunk/UTF8/legitimateedge. Hugechunkalreadyallocatedtestonly finiteproofnotOOM.
+
+Chat boundedpendingline/event+aggregatecontentreasoning/tool; guardbeforehandlers; no wholelifetimessebytecap ifmanylegalusageevents. Responses existingevent/outputguardsretain, nonstream/errorbodybounded. No doublePOST orpaidretry; submitreadlimitprotocoluncertain andsavedintent retained, music existingtaskIds andresultscontinueGET/download onexplicitretry; rawoversizeaudio cannotenterdbmedia. ExistingB05abortpaths andA01redactionbeforetruncate/statuswhitelist intact.
+
+Errors classes/resultkinds accessible meaningful diagnostic, swallowingboundsparseerrorsmustnotbecome falseok orfreefallpaidfallback. Evidence meaningful exactrequestcounts/reader.cancel/release/alltransactionrows. No network/decodeinsidewrite transactions or dependencyinstall. CurrentcodepathsAPIMartAudio/MiMo/AIHubMix image-video download/Chat/Responses; Tavilysharedreuseifactualprotocoladequate.
+
+beforeafterallfiles latestunitoverlapApimartfromC02 etc attributedC06, wholepreviouscoveragecompare except deliberateownedscope. static noaddeddiagnostics/readablehelperfunctions; tests/lint andaffectedsavedruntime tests, batchfullgate later. Realprovider/OOM/acoustic/browserpeakclaimnotcovered.
+
+AIHubMix actual API correction: downloadAIHubMixResult is image/video; separate local media-download resource limit from32MiBaudio decoder. Verifyvalidvideo>32MiB accepted below chosen media policy andoverflow cancelled; do not accidentallycapinlineimage JSON via ordinary4MiB body allowance. Report exact inspected paths.

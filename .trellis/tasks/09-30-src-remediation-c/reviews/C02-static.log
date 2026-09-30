@@ -1,0 +1,38 @@
+[
+  {
+    "file": "src/domain/music.ts",
+    "currentDiagnostics": 0,
+    "baselineDiagnostics": 0,
+    "added": []
+  },
+  {
+    "file": "src/db/music.ts",
+    "currentDiagnostics": 0,
+    "baselineDiagnostics": 0,
+    "added": []
+  },
+  {
+    "file": "src/lib/agent/musicTools.ts",
+    "currentDiagnostics": 0,
+    "baselineDiagnostics": 0,
+    "added": []
+  },
+  {
+    "file": "src/lib/audioGeneration/input.ts",
+    "currentDiagnostics": 0,
+    "baselineDiagnostics": 0,
+    "added": []
+  },
+  {
+    "file": "src/lib/ai/apimartAudio.ts",
+    "currentDiagnostics": 3,
+    "baselineDiagnostics": 3,
+    "added": []
+  },
+  {
+    "file": "src/lib/audioProjectPackage.ts",
+    "currentDiagnostics": 6,
+    "baselineDiagnostics": 6,
+    "added": []
+  }
+]

@@ -1,0 +1,13 @@
+7:35:27 PM [vite] (client) Re-optimizing dependencies because vite config has changed
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.evaluate: TypeError: Cannot read properties of undefined (reading 'map')
+    at assertSlotMedia (http://127.0.0.1:5173/src/db/repo.ts:715:31)
+    at Transaction2.<anonymous> (http://127.0.0.1:5173/src/db/repo.ts:731:11)
+    at /Users/xiaomengdao/WebstormProjects/aifenjing/scripts/c01-browser-regression.mjs:16:31 {
+  log: []
+}
+
+Node.js v24.11.0

@@ -1,0 +1,472 @@
+{
+  "completedReviewUnits": [
+    "C01",
+    "C02",
+    "C03",
+    "C04",
+    "C05",
+    "C06"
+  ],
+  "files": [
+    {
+      "path": "scripts/c01-browser-regression.mjs",
+      "sha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+      "review": {
+        "unit": "C01",
+        "sha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6"
+      },
+      "matches": true
+    },
+    {
+      "path": "scripts/c02-browser-regression.mjs",
+      "sha256": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+      "review": {
+        "unit": "C02",
+        "sha256": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/audio/AudioExports.tsx",
+      "sha256": "45fb461bff60e6fabad1eae899a51be95786722edc3b04bc9204ff5e514a4d75",
+      "review": {
+        "unit": "C04",
+        "sha256": "45fb461bff60e6fabad1eae899a51be95786722edc3b04bc9204ff5e514a4d75"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/audio/AudioTimeline.tsx",
+      "sha256": "607778048835edc4aae79c144a9c86f8a43733707aeabc5f3d602a4d6d3a84b2",
+      "review": {
+        "unit": "C04",
+        "sha256": "607778048835edc4aae79c144a9c86f8a43733707aeabc5f3d602a4d6d3a84b2"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/music/MusicCreation.tsx",
+      "sha256": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c",
+      "review": {
+        "unit": "C02",
+        "sha256": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/db/agentTaskRecords.ts",
+      "sha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+      "review": {
+        "unit": "C01",
+        "sha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/db/music.ts",
+      "sha256": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+      "review": {
+        "unit": "C02",
+        "sha256": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/db/repo.ts",
+      "sha256": "614201eb96fce410aebabb18b7f9f6a5864596952f5716e4bda94d5ac5b5a33f",
+      "review": {
+        "unit": "C05",
+        "sha256": "614201eb96fce410aebabb18b7f9f6a5864596952f5716e4bda94d5ac5b5a33f"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/db/taskGenerationEvidence.ts",
+      "sha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+      "review": {
+        "unit": "C01",
+        "sha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/domain/music.ts",
+      "sha256": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+      "review": {
+        "unit": "C02",
+        "sha256": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/agent/generationRuntime.ts",
+      "sha256": "3b8666ffe35474cd811cc34ae55290526a11ca14b9ac0b212d6d19ee49b6fb86",
+      "review": {
+        "unit": "C06",
+        "sha256": "3b8666ffe35474cd811cc34ae55290526a11ca14b9ac0b212d6d19ee49b6fb86"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/agent/musicTools.ts",
+      "sha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+      "review": {
+        "unit": "C02",
+        "sha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/agent/wrapupEvidence.ts",
+      "sha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "review": {
+        "unit": "C01",
+        "sha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/ai/aihubmix.ts",
+      "sha256": "c6a66b5fdb0904d1765b70f04b38769f55ec5a6c70feae757396adffbb4233c9",
+      "review": {
+        "unit": "C06",
+        "sha256": "c6a66b5fdb0904d1765b70f04b38769f55ec5a6c70feae757396adffbb4233c9"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/ai/apimartAudio.ts",
+      "sha256": "b039e073947defcfc5b69a1e33fd2b7a39779c33159ba4eb65cd632509362d9e",
+      "review": {
+        "unit": "C06",
+        "sha256": "b039e073947defcfc5b69a1e33fd2b7a39779c33159ba4eb65cd632509362d9e"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/ai/boundedResponse.ts",
+      "sha256": "92cc47f78623f8c1c8e7d864a9f4af655c5b498077f8b0e93de25eefc9be8384",
+      "review": {
+        "unit": "C06",
+        "sha256": "92cc47f78623f8c1c8e7d864a9f4af655c5b498077f8b0e93de25eefc9be8384"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/ai/boundedSse.ts",
+      "sha256": "8626015eebd251a1956992f6274d679f8e3cd6af556e2e4acb9acf72fe925894",
+      "review": {
+        "unit": "C06",
+        "sha256": "8626015eebd251a1956992f6274d679f8e3cd6af556e2e4acb9acf72fe925894"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/ai/chatStream.ts",
+      "sha256": "ede7b8806f165128a864f948435defc700c226a4656041c6a485c0f3342cdf6d",
+      "review": {
+        "unit": "C06",
+        "sha256": "ede7b8806f165128a864f948435defc700c226a4656041c6a485c0f3342cdf6d"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/ai/mimoSpeech.ts",
+      "sha256": "0be180a9ed8767321126cc7b49ba3f16836e625466e3d43c105c46e9dcaf62c8",
+      "review": {
+        "unit": "C06",
+        "sha256": "0be180a9ed8767321126cc7b49ba3f16836e625466e3d43c105c46e9dcaf62c8"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/ai/responsesStream.ts",
+      "sha256": "7a641a8da7404523939998ea6618989e9823bb1f63e24dec9aad5076e2eabee7",
+      "review": {
+        "unit": "C06",
+        "sha256": "7a641a8da7404523939998ea6618989e9823bb1f63e24dec9aad5076e2eabee7"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/ai/tavily.ts",
+      "sha256": "b24c36e3ef77e85585b6d72ca684b40e2f7c7e5d758696abea5ea945a0c98ae4",
+      "review": {
+        "unit": "C06",
+        "sha256": "b24c36e3ef77e85585b6d72ca684b40e2f7c7e5d758696abea5ea945a0c98ae4"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/audio/engine.ts",
+      "sha256": "d7729b85c481dbd05ed4850862c64e5bf8c6ad9297064e142fe0fdaa05679e28",
+      "review": {
+        "unit": "C06",
+        "sha256": "d7729b85c481dbd05ed4850862c64e5bf8c6ad9297064e142fe0fdaa05679e28"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/audio/fingerprint.ts",
+      "sha256": "2e75f9a80cc117c5f9a2b0aa0528f9f28be1e5d00cc3826376e1fedcabb4ef59",
+      "review": {
+        "unit": "C04",
+        "sha256": "2e75f9a80cc117c5f9a2b0aa0528f9f28be1e5d00cc3826376e1fedcabb4ef59"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/audio/recorder.ts",
+      "sha256": "3b9eadfeec03eed1a9f5a3424457cdc588f5a54ae83fc77f1e8bf7f97293935a",
+      "review": {
+        "unit": "C06",
+        "sha256": "3b9eadfeec03eed1a9f5a3424457cdc588f5a54ae83fc77f1e8bf7f97293935a"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/audioGeneration/input.ts",
+      "sha256": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+      "review": {
+        "unit": "C02",
+        "sha256": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/audioProjectPackage.ts",
+      "sha256": "8412440a2fc31960d444d71e6a3d5b5cd8c3e4dd2c713d03db3be6bb95737331",
+      "review": {
+        "unit": "C04",
+        "sha256": "8412440a2fc31960d444d71e6a3d5b5cd8c3e4dd2c713d03db3be6bb95737331"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/projectPackage.ts",
+      "sha256": "ee0ef3c984a4454f5d90e9ac7b8c0570f919024fb2078d9862fad93efc2cb555",
+      "review": {
+        "unit": "C03",
+        "sha256": "ee0ef3c984a4454f5d90e9ac7b8c0570f919024fb2078d9862fad93efc2cb555"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/resource/limits.ts",
+      "sha256": "aaed95b303a65539344a27c6fbee1670171248995a4e2da3fe4dc9cc4307bb17",
+      "review": {
+        "unit": "C06",
+        "sha256": "aaed95b303a65539344a27c6fbee1670171248995a4e2da3fe4dc9cc4307bb17"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/agentGenerationEvidence.test.ts",
+      "sha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+      "review": {
+        "unit": "C01",
+        "sha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/agentTaskOrchestrationReview.test.ts",
+      "sha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+      "review": {
+        "unit": "C01",
+        "sha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/agentTaskWrapup.test.ts",
+      "sha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+      "review": {
+        "unit": "C01",
+        "sha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/aihubmix.test.ts",
+      "sha256": "d38b3432f297af0905ea84ff4fe12b81bb06e7cb345b8270c684351a9c2e1d9f",
+      "review": {
+        "unit": "C06",
+        "sha256": "d38b3432f297af0905ea84ff4fe12b81bb06e7cb345b8270c684351a9c2e1d9f"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/apimartAudio.test.ts",
+      "sha256": "7d5258fd38910415c82184d68bd547535016a146d21cd56ee9fcb5b70d8d3c24",
+      "review": {
+        "unit": "C06",
+        "sha256": "7d5258fd38910415c82184d68bd547535016a146d21cd56ee9fcb5b70d8d3c24"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/audioFingerprint.test.ts",
+      "sha256": "82fe247fe9cf046979e0696a8ef2ccdb2d628d38f14fa1c25f1c15e3c3efc5ae",
+      "review": {
+        "unit": "C04",
+        "sha256": "82fe247fe9cf046979e0696a8ef2ccdb2d628d38f14fa1c25f1c15e3c3efc5ae"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/audioGenerationRuntime.test.ts",
+      "sha256": "0ff056a4fe2c1dde7819b92f5999450894b38afd6c83c8d7df819edc93992fd9",
+      "review": {
+        "unit": "C06",
+        "sha256": "0ff056a4fe2c1dde7819b92f5999450894b38afd6c83c8d7df819edc93992fd9"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/b03IntentBoundaries.test.ts",
+      "sha256": "69edaf87e96e60da8390cb03d8302eaad26c89ff7e0eb0d629da7586377fdedc",
+      "review": {
+        "unit": "C05",
+        "sha256": "69edaf87e96e60da8390cb03d8302eaad26c89ff7e0eb0d629da7586377fdedc"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/boundedAudioRuntime.test.ts",
+      "sha256": "4ae19c1df51503a2074049ac5a5a8d2a8c31451d4170b659a47d2b57d98dd85d",
+      "review": {
+        "unit": "C06",
+        "sha256": "4ae19c1df51503a2074049ac5a5a8d2a8c31451d4170b659a47d2b57d98dd85d"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/boundedChatInput.test.ts",
+      "sha256": "531dd752e588c2864bba348c8f346d4e03247dd4ed3d4fe331c21ac4ae303769",
+      "review": {
+        "unit": "C06",
+        "sha256": "531dd752e588c2864bba348c8f346d4e03247dd4ed3d4fe331c21ac4ae303769"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/boundedInput.test.ts",
+      "sha256": "e8b8b385012157a718eebb8a46a26048f93094c1003621dd15fb58f6a3a1b761",
+      "review": {
+        "unit": "C06",
+        "sha256": "e8b8b385012157a718eebb8a46a26048f93094c1003621dd15fb58f6a3a1b761"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/fixtures/c01/harness.ts",
+      "sha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+      "review": {
+        "unit": "C01",
+        "sha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/fixtures/c01/index.html",
+      "sha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+      "review": {
+        "unit": "C01",
+        "sha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/fixtures/c02/harness.tsx",
+      "sha256": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+      "review": {
+        "unit": "C02",
+        "sha256": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/fixtures/c02/index.html",
+      "sha256": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8",
+      "review": {
+        "unit": "C02",
+        "sha256": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/mediaPatchBoundary.test.ts",
+      "sha256": "0800f65c6ec9acb901689b9514a5cdc8285a38111700fe2f82f8c1caae8165cc",
+      "review": {
+        "unit": "C05",
+        "sha256": "0800f65c6ec9acb901689b9514a5cdc8285a38111700fe2f82f8c1caae8165cc"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/musicDurationContract.test.ts",
+      "sha256": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399",
+      "review": {
+        "unit": "C02",
+        "sha256": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/musicLegacyDurationRepair.test.ts",
+      "sha256": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e",
+      "review": {
+        "unit": "C02",
+        "sha256": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/parentProjectWrites.test.ts",
+      "sha256": "49219fb616c63e1021dec6280e6ffb1db1f4d789e99336d1ea78a68ccb09240d",
+      "review": {
+        "unit": "C03",
+        "sha256": "49219fb616c63e1021dec6280e6ffb1db1f4d789e99336d1ea78a68ccb09240d"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/productionContext.test.ts",
+      "sha256": "1bc781d890beb53709d8a866c75d4d96bcd7eec5b2b85092208555152c504f8e",
+      "review": {
+        "unit": "C05",
+        "sha256": "1bc781d890beb53709d8a866c75d4d96bcd7eec5b2b85092208555152c504f8e"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/projectPackage.test.ts",
+      "sha256": "9a7bd3e1d9dafb17b620b4fda7750848364c5158b7d05365db45434e4872f35c",
+      "review": {
+        "unit": "C05",
+        "sha256": "9a7bd3e1d9dafb17b620b4fda7750848364c5158b7d05365db45434e4872f35c"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/projectPackageRelations.test.ts",
+      "sha256": "89e20d9f6f573b3cea4a82c4413e240c918d7ccc8227f8f665a532fe674ecd8a",
+      "review": {
+        "unit": "C03",
+        "sha256": "89e20d9f6f573b3cea4a82c4413e240c918d7ccc8227f8f665a532fe674ecd8a"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/repo.test.ts",
+      "sha256": "305b814e209ac5283c65b315b52bb68d0302800cc889854ada22437d8ffea275",
+      "review": {
+        "unit": "C05",
+        "sha256": "305b814e209ac5283c65b315b52bb68d0302800cc889854ada22437d8ffea275"
+      },
+      "matches": true
+    }
+  ],
+  "missingOrChanged": []
+}

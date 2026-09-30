@@ -1,0 +1,4 @@
+COMMAND ["git", "diff", "--check", "--", "src/db/repo.ts", "src/lib/projectPackage.ts", "tests/parentProjectWrites.test.ts", "tests/projectPackageRelations.test.ts"]
+COMMAND ["git", "diff", "--no-index", "--check", "/dev/null", "tests/parentProjectWrites.test.ts"]
+{"command": ["git", "diff", "--no-index", "--check", "/dev/null", "tests/parentProjectWrites.test.ts"], "exitCode": 1, "output": "", "interpretation": "no whitespace errors; no-index may return 1 for added-file differences"}
+{"command": ["git", "diff", "--no-index", "--check", "/dev/null", "tests/projectPackageRelations.test.ts"], "exitCode": 1, "output": "", "interpretation": "no whitespace errors; no-index may return 1 for added-file differences"}

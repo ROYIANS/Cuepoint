@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "role": "trellis-implement",
+  "unit": "C05",
+  "status": "IMPLEMENTATION_READY_FOR_INDEPENDENT_CHECK",
+  "completedAt": "2026-09-30T14:30:48.760675+00:00",
+  "files": [
+    "src/db/repo.ts",
+    "tests/repo.test.ts",
+    "tests/projectPackage.test.ts",
+    "tests/productionContext.test.ts",
+    "tests/b03IntentBoundaries.test.ts",
+    "tests/mediaPatchBoundary.test.ts"
+  ],
+  "before": {
+    "src/db/repo.ts": "346e54a274405562deba97a67357a6c4d65b441de47ae1ef7253ce871367d7a1",
+    "tests/repo.test.ts": "90e63020910f37c32a833a8876d4ee96c8334af35dd3c895ff6490c42016c753",
+    "tests/projectPackage.test.ts": "a9a5a7675f2d38e1ab51c1148a1eca6bb9dd4b72ec2915460337d724d96a50c3",
+    "tests/productionContext.test.ts": "c4318ab029f7b77fedbd20ede6b22387af1b3654ad5044e336036d4bcb2513fc",
+    "tests/b03IntentBoundaries.test.ts": "c4619b7cf76ea84b42945777df36e96d8a360d57a342585be9784dd25432d528",
+    "tests/mediaPatchBoundary.test.ts": null
+  },
+  "after": {
+    "src/db/repo.ts": "614201eb96fce410aebabb18b7f9f6a5864596952f5716e4bda94d5ac5b5a33f",
+    "tests/repo.test.ts": "305b814e209ac5283c65b315b52bb68d0302800cc889854ada22437d8ffea275",
+    "tests/projectPackage.test.ts": "9a7bd3e1d9dafb17b620b4fda7750848364c5158b7d05365db45434e4872f35c",
+    "tests/productionContext.test.ts": "1bc781d890beb53709d8a866c75d4d96bcd7eec5b2b85092208555152c504f8e",
+    "tests/b03IntentBoundaries.test.ts": "69edaf87e96e60da8390cb03d8302eaad26c89ff7e0eb0d629da7586377fdedc",
+    "tests/mediaPatchBoundary.test.ts": "0800f65c6ec9acb901689b9514a5cdc8285a38111700fe2f82f8c1caae8165cc"
+  },
+  "allChangedBefore": {
+    "scripts/c01-browser-regression.mjs": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+    "scripts/c02-browser-regression.mjs": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+    "src/components/audio/AudioExports.tsx": "45fb461bff60e6fabad1eae899a51be95786722edc3b04bc9204ff5e514a4d75",
+    "src/components/audio/AudioTimeline.tsx": "607778048835edc4aae79c144a9c86f8a43733707aeabc5f3d602a4d6d3a84b2",
+    "src/components/music/MusicCreation.tsx": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c",
+    "src/db/agentTaskRecords.ts": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+    "src/db/music.ts": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+    "src/db/repo.ts": "346e54a274405562deba97a67357a6c4d65b441de47ae1ef7253ce871367d7a1",
+    "src/db/taskGenerationEvidence.ts": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+    "src/domain/music.ts": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+    "src/lib/agent/musicTools.ts": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+    "src/lib/agent/wrapupEvidence.ts": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+    "src/lib/ai/apimartAudio.ts": "8cb50863b0aab40e1ddfe9b956b938125eba4f170bcd463f2cce24e7e5eb2c59",
+    "src/lib/audio/fingerprint.ts": "2e75f9a80cc117c5f9a2b0aa0528f9f28be1e5d00cc3826376e1fedcabb4ef59",
+    "src/lib/audioGeneration/input.ts": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+    "src/lib/audioProjectPackage.ts": "8412440a2fc31960d444d71e6a3d5b5cd8c3e4dd2c713d03db3be6bb95737331",
+    "src/lib/projectPackage.ts": "ee0ef3c984a4454f5d90e9ac7b8c0570f919024fb2078d9862fad93efc2cb555",
+    "tests/agentGenerationEvidence.test.ts": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+    "tests/agentTaskOrchestrationReview.test.ts": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+    "tests/agentTaskWrapup.test.ts": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+    "tests/audioFingerprint.test.ts": "82fe247fe9cf046979e0696a8ef2ccdb2d628d38f14fa1c25f1c15e3c3efc5ae",
+    "tests/fixtures/c01/harness.ts": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+    "tests/fixtures/c01/index.html": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+    "tests/fixtures/c02/harness.tsx": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+    "tests/fixtures/c02/index.html": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8",
+    "tests/musicDurationContract.test.ts": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399",
+    "tests/musicLegacyDurationRepair.test.ts": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e",
+    "tests/parentProjectWrites.test.ts": "49219fb616c63e1021dec6280e6ffb1db1f4d789e99336d1ea78a68ccb09240d",
+    "tests/projectPackageRelations.test.ts": "89e20d9f6f573b3cea4a82c4413e240c918d7ccc8227f8f665a532fe674ecd8a"
+  },
+  "allChangedAfter": {
+    "scripts/c01-browser-regression.mjs": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+    "scripts/c02-browser-regression.mjs": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+    "src/components/audio/AudioExports.tsx": "45fb461bff60e6fabad1eae899a51be95786722edc3b04bc9204ff5e514a4d75",
+    "src/components/audio/AudioTimeline.tsx": "607778048835edc4aae79c144a9c86f8a43733707aeabc5f3d602a4d6d3a84b2",
+    "src/components/music/MusicCreation.tsx": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c",
+    "src/db/agentTaskRecords.ts": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+    "src/db/music.ts": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+    "src/db/repo.ts": "614201eb96fce410aebabb18b7f9f6a5864596952f5716e4bda94d5ac5b5a33f",
+    "src/db/taskGenerationEvidence.ts": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+    "src/domain/music.ts": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+    "src/lib/agent/musicTools.ts": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+    "src/lib/agent/wrapupEvidence.ts": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+    "src/lib/ai/apimartAudio.ts": "8cb50863b0aab40e1ddfe9b956b938125eba4f170bcd463f2cce24e7e5eb2c59",
+    "src/lib/audio/fingerprint.ts": "2e75f9a80cc117c5f9a2b0aa0528f9f28be1e5d00cc3826376e1fedcabb4ef59",
+    "src/lib/audioGeneration/input.ts": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+    "src/lib/audioProjectPackage.ts": "8412440a2fc31960d444d71e6a3d5b5cd8c3e4dd2c713d03db3be6bb95737331",
+    "src/lib/projectPackage.ts": "ee0ef3c984a4454f5d90e9ac7b8c0570f919024fb2078d9862fad93efc2cb555",
+    "tests/agentGenerationEvidence.test.ts": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+    "tests/agentTaskOrchestrationReview.test.ts": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+    "tests/agentTaskWrapup.test.ts": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+    "tests/audioFingerprint.test.ts": "82fe247fe9cf046979e0696a8ef2ccdb2d628d38f14fa1c25f1c15e3c3efc5ae",
+    "tests/b03IntentBoundaries.test.ts": "69edaf87e96e60da8390cb03d8302eaad26c89ff7e0eb0d629da7586377fdedc",
+    "tests/fixtures/c01/harness.ts": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+    "tests/fixtures/c01/index.html": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+    "tests/fixtures/c02/harness.tsx": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+    "tests/fixtures/c02/index.html": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8",
+    "tests/mediaPatchBoundary.test.ts": "0800f65c6ec9acb901689b9514a5cdc8285a38111700fe2f82f8c1caae8165cc",
+    "tests/musicDurationContract.test.ts": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399",
+    "tests/musicLegacyDurationRepair.test.ts": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e",
+    "tests/parentProjectWrites.test.ts": "49219fb616c63e1021dec6280e6ffb1db1f4d789e99336d1ea78a68ccb09240d",
+    "tests/productionContext.test.ts": "1bc781d890beb53709d8a866c75d4d96bcd7eec5b2b85092208555152c504f8e",
+    "tests/projectPackage.test.ts": "9a7bd3e1d9dafb17b620b4fda7750848364c5158b7d05365db45434e4872f35c",
+    "tests/projectPackageRelations.test.ts": "89e20d9f6f573b3cea4a82c4413e240c918d7ccc8227f8f665a532fe674ecd8a",
+    "tests/repo.test.ts": "305b814e209ac5283c65b315b52bb68d0302800cc889854ada22437d8ffea275"
+  },
+  "earlierReviewedHashes": {
+    "C01": {
+      "src/db/taskGenerationEvidence.ts": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+      "src/db/agentTaskRecords.ts": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+      "src/lib/agent/wrapupEvidence.ts": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "tests/agentGenerationEvidence.test.ts": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+      "tests/agentTaskWrapup.test.ts": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+      "tests/agentTaskOrchestrationReview.test.ts": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+      "scripts/c01-browser-regression.mjs": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+      "tests/fixtures/c01/harness.ts": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+      "tests/fixtures/c01/index.html": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47"
+    },
+    "C02": {
+      "src/domain/music.ts": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+      "src/db/music.ts": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+      "src/lib/agent/musicTools.ts": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+      "src/lib/audioGeneration/input.ts": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+      "src/lib/ai/apimartAudio.ts": "8cb50863b0aab40e1ddfe9b956b938125eba4f170bcd463f2cce24e7e5eb2c59",
+      "src/lib/audioProjectPackage.ts": "12a0c856dceccf6ce249c1b367e4b3ea0d4f67d315427adfcd57bd1e0d1691bc",
+      "src/components/music/MusicCreation.tsx": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c",
+      "tests/musicDurationContract.test.ts": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399",
+      "tests/musicLegacyDurationRepair.test.ts": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e",
+      "scripts/c02-browser-regression.mjs": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+      "tests/fixtures/c02/harness.tsx": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+      "tests/fixtures/c02/index.html": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8"
+    },
+    "C03": {
+      "src/db/repo.ts": "346e54a274405562deba97a67357a6c4d65b441de47ae1ef7253ce871367d7a1",
+      "src/lib/projectPackage.ts": "ee0ef3c984a4454f5d90e9ac7b8c0570f919024fb2078d9862fad93efc2cb555",
+      "tests/parentProjectWrites.test.ts": "49219fb616c63e1021dec6280e6ffb1db1f4d789e99336d1ea78a68ccb09240d",
+      "tests/projectPackageRelations.test.ts": "89e20d9f6f573b3cea4a82c4413e240c918d7ccc8227f8f665a532fe674ecd8a"
+    },
+    "C04": {
+      "src/lib/audioProjectPackage.ts": "8412440a2fc31960d444d71e6a3d5b5cd8c3e4dd2c713d03db3be6bb95737331",
+      "src/components/audio/AudioTimeline.tsx": "607778048835edc4aae79c144a9c86f8a43733707aeabc5f3d602a4d6d3a84b2",
+      "src/components/audio/AudioExports.tsx": "45fb461bff60e6fabad1eae899a51be95786722edc3b04bc9204ff5e514a4d75",
+      "src/lib/audio/fingerprint.ts": "2e75f9a80cc117c5f9a2b0aa0528f9f28be1e5d00cc3826376e1fedcabb4ef59",
+      "tests/audioFingerprint.test.ts": "82fe247fe9cf046979e0696a8ef2ccdb2d628d38f14fa1c25f1c15e3c3efc5ae"
+    }
+  },
+  "priorReviewedFileCount": 29,
+  "authorizedDrift": {
+    "src/db/repo.ts": {
+      "reviewed": "346e54a274405562deba97a67357a6c4d65b441de47ae1ef7253ce871367d7a1",
+      "current": "614201eb96fce410aebabb18b7f9f6a5864596952f5716e4bda94d5ac5b5a33f",
+      "authorization": "C05 owned repository boundary changes"
+    }
+  },
+  "unexpectedDrift": [],
+  "checks": [
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/mediaPatchBoundary.test.ts",
+      "exitCode": 1,
+      "result": "Old entry: 24 failed / 54 passed; 23 actual boundary failures and 1 new test incomplete baseline failure",
+      "log": ".trellis/tasks/09-30-src-remediation-c/reviews/C05-old-entry-red.log"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/mediaPatchBoundary.test.ts",
+      "exitCode": 1,
+      "result": "First patched run: 77 passed / 1 failed due solely to incomplete multi-field baseline; fixture fixed to complete shot baseline without changing production CAS",
+      "log": ".trellis/tasks/09-30-src-remediation-c/reviews/C05-boundary-first-run.log"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/mediaPatchBoundary.test.ts tests/repo.test.ts tests/projectPackage.test.ts tests/productionContext.test.ts tests/b03IntentBoundaries.test.ts tests/repoReliability.test.ts tests/manualDraftBaseline.test.ts tests/assetFoundation.test.ts tests/productionProposals.test.ts tests/agentGeneration.test.ts tests/agentGenerationBatch.test.ts tests/parentProjectWrites.test.ts",
+      "exitCode": 0,
+      "result": "12 files / 260 tests passed (new boundary suite 82 cases)",
+      "log": ".trellis/tasks/09-30-src-remediation-c/reviews/C05-focused-tests.log"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm lint",
+      "exitCode": 0,
+      "log": ".trellis/tasks/09-30-src-remediation-c/reviews/C05-lint.log"
+    },
+    {
+      "command": "node .trellis/tasks/09-30-src-remediation-c/reviews/C05-static.mjs",
+      "exitCode": 0,
+      "result": "11 baseline / 11 current diagnostics, zero added including complexity; new assertTextPatch helper has no diagnostics",
+      "log": ".trellis/tasks/09-30-src-remediation-c/reviews/C05-static.log"
+    },
+    {
+      "command": "git diff --check -- src/db/repo.ts tests/repo.test.ts tests/projectPackage.test.ts tests/productionContext.test.ts tests/b03IntentBoundaries.test.ts",
+      "exitCode": 0
+    }
+  ],
+  "scope": "Runtime/type media guard, strict transactional cover validation/recycling, target kind enforcement and fixture migrations; no production caller changes",
+  "callerInventory": {
+    "path": ".trellis/tasks/09-30-src-remediation-c/research/C05-static-call-sites.json",
+    "sha256": "dddee13646fce359d02095b2efefa2e1438608d4d731ecabe9f2b72d761e0945",
+    "calls": 43,
+    "namespaceFunctionReferences": 4,
+    "manual": ".trellis/tasks/09-30-src-remediation-c/research/C05-manual-caller-followup.md"
+  },
+  "limitations": [
+    "Independent checker pending",
+    "No full suite or browser run as instructed",
+    "Risk boundary proven by direct repository calls; no normal UI exploit claim"
+  ]
+}

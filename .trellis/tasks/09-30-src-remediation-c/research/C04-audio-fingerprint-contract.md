@@ -1,0 +1,11 @@
+# C04 refreshed fingerprint consumers
+
+准备；C03通过后实现。
+
+当前buildAudioSchedule返回纯对象 {clips,durationSec,sources,chapterOffsets}；AudioTimeline:270保存JSON.stringify(schedule)，AudioExports直接与新scheduleJSON比较。audioProjectPackage remapAudioSnapshot正确重映射实体/媒体但漏audioExports.fingerprint。
+
+保留已识别旧schema (可明确称v0历史形状) 的语义ID映射，必要时引入小的版本化fingerprint helper并一起更新创建/当前比较两个真实消费者。不能把每个export替换成现时schedule；原先stale必须继续stale。识别不仅能JSON.parse：校验schedule形状/有限数值/精确已知字段并保留序列等比较语义，无法识别的历史字符串保留原值并判unknown/stale。所有clips.clipId/mediaId、sources.id/mediaId、chapterOffsets key需要正确map。原已删除实体不在map时保留stale证据，不抛错导致整个合法历史包无法导入；不能丢掉未知clip/chapter从而变fresh。章节被删时export.scope=chapter保持语义及原chapterTitle，不能误降为project fresh。
+
+证据使用实际ZIP导出导入：project/chapter各current/stale、已删原章节仍有成品、两轮roundtrip、正常media字节存在且可取。无需真实解码/声学渲染。若改变格式，旧v0仍可current比较，不伪造unknown。只改该语义及聚焦tests。
+
+重要真实shape补充（C02 check期间read-only）：buildAudioSchedule.sources的TS类型虽是Pick<id/mediaId/duration/sampleRate/channels>，实现却usedMedia.set(take.mediaId,{...take})，真实AudioTimeline/getAudioProjectSnapshot传完整AudioTake。因此已有fingerprint sources包含projectId、revision、createdAt/updatedAt、segmentId、name/source/textSnapshot、provenance.jobId等完整row字段。只重映射id/mediaId不足！audioProjectPackage remapAudioPackage也重映射project/segment/provenance.jobId；必须以真实旧source完整metadata考虑兼容，保持既有stale。schema.parse reconstructs AudioTake keys按schema顺序，导入后key insertion order也会变，原rawJSON.stringify比较无法仅靠ID映射修好。可以规范化object key顺序/比较parsed结构，并确保原本改take名字/版本元数据产生的旧stale不被语义投影drop而误fresh。若要缩fingerprint到真正声学语义，先按原包原snapshot判断旧fingerprint是否current并保留旧stale标记，而不是全量投影覆盖，具体方案交执行时最小设计。实测真实repo take/export ZIP roundtrip，不能只用手工Pick的schedule fixture掩盖真实metadata和order。

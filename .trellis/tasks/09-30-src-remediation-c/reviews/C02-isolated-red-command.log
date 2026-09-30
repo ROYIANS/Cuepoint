@@ -1,0 +1,3 @@
+Isolated current source tree; only six C02 production files replaced in the copied tree with git show HEAD:<path>. Shared source files never overwritten.
+Root: /var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-old-source-ih1gk2f7
+Command: /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/musicDurationContract.test.ts --root /var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-old-source-ih1gk2f7

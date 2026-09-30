@@ -1,0 +1,52 @@
+[
+  {
+    "name": "vitest",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "tests/musicDurationContract.test.ts",
+      "tests/musicLegacyDurationRepair.test.ts",
+      "tests/musicDraftVariants.test.ts",
+      "tests/audioMusicAgentTools.test.ts",
+      "tests/musicGenerationReview.test.ts",
+      "tests/musicReviewPresentation.test.ts",
+      "tests/audioFoundation.test.ts",
+      "tests/audioGenerationRuntime.test.ts",
+      "tests/audioGenerationRecoveryAudit.test.ts",
+      "tests/audioGenerationAgent.test.ts",
+      "tests/apimartAudio.test.ts",
+      "tests/projectPackage.test.ts"
+    ],
+    "exitCode": 0,
+    "log": ".trellis/tasks/09-30-src-remediation-c/reviews/C02-check-vitest.log"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "lint"
+    ],
+    "exitCode": 0,
+    "log": ".trellis/tasks/09-30-src-remediation-c/reviews/C02-check-lint.log"
+  },
+  {
+    "name": "static",
+    "command": [
+      "node",
+      ".trellis/tasks/09-30-src-remediation-c/reviews/C02-check-static.mjs"
+    ],
+    "exitCode": 0,
+    "log": ".trellis/tasks/09-30-src-remediation-c/reviews/C02-check-static.log"
+  },
+  {
+    "name": "native-browser",
+    "command": [
+      "node",
+      "scripts/c02-browser-regression.mjs"
+    ],
+    "exitCode": 0,
+    "log": ".trellis/tasks/09-30-src-remediation-c/reviews/C02-check-native-browser.log"
+  }
+]

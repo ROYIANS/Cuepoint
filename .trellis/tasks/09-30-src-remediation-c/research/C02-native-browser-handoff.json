@@ -1,0 +1,14 @@
+{
+  "status": "green",
+  "files": {
+    "scripts/c02-browser-regression.mjs": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+    "tests/fixtures/c02/harness.tsx": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+    "tests/fixtures/c02/index.html": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8"
+  },
+  "red": "reviews/C02-browser-original-red.log",
+  "baseline": "reviews/C02-browser-red-baseline.json",
+  "scope": "Actual MusicCreation React/Radix + native Dexie and draft controller; explicit legacy Simple repair, preserved text/CAS conflicts and switching disabled. No provider/full route.",
+  "green": "reviews/C02-browser-green.log",
+  "cases": 3,
+  "fixtureNote": "reviews/C02-browser-fixture-note.md"
+}

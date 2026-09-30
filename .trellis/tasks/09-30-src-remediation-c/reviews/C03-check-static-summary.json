@@ -1,0 +1,14 @@
+[
+  {
+    "file": "src/db/repo.ts",
+    "baselineDiagnostics": 11,
+    "currentDiagnostics": 11,
+    "added": []
+  },
+  {
+    "file": "src/lib/projectPackage.ts",
+    "baselineDiagnostics": 60,
+    "currentDiagnostics": 60,
+    "added": []
+  }
+]

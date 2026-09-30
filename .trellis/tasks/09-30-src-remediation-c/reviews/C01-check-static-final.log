@@ -1,0 +1,483 @@
+COMMAND: ["/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node", ".trellis/tasks/09-30-src-remediation-c/reviews/C01-check-static.mjs"]
+{
+  "configSha256": "71fec4e76e3e26f5e21e6412d7847a5c7e0b8e828af4fba41237351faa24ccce",
+  "current": [
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTaskRecords.ts",
+      "errors": 0,
+      "warnings": 3,
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'validateTaskSources' has a complexity of 41. Maximum allowed is 20.",
+          "line": 41,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 41,
+          "endColumn": 42
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 28 to the 20 allowed.",
+          "line": 41,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 41,
+          "endColumn": 42
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'writeTaskRecord' has a complexity of 28. Maximum allowed is 20.",
+          "line": 72,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 72,
+          "endColumn": 38
+        }
+      ]
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/taskGenerationEvidence.ts",
+      "errors": 0,
+      "warnings": 0,
+      "messages": []
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/wrapupEvidence.ts",
+      "errors": 3,
+      "warnings": 12,
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-assignment",
+          "severity": 2,
+          "message": "Unsafe assignment of an `any` value.",
+          "line": 20,
+          "column": 15,
+          "nodeType": "VariableDeclarator",
+          "messageId": "anyAssignment",
+          "endLine": 20,
+          "endColumn": 77
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-return",
+          "severity": 2,
+          "message": "Unsafe return of a value of type `any`.",
+          "line": 21,
+          "column": 9,
+          "nodeType": "ReturnStatement",
+          "messageId": "unsafeReturn",
+          "endLine": 21,
+          "endColumn": 93
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'collectWrapupSnapshot' has a complexity of 91. Maximum allowed is 20.",
+          "line": 28,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 28,
+          "endColumn": 44
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 139 to the 20 allowed.",
+          "line": 28,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 28,
+          "endColumn": 44
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 80,
+          "column": 52,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 80,
+          "endColumn": 213
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 80,
+          "column": 89,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 80,
+          "endColumn": 213
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 80,
+          "column": 103,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 80,
+          "endColumn": 203
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 110,
+          "column": 30,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 110,
+          "endColumn": 113
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 119,
+          "column": 26,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 119,
+          "endColumn": 192
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 120,
+          "column": 24,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 120,
+          "endColumn": 111
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 122,
+          "column": 72,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 122,
+          "endColumn": 179
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 122,
+          "column": 181,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 122,
+          "endColumn": 296
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 169,
+          "column": 24,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 169,
+          "endColumn": 85
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 204,
+          "column": 22,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 204,
+          "endColumn": 102
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 234,
+          "column": 120,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 234,
+          "endColumn": 135,
+          "fix": {
+            "range": [
+              12811,
+              12812
+            ],
+            "text": ""
+          }
+        }
+      ]
+    }
+  ],
+  "baseline": [
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTaskRecords.ts",
+      "errors": 1,
+      "warnings": 4,
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'validateTaskSources' has a complexity of 38. Maximum allowed is 20.",
+          "line": 45,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 45,
+          "endColumn": 42
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 27 to the 20 allowed.",
+          "line": 45,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 45,
+          "endColumn": 42
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'writeTaskRecord' has a complexity of 28. Maximum allowed is 20.",
+          "line": 73,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 73,
+          "endColumn": 38
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'taskGenerationSource' has a complexity of 22. Maximum allowed is 20.",
+          "line": 126,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 126,
+          "endColumn": 43
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 138,
+          "column": 98,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 138,
+          "endColumn": 104,
+          "fix": {
+            "range": [
+              8213,
+              8214
+            ],
+            "text": ""
+          }
+        }
+      ]
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/wrapupEvidence.ts",
+      "errors": 3,
+      "warnings": 12,
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-assignment",
+          "severity": 2,
+          "message": "Unsafe assignment of an `any` value.",
+          "line": 20,
+          "column": 15,
+          "nodeType": "VariableDeclarator",
+          "messageId": "anyAssignment",
+          "endLine": 20,
+          "endColumn": 77
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-return",
+          "severity": 2,
+          "message": "Unsafe return of a value of type `any`.",
+          "line": 21,
+          "column": 9,
+          "nodeType": "ReturnStatement",
+          "messageId": "unsafeReturn",
+          "endLine": 21,
+          "endColumn": 93
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'collectWrapupSnapshot' has a complexity of 87. Maximum allowed is 20.",
+          "line": 28,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 28,
+          "endColumn": 44
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 136 to the 20 allowed.",
+          "line": 28,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 28,
+          "endColumn": 44
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 80,
+          "column": 52,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 80,
+          "endColumn": 213
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 80,
+          "column": 89,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 80,
+          "endColumn": 213
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 80,
+          "column": 103,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 80,
+          "endColumn": 203
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 98,
+          "column": 30,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 98,
+          "endColumn": 113
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 107,
+          "column": 26,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 107,
+          "endColumn": 192
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 108,
+          "column": 24,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 108,
+          "endColumn": 111
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 110,
+          "column": 72,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 110,
+          "endColumn": 179
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 110,
+          "column": 181,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 110,
+          "endColumn": 296
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 156,
+          "column": 24,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 156,
+          "endColumn": 145
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 199,
+          "column": 22,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 199,
+          "endColumn": 102
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 229,
+          "column": 120,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 229,
+          "endColumn": 135,
+          "fix": {
+            "range": [
+              12459,
+              12460
+            ],
+            "text": ""
+          }
+        }
+      ]
+    }
+  ]
+}
+
+EXIT: 0

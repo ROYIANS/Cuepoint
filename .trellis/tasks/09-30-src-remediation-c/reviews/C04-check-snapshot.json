@@ -1,0 +1,336 @@
+{
+  "schemaVersion": 1,
+  "role": "trellis-check",
+  "unit": "C04",
+  "status": "PASS",
+  "completedAt": "2026-09-30T14:13:33.728272+00:00",
+  "files": [
+    "src/lib/audioProjectPackage.ts",
+    "src/components/audio/AudioTimeline.tsx",
+    "src/components/audio/AudioExports.tsx",
+    "src/lib/audio/fingerprint.ts",
+    "tests/audioFingerprint.test.ts"
+  ],
+  "before": {
+    "src/lib/audioProjectPackage.ts": "12a0c856dceccf6ce249c1b367e4b3ea0d4f67d315427adfcd57bd1e0d1691bc",
+    "src/components/audio/AudioTimeline.tsx": "9fd89a8534e9cbca8dd2f6027875ffdf8066292457c9e9a45c6ef1705fb74c7d",
+    "src/components/audio/AudioExports.tsx": "7ef73d447762d1323a7d6e993acb43d5e73f4577fa544cc51ceacaeddfe70604",
+    "src/lib/audio/fingerprint.ts": null,
+    "tests/audioFingerprint.test.ts": null
+  },
+  "beforeSelfFix": {
+    "src/lib/audioProjectPackage.ts": "c731c608296092d1f6b47263c194bb172c1141986d2e68505b23bbca868b69c7",
+    "src/components/audio/AudioTimeline.tsx": "607778048835edc4aae79c144a9c86f8a43733707aeabc5f3d602a4d6d3a84b2",
+    "src/components/audio/AudioExports.tsx": "45fb461bff60e6fabad1eae899a51be95786722edc3b04bc9204ff5e514a4d75",
+    "src/lib/audio/fingerprint.ts": "d664d290a229709c2fb6ed27837c53d9adec39c00207b63752345147f40f4220",
+    "tests/audioFingerprint.test.ts": "93aedd38cb8312fbdee0013aab96fda646318e13003beb5b44c1fa2626f076d3"
+  },
+  "after": {
+    "src/lib/audioProjectPackage.ts": "8412440a2fc31960d444d71e6a3d5b5cd8c3e4dd2c713d03db3be6bb95737331",
+    "src/components/audio/AudioTimeline.tsx": "607778048835edc4aae79c144a9c86f8a43733707aeabc5f3d602a4d6d3a84b2",
+    "src/components/audio/AudioExports.tsx": "45fb461bff60e6fabad1eae899a51be95786722edc3b04bc9204ff5e514a4d75",
+    "src/lib/audio/fingerprint.ts": "2e75f9a80cc117c5f9a2b0aa0528f9f28be1e5d00cc3826376e1fedcabb4ef59",
+    "tests/audioFingerprint.test.ts": "82fe247fe9cf046979e0696a8ef2ccdb2d628d38f14fa1c25f1c15e3c3efc5ae"
+  },
+  "beforeMeaning": "Original C04-entry SHA256; null means file did not exist. beforeSelfFix is implementation handoff SHA256; after is independently checked final state.",
+  "sourceBackupDirectory": ".trellis/tasks/09-30-src-remediation-c/reviews/C04-source-backups",
+  "originalBackupHashesVerified": true,
+  "earlierReviewedFiles": [
+    {
+      "unit": "C01",
+      "file": "src/db/taskGenerationEvidence.ts",
+      "reviewedSha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+      "currentSha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C01",
+      "file": "src/db/agentTaskRecords.ts",
+      "reviewedSha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+      "currentSha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C01",
+      "file": "src/lib/agent/wrapupEvidence.ts",
+      "reviewedSha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "currentSha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C01",
+      "file": "tests/agentGenerationEvidence.test.ts",
+      "reviewedSha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+      "currentSha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C01",
+      "file": "tests/agentTaskWrapup.test.ts",
+      "reviewedSha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+      "currentSha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C01",
+      "file": "tests/agentTaskOrchestrationReview.test.ts",
+      "reviewedSha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+      "currentSha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C01",
+      "file": "scripts/c01-browser-regression.mjs",
+      "reviewedSha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+      "currentSha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C01",
+      "file": "tests/fixtures/c01/harness.ts",
+      "reviewedSha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+      "currentSha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C01",
+      "file": "tests/fixtures/c01/index.html",
+      "reviewedSha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+      "currentSha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C02",
+      "file": "src/domain/music.ts",
+      "reviewedSha256": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+      "currentSha256": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C02",
+      "file": "src/db/music.ts",
+      "reviewedSha256": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+      "currentSha256": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C02",
+      "file": "src/lib/agent/musicTools.ts",
+      "reviewedSha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+      "currentSha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C02",
+      "file": "src/lib/audioGeneration/input.ts",
+      "reviewedSha256": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+      "currentSha256": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C02",
+      "file": "src/lib/ai/apimartAudio.ts",
+      "reviewedSha256": "8cb50863b0aab40e1ddfe9b956b938125eba4f170bcd463f2cce24e7e5eb2c59",
+      "currentSha256": "8cb50863b0aab40e1ddfe9b956b938125eba4f170bcd463f2cce24e7e5eb2c59",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C02",
+      "file": "src/lib/audioProjectPackage.ts",
+      "reviewedSha256": "12a0c856dceccf6ce249c1b367e4b3ea0d4f67d315427adfcd57bd1e0d1691bc",
+      "currentSha256": "8412440a2fc31960d444d71e6a3d5b5cd8c3e4dd2c713d03db3be6bb95737331",
+      "preserved": false,
+      "authorizedC04Drift": true
+    },
+    {
+      "unit": "C02",
+      "file": "src/components/music/MusicCreation.tsx",
+      "reviewedSha256": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c",
+      "currentSha256": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C02",
+      "file": "tests/musicDurationContract.test.ts",
+      "reviewedSha256": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399",
+      "currentSha256": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C02",
+      "file": "tests/musicLegacyDurationRepair.test.ts",
+      "reviewedSha256": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e",
+      "currentSha256": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C02",
+      "file": "scripts/c02-browser-regression.mjs",
+      "reviewedSha256": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+      "currentSha256": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C02",
+      "file": "tests/fixtures/c02/harness.tsx",
+      "reviewedSha256": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+      "currentSha256": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C02",
+      "file": "tests/fixtures/c02/index.html",
+      "reviewedSha256": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8",
+      "currentSha256": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C03",
+      "file": "src/db/repo.ts",
+      "reviewedSha256": "346e54a274405562deba97a67357a6c4d65b441de47ae1ef7253ce871367d7a1",
+      "currentSha256": "346e54a274405562deba97a67357a6c4d65b441de47ae1ef7253ce871367d7a1",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C03",
+      "file": "src/lib/projectPackage.ts",
+      "reviewedSha256": "ee0ef3c984a4454f5d90e9ac7b8c0570f919024fb2078d9862fad93efc2cb555",
+      "currentSha256": "ee0ef3c984a4454f5d90e9ac7b8c0570f919024fb2078d9862fad93efc2cb555",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C03",
+      "file": "tests/parentProjectWrites.test.ts",
+      "reviewedSha256": "49219fb616c63e1021dec6280e6ffb1db1f4d789e99336d1ea78a68ccb09240d",
+      "currentSha256": "49219fb616c63e1021dec6280e6ffb1db1f4d789e99336d1ea78a68ccb09240d",
+      "preserved": true,
+      "authorizedC04Drift": false
+    },
+    {
+      "unit": "C03",
+      "file": "tests/projectPackageRelations.test.ts",
+      "reviewedSha256": "89e20d9f6f573b3cea4a82c4413e240c918d7ccc8227f8f665a532fe674ecd8a",
+      "currentSha256": "89e20d9f6f573b3cea4a82c4413e240c918d7ccc8227f8f665a532fe674ecd8a",
+      "preserved": true,
+      "authorizedC04Drift": false
+    }
+  ],
+  "priorReviewedCount": 25,
+  "allEarlierReviewedHashesPreservedExceptOwnedAudioPackage": true,
+  "checks": [
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/audioFingerprint.test.ts",
+      "exitCode": 1,
+      "phase": "meaningful regression before checker correction",
+      "result": "2 failed / 9 passed; v0 and v1 stale became current after allowlist stripped newer source metadata",
+      "log": ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check-red.log"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/audioFingerprint.test.ts tests/audioFoundation.test.ts tests/musicDurationContract.test.ts tests/musicLegacyDurationRepair.test.ts",
+      "exitCode": 0,
+      "result": "4 files / 67 tests passed",
+      "log": ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check-focused-tests.log"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm lint",
+      "exitCode": 0,
+      "result": "tsc -b --pretty false passed",
+      "log": ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check-lint.log"
+    },
+    {
+      "command": "node .trellis/tasks/09-30-src-remediation-c/reviews/C04-check-static.mjs",
+      "exitCode": 0,
+      "result": "0 added diagnostics; all added rules fail this check, including complexity",
+      "log": ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check-static.log"
+    },
+    {
+      "command": "git diff --check -- src/lib/audioProjectPackage.ts src/components/audio/AudioTimeline.tsx src/components/audio/AudioExports.tsx src/lib/audio/fingerprint.ts tests/audioFingerprint.test.ts",
+      "exitCode": 0
+    }
+  ],
+  "static": [
+    {
+      "file": "src/lib/audioProjectPackage.ts",
+      "baselineDiagnostics": 6,
+      "currentDiagnostics": 6,
+      "added": []
+    },
+    {
+      "file": "src/components/audio/AudioTimeline.tsx",
+      "baselineDiagnostics": 8,
+      "currentDiagnostics": 8,
+      "added": []
+    },
+    {
+      "file": "src/components/audio/AudioExports.tsx",
+      "baselineDiagnostics": 0,
+      "currentDiagnostics": 0,
+      "added": []
+    },
+    {
+      "file": "src/lib/audio/fingerprint.ts",
+      "baselineDiagnostics": 0,
+      "currentDiagnostics": 0,
+      "added": []
+    }
+  ],
+  "staticMetrics": {
+    "remapAudioPackage": {
+      "beforeComplexity": 36,
+      "afterComplexity": 36,
+      "beforeCognitiveComplexity": 64,
+      "afterCognitiveComplexity": 64
+    }
+  },
+  "staticNormalization": "Only embedded line N diagnostic locations normalized for multiset matching; raw before/current messages retained.",
+  "corrections": [
+    "Before either outgoing snapshot or inbound package allowlisting, compare recognized fingerprints with source rows retaining all raw take and provenance metadata; make stale sticky without copying future fields into the allowlisted package.",
+    "Replace duplicate-item array reorder assertions with two distinct real take/media/clip rows; retain canonical object order and meaningful source/clip/envelope array order."
+  ],
+  "coverage": [
+    "Full five-file C04 review from entry backups/current and creation/comparison/remap consumers; AudioTimeline and AudioExports handoff hashes unchanged by checker.",
+    "True getAudioProjectSnapshot full sources; project/chapter v0/v1 current and metadata/trim/gain stale after two real ZIP roundtrips; separate name/revision-only stale.",
+    "Deleted chapter scope/title/history and unmapped historical IDs retained; optional missing-job cleanup cannot stale-to-current; unknown/future/malformed strings remain byte-for-byte unknown.",
+    "Outgoing and incoming allowlists retain stale for newer source and nested provenance metadata, both v0/v1; known metadata retained without acoustic projection.",
+    "Minimal v0 recognition, strict v1 recognition, canonical object keys with array order retained; source and export media bytes retrievable."
+  ],
+  "limitations": [
+    "No browser, acoustic decode, playback or render verification; bytes/retrieval only.",
+    "No full suite/build/model gate; batch coordinator owns those.",
+    "Meaningful red is against the implementation handoff before checker correction; no original-entry red run claimed."
+  ],
+  "evidenceHashes": {
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check-red.log": "4f772c854cb9275cbf51269d4f4d710c09eecc5fae30dcacbda54115453ddbe0",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check-focused-tests.log": "efa11a2cbf681baf7062c36cf554fac1d832fd1777e944a6ed767a8308a3443d",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check-lint.log": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check-static.log": "77e540ef8dde76426164432624d531713be701d89a922fe83aefac71cc6c55d4",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check-static.mjs": "300660b381844026f4d2db41a1595c40314d4e1aabd10b385327b75080214fa5",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check-static-before.json": "ae18ede2de7eca20b1d1154ec0eeac60c913f2809b8002c8e785499f27589233",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check-static-current.json": "c9bd22419c71453e7657de1db12b8e1bcd1b5ddf277ce23f1d911daa6fab5023",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C04-check-static-summary.json": "d54a9449cc86c8288ad146e1da2dc20ddf1a91641f81e44090b0078772000ce4",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C04-entry-snapshot.json": "70b2fac2207e25a69b695d6ef9b6625e115b45182dee5fb0a71e0a2c90c6584d",
+    ".trellis/tasks/09-30-src-remediation-c/reviews/C04-implement-snapshot.json": "fb736d68fbb18637a2088e9df4a93a3ec38a219ef049738fe5cc7c6f2044b179"
+  }
+}

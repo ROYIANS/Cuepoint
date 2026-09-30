@@ -1,0 +1,21 @@
+COMMAND ["node", "scripts/c02-browser-regression.mjs"]
+{"baselineUIReady":true,"savedDuration":30.5,"visibleDurationControls":0,"externalRequests":0,"pageErrors":[]}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+[2m  - waiting for getByRole('button', { name: /清除.*时长|修复.*时长/ }) to be visible[22m
+
+    at fixture (/Users/xiaomengdao/WebstormProjects/aifenjing/scripts/c02-browser-regression.mjs:24:18)
+    at async file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/c02-browser-regression.mjs:31:46 {
+  log: [
+    "  - waiting for getByRole('button', { name: /清除.*时长|修复.*时长/ }) to be visible"
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v24.11.0
+
+EXIT_CODE=1

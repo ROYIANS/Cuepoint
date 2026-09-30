@@ -1,0 +1,3 @@
+Current strict C02 source copied to isolated root; only MusicCreation.tsx replaced by git show HEAD:src/components/music/MusicCreation.tsx. Shared source never overwritten.
+Command: /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/musicLegacyDurationRepair.test.ts --root /var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-ui-old-source-5ml5c478
+Final run copies tsconfig.json and tsconfig.node.json too, preserving the JSX transform configuration; final 8-case callback test used. Previous React-undefined bootstrap is not product red.

@@ -1,0 +1,39 @@
+[
+  {
+    "name": "duration-old-red",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "tests/musicDurationContract.test.ts",
+      "--root",
+      "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/c02-check-duration-old-alth4ei8"
+    ],
+    "exitCode": 1,
+    "log": ".trellis/tasks/09-30-src-remediation-c/reviews/C02-check-duration-old-red.log"
+  },
+  {
+    "name": "ui-old-red",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "tests/musicLegacyDurationRepair.test.ts",
+      "--root",
+      "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-ui-old-source-5ml5c478"
+    ],
+    "exitCode": 1,
+    "log": ".trellis/tasks/09-30-src-remediation-c/reviews/C02-check-ui-old-red.log"
+  },
+  {
+    "name": "native-ui-old-red",
+    "command": [
+      "node",
+      "scripts/c02-browser-regression.mjs"
+    ],
+    "exitCode": 1,
+    "log": ".trellis/tasks/09-30-src-remediation-c/reviews/C02-check-native-ui-old-red.log"
+  }
+]

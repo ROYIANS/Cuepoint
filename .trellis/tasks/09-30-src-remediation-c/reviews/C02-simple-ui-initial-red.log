@@ -1,0 +1,102 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/musicLegacyDurationRepair.test.ts (8 tests | 8 failed) 48ms
+   ❯ C02 actual Simple legacy repair callbacks (8)
+     × shows historical duration 30.5 unchanged until explicit action 15ms
+     × shows historical duration 120 unchanged until explicit action 5ms
+     × shows historical duration 9 unchanged until explicit action 4ms
+     × shows historical duration 361 unchanged until explicit action 8ms
+     × keeps ordinary Simple and Custom layouts unchanged and disables repair while switching or busy 4ms
+     × clears only the historical duration, preserves dirty text and saves through the actual debounce/CAS 4ms
+     × retains the cleared local draft and text on write failure, then retries the same draft 4ms
+     × keeps local repair/text and reports CAS conflict instead of overwriting a newer draft 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/musicLegacyDurationRepair.test.ts > C02 actual Simple legacy repair callbacks > shows historical duration 30.5 unchanged until explicit action
+ FAIL  tests/musicLegacyDurationRepair.test.ts > C02 actual Simple legacy repair callbacks > shows historical duration 120 unchanged until explicit action
+ FAIL  tests/musicLegacyDurationRepair.test.ts > C02 actual Simple legacy repair callbacks > shows historical duration 9 unchanged until explicit action
+ FAIL  tests/musicLegacyDurationRepair.test.ts > C02 actual Simple legacy repair callbacks > shows historical duration 361 unchanged until explicit action
+AssertionError: expected undefined to be false // Object.is equality
+
+- Expected:
+false
+
++ Received:
+undefined
+
+ ❯ tests/musicLegacyDurationRepair.test.ts:91:46
+     89|         const row = await fixture(duration), save = vi.spyOn(musicRepo…
+     90|         const tree = draw(row);
+     91|         expect(repair(tree)?.props.disabled).toBe(false);
+       |                                              ^
+     92|         expect(tree.flatMap(node => nodes(node)).some(node => String(n…
+     93|         await vi.advanceTimersByTimeAsync(400);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  tests/musicLegacyDurationRepair.test.ts > C02 actual Simple legacy repair callbacks > keeps ordinary Simple and Custom layouts unchanged and disables repair while switching or busy
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ tests/musicLegacyDurationRepair.test.ts:100:70
+     98|     it("keeps ordinary Simple and Custom layouts unchanged and disable…
+     99|         const row = await fixture();
+    100|         expect(repair(draw(row, {switching: true}))?.props.disabled).t…
+       |                                                                      ^
+    101|         // The first production useState cell is the component's busy …
+    102|         host.cells[0] = true;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  tests/musicLegacyDurationRepair.test.ts > C02 actual Simple legacy repair callbacks > clears only the historical duration, preserves dirty text and saves through the actual debounce/CAS
+AssertionError: expected undefined to be defined
+ ❯ click tests/musicLegacyDurationRepair.test.ts:58:18
+     56| const repair = (tree: Node[]) => tree.find(node => node.props.children…
+     57| function click(node: Node | undefined) {
+     58|     expect(node).toBeDefined();
+       |                  ^
+     59|     (node!.props.onClick as () => void)();
+     60| }
+ ❯ tests/musicLegacyDurationRepair.test.ts:117:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  tests/musicLegacyDurationRepair.test.ts > C02 actual Simple legacy repair callbacks > retains the cleared local draft and text on write failure, then retries the same draft
+AssertionError: expected undefined to be defined
+ ❯ click tests/musicLegacyDurationRepair.test.ts:58:18
+     56| const repair = (tree: Node[]) => tree.find(node => node.props.children…
+     57| function click(node: Node | undefined) {
+     58|     expect(node).toBeDefined();
+       |                  ^
+     59|     (node!.props.onClick as () => void)();
+     60| }
+ ❯ tests/musicLegacyDurationRepair.test.ts:135:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  tests/musicLegacyDurationRepair.test.ts > C02 actual Simple legacy repair callbacks > keeps local repair/text and reports CAS conflict instead of overwriting a newer draft
+AssertionError: expected undefined to be defined
+ ❯ click tests/musicLegacyDurationRepair.test.ts:58:18
+     56| const repair = (tree: Node[]) => tree.find(node => node.props.children…
+     57| function click(node: Node | undefined) {
+     58|     expect(node).toBeDefined();
+       |                  ^
+     59|     (node!.props.onClick as () => void)();
+     60| }
+ ❯ tests/musicLegacyDurationRepair.test.ts:153:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  8 failed (8)
+   Start at  20:34:27
+   Duration  444ms (transform 49%, import 29%, tests 12%, setup 9%)
+

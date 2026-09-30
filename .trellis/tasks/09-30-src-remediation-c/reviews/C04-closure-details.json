@@ -1,0 +1,9 @@
+{
+  "resolution": "三消费者共用v0/v1指纹识别、canonical对象顺序及完整metadata映射；原stale保留，ZIP快照/解析过滤前捕获历史过期，未知串/删除章节历史保持。",
+  "checks": [
+    "4 files /67 tests passed; real ZIP twice/full AudioTake/media bytes",
+    "Typecheck passed",
+    "4 sources static 0 added; new helper 0; prior files unchanged except owned package"
+  ],
+  "progress": "C04 independent PASS：5最终文件hash核验、4files67tests/lint/static0added；checker补schema过滤future source metadata前保留stale的两项回归。SS03关闭，25fixed25pending1inprogress，currentC05。无C提交。"
+}

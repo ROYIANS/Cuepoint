@@ -1,0 +1,18 @@
+FAIL character: router blocks dirty target switch; continue preserves; discard remounts; 2 passed; artifacts: /var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/b01-browser-failure-KujjCy
+visible dialogs/status []
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.inputValue: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for getByRole('textbox', { name: '画面描述 / 提示词' })[22m
+
+    at /Users/xiaomengdao/WebstormProjects/aifenjing/scripts/b01-browser-regression.mjs:117:80
+    at async test (/Users/xiaomengdao/WebstormProjects/aifenjing/scripts/b01-browser-regression.mjs:65:13)
+    at async file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/b01-browser-regression.mjs:109:9 {
+  log: [ "  - waiting for getByRole('textbox', { name: '画面描述 / 提示词' })" ],
+  name: 'TimeoutError'
+}
+
+Node.js v24.11.0

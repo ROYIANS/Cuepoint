@@ -1,0 +1,42 @@
+COMMAND: ["/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm", "test", "tests/agentGenerationEvidence.test.ts", "-t", "provenance across two owned runs"]
+
+> cuepoint@0.1.0 test /Users/xiaomengdao/WebstormProjects/aifenjing
+> vitest run tests/agentGenerationEvidence.test.ts -t 'provenance across two owned runs'
+
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/agentGenerationEvidence.test.ts (81 tests | 1 failed | 79 skipped) 97ms
+   ❯ generation tool history eligibility (42)
+     × checks submit_generation provenance across two owned runs 77ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > checks submit_generation provenance across two owned runs
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/agentGenerationEvidence.test.ts:175:95
+    173|         const ledgerCall = await db.agentToolCalls.get(call.id), ledge…
+    174|         const draft = await startTaskWrapup(task.id, "ai");
+    175|         expect(draft.snapshot.evidence.find(e => e.id === `tool:${call…
+       |                                                                                               ^
+    176|         expect(draft.snapshot.evidence.find(e => e.id === "generation:…
+    177|         const content = {...draft.content, results: [{text: "此调用生成或核实文…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed | 79 skipped (81)
+   Start at  19:57:06
+   Duration  480ms (transform 58%, tests 23%, setup 10%, import 9%)
+
+ ELIFECYCLE  Test failed. See above for more details.
+
+EXIT: 1

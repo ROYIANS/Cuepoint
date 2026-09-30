@@ -1,5 +1,5 @@
 {
-  "status": "product-commits-executed-evidence-commit-pending",
+  "status": "executed",
   "baseRevision": "20b0204c9fab43e1265b94761ee880649be2fca9",
   "commits": [
     {
@@ -305,5 +305,9 @@
       "message": "fix: 校验服务响应和恢复音乐任务",
       "revision": "a5ce45055c2b015ba41a9a890f0bde3425555174"
     }
-  ]
+  ],
+  "executedEvidenceCommit": {
+    "message": "chore: 记录源码整改B验证和后续关口",
+    "revision": "028e60070c14552025a3493e65f032350fdba8b5"
+  }
 }

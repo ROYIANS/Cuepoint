@@ -1,0 +1,172 @@
+{
+  "scope": "C02 implementation: seven production files and two focused tests; main owns three browser files, total scope twelve files; HEAD baseline for previously clean production files",
+  "files": [
+    {
+      "path": "src/domain/music.ts",
+      "owner": "implement",
+      "beforeSha256": "2de36b872009f620cb5c7a0d4a603db339cb151d7938ecd87b6b118cbacd6bfd",
+      "afterSha256": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da"
+    },
+    {
+      "path": "src/db/music.ts",
+      "owner": "implement",
+      "beforeSha256": "8e5f0a9024fdf2088f33589c0f29dbc6d3d56081d48eba1e468079b9b6db6c66",
+      "afterSha256": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54"
+    },
+    {
+      "path": "src/lib/agent/musicTools.ts",
+      "owner": "implement",
+      "beforeSha256": "3fcad6e83c1dd598a90bec73c56d304873ef531c5ae2955d3511a33bb75d0a8f",
+      "afterSha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87"
+    },
+    {
+      "path": "src/lib/audioGeneration/input.ts",
+      "owner": "implement",
+      "beforeSha256": "fa5aa467fcaccee5e91006d1291d92cdfab8ab53b09d4d23ca923f515166d2e2",
+      "afterSha256": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62"
+    },
+    {
+      "path": "src/lib/ai/apimartAudio.ts",
+      "owner": "implement",
+      "beforeSha256": "072ef52ecadf96230346389a22bb14e3f630cc0ac590a9e538abdb0d7caa3611",
+      "afterSha256": "8cb50863b0aab40e1ddfe9b956b938125eba4f170bcd463f2cce24e7e5eb2c59"
+    },
+    {
+      "path": "src/lib/audioProjectPackage.ts",
+      "owner": "implement",
+      "beforeSha256": "3f14040e3545ed08de7778ea2722e6c9f497023ecf7dd3984a6f63bbc50655ca",
+      "afterSha256": "12a0c856dceccf6ce249c1b367e4b3ea0d4f67d315427adfcd57bd1e0d1691bc"
+    },
+    {
+      "path": "src/components/music/MusicCreation.tsx",
+      "owner": "implement",
+      "beforeSha256": "50d329e47704379ecc18471db94df1e0e2c666c0fb0b78c4eed95d69f8a84c18",
+      "afterSha256": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c"
+    },
+    {
+      "path": "tests/musicDurationContract.test.ts",
+      "owner": "implement",
+      "beforeSha256": null,
+      "afterSha256": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399"
+    },
+    {
+      "path": "tests/musicLegacyDurationRepair.test.ts",
+      "owner": "implement",
+      "beforeSha256": null,
+      "afterSha256": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e"
+    }
+  ],
+  "browserFiles": [
+    {
+      "path": "scripts/c02-browser-regression.mjs",
+      "owner": "main",
+      "afterSha256": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+      "mainFinalSha256": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+      "matches": true
+    },
+    {
+      "path": "tests/fixtures/c02/harness.tsx",
+      "owner": "main",
+      "afterSha256": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+      "mainFinalSha256": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+      "matches": true
+    },
+    {
+      "path": "tests/fixtures/c02/index.html",
+      "owner": "main",
+      "afterSha256": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8",
+      "mainFinalSha256": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8",
+      "matches": true
+    }
+  ],
+  "C01ReviewedFiles": [
+    {
+      "path": "src/db/taskGenerationEvidence.ts",
+      "reviewedSha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+      "actualSha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+      "matches": true
+    },
+    {
+      "path": "src/db/agentTaskRecords.ts",
+      "reviewedSha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+      "actualSha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+      "matches": true
+    },
+    {
+      "path": "src/lib/agent/wrapupEvidence.ts",
+      "reviewedSha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "actualSha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "matches": true
+    },
+    {
+      "path": "tests/agentGenerationEvidence.test.ts",
+      "reviewedSha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+      "actualSha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+      "matches": true
+    },
+    {
+      "path": "tests/agentTaskWrapup.test.ts",
+      "reviewedSha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+      "actualSha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+      "matches": true
+    },
+    {
+      "path": "tests/agentTaskOrchestrationReview.test.ts",
+      "reviewedSha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+      "actualSha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+      "matches": true
+    },
+    {
+      "path": "scripts/c01-browser-regression.mjs",
+      "reviewedSha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+      "actualSha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+      "matches": true
+    },
+    {
+      "path": "tests/fixtures/c01/harness.ts",
+      "reviewedSha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+      "actualSha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+      "matches": true
+    },
+    {
+      "path": "tests/fixtures/c01/index.html",
+      "reviewedSha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+      "actualSha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+      "matches": true
+    }
+  ],
+  "validation": {
+    "vitest": {
+      "files": 12,
+      "tests": 248,
+      "passed": 248,
+      "log": "reviews/C02-vitest-final.log"
+    },
+    "durationOldSourceRed": {
+      "tests": 38,
+      "failed": 13,
+      "passed": 25,
+      "log": "reviews/C02-isolated-red.log"
+    },
+    "uiOldSourceRed": {
+      "tests": 8,
+      "failed": 8,
+      "log": "reviews/C02-simple-ui-red.log"
+    },
+    "lint": {
+      "exitCode": 0,
+      "log": "reviews/C02-lint-final.log"
+    },
+    "static": {
+      "addedDiagnostics": 0,
+      "log": "reviews/C02-static-final.log"
+    },
+    "nativeBrowser": {
+      "cases": 3,
+      "passed": 3,
+      "externalRequests": 0,
+      "log": "reviews/C02-browser-implement-final.log"
+    },
+    "totalReviewScopeFiles": 12
+  }
+}

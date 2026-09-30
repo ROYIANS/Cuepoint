@@ -1,0 +1,622 @@
+
+> cuepoint@0.1.0 test /private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/c01-baseline-phz_tbxx
+> vitest run tests/agentGenerationEvidence.test.ts
+
+
+ RUN  v5.0.1 /private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/c01-baseline-phz_tbxx
+
+ ❯ tests/agentGenerationEvidence.test.ts (79 tests | 61 failed) 1338ms
+   ❯ current image/video evidence at record and wrapup boundaries (39)
+     × rejects image missing outputs, preserving historical ledger 46ms
+     × rejects image empty outputs, preserving historical ledger 29ms
+     × rejects image foreign outputs, preserving historical ledger 25ms
+     × rejects image mime outputs, preserving historical ledger 35ms
+     × rejects image mime-subtype outputs, preserving historical ledger 23ms
+     × rejects image not-blob outputs, preserving historical ledger 21ms
+     × rejects image result-kind outputs, preserving historical ledger 25ms
+     × rejects image target-owner outputs, preserving historical ledger 22ms
+     × rejects image no-result outputs, preserving historical ledger 29ms
+     × rejects image failed outputs, preserving historical ledger 21ms
+     × rejects image unknown outputs, preserving historical ledger 19ms
+     × rejects image running outputs, preserving historical ledger 21ms
+     × rejects image downloading outputs, preserving historical ledger 25ms
+     × rejects image remote_completed outputs, preserving historical ledger 35ms
+     × rejects video missing outputs, preserving historical ledger 76ms
+     × rejects video empty outputs, preserving historical ledger 41ms
+     × rejects video foreign outputs, preserving historical ledger 20ms
+     × rejects video mime outputs, preserving historical ledger 16ms
+     × rejects video mime-subtype outputs, preserving historical ledger 16ms
+     × rejects video not-blob outputs, preserving historical ledger 18ms
+     × rejects video result-kind outputs, preserving historical ledger 20ms
+     × rejects video target-owner outputs, preserving historical ledger 18ms
+     × rejects video no-result outputs, preserving historical ledger 35ms
+     × rejects video failed outputs, preserving historical ledger 27ms
+     × rejects video unknown outputs, preserving historical ledger 23ms
+     × rejects video running outputs, preserving historical ledger 22ms
+     × rejects video downloading outputs, preserving historical ledger 29ms
+     × rejects video remote_completed outputs, preserving historical ledger 21ms
+     × retains independent downloaded file after illegal-slot, without inventing application 11ms
+     × retains independent downloaded file after slot-kind, without inventing application 10ms
+   ❯ generation tool history eligibility (40)
+     × never promotes rejected call with applied old output 7ms
+     × never promotes rejected call with downloaded old output 11ms
+     × never promotes failed call with applied old output 10ms
+     × never promotes failed call with downloaded old output 7ms
+     × never promotes unknown call with applied old output 7ms
+     × never promotes unknown call with downloaded old output 7ms
+     × never promotes pending call with applied old output 6ms
+     × never promotes pending call with downloaded old output 7ms
+     × never promotes awaiting_approval call with applied old output 7ms
+     × never promotes awaiting_approval call with downloaded old output 6ms
+     × never promotes approved call with applied old output 7ms
+     × never promotes approved call with downloaded old output 9ms
+     × never promotes running call with applied old output 6ms
+     × never promotes running call with downloaded old output 8ms
+     × does not certify completed non-generation calls via old job 7ms
+     × does not certify completed remote-failed calls via old job 6ms
+     × does not certify completed apply-conflict calls via old job 9ms
+     × does not certify completed wrong-job calls via old job 6ms
+     × does not certify completed wrong-media calls via old job 6ms
+     × does not certify completed wrong-kind calls via old job 8ms
+     × does not certify completed wrong-args calls via old job 6ms
+     × does not certify completed no-result calls via old job 7ms
+     × does not certify completed foreign-job calls via old job 7ms
+     × does not certify completed ok-false calls via old job 7ms
+     × does not certify completed success-false calls via old job 11ms
+     × preserves completed non-generation write facts even when they mention an old job 8ms
+     × rejects foreign batch-owner provenance without breaking source inventory 7ms
+     × rejects foreign batch-project provenance without breaking source inventory 6ms
+     × rejects foreign run-project provenance without breaking source inventory 6ms
+     × marks a downloaded job snapshot stale when its owning run becomes foreign, even without tool evidence 8ms
+     × verifies a completed submit's own job and keeps tool body historical 7ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 61 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects image missing outputs, preserving historical ledger
+AssertionError: promise resolved "{ kind: 'verification', …(11) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "author": "ai",
++   "body": "交付",
++   "claim": "result",
++   "createdAt": "2026-09-30T11:41:44.362Z",
++   "id": "trec_700feaad-4f5d-46ee-bec2-ab832202f779",
++   "kind": "verification",
++   "revision": 1,
++   "runId": undefined,
++   "sources": [
++     {
++       "id": "check",
++       "type": "tool",
++     },
++   ],
++   "taskId": "task_5a481ab4-40d5-4757-989f-6ae1fd6f8e28",
++   "title": "成果",
++   "updatedAt": "2026-09-30T11:41:44.362Z",
+  }
+
+ ❯ tests/agentGenerationEvidence.test.ts:85:187
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/61]⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects image empty outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects image foreign outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects image mime outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects image failed outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects image unknown outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects image running outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects image downloading outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects image remote_completed outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects video empty outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects video foreign outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects video mime outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects video failed outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects video unknown outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects video running outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects video downloading outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects video remote_completed outputs, preserving historical ledger
+AssertionError: expected { id: 'generation:job', …(8) } to match object { available: false, …(2) }
+(6 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "available": false,
+-   "outcome": "unresolved",
+-   "supportsResult": false,
++   "available": true,
++   "outcome": "applied",
++   "supportsResult": true,
+  }
+
+ ❯ tests/agentGenerationEvidence.test.ts:79:68
+     77|         const draft = await startTaskWrapup(task.id, "ai");
+     78|         for (const id of ["generation:job", "tool:check"]) {
+     79|             expect(draft.snapshot.evidence.find(e => e.id === id)).toM…
+       |                                                                    ^
+     80|             const content = {...draft.content, results: [{text: "交付成果"…
+     81|             expect(() => validateWrapupContent(content, draft.snapshot…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/61]⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects image mime-subtype outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects image not-blob outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects image result-kind outputs, preserving historical ledger
+AssertionError: expected { id: 'job', batchId: 'batch', …(7) } to match object { available: false, …(2) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "applied": false,
+-   "available": false,
+-   "supportsResult": false,
++   "applied": true,
++   "available": true,
++   "supportsResult": true,
+  }
+
+ ❯ tests/agentGenerationEvidence.test.ts:76:58
+     74|         else await db.agentGenerationJobs.update(job.id, {status: faul…
+     75|         const historicalJob = await db.agentGenerationJobs.get(job.id);
+     76|         expect(await taskGenerationSource(task, job.id)).toMatchObject…
+       |                                                          ^
+     77|         const draft = await startTaskWrapup(task.id, "ai");
+     78|         for (const id of ["generation:job", "tool:check"]) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/61]⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects image target-owner outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects video target-owner outputs, preserving historical ledger
+AssertionError: expected { id: 'job', batchId: 'batch', …(7) } to match object { available: false, …(2) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "applied": false,
+-   "available": false,
+-   "supportsResult": false,
++   "available": true,
++   "supportsResult": true,
+  }
+
+ ❯ tests/agentGenerationEvidence.test.ts:76:58
+     74|         else await db.agentGenerationJobs.update(job.id, {status: faul…
+     75|         const historicalJob = await db.agentGenerationJobs.get(job.id);
+     76|         expect(await taskGenerationSource(task, job.id)).toMatchObject…
+       |                                                          ^
+     77|         const draft = await startTaskWrapup(task.id, "ai");
+     78|         for (const id of ["generation:job", "tool:check"]) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/61]⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects image no-result outputs, preserving historical ledger
+AssertionError: promise resolved "{ kind: 'verification', …(11) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "author": "ai",
++   "body": "交付",
++   "claim": "result",
++   "createdAt": "2026-09-30T11:41:44.580Z",
++   "id": "trec_81c239f4-cc02-48d0-8b1c-58dbc08bc4bd",
++   "kind": "verification",
++   "revision": 1,
++   "runId": undefined,
++   "sources": [
++     {
++       "id": "check",
++       "type": "tool",
++     },
++   ],
++   "taskId": "task_d620f43e-5962-496a-af11-4849c6a503ee",
++   "title": "成果",
++   "updatedAt": "2026-09-30T11:41:44.580Z",
+  }
+
+ ❯ tests/agentGenerationEvidence.test.ts:85:187
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/61]⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects video missing outputs, preserving historical ledger
+AssertionError: promise resolved "{ kind: 'verification', …(11) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "author": "ai",
++   "body": "交付",
++   "claim": "result",
++   "createdAt": "2026-09-30T11:41:44.776Z",
++   "id": "trec_bb1c5662-ca25-4760-841a-a5196045c1d6",
++   "kind": "verification",
++   "revision": 1,
++   "runId": undefined,
++   "sources": [
++     {
++       "id": "check",
++       "type": "tool",
++     },
++   ],
++   "taskId": "task_faed94e4-9b9a-442e-a1af-c55a1ee10256",
++   "title": "成果",
++   "updatedAt": "2026-09-30T11:41:44.776Z",
+  }
+
+ ❯ tests/agentGenerationEvidence.test.ts:85:187
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/61]⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects video mime-subtype outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects video not-blob outputs, preserving historical ledger
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects video result-kind outputs, preserving historical ledger
+AssertionError: expected { id: 'job', batchId: 'batch', …(7) } to match object { available: false, …(2) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "applied": false,
+-   "available": false,
+-   "supportsResult": false,
++   "applied": true,
++   "available": true,
++   "supportsResult": true,
+  }
+
+ ❯ tests/agentGenerationEvidence.test.ts:76:58
+     74|         else await db.agentGenerationJobs.update(job.id, {status: faul…
+     75|         const historicalJob = await db.agentGenerationJobs.get(job.id);
+     76|         expect(await taskGenerationSource(task, job.id)).toMatchObject…
+       |                                                          ^
+     77|         const draft = await startTaskWrapup(task.id, "ai");
+     78|         for (const id of ["generation:job", "tool:check"]) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/61]⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > rejects video no-result outputs, preserving historical ledger
+AssertionError: promise resolved "{ kind: 'verification', …(11) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "author": "ai",
++   "body": "交付",
++   "claim": "result",
++   "createdAt": "2026-09-30T11:41:44.961Z",
++   "id": "trec_cab11681-d586-49e8-aa82-3f0d766c33a1",
++   "kind": "verification",
++   "revision": 1,
++   "runId": undefined,
++   "sources": [
++     {
++       "id": "check",
++       "type": "tool",
++     },
++   ],
++   "taskId": "task_1b1a2717-78d3-43c8-a5f8-99483ca77310",
++   "title": "成果",
++   "updatedAt": "2026-09-30T11:41:44.961Z",
+  }
+
+ ❯ tests/agentGenerationEvidence.test.ts:85:187
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/61]⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > retains independent downloaded file after illegal-slot, without inventing application
+AssertionError: expected { id: 'job', batchId: 'batch', …(7) } to match object { available: true, …(2) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "applied": false,
++   "applied": true,
+    "available": true,
+    "supportsResult": true,
+  }
+
+ ❯ tests/agentGenerationEvidence.test.ts:107:58
+    105|         }
+    106|         if (fault === "slot-kind") await db.shots.update(shot.id, {cli…
+    107|         expect(await taskGenerationSource(task, job.id)).toMatchObject…
+       |                                                          ^
+    108|         const state = await getTaskWrapupState(task.id);
+    109|         expect(state.currentEvidence.find(e => e.id === "generation:jo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/61]⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > current image/video evidence at record and wrapup boundaries > retains independent downloaded file after slot-kind, without inventing application
+AssertionError: expected { id: 'job', batchId: 'batch', …(7) } to match object { available: true, …(2) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "applied": false,
++   "applied": true,
+    "available": true,
+    "supportsResult": true,
+  }
+
+ ❯ tests/agentGenerationEvidence.test.ts:107:58
+    105|         }
+    106|         if (fault === "slot-kind") await db.shots.update(shot.id, {cli…
+    107|         expect(await taskGenerationSource(task, job.id)).toMatchObject…
+       |                                                          ^
+    108|         const state = await getTaskWrapupState(task.id);
+    109|         expect(state.currentEvidence.find(e => e.id === "generation:jo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/61]⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > never promotes rejected call with applied old output
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > never promotes failed call with applied old output
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > never promotes unknown call with applied old output
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > never promotes pending call with applied old output
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > never promotes awaiting_approval call with applied old output
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > never promotes approved call with applied old output
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > never promotes running call with applied old output
+AssertionError: expected { Object (id, kind, ...) } to match object { outcome: 'unresolved', …(1) }
+(6 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "outcome": "unresolved",
+-   "supportsResult": false,
++   "outcome": "applied",
++   "supportsResult": true,
+  }
+
+ ❯ tests/agentGenerationEvidence.test.ts:129:74
+    127|         const ledger = await db.agentToolCalls.get(call.id);
+    128|         const draft = await startTaskWrapup(task.id, "ai");
+    129|         expect(draft.snapshot.evidence.find(e => e.id === "tool:check"…
+       |                                                                          ^
+    130|         await expect(publishTaskWrapup(draft.id, {...draft.content, re…
+    131|         expect(draft.snapshot.evidence.find(e => e.id === "generation:…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/61]⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > never promotes rejected call with downloaded old output
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > never promotes failed call with downloaded old output
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > never promotes unknown call with downloaded old output
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > never promotes pending call with downloaded old output
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > never promotes awaiting_approval call with downloaded old output
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > never promotes approved call with downloaded old output
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > never promotes running call with downloaded old output
+AssertionError: expected { Object (id, kind, ...) } to match object { outcome: 'unresolved', …(1) }
+(6 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "outcome": "unresolved",
+-   "supportsResult": false,
++   "outcome": "downloaded",
++   "supportsResult": true,
+  }
+
+ ❯ tests/agentGenerationEvidence.test.ts:129:74
+    127|         const ledger = await db.agentToolCalls.get(call.id);
+    128|         const draft = await startTaskWrapup(task.id, "ai");
+    129|         expect(draft.snapshot.evidence.find(e => e.id === "tool:check"…
+       |                                                                          ^
+    130|         await expect(publishTaskWrapup(draft.id, {...draft.content, re…
+    131|         expect(draft.snapshot.evidence.find(e => e.id === "generation:…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/61]⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > does not certify completed non-generation calls via old job
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > does not certify completed remote-failed calls via old job
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > does not certify completed apply-conflict calls via old job
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > does not certify completed wrong-job calls via old job
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > does not certify completed wrong-media calls via old job
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > does not certify completed wrong-kind calls via old job
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > does not certify completed wrong-args calls via old job
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > does not certify completed no-result calls via old job
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > does not certify completed foreign-job calls via old job
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > does not certify completed ok-false calls via old job
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > does not certify completed success-false calls via old job
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/agentGenerationEvidence.test.ts:151:90
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/61]⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > preserves completed non-generation write facts even when they mention an old job
+AssertionError: expected { id: 'tool:submit', …(7) } to match object { available: true, …(2) }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "available": true,
+-   "outcome": "fact",
+-   "supportsResult": true,
++   "available": false,
++   "outcome": "unresolved",
++   "supportsResult": false,
+  }
+
+ ❯ tests/agentGenerationEvidence.test.ts:169:103
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/61]⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > rejects foreign batch-owner provenance without breaking source inventory
+AssertionError: expected { id: 'generation:job', …(8) } to match object { supportsResult: false, …(1) }
+(7 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "outcome": "unresolved",
+-   "supportsResult": false,
++   "outcome": "applied",
++   "supportsResult": true,
+  }
+
+ ❯ tests/agentGenerationEvidence.test.ts:182:113
+    180|         expect(await listTaskGenerationSources(task)).toEqual([]);
+    181|         const state = await getTaskWrapupState(task.id);
+    182|         for (const id of ["generation:job", "tool:check"]) expect(stat…
+       |                                                                                                                 ^
+    183|     });
+    184|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/61]⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > rejects foreign batch-project provenance without breaking source inventory
+AssertionError: promise resolved "{ id: 'job', batchId: 'batch', …(7) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "applied": true,
++   "available": true,
++   "batchId": "batch",
++   "body": "{\"jobId\":\"job\",\"batchId\":\"batch\",\"status\":\"applied\",\"target\":{\"kind\":\"character\",\"projectId\":\"prj_0dde9049-64f2-4c21-ac63-f563c1f98d35\",\"entityId\":\"chr_14d8b110-2c70-4115-ac83-0ca4001ee3d5\",\"slot\":\"front\"},\"result\":{\"kind\":\"image\",\"mediaId\":\"output\"},\"available\":true,\"applied\":true}",
++   "id": "job",
++   "label": "图片 · model",
++   "result": {
++     "kind": "image",
++     "mediaId": "output",
++   },
++   "status": "applied",
++   "supportsResult": true,
+  }
+
+ ❯ tests/agentGenerationEvidence.test.ts:179:56
+    177|         if (fault === "batch-project") await db.agentGenerationBatches…
+    178|         if (fault === "run-project") await db.agentRuns.update(run.id,…
+    179|         await expect(taskGenerationSource(task, job.id)).rejects.toThr…
+       |                                                        ^
+    180|         expect(await listTaskGenerationSources(task)).toEqual([]);
+    181|         const state = await getTaskWrapupState(task.id);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/61]⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > rejects foreign run-project provenance without breaking source inventory
+AssertionError: promise resolved "{ id: 'job', batchId: 'batch', …(7) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "applied": true,
++   "available": true,
++   "batchId": "batch",
++   "body": "{\"jobId\":\"job\",\"batchId\":\"batch\",\"status\":\"applied\",\"target\":{\"kind\":\"character\",\"projectId\":\"prj_df5f150a-a993-437d-8921-5eed855b6652\",\"entityId\":\"chr_c291d126-634e-4f8c-8b8b-7fbeab050588\",\"slot\":\"front\"},\"result\":{\"kind\":\"image\",\"mediaId\":\"output\"},\"available\":true,\"applied\":true}",
++   "id": "job",
++   "label": "图片 · model",
++   "result": {
++     "kind": "image",
++     "mediaId": "output",
++   },
++   "status": "applied",
++   "supportsResult": true,
+  }
+
+ ❯ tests/agentGenerationEvidence.test.ts:179:56
+    177|         if (fault === "batch-project") await db.agentGenerationBatches…
+    178|         if (fault === "run-project") await db.agentRuns.update(run.id,…
+    179|         await expect(taskGenerationSource(task, job.id)).rejects.toThr…
+       |                                                        ^
+    180|         expect(await listTaskGenerationSources(task)).toEqual([]);
+    181|         const state = await getTaskWrapupState(task.id);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/61]⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > marks a downloaded job snapshot stale when its owning run becomes foreign, even without tool evidence
+AssertionError: expected { id: 'generation:job', …(8) } to match object { available: false, …(1) }
+(7 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "available": false,
+-   "supportsResult": false,
++   "available": true,
++   "supportsResult": true,
+  }
+
+ ❯ tests/agentGenerationEvidence.test.ts:194:76
+    192|         await db.agentRuns.update(run.id, {projectId: "foreign"});
+    193|         const state = await getTaskWrapupState(task.id);
+    194|         expect(state.currentEvidence.find(e => e.id === "generation:jo…
+       |                                                                            ^
+    195|         expect(state.stale).toBe(true);
+    196|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/61]⎯
+
+ FAIL  tests/agentGenerationEvidence.test.ts > generation tool history eligibility > verifies a completed submit's own job and keeps tool body historical
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/agentGenerationEvidence.test.ts:208:129
+    206|         expect(await db.agentToolCalls.get(submit.id)).toEqual(submit);
+    207|         await db.agentToolCalls.add({...submit, id: "unrelated-submit"…
+    208|         expect((await getTaskWrapupState(task.id)).currentEvidence.fin…
+       |                                                                                                                                 ^
+    209|     });
+    210| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/61]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  61 failed | 18 passed (79)
+   Start at  19:41:43
+   Duration  2.44s (tests 58%, transform 36%, setup 3%, import 3%)
+
+ ELIFECYCLE  Test failed. See above for more details.

@@ -1,0 +1,29 @@
+{
+  "files": 379,
+  "edges": 2233,
+  "parseErrors": 0,
+  "staticValueCycles": [
+    [
+      "src/db/agentTaskRecords.ts",
+      "src/db/agentTaskWrapups.ts",
+      "src/db/agentTasks.ts",
+      "src/lib/agent/wrapupEvidence.ts"
+    ],
+    [
+      "src/db/agentTools.ts",
+      "src/lib/agent/toolLoading.ts"
+    ],
+    [
+      "src/db/agentGenerationBatches.ts",
+      "src/lib/agent/generationRuntime.ts"
+    ]
+  ],
+  "totals": {
+    "anyKeywords": 46,
+    "typeAssertions": 472,
+    "nonNullAssertions": 209,
+    "nestedTernaries": 449,
+    "emptyCatches": 16,
+    "dynamicImports": 8
+  }
+}

@@ -1,0 +1,502 @@
+{
+  "limitation": "Static direct identifier/namespace calls and namespace function references; computed references and payload builders require manual follow-up",
+  "calls": [
+    {
+      "file": "src/components/assets/CharacterDetailPage.tsx",
+      "line": 99,
+      "name": "patchCharacter",
+      "from": "@/db/repo",
+      "args": [
+        "character.id",
+        "{name: value}",
+        "{name: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/CharacterDetailPage.tsx",
+      "line": 107,
+      "name": "patchCharacter",
+      "from": "@/db/repo",
+      "args": [
+        "character.id",
+        "{bio: value}",
+        "{bio: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/CharacterDetailPage.tsx",
+      "line": 116,
+      "name": "patchCharacter",
+      "from": "@/db/repo",
+      "args": [
+        "character.id",
+        "{appearance: value}",
+        "{appearance: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/CharacterDetailPage.tsx",
+      "line": 125,
+      "name": "patchCharacter",
+      "from": "@/db/repo",
+      "args": [
+        "character.id",
+        "{notes: value}",
+        "{notes: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/CharacterDetailPage.tsx",
+      "line": 138,
+      "name": "patchCharacter",
+      "from": "@/db/repo",
+      "args": [
+        "character.id",
+        "{personality: value}",
+        "{personality: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/CharacterDetailPage.tsx",
+      "line": 148,
+      "name": "patchCharacter",
+      "from": "@/db/repo",
+      "args": [
+        "character.id",
+        "{motivation: value}",
+        "{motivation: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/CharacterDetailPage.tsx",
+      "line": 158,
+      "name": "patchCharacter",
+      "from": "@/db/repo",
+      "args": [
+        "character.id",
+        "{voice: value}",
+        "{voice: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/PropDetailPage.tsx",
+      "line": 107,
+      "name": "patchProp",
+      "from": "@/db/repo",
+      "args": [
+        "prop.id",
+        "{name: value}",
+        "{name: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/PropDetailPage.tsx",
+      "line": 115,
+      "name": "patchProp",
+      "from": "@/db/repo",
+      "args": [
+        "prop.id",
+        "{kind: value}",
+        "{kind: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/PropDetailPage.tsx",
+      "line": 124,
+      "name": "patchProp",
+      "from": "@/db/repo",
+      "args": [
+        "prop.id",
+        "{notes: value}",
+        "{notes: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/PropDetailPage.tsx",
+      "line": 137,
+      "name": "patchProp",
+      "from": "@/db/repo",
+      "args": [
+        "prop.id",
+        "{appearance: value}",
+        "{appearance: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/PropDetailPage.tsx",
+      "line": 147,
+      "name": "patchProp",
+      "from": "@/db/repo",
+      "args": [
+        "prop.id",
+        "{material: value}",
+        "{material: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/PropDetailPage.tsx",
+      "line": 157,
+      "name": "patchProp",
+      "from": "@/db/repo",
+      "args": [
+        "prop.id",
+        "{size: value}",
+        "{size: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/PropDetailPage.tsx",
+      "line": 167,
+      "name": "patchProp",
+      "from": "@/db/repo",
+      "args": [
+        "prop.id",
+        "{usage: value}",
+        "{usage: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/PropDetailPage.tsx",
+      "line": 177,
+      "name": "patchProp",
+      "from": "@/db/repo",
+      "args": [
+        "prop.id",
+        "{continuity: value}",
+        "{continuity: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/SceneDetailPage.tsx",
+      "line": 107,
+      "name": "patchScene",
+      "from": "@/db/repo",
+      "args": [
+        "scene.id",
+        "{name: value}",
+        "{name: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/SceneDetailPage.tsx",
+      "line": 115,
+      "name": "patchScene",
+      "from": "@/db/repo",
+      "args": [
+        "scene.id",
+        "{location: value}",
+        "{location: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/SceneDetailPage.tsx",
+      "line": 123,
+      "name": "patchScene",
+      "from": "@/db/repo",
+      "args": [
+        "scene.id",
+        "{timeOfDay: value}",
+        "{timeOfDay: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/SceneDetailPage.tsx",
+      "line": 132,
+      "name": "patchScene",
+      "from": "@/db/repo",
+      "args": [
+        "scene.id",
+        "{atmosphere: value}",
+        "{atmosphere: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/SceneDetailPage.tsx",
+      "line": 140,
+      "name": "patchScene",
+      "from": "@/db/repo",
+      "args": [
+        "scene.id",
+        "{notes: value}",
+        "{notes: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/SceneDetailPage.tsx",
+      "line": 153,
+      "name": "patchScene",
+      "from": "@/db/repo",
+      "args": [
+        "scene.id",
+        "{geography: value}",
+        "{geography: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/SceneDetailPage.tsx",
+      "line": 163,
+      "name": "patchScene",
+      "from": "@/db/repo",
+      "args": [
+        "scene.id",
+        "{lighting: value}",
+        "{lighting: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/StyleDetailPage.tsx",
+      "line": 107,
+      "name": "patchStyle",
+      "from": "@/db/repo",
+      "args": [
+        "style.id",
+        "{name: value}",
+        "{name: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/StyleDetailPage.tsx",
+      "line": 115,
+      "name": "patchStyle",
+      "from": "@/db/repo",
+      "args": [
+        "style.id",
+        "{notes: value}",
+        "{notes: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/StyleDetailPage.tsx",
+      "line": 129,
+      "name": "patchStyle",
+      "from": "@/db/repo",
+      "args": [
+        "style.id",
+        "{palette: value}",
+        "{palette: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/StyleDetailPage.tsx",
+      "line": 139,
+      "name": "patchStyle",
+      "from": "@/db/repo",
+      "args": [
+        "style.id",
+        "{lighting: value}",
+        "{lighting: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/StyleDetailPage.tsx",
+      "line": 149,
+      "name": "patchStyle",
+      "from": "@/db/repo",
+      "args": [
+        "style.id",
+        "{lens: value}",
+        "{lens: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/StyleDetailPage.tsx",
+      "line": 159,
+      "name": "patchStyle",
+      "from": "@/db/repo",
+      "args": [
+        "style.id",
+        "{composition: value}",
+        "{composition: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/assets/StyleDetailPage.tsx",
+      "line": 169,
+      "name": "patchStyle",
+      "from": "@/db/repo",
+      "args": [
+        "style.id",
+        "{negativePrompt: value}",
+        "{negativePrompt: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/shots/DurationInput.tsx",
+      "line": 13,
+      "name": "patchShot",
+      "from": "@/db/repo",
+      "args": [
+        "shotId",
+        "{durationSec}",
+        "{durationSec: baseline}"
+      ]
+    },
+    {
+      "file": "src/components/shots/ShotEditorPage.tsx",
+      "line": 1700,
+      "name": "patchShot",
+      "from": "@/db/repo",
+      "args": [
+        "shot.id",
+        "{shotNumber: event.target.value}"
+      ]
+    },
+    {
+      "file": "src/components/shots/ShotEditorPage.tsx",
+      "line": 1711,
+      "name": "patchShot",
+      "from": "@/db/repo",
+      "args": [
+        "shot.id",
+        "{status: normalizeShotStatus(value)}"
+      ]
+    },
+    {
+      "file": "src/components/shots/ShotEditorPage.tsx",
+      "line": 1773,
+      "name": "patchShot",
+      "from": "@/db/repo",
+      "args": [
+        "shot.id",
+        "{content}"
+      ]
+    },
+    {
+      "file": "src/components/shots/ShotEditorPage.tsx",
+      "line": 1848,
+      "name": "patchShot",
+      "from": "@/db/repo",
+      "args": [
+        "shot.id",
+        "{characterIds: []}"
+      ]
+    },
+    {
+      "file": "src/components/shots/ShotEditorPage.tsx",
+      "line": 1884,
+      "name": "patchShot",
+      "from": "@/db/repo",
+      "args": [
+        "shot.id",
+        "{\n                                            sceneId: value === \"none\" ? undefined : value,\n                                        }"
+      ]
+    },
+    {
+      "file": "src/components/shots/ShotEditorPage.tsx",
+      "line": 1935,
+      "name": "patchShot",
+      "from": "@/db/repo",
+      "args": [
+        "shot.id",
+        "{[column.id]: value} as Partial<Shot>"
+      ]
+    },
+    {
+      "file": "src/components/shots/ShotEditorPage.tsx",
+      "line": 1984,
+      "name": "patchShot",
+      "from": "@/db/repo",
+      "args": [
+        "shot.id",
+        "patch"
+      ]
+    },
+    {
+      "file": "src/components/workspace/WorkspaceChrome.tsx",
+      "line": 156,
+      "name": "patchProjectOutput",
+      "from": "@/db/repo",
+      "args": [
+        "projectId",
+        "{coverMediaId: uploaded.id}"
+      ]
+    },
+    {
+      "file": "src/components/workspace/WorkspaceChrome.tsx",
+      "line": 164,
+      "name": "patchProjectOutput",
+      "from": "@/db/repo",
+      "args": [
+        "projectId",
+        "{coverMediaId: null}"
+      ]
+    },
+    {
+      "file": "src/db/productionProposals.ts",
+      "line": 164,
+      "name": "patchShot",
+      "from": "./repo",
+      "args": [
+        "target.entityId",
+        "patch"
+      ]
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "line": 482,
+      "name": "patchProjectOutput",
+      "from": "@/db/repo",
+      "args": [
+        "id",
+        "{coverMediaId}"
+      ],
+      "namespace": true
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "line": 581,
+      "name": "patchShot",
+      "from": "@/db/repo",
+      "args": [
+        "row.id",
+        "shotPatch(args.fields)"
+      ],
+      "namespace": true
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "line": 589,
+      "name": "patchShot",
+      "from": "@/db/repo",
+      "args": [
+        "args.id",
+        "shotPatch(args.patch)"
+      ],
+      "namespace": true
+    }
+  ],
+  "functionReferences": [
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "line": 604,
+      "name": "patchCharacter",
+      "from": "@/db/repo",
+      "expression": "repo.patchCharacter",
+      "context": "patch: repo.patchCharacter"
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "line": 608,
+      "name": "patchScene",
+      "from": "@/db/repo",
+      "expression": "repo.patchScene",
+      "context": "patch: repo.patchScene"
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "line": 609,
+      "name": "patchProp",
+      "from": "@/db/repo",
+      "expression": "repo.patchProp",
+      "context": "patch: repo.patchProp"
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "line": 610,
+      "name": "patchStyle",
+      "from": "@/db/repo",
+      "expression": "repo.patchStyle",
+      "context": "patch: repo.patchStyle"
+    }
+  ]
+}

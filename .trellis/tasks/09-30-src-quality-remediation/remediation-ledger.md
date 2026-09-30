@@ -17,12 +17,12 @@
 | B05 | 音乐任务ID与取消恢复 | PM-03, PM-04, PM-06 | 验证完成 | [B05复核](../09-30-src-remediation-b/reviews/B05-check.md) |
 | B06 | 异步连接与文件导入会话 | SS-07, PU-07 | 验证完成 | [B06复核](../09-30-src-remediation-b/reviews/B06-check.md) |
 | B07 | 主题文本与附件草稿作用域 | AU-10 | 验证完成 | [B07复核](../09-30-src-remediation-b/reviews/B07-check.md) |
-| C01 | 当前成果与调用账本区分 | AR-01, AR-02 | 待处理 | — |
-| C02 | 音乐草稿生成参数一致性 | AR-03 | 待处理 | — |
-| C03 | 父项目和现代包外键不变量 | PD-01, SS-04 | 待处理 | — |
-| C04 | 音频包成品标识重映射 | SS-03 | 待处理 | — |
-| C05 | 收窄宽patch媒体入口 | PD-03 | 待处理 | — |
-| C06 | 入站读取资源边界 | PM-05 | 待处理 | — |
+| C01 | 当前成果与调用账本区分 | AR-01, AR-02 | 验证完成 | [C01复核](../09-30-src-remediation-c/reviews/C01-check.md) |
+| C02 | 音乐草稿生成参数一致性 | AR-03 | 验证完成 | [C02复核](../09-30-src-remediation-c/reviews/C02-check.md) |
+| C03 | 父项目和现代包外键不变量 | PD-01, SS-04 | 验证完成 | [C03复核](../09-30-src-remediation-c/reviews/C03-check.md) |
+| C04 | 音频包成品标识重映射 | SS-03 | 验证完成 | [C04复核](../09-30-src-remediation-c/reviews/C04-check.md) |
+| C05 | 收窄宽patch媒体入口 | PD-03 | 验证完成 | [C05复核](../09-30-src-remediation-c/reviews/C05-check.md) |
+| C06 | 入站读取资源边界 | PM-05 | 验证完成 | [C06复核](../09-30-src-remediation-c/reviews/C06-check.md) |
 | D01 | 解除八文件值依赖环 | AR-04, PD-04 | 待处理 | — |
 | D02 | 按业务分解综合repository | PD-05 | 待处理 | — |
 | D03 | 页面编排与共享能力职责 | PU-08, SS-08, AU-08 | 待处理 | — |
@@ -39,7 +39,7 @@
 | E06 | 富消息和图标加载优化 | AU-09 | 待处理 | — |
 | E07 | 收窄未用出口和控件 | PD-08, SS-10 | 待处理 | — |
 
-下一未完成单元：C01。
+下一未完成单元：D01。
 
 ## 用户示例与附加整理
 

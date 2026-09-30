@@ -1,0 +1,26 @@
+[
+  {
+    "file": "src/lib/audioProjectPackage.ts",
+    "baselineDiagnostics": 6,
+    "currentDiagnostics": 6,
+    "added": []
+  },
+  {
+    "file": "src/components/audio/AudioTimeline.tsx",
+    "baselineDiagnostics": 8,
+    "currentDiagnostics": 8,
+    "added": []
+  },
+  {
+    "file": "src/components/audio/AudioExports.tsx",
+    "baselineDiagnostics": 0,
+    "currentDiagnostics": 0,
+    "added": []
+  },
+  {
+    "file": "src/lib/audio/fingerprint.ts",
+    "baselineDiagnostics": 0,
+    "currentDiagnostics": 0,
+    "added": []
+  }
+]

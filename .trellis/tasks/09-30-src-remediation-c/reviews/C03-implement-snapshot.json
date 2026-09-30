@@ -1,0 +1,272 @@
+{
+  "status": "IMPLEMENT_COMPLETE_PENDING_INDEPENDENT_CHECK",
+  "finishedAt": "2026-09-30T13:27:45.398879+00:00",
+  "scope": "C03 PD-01 / SS-04: two sources and two regression test files",
+  "hashSemantics": "beforeSha256 is implement-entry workspace bytes; null means the file did not exist. afterSha256 is final implement bytes. Prior C01/C02 hashes compare independent-check exit, C03 entry and C03 exit.",
+  "files": [
+    {
+      "path": "src/db/repo.ts",
+      "beforeSha256": "f87b802e9b9eea8a4642e60bd8ed9180d1f1b9113c3de42d2e6717176f2792cd",
+      "afterSha256": "346e54a274405562deba97a67357a6c4d65b441de47ae1ef7253ce871367d7a1"
+    },
+    {
+      "path": "src/lib/projectPackage.ts",
+      "beforeSha256": "1e07966b6ac71077c8afac7dd739beec3b92323129dc48c766dbd653e18104ad",
+      "afterSha256": "7486c9fb56bdf01cdf9f86b06115ec14103d8a5b11ee9f2cee449c23de6a4679"
+    },
+    {
+      "path": "tests/parentProjectWrites.test.ts",
+      "beforeSha256": null,
+      "afterSha256": "49219fb616c63e1021dec6280e6ffb1db1f4d789e99336d1ea78a68ccb09240d"
+    },
+    {
+      "path": "tests/projectPackageRelations.test.ts",
+      "beforeSha256": null,
+      "afterSha256": "7f6fb9be98d45c868919a24c36636d425258a632f4709eda4de1e50d4de51da1"
+    }
+  ],
+  "priorReviewedFiles": {
+    "C01": [
+      {
+        "path": "src/db/taskGenerationEvidence.ts",
+        "reviewedSha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+        "entrySha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+        "afterSha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+        "matches": true
+      },
+      {
+        "path": "src/db/agentTaskRecords.ts",
+        "reviewedSha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+        "entrySha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+        "afterSha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+        "matches": true
+      },
+      {
+        "path": "src/lib/agent/wrapupEvidence.ts",
+        "reviewedSha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+        "entrySha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+        "afterSha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+        "matches": true
+      },
+      {
+        "path": "tests/agentGenerationEvidence.test.ts",
+        "reviewedSha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+        "entrySha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+        "afterSha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+        "matches": true
+      },
+      {
+        "path": "tests/agentTaskWrapup.test.ts",
+        "reviewedSha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+        "entrySha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+        "afterSha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+        "matches": true
+      },
+      {
+        "path": "tests/agentTaskOrchestrationReview.test.ts",
+        "reviewedSha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+        "entrySha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+        "afterSha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+        "matches": true
+      },
+      {
+        "path": "scripts/c01-browser-regression.mjs",
+        "reviewedSha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+        "entrySha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+        "afterSha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+        "matches": true
+      },
+      {
+        "path": "tests/fixtures/c01/harness.ts",
+        "reviewedSha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+        "entrySha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+        "afterSha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+        "matches": true
+      },
+      {
+        "path": "tests/fixtures/c01/index.html",
+        "reviewedSha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+        "entrySha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+        "afterSha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+        "matches": true
+      }
+    ],
+    "C02": [
+      {
+        "path": "src/domain/music.ts",
+        "reviewedSha256": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+        "entrySha256": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+        "afterSha256": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+        "matches": true
+      },
+      {
+        "path": "src/db/music.ts",
+        "reviewedSha256": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+        "entrySha256": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+        "afterSha256": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+        "matches": true
+      },
+      {
+        "path": "src/lib/agent/musicTools.ts",
+        "reviewedSha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+        "entrySha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+        "afterSha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+        "matches": true
+      },
+      {
+        "path": "src/lib/audioGeneration/input.ts",
+        "reviewedSha256": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+        "entrySha256": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+        "afterSha256": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+        "matches": true
+      },
+      {
+        "path": "src/lib/ai/apimartAudio.ts",
+        "reviewedSha256": "8cb50863b0aab40e1ddfe9b956b938125eba4f170bcd463f2cce24e7e5eb2c59",
+        "entrySha256": "8cb50863b0aab40e1ddfe9b956b938125eba4f170bcd463f2cce24e7e5eb2c59",
+        "afterSha256": "8cb50863b0aab40e1ddfe9b956b938125eba4f170bcd463f2cce24e7e5eb2c59",
+        "matches": true
+      },
+      {
+        "path": "src/lib/audioProjectPackage.ts",
+        "reviewedSha256": "12a0c856dceccf6ce249c1b367e4b3ea0d4f67d315427adfcd57bd1e0d1691bc",
+        "entrySha256": "12a0c856dceccf6ce249c1b367e4b3ea0d4f67d315427adfcd57bd1e0d1691bc",
+        "afterSha256": "12a0c856dceccf6ce249c1b367e4b3ea0d4f67d315427adfcd57bd1e0d1691bc",
+        "matches": true
+      },
+      {
+        "path": "src/components/music/MusicCreation.tsx",
+        "reviewedSha256": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c",
+        "entrySha256": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c",
+        "afterSha256": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c",
+        "matches": true
+      },
+      {
+        "path": "tests/musicDurationContract.test.ts",
+        "reviewedSha256": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399",
+        "entrySha256": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399",
+        "afterSha256": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399",
+        "matches": true
+      },
+      {
+        "path": "tests/musicLegacyDurationRepair.test.ts",
+        "reviewedSha256": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e",
+        "entrySha256": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e",
+        "afterSha256": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e",
+        "matches": true
+      },
+      {
+        "path": "scripts/c02-browser-regression.mjs",
+        "reviewedSha256": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+        "entrySha256": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+        "afterSha256": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+        "matches": true
+      },
+      {
+        "path": "tests/fixtures/c02/harness.tsx",
+        "reviewedSha256": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+        "entrySha256": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+        "afterSha256": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+        "matches": true
+      },
+      {
+        "path": "tests/fixtures/c02/index.html",
+        "reviewedSha256": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8",
+        "entrySha256": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8",
+        "afterSha256": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8",
+        "matches": true
+      }
+    ]
+  },
+  "priorReviewedFileCount": 21,
+  "allPriorReviewedHashesMatch": true,
+  "validation": {
+    "tests": {
+      "files": 13,
+      "passed": 182,
+      "log": "reviews/C03-final-tests.log"
+    },
+    "newRegressionTests": 38,
+    "isolatedOldSourceRed": {
+      "files": 2,
+      "tests": 38,
+      "failed": 24,
+      "passed": 14,
+      "exitCode": 1,
+      "baselineDirectory": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/c03-baseline-t_om_i5a",
+      "log": "reviews/C03-isolated-old-red.log",
+      "sourceHashesMatchEntry": true
+    },
+    "lint": {
+      "exitCode": 0,
+      "log": "reviews/C03-lint.log"
+    },
+    "static": {
+      "exitCode": 0,
+      "addedDiagnostics": 0,
+      "counts": [
+        {
+          "file": "src/db/repo.ts",
+          "baselineDiagnostics": 11,
+          "currentDiagnostics": 11,
+          "added": []
+        },
+        {
+          "file": "src/lib/projectPackage.ts",
+          "baselineDiagnostics": 60,
+          "currentDiagnostics": 60,
+          "added": []
+        }
+      ],
+      "log": "reviews/C03-static.log"
+    },
+    "whitespace": {
+      "command": "git diff --check -- src/db/repo.ts src/lib/projectPackage.ts",
+      "exitCode": 0
+    }
+  },
+  "evidenceFiles": [
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-final-tests.log",
+      "sha256": "12443dd7a499a294368a7d742c63f8ef5ea91fd64f573227034d9ea1446c74b7"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-lint.log",
+      "sha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-static.log",
+      "sha256": "de4c34756f54375e214b2bf387817cf26b933bfc0acc2f8643b58baa019b56c3"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-static-summary.json",
+      "sha256": "cc7443958090cc06073835e7e76d059eb6efb4877de5b4c6e7b03e83bc716c0b"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-static-before.json",
+      "sha256": "c904ebb53999ab643bf94be978549c1213a43f7bb90d4d266c76b3dc02db1b79"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-static-current.json",
+      "sha256": "42fe5d3d7d89d672799b64cb8bd5d88b208fa4f797d0d70da777c73593a90152"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-isolated-old-red.log",
+      "sha256": "a21f7436c98feb5891f0c2b644ad0b24609d5e41624cee36e24d721d0b9de4ce"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-entry-snapshot.json",
+      "sha256": "466ffa8d0cf77a599faf4e4367843e70f1d90c9bb9a896927c7ce39fff226a33"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-static.mjs",
+      "sha256": "081657544fad6213e5e144ed8d40bf1292f7c064ac4b336e911f559d0c2cd6a3"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-eslint.config.mjs",
+      "sha256": "71fec4e76e3e26f5e21e6412d7847a5c7e0b8e828af4fba41237351faa24ccce"
+    }
+  ],
+  "handoff": "research/C03-implement-handoff.md",
+  "handoffSha256": "c6eb7e2b30e5d8897e3e2df98612fa9c2401f580b240e3cb721ce248730e7888"
+}

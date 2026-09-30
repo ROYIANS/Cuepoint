@@ -1,0 +1,98 @@
+src/lib/agent/musicGenerationReviewSnapshot.ts:3:import {musicSettingsSchema, musicWireInput} from "@/lib/audioGeneration/input";
+src/lib/agent/musicGenerationReviewSnapshot.ts:19:        musicWireInput(parsed.settings);
+src/lib/agent/musicReviewPresentation.ts:2:import {musicWireInput} from "@/lib/audioGeneration/input";
+src/lib/agent/musicReviewPresentation.ts:6:    const wire = musicWireInput(settings);
+src/lib/agent/musicTools.ts:3:import {addMusicDraft, patchMusicDraft, patchMusicWork, validateMusicSettings} from "@/db/music";
+src/lib/agent/musicTools.ts:135:        execute: (args) => args.id ? patchMusicDraft(args.projectId, args.id, args.revision!, {settings: args.settings}) : addMusicDraft(args.projectId, {settings: args.settings})
+src/lib/agent/musicTools.ts:161:        execute: (args) => patchMusicWork(args.projectId, args.id, args.revision, args.patch)
+src/lib/agent/musicTools.ts:186:            return addMusicDraft(args.projectId, {settings: work.settings});
+src/lib/agent/audioGenerationTools.ts:17:import {validateGenerationInput} from "@/lib/audioGeneration/input";
+src/lib/agent/audioGenerationTools.ts:56:    validateGenerationInput(args.input);
+src/db/music.ts:69:export async function addMusicDraft(projectId: string, input: AudioInput<MusicDraft>): Promise<MusicDraft> {
+src/db/music.ts:79:export const patchMusicDraft = (projectId: string, id: string, revision: number, patch: Partial<AudioInput<MusicDraft>>) => patchAudioRow(db.musicDrafts, projectId, id, revision, patch, ["settings"], validateMusicDraft);
+src/db/music.ts:81:export async function addMusicWork(projectId: string, input: AudioInput<MusicWork>, media?: MediaRecord): Promise<MusicWork> {
+src/db/music.ts:96:export const patchMusicWork = (projectId: string, id: string, revision: number, patch: Partial<Pick<MusicWork, "title" | "notes" | "favorite">>) => patchAudioRow(db.musicWorks, projectId, id, revision, patch, ["title", "notes", "favorite"], validateLegacyMusicWork);
+src/db/audioGeneration.ts:13:import {validateGenerationInput} from "@/lib/audioGeneration/input";
+src/db/audioGeneration.ts:25:            validateGenerationInput(row.input);
+src/lib/audioGeneration/runtime.ts:5:import {addMusicWork} from "@/db/music";
+src/lib/audioGeneration/runtime.ts:29:import {musicWireInput, speechWireInput, validateGenerationInput} from "./input";
+src/lib/audioGeneration/runtime.ts:83:    const input = validateGenerationInput(args.input);
+src/lib/audioGeneration/runtime.ts:128:            const work = await addMusicWork(job.projectId, {
+src/lib/audioGeneration/runtime.ts:179:        validateGenerationInput(job.input);
+src/lib/audioGeneration/runtime.ts:236:        const response = await submitApimartMusic(credentials, musicWireInput(job.input.settings), options);
+src/lib/audioGeneration/input.ts:73:export function musicWireInput(settings: MusicSettings): MusicInput {
+src/lib/audioGeneration/input.ts:98:export function validateGenerationInput(raw: unknown): AudioGenerationInput {
+src/lib/audioGeneration/input.ts:102:    } else musicWireInput(input.settings);
+src/components/music/MusicCreation.tsx:4:import {patchMusicDraft} from "@/db/music";
+src/components/music/MusicCreation.tsx:44:            await patchMusicDraft(record.projectId, current.id, current.revision, {settings});
+src/components/music/MusicWorkspacePage.tsx:6:import {addMusicDraft, patchMusicWork} from "@/db/music";
+src/components/music/MusicWorkspacePage.tsx:121:        const row = retained?.projectId === projectId && musicVariant(retained.settings) === target ? retained : await addMusicDraft(projectId, {settings: newVariantSettings(current.settings, target)});
+src/components/music/MusicWorkspacePage.tsx:134:                                                  const row = await addMusicDraft(projectId, {settings: structuredClone(selected.settings)});
+src/components/music/MusicWorkspacePage.tsx:157:                        const row = await addMusicDraft(projectId, {settings: defaultMusicSettings()});
+src/components/music/MusicWorkspacePage.tsx:167:                    const row = await addMusicDraft(projectId, {settings: defaultMusicSettings()});
+src/components/music/MusicWorkspacePage.tsx:205:                            onClick={() => void action(() => patchMusicWork(projectId, work.id, work.revision, {favorite: !work.favorite}))}><Heart
+src/components/music/MusicWorkspacePage.tsx:243:        await patchMusicWork(work.projectId, work.id, current.revision, {[field]: text});
+src/domain/agent.ts:70:    settings: import("./music").MusicSettings;
+src/domain/music.ts:10:export type MusicSettings =
+src/domain/music.ts:17:    lengthSec?: number;
+src/domain/music.ts:33:    settings: MusicSettings
+src/domain/music.ts:42:    settings?: MusicSettings;
+src/domain/music.ts:46:export function defaultMusicSettings(engine: MusicSettings["engine"] = "suno"): MusicSettings {
+src/domain/audioGeneration.ts:2:import type {MusicSettings} from "./music";
+src/domain/audioGeneration.ts:15:    | { kind: "music"; settings: MusicSettings; draftId?: Id; draftRevision?: number };
+src/db/music.ts:3:import {MUSIC_DURATION_LIMITS, type MusicDraft, type MusicSettings, type MusicWork} from "@/domain/music";
+src/db/music.ts:19:function validateMusicDuration(engine: MusicSettings["engine"], duration: number | undefined, allowLegacyFraction: boolean) {
+src/db/music.ts:26:function validateStoredMusicSettings(settings: MusicSettings, allowLegacyFraction: boolean) {
+src/db/music.ts:28:        validateMusicDuration(settings.engine, settings.lengthSec, allowLegacyFraction);
+src/db/music.ts:37:export function validateMusicSettings(settings: MusicSettings) {
+src/db/music.ts:38:    validateStoredMusicSettings(settings, false);
+src/db/music.ts:41:export async function validateMusicDraft(row: MusicDraft) {
+src/db/music.ts:43:    validateMusicSettings(row.settings);
+src/db/music.ts:47:export async function validateLegacyMusicDraft(row: MusicDraft) {
+src/db/music.ts:49:    validateStoredMusicSettings(row.settings, true);
+src/db/music.ts:56:    if (row.settings) validateStoredMusicSettings(row.settings, allowLegacyFraction);
+src/db/music.ts:60:export async function validateMusicWork(row: MusicWork) {
+src/db/music.ts:65:export async function validateLegacyMusicWork(row: MusicWork) {
+src/db/music.ts:72:        await validateMusicDraft(row);
+src/db/music.ts:79:export const patchMusicDraft = (projectId: string, id: string, revision: number, patch: Partial<AudioInput<MusicDraft>>) => patchAudioRow(db.musicDrafts, projectId, id, revision, patch, ["settings"], validateMusicDraft);
+src/db/music.ts:89:        await validateMusicWork(row);
+src/db/music.ts:96:export const patchMusicWork = (projectId: string, id: string, revision: number, patch: Partial<Pick<MusicWork, "title" | "notes" | "favorite">>) => patchAudioRow(db.musicWorks, projectId, id, revision, patch, ["title", "notes", "favorite"], validateLegacyMusicWork);
+src/components/music/MusicCreation.tsx:5:import type {MusicDraft, MusicSettings} from "@/domain/music";
+src/components/music/MusicCreation.tsx:39:    const {draft, setDraft, status, error: saveError, retry, useLatest} = useDebouncedDraft<MusicSettings>({
+src/components/music/MusicCreation.tsx:47:    const update = (patch: Partial<MusicSettings>) => setDraft((previous) => ({...previous, ...patch} as MusicSettings));
+src/components/music/MusicCreation.tsx:138:                    value={draft.lengthSec ?? ""}
+src/components/music/MusicCreation.tsx:139:                    onChange={(e) => update({lengthSec: e.target.value ? Number(e.target.value) : undefined})}/></Field><Field
+src/components/music/draftVariants.ts:1:import {defaultMusicSettings, type MusicSettings} from "@/domain/music";
+src/components/music/draftVariants.ts:5:export function musicVariant(settings: MusicSettings): MusicVariant {
+src/components/music/draftVariants.ts:10:export function newVariantSettings(current: MusicSettings, target: MusicVariant): MusicSettings {
+src/components/music/draftVariants.ts:12:    if (target === "flowmusic") return {...defaultMusicSettings("flowmusic"), title: current.title};
+src/components/music/draftVariants.ts:13:    const defaults = defaultMusicSettings("suno");
+src/components/music/draftVariants.ts:45:export function linkMusicVariants(links: VariantLinks, source: { id: string; settings: MusicSettings }, target: {
+src/components/music/draftVariants.ts:47:    settings: MusicSettings
+src/components/music/MusicWorkspacePage.tsx:9:import {defaultMusicSettings, type MusicSettings, type MusicWork} from "@/domain/music";
+src/components/music/MusicWorkspacePage.tsx:157:                        const row = await addMusicDraft(projectId, {settings: defaultMusicSettings()});
+src/components/music/MusicWorkspacePage.tsx:167:                    const row = await addMusicDraft(projectId, {settings: defaultMusicSettings()});
+src/components/music/MusicWorkspacePage.tsx:285:    settings: MusicSettings;
+src/components/music/MusicWorkspacePage.tsx:292:        : [["引擎", "Flow Music"], ["描述", settings.soundPrompt], ["歌词", settings.lyrics], ["BPM", settings.bpm], ["时长", settings.lengthSec], ["随机种子", settings.seed]];
+src/db/repo.ts:3:import {defaultMusicSettings, type MusicDraft} from "@/domain/music";
+src/db/repo.ts:2023:        } else await db.musicDrafts.add(newAudioRow<MusicDraft>(project.id, "mdr", {settings: defaultMusicSettings()}));
+src/db/audioGeneration.ts:12:import {validateMusicSettings} from "./music";
+src/db/audioGeneration.ts:34:        validateMusicSettings(row.input.settings);
+src/lib/agent/musicTools.ts:3:import {addMusicDraft, patchMusicDraft, patchMusicWork, validateMusicSettings} from "@/db/music";
+src/lib/agent/musicTools.ts:29:        lengthSec: s.optional(s.number(MUSIC_DURATION_LIMITS.flowmusic.min, MUSIC_DURATION_LIMITS.flowmusic.max, true)),
+src/lib/agent/musicTools.ts:175:            validateMusicSettings(work.settings);
+src/lib/agent/musicGenerationReviewSnapshot.ts:3:import {musicSettingsSchema, musicWireInput} from "@/lib/audioGeneration/input";
+src/lib/agent/musicGenerationReviewSnapshot.ts:10:    connectorId: identity, connectorLabel: z.string().min(1).max(1000), settings: musicSettingsSchema,
+src/lib/agent/musicReviewPresentation.ts:1:import type {MusicSettings} from "@/domain/music";
+src/lib/agent/musicReviewPresentation.ts:5:export function describeMusicReview(settings: MusicSettings) {
+src/lib/audioGeneration/input.ts:4:import {MUSIC_DURATION_LIMITS, type MusicSettings} from "@/domain/music";
+src/lib/audioGeneration/input.ts:33:export const musicSettingsSchema = z.discriminatedUnion("engine", [
+src/lib/audioGeneration/input.ts:40:        lengthSec: z.number().int("音乐时长必须为整数秒").min(MUSIC_DURATION_LIMITS.flowmusic.min).max(MUSIC_DURATION_LIMITS.flowmusic.max).optional(),
+src/lib/audioGeneration/input.ts:67:        settings: musicSettingsSchema,
+src/lib/audioGeneration/input.ts:73:export function musicWireInput(settings: MusicSettings): MusicInput {
+src/lib/audioGeneration/input.ts:74:    const s = musicSettingsSchema.parse(settings);
+src/lib/audioGeneration/input.ts:77:        ...(s.bpm !== undefined ? {bpm: s.bpm} : {}), ...(s.lengthSec !== undefined ? {length: s.lengthSec} : {}), ...(s.seed !== undefined ? {seed: s.seed} : {}),
+src/lib/audioProjectPackage.ts:15:import {validateLegacyMusicDraft, validateLegacyMusicWork} from "@/db/music";
+src/lib/audioProjectPackage.ts:42:        lengthSec: number.optional(),
+src/lib/audioProjectPackage.ts:279:    for (const row of value.musicDrafts) await validateLegacyMusicDraft(row);
+src/lib/audioProjectPackage.ts:280:    for (const row of value.musicWorks) await validateLegacyMusicWork(row);

@@ -1,0 +1,8 @@
+[
+  {
+    "file": "src/db/repo.ts",
+    "baselineDiagnostics": 11,
+    "currentDiagnostics": 11,
+    "added": []
+  }
+]

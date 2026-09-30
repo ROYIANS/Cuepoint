@@ -1,0 +1,2 @@
+.trellis/spec/frontend/ai-connectors.md:249: new blank line at EOF.
+.trellis/spec/frontend/asset-output-foundation.md:107: new blank line at EOF.

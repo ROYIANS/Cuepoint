@@ -1,0 +1,63 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/audioGenerationRuntime.test.ts (21 tests | 1 failed) 395ms
+   ❯ truthful music task observations (16)
+     × preserves partial observations on Stop and never invents a processing state for unchecked siblings 10ms
+ ❯ tests/aihubmix.test.ts (89 tests | 1 failed) 566ms
+   ❯ AIHubMix failure and abort boundaries (16)
+     × recognizes abort during JSON and binary consumption 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/aihubmix.test.ts > AIHubMix failure and abort boundaries > recognizes abort during JSON and binary consumption
+AssertionError: expected { ok: true, …(1) } to match object { ok: false, kind: 'aborted' }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "kind": "aborted",
+-   "ok": false,
++   "ok": true,
+  }
+
+ ❯ tests/aihubmix.test.ts:254:122
+    252|     const binaryResponse = new Response("x"); vi.spyOn(binaryResponse,…
+    253|     const task = completedTask();
+    254|     expect(await downloadAIHubMixResult(credentials, task, task.output…
+       |                                                                                                                          ^
+    255|   });
+    256|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/audioGenerationRuntime.test.ts > truthful music task observations > preserves partial observations on Stop and never invents a processing state for unchecked siblings
+AssertionError: expected [ 'query-failed', 'query-failed' ] to deeply equal [ 'completed', 'query-failed' ]
+
+- Expected
++ Received
+
+  [
+-   "completed",
++   "query-failed",
+    "query-failed",
+  ]
+
+ ❯ tests/audioGenerationRuntime.test.ts:205:62
+    203|     const stopped = await refreshAudioGeneration(project.id, job.id, {…
+    204|     expect(stopped.status).toBe("submitted");
+    205|     expect(stopped.taskObservations?.map(row => row.status)).toEqual([…
+       |                                                              ^
+    206|     expect(stopped.results).toHaveLength(1);
+    207|     expect(await db.musicWorks.count()).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 5 passed (7)
+      Tests  2 failed | 313 passed (315)
+   Start at  22:50:02
+   Duration  1.12s (tests 53%, transform 31%, setup 11%, import 5%)
+

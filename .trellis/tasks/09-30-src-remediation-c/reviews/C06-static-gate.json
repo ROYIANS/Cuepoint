@@ -1,0 +1,808 @@
+{
+  "policy": "No added non-complexity diagnostics, no diagnostics in new helpers; existing adapter complexity changes retained for review",
+  "addedNonComplexity": [],
+  "newHelperDiagnostics": [],
+  "complexityMetrics": [
+    {
+      "file": "src/lib/ai/apimartAudio.ts",
+      "before": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'getApimartMusicTask' has a complexity of 32. Maximum allowed is 20.",
+          "line": 195,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 195,
+          "endColumn": 42
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 46 to the 20 allowed.",
+          "line": 195,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 195,
+          "endColumn": 42
+        }
+      ],
+      "after": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'getApimartMusicTask' has a complexity of 32. Maximum allowed is 20.",
+          "line": 206,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 206,
+          "endColumn": 42
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 46 to the 20 allowed.",
+          "line": 206,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 206,
+          "endColumn": 42
+        }
+      ]
+    },
+    {
+      "file": "src/lib/ai/mimoSpeech.ts",
+      "before": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'request' has a complexity of 22. Maximum allowed is 20.",
+          "line": 36,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 36,
+          "endColumn": 23
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'generateMimoSpeech' has a complexity of 49. Maximum allowed is 20.",
+          "line": 112,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 112,
+          "endColumn": 41
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 33 to the 20 allowed.",
+          "line": 112,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 112,
+          "endColumn": 41
+        }
+      ],
+      "after": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'request' has a complexity of 27. Maximum allowed is 20.",
+          "line": 38,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 38,
+          "endColumn": 23
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 30 to the 20 allowed.",
+          "line": 38,
+          "column": 16,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 38,
+          "endColumn": 23
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'generateMimoSpeech' has a complexity of 53. Maximum allowed is 20.",
+          "line": 123,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 123,
+          "endColumn": 41
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 37 to the 20 allowed.",
+          "line": 123,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 123,
+          "endColumn": 41
+        }
+      ]
+    },
+    {
+      "file": "src/lib/ai/aihubmix.ts",
+      "before": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'parseTask' has a complexity of 31. Maximum allowed is 20.",
+          "line": 271,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 271,
+          "endColumn": 19
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 28 to the 20 allowed.",
+          "line": 271,
+          "column": 10,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 271,
+          "endColumn": 19
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'downloadAIHubMixResult' has a complexity of 33. Maximum allowed is 20.",
+          "line": 360,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 360,
+          "endColumn": 45
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 22 to the 20 allowed.",
+          "line": 360,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 360,
+          "endColumn": 45
+        }
+      ],
+      "after": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'parseTask' has a complexity of 31. Maximum allowed is 20.",
+          "line": 273,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 273,
+          "endColumn": 19
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 28 to the 20 allowed.",
+          "line": 273,
+          "column": 10,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 273,
+          "endColumn": 19
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'downloadAIHubMixResult' has a complexity of 35. Maximum allowed is 20.",
+          "line": 362,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 362,
+          "endColumn": 45
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 26 to the 20 allowed.",
+          "line": 362,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 362,
+          "endColumn": 45
+        }
+      ]
+    },
+    {
+      "file": "src/lib/ai/chatStream.ts",
+      "before": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'decodeCompletion' has a complexity of 27. Maximum allowed is 20.",
+          "line": 180,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 180,
+          "endColumn": 26
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 27 to the 20 allowed.",
+          "line": 180,
+          "column": 10,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 180,
+          "endColumn": 26
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 37 to the 20 allowed.",
+          "line": 224,
+          "column": 9,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 224,
+          "endColumn": 13
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Method 'push' has a complexity of 28. Maximum allowed is 20.",
+          "line": 224,
+          "column": 9,
+          "nodeType": "FunctionExpression",
+          "messageId": "complex",
+          "endLine": 224,
+          "endColumn": 13
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'streamChatCompletions' has a complexity of 43. Maximum allowed is 20.",
+          "line": 310,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 310,
+          "endColumn": 44
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 30 to the 20 allowed.",
+          "line": 310,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 310,
+          "endColumn": 44
+        }
+      ],
+      "after": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'decodeCompletion' has a complexity of 27. Maximum allowed is 20.",
+          "line": 194,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 194,
+          "endColumn": 26
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 27 to the 20 allowed.",
+          "line": 194,
+          "column": 10,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 194,
+          "endColumn": 26
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 37 to the 20 allowed.",
+          "line": 240,
+          "column": 9,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 240,
+          "endColumn": 13
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Method 'push' has a complexity of 28. Maximum allowed is 20.",
+          "line": 240,
+          "column": 9,
+          "nodeType": "FunctionExpression",
+          "messageId": "complex",
+          "endLine": 240,
+          "endColumn": 13
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'streamChatCompletions' has a complexity of 33. Maximum allowed is 20.",
+          "line": 331,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 331,
+          "endColumn": 44
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 25 to the 20 allowed.",
+          "line": 331,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 331,
+          "endColumn": 44
+        }
+      ]
+    },
+    {
+      "file": "src/lib/ai/responsesStream.ts",
+      "before": [
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 33 to the 20 allowed.",
+          "line": 73,
+          "column": 56,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 73,
+          "endColumn": 58
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Arrow function has a complexity of 27. Maximum allowed is 20.",
+          "line": 73,
+          "column": 56,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 73,
+          "endColumn": 58
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'streamResponses' has a complexity of 40. Maximum allowed is 20.",
+          "line": 134,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 134,
+          "endColumn": 38
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 27 to the 20 allowed.",
+          "line": 134,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 134,
+          "endColumn": 38
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+          "line": 253,
+          "column": 39,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 253,
+          "endColumn": 41
+        }
+      ],
+      "after": [
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 33 to the 20 allowed.",
+          "line": 76,
+          "column": 56,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 76,
+          "endColumn": 58
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Arrow function has a complexity of 27. Maximum allowed is 20.",
+          "line": 76,
+          "column": 56,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 76,
+          "endColumn": 58
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'streamResponses' has a complexity of 31. Maximum allowed is 20.",
+          "line": 137,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 137,
+          "endColumn": 38
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 22 to the 20 allowed.",
+          "line": 137,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 137,
+          "endColumn": 38
+        }
+      ]
+    },
+    {
+      "file": "src/lib/ai/tavily.ts",
+      "before": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'request' has a complexity of 29. Maximum allowed is 20.",
+          "line": 64,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 64,
+          "endColumn": 23
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 39 to the 20 allowed.",
+          "line": 64,
+          "column": 16,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 64,
+          "endColumn": 23
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'executeWebRequest' has a complexity of 34. Maximum allowed is 20.",
+          "line": 105,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 105,
+          "endColumn": 40
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 29 to the 20 allowed.",
+          "line": 105,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 105,
+          "endColumn": 40
+        }
+      ],
+      "after": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'request' has a complexity of 29. Maximum allowed is 20.",
+          "line": 36,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 36,
+          "endColumn": 23
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 39 to the 20 allowed.",
+          "line": 36,
+          "column": 16,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 36,
+          "endColumn": 23
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'executeWebRequest' has a complexity of 34. Maximum allowed is 20.",
+          "line": 77,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 77,
+          "endColumn": 40
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 29 to the 20 allowed.",
+          "line": 77,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 77,
+          "endColumn": 40
+        }
+      ]
+    },
+    {
+      "file": "src/lib/audio/engine.ts",
+      "before": [],
+      "after": []
+    },
+    {
+      "file": "src/lib/audio/recorder.ts",
+      "before": [],
+      "after": []
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "before": [
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+          "line": 56,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 56,
+          "endColumn": 43
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'prepareGenerationSnapshot' has a complexity of 22. Maximum allowed is 20.",
+          "line": 110,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 110,
+          "endColumn": 48
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 22 to the 20 allowed.",
+          "line": 110,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 110,
+          "endColumn": 48
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 24 to the 20 allowed.",
+          "line": 189,
+          "column": 16,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 189,
+          "endColumn": 29
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'submitClaimedGeneration' has a complexity of 25. Maximum allowed is 20.",
+          "line": 287,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 287,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 46 to the 20 allowed.",
+          "line": 287,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 287,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'checkAgentGeneration' has a complexity of 26. Maximum allowed is 20.",
+          "line": 440,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 440,
+          "endColumn": 43
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 23 to the 20 allowed.",
+          "line": 440,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 440,
+          "endColumn": 43
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 23. Maximum allowed is 20.",
+          "line": 581,
+          "column": 48,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 581,
+          "endColumn": 50
+        }
+      ],
+      "after": [
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+          "line": 58,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 58,
+          "endColumn": 43
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'prepareGenerationSnapshot' has a complexity of 22. Maximum allowed is 20.",
+          "line": 112,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 112,
+          "endColumn": 48
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 22 to the 20 allowed.",
+          "line": 112,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 112,
+          "endColumn": 48
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 24 to the 20 allowed.",
+          "line": 191,
+          "column": 16,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 191,
+          "endColumn": 29
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'submitClaimedGeneration' has a complexity of 25. Maximum allowed is 20.",
+          "line": 289,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 289,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 46 to the 20 allowed.",
+          "line": 289,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 289,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'checkAgentGeneration' has a complexity of 26. Maximum allowed is 20.",
+          "line": 442,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 442,
+          "endColumn": 43
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 23 to the 20 allowed.",
+          "line": 442,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 442,
+          "endColumn": 43
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 23. Maximum allowed is 20.",
+          "line": 583,
+          "column": 48,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 583,
+          "endColumn": 50
+        }
+      ]
+    },
+    {
+      "file": "src/lib/resource/limits.ts",
+      "before": [],
+      "after": []
+    },
+    {
+      "file": "src/lib/ai/boundedResponse.ts",
+      "before": [],
+      "after": []
+    },
+    {
+      "file": "src/lib/ai/boundedSse.ts",
+      "before": [],
+      "after": []
+    }
+  ],
+  "passed": true
+}

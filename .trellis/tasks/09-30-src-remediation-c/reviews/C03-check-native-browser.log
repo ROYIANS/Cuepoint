@@ -1,0 +1,4 @@
+COMMAND ["/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node", "scripts/c01-browser-regression.mjs"]
+ENV {"C01_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs", "C01_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"}
+9:37:54 PM [vite] (client) Re-optimizing dependencies because vite config has changed
+{"checks":6,"generations":160,"calls":161,"nativeIndexedDB":true,"provenanceRefused":true,"externalRequests":0,"browser":"Chromium native IndexedDB","limitation":"Synthetic nonempty media metadata, no pixel decode, external provider or full product UI"}

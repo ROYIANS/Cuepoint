@@ -3,7 +3,7 @@
   "name": "src-quality-remediation",
   "title": "src 代码质量与架构逐项整改",
   "description": "按已审查的 A→E 根因计划逐项整改全部51项发现，维护可核验台账；每个单元实现、回归、独立复核后顺序推进，风险先验证，保留不需修改项的理由。",
-  "status": "in_progress",
+  "status": "paused",
   "dev_type": null,
   "scope": null,
   "package": null,
@@ -20,10 +20,11 @@
   "subtasks": [],
   "children": [
     "09-30-src-remediation-a",
-    "09-30-src-remediation-b"
+    "09-30-src-remediation-b",
+    "09-30-src-remediation-c"
   ],
   "parent": "09-30-src-quality-architecture-audit",
   "relatedFiles": [],
-  "notes": "",
+  "notes": "27/51 findings fixed;24 pending. C complete integration/full-scope independent review PASS, five local commits approved2026-10-01. User explicitly requested pausing after commits. D01 remains pending; no D implementation, push or archive.",
   "meta": {}
 }

@@ -1,0 +1,1119 @@
+
+> cuepoint@0.1.0 test /private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/c03-baseline-t_om_i5a
+> vitest run tests/parentProjectWrites.test.ts tests/projectPackageRelations.test.ts
+
+
+ RUN  v5.0.1 /private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/c03-baseline-t_om_i5a
+
+ ❯ tests/parentProjectWrites.test.ts (21 tests | 14 failed) 114ms
+   ❯ character parent project writes (4)
+     × rejects a prepared callback that finishes after its project was deleted 18ms
+     × rolls back the child if touching the existing parent fails 5ms
+     × holds only the child and projects tables and touches the parent 7ms
+   ❯ scene parent project writes (4)
+     × rejects a prepared callback that finishes after its project was deleted 6ms
+     × rolls back the child if touching the existing parent fails 6ms
+     × holds only the child and projects tables and touches the parent 4ms
+   ❯ prop parent project writes (4)
+     × rejects a prepared callback that finishes after its project was deleted 6ms
+     × rolls back the child if touching the existing parent fails 5ms
+     × holds only the child and projects tables and touches the parent 3ms
+   ❯ style parent project writes (4)
+     × rejects a prepared callback that finishes after its project was deleted 5ms
+     × rolls back the child if touching the existing parent fails 4ms
+     × holds only the child and projects tables and touches the parent 3ms
+   ❯ media parent project writes (4)
+     × rejects a prepared callback that finishes after its project was deleted 5ms
+     × rolls back the child if touching the existing parent fails 8ms
+ ❯ tests/projectPackageRelations.test.ts (17 tests | 11 failed) 154ms
+   ❯ modern ZIP original episode and beat relationships (15)
+     × rejects absent episodeId before parseShot fallb… without changing any existing table 23ms
+     × rejects null episodeId before parseShot fallback without changing any existing table 12ms
+     × rejects foreign episodeId without changing any existing table 8ms
+     × rejects empty episodeId without changing any existing table 10ms
+     × rejects numeric episodeId without changing any existing table 7ms
+     × rejects beat from another episode without changing any existing table 7ms
+     × rejects unknown beat without changing any existing table 7ms
+     × rejects duplicate beats within one episode without changing any existing table 7ms
+     × rejects duplicate explicit beat IDs that parser… without changing any existing table 6ms
+     × rejects reference to a beat ID synthesized by n… without changing any existing table 7ms
+     × rejects reference to a coerced numeric beat ID without changing any existing table 6ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 25 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/parentProjectWrites.test.ts > character parent project writes > rejects a prepared callback that finishes after its project was deleted
+AssertionError: promise resolved "{ …(9) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "appearance": "",
++   "bio": "",
++   "createdAt": "2026-09-30T13:23:48.407Z",
++   "id": "chr_8de14bf5-04e6-4844-a482-9730b58b162c",
++   "name": "未命名角色",
++   "notes": "",
++   "projectId": "prj_d1ba1049-87c8-4803-be22-d59927fc38ac",
++   "slots": {},
++   "updatedAt": "2026-09-30T13:23:48.407Z",
+  }
+
+ ❯ tests/parentProjectWrites.test.ts:34:27
+     32|     await deleteProject(project.id);
+     33|     finishPreparation();
+     34|     await expect(lateWrite).rejects.toThrow("项目不存在");
+       |                           ^
+     35|     expect(await table.count()).toBe(0);
+     36|     expect(await db.projects.get(project.id)).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/25]⎯
+
+ FAIL  tests/parentProjectWrites.test.ts > character parent project writes > rolls back the child if touching the existing parent fails
+AssertionError: promise resolved "{ …(9) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "appearance": "",
++   "bio": "",
++   "createdAt": "2026-09-30T13:23:48.415Z",
++   "id": "chr_5145d8f0-537d-4274-821e-781298d9ae79",
++   "name": "未命名角色",
++   "notes": "",
++   "projectId": "prj_09790cd2-d1b1-4c0b-a8f4-16266a4e05ec",
++   "slots": {},
++   "updatedAt": "2026-09-30T13:23:48.415Z",
+  }
+
+ ❯ tests/parentProjectWrites.test.ts:44:38
+     42|     db.projects.hook("updating", fail);
+     43|     try {
+     44|       await expect(create(project.id)).rejects.toThrow("injected paren…
+       |                                      ^
+     45|     } finally {
+     46|       db.projects.hook("updating").unsubscribe(fail);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/25]⎯
+
+ FAIL  tests/parentProjectWrites.test.ts > character parent project writes > holds only the child and projects tables and touches the parent
+AssertionError: expected [ 'characters' ] to deeply equal [ 'characters', 'projects' ]
+
+- Expected
++ Received
+
+  [
+    "characters",
+-   "projects",
+  ]
+
+ ❯ Object.checkTransaction tests/parentProjectWrites.test.ts:62:67
+     60|     await db.projects.update(project.id, { updatedAt: "2000-01-01T00:0…
+     61|     const checkTransaction = () => {
+     62|       expect(Dexie.currentTransaction?.storeNames.slice().sort()).toEq…
+       |                                                                   ^
+     63|     };
+     64|     table.hook("creating", checkTransaction);
+ ❯ ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/hooks/hooks-middleware.ts:100:65
+ ❯ ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/hooks/hooks-middleware.ts:89:41
+ ❯ ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/helpers/promise.js:812:21
+ ❯ callListener ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/helpers/promise.js:495:11
+ ❯ endMicroTickScope ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/helpers/promise.js:544:17
+ ❯ Table._trans ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/classes/table/table.ts:119:24
+ ❯ Table.add ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/classes/table/table.ts:401:17
+ ❯ addCharacter src/db/repo.ts:867:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/25]⎯
+
+ FAIL  tests/parentProjectWrites.test.ts > scene parent project writes > rejects a prepared callback that finishes after its project was deleted
+AssertionError: promise resolved "{ …(10) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "atmosphere": "",
++   "createdAt": "2026-09-30T13:23:48.434Z",
++   "id": "scn_59eef4ea-137d-4f0c-8edd-360544fdb6a2",
++   "location": "",
++   "name": "未命名场景",
++   "notes": "",
++   "projectId": "prj_ef3adf6d-21bc-44ca-a596-4a32d8f67631",
++   "slots": {},
++   "timeOfDay": "",
++   "updatedAt": "2026-09-30T13:23:48.434Z",
+  }
+
+ ❯ tests/parentProjectWrites.test.ts:34:27
+     32|     await deleteProject(project.id);
+     33|     finishPreparation();
+     34|     await expect(lateWrite).rejects.toThrow("项目不存在");
+       |                           ^
+     35|     expect(await table.count()).toBe(0);
+     36|     expect(await db.projects.get(project.id)).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/25]⎯
+
+ FAIL  tests/parentProjectWrites.test.ts > scene parent project writes > rolls back the child if touching the existing parent fails
+ FAIL  tests/parentProjectWrites.test.ts > prop parent project writes > rolls back the child if touching the existing parent fails
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/parentProjectWrites.test.ts:48:33
+     46|       db.projects.hook("updating").unsubscribe(fail);
+     47|     }
+     48|     expect(await table.count()).toBe(0);
+       |                                 ^
+     49|     expect(await db.projects.get(project.id)).toEqual(project);
+     50|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/25]⎯
+
+ FAIL  tests/parentProjectWrites.test.ts > scene parent project writes > holds only the child and projects tables and touches the parent
+AssertionError: expected [ 'scenes' ] to deeply equal [ 'projects', 'scenes' ]
+
+- Expected
++ Received
+
+  [
+-   "projects",
+    "scenes",
+  ]
+
+ ❯ Object.checkTransaction tests/parentProjectWrites.test.ts:62:67
+     60|     await db.projects.update(project.id, { updatedAt: "2000-01-01T00:0…
+     61|     const checkTransaction = () => {
+     62|       expect(Dexie.currentTransaction?.storeNames.slice().sort()).toEq…
+       |                                                                   ^
+     63|     };
+     64|     table.hook("creating", checkTransaction);
+ ❯ ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/hooks/hooks-middleware.ts:100:65
+ ❯ ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/hooks/hooks-middleware.ts:89:41
+ ❯ ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/helpers/promise.js:812:21
+ ❯ callListener ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/helpers/promise.js:495:11
+ ❯ endMicroTickScope ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/helpers/promise.js:544:17
+ ❯ Table._trans ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/classes/table/table.ts:119:24
+ ❯ Table.add ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/classes/table/table.ts:401:17
+ ❯ addScene src/db/repo.ts:957:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/25]⎯
+
+ FAIL  tests/parentProjectWrites.test.ts > prop parent project writes > rejects a prepared callback that finishes after its project was deleted
+AssertionError: promise resolved "{ …(8) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "createdAt": "2026-09-30T13:23:48.453Z",
++   "id": "prp_e3fe79d3-0e12-43f7-b86d-d43dda7193fb",
++   "kind": "",
++   "name": "未命名道具",
++   "notes": "",
++   "projectId": "prj_eca57771-f4ce-4ea6-9803-78d3bbc49b73",
++   "slots": {},
++   "updatedAt": "2026-09-30T13:23:48.453Z",
+  }
+
+ ❯ tests/parentProjectWrites.test.ts:34:27
+     32|     await deleteProject(project.id);
+     33|     finishPreparation();
+     34|     await expect(lateWrite).rejects.toThrow("项目不存在");
+       |                           ^
+     35|     expect(await table.count()).toBe(0);
+     36|     expect(await db.projects.get(project.id)).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/25]⎯
+
+ FAIL  tests/parentProjectWrites.test.ts > prop parent project writes > holds only the child and projects tables and touches the parent
+AssertionError: expected [ 'props' ] to deeply equal [ 'projects', 'props' ]
+
+- Expected
++ Received
+
+  [
+-   "projects",
+    "props",
+  ]
+
+ ❯ Object.checkTransaction tests/parentProjectWrites.test.ts:62:67
+     60|     await db.projects.update(project.id, { updatedAt: "2000-01-01T00:0…
+     61|     const checkTransaction = () => {
+     62|       expect(Dexie.currentTransaction?.storeNames.slice().sort()).toEq…
+       |                                                                   ^
+     63|     };
+     64|     table.hook("creating", checkTransaction);
+ ❯ ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/hooks/hooks-middleware.ts:100:65
+ ❯ ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/hooks/hooks-middleware.ts:89:41
+ ❯ ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/helpers/promise.js:812:21
+ ❯ callListener ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/helpers/promise.js:495:11
+ ❯ endMicroTickScope ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/helpers/promise.js:544:17
+ ❯ Table._trans ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/classes/table/table.ts:119:24
+ ❯ Table.add ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/classes/table/table.ts:401:17
+ ❯ addProp src/db/repo.ts:1027:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/25]⎯
+
+ FAIL  tests/parentProjectWrites.test.ts > style parent project writes > rejects a prepared callback that finishes after its project was deleted
+AssertionError: promise resolved "{ …(7) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "createdAt": "2026-09-30T13:23:48.469Z",
++   "id": "sty_8ec960d0-92a2-4261-bf0b-c25db0e1dcab",
++   "name": "未命名风格",
++   "notes": "",
++   "projectId": "prj_d1beaf7b-d913-41de-b92a-9fd22f0efb4b",
++   "slots": {},
++   "updatedAt": "2026-09-30T13:23:48.469Z",
+  }
+
+ ❯ tests/parentProjectWrites.test.ts:34:27
+     32|     await deleteProject(project.id);
+     33|     finishPreparation();
+     34|     await expect(lateWrite).rejects.toThrow("项目不存在");
+       |                           ^
+     35|     expect(await table.count()).toBe(0);
+     36|     expect(await db.projects.get(project.id)).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/25]⎯
+
+ FAIL  tests/parentProjectWrites.test.ts > style parent project writes > rolls back the child if touching the existing parent fails
+AssertionError: promise resolved "{ …(7) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "createdAt": "2026-09-30T13:23:48.473Z",
++   "id": "sty_a4d0916a-46fe-45d2-b8b1-92f50e9948f1",
++   "name": "未命名风格",
++   "notes": "",
++   "projectId": "prj_140b8222-3a36-4abe-87d0-ad549a1381e9",
++   "slots": {},
++   "updatedAt": "2026-09-30T13:23:48.473Z",
+  }
+
+ ❯ tests/parentProjectWrites.test.ts:44:38
+     42|     db.projects.hook("updating", fail);
+     43|     try {
+     44|       await expect(create(project.id)).rejects.toThrow("injected paren…
+       |                                      ^
+     45|     } finally {
+     46|       db.projects.hook("updating").unsubscribe(fail);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/25]⎯
+
+ FAIL  tests/parentProjectWrites.test.ts > style parent project writes > holds only the child and projects tables and touches the parent
+AssertionError: expected [ 'styles' ] to deeply equal [ 'projects', 'styles' ]
+
+- Expected
++ Received
+
+  [
+-   "projects",
+    "styles",
+  ]
+
+ ❯ Object.checkTransaction tests/parentProjectWrites.test.ts:62:67
+     60|     await db.projects.update(project.id, { updatedAt: "2000-01-01T00:0…
+     61|     const checkTransaction = () => {
+     62|       expect(Dexie.currentTransaction?.storeNames.slice().sort()).toEq…
+       |                                                                   ^
+     63|     };
+     64|     table.hook("creating", checkTransaction);
+ ❯ ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/hooks/hooks-middleware.ts:100:65
+ ❯ ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/hooks/hooks-middleware.ts:89:41
+ ❯ ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/helpers/promise.js:812:21
+ ❯ callListener ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/helpers/promise.js:495:11
+ ❯ endMicroTickScope ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/helpers/promise.js:544:17
+ ❯ Table._trans ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/classes/table/table.ts:119:24
+ ❯ Table.add ../../../../../../../Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/dexie@4.4.6/node_modules/dexie/src/classes/table/table.ts:401:17
+ ❯ addStyle src/db/repo.ts:1084:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/25]⎯
+
+ FAIL  tests/parentProjectWrites.test.ts > media parent project writes > rejects a prepared callback that finishes after its project was deleted
+AssertionError: promise resolved "'prepared-media'" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+"prepared-media"
+
+ ❯ tests/parentProjectWrites.test.ts:34:27
+     32|     await deleteProject(project.id);
+     33|     finishPreparation();
+     34|     await expect(lateWrite).rejects.toThrow("项目不存在");
+       |                           ^
+     35|     expect(await table.count()).toBe(0);
+     36|     expect(await db.projects.get(project.id)).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/25]⎯
+
+ FAIL  tests/parentProjectWrites.test.ts > media parent project writes > rolls back the child if touching the existing parent fails
+AssertionError: promise resolved "'prepared-media'" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+"prepared-media"
+
+ ❯ tests/parentProjectWrites.test.ts:44:38
+     42|     db.projects.hook("updating", fail);
+     43|     try {
+     44|       await expect(create(project.id)).rejects.toThrow("injected paren…
+       |                                      ^
+     45|     } finally {
+     46|       db.projects.hook("updating").unsubscribe(fail);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/25]⎯
+
+ FAIL  tests/projectPackageRelations.test.ts > modern ZIP original episode and beat relationships > rejects absent episodeId before parseShot fallb… without changing any existing table
+AssertionError: promise resolved "{ kind: undefined, …(18) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "archivedAt": undefined,
++   "aspectPreset": "16:9",
++   "audience": undefined,
++   "brief": undefined,
++   "columnSettings": {
++     "visible": [
++       "durationSec",
++       "content",
++       "characters",
++       "scene",
++       "notes",
++     ],
++   },
++   "createdAt": "2026-09-30T13:23:48.478Z",
++   "defaultStyleId": undefined,
++   "extra": {
++     "unknownProject": 42,
++   },
++   "generationDefaults": undefined,
++   "genre": undefined,
++   "id": "prj_b1ff1cc4-85eb-40a7-bbf6-af15eab6e423",
++   "kind": undefined,
++   "mode": "series",
++   "name": "relation test",
++   "setting": {
++     "background": "",
++     "rules": "",
++     "worldview": "",
++   },
++   "shotSettings": {
++     "autoIncrementShotNumber": true,
++     "defaultDurationSec": 0,
++     "filters": {
++       "beatIds": [],
++       "gaps": [],
++       "statuses": [],
++     },
++     "workspaceView": "design",
++   },
++   "story": {
++     "logline": "",
++   },
++   "tone": undefined,
++   "updatedAt": "2026-09-30T13:23:48.478Z",
+  }
+
+ ❯ tests/projectPackageRelations.test.ts:74:70
+     72|     const { episodes, shots } = modernRecords();
+     73|     mutate(episodes, shots);
+     74|     await expect(importProjectZip(await packageBlob(episodes, shots)))…
+       |                                                                      ^
+     75|     expect(await snapshot()).toEqual(before);
+     76|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/25]⎯
+
+ FAIL  tests/projectPackageRelations.test.ts > modern ZIP original episode and beat relationships > rejects null episodeId before parseShot fallback without changing any existing table
+AssertionError: promise resolved "{ kind: undefined, …(18) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "archivedAt": undefined,
++   "aspectPreset": "16:9",
++   "audience": undefined,
++   "brief": undefined,
++   "columnSettings": {
++     "visible": [
++       "durationSec",
++       "content",
++       "characters",
++       "scene",
++       "notes",
++     ],
++   },
++   "createdAt": "2026-09-30T13:23:48.494Z",
++   "defaultStyleId": undefined,
++   "extra": {
++     "unknownProject": 42,
++   },
++   "generationDefaults": undefined,
++   "genre": undefined,
++   "id": "prj_79592fcc-63d9-41bf-b3bf-d65be50e2cb1",
++   "kind": undefined,
++   "mode": "series",
++   "name": "relation test",
++   "setting": {
++     "background": "",
++     "rules": "",
++     "worldview": "",
++   },
++   "shotSettings": {
++     "autoIncrementShotNumber": true,
++     "defaultDurationSec": 0,
++     "filters": {
++       "beatIds": [],
++       "gaps": [],
++       "statuses": [],
++     },
++     "workspaceView": "design",
++   },
++   "story": {
++     "logline": "",
++   },
++   "tone": undefined,
++   "updatedAt": "2026-09-30T13:23:48.494Z",
+  }
+
+ ❯ tests/projectPackageRelations.test.ts:74:70
+     72|     const { episodes, shots } = modernRecords();
+     73|     mutate(episodes, shots);
+     74|     await expect(importProjectZip(await packageBlob(episodes, shots)))…
+       |                                                                      ^
+     75|     expect(await snapshot()).toEqual(before);
+     76|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/25]⎯
+
+ FAIL  tests/projectPackageRelations.test.ts > modern ZIP original episode and beat relationships > rejects foreign episodeId without changing any existing table
+AssertionError: promise resolved "{ kind: undefined, …(18) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "archivedAt": undefined,
++   "aspectPreset": "16:9",
++   "audience": undefined,
++   "brief": undefined,
++   "columnSettings": {
++     "visible": [
++       "durationSec",
++       "content",
++       "characters",
++       "scene",
++       "notes",
++     ],
++   },
++   "createdAt": "2026-09-30T13:23:48.502Z",
++   "defaultStyleId": undefined,
++   "extra": {
++     "unknownProject": 42,
++   },
++   "generationDefaults": undefined,
++   "genre": undefined,
++   "id": "prj_a9509f20-970d-4d9c-98f1-8e0f2e6ba656",
++   "kind": undefined,
++   "mode": "series",
++   "name": "relation test",
++   "setting": {
++     "background": "",
++     "rules": "",
++     "worldview": "",
++   },
++   "shotSettings": {
++     "autoIncrementShotNumber": true,
++     "defaultDurationSec": 0,
++     "filters": {
++       "beatIds": [],
++       "gaps": [],
++       "statuses": [],
++     },
++     "workspaceView": "design",
++   },
++   "story": {
++     "logline": "",
++   },
++   "tone": undefined,
++   "updatedAt": "2026-09-30T13:23:48.502Z",
+  }
+
+ ❯ tests/projectPackageRelations.test.ts:74:70
+     72|     const { episodes, shots } = modernRecords();
+     73|     mutate(episodes, shots);
+     74|     await expect(importProjectZip(await packageBlob(episodes, shots)))…
+       |                                                                      ^
+     75|     expect(await snapshot()).toEqual(before);
+     76|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/25]⎯
+
+ FAIL  tests/projectPackageRelations.test.ts > modern ZIP original episode and beat relationships > rejects empty episodeId without changing any existing table
+AssertionError: promise resolved "{ kind: undefined, …(18) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "archivedAt": undefined,
++   "aspectPreset": "16:9",
++   "audience": undefined,
++   "brief": undefined,
++   "columnSettings": {
++     "visible": [
++       "durationSec",
++       "content",
++       "characters",
++       "scene",
++       "notes",
++     ],
++   },
++   "createdAt": "2026-09-30T13:23:48.512Z",
++   "defaultStyleId": undefined,
++   "extra": {
++     "unknownProject": 42,
++   },
++   "generationDefaults": undefined,
++   "genre": undefined,
++   "id": "prj_85847071-8be7-43d9-92b9-86de245a0db9",
++   "kind": undefined,
++   "mode": "series",
++   "name": "relation test",
++   "setting": {
++     "background": "",
++     "rules": "",
++     "worldview": "",
++   },
++   "shotSettings": {
++     "autoIncrementShotNumber": true,
++     "defaultDurationSec": 0,
++     "filters": {
++       "beatIds": [],
++       "gaps": [],
++       "statuses": [],
++     },
++     "workspaceView": "design",
++   },
++   "story": {
++     "logline": "",
++   },
++   "tone": undefined,
++   "updatedAt": "2026-09-30T13:23:48.512Z",
+  }
+
+ ❯ tests/projectPackageRelations.test.ts:74:70
+     72|     const { episodes, shots } = modernRecords();
+     73|     mutate(episodes, shots);
+     74|     await expect(importProjectZip(await packageBlob(episodes, shots)))…
+       |                                                                      ^
+     75|     expect(await snapshot()).toEqual(before);
+     76|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/25]⎯
+
+ FAIL  tests/projectPackageRelations.test.ts > modern ZIP original episode and beat relationships > rejects numeric episodeId without changing any existing table
+AssertionError: promise resolved "{ kind: undefined, …(18) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "archivedAt": undefined,
++   "aspectPreset": "16:9",
++   "audience": undefined,
++   "brief": undefined,
++   "columnSettings": {
++     "visible": [
++       "durationSec",
++       "content",
++       "characters",
++       "scene",
++       "notes",
++     ],
++   },
++   "createdAt": "2026-09-30T13:23:48.519Z",
++   "defaultStyleId": undefined,
++   "extra": {
++     "unknownProject": 42,
++   },
++   "generationDefaults": undefined,
++   "genre": undefined,
++   "id": "prj_bb906ca0-9b9a-44ca-8dbd-261564647373",
++   "kind": undefined,
++   "mode": "series",
++   "name": "relation test",
++   "setting": {
++     "background": "",
++     "rules": "",
++     "worldview": "",
++   },
++   "shotSettings": {
++     "autoIncrementShotNumber": true,
++     "defaultDurationSec": 0,
++     "filters": {
++       "beatIds": [],
++       "gaps": [],
++       "statuses": [],
++     },
++     "workspaceView": "design",
++   },
++   "story": {
++     "logline": "",
++   },
++   "tone": undefined,
++   "updatedAt": "2026-09-30T13:23:48.519Z",
+  }
+
+ ❯ tests/projectPackageRelations.test.ts:74:70
+     72|     const { episodes, shots } = modernRecords();
+     73|     mutate(episodes, shots);
+     74|     await expect(importProjectZip(await packageBlob(episodes, shots)))…
+       |                                                                      ^
+     75|     expect(await snapshot()).toEqual(before);
+     76|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/25]⎯
+
+ FAIL  tests/projectPackageRelations.test.ts > modern ZIP original episode and beat relationships > rejects beat from another episode without changing any existing table
+AssertionError: promise resolved "{ kind: undefined, …(18) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "archivedAt": undefined,
++   "aspectPreset": "16:9",
++   "audience": undefined,
++   "brief": undefined,
++   "columnSettings": {
++     "visible": [
++       "durationSec",
++       "content",
++       "characters",
++       "scene",
++       "notes",
++     ],
++   },
++   "createdAt": "2026-09-30T13:23:48.526Z",
++   "defaultStyleId": undefined,
++   "extra": {
++     "unknownProject": 42,
++   },
++   "generationDefaults": undefined,
++   "genre": undefined,
++   "id": "prj_a22152cf-a000-4d81-8630-ccd4b836060b",
++   "kind": undefined,
++   "mode": "series",
++   "name": "relation test",
++   "setting": {
++     "background": "",
++     "rules": "",
++     "worldview": "",
++   },
++   "shotSettings": {
++     "autoIncrementShotNumber": true,
++     "defaultDurationSec": 0,
++     "filters": {
++       "beatIds": [],
++       "gaps": [],
++       "statuses": [],
++     },
++     "workspaceView": "design",
++   },
++   "story": {
++     "logline": "",
++   },
++   "tone": undefined,
++   "updatedAt": "2026-09-30T13:23:48.526Z",
+  }
+
+ ❯ tests/projectPackageRelations.test.ts:74:70
+     72|     const { episodes, shots } = modernRecords();
+     73|     mutate(episodes, shots);
+     74|     await expect(importProjectZip(await packageBlob(episodes, shots)))…
+       |                                                                      ^
+     75|     expect(await snapshot()).toEqual(before);
+     76|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/25]⎯
+
+ FAIL  tests/projectPackageRelations.test.ts > modern ZIP original episode and beat relationships > rejects unknown beat without changing any existing table
+AssertionError: promise resolved "{ kind: undefined, …(18) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "archivedAt": undefined,
++   "aspectPreset": "16:9",
++   "audience": undefined,
++   "brief": undefined,
++   "columnSettings": {
++     "visible": [
++       "durationSec",
++       "content",
++       "characters",
++       "scene",
++       "notes",
++     ],
++   },
++   "createdAt": "2026-09-30T13:23:48.533Z",
++   "defaultStyleId": undefined,
++   "extra": {
++     "unknownProject": 42,
++   },
++   "generationDefaults": undefined,
++   "genre": undefined,
++   "id": "prj_9eb41cbd-53ea-4e50-b482-59860c0b21fd",
++   "kind": undefined,
++   "mode": "series",
++   "name": "relation test",
++   "setting": {
++     "background": "",
++     "rules": "",
++     "worldview": "",
++   },
++   "shotSettings": {
++     "autoIncrementShotNumber": true,
++     "defaultDurationSec": 0,
++     "filters": {
++       "beatIds": [],
++       "gaps": [],
++       "statuses": [],
++     },
++     "workspaceView": "design",
++   },
++   "story": {
++     "logline": "",
++   },
++   "tone": undefined,
++   "updatedAt": "2026-09-30T13:23:48.533Z",
+  }
+
+ ❯ tests/projectPackageRelations.test.ts:74:70
+     72|     const { episodes, shots } = modernRecords();
+     73|     mutate(episodes, shots);
+     74|     await expect(importProjectZip(await packageBlob(episodes, shots)))…
+       |                                                                      ^
+     75|     expect(await snapshot()).toEqual(before);
+     76|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/25]⎯
+
+ FAIL  tests/projectPackageRelations.test.ts > modern ZIP original episode and beat relationships > rejects duplicate beats within one episode without changing any existing table
+AssertionError: promise resolved "{ kind: undefined, …(18) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "archivedAt": undefined,
++   "aspectPreset": "16:9",
++   "audience": undefined,
++   "brief": undefined,
++   "columnSettings": {
++     "visible": [
++       "durationSec",
++       "content",
++       "characters",
++       "scene",
++       "notes",
++     ],
++   },
++   "createdAt": "2026-09-30T13:23:48.560Z",
++   "defaultStyleId": undefined,
++   "extra": {
++     "unknownProject": 42,
++   },
++   "generationDefaults": undefined,
++   "genre": undefined,
++   "id": "prj_2a46f8a3-e9ce-4092-afac-bfca2f867a57",
++   "kind": undefined,
++   "mode": "series",
++   "name": "relation test",
++   "setting": {
++     "background": "",
++     "rules": "",
++     "worldview": "",
++   },
++   "shotSettings": {
++     "autoIncrementShotNumber": true,
++     "defaultDurationSec": 0,
++     "filters": {
++       "beatIds": [],
++       "gaps": [],
++       "statuses": [],
++     },
++     "workspaceView": "design",
++   },
++   "story": {
++     "logline": "",
++   },
++   "tone": undefined,
++   "updatedAt": "2026-09-30T13:23:48.560Z",
+  }
+
+ ❯ tests/projectPackageRelations.test.ts:74:70
+     72|     const { episodes, shots } = modernRecords();
+     73|     mutate(episodes, shots);
+     74|     await expect(importProjectZip(await packageBlob(episodes, shots)))…
+       |                                                                      ^
+     75|     expect(await snapshot()).toEqual(before);
+     76|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/25]⎯
+
+ FAIL  tests/projectPackageRelations.test.ts > modern ZIP original episode and beat relationships > rejects duplicate explicit beat IDs that parser… without changing any existing table
+AssertionError: promise resolved "{ kind: undefined, …(18) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "archivedAt": undefined,
++   "aspectPreset": "16:9",
++   "audience": undefined,
++   "brief": undefined,
++   "columnSettings": {
++     "visible": [
++       "durationSec",
++       "content",
++       "characters",
++       "scene",
++       "notes",
++     ],
++   },
++   "createdAt": "2026-09-30T13:23:48.566Z",
++   "defaultStyleId": undefined,
++   "extra": {
++     "unknownProject": 42,
++   },
++   "generationDefaults": undefined,
++   "genre": undefined,
++   "id": "prj_4bcfe663-fec2-4549-99d7-a27a05791447",
++   "kind": undefined,
++   "mode": "series",
++   "name": "relation test",
++   "setting": {
++     "background": "",
++     "rules": "",
++     "worldview": "",
++   },
++   "shotSettings": {
++     "autoIncrementShotNumber": true,
++     "defaultDurationSec": 0,
++     "filters": {
++       "beatIds": [],
++       "gaps": [],
++       "statuses": [],
++     },
++     "workspaceView": "design",
++   },
++   "story": {
++     "logline": "",
++   },
++   "tone": undefined,
++   "updatedAt": "2026-09-30T13:23:48.566Z",
+  }
+
+ ❯ tests/projectPackageRelations.test.ts:74:70
+     72|     const { episodes, shots } = modernRecords();
+     73|     mutate(episodes, shots);
+     74|     await expect(importProjectZip(await packageBlob(episodes, shots)))…
+       |                                                                      ^
+     75|     expect(await snapshot()).toEqual(before);
+     76|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/25]⎯
+
+ FAIL  tests/projectPackageRelations.test.ts > modern ZIP original episode and beat relationships > rejects reference to a beat ID synthesized by n… without changing any existing table
+AssertionError: promise resolved "{ kind: undefined, …(18) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "archivedAt": undefined,
++   "aspectPreset": "16:9",
++   "audience": undefined,
++   "brief": undefined,
++   "columnSettings": {
++     "visible": [
++       "durationSec",
++       "content",
++       "characters",
++       "scene",
++       "notes",
++     ],
++   },
++   "createdAt": "2026-09-30T13:23:48.573Z",
++   "defaultStyleId": undefined,
++   "extra": {
++     "unknownProject": 42,
++   },
++   "generationDefaults": undefined,
++   "genre": undefined,
++   "id": "prj_6886c9e9-3985-4959-906b-68ea8a643638",
++   "kind": undefined,
++   "mode": "series",
++   "name": "relation test",
++   "setting": {
++     "background": "",
++     "rules": "",
++     "worldview": "",
++   },
++   "shotSettings": {
++     "autoIncrementShotNumber": true,
++     "defaultDurationSec": 0,
++     "filters": {
++       "beatIds": [],
++       "gaps": [],
++       "statuses": [],
++     },
++     "workspaceView": "design",
++   },
++   "story": {
++     "logline": "",
++   },
++   "tone": undefined,
++   "updatedAt": "2026-09-30T13:23:48.573Z",
+  }
+
+ ❯ tests/projectPackageRelations.test.ts:74:70
+     72|     const { episodes, shots } = modernRecords();
+     73|     mutate(episodes, shots);
+     74|     await expect(importProjectZip(await packageBlob(episodes, shots)))…
+       |                                                                      ^
+     75|     expect(await snapshot()).toEqual(before);
+     76|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/25]⎯
+
+ FAIL  tests/projectPackageRelations.test.ts > modern ZIP original episode and beat relationships > rejects reference to a coerced numeric beat ID without changing any existing table
+AssertionError: promise resolved "{ kind: undefined, …(18) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "archivedAt": undefined,
++   "aspectPreset": "16:9",
++   "audience": undefined,
++   "brief": undefined,
++   "columnSettings": {
++     "visible": [
++       "durationSec",
++       "content",
++       "characters",
++       "scene",
++       "notes",
++     ],
++   },
++   "createdAt": "2026-09-30T13:23:48.579Z",
++   "defaultStyleId": undefined,
++   "extra": {
++     "unknownProject": 42,
++   },
++   "generationDefaults": undefined,
++   "genre": undefined,
++   "id": "prj_9ca486cd-b356-4247-ac43-3122d0f5dfc5",
++   "kind": undefined,
++   "mode": "series",
++   "name": "relation test",
++   "setting": {
++     "background": "",
++     "rules": "",
++     "worldview": "",
++   },
++   "shotSettings": {
++     "autoIncrementShotNumber": true,
++     "defaultDurationSec": 0,
++     "filters": {
++       "beatIds": [],
++       "gaps": [],
++       "statuses": [],
++     },
++     "workspaceView": "design",
++   },
++   "story": {
++     "logline": "",
++   },
++   "tone": undefined,
++   "updatedAt": "2026-09-30T13:23:48.579Z",
+  }
+
+ ❯ tests/projectPackageRelations.test.ts:74:70
+     72|     const { episodes, shots } = modernRecords();
+     73|     mutate(episodes, shots);
+     74|     await expect(importProjectZip(await packageBlob(episodes, shots)))…
+       |                                                                      ^
+     75|     expect(await snapshot()).toEqual(before);
+     76|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/25]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  25 failed | 13 passed (38)
+   Start at  21:23:48
+   Duration  476ms (tests 41%, transform 37%, setup 12%, import 9%, worker 1%)
+
+ ELIFECYCLE  Test failed. See above for more details.

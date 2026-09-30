@@ -1,0 +1,20 @@
+COMMAND: ["/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm", "test", "tests/agentGeneration.test.ts", "tests/agentGenerationBatch.test.ts", "tests/agentGenerationBatchSafety.test.ts", "tests/agentGenerationEvidence.test.ts", "tests/agentGenerationRecovery.test.ts", "tests/agentGenerationReview.test.ts", "tests/agentGenerationReviewTransactions.test.ts", "tests/agentTaskOrchestration.test.ts", "tests/agentTaskOrchestrationReview.test.ts", "tests/agentTaskWrapup.test.ts", "tests/agentTasks.test.ts", "tests/audioGenerationAgent.test.ts", "tests/audioAgentExecution.test.ts", "tests/audioMusicAgentTools.test.ts"]
+
+> cuepoint@0.1.0 test /Users/xiaomengdao/WebstormProjects/aifenjing
+> vitest run tests/agentGeneration.test.ts tests/agentGenerationBatch.test.ts tests/agentGenerationBatchSafety.test.ts tests/agentGenerationEvidence.test.ts tests/agentGenerationRecovery.test.ts tests/agentGenerationReview.test.ts tests/agentGenerationReviewTransactions.test.ts tests/agentTaskOrchestration.test.ts tests/agentTaskOrchestrationReview.test.ts tests/agentTaskWrapup.test.ts tests/agentTasks.test.ts tests/audioGenerationAgent.test.ts tests/audioAgentExecution.test.ts tests/audioMusicAgentTools.test.ts
+
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+
+ Test Files  14 passed (14)
+      Tests  260 passed (260)
+   Start at  19:53:55
+   Duration  3.21s (tests 55%, transform 30%, import 9%, setup 6%)
+
+  Transform  transforming modules took 6.84s · 30% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+
+EXIT: 0

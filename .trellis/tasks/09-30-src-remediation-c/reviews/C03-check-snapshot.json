@@ -1,0 +1,612 @@
+{
+  "status": "PASS",
+  "role": "trellis-check",
+  "startedAt": "2026-09-30T13:31:17.445697+00:00",
+  "finishedAt": "2026-09-30T13:44:07.800613+00:00",
+  "scope": "C03 PD-01 / SS-04 only",
+  "hashSemantics": "before=implement entry (null=new test absent); implementAfter=handoff; checkEntry=checker entry; after=accepted final. Baseline directory includes copied new tests for old-source red, not historical tests.",
+  "files": [
+    {
+      "path": "src/db/repo.ts",
+      "status": "reviewed",
+      "beforeSha256": "f87b802e9b9eea8a4642e60bd8ed9180d1f1b9113c3de42d2e6717176f2792cd",
+      "implementAfterSha256": "346e54a274405562deba97a67357a6c4d65b441de47ae1ef7253ce871367d7a1",
+      "checkEntrySha256": "346e54a274405562deba97a67357a6c4d65b441de47ae1ef7253ce871367d7a1",
+      "afterSha256": "346e54a274405562deba97a67357a6c4d65b441de47ae1ef7253ce871367d7a1",
+      "checkerChanged": false,
+      "baselineVerifiedSha256": "f87b802e9b9eea8a4642e60bd8ed9180d1f1b9113c3de42d2e6717176f2792cd",
+      "coverage": "Complete before/after full-context diff read; final checker patch reviewed.",
+      "fullDiff": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-full-repo.ts.diff"
+    },
+    {
+      "path": "src/lib/projectPackage.ts",
+      "status": "reviewed",
+      "beforeSha256": "1e07966b6ac71077c8afac7dd739beec3b92323129dc48c766dbd653e18104ad",
+      "implementAfterSha256": "7486c9fb56bdf01cdf9f86b06115ec14103d8a5b11ee9f2cee449c23de6a4679",
+      "checkEntrySha256": "7486c9fb56bdf01cdf9f86b06115ec14103d8a5b11ee9f2cee449c23de6a4679",
+      "afterSha256": "ee0ef3c984a4454f5d90e9ac7b8c0570f919024fb2078d9862fad93efc2cb555",
+      "checkerChanged": true,
+      "baselineVerifiedSha256": "1e07966b6ac71077c8afac7dd739beec3b92323129dc48c766dbd653e18104ad",
+      "coverage": "Complete before/after full-context diff read; final checker patch reviewed.",
+      "fullDiff": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-full-projectPackage.ts.diff"
+    },
+    {
+      "path": "tests/parentProjectWrites.test.ts",
+      "status": "reviewed",
+      "beforeSha256": null,
+      "implementAfterSha256": "49219fb616c63e1021dec6280e6ffb1db1f4d789e99336d1ea78a68ccb09240d",
+      "checkEntrySha256": "49219fb616c63e1021dec6280e6ffb1db1f4d789e99336d1ea78a68ccb09240d",
+      "afterSha256": "49219fb616c63e1021dec6280e6ffb1db1f4d789e99336d1ea78a68ccb09240d",
+      "checkerChanged": false,
+      "baselineVerifiedSha256": null,
+      "coverage": "Complete before/after full-context diff read; final checker patch reviewed.",
+      "fullDiff": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-full-parentProjectWrites.test.ts.diff"
+    },
+    {
+      "path": "tests/projectPackageRelations.test.ts",
+      "status": "reviewed",
+      "beforeSha256": null,
+      "implementAfterSha256": "7f6fb9be98d45c868919a24c36636d425258a632f4709eda4de1e50d4de51da1",
+      "checkEntrySha256": "7f6fb9be98d45c868919a24c36636d425258a632f4709eda4de1e50d4de51da1",
+      "afterSha256": "89e20d9f6f573b3cea4a82c4413e240c918d7ccc8227f8f665a532fe674ecd8a",
+      "checkerChanged": true,
+      "baselineVerifiedSha256": null,
+      "coverage": "Complete before/after full-context diff read; final checker patch reviewed.",
+      "fullDiff": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-full-projectPackageRelations.test.ts.diff"
+    }
+  ],
+  "priorReviewedFileCount": 21,
+  "allPriorReviewedHashesMatch": true,
+  "priorReviewedFiles": [
+    {
+      "path": "src/db/taskGenerationEvidence.ts",
+      "reviewedSha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+      "entrySha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+      "unit": "C01",
+      "checkEntrySha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+      "afterSha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+      "unchanged": true
+    },
+    {
+      "path": "src/db/agentTaskRecords.ts",
+      "reviewedSha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+      "entrySha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+      "unit": "C01",
+      "checkEntrySha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+      "afterSha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+      "unchanged": true
+    },
+    {
+      "path": "src/lib/agent/wrapupEvidence.ts",
+      "reviewedSha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "entrySha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "unit": "C01",
+      "checkEntrySha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "afterSha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "unchanged": true
+    },
+    {
+      "path": "tests/agentGenerationEvidence.test.ts",
+      "reviewedSha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+      "entrySha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+      "unit": "C01",
+      "checkEntrySha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+      "afterSha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678",
+      "unchanged": true
+    },
+    {
+      "path": "tests/agentTaskWrapup.test.ts",
+      "reviewedSha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+      "entrySha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+      "unit": "C01",
+      "checkEntrySha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+      "afterSha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a",
+      "unchanged": true
+    },
+    {
+      "path": "tests/agentTaskOrchestrationReview.test.ts",
+      "reviewedSha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+      "entrySha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+      "unit": "C01",
+      "checkEntrySha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+      "afterSha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/c01-browser-regression.mjs",
+      "reviewedSha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+      "entrySha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+      "unit": "C01",
+      "checkEntrySha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+      "afterSha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/c01/harness.ts",
+      "reviewedSha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+      "entrySha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+      "unit": "C01",
+      "checkEntrySha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+      "afterSha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/c01/index.html",
+      "reviewedSha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+      "entrySha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+      "unit": "C01",
+      "checkEntrySha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+      "afterSha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47",
+      "unchanged": true
+    },
+    {
+      "path": "src/domain/music.ts",
+      "reviewedSha256": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+      "entrySha256": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+      "unit": "C02",
+      "checkEntrySha256": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+      "afterSha256": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+      "unchanged": true
+    },
+    {
+      "path": "src/db/music.ts",
+      "reviewedSha256": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+      "entrySha256": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+      "unit": "C02",
+      "checkEntrySha256": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+      "afterSha256": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+      "unchanged": true
+    },
+    {
+      "path": "src/lib/agent/musicTools.ts",
+      "reviewedSha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+      "entrySha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+      "unit": "C02",
+      "checkEntrySha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+      "afterSha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+      "unchanged": true
+    },
+    {
+      "path": "src/lib/audioGeneration/input.ts",
+      "reviewedSha256": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+      "entrySha256": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+      "unit": "C02",
+      "checkEntrySha256": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+      "afterSha256": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+      "unchanged": true
+    },
+    {
+      "path": "src/lib/ai/apimartAudio.ts",
+      "reviewedSha256": "8cb50863b0aab40e1ddfe9b956b938125eba4f170bcd463f2cce24e7e5eb2c59",
+      "entrySha256": "8cb50863b0aab40e1ddfe9b956b938125eba4f170bcd463f2cce24e7e5eb2c59",
+      "unit": "C02",
+      "checkEntrySha256": "8cb50863b0aab40e1ddfe9b956b938125eba4f170bcd463f2cce24e7e5eb2c59",
+      "afterSha256": "8cb50863b0aab40e1ddfe9b956b938125eba4f170bcd463f2cce24e7e5eb2c59",
+      "unchanged": true
+    },
+    {
+      "path": "src/lib/audioProjectPackage.ts",
+      "reviewedSha256": "12a0c856dceccf6ce249c1b367e4b3ea0d4f67d315427adfcd57bd1e0d1691bc",
+      "entrySha256": "12a0c856dceccf6ce249c1b367e4b3ea0d4f67d315427adfcd57bd1e0d1691bc",
+      "unit": "C02",
+      "checkEntrySha256": "12a0c856dceccf6ce249c1b367e4b3ea0d4f67d315427adfcd57bd1e0d1691bc",
+      "afterSha256": "12a0c856dceccf6ce249c1b367e4b3ea0d4f67d315427adfcd57bd1e0d1691bc",
+      "unchanged": true
+    },
+    {
+      "path": "src/components/music/MusicCreation.tsx",
+      "reviewedSha256": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c",
+      "entrySha256": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c",
+      "unit": "C02",
+      "checkEntrySha256": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c",
+      "afterSha256": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c",
+      "unchanged": true
+    },
+    {
+      "path": "tests/musicDurationContract.test.ts",
+      "reviewedSha256": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399",
+      "entrySha256": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399",
+      "unit": "C02",
+      "checkEntrySha256": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399",
+      "afterSha256": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399",
+      "unchanged": true
+    },
+    {
+      "path": "tests/musicLegacyDurationRepair.test.ts",
+      "reviewedSha256": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e",
+      "entrySha256": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e",
+      "unit": "C02",
+      "checkEntrySha256": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e",
+      "afterSha256": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/c02-browser-regression.mjs",
+      "reviewedSha256": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+      "entrySha256": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+      "unit": "C02",
+      "checkEntrySha256": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+      "afterSha256": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/c02/harness.tsx",
+      "reviewedSha256": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+      "entrySha256": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+      "unit": "C02",
+      "checkEntrySha256": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+      "afterSha256": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+      "unchanged": true
+    },
+    {
+      "path": "tests/fixtures/c02/index.html",
+      "reviewedSha256": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8",
+      "entrySha256": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8",
+      "unit": "C02",
+      "checkEntrySha256": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8",
+      "afterSha256": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8",
+      "unchanged": true
+    }
+  ],
+  "allFileCoverage": [
+    {
+      "path": "src/db/repo.ts",
+      "status": "reviewed",
+      "sha256": "346e54a274405562deba97a67357a6c4d65b441de47ae1ef7253ce871367d7a1"
+    },
+    {
+      "path": "src/lib/projectPackage.ts",
+      "status": "reviewed",
+      "sha256": "ee0ef3c984a4454f5d90e9ac7b8c0570f919024fb2078d9862fad93efc2cb555"
+    },
+    {
+      "path": "tests/parentProjectWrites.test.ts",
+      "status": "reviewed",
+      "sha256": "49219fb616c63e1021dec6280e6ffb1db1f4d789e99336d1ea78a68ccb09240d"
+    },
+    {
+      "path": "tests/projectPackageRelations.test.ts",
+      "status": "reviewed",
+      "sha256": "89e20d9f6f573b3cea4a82c4413e240c918d7ccc8227f8f665a532fe674ecd8a"
+    },
+    {
+      "path": "src/db/taskGenerationEvidence.ts",
+      "status": "prior-review-hash-verified",
+      "sha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312"
+    },
+    {
+      "path": "src/db/agentTaskRecords.ts",
+      "status": "prior-review-hash-verified",
+      "sha256": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25"
+    },
+    {
+      "path": "src/lib/agent/wrapupEvidence.ts",
+      "status": "prior-review-hash-verified",
+      "sha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17"
+    },
+    {
+      "path": "tests/agentGenerationEvidence.test.ts",
+      "status": "prior-review-hash-verified",
+      "sha256": "2c34db266339bf5229daf9706f4c7368fe4baca51c2db8667a9b34415f86b678"
+    },
+    {
+      "path": "tests/agentTaskWrapup.test.ts",
+      "status": "prior-review-hash-verified",
+      "sha256": "aaadeb2479d8ca0c0fb16838ab11af77a5770f7e0b19cf54399dddabdac3843a"
+    },
+    {
+      "path": "tests/agentTaskOrchestrationReview.test.ts",
+      "status": "prior-review-hash-verified",
+      "sha256": "b308e7d3a27679727f5b00ef1040359c267696396ff03d983e83c63d5b8ca2f8"
+    },
+    {
+      "path": "scripts/c01-browser-regression.mjs",
+      "status": "prior-review-hash-verified",
+      "sha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6"
+    },
+    {
+      "path": "tests/fixtures/c01/harness.ts",
+      "status": "prior-review-hash-verified",
+      "sha256": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502"
+    },
+    {
+      "path": "tests/fixtures/c01/index.html",
+      "status": "prior-review-hash-verified",
+      "sha256": "ef7956599e6ae1330890f167d78c00958ada24c554a46ba9cde72aa2b4189a47"
+    },
+    {
+      "path": "src/domain/music.ts",
+      "status": "prior-review-hash-verified",
+      "sha256": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da"
+    },
+    {
+      "path": "src/db/music.ts",
+      "status": "prior-review-hash-verified",
+      "sha256": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54"
+    },
+    {
+      "path": "src/lib/agent/musicTools.ts",
+      "status": "prior-review-hash-verified",
+      "sha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87"
+    },
+    {
+      "path": "src/lib/audioGeneration/input.ts",
+      "status": "prior-review-hash-verified",
+      "sha256": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62"
+    },
+    {
+      "path": "src/lib/ai/apimartAudio.ts",
+      "status": "prior-review-hash-verified",
+      "sha256": "8cb50863b0aab40e1ddfe9b956b938125eba4f170bcd463f2cce24e7e5eb2c59"
+    },
+    {
+      "path": "src/lib/audioProjectPackage.ts",
+      "status": "prior-review-hash-verified",
+      "sha256": "12a0c856dceccf6ce249c1b367e4b3ea0d4f67d315427adfcd57bd1e0d1691bc"
+    },
+    {
+      "path": "src/components/music/MusicCreation.tsx",
+      "status": "prior-review-hash-verified",
+      "sha256": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c"
+    },
+    {
+      "path": "tests/musicDurationContract.test.ts",
+      "status": "prior-review-hash-verified",
+      "sha256": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399"
+    },
+    {
+      "path": "tests/musicLegacyDurationRepair.test.ts",
+      "status": "prior-review-hash-verified",
+      "sha256": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e"
+    },
+    {
+      "path": "scripts/c02-browser-regression.mjs",
+      "status": "prior-review-hash-verified",
+      "sha256": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84"
+    },
+    {
+      "path": "tests/fixtures/c02/harness.tsx",
+      "status": "prior-review-hash-verified",
+      "sha256": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22"
+    },
+    {
+      "path": "tests/fixtures/c02/index.html",
+      "status": "prior-review-hash-verified",
+      "sha256": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8"
+    }
+  ],
+  "validation": {
+    "tests": {
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "test",
+        "tests/parentProjectWrites.test.ts",
+        "tests/projectPackageRelations.test.ts",
+        "tests/projectPackage.test.ts",
+        "tests/repoReliability.test.ts",
+        "tests/repo.test.ts",
+        "tests/assetFoundation.test.ts",
+        "tests/agentToolTransactions.test.ts",
+        "tests/runWriteOutcomes.test.ts",
+        "tests/shotDeleteUndo.test.ts",
+        "tests/draftMedia.test.ts",
+        "tests/productionProposals.test.ts",
+        "tests/agentGenerationBatchSafety.test.ts",
+        "tests/agentGenerationRecovery.test.ts"
+      ],
+      "exitCode": 0,
+      "log": "reviews/C03-check-tests.log",
+      "invocation": "local pnpm test script with 13 explicit file arguments",
+      "packageScript": "vitest run",
+      "effectiveCommand": [
+        "vitest",
+        "run",
+        "tests/parentProjectWrites.test.ts",
+        "tests/projectPackageRelations.test.ts",
+        "tests/projectPackage.test.ts",
+        "tests/repoReliability.test.ts",
+        "tests/repo.test.ts",
+        "tests/assetFoundation.test.ts",
+        "tests/agentToolTransactions.test.ts",
+        "tests/runWriteOutcomes.test.ts",
+        "tests/shotDeleteUndo.test.ts",
+        "tests/draftMedia.test.ts",
+        "tests/productionProposals.test.ts",
+        "tests/agentGenerationBatchSafety.test.ts",
+        "tests/agentGenerationRecovery.test.ts"
+      ],
+      "actualFiles": 13,
+      "actualPassed": 185,
+      "wholeSuiteRun": false
+    },
+    "lint": {
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "lint"
+      ],
+      "exitCode": 0,
+      "log": "reviews/C03-check-lint.log"
+    },
+    "static": {
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-static.mjs"
+      ],
+      "exitCode": 0,
+      "log": "reviews/C03-check-static.log"
+    },
+    "native-browser": {
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "scripts/c01-browser-regression.mjs"
+      ],
+      "exitCode": 0,
+      "log": "reviews/C03-check-native-browser.log"
+    },
+    "whitespace": {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/db/repo.ts",
+        "src/lib/projectPackage.ts",
+        "tests/parentProjectWrites.test.ts",
+        "tests/projectPackageRelations.test.ts"
+      ],
+      "exitCode": 0,
+      "log": "reviews/C03-check-whitespace.log"
+    }
+  },
+  "staticCounts": [
+    {
+      "file": "src/db/repo.ts",
+      "baselineDiagnostics": 11,
+      "currentDiagnostics": 11,
+      "added": []
+    },
+    {
+      "file": "src/lib/projectPackage.ts",
+      "baselineDiagnostics": 60,
+      "currentDiagnostics": 60,
+      "added": []
+    }
+  ],
+  "checkerCorrection": {
+    "status": "resolved",
+    "file": "src/lib/projectPackage.ts",
+    "function": "parseEpisode",
+    "trigger": "missing beat ID at index 0 + explicit beat_0 in same modern episode",
+    "mechanism": "normalization synthesizes duplicate identity before remap",
+    "fix": "assert unique normalized beat identities before remap, after original raw FK validation",
+    "red": {
+      "files": 1,
+      "tests": 18,
+      "failed": 1,
+      "passed": 17,
+      "exitCode": 1,
+      "log": "reviews/C03-check-identity-red.log"
+    },
+    "addedCases": [
+      "synthesized/explicit beat ID collision",
+      "episode 7/string-7 collision",
+      "shot 7/string-7 collision"
+    ],
+    "positiveCompatibility": "unreferenced missing beat ID accepted and uniquely remapped; legacy branches preserved"
+  },
+  "unitRegressionTests": 41,
+  "nativeScope": "C01 native Chromium IndexedDB fixture, addCharacter/putMedia path affected, 6 checks, zero external requests; not full product/provider E2E",
+  "unresolvedC03Blockers": [],
+  "excludedWork": [
+    "spec/ledger edits",
+    "commits",
+    "archives",
+    "C04",
+    "D modules"
+  ],
+  "evidenceFiles": [
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check.md",
+      "sha256": "ff17e5ce52f56ab9043873d30dd4b8053f32ac8423f3f50693b6531bacc76d30"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-input.json",
+      "sha256": "3a5a554b96319934f8f382701c88e06118306e4dc20661e915e7dee29b327c6a"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-commands.json",
+      "sha256": "98ae29816d194810c5a012d24dd290142c52394ef59f085b755337695faf575b"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-tests.log",
+      "sha256": "10599530809f5e5050072827d7e708a9c623d4a4dd725f1fcfe32780605d882d"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-lint.log",
+      "sha256": "d546bdef181fd914e8f80c80d36dceaa8553c2e96d8917867349f27b423efdd2"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-static.log",
+      "sha256": "76f85f9808062f8068747c74c5e345a2b39e4e58d8f0205d0b21b3655c3f32a6"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-native-browser.log",
+      "sha256": "b71f7e8a8cfdeb2b192f6f2f5ad6efccd320ed796a18e004fe2b843c8219560c"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-whitespace.log",
+      "sha256": "f3aa1186837cf79ee6fb5047487f899ea2d8878b8380b7ee6c2b8ee166d730f8"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-identity-red.log",
+      "sha256": "2e0e26fcaad90742117b7534f40a074eb24f591902a9bf5fd2e5433ea36d7308"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-static-summary.json",
+      "sha256": "cc7443958090cc06073835e7e76d059eb6efb4877de5b4c6e7b03e83bc716c0b"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-static-before.json",
+      "sha256": "c904ebb53999ab643bf94be978549c1213a43f7bb90d4d266c76b3dc02db1b79"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-static-current.json",
+      "sha256": "68baf0e9d4c7237d75000a81ef8a9f6066e7420e2209baeaf62b1c09a79020d7"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-static.mjs",
+      "sha256": "4aed40e58e49554fb034621b09cb05f722e73f523e77dd57fd6afe3a95688d5e"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-eslint.config.mjs",
+      "sha256": "71fec4e76e3e26f5e21e6412d7847a5c7e0b8e828af4fba41237351faa24ccce"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-entry-snapshot.json",
+      "sha256": "466ffa8d0cf77a599faf4e4367843e70f1d90c9bb9a896927c7ce39fff226a33"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-implement-snapshot.json",
+      "sha256": "87ea441588b97b73dc8c37d85ea25f3dc9a8f5ef320c54126a5c1694270fa822"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-isolated-old-red.log",
+      "sha256": "a21f7436c98feb5891f0c2b644ad0b24609d5e41624cee36e24d721d0b9de4ce"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-full-repo.ts.diff",
+      "sha256": "de6a3f8eec4c4b8f4e86153b9c8777b950126995360e9b7bd875bbdf5fe84b61"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-full-projectPackage.ts.diff",
+      "sha256": "627b881338d55100572f6357b5205bbd86e07fbe351e9488ee1154fd8e42b898"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-full-parentProjectWrites.test.ts.diff",
+      "sha256": "eecfa382236da5bd11cc90a4aa6851ad75f854d444331672b423e85d0a867b8f"
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-c/reviews/C03-check-full-projectPackageRelations.test.ts.diff",
+      "sha256": "e225edacc23aaa96594ec0a4b02b8a786b92605182058f1d628a4b8beb59da11"
+    }
+  ],
+  "before": {
+    "src/db/repo.ts": "346e54a274405562deba97a67357a6c4d65b441de47ae1ef7253ce871367d7a1",
+    "src/lib/projectPackage.ts": "7486c9fb56bdf01cdf9f86b06115ec14103d8a5b11ee9f2cee449c23de6a4679",
+    "tests/parentProjectWrites.test.ts": "49219fb616c63e1021dec6280e6ffb1db1f4d789e99336d1ea78a68ccb09240d",
+    "tests/projectPackageRelations.test.ts": "7f6fb9be98d45c868919a24c36636d425258a632f4709eda4de1e50d4de51da1"
+  },
+  "after": {
+    "src/db/repo.ts": "346e54a274405562deba97a67357a6c4d65b441de47ae1ef7253ce871367d7a1",
+    "src/lib/projectPackage.ts": "ee0ef3c984a4454f5d90e9ac7b8c0570f919024fb2078d9862fad93efc2cb555",
+    "tests/parentProjectWrites.test.ts": "49219fb616c63e1021dec6280e6ffb1db1f4d789e99336d1ea78a68ccb09240d",
+    "tests/projectPackageRelations.test.ts": "89e20d9f6f573b3cea4a82c4413e240c918d7ccc8227f8f665a532fe674ecd8a"
+  },
+  "baseline": {
+    "src/db/repo.ts": "f87b802e9b9eea8a4642e60bd8ed9180d1f1b9113c3de42d2e6717176f2792cd",
+    "src/lib/projectPackage.ts": "1e07966b6ac71077c8afac7dd739beec3b92323129dc48c766dbd653e18104ad",
+    "tests/parentProjectWrites.test.ts": null,
+    "tests/projectPackageRelations.test.ts": null
+  },
+  "normalizedMapsNote": "Coordinator additive maps from checker file rows; no new review or product changes."
+}

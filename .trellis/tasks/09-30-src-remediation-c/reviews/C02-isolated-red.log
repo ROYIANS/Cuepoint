@@ -1,0 +1,293 @@
+
+ RUN  v5.0.1 /var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-old-source-ih1gk2f7
+
+ ❯ tests/musicDurationContract.test.ts (38 tests | 13 failed) 343ms
+   ❯ C02 integer music settings across real consumers (26)
+     × advertises optional integer durations with the engine's exact bounds 9ms
+     × rejects flowmusic/30.5 before domain writes, ledger or network 9ms
+     × rejects suno/30.5 before domain writes, ledger or network 6ms
+     × flowmusic/parse rejects fractional tool arguments before an atomic write 5ms
+     × flowmusic/prepare rejects fractional tool arguments before an atomic write 6ms
+     × flowmusic/execute rejects fractional tool arguments before an atomic write 6ms
+     × suno/parse rejects fractional tool arguments before an atomic write 6ms
+     × suno/prepare rejects fractional tool arguments before an atomic write 6ms
+     × suno/execute rejects fractional tool arguments before an atomic write 9ms
+   ❯ C02 history remains readable and repairable (12)
+     × rechecks flowmusic work reuse before executing a new draft write 7ms
+     × rechecks suno work reuse before executing a new draft write 7ms
+     × preserves fractional flowmusic draft/work history through actual ZIP and permits repair/metadata 9ms
+     × preserves fractional suno draft/work history through actual ZIP and permits repair/metadata 7ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/musicDurationContract.test.ts > C02 integer music settings across real consumers > advertises optional integer durations with the engine's exact bounds
+AssertionError: expected { type: 'number', minimum: 1, …(1) } to deeply equal { type: 'integer', minimum: 1, …(1) }
+
+- Expected
++ Received
+
+  {
+    "maximum": 240,
+    "minimum": 1,
+-   "type": "integer",
++   "type": "number",
+  }
+
+ ❯ ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-old-source-ih1gk2f7/tests/musicDurationContract.test.ts:67:43
+     65|         const parameters = tool("music_save_draft").parameters as {pro…
+     66|         const [flow, suno] = parameters.properties.settings.anyOf;
+     67|         expect(flow.properties.lengthSec).toEqual({type: "integer", mi…
+       |                                           ^
+     68|         expect(suno.properties.durationSec).toEqual({type: "integer", …
+     69|         expect(flow.required).not.toContain("lengthSec");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/13]⎯
+
+ FAIL  tests/musicDurationContract.test.ts > C02 integer music settings across real consumers > rejects flowmusic/30.5 before domain writes, ledger or network
+AssertionError: promise resolved "{ settings: { …(5) }, …(5) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "createdAt": "2026-09-30T12:21:35.990Z",
++   "id": "mdr_49c29428-3d51-42ce-a2ae-9824e2e34d37",
++   "projectId": "prj_0d391889-7024-4836-9b67-b3d9b36a87bb",
++   "revision": 1,
++   "settings": {
++     "engine": "flowmusic",
++     "lengthSec": 30.5,
++     "lyrics": "",
++     "soundPrompt": "钢琴",
++     "title": "歌",
++   },
++   "updatedAt": "2026-09-30T12:21:35.990Z",
+  }
+
+ ❯ ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-old-source-ih1gk2f7/tests/musicDurationContract.test.ts:100:64
+     98|         const raw = {projectId: project.id, id: draft.id, revision: dr…
+     99|         const before = await snapshot();
+    100|         await expect(addMusicDraft(project.id, {settings: bad})).rejec…
+       |                                                                ^
+    101|         await expect(patchMusicDraft(project.id, draft.id, draft.revis…
+    102|         await expect(work(project.id, bad)).rejects.toThrow();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/13]⎯
+
+ FAIL  tests/musicDurationContract.test.ts > C02 integer music settings across real consumers > rejects suno/30.5 before domain writes, ledger or network
+AssertionError: promise resolved "{ …(6) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "createdAt": "2026-09-30T12:21:36.031Z",
++   "id": "mdr_a12d1f8b-53f4-4557-9e43-94e1d4c7ab35",
++   "projectId": "prj_ffad7c5c-8c1b-43c0-8522-0203c27c5972",
++   "revision": 1,
++   "settings": {
++     "custom": true,
++     "durationSec": 30.5,
++     "engine": "suno",
++     "instrumental": false,
++     "negativeTags": "",
++     "prompt": "歌词",
++     "style": "钢琴",
++     "title": "歌",
++     "version": "v6",
++   },
++   "updatedAt": "2026-09-30T12:21:36.031Z",
+  }
+
+ ❯ ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-old-source-ih1gk2f7/tests/musicDurationContract.test.ts:100:64
+     98|         const raw = {projectId: project.id, id: draft.id, revision: dr…
+     99|         const before = await snapshot();
+    100|         await expect(addMusicDraft(project.id, {settings: bad})).rejec…
+       |                                                                ^
+    101|         await expect(patchMusicDraft(project.id, draft.id, draft.revis…
+    102|         await expect(work(project.id, bad)).rejects.toThrow();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/13]⎯
+
+ FAIL  tests/musicDurationContract.test.ts > C02 integer music settings across real consumers > flowmusic/parse rejects fractional tool arguments before an atomic write
+ FAIL  tests/musicDurationContract.test.ts > C02 integer music settings across real consumers > suno/parse rejects fractional tool arguments before an atomic write
+AssertionError: expected [Function] to throw an error
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-old-source-ih1gk2f7/tests/musicDurationContract.test.ts:121:82
+    119|         const raw = {projectId: project.id, settings: settings(engine,…
+    120|         const before = await snapshot();
+    121|         if (phase === "parse") expect(() => call.definition.parseArgum…
+       |                                                                                  ^
+    122|         if (phase === "prepare") await expect(call.definition.prepare!…
+    123|         if (phase === "execute") await expect(call.definition.execute(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/13]⎯
+
+ FAIL  tests/musicDurationContract.test.ts > C02 integer music settings across real consumers > flowmusic/prepare rejects fractional tool arguments before an atomic write
+AssertionError: promise resolved "{ summary: '保存音乐创作草稿', …(3) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "changes": [
++     "创建 flowmusic 草稿：{\"engine\":\"flowmusic\",\"soundPrompt\":\"钢琴\",\"lyrics\":\"\",\"title\":\"歌\",\"lengthSec\":30.5}",
++     "仅保存创作参数，不提交生成。",
++   ],
++   "revision": "sha256-v1:66e91a8201175d495d9ed9546386b65894aa65b27974795a8aebbc1edb357623",
++   "summary": "保存音乐创作草稿",
++   "target": {
++     "href": "/p/prj_ab51335e-5e89-4918-8d02-da673bf20da2",
++     "label": "打开作品项目",
++   },
+  }
+
+ ❯ ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-old-source-ih1gk2f7/tests/musicDurationContract.test.ts:122:86
+    120|         const before = await snapshot();
+    121|         if (phase === "parse") expect(() => call.definition.parseArgum…
+    122|         if (phase === "prepare") await expect(call.definition.prepare!…
+       |                                                                                      ^
+    123|         if (phase === "execute") await expect(call.definition.execute(…
+    124|         expect(await snapshot()).toEqual(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/13]⎯
+
+ FAIL  tests/musicDurationContract.test.ts > C02 integer music settings across real consumers > flowmusic/execute rejects fractional tool arguments before an atomic write
+ FAIL  tests/musicDurationContract.test.ts > C02 integer music settings across real consumers > suno/execute rejects fractional tool arguments before an atomic write
+AssertionError: expected [Function] to throw error matching /integer|整数/ but got '目标或影响范围已变化，请重新读取并提出操作，原批准不能覆盖新的内容'
+
+- Expected:
+/integer|整数/
+
++ Received:
+"目标或影响范围已变化，请重新读取并提出操作，原批准不能覆盖新的内容"
+
+ ❯ ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-old-source-ih1gk2f7/tests/musicDurationContract.test.ts:123:85
+    121|         if (phase === "parse") expect(() => call.definition.parseArgum…
+    122|         if (phase === "prepare") await expect(call.definition.prepare!…
+    123|         if (phase === "execute") await expect(call.definition.execute(…
+       |                                                                                     ^
+    124|         expect(await snapshot()).toEqual(before);
+    125|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/13]⎯
+
+ FAIL  tests/musicDurationContract.test.ts > C02 integer music settings across real consumers > suno/prepare rejects fractional tool arguments before an atomic write
+AssertionError: promise resolved "{ summary: '保存音乐创作草稿', …(3) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "changes": [
++     "创建 suno 草稿：{\"engine\":\"suno\",\"version\":\"v6\",\"custom\":true,\"instrumental\":false,\"prompt\":\"歌词\",\"title\":\"歌\",\"style\":\"钢琴\",\"negativeTags\":\"\",\"durationSec\":30.5}",
++     "仅保存创作参数，不提交生成。",
++   ],
++   "revision": "sha256-v1:3dec52f2885ef59745da4cafa73a642ad239fde01fbad47028305fbcfe6771b6",
++   "summary": "保存音乐创作草稿",
++   "target": {
++     "href": "/p/prj_f1f20e66-a405-4de6-9b20-dcdd7bc226e1",
++     "label": "打开作品项目",
++   },
+  }
+
+ ❯ ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-old-source-ih1gk2f7/tests/musicDurationContract.test.ts:122:86
+    120|         const before = await snapshot();
+    121|         if (phase === "parse") expect(() => call.definition.parseArgum…
+    122|         if (phase === "prepare") await expect(call.definition.prepare!…
+       |                                                                                      ^
+    123|         if (phase === "execute") await expect(call.definition.execute(…
+    124|         expect(await snapshot()).toEqual(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/13]⎯
+
+ FAIL  tests/musicDurationContract.test.ts > C02 history remains readable and repairable > rechecks flowmusic work reuse before executing a new draft write
+ FAIL  tests/musicDurationContract.test.ts > C02 history remains readable and repairable > rechecks suno work reuse before executing a new draft write
+AssertionError: expected [Function] to throw error matching /integer|整数/ but got '目标或影响范围已变化，请重新读取并提出操作，原批准不能覆盖新的内容'
+
+- Expected:
+/integer|整数/
+
++ Received:
+"目标或影响范围已变化，请重新读取并提出操作，原批准不能覆盖新的内容"
+
+ ❯ ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-old-source-ih1gk2f7/tests/musicDurationContract.test.ts:153:66
+    151|         await db.musicWorks.update(originalWork.id, {settings: setting…
+    152|         const before = await snapshot();
+    153|         await expect(call.definition.execute(call.args, call.ctx)).rej…
+       |                                                                  ^
+    154|         expect(await snapshot()).toEqual(before);
+    155|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/13]⎯
+
+ FAIL  tests/musicDurationContract.test.ts > C02 history remains readable and repairable > preserves fractional flowmusic draft/work history through actual ZIP and permits repair/metadata
+AssertionError: promise resolved "{ summary: '复用音乐参数', …(3) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "changes": [
++     "复用「歌」的参数新建音乐草稿，不生成音乐。",
++   ],
++   "revision": "sha256-v1:1d15a456ba431e7c684a40393301fbb9c31f97bd043e458af7a200d2dc38b57e",
++   "summary": "复用音乐参数",
++   "target": {
++     "href": "/p/prj_40f568ab-d887-4ae4-aac7-f96df713543e",
++     "label": "打开作品项目",
++   },
+  }
+
+ ❯ ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-old-source-ih1gk2f7/tests/musicDurationContract.test.ts:172:148
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/13]⎯
+
+ FAIL  tests/musicDurationContract.test.ts > C02 history remains readable and repairable > preserves fractional suno draft/work history through actual ZIP and permits repair/metadata
+AssertionError: promise resolved "{ summary: '复用音乐参数', …(3) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "changes": [
++     "复用「歌」的参数新建音乐草稿，不生成音乐。",
++   ],
++   "revision": "sha256-v1:853913ca82f6e31cb984df5f76d5a5d321e7e003b9ce3dcc445c0179946477a4",
++   "summary": "复用音乐参数",
++   "target": {
++     "href": "/p/prj_c4c08b51-a40f-449c-864f-dc2fef7aae60",
++     "label": "打开作品项目",
++   },
+  }
+
+ ❯ ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-old-source-ih1gk2f7/tests/musicDurationContract.test.ts:172:148
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/13]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  13 failed | 25 passed (38)
+   Start at  20:21:35
+   Duration  808ms (tests 45%, transform 41%, import 9%, setup 4%)
+

@@ -1,0 +1,1 @@
+Initial browser fixture run failed before evidence assertions because its slot lacked the mandatory referenceImages field. Fixed fixture via existing emptySlot(); this initial failure is not product red evidence. Original log retained as C01-browser-before.log. Product red is separately rerun against committed B sources through a Vite read-only transform.

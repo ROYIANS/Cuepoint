@@ -1,0 +1,1 @@
+get_context.py --mode packages: Single-repo project (no packages configured); Spec layers: frontend. All C product changes belong to frontend layer. Final checker loads frontend/index.md Quality Check and twelve scoped specs. This prepared manifest becomes check.jsonl only after C06 PASS.

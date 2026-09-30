@@ -1,0 +1,58 @@
+{
+  "scopeFiles": [
+    "src/domain/music.ts",
+    "src/db/music.ts",
+    "src/lib/agent/musicTools.ts",
+    "src/lib/audioGeneration/input.ts",
+    "src/lib/ai/apimartAudio.ts",
+    "src/lib/audioProjectPackage.ts",
+    "src/components/music/MusicCreation.tsx",
+    "tests/musicDurationContract.test.ts",
+    "tests/musicLegacyDurationRepair.test.ts",
+    "scripts/c02-browser-regression.mjs",
+    "tests/fixtures/c02/harness.tsx",
+    "tests/fixtures/c02/index.html"
+  ],
+  "before": {
+    "src/domain/music.ts": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+    "src/db/music.ts": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+    "src/lib/agent/musicTools.ts": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+    "src/lib/audioGeneration/input.ts": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+    "src/lib/ai/apimartAudio.ts": "8cb50863b0aab40e1ddfe9b956b938125eba4f170bcd463f2cce24e7e5eb2c59",
+    "src/lib/audioProjectPackage.ts": "12a0c856dceccf6ce249c1b367e4b3ea0d4f67d315427adfcd57bd1e0d1691bc",
+    "src/components/music/MusicCreation.tsx": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c",
+    "tests/musicDurationContract.test.ts": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399",
+    "tests/musicLegacyDurationRepair.test.ts": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e",
+    "scripts/c02-browser-regression.mjs": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+    "tests/fixtures/c02/harness.tsx": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+    "tests/fixtures/c02/index.html": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8"
+  },
+  "after": {
+    "src/domain/music.ts": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+    "src/db/music.ts": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+    "src/lib/agent/musicTools.ts": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+    "src/lib/audioGeneration/input.ts": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+    "src/lib/ai/apimartAudio.ts": "8cb50863b0aab40e1ddfe9b956b938125eba4f170bcd463f2cce24e7e5eb2c59",
+    "src/lib/audioProjectPackage.ts": "12a0c856dceccf6ce249c1b367e4b3ea0d4f67d315427adfcd57bd1e0d1691bc",
+    "src/components/music/MusicCreation.tsx": "c61c3efe64eec1bf1b6957557517affff1fbec4833a7571dc6a694879796ec6c",
+    "tests/musicDurationContract.test.ts": "529c94b973c0e417cd8d5aeb4a545f3baffc1a492ba663badaf921fa99f0a399",
+    "tests/musicLegacyDurationRepair.test.ts": "ad5b464f1a78b1ea62414af1935fbb86198d17d77a94c6f43bff414e0200cd1e",
+    "scripts/c02-browser-regression.mjs": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+    "tests/fixtures/c02/harness.tsx": "10bff4b31b13f24d2a5c68e4e5cf141cc0eb4f3591c154957d9feb0018b56a22",
+    "tests/fixtures/c02/index.html": "f8e7f43063caa78f94c1735f3f1a6dd6ef9783650f40d0a8ef19bf5f1c65efe8"
+  },
+  "baseline": {
+    "src/domain/music.ts": "2de36b872009f620cb5c7a0d4a603db339cb151d7938ecd87b6b118cbacd6bfd",
+    "src/db/music.ts": "8e5f0a9024fdf2088f33589c0f29dbc6d3d56081d48eba1e468079b9b6db6c66",
+    "src/lib/agent/musicTools.ts": "3fcad6e83c1dd598a90bec73c56d304873ef531c5ae2955d3511a33bb75d0a8f",
+    "src/lib/audioGeneration/input.ts": "fa5aa467fcaccee5e91006d1291d92cdfab8ab53b09d4d23ca923f515166d2e2",
+    "src/lib/ai/apimartAudio.ts": "072ef52ecadf96230346389a22bb14e3f630cc0ac590a9e538abdb0d7caa3611",
+    "src/lib/audioProjectPackage.ts": "3f14040e3545ed08de7778ea2722e6c9f497023ecf7dd3984a6f63bbc50655ca",
+    "src/components/music/MusicCreation.tsx": "50d329e47704379ecc18471db94df1e0e2c666c0fb0b78c4eed95d69f8a84c18",
+    "tests/musicDurationContract.test.ts": null,
+    "tests/musicLegacyDurationRepair.test.ts": null,
+    "scripts/c02-browser-regression.mjs": null,
+    "tests/fixtures/c02/harness.tsx": null,
+    "tests/fixtures/c02/index.html": null
+  }
+}

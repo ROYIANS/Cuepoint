@@ -1,0 +1,332 @@
+[
+  {
+    "file": "src/components/audio/AudioExports.tsx",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/components/audio/AudioTimeline.tsx",
+    "before": 8,
+    "after": 8,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/components/music/MusicCreation.tsx",
+    "before": 2,
+    "after": 2,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/db/agentTaskRecords.ts",
+    "before": 5,
+    "after": 3,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Async function 'validateTaskSources' has a complexity of 41. Maximum allowed is 20.",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 28 to the 20 allowed.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "complexity",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "count": 1
+      },
+      {
+        "rule": "complexity",
+        "count": 1
+      },
+      {
+        "rule": "@typescript-eslint/no-unnecessary-type-assertion",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/db/music.ts",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/db/repo.ts",
+    "before": 11,
+    "after": 11,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/db/taskGenerationEvidence.ts",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/domain/music.ts",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/agent/generationRuntime.ts",
+    "before": 18,
+    "after": 18,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/agent/musicTools.ts",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/agent/wrapupEvidence.ts",
+    "before": 15,
+    "after": 15,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Async function 'collectWrapupSnapshot' has a complexity of 91. Maximum allowed is 20.",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 139 to the 20 allowed.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "complexity",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/lib/ai/aihubmix.ts",
+    "before": 10,
+    "after": 10,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Async function 'downloadAIHubMixResult' has a complexity of 35. Maximum allowed is 20.",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 26 to the 20 allowed.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "complexity",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/lib/ai/apimartAudio.ts",
+    "before": 3,
+    "after": 3,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/ai/boundedResponse.ts",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/ai/boundedSse.ts",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/ai/chatStream.ts",
+    "before": 11,
+    "after": 11,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Async function 'streamChatCompletions' has a complexity of 33. Maximum allowed is 20.",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 25 to the 20 allowed.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "complexity",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/lib/ai/mimoSpeech.ts",
+    "before": 5,
+    "after": 4,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Async function 'generateMimoSpeech' has a complexity of 53. Maximum allowed is 20.",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 37 to the 20 allowed.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "complexity",
+        "count": 1
+      },
+      {
+        "rule": "complexity",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/lib/ai/responsesStream.ts",
+    "before": 7,
+    "after": 6,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Async function 'streamResponses' has a complexity of 31. Maximum allowed is 20.",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 22 to the 20 allowed.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "complexity",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/lib/ai/tavily.ts",
+    "before": 10,
+    "after": 10,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/audio/engine.ts",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/audio/fingerprint.ts",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/audio/recorder.ts",
+    "before": 2,
+    "after": 2,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/audioGeneration/input.ts",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/audioProjectPackage.ts",
+    "before": 6,
+    "after": 6,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/projectPackage.ts",
+    "before": 60,
+    "after": 60,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/resource/limits.ts",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  }
+]

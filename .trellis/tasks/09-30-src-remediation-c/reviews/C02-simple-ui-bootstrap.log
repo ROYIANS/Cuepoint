@@ -1,0 +1,95 @@
+
+ RUN  v5.0.1 /var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-ui-old-source-5ml5c478
+
+ ❯ tests/musicLegacyDurationRepair.test.ts (8 tests | 8 failed) 44ms
+   ❯ C02 actual Simple legacy repair callbacks (8)
+     × shows historical duration 30.5 unchanged until explicit action 14ms
+     × shows historical duration 120 unchanged until explicit action 5ms
+     × shows historical duration 9 unchanged until explicit action 6ms
+     × shows historical duration 361 unchanged until explicit action 4ms
+     × keeps ordinary Simple and Custom layouts unchanged and disables repair while switching or busy 4ms
+     × clears only the historical duration, preserves dirty text and saves through the actual debounce/CAS 3ms
+     × retains the cleared local draft and text on write failure, then retries the same draft 3ms
+     × keeps local repair/text and reports CAS conflict instead of overwriting a newer draft 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/musicLegacyDurationRepair.test.ts > C02 actual Simple legacy repair callbacks > shows historical duration 30.5 unchanged until explicit action
+ FAIL  tests/musicLegacyDurationRepair.test.ts > C02 actual Simple legacy repair callbacks > shows historical duration 120 unchanged until explicit action
+ FAIL  tests/musicLegacyDurationRepair.test.ts > C02 actual Simple legacy repair callbacks > shows historical duration 9 unchanged until explicit action
+ FAIL  tests/musicLegacyDurationRepair.test.ts > C02 actual Simple legacy repair callbacks > shows historical duration 361 unchanged until explicit action
+ReferenceError: React is not defined
+ ❯ Module.MusicCreation ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-ui-old-source-5ml5c478/src/components/music/MusicCreation.tsx:75:5
+     73|     }
+     74|
+     75|     return <div className="mw-creation">
+       |     ^
+     76|         <div className="mw-compose-scroll">
+     77|             <div className="mw-mode-bar">
+ ❯ draw ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-ui-old-source-5ml5c478/tests/musicLegacyDurationRepair.test.ts:60:24
+ ❯ ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-ui-old-source-5ml5c478/tests/musicLegacyDurationRepair.test.ts:98:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  tests/musicLegacyDurationRepair.test.ts > C02 actual Simple legacy repair callbacks > keeps ordinary Simple and Custom layouts unchanged and disables repair while switching or busy
+ReferenceError: React is not defined
+ ❯ Module.MusicCreation ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-ui-old-source-5ml5c478/src/components/music/MusicCreation.tsx:75:5
+     73|     }
+     74|
+     75|     return <div className="mw-creation">
+       |     ^
+     76|         <div className="mw-compose-scroll">
+     77|             <div className="mw-mode-bar">
+ ❯ draw ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-ui-old-source-5ml5c478/tests/musicLegacyDurationRepair.test.ts:60:24
+ ❯ ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-ui-old-source-5ml5c478/tests/musicLegacyDurationRepair.test.ts:108:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  tests/musicLegacyDurationRepair.test.ts > C02 actual Simple legacy repair callbacks > clears only the historical duration, preserves dirty text and saves through the actual debounce/CAS
+ReferenceError: React is not defined
+ ❯ Module.MusicCreation ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-ui-old-source-5ml5c478/src/components/music/MusicCreation.tsx:75:5
+     73|     }
+     74|
+     75|     return <div className="mw-creation">
+       |     ^
+     76|         <div className="mw-compose-scroll">
+     77|             <div className="mw-mode-bar">
+ ❯ draw ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-ui-old-source-5ml5c478/tests/musicLegacyDurationRepair.test.ts:60:24
+ ❯ ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-ui-old-source-5ml5c478/tests/musicLegacyDurationRepair.test.ts:123:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  tests/musicLegacyDurationRepair.test.ts > C02 actual Simple legacy repair callbacks > retains the cleared local draft and text on write failure, then retries the same draft
+ReferenceError: React is not defined
+ ❯ Module.MusicCreation ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-ui-old-source-5ml5c478/src/components/music/MusicCreation.tsx:75:5
+     73|     }
+     74|
+     75|     return <div className="mw-creation">
+       |     ^
+     76|         <div className="mw-compose-scroll">
+     77|             <div className="mw-mode-bar">
+ ❯ draw ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-ui-old-source-5ml5c478/tests/musicLegacyDurationRepair.test.ts:60:24
+ ❯ ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-ui-old-source-5ml5c478/tests/musicLegacyDurationRepair.test.ts:144:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  tests/musicLegacyDurationRepair.test.ts > C02 actual Simple legacy repair callbacks > keeps local repair/text and reports CAS conflict instead of overwriting a newer draft
+ReferenceError: React is not defined
+ ❯ Module.MusicCreation ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-ui-old-source-5ml5c478/src/components/music/MusicCreation.tsx:75:5
+     73|     }
+     74|
+     75|     return <div className="mw-creation">
+       |     ^
+     76|         <div className="mw-compose-scroll">
+     77|             <div className="mw-mode-bar">
+ ❯ draw ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-ui-old-source-5ml5c478/tests/musicLegacyDurationRepair.test.ts:60:24
+ ❯ ../../../../../../private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-c02-ui-old-source-5ml5c478/tests/musicLegacyDurationRepair.test.ts:162:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  8 failed (8)
+   Start at  20:36:42
+   Duration  445ms (transform 49%, import 30%, tests 11%, setup 9%)
+

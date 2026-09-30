@@ -1,0 +1,13 @@
+
+> cuepoint@0.1.0 test /Users/xiaomengdao/WebstormProjects/aifenjing
+> vitest run tests/parentProjectWrites.test.ts tests/projectPackageRelations.test.ts
+
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+
+ Test Files  2 passed (2)
+      Tests  37 passed (37)
+   Start at  21:17:31
+   Duration  459ms (tests 39%, transform 39%, setup 12%, import 9%)
+

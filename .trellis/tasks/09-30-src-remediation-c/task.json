@@ -1,0 +1,33 @@
+{
+  "id": "src-remediation-c",
+  "name": "src-remediation-c",
+  "title": "源码整改C：成果证据、持久化不变量与读取边界",
+  "description": "按已批准台账顺序完成C01–C06八项发现；逐项实现、回归、独立复核，批末整体关口后确认提交。",
+  "status": "completed",
+  "dev_type": "frontend",
+  "scope": "src quality remediation C01–C06",
+  "package": null,
+  "priority": "P2",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-09-30",
+  "completedAt": "2026-10-01",
+  "branch": "main",
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": "ad3b8b5c85ee98073cfe6c6f348e53c1cdefe903",
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "09-30-src-quality-remediation",
+  "relatedFiles": [],
+  "notes": "C01–C06 plus complete integration/full51-file independent review PASS;144files2402tests/33 native cases/typecheck/model/build. All five local commits approved2026-10-01; four product commits recorded, this task record included in the final evidence commit. commit field identifies product tip; final evidence revision is in git history. User requested pause afterward; D01 pending, no next development, push or archive.",
+  "meta": {
+    "productCommits": [
+      "23675ec336676c40dc81b0aea65c3e7d52a29cf5",
+      "d0ce22c7ab72fe0a306a4afe448e2766f49ddad8",
+      "6002c4ce39aded59a7411aac7d4bfece52cffec8",
+      "ad3b8b5c85ee98073cfe6c6f348e53c1cdefe903"
+    ]
+  }
+}

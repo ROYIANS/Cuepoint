@@ -1,0 +1,166 @@
+[
+  {
+    "file": "src/lib/ai/apimartAudio.ts",
+    "before": 3,
+    "after": 3,
+    "added": []
+  },
+  {
+    "file": "src/lib/ai/mimoSpeech.ts",
+    "before": 5,
+    "after": 4,
+    "added": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'generateMimoSpeech' has a complexity of 53. Maximum allowed is 20.",
+        "line": 128,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 128,
+        "endColumn": 41
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 37 to the 20 allowed.",
+        "line": 128,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 128,
+        "endColumn": 41
+      }
+    ]
+  },
+  {
+    "file": "src/lib/ai/aihubmix.ts",
+    "before": 10,
+    "after": 10,
+    "added": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'downloadAIHubMixResult' has a complexity of 35. Maximum allowed is 20.",
+        "line": 362,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 362,
+        "endColumn": 45
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 26 to the 20 allowed.",
+        "line": 362,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 362,
+        "endColumn": 45
+      }
+    ]
+  },
+  {
+    "file": "src/lib/ai/chatStream.ts",
+    "before": 11,
+    "after": 11,
+    "added": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'streamChatCompletions' has a complexity of 33. Maximum allowed is 20.",
+        "line": 331,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 331,
+        "endColumn": 44
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 25 to the 20 allowed.",
+        "line": 331,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 331,
+        "endColumn": 44
+      }
+    ]
+  },
+  {
+    "file": "src/lib/ai/responsesStream.ts",
+    "before": 7,
+    "after": 6,
+    "added": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'streamResponses' has a complexity of 31. Maximum allowed is 20.",
+        "line": 137,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 137,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 22 to the 20 allowed.",
+        "line": 137,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 137,
+        "endColumn": 38
+      }
+    ]
+  },
+  {
+    "file": "src/lib/ai/tavily.ts",
+    "before": 10,
+    "after": 10,
+    "added": []
+  },
+  {
+    "file": "src/lib/audio/engine.ts",
+    "before": 0,
+    "after": 0,
+    "added": []
+  },
+  {
+    "file": "src/lib/audio/recorder.ts",
+    "before": 2,
+    "after": 2,
+    "added": []
+  },
+  {
+    "file": "src/lib/agent/generationRuntime.ts",
+    "before": 18,
+    "after": 18,
+    "added": []
+  },
+  {
+    "file": "src/lib/resource/limits.ts",
+    "before": 0,
+    "after": 0,
+    "added": []
+  },
+  {
+    "file": "src/lib/ai/boundedResponse.ts",
+    "before": 0,
+    "after": 0,
+    "added": []
+  },
+  {
+    "file": "src/lib/ai/boundedSse.ts",
+    "before": 0,
+    "after": 0,
+    "added": []
+  }
+]

@@ -111,3 +111,14 @@ No commands below were executed. Use the explicit local pnpm path:
 - Later structural gate: use the existing AST analysis mechanism, keep type-only edges distinct, confirm the eight-file value SCC disappears and no new value SCC is introduced. Save fresh review evidence separately; do not overwrite the audit baseline/tools. Verify direct imports and compatibility consumers. This is later implementation verification, not a broad-map request for this sidecar.
 
 No function-direction uncertainty blocks this proposal. AR-04/PD-04 remain open pending later implementation and review.
+
+
+## C01 refresh (2026-09-30; before independent C01 sign-off)
+
+C01 current evidence no longer imports `readGenerationTarget` from generationRuntime into task records: the new evidence leaf reads current DB targets directly. Scoped current AST in C child `research/C-current-ast-results.json` (375 TS/TSX files, 2207 edges, zero parse errors) now reports three separate value SCCs: B/G, T/L and R/W/A/E. The original four-cut minimum is historical, not the current worktree plan. Refresh after C final review; current minimum is **three remaining cuts**: B→G (generationPreparation/DB target reader), R→A (task guard leaf), T→L (pure selector leaf). R→G is already absent as a necessary C01 evidence fix. Keep D01 full graph validation and atomic transaction contracts; do not reintroduce old runtime dependency or claim all cycles resolved now. Parent finding AR04/PD04 stays pending until D01 independent verification.
+
+C05 checkpoint refresh (pre-C06): current AST376 TS/TSX files/2214edges/0parseerrors retains the same three value SCCs; the C04 fingerprint leaf adds no cycle. This is preparationonly, notD01closure. The C final snapshot must refresh again after bounded-reader imports.
+
+C whole-gate checkpoint:379TS/TSX/2233edges/0parseerrors after C06 retains the same three SCCs, no new bounded-reader/resource cycle. Full C review still pending. Refresh D01 against committed C state when its turn starts; notD01findingclosure.
+
+C whole-scope final independent review PASS confirms the same379files/2233edges/three SCCs with no new cycle. No C commit has landed yet; D01 remains pending and must reread committed C state when started.
