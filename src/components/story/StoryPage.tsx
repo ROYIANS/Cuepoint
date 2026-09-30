@@ -1,7 +1,7 @@
 import {changedDraftFields} from "@/lib/draftConflict";
 import {useLiveQuery} from "dexie-react-hooks";
 import {ArrowDown, ArrowUp, Copy, CopyPlus, Plus, Trash2} from "lucide-react";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {db} from "@/db/database";
 import {
     addStoryBeat,
@@ -62,6 +62,9 @@ export function StoryPage({projectId, episodeId}: { projectId: string; episodeId
     );
 }
 
+type ScriptImport = {request: number; name: string; text: string};
+type ScriptImportSession = {scope: string; request: number; revision: number; candidate?: ScriptImport};
+
 function StoryEditor({
                          episode,
                          film,
@@ -74,7 +77,7 @@ function StoryEditor({
     scenes: { id: string; name: string }[];
 }) {
     const initialStory = normalizeEpisodeStory(episode.story);
-    const {draft, setDraft, status, error, retry, useLatest, flush} = useDebouncedDraft({
+    const {draft, setDraft, status, error, retry, useLatest: adoptLatestDraft, flush} = useDebouncedDraft({
         draftKey: `episode:${episode.id}:story`,
         scope: episode.projectId,
         initialValue: {
@@ -93,10 +96,75 @@ function StoryEditor({
         void patchStoryBeat(episode.id, id, change);
     }
 
+    const mounted = useRef(true);
+    const importSession = useRef<ScriptImportSession>({scope: `${episode.projectId}:${episode.id}`, request: 0, revision: 0});
+    if (importSession.current.scope !== `${episode.projectId}:${episode.id}`) {
+        importSession.current = {scope: `${episode.projectId}:${episode.id}`, request: 0, revision: 0};
+    }
+    const session = importSession.current;
+    const [importCandidate, setImportCandidate] = useState<ScriptImport>();
+    const [importError, setImportError] = useState<string>();
+    const candidate = importCandidate === session.candidate ? importCandidate : undefined;
+
+    useEffect(() => {
+        mounted.current = true;
+        return () => {
+            mounted.current = false;
+            session.request += 1;
+            session.candidate = undefined;
+        };
+    }, [session]);
+
+    function currentSession() {
+        return mounted.current && importSession.current === session;
+    }
+
+    function useLatestStory() {
+        if (!currentSession()) return;
+        session.revision += 1;
+        session.request += 1;
+        session.candidate = undefined;
+        setImportCandidate(undefined);
+        setImportError(undefined);
+        adoptLatestDraft();
+    }
+
+    function changeScript(value: string) {
+        if (!currentSession()) return;
+        // Count every edit, including edit-then-revert, rather than comparing
+        // text at completion. A conflict candidate remains an explicit choice.
+        session.revision += 1;
+        setDraft((current) => ({...current, script: value}));
+    }
+
+    function decideImport(adopt: boolean) {
+        if (!currentSession() || !candidate || session.candidate !== candidate) return;
+        session.request += 1;
+        session.candidate = undefined;
+        setImportCandidate(undefined);
+        if (adopt) changeScript(candidate.text);
+    }
+
     async function applyScriptFile(file: File) {
-        if (!isScriptFile(file)) return;
-        const text = await file.text();
-        setDraft((current) => ({...current, script: text}));
+        if (!currentSession() || !isScriptFile(file)) return;
+        const request = ++session.request;
+        const revision = session.revision;
+        session.candidate = undefined;
+        setImportCandidate(undefined);
+        setImportError(undefined);
+        try {
+            const text = await file.text();
+            if (!currentSession() || request !== session.request) return;
+            if (revision !== session.revision) {
+                const next = {request, name: file.name, text};
+                session.candidate = next;
+                setImportCandidate(next);
+            } else {
+                changeScript(text);
+            }
+        } catch {
+            if (currentSession() && request === session.request) setImportError("读取剧本失败，请重新拖入文件重试。");
+        }
     }
 
     async function addBeatFromSelection() {
@@ -158,7 +226,7 @@ function StoryEditor({
                             </p>
                         </div>
                         <DraftStatus status={status} error={error} onRetry={() => void retry()}
-                                     onUseLatest={useLatest}/>
+                                     onUseLatest={useLatestStory}/>
                     </div>
                     <Label className="mt-6">{film ? "故事标题（可选）" : "集标题（可选）"}</Label>
                     <Input
@@ -166,7 +234,8 @@ function StoryEditor({
                         value={draft.title}
                         placeholder={film ? "可填写这一稿的标题" : "不填就显示第几集"}
                         onChange={(event) => {
-                            setDraft((current) => ({...current, title: event.target.value}));
+                            const value = event.target.value;
+                            setDraft((current) => ({...current, title: value}));
                         }}
                     />
                     <Label className="mt-6">{film ? "一句话故事" : "本集一句话"}</Label>
@@ -174,9 +243,10 @@ function StoryEditor({
                         className="mt-2"
                         value={draft.logline}
                         placeholder={film ? "这个故事，用一句话说完" : "这一集，用一句话说完"}
-                        onChange={(event) =>
-                            setDraft((current) => ({...current, logline: event.target.value}))
-                        }
+                        onChange={(event) => {
+                            const value = event.target.value;
+                            setDraft((current) => ({...current, logline: value}));
+                        }}
                     />
                     <Label className="mt-6">剧本</Label>
                     <p className="text-muted-foreground mt-1 text-[11px]">可拖入 .txt / .md，写入正文，不会自动拆场。</p>
@@ -193,6 +263,7 @@ function StoryEditor({
                         onDragLeave={() => setDragging(false)}
                         onDrop={(event) => {
                             event.preventDefault();
+                            if (!currentSession()) return;
                             setDragging(false);
                             const file = event.dataTransfer.files[0];
                             if (file) void applyScriptFile(file);
@@ -203,11 +274,20 @@ function StoryEditor({
                             className="min-h-[28rem] resize-y bg-card/60 text-[14px] leading-7"
                             value={draft.script}
                             placeholder="直接贴剧本，或把 txt / md 拖进来。"
-                            onChange={(event) =>
-                                setDraft((current) => ({...current, script: event.target.value}))
-                            }
+                            onChange={(event) => changeScript(event.target.value)}
                         />
                     </div>
+                    {importError ? <p role="alert" className="text-destructive mt-2 text-xs">{importError}</p> : null}
+                    {candidate ? (
+                        <div className="bg-muted/40 mt-3 rounded-lg border p-3">
+                            <p className="text-sm">读取 {candidate.name} 期间正文已修改，当前正文已保留。</p>
+                            <pre className="mt-2 max-h-40 overflow-auto whitespace-pre-wrap text-xs">{candidate.text}</pre>
+                            <div className="mt-3 flex gap-2">
+                                <Button size="sm" onClick={() => decideImport(true)}>采用导入正文</Button>
+                                <Button size="sm" variant="outline" onClick={() => decideImport(false)}>放弃导入</Button>
+                            </div>
+                        </div>
+                    ) : null}
                 </section>
                 <aside className="min-w-0">
                     <div className="flex items-center justify-between">

@@ -111,3 +111,16 @@ Wrong: import raw `topicKey` while normal CRUD writes `normalizeMemoryText(topic
 
 Correct: validate the original package chain, then normalize current and every historical
 snapshot with the same helper before persisting the detached imported aggregate.
+
+
+## Scenario: One promotion request/editor session (B02 / AU-01; 2026-09-30)
+
+TaskWrapup owns candidate reads for all current, confirmed and history source buttons. MemoryPromotion emits a source intention and displays parent pending/disabled state. Acquire a synchronous ref lock before awaiting the source read; a disabled button after rerender is not sufficient to serialize old-render callbacks. Capture task/project, source reference and request epoch; only its mounted matching preparing session may publish a cloned candidate. A failed read releases the lock for retry; old unmounted completion must not publish, toast, or clear a newer session's pending state. Report candidate-read pending to the inspector, just as editor-save pending is reported.
+
+Opening a candidate freezes input/body/tags, source ref, excerpt and owner as one session. Editor callbacks carry that session epoch; closing/saving invalidates it, and stale close/save/pending callbacks cannot modify a reopened editor. An epoch key may distinguish explicit close/reopen even when batched into one render; it must not remount an active dirty editor on source refresh.
+
+MemoryEditor freezes the mount input baseline, owner, memory/source identity, excerpt and initial expected revision. Query current revisions/conflicts against that frozen owner and ID; keep existing explicit latest-revision reconciliation before advancing CAS. Equivalent source objects compare their explicit identity fields, not JSON property insertion order. Incoming target mismatch preserves the readable draft and rejects both current and captured old-render submit callbacks. Live data must not rebind a dirty draft or derive its baseline from the latest candidate props.
+
+Behavioral regressions in `tests/b02MemoryPromotion.test.ts` execute actual TaskWrapup/ReviewDocument/MemoryPromotion/MemoryEditor callbacks with controlled candidate reads and real Dexie repository promotion/CAS. Verify rapid current/history callbacks cause one read, mutation/refresh cannot alter the frozen source, failed-read retry, stale completion/callbacks after unmount/close/reopen, equivalent reordered references, coherent saved body/ref/excerpt, and explicit revision reconciliation. The deterministic hook host proves these callback/storage mechanisms, not ReactDOM or native browser scheduling. Preserve route/unload/dirty/pending behavior and source ownership validation; do not use a candidate key to silently discard an open editor.
+
+Successful saves retire the mounted editor session synchronously before calling onSaved, including captured callbacks before a close rerender. Async completion/error/pending publication requires the initiating mounted epoch. An already initiated repository write still belongs to its original validated owner; unmount suppresses UI publication, and a still-mounted target change receives an explicit original-target completion message. Neither case permits old callbacks to submit again. Tests include controlled initial effect cleanup/setup replay but do not claim ReactDOM StrictMode.

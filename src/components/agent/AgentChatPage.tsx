@@ -68,7 +68,6 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     const connectors = useLiveQuery(() => db.connectors.toArray(), []);
     const projects = useLiveQuery(() => db.projects.orderBy("updatedAt").reverse().filter((project) => project.id !== STUDIO_LIBRARY_ID).toArray(), []);
     const activeThreadId = threadId;
-    const [draft, setDraft] = useState("");
     const [contextOpen, setContextOpen] = useState(false);
     const [sessionConnectorId, setSessionConnectorId] = useState<Id | undefined>();
     const [sessionModel, setSessionModel] = useState("");
@@ -209,6 +208,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     const modelValue = sessionModel.trim();
     const projectId = activeThreadId ? activeThread?.projectId : composerProjectId;
     const references = useReferenceDraft(JSON.stringify([activeThreadId ?? "home", projectId]), projectId);
+    const {text: draft, setText: setDraft} = references;
     const taskMode = activeThreadId ? Boolean(activeThread?.taskMode) : chatMode === "task";
     const projectRequired = taskMode && !projectId;
     const projectUnavailable = Boolean(projectId && projects && !projects.some((project) => project.id === projectId));
@@ -256,7 +256,6 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         if (abortRef.current) {
             abortRef.current.abort();
         }
-        setDraft("");
         void (async () => {
             const thread = await createChatThread({
                 connectorId: selectedConnector?.id,
@@ -335,9 +334,10 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     }, []);
 
     const handleSend = useCallback(async () => {
-        const content = draft.trim();
-        const attachments = [...references.attachments];
-        if ((!content && !attachments.length) || references.imports.length || sendLockRef.current) return;
+        const submitted = references.capture();
+        const content = submitted.text.trim();
+        const attachments = submitted.attachments;
+        if ((!content && !attachments.length) || submitted.imports.length || sendLockRef.current) return;
         if (projectRequired) {
             toast.error("任务模式请先选择项目");
             return;
@@ -379,9 +379,16 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                 await withThreadRunLock(targetThread.id, async () => {
                     if (controller.signal.aborted) return;
                     // Acquire execution ownership before mounting detail recovery effects.
+                    let owner = submitted;
                     if (!activeThread) {
-                        references.moveTo(JSON.stringify([targetThread.id, projectId]));
-                        await navigate({to: "/agent/$threadId", params: {threadId: targetThread.id}});
+                        const transfer = references.moveTo(JSON.stringify([targetThread.id, projectId]), submitted);
+                        owner = transfer.submitted;
+                        try {
+                            await navigate({to: "/agent/$threadId", params: {threadId: targetThread.id}});
+                        } catch (error) {
+                            if (!transfer.restore()) throw new Error(`打开话题失败，发送草稿保留在「${targetThread.title}」中，请打开后重试`);
+                            throw error;
+                        }
                     }
                     if (controller.signal.aborted) return;
                     await updateChatThread(targetThread.id, {
@@ -403,8 +410,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                         reasoningEffort,
                         interactionMode: activeThreadId ? interactionMode : "smart"
                     });
-                    setDraft((current) => current === draft ? "" : current);
-                    references.clearSent(attachments, JSON.stringify([targetThread.id, projectId]));
+                    references.acknowledge(owner);
                     await executeChatRun(run, connector.apiKey, controller);
                 });
 
@@ -591,11 +597,15 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         onAttachReference: (attachment) => {
             if (!sendLockRef.current) references.attach(attachment);
         },
-        onRemoveReference: references.remove,
+        onRemoveReference: (attachment) => {
+            if (!sendLockRef.current) references.remove(attachment);
+        },
         onImportReferences: (files) => {
             if (!sendLockRef.current) void references.importFiles(files);
         },
-        onCancelReferenceImport: references.cancel,
+        onCancelReferenceImport: (id) => {
+            if (!sendLockRef.current) references.cancel(id);
+        },
         onRetryReferenceImport: (job) => {
             if (!sendLockRef.current) references.retry(job);
         },

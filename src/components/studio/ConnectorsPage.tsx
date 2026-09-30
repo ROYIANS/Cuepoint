@@ -1,7 +1,7 @@
 import {SearchConnection} from "./SearchConnection";
 import {useLiveQuery} from "dexie-react-hooks";
 import {Check, Plug} from "lucide-react";
-import {useMemo, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {toast} from "sonner";
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
@@ -23,11 +23,15 @@ import {CONNECTOR_CATALOG, type ConnectorDefinition} from "@/lib/ai/catalog";
 import {maskApiKey} from "@/lib/ai/openaiCompatible";
 import {listConnectorModels, testConnectorConnection} from "@/lib/ai/connectors";
 import {cn} from "@/lib/utils";
+import {redactCredentials} from "@/lib/ai/safeError";
 
 type EditorState = {
     definition: ConnectorDefinition;
     existing?: ConnectorConfig;
 };
+
+type EditorSession = EditorState & {baseUrl: string; apiKey: string};
+type EditorOperation = {session: EditorSession; kind: "probe" | "test" | "save" | "disconnect"};
 
 export function ConnectorsPage() {
     const connectors = useLiveQuery(() => db.connectors.toArray(), []) ?? [];
@@ -47,14 +51,52 @@ export function ConnectorsPage() {
     const [probing, setProbing] = useState(false);
     const [saving, setSaving] = useState(false);
 
+    const mounted = useRef(true);
+    const sessionRef = useRef<EditorSession | undefined>(undefined);
+    const operationRef = useRef<EditorOperation | undefined>(undefined);
+    const session = sessionRef.current;
+
+    useEffect(() => {
+        mounted.current = true;
+        return () => {
+            mounted.current = false;
+            operationRef.current = undefined;
+        };
+    }, []);
+
+    function writeLocked() {
+        return operationRef.current?.kind === "save" || operationRef.current?.kind === "disconnect";
+    }
+
+    function currentOperation(operation: EditorOperation) {
+        return mounted.current && sessionRef.current === operation.session && operationRef.current === operation;
+    }
+
+    function finishOperation(operation: EditorOperation) {
+        if (!currentOperation(operation)) return;
+        operationRef.current = undefined;
+        setTesting(false);
+        setProbing(false);
+        setSaving(false);
+    }
+
     function openEditor(definition: ConnectorDefinition, existing?: ConnectorConfig) {
+        if (!mounted.current || writeLocked()) return;
+        sessionRef.current = {definition, existing, baseUrl: existing?.baseUrl ?? definition.defaultBaseUrl, apiKey: ""};
+        operationRef.current = undefined;
         setEditor({definition, existing});
-        setBaseUrl(existing?.baseUrl ?? definition.defaultBaseUrl);
+        setBaseUrl(sessionRef.current.baseUrl);
         setApiKey("");
         setProbeModels([]);
+        setTesting(false);
+        setProbing(false);
+        setSaving(false);
     }
 
     function closeEditor() {
+        if (!mounted.current || sessionRef.current !== session || writeLocked()) return;
+        sessionRef.current = undefined;
+        operationRef.current = undefined;
         setEditor(undefined);
         setProbeModels([]);
         setTesting(false);
@@ -62,96 +104,122 @@ export function ConnectorsPage() {
         setSaving(false);
     }
 
-    function resolveApiKey(): string {
-        if (apiKey.trim()) return apiKey.trim();
-        return editor?.existing?.apiKey ?? "";
+    function changeCredential(field: "baseUrl" | "apiKey", value: string) {
+        if (!mounted.current || !session || sessionRef.current !== session || writeLocked()) return;
+        session[field] = value;
+        // Transport has no AbortSignal: cancel publication and release only this
+        // credential operation synchronously, before another callback can run.
+        operationRef.current = undefined;
+        setTesting(false);
+        setProbing(false);
+        setProbeModels([]);
+        if (field === "baseUrl") setBaseUrl(value);
+        else setApiKey(value);
+    }
+
+    function credentials() {
+        return {
+            definitionId: session!.definition.id,
+            baseUrl: session!.baseUrl,
+            apiKey: session!.apiKey.trim() || session!.existing?.apiKey || "",
+        };
     }
 
     async function handleProbeModels() {
-        if (!editor) return;
+        if (!mounted.current || !session || sessionRef.current !== session || operationRef.current) return;
+        const operation: EditorOperation = {session, kind: "probe"};
+        const request = credentials();
+        operationRef.current = operation;
         setProbing(true);
         try {
-            const result = await listConnectorModels({
-                definitionId: editor.definition.id,
-                baseUrl,
-                apiKey: resolveApiKey(),
-            });
+            const result = await listConnectorModels(request);
+            if (!currentOperation(operation)) return;
             if (!result.ok) {
-                toast.error(result.message);
+                toast.error(redactCredentials(result.message, request.apiKey).slice(0, 300));
                 setProbeModels([]);
                 return;
             }
             setProbeModels(result.models);
             toast.success(
-                editor.definition.id === "aihubmix"
+                session.definition.id === "aihubmix"
                     ? `已获取 ${result.models.length} 个公开模型；API Key 请通过测试连接验证`
                     : result.models.length > 0
                         ? `探活成功，可见 ${result.models.length} 个模型`
                         : "探活成功，但接口未返回模型列表",
             );
+        } catch (error) {
+            if (currentOperation(operation)) toast.error(redactCredentials(error instanceof Error ? error.message : "拉取失败", request.apiKey).slice(0, 300));
         } finally {
-            setProbing(false);
+            finishOperation(operation);
         }
     }
 
     async function handleTest() {
-        if (!editor) return;
+        if (!mounted.current || !session || sessionRef.current !== session || operationRef.current) return;
+        const operation: EditorOperation = {session, kind: "test"};
+        const request = credentials();
+        operationRef.current = operation;
         setTesting(true);
         try {
-            const result = await testConnectorConnection({
-                definitionId: editor.definition.id,
-                baseUrl,
-                apiKey: resolveApiKey(),
-            });
-            if (result.ok) {
-                const detail =
-                    result.via === "models" && result.modelCount != null
-                        ? `（${result.modelCount} 个模型）`
-                        : "";
-                toast.success(editor.definition.id === "mimo" ? `模型目录读取成功${detail}；配音权限以实际生成为准` : result.via === "authenticated-read" ? "鉴权读取成功；具体模型权限以实际调用为准" : `连接成功${detail}`);
-                if (result.via === "models") {
-                    const listed = await listConnectorModels({
-                        definitionId: editor.definition.id,
-                        baseUrl,
-                        apiKey: resolveApiKey(),
-                    });
-                    if (listed.ok) setProbeModels(listed.models);
-                }
-            } else {
-                toast.error(result.message);
+            const result = await testConnectorConnection(request);
+            if (!currentOperation(operation)) return;
+            if (!result.ok) {
+                toast.error(redactCredentials(result.message, request.apiKey).slice(0, 300));
+                return;
             }
+            // Wait for the nested directory read before publishing success;
+            // changing credentials retires both stages of this operation.
+            if (result.via === "models") {
+                const listed = await listConnectorModels(request);
+                if (!currentOperation(operation)) return;
+                if (listed.ok) setProbeModels(listed.models);
+            }
+            const detail = result.via === "models" && result.modelCount != null
+                ? `（${result.modelCount} 个模型）` : "";
+            toast.success(session.definition.id === "mimo" ? `模型目录读取成功${detail}；配音权限以实际生成为准` : result.via === "authenticated-read" ? "鉴权读取成功；具体模型权限以实际调用为准" : `连接成功${detail}`);
+        } catch (error) {
+            if (currentOperation(operation)) toast.error(redactCredentials(error instanceof Error ? error.message : "测试失败", request.apiKey).slice(0, 300));
         } finally {
-            setTesting(false);
+            finishOperation(operation);
         }
     }
 
     async function handleSave() {
-        if (!editor) return;
+        if (!mounted.current || !session || sessionRef.current !== session || operationRef.current) return;
+        const operation: EditorOperation = {session, kind: "save"};
+        const request = {...credentials(), protocol: session.definition.protocol, label: session.definition.title};
+        operationRef.current = operation;
         setSaving(true);
         try {
-            await upsertConnector({
-                definitionId: editor.definition.id,
-                protocol: editor.definition.protocol,
-                baseUrl,
-                apiKey: resolveApiKey(),
-                label: editor.definition.title,
-            });
+            await upsertConnector(request);
+            if (!currentOperation(operation)) return;
+            operationRef.current = undefined;
             toast.success("已保存连接");
             closeEditor();
-        } catch (err) {
-            toast.error(err instanceof Error ? err.message : "保存失败");
+        } catch (error) {
+            if (currentOperation(operation)) toast.error(redactCredentials(error instanceof Error ? error.message : "保存失败", request.apiKey).slice(0, 300));
         } finally {
-            setSaving(false);
+            finishOperation(operation);
         }
     }
 
-    async function handleDisconnect(config: ConnectorConfig) {
+    async function handleDisconnect() {
+        if (!mounted.current || !session?.existing || sessionRef.current !== session || operationRef.current) return;
+        const operation: EditorOperation = {session, kind: "disconnect"};
+        const request = credentials();
+        const id = session.existing.id;
+        operationRef.current = operation;
+        setSaving(true);
         try {
-            await deleteConnector(config.id);
+            await deleteConnector(id);
+            if (!currentOperation(operation)) return;
+            operationRef.current = undefined;
             toast.success("已断开连接");
             closeEditor();
-        } catch (err) {
-            toast.error(err instanceof Error ? err.message : "断开失败");
+        } catch (error) {
+            if (currentOperation(operation)) toast.error(redactCredentials(error instanceof Error ? error.message : "断开失败", request.apiKey).slice(0, 300));
+        } finally {
+            finishOperation(operation);
         }
     }
 
@@ -210,6 +278,7 @@ export function ConnectorsPage() {
                                         <Button
                                             variant="outline"
                                             size="sm"
+                                            disabled={saving}
                                             onClick={() => openEditor(definition, existing)}
                                         >
                                             编辑
@@ -218,6 +287,7 @@ export function ConnectorsPage() {
                                         <Button
                                             variant="brand"
                                             size="sm"
+                                            disabled={saving}
                                             onClick={() => openEditor(definition)}
                                         >
                                             <Plug className="size-3.5"/>
@@ -233,7 +303,11 @@ export function ConnectorsPage() {
             </div>
 
             <Dialog open={Boolean(editor)} onOpenChange={(open) => !open && closeEditor()}>
-                <DialogContent>
+                <DialogContent
+                    showCloseButton={!saving}
+                    onEscapeKeyDown={(event) => {if (writeLocked()) event.preventDefault();}}
+                    onPointerDownOutside={(event) => {if (writeLocked()) event.preventDefault();}}
+                >
                     <DialogHeader>
                         <DialogTitle>{editor?.existing ? "编辑连接" : "安装连接"}</DialogTitle>
                         <DialogDescription>
@@ -250,7 +324,8 @@ export function ConnectorsPage() {
                         <Field label="Base URL">
                             <Input
                                 value={baseUrl}
-                                onChange={(event) => setBaseUrl(event.target.value)}
+                                disabled={saving}
+                                onChange={(event) => changeCredential("baseUrl", event.target.value)}
                                 placeholder={editor?.definition.defaultBaseUrl}
                                 autoComplete="off"
                             />
@@ -259,7 +334,8 @@ export function ConnectorsPage() {
                             <Input
                                 type="password"
                                 value={apiKey}
-                                onChange={(event) => setApiKey(event.target.value)}
+                                disabled={saving}
+                                onChange={(event) => changeCredential("apiKey", event.target.value)}
                                 placeholder={
                                     editor?.existing
                                         ? `已保存 ${maskApiKey(editor.existing.apiKey)}（留空则保持）`
@@ -286,7 +362,8 @@ export function ConnectorsPage() {
                                 <Button
                                     variant="ghost"
                                     className="text-destructive hover:text-destructive"
-                                    onClick={() => void handleDisconnect(editor.existing!)}
+                                    disabled={testing || saving || probing}
+                                    onClick={() => void handleDisconnect()}
                                 >
                                     断开
                                 </Button>

@@ -39,11 +39,11 @@ export const EMPTY_MEMORY: MemoryInput = {
 };
 
 export function MemoryEditor({
-                                 projectId,
-                                 initial = EMPTY_MEMORY,
-                                 memory,
-                                 source,
-                                 sourceExcerpt,
+                                 projectId: incomingProjectId,
+                                 initial: incomingInitial = EMPTY_MEMORY,
+                                 memory: incomingMemory,
+                                 source: incomingSource,
+                                 sourceExcerpt: incomingExcerpt,
                                  onClose,
                                  onSaved,
                                  onPendingChange,
@@ -57,20 +57,32 @@ export function MemoryEditor({
     onSaved: (memory: ProjectMemory) => void;
     onPendingChange?: (pending: boolean) => void;
 }) {
-    const baseline: MemoryInput = {
-        inclusion: initial.inclusion ?? "relevant",
-        category: initial.category,
-        title: initial.title,
-        topicKey: initial.topicKey,
-        body: initial.body,
-        applicability: initial.applicability,
-        tags: initial.tags,
-    };
-    const [draft, setDraft] = useState<MemoryInput>(() => ({
-        ...baseline,
-        tags: [...initial.tags],
+    // A mounted editor owns one input/source/owner snapshot. Live revisions are
+    // reconciled explicitly below; new props cannot silently rebind its draft.
+    const [session] = useState(() => ({
+        projectId: incomingProjectId,
+        memory: incomingMemory ? structuredClone(incomingMemory) : undefined,
+        source: incomingSource ? structuredClone(incomingSource) : undefined,
+        sourceExcerpt: incomingExcerpt,
+        baseline: {
+            inclusion: incomingInitial.inclusion ?? "relevant",
+            category: incomingInitial.category,
+            title: incomingInitial.title,
+            topicKey: incomingInitial.topicKey,
+            body: incomingInitial.body,
+            applicability: incomingInitial.applicability,
+            tags: [...incomingInitial.tags],
+        } satisfies MemoryInput,
     }));
-    const [tagsText, setTagsText] = useState(initial.tags.join("，"));
+    const {projectId, memory, source, sourceExcerpt, baseline} = session;
+    const identityMismatch = incomingProjectId !== projectId || incomingMemory?.id !== memory?.id ||
+        incomingSource?.taskId !== source?.taskId || incomingSource?.summaryId !== source?.summaryId ||
+        incomingSource?.summaryRevision !== source?.summaryRevision || incomingSource?.itemKind !== source?.itemKind ||
+        incomingSource?.itemIndex !== source?.itemIndex || incomingSource?.itemText !== source?.itemText;
+    const targetMatches = useRef(true);
+    targetMatches.current = !identityMismatch;
+    const [draft, setDraft] = useState<MemoryInput>(() => structuredClone(baseline));
+    const [tagsText, setTagsText] = useState(baseline.tags.join("，"));
     const [expectedRevision, setExpectedRevision] = useState(memory?.revision);
     const [readAttempt, setReadAttempt] = useState(0);
     const currentRead = useLiveQuery(
@@ -84,10 +96,20 @@ export function MemoryEditor({
     );
     const current = currentRead?.data;
     const [pending, setPending] = useState(false);
+    const [saveCompleted, setSaveCompleted] = useState(false);
     const [error, setError] = useState("");
     const [conflictIds, setConflictIds] = useState<string[]>([]);
     const [discard, setDiscard] = useState(false);
     const lock = useRef(false);
+    const lifetime = useRef({mounted: false, epoch: 0, saved: false});
+    useEffect(() => {
+        const active = lifetime.current;
+        active.mounted = true;
+        return () => {
+            active.mounted = false;
+            active.epoch++;
+        };
+    }, []);
     useEffect(() => {
         onPendingChange?.(pending);
         return () => onPendingChange?.(false);
@@ -105,9 +127,10 @@ export function MemoryEditor({
     );
     const conflicts = conflictsRead?.data;
     const readError = currentRead?.error || conflictsRead?.error;
-    const dirty =
+    const dirty = !saveCompleted && (
         JSON.stringify(draft) !== JSON.stringify(baseline) ||
-        tagsText !== initial.tags.join("，");
+        tagsText !== baseline.tags.join("，")
+    );
     const blocker = useBlocker({
         shouldBlockFn: () => dirty || pending,
         withResolver: true,
@@ -127,7 +150,14 @@ export function MemoryEditor({
     }
 
     async function save(replace?: { id: string; expectedRevision: number }) {
-        if (lock.current) return;
+        const active = lifetime.current;
+        if (!active.mounted || active.saved || lock.current) return;
+        if (!targetMatches.current) {
+            setError("编辑目标已发生变化，请保留草稿并重新打开原记忆");
+            return;
+        }
+        const epoch = active.epoch;
+        const mounted = () => active.mounted && active.epoch === epoch;
         lock.current = true;
         setPending(true);
         setError("");
@@ -139,6 +169,19 @@ export function MemoryEditor({
                 .map((tag) => tag.trim())
                 .filter(Boolean),
         };
+        function saved(value: ProjectMemory, message: string) {
+            if (!mounted()) return;
+            // Retire this session before a callback can synchronously close it
+            // or invoke a captured submit again, even before React rerenders.
+            active.saved = true;
+            setSaveCompleted(true);
+            if (!targetMatches.current) {
+                setError("原编辑目标已保存，但当前目标已发生变化，请重新打开记忆查看");
+                return;
+            }
+            onSaved(value);
+            if (mounted()) toast.success(message);
+        }
         try {
             if (memory) {
                 const updated = await updateProjectMemory(
@@ -147,20 +190,19 @@ export function MemoryEditor({
                     input,
                     expectedRevision!,
                 );
-                onSaved(updated);
-                toast.success("记忆已更新");
+                saved(updated, "记忆已更新");
             } else {
                 const result = source
                     ? await promoteProjectMemory(projectId, source, input, {replace})
                     : await createProjectMemory(projectId, input, {replace});
-                onSaved(result.memory);
-                toast.success(
+                saved(result.memory,
                     result.duplicate
                         ? "这条记忆已经保存，无需重复添加"
                         : "已保存到项目记忆",
                 );
             }
         } catch (failure) {
+            if (!mounted()) return;
             setError(
                 failure instanceof Error
                     ? failure.message
@@ -170,7 +212,7 @@ export function MemoryEditor({
                 setConflictIds(failure.existingIds);
         } finally {
             lock.current = false;
-            setPending(false);
+            if (mounted()) setPending(false);
         }
     }
 
@@ -203,7 +245,7 @@ export function MemoryEditor({
                         }}
                         className="memory-editor-form"
                     >
-                        <fieldset disabled={pending} className="memory-editor-fields">
+                        <fieldset disabled={pending || saveCompleted} className="memory-editor-fields">
                             {sourceExcerpt && (
                                 <details className="memory-source-excerpt">
                                     <summary>查看这条记忆的原始依据</summary>
@@ -332,6 +374,11 @@ export function MemoryEditor({
                                 </Button>
                             </div>
                         )}
+                        {identityMismatch && (
+                            <p className="memory-error" role="alert">
+                                编辑目标已发生变化。草稿与原始来源仍保留，请重新打开原记忆后再保存。
+                            </p>
+                        )}
                         {error && (
                             <p className="memory-error" role="alert">
                                 {error}。编辑内容仍保留。
@@ -379,6 +426,8 @@ export function MemoryEditor({
                                 type="submit"
                                 disabled={
                                     pending ||
+                                    saveCompleted ||
+                                    identityMismatch ||
                                     !!readError ||
                                     (!!memory &&
                                         (!current || current.revision !== expectedRevision)) ||

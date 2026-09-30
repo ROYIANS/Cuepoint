@@ -1,6 +1,7 @@
 import {ReferenceSourceLink} from "./ReferenceAttachments";
 import {MemoryEditor} from "@/components/memory/MemoryEditor";
-import type {MemoryCandidate, ProjectMemory} from "@/domain/projectMemory";
+import type {MemoryCandidate, MemorySourceRef, ProjectMemory} from "@/domain/projectMemory";
+import {listMemoryCandidates} from "@/db/projectMemories";
 import {MemoryPromotion} from "@/components/memory/MemoryPromotion";
 import {useEffect, useRef, useState} from "react";
 import {useLiveQuery} from "dexie-react-hooks";
@@ -89,11 +90,12 @@ function Sources({ids, evidence, selectable, onChange}: {
     </details>;
 }
 
-function ReviewDocument({record, evidence, projectId, onCandidate}: {
+function ReviewDocument({record, evidence, promotionPending, promotionDisabled, onPromote}: {
     record: AgentTaskWrapup;
     evidence: WrapupEvidence[];
-    projectId: string;
-    onCandidate: (candidate: MemoryCandidate) => void
+    promotionPending: boolean;
+    promotionDisabled: boolean;
+    onPromote: (source: MemorySourceRef) => void
 }) {
     const content = record.content;
     return <div className="task-review-document">
@@ -110,7 +112,7 @@ function ReviewDocument({record, evidence, projectId, onCandidate}: {
             <h3>{label}<span>{content[key].length}</span></h3>{content[key].length ? content[key].map((item, index) =>
                 <div key={index} className="task-review-entry"><p>{item.text}</p><Sources ids={item.sourceIds}
                                                                                           evidence={evidence}/>{record.confirmedAt && (key === "decisions" || key === "lessons") &&
-                    <MemoryPromotion onCandidate={onCandidate} projectId={projectId} source={{
+                    <MemoryPromotion onPromote={onPromote} pending={promotionPending} disabled={promotionDisabled} source={{
                         taskId: record.taskId,
                         summaryId: record.id,
                         summaryRevision: record.revision,
@@ -150,7 +152,65 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
         sources: WrapupEvidence[];
         record: AgentTaskWrapup
     }>();
-    const [candidate, setCandidate] = useState<MemoryCandidate>();
+    const [candidate, setCandidate] = useState<{ epoch: number; projectId: string; value: MemoryCandidate }>();
+    const [candidatePending, setCandidatePending] = useState(false);
+    const promotion = useRef<{mounted: boolean; epoch: number; phase: "idle" | "preparing" | "editing"}>({
+        mounted: false, epoch: 0, phase: "idle",
+    });
+    const promotionOwner = useRef({taskId: task.id, projectId: task.projectId});
+    promotionOwner.current = {taskId: task.id, projectId: task.projectId};
+    useEffect(() => {
+        const session = promotion.current;
+        session.mounted = true;
+        return () => {
+            session.mounted = false;
+            session.epoch++;
+            session.phase = "idle";
+        };
+    }, []);
+
+    async function prepareMemory(source: MemorySourceRef) {
+        const session = promotion.current;
+        const owner = {taskId: task.id, projectId: task.projectId};
+        if (!session.mounted || session.phase !== "idle" || candidate ||
+            promotionOwner.current.taskId !== owner.taskId || promotionOwner.current.projectId !== owner.projectId ||
+            source.taskId !== owner.taskId) return;
+        // The ref locks immediately, including callbacks from a render before disabled updates.
+        const epoch = ++session.epoch;
+        session.phase = "preparing";
+        const frozenSource = structuredClone(source);
+        setCandidatePending(true);
+        const active = () => session.mounted && session.epoch === epoch && session.phase === "preparing" &&
+            promotionOwner.current.taskId === owner.taskId && promotionOwner.current.projectId === owner.projectId;
+        try {
+            const candidates = await listMemoryCandidates(owner.projectId, frozenSource.taskId,
+                frozenSource.summaryId, frozenSource.summaryRevision);
+            if (!active()) return;
+            const selected = candidates.find(item => item.ref.itemKind === frozenSource.itemKind &&
+                item.ref.itemIndex === frozenSource.itemIndex && item.ref.itemText === frozenSource.itemText);
+            if (!selected) throw new Error("这条总结来源已发生变化，请重新打开后再试");
+            const frozenCandidate = structuredClone(selected);
+            session.phase = "editing";
+            setCandidate({epoch, projectId: owner.projectId, value: frozenCandidate});
+        } catch (failure) {
+            if (active()) toast.error(failure instanceof Error ? failure.message : "读取总结来源失败");
+        } finally {
+            if (session.mounted && session.epoch === epoch) {
+                if (session.phase === "preparing") session.phase = "idle";
+                setCandidatePending(false);
+            }
+        }
+    }
+
+    function closeMemory(epoch: number) {
+        const session = promotion.current;
+        if (!session.mounted || session.epoch !== epoch || session.phase !== "editing") return false;
+        session.epoch++;
+        session.phase = "idle";
+        setCandidate(undefined);
+        setMemoryPending(false);
+        return true;
+    }
     const [savedMemory, setSavedMemory] = useState<ProjectMemory>();
     const [memoryPending, setMemoryPending] = useState(false);
     const [pending, setPending] = useState(false);
@@ -170,9 +230,9 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
         return () => onEditingChange(false);
     }, [!!draft, !!candidate, onEditingChange]);
     useEffect(() => {
-        onPendingChange(pending || preparing || memoryPending);
+        onPendingChange(pending || preparing || memoryPending || candidatePending);
         return () => onPendingChange(false);
-    }, [pending, preparing, memoryPending, onPendingChange]);
+    }, [pending, preparing, memoryPending, candidatePending, onPendingChange]);
     useEffect(() => () => controller.current?.abort(), []);
     useEffect(() => {
         if (!draft) return;
@@ -384,12 +444,12 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
                     </div>
                 </form> : <>
                     {latest.status === "draft" &&
-                        <ReviewDocument onCandidate={setCandidate} projectId={task.projectId} record={latest}
+                        <ReviewDocument onPromote={source => void prepareMemory(source)} promotionPending={candidatePending} promotionDisabled={candidatePending || !!candidate} record={latest}
                                         evidence={evidence}/>}
                     {state.confirmed && (latest.id !== state.confirmed.id || latest.revision !== state.confirmed.revision) &&
                         <details className="task-review-previous">
                             <summary>上次确认的总结 · {dateLabel(state.confirmed.confirmedAt!)}</summary>
-                            <ReviewDocument onCandidate={setCandidate} projectId={task.projectId}
+                            <ReviewDocument onPromote={source => void prepareMemory(source)} promotionPending={candidatePending} promotionDisabled={candidatePending || !!candidate}
                                             record={state.confirmed}
                                             evidence={currentSources(state.confirmed.snapshot.evidence)}/></details>}
                     {!preparing && task.lifecycle === "open" && <div className="task-review-actions">
@@ -421,12 +481,15 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
                                                                                      params={{projectId: task.projectId}}
                                                                                      search={{memory: savedMemory.id}}>查看“{savedMemory.title}”</Link>
         </p>}
-        {candidate && <MemoryEditor projectId={task.projectId} initial={candidate.input} source={candidate.ref}
-                                    sourceExcerpt={`${candidate.source.taskTitle} · 总结版本 ${candidate.ref.summaryRevision}\n${candidate.source.excerpt}`}
-                                    onPendingChange={setMemoryPending} onClose={() => setCandidate(undefined)}
+        {candidate && <MemoryEditor key={candidate.epoch} projectId={task.projectId} initial={candidate.value.input} source={candidate.value.ref}
+                                    sourceExcerpt={`${candidate.value.source.taskTitle} · 总结版本 ${candidate.value.ref.summaryRevision}\n${candidate.value.source.excerpt}`}
+                                    onPendingChange={value => {
+                                        if (promotion.current.mounted && promotion.current.epoch === candidate.epoch &&
+                                            promotion.current.phase === "editing") setMemoryPending(value);
+                                    }} onClose={() => closeMemory(candidate.epoch)}
                                     onSaved={(memory) => {
-                                        setCandidate(undefined);
-                                        setSavedMemory(memory);
+                                        if (memory.projectId === candidate.projectId && closeMemory(candidate.epoch))
+                                            setSavedMemory(memory);
                                     }}/>}
         <Dialog open={historyOpen} onOpenChange={setHistoryOpen}><DialogContent
             className="agent-task-dialog task-review-history"><DialogHeader><DialogTitle>总结历史</DialogTitle><DialogDescription>每次保存独立留存。旧总结仅供追溯，不代表当前工作已通过验收。</DialogDescription></DialogHeader>{state?.history.map((version) =>
@@ -434,7 +497,7 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
                 <summary>
                     <span>{version.confirmedAt ? "已确认" : version.status === "draft" ? "草稿" : version.status === "failed" ? "失败" : "中断"} · 版本 {version.revision}<small>{dateLabel(version.updatedAt)} · {version.author === "ai" ? "AI" : "人工"}</small></span>
                 </summary>
-                <ReviewDocument onCandidate={setCandidate} projectId={task.projectId} record={version}
+                <ReviewDocument onPromote={source => void prepareMemory(source)} promotionPending={candidatePending} promotionDisabled={candidatePending || !!candidate} record={version}
                                 evidence={currentSources(version.snapshot.evidence)}/></details>)}
         </DialogContent></Dialog>
     </div>;
