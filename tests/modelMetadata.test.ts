@@ -31,7 +31,7 @@ describe("malformed directory metadata", () => {
   it("does not traverse non-array data", async () => {
     const fetchImpl = (async () => new Response(JSON.stringify({ data: {} }))) as typeof fetch;
     const result = await discoverConnectorChatModels({ definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "fixture" }, { fetchImpl });
-    expect(result).toEqual({ ok: true, models: [], incompatibleModels: [] });
+    expect(result).toMatchObject({ ok: false, message: expect.any(String) });
   });
 });
 
@@ -39,4 +39,21 @@ it("separates reference capacity from gateway reasoning support without guessing
   expect(getReasoningPolicy({ definitionId: "apimart", baseUrl: "https://api.apimart.ai/v1" }, "gpt-5.6-luna")).toBeUndefined();
   expect(resolveModelMetadata("gpt-5.6-luna").contextWindow?.tokens).toBe(1_050_000);
   expect(resolveModelMetadata("custom-gpt-5.6-luna").contextWindow).toBeUndefined();
+});
+
+it("keeps duplicate directory metadata conservative and ignores malformed optional limits", async () => {
+  const fetchImpl = (async () => Response.json({ data: [
+    { id: " example ", context_window: 128000, max_output_tokens: 8192, capabilities: { vision: true } },
+    { id: "example", context_length: 64000, max_output: 4096, capabilities: { vision: false } },
+    { id: "unknown", context_length: "128K", max_output: -1, capabilities: "invalid" },
+    { id: "__proto__", context_length: 200000 },
+  ] })) as typeof fetch;
+  const result = await discoverConnectorChatModels({ definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "fixture" }, { fetchImpl });
+  expect(result.ok).toBe(true);
+  if (result.ok) {
+    expect(result.models).toEqual(["__proto__", "example", "unknown"]);
+    expect(result.metadata?.example).toEqual({ source: "provider", contextWindow: 64000, maxOutputTokens: 4096, vision: false });
+    expect(result.metadata?.unknown).toBeUndefined();
+    expect(result.metadata?.["__proto__"]).toEqual({ source: "provider", contextWindow: 200000 });
+  }
 });

@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { refreshAudioGeneration } from "@/lib/audioGeneration/runtime";
 import { db } from "@/db/database";
 import { createAudioMusicProject } from "@/db/repo";
 import { createAgentTask } from "@/db/agentTasks";
@@ -113,6 +114,34 @@ describe("sound task generation evidence", () => {
     const wrap = await createManualWrapup(f.task.id);
     expect(wrap.snapshot.evidence.find(item => item.id === `generation:${f.job.id}`)).toMatchObject({ outcome: "unresolved", available: true, supportsResult: false });
     expect((await getTaskWrapupState(f.task.id)).completionBlockers).toContain("声音生成仍有进行中或待核实结果");
+  });
+
+  it("repairs legacy duplicate IDs without changing task origin or promoting historical evidence to a fresh fact", async () => {
+    const f = await fixture();
+    await db.connectors.add({ id: "sound", definitionId: "apimart", protocol: "openai-compatible", baseUrl: "https://fixture.test/v1", apiKey: "fixture-key", updatedAt: f.run.updatedAt });
+    await db.audioGenerationJobs.update(f.job.id, { status: "submitted", taskIds: ["remote-task", "remote-task", "later", "later"] });
+    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+      expect(init?.method).toBe("GET");
+      const taskId = new URL(String(url)).pathname.split("/").at(-1)!;
+      return Response.json({ code: 200, data: { id: taskId, status: taskId === "later" ? "processing" : "provider-new-status" } });
+    });
+    const recovered = await refreshAudioGeneration(f.project.id, f.job.id, { fetchImpl });
+    expect(recovered.taskIds).toEqual(["remote-task", "later"]);
+    expect(recovered.source).toEqual(f.job.source);
+    expect(recovered.results).toEqual(f.job.results);
+    expect(recovered.taskObservations![0]).toMatchObject({ status: "unknown", lastVerified: f.job.taskObservations![0].lastVerified });
+    expect(recovered.taskObservations![1].status).toBe("processing");
+    expect(fetchImpl).toHaveBeenCalledTimes(2);
+    expect(await db.audioGenerationJobs.count()).toBe(1);
+    expect(await db.agentToolCalls.count()).toBe(1);
+    const source = await taskGenerationSource(f.task, f.job.id);
+    expect(source).toMatchObject({ available: true, supportsResult: false });
+    expect(JSON.parse(source.body).source).toEqual(f.job.source);
+    expect((await listTaskGenerationSources(f.task)).map(row => row.id)).toEqual([f.job.id]);
+    const other = await createAgentTask({ projectId: f.project.id, title: "另一个任务", goal: "查看" });
+    await expect(taskGenerationSource(other, f.job.id)).rejects.toThrow("不属于");
+    const wrap = await createManualWrapup(f.task.id);
+    expect(wrap.snapshot.evidence.find(item => item.id === `generation:${f.job.id}`)).toMatchObject({ outcome: "unresolved", available: true, supportsResult: false });
   });
 
   it.each(["missing-call", "unapproved", "dormant"] as const)("excludes %s job from task evidence", async reason => {

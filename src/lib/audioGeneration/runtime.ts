@@ -27,7 +27,8 @@ import {audioBufferMetadata, decodeAudioBlob} from "@/lib/audio/engine";
 import {createId, nowIso} from "@/lib/ids";
 import {audioMimeExtension, detectAudioMime} from "@/lib/audio/mime";
 import {musicWireInput, speechWireInput, validateGenerationInput} from "./input";
-import {observeAudioTask} from "./observations";
+import {observeAudioTask, validateAudioTaskObservations} from "./observations";
+import {canonicalizeAudioTaskIds} from "./taskIds";
 import {inspectAudioGenerationOutputs} from "./outputEvidence";
 
 export interface AudioGenerationOptions extends ApimartRequestOptions {
@@ -247,6 +248,10 @@ export async function refreshAudioGeneration(projectId: string, jobId: string, o
         let job = await readJob(projectId, jobId);
         if (job.dormant || job.status === "saved" || job.status === "prepared") return job;
         await assertAudioProject(projectId);
+        // Repair submitted legacy duplicates before strict checkpoint validation or any request.
+        const taskIds = canonicalizeAudioTaskIds(job.taskIds);
+        if (taskIds.length !== job.taskIds.length) job = await change(job, {taskIds});
+        validateAudioTaskObservations(job.taskObservations, job.taskIds);
         if (job.status === "submitting") return change(job, {
             status: "uncertain",
             error: "提交过程已中断，结果尚不确定；请核实后再创建新的生成"

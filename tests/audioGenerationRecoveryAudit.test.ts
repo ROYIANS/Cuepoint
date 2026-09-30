@@ -1,5 +1,9 @@
+import JSZip from "jszip";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
+import { patchAudioGenerationJob } from "@/db/audioGeneration";
+import { observeAudioTask } from "@/lib/audioGeneration/observations";
+import { snapshotAudioPackage } from "@/lib/audioProjectPackage";
 import { deleteMusicWork } from "@/db/music";
 import { exportProjectZip, importProjectZip } from "@/lib/projectPackage";
 import { createAudioMusicProject } from "@/db/repo";
@@ -124,5 +128,200 @@ describe("audio generation recovery integration audit", () => {
     ] } } })) });
     expect(result.ok).toBe(true);
     if (result.ok) expect(result.task.tracks.map((track) => track.audioIndex)).toEqual([1, 3]);
+  });
+});
+
+
+describe("B05 durable task identity recovery", () => {
+  it("stores duplicate provider IDs once, then queries and downloads each unique task once", async () => {
+    const { project, job } = await prepared();
+    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+      if (init?.method === "POST") return Response.json({ code: 200, data: ["early", "late", "early"].map(task_id => ({ task_id })) });
+      if (String(url).includes("/music/tasks/")) {
+        const id = new URL(String(url)).pathname.split("/").at(-1)!;
+        return complete(id, [`https://cdn.example/${id}.wav`]);
+      }
+      return wav();
+    });
+    const submitted = await submitAudioGeneration(project.id, job.id, { fetchImpl });
+    expect(submitted.taskIds).toEqual(["early", "late"]);
+    expect((await db.audioGenerationJobs.get(job.id))!.taskIds).toEqual(submitted.taskIds);
+    const saved = await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+    expect(saved.status).toBe("saved");
+    expect(saved.taskObservations?.map(row => row.taskId)).toEqual(["early", "late"]);
+    expect(await db.musicWorks.count()).toBe(2);
+    expect(fetchImpl.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(1);
+    expect(fetchImpl.mock.calls.filter(([url]) => String(url).includes("/music/tasks/"))).toHaveLength(2);
+    expect(fetchImpl).toHaveBeenCalledTimes(5);
+  });
+
+  it("recovers duplicate legacy submissions with absent observations using only one GET per unique ID", async () => {
+    const { project, job } = await prepared();
+    await db.audioGenerationJobs.update(job.id, { status: "submitted", taskIds: ["old", "old", "sibling"] });
+    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+      expect(init?.method).not.toBe("POST");
+      if (String(url).includes("/music/tasks/")) {
+        const checkpoint = (await db.audioGenerationJobs.get(job.id))!;
+        expect(checkpoint.taskIds).toEqual(["old", "sibling"]);
+        const id = new URL(String(url)).pathname.split("/").at(-1)!;
+        return complete(id, [`https://cdn.example/${id}.wav`]);
+      }
+      return wav();
+    });
+    const saved = await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+    expect(saved.status).toBe("saved");
+    expect(saved.taskObservations?.map(row => row.taskId)).toEqual(["old", "sibling"]);
+    expect(await db.musicWorks.count()).toBe(2);
+    expect(fetchImpl.mock.calls.filter(([url]) => String(url).includes("/music/tasks/"))).toHaveLength(2);
+    expect(fetchImpl.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(0);
+    expect(fetchImpl).toHaveBeenCalledTimes(4);
+  });
+
+  it("checkpoints legacy unique IDs before GET, preserving verified evidence and downloads through processing and retry", async () => {
+    const { project, job } = await prepared();
+    const observations = [
+      observeAudioTask("early", "completed", "2026-09-22T00:00:00.000Z"),
+      observeAudioTask("late", "processing", "2026-09-22T00:00:00.000Z"),
+    ];
+    const results = [{ key: "early:1", title: "existing result", provenance: { provider: "apimart" as const, model: "flowmusic", taskId: "early", audioIndex: 1, audioUrl: "https://cdn.example/early.wav" } }];
+    await db.audioGenerationJobs.update(job.id, { status: "submitted", taskIds: ["early", "early", "late", "late"], taskObservations: observations, results });
+    let lateStatus = "processing";
+    let downloads = 0;
+    let queries = 0;
+    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+      expect(init?.method).not.toBe("POST");
+      if (String(url).includes("/music/tasks/")) {
+        const checkpoint = (await db.audioGenerationJobs.get(job.id))!;
+        expect(checkpoint.taskIds).toEqual(["early", "late"]);
+        if (queries++ === 0) {
+          expect(checkpoint.revision).toBe(job.revision + 1);
+          expect(checkpoint.taskObservations).toEqual(observations);
+          expect(checkpoint.results).toEqual(results);
+          expect(checkpoint.input).toEqual(job.input);
+          expect(checkpoint.source).toEqual(job.source);
+          expect(checkpoint.connector).toEqual(job.connector);
+        }
+        const id = new URL(String(url)).pathname.split("/").at(-1)!;
+        if (id === "early" || lateStatus === "completed") return complete(id, [`https://cdn.example/${id}.wav`]);
+        if (lateStatus === "query-failed") throw new Error("temporary query failure");
+        return Response.json({ code: 200, data: { id, status: lateStatus } });
+      }
+      downloads++;
+      return wav();
+    });
+    const running = await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+    expect(running.status).toBe("running");
+    expect(running.taskObservations?.map(row => row.taskId)).toEqual(["early", "late"]);
+    expect(running.results[0].title).toBe("existing result");
+    expect(await db.musicWorks.count()).toBe(1);
+    expect(queries).toBe(2);
+    expect(downloads).toBe(1);
+    const savedSibling = running.results[0];
+    const previous = running.taskObservations![1].lastVerified;
+    lateStatus = "query-failed";
+    const failedQuery = await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+    expect(failedQuery.taskObservations![1]).toMatchObject({ status: "query-failed", lastVerified: previous });
+    expect(failedQuery.results[0]).toEqual(savedSibling);
+    expect(downloads).toBe(1);
+    lateStatus = "completed";
+    const saved = await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+    expect(saved.status).toBe("saved");
+    expect(saved.results[0]).toEqual(savedSibling);
+    expect(saved.taskObservations?.map(row => row.status)).toEqual(["completed", "completed"]);
+    expect(await db.musicWorks.count()).toBe(2);
+    expect(queries).toBe(6);
+    expect(downloads).toBe(2);
+    expect(fetchImpl).toHaveBeenCalledTimes(8);
+    expect(fetchImpl.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(0);
+  });
+
+  it.each([
+    ["."], [".."], [""], ["  "], ["x".repeat(513)], ["task\u0000"], ["task\u007f"], ["task\ud800"], ["task\udc00"],
+    Array.from({ length: 101 }, (_, i) => `task-${i}`),
+  ])("rejects malformed legacy IDs locally, preserving history (%j)", async (...taskIds) => {
+    const { project, job } = await prepared();
+    await db.audioGenerationJobs.update(job.id, { status: "submitted", taskIds });
+    const before = await db.audioGenerationJobs.get(job.id);
+    const fetchImpl = vi.fn<typeof fetch>();
+    await expect(refreshAudioGeneration(project.id, job.id, { fetchImpl, decode })).rejects.toThrow("音乐任务 ID");
+    expect(fetchImpl).not.toHaveBeenCalled();
+    expect(await db.audioGenerationJobs.get(job.id)).toEqual(before);
+    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ["valid", "."], ["valid", ".."], ["valid", ""], ["valid", "  "], ["valid", "x".repeat(513)],
+    ["valid", "bad\n"], ["valid", "task\ud800"], ["valid", "task\udc00"], Array.from({ length: 101 }, (_, i) => `task-${i}`),
+  ])("keeps malformed paid success uncertain, never auto-submitting again (%j)", async (...taskIds) => {
+    const { project, job } = await prepared();
+    const fetchImpl = vi.fn<typeof fetch>(async () => Response.json({ code: 200, data: taskIds.map(task_id => ({ task_id })) }));
+    const uncertain = await submitAudioGeneration(project.id, job.id, { fetchImpl });
+    expect(uncertain).toMatchObject({ status: "uncertain", taskIds: [], results: [] });
+    expect(uncertain.error).toBeTruthy();
+    expect(uncertain.claim).toBeTruthy();
+    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+    await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+    expect(fetchImpl).toHaveBeenCalledOnce();
+    expect((await db.audioGenerationJobs.get(job.id))!.source).toEqual(job.source);
+  });
+
+  it.each(["signal", "independent", "malformed"])("retains uncertain paid JSON %s failure with exactly one POST", async mode => {
+    const { project, job } = await prepared();
+    const controller = new AbortController();
+    const response = Response.json({});
+    vi.spyOn(response, "json").mockImplementation(async () => {
+      if (mode === "signal") controller.abort();
+      if (mode === "independent") throw Object.assign(new Error("cancelled"), { name: "AbortError" });
+      throw new SyntaxError("broken JSON");
+    });
+    const fetchImpl = vi.fn<typeof fetch>(async () => response);
+    const uncertain = await submitAudioGeneration(project.id, job.id, { fetchImpl, signal: controller.signal });
+    expect(uncertain).toMatchObject({ status: "uncertain", taskIds: [] });
+    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+    await refreshAudioGeneration(project.id, job.id, { fetchImpl });
+    expect(fetchImpl).toHaveBeenCalledOnce();
+    expect(fetchImpl.mock.calls[0][1]?.method).toBe("POST");
+  });
+});
+
+describe("B05 task identity storage and package boundaries", () => {
+  it.each([
+    ["duplicate", "duplicate"], ["."], [".."], [""], ["  "], ["x".repeat(513)], ["bad\n"], ["bad\u007f"], ["task\ud800"], ["task\udc00"],
+    Array.from({ length: 101 }, (_, i) => `task-${i}`),
+  ])("rejects malformed IDs even without observations in storage, snapshot and import (%j)", async (...taskIds) => {
+    const { project, job } = await prepared();
+    // Valid empty prepared music job round trips before testing the malformed boundary.
+    const zip = await JSZip.loadAsync(await exportProjectZip(project.id));
+    const raw = JSON.parse(await zip.file("audioProject.json")!.async("string"));
+    expect(raw.audioGenerationJobs[0].taskIds).toEqual([]);
+    await expect(patchAudioGenerationJob(project.id, job.id, job.revision, { taskIds })).rejects.toThrow("音乐任务 ID");
+    expect(await db.audioGenerationJobs.get(job.id)).toEqual(job);
+    raw.audioGenerationJobs[0].taskIds = taskIds;
+    zip.file("audioProject.json", JSON.stringify(raw));
+    const before = await Promise.all(db.tables.map(table => table.toArray()));
+    await expect(importProjectZip(await zip.generateAsync({ type: "blob" }))).rejects.toThrow("音乐任务 ID");
+    expect(await Promise.all(db.tables.map(table => table.toArray()))).toEqual(before);
+    await db.audioGenerationJobs.update(job.id, { taskIds });
+    await expect(snapshotAudioPackage(project.id)).rejects.toThrow("音乐任务 ID");
+  });
+
+  it("rejects sparse task ID arrays at the actual storage boundary", async () => {
+    const { project, job } = await prepared();
+    const taskIds = Array<string>(2);
+    taskIds[1] = "valid";
+    await expect(patchAudioGenerationJob(project.id, job.id, job.revision, { taskIds })).rejects.toThrow("音乐任务 ID");
+    expect(await db.audioGenerationJobs.get(job.id)).toEqual(job);
+  });
+
+  it("keeps prepared speech empty task IDs compatible with strict storage and ZIP import", async () => {
+    const project = await createAudioMusicProject("speech", "audio");
+    await db.connectors.add(credentials);
+    const job = await prepareAudioGeneration({ projectId: project.id, connectorId: credentials.id, input: { kind: "speech", text: "你好", voice: "alloy", speed: 1 } });
+    expect(job.taskIds).toEqual([]);
+    const patched = await patchAudioGenerationJob(project.id, job.id, job.revision, { taskIds: [] });
+    expect(patched.taskObservations).toBeUndefined();
+    const imported = await importProjectZip(await exportProjectZip(project.id));
+    expect((await db.audioGenerationJobs.where("projectId").equals(imported.id).first())!).toMatchObject({ taskIds: [], dormant: true, status: "prepared" });
   });
 });

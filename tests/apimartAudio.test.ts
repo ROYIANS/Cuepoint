@@ -68,3 +68,93 @@ describe("APIMart audio wire contracts", () => {
     expect(await downloadApimartAudio("https://cdn.example/error", { fetchImpl: json({ error: "no file" }) })).toMatchObject({ ok: false, kind: "protocol" });
   });
 });
+
+
+describe("bounded music task identity", () => {
+  it("deduplicates successful submissions in first-seen order, allowing 100 unique tasks", async () => {
+    const taskIds = Array.from({ length: 100 }, (_, i) => `task-${i}`);
+    const fetchImpl = json({ code: 200, data: [...taskIds, ...taskIds].map(task_id => ({ task_id })) });
+    expect(await submitApimartMusic(credentials, { model: "flowmusic", sound_prompt: "piano" }, { fetchImpl })).toEqual({ ok: true, taskIds });
+    expect(fetchImpl).toHaveBeenCalledOnce();
+  });
+
+  it.each(["", "  ", ".", "..", "x".repeat(513), "task\u0000", "task\n", "task\u007f", "task\u0085", "task\ud800", "task\udc00", "🎵".repeat(256) + "x", 42, null])("rejects malformed provider ID %j after one paid request", async task_id => {
+    const fetchImpl = json({ code: 200, data: [{ task_id: "valid" }, { task_id }] });
+    expect(await submitApimartMusic(credentials, { model: "flowmusic", sound_prompt: "piano" }, { fetchImpl })).toMatchObject({ ok: false, kind: "protocol" });
+    expect(fetchImpl).toHaveBeenCalledOnce();
+  });
+
+  it("rejects 101 unique provider tasks without accepting a partial set", async () => {
+    const fetchImpl = json({ code: 200, data: Array.from({ length: 101 }, (_, i) => ({ task_id: `task-${i}` })) });
+    expect(await submitApimartMusic(credentials, { model: "flowmusic", sound_prompt: "piano" }, { fetchImpl })).toMatchObject({ ok: false, kind: "protocol" });
+    expect(fetchImpl).toHaveBeenCalledOnce();
+  });
+
+  it.each(["", "  ", ".", "..", "x".repeat(513), "task\u0000", "task\n", "task\u007f", "task\u0085", "task\ud800", "task\udc00", "🎵".repeat(256) + "x"])("rejects invalid detail ID %j before fetch", async taskId => {
+    const fetchImpl = vi.fn<typeof fetch>();
+    expect(await getApimartMusicTask(credentials, taskId, { fetchImpl })).toMatchObject({ ok: false, kind: "validation" });
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
+  it.each(["task/1", "x".repeat(512), " tâche/🎵 ", "%2e%2e", "🎵".repeat(256)])("keeps opaque ID %s inside a real Request detail URL", async taskId => {
+    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+      const request = new Request(url, init);
+      expect(new URL(request.url).pathname).toBe(`/v1/music/tasks/${encodeURIComponent(taskId)}`);
+      expect(request.method).toBe("GET");
+      return Response.json({ code: 200, data: { id: taskId, status: "processing" } });
+    });
+    expect(await getApimartMusicTask(credentials, taskId, { fetchImpl })).toMatchObject({ ok: true, task: { id: taskId } });
+    expect(fetchImpl).toHaveBeenCalledOnce();
+  });
+});
+
+describe("audio body cancellation", () => {
+  it.each(["submit", "detail"] as const)("classifies %s JSON cancellation independently of signal state", async operation => {
+    for (const mode of ["signal", "error", "dom", "malformed"] as const) {
+      const controller = new AbortController();
+      const response = Response.json({});
+      vi.spyOn(response, "json").mockImplementation(async () => {
+        if (mode === "signal") controller.abort();
+        if (mode === "dom") throw new DOMException("cancelled", "AbortError");
+        if (mode === "error") throw Object.assign(new Error("cancelled"), { name: "AbortError" });
+        throw new SyntaxError("broken JSON");
+      });
+      const fetchImpl = vi.fn<typeof fetch>(async () => response);
+      const options = { fetchImpl, signal: controller.signal };
+      const result = operation === "submit"
+        ? await submitApimartMusic(credentials, { model: "flowmusic", sound_prompt: "piano" }, options)
+        : await getApimartMusicTask(credentials, "task", options);
+      expect(result).toMatchObject({ ok: false, kind: mode === "malformed" ? "protocol" : "aborted" });
+      expect(fetchImpl).toHaveBeenCalledOnce();
+    }
+  });
+
+  it("keeps malformed HTTP error bodies as HTTP failures and classifies cancelled bodies as aborted", async () => {
+    for (const cancelled of [true, false]) {
+      const response = new Response(null, { status: 403 });
+      vi.spyOn(response, "json").mockRejectedValue(cancelled ? new DOMException("cancelled", "AbortError") : new SyntaxError("broken JSON"));
+      const fetchImpl = vi.fn<typeof fetch>(async () => response);
+      expect(await submitApimartMusic(credentials, { model: "flowmusic", sound_prompt: "piano" }, { fetchImpl })).toMatchObject({ ok: false, kind: cancelled ? "aborted" : "http" });
+      expect(fetchImpl).toHaveBeenCalledOnce();
+    }
+  });
+
+  it.each(["speech", "cdn"] as const)("classifies %s binary read and fetch AbortError without an aborted signal", async operation => {
+    for (const stage of ["fetch", "body"] as const) {
+      for (const error of [new DOMException("cancelled", "AbortError"), Object.assign(new Error("cancelled"), { name: "AbortError" })]) {
+        const response = new Response(new Uint8Array([1]), { headers: { "Content-Type": "audio/wav" } });
+        vi.spyOn(response, "blob").mockRejectedValue(error);
+        const fetchImpl = vi.fn<typeof fetch>(async () => {
+          if (stage === "fetch") throw error;
+          return response;
+        });
+        const options = { fetchImpl, signal: new AbortController().signal };
+        const result = operation === "speech"
+          ? await generateApimartSpeech(credentials, speech, options)
+          : await downloadApimartAudio("https://cdn.example/audio.wav", options);
+        expect(result).toMatchObject({ ok: false, kind: "aborted" });
+        expect(fetchImpl).toHaveBeenCalledOnce();
+      }
+    }
+  });
+});

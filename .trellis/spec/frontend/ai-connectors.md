@@ -202,3 +202,12 @@ Base: failed status and ordinary provider error stay readable. Good: long unknow
 
 ### Wrong / correct
 Wrong: `finishReason = response.status` for any string. Correct: retain only recognized diagnostic statuses; separately redact the error and assert the complete persisted result has no credentials.
+
+
+## Scenario: Generic discovery/probe protocol success (B04 / PM-02; 2026-09-30)
+
+OpenAI-compatible/DeepSeek list/probe accepts an object directory envelope with no non-null error or success:false, an actual data array, and every row a nonempty string ID after trimming. A valid empty data array is success (modelCount0); HTML, malformed JSON, missing/non-array data or malformed rows are failure. Optional metadata may be absent/invalid without invalidating an otherwise valid ID; preserve trimmed IDs, dedup/sort and conservative duplicate metadata merging.
+
+One generic operation uses GET /models first. Only HTTP404/405 or a TypeError thrown by the GET fetch transport permits one existing minimal chat POST. Body read/JSON/decoder errors—including TypeError after fetch resolved—are protocol failures, not fallback authorization. Keep fetch handling separate from body processing. Other HTTP errors and non-TypeError transport errors stop after GET. The permitted POST keeps defaultModel, ping and max_tokens1; successful HTTP alone is insufficient: error envelopes take precedence and a valid choices/message frame is required, while empty output from a one-token probe may be valid. No POST response/error triggers another request. Specialized MiMo/APIMart/AIHubMix probes stay read-only.
+
+Tests assert result and exact requests/methods: malformed GET1/POST0, allowed fallback GET1/POST1 (two attempts), malformed fallback still exactlytwo, missing credentials zero. For forbidden fallback cases return a valid mock chat frame if accidentally called, so the test detects both hidden success and an unnecessary paid request. Connection page can append its separate list GET after successful via=models; adapter counts are not page-wide counts. Redact provider diagnostics before bounding them and retain current public result shapes.

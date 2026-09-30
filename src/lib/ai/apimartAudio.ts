@@ -1,3 +1,4 @@
+import {canonicalizeAudioTaskIds, isAudioTaskId} from "@/lib/audioGeneration/taskIds";
 import {z} from "zod";
 import type {ApimartCredentials, ApimartFailure, ApimartRequestOptions, ApimartResult} from "./apimart";
 import {normalizeBaseUrl} from "./openaiCompatible";
@@ -88,6 +89,7 @@ function safeUrl(v: unknown): v is string {
 }
 
 const failure = (kind: ApimartFailure["kind"], message: string): ApimartFailure => ({ok: false, kind, message});
+const aborted = (error: unknown, signal?: AbortSignal) => signal?.aborted || (error instanceof Error || error instanceof DOMException) && error.name === "AbortError";
 const protocol = () => failure("protocol", "APIMart 音频响应不符合接口约定；请保留任务记录，不要自动重复提交");
 
 async function audioRequest(credentials: ApimartCredentials, path: string, input: SpeechInput | MusicInput | undefined, options: ApimartRequestOptions): Promise<ApimartResult<{
@@ -109,7 +111,9 @@ async function audioRequest(credentials: ApimartCredentials, path: string, input
             let body: unknown;
             try {
                 body = await response.json();
-            } catch { /* HTTP status remains authoritative. */
+            } catch (error) {
+                if (aborted(error, options.signal)) return failure("aborted", "请求已停止；远端生成不会因此取消");
+                /* HTTP status remains authoritative for other body failures. */
             }
             const error = record(body) && record(body.error) ? body.error : undefined;
             const detail = typeof error?.message === "string" ? redactCredentials(error.message, key).slice(0, 300) : "请检查连接权限、余额和请求参数";
@@ -121,8 +125,8 @@ async function audioRequest(credentials: ApimartCredentials, path: string, input
             };
         }
         return {ok: true, response};
-    } catch {
-        return failure(options.signal?.aborted ? "aborted" : "network", "音频请求未能完成；提交结果可能尚未确认，请勿自动重复生成");
+    } catch (error) {
+        return failure(aborted(error, options.signal) ? "aborted" : "network", "音频请求未能完成；提交结果可能尚未确认，请勿自动重复生成");
     }
 }
 
@@ -134,7 +138,8 @@ async function jsonEnvelope(credentials: ApimartCredentials, path: string, input
     let body: unknown;
     try {
         body = await result.response.json();
-    } catch {
+    } catch (error) {
+        if (aborted(error, options.signal)) return failure("aborted", "请求已停止；远端生成不会因此取消");
         return protocol();
     }
     if (!record(body)) return protocol();
@@ -166,8 +171,8 @@ export async function generateApimartSpeech(credentials: ApimartCredentials, inp
             ok: true,
             blob: new Blob([blob], {type: mime?.startsWith("audio/") ? blob.type : mimeTypes[input.response_format]})
         };
-    } catch {
-        return failure(options.signal?.aborted ? "aborted" : "protocol", "未能读取完整的配音文件；不会自动重新生成");
+    } catch (error) {
+        return failure(aborted(error, options.signal) ? "aborted" : "protocol", "未能读取完整的配音文件；不会自动重新生成");
     }
 }
 
@@ -178,14 +183,18 @@ export async function submitApimartMusic(credentials: ApimartCredentials, input:
     if (!parsed.success) return failure("validation", parsed.error.issues[0]?.message ?? "音乐参数无效");
     const result = await jsonEnvelope(credentials, "/music/generations", parsed.data, options);
     if (!result.ok) return result;
-    if (!Array.isArray(result.data) || !result.data.length || !result.data.every(row => record(row) && nonempty(row.task_id))) return protocol();
-    return {ok: true, taskIds: result.data.map(row => row.task_id as string)};
+    if (!Array.isArray(result.data) || !result.data.length || !result.data.every(record)) return protocol();
+    try {
+        return {ok: true, taskIds: canonicalizeAudioTaskIds(result.data.map(row => row.task_id))};
+    } catch {
+        return protocol();
+    }
 }
 
 export async function getApimartMusicTask(credentials: ApimartCredentials, taskId: string, options: ApimartRequestOptions = {}): Promise<ApimartResult<{
     task: MusicTask
 }>> {
-    if (!taskId.trim()) return failure("validation", "缺少音乐任务 ID");
+    if (!isAudioTaskId(taskId)) return failure("validation", "音乐任务 ID 无效；请保留任务记录，不要重复提交");
     const result = await jsonEnvelope(credentials, `/music/tasks/${encodeURIComponent(taskId)}?language=zh`, undefined, options);
     if (!result.ok) return result;
     const row = result.data;
@@ -239,7 +248,7 @@ export async function downloadApimartAudio(url: string, options: ApimartRequestO
         const blob = await response.blob();
         if (!blob.size || (blob.type && !blob.type.startsWith("audio/") && blob.type !== "application/octet-stream")) return protocol();
         return {ok: true, blob};
-    } catch {
-        return failure(options.signal?.aborted ? "aborted" : "network", "音频下载未完成，请重试下载；无需重新生成");
+    } catch (error) {
+        return failure(aborted(error, options.signal) ? "aborted" : "network", "音频下载未完成，请重试下载；无需重新生成");
     }
 }

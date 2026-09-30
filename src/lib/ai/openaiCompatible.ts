@@ -49,6 +49,77 @@ export type ListModelsResult =
     | { ok: true; models: string[]; metadata?: Record<string, ChatModelMetadata> }
     | { ok: false; message: string };
 
+function record(value: unknown): value is Record<string, unknown> {
+    return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function serviceEnvelope(value: unknown): Record<string, unknown> {
+    if (!record(value)) throw new Error("服务返回了无效的响应格式");
+    if (value.error != null || value.success === false) {
+        const error = value.error;
+        if (record(error) && typeof error.message === "string") throw new Error(error.message);
+        if (typeof error === "string") throw new Error(error);
+        if (typeof value.message === "string") throw new Error(value.message);
+        throw new Error("模型服务返回错误");
+    }
+    return value;
+}
+
+function decodeModelDirectory(value: unknown): {
+    models: string[];
+    modelCount: number;
+    metadata?: Record<string, ChatModelMetadata>;
+} {
+    const envelope = serviceEnvelope(value);
+    if (!Array.isArray(envelope.data)) throw new Error("模型目录缺少有效的 data 数组");
+    const models: string[] = [];
+    const entries: Array<readonly [string, ChatModelMetadata]> = [];
+    for (const row of envelope.data) {
+        if (!record(row) || typeof row.id !== "string" || !row.id.trim()) {
+            throw new Error("模型目录包含无效的模型 ID");
+        }
+        const id = row.id.trim();
+        models.push(id);
+        const metadata = parseModelMetadata(row);
+        if (metadata) entries.push([id, metadata]);
+    }
+    return {
+        models: [...new Set(models)].sort((left, right) => left.localeCompare(right)),
+        modelCount: envelope.data.length,
+        ...(entries.length ? {metadata: collectModelMetadata(entries)} : {}),
+    };
+}
+
+function validateChatProbe(value: unknown): void {
+    const envelope = serviceEnvelope(value);
+    if (!Array.isArray(envelope.choices) || !record(envelope.choices[0])) {
+        throw new Error("模型响应缺少有效的 choices");
+    }
+    const message = envelope.choices[0].message;
+    if (!record(message) || message.role !== "assistant") throw new Error("模型回复格式无效");
+    // A one-token probe may finish before producing any text.
+    for (const field of ["content", "reasoning_content", "reasoning"]) {
+        if (message[field] != null && typeof message[field] !== "string") {
+            throw new Error("模型回复包含无效的文本格式");
+        }
+    }
+}
+
+async function readProtocolBody(response: Response): Promise<unknown> {
+    try {
+        return await response.json();
+    } catch (error) {
+        throw new Error(`服务响应解析失败：${error instanceof Error ? error.message : "无效 JSON"}`);
+    }
+}
+
+function failure(error: unknown, apiKey: string): { ok: false; message: string } {
+    return {
+        ok: false,
+        message: redactCredentials(error instanceof Error ? error.message : "网络错误", apiKey).slice(0, 300),
+    };
+}
+
 /**
  * List model ids from GET /v1/models (OpenAI-compatible).
  */
@@ -70,32 +141,16 @@ export async function listModels(
             const text = await res.text().catch(() => "");
             return {ok: false, message: formatHttpError(res.status, text, apiKey)};
         }
-        const data = (await res.json().catch(() => null)) as {
-            data?: Array<{ id?: unknown }>;
-        } | null;
-        const models = Array.isArray(data?.data)
-            ? data.data
-                .map((row) => (typeof row?.id === "string" ? row.id.trim() : ""))
-                .filter(Boolean)
-                .filter((id, index, list) => list.indexOf(id) === index)
-                .sort((left, right) => left.localeCompare(right))
-            : [];
-        const entries = (Array.isArray(data?.data) ? data.data : []).flatMap((row) => {
-            const metadata = parseModelMetadata(row);
-            return typeof row?.id === "string" && row.id.trim() && metadata ? [[row.id.trim(), metadata] as const] : [];
-        });
-        return {ok: true, models, ...(entries.length ? {metadata: collectModelMetadata(entries)} : {})};
-    } catch (err) {
-        return {
-            ok: false,
-            message: redactCredentials(err instanceof Error ? err.message : "网络错误", apiKey).slice(0, 300),
-        };
+        const {models, metadata} = decodeModelDirectory(await readProtocolBody(res));
+        return {ok: true, models, ...(metadata ? {metadata} : {})};
+    } catch (error) {
+        return failure(error, apiKey);
     }
 }
 
 /**
  * Cheap connectivity check for OpenAI-compatible endpoints.
- * Prefers GET /models; falls back to a minimal chat/completions call.
+ * Only an unavailable /models route or GET fetch TypeError permits one chat probe.
  */
 export async function testConnection(
     input: TestConnectionInput,
@@ -107,25 +162,25 @@ export async function testConnection(
     if (!apiKey) return {ok: false, message: "请填写 API Key"};
 
     const headers = authHeaders(apiKey);
-
+    let modelsRes: Response | undefined;
     try {
-        const modelsRes = await fetchImpl(modelsUrl(base), {method: "GET", headers});
-        if (modelsRes.ok) {
-            const data = (await modelsRes.json().catch(() => null)) as { data?: unknown } | null;
-            const modelCount = Array.isArray(data?.data) ? data.data.length : undefined;
-            return {ok: true, via: "models", modelCount};
-        }
-        if (modelsRes.status !== 404 && modelsRes.status !== 405) {
-            const text = await modelsRes.text().catch(() => "");
-            return {ok: false, message: formatHttpError(modelsRes.status, text, apiKey)};
-        }
-    } catch (err) {
-        // Fall through to chat probe — some proxies reject /models.
-        if (!(err instanceof TypeError)) {
-            return {
-                ok: false,
-                message: redactCredentials(err instanceof Error ? err.message : "网络错误", apiKey).slice(0, 300),
-            };
+        modelsRes = await fetchImpl(modelsUrl(base), {method: "GET", headers});
+    } catch (error) {
+        // Keep this gate limited to fetch: body/decoder failures must never send a POST.
+        if (!(error instanceof TypeError)) return failure(error, apiKey);
+    }
+    if (modelsRes) {
+        try {
+            if (modelsRes.ok) {
+                const {modelCount} = decodeModelDirectory(await readProtocolBody(modelsRes));
+                return {ok: true, via: "models", modelCount};
+            }
+            if (modelsRes.status !== 404 && modelsRes.status !== 405) {
+                const text = await modelsRes.text().catch(() => "");
+                return {ok: false, message: formatHttpError(modelsRes.status, text, apiKey)};
+            }
+        } catch (error) {
+            return failure(error, apiKey);
         }
     }
 
@@ -140,13 +195,13 @@ export async function testConnection(
                 max_tokens: 1,
             }),
         });
-        if (chatRes.ok) return {ok: true, via: "chat"};
-        const text = await chatRes.text().catch(() => "");
-        return {ok: false, message: formatHttpError(chatRes.status, text, apiKey)};
-    } catch (err) {
-        return {
-            ok: false,
-            message: redactCredentials(err instanceof Error ? err.message : "网络错误", apiKey).slice(0, 300),
-        };
+        if (!chatRes.ok) {
+            const text = await chatRes.text().catch(() => "");
+            return {ok: false, message: formatHttpError(chatRes.status, text, apiKey)};
+        }
+        validateChatProbe(await readProtocolBody(chatRes));
+        return {ok: true, via: "chat"};
+    } catch (error) {
+        return failure(error, apiKey);
     }
 }

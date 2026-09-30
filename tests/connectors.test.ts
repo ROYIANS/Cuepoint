@@ -55,8 +55,15 @@ describe("connector routing", () => {
     expect(String(discover.mock.calls[0][0])).toBe(`${connector.baseUrl}/models`);
     const probe = vi.fn<typeof fetch>()
       .mockResolvedValueOnce(new Response("missing", { status: 404 }))
-      .mockResolvedValueOnce(Response.json({ id: "reply" }));
+      .mockResolvedValueOnce(Response.json({ choices: [{ message: { role: "assistant", content: "pong" } }] }));
     expect(await testConnectorConnection(connector, probe)).toEqual({ ok: true, via: "chat" });
+    expect(probe).toHaveBeenCalledTimes(2);
+    expect(probe.mock.calls.map(call => call[1]?.method)).toEqual(["GET", "POST"]);
+    expect(probe.mock.calls[1][0]).toBe(`${connector.baseUrl}/chat/completions`);
+    expect(JSON.parse(String(probe.mock.calls[1][1]?.body))).toEqual({
+      model: definitionId === "deepseek" ? "deepseek-chat" : "gpt-4o-mini",
+      messages: [{ role: "user", content: "ping" }], max_tokens: 1,
+    });
     expect(JSON.parse(String(probe.mock.calls[1][1]?.body)).model).toBe(
       definitionId === "deepseek" ? "deepseek-chat" : "gpt-4o-mini",
     );
@@ -254,3 +261,49 @@ describe("MiMo connector", () => {
     expect(await db.connectors.get(saved.id)).toMatchObject({ id: edited.id, definitionId: "mimo", apiKey: "rotated", baseUrl: "https://proxy.test/mimo/v1" });
   });
 });
+
+for (const definitionId of ["openai-compatible", "deepseek"] as const) {
+  describe(`${definitionId} protocol failure propagation`, () => {
+    const connector = { definitionId, baseUrl: "https://example.test/v1", apiKey: "test-key" };
+    const callers = [
+      ["all", (fetchImpl: typeof fetch) => listConnectorModels(connector, "all", fetchImpl)],
+      ["chat", (fetchImpl: typeof fetch) => listConnectorModels(connector, "chat", fetchImpl)],
+      ["discover", (fetchImpl: typeof fetch) => discoverConnectorChatModels(connector, { fetchImpl })],
+      ["probe", (fetchImpl: typeof fetch) => testConnectorConnection(connector, fetchImpl)],
+    ] as const;
+    for (const [name, call] of callers) {
+      it.each([
+        ["HTML", () => new Response("<html>login</html>")],
+        ["bad envelope", () => Response.json({ data: {} })],
+        ["bad row", () => Response.json({ data: [{ id: "valid" }, { id: " " }] })],
+        ["error", () => Response.json({ error: { message: "denied test-key" }, data: [] })],
+      ] as const)(`${name} rejects %s with only one GET`, async (_label, response) => {
+        const fetchImpl = vi.fn<typeof fetch>(async (_url, init) => init?.method === "POST"
+          ? Response.json({ choices: [{ message: { role: "assistant", content: "pong" } }] }) : response());
+        const result = await call(fetchImpl);
+        expect(result.ok).toBe(false);
+        expect(JSON.stringify(result)).not.toContain("test-key");
+        expect(fetchImpl).toHaveBeenCalledOnce();
+        expect(fetchImpl.mock.calls[0][1]?.method).toBe("GET");
+        expect(fetchImpl.mock.calls[0][0]).toBe(`${connector.baseUrl}/models`);
+      });
+    }
+  });
+}
+
+for (const connector of [apimart, aihubmix, mimo]) {
+  it.each([
+    ["HTML", () => new Response("<html>login</html>")],
+    ["bad JSON", () => new Response('{"data":')],
+    ["bad envelope", () => Response.json({ data: {} })],
+    ["error", () => Response.json({ error: { message: "denied" }, data: [] })],
+    ["405", () => new Response("missing", { status: 405 })],
+    ["fetch TypeError", () => { throw new TypeError("fetch rejected"); }],
+  ] as const)(`${connector.definitionId} read-only probe rejects %s without POST`, async (_label, response) => {
+    const fetchImpl = vi.fn<typeof fetch>(async (_url, init) => init?.method === "POST"
+      ? Response.json({ choices: [{ message: { role: "assistant", content: "pong" } }] }) : response());
+    expect((await testConnectorConnection(connector, fetchImpl)).ok).toBe(false);
+    expect(fetchImpl).toHaveBeenCalledOnce();
+    expect(fetchImpl.mock.calls[0][1]?.method).toBe("GET");
+  });
+}

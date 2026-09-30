@@ -342,3 +342,45 @@ saved decoder metadata, deleted/unavailable results, manuscript selection and va
 clip placement. Inspecting a file does not decode or audition it. Task sources consume
 the same inspector; see [sound outcome evidence](./agent-task-wrapup.md#sound-generation-outcome-evidence)
 for source ownership, record eligibility and wrap-up freshness rules.
+
+
+## B05: provider task identity and recovery boundary (2026-09-30)
+
+### 1. Scope / trigger
+
+APIMart music submit/query, durable job writes, package snapshot/import and recovery share task identity rules. A successful paid submission must not store a duplicate task twice, and a legacy duplicate must not prevent recovery of its completed siblings.
+
+### 2. Signatures
+
+`isAudioTaskId(value: unknown): value is string`, `canonicalizeAudioTaskIds(value: unknown): string[]` and `validateAudioTaskIds(value: unknown): asserts value is string[]` live in `lib/audioGeneration/taskIds.ts`. `validateAudioTaskObservations(observations, taskIds)` validates the collection even when observations are undefined; existing DB prepare/claim/patch and both package validation loops use this boundary.
+
+### 3. Contracts
+
+An opaque ID is a string, nonblank after trim, at most 512 UTF-16 units, with no C0/DEL/C1 control character or unpaired UTF-16 surrogate, and not exactly `.` or `..`. Valid Unicode pairs remain accepted and count as two UTF-16 units. Other content is preserved, including slash and nonblank surrounding whitespace. Canonicalization retains first-seen order and at most 100 unique IDs; it rejects the whole collection on any invalid entry. Strict new storage/import additionally rejects duplicates. Empty collections remain valid for prepared music and speech.
+
+Recovery for active historical jobs canonicalizes IDs through the revision-checked taskIds-only checkpoint before observation validation, GET or download. Preserve results, saved media, observations/lastVerified, input, source and connector. Dormant/prepared/already-saved early-return behavior remains unchanged. Malformed active history fails locally without changing the row or calling a provider. Never replay generation POST on query recovery, invalid response or cancellation.
+
+### 4. Validation and error matrix
+
+| Boundary | Outcome |
+| --- | --- |
+| Submit response has repeated valid IDs | Success with ordered unique IDs; one original POST |
+| Submit response has invalid ID or >100 unique IDs | Protocol failure; runtime keeps uncertain paid outcome |
+| Query ID invalid | Validation failure before fetch |
+| New DB/package collection malformed or duplicate | Reject without partial write/import |
+| Recoverable legacy collection repeats valid IDs | Persist canonical checkpoint; query each task once per pass |
+| Active legacy collection malformed | Local keep-history error, unchanged row and zero fetch |
+| Fetch/body fails with aborted signal or Error/DOMException named AbortError | Aborted result, not malformed JSON; no remote-cancellation claim |
+| Ordinary malformed JSON with no cancellation | Protocol failure (HTTP diagnostic read remains HTTP failure) |
+
+### 5. Good / base / bad cases
+
+Good: `['a','a','b']` from submit or active legacy recovery becomes `['a','b']`. Base: prepared speech `[]` remains valid; `task/1` produces the encoded detail segment `task%2F1`. Bad: exact dot segments, controls, unpaired surrogates, sparse holes, blank strings, 513 units or 101 unique tasks fail; do not silently remove malformed identities.
+
+### 6. Required tests
+
+Use actual repository/package paths with fake-indexeddb and mocked transport: duplicate submit (one POST), legacy duplicate repair before first GET (zero POST), preserved completed/processing evidence and saved sibling, retry after download/query failure, original Agent task ownership, invalid history zero-fetch/unchanged row, package rollback, empty speech roundtrip and real Request path encoding, including valid Unicode pairs and malformed-surrogate rejection. JSON, speech and CDN read tests cover signal and independent AbortError; ordinary SyntaxError stays protocol. Tests do not establish real provider or acoustic behavior.
+
+### 7. Wrong vs correct
+
+Wrong: validate observations before repairing a legacy duplicate, or drop bad IDs and submit again. Correct: canonicalize only valid duplicates through the existing CAS checkpoint, then validate and resume GET/download; preserve ambiguous paid history on malformed identity.
