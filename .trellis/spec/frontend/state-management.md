@@ -722,3 +722,52 @@ onSave={(slot) => setCharacterSlot(character.id, key, slot)}
 persist={(durationSec, baseline) => patchShot(shotId, {durationSec}, {durationSec: baseline})}
 onSave={(slot, baseline) => setCharacterSlot(character.id, key, slot, baseline)}
 ```
+
+
+## Scenario: Query identity and manual route departure (B01 / SS-01, PU-05; 2026-09-30)
+
+### 1. Scope / Trigger
+
+A live-query dependency changes while its previous result is retained, or a project/episode/asset/material editor is about to be removed. Query identity, saved target and manual draft lifecycle must agree.
+
+### 2. Boundaries
+
+Project Chrome is keyed by project ID; shot/print content by project+episode; four asset detail contents by owner+entity. Query envelopes also tag their dependencies, including null/empty outcomes, before row ownership checks. Material detail keeps an active ID until parent-driven selection passes its existing guard, then queries and keys the editor by the matched material ID.
+
+`useManualDraftGuard(dirty, pending, onDiscard)` serves actual slot/output/relations callers. It uses the router resolver plus unload protection; pathname departure blocks, same-path focus/search keeps the editing session. Pending work suppresses discard. Explicit discard awaits cleanup; failure displays an error and does not proceed. Before discard starts, Continue resets the navigation resolver and preserves the active draft, frozen baseline, owned media and retained failed-upload File. Once discard has canceled the media session, a cleanup failure leaves the editor readable but disables further saves/uploads in that canceled session; retry cancellation/cleanup before departure, rather than resuming writes against a closed DraftMediaSession. Mounted slot-open notifications must balance close and actual unmount so retained row context does not persist after the last editor disappears.
+
+### 3. Contracts
+
+- Same-target field/slot live updates preserve the editing session. Keys must not include updatedAt, whole records, search, or selected focus.
+- A04 SlotEditSession still freezes owner/target/title/callback/baseline; route guards supplement rather than replace its target check and transaction CAS. Failed saves retain local draft and media for retry.
+- Project output still saves only changed fields against frozen baselines and follows the authoritative acknowledgement protocol. Route departure has the same dirty/pending protection as browser unload.
+- Relation saving/error state is an unresolved manual session; failed selection remains available for retry or explicit discard.
+- Material B→C requests while confirmation is open resolve to the latest requested ID. Continue restores the active parent selection, permitting a later repeated B request. A stale confirmation callback cannot publish an obsolete selection.
+- Missing rows do not silently destroy open assigned manual editors. Retain only matched session context needed for readable drafts, mark the target unavailable and disable writes; normal initial missing queries show not-found. Asset/material retention lasts only for active editing. The unavailable project shell can preserve unknown descendant mounts, but must expose not-found, hide normal project affordances, make inline Outlet controls inert, and disable assigned portal editor actions through WorkspaceUnavailableContext. This is readable session context, not write authorization.
+- This scoped protection does not claim universal draft survival after deletion in every unrelated child, layout/filter removal, forced process shutdown, or browser restart. Such coverage requires its own verified contract.
+
+### 4. Validation Matrix
+
+| Trigger | Required behavior |
+| --- | --- |
+| Old null/empty result after target change | Loading until envelope matches; no repair/write/export against old identity |
+| Matching envelope but foreign owner row | Not-found; no editor or write target |
+| Dirty pathname/history departure | Continue preserves; explicit discard permits target remount |
+| Pending upload/save | No discard; wait or continue editing session |
+| Save conflict / failed upload | Draft, original baseline, owned media/File remain; retry still targets opening owner |
+| Same-path locate/search | Keep slot session; do not discard or remount |
+| Parent material B→C selection | Latest requested target wins only after guard; continue restores active selection |
+| Assigned target disappears | Readable protected draft plus unavailable status; writes disabled |
+
+### 5. Verification
+
+`tests/b01QueryIdentity.test.ts` executes actual consumers and captured queriers against fake IndexedDB with explicit stale rows/null/empty envelopes; its lightweight hook host is not ReactDOM. `scripts/b01-browser-regression.mjs` with `tests/fixtures/b01` exercises actual ReactDOM, Radix, browser history/router blockers and isolated IndexedDB. It controls read/picker/mutation timing through documented fixture seams and simplifies surrounding routes. It must not be described as an unmodified full-app or paid-provider E2E test. Set installed browser tooling through B01_PLAYWRIGHT_PATH/B01_CHROMIUM_PATH when absent from normal resolution; do not install product dependencies for this fixture. Keep focused A04 regressions with this change.
+
+
+## Scenario: Changed-field and membership intent (B03 / AU-03, PU-04; 2026-09-30)
+
+`updateContextPolicy(threadId, patch: Partial<ContextPolicy>)` reads the current thread/general-agent policy inside the existing transaction, merges only explicit fields, then normalizes. UI passes the actual changed fields, not a spread of its rendered full policy. Independent fields survive stale renders/two callers; same-field ordinary settings follow last committed explicit intent. Explicit undefined customContextTokens clears the field. `resetThreadContextPolicy` and `saveContextPolicyAsDefault` read their source in the transaction and deliberately replace the whole normalized policy, including removing optional tokens absent from that source. They must not reuse merge semantics for a reset.
+
+`setShotCharacterSelected(shotId, characterId, selected)` applies explicit add/remove membership intent to the latest shot within PRODUCTION_TABLES, validates current project/episode/beat and surviving asset references, then writes and touches project atomically. Repeated selected values are idempotent; keep existing order and append new members. Missing selected target rejects; removal of a deleted target may repair a stale reference only if all survivors validate. Existing foreign target rejects for either selected value. Checkbox callbacks pass checked===true and display mutation errors. Whole-array `patchShot`, explicit clear and A02 bulk assignment/undo remain deliberate exact replacement APIs, not checkbox-intent helpers.
+
+`tests/b03IntentBoundaries.test.ts` executes actual ContextParameters and ShotRow callbacks plus production transactions: stale independent/same-field updates, optional clear and full reset/default copy, rapid add/add and add/remove, duplicate intent, missing/foreign scope, invalid survivors, rollback and unrelated fields/media. Its hook host and fake IndexedDB do not establish ReactDOM or native browser scheduling. Do not replace transaction tests with assertions on a copied merge or source text.

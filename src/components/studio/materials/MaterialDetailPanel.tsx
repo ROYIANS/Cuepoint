@@ -1,4 +1,4 @@
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Link} from "@tanstack/react-router";
 import {useLiveQuery} from "dexie-react-hooks";
 import {Archive, ArrowUpRight, History, Trash2, Upload, X} from "lucide-react";
@@ -44,16 +44,35 @@ export function MaterialDetailPanel({id, onClose, onSelect}: {
     onClose: () => void;
     onSelect: (id: string) => void
 }) {
-    const material = useLiveQuery(async () => await db.libraryMaterials.get(id) ?? null, [id]);
-    return material ? <MaterialEditor key={id} material={material} onClose={onClose} onSelect={onSelect}/> :
+    // Parent selection changes are not router navigation. Keep the current
+    // editor alive until its existing draft guard approves the switch.
+    const [activeId, setActiveId] = useState(id);
+    const result = useLiveQuery(async () => ({id: activeId, material: await db.libraryMaterials.get(activeId) ?? null}), [activeId]);
+    const loadedMaterial = result?.id === activeId ? result.material : undefined;
+    const lastMaterial = useRef<LibraryMaterial | undefined>(undefined);
+    const [editing, setEditing] = useState(false);
+    if (loadedMaterial) lastMaterial.current = loadedMaterial;
+    const material = loadedMaterial ?? (editing && lastMaterial.current?.id === activeId ? lastMaterial.current : loadedMaterial);
+    const select = (nextId: string) => {
+        setActiveId(nextId);
+        onSelect(nextId);
+    };
+    useEffect(() => {
+        // No manual session exists while the current material is missing/loading.
+        if (!material) setActiveId(id);
+    }, [id, material]);
+    return material ? <MaterialEditor key={material.id} material={material} requestedId={id} unavailable={!loadedMaterial} onEditingChange={setEditing} onClose={onClose} onSelect={select}/> :
         <Sheet open onOpenChange={(open) => {
             if (!open) onClose();
         }}><SheetContent
             className="material-detail"><SheetHeader><SheetTitle>素材详情</SheetTitle><SheetDescription>{material === null ? "素材不存在或已删除" : "正在读取素材…"}</SheetDescription></SheetHeader></SheetContent></Sheet>;
 }
 
-function MaterialEditor({material, onClose, onSelect}: {
+function MaterialEditor({material, requestedId, unavailable, onEditingChange, onClose, onSelect}: {
     material: LibraryMaterial;
+    requestedId: string;
+    unavailable: boolean;
+    onEditingChange: (editing: boolean) => void;
     onClose: () => void;
     onSelect: (id: string) => void
 }) {
@@ -70,6 +89,23 @@ function MaterialEditor({material, onClose, onSelect}: {
     const [releasing, setReleasing] = useState<string | null>(null);
     const fileInput = useRef<HTMLInputElement>(null);
     const guard = useMaterialDraftGuard(Boolean(draft), pending);
+    useEffect(() => {onEditingChange(Boolean(draft) || pending);}, [draft, pending, onEditingChange]);
+    const {requestClose} = guard;
+    const latestRequestedId = useRef(requestedId);
+    latestRequestedId.current = requestedId;
+    const selectionRequest = useRef<string | undefined>(undefined);
+    useEffect(() => {
+        if (requestedId === material.id) {
+            selectionRequest.current = undefined;
+            return;
+        }
+        if (pending || selectionRequest.current === requestedId) return;
+        selectionRequest.current = requestedId;
+        requestClose(() => onSelect(latestRequestedId.current), () => {
+            selectionRequest.current = undefined;
+            onSelect(material.id);
+        });
+    }, [requestedId, material.id, pending, requestClose, onSelect]);
     const data = useLiveQuery(async () => ({
         versions: (await db.materialVersions.where("materialId").equals(material.id).toArray()).sort((a, b) => b.revision - a.revision),
         uses: await db.materialUses.where("materialId").equals(material.id).toArray(),
@@ -95,7 +131,7 @@ function MaterialEditor({material, onClose, onSelect}: {
     }
 
     async function action(work: () => Promise<unknown>, message: string) {
-        if (pendingRef.current) return;
+        if (pendingRef.current || unavailable) return;
         pendingRef.current = true;
         setPending(true);
         setError("");
@@ -111,12 +147,13 @@ function MaterialEditor({material, onClose, onSelect}: {
         }
     }
 
-    const operationsDisabled = pending || Boolean(draft);
+    const operationsDisabled = unavailable || pending || Boolean(draft);
     const scopeLabel = materialScope.kind === "global" ? "全局素材" : materialScope.kind === "ip" ? `IP · ${data?.ips.find((ip) => ip.id === materialScope.id)?.name ?? "已不可用"}` : `项目 · ${data?.projects.find((project) => project.id === materialScope.id)?.name ?? "已删除"}`;
     const hasReferences = Boolean(data?.uses.length || data?.derived.length);
     return <><Sheet open onOpenChange={(open) => {
         if (!open) guard.requestClose(onClose);
     }}><SheetContent className="material-detail" showCloseButton={false}>
+        {unavailable && <p role="alert">素材不存在或已删除，当前修改仍保留。请放弃修改或继续编辑。</p>}
         <SheetHeader className="material-detail-heading">
             <div><p className="material-eyebrow">{KIND_LABELS[material.kind]} · {scopeLabel}</p>
                 <SheetTitle>{material.name}</SheetTitle><SheetDescription>版本 {material.revision}{material.archived ? " · 已归档" : " · 可复用"}</SheetDescription>
@@ -145,7 +182,7 @@ function MaterialEditor({material, onClose, onSelect}: {
                 <label className="material-field">标签<Input value={values.tags} disabled={pending || material.archived}
                                                              onChange={(event) => edit({tags: event.target.value})}
                                                              placeholder="用逗号分隔"/></label>
-                {draft && <div className="material-inline-actions"><Button disabled={pending || !values.name.trim()}
+                {draft && <div className="material-inline-actions"><Button disabled={unavailable || pending || !values.name.trim()}
                                                                            onClick={() => void action(async () => {
                                                                                await updateMaterialMetadata(material.id, {
                                                                                    name: values.name,
@@ -183,11 +220,16 @@ function MaterialEditor({material, onClose, onSelect}: {
                                                                                           onChange={setTargetScope}
                                                                                           disabled={operationsDisabled}/><Button
                     disabled={operationsDisabled || scopeValue(material.scope) === targetScope}
-                    onClick={() => void action(async () => {
-                        const copy = await promoteMaterial(material.id, parseScope(targetScope));
-                        setPromoting(false);
-                        onSelect(copy.id);
-                    }, "独立副本已保存。")}>保存独立副本</Button></div>}
+                    onClick={() => {
+                        let copyId: string | undefined;
+                        void action(async () => {
+                            const copy = await promoteMaterial(material.id, parseScope(targetScope));
+                            copyId = copy.id;
+                            setPromoting(false);
+                        }, "独立副本已保存。").then(() => {
+                            if (copyId) onSelect(copyId);
+                        });
+                    }}>保存独立副本</Button></div>}
             </section>
             <section className="material-detail-section"><h3>用于项目</h3><p
                 className="material-muted">创建项目专属副本并固定版本，后续更新需手动确认。媒体会进入项目素材，不会自动替换镜头。</p>

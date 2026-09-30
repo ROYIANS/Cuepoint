@@ -87,30 +87,32 @@ export function MaterialScopeSelect({value, onChange, filter = false, disabled =
 }
 
 export function useMaterialDraftGuard(dirty: boolean, pending: boolean) {
-    const [requested, setRequested] = useState<(() => void) | null>(null);
+    const [requested, setRequested] = useState<{close: () => void; cancel?: () => void} | null>(null);
     const blocker = useBlocker({
         shouldBlockFn: () => dirty || pending,
         withResolver: true,
         enableBeforeUnload: dirty || pending
     });
-    const requestClose = (close: () => void) => {
+    const requestClose = (close: () => void, cancel?: () => void) => {
         if (pending) return;
-        if (dirty) setRequested(() => close); else close();
+        if (dirty) setRequested({close, cancel}); else close();
     };
     const dialog: ReactNode = <AlertDialog open={Boolean(requested) || blocker.status === "blocked"}
                                            onOpenChange={(open) => {
                                                if (!open) {
+                                                   requested?.cancel?.();
                                                    setRequested(null);
                                                    if (blocker.status === "blocked") blocker.reset();
                                                }
                                            }}>
         <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>{pending ? "正在保存素材" : "保留未保存的修改？"}</AlertDialogTitle><AlertDialogDescription>{pending ? "等待操作完成后再离开，避免丢失操作结果。" : "离开会放弃当前表单中尚未保存的内容。"}</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter>
             <Button variant="outline" onClick={() => {
+                requested?.cancel?.();
                 setRequested(null);
                 if (blocker.status === "blocked") blocker.reset();
             }}>继续编辑</Button>
             {!pending && <Button variant="destructive" onClick={() => {
-                requested?.();
+                requested?.close();
                 setRequested(null);
                 if (blocker.status === "blocked") blocker.proceed();
             }}>放弃并离开</Button>}

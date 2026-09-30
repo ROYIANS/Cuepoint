@@ -1,3 +1,4 @@
+import {useRef, useState} from "react";
 import {Link, useNavigate} from "@tanstack/react-router";
 import {useLiveQuery} from "dexie-react-hooks";
 import {ChevronLeft} from "lucide-react";
@@ -8,7 +9,12 @@ import {EditableGenerationSlot} from "@/components/slots/GenerationSlotCard";
 import {AssetTextField} from "./AssetTextField";
 import {Button} from "@/components/ui/button";
 
-export function SceneDetailPage({
+export function SceneDetailPage(props: Parameters<typeof SceneDetailContent>[0]) {
+    const ownerId = props.back?.kind === "project" ? props.back.projectId : STUDIO_LIBRARY_ID;
+    return <SceneDetailContent key={JSON.stringify([ownerId, props.sceneId])} {...props}/>;
+}
+
+function SceneDetailContent({
                                     sceneId,
                                     back,
                                 }: {
@@ -16,7 +22,14 @@ export function SceneDetailPage({
     back: { kind: "studio" } | { kind: "project"; projectId: string };
 }) {
     const navigate = useNavigate();
-    const scene = useLiveQuery(async () => (await db.scenes.get(sceneId)) ?? null, [sceneId]);
+    const ownerId = back.kind === "project" ? back.projectId : STUDIO_LIBRARY_ID;
+    const result = useLiveQuery(async () => ({ownerId, id: sceneId, value: (await db.scenes.get(sceneId)) ?? null}), [ownerId, sceneId]);
+
+    const loaded = result?.ownerId === ownerId && result.id === sceneId ? result.value : undefined;
+    const [openEditors, setOpenEditors] = useState(0);
+    const lastRecord = useRef(loaded);
+    if (loaded) lastRecord.current = loaded;
+    const scene = loaded ?? (openEditors > 0 ? lastRecord.current : loaded);
 
     if (scene === undefined) {
         return <div className="text-muted-foreground p-8 text-sm">加载中…</div>;
@@ -47,6 +60,7 @@ export function SceneDetailPage({
 
     return (
         <div className="h-full overflow-auto">
+            {!loaded && <p role="alert" className="p-4">此设定已不可用，当前槽位草稿仍保留。可复制草稿或取消后离开。</p>}
             <div className="mx-auto max-w-5xl px-4 py-6 sm:px-8">
                 {back.kind === "studio" ? (
                     <Link
@@ -70,6 +84,8 @@ export function SceneDetailPage({
                     <div className="grid grid-cols-2 gap-4">
                         {SCENE_SLOTS.map((slot) => (
                             <EditableGenerationSlot
+                                unavailable={!loaded}
+                                onEditorOpenChange={(open) => setOpenEditors(count => count + (open ? 1 : -1))}
                                 key={slot.id}
                                 projectId={scene.projectId}
                                 targetKey={JSON.stringify([scene.projectId, "scene", scene.id, slot.id])}

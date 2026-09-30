@@ -7,5 +7,5 @@ export const Route = createFileRoute("/p/$projectId")({
 
 function WorkspaceRoute() {
     const {projectId} = Route.useParams();
-    return <WorkspaceChrome projectId={projectId}/>;
+    return <WorkspaceChrome key={projectId} projectId={projectId}/>;
 }

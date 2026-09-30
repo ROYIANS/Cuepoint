@@ -9,6 +9,8 @@ import {defaultImageGeneration} from "@/domain/output";
 const host = vi.hoisted(() => ({
     cells: [] as unknown[], cursor: 0, effects: [] as Array<() => void>, row: undefined as unknown,
     draftOptions: undefined as unknown, queries: undefined as unknown[] | undefined, queryIndex: 0,
+    cleanups: new Map<number, () => void>(),
+    blocker: {status: "idle" as "idle" | "blocked", proceed: vi.fn(), reset: vi.fn()},
 }));
 vi.mock("react", async importOriginal => {
     const react = await importOriginal<typeof import("react")>();
@@ -23,14 +25,20 @@ vi.mock("react", async importOriginal => {
             if (!(index in host.cells)) host.cells[index] = {current: initial};
             return host.cells[index];
         },
-        useEffect: (effect: () => void, deps?: unknown[]) => {
+        useEffect: (effect: () => void | (() => void), deps?: unknown[]) => {
             const index = host.cursor++;
             const previous = host.cells[index] as unknown[] | undefined;
             if (!previous || !deps || deps.some((value, i) => !Object.is(value, previous[i]))) {
                 host.cells[index] = deps;
-                host.effects.push(effect);
+                host.effects.push(() => {
+                    host.cleanups.get(index)?.();
+                    const cleanup = effect();
+                    if (typeof cleanup === "function") host.cleanups.set(index, cleanup);
+                    else host.cleanups.delete(index);
+                });
             }
         },
+        useContext: () => false, // A04 host has no unavailable workspace provider.
         useId: () => "test-id",
         useMemo: (compute: () => unknown) => compute(),
         useCallback: (callback: unknown) => callback,
@@ -42,7 +50,7 @@ vi.mock("@dnd-kit/sortable", () => ({SortableContext: () => null, sortableKeyboa
 vi.mock("@/lib/undo", () => ({useUndo: () => ({registerUndo: vi.fn()})}));
 vi.mock("@/lib/useShotMedia", () => ({useShotMedia: () => new Map()}));
 vi.mock("@/components/shots/ShotRowViewport", () => ({ShotScrollViewport: () => null, useShotRowViewport: () => ({rowRef: vi.fn(), nearViewport: true})}));
-vi.mock("@tanstack/react-router", () => ({Link: () => null, useNavigate: () => vi.fn()}));
+vi.mock("@tanstack/react-router", () => ({Link: () => null, useNavigate: () => vi.fn(), useBlocker: () => host.blocker}));
 vi.mock("@/lib/debouncedDraft", () => ({useDebouncedDraft: (options: {initialValue: unknown}) => {
     host.draftOptions = options;
     return {draft: options.initialValue, setDraft: vi.fn(), status: "saved", retry: vi.fn(), useLatest: vi.fn()};
@@ -73,14 +81,22 @@ function nodes(tree: unknown): Node[] {
     const node = tree as Node;
     return [node, ...nodes(node.props.children)];
 }
+// Identity wrappers must be traversed to keep exercising their actual consumers.
+function unwrap(tree: unknown): unknown {
+    const node = tree as Node;
+    if (node && typeof node.type === "function" && /DetailContent|ShotEditorPageContent/.test(node.type.name)) {
+        return (node.type as (props: Record<string, unknown>) => unknown)(node.props);
+    }
+    return tree;
+}
 function render(run: () => unknown) {
     host.cursor = 0;
-    const tree = run();
+    const tree = unwrap(run());
     const effects = host.effects.splice(0);
     effects.forEach(effect => effect());
     return nodes(tree);
 }
-function reset() {host.cells = []; host.cursor = 0; host.effects = []; host.row = undefined; host.queries = undefined; host.queryIndex = 0;}
+function reset() {host.cells = []; host.cursor = 0; host.effects = []; host.row = undefined; host.queries = undefined; host.queryIndex = 0; host.cleanups.clear(); host.blocker.status = "idle"; host.blocker.proceed.mockClear(); host.blocker.reset.mockClear();}
 function nodeName(node: Node) {return typeof node.type === "function" ? node.type.name : node.type;}
 function button(tree: Node[], text: string) {
     const node = tree.find(n => n.props.children === text);
@@ -95,6 +111,80 @@ function deferred() {
 async function settle() {for (let i = 0; i < 8; i++) await Promise.resolve();}
 
 describe("actual manual consumer wiring", () => {
+    it("balances mounted slot notifications on close and actual unmount", () => {
+        reset();
+        const onEditorOpenChange = vi.fn();
+        const props = {projectId: "owner", targetKey: "owner:asset:front", variant: "frame" as const,
+            title: "asset", onSave: vi.fn(async () => {}), onEditorOpenChange};
+        const draw = () => render(() => EditableGenerationSlot(props));
+        let tree = draw();
+        (tree.find(n => nodeName(n) === "GenerationSlotTile")!.props.onOpen as () => void)();
+        tree = draw();
+        expect(onEditorOpenChange.mock.calls).toEqual([[true]]);
+        (tree.find(n => n.type === GenerationSlotEditor)!.props.onClose as () => void)();
+        tree = draw();
+        expect(onEditorOpenChange.mock.calls).toEqual([[true], [false]]);
+        (tree.find(n => nodeName(n) === "GenerationSlotTile")!.props.onOpen as () => void)();
+        draw();
+        // Execute the actual mounted hook cleanup, as React does when a row is removed.
+        for (const cleanup of host.cleanups.values()) cleanup();
+        host.cleanups.clear();
+        expect(onEditorOpenChange.mock.calls).toEqual([[true], [false], [true], [false]]);
+    });
+
+    it("failed navigation cleanup keeps owned media and disables the closed session until retry completes", async () => {
+        reset();
+        const project = await repo.createProject("navigation cleanup");
+        vi.mocked(pickMediaFile).mockResolvedValue({type: "image/png"} as File);
+        vi.mocked(uploadMediaFile).mockImplementation(async owner => {
+            await repo.putMedia({id: "navigation-owned", projectId: owner, mimeType: "image/png", filename: "owned.png", blob: new Blob(["owned"])});
+            return {id: "navigation-owned", kind: "image"};
+        });
+        const originalDelete = repo.deleteMediaIfOrphan;
+        let failCleanup = true;
+        const cleanupGate = deferred();
+        const cleanup = vi.spyOn(repo, "deleteMediaIfOrphan").mockImplementation(async id => {
+            if (failCleanup) throw new Error("cleanup unavailable");
+            await cleanupGate.promise;
+            return originalDelete(id);
+        });
+        try {
+            const props = {open: true, targetKey: `${project.id}:asset:front`, projectId: project.id,
+                title: "asset", value: emptySlot(), onClose: vi.fn(), onSave: vi.fn(async () => {})};
+            const draw = () => render(() => GenerationSlotEditor(props));
+            let tree = draw();
+            (button(tree, "上传素材").props.onClick as () => void)();
+            await settle(); await db.transaction("r", db.media, () => db.media.toArray()); await settle();
+            host.blocker.status = "blocked";
+            tree = draw();
+            (button(tree, "放弃并离开").props.onClick as () => void)();
+            await settle();
+            tree = draw();
+            expect(host.blocker.proceed).not.toHaveBeenCalled();
+            expect(await db.media.get("navigation-owned")).toBeDefined();
+            expect(tree.find(n => n.props.children === "保存" || n.props.children === "重试保存")!.props.disabled).toBe(true);
+            (button(tree, "继续编辑").props.onClick as () => void)();
+            host.blocker.status = "idle";
+            tree = draw();
+            expect(button(tree, "重试保存").props.disabled).toBe(true);
+            expect(tree.some(n => Array.isArray(n.props.children) && n.props.children.includes("请再次取消以重试清理。"))).toBe(true);
+            failCleanup = false;
+            host.blocker.status = "blocked";
+            tree = draw();
+            (button(tree, "放弃并离开").props.onClick as () => void)();
+            await settle();
+            tree = draw();
+            expect(tree.some(n => n.props.children === "放弃并离开")).toBe(false);
+            expect(host.blocker.proceed).not.toHaveBeenCalled();
+            cleanupGate.resolve();
+            await settle(); await db.transaction("r", db.media, () => db.media.toArray()); await settle();
+            expect(await db.media.get("navigation-owned")).toBeUndefined();
+            expect(host.blocker.proceed).toHaveBeenCalledOnce();
+            expect(props.onSave).not.toHaveBeenCalled();
+            expect(props.onClose).not.toHaveBeenCalled();
+        } finally {cleanup.mockRestore();}
+    });
+
     it("passes frozen baselines from every asset page through the actual wrapper/editor to DB", async () => {
         const project = await repo.createProject("manual assets");
         const cases = [
@@ -104,7 +194,7 @@ describe("actual manual consumer wiring", () => {
             {row: await repo.addStyle(project.id), page: (id: string) => StyleDetailPage({styleId: id, back: {kind: "project", projectId: project.id}}), write: (id: string) => repo.setStyleSlot(id, "look", {...emptySlot(), prompt: "theirs"})},
         ];
         for (const c of cases) {
-            reset(); host.row = c.row;
+            reset(); host.row = {ownerId: project.id, id: c.row.id, value: c.row};
             const slot = render(() => c.page(c.row.id)).find(n => n.type === EditableGenerationSlot)!;
             expect(slot.props.targetKey).toContain(c.row.id);
             reset();
@@ -135,9 +225,9 @@ describe("actual manual consumer wiring", () => {
         const episode = (await repo.firstEpisode(project.id))!;
         const shot = await repo.addShot(project.id, episode.id);
         reset();
-        host.queries = [{...project, shotSettings: {...project.shotSettings, workspaceView: "media"}}, episode, [shot], [], [], {projectId: project.id, props: [], styles: []}];
+        host.queries = [{projectId: project.id, project: {...project, shotSettings: {...project.shotSettings, workspaceView: "media"}}}, {projectId: project.id, episodeId: episode.id, episode}, {projectId: project.id, episodeId: episode.id, shots: [shot]}, {projectId: project.id, characters: [], scenes: []}, {projectId: project.id, props: [], styles: []}];
         host.cursor = 0;
-        let tree = nodes(ShotEditorPage({projectId: project.id, episodeId: episode.id}));
+        let tree = nodes(unwrap(ShotEditorPage({projectId: project.id, episodeId: episode.id})));
         // Expand only actual product beat/row components; skip DOM and UI primitives.
         for (const name of ["BeatBlock", "BeatBlockView", "ShotRow"]) {
             const child = tree.find(n => nodeName(n) === name)!;

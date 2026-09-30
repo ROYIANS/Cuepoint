@@ -1,3 +1,5 @@
+import {useWorkspaceUnavailable} from "@/lib/workspaceAvailability";
+import {useManualDraftGuard} from "@/lib/useManualDraftGuard";
 import {ShotScrollViewport, useShotRowViewport} from "./ShotRowViewport";
 import {DurationInput} from "./DurationInput";
 import {shotRelations} from "@/lib/shotRelations";
@@ -67,6 +69,7 @@ import {
     reorderShots,
     restoreShots,
     restoreStoryBeat,
+    setShotCharacterSelected,
     setShotSlot,
     setVisibleColumns,
     updateEpisodeShotFilters,
@@ -230,7 +233,11 @@ function PlainCell({
     );
 }
 
-export function ShotEditorPage({
+export function ShotEditorPage(props: Parameters<typeof ShotEditorPageContent>[0]) {
+    return <ShotEditorPageContent key={JSON.stringify([props.projectId, props.episodeId])} {...props}/>;
+}
+
+function ShotEditorPageContent({
                                    projectId,
                                    episodeId,
                                    focusShotId,
@@ -239,29 +246,33 @@ export function ShotEditorPage({
     episodeId: string;
     focusShotId?: string;
 }) {
-    const project = useLiveQuery(
-        async () => (await db.projects.get(projectId)) ?? null,
+    const projectResult = useLiveQuery(
+        async () => ({projectId, project: (await db.projects.get(projectId)) ?? null}),
         [projectId],
     );
-    const episode = useLiveQuery(
-        async () => (await db.episodes.get(episodeId)) ?? null,
-        [episodeId],
+    const episodeResult = useLiveQuery(
+        async () => ({projectId, episodeId, episode: (await db.episodes.get(episodeId)) ?? null}),
+        [projectId, episodeId],
     );
-    const shots =
-        useLiveQuery(
-            () => db.shots.where("episodeId").equals(episodeId).sortBy("order"),
-            [episodeId],
-        ) ?? [];
-    const characters =
-        useLiveQuery(
-            () => db.characters.where("projectId").equals(projectId).toArray(),
-            [projectId],
-        ) ?? [];
-    const scenes =
-        useLiveQuery(
-            () => db.scenes.where("projectId").equals(projectId).toArray(),
-            [projectId],
-        ) ?? [];
+    const shotsResult = useLiveQuery(async () => ({
+        projectId, episodeId,
+        shots: await db.shots.where("episodeId").equals(episodeId).sortBy("order"),
+    }), [projectId, episodeId]);
+    const assetsResult = useLiveQuery(async () => ({
+        projectId,
+        characters: await db.characters.where("projectId").equals(projectId).toArray(),
+        scenes: await db.scenes.where("projectId").equals(projectId).toArray(),
+    }), [projectId]);
+    const workspaceUnavailable = useWorkspaceUnavailable();
+    const loadedProject = projectResult?.projectId === projectId ? projectResult.project : undefined;
+    const loadedEpisode = episodeResult?.projectId === projectId && episodeResult.episodeId === episodeId
+        ? episodeResult.episode : undefined;
+    const loadedShots = shotsResult?.projectId === projectId && shotsResult.episodeId === episodeId
+        ? shotsResult.shots : undefined;
+    const loadedCharacters = assetsResult?.projectId === projectId ? assetsResult.characters : undefined;
+    const loadedScenes = assetsResult?.projectId === projectId ? assetsResult.scenes : undefined;
+    const characters = useMemo(() => loadedCharacters ?? [], [loadedCharacters]);
+    const scenes = useMemo(() => loadedScenes ?? [], [loadedScenes]);
 
     const relationAssets = useLiveQuery(async () => ({
         projectId,
@@ -272,14 +283,31 @@ export function ShotEditorPage({
     const styles = relationAssets?.projectId === projectId ? relationAssets.styles : undefined;
     const [relationShotId, setRelationShotId] = useState<string>();
     const [relationStatus, setRelationStatus] = useState<"saved" | "saving" | "error">("saved");
-    useEffect(() => {
-        if (relationStatus === "saved") return;
-        const preventUnload = (event: BeforeUnloadEvent) => {
-            event.preventDefault();
-        };
-        window.addEventListener("beforeunload", preventUnload);
-        return () => window.removeEventListener("beforeunload", preventUnload);
-    }, [relationStatus]);
+    const [openSlotShots, setOpenSlotShots] = useState<Record<string, number>>({});
+    const onSlotOpenChange = useCallback((shotId: string, open: boolean) => {
+        setOpenSlotShots(counts => ({...counts, [shotId]: Math.max(0, (counts[shotId] ?? 0) + (open ? 1 : -1))}));
+    }, []);
+    const manualSession = Object.values(openSlotShots).some(count => count > 0) || relationStatus !== "saved";
+    const lastProject = useRef(loadedProject);
+    const lastEpisode = useRef(loadedEpisode);
+    const lastShots = useRef(loadedShots ?? []);
+    if (loadedProject) lastProject.current = loadedProject;
+    if (loadedEpisode) lastEpisode.current = loadedEpisode;
+    const {shots, retainedCount} = useMemo(() => {
+        const retained = lastShots.current.filter(shot =>
+            ((openSlotShots[shot.id] ?? 0) > 0 || relationStatus !== "saved" && relationShotId === shot.id) &&
+            !loadedShots?.some(current => current.id === shot.id));
+        const current = retained.length > 0 ? [...(loadedShots ?? []), ...retained] : loadedShots ?? [];
+        lastShots.current = current;
+        return {shots: current, retainedCount: retained.length};
+    }, [loadedShots, openSlotShots, relationStatus, relationShotId]);
+    const project = loadedProject ?? (manualSession ? lastProject.current : loadedProject);
+    const episode = loadedEpisode ?? (manualSession ? lastEpisode.current : loadedEpisode);
+    const unavailable = workspaceUnavailable || !loadedProject || !loadedEpisode || retainedCount > 0;
+    const relationNavigationGuard = useManualDraftGuard(relationStatus === "error", relationStatus === "saving", () => {
+        setRelationStatus("saved");
+        setRelationShotId(undefined);
+    });
 
     const visible = normalizeVisibleColumns(project?.columnSettings.visible);
     const visibleDefs = SHOT_COLUMNS.filter((column) => visible.includes(column.id));
@@ -405,6 +433,7 @@ export function ShotEditorPage({
     }, [activeShotId]);
 
     const keyboardRef = useRef({
+        unavailable,
         visibleShotIds,
         visibleShots,
         shots,
@@ -441,6 +470,7 @@ export function ShotEditorPage({
     }
 
     keyboardRef.current = {
+        unavailable,
         visibleShotIds,
         visibleShots,
         shots,
@@ -460,6 +490,7 @@ export function ShotEditorPage({
         function onKeyDown(event: KeyboardEvent) {
             if (event.defaultPrevented || isFormFieldTarget(event.target)) return;
             const ctx = keyboardRef.current;
+            if (ctx.unavailable) return;
             const meta = event.metaKey || event.ctrlKey;
             const key = event.key;
 
@@ -555,13 +586,13 @@ export function ShotEditorPage({
         void persistFilters({...filters, gaps});
     }
 
-    if (project === undefined || episode === undefined || props === undefined || styles === undefined) {
+    if (project === undefined || episode === undefined || loadedShots === undefined || loadedCharacters === undefined || loadedScenes === undefined || props === undefined || styles === undefined) {
         return <div className="text-muted-foreground p-8 text-sm">加载分镜…</div>;
     }
     if (project === null) {
         return <div className="text-muted-foreground p-8 text-sm">找不到这个项目</div>;
     }
-    if (episode === null || episode.projectId !== projectId) {
+    if (episode === null || episode.projectId !== projectId || episode.id !== episodeId) {
         return <div className="text-muted-foreground p-8 text-sm">找不到当前故事</div>;
     }
 
@@ -675,7 +706,10 @@ export function ShotEditorPage({
     }
 
     return (
+        <>
+        {relationNavigationGuard}
         <div className="flex h-full flex-col">
+            {unavailable && <p role="alert" className="p-4">当前项目、故事或镜头已不可用，未完成的修改仍保留。</p>}
             <div className="flex min-h-14 shrink-0 flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-5">
                 <div className="flex items-center gap-3">
                     <h1 className="text-[17px] font-semibold">制作分镜</h1>
@@ -1172,6 +1206,8 @@ export function ShotEditorPage({
                                         sensors={sensors}
                                         onDeleteBeat={() => setPendingBeatId(beat.id)}
                                         onReorderShots={commitShotReorder}
+                                        unavailable={unavailable}
+                                        onSlotOpenChange={onSlotOpenChange}
                                         onEditRelations={setRelationShotId}
                                         onDuplicateShot={(shotId) => void copyShot(shotId)}
                                     />
@@ -1199,7 +1235,9 @@ export function ShotEditorPage({
                                 hideHeader={beats.length === 0}
                                 sensors={sensors}
                                 onReorderShots={commitShotReorder}
-                                onEditRelations={setRelationShotId}
+                                unavailable={unavailable}
+                                        onSlotOpenChange={onSlotOpenChange}
+                                        onEditRelations={setRelationShotId}
                                 onDuplicateShot={(shotId) => void copyShot(shotId)}
                             />
                         ) : null}
@@ -1236,7 +1274,7 @@ export function ShotEditorPage({
                     {shots.find((shot) => shot.id === relationShotId) ? (
                         <ShotRelationsEditor key={relationShotId} project={project}
                                              shot={shots.find((shot) => shot.id === relationShotId)!} props={props}
-                                             styles={styles} onStatusChange={setRelationStatus}/>
+                                             styles={styles} unavailable={unavailable} onStatusChange={setRelationStatus}/>
                     ) : <div className="space-y-2">
                         <p className="text-muted-foreground text-sm">这个镜头已不存在，请选择其他镜头。</p>
                         {relationStatus === "error" && <Button variant="ghost"
@@ -1290,6 +1328,7 @@ export function ShotEditorPage({
                 </AlertDialogContent>
             </AlertDialog>
         </div>
+        </>
     );
 }
 
@@ -1322,6 +1361,8 @@ type BeatBlockProps = {
     sensors: ReturnType<typeof useSensors>;
     onDeleteBeat?: () => void;
     onReorderShots: (groupIds: string[], activeId: string, overId: string) => Promise<void>;
+    unavailable: boolean;
+    onSlotOpenChange: (shotId: string, open: boolean) => void;
     onEditRelations: (shotId: string) => void;
     onDuplicateShot: (shotId: string) => void;
 };
@@ -1358,6 +1399,8 @@ function BeatBlockView({
                            onReorderShots,
                            onDuplicateShot,
                            onEditRelations,
+                           onSlotOpenChange,
+                           unavailable,
                            sortableState,
                        }: BeatBlockProps & {
     sortableState?: ReturnType<typeof useSortable>;
@@ -1468,6 +1511,8 @@ function BeatBlockView({
                                     const target = shots[index + offset];
                                     if (target) void onReorderShots(shotIds, shot.id, target.id);
                                 }}
+                                unavailable={unavailable}
+                                onSlotOpenChange={(open) => onSlotOpenChange(shot.id, open)}
                                 onEditRelations={() => onEditRelations(shot.id)}
                                 onDuplicate={() => onDuplicateShot(shot.id)}
                             />
@@ -1501,6 +1546,8 @@ function ShotRow({
                      onMove,
                      onDuplicate,
                      onEditRelations,
+                     onSlotOpenChange,
+                     unavailable,
                  }: {
     shot: Shot;
     striped: boolean;
@@ -1522,6 +1569,8 @@ function ShotRow({
     canMoveDown: boolean;
     onMove: (offset: -1 | 1) => void;
     onDuplicate: () => void;
+    unavailable: boolean;
+    onSlotOpenChange: (open: boolean) => void;
     onEditRelations: () => void;
 }) {
     const {
@@ -1679,6 +1728,8 @@ function ShotRow({
                         <>
                             <div className={cn(DESIGN_CELL_CHROME, "w-full")}>
                                 <EditableGenerationSlot
+                                    unavailable={unavailable}
+                                    onEditorOpenChange={onSlotOpenChange}
                                     projectId={projectId}
                                     targetKey={JSON.stringify([projectId, "shot", shot.id, "firstFrame"])}
                                     slot={shot.firstFrame ?? emptySlot()}
@@ -1690,6 +1741,8 @@ function ShotRow({
                             </div>
                             <div className={cn(DESIGN_CELL_CHROME, "w-full border-l")}>
                                 <EditableGenerationSlot
+                                    unavailable={unavailable}
+                                    onEditorOpenChange={onSlotOpenChange}
                                     projectId={projectId}
                                     targetKey={JSON.stringify([projectId, "shot", shot.id, "lastFrame"])}
                                     slot={shot.lastFrame ?? emptySlot()}
@@ -1701,6 +1754,8 @@ function ShotRow({
                             </div>
                             <div className={cn(DESIGN_CELL_CHROME, "w-full border-l")}>
                                 <EditableGenerationSlot
+                                    unavailable={unavailable}
+                                    onEditorOpenChange={onSlotOpenChange}
                                     projectId={projectId}
                                     targetKey={JSON.stringify([projectId, "shot", shot.id, "clip"])}
                                     slot={shot.clip ?? emptySlot()}
@@ -1805,12 +1860,8 @@ function ShotRow({
                                                             onSelect={(event) => event.preventDefault()}
                                                             onCheckedChange={(checked) => {
                                                                 onActivate();
-                                                                const ids = checked
-                                                                    ? selectedChar
-                                                                        ? shot.characterIds
-                                                                        : [...shot.characterIds, character.id]
-                                                                    : shot.characterIds.filter((id) => id !== character.id);
-                                                                void patchShot(shot.id, {characterIds: ids});
+                                                                void setShotCharacterSelected(shot.id, character.id, checked === true)
+                                                                    .catch(() => toast.error("保存角色失败，请重试"));
                                                             }}
                                                         >
                                                             <AssetStill
@@ -1905,11 +1956,12 @@ function ShotRow({
     );
 }
 
-function ShotRelationsEditor({project, shot, props, styles, onStatusChange}: {
+function ShotRelationsEditor({project, shot, props, styles, unavailable, onStatusChange}: {
     project: Project;
     shot: Shot;
     props: Prop[];
     styles: VisualStyle[];
+    unavailable: boolean;
     onStatusChange: (status: "saved" | "saving" | "error") => void;
 }) {
     const [saving, setSaving] = useState(false);
@@ -1922,7 +1974,7 @@ function ShotRelationsEditor({project, shot, props, styles, onStatusChange}: {
     const missingPropIds = (shot.propIds ?? []).filter((id) => !props.some((item) => item.id === id));
 
     async function save(patch: Partial<Shot>) {
-        if (pending.current) return;
+        if (pending.current || unavailable) return;
         pending.current = true;
         setSaving(true);
         onStatusChange("saving");
@@ -1945,7 +1997,7 @@ function ShotRelationsEditor({project, shot, props, styles, onStatusChange}: {
         <div className="space-y-5">
             <div className="space-y-2">
                 <Label htmlFor={`shot-style-${shot.id}`}>镜头风格</Label>
-                <Select value={styleValue} disabled={saving}
+                <Select value={styleValue} disabled={saving || unavailable}
                         onValueChange={(value) => void save({styleId: value === "inherit" ? undefined : value === "none" ? null : value})}>
                     <SelectTrigger id={`shot-style-${shot.id}`} className="w-full"><SelectValue/></SelectTrigger>
                     <SelectContent>
@@ -1960,7 +2012,7 @@ function ShotRelationsEditor({project, shot, props, styles, onStatusChange}: {
                 </Select>
                 <p className="text-muted-foreground text-xs">当前生效：{relations.style} · {relations.styleSource}</p>
             </div>
-            <fieldset disabled={saving} className="space-y-2">
+            <fieldset disabled={saving || unavailable} className="space-y-2">
                 <legend className="mb-2 text-sm font-medium">镜头道具（可多选）</legend>
                 {props.length === 0 ?
                     <p className="text-muted-foreground text-xs">先在世界的道具库中添加道具，再关联到镜头。</p> : (
@@ -1968,7 +2020,7 @@ function ShotRelationsEditor({project, shot, props, styles, onStatusChange}: {
                             {props.map((prop) => (
                                 <label key={prop.id}
                                        className="hover:bg-muted flex cursor-pointer items-center gap-3 rounded px-2 py-2 text-sm">
-                                    <Checkbox disabled={saving} checked={(shot.propIds ?? []).includes(prop.id)}
+                                    <Checkbox disabled={saving || unavailable} checked={(shot.propIds ?? []).includes(prop.id)}
                                               onCheckedChange={(checked) => {
                                                   const ids = new Set(shot.propIds ?? []);
                                                   if (checked) ids.add(prop.id); else ids.delete(prop.id);
@@ -1981,7 +2033,7 @@ function ShotRelationsEditor({project, shot, props, styles, onStatusChange}: {
                     )}
                 {missingPropIds.length > 0 ? <div className="text-destructive text-xs">
                     有 {missingPropIds.length} 个道具关联已失效。
-                    <Button size="sm" variant="ghost" disabled={saving}
+                    <Button size="sm" variant="ghost" disabled={saving || unavailable}
                             onClick={() => void save({propIds: (shot.propIds ?? []).filter((id) => !missingPropIds.includes(id))})}>移除失效关联</Button>
                 </div> : null}
                 <p className="text-muted-foreground text-xs">已关联：{relations.props || "无道具"}</p>

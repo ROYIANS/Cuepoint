@@ -1,3 +1,4 @@
+import {useManualDraftGuard} from "@/lib/useManualDraftGuard";
 import {type ReactNode, useEffect, useRef, useState} from "react";
 import {useLiveQuery} from "dexie-react-hooks";
 import {toast} from "sonner";
@@ -57,8 +58,9 @@ function Section({title, description, children}: { title: string; description: s
     </section>;
 }
 
-export function ProjectSettingsPanel({project, onOutputState}: {
+export function ProjectSettingsPanel({project, onOutputState, unavailable = false}: {
     project: Project;
+    unavailable?: boolean;
     onOutputState: (state: { dirty: boolean; saving: boolean }) => void
 }) {
     const styles = useLiveQuery(() => db.styles.where("projectId").equals(project.id).sortBy("name"), [project.id]);
@@ -106,7 +108,7 @@ export function ProjectSettingsPanel({project, onOutputState}: {
             <Section title="默认视觉风格"
                      description="镜头默认跟随这里的风格；镜头中单独选择的风格会保留。可先在世界 → 风格中建立本项目的风格。">
                 <SettingSelect label="项目风格" value={project.defaultStyleId ?? "none"}
-                               disabled={styles === undefined || stylePending}
+                               disabled={unavailable || styles === undefined || stylePending}
                                options={[{
                                    value: "none",
                                    label: "暂不设置"
@@ -117,7 +119,7 @@ export function ProjectSettingsPanel({project, onOutputState}: {
                                onChange={(value) => void setStyle(value)}/>
                 {stylePending && <p role="status" className="text-muted-foreground text-xs">正在保存风格…</p>}
             </Section>
-            <ProjectOutputSettings key={project.id} project={project} onOutputState={onOutputState}/>
+            <ProjectOutputSettings key={project.id} project={project} unavailable={unavailable} onOutputState={onOutputState}/>
         </>}
     </div>;
 }
@@ -129,8 +131,9 @@ const IMAGE_MODEL_LABELS: Record<ApimartImageModel, string> = {
     "gpt-image-2.5-ext": "APIMart · GPT Image 2.5 Ext",
 };
 
-function ProjectOutputSettings({project, onOutputState}: {
+function ProjectOutputSettings({project, onOutputState, unavailable = false}: {
     project: Project;
+    unavailable?: boolean;
     onOutputState: (state: { dirty: boolean; saving: boolean }) => void
 }) {
     const [output, setOutput] = useState<ProjectOutputDraft>(() => {
@@ -159,15 +162,11 @@ function ProjectOutputSettings({project, onOutputState}: {
     useEffect(() => {
         onOutputState({dirty, saving});
     }, [dirty, saving, onOutputState]);
-    useEffect(() => {
-        const protect = (event: BeforeUnloadEvent) => {
-            if (!dirty && !saving) return;
-            event.preventDefault();
-            event.returnValue = "";
-        };
-        window.addEventListener("beforeunload", protect);
-        return () => window.removeEventListener("beforeunload", protect);
-    }, [dirty, saving]);
+    const navigationGuard = useManualDraftGuard(dirty, saving, () => {
+        const value = projectOutputValue(project);
+        setOutput({value, baseline: structuredClone(value), observed: value});
+        setSaveError(undefined);
+    });
     const image = draft.image;
     const video = draft.video;
     const imageKnown = Boolean(image && image.provider === "apimart" && isApimartImageModel(image.model) && image.profileVersion === OUTPUT_PROFILE_VERSION);
@@ -181,7 +180,7 @@ function ProjectOutputSettings({project, onOutputState}: {
     };
 
     async function save() {
-        if (errors.length || saveBusy.current) return;
+        if (unavailable || errors.length || saveBusy.current) return;
         saveBusy.current = true;
         setSaving(true);
         setSaveError(undefined);
@@ -202,9 +201,9 @@ function ProjectOutputSettings({project, onOutputState}: {
         }
     }
 
-    return <Section title="画幅与生成默认值"
+    return <>{navigationGuard}<Section title="画幅与生成默认值"
                     description="画幅表达作品的目标。图片和视频可分别选择模型参数，也可以保持手动制作；保存配置不会发起生成。">
-        <fieldset disabled={saving} className="min-w-0 space-y-5">
+        <fieldset disabled={saving || unavailable} className="min-w-0 space-y-5">
             <SettingSelect label="项目目标画幅" value={ratio} options={ASPECT_PRESET_IDS}
                            onChange={(value) => setRatio(value as AspectPresetId)}/>
             <div className="rounded-xl border p-4 space-y-4">
@@ -301,9 +300,9 @@ function ProjectOutputSettings({project, onOutputState}: {
                     setOutput({value, baseline: structuredClone(value), observed: value});
                     setSaveError(undefined);
                 }}>{saveError ? "采用最新内容" : "撤销修改"}</Button>
-                <Button size="sm" disabled={!dirty || saving || errors.length > 0}
+                <Button size="sm" disabled={unavailable || !dirty || saving || errors.length > 0}
                         onClick={() => void save()}>保存输出配置</Button>
             </div>
         </div>
-    </Section>;
+    </Section></>;
 }

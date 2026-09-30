@@ -1497,6 +1497,30 @@ export async function patchShot(
     });
 }
 
+/** Apply one checkbox intention to the latest membership, preserving other edits. */
+export async function setShotCharacterSelected(id: Id, characterId: Id, selected: boolean): Promise<void> {
+    await db.transaction("rw", PRODUCTION_TABLES, async () => {
+        const shot = await db.shots.get(id);
+        if (!shot) throw new Error("镜头不存在，无法保存");
+        const character = await db.characters.get(characterId);
+        if ((selected && !character) || (character && character.projectId !== shot.projectId)) {
+            throw new Error("角色不属于当前项目");
+        }
+        // Removing a deleted reference is permitted only if all remaining
+        // references validate. Selecting it can never resurrect the old row.
+        let characterIds = shot.characterIds;
+        if (selected) {
+            if (!characterIds.includes(characterId)) characterIds = [...characterIds, characterId];
+        } else {
+            characterIds = characterIds.filter((item) => item !== characterId);
+        }
+        const next = {...shot, characterIds};
+        await assertShotReferences(next);
+        await db.shots.put(next);
+        await touchProject(shot.projectId);
+    });
+}
+
 export type EpisodeShotBulkPatch = Partial<
     Pick<Shot, "beatId" | "durationSec" | "status" | "characterIds" | "sceneId" | "propIds" | "styleId" | "notes">
 >;

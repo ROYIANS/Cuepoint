@@ -1,3 +1,5 @@
+import {useWorkspaceUnavailable} from "@/lib/workspaceAvailability";
+import {useManualDraftGuard} from "@/lib/useManualDraftGuard";
 import {Library, Plus, Trash2, Type} from "lucide-react";
 import {useEffect, useId, useRef, useState} from "react";
 import {toast} from "sonner";
@@ -169,8 +171,10 @@ export function GenerationSlotEditor({
                                          onClose,
                                          onSave,
                                          resultKinds = ["image", "video"],
+                                         unavailable = false,
                                      }: {
     open: boolean;
+    unavailable?: boolean;
     targetKey: string;
     resultKinds?: readonly MediaKind[];
     title: string;
@@ -179,6 +183,7 @@ export function GenerationSlotEditor({
     onClose: () => void;
     onSave: (slot: GenerationSlot, baseline: GenerationSlot) => Promise<void>;
 }) {
+    const workspaceUnavailable = useWorkspaceUnavailable();
     const [editSession] = useState(() => new SlotEditSession(targetKey, projectId, title, value, resultKinds, onSave));
     const [draft, setDraft] = useState(() => structuredClone(editSession.baseline));
     const targetChanged = targetKey !== editSession.targetKey;
@@ -206,6 +211,22 @@ export function GenerationSlotEditor({
         };
     }, [session]);
 
+    const navigationGuard = useManualDraftGuard(
+        JSON.stringify(draft) !== JSON.stringify(editSession.baseline) || Boolean(error) || Boolean(failedUpload.current),
+        pending !== null,
+        async () => {
+            // cancel() closes ownership before deleting uploads. A cleanup failure
+            // must leave a readable canceled session, not enabled save/upload controls.
+            setCancelled(true);
+            try {
+                await session.cancel();
+            } catch (reason) {
+                fail(reason);
+                throw reason;
+            }
+        },
+    );
+
     const mediaIds = (slot: GenerationSlot) => [
         ...slot.referenceImageIds, ...slot.referenceVideoIds,
         ...(slot.result ? [slot.result.mediaId] : []),
@@ -215,7 +236,7 @@ export function GenerationSlotEditor({
     };
 
     async function upload(kind: "image" | "video" | "result", retryFile?: File) {
-        if (busy.current || cancelled || targetChanged) return;
+        if (busy.current || cancelled || targetChanged || unavailable || workspaceUnavailable) return;
         busy.current = true;
         setPending("upload");
         setError(undefined);
@@ -248,7 +269,7 @@ export function GenerationSlotEditor({
     }
 
     async function selectExisting(record: MediaRecord) {
-        if (busy.current || cancelled || targetChanged || !pickerTarget || record.projectId !== editSession.projectId) return;
+        if (busy.current || cancelled || targetChanged || unavailable || workspaceUnavailable || !pickerTarget || record.projectId !== editSession.projectId) return;
         const kind: MediaKind = record.mimeType.startsWith("video/") ? "video" : "image";
         const allowedKinds = pickerTarget === "result" ? editSession.resultKinds : [pickerTarget];
         if (!allowedKinds.includes(kind) || record.blob.size === 0) return;
@@ -283,7 +304,7 @@ export function GenerationSlotEditor({
                 key={target}
                 projectId={editSession.projectId}
                 kinds={target === "result" ? editSession.resultKinds : [target]}
-                disabled={pending !== null || cancelled || targetChanged}
+                disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
                 selectedIds={selectedIds}
                 onSelect={(record) => void selectExisting(record)}
                 onClose={() => setPickerTarget(null)}
@@ -306,7 +327,7 @@ export function GenerationSlotEditor({
     }
 
     async function save() {
-        if (busy.current || cancelled) return;
+        if (busy.current || cancelled || unavailable || workspaceUnavailable) return;
         busy.current = true;
         setPending("save");
         setError(undefined);
@@ -323,6 +344,8 @@ export function GenerationSlotEditor({
     }
 
     return (
+        <>
+        {navigationGuard}
         <Dialog open={open} onOpenChange={(next) => !next && void close()}>
             <DialogContent className="flex max-h-[90vh] max-w-2xl flex-col overflow-hidden sm:max-w-2xl">
                 <DialogHeader>
@@ -336,7 +359,7 @@ export function GenerationSlotEditor({
                             autoFocus
                             id={promptId}
                             disabled={pending !== null || cancelled}
-                            readOnly={targetChanged}
+                            readOnly={targetChanged || unavailable || workspaceUnavailable}
                             value={draft.prompt}
                             onChange={(event) => setDraft({...draft, prompt: event.target.value})}
                             placeholder="描述画面内容、动作、光线或镜头…"
@@ -346,13 +369,13 @@ export function GenerationSlotEditor({
                     <div className="grid gap-2">
                         <div className="flex flex-wrap items-center justify-between gap-2">
                             <div id={refImageId} className="text-sm font-medium">参考图</div>
-                            <Button type="button" variant="ghost" size="sm" disabled={pending !== null || cancelled || targetChanged}
+                            <Button type="button" variant="ghost" size="sm" disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
                                     onClick={() => setPickerTarget(pickerTarget === "image" ? null : "image")}>
                                 <Library/> 选择已有参考图
                             </Button>
                         </div>
                         <RefStrip
-                            disabled={pending !== null || cancelled || targetChanged}
+                            disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
                             labelledBy={refImageId}
                             ids={draft.referenceImageIds}
                             addLabel="添加图片"
@@ -369,13 +392,13 @@ export function GenerationSlotEditor({
                     <div className="grid gap-2">
                         <div className="flex flex-wrap items-center justify-between gap-2">
                             <div id={refVideoId} className="text-sm font-medium">参考视频</div>
-                            <Button type="button" variant="ghost" size="sm" disabled={pending !== null || cancelled || targetChanged}
+                            <Button type="button" variant="ghost" size="sm" disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
                                     onClick={() => setPickerTarget(pickerTarget === "video" ? null : "video")}>
                                 <Library/> 选择已有参考视频
                             </Button>
                         </div>
                         <RefStrip
-                            disabled={pending !== null || cancelled || targetChanged}
+                            disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
                             labelledBy={refVideoId}
                             ids={draft.referenceVideoIds}
                             addLabel="添加视频"
@@ -399,11 +422,11 @@ export function GenerationSlotEditor({
                             </div>
                             <div className="flex flex-wrap gap-2">
                                 <Button type="button" size="sm" variant="outline"
-                                        disabled={pending !== null || cancelled || targetChanged}
+                                        disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
                                         onClick={() => setPickerTarget(pickerTarget === "result" ? null : "result")}>
                                     <Library/> 选择已有素材
                                 </Button>
-                                <Button size="sm" variant="outline" disabled={pending !== null || cancelled || targetChanged}
+                                <Button size="sm" variant="outline" disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
                                         onClick={() => void upload("result")}>
                                     上传素材
                                 </Button>
@@ -411,7 +434,7 @@ export function GenerationSlotEditor({
                                     <Button
                                         size="sm"
                                         variant="ghost"
-                                        disabled={pending !== null || cancelled || targetChanged}
+                                        disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
                                         onClick={() => setDraft({...draft, result: undefined})}
                                     >
                                         清除
@@ -437,7 +460,7 @@ export function GenerationSlotEditor({
                     <div role="alert" className="text-destructive text-sm">
                         <p>{error}。{cancelled ? "请再次取消以重试清理。" : "内容已保留，可重试或取消。"}</p>
                         {failedUpload.current && !cancelled ? (
-                            <Button variant="outline" size="sm" disabled={pending !== null} onClick={() => {
+                            <Button variant="outline" size="sm" disabled={pending !== null || unavailable || workspaceUnavailable} onClick={() => {
                                 const retry = failedUpload.current;
                                 if (retry) void upload(retry.kind, retry.file);
                             }}>重试上传</Button>
@@ -451,7 +474,7 @@ export function GenerationSlotEditor({
                     </Button>
                     <Button
                         variant="brand"
-                        disabled={pending !== null || cancelled || targetChanged}
+                        disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
                         onClick={() => void save()}
                     >
                         {pending === "save" ? "保存中…" : pending === "upload" ? "上传中…" : error && !failedUpload.current ? "重试保存" : "保存"}
@@ -459,6 +482,7 @@ export function GenerationSlotEditor({
                 </DialogFooter>
             </DialogContent>
         </Dialog>
+        </>
     );
 }
 
@@ -471,6 +495,8 @@ export function EditableGenerationSlot({
                                            title,
                                            onSave,
                                            size = "default",
+                                           onEditorOpenChange,
+                                           unavailable = false,
                                        }: {
     projectId: Id;
     targetKey: string;
@@ -480,9 +506,20 @@ export function EditableGenerationSlot({
     title: string;
     onSave: (slot: GenerationSlot, baseline: GenerationSlot) => Promise<void>;
     size?: TileSize;
+    onEditorOpenChange?: (open: boolean) => void;
+    unavailable?: boolean;
 }) {
     const value = slot ?? emptySlot();
     const [open, setOpen] = useState(false);
+    const reportOpen = useRef(onEditorOpenChange);
+    reportOpen.current = onEditorOpenChange;
+    useEffect(() => {
+        if (!open) return;
+        const report = reportOpen.current;
+        report?.(true);
+        // Balance notifications when a mounted slot disappears as well as on close.
+        return () => report?.(false);
+    }, [open]);
     return (
         <>
             <GenerationSlotTile
@@ -496,6 +533,7 @@ export function EditableGenerationSlot({
             {open ? (
                 <GenerationSlotEditor
                     open={open}
+                    unavailable={unavailable}
                     targetKey={targetKey}
                     title={title}
                     projectId={projectId}

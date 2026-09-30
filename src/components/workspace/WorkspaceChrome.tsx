@@ -1,3 +1,4 @@
+import {WorkspaceUnavailableContext} from "@/lib/workspaceAvailability";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -13,7 +14,7 @@ import {flushPendingDrafts} from "@/lib/debouncedDraft";
 import {Link, Navigate, Outlet, useNavigate, useRouterState} from "@tanstack/react-router";
 import {useLiveQuery} from "dexie-react-hooks";
 import {ChevronLeft, Download, Library, Settings2} from "lucide-react";
-import {useState} from "react";
+import {useRef, useState} from "react";
 import {toast} from "sonner";
 import {Still} from "@/components/studio/Still";
 import {Button} from "@/components/ui/button";
@@ -47,22 +48,34 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
     const navigate = useNavigate();
     const pathname = useRouterState({select: (state) => state.location.pathname});
     const episodeId = episodeIdFromPath(pathname, projectId);
-    const project = useLiveQuery(
-        async () => (await db.projects.get(projectId)) ?? null,
+    const projectResult = useLiveQuery(
+        async () => ({projectId, project: (await db.projects.get(projectId)) ?? null}),
         [projectId],
     );
-    const currentEpisode = useLiveQuery(
+    const currentEpisodeResult = useLiveQuery(
         async () => {
-            if (!episodeId) return undefined;
+            if (!episodeId) return {projectId, episodeId, episode: null};
             const row = await db.episodes.get(episodeId);
-            return row?.projectId === projectId ? row : null;
+            return {projectId, episodeId, episode: row?.projectId === projectId ? row : null};
         },
         [episodeId, projectId],
     );
-    const firstProjectEpisode = useLiveQuery(async () => {
+    const firstEpisodeResult = useLiveQuery(async () => {
         const rows = await db.episodes.where("projectId").equals(projectId).sortBy("order");
-        return rows[0] ?? null;
+        return {projectId, episode: rows[0] ?? null};
     }, [projectId]);
+    const loadedProject = projectResult?.projectId === projectId ? projectResult.project : undefined;
+    const lastProject = useRef(loadedProject);
+    if (loadedProject) lastProject.current = loadedProject;
+    // Snapshot is layout/session data only. Missing rows are shown explicitly;
+    // controls and descendant writes are disabled while preserving the Outlet.
+    const project = loadedProject ?? (lastProject.current?.id === projectId ? lastProject.current : loadedProject);
+    const currentEpisode = currentEpisodeResult?.projectId === projectId && currentEpisodeResult.episodeId === episodeId
+        ? currentEpisodeResult.episode : undefined;
+    const firstProjectEpisode = firstEpisodeResult?.projectId === projectId ? firstEpisodeResult.episode : undefined;
+    const lastEpisode = useRef(currentEpisode);
+    if (currentEpisode) lastEpisode.current = currentEpisode;
+    const previouslyLoadedEpisode = lastEpisode.current?.id === episodeId;
     const [backingUp, setBackingUp] = useState(false);
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [outputState, setOutputState] = useState({dirty: false, saving: false});
@@ -80,7 +93,6 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
 
     if (
         project === undefined ||
-        (episodeId && currentEpisode === undefined) ||
         (project && normalizeProjectMode(project.mode) === "film" && firstProjectEpisode === undefined)
     ) {
         return <div className="text-muted-foreground p-10 text-sm">加载项目…</div>;
@@ -95,15 +107,19 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
         );
     }
 
+    const projectMissing = loadedProject === null;
+    const episodeMissing = Boolean(episodeId && currentEpisode === null);
+    const unavailable = projectMissing || episodeMissing;
+    const outputProtected = outputState.dirty || outputState.saving;
     const kind = project.kind ?? "video";
     if (!["video", "audio", "music"].includes(kind)) return <div role="alert" className="p-8">不支持的项目类型</div>;
     const mode = normalizeProjectMode(project.mode);
     const projectHome = pathname === `/p/${projectId}` || pathname === `/p/${projectId}/`;
 
-    if (shouldRedirectAudioMusicChild(kind, projectId, pathname)) return <Navigate to="/p/$projectId"
+    if (!unavailable && shouldRedirectAudioMusicChild(kind, projectId, pathname)) return <Navigate to="/p/$projectId"
                                                                                    params={{projectId}} replace/>;
 
-    if (episodeId && currentEpisode === null) {
+    if (episodeId && currentEpisode === null && !previouslyLoadedEpisode && !outputProtected && !projectMissing) {
         return (
             <div className="flex min-h-screen flex-col items-center justify-center gap-3">
                 <p>找不到这一集</p>
@@ -114,7 +130,7 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
         );
     }
 
-    if (kind === "video" && mode === "film" && firstProjectEpisode === null && !projectHome && pathname !== `/p/${projectId}/memory`) {
+    if (!unavailable && !outputProtected && kind === "video" && mode === "film" && firstProjectEpisode === null && !previouslyLoadedEpisode && !projectHome && pathname !== `/p/${projectId}/memory`) {
         return (
             <div className="flex min-h-screen flex-col items-center justify-center gap-3">
                 <p>这个单片项目缺少内部集</p>
@@ -125,6 +141,8 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
         );
     }
 
+    // A same-project episode read must not unmount settings or the Outlet.
+    // Its previous episode is hidden until the requested identity resolves.
     const episode = currentEpisode || undefined;
     const filmEpisode = kind === "video" && mode === "film" ? firstProjectEpisode || undefined : undefined;
     const title = mode === "film" ? project.name : episode ? episodeLabel(episode) : project.name;
@@ -150,9 +168,14 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
     }
 
     return (
+        <WorkspaceUnavailableContext value={unavailable}>
         <div
             className={cn("workspace-shell bg-background flex flex-col", kind !== "video" ? "h-dvh overflow-hidden" : "h-screen")}>
-            <header
+            {unavailable && <div className="p-4">
+                <p role="alert">{projectMissing ? "找不到这个项目" : "找不到这一集"}。已打开的修改仍保留，可复制或关闭；当前内容不能保存。</p>
+                <Button className="mt-3" variant="outline" onClick={() => void navigate({to: "/projects"})}>返回工作室</Button>
+            </div>}
+            <header hidden={unavailable} style={unavailable ? {display: "none"} : undefined}
                 className="workspace-header grid min-h-14 shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-2 border-b px-3 py-2 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4">
                 <div className="col-start-1 row-start-1 flex min-w-0 items-center gap-1">
                     {backToStudio ? (
@@ -302,16 +325,16 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                     </Button>
                 </div>
             </header>
-            <div className="min-h-0 flex-1">
+            <div className="min-h-0 flex-1" inert={unavailable}>
                 <Outlet/>
             </div>
 
-            <Dialog open={settingsOpen} onOpenChange={changeSettingsOpen}>
+            <Dialog open={settingsOpen && (!unavailable || outputProtected)} onOpenChange={changeSettingsOpen}>
                 <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-2xl">
                     <DialogHeader>
                         <DialogTitle>项目设定</DialogTitle>
                     </DialogHeader>
-                    <ProjectSettingsPanel project={project} onOutputState={setOutputState}/>
+                    <ProjectSettingsPanel project={project} unavailable={unavailable} onOutputState={setOutputState}/>
                     <div>
                         <p className="text-sm font-medium">项目封面</p>
                         <div className="mt-2 flex items-start gap-4">
@@ -320,11 +343,11 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                                 <Still mediaId={project.coverMediaId} title={project.name}/>
                             </div>
                             <div className="flex flex-col gap-2">
-                                <Button variant="outline" size="sm" onClick={() => void uploadCover()}>
+                                <Button variant="outline" size="sm" disabled={unavailable} onClick={() => void uploadCover()}>
                                     {project.coverMediaId ? "更换封面" : "上传封面"}
                                 </Button>
                                 {project.coverMediaId ? (
-                                    <Button variant="ghost" size="sm" onClick={() => void clearCover()}>
+                                    <Button variant="ghost" size="sm" disabled={unavailable} onClick={() => void clearCover()}>
                                         清除封面
                                     </Button>
                                 ) : (
@@ -359,5 +382,6 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                 </AlertDialogContent>
             </AlertDialog>
         </div>
+        </WorkspaceUnavailableContext>
     );
 }

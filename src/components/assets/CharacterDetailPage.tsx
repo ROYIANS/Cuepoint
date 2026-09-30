@@ -1,3 +1,4 @@
+import {useRef, useState} from "react";
 import {Link, useNavigate} from "@tanstack/react-router";
 import {useLiveQuery} from "dexie-react-hooks";
 import {ChevronLeft} from "lucide-react";
@@ -8,7 +9,12 @@ import {EditableGenerationSlot} from "@/components/slots/GenerationSlotCard";
 import {AssetTextField} from "./AssetTextField";
 import {Button} from "@/components/ui/button";
 
-export function CharacterDetailPage({
+export function CharacterDetailPage(props: Parameters<typeof CharacterDetailContent>[0]) {
+    const ownerId = props.back?.kind === "project" ? props.back.projectId : STUDIO_LIBRARY_ID;
+    return <CharacterDetailContent key={JSON.stringify([ownerId, props.characterId])} {...props}/>;
+}
+
+function CharacterDetailContent({
                                         characterId,
                                         back,
                                     }: {
@@ -16,10 +22,17 @@ export function CharacterDetailPage({
     back: { kind: "studio" } | { kind: "project"; projectId: string };
 }) {
     const navigate = useNavigate();
-    const character = useLiveQuery(
-        async () => (await db.characters.get(characterId)) ?? null,
-        [characterId],
+    const ownerId = back.kind === "project" ? back.projectId : STUDIO_LIBRARY_ID;
+    const result = useLiveQuery(
+        async () => ({ownerId, id: characterId, value: (await db.characters.get(characterId)) ?? null}),
+        [ownerId, characterId],
     );
+
+    const loaded = result?.ownerId === ownerId && result.id === characterId ? result.value : undefined;
+    const [openEditors, setOpenEditors] = useState(0);
+    const lastRecord = useRef(loaded);
+    if (loaded) lastRecord.current = loaded;
+    const character = loaded ?? (openEditors > 0 ? lastRecord.current : loaded);
 
     if (character === undefined) {
         return <div className="text-muted-foreground p-8 text-sm">加载中…</div>;
@@ -39,6 +52,7 @@ export function CharacterDetailPage({
 
     return (
         <div className="h-full overflow-auto">
+            {!loaded && <p role="alert" className="p-4">此设定已不可用，当前槽位草稿仍保留。可复制草稿或取消后离开。</p>}
             <div className="mx-auto max-w-5xl px-4 py-6 sm:px-8">
                 {back.kind === "studio" ? (
                     <Link
@@ -62,6 +76,8 @@ export function CharacterDetailPage({
                     <div className="grid grid-cols-2 gap-4">
                         {CHARACTER_SLOTS.map((slot) => (
                             <EditableGenerationSlot
+                                unavailable={!loaded}
+                                onEditorOpenChange={(open) => setOpenEditors(count => count + (open ? 1 : -1))}
                                 key={slot.id}
                                 projectId={character.projectId}
                                 targetKey={JSON.stringify([character.projectId, "character", character.id, slot.id])}

@@ -29,7 +29,7 @@ export function ContextParameters({threadId, onBack}: { threadId?: string; onBac
             setSaving(false);
         }
     };
-    const patch = (value: Partial<ContextPolicy>) => void save(() => updateContextPolicy(threadId, {...policy, ...value}));
+    const patch = (value: Partial<ContextPolicy>) => void save(() => updateContextPolicy(threadId, value));
     const disabled = saving || !source;
     return <div className="agent-control-panel agent-parameters">
         <div className="agent-skill-heading">

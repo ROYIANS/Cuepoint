@@ -15,20 +15,27 @@ export const Route = createFileRoute("/p/$projectId/")({
 
 function SeriesHomeRoute() {
     const {projectId} = Route.useParams();
-    const project = useLiveQuery(
-        async () => (await db.projects.get(projectId)) ?? null,
+    return <SeriesHome key={projectId} projectId={projectId}/>;
+}
+
+function SeriesHome({projectId}: {projectId: string}) {
+    const projectResult = useLiveQuery(
+        async () => ({projectId, project: (await db.projects.get(projectId)) ?? null}),
         [projectId],
     );
-    const episode = useLiveQuery(async () => {
+    const episodeResult = useLiveQuery(async () => {
         const rows = await db.episodes.where("projectId").equals(projectId).sortBy("order");
-        return rows[0] ?? null;
+        return {projectId, episode: rows[0] ?? null};
     }, [projectId]);
+    const project = projectResult?.projectId === projectId ? projectResult.project : undefined;
+    const episode = episodeResult?.projectId === projectId ? episodeResult.episode : undefined;
     const [repairing, setRepairing] = useState(false);
     const [repairError, setRepairError] = useState<string>();
 
     useEffect(() => {
         if (
             !project ||
+            episode === undefined ||
             (project.kind !== undefined && project.kind !== "video") ||
             normalizeProjectMode(project.mode) !== "film" ||
             episode !== null ||
@@ -44,6 +51,9 @@ function SeriesHomeRoute() {
             })
             .finally(() => setRepairing(false));
     }, [episode, project, projectId, repairError, repairing]);
+
+    if (project === undefined || episode === undefined) return <div className="text-muted-foreground p-8 text-sm">加载项目…</div>;
+    if (project === null) return <div className="text-muted-foreground p-8 text-sm">找不到这个项目</div>;
 
     if (project?.kind === "audio") return <AudioWorkspacePage key={projectId} projectId={projectId}/>;
     if (project?.kind === "music") return <MusicWorkspacePage key={projectId} projectId={projectId}/>;

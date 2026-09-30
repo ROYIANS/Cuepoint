@@ -9,33 +9,44 @@ import {episodeLabel, normalizeProjectMode} from "@/domain/types";
 import {deriveEpisodeDelivery} from "@/lib/episodeDelivery";
 import {formatDuration} from "@/lib/format";
 
-export function StoryboardPrintPage({
+export function StoryboardPrintPage(props: Parameters<typeof StoryboardPrintPageContent>[0]) {
+    return <StoryboardPrintPageContent key={JSON.stringify([props.projectId, props.episodeId])} {...props}/>;
+}
+
+function StoryboardPrintPageContent({
                                         projectId,
                                         episodeId,
                                     }: {
     projectId: string;
     episodeId: string;
 }) {
-    const project = useLiveQuery(
-        async () => (await db.projects.get(projectId)) ?? null,
+    const projectResult = useLiveQuery(
+        async () => ({projectId, project: (await db.projects.get(projectId)) ?? null}),
         [projectId],
     );
-    const episode = useLiveQuery(
-        async () => (await db.episodes.get(episodeId)) ?? null,
-        [episodeId],
+    const episodeResult = useLiveQuery(
+        async () => ({projectId, episodeId, episode: (await db.episodes.get(episodeId)) ?? null}),
+        [projectId, episodeId],
     );
-    const shots = useLiveQuery(
-        () => db.shots.where("episodeId").equals(episodeId).sortBy("order"),
-        [episodeId],
-    );
-    const characters = useLiveQuery(
-        () => db.characters.where("projectId").equals(projectId).toArray(),
-        [projectId],
-    );
-    const scenes = useLiveQuery(
-        () => db.scenes.where("projectId").equals(projectId).toArray(),
-        [projectId],
-    );
+    const shotsResult = useLiveQuery(async () => ({
+        projectId, episodeId,
+        shots: await db.shots.where("episodeId").equals(episodeId).sortBy("order"),
+    }), [projectId, episodeId]);
+    const assetsResult = useLiveQuery(async () => ({
+        projectId,
+        characters: await db.characters.where("projectId").equals(projectId).toArray(),
+        scenes: await db.scenes.where("projectId").equals(projectId).toArray(),
+    }), [projectId]);
+    const project = projectResult?.projectId === projectId ? projectResult.project : undefined;
+    const episode = episodeResult?.projectId === projectId && episodeResult.episodeId === episodeId
+        ? episodeResult.episode : undefined;
+    const loadedShots = shotsResult?.projectId === projectId && shotsResult.episodeId === episodeId
+        ? shotsResult.shots : undefined;
+    const loadedCharacters = assetsResult?.projectId === projectId ? assetsResult.characters : undefined;
+    const loadedScenes = assetsResult?.projectId === projectId ? assetsResult.scenes : undefined;
+    const shots = loadedShots;
+    const characters = loadedCharacters;
+    const scenes = loadedScenes;
 
     const relationAssets = useLiveQuery(async () => ({
         projectId,
@@ -59,7 +70,7 @@ export function StoryboardPrintPage({
     ) {
         return <div className="p-8 text-sm">加载故事板…</div>;
     }
-    if (project === null || episode === null || episode.projectId !== projectId) {
+    if (project === null || episode === null || episode.projectId !== projectId || episode.id !== episodeId) {
         return <div className="p-8 text-sm">找不到当前故事板</div>;
     }
 
