@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type SetStateAction } from "react";
+import {type SetStateAction, useCallback, useEffect, useRef, useState} from "react";
 
 export type DraftSaveStatus = "saved" | "saving" | "error";
 
@@ -9,295 +9,305 @@ const pendingDrafts = new Map<string, Set<{ flush: () => Promise<void>; detached
 
 /** Keep failed, unmounted drafts available to the backup barrier for retry. */
 export function registerPendingDraft(scope: string, flush: () => Promise<void>): () => void {
-  const entries = pendingDrafts.get(scope) ?? new Set();
-  pendingDrafts.set(scope, entries);
-  const entry = { flush, detached: false };
-  entries.add(entry);
-  return () => {
-    entry.detached = true;
-    void flush().then(() => entries.delete(entry), () => undefined);
-  };
+    const entries = pendingDrafts.get(scope) ?? new Set();
+    pendingDrafts.set(scope, entries);
+    const entry = {flush, detached: false};
+    entries.add(entry);
+    return () => {
+        entry.detached = true;
+        void flush().then(() => entries.delete(entry), () => undefined);
+    };
 }
 
 export async function flushPendingDrafts(scope: string): Promise<void> {
-  const entries = pendingDrafts.get(scope);
-  if (!entries) return;
-  const results = await Promise.allSettled([...entries].map(async (entry) => {
-    await entry.flush();
-    if (entry.detached) entries.delete(entry);
-  }));
-  const failure = results.find((result) => result.status === "rejected");
-  if (failure?.status === "rejected") throw failure.reason;
+    const entries = pendingDrafts.get(scope);
+    if (!entries) return;
+    const results = await Promise.allSettled([...entries].map(async (entry) => {
+        await entry.flush();
+        if (entry.detached) entries.delete(entry);
+    }));
+    const failure = results.find((result) => result.status === "rejected");
+    if (failure?.status === "rejected") throw failure.reason;
 }
 
 export class DebouncedDraftController<T> {
-  private revision = 0;
-  private persistedRevision = 0;
-  private timer: ReturnType<typeof setTimeout> | undefined;
-  private inFlight: Promise<{ revision: number }> | undefined;
-  private disposed = false;
-  private value: T;
-  private baseline: T;
-  private latestExternal: T;
-  private lastError: unknown;
-  private status: DraftSaveStatus = "saved";
+    private revision = 0;
+    private persistedRevision = 0;
+    private timer: ReturnType<typeof setTimeout> | undefined;
+    private inFlight: Promise<{ revision: number }> | undefined;
+    private disposed = false;
+    private value: T;
+    private baseline: T;
+    private latestExternal: T;
+    private lastError: unknown;
+    private status: DraftSaveStatus = "saved";
 
-  constructor(
-    initialValue: T,
-    private persist: (value: T) => Promise<void>,
-    private onStatus: (status: DraftSaveStatus, error?: unknown) => void,
-    private readonly delay = 400,
-  ) {
-    this.value = initialValue;
-    this.baseline = initialValue;
-    this.latestExternal = initialValue;
-  }
-
-  get snapshot() { return { value: this.value, baseline: this.baseline, status: this.status, error: this.lastError }; }
-  get isSettled() { return this.persistedRevision === this.revision && !this.inFlight; }
-  get isDisposed() { return this.disposed; }
-
-  /** Refresh clean fields; dirty fields retain the baseline used for transactional CAS. */
-  rebase(latest: T): boolean {
-    this.latestExternal = latest;
-    if (this.inFlight) return false;
-    if (this.isSettled) {
-      this.value = latest;
-      this.baseline = latest;
-      return true;
+    constructor(
+        initialValue: T,
+        private persist: (value: T) => Promise<void>,
+        private onStatus: (status: DraftSaveStatus, error?: unknown) => void,
+        private readonly delay = 400,
+    ) {
+        this.value = initialValue;
+        this.baseline = initialValue;
+        this.latestExternal = initialValue;
     }
-    if (typeof latest === "object" && latest !== null && typeof this.value === "object" && this.value !== null) {
-      const next = { ...this.value };
-      const baseline = { ...this.baseline };
-      for (const key of Object.keys(latest) as Array<keyof T>) {
-        if (this.value[key] === this.baseline[key]) {
-          next[key] = latest[key];
-          baseline[key] = latest[key];
+
+    get snapshot() {
+        return {value: this.value, baseline: this.baseline, status: this.status, error: this.lastError};
+    }
+
+    get isSettled() {
+        return this.persistedRevision === this.revision && !this.inFlight;
+    }
+
+    get isDisposed() {
+        return this.disposed;
+    }
+
+    /** Refresh clean fields; dirty fields retain the baseline used for transactional CAS. */
+    rebase(latest: T): boolean {
+        this.latestExternal = latest;
+        if (this.inFlight) return false;
+        if (this.isSettled) {
+            this.value = latest;
+            this.baseline = latest;
+            return true;
         }
-      }
-      this.value = next;
-      this.baseline = baseline;
+        if (typeof latest === "object" && latest !== null && typeof this.value === "object" && this.value !== null) {
+            const next = {...this.value};
+            const baseline = {...this.baseline};
+            for (const key of Object.keys(latest) as Array<keyof T>) {
+                if (this.value[key] === this.baseline[key]) {
+                    next[key] = latest[key];
+                    baseline[key] = latest[key];
+                }
+            }
+            this.value = next;
+            this.baseline = baseline;
+        }
+        return true;
     }
-    return true;
-  }
 
-  useLatest(): void {
-    if (this.inFlight) return;
-    if (this.timer) clearTimeout(this.timer);
-    this.timer = undefined;
-    this.value = this.latestExternal;
-    this.baseline = this.latestExternal;
-    this.revision += 1;
-    this.persistedRevision = this.revision;
-    this.lastError = undefined;
-    this.report("saved");
-  }
-
-  /** Browser-standard guard; async writes cannot be guaranteed once the user leaves. */
-  guardBeforeUnload(event: Pick<BeforeUnloadEvent, "preventDefault" | "returnValue">): void {
-    if (this.isSettled) return;
-    event.preventDefault();
-    event.returnValue = "";
-    void this.flush();
-  }
-
-  private report(status: DraftSaveStatus, error?: unknown) {
-    this.status = status;
-    if (!this.disposed) this.onStatus(status, error);
-  }
-
-  change(value: T): void {
-    this.value = value;
-    this.revision += 1;
-    this.report("saving");
-    this.schedule();
-  }
-
-  private schedule(): void {
-    if (this.timer) clearTimeout(this.timer);
-    this.timer = setTimeout(() => {
-      this.timer = undefined;
-      void this.flush();
-    }, this.delay);
-  }
-
-  async flush(): Promise<void> {
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = undefined;
-    }
-    if (this.inFlight) {
-      const result = await this.inFlight;
-      if (this.revision !== result.revision) {
-        await this.flush();
-      }
-      return;
-    }
-    if (this.persistedRevision === this.revision) return;
-    const savingRevision = this.revision;
-    const savingValue = this.value;
-    this.report("saving");
-    let write: Promise<void>;
-    try {
-      write = this.persist(savingValue);
-    } catch (error) {
-      write = Promise.reject(error);
-    }
-    const save = write.then(
-      () => {
+    useLatest(): void {
+        if (this.inFlight) return;
+        if (this.timer) clearTimeout(this.timer);
+        this.timer = undefined;
+        this.value = this.latestExternal;
+        this.baseline = this.latestExternal;
+        this.revision += 1;
+        this.persistedRevision = this.revision;
         this.lastError = undefined;
-        this.persistedRevision = savingRevision;
-        this.baseline = savingValue;
-        if (this.revision === savingRevision) {
-          this.report("saved");
-        }
-        return { revision: savingRevision };
-      },
-      (error: unknown) => {
-        this.lastError = error ?? new Error("保存失败");
-        if (this.revision === savingRevision) {
-          this.report("error", this.lastError);
-        }
-        return { revision: savingRevision };
-      },
-    );
-    this.inFlight = save;
-    await save;
-    if (this.inFlight === save) this.inFlight = undefined;
+        this.report("saved");
+    }
 
-    if (this.revision !== savingRevision) {
-      if (this.disposed) {
-        await this.flush();
-      } else if (!this.timer) {
+    /** Browser-standard guard; async writes cannot be guaranteed once the user leaves. */
+    guardBeforeUnload(event: Pick<BeforeUnloadEvent, "preventDefault" | "returnValue">): void {
+        if (this.isSettled) return;
+        event.preventDefault();
+        event.returnValue = "";
+        void this.flush();
+    }
+
+    change(value: T): void {
+        this.value = value;
+        this.revision += 1;
+        this.report("saving");
         this.schedule();
-      }
     }
-  }
 
-  retry(): Promise<void> {
-    return this.flush();
-  }
+    async flush(): Promise<void> {
+        if (this.timer) {
+            clearTimeout(this.timer);
+            this.timer = undefined;
+        }
+        if (this.inFlight) {
+            const result = await this.inFlight;
+            if (this.revision !== result.revision) {
+                await this.flush();
+            }
+            return;
+        }
+        if (this.persistedRevision === this.revision) return;
+        const savingRevision = this.revision;
+        const savingValue = this.value;
+        this.report("saving");
+        let write: Promise<void>;
+        try {
+            write = this.persist(savingValue);
+        } catch (error) {
+            write = Promise.reject(error);
+        }
+        const save = write.then(
+            () => {
+                this.lastError = undefined;
+                this.persistedRevision = savingRevision;
+                this.baseline = savingValue;
+                if (this.revision === savingRevision) {
+                    this.report("saved");
+                }
+                return {revision: savingRevision};
+            },
+            (error: unknown) => {
+                this.lastError = error ?? new Error("保存失败");
+                if (this.revision === savingRevision) {
+                    this.report("error", this.lastError);
+                }
+                return {revision: savingRevision};
+            },
+        );
+        this.inFlight = save;
+        await save;
+        if (this.inFlight === save) this.inFlight = undefined;
 
-  /** Unlike UI flush, backup must reject on failure and drain newer revisions. */
-  async flushOrThrow(): Promise<void> {
-    do {
-      await this.flush();
-      if (this.persistedRevision !== this.revision && this.lastError !== undefined) {
-        throw this.lastError;
-      }
-    } while (this.persistedRevision !== this.revision);
-  }
-
-  resume(persist?: (value: T) => Promise<void>, onStatus?: (status: DraftSaveStatus, error?: unknown) => void): void {
-    if (persist) this.persist = persist;
-    if (onStatus) this.onStatus = onStatus;
-    this.disposed = false;
-    this.onStatus(this.status, this.lastError);
-  }
-
-  dispose(): void {
-    this.disposed = true;
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = undefined;
+        if (this.revision !== savingRevision) {
+            if (this.disposed) {
+                await this.flush();
+            } else if (!this.timer) {
+                this.schedule();
+            }
+        }
     }
-    void this.flush();
-  }
+
+    retry(): Promise<void> {
+        return this.flush();
+    }
+
+    /** Unlike UI flush, backup must reject on failure and drain newer revisions. */
+    async flushOrThrow(): Promise<void> {
+        do {
+            await this.flush();
+            if (this.persistedRevision !== this.revision && this.lastError !== undefined) {
+                throw this.lastError;
+            }
+        } while (this.persistedRevision !== this.revision);
+    }
+
+    resume(persist?: (value: T) => Promise<void>, onStatus?: (status: DraftSaveStatus, error?: unknown) => void): void {
+        if (persist) this.persist = persist;
+        if (onStatus) this.onStatus = onStatus;
+        this.disposed = false;
+        this.onStatus(this.status, this.lastError);
+    }
+
+    dispose(): void {
+        this.disposed = true;
+        if (this.timer) {
+            clearTimeout(this.timer);
+            this.timer = undefined;
+        }
+        void this.flush();
+    }
+
+    private report(status: DraftSaveStatus, error?: unknown) {
+        this.status = status;
+        if (!this.disposed) this.onStatus(status, error);
+    }
+
+    private schedule(): void {
+        if (this.timer) clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
+            this.timer = undefined;
+            void this.flush();
+        }, this.delay);
+    }
 }
 
 export function useDebouncedDraft<T>({
-  initialValue,
-  persist,
-  delay = 400,
-  scope,
-  draftKey,
-}: {
-  initialValue: T;
-  persist: (value: T, baseline: T) => Promise<void>;
-  delay?: number;
-  scope?: string;
-  /** Stable entity + field identity restores failed navigation drafts on reopening. */
-  draftKey?: string;
+                                         initialValue,
+                                         persist,
+                                         delay = 400,
+                                         scope,
+                                         draftKey,
+                                     }: {
+    initialValue: T;
+    persist: (value: T, baseline: T) => Promise<void>;
+    delay?: number;
+    scope?: string;
+    /** Stable entity + field identity restores failed navigation drafts on reopening. */
+    draftKey?: string;
 }) {
-  const persistRef = useRef(persist);
-  persistRef.current = persist;
-  const controllerRef = useRef<DebouncedDraftController<T> | null>(null);
-  if (!controllerRef.current) {
-    const retained = scope && draftKey ? retainedDrafts.get(scope)?.get(draftKey) : undefined;
-    controllerRef.current = retained
-      ? retained as DebouncedDraftController<T>
-      : new DebouncedDraftController(initialValue, (value) => persistRef.current(value, controllerRef.current!.snapshot.baseline), () => undefined, delay);
-  }
-  const controller = controllerRef.current;
-  const [draft, setDraftState] = useState(controller.snapshot.value);
-  const [status, setStatus] = useState<DraftSaveStatus>(controller.snapshot.status);
-  const [error, setError] = useState<unknown>(controller.snapshot.error);
-  const draftRef = useRef(controller.snapshot.value);
-
-  const setDraft = useCallback((action: SetStateAction<T>) => {
-    const next = typeof action === "function"
-      ? (action as (value: T) => T)(draftRef.current)
-      : action;
-    draftRef.current = next;
-    controller.change(next);
-    setDraftState(next);
-  }, [controller]);
-
-  const flush = useCallback(() => controller.flush(), [controller]);
-  const retry = useCallback(() => controller.retry(), [controller]);
-  const useLatest = useCallback(() => controller.useLatest(), [controller]);
-
-  // Live-query values may be new objects on every render. Compare the flat draft
-  // before notifying React to avoid both stale text and an effect/render loop.
-  const externalVersion = useRef<string | undefined>(undefined);
-  useEffect(() => {
-    const version = JSON.stringify(initialValue);
-    if (externalVersion.current === version) return;
-    if (!controller.rebase(initialValue)) return;
-    externalVersion.current = version;
-    const next = controller.snapshot.value;
-    if (JSON.stringify(draftRef.current) !== JSON.stringify(next)) {
-      draftRef.current = next;
-      setDraftState(next);
+    const persistRef = useRef(persist);
+    persistRef.current = persist;
+    const controllerRef = useRef<DebouncedDraftController<T> | null>(null);
+    if (!controllerRef.current) {
+        const retained = scope && draftKey ? retainedDrafts.get(scope)?.get(draftKey) : undefined;
+        controllerRef.current = retained
+            ? retained as DebouncedDraftController<T>
+            : new DebouncedDraftController(initialValue, (value) => persistRef.current(value, controllerRef.current!.snapshot.baseline), () => undefined, delay);
     }
-  });
+    const controller = controllerRef.current;
+    const [draft, setDraftState] = useState(controller.snapshot.value);
+    const [status, setStatus] = useState<DraftSaveStatus>(controller.snapshot.status);
+    const [error, setError] = useState<unknown>(controller.snapshot.error);
+    const draftRef = useRef(controller.snapshot.value);
 
-  useEffect(() => {
-    controller.resume((value) => persistRef.current(value, controllerRef.current!.snapshot.baseline), (nextStatus, nextError) => {
-      draftRef.current = controller.snapshot.value;
-      setDraftState(controller.snapshot.value);
-      setStatus(nextStatus);
-      setError(nextError);
+    const setDraft = useCallback((action: SetStateAction<T>) => {
+        const next = typeof action === "function"
+            ? (action as (value: T) => T)(draftRef.current)
+            : action;
+        draftRef.current = next;
+        controller.change(next);
+        setDraftState(next);
+    }, [controller]);
+
+    const flush = useCallback(() => controller.flush(), [controller]);
+    const retry = useCallback(() => controller.retry(), [controller]);
+    const useLatest = useCallback(() => controller.useLatest(), [controller]);
+
+    // Live-query values may be new objects on every render. Compare the flat draft
+    // before notifying React to avoid both stale text and an effect/render loop.
+    const externalVersion = useRef<string | undefined>(undefined);
+    useEffect(() => {
+        const version = JSON.stringify(initialValue);
+        if (externalVersion.current === version) return;
+        if (!controller.rebase(initialValue)) return;
+        externalVersion.current = version;
+        const next = controller.snapshot.value;
+        if (JSON.stringify(draftRef.current) !== JSON.stringify(next)) {
+            draftRef.current = next;
+            setDraftState(next);
+        }
     });
-    if (scope && draftKey) {
-      const retained = retainedDrafts.get(scope) ?? new Map();
-      retained.set(draftKey, controller);
-      retainedDrafts.set(scope, retained);
-    }
-    const scopedFlush = async () => {
-      await controller.flushOrThrow();
-      if (scope && draftKey && controller.isDisposed && controller.isSettled) {
-        const retained = retainedDrafts.get(scope);
-        if (retained?.get(draftKey) === controller) retained.delete(draftKey);
-      }
-    };
-    const unregister = scope ? registerPendingDraft(scope, scopedFlush) : undefined;
-    const handleVisibility = () => {
-      if (document.visibilityState === "hidden") void flush();
-    };
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => controller.guardBeforeUnload(event);
-    const handlePageHide = () => { void flush(); };
-    document.addEventListener("visibilitychange", handleVisibility);
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    window.addEventListener("pagehide", handlePageHide);
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibility);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      window.removeEventListener("pagehide", handlePageHide);
-      controller.dispose();
-      unregister?.();
-    };
-  }, [controller, flush, scope, draftKey]);
 
-  return { draft, setDraft, status, error, flush, retry, useLatest };
+    useEffect(() => {
+        controller.resume((value) => persistRef.current(value, controllerRef.current!.snapshot.baseline), (nextStatus, nextError) => {
+            draftRef.current = controller.snapshot.value;
+            setDraftState(controller.snapshot.value);
+            setStatus(nextStatus);
+            setError(nextError);
+        });
+        if (scope && draftKey) {
+            const retained = retainedDrafts.get(scope) ?? new Map();
+            retained.set(draftKey, controller);
+            retainedDrafts.set(scope, retained);
+        }
+        const scopedFlush = async () => {
+            await controller.flushOrThrow();
+            if (scope && draftKey && controller.isDisposed && controller.isSettled) {
+                const retained = retainedDrafts.get(scope);
+                if (retained?.get(draftKey) === controller) retained.delete(draftKey);
+            }
+        };
+        const unregister = scope ? registerPendingDraft(scope, scopedFlush) : undefined;
+        const handleVisibility = () => {
+            if (document.visibilityState === "hidden") void flush();
+        };
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => controller.guardBeforeUnload(event);
+        const handlePageHide = () => {
+            void flush();
+        };
+        document.addEventListener("visibilitychange", handleVisibility);
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        window.addEventListener("pagehide", handlePageHide);
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibility);
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+            window.removeEventListener("pagehide", handlePageHide);
+            controller.dispose();
+            unregister?.();
+        };
+    }, [controller, flush, scope, draftKey]);
+
+    return {draft, setDraft, status, error, flush, retry, useLatest};
 }

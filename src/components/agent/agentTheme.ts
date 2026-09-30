@@ -17,25 +17,25 @@ export const MUTED = TEXT_TERTIARY;
 
 /** 4px spacing scale from LobeHub DESIGN.md — round off-scale values here. */
 export const SPACE = {
-  xxs: 4,
-  xs: 8,
-  sm: 12,
-  base: 16,
-  md: 20,
-  lg: 24,
-  xl: 32,
+    xxs: 4,
+    xs: 8,
+    sm: 12,
+    base: 16,
+    md: 20,
+    lg: 24,
+    xl: 32,
 } as const;
 
 export const RADIUS = {
-  xs: 4,
-  sm: 6,
-  md: 8,
-  lg: 12,
+    xs: 4,
+    sm: 6,
+    md: 8,
+    lg: 12,
 } as const;
 
 export const CONTROL = {
-  sm: 28,
-  md: 36,
+    sm: 28,
+    md: 36,
 } as const;
 
 /** LobeHub Conversation chrome — ChatHeader is `position: absolute; height: 52px`. */

@@ -1,4 +1,4 @@
-import type { ChatThread } from "@/domain/types";
+import type {ChatThread} from "@/domain/types";
 
 /**
  * Case-insensitive substring filter on thread titles only.
@@ -6,12 +6,12 @@ import type { ChatThread } from "@/domain/types";
  * Empty / whitespace-only query returns the full list unchanged.
  */
 export function filterThreadsByTitle(
-  threads: ChatThread[],
-  query: string,
+    threads: ChatThread[],
+    query: string,
 ): ChatThread[] {
-  const needle = query.trim().toLocaleLowerCase("zh-CN");
-  if (!needle) return threads;
-  return threads.filter((thread) =>
-    thread.title.toLocaleLowerCase("zh-CN").includes(needle),
-  );
+    const needle = query.trim().toLocaleLowerCase("zh-CN");
+    if (!needle) return threads;
+    return threads.filter((thread) =>
+        thread.title.toLocaleLowerCase("zh-CN").includes(needle),
+    );
 }

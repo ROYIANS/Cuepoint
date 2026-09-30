@@ -8,1084 +8,1090 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as StudioRouteImport } from './routes/_studio'
-import { Route as StudioIndexRouteImport } from './routes/_studio.index'
-import { Route as StudioAboutRouteImport } from './routes/_studio.about'
-import { Route as StudioAgentRouteImport } from './routes/_studio.agent'
-import { Route as StudioAssetsRouteImport } from './routes/_studio.assets'
-import { Route as StudioCharactersRouteImport } from './routes/_studio.characters'
-import { Route as StudioConnectorsRouteImport } from './routes/_studio.connectors'
-import { Route as StudioIpsRouteImport } from './routes/_studio.ips'
-import { Route as StudioProjectsRouteImport } from './routes/_studio.projects'
-import { Route as StudioPropsRouteImport } from './routes/_studio.props'
-import { Route as StudioScenesRouteImport } from './routes/_studio.scenes'
-import { Route as StudioSettingsRouteImport } from './routes/_studio.settings'
-import { Route as StudioStylesRouteImport } from './routes/_studio.styles'
-import { Route as PProjectIdRouteImport } from './routes/p.$projectId'
-import { Route as StudioAgentIndexRouteImport } from './routes/_studio.agent.index'
-import { Route as StudioAgentThreadIdRouteImport } from './routes/_studio.agent.$threadId'
-import { Route as StudioAgentTasksRouteImport } from './routes/_studio.agent.tasks'
-import { Route as StudioCharactersIndexRouteImport } from './routes/_studio.characters.index'
-import { Route as StudioCharactersCharacterIdRouteImport } from './routes/_studio.characters.$characterId'
-import { Route as StudioIpsIndexRouteImport } from './routes/_studio.ips.index'
-import { Route as StudioIpsIpIdRouteImport } from './routes/_studio.ips.$ipId'
-import { Route as StudioPropsIndexRouteImport } from './routes/_studio.props.index'
-import { Route as StudioPropsPropIdRouteImport } from './routes/_studio.props.$propId'
-import { Route as StudioScenesIndexRouteImport } from './routes/_studio.scenes.index'
-import { Route as StudioScenesSceneIdRouteImport } from './routes/_studio.scenes.$sceneId'
-import { Route as StudioStylesIndexRouteImport } from './routes/_studio.styles.index'
-import { Route as StudioStylesStyleIdRouteImport } from './routes/_studio.styles.$styleId'
-import { Route as PProjectIdIndexRouteImport } from './routes/p.$projectId.index'
-import { Route as PProjectIdAssetsRouteImport } from './routes/p.$projectId.assets'
-import { Route as PProjectIdMemoryRouteImport } from './routes/p.$projectId.memory'
-import { Route as PProjectIdPlanRouteImport } from './routes/p.$projectId.plan'
-import { Route as PProjectIdProduceRouteImport } from './routes/p.$projectId.produce'
-import { Route as PProjectIdReportRouteImport } from './routes/p.$projectId.report'
-import { Route as PProjectIdShotsRouteImport } from './routes/p.$projectId.shots'
-import { Route as PProjectIdStoryboardRouteImport } from './routes/p.$projectId.storyboard'
-import { Route as PProjectIdWorldRouteImport } from './routes/p.$projectId.world'
-import { Route as PProjectIdAssetsIndexRouteImport } from './routes/p.$projectId.assets.index'
-import { Route as PProjectIdEEpisodeIdRouteImport } from './routes/p.$projectId.e.$episodeId'
-import { Route as PProjectIdAssetsCharactersCharacterIdRouteImport } from './routes/p.$projectId.assets.characters.$characterId'
-import { Route as PProjectIdAssetsPropsPropIdRouteImport } from './routes/p.$projectId.assets.props.$propId'
-import { Route as PProjectIdAssetsScenesSceneIdRouteImport } from './routes/p.$projectId.assets.scenes.$sceneId'
-import { Route as PProjectIdAssetsStylesStyleIdRouteImport } from './routes/p.$projectId.assets.styles.$styleId'
-import { Route as PProjectIdEEpisodeIdIndexRouteImport } from './routes/p.$projectId.e.$episodeId.index'
-import { Route as PProjectIdEEpisodeIdProduceRouteImport } from './routes/p.$projectId.e.$episodeId.produce'
-import { Route as PProjectIdEEpisodeIdShotsRouteImport } from './routes/p.$projectId.e.$episodeId.shots'
-import { Route as PProjectIdEEpisodeIdStoryboardRouteImport } from './routes/p.$projectId.e.$episodeId.storyboard'
+import {Route as rootRouteImport} from './routes/__root'
+import {Route as StudioRouteImport} from './routes/_studio'
+import {Route as StudioIndexRouteImport} from './routes/_studio.index'
+import {Route as StudioAboutRouteImport} from './routes/_studio.about'
+import {Route as StudioAgentRouteImport} from './routes/_studio.agent'
+import {Route as StudioAssetsRouteImport} from './routes/_studio.assets'
+import {Route as StudioCharactersRouteImport} from './routes/_studio.characters'
+import {Route as StudioConnectorsRouteImport} from './routes/_studio.connectors'
+import {Route as StudioIpsRouteImport} from './routes/_studio.ips'
+import {Route as StudioProjectsRouteImport} from './routes/_studio.projects'
+import {Route as StudioPropsRouteImport} from './routes/_studio.props'
+import {Route as StudioScenesRouteImport} from './routes/_studio.scenes'
+import {Route as StudioSettingsRouteImport} from './routes/_studio.settings'
+import {Route as StudioStylesRouteImport} from './routes/_studio.styles'
+import {Route as PProjectIdRouteImport} from './routes/p.$projectId'
+import {Route as StudioAgentIndexRouteImport} from './routes/_studio.agent.index'
+import {Route as StudioAgentThreadIdRouteImport} from './routes/_studio.agent.$threadId'
+import {Route as StudioAgentTasksRouteImport} from './routes/_studio.agent.tasks'
+import {Route as StudioCharactersIndexRouteImport} from './routes/_studio.characters.index'
+import {Route as StudioCharactersCharacterIdRouteImport} from './routes/_studio.characters.$characterId'
+import {Route as StudioIpsIndexRouteImport} from './routes/_studio.ips.index'
+import {Route as StudioIpsIpIdRouteImport} from './routes/_studio.ips.$ipId'
+import {Route as StudioPropsIndexRouteImport} from './routes/_studio.props.index'
+import {Route as StudioPropsPropIdRouteImport} from './routes/_studio.props.$propId'
+import {Route as StudioScenesIndexRouteImport} from './routes/_studio.scenes.index'
+import {Route as StudioScenesSceneIdRouteImport} from './routes/_studio.scenes.$sceneId'
+import {Route as StudioStylesIndexRouteImport} from './routes/_studio.styles.index'
+import {Route as StudioStylesStyleIdRouteImport} from './routes/_studio.styles.$styleId'
+import {Route as PProjectIdIndexRouteImport} from './routes/p.$projectId.index'
+import {Route as PProjectIdAssetsRouteImport} from './routes/p.$projectId.assets'
+import {Route as PProjectIdMemoryRouteImport} from './routes/p.$projectId.memory'
+import {Route as PProjectIdPlanRouteImport} from './routes/p.$projectId.plan'
+import {Route as PProjectIdProduceRouteImport} from './routes/p.$projectId.produce'
+import {Route as PProjectIdReportRouteImport} from './routes/p.$projectId.report'
+import {Route as PProjectIdShotsRouteImport} from './routes/p.$projectId.shots'
+import {Route as PProjectIdStoryboardRouteImport} from './routes/p.$projectId.storyboard'
+import {Route as PProjectIdWorldRouteImport} from './routes/p.$projectId.world'
+import {Route as PProjectIdAssetsIndexRouteImport} from './routes/p.$projectId.assets.index'
+import {Route as PProjectIdEEpisodeIdRouteImport} from './routes/p.$projectId.e.$episodeId'
+import {
+    Route as PProjectIdAssetsCharactersCharacterIdRouteImport
+} from './routes/p.$projectId.assets.characters.$characterId'
+import {Route as PProjectIdAssetsPropsPropIdRouteImport} from './routes/p.$projectId.assets.props.$propId'
+import {Route as PProjectIdAssetsScenesSceneIdRouteImport} from './routes/p.$projectId.assets.scenes.$sceneId'
+import {Route as PProjectIdAssetsStylesStyleIdRouteImport} from './routes/p.$projectId.assets.styles.$styleId'
+import {Route as PProjectIdEEpisodeIdIndexRouteImport} from './routes/p.$projectId.e.$episodeId.index'
+import {Route as PProjectIdEEpisodeIdProduceRouteImport} from './routes/p.$projectId.e.$episodeId.produce'
+import {Route as PProjectIdEEpisodeIdShotsRouteImport} from './routes/p.$projectId.e.$episodeId.shots'
+import {Route as PProjectIdEEpisodeIdStoryboardRouteImport} from './routes/p.$projectId.e.$episodeId.storyboard'
 
 const StudioRoute = StudioRouteImport.update({
-  id: '/_studio',
-  getParentRoute: () => rootRouteImport,
+    id: '/_studio',
+    getParentRoute: () => rootRouteImport,
 } as any)
 const StudioIndexRoute = StudioIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => StudioRoute,
-} as any)
-const StudioAboutRoute = StudioAboutRouteImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => StudioRoute,
-} as any)
-const StudioAgentRoute = StudioAgentRouteImport.update({
-  id: '/agent',
-  path: '/agent',
-  getParentRoute: () => StudioRoute,
-} as any)
-const StudioAssetsRoute = StudioAssetsRouteImport.update({
-  id: '/assets',
-  path: '/assets',
-  getParentRoute: () => StudioRoute,
-} as any)
-const StudioCharactersRoute = StudioCharactersRouteImport.update({
-  id: '/characters',
-  path: '/characters',
-  getParentRoute: () => StudioRoute,
-} as any)
-const StudioConnectorsRoute = StudioConnectorsRouteImport.update({
-  id: '/connectors',
-  path: '/connectors',
-  getParentRoute: () => StudioRoute,
-} as any)
-const StudioIpsRoute = StudioIpsRouteImport.update({
-  id: '/ips',
-  path: '/ips',
-  getParentRoute: () => StudioRoute,
-} as any)
-const StudioProjectsRoute = StudioProjectsRouteImport.update({
-  id: '/projects',
-  path: '/projects',
-  getParentRoute: () => StudioRoute,
-} as any)
-const StudioPropsRoute = StudioPropsRouteImport.update({
-  id: '/props',
-  path: '/props',
-  getParentRoute: () => StudioRoute,
-} as any)
-const StudioScenesRoute = StudioScenesRouteImport.update({
-  id: '/scenes',
-  path: '/scenes',
-  getParentRoute: () => StudioRoute,
-} as any)
-const StudioSettingsRoute = StudioSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => StudioRoute,
-} as any)
-const StudioStylesRoute = StudioStylesRouteImport.update({
-  id: '/styles',
-  path: '/styles',
-  getParentRoute: () => StudioRoute,
-} as any)
-const PProjectIdRoute = PProjectIdRouteImport.update({
-  id: '/p/$projectId',
-  path: '/p/$projectId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StudioAgentIndexRoute = StudioAgentIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => StudioAgentRoute,
-} as any)
-const StudioAgentThreadIdRoute = StudioAgentThreadIdRouteImport.update({
-  id: '/$threadId',
-  path: '/$threadId',
-  getParentRoute: () => StudioAgentRoute,
-} as any)
-const StudioAgentTasksRoute = StudioAgentTasksRouteImport.update({
-  id: '/tasks',
-  path: '/tasks',
-  getParentRoute: () => StudioAgentRoute,
-} as any)
-const StudioCharactersIndexRoute = StudioCharactersIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => StudioCharactersRoute,
-} as any)
-const StudioCharactersCharacterIdRoute =
-  StudioCharactersCharacterIdRouteImport.update({
-    id: '/$characterId',
-    path: '/$characterId',
-    getParentRoute: () => StudioCharactersRoute,
-  } as any)
-const StudioIpsIndexRoute = StudioIpsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => StudioIpsRoute,
-} as any)
-const StudioIpsIpIdRoute = StudioIpsIpIdRouteImport.update({
-  id: '/$ipId',
-  path: '/$ipId',
-  getParentRoute: () => StudioIpsRoute,
-} as any)
-const StudioPropsIndexRoute = StudioPropsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => StudioPropsRoute,
-} as any)
-const StudioPropsPropIdRoute = StudioPropsPropIdRouteImport.update({
-  id: '/$propId',
-  path: '/$propId',
-  getParentRoute: () => StudioPropsRoute,
-} as any)
-const StudioScenesIndexRoute = StudioScenesIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => StudioScenesRoute,
-} as any)
-const StudioScenesSceneIdRoute = StudioScenesSceneIdRouteImport.update({
-  id: '/$sceneId',
-  path: '/$sceneId',
-  getParentRoute: () => StudioScenesRoute,
-} as any)
-const StudioStylesIndexRoute = StudioStylesIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => StudioStylesRoute,
-} as any)
-const StudioStylesStyleIdRoute = StudioStylesStyleIdRouteImport.update({
-  id: '/$styleId',
-  path: '/$styleId',
-  getParentRoute: () => StudioStylesRoute,
-} as any)
-const PProjectIdIndexRoute = PProjectIdIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => PProjectIdRoute,
-} as any)
-const PProjectIdAssetsRoute = PProjectIdAssetsRouteImport.update({
-  id: '/assets',
-  path: '/assets',
-  getParentRoute: () => PProjectIdRoute,
-} as any)
-const PProjectIdMemoryRoute = PProjectIdMemoryRouteImport.update({
-  id: '/memory',
-  path: '/memory',
-  getParentRoute: () => PProjectIdRoute,
-} as any)
-const PProjectIdPlanRoute = PProjectIdPlanRouteImport.update({
-  id: '/plan',
-  path: '/plan',
-  getParentRoute: () => PProjectIdRoute,
-} as any)
-const PProjectIdProduceRoute = PProjectIdProduceRouteImport.update({
-  id: '/produce',
-  path: '/produce',
-  getParentRoute: () => PProjectIdRoute,
-} as any)
-const PProjectIdReportRoute = PProjectIdReportRouteImport.update({
-  id: '/report',
-  path: '/report',
-  getParentRoute: () => PProjectIdRoute,
-} as any)
-const PProjectIdShotsRoute = PProjectIdShotsRouteImport.update({
-  id: '/shots',
-  path: '/shots',
-  getParentRoute: () => PProjectIdRoute,
-} as any)
-const PProjectIdStoryboardRoute = PProjectIdStoryboardRouteImport.update({
-  id: '/storyboard',
-  path: '/storyboard',
-  getParentRoute: () => PProjectIdRoute,
-} as any)
-const PProjectIdWorldRoute = PProjectIdWorldRouteImport.update({
-  id: '/world',
-  path: '/world',
-  getParentRoute: () => PProjectIdRoute,
-} as any)
-const PProjectIdAssetsIndexRoute = PProjectIdAssetsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => PProjectIdAssetsRoute,
-} as any)
-const PProjectIdEEpisodeIdRoute = PProjectIdEEpisodeIdRouteImport.update({
-  id: '/e/$episodeId',
-  path: '/e/$episodeId',
-  getParentRoute: () => PProjectIdRoute,
-} as any)
-const PProjectIdAssetsCharactersCharacterIdRoute =
-  PProjectIdAssetsCharactersCharacterIdRouteImport.update({
-    id: '/characters/$characterId',
-    path: '/characters/$characterId',
-    getParentRoute: () => PProjectIdAssetsRoute,
-  } as any)
-const PProjectIdAssetsPropsPropIdRoute =
-  PProjectIdAssetsPropsPropIdRouteImport.update({
-    id: '/props/$propId',
-    path: '/props/$propId',
-    getParentRoute: () => PProjectIdAssetsRoute,
-  } as any)
-const PProjectIdAssetsScenesSceneIdRoute =
-  PProjectIdAssetsScenesSceneIdRouteImport.update({
-    id: '/scenes/$sceneId',
-    path: '/scenes/$sceneId',
-    getParentRoute: () => PProjectIdAssetsRoute,
-  } as any)
-const PProjectIdAssetsStylesStyleIdRoute =
-  PProjectIdAssetsStylesStyleIdRouteImport.update({
-    id: '/styles/$styleId',
-    path: '/styles/$styleId',
-    getParentRoute: () => PProjectIdAssetsRoute,
-  } as any)
-const PProjectIdEEpisodeIdIndexRoute =
-  PProjectIdEEpisodeIdIndexRouteImport.update({
     id: '/',
     path: '/',
-    getParentRoute: () => PProjectIdEEpisodeIdRoute,
-  } as any)
-const PProjectIdEEpisodeIdProduceRoute =
-  PProjectIdEEpisodeIdProduceRouteImport.update({
+    getParentRoute: () => StudioRoute,
+} as any)
+const StudioAboutRoute = StudioAboutRouteImport.update({
+    id: '/about',
+    path: '/about',
+    getParentRoute: () => StudioRoute,
+} as any)
+const StudioAgentRoute = StudioAgentRouteImport.update({
+    id: '/agent',
+    path: '/agent',
+    getParentRoute: () => StudioRoute,
+} as any)
+const StudioAssetsRoute = StudioAssetsRouteImport.update({
+    id: '/assets',
+    path: '/assets',
+    getParentRoute: () => StudioRoute,
+} as any)
+const StudioCharactersRoute = StudioCharactersRouteImport.update({
+    id: '/characters',
+    path: '/characters',
+    getParentRoute: () => StudioRoute,
+} as any)
+const StudioConnectorsRoute = StudioConnectorsRouteImport.update({
+    id: '/connectors',
+    path: '/connectors',
+    getParentRoute: () => StudioRoute,
+} as any)
+const StudioIpsRoute = StudioIpsRouteImport.update({
+    id: '/ips',
+    path: '/ips',
+    getParentRoute: () => StudioRoute,
+} as any)
+const StudioProjectsRoute = StudioProjectsRouteImport.update({
+    id: '/projects',
+    path: '/projects',
+    getParentRoute: () => StudioRoute,
+} as any)
+const StudioPropsRoute = StudioPropsRouteImport.update({
+    id: '/props',
+    path: '/props',
+    getParentRoute: () => StudioRoute,
+} as any)
+const StudioScenesRoute = StudioScenesRouteImport.update({
+    id: '/scenes',
+    path: '/scenes',
+    getParentRoute: () => StudioRoute,
+} as any)
+const StudioSettingsRoute = StudioSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => StudioRoute,
+} as any)
+const StudioStylesRoute = StudioStylesRouteImport.update({
+    id: '/styles',
+    path: '/styles',
+    getParentRoute: () => StudioRoute,
+} as any)
+const PProjectIdRoute = PProjectIdRouteImport.update({
+    id: '/p/$projectId',
+    path: '/p/$projectId',
+    getParentRoute: () => rootRouteImport,
+} as any)
+const StudioAgentIndexRoute = StudioAgentIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => StudioAgentRoute,
+} as any)
+const StudioAgentThreadIdRoute = StudioAgentThreadIdRouteImport.update({
+    id: '/$threadId',
+    path: '/$threadId',
+    getParentRoute: () => StudioAgentRoute,
+} as any)
+const StudioAgentTasksRoute = StudioAgentTasksRouteImport.update({
+    id: '/tasks',
+    path: '/tasks',
+    getParentRoute: () => StudioAgentRoute,
+} as any)
+const StudioCharactersIndexRoute = StudioCharactersIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => StudioCharactersRoute,
+} as any)
+const StudioCharactersCharacterIdRoute =
+    StudioCharactersCharacterIdRouteImport.update({
+        id: '/$characterId',
+        path: '/$characterId',
+        getParentRoute: () => StudioCharactersRoute,
+    } as any)
+const StudioIpsIndexRoute = StudioIpsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => StudioIpsRoute,
+} as any)
+const StudioIpsIpIdRoute = StudioIpsIpIdRouteImport.update({
+    id: '/$ipId',
+    path: '/$ipId',
+    getParentRoute: () => StudioIpsRoute,
+} as any)
+const StudioPropsIndexRoute = StudioPropsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => StudioPropsRoute,
+} as any)
+const StudioPropsPropIdRoute = StudioPropsPropIdRouteImport.update({
+    id: '/$propId',
+    path: '/$propId',
+    getParentRoute: () => StudioPropsRoute,
+} as any)
+const StudioScenesIndexRoute = StudioScenesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => StudioScenesRoute,
+} as any)
+const StudioScenesSceneIdRoute = StudioScenesSceneIdRouteImport.update({
+    id: '/$sceneId',
+    path: '/$sceneId',
+    getParentRoute: () => StudioScenesRoute,
+} as any)
+const StudioStylesIndexRoute = StudioStylesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => StudioStylesRoute,
+} as any)
+const StudioStylesStyleIdRoute = StudioStylesStyleIdRouteImport.update({
+    id: '/$styleId',
+    path: '/$styleId',
+    getParentRoute: () => StudioStylesRoute,
+} as any)
+const PProjectIdIndexRoute = PProjectIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => PProjectIdRoute,
+} as any)
+const PProjectIdAssetsRoute = PProjectIdAssetsRouteImport.update({
+    id: '/assets',
+    path: '/assets',
+    getParentRoute: () => PProjectIdRoute,
+} as any)
+const PProjectIdMemoryRoute = PProjectIdMemoryRouteImport.update({
+    id: '/memory',
+    path: '/memory',
+    getParentRoute: () => PProjectIdRoute,
+} as any)
+const PProjectIdPlanRoute = PProjectIdPlanRouteImport.update({
+    id: '/plan',
+    path: '/plan',
+    getParentRoute: () => PProjectIdRoute,
+} as any)
+const PProjectIdProduceRoute = PProjectIdProduceRouteImport.update({
     id: '/produce',
     path: '/produce',
-    getParentRoute: () => PProjectIdEEpisodeIdRoute,
-  } as any)
-const PProjectIdEEpisodeIdShotsRoute =
-  PProjectIdEEpisodeIdShotsRouteImport.update({
+    getParentRoute: () => PProjectIdRoute,
+} as any)
+const PProjectIdReportRoute = PProjectIdReportRouteImport.update({
+    id: '/report',
+    path: '/report',
+    getParentRoute: () => PProjectIdRoute,
+} as any)
+const PProjectIdShotsRoute = PProjectIdShotsRouteImport.update({
     id: '/shots',
     path: '/shots',
-    getParentRoute: () => PProjectIdEEpisodeIdRoute,
-  } as any)
-const PProjectIdEEpisodeIdStoryboardRoute =
-  PProjectIdEEpisodeIdStoryboardRouteImport.update({
+    getParentRoute: () => PProjectIdRoute,
+} as any)
+const PProjectIdStoryboardRoute = PProjectIdStoryboardRouteImport.update({
     id: '/storyboard',
     path: '/storyboard',
-    getParentRoute: () => PProjectIdEEpisodeIdRoute,
-  } as any)
+    getParentRoute: () => PProjectIdRoute,
+} as any)
+const PProjectIdWorldRoute = PProjectIdWorldRouteImport.update({
+    id: '/world',
+    path: '/world',
+    getParentRoute: () => PProjectIdRoute,
+} as any)
+const PProjectIdAssetsIndexRoute = PProjectIdAssetsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => PProjectIdAssetsRoute,
+} as any)
+const PProjectIdEEpisodeIdRoute = PProjectIdEEpisodeIdRouteImport.update({
+    id: '/e/$episodeId',
+    path: '/e/$episodeId',
+    getParentRoute: () => PProjectIdRoute,
+} as any)
+const PProjectIdAssetsCharactersCharacterIdRoute =
+    PProjectIdAssetsCharactersCharacterIdRouteImport.update({
+        id: '/characters/$characterId',
+        path: '/characters/$characterId',
+        getParentRoute: () => PProjectIdAssetsRoute,
+    } as any)
+const PProjectIdAssetsPropsPropIdRoute =
+    PProjectIdAssetsPropsPropIdRouteImport.update({
+        id: '/props/$propId',
+        path: '/props/$propId',
+        getParentRoute: () => PProjectIdAssetsRoute,
+    } as any)
+const PProjectIdAssetsScenesSceneIdRoute =
+    PProjectIdAssetsScenesSceneIdRouteImport.update({
+        id: '/scenes/$sceneId',
+        path: '/scenes/$sceneId',
+        getParentRoute: () => PProjectIdAssetsRoute,
+    } as any)
+const PProjectIdAssetsStylesStyleIdRoute =
+    PProjectIdAssetsStylesStyleIdRouteImport.update({
+        id: '/styles/$styleId',
+        path: '/styles/$styleId',
+        getParentRoute: () => PProjectIdAssetsRoute,
+    } as any)
+const PProjectIdEEpisodeIdIndexRoute =
+    PProjectIdEEpisodeIdIndexRouteImport.update({
+        id: '/',
+        path: '/',
+        getParentRoute: () => PProjectIdEEpisodeIdRoute,
+    } as any)
+const PProjectIdEEpisodeIdProduceRoute =
+    PProjectIdEEpisodeIdProduceRouteImport.update({
+        id: '/produce',
+        path: '/produce',
+        getParentRoute: () => PProjectIdEEpisodeIdRoute,
+    } as any)
+const PProjectIdEEpisodeIdShotsRoute =
+    PProjectIdEEpisodeIdShotsRouteImport.update({
+        id: '/shots',
+        path: '/shots',
+        getParentRoute: () => PProjectIdEEpisodeIdRoute,
+    } as any)
+const PProjectIdEEpisodeIdStoryboardRoute =
+    PProjectIdEEpisodeIdStoryboardRouteImport.update({
+        id: '/storyboard',
+        path: '/storyboard',
+        getParentRoute: () => PProjectIdEEpisodeIdRoute,
+    } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof StudioIndexRoute
-  '/about': typeof StudioAboutRoute
-  '/agent': typeof StudioAgentRouteWithChildren
-  '/assets': typeof StudioAssetsRoute
-  '/characters': typeof StudioCharactersRouteWithChildren
-  '/connectors': typeof StudioConnectorsRoute
-  '/ips': typeof StudioIpsRouteWithChildren
-  '/projects': typeof StudioProjectsRoute
-  '/props': typeof StudioPropsRouteWithChildren
-  '/scenes': typeof StudioScenesRouteWithChildren
-  '/settings': typeof StudioSettingsRoute
-  '/styles': typeof StudioStylesRouteWithChildren
-  '/p/$projectId': typeof PProjectIdRouteWithChildren
-  '/agent/$threadId': typeof StudioAgentThreadIdRoute
-  '/agent/tasks': typeof StudioAgentTasksRoute
-  '/characters/$characterId': typeof StudioCharactersCharacterIdRoute
-  '/ips/$ipId': typeof StudioIpsIpIdRoute
-  '/props/$propId': typeof StudioPropsPropIdRoute
-  '/scenes/$sceneId': typeof StudioScenesSceneIdRoute
-  '/styles/$styleId': typeof StudioStylesStyleIdRoute
-  '/p/$projectId/assets': typeof PProjectIdAssetsRouteWithChildren
-  '/p/$projectId/memory': typeof PProjectIdMemoryRoute
-  '/p/$projectId/plan': typeof PProjectIdPlanRoute
-  '/p/$projectId/produce': typeof PProjectIdProduceRoute
-  '/p/$projectId/report': typeof PProjectIdReportRoute
-  '/p/$projectId/shots': typeof PProjectIdShotsRoute
-  '/p/$projectId/storyboard': typeof PProjectIdStoryboardRoute
-  '/p/$projectId/world': typeof PProjectIdWorldRoute
-  '/agent/': typeof StudioAgentIndexRoute
-  '/characters/': typeof StudioCharactersIndexRoute
-  '/ips/': typeof StudioIpsIndexRoute
-  '/props/': typeof StudioPropsIndexRoute
-  '/scenes/': typeof StudioScenesIndexRoute
-  '/styles/': typeof StudioStylesIndexRoute
-  '/p/$projectId/': typeof PProjectIdIndexRoute
-  '/p/$projectId/e/$episodeId': typeof PProjectIdEEpisodeIdRouteWithChildren
-  '/p/$projectId/assets/': typeof PProjectIdAssetsIndexRoute
-  '/p/$projectId/assets/characters/$characterId': typeof PProjectIdAssetsCharactersCharacterIdRoute
-  '/p/$projectId/assets/props/$propId': typeof PProjectIdAssetsPropsPropIdRoute
-  '/p/$projectId/assets/scenes/$sceneId': typeof PProjectIdAssetsScenesSceneIdRoute
-  '/p/$projectId/assets/styles/$styleId': typeof PProjectIdAssetsStylesStyleIdRoute
-  '/p/$projectId/e/$episodeId/produce': typeof PProjectIdEEpisodeIdProduceRoute
-  '/p/$projectId/e/$episodeId/shots': typeof PProjectIdEEpisodeIdShotsRoute
-  '/p/$projectId/e/$episodeId/storyboard': typeof PProjectIdEEpisodeIdStoryboardRoute
-  '/p/$projectId/e/$episodeId/': typeof PProjectIdEEpisodeIdIndexRoute
+    '/': typeof StudioIndexRoute
+    '/about': typeof StudioAboutRoute
+    '/agent': typeof StudioAgentRouteWithChildren
+    '/assets': typeof StudioAssetsRoute
+    '/characters': typeof StudioCharactersRouteWithChildren
+    '/connectors': typeof StudioConnectorsRoute
+    '/ips': typeof StudioIpsRouteWithChildren
+    '/projects': typeof StudioProjectsRoute
+    '/props': typeof StudioPropsRouteWithChildren
+    '/scenes': typeof StudioScenesRouteWithChildren
+    '/settings': typeof StudioSettingsRoute
+    '/styles': typeof StudioStylesRouteWithChildren
+    '/p/$projectId': typeof PProjectIdRouteWithChildren
+    '/agent/$threadId': typeof StudioAgentThreadIdRoute
+    '/agent/tasks': typeof StudioAgentTasksRoute
+    '/characters/$characterId': typeof StudioCharactersCharacterIdRoute
+    '/ips/$ipId': typeof StudioIpsIpIdRoute
+    '/props/$propId': typeof StudioPropsPropIdRoute
+    '/scenes/$sceneId': typeof StudioScenesSceneIdRoute
+    '/styles/$styleId': typeof StudioStylesStyleIdRoute
+    '/p/$projectId/assets': typeof PProjectIdAssetsRouteWithChildren
+    '/p/$projectId/memory': typeof PProjectIdMemoryRoute
+    '/p/$projectId/plan': typeof PProjectIdPlanRoute
+    '/p/$projectId/produce': typeof PProjectIdProduceRoute
+    '/p/$projectId/report': typeof PProjectIdReportRoute
+    '/p/$projectId/shots': typeof PProjectIdShotsRoute
+    '/p/$projectId/storyboard': typeof PProjectIdStoryboardRoute
+    '/p/$projectId/world': typeof PProjectIdWorldRoute
+    '/agent/': typeof StudioAgentIndexRoute
+    '/characters/': typeof StudioCharactersIndexRoute
+    '/ips/': typeof StudioIpsIndexRoute
+    '/props/': typeof StudioPropsIndexRoute
+    '/scenes/': typeof StudioScenesIndexRoute
+    '/styles/': typeof StudioStylesIndexRoute
+    '/p/$projectId/': typeof PProjectIdIndexRoute
+    '/p/$projectId/e/$episodeId': typeof PProjectIdEEpisodeIdRouteWithChildren
+    '/p/$projectId/assets/': typeof PProjectIdAssetsIndexRoute
+    '/p/$projectId/assets/characters/$characterId': typeof PProjectIdAssetsCharactersCharacterIdRoute
+    '/p/$projectId/assets/props/$propId': typeof PProjectIdAssetsPropsPropIdRoute
+    '/p/$projectId/assets/scenes/$sceneId': typeof PProjectIdAssetsScenesSceneIdRoute
+    '/p/$projectId/assets/styles/$styleId': typeof PProjectIdAssetsStylesStyleIdRoute
+    '/p/$projectId/e/$episodeId/produce': typeof PProjectIdEEpisodeIdProduceRoute
+    '/p/$projectId/e/$episodeId/shots': typeof PProjectIdEEpisodeIdShotsRoute
+    '/p/$projectId/e/$episodeId/storyboard': typeof PProjectIdEEpisodeIdStoryboardRoute
+    '/p/$projectId/e/$episodeId/': typeof PProjectIdEEpisodeIdIndexRoute
 }
+
 export interface FileRoutesByTo {
-  '/about': typeof StudioAboutRoute
-  '/assets': typeof StudioAssetsRoute
-  '/connectors': typeof StudioConnectorsRoute
-  '/projects': typeof StudioProjectsRoute
-  '/settings': typeof StudioSettingsRoute
-  '/': typeof StudioIndexRoute
-  '/agent/$threadId': typeof StudioAgentThreadIdRoute
-  '/agent/tasks': typeof StudioAgentTasksRoute
-  '/characters/$characterId': typeof StudioCharactersCharacterIdRoute
-  '/ips/$ipId': typeof StudioIpsIpIdRoute
-  '/props/$propId': typeof StudioPropsPropIdRoute
-  '/scenes/$sceneId': typeof StudioScenesSceneIdRoute
-  '/styles/$styleId': typeof StudioStylesStyleIdRoute
-  '/p/$projectId/memory': typeof PProjectIdMemoryRoute
-  '/p/$projectId/plan': typeof PProjectIdPlanRoute
-  '/p/$projectId/produce': typeof PProjectIdProduceRoute
-  '/p/$projectId/report': typeof PProjectIdReportRoute
-  '/p/$projectId/shots': typeof PProjectIdShotsRoute
-  '/p/$projectId/storyboard': typeof PProjectIdStoryboardRoute
-  '/p/$projectId/world': typeof PProjectIdWorldRoute
-  '/agent': typeof StudioAgentIndexRoute
-  '/characters': typeof StudioCharactersIndexRoute
-  '/ips': typeof StudioIpsIndexRoute
-  '/props': typeof StudioPropsIndexRoute
-  '/scenes': typeof StudioScenesIndexRoute
-  '/styles': typeof StudioStylesIndexRoute
-  '/p/$projectId': typeof PProjectIdIndexRoute
-  '/p/$projectId/assets': typeof PProjectIdAssetsIndexRoute
-  '/p/$projectId/assets/characters/$characterId': typeof PProjectIdAssetsCharactersCharacterIdRoute
-  '/p/$projectId/assets/props/$propId': typeof PProjectIdAssetsPropsPropIdRoute
-  '/p/$projectId/assets/scenes/$sceneId': typeof PProjectIdAssetsScenesSceneIdRoute
-  '/p/$projectId/assets/styles/$styleId': typeof PProjectIdAssetsStylesStyleIdRoute
-  '/p/$projectId/e/$episodeId/produce': typeof PProjectIdEEpisodeIdProduceRoute
-  '/p/$projectId/e/$episodeId/shots': typeof PProjectIdEEpisodeIdShotsRoute
-  '/p/$projectId/e/$episodeId/storyboard': typeof PProjectIdEEpisodeIdStoryboardRoute
-  '/p/$projectId/e/$episodeId': typeof PProjectIdEEpisodeIdIndexRoute
+    '/about': typeof StudioAboutRoute
+    '/assets': typeof StudioAssetsRoute
+    '/connectors': typeof StudioConnectorsRoute
+    '/projects': typeof StudioProjectsRoute
+    '/settings': typeof StudioSettingsRoute
+    '/': typeof StudioIndexRoute
+    '/agent/$threadId': typeof StudioAgentThreadIdRoute
+    '/agent/tasks': typeof StudioAgentTasksRoute
+    '/characters/$characterId': typeof StudioCharactersCharacterIdRoute
+    '/ips/$ipId': typeof StudioIpsIpIdRoute
+    '/props/$propId': typeof StudioPropsPropIdRoute
+    '/scenes/$sceneId': typeof StudioScenesSceneIdRoute
+    '/styles/$styleId': typeof StudioStylesStyleIdRoute
+    '/p/$projectId/memory': typeof PProjectIdMemoryRoute
+    '/p/$projectId/plan': typeof PProjectIdPlanRoute
+    '/p/$projectId/produce': typeof PProjectIdProduceRoute
+    '/p/$projectId/report': typeof PProjectIdReportRoute
+    '/p/$projectId/shots': typeof PProjectIdShotsRoute
+    '/p/$projectId/storyboard': typeof PProjectIdStoryboardRoute
+    '/p/$projectId/world': typeof PProjectIdWorldRoute
+    '/agent': typeof StudioAgentIndexRoute
+    '/characters': typeof StudioCharactersIndexRoute
+    '/ips': typeof StudioIpsIndexRoute
+    '/props': typeof StudioPropsIndexRoute
+    '/scenes': typeof StudioScenesIndexRoute
+    '/styles': typeof StudioStylesIndexRoute
+    '/p/$projectId': typeof PProjectIdIndexRoute
+    '/p/$projectId/assets': typeof PProjectIdAssetsIndexRoute
+    '/p/$projectId/assets/characters/$characterId': typeof PProjectIdAssetsCharactersCharacterIdRoute
+    '/p/$projectId/assets/props/$propId': typeof PProjectIdAssetsPropsPropIdRoute
+    '/p/$projectId/assets/scenes/$sceneId': typeof PProjectIdAssetsScenesSceneIdRoute
+    '/p/$projectId/assets/styles/$styleId': typeof PProjectIdAssetsStylesStyleIdRoute
+    '/p/$projectId/e/$episodeId/produce': typeof PProjectIdEEpisodeIdProduceRoute
+    '/p/$projectId/e/$episodeId/shots': typeof PProjectIdEEpisodeIdShotsRoute
+    '/p/$projectId/e/$episodeId/storyboard': typeof PProjectIdEEpisodeIdStoryboardRoute
+    '/p/$projectId/e/$episodeId': typeof PProjectIdEEpisodeIdIndexRoute
 }
+
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/_studio': typeof StudioRouteWithChildren
-  '/_studio/about': typeof StudioAboutRoute
-  '/_studio/agent': typeof StudioAgentRouteWithChildren
-  '/_studio/assets': typeof StudioAssetsRoute
-  '/_studio/characters': typeof StudioCharactersRouteWithChildren
-  '/_studio/connectors': typeof StudioConnectorsRoute
-  '/_studio/ips': typeof StudioIpsRouteWithChildren
-  '/_studio/projects': typeof StudioProjectsRoute
-  '/_studio/props': typeof StudioPropsRouteWithChildren
-  '/_studio/scenes': typeof StudioScenesRouteWithChildren
-  '/_studio/settings': typeof StudioSettingsRoute
-  '/_studio/styles': typeof StudioStylesRouteWithChildren
-  '/p/$projectId': typeof PProjectIdRouteWithChildren
-  '/_studio/': typeof StudioIndexRoute
-  '/_studio/agent/$threadId': typeof StudioAgentThreadIdRoute
-  '/_studio/agent/tasks': typeof StudioAgentTasksRoute
-  '/_studio/characters/$characterId': typeof StudioCharactersCharacterIdRoute
-  '/_studio/ips/$ipId': typeof StudioIpsIpIdRoute
-  '/_studio/props/$propId': typeof StudioPropsPropIdRoute
-  '/_studio/scenes/$sceneId': typeof StudioScenesSceneIdRoute
-  '/_studio/styles/$styleId': typeof StudioStylesStyleIdRoute
-  '/p/$projectId/assets': typeof PProjectIdAssetsRouteWithChildren
-  '/p/$projectId/memory': typeof PProjectIdMemoryRoute
-  '/p/$projectId/plan': typeof PProjectIdPlanRoute
-  '/p/$projectId/produce': typeof PProjectIdProduceRoute
-  '/p/$projectId/report': typeof PProjectIdReportRoute
-  '/p/$projectId/shots': typeof PProjectIdShotsRoute
-  '/p/$projectId/storyboard': typeof PProjectIdStoryboardRoute
-  '/p/$projectId/world': typeof PProjectIdWorldRoute
-  '/_studio/agent/': typeof StudioAgentIndexRoute
-  '/_studio/characters/': typeof StudioCharactersIndexRoute
-  '/_studio/ips/': typeof StudioIpsIndexRoute
-  '/_studio/props/': typeof StudioPropsIndexRoute
-  '/_studio/scenes/': typeof StudioScenesIndexRoute
-  '/_studio/styles/': typeof StudioStylesIndexRoute
-  '/p/$projectId/': typeof PProjectIdIndexRoute
-  '/p/$projectId/e/$episodeId': typeof PProjectIdEEpisodeIdRouteWithChildren
-  '/p/$projectId/assets/': typeof PProjectIdAssetsIndexRoute
-  '/p/$projectId/assets/characters/$characterId': typeof PProjectIdAssetsCharactersCharacterIdRoute
-  '/p/$projectId/assets/props/$propId': typeof PProjectIdAssetsPropsPropIdRoute
-  '/p/$projectId/assets/scenes/$sceneId': typeof PProjectIdAssetsScenesSceneIdRoute
-  '/p/$projectId/assets/styles/$styleId': typeof PProjectIdAssetsStylesStyleIdRoute
-  '/p/$projectId/e/$episodeId/produce': typeof PProjectIdEEpisodeIdProduceRoute
-  '/p/$projectId/e/$episodeId/shots': typeof PProjectIdEEpisodeIdShotsRoute
-  '/p/$projectId/e/$episodeId/storyboard': typeof PProjectIdEEpisodeIdStoryboardRoute
-  '/p/$projectId/e/$episodeId/': typeof PProjectIdEEpisodeIdIndexRoute
+    __root__: typeof rootRouteImport
+    '/_studio': typeof StudioRouteWithChildren
+    '/_studio/about': typeof StudioAboutRoute
+    '/_studio/agent': typeof StudioAgentRouteWithChildren
+    '/_studio/assets': typeof StudioAssetsRoute
+    '/_studio/characters': typeof StudioCharactersRouteWithChildren
+    '/_studio/connectors': typeof StudioConnectorsRoute
+    '/_studio/ips': typeof StudioIpsRouteWithChildren
+    '/_studio/projects': typeof StudioProjectsRoute
+    '/_studio/props': typeof StudioPropsRouteWithChildren
+    '/_studio/scenes': typeof StudioScenesRouteWithChildren
+    '/_studio/settings': typeof StudioSettingsRoute
+    '/_studio/styles': typeof StudioStylesRouteWithChildren
+    '/p/$projectId': typeof PProjectIdRouteWithChildren
+    '/_studio/': typeof StudioIndexRoute
+    '/_studio/agent/$threadId': typeof StudioAgentThreadIdRoute
+    '/_studio/agent/tasks': typeof StudioAgentTasksRoute
+    '/_studio/characters/$characterId': typeof StudioCharactersCharacterIdRoute
+    '/_studio/ips/$ipId': typeof StudioIpsIpIdRoute
+    '/_studio/props/$propId': typeof StudioPropsPropIdRoute
+    '/_studio/scenes/$sceneId': typeof StudioScenesSceneIdRoute
+    '/_studio/styles/$styleId': typeof StudioStylesStyleIdRoute
+    '/p/$projectId/assets': typeof PProjectIdAssetsRouteWithChildren
+    '/p/$projectId/memory': typeof PProjectIdMemoryRoute
+    '/p/$projectId/plan': typeof PProjectIdPlanRoute
+    '/p/$projectId/produce': typeof PProjectIdProduceRoute
+    '/p/$projectId/report': typeof PProjectIdReportRoute
+    '/p/$projectId/shots': typeof PProjectIdShotsRoute
+    '/p/$projectId/storyboard': typeof PProjectIdStoryboardRoute
+    '/p/$projectId/world': typeof PProjectIdWorldRoute
+    '/_studio/agent/': typeof StudioAgentIndexRoute
+    '/_studio/characters/': typeof StudioCharactersIndexRoute
+    '/_studio/ips/': typeof StudioIpsIndexRoute
+    '/_studio/props/': typeof StudioPropsIndexRoute
+    '/_studio/scenes/': typeof StudioScenesIndexRoute
+    '/_studio/styles/': typeof StudioStylesIndexRoute
+    '/p/$projectId/': typeof PProjectIdIndexRoute
+    '/p/$projectId/e/$episodeId': typeof PProjectIdEEpisodeIdRouteWithChildren
+    '/p/$projectId/assets/': typeof PProjectIdAssetsIndexRoute
+    '/p/$projectId/assets/characters/$characterId': typeof PProjectIdAssetsCharactersCharacterIdRoute
+    '/p/$projectId/assets/props/$propId': typeof PProjectIdAssetsPropsPropIdRoute
+    '/p/$projectId/assets/scenes/$sceneId': typeof PProjectIdAssetsScenesSceneIdRoute
+    '/p/$projectId/assets/styles/$styleId': typeof PProjectIdAssetsStylesStyleIdRoute
+    '/p/$projectId/e/$episodeId/produce': typeof PProjectIdEEpisodeIdProduceRoute
+    '/p/$projectId/e/$episodeId/shots': typeof PProjectIdEEpisodeIdShotsRoute
+    '/p/$projectId/e/$episodeId/storyboard': typeof PProjectIdEEpisodeIdStoryboardRoute
+    '/p/$projectId/e/$episodeId/': typeof PProjectIdEEpisodeIdIndexRoute
 }
+
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/about'
-    | '/agent'
-    | '/assets'
-    | '/characters'
-    | '/connectors'
-    | '/ips'
-    | '/projects'
-    | '/props'
-    | '/scenes'
-    | '/settings'
-    | '/styles'
-    | '/p/$projectId'
-    | '/agent/$threadId'
-    | '/agent/tasks'
-    | '/characters/$characterId'
-    | '/ips/$ipId'
-    | '/props/$propId'
-    | '/scenes/$sceneId'
-    | '/styles/$styleId'
-    | '/p/$projectId/assets'
-    | '/p/$projectId/memory'
-    | '/p/$projectId/plan'
-    | '/p/$projectId/produce'
-    | '/p/$projectId/report'
-    | '/p/$projectId/shots'
-    | '/p/$projectId/storyboard'
-    | '/p/$projectId/world'
-    | '/agent/'
-    | '/characters/'
-    | '/ips/'
-    | '/props/'
-    | '/scenes/'
-    | '/styles/'
-    | '/p/$projectId/'
-    | '/p/$projectId/e/$episodeId'
-    | '/p/$projectId/assets/'
-    | '/p/$projectId/assets/characters/$characterId'
-    | '/p/$projectId/assets/props/$propId'
-    | '/p/$projectId/assets/scenes/$sceneId'
-    | '/p/$projectId/assets/styles/$styleId'
-    | '/p/$projectId/e/$episodeId/produce'
-    | '/p/$projectId/e/$episodeId/shots'
-    | '/p/$projectId/e/$episodeId/storyboard'
-    | '/p/$projectId/e/$episodeId/'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/about'
-    | '/assets'
-    | '/connectors'
-    | '/projects'
-    | '/settings'
-    | '/'
-    | '/agent/$threadId'
-    | '/agent/tasks'
-    | '/characters/$characterId'
-    | '/ips/$ipId'
-    | '/props/$propId'
-    | '/scenes/$sceneId'
-    | '/styles/$styleId'
-    | '/p/$projectId/memory'
-    | '/p/$projectId/plan'
-    | '/p/$projectId/produce'
-    | '/p/$projectId/report'
-    | '/p/$projectId/shots'
-    | '/p/$projectId/storyboard'
-    | '/p/$projectId/world'
-    | '/agent'
-    | '/characters'
-    | '/ips'
-    | '/props'
-    | '/scenes'
-    | '/styles'
-    | '/p/$projectId'
-    | '/p/$projectId/assets'
-    | '/p/$projectId/assets/characters/$characterId'
-    | '/p/$projectId/assets/props/$propId'
-    | '/p/$projectId/assets/scenes/$sceneId'
-    | '/p/$projectId/assets/styles/$styleId'
-    | '/p/$projectId/e/$episodeId/produce'
-    | '/p/$projectId/e/$episodeId/shots'
-    | '/p/$projectId/e/$episodeId/storyboard'
-    | '/p/$projectId/e/$episodeId'
-  id:
-    | '__root__'
-    | '/_studio'
-    | '/_studio/about'
-    | '/_studio/agent'
-    | '/_studio/assets'
-    | '/_studio/characters'
-    | '/_studio/connectors'
-    | '/_studio/ips'
-    | '/_studio/projects'
-    | '/_studio/props'
-    | '/_studio/scenes'
-    | '/_studio/settings'
-    | '/_studio/styles'
-    | '/p/$projectId'
-    | '/_studio/'
-    | '/_studio/agent/$threadId'
-    | '/_studio/agent/tasks'
-    | '/_studio/characters/$characterId'
-    | '/_studio/ips/$ipId'
-    | '/_studio/props/$propId'
-    | '/_studio/scenes/$sceneId'
-    | '/_studio/styles/$styleId'
-    | '/p/$projectId/assets'
-    | '/p/$projectId/memory'
-    | '/p/$projectId/plan'
-    | '/p/$projectId/produce'
-    | '/p/$projectId/report'
-    | '/p/$projectId/shots'
-    | '/p/$projectId/storyboard'
-    | '/p/$projectId/world'
-    | '/_studio/agent/'
-    | '/_studio/characters/'
-    | '/_studio/ips/'
-    | '/_studio/props/'
-    | '/_studio/scenes/'
-    | '/_studio/styles/'
-    | '/p/$projectId/'
-    | '/p/$projectId/e/$episodeId'
-    | '/p/$projectId/assets/'
-    | '/p/$projectId/assets/characters/$characterId'
-    | '/p/$projectId/assets/props/$propId'
-    | '/p/$projectId/assets/scenes/$sceneId'
-    | '/p/$projectId/assets/styles/$styleId'
-    | '/p/$projectId/e/$episodeId/produce'
-    | '/p/$projectId/e/$episodeId/shots'
-    | '/p/$projectId/e/$episodeId/storyboard'
-    | '/p/$projectId/e/$episodeId/'
-  fileRoutesById: FileRoutesById
+    fileRoutesByFullPath: FileRoutesByFullPath
+    fullPaths:
+        | '/'
+        | '/about'
+        | '/agent'
+        | '/assets'
+        | '/characters'
+        | '/connectors'
+        | '/ips'
+        | '/projects'
+        | '/props'
+        | '/scenes'
+        | '/settings'
+        | '/styles'
+        | '/p/$projectId'
+        | '/agent/$threadId'
+        | '/agent/tasks'
+        | '/characters/$characterId'
+        | '/ips/$ipId'
+        | '/props/$propId'
+        | '/scenes/$sceneId'
+        | '/styles/$styleId'
+        | '/p/$projectId/assets'
+        | '/p/$projectId/memory'
+        | '/p/$projectId/plan'
+        | '/p/$projectId/produce'
+        | '/p/$projectId/report'
+        | '/p/$projectId/shots'
+        | '/p/$projectId/storyboard'
+        | '/p/$projectId/world'
+        | '/agent/'
+        | '/characters/'
+        | '/ips/'
+        | '/props/'
+        | '/scenes/'
+        | '/styles/'
+        | '/p/$projectId/'
+        | '/p/$projectId/e/$episodeId'
+        | '/p/$projectId/assets/'
+        | '/p/$projectId/assets/characters/$characterId'
+        | '/p/$projectId/assets/props/$propId'
+        | '/p/$projectId/assets/scenes/$sceneId'
+        | '/p/$projectId/assets/styles/$styleId'
+        | '/p/$projectId/e/$episodeId/produce'
+        | '/p/$projectId/e/$episodeId/shots'
+        | '/p/$projectId/e/$episodeId/storyboard'
+        | '/p/$projectId/e/$episodeId/'
+    fileRoutesByTo: FileRoutesByTo
+    to:
+        | '/about'
+        | '/assets'
+        | '/connectors'
+        | '/projects'
+        | '/settings'
+        | '/'
+        | '/agent/$threadId'
+        | '/agent/tasks'
+        | '/characters/$characterId'
+        | '/ips/$ipId'
+        | '/props/$propId'
+        | '/scenes/$sceneId'
+        | '/styles/$styleId'
+        | '/p/$projectId/memory'
+        | '/p/$projectId/plan'
+        | '/p/$projectId/produce'
+        | '/p/$projectId/report'
+        | '/p/$projectId/shots'
+        | '/p/$projectId/storyboard'
+        | '/p/$projectId/world'
+        | '/agent'
+        | '/characters'
+        | '/ips'
+        | '/props'
+        | '/scenes'
+        | '/styles'
+        | '/p/$projectId'
+        | '/p/$projectId/assets'
+        | '/p/$projectId/assets/characters/$characterId'
+        | '/p/$projectId/assets/props/$propId'
+        | '/p/$projectId/assets/scenes/$sceneId'
+        | '/p/$projectId/assets/styles/$styleId'
+        | '/p/$projectId/e/$episodeId/produce'
+        | '/p/$projectId/e/$episodeId/shots'
+        | '/p/$projectId/e/$episodeId/storyboard'
+        | '/p/$projectId/e/$episodeId'
+    id:
+        | '__root__'
+        | '/_studio'
+        | '/_studio/about'
+        | '/_studio/agent'
+        | '/_studio/assets'
+        | '/_studio/characters'
+        | '/_studio/connectors'
+        | '/_studio/ips'
+        | '/_studio/projects'
+        | '/_studio/props'
+        | '/_studio/scenes'
+        | '/_studio/settings'
+        | '/_studio/styles'
+        | '/p/$projectId'
+        | '/_studio/'
+        | '/_studio/agent/$threadId'
+        | '/_studio/agent/tasks'
+        | '/_studio/characters/$characterId'
+        | '/_studio/ips/$ipId'
+        | '/_studio/props/$propId'
+        | '/_studio/scenes/$sceneId'
+        | '/_studio/styles/$styleId'
+        | '/p/$projectId/assets'
+        | '/p/$projectId/memory'
+        | '/p/$projectId/plan'
+        | '/p/$projectId/produce'
+        | '/p/$projectId/report'
+        | '/p/$projectId/shots'
+        | '/p/$projectId/storyboard'
+        | '/p/$projectId/world'
+        | '/_studio/agent/'
+        | '/_studio/characters/'
+        | '/_studio/ips/'
+        | '/_studio/props/'
+        | '/_studio/scenes/'
+        | '/_studio/styles/'
+        | '/p/$projectId/'
+        | '/p/$projectId/e/$episodeId'
+        | '/p/$projectId/assets/'
+        | '/p/$projectId/assets/characters/$characterId'
+        | '/p/$projectId/assets/props/$propId'
+        | '/p/$projectId/assets/scenes/$sceneId'
+        | '/p/$projectId/assets/styles/$styleId'
+        | '/p/$projectId/e/$episodeId/produce'
+        | '/p/$projectId/e/$episodeId/shots'
+        | '/p/$projectId/e/$episodeId/storyboard'
+        | '/p/$projectId/e/$episodeId/'
+    fileRoutesById: FileRoutesById
 }
+
 export interface RootRouteChildren {
-  StudioRoute: typeof StudioRouteWithChildren
-  PProjectIdRoute: typeof PProjectIdRouteWithChildren
+    StudioRoute: typeof StudioRouteWithChildren
+    PProjectIdRoute: typeof PProjectIdRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/_studio': {
-      id: '/_studio'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof StudioRouteImport
-      parentRoute: typeof rootRouteImport
+    interface FileRoutesByPath {
+        '/_studio': {
+            id: '/_studio'
+            path: ''
+            fullPath: '/'
+            preLoaderRoute: typeof StudioRouteImport
+            parentRoute: typeof rootRouteImport
+        }
+        '/_studio/': {
+            id: '/_studio/'
+            path: '/'
+            fullPath: '/'
+            preLoaderRoute: typeof StudioIndexRouteImport
+            parentRoute: typeof StudioRoute
+        }
+        '/_studio/about': {
+            id: '/_studio/about'
+            path: '/about'
+            fullPath: '/about'
+            preLoaderRoute: typeof StudioAboutRouteImport
+            parentRoute: typeof StudioRoute
+        }
+        '/_studio/agent': {
+            id: '/_studio/agent'
+            path: '/agent'
+            fullPath: '/agent'
+            preLoaderRoute: typeof StudioAgentRouteImport
+            parentRoute: typeof StudioRoute
+        }
+        '/_studio/assets': {
+            id: '/_studio/assets'
+            path: '/assets'
+            fullPath: '/assets'
+            preLoaderRoute: typeof StudioAssetsRouteImport
+            parentRoute: typeof StudioRoute
+        }
+        '/_studio/characters': {
+            id: '/_studio/characters'
+            path: '/characters'
+            fullPath: '/characters'
+            preLoaderRoute: typeof StudioCharactersRouteImport
+            parentRoute: typeof StudioRoute
+        }
+        '/_studio/connectors': {
+            id: '/_studio/connectors'
+            path: '/connectors'
+            fullPath: '/connectors'
+            preLoaderRoute: typeof StudioConnectorsRouteImport
+            parentRoute: typeof StudioRoute
+        }
+        '/_studio/ips': {
+            id: '/_studio/ips'
+            path: '/ips'
+            fullPath: '/ips'
+            preLoaderRoute: typeof StudioIpsRouteImport
+            parentRoute: typeof StudioRoute
+        }
+        '/_studio/projects': {
+            id: '/_studio/projects'
+            path: '/projects'
+            fullPath: '/projects'
+            preLoaderRoute: typeof StudioProjectsRouteImport
+            parentRoute: typeof StudioRoute
+        }
+        '/_studio/props': {
+            id: '/_studio/props'
+            path: '/props'
+            fullPath: '/props'
+            preLoaderRoute: typeof StudioPropsRouteImport
+            parentRoute: typeof StudioRoute
+        }
+        '/_studio/scenes': {
+            id: '/_studio/scenes'
+            path: '/scenes'
+            fullPath: '/scenes'
+            preLoaderRoute: typeof StudioScenesRouteImport
+            parentRoute: typeof StudioRoute
+        }
+        '/_studio/settings': {
+            id: '/_studio/settings'
+            path: '/settings'
+            fullPath: '/settings'
+            preLoaderRoute: typeof StudioSettingsRouteImport
+            parentRoute: typeof StudioRoute
+        }
+        '/_studio/styles': {
+            id: '/_studio/styles'
+            path: '/styles'
+            fullPath: '/styles'
+            preLoaderRoute: typeof StudioStylesRouteImport
+            parentRoute: typeof StudioRoute
+        }
+        '/p/$projectId': {
+            id: '/p/$projectId'
+            path: '/p/$projectId'
+            fullPath: '/p/$projectId'
+            preLoaderRoute: typeof PProjectIdRouteImport
+            parentRoute: typeof rootRouteImport
+        }
+        '/_studio/agent/': {
+            id: '/_studio/agent/'
+            path: '/'
+            fullPath: '/agent/'
+            preLoaderRoute: typeof StudioAgentIndexRouteImport
+            parentRoute: typeof StudioAgentRoute
+        }
+        '/_studio/agent/$threadId': {
+            id: '/_studio/agent/$threadId'
+            path: '/$threadId'
+            fullPath: '/agent/$threadId'
+            preLoaderRoute: typeof StudioAgentThreadIdRouteImport
+            parentRoute: typeof StudioAgentRoute
+        }
+        '/_studio/agent/tasks': {
+            id: '/_studio/agent/tasks'
+            path: '/tasks'
+            fullPath: '/agent/tasks'
+            preLoaderRoute: typeof StudioAgentTasksRouteImport
+            parentRoute: typeof StudioAgentRoute
+        }
+        '/_studio/characters/': {
+            id: '/_studio/characters/'
+            path: '/'
+            fullPath: '/characters/'
+            preLoaderRoute: typeof StudioCharactersIndexRouteImport
+            parentRoute: typeof StudioCharactersRoute
+        }
+        '/_studio/characters/$characterId': {
+            id: '/_studio/characters/$characterId'
+            path: '/$characterId'
+            fullPath: '/characters/$characterId'
+            preLoaderRoute: typeof StudioCharactersCharacterIdRouteImport
+            parentRoute: typeof StudioCharactersRoute
+        }
+        '/_studio/ips/': {
+            id: '/_studio/ips/'
+            path: '/'
+            fullPath: '/ips/'
+            preLoaderRoute: typeof StudioIpsIndexRouteImport
+            parentRoute: typeof StudioIpsRoute
+        }
+        '/_studio/ips/$ipId': {
+            id: '/_studio/ips/$ipId'
+            path: '/$ipId'
+            fullPath: '/ips/$ipId'
+            preLoaderRoute: typeof StudioIpsIpIdRouteImport
+            parentRoute: typeof StudioIpsRoute
+        }
+        '/_studio/props/': {
+            id: '/_studio/props/'
+            path: '/'
+            fullPath: '/props/'
+            preLoaderRoute: typeof StudioPropsIndexRouteImport
+            parentRoute: typeof StudioPropsRoute
+        }
+        '/_studio/props/$propId': {
+            id: '/_studio/props/$propId'
+            path: '/$propId'
+            fullPath: '/props/$propId'
+            preLoaderRoute: typeof StudioPropsPropIdRouteImport
+            parentRoute: typeof StudioPropsRoute
+        }
+        '/_studio/scenes/': {
+            id: '/_studio/scenes/'
+            path: '/'
+            fullPath: '/scenes/'
+            preLoaderRoute: typeof StudioScenesIndexRouteImport
+            parentRoute: typeof StudioScenesRoute
+        }
+        '/_studio/scenes/$sceneId': {
+            id: '/_studio/scenes/$sceneId'
+            path: '/$sceneId'
+            fullPath: '/scenes/$sceneId'
+            preLoaderRoute: typeof StudioScenesSceneIdRouteImport
+            parentRoute: typeof StudioScenesRoute
+        }
+        '/_studio/styles/': {
+            id: '/_studio/styles/'
+            path: '/'
+            fullPath: '/styles/'
+            preLoaderRoute: typeof StudioStylesIndexRouteImport
+            parentRoute: typeof StudioStylesRoute
+        }
+        '/_studio/styles/$styleId': {
+            id: '/_studio/styles/$styleId'
+            path: '/$styleId'
+            fullPath: '/styles/$styleId'
+            preLoaderRoute: typeof StudioStylesStyleIdRouteImport
+            parentRoute: typeof StudioStylesRoute
+        }
+        '/p/$projectId/': {
+            id: '/p/$projectId/'
+            path: '/'
+            fullPath: '/p/$projectId/'
+            preLoaderRoute: typeof PProjectIdIndexRouteImport
+            parentRoute: typeof PProjectIdRoute
+        }
+        '/p/$projectId/assets': {
+            id: '/p/$projectId/assets'
+            path: '/assets'
+            fullPath: '/p/$projectId/assets'
+            preLoaderRoute: typeof PProjectIdAssetsRouteImport
+            parentRoute: typeof PProjectIdRoute
+        }
+        '/p/$projectId/memory': {
+            id: '/p/$projectId/memory'
+            path: '/memory'
+            fullPath: '/p/$projectId/memory'
+            preLoaderRoute: typeof PProjectIdMemoryRouteImport
+            parentRoute: typeof PProjectIdRoute
+        }
+        '/p/$projectId/plan': {
+            id: '/p/$projectId/plan'
+            path: '/plan'
+            fullPath: '/p/$projectId/plan'
+            preLoaderRoute: typeof PProjectIdPlanRouteImport
+            parentRoute: typeof PProjectIdRoute
+        }
+        '/p/$projectId/produce': {
+            id: '/p/$projectId/produce'
+            path: '/produce'
+            fullPath: '/p/$projectId/produce'
+            preLoaderRoute: typeof PProjectIdProduceRouteImport
+            parentRoute: typeof PProjectIdRoute
+        }
+        '/p/$projectId/report': {
+            id: '/p/$projectId/report'
+            path: '/report'
+            fullPath: '/p/$projectId/report'
+            preLoaderRoute: typeof PProjectIdReportRouteImport
+            parentRoute: typeof PProjectIdRoute
+        }
+        '/p/$projectId/shots': {
+            id: '/p/$projectId/shots'
+            path: '/shots'
+            fullPath: '/p/$projectId/shots'
+            preLoaderRoute: typeof PProjectIdShotsRouteImport
+            parentRoute: typeof PProjectIdRoute
+        }
+        '/p/$projectId/storyboard': {
+            id: '/p/$projectId/storyboard'
+            path: '/storyboard'
+            fullPath: '/p/$projectId/storyboard'
+            preLoaderRoute: typeof PProjectIdStoryboardRouteImport
+            parentRoute: typeof PProjectIdRoute
+        }
+        '/p/$projectId/world': {
+            id: '/p/$projectId/world'
+            path: '/world'
+            fullPath: '/p/$projectId/world'
+            preLoaderRoute: typeof PProjectIdWorldRouteImport
+            parentRoute: typeof PProjectIdRoute
+        }
+        '/p/$projectId/assets/': {
+            id: '/p/$projectId/assets/'
+            path: '/'
+            fullPath: '/p/$projectId/assets/'
+            preLoaderRoute: typeof PProjectIdAssetsIndexRouteImport
+            parentRoute: typeof PProjectIdAssetsRoute
+        }
+        '/p/$projectId/e/$episodeId': {
+            id: '/p/$projectId/e/$episodeId'
+            path: '/e/$episodeId'
+            fullPath: '/p/$projectId/e/$episodeId'
+            preLoaderRoute: typeof PProjectIdEEpisodeIdRouteImport
+            parentRoute: typeof PProjectIdRoute
+        }
+        '/p/$projectId/assets/characters/$characterId': {
+            id: '/p/$projectId/assets/characters/$characterId'
+            path: '/characters/$characterId'
+            fullPath: '/p/$projectId/assets/characters/$characterId'
+            preLoaderRoute: typeof PProjectIdAssetsCharactersCharacterIdRouteImport
+            parentRoute: typeof PProjectIdAssetsRoute
+        }
+        '/p/$projectId/assets/props/$propId': {
+            id: '/p/$projectId/assets/props/$propId'
+            path: '/props/$propId'
+            fullPath: '/p/$projectId/assets/props/$propId'
+            preLoaderRoute: typeof PProjectIdAssetsPropsPropIdRouteImport
+            parentRoute: typeof PProjectIdAssetsRoute
+        }
+        '/p/$projectId/assets/scenes/$sceneId': {
+            id: '/p/$projectId/assets/scenes/$sceneId'
+            path: '/scenes/$sceneId'
+            fullPath: '/p/$projectId/assets/scenes/$sceneId'
+            preLoaderRoute: typeof PProjectIdAssetsScenesSceneIdRouteImport
+            parentRoute: typeof PProjectIdAssetsRoute
+        }
+        '/p/$projectId/assets/styles/$styleId': {
+            id: '/p/$projectId/assets/styles/$styleId'
+            path: '/styles/$styleId'
+            fullPath: '/p/$projectId/assets/styles/$styleId'
+            preLoaderRoute: typeof PProjectIdAssetsStylesStyleIdRouteImport
+            parentRoute: typeof PProjectIdAssetsRoute
+        }
+        '/p/$projectId/e/$episodeId/': {
+            id: '/p/$projectId/e/$episodeId/'
+            path: '/'
+            fullPath: '/p/$projectId/e/$episodeId/'
+            preLoaderRoute: typeof PProjectIdEEpisodeIdIndexRouteImport
+            parentRoute: typeof PProjectIdEEpisodeIdRoute
+        }
+        '/p/$projectId/e/$episodeId/produce': {
+            id: '/p/$projectId/e/$episodeId/produce'
+            path: '/produce'
+            fullPath: '/p/$projectId/e/$episodeId/produce'
+            preLoaderRoute: typeof PProjectIdEEpisodeIdProduceRouteImport
+            parentRoute: typeof PProjectIdEEpisodeIdRoute
+        }
+        '/p/$projectId/e/$episodeId/shots': {
+            id: '/p/$projectId/e/$episodeId/shots'
+            path: '/shots'
+            fullPath: '/p/$projectId/e/$episodeId/shots'
+            preLoaderRoute: typeof PProjectIdEEpisodeIdShotsRouteImport
+            parentRoute: typeof PProjectIdEEpisodeIdRoute
+        }
+        '/p/$projectId/e/$episodeId/storyboard': {
+            id: '/p/$projectId/e/$episodeId/storyboard'
+            path: '/storyboard'
+            fullPath: '/p/$projectId/e/$episodeId/storyboard'
+            preLoaderRoute: typeof PProjectIdEEpisodeIdStoryboardRouteImport
+            parentRoute: typeof PProjectIdEEpisodeIdRoute
+        }
     }
-    '/_studio/': {
-      id: '/_studio/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof StudioIndexRouteImport
-      parentRoute: typeof StudioRoute
-    }
-    '/_studio/about': {
-      id: '/_studio/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof StudioAboutRouteImport
-      parentRoute: typeof StudioRoute
-    }
-    '/_studio/agent': {
-      id: '/_studio/agent'
-      path: '/agent'
-      fullPath: '/agent'
-      preLoaderRoute: typeof StudioAgentRouteImport
-      parentRoute: typeof StudioRoute
-    }
-    '/_studio/assets': {
-      id: '/_studio/assets'
-      path: '/assets'
-      fullPath: '/assets'
-      preLoaderRoute: typeof StudioAssetsRouteImport
-      parentRoute: typeof StudioRoute
-    }
-    '/_studio/characters': {
-      id: '/_studio/characters'
-      path: '/characters'
-      fullPath: '/characters'
-      preLoaderRoute: typeof StudioCharactersRouteImport
-      parentRoute: typeof StudioRoute
-    }
-    '/_studio/connectors': {
-      id: '/_studio/connectors'
-      path: '/connectors'
-      fullPath: '/connectors'
-      preLoaderRoute: typeof StudioConnectorsRouteImport
-      parentRoute: typeof StudioRoute
-    }
-    '/_studio/ips': {
-      id: '/_studio/ips'
-      path: '/ips'
-      fullPath: '/ips'
-      preLoaderRoute: typeof StudioIpsRouteImport
-      parentRoute: typeof StudioRoute
-    }
-    '/_studio/projects': {
-      id: '/_studio/projects'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof StudioProjectsRouteImport
-      parentRoute: typeof StudioRoute
-    }
-    '/_studio/props': {
-      id: '/_studio/props'
-      path: '/props'
-      fullPath: '/props'
-      preLoaderRoute: typeof StudioPropsRouteImport
-      parentRoute: typeof StudioRoute
-    }
-    '/_studio/scenes': {
-      id: '/_studio/scenes'
-      path: '/scenes'
-      fullPath: '/scenes'
-      preLoaderRoute: typeof StudioScenesRouteImport
-      parentRoute: typeof StudioRoute
-    }
-    '/_studio/settings': {
-      id: '/_studio/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof StudioSettingsRouteImport
-      parentRoute: typeof StudioRoute
-    }
-    '/_studio/styles': {
-      id: '/_studio/styles'
-      path: '/styles'
-      fullPath: '/styles'
-      preLoaderRoute: typeof StudioStylesRouteImport
-      parentRoute: typeof StudioRoute
-    }
-    '/p/$projectId': {
-      id: '/p/$projectId'
-      path: '/p/$projectId'
-      fullPath: '/p/$projectId'
-      preLoaderRoute: typeof PProjectIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_studio/agent/': {
-      id: '/_studio/agent/'
-      path: '/'
-      fullPath: '/agent/'
-      preLoaderRoute: typeof StudioAgentIndexRouteImport
-      parentRoute: typeof StudioAgentRoute
-    }
-    '/_studio/agent/$threadId': {
-      id: '/_studio/agent/$threadId'
-      path: '/$threadId'
-      fullPath: '/agent/$threadId'
-      preLoaderRoute: typeof StudioAgentThreadIdRouteImport
-      parentRoute: typeof StudioAgentRoute
-    }
-    '/_studio/agent/tasks': {
-      id: '/_studio/agent/tasks'
-      path: '/tasks'
-      fullPath: '/agent/tasks'
-      preLoaderRoute: typeof StudioAgentTasksRouteImport
-      parentRoute: typeof StudioAgentRoute
-    }
-    '/_studio/characters/': {
-      id: '/_studio/characters/'
-      path: '/'
-      fullPath: '/characters/'
-      preLoaderRoute: typeof StudioCharactersIndexRouteImport
-      parentRoute: typeof StudioCharactersRoute
-    }
-    '/_studio/characters/$characterId': {
-      id: '/_studio/characters/$characterId'
-      path: '/$characterId'
-      fullPath: '/characters/$characterId'
-      preLoaderRoute: typeof StudioCharactersCharacterIdRouteImport
-      parentRoute: typeof StudioCharactersRoute
-    }
-    '/_studio/ips/': {
-      id: '/_studio/ips/'
-      path: '/'
-      fullPath: '/ips/'
-      preLoaderRoute: typeof StudioIpsIndexRouteImport
-      parentRoute: typeof StudioIpsRoute
-    }
-    '/_studio/ips/$ipId': {
-      id: '/_studio/ips/$ipId'
-      path: '/$ipId'
-      fullPath: '/ips/$ipId'
-      preLoaderRoute: typeof StudioIpsIpIdRouteImport
-      parentRoute: typeof StudioIpsRoute
-    }
-    '/_studio/props/': {
-      id: '/_studio/props/'
-      path: '/'
-      fullPath: '/props/'
-      preLoaderRoute: typeof StudioPropsIndexRouteImport
-      parentRoute: typeof StudioPropsRoute
-    }
-    '/_studio/props/$propId': {
-      id: '/_studio/props/$propId'
-      path: '/$propId'
-      fullPath: '/props/$propId'
-      preLoaderRoute: typeof StudioPropsPropIdRouteImport
-      parentRoute: typeof StudioPropsRoute
-    }
-    '/_studio/scenes/': {
-      id: '/_studio/scenes/'
-      path: '/'
-      fullPath: '/scenes/'
-      preLoaderRoute: typeof StudioScenesIndexRouteImport
-      parentRoute: typeof StudioScenesRoute
-    }
-    '/_studio/scenes/$sceneId': {
-      id: '/_studio/scenes/$sceneId'
-      path: '/$sceneId'
-      fullPath: '/scenes/$sceneId'
-      preLoaderRoute: typeof StudioScenesSceneIdRouteImport
-      parentRoute: typeof StudioScenesRoute
-    }
-    '/_studio/styles/': {
-      id: '/_studio/styles/'
-      path: '/'
-      fullPath: '/styles/'
-      preLoaderRoute: typeof StudioStylesIndexRouteImport
-      parentRoute: typeof StudioStylesRoute
-    }
-    '/_studio/styles/$styleId': {
-      id: '/_studio/styles/$styleId'
-      path: '/$styleId'
-      fullPath: '/styles/$styleId'
-      preLoaderRoute: typeof StudioStylesStyleIdRouteImport
-      parentRoute: typeof StudioStylesRoute
-    }
-    '/p/$projectId/': {
-      id: '/p/$projectId/'
-      path: '/'
-      fullPath: '/p/$projectId/'
-      preLoaderRoute: typeof PProjectIdIndexRouteImport
-      parentRoute: typeof PProjectIdRoute
-    }
-    '/p/$projectId/assets': {
-      id: '/p/$projectId/assets'
-      path: '/assets'
-      fullPath: '/p/$projectId/assets'
-      preLoaderRoute: typeof PProjectIdAssetsRouteImport
-      parentRoute: typeof PProjectIdRoute
-    }
-    '/p/$projectId/memory': {
-      id: '/p/$projectId/memory'
-      path: '/memory'
-      fullPath: '/p/$projectId/memory'
-      preLoaderRoute: typeof PProjectIdMemoryRouteImport
-      parentRoute: typeof PProjectIdRoute
-    }
-    '/p/$projectId/plan': {
-      id: '/p/$projectId/plan'
-      path: '/plan'
-      fullPath: '/p/$projectId/plan'
-      preLoaderRoute: typeof PProjectIdPlanRouteImport
-      parentRoute: typeof PProjectIdRoute
-    }
-    '/p/$projectId/produce': {
-      id: '/p/$projectId/produce'
-      path: '/produce'
-      fullPath: '/p/$projectId/produce'
-      preLoaderRoute: typeof PProjectIdProduceRouteImport
-      parentRoute: typeof PProjectIdRoute
-    }
-    '/p/$projectId/report': {
-      id: '/p/$projectId/report'
-      path: '/report'
-      fullPath: '/p/$projectId/report'
-      preLoaderRoute: typeof PProjectIdReportRouteImport
-      parentRoute: typeof PProjectIdRoute
-    }
-    '/p/$projectId/shots': {
-      id: '/p/$projectId/shots'
-      path: '/shots'
-      fullPath: '/p/$projectId/shots'
-      preLoaderRoute: typeof PProjectIdShotsRouteImport
-      parentRoute: typeof PProjectIdRoute
-    }
-    '/p/$projectId/storyboard': {
-      id: '/p/$projectId/storyboard'
-      path: '/storyboard'
-      fullPath: '/p/$projectId/storyboard'
-      preLoaderRoute: typeof PProjectIdStoryboardRouteImport
-      parentRoute: typeof PProjectIdRoute
-    }
-    '/p/$projectId/world': {
-      id: '/p/$projectId/world'
-      path: '/world'
-      fullPath: '/p/$projectId/world'
-      preLoaderRoute: typeof PProjectIdWorldRouteImport
-      parentRoute: typeof PProjectIdRoute
-    }
-    '/p/$projectId/assets/': {
-      id: '/p/$projectId/assets/'
-      path: '/'
-      fullPath: '/p/$projectId/assets/'
-      preLoaderRoute: typeof PProjectIdAssetsIndexRouteImport
-      parentRoute: typeof PProjectIdAssetsRoute
-    }
-    '/p/$projectId/e/$episodeId': {
-      id: '/p/$projectId/e/$episodeId'
-      path: '/e/$episodeId'
-      fullPath: '/p/$projectId/e/$episodeId'
-      preLoaderRoute: typeof PProjectIdEEpisodeIdRouteImport
-      parentRoute: typeof PProjectIdRoute
-    }
-    '/p/$projectId/assets/characters/$characterId': {
-      id: '/p/$projectId/assets/characters/$characterId'
-      path: '/characters/$characterId'
-      fullPath: '/p/$projectId/assets/characters/$characterId'
-      preLoaderRoute: typeof PProjectIdAssetsCharactersCharacterIdRouteImport
-      parentRoute: typeof PProjectIdAssetsRoute
-    }
-    '/p/$projectId/assets/props/$propId': {
-      id: '/p/$projectId/assets/props/$propId'
-      path: '/props/$propId'
-      fullPath: '/p/$projectId/assets/props/$propId'
-      preLoaderRoute: typeof PProjectIdAssetsPropsPropIdRouteImport
-      parentRoute: typeof PProjectIdAssetsRoute
-    }
-    '/p/$projectId/assets/scenes/$sceneId': {
-      id: '/p/$projectId/assets/scenes/$sceneId'
-      path: '/scenes/$sceneId'
-      fullPath: '/p/$projectId/assets/scenes/$sceneId'
-      preLoaderRoute: typeof PProjectIdAssetsScenesSceneIdRouteImport
-      parentRoute: typeof PProjectIdAssetsRoute
-    }
-    '/p/$projectId/assets/styles/$styleId': {
-      id: '/p/$projectId/assets/styles/$styleId'
-      path: '/styles/$styleId'
-      fullPath: '/p/$projectId/assets/styles/$styleId'
-      preLoaderRoute: typeof PProjectIdAssetsStylesStyleIdRouteImport
-      parentRoute: typeof PProjectIdAssetsRoute
-    }
-    '/p/$projectId/e/$episodeId/': {
-      id: '/p/$projectId/e/$episodeId/'
-      path: '/'
-      fullPath: '/p/$projectId/e/$episodeId/'
-      preLoaderRoute: typeof PProjectIdEEpisodeIdIndexRouteImport
-      parentRoute: typeof PProjectIdEEpisodeIdRoute
-    }
-    '/p/$projectId/e/$episodeId/produce': {
-      id: '/p/$projectId/e/$episodeId/produce'
-      path: '/produce'
-      fullPath: '/p/$projectId/e/$episodeId/produce'
-      preLoaderRoute: typeof PProjectIdEEpisodeIdProduceRouteImport
-      parentRoute: typeof PProjectIdEEpisodeIdRoute
-    }
-    '/p/$projectId/e/$episodeId/shots': {
-      id: '/p/$projectId/e/$episodeId/shots'
-      path: '/shots'
-      fullPath: '/p/$projectId/e/$episodeId/shots'
-      preLoaderRoute: typeof PProjectIdEEpisodeIdShotsRouteImport
-      parentRoute: typeof PProjectIdEEpisodeIdRoute
-    }
-    '/p/$projectId/e/$episodeId/storyboard': {
-      id: '/p/$projectId/e/$episodeId/storyboard'
-      path: '/storyboard'
-      fullPath: '/p/$projectId/e/$episodeId/storyboard'
-      preLoaderRoute: typeof PProjectIdEEpisodeIdStoryboardRouteImport
-      parentRoute: typeof PProjectIdEEpisodeIdRoute
-    }
-  }
 }
 
 interface StudioAgentRouteChildren {
-  StudioAgentThreadIdRoute: typeof StudioAgentThreadIdRoute
-  StudioAgentTasksRoute: typeof StudioAgentTasksRoute
-  StudioAgentIndexRoute: typeof StudioAgentIndexRoute
+    StudioAgentThreadIdRoute: typeof StudioAgentThreadIdRoute
+    StudioAgentTasksRoute: typeof StudioAgentTasksRoute
+    StudioAgentIndexRoute: typeof StudioAgentIndexRoute
 }
 
 const StudioAgentRouteChildren: StudioAgentRouteChildren = {
-  StudioAgentThreadIdRoute: StudioAgentThreadIdRoute,
-  StudioAgentTasksRoute: StudioAgentTasksRoute,
-  StudioAgentIndexRoute: StudioAgentIndexRoute,
+    StudioAgentThreadIdRoute: StudioAgentThreadIdRoute,
+    StudioAgentTasksRoute: StudioAgentTasksRoute,
+    StudioAgentIndexRoute: StudioAgentIndexRoute,
 }
 
 const StudioAgentRouteWithChildren = StudioAgentRoute._addFileChildren(
-  StudioAgentRouteChildren,
+    StudioAgentRouteChildren,
 )
 
 interface StudioCharactersRouteChildren {
-  StudioCharactersCharacterIdRoute: typeof StudioCharactersCharacterIdRoute
-  StudioCharactersIndexRoute: typeof StudioCharactersIndexRoute
+    StudioCharactersCharacterIdRoute: typeof StudioCharactersCharacterIdRoute
+    StudioCharactersIndexRoute: typeof StudioCharactersIndexRoute
 }
 
 const StudioCharactersRouteChildren: StudioCharactersRouteChildren = {
-  StudioCharactersCharacterIdRoute: StudioCharactersCharacterIdRoute,
-  StudioCharactersIndexRoute: StudioCharactersIndexRoute,
+    StudioCharactersCharacterIdRoute: StudioCharactersCharacterIdRoute,
+    StudioCharactersIndexRoute: StudioCharactersIndexRoute,
 }
 
 const StudioCharactersRouteWithChildren =
-  StudioCharactersRoute._addFileChildren(StudioCharactersRouteChildren)
+    StudioCharactersRoute._addFileChildren(StudioCharactersRouteChildren)
 
 interface StudioIpsRouteChildren {
-  StudioIpsIpIdRoute: typeof StudioIpsIpIdRoute
-  StudioIpsIndexRoute: typeof StudioIpsIndexRoute
+    StudioIpsIpIdRoute: typeof StudioIpsIpIdRoute
+    StudioIpsIndexRoute: typeof StudioIpsIndexRoute
 }
 
 const StudioIpsRouteChildren: StudioIpsRouteChildren = {
-  StudioIpsIpIdRoute: StudioIpsIpIdRoute,
-  StudioIpsIndexRoute: StudioIpsIndexRoute,
+    StudioIpsIpIdRoute: StudioIpsIpIdRoute,
+    StudioIpsIndexRoute: StudioIpsIndexRoute,
 }
 
 const StudioIpsRouteWithChildren = StudioIpsRoute._addFileChildren(
-  StudioIpsRouteChildren,
+    StudioIpsRouteChildren,
 )
 
 interface StudioPropsRouteChildren {
-  StudioPropsPropIdRoute: typeof StudioPropsPropIdRoute
-  StudioPropsIndexRoute: typeof StudioPropsIndexRoute
+    StudioPropsPropIdRoute: typeof StudioPropsPropIdRoute
+    StudioPropsIndexRoute: typeof StudioPropsIndexRoute
 }
 
 const StudioPropsRouteChildren: StudioPropsRouteChildren = {
-  StudioPropsPropIdRoute: StudioPropsPropIdRoute,
-  StudioPropsIndexRoute: StudioPropsIndexRoute,
+    StudioPropsPropIdRoute: StudioPropsPropIdRoute,
+    StudioPropsIndexRoute: StudioPropsIndexRoute,
 }
 
 const StudioPropsRouteWithChildren = StudioPropsRoute._addFileChildren(
-  StudioPropsRouteChildren,
+    StudioPropsRouteChildren,
 )
 
 interface StudioScenesRouteChildren {
-  StudioScenesSceneIdRoute: typeof StudioScenesSceneIdRoute
-  StudioScenesIndexRoute: typeof StudioScenesIndexRoute
+    StudioScenesSceneIdRoute: typeof StudioScenesSceneIdRoute
+    StudioScenesIndexRoute: typeof StudioScenesIndexRoute
 }
 
 const StudioScenesRouteChildren: StudioScenesRouteChildren = {
-  StudioScenesSceneIdRoute: StudioScenesSceneIdRoute,
-  StudioScenesIndexRoute: StudioScenesIndexRoute,
+    StudioScenesSceneIdRoute: StudioScenesSceneIdRoute,
+    StudioScenesIndexRoute: StudioScenesIndexRoute,
 }
 
 const StudioScenesRouteWithChildren = StudioScenesRoute._addFileChildren(
-  StudioScenesRouteChildren,
+    StudioScenesRouteChildren,
 )
 
 interface StudioStylesRouteChildren {
-  StudioStylesStyleIdRoute: typeof StudioStylesStyleIdRoute
-  StudioStylesIndexRoute: typeof StudioStylesIndexRoute
+    StudioStylesStyleIdRoute: typeof StudioStylesStyleIdRoute
+    StudioStylesIndexRoute: typeof StudioStylesIndexRoute
 }
 
 const StudioStylesRouteChildren: StudioStylesRouteChildren = {
-  StudioStylesStyleIdRoute: StudioStylesStyleIdRoute,
-  StudioStylesIndexRoute: StudioStylesIndexRoute,
+    StudioStylesStyleIdRoute: StudioStylesStyleIdRoute,
+    StudioStylesIndexRoute: StudioStylesIndexRoute,
 }
 
 const StudioStylesRouteWithChildren = StudioStylesRoute._addFileChildren(
-  StudioStylesRouteChildren,
+    StudioStylesRouteChildren,
 )
 
 interface StudioRouteChildren {
-  StudioAboutRoute: typeof StudioAboutRoute
-  StudioAgentRoute: typeof StudioAgentRouteWithChildren
-  StudioAssetsRoute: typeof StudioAssetsRoute
-  StudioCharactersRoute: typeof StudioCharactersRouteWithChildren
-  StudioConnectorsRoute: typeof StudioConnectorsRoute
-  StudioIpsRoute: typeof StudioIpsRouteWithChildren
-  StudioProjectsRoute: typeof StudioProjectsRoute
-  StudioPropsRoute: typeof StudioPropsRouteWithChildren
-  StudioScenesRoute: typeof StudioScenesRouteWithChildren
-  StudioSettingsRoute: typeof StudioSettingsRoute
-  StudioStylesRoute: typeof StudioStylesRouteWithChildren
-  StudioIndexRoute: typeof StudioIndexRoute
+    StudioAboutRoute: typeof StudioAboutRoute
+    StudioAgentRoute: typeof StudioAgentRouteWithChildren
+    StudioAssetsRoute: typeof StudioAssetsRoute
+    StudioCharactersRoute: typeof StudioCharactersRouteWithChildren
+    StudioConnectorsRoute: typeof StudioConnectorsRoute
+    StudioIpsRoute: typeof StudioIpsRouteWithChildren
+    StudioProjectsRoute: typeof StudioProjectsRoute
+    StudioPropsRoute: typeof StudioPropsRouteWithChildren
+    StudioScenesRoute: typeof StudioScenesRouteWithChildren
+    StudioSettingsRoute: typeof StudioSettingsRoute
+    StudioStylesRoute: typeof StudioStylesRouteWithChildren
+    StudioIndexRoute: typeof StudioIndexRoute
 }
 
 const StudioRouteChildren: StudioRouteChildren = {
-  StudioAboutRoute: StudioAboutRoute,
-  StudioAgentRoute: StudioAgentRouteWithChildren,
-  StudioAssetsRoute: StudioAssetsRoute,
-  StudioCharactersRoute: StudioCharactersRouteWithChildren,
-  StudioConnectorsRoute: StudioConnectorsRoute,
-  StudioIpsRoute: StudioIpsRouteWithChildren,
-  StudioProjectsRoute: StudioProjectsRoute,
-  StudioPropsRoute: StudioPropsRouteWithChildren,
-  StudioScenesRoute: StudioScenesRouteWithChildren,
-  StudioSettingsRoute: StudioSettingsRoute,
-  StudioStylesRoute: StudioStylesRouteWithChildren,
-  StudioIndexRoute: StudioIndexRoute,
+    StudioAboutRoute: StudioAboutRoute,
+    StudioAgentRoute: StudioAgentRouteWithChildren,
+    StudioAssetsRoute: StudioAssetsRoute,
+    StudioCharactersRoute: StudioCharactersRouteWithChildren,
+    StudioConnectorsRoute: StudioConnectorsRoute,
+    StudioIpsRoute: StudioIpsRouteWithChildren,
+    StudioProjectsRoute: StudioProjectsRoute,
+    StudioPropsRoute: StudioPropsRouteWithChildren,
+    StudioScenesRoute: StudioScenesRouteWithChildren,
+    StudioSettingsRoute: StudioSettingsRoute,
+    StudioStylesRoute: StudioStylesRouteWithChildren,
+    StudioIndexRoute: StudioIndexRoute,
 }
 
 const StudioRouteWithChildren =
-  StudioRoute._addFileChildren(StudioRouteChildren)
+    StudioRoute._addFileChildren(StudioRouteChildren)
 
 interface PProjectIdAssetsRouteChildren {
-  PProjectIdAssetsIndexRoute: typeof PProjectIdAssetsIndexRoute
-  PProjectIdAssetsCharactersCharacterIdRoute: typeof PProjectIdAssetsCharactersCharacterIdRoute
-  PProjectIdAssetsPropsPropIdRoute: typeof PProjectIdAssetsPropsPropIdRoute
-  PProjectIdAssetsScenesSceneIdRoute: typeof PProjectIdAssetsScenesSceneIdRoute
-  PProjectIdAssetsStylesStyleIdRoute: typeof PProjectIdAssetsStylesStyleIdRoute
+    PProjectIdAssetsIndexRoute: typeof PProjectIdAssetsIndexRoute
+    PProjectIdAssetsCharactersCharacterIdRoute: typeof PProjectIdAssetsCharactersCharacterIdRoute
+    PProjectIdAssetsPropsPropIdRoute: typeof PProjectIdAssetsPropsPropIdRoute
+    PProjectIdAssetsScenesSceneIdRoute: typeof PProjectIdAssetsScenesSceneIdRoute
+    PProjectIdAssetsStylesStyleIdRoute: typeof PProjectIdAssetsStylesStyleIdRoute
 }
 
 const PProjectIdAssetsRouteChildren: PProjectIdAssetsRouteChildren = {
-  PProjectIdAssetsIndexRoute: PProjectIdAssetsIndexRoute,
-  PProjectIdAssetsCharactersCharacterIdRoute:
+    PProjectIdAssetsIndexRoute: PProjectIdAssetsIndexRoute,
+    PProjectIdAssetsCharactersCharacterIdRoute:
     PProjectIdAssetsCharactersCharacterIdRoute,
-  PProjectIdAssetsPropsPropIdRoute: PProjectIdAssetsPropsPropIdRoute,
-  PProjectIdAssetsScenesSceneIdRoute: PProjectIdAssetsScenesSceneIdRoute,
-  PProjectIdAssetsStylesStyleIdRoute: PProjectIdAssetsStylesStyleIdRoute,
+    PProjectIdAssetsPropsPropIdRoute: PProjectIdAssetsPropsPropIdRoute,
+    PProjectIdAssetsScenesSceneIdRoute: PProjectIdAssetsScenesSceneIdRoute,
+    PProjectIdAssetsStylesStyleIdRoute: PProjectIdAssetsStylesStyleIdRoute,
 }
 
 const PProjectIdAssetsRouteWithChildren =
-  PProjectIdAssetsRoute._addFileChildren(PProjectIdAssetsRouteChildren)
+    PProjectIdAssetsRoute._addFileChildren(PProjectIdAssetsRouteChildren)
 
 interface PProjectIdEEpisodeIdRouteChildren {
-  PProjectIdEEpisodeIdProduceRoute: typeof PProjectIdEEpisodeIdProduceRoute
-  PProjectIdEEpisodeIdShotsRoute: typeof PProjectIdEEpisodeIdShotsRoute
-  PProjectIdEEpisodeIdStoryboardRoute: typeof PProjectIdEEpisodeIdStoryboardRoute
-  PProjectIdEEpisodeIdIndexRoute: typeof PProjectIdEEpisodeIdIndexRoute
+    PProjectIdEEpisodeIdProduceRoute: typeof PProjectIdEEpisodeIdProduceRoute
+    PProjectIdEEpisodeIdShotsRoute: typeof PProjectIdEEpisodeIdShotsRoute
+    PProjectIdEEpisodeIdStoryboardRoute: typeof PProjectIdEEpisodeIdStoryboardRoute
+    PProjectIdEEpisodeIdIndexRoute: typeof PProjectIdEEpisodeIdIndexRoute
 }
 
 const PProjectIdEEpisodeIdRouteChildren: PProjectIdEEpisodeIdRouteChildren = {
-  PProjectIdEEpisodeIdProduceRoute: PProjectIdEEpisodeIdProduceRoute,
-  PProjectIdEEpisodeIdShotsRoute: PProjectIdEEpisodeIdShotsRoute,
-  PProjectIdEEpisodeIdStoryboardRoute: PProjectIdEEpisodeIdStoryboardRoute,
-  PProjectIdEEpisodeIdIndexRoute: PProjectIdEEpisodeIdIndexRoute,
+    PProjectIdEEpisodeIdProduceRoute: PProjectIdEEpisodeIdProduceRoute,
+    PProjectIdEEpisodeIdShotsRoute: PProjectIdEEpisodeIdShotsRoute,
+    PProjectIdEEpisodeIdStoryboardRoute: PProjectIdEEpisodeIdStoryboardRoute,
+    PProjectIdEEpisodeIdIndexRoute: PProjectIdEEpisodeIdIndexRoute,
 }
 
 const PProjectIdEEpisodeIdRouteWithChildren =
-  PProjectIdEEpisodeIdRoute._addFileChildren(PProjectIdEEpisodeIdRouteChildren)
+    PProjectIdEEpisodeIdRoute._addFileChildren(PProjectIdEEpisodeIdRouteChildren)
 
 interface PProjectIdRouteChildren {
-  PProjectIdAssetsRoute: typeof PProjectIdAssetsRouteWithChildren
-  PProjectIdMemoryRoute: typeof PProjectIdMemoryRoute
-  PProjectIdPlanRoute: typeof PProjectIdPlanRoute
-  PProjectIdProduceRoute: typeof PProjectIdProduceRoute
-  PProjectIdReportRoute: typeof PProjectIdReportRoute
-  PProjectIdShotsRoute: typeof PProjectIdShotsRoute
-  PProjectIdStoryboardRoute: typeof PProjectIdStoryboardRoute
-  PProjectIdWorldRoute: typeof PProjectIdWorldRoute
-  PProjectIdIndexRoute: typeof PProjectIdIndexRoute
-  PProjectIdEEpisodeIdRoute: typeof PProjectIdEEpisodeIdRouteWithChildren
+    PProjectIdAssetsRoute: typeof PProjectIdAssetsRouteWithChildren
+    PProjectIdMemoryRoute: typeof PProjectIdMemoryRoute
+    PProjectIdPlanRoute: typeof PProjectIdPlanRoute
+    PProjectIdProduceRoute: typeof PProjectIdProduceRoute
+    PProjectIdReportRoute: typeof PProjectIdReportRoute
+    PProjectIdShotsRoute: typeof PProjectIdShotsRoute
+    PProjectIdStoryboardRoute: typeof PProjectIdStoryboardRoute
+    PProjectIdWorldRoute: typeof PProjectIdWorldRoute
+    PProjectIdIndexRoute: typeof PProjectIdIndexRoute
+    PProjectIdEEpisodeIdRoute: typeof PProjectIdEEpisodeIdRouteWithChildren
 }
 
 const PProjectIdRouteChildren: PProjectIdRouteChildren = {
-  PProjectIdAssetsRoute: PProjectIdAssetsRouteWithChildren,
-  PProjectIdMemoryRoute: PProjectIdMemoryRoute,
-  PProjectIdPlanRoute: PProjectIdPlanRoute,
-  PProjectIdProduceRoute: PProjectIdProduceRoute,
-  PProjectIdReportRoute: PProjectIdReportRoute,
-  PProjectIdShotsRoute: PProjectIdShotsRoute,
-  PProjectIdStoryboardRoute: PProjectIdStoryboardRoute,
-  PProjectIdWorldRoute: PProjectIdWorldRoute,
-  PProjectIdIndexRoute: PProjectIdIndexRoute,
-  PProjectIdEEpisodeIdRoute: PProjectIdEEpisodeIdRouteWithChildren,
+    PProjectIdAssetsRoute: PProjectIdAssetsRouteWithChildren,
+    PProjectIdMemoryRoute: PProjectIdMemoryRoute,
+    PProjectIdPlanRoute: PProjectIdPlanRoute,
+    PProjectIdProduceRoute: PProjectIdProduceRoute,
+    PProjectIdReportRoute: PProjectIdReportRoute,
+    PProjectIdShotsRoute: PProjectIdShotsRoute,
+    PProjectIdStoryboardRoute: PProjectIdStoryboardRoute,
+    PProjectIdWorldRoute: PProjectIdWorldRoute,
+    PProjectIdIndexRoute: PProjectIdIndexRoute,
+    PProjectIdEEpisodeIdRoute: PProjectIdEEpisodeIdRouteWithChildren,
 }
 
 const PProjectIdRouteWithChildren = PProjectIdRoute._addFileChildren(
-  PProjectIdRouteChildren,
+    PProjectIdRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
-  StudioRoute: StudioRouteWithChildren,
-  PProjectIdRoute: PProjectIdRouteWithChildren,
+    StudioRoute: StudioRouteWithChildren,
+    PProjectIdRoute: PProjectIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
-  ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+    ._addFileChildren(rootRouteChildren)
+    ._addFileTypes<FileRouteTypes>()

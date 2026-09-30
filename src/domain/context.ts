@@ -1,45 +1,53 @@
-import type { AgentSelectedReferences } from "./referenceInput";
-import type { AgentRequestMessage, AgentRun, AgentTokenUsage } from "./agent";
+import type {AgentSelectedReferences} from "./referenceInput";
+import type {AgentRequestMessage, AgentRun, AgentTokenUsage} from "./agent";
 
 export interface ContextPolicy {
-  autoCompress: boolean;
-  limitHistory: boolean;
-  historyMessageCount: number;
-  /** Explicit local budget, never presented as provider metadata. */
-  customContextTokens?: number;
+    autoCompress: boolean;
+    limitHistory: boolean;
+    historyMessageCount: number;
+    /** Explicit local budget, never presented as provider metadata. */
+    customContextTokens?: number;
 }
-export interface ContextSource { id: string; role: "user" | "assistant" | "system"; content: string; referenceContext?: AgentSelectedReferences }
+
+export interface ContextSource {
+    id: string;
+    role: "user" | "assistant" | "system";
+    content: string;
+    referenceContext?: AgentSelectedReferences
+}
+
 export interface ContextSnapshot {
-  policy: ContextPolicy;
-  capacity?: number;
-  capacitySource?: string;
-  history: ContextSource[];
-  summaryId?: string;
-  /** Current base envelope; tool continuation is always appended after it. */
-  baseMessages: AgentRequestMessage[];
-  draft: string;
-  selectedReferences?: AgentSelectedReferences;
-  /** Separate, replaceable upcoming memory layer; excluded from history compaction. */
-  memoryEnvelope?: string;
+    policy: ContextPolicy;
+    capacity?: number;
+    capacitySource?: string;
+    history: ContextSource[];
+    summaryId?: string;
+    /** Current base envelope; tool continuation is always appended after it. */
+    baseMessages: AgentRequestMessage[];
+    draft: string;
+    selectedReferences?: AgentSelectedReferences;
+    /** Separate, replaceable upcoming memory layer; excluded from history compaction. */
+    memoryEnvelope?: string;
 }
+
 export interface ContextCompaction {
-  id: string;
-  threadId: string;
-  runId: string;
-  previousSummaryId?: string;
-  status: "running" | "completed" | "failed" | "interrupted";
-  /** Exact source coverage allows validation without hash collision ambiguity. */
-  coverage: ContextSource[];
-  input: AgentRequestMessage[];
-  policy: ContextPolicy;
-  connector: AgentRun["connector"];
-  model: string;
-  content: string;
-  beforeTokens: number;
-  afterTokens?: number;
-  usage?: AgentTokenUsage;
-  error?: string;
-  createdAt: string;
-  updatedAt: string;
-  activatedAt?: string;
+    id: string;
+    threadId: string;
+    runId: string;
+    previousSummaryId?: string;
+    status: "running" | "completed" | "failed" | "interrupted";
+    /** Exact source coverage allows validation without hash collision ambiguity. */
+    coverage: ContextSource[];
+    input: AgentRequestMessage[];
+    policy: ContextPolicy;
+    connector: AgentRun["connector"];
+    model: string;
+    content: string;
+    beforeTokens: number;
+    afterTokens?: number;
+    usage?: AgentTokenUsage;
+    error?: string;
+    createdAt: string;
+    updatedAt: string;
+    activatedAt?: string;
 }

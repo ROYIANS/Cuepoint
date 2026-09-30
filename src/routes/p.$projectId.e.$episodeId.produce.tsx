@@ -1,11 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { ProducePage } from "@/components/produce/ProducePage";
+import {createFileRoute} from "@tanstack/react-router";
+import {ProducePage} from "@/components/produce/ProducePage";
 
 export const Route = createFileRoute("/p/$projectId/e/$episodeId/produce")({
-  component: EpisodeProduceRoute,
+    component: EpisodeProduceRoute,
 });
 
 function EpisodeProduceRoute() {
-  const { projectId, episodeId } = Route.useParams();
-  return <ProducePage projectId={projectId} episodeId={episodeId} />;
+    const {projectId, episodeId} = Route.useParams();
+    return <ProducePage projectId={projectId} episodeId={episodeId}/>;
 }

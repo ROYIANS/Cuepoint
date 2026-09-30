@@ -1,11 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { SceneDetailPage } from "@/components/assets/SceneDetailPage";
+import {createFileRoute} from "@tanstack/react-router";
+import {SceneDetailPage} from "@/components/assets/SceneDetailPage";
 
 export const Route = createFileRoute("/p/$projectId/assets/scenes/$sceneId")({
-  component: SceneRoute,
+    component: SceneRoute,
 });
 
 function SceneRoute() {
-  const { projectId, sceneId } = Route.useParams();
-  return <SceneDetailPage sceneId={sceneId} back={{ kind: "project", projectId }} />;
+    const {projectId, sceneId} = Route.useParams();
+    return <SceneDetailPage sceneId={sceneId} back={{kind: "project", projectId}}/>;
 }
