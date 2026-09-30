@@ -1,4 +1,4 @@
-import {readGenerationTarget} from "@/lib/agent/generationRuntime";
+import {inspectTaskGenerationOutput, ownedTaskGenerationJob, PICTURE_GENERATION_TOOLS, provesCompletedGeneration, taskGenerationToolSource} from "./taskGenerationEvidence";
 import {db} from "./database";
 import {editableAgentTask} from "./agentTasks";
 import type {AgentTaskRecord, TaskRecordInput, TaskRecordSource} from "@/domain/agentTaskRecords";
@@ -24,6 +24,7 @@ export async function listTaskRecordVersions(taskId: string, recordId: string) {
 
 /** A completed ledger entry may describe a failed remote job or an apply conflict. */
 export function provesCompletedEffect(call: AgentToolCall): boolean {
+    if ((PICTURE_GENERATION_TOOLS as readonly string[]).includes(call.name)) return provesCompletedGeneration(call);
     let value: unknown;
     try {
         value = JSON.parse(call.result ?? "null");
@@ -33,11 +34,6 @@ export function provesCompletedEffect(call: AgentToolCall): boolean {
     if (!value || typeof value !== "object" || Array.isArray(value)) return false;
     const result = value as Record<string, unknown>;
     if (result.error || result.ok === false || result.success === false) return false;
-    if (["submit_generation", "check_generation", "apply_generation"].includes(call.name)) {
-        const media = result.result as { mediaId?: unknown; kind?: unknown } | undefined;
-        return (call.name === "apply_generation" ? result.status === "applied" && result.applied === true : result.status === "downloaded" || result.status === "applied") &&
-            typeof media?.mediaId === "string" && !!media.mediaId && (media.kind === "image" || media.kind === "video");
-    }
     // Other network tools can report a check without producing a business result.
     return call.effect === "write" && result.applied !== false;
 }
@@ -57,6 +53,9 @@ export async function validateTaskSources(task: Pick<AgentTask, "id" | "threadId
             if (!call || !run || call.threadId !== task.threadId || run.threadId !== task.threadId || run.taskId !== task.id || call.status !== "completed" || !call.result || call.effect === "bookkeeping") throw new Error("来源不是当前任务已完成的业务工具结果");
             if ((SOUND_GENERATION_TOOLS as readonly string[]).includes(call.name)) {
                 const evidence = await taskAudioToolSource(task, call);
+                completedEffect ||= evidence?.supportsResult === true;
+            } else if ((PICTURE_GENERATION_TOOLS as readonly string[]).includes(call.name)) {
+                const evidence = await Promise.resolve(taskGenerationToolSource(task, call));
                 completedEffect ||= evidence?.supportsResult === true;
             } else completedEffect ||= provesCompletedEffect(call);
         } else if (source.type === "generation") {
@@ -127,17 +126,8 @@ export async function taskGenerationSource(task: Pick<AgentTask, "id" | "threadI
     const soundJob = await db.audioGenerationJobs.get(jobId);
     if (soundJob) return taskAudioGenerationSource(task, soundJob);
     const job = await db.agentGenerationJobs.get(jobId);
-    const run = job && await db.agentRuns.get(job.runId);
-    if (!job || !run || run.taskId !== task.id || job.threadId !== task.threadId || run.threadId !== task.threadId || !job.batchId) throw new Error("生成结果不属于当前任务批次");
-    const batch = await db.agentGenerationBatches.get(job.batchId);
-    if (!batch || batch.taskId !== task.id || batch.threadId !== task.threadId) throw new Error("生成批次来源已失效");
-    const media = job.result && await db.media.get(job.result.mediaId);
-    const available = !!media && media.projectId === job.projectId && !!media.blob.size && media.mimeType.startsWith(`${job.kind}/`) && ['downloaded', 'applied', 'conflict'].includes(job.status);
-    let applied = false;
-    try {
-        applied = available && (await readGenerationTarget(job.target)).slot.result?.mediaId === media!.id;
-    } catch { /* Downloaded output survives target deletion. */
-    }
+    if (!job || !job.batchId || !await Promise.resolve(ownedTaskGenerationJob(task, job))) throw new Error("生成结果不属于当前任务批次");
+    const {available, applied} = await Promise.resolve(inspectTaskGenerationOutput(job));
     return {
         id: job.id,
         batchId: job.batchId,
@@ -168,8 +158,7 @@ export async function listTaskGenerationSources(task: AgentTask) {
         const runIds = new Set(runs.filter(run => run.threadId === task.threadId).map(run => run.id));
         const jobs = await db.agentGenerationJobs.where("threadId").equals(task.threadId).toArray();
         for (const job of jobs.filter(job => job.batchId && runIds.has(job.runId))) {
-            const batch = await db.agentGenerationBatches.get(job.batchId!);
-            if (batch?.taskId === task.id && batch.threadId === task.threadId) sources.push(await Promise.resolve(taskGenerationSource(task, job.id)));
+            if (await Promise.resolve(ownedTaskGenerationJob(task, job))) sources.push(await Promise.resolve(taskGenerationSource(task, job.id)));
         }
         const soundJobs = await db.audioGenerationJobs.where("projectId").equals(task.projectId).toArray();
         for (const job of soundJobs) {

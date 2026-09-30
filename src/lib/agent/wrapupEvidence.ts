@@ -11,7 +11,7 @@ import type {AgentTask} from "@/domain/agent";
 import type {WrapupEvidence, WrapupSnapshot} from "@/domain/agentTaskWrapup";
 import {targetRevision} from "@/lib/productionRevision";
 import {type BusinessKind, getRow, navigation, projection} from "./businessStore";
-import {parseGenerationSlot} from "@/domain/slot";
+import {inspectTaskGenerationOutput, ownedTaskGenerationJob, PICTURE_GENERATION_TOOLS, taskGenerationToolSource} from "@/db/taskGenerationEvidence";
 
 const kinds = ["project", "episode", "beat", "shot", "character", "scene", "prop", "style", "media"];
 
@@ -75,7 +75,7 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
     for (const call of calls) {
         const value = json(call.result), args = json(call.arguments);
         const unsettled = !['completed', 'failed', 'rejected'].includes(call.status);
-        const generation = ["submit_generation", "apply_generation", "check_generation"].includes(call.name);
+        const generation = (PICTURE_GENERATION_TOOLS as readonly string[]).includes(call.name);
         const failed = call.status !== "completed" || !!value.error || value.ok === false || value.success === false || (!generation && value.applied === false);
         const outcome: WrapupEvidence['outcome'] = unsettled || failed ? "unresolved" : generation ? (value.status === "applied" ? "applied" : value.status === "downloaded" ? "downloaded" : "unresolved") : "fact";
         add({
@@ -91,6 +91,18 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
             available: true,
             supportsResult: call.status === "completed" && provesCompletedEffect(call)
         }, call);
+        if (generation) {
+            const current = await Promise.resolve(taskGenerationToolSource(task, call));
+            const source = evidence.at(-1)!;
+            source.supportsResult = current?.supportsResult === true;
+            source.outcome = "unresolved";
+            if (current?.supportsResult) source.outcome = current.applied ? "applied" : "downloaded";
+            source.available = current?.available === true;
+            const body = `${source.body}\n当前输出状态：${source.outcome}；原工具返回只记录当时事实。`;
+            source.body = body.slice(0, 1800);
+            source.truncated ||= body.length > 1800;
+            fingerprints.push([source.id, {jobId: current?.jobId, available: source.available, applied: current?.applied}]);
+        }
         if ((SOUND_GENERATION_TOOLS as readonly string[]).includes(call.name)) {
             const current = call.status === "completed" ? await Promise.resolve(taskAudioToolSource(task, call)) : undefined;
             const source = evidence.at(-1)!;
@@ -144,25 +156,17 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
     for (const job of jobs) {
         const target = job.target;
         await Promise.resolve(entity(target.kind, target.entityId, target.projectId, 'episodeId' in target ? target.episodeId : undefined));
-        const media = job.result ? await db.media.get(job.result.mediaId) : undefined;
-        let applied = false, href: string | undefined;
+        const owned = await Promise.resolve(ownedTaskGenerationJob(task, job));
+        const output = await Promise.resolve(inspectTaskGenerationOutput(job));
+        const {media} = output;
+        const available = owned && output.available, applied = available && output.applied;
+        let href: string | undefined;
         try {
             const row = await getRow(target.kind, target.entityId, target.projectId, 'episodeId' in target ? target.episodeId : undefined);
             href = navigation(target.kind, row).href;
-            const slot = target.kind === 'shot' ? row[target.slot ?? 'clip'] : json(row.slots)[target.slot];
-            applied = !!media && parseGenerationSlot(slot).result?.mediaId === media.id;
         } catch {/* Missing targets remain historical evidence. */
         }
-        const status = applied ? 'applied' : media && (['downloaded', 'applied', 'conflict'].includes(job.status)) ? 'downloaded' : 'unresolved';
-        for (const call of calls.filter(call => call.id === job.callId || json(call.arguments).jobId === job.id)) {
-            const source = evidence.find(item => item.id === `tool:${call.id}`);
-            if (source) {
-                source.supportsResult = status !== "unresolved";
-                source.outcome = status;
-                source.available = !!media;
-                source.body = `${source.body}\n当前输出状态：${status}；原工具返回只记录当时事实。`;
-            }
-        }
+        const status = applied ? 'applied' : available ? 'downloaded' : 'unresolved';
         add({
             id: `generation:${job.id}`,
             kind: "generation",
@@ -172,12 +176,12 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
                 currentOutcome: status,
                 target: job.target,
                 result: job.result,
-                mediaAvailable: !!media,
+                mediaAvailable: available,
                 appliedToCurrentTarget: applied,
                 error: job.error
             }),
             outcome: status,
-            available: !!media,
+            available,
             supportsResult: status !== "unresolved",
             href
         }, {
@@ -186,8 +190,9 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
                 id: media.id,
                 projectId: media.projectId,
                 mimeType: media.mimeType,
-                size: media.blob.size
+                size: media.blob instanceof Blob ? media.blob.size : null
             } : null,
+            currentAvailable: available,
             currentApplied: applied
         });
     }

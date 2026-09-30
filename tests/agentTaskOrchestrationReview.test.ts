@@ -1,5 +1,5 @@
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
-import { createProject as createBoundTestProject } from "@/db/repo";
+import { addCharacter, createProject as createBoundTestProject } from "@/db/repo";
 import { describe, expect, it } from "vitest";
 import { TASK_TOOLS } from "@/lib/agent/taskTools";
 import { db } from "@/db/database";
@@ -7,6 +7,7 @@ import { createAgentTask, updateAgentTask } from "@/db/agentTasks";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
 import {  transitionToolCall, updateRunPlanAndComplete } from "@/db/agentTools";
 import { validateTaskSources } from "@/db/agentTaskRecords";
+import type { AgentGenerationJob } from "@/domain/agentGeneration";
 import type { ConnectorConfig } from "@/domain/types";
 const connector:ConnectorConfig={id:"fixture",name:"Fixture",definitionId:"openai-compatible",baseUrl:"https://example.test/v1",apiKey:"fake",updatedAt:"now"};
 async function fixture(){
@@ -31,7 +32,11 @@ describe("task orchestration independent boundaries",()=>{
   await expect(validateTaskSources(task,sources,"observation","ai")).resolves.toBeUndefined();
  });
  it.each(["downloaded","applied"])("accepts the actual %s generation stage as evidence without requiring another submission",async(status)=>{
-  const {task,run}=await fixture();const sources=await effect(run.id,"submit_generation","network",{status,applied:status==="applied",result:{mediaId:"actual",kind:"image"}});
+  const {task,run}=await fixture();const character=await addCharacter(task.projectId);
+  const sources=await effect(run.id,"submit_generation","network",{jobId:"actual-job",status,applied:status==="applied",result:{mediaId:"actual",kind:"image"}});
+  await db.media.add({id:"actual",projectId:task.projectId!,mimeType:"image/png",filename:"actual.png",blob:new Blob(["image"]),createdAt:run.createdAt});
+  const job:AgentGenerationJob={version:1,id:"actual-job",runId:run.id,threadId:run.threadId,callId:sources[0].id,projectId:task.projectId!,connectorId:connector.id,provider:"apimart",baseUrl:connector.baseUrl,model:"model",kind:"image",target:{kind:"character",projectId:task.projectId!,entityId:character.id,slot:"front"},baseRevision:"base",sourceRevisions:[],parameters:{},inputs:[],fingerprint:"fingerprint",status:status as "downloaded"|"applied",result:{mediaId:"actual",kind:"image"},createdAt:run.createdAt,updatedAt:run.createdAt};
+  await db.agentGenerationJobs.add(job);
   await expect(validateTaskSources(task,sources,"result","ai")).resolves.toBeUndefined();
  });
  it("pages full owned source text, rejects foreign sources and bounds artifact previews",async()=>{
