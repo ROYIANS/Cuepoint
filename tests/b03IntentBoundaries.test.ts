@@ -195,7 +195,7 @@ describe("B03 shot character selection intent", () => {
         await db.projects.update(f.project.id, {updatedAt: oldTime});
         const mediaSlot = {...emptySlot(), prompt: "preserved media draft"};
         ui.select(f.a.id, true); ui.select(f.b.id, true);
-        await Promise.all([mutations(select), repo.patchShot(f.shot.id, {notes: "latest notes", firstFrame: mediaSlot})]);
+        await Promise.all([mutations(select), repo.patchShot(f.shot.id, {notes: "latest notes"}), repo.setShotSlot(f.shot.id, "firstFrame", mediaSlot)]);
         expect(select.mock.calls).toEqual([[f.shot.id, f.a.id, true], [f.shot.id, f.b.id, true]]);
         expect(await db.shots.get(f.shot.id)).toEqual({...f.shot, characterIds: [f.a.id, f.b.id], notes: "latest notes", firstFrame: mediaSlot});
         expect((await db.projects.get(f.project.id))?.updatedAt).not.toBe(oldTime);

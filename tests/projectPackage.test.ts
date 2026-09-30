@@ -15,11 +15,13 @@ import {
   copyStudioStyle,
   createChatThread,
   createProject,
-  patchCharacter,
   patchProp,
   patchShot,
   patchStyle,
   putMedia,
+  setCharacterSlot,
+  setPropSlot,
+  setShotSlot,
   updateProject,
   updateEpisodeShotFilters,
   upsertConnector,
@@ -75,7 +77,7 @@ describe("project packages", () => {
     const shot = await addShot(project.id, episode.id);
     await patchShot(shot.id, { content: "before" });
     await db.media.add({ id: "snapshot-media", projectId: project.id, mimeType: "image/png", filename: "frame.png", blob: new Blob(["frame"]) });
-    await patchShot(shot.id, { firstFrame: { ...emptySlot(), result: { mediaId: "snapshot-media", kind: "image" } } });
+    await setShotSlot(shot.id, "firstFrame", { ...emptySlot(), result: { mediaId: "snapshot-media", kind: "image" } });
     let edit: Promise<unknown> | undefined;
     const afterProjectRead = (value: typeof project) => {
       if (value?.id === project.id && !edit) {
@@ -115,10 +117,8 @@ describe("project packages", () => {
       filename: "reference.png",
       blob: new Blob(["image"]),
     });
-    await patchProp(prop.id, {
-      extra: { nested: { retained: true } },
-      slots: { hero: { ...emptySlot(), result: { mediaId, kind: "image" } } },
-    });
+    await patchProp(prop.id, { extra: { nested: { retained: true } } });
+    await setPropSlot(prop.id, "hero", { ...emptySlot(), result: { mediaId, kind: "image" } });
     await patchStyle(style.id, { extra: { palette: ["red", "blue"] } });
 
     const imported = await importProjectZip(await exportProjectZip(project.id));
@@ -147,14 +147,9 @@ describe("project packages", () => {
       filename: "reference.mp4",
       blob: new Blob(["video"], { type: "video/mp4" }),
     });
-    await patchCharacter(studioCharacter.id, {
-      slots: {
-        front: {
-          ...emptySlot(),
-          referenceVideoIds: [mediaId],
-          result: { mediaId, kind: "video" },
-        },
-      },
+    await setCharacterSlot(studioCharacter.id, "front", {
+      ...emptySlot(),
+      referenceVideoIds: [mediaId],
     });
 
     await Promise.all([
@@ -170,7 +165,7 @@ describe("project packages", () => {
       db.props.where("projectId").equals(imported.id).toArray(),
       db.styles.where("projectId").equals(imported.id).toArray(),
     ]);
-    const importedMediaId = characters[0]?.slots.front?.result?.mediaId;
+    const importedMediaId = characters[0]?.slots.front?.referenceVideoIds[0];
 
     expect([characters.length, scenes.length, props.length, styles.length]).toEqual([
       1, 1, 1, 1,

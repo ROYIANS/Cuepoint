@@ -397,18 +397,73 @@ const EPISODE_KEYS = [
     "extra",
 ];
 
+/** Only original string identities can satisfy modern package relationships. */
+function originalId(raw: Record<string, unknown>): string | undefined {
+    return typeof raw.id === "string" && raw.id ? raw.id : undefined;
+}
+
+function assertUniqueOriginalIds(rows: Record<string, unknown>[], label: string): void {
+    const ids = new Set<string>();
+    for (const row of rows) {
+        if (typeof row.id !== "string" && typeof row.id !== "number" && typeof row.id !== "boolean") continue;
+        // Match parser identity coercion for collisions, without making repaired IDs valid references.
+        const id = String(row.id);
+        if (ids.has(id)) throw new PackageError(`${label} ID 重复：${id}`);
+        ids.add(id);
+    }
+}
+
+function originalBeatIds(episode: Record<string, unknown>): Set<string> {
+    const story = episode.story;
+    if (!story || typeof story !== "object" || Array.isArray(story)) return new Set();
+    const beats = (story as Record<string, unknown>).beats;
+    if (!Array.isArray(beats)) return new Set();
+    const rows = beats.filter((beat): beat is Record<string, unknown> =>
+        Boolean(beat) && typeof beat === "object" && !Array.isArray(beat));
+    assertUniqueOriginalIds(rows, "场次");
+    return new Set(rows.flatMap((row) => originalId(row) ?? []));
+}
+
+/** Run before parsers synthesize identities or mutate/remap the original scope. */
+function validateModernShotRelations(
+    episodes: Record<string, unknown>[],
+    shots: Record<string, unknown>[],
+): void {
+    // Missing and explicitly empty episodes remain the existing legacy format.
+    if (!episodes.length) return;
+    assertUniqueOriginalIds(episodes, "分集");
+    assertUniqueOriginalIds(shots, "分镜");
+    const beatsByEpisode = new Map<string, Set<string>>();
+    for (const episode of episodes) {
+        const beats = originalBeatIds(episode);
+        const id = originalId(episode);
+        if (id) beatsByEpisode.set(id, beats);
+    }
+    for (const shot of shots) {
+        const beats = typeof shot.episodeId === "string" ? beatsByEpisode.get(shot.episodeId) : undefined;
+        if (!beats) throw new PackageError("分镜必须引用包内有效的原始分集 ID");
+        if (!shot.beatId) continue;
+        if (typeof shot.beatId !== "string" || !beats.has(shot.beatId)) {
+            throw new PackageError("分镜场次必须属于它引用的分集");
+        }
+    }
+}
+
 function parseEpisode(
     raw: Record<string, unknown>,
     projectId: Id,
     index: number,
 ): Episode {
     const at = nowIso();
+    const story = normalizeEpisodeStory(raw.story);
+    // Synthesized beat identities must not merge with explicit ones during remapping.
+    assertUniqueOriginalIds(story.beats.map((beat) => ({id: beat.id})), "场次");
     return {
         id: String(raw.id ?? createId("ep")),
         projectId,
         order: Number.isFinite(Number(raw.order)) ? Number(raw.order) : index,
         title: String(raw.title ?? ""),
-        story: normalizeEpisodeStory(raw.story),
+        story,
         ...(raw.shotFilters === undefined
             ? {}
             : {shotFilters: normalizeShotFilters(raw.shotFilters)}),
@@ -501,6 +556,29 @@ function parseShot(
         beatId: raw.beatId ? String(raw.beatId) : undefined,
         extra: pickExtra(raw, SHOT_KEYS),
     };
+}
+
+function remapShotStoryScope(
+    shot: Shot,
+    hasEpisodes: boolean,
+    fallbackEpisodeId: Id,
+    episodeMap: Map<string, string>,
+    beatMaps: Map<string, Map<string, string>>,
+): void {
+    const oldEpisodeId = shot.episodeId;
+    if (!hasEpisodes) {
+        shot.episodeId = fallbackEpisodeId;
+        const legacyBeatMap = beatMaps.values().next().value;
+        shot.beatId = shot.beatId ? legacyBeatMap?.get(shot.beatId) : undefined;
+        return;
+    }
+    const episodeId = episodeMap.get(oldEpisodeId);
+    if (!episodeId) throw new PackageError("分镜分集 ID 无法重映射");
+    shot.episodeId = episodeId;
+    if (!shot.beatId) return;
+    const beatId = beatMaps.get(oldEpisodeId)?.get(shot.beatId);
+    if (!beatId) throw new PackageError("分镜场次 ID 无法重映射");
+    shot.beatId = beatId;
 }
 
 function remapId(
@@ -854,6 +932,7 @@ export async function importProjectZip(file: Blob): Promise<Project> {
         }
     }
     const hasEpisodes = episodesRaw.length > 0;
+    validateModernShotRelations(episodesRaw, shotsRaw);
 
     const project = parseProject(projectRaw, "导入的项目");
     const audioPackage = parseAudioPackage(await readJson("audioProject.json"), projectRaw.id, getProjectKind(project));
@@ -1016,10 +1095,9 @@ export async function importProjectZip(file: Blob): Promise<Project> {
 
     const shots = shotsRaw.map((raw, index) => {
         const shot = parseShot(raw, projectId, fallbackEpisodeId, index);
-        const oldEpisodeId = shot.episodeId;
+        remapShotStoryScope(shot, hasEpisodes, fallbackEpisodeId, episodeMap, beatMaps);
         shot.id = remapId(shotMap, shot.id, "sht")!;
         shot.projectId = projectId;
-        shot.episodeId = episodeMap.get(oldEpisodeId) ?? fallbackEpisodeId;
         shot.firstFrame = remapSlot(shot.firstFrame, mapMedia);
         shot.lastFrame = remapSlot(shot.lastFrame, mapMedia);
         shot.clip = remapSlot(shot.clip, mapMedia);
@@ -1032,9 +1110,6 @@ export async function importProjectZip(file: Blob): Promise<Project> {
         // A missing explicit style must not unexpectedly inherit a different default.
         if (typeof shot.styleId === "string")
             shot.styleId = styleMap.get(shot.styleId) ?? null;
-        const beatMap =
-            beatMaps.get(oldEpisodeId) ?? beatMaps.values().next().value;
-        shot.beatId = shot.beatId ? beatMap?.get(shot.beatId) : undefined;
         return shot;
     });
 

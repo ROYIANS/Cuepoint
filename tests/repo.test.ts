@@ -27,6 +27,7 @@ import {
   patchStyle,
   patchEpisodeShots,
   putMedia,
+  setCharacterSlot,
   reorderBeats,
   reorderEpisodes,
   reorderShots,
@@ -165,9 +166,8 @@ describe("repository invariants", () => {
       referenceImageIds: [sourceMediaId],
       result: { mediaId: sourceMediaId, kind: "image" as const },
     };
-    await patchCharacter(character.id, {
-      slots: { front: sharedSlot, side: sharedSlot },
-    });
+    await setCharacterSlot(character.id, "front", sharedSlot);
+    await setCharacterSlot(character.id, "side", sharedSlot);
 
     const copy = await copyStudioCharacter(project.id, character.id);
     const mappedIds = [

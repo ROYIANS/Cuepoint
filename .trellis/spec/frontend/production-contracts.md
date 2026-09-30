@@ -68,3 +68,7 @@ ZIP generation uses browser memory (STORE for media); no streaming archive or ti
 
 See [Project References](./agent-references.md) for shared source ownership,
 request materialization, withdrawal, source evidence and ZIP lifecycle contracts.
+
+## Modern ZIP identity and parent ownership (C03)
+
+See [the C03 parent ownership and modern package identity contract](state-management.md#c03-parent-ownership-and-modern-package-identity-contract-2026-09-30) for the seven-section contract. Modern nonempty episodes require original shot/beat ownership before repair; normalized beat identities must also remain unique before remapping. Legacy absent/empty episodes keep their explicit compatibility branch.

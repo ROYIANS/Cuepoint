@@ -68,6 +68,12 @@ function pickPatch<T extends object>(patch: T, keys: readonly (keyof T)[]): Part
     return Object.fromEntries(keys.filter((key) => Object.hasOwn(patch, key)).map((key) => [key, patch[key]])) as Partial<T>;
 }
 
+function assertTextPatch(patch: object, mediaFields: readonly string[]): void {
+    if (mediaFields.some(field => Object.hasOwn(patch, field))) {
+        throw new Error("媒体字段请通过专用槽位接口保存");
+    }
+}
+
 function touch<T extends { updatedAt: string }>(record: T): T {
     return {...record, updatedAt: nowIso()};
 }
@@ -75,6 +81,11 @@ function touch<T extends { updatedAt: string }>(record: T): T {
 export async function touchProject(projectId: Id): Promise<void> {
     if (isStudioLibrary(projectId)) return;
     await db.projects.update(projectId, {updatedAt: nowIso()});
+}
+
+async function assertProjectOwner(projectId: Id): Promise<void> {
+    if (isStudioLibrary(projectId)) return;
+    if (!await db.projects.get(projectId)) throw new Error("项目不存在，无法保存");
 }
 
 export function emptyProject(
@@ -407,6 +418,9 @@ export async function patchProjectOutput(
     await db.transaction("rw", PRODUCTION_TABLES, async () => {
         const project = await db.projects.get(id);
         if (!project) throw new Error("项目不存在，无法保存");
+        if (patch.coverMediaId !== undefined && patch.coverMediaId !== null) {
+            await assertSlotMedia(id, {...emptySlot(), result: {mediaId: patch.coverMediaId, kind: "image"}});
+        }
         const previousCover = project.coverMediaId;
         const next: Project = {
             ...project,
@@ -711,6 +725,7 @@ async function recycleSlotMedia(
 
 export async function putMedia(record: MediaRecord): Promise<Id> {
     return db.transaction("rw", db.media, db.projects, async () => {
+        await assertProjectOwner(record.projectId);
         // Physical replacement is a new record; immutable IDs keep pending previews valid.
         await db.media.add(record);
         await touchProject(record.projectId);
@@ -863,31 +878,35 @@ export function copyStudioStyle(projectId: Id, sourceId: Id): Promise<VisualStyl
 }
 
 export async function addCharacter(projectId: Id): Promise<Character> {
-    const character = emptyCharacter(projectId);
-    await db.characters.add(character);
-    await touchProject(projectId);
-    return character;
+    return db.transaction("rw", db.projects, db.characters, async () => {
+        await assertProjectOwner(projectId);
+        const character = emptyCharacter(projectId);
+        await db.characters.add(character);
+        await touchProject(projectId);
+        return character;
+    });
 }
 
 export async function patchCharacter(
     id: Id,
-    patch: Partial<Omit<Character, "id" | "projectId" | "createdAt">>,
+    patch: Partial<Omit<Character, "id" | "projectId" | "createdAt" | "slots">>,
     baseline?: Partial<Character>,
 ): Promise<void> {
+    assertTextPatch(patch, ["slots"]);
     await db.transaction("rw", db.projects, db.characters, async () => {
         const character = await db.characters.get(id);
         if (!character) throw new Error("角色不存在，无法保存");
-        patch = pickPatch(patch, ["name", "bio", "appearance", "notes", "personality", "motivation", "voice", "slots", "extra"]);
+        patch = pickPatch(patch, ["name", "bio", "appearance", "notes", "personality", "motivation", "voice", "extra"]);
         assertDraftBaseline(character, patch, baseline);
-        await db.characters.put(touch({
-            ...character, ...patch,
-            ...(patch.slots ? {slots: {...character.slots, ...patch.slots}} : {}),
-        }));
+        await db.characters.put(touch({...character, ...patch}));
         await touchProject(character.projectId);
     });
 }
 
-async function assertSlotMedia(projectId: Id, slot: GenerationSlot): Promise<void> {
+async function assertSlotMedia(projectId: Id, slot: GenerationSlot, allowVideoResult = false): Promise<void> {
+    if (slot.result && slot.result.kind !== "image" && !(allowVideoResult && slot.result.kind === "video")) {
+        throw new Error("素材结果类型不适用于当前槽位");
+    }
     const expected = [
         ...slot.referenceImageIds.map((id) => ({id, kind: "image" as const})),
         ...slot.referenceVideoIds.map((id) => ({id, kind: "video" as const})),
@@ -953,26 +972,27 @@ export async function deleteCharacter(id: Id): Promise<void> {
 }
 
 export async function addScene(projectId: Id): Promise<Scene> {
-    const scene = emptyScene(projectId);
-    await db.scenes.add(scene);
-    await touchProject(projectId);
-    return scene;
+    return db.transaction("rw", db.projects, db.scenes, async () => {
+        await assertProjectOwner(projectId);
+        const scene = emptyScene(projectId);
+        await db.scenes.add(scene);
+        await touchProject(projectId);
+        return scene;
+    });
 }
 
 export async function patchScene(
     id: Id,
-    patch: Partial<Omit<Scene, "id" | "projectId" | "createdAt">>,
+    patch: Partial<Omit<Scene, "id" | "projectId" | "createdAt" | "slots">>,
     baseline?: Partial<Scene>,
 ): Promise<void> {
+    assertTextPatch(patch, ["slots"]);
     await db.transaction("rw", db.projects, db.scenes, async () => {
         const scene = await db.scenes.get(id);
         if (!scene) throw new Error("场景不存在，无法保存");
-        patch = pickPatch(patch, ["name", "location", "timeOfDay", "atmosphere", "notes", "geography", "lighting", "slots", "extra"]);
+        patch = pickPatch(patch, ["name", "location", "timeOfDay", "atmosphere", "notes", "geography", "lighting", "extra"]);
         assertDraftBaseline(scene, patch, baseline);
-        await db.scenes.put(touch({
-            ...scene, ...patch,
-            ...(patch.slots ? {slots: {...scene.slots, ...patch.slots}} : {}),
-        }));
+        await db.scenes.put(touch({...scene, ...patch}));
         await touchProject(scene.projectId);
     });
 }
@@ -1023,26 +1043,27 @@ export async function deleteScene(id: Id): Promise<void> {
 }
 
 export async function addProp(projectId: Id): Promise<Prop> {
-    const prop = emptyProp(projectId);
-    await db.props.add(prop);
-    await touchProject(projectId);
-    return prop;
+    return db.transaction("rw", db.projects, db.props, async () => {
+        await assertProjectOwner(projectId);
+        const prop = emptyProp(projectId);
+        await db.props.add(prop);
+        await touchProject(projectId);
+        return prop;
+    });
 }
 
 export async function patchProp(
     id: Id,
-    patch: Partial<Omit<Prop, "id" | "projectId" | "createdAt">>,
+    patch: Partial<Omit<Prop, "id" | "projectId" | "createdAt" | "slots">>,
     baseline?: Partial<Prop>,
 ): Promise<void> {
+    assertTextPatch(patch, ["slots"]);
     await db.transaction("rw", db.projects, db.props, async () => {
         const prop = await db.props.get(id);
         if (!prop) throw new Error("道具不存在，无法保存");
-        patch = pickPatch(patch, ["name", "kind", "notes", "appearance", "material", "size", "usage", "continuity", "slots", "extra"]);
+        patch = pickPatch(patch, ["name", "kind", "notes", "appearance", "material", "size", "usage", "continuity", "extra"]);
         assertDraftBaseline(prop, patch, baseline);
-        await db.props.put(touch({
-            ...prop, ...patch,
-            ...(patch.slots ? {slots: {...prop.slots, ...patch.slots}} : {}),
-        }));
+        await db.props.put(touch({...prop, ...patch}));
         await touchProject(prop.projectId);
     });
 }
@@ -1080,26 +1101,27 @@ export async function deleteProp(id: Id): Promise<void> {
 }
 
 export async function addStyle(projectId: Id): Promise<VisualStyle> {
-    const style = emptyStyle(projectId);
-    await db.styles.add(style);
-    await touchProject(projectId);
-    return style;
+    return db.transaction("rw", db.projects, db.styles, async () => {
+        await assertProjectOwner(projectId);
+        const style = emptyStyle(projectId);
+        await db.styles.add(style);
+        await touchProject(projectId);
+        return style;
+    });
 }
 
 export async function patchStyle(
     id: Id,
-    patch: Partial<Omit<VisualStyle, "id" | "projectId" | "createdAt">>,
+    patch: Partial<Omit<VisualStyle, "id" | "projectId" | "createdAt" | "slots">>,
     baseline?: Partial<VisualStyle>,
 ): Promise<void> {
+    assertTextPatch(patch, ["slots"]);
     await db.transaction("rw", db.projects, db.styles, async () => {
         const style = await db.styles.get(id);
         if (!style) throw new Error("风格不存在，无法保存");
-        patch = pickPatch(patch, ["name", "notes", "palette", "lighting", "lens", "composition", "negativePrompt", "slots", "extra"]);
+        patch = pickPatch(patch, ["name", "notes", "palette", "lighting", "lens", "composition", "negativePrompt", "extra"]);
         assertDraftBaseline(style, patch, baseline);
-        await db.styles.put(touch({
-            ...style, ...patch,
-            ...(patch.slots ? {slots: {...style.slots, ...patch.slots}} : {}),
-        }));
+        await db.styles.put(touch({...style, ...patch}));
         await touchProject(style.projectId);
     });
 }
@@ -1476,13 +1498,14 @@ export async function addShot(
 
 export async function patchShot(
     id: Id,
-    patch: Partial<Omit<Shot, "id" | "projectId" | "episodeId">>,
+    patch: Partial<Omit<Shot, "id" | "projectId" | "episodeId" | ShotPictureField>>,
     baseline?: Partial<Shot>,
 ): Promise<void> {
+    assertTextPatch(patch, SHOT_PICTURE_FIELDS);
     await db.transaction("rw", PRODUCTION_TABLES, async () => {
         const shot = await db.shots.get(id);
         if (!shot) throw new Error("镜头不存在，无法保存");
-        patch = pickPatch(patch, ["order", "shotNumber", "status", "firstFrame", "lastFrame", "clip", "category", "durationSec", "content", "notes", "sceneCloseup", "sound", "emotion", "cameraAngle", "cameraGear", "focalLength", "characterIds", "sceneId", "beatId", "propIds", "styleId", "extra"]);
+        patch = pickPatch(patch, ["order", "shotNumber", "status", "category", "durationSec", "content", "notes", "sceneCloseup", "sound", "emotion", "cameraAngle", "cameraGear", "focalLength", "characterIds", "sceneId", "beatId", "propIds", "styleId", "extra"]);
         if (baseline) {
             for (const key of Object.keys(patch) as Array<keyof typeof patch>) {
                 const current = key === "durationSec" ? shot.durationSec ?? 0 : shot[key] ?? "";
@@ -1721,7 +1744,7 @@ export async function setShotSlot(
         const shot = await db.shots.get(id);
         if (!shot) throw new Error("镜头不存在，无法保存");
         if (baseline && !sameSlotValue(shot[field], baseline) && !sameSlotValue(shot[field], slot)) throw new DraftConflictError();
-        await assertSlotMedia(shot.projectId, slot);
+        await assertSlotMedia(shot.projectId, slot, field === "clip");
         const previous = shot[field];
         await db.shots.put({...shot, [field]: slot});
         await touchProject(shot.projectId);

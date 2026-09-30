@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
-import { addCharacter, addProp, addScene, addShot, addStoryBeat, addStyle, createProject, patchCharacter, patchProjectDetails, patchShot, patchStoryBeat, putMedia } from "@/db/repo";
+import { addCharacter, addProp, addScene, addShot, addStoryBeat, addStyle, createProject, patchCharacter, patchProjectDetails, patchShot, patchStoryBeat, putMedia, setShotSlot } from "@/db/repo";
 import { buildProductionContext } from "@/lib/productionContext";
 import { targetRevision, validateProductionTarget } from "@/lib/productionRevision";
 import { defaultImageGeneration, defaultVideoGeneration } from "@/domain/output";
@@ -51,7 +51,8 @@ describe("scoped production context", () => {
     await db.projects.update(project.id, { extra: { apiKey: "SECRET_PROJECT" } });
     await db.connectors.put({ id: "connector", definitionId: "apimart", protocol: "openai-compatible", baseUrl: "https://example.test", apiKey: "SECRET_CONNECTOR", updatedAt: "today" });
     await putMedia({ id: "image", projectId: project.id, filename: "one.png", mimeType: "image/png", blob: new Blob(["SECRET_BYTES"]) });
-    await patchShot(shot.id, { beatId: beat.id, propIds: [prop.id], durationSec: 8, firstFrame: { ...emptySlot(), result: { mediaId: "image", kind: "image" } } });
+    await patchShot(shot.id, { beatId: beat.id, propIds: [prop.id], durationSec: 8 });
+    await setShotSlot(shot.id, "firstFrame", { ...emptySlot(), result: { mediaId: "image", kind: "image" } });
     const unlinked = await addCharacter(project.id);
     await patchCharacter(unlinked.id, { name: "UNLINKED_CHARACTER" });
     const context = await buildProductionContext(project.id, episode.id, shot.id);
