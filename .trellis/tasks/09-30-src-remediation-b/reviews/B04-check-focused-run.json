@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "tests/openaiCompatible.test.ts",
+    "tests/connectors.test.ts",
+    "tests/modelMetadata.test.ts",
+    "tests/agentAuditRemediation.test.ts"
+  ],
+  "startedAt": "2026-09-30T07:47:20.010Z",
+  "seconds": 2.504,
+  "exit": 0,
+  "stdoutLog": "B04-check-focused.log"
+}

@@ -1,0 +1,22 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "tests/apimartAudio.test.ts",
+    "tests/audioGenerationRecoveryAudit.test.ts",
+    "tests/audioGenerationRuntime.test.ts",
+    "tests/audioTaskEvidence.test.ts",
+    "tests/audioFoundation.test.ts",
+    "tests/projectPackage.test.ts",
+    "tests/audioGenerationAgent.test.ts",
+    "tests/audioAgentExecution.test.ts",
+    "tests/audioOutputEvidence.test.ts",
+    "--reporter=json",
+    "--outputFile=/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-remediation-b/reviews/B05-check-tests.json"
+  ],
+  "startedAt": "2026-09-30T17:06:46.537769+08:00",
+  "seconds": 2.771474,
+  "exit": 0
+}

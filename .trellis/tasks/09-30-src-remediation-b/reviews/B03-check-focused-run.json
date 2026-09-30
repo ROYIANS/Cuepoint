@@ -1,0 +1,22 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "tests/b03IntentBoundaries.test.ts",
+    "tests/contextManagement.test.ts",
+    "tests/repo.test.ts",
+    "tests/repoReliability.test.ts",
+    "tests/shotBulkUndo.test.ts",
+    "tests/draftConcurrency.test.ts",
+    "tests/draftMedia.test.ts",
+    "tests/manualDraftBaseline.test.ts",
+    "tests/manualDraftWiring.test.ts",
+    "tests/b01QueryIdentity.test.ts",
+    "tests/b02MemoryPromotion.test.ts"
+  ],
+  "startedAt": "2026-09-30T07:27:30.713695+00:00",
+  "endedAt": "2026-09-30T07:27:33.568330+00:00",
+  "exitCode": 0
+}

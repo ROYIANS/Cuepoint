@@ -19,7 +19,8 @@
   "pr_url": null,
   "subtasks": [],
   "children": [
-    "09-30-src-remediation-a"
+    "09-30-src-remediation-a",
+    "09-30-src-remediation-b"
   ],
   "parent": "09-30-src-quality-architecture-audit",
   "relatedFiles": [],

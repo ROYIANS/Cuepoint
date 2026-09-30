@@ -1,0 +1,19 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Wholebatch affectedfrontend QualityCheck"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "AllB types/protocol boundaries"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Wholebatch gate and regression evidence"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "A04+B01+B03 full late sections disk read"}
+{"file": ".trellis/spec/frontend/hook-guidelines.md", "reason": "Queryidentity, manual lifecycle, B06"}
+{"file": ".trellis/spec/frontend/project-memory.md", "reason": "B02 frozen sessions"}
+{"file": ".trellis/spec/frontend/ai-connectors.md", "reason": "B04/B05 read/requestprotocol"}
+{"file": ".trellis/spec/frontend/audio-music.md", "reason": "B05 durability/package/recovery"}
+{"file": ".trellis/spec/frontend/agent-references.md", "reason": "B07 compose capture/move/ack/import"}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Weblock/routecancel/paidrequest preservation"}
+{"file": ".trellis/spec/frontend/chat-performance.md", "reason": "Agent unchangedscroll/memo/loading"}
+{"file": ".trellis/tasks/09-30-src-remediation-b/research/B-batch-review-contract.md", "reason": "Fullbatch acceptance and source hashes"}
+{"file": ".trellis/tasks/09-30-src-remediation-b/reviews/B01-check.md", "reason": "Latest B01 independent evidence"}
+{"file": ".trellis/tasks/09-30-src-remediation-b/reviews/B02-check.md", "reason": "Latest B02 independent evidence"}
+{"file": ".trellis/tasks/09-30-src-remediation-b/reviews/B03-check.md", "reason": "Latest B03 independent evidence"}
+{"file": ".trellis/tasks/09-30-src-remediation-b/reviews/B04-check.md", "reason": "Latest B04 independent evidence"}
+{"file": ".trellis/tasks/09-30-src-remediation-b/reviews/B05-check.md", "reason": "Latest B05 independent evidence"}
+{"file": ".trellis/tasks/09-30-src-remediation-b/reviews/B06-check.md", "reason": "Latest B06 independent evidence"}
+{"file": ".trellis/tasks/09-30-src-remediation-b/reviews/B07-check.md", "reason": "Latest B07 independent evidence"}

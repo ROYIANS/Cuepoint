@@ -1,0 +1,57 @@
+[
+  {
+    "name": "typecheck",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "lint"
+    ],
+    "exit": 0,
+    "seconds": 7.31
+  },
+  {
+    "name": "tests",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "test",
+      "--reporter=dot"
+    ],
+    "exit": 0,
+    "seconds": 12.61
+  },
+  {
+    "name": "b01-browser",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/b01-browser-regression.mjs"
+    ],
+    "exit": 0,
+    "seconds": 22.31
+  },
+  {
+    "name": "b07-browser",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/b07-browser-regression.mjs"
+    ],
+    "exit": 0,
+    "seconds": 3.15
+  },
+  {
+    "name": "models",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "model-bank:verify"
+    ],
+    "exit": 0,
+    "seconds": 0.71
+  },
+  {
+    "name": "build",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "build"
+    ],
+    "exit": 0,
+    "seconds": 16.92
+  }
+]

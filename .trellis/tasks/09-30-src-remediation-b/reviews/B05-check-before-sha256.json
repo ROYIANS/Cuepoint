@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-09-30T16:58:46.658569+08:00",
+  "files": {
+    "src/lib/ai/apimartAudio.ts": "072ef52ecadf96230346389a22bb14e3f630cc0ac590a9e538abdb0d7caa3611",
+    "src/lib/audioGeneration/taskIds.ts": "4cf403cb20330f015bf6bfb0b8c99d43f82e328ffa92e8c801deaa63e2bef002",
+    "src/lib/audioGeneration/observations.ts": "3a4eaa6f6cf3c0186ff5d129bdaa07acf59df509b19523301d7237d502963cbe",
+    "src/lib/audioGeneration/runtime.ts": "e63f2ea630494265031c7110a7beac4dd190dfe61e7dbefbb7d10caf7cefb054",
+    "tests/apimartAudio.test.ts": "720c185ec45cd25cf717f832955fdee7329a0cb318af8324b503d7f9b0bb62af",
+    "tests/audioGenerationRecoveryAudit.test.ts": "ff9598355ff7e5c91e0379337f699e285537c2c2f9e0e300209a974d1b082523",
+    "tests/audioTaskEvidence.test.ts": "55726461495950bea18a3cfe2479be9f2078231fd76c242d9ffaa69faad6ceb2",
+    "src/db/audioGeneration.ts": "4a0dfc90400e7bb133e44ffa7062dcf1b1da919ac6b06511fb77bfe48727535b",
+    "src/lib/audioProjectPackage.ts": "3f14040e3545ed08de7778ea2722e6c9f497023ecf7dd3984a6f63bbc50655ca"
+  }
+}

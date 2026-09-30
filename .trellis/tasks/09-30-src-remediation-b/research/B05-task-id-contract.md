@@ -1,0 +1,17 @@
+# B05: music task identity and cancellation
+
+Coordinator source preparation, 2026-09-30. B01 still active. Read audit providers-media PM-03/04/06, apimartAudio, observations, audioGeneration runtime/db, audioProjectPackage.
+
+## Present failure
+submitApimartMusic only nonempty-checks task_id and returns duplicates. Runtime persists submitted IDs; refresh creates duplicated observations via taskIds.flatMap and strict observations validator throws on first checkpoint, so later siblings never reach downloads. Observation boundary already caps 100 and ID length512/control characters; package taskIds z.array(z.string()) is weaker. get task uses encodeURIComponent but dot segment stays literal; real Request normalizes it. Encoded slash task/1 is expressly supported by current tests and must remain supported. jsonEnvelope body.json catch always protocol, even AbortError or aborted signal. Existing request/blob catches use signal state but not independent AbortError name.
+
+## Required decisions for implementation
+One pure task-ID constraint used by adapter/storage/query/import: nonblank bounded string, no control chars, reject exact dot segments, allow slash encoded by URL construction; collection unique and <=100 after supported duplicate normalization. Duplicate successful submit IDs represent the same task: deduplicate preserving first order before accepting, no resubmit. Do not silently accept other malformed IDs or oversized sets as complete. Keep uncertain/non-resubmit paid outcome semantics and diagnostic error.
+
+Support recovery of already persisted duplicate taskIds: canonicalize unique valid IDs inside existing write checkpoint before loops; no POST. Strict new storage/import boundary and compatibility recovery need deliberate ordering (cannot use strict validator to prevent repairing a legacy duplicate row). Preserve independent existing observations and verified results; no fabricated provider statuses; current sibling pass can checkpoint and continue downloads. Invalid legacy IDs should produce local explainable failure without querying wrong endpoint or retrying paid request.
+
+Cancellation classified as aborted on signal.aborted OR caught DOMException/Error named AbortError, including json/body and binary/CDN read. Malformed ordinary JSON remains protocol; no extra call.
+
+Likely scope apimartAudio, observations (or new narrow taskIds pure domain helper), audioGeneration repo/runtime and audioProjectPackage; tests apimartAudio/audioGenerationRecoveryAudit/audioTaskEvidence/package boundary. Prove uniqueness/count/length/dot/control invalid cases, real Request URL task/1 vs ./.. rejected before fetch, completed sibling plus processing/retry evidence preservation, duplicate legacy resume GET counts/checkpoints/noPOST, aborted JSON-body and independent AbortError vs malformed JSON. Reuse actual db/fake-indexeddb. Do not broaden music draft durations C02 or provider request policy D07.
+
+Current runtime submit handling already maps network/aborted/protocol failure to uncertain, avoiding retry of paid POST; preserve it. patchAudioGenerationJob validates nextobservations beforeput and will accept legacyduplicate repair onlyif nexttaskIds canonicalized. readJob currently ownedAudioRow not strictobservations-onread; confirm entryorder atimplementation. Package has two validationentryloops; both mustshare IDconstraint. Nonmusic/speech prepared taskIds=[] mustremainvalid. Excessive/malformed successfulprovider submission cannot beaccepted onlypartiallywithoutdiagnostic, and nevercauseautomaticnewPOST.

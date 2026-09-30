@@ -1,0 +1,106 @@
+{
+  "baselinePolicy": "A integration overrides the original full audit; unchanged B02 files have no A integration row, so use their original full-audit row.",
+  "current": "B02-check-eslint.json",
+  "handoff": "integration/eslint-results.json",
+  "ignoredRules": [
+    "complexity",
+    "sonarjs/cognitive-complexity"
+  ],
+  "files": [
+    {
+      "path": "src/components/agent/TaskWrapup.tsx",
+      "baseline": ".trellis/tasks/09-30-src-quality-architecture-audit/research/tools/eslint-results.json",
+      "newNonComplexity": [],
+      "removedNonComplexity": [],
+      "removedSinceB02Handoff": [
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+          "count": 1
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "message": "The ref value 'promotion.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'promotion.current' to a variable inside the effect, and use that variable in the cleanup function.",
+          "count": 1
+        }
+      ],
+      "remainingNonComplexity": [
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "message": "React Hook useEffect has missing dependencies: 'candidate' and 'draft'. Either include them or remove the dependency array.",
+          "count": 1
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "message": "React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked.",
+          "count": 2
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "message": "Do not nest ternary expressions.",
+          "count": 6
+        }
+      ],
+      "complexityDiagnostics": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'TaskWrapup' has a complexity of 75. Maximum allowed is 20.",
+          "line": 127,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 127,
+          "endColumn": 27
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 51 to the 20 allowed.",
+          "line": 127,
+          "column": 17,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 127,
+          "endColumn": 27
+        }
+      ]
+    },
+    {
+      "path": "src/components/memory/MemoryEditor.tsx",
+      "baseline": ".trellis/tasks/09-30-src-quality-architecture-audit/research/tools/eslint-results.json",
+      "newNonComplexity": [],
+      "removedNonComplexity": [],
+      "removedSinceB02Handoff": [],
+      "remainingNonComplexity": [
+        {
+          "ruleId": "no-nested-ternary",
+          "message": "Do not nest ternary expressions.",
+          "count": 2
+        }
+      ],
+      "complexityDiagnostics": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'MemoryEditor' has a complexity of 62. Maximum allowed is 20.",
+          "line": 41,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 41,
+          "endColumn": 29
+        }
+      ]
+    },
+    {
+      "path": "src/components/memory/MemoryPromotion.tsx",
+      "baseline": ".trellis/tasks/09-30-src-quality-architecture-audit/research/tools/eslint-results.json",
+      "newNonComplexity": [],
+      "removedNonComplexity": [],
+      "removedSinceB02Handoff": [],
+      "remainingNonComplexity": [],
+      "complexityDiagnostics": []
+    }
+  ]
+}

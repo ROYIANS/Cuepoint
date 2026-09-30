@@ -1,0 +1,8 @@
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Compose scope types"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Actual callback regressions"}
+{"file": ".trellis/spec/frontend/hook-guidelines.md", "reason": "Lifetimes/scoped async state"}
+{"file": ".trellis/spec/frontend/agent-references.md", "reason": "Origin scoped imports; first send transfer and clear"}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Thread lock/route cancellation and failed draft retention"}
+{"file": ".trellis/spec/frontend/chat-performance.md", "reason": "Preserve loading/scroll/memo contracts"}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "Extend existing compose/reference session instead of global registry"}
+{"file": ".trellis/tasks/09-30-src-remediation-b/research/B07-thread-scope-contract.md", "reason": "B07 exact scope and firstsend failure semantics"}

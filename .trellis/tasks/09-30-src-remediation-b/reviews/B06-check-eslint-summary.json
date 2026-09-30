@@ -1,0 +1,124 @@
+{
+  "baseline": ".trellis/tasks/09-30-src-quality-architecture-audit/research/tools/eslint-results.json",
+  "initialScan": "B06-check-initial-eslint.json",
+  "finalScan": "B06-check-self-fix-eslint.json",
+  "sources": {
+    "src/components/studio/ConnectorsPage.tsx": {
+      "baselineCounts": {
+        "errors": 0,
+        "warnings": 7
+      },
+      "finalCounts": {
+        "errors": 0,
+        "warnings": 8
+      },
+      "initialNewNonComplexity": [],
+      "finalNewNonComplexity": [],
+      "finalInheritedNonComplexity": [
+        {
+          "severity": 1,
+          "rule": "react-hooks/exhaustive-deps",
+          "message": "The 'connectors' logical expression could make the dependencies of useMemo Hook (at line <relocated>) change on every render. Move it inside the useMemo callback. Alternatively, wrap the initialization of 'connectors' in its own useMemo() Hook.",
+          "count": 1
+        },
+        {
+          "severity": 1,
+          "rule": "no-nested-ternary",
+          "message": "Do not nest ternary expressions.",
+          "count": 5
+        }
+      ],
+      "removedDuringCheck": [],
+      "baselineComplexity": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'ConnectorsPage' has a complexity of 32. Maximum allowed is 20.",
+          "line": 32,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 32,
+          "endColumn": 31
+        }
+      ],
+      "finalComplexity": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'ConnectorsPage' has a complexity of 34. Maximum allowed is 20.",
+          "line": 36,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 36,
+          "endColumn": 31
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 26 to the 20 allowed.",
+          "line": 157,
+          "column": 20,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 157,
+          "endColumn": 30
+        }
+      ],
+      "finalEffectDependencyDiagnostics": [
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "The 'connectors' logical expression could make the dependencies of useMemo Hook (at line 44) change on every render. Move it inside the useMemo callback. Alternatively, wrap the initialization of 'connectors' in its own useMemo() Hook.",
+          "line": 37,
+          "column": 11,
+          "nodeType": "VariableDeclarator",
+          "endLine": 37,
+          "endColumn": 77
+        }
+      ]
+    },
+    "src/components/story/StoryPage.tsx": {
+      "baselineCounts": {
+        "errors": 2,
+        "warnings": 0
+      },
+      "finalCounts": {
+        "errors": 2,
+        "warnings": 0
+      },
+      "initialNewNonComplexity": [
+        {
+          "severity": 2,
+          "rule": "react-hooks/rules-of-hooks",
+          "message": "React Hook \"useLatest\" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?",
+          "count": 1
+        }
+      ],
+      "finalNewNonComplexity": [],
+      "finalInheritedNonComplexity": [
+        {
+          "severity": 2,
+          "rule": "@typescript-eslint/no-unnecessary-type-assertion",
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "count": 2
+        }
+      ],
+      "removedDuringCheck": [
+        {
+          "severity": 2,
+          "rule": "react-hooks/rules-of-hooks",
+          "message": "React Hook \"useLatest\" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?",
+          "count": 1
+        }
+      ],
+      "baselineComplexity": [],
+      "finalComplexity": [],
+      "finalEffectDependencyDiagnostics": []
+    }
+  },
+  "errors": 2,
+  "warnings": 8,
+  "signatureNormalization": "Diagnostic line/column fields and embedded (at line N) references are ignored for relocated baseline comparisons. Rule, severity, message and duplicate count are compared."
+}

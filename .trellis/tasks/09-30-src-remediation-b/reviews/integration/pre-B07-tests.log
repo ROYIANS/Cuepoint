@@ -1,0 +1,6 @@
+
+> cuepoint@0.1.0 test /Users/xiaomengdao/WebstormProjects/aifenjing
+> vitest run --reporter=json --outputFile=/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-remediation-b/reviews/integration/pre-B07-tests.json
+
+JSON report written to /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-remediation-b/reviews/integration/pre-B07-tests.json
+ ELIFECYCLE  Test failed. See above for more details.

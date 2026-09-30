@@ -1,0 +1,22 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "tests/b06EditorSessions.test.ts",
+    "tests/debouncedDraft.test.ts",
+    "tests/draftConcurrency.test.ts",
+    "tests/connectors.test.ts",
+    "tests/connectorMigration.test.ts",
+    "--reporter=default",
+    "--reporter=json",
+    "--outputFile=/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-remediation-b/reviews/B06-check-self-fix-tests.json"
+  ],
+  "environment": {
+    "PATH": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+  },
+  "startedAt": "2026-09-30T09:51:15.021Z",
+  "seconds": 2.553,
+  "exit": 0
+}

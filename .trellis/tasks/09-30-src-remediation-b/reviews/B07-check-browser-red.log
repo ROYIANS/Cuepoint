@@ -1,0 +1,21 @@
+FAIL actual browser history A/B/back/forward keeps thread text and references aligned; 0 passed; artifacts: /var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/b07-browser-failure-DCTZDl
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'Browser A' !== ''
+
+    at file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/b07-browser-regression.mjs:93:16
+    at async test (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/b07-browser-regression.mjs:82:14)
+    at async file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/b07-browser-regression.mjs:90:5 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'Browser A',
+  expected: '',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.11.0

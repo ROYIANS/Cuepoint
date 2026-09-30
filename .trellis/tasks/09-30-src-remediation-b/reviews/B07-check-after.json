@@ -1,0 +1,9 @@
+{
+  "src/components/agent/AgentChatPage.tsx": "e59b75a283eeaf80084d7b8769ca842003a21460ad3e9347c288fdfa8a5d6487",
+  "src/components/agent/useReferenceDraft.ts": "c2649c23d53889a4d6bdacbaa533858001746cba4400ab4b8e1baf60ad3cf48f",
+  "tests/b07ComposeSessions.test.ts": "cefe76be8b32e1d247f58416e39c781bb5cd1e239754823fca16caff0c1e8b13",
+  "scripts/b07-browser-regression.mjs": "4e288edb5535310937a98667690ddcdddce0cec176619fcb5e5bf506fe422077",
+  "tests/fixtures/b07/index.html": "f3d13595619adc85cd86846ae1d28badd918a956f58a9ce0d3e222caa0623b20",
+  "tests/fixtures/b07/harness.tsx": "1e7d5485ba34753d20f2c06e375cf7ce27a8c3928e222f10f4b2e6711e58ef53",
+  "tests/fixtures/b07/surface.tsx": "a733f584d25d7a7ee9fd52716bf8ba1976f377b6dd9f73086698bf5aeb1aad08"
+}

@@ -1,0 +1,24 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "tests/b06EditorSessions.test.ts",
+    "tests/debouncedDraft.test.ts",
+    "tests/draftConcurrency.test.ts",
+    "tests/connectors.test.ts",
+    "tests/connectorMigration.test.ts",
+    "--reporter=default",
+    "--reporter=json",
+    "--outputFile=.trellis/tasks/09-30-src-remediation-b/reviews/B-final-check-B06-focused.json"
+  ],
+  "exit": 0,
+  "startedAt": "2026-09-30T10:55:48.031Z",
+  "timingSource": "Vitest JSON startTime; shell wall-clock interval was not separately recorded",
+  "success": true,
+  "testFiles": 5,
+  "tests": 176,
+  "passed": 176,
+  "failed": 0
+}

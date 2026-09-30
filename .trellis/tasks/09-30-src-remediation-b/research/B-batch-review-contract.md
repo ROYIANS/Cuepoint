@@ -1,0 +1,14 @@
+# B final full-scope review contract
+
+Coordinator preparation. Execute only after B01–B07 independently pass. This is the final Phase 2.2 review of the whole batch, not a review limited to B07.
+
+Affected package: single-repo frontend; run get_context.py --mode packages and read frontend/index.md Quality Check. Restore curated check.jsonl with all relevant B specs and unit reviews. Read every changed/new product file against committed A HEAD 20b0204 and map every one to unit coverage; verify-reviewed-files.py must have no missing/changed files after all final snapshots. If a final self-fix changes a unit hash, record the replacement snapshot with unit attribution rather than silently preserving a stale PASS. Check source/test hashes before and after the complete gate.
+
+Gate: explicit machine-local pnpm lint, full test suite, models verify, build; B01 actual styled browser fixture and B07 actual browser-history/compose fixture with host environment recorded in their reviews; git diff --check; isolated changed-source ESLint comparison against A baseline. Preserve generated route formatting only after token-equivalence proof. No dependency installation or paid provider requests. A full test pass is not a declaration that inherited lint/complexity debts or all remaining findings are fixed.
+
+Cross-unit checks: B01 keyed identity vs B02 frozen candidate edits; A04 baseline/dirty failure retention; B03 transaction-latest intent and unchanged full-replacement commands; B04 protocol validation/request counts; B05 unique IDs, no paid resubmission, retained historical ownership and package validation; B06 request/session/revision guards and latest-import adoption; B07 compose scope/transfer/acknowledgement and reference-import async preservation. UI route/query loading, missing and clean deletion must retain their documented behavior. Review existing real browser seams and clearly distinguish hook/callback transport fixtures from native full-app integration.
+
+Output: reviews/B-final-check.md and snapshot; actual gate totals, commands, static scan delta and limitations. Coordinator validates hashes and ledger, synchronizes specs, marks batch review-ready, then proposes one concrete logical commit plan per workflow Phase3.4. Do not commit/push/archive/journal in an implement/check agent. Pending C/D/E findings remain pending.
+
+
+Coordinator progress: B05 finished with 203 tests and the independent unpaired-surrogate correction. Full B changed-file coverage through B05 is 39 files with zero missing/changed hashes. B06 owns exactly two source files and its focused callback tests. The final review should use the latest B05 snapshot rather than the original 188-test implement hashes, and include the appended audio-music/hook lifetime executable contracts. This record is preparation, not full-batch acceptance.

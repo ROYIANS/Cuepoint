@@ -1,0 +1,53 @@
+{
+  "baseline": ".trellis/tasks/09-30-src-quality-architecture-audit/research/tools/eslint-results.json",
+  "sources": {
+    "src/lib/ai/apimartAudio.ts": {
+      "errors": 0,
+      "warnings": 3
+    },
+    "src/lib/audioGeneration/observations.ts": {
+      "errors": 0,
+      "warnings": 2
+    },
+    "src/lib/audioGeneration/runtime.ts": {
+      "errors": 0,
+      "warnings": 7
+    },
+    "src/lib/audioGeneration/taskIds.ts": {
+      "errors": 0,
+      "warnings": 0
+    }
+  },
+  "errors": 0,
+  "warnings": 12,
+  "newNonComplexitySignatures": [],
+  "removedNonComplexitySignatures": [
+    {
+      "path": "src/lib/ai/apimartAudio.ts",
+      "rule": "@typescript-eslint/no-unsafe-member-access",
+      "message": "Unsafe member access .task_id on an `any` value."
+    },
+    {
+      "path": "src/lib/audioGeneration/observations.ts",
+      "rule": "no-control-regex",
+      "message": "Unexpected control character(s) in regular expression: \\x00, \\x1f."
+    }
+  ],
+  "inheritedNonComplexitySignatures": [
+    {
+      "path": "src/lib/ai/apimartAudio.ts",
+      "rule": "no-nested-ternary",
+      "message": "Do not nest ternary expressions."
+    },
+    {
+      "path": "src/lib/audioGeneration/observations.ts",
+      "rule": "no-nested-ternary",
+      "message": "Do not nest ternary expressions."
+    },
+    {
+      "path": "src/lib/audioGeneration/runtime.ts",
+      "rule": "no-nested-ternary",
+      "message": "Do not nest ternary expressions."
+    }
+  ]
+}

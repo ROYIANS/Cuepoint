@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "tests/b06EditorSessions.test.ts",
+    "tests/debouncedDraft.test.ts",
+    "tests/draftConcurrency.test.ts",
+    "tests/connectors.test.ts",
+    "tests/connectorMigration.test.ts"
+  ],
+  "environment": {
+    "PATH": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+  },
+  "startedAt": "2026-09-30T09:47:14.944Z",
+  "seconds": 2.587,
+  "exit": 0
+}

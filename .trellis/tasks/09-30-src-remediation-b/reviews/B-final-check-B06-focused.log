@@ -1,0 +1,15 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ✓ tests/debouncedDraft.test.ts (13 tests) 59ms
+ ✓ tests/connectorMigration.test.ts (1 test) 32ms
+ ✓ tests/draftConcurrency.test.ts (7 tests) 50ms
+ ✓ tests/connectors.test.ts (99 tests) 360ms
+ ✓ tests/b06EditorSessions.test.ts (56 tests) 979ms
+
+ Test Files  5 passed (5)
+      Tests  176 passed (176)
+   Start at  18:55:48
+   Duration  1.48s (tests 51%, transform 31%, setup 11%, import 6%)
+
+JSON report written to /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-remediation-b/reviews/B-final-check-B06-focused.json

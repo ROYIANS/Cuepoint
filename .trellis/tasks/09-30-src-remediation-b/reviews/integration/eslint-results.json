@@ -1,0 +1,1605 @@
+[
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+    "messages": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'AgentChatInner' has a complexity of 133. Maximum allowed is 20.",
+        "line": 57,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 57,
+        "endColumn": 24
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 64 to the 20 allowed.",
+        "line": 57,
+        "column": 10,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 57,
+        "endColumn": 24
+      },
+      {
+        "ruleId": "react-hooks/exhaustive-deps",
+        "severity": 1,
+        "message": "The 'threadList' logical expression could make the dependencies of useMemo Hook (at line 156) change on every render. To fix this, wrap the initialization of 'threadList' in its own useMemo() Hook.",
+        "line": 112,
+        "column": 11,
+        "nodeType": "VariableDeclarator",
+        "endLine": 112,
+        "endColumn": 37
+      },
+      {
+        "ruleId": "react-hooks/exhaustive-deps",
+        "severity": 1,
+        "message": "The 'connectorList' logical expression could make the dependencies of useMemo Hook (at line 206) change on every render. To fix this, wrap the initialization of 'connectorList' in its own useMemo() Hook.",
+        "line": 113,
+        "column": 11,
+        "nodeType": "VariableDeclarator",
+        "endLine": 113,
+        "endColumn": 43
+      },
+      {
+        "ruleId": "react-hooks/exhaustive-deps",
+        "severity": 1,
+        "message": "React Hook useEffect has a missing dependency: 'activeThread'. Either include it or remove the dependency array.",
+        "line": 199,
+        "column": 8,
+        "nodeType": "ArrayExpression",
+        "endLine": 199,
+        "endColumn": 97,
+        "suggestions": [
+          {
+            "desc": "Update the dependencies array to be: [loaded, activeThread.id, activeThread.connectorId, activeThread.model, connectorList, activeThread]",
+            "fix": {
+              "range": [
+                9112,
+                9201
+              ],
+              "text": "[loaded, activeThread.id, activeThread.connectorId, activeThread.model, connectorList, activeThread]"
+            }
+          }
+        ]
+      },
+      {
+        "ruleId": "react-hooks/exhaustive-deps",
+        "severity": 1,
+        "message": "React Hook useEffect has a missing dependency: 'selectedConnector'. Either include it or remove the dependency array.",
+        "line": 253,
+        "column": 8,
+        "nodeType": "ArrayExpression",
+        "endLine": 253,
+        "endColumn": 119,
+        "suggestions": [
+          {
+            "desc": "Update the dependencies array to be: [selectedConnector.id, selectedConnector.definitionId, selectedConnector.baseUrl, selectedConnector.apiKey, selectedConnector]",
+            "fix": {
+              "range": [
+                12487,
+                12598
+              ],
+              "text": "[selectedConnector.id, selectedConnector.definitionId, selectedConnector.baseUrl, selectedConnector.apiKey, selectedConnector]"
+            }
+          }
+        ]
+      },
+      {
+        "ruleId": "react-hooks/exhaustive-deps",
+        "severity": 1,
+        "message": "React Hook useCallback has missing dependencies: 'catalogMatches' and 'modelCatalog?.metadata'. Either include them or remove the dependency array.",
+        "line": 433,
+        "column": 8,
+        "nodeType": "ArrayExpression",
+        "endLine": 433,
+        "endColumn": 190,
+        "suggestions": [
+          {
+            "desc": "Update the dependencies array to be: [references, projectRequired, projectUnavailable, selectedConnector, modelValue, activeThreadId, activeThread, chatMode, projectId, interactionMode, reasoningEffort, catalogMatches, modelCatalog?.metadata, navigate]",
+            "fix": {
+              "range": [
+                19965,
+                20147
+              ],
+              "text": "[references, projectRequired, projectUnavailable, selectedConnector, modelValue, activeThreadId, activeThread, chatMode, projectId, interactionMode, reasoningEffort, catalogMatches, modelCatalog?.metadata, navigate]"
+            }
+          }
+        ]
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 645,
+        "column": 32,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 645,
+        "endColumn": 315
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 645,
+        "column": 134,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 645,
+        "endColumn": 315
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 645,
+        "column": 189,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 645,
+        "endColumn": 315
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 681,
+        "column": 23,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 685,
+        "endColumn": 24
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 705,
+        "column": 14,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 736,
+        "endColumn": 14
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 12,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/ContextParameters.tsx",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/TaskWrapup.tsx",
+    "messages": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'TaskWrapup' has a complexity of 75. Maximum allowed is 20.",
+        "line": 127,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 127,
+        "endColumn": 27
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 51 to the 20 allowed.",
+        "line": 127,
+        "column": 17,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 127,
+        "endColumn": 27
+      },
+      {
+        "ruleId": "react-hooks/exhaustive-deps",
+        "severity": 1,
+        "message": "React Hook useEffect has missing dependencies: 'candidate' and 'draft'. Either include them or remove the dependency array.",
+        "line": 231,
+        "column": 8,
+        "nodeType": "ArrayExpression",
+        "endLine": 231,
+        "endColumn": 47,
+        "suggestions": [
+          {
+            "desc": "Update the dependencies array to be: [candidate, draft, onEditingChange]",
+            "fix": {
+              "range": [
+                12062,
+                12101
+              ],
+              "text": "[candidate, draft, onEditingChange]"
+            }
+          }
+        ]
+      },
+      {
+        "ruleId": "react-hooks/exhaustive-deps",
+        "severity": 1,
+        "message": "React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked.",
+        "line": 231,
+        "column": 9,
+        "nodeType": "UnaryExpression",
+        "endLine": 231,
+        "endColumn": 16
+      },
+      {
+        "ruleId": "react-hooks/exhaustive-deps",
+        "severity": 1,
+        "message": "React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked.",
+        "line": 231,
+        "column": 18,
+        "nodeType": "UnaryExpression",
+        "endLine": 231,
+        "endColumn": 29
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 317,
+        "column": 22,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 317,
+        "endColumn": 116
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 339,
+        "column": 28,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 339,
+        "endColumn": 165
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 339,
+        "column": 57,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 339,
+        "endColumn": 165
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 339,
+        "column": 77,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 339,
+        "endColumn": 165
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 498,
+        "column": 28,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 498,
+        "endColumn": 135
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 498,
+        "column": 58,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 498,
+        "endColumn": 135
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 11,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/useReferenceDraft.ts",
+    "messages": [
+      {
+        "ruleId": "react-hooks/exhaustive-deps",
+        "severity": 1,
+        "message": "The ref value 'controllers.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'controllers.current' to a variable inside the effect, and use that variable in the cleanup function.",
+        "line": 35,
+        "column": 50,
+        "nodeType": "Identifier",
+        "endLine": 35,
+        "endColumn": 57
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 1,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/assets/CharacterDetailPage.tsx",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/assets/PropDetailPage.tsx",
+    "messages": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'PropDetailContent' has a complexity of 21. Maximum allowed is 20.",
+        "line": 17,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 17,
+        "endColumn": 27
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 1,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/assets/SceneDetailPage.tsx",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/assets/StyleDetailPage.tsx",
+    "messages": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'StyleDetailContent' has a complexity of 21. Maximum allowed is 20.",
+        "line": 17,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 17,
+        "endColumn": 28
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 1,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/memory/MemoryEditor.tsx",
+    "messages": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'MemoryEditor' has a complexity of 62. Maximum allowed is 20.",
+        "line": 41,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 41,
+        "endColumn": 29
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 235,
+        "column": 30,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 235,
+        "endColumn": 77
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 438,
+        "column": 34,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 438,
+        "endColumn": 78
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 3,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/memory/MemoryPromotion.tsx",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/produce/StoryboardPrintPage.tsx",
+    "messages": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'StoryboardPrintPageContent' has a complexity of 31. Maximum allowed is 20.",
+        "line": 16,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 16,
+        "endColumn": 36
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 1,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/shots/ShotEditorPage.tsx",
+    "messages": [
+      {
+        "ruleId": "@typescript-eslint/switch-exhaustiveness-check",
+        "severity": 2,
+        "message": "Switch is not exhaustive. Cases not matched: \"cameraAngle\" | \"cameraGear\" | \"category\" | \"emotion\" | \"focalLength\" | \"sceneCloseup\" | \"sound\"",
+        "line": 142,
+        "column": 13,
+        "nodeType": "Identifier",
+        "messageId": "switchIsNotExhaustive",
+        "endLine": 142,
+        "endColumn": 15,
+        "suggestions": [
+          {
+            "messageId": "addMissingCases",
+            "fix": {
+              "range": [
+                4198,
+                4198
+              ],
+              "text": "case \"cameraAngle\": { throw new Error('Not implemented yet: \"cameraAngle\" case') }\n        case \"cameraGear\": { throw new Error('Not implemented yet: \"cameraGear\" case') }\n        case \"category\": { throw new Error('Not implemented yet: \"category\" case') }\n        case \"emotion\": { throw new Error('Not implemented yet: \"emotion\" case') }\n        case \"focalLength\": { throw new Error('Not implemented yet: \"focalLength\" case') }\n        case \"sceneCloseup\": { throw new Error('Not implemented yet: \"sceneCloseup\" case') }\n        case \"sound\": { throw new Error('Not implemented yet: \"sound\" case') }\n        "
+            },
+            "desc": "Add branches for missing cases."
+          }
+        ]
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'ShotEditorPageContent' has a complexity of 76. Maximum allowed is 20.",
+        "line": 240,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 240,
+        "endColumn": 31
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 41 to the 20 allowed.",
+        "line": 240,
+        "column": 10,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 240,
+        "endColumn": 31
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'onKeyDown' has a complexity of 31. Maximum allowed is 20.",
+        "line": 490,
+        "column": 9,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 490,
+        "endColumn": 27
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+        "line": 490,
+        "column": 18,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 490,
+        "endColumn": 27
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 959,
+        "column": 37,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 959,
+        "endColumn": 110
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 25 to the 20 allowed.",
+        "line": 1777,
+        "column": 50,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 1777,
+        "endColumn": 52
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 1779,
+        "column": 30,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 1938,
+        "endColumn": 30
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 1783,
+        "column": 33,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 1938,
+        "endColumn": 30
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 1799,
+        "column": 24,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 1833,
+        "endColumn": 24
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 1801,
+        "column": 27,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 1833,
+        "endColumn": 24
+      },
+      {
+        "ruleId": "@typescript-eslint/no-base-to-string",
+        "severity": 2,
+        "message": "'shot[column.id as keyof Shot] ?? \"\"' may use Object's default stringification format ('[object Object]') when stringified.",
+        "line": 1932,
+        "column": 51,
+        "nodeType": "LogicalExpression",
+        "messageId": "baseToString",
+        "endLine": 1932,
+        "endColumn": 86
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+        "line": 1935,
+        "column": 65,
+        "nodeType": "TSAsExpression",
+        "messageId": "contextuallyUnnecessary",
+        "endLine": 1935,
+        "endColumn": 102,
+        "fix": {
+          "range": [
+            89726,
+            89743
+          ],
+          "text": ""
+        }
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 1972,
+        "column": 24,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 1972,
+        "endColumn": 110
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 2001,
+        "column": 71,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 2001,
+        "endColumn": 136
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 2042,
+        "column": 18,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 2055,
+        "endColumn": 28
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 3,
+    "fatalErrorCount": 0,
+    "warningCount": 13,
+    "fixableErrorCount": 1,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/slots/GenerationSlotCard.tsx",
+    "messages": [
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 22 to the 20 allowed.",
+        "line": 43,
+        "column": 17,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 43,
+        "endColumn": 35
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 66,
+        "column": 17,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 70,
+        "endColumn": 65
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 80,
+        "column": 21,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 84,
+        "endColumn": 78
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 87,
+        "column": 18,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 108,
+        "endColumn": 18
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 89,
+        "column": 21,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 108,
+        "endColumn": 18
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 96,
+        "column": 21,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 108,
+        "endColumn": 18
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'GenerationSlotEditor' has a complexity of 56. Maximum allowed is 20.",
+        "line": 165,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 165,
+        "endColumn": 37
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 245,
+        "column": 63,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 245,
+        "endColumn": 200
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 256,
+        "column": 26,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 260,
+        "endColumn": 95
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 276,
+        "column": 22,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 280,
+        "endColumn": 103
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 299,
+        "column": 29,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 301,
+        "endColumn": 85
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 480,
+        "column": 26,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 480,
+        "endColumn": 134
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 480,
+        "column": 56,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 480,
+        "endColumn": 134
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 13,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/story/StoryPage.tsx",
+    "messages": [
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since it does not change the type of the expression.",
+        "line": 186,
+        "column": 40,
+        "nodeType": "TSNonNullExpression",
+        "messageId": "unnecessaryAssertion",
+        "endLine": 186,
+        "endColumn": 53,
+        "fix": {
+          "range": [
+            7345,
+            7346
+          ],
+          "text": ""
+        }
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since it does not change the type of the expression.",
+        "line": 186,
+        "column": 55,
+        "nodeType": "TSNonNullExpression",
+        "messageId": "unnecessaryAssertion",
+        "endLine": 186,
+        "endColumn": 67,
+        "fix": {
+          "range": [
+            7359,
+            7360
+          ],
+          "text": ""
+        }
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 2,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 2,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/ConnectorsPage.tsx",
+    "messages": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'ConnectorsPage' has a complexity of 34. Maximum allowed is 20.",
+        "line": 36,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 36,
+        "endColumn": 31
+      },
+      {
+        "ruleId": "react-hooks/exhaustive-deps",
+        "severity": 1,
+        "message": "The 'connectors' logical expression could make the dependencies of useMemo Hook (at line 44) change on every render. Move it inside the useMemo callback. Alternatively, wrap the initialization of 'connectors' in its own useMemo() Hook.",
+        "line": 37,
+        "column": 11,
+        "nodeType": "VariableDeclarator",
+        "endLine": 37,
+        "endColumn": 77
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 144,
+        "column": 17,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 148,
+        "endColumn": 44
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 179,
+        "column": 27,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 179,
+        "endColumn": 174
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 314,
+        "column": 30,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 320,
+        "endColumn": 110
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 316,
+        "column": 35,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 320,
+        "endColumn": 110
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 378,
+        "column": 34,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 378,
+        "endColumn": 111
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 7,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/materials/MaterialControls.tsx",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/materials/MaterialDetailPanel.tsx",
+    "messages": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'MaterialEditor' has a complexity of 72. Maximum allowed is 20.",
+        "line": 71,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 71,
+        "endColumn": 24
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 151,
+        "column": 24,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 151,
+        "endColumn": 266
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 197,
+        "column": 68,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 197,
+        "endColumn": 164
+      },
+      {
+        "ruleId": "react-hooks/rules-of-hooks",
+        "severity": 2,
+        "message": "React Hook \"useMaterialInProject\" cannot be called inside a callback. React Hooks must be called in a React function component or a custom React Hook function.",
+        "line": 245,
+        "column": 54,
+        "nodeType": "Identifier",
+        "endLine": 245,
+        "endColumn": 74
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 0,
+    "warningCount": 3,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/workspace/ProjectSettingsPanel.tsx",
+    "messages": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'ProjectOutputSettings' has a complexity of 42. Maximum allowed is 20.",
+        "line": 134,
+        "column": 1,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 134,
+        "endColumn": 31
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 24 to the 20 allowed.",
+        "line": 134,
+        "column": 10,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 134,
+        "endColumn": 31
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 211,
+        "column": 52,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 211,
+        "endColumn": 112
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 250,
+        "column": 52,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 250,
+        "endColumn": 113
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 270,
+        "column": 88,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 276,
+        "endColumn": 42
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 296,
+        "column": 59,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 296,
+        "endColumn": 108
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 6,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/workspace/WorkspaceChrome.tsx",
+    "messages": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'WorkspaceChrome' has a complexity of 71. Maximum allowed is 20.",
+        "line": 47,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 47,
+        "endColumn": 32
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 51 to the 20 allowed.",
+        "line": 47,
+        "column": 17,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 47,
+        "endColumn": 32
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 148,
+        "column": 19,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 148,
+        "endColumn": 98
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 198,
+        "column": 22,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 294,
+        "endColumn": 22
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 199,
+        "column": 179,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 294,
+        "endColumn": 22
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 250,
+        "column": 25,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 294,
+        "endColumn": 22
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 6,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/contextSettings.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/repo.ts",
+    "messages": [
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 24 to the 20 allowed.",
+        "line": 262,
+        "column": 65,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 262,
+        "endColumn": 67
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'collectMediaIds' has a complexity of 32. Maximum allowed is 20.",
+        "line": 634,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 634,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 39 to the 20 allowed.",
+        "line": 634,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 634,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 33 to the 20 allowed.",
+        "line": 761,
+        "column": 18,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 761,
+        "endColumn": 20
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async arrow function has a complexity of 23. Maximum allowed is 20.",
+        "line": 761,
+        "column": 18,
+        "nodeType": "ArrowFunctionExpression",
+        "messageId": "complex",
+        "endLine": 761,
+        "endColumn": 20
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 766,
+        "column": 17,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 772,
+        "endColumn": 60
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 768,
+        "column": 23,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 772,
+        "endColumn": 60
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 778,
+        "column": 17,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 784,
+        "endColumn": 93
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 780,
+        "column": 23,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 784,
+        "endColumn": 93
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+        "severity": 2,
+        "message": "This assertion is unnecessary since it does not change the type of the expression.",
+        "line": 1281,
+        "column": 24,
+        "nodeType": "TSNonNullExpression",
+        "messageId": "unnecessaryAssertion",
+        "endLine": 1281,
+        "endColumn": 49,
+        "fix": {
+          "range": [
+            52901,
+            52902
+          ],
+          "text": ""
+        }
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async arrow function has a complexity of 21. Maximum allowed is 20.",
+        "line": 1419,
+        "column": 61,
+        "nodeType": "ArrowFunctionExpression",
+        "messageId": "complex",
+        "endLine": 1419,
+        "endColumn": 63
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 0,
+    "warningCount": 10,
+    "fixableErrorCount": 1,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/apimartAudio.ts",
+    "messages": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async function 'getApimartMusicTask' has a complexity of 32. Maximum allowed is 20.",
+        "line": 194,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 194,
+        "endColumn": 42
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 46 to the 20 allowed.",
+        "line": 194,
+        "column": 23,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 194,
+        "endColumn": 42
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 231,
+        "column": 17,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 231,
+        "endColumn": 216
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 3,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/openaiCompatible.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/observations.ts",
+    "messages": [
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'validateAudioTaskObservations' has a complexity of 25. Maximum allowed is 20.",
+        "line": 9,
+        "column": 8,
+        "nodeType": "FunctionDeclaration",
+        "messageId": "complex",
+        "endLine": 9,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 31,
+        "column": 13,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 33,
+        "endColumn": 62
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 2,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/runtime.ts",
+    "messages": [
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 23 to the 20 allowed.",
+        "line": 140,
+        "column": 16,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 140,
+        "endColumn": 31
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 29 to the 20 allowed.",
+        "line": 175,
+        "column": 35,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 175,
+        "endColumn": 37
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async arrow function has a complexity of 31. Maximum allowed is 20.",
+        "line": 175,
+        "column": 35,
+        "nodeType": "ArrowFunctionExpression",
+        "messageId": "complex",
+        "endLine": 175,
+        "endColumn": 37
+      },
+      {
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 46 to the 20 allowed.",
+        "line": 247,
+        "column": 35,
+        "nodeType": null,
+        "messageId": "refactorFunction",
+        "endLine": 247,
+        "endColumn": 37
+      },
+      {
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Async arrow function has a complexity of 37. Maximum allowed is 20.",
+        "line": 247,
+        "column": 35,
+        "nodeType": "ArrowFunctionExpression",
+        "messageId": "complex",
+        "endLine": 247,
+        "endColumn": 37
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 329,
+        "column": 24,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 329,
+        "endColumn": 102
+      },
+      {
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 332,
+        "column": 46,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 332,
+        "endColumn": 113
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 7,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/taskIds.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/useManualDraftGuard.tsx",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/workspaceAvailability.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/routes/p.$projectId.index.tsx",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/routes/p.$projectId.tsx",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "review": "B03 AU-03 / PU-04 only",
+  "capturedAt": "2026-09-30T07:26:53.541237+00:00",
+  "ownership": {
+    "checker": [
+      "four assigned B03 product files (only concrete B03 fixes)",
+      "tests/b03IntentBoundaries.test.ts",
+      "reviews/B03-check.md and B03-check evidence"
+    ],
+    "coordinator": [
+      "specs",
+      "ledger",
+      "task metadata"
+    ]
+  },
+  "before": {
+    "src/components/agent/ContextParameters.tsx": "436e0f779181f61661c36bb83e10c4fa97e762c8140e6cb748712bdc42f8348a",
+    "src/db/contextSettings.ts": "e599b1ada783a7aa31c2e3234186a91cf05d63ba2fb49ed6b08a116320f28109",
+    "src/db/repo.ts": "f87b802e9b9eea8a4642e60bd8ed9180d1f1b9113c3de42d2e6717176f2792cd",
+    "src/components/shots/ShotEditorPage.tsx": "c2e83c197b71236a2f09985012fcc8447b51392db5ca2b43499bc057fcaac428",
+    "tests/b03IntentBoundaries.test.ts": "c4619b7cf76ea84b42945777df36e96d8a360d57a342585be9784dd25432d528"
+  },
+  "after": {
+    "src/components/agent/ContextParameters.tsx": "436e0f779181f61661c36bb83e10c4fa97e762c8140e6cb748712bdc42f8348a",
+    "src/db/contextSettings.ts": "e599b1ada783a7aa31c2e3234186a91cf05d63ba2fb49ed6b08a116320f28109",
+    "src/db/repo.ts": "f87b802e9b9eea8a4642e60bd8ed9180d1f1b9113c3de42d2e6717176f2792cd",
+    "src/components/shots/ShotEditorPage.tsx": "c2e83c197b71236a2f09985012fcc8447b51392db5ca2b43499bc057fcaac428",
+    "tests/b03IntentBoundaries.test.ts": "c4619b7cf76ea84b42945777df36e96d8a360d57a342585be9784dd25432d528"
+  },
+  "sourcesUnchanged": true,
+  "validatedAt": "2026-09-30T07:28:53.222957+00:00",
+  "checkerSourceOrTestEdits": []
+}

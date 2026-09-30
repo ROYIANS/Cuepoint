@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "--config",
+    "/tmp/b07-red-vitest.config.mjs",
+    "tests/b07ComposeSessions.test.ts",
+    "-t",
+    "B07 actual compose callbacks"
+  ],
+  "startedAt": "2026-09-30T10:35:22.902335+00:00",
+  "seconds": 1.795,
+  "exit": 1
+}

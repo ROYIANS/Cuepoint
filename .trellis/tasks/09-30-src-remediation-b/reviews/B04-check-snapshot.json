@@ -1,0 +1,64 @@
+{
+  "review": "B04 PM-02 only",
+  "capturedAt": "2026-09-30T07:47:20.003Z",
+  "before": {
+    "src/lib/ai/openaiCompatible.ts": "58af82f28f70dbd361d9bfc43b4201186407060c67ad6fd3f342e20a65c29912",
+    "tests/openaiCompatible.test.ts": "5e9a68d32f76c79fdcfbba647280b7af85202c0a8867cb0daeb3c0bdd86b9fbf",
+    "tests/connectors.test.ts": "e5d146330a2f663bff417f8a03479393b351436e954d1614cc5e530e65751d68",
+    "tests/modelMetadata.test.ts": "91d2f9e15f232a20ecb66c84daca31e989d1e32f3423e0a3322b0771e4cf3f57"
+  },
+  "checkerSourceOrTestEdits": [],
+  "after": {
+    "src/lib/ai/openaiCompatible.ts": "58af82f28f70dbd361d9bfc43b4201186407060c67ad6fd3f342e20a65c29912",
+    "tests/openaiCompatible.test.ts": "5e9a68d32f76c79fdcfbba647280b7af85202c0a8867cb0daeb3c0bdd86b9fbf",
+    "tests/connectors.test.ts": "e5d146330a2f663bff417f8a03479393b351436e954d1614cc5e530e65751d68",
+    "tests/modelMetadata.test.ts": "91d2f9e15f232a20ecb66c84daca31e989d1e32f3423e0a3322b0771e4cf3f57"
+  },
+  "sourcesUnchanged": true,
+  "validatedAt": "2026-09-30T07:50:02.383Z",
+  "versions": {
+    "node": "v24.11.0",
+    "pnpm": "10.15.0",
+    "eslint": "v9.39.5"
+  },
+  "b03Comparison": [
+    {
+      "path": "src/components/agent/ContextParameters.tsx",
+      "expected": "436e0f779181f61661c36bb83e10c4fa97e762c8140e6cb748712bdc42f8348a",
+      "current": "436e0f779181f61661c36bb83e10c4fa97e762c8140e6cb748712bdc42f8348a"
+    },
+    {
+      "path": "src/db/contextSettings.ts",
+      "expected": "e599b1ada783a7aa31c2e3234186a91cf05d63ba2fb49ed6b08a116320f28109",
+      "current": "e599b1ada783a7aa31c2e3234186a91cf05d63ba2fb49ed6b08a116320f28109"
+    },
+    {
+      "path": "src/db/repo.ts",
+      "expected": "f87b802e9b9eea8a4642e60bd8ed9180d1f1b9113c3de42d2e6717176f2792cd",
+      "current": "f87b802e9b9eea8a4642e60bd8ed9180d1f1b9113c3de42d2e6717176f2792cd"
+    },
+    {
+      "path": "src/components/shots/ShotEditorPage.tsx",
+      "expected": "c2e83c197b71236a2f09985012fcc8447b51392db5ca2b43499bc057fcaac428",
+      "current": "c2e83c197b71236a2f09985012fcc8447b51392db5ca2b43499bc057fcaac428"
+    },
+    {
+      "path": "tests/b03IntentBoundaries.test.ts",
+      "expected": "c4619b7cf76ea84b42945777df36e96d8a360d57a342585be9784dd25432d528",
+      "current": "c4619b7cf76ea84b42945777df36e96d8a360d57a342585be9784dd25432d528"
+    }
+  ],
+  "ownership": {
+    "checker": "reviews/B04-check.md and B04-check evidence only; no product/test changes needed",
+    "coordinator": "specs, task metadata and finding ledger"
+  },
+  "manifestReference": {
+    "path": ".trellis/tasks/09-30-src-quality-architecture-audit/research/source-manifest.json",
+    "baseRevision": "2fc0e9523e62a5258a488cc3d0274d24c8967c6f",
+    "adapter": {
+      "path": "src/lib/ai/openaiCompatible.ts",
+      "lines": 152,
+      "sha256": "fc2b626b0115697648a1e16e424cc8f52eee4d122297fc8448bed465b35c5587"
+    }
+  }
+}

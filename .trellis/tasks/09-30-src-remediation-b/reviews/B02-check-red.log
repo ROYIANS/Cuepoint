@@ -1,0 +1,179 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+stderr | tests/b02MemoryPromotion.test.ts > B02 actual promotion and editor sessions > accepts one promotion and one save after initial effect cleanup/setup replay
+MemoryEditor: `key` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://react.dev/link/special-props)
+
+ ❯ tests/b02MemoryPromotion.test.ts (14 tests | 6 failed) 652ms
+   ❯ B02 actual promotion and editor sessions (14)
+     × retires saved callbacks before synchronous unmount and never submits the closed editor again 72ms
+     × retires saved callbacks even when the caller has not rendered the close yet 66ms
+     × ignores pending editor resolve and captured submit after unmount 16ms
+     × ignores pending editor reject and captured submit after unmount 16ms
+     × reports a completed original-owner save without calling a changed owner's callback 14ms
+     × accepts one promotion and one save after initial effect cleanup/setup replay 77ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/b02MemoryPromotion.test.ts > B02 actual promotion and editor sessions > retires saved callbacks before synchronous unmount and never submits the closed editor again
+AssertionError: expected "promoteProjectMemory" to be called 1 times, but got 2 times
+ ❯ tests/b02MemoryPromotion.test.ts:347:25
+    345|         const lateWrites = ui.host.lateWrites;
+    346|         submit(captured); await Promise.allSettled(promote.mock.result…
+    347|         expect(promote).toHaveBeenCalledTimes(1);
+       |                         ^
+    348|         expect(ui.host.lateWrites).toBe(0);
+    349|         expect(lateWrites).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/b02MemoryPromotion.test.ts > B02 actual promotion and editor sessions > retires saved callbacks even when the caller has not rendered the close yet
+AssertionError: expected "promoteProjectMemory" to be called 1 times, but got 2 times
+ ❯ tests/b02MemoryPromotion.test.ts:360:25
+    358|         submit(captured); await vi.waitFor(() => expect(onSaved).toHav…
+    359|         submit(captured); await Promise.allSettled(promote.mock.result…
+    360|         expect(promote).toHaveBeenCalledTimes(1);
+       |                         ^
+    361|         expect(onSaved).toHaveBeenCalledTimes(1);
+    362|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/b02MemoryPromotion.test.ts > B02 actual promotion and editor sessions > ignores pending editor resolve and captured submit after unmount
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "applicability": "",
+        "body": "新版决策",
+        "category": "decision",
+        "createdAt": "2026-09-30T06:59:20.397Z",
+        "id": "pm_df29a8b5-05eb-4cb2-9cd0-10e32c0b9f7a",
+        "inclusion": "relevant",
+        "projectId": "prj_a3d69cf0-e15a-43fe-b753-e0515d3441ed",
+        "reviewedAt": "2026-09-30T06:59:20.397Z",
+        "revision": 1,
+        "source": Object {
+          "confirmedAt": "2026-09-30T06:59:20.391Z",
+          "evidence": Array [],
+          "excerpt": "新版决策",
+          "itemIndex": 0,
+          "itemKind": "decision",
+          "itemText": "新版决策",
+          "kind": "summary",
+          "projectId": "prj_a3d69cf0-e15a-43fe-b753-e0515d3441ed",
+          "summaryId": "wrap_ea324b98-ea18-4f29-9577-0fe90571b78a",
+          "summaryRevision": 3,
+          "taskId": "task_6edbed67-501a-4c3b-892d-115b523f2726",
+          "taskTitle": "来源任务",
+          "threadId": "cth_7c75a29a-03f4-4684-b104-37bfb3930484",
+        },
+        "status": "active",
+        "tags": Array [],
+        "title": "新版决策",
+        "topicKey": "新版决策",
+        "updatedAt": "2026-09-30T06:59:20.397Z",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ tests/b02MemoryPromotion.test.ts:379:29
+    377|         submit(captured); await Promise.allSettled(promote.mock.result…
+    378|         expect(promote).toHaveBeenCalledTimes(1);
+    379|         expect(onSaved).not.toHaveBeenCalled();
+       |                             ^
+    380|         expect(ui.host.lateWrites).toBe(0);
+    381|         expect(toast.success).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/b02MemoryPromotion.test.ts > B02 actual promotion and editor sessions > ignores pending editor reject and captured submit after unmount
+AssertionError: expected "promoteProjectMemory" to be called 1 times, but got 2 times
+ ❯ tests/b02MemoryPromotion.test.ts:378:25
+    376|         await settle();
+    377|         submit(captured); await Promise.allSettled(promote.mock.result…
+    378|         expect(promote).toHaveBeenCalledTimes(1);
+       |                         ^
+    379|         expect(onSaved).not.toHaveBeenCalled();
+    380|         expect(ui.host.lateWrites).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/b02MemoryPromotion.test.ts > B02 actual promotion and editor sessions > reports a completed original-owner save without calling a changed owner's callback
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "applicability": "",
+        "body": "新版决策",
+        "category": "decision",
+        "createdAt": "2026-09-30T06:59:20.427Z",
+        "id": "pm_e80897c2-6014-406c-a08b-01328c77e9ec",
+        "inclusion": "relevant",
+        "projectId": "prj_61ca3229-e8e2-4747-80bd-fd3ddf32f551",
+        "reviewedAt": "2026-09-30T06:59:20.427Z",
+        "revision": 1,
+        "source": Object {
+          "confirmedAt": "2026-09-30T06:59:20.421Z",
+          "evidence": Array [],
+          "excerpt": "新版决策",
+          "itemIndex": 0,
+          "itemKind": "decision",
+          "itemText": "新版决策",
+          "kind": "summary",
+          "projectId": "prj_61ca3229-e8e2-4747-80bd-fd3ddf32f551",
+          "summaryId": "wrap_4677b6b4-0bc3-4a85-a91f-5aa21d79acbf",
+          "summaryRevision": 3,
+          "taskId": "task_b3827ad5-cf27-42fa-a62c-88f9d3de9ded",
+          "taskTitle": "来源任务",
+          "threadId": "cth_dc2c758f-2f84-4a98-93f3-a13505c39bf6",
+        },
+        "status": "active",
+        "tags": Array [],
+        "title": "新版决策",
+        "topicKey": "新版决策",
+        "updatedAt": "2026-09-30T06:59:20.427Z",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ tests/b02MemoryPromotion.test.ts:398:29
+    396|         gate.resolve();
+    397|         await Promise.allSettled(promote.mock.results.map(result => re…
+    398|         expect(onSaved).not.toHaveBeenCalled();
+       |                             ^
+    399|         expect(ui.render().some(node => text(node).includes("原编辑目标已保存"…
+    400|         expect((await db.projectMemories.toArray())[0]).toMatchObject(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  tests/b02MemoryPromotion.test.ts > B02 actual promotion and editor sessions > accepts one promotion and one save after initial effect cleanup/setup replay
+AssertionError: expected "promoteProjectMemory" to be called 1 times, but got 2 times
+ ❯ tests/b02MemoryPromotion.test.ts:418:25
+    416|         expect(await db.projectMemories.count()).toBe(1);
+    417|         unmount(ui.host); unmount(f.host); submit(captured); await Pro…
+    418|         expect(promote).toHaveBeenCalledTimes(1); expect(ui.host.lateW…
+       |                         ^
+    419|         expect(f.host.lateWrites).toBe(0);
+    420|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 8 passed (14)
+   Start at  14:59:19
+   Duration  1.17s (tests 58%, transform 29%, import 9%, setup 3%)
+

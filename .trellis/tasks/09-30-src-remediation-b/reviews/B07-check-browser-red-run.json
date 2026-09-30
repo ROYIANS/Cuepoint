@@ -1,0 +1,14 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+    "scripts/b07-browser-regression.mjs"
+  ],
+  "environment": {
+    "B07_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+    "B07_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell",
+    "B07_BASELINE_ROOT": "/tmp/b07-baseline-source"
+  },
+  "startedAt": "2026-09-30T10:37:06.919933+00:00",
+  "seconds": 1.372,
+  "exit": 1
+}

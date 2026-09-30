@@ -1,0 +1,281 @@
+{
+  "review": "B05 PM-03/04/06 only",
+  "capturedAt": "2026-09-30T16:58:46.658569+08:00",
+  "before": {
+    "src/lib/ai/apimartAudio.ts": "072ef52ecadf96230346389a22bb14e3f630cc0ac590a9e538abdb0d7caa3611",
+    "src/lib/audioGeneration/taskIds.ts": "4cf403cb20330f015bf6bfb0b8c99d43f82e328ffa92e8c801deaa63e2bef002",
+    "src/lib/audioGeneration/observations.ts": "3a4eaa6f6cf3c0186ff5d129bdaa07acf59df509b19523301d7237d502963cbe",
+    "src/lib/audioGeneration/runtime.ts": "e63f2ea630494265031c7110a7beac4dd190dfe61e7dbefbb7d10caf7cefb054",
+    "tests/apimartAudio.test.ts": "720c185ec45cd25cf717f832955fdee7329a0cb318af8324b503d7f9b0bb62af",
+    "tests/audioGenerationRecoveryAudit.test.ts": "ff9598355ff7e5c91e0379337f699e285537c2c2f9e0e300209a974d1b082523",
+    "tests/audioTaskEvidence.test.ts": "55726461495950bea18a3cfe2479be9f2078231fd76c242d9ffaa69faad6ceb2"
+  },
+  "after": {
+    "src/lib/ai/apimartAudio.ts": "072ef52ecadf96230346389a22bb14e3f630cc0ac590a9e538abdb0d7caa3611",
+    "src/lib/audioGeneration/taskIds.ts": "9c6a060ef497e2b41ed783ce5ce628770623c3afc1b7f8f62173373cc66f6a9f",
+    "src/lib/audioGeneration/observations.ts": "3a4eaa6f6cf3c0186ff5d129bdaa07acf59df509b19523301d7237d502963cbe",
+    "src/lib/audioGeneration/runtime.ts": "e63f2ea630494265031c7110a7beac4dd190dfe61e7dbefbb7d10caf7cefb054",
+    "tests/apimartAudio.test.ts": "b109ec2bd706dac444166ce939572ad7fa954cb432e245f646075d7598acbbcd",
+    "tests/audioGenerationRecoveryAudit.test.ts": "87a38cdc581c79375692eab741dba09a40e22d756654939ce2762adc4c8d9ace",
+    "tests/audioTaskEvidence.test.ts": "55726461495950bea18a3cfe2479be9f2078231fd76c242d9ffaa69faad6ceb2"
+  },
+  "checkerSourceOrTestEdits": [
+    "src/lib/audioGeneration/taskIds.ts",
+    "tests/apimartAudio.test.ts",
+    "tests/audioGenerationRecoveryAudit.test.ts"
+  ],
+  "sourcesUnchanged": false,
+  "validatedAt": "2026-09-30T17:11:36.738168+08:00",
+  "versions": {
+    "node": "v24.11.0",
+    "pnpm": "10.15.0",
+    "eslint": "v9.39.5"
+  },
+  "callerTraceFiles": {
+    "src/db/audioGeneration.ts": {
+      "before": "4a0dfc90400e7bb133e44ffa7062dcf1b1da919ac6b06511fb77bfe48727535b",
+      "after": "4a0dfc90400e7bb133e44ffa7062dcf1b1da919ac6b06511fb77bfe48727535b"
+    },
+    "src/lib/audioProjectPackage.ts": {
+      "before": "3f14040e3545ed08de7778ea2722e6c9f497023ecf7dd3984a6f63bbc50655ca",
+      "after": "3f14040e3545ed08de7778ea2722e6c9f497023ecf7dd3984a6f63bbc50655ca"
+    }
+  },
+  "priorUnitComparison": [
+    {
+      "path": "src/components/assets/CharacterDetailPage.tsx",
+      "latestUnit": "B01",
+      "expected": "32799fd89a73500718c080ebbf4ca9f30d112ed1af2eeb7ff1827ff7cb72c8b1",
+      "current": "32799fd89a73500718c080ebbf4ca9f30d112ed1af2eeb7ff1827ff7cb72c8b1"
+    },
+    {
+      "path": "src/components/assets/PropDetailPage.tsx",
+      "latestUnit": "B01",
+      "expected": "7c1808e144aba36b11c116aedd1e8c2931257646b8cd8e010ebab2c6718b4048",
+      "current": "7c1808e144aba36b11c116aedd1e8c2931257646b8cd8e010ebab2c6718b4048"
+    },
+    {
+      "path": "src/components/assets/SceneDetailPage.tsx",
+      "latestUnit": "B01",
+      "expected": "df368bf17aac8edbc765a1540646ba25086c877c3c9457705b504bb264e53ffb",
+      "current": "df368bf17aac8edbc765a1540646ba25086c877c3c9457705b504bb264e53ffb"
+    },
+    {
+      "path": "src/components/assets/StyleDetailPage.tsx",
+      "latestUnit": "B01",
+      "expected": "a23e41314f3b9a36ebeee8d46bc7b02f563606a1c7a8c85b4eb37686f59b28ce",
+      "current": "a23e41314f3b9a36ebeee8d46bc7b02f563606a1c7a8c85b4eb37686f59b28ce"
+    },
+    {
+      "path": "src/components/produce/StoryboardPrintPage.tsx",
+      "latestUnit": "B01",
+      "expected": "0d63f4fd666d5ccd4dfa5c015cb7b65817b4ec8e1960ac98f8d81dc2b353b278",
+      "current": "0d63f4fd666d5ccd4dfa5c015cb7b65817b4ec8e1960ac98f8d81dc2b353b278"
+    },
+    {
+      "path": "src/components/shots/ShotEditorPage.tsx",
+      "latestUnit": "B03",
+      "expected": "c2e83c197b71236a2f09985012fcc8447b51392db5ca2b43499bc057fcaac428",
+      "current": "c2e83c197b71236a2f09985012fcc8447b51392db5ca2b43499bc057fcaac428"
+    },
+    {
+      "path": "src/components/slots/GenerationSlotCard.tsx",
+      "latestUnit": "B01",
+      "expected": "4bc8efdc5a898252e93f315f7788fc0d4705bb42b0c3c42652828fec5780a097",
+      "current": "4bc8efdc5a898252e93f315f7788fc0d4705bb42b0c3c42652828fec5780a097"
+    },
+    {
+      "path": "src/components/studio/materials/MaterialControls.tsx",
+      "latestUnit": "B01",
+      "expected": "624805744af6db6bea5d4bd40cd7e8ccac9824d977ea1d273dc0cd01b26f59bb",
+      "current": "624805744af6db6bea5d4bd40cd7e8ccac9824d977ea1d273dc0cd01b26f59bb"
+    },
+    {
+      "path": "src/components/studio/materials/MaterialDetailPanel.tsx",
+      "latestUnit": "B01",
+      "expected": "e100e01b18ed5303d8f682c0d0c2988da29233704fb2e9c6091f49001d0839a1",
+      "current": "e100e01b18ed5303d8f682c0d0c2988da29233704fb2e9c6091f49001d0839a1"
+    },
+    {
+      "path": "src/components/workspace/ProjectSettingsPanel.tsx",
+      "latestUnit": "B01",
+      "expected": "fb33365b5124d8d69fe556fc5d2b92b3087c33842f8c8d733d0f6e1c842ea1ca",
+      "current": "fb33365b5124d8d69fe556fc5d2b92b3087c33842f8c8d733d0f6e1c842ea1ca"
+    },
+    {
+      "path": "src/components/workspace/WorkspaceChrome.tsx",
+      "latestUnit": "B01",
+      "expected": "9dd23617dcf89f9fc1cac484cfca7d61c7135d577e16be353d76f9b17ce2418d",
+      "current": "9dd23617dcf89f9fc1cac484cfca7d61c7135d577e16be353d76f9b17ce2418d"
+    },
+    {
+      "path": "src/lib/useManualDraftGuard.tsx",
+      "latestUnit": "B01",
+      "expected": "a5a93b4da49c5aa67b900d2e57ea531500943309173b5556cacad03450c12722",
+      "current": "a5a93b4da49c5aa67b900d2e57ea531500943309173b5556cacad03450c12722"
+    },
+    {
+      "path": "src/lib/workspaceAvailability.ts",
+      "latestUnit": "B01",
+      "expected": "c1de467519f3a83b305c3557c0d0a876f2da7e1a8f70670f53661bdb57ac0b1b",
+      "current": "c1de467519f3a83b305c3557c0d0a876f2da7e1a8f70670f53661bdb57ac0b1b"
+    },
+    {
+      "path": "src/routes/p.$projectId.index.tsx",
+      "latestUnit": "B01",
+      "expected": "0a20cef48da89ebf46de8555d34a0d27c39ddc8b2d8464941610994ff61be63f",
+      "current": "0a20cef48da89ebf46de8555d34a0d27c39ddc8b2d8464941610994ff61be63f"
+    },
+    {
+      "path": "src/routes/p.$projectId.tsx",
+      "latestUnit": "B01",
+      "expected": "900667d80ce5146e342830ede57859f9c5feed2fd50bd7abfac3e4ce1b6c658b",
+      "current": "900667d80ce5146e342830ede57859f9c5feed2fd50bd7abfac3e4ce1b6c658b"
+    },
+    {
+      "path": "tests/b01QueryIdentity.test.ts",
+      "latestUnit": "B01",
+      "expected": "10fde936dd92dc595e83e884451748cd4e0350585d8cea2871396912b09bdca4",
+      "current": "10fde936dd92dc595e83e884451748cd4e0350585d8cea2871396912b09bdca4"
+    },
+    {
+      "path": "tests/manualDraftWiring.test.ts",
+      "latestUnit": "B01",
+      "expected": "8f38529fa161cbd49af5672be13b079e99ef85c7a5766dae879dc4f1f3a53cba",
+      "current": "8f38529fa161cbd49af5672be13b079e99ef85c7a5766dae879dc4f1f3a53cba"
+    },
+    {
+      "path": "tests/manualDraftBaseline.test.ts",
+      "latestUnit": "B01",
+      "expected": "d674fe4421c01ec9cba6c489872f513f43b3885d6d7321a6723dcb7c623c8e79",
+      "current": "d674fe4421c01ec9cba6c489872f513f43b3885d6d7321a6723dcb7c623c8e79"
+    },
+    {
+      "path": "tests/draftMedia.test.ts",
+      "latestUnit": "B01",
+      "expected": "5dc8232bc48ba89cdbed5232c1965612f9e444fa35b959cff776d37aa367dd41",
+      "current": "5dc8232bc48ba89cdbed5232c1965612f9e444fa35b959cff776d37aa367dd41"
+    },
+    {
+      "path": "tests/debouncedDraft.test.ts",
+      "latestUnit": "B01",
+      "expected": "7182bf42ec6a83e063a31d64c9e698fc1ac3c94105664998fb93f4367973c4cd",
+      "current": "7182bf42ec6a83e063a31d64c9e698fc1ac3c94105664998fb93f4367973c4cd"
+    },
+    {
+      "path": "tests/useShotMedia.test.ts",
+      "latestUnit": "B01",
+      "expected": "cece53d706f1fad688d755e2987c9a5804ef54cfb7caac66a25765642c5cbecf",
+      "current": "cece53d706f1fad688d755e2987c9a5804ef54cfb7caac66a25765642c5cbecf"
+    },
+    {
+      "path": "tests/episodeDelivery.test.ts",
+      "latestUnit": "B01",
+      "expected": "abce7785daf5fef73f81fc15490022c954e1cf381ec9c4bdfd2286327f370224",
+      "current": "abce7785daf5fef73f81fc15490022c954e1cf381ec9c4bdfd2286327f370224"
+    },
+    {
+      "path": "tests/fixtures/b01/index.html",
+      "latestUnit": "B01",
+      "expected": "f4365ab59b46ab1d180674efacd8223aa258ec750bdd1ff9d59a4b0a919bb881",
+      "current": "f4365ab59b46ab1d180674efacd8223aa258ec750bdd1ff9d59a4b0a919bb881"
+    },
+    {
+      "path": "tests/fixtures/b01/harness.tsx",
+      "latestUnit": "B01",
+      "expected": "dee38264ed884675145d87a295819757003791d3f0ea515b1d7ee2d868bbdfd2",
+      "current": "dee38264ed884675145d87a295819757003791d3f0ea515b1d7ee2d868bbdfd2"
+    },
+    {
+      "path": "scripts/b01-browser-regression.mjs",
+      "latestUnit": "B01",
+      "expected": "bc5a3418020b1b293906a24b969e60cc46e8a23b29018d6eb94b62f897f1819c",
+      "current": "bc5a3418020b1b293906a24b969e60cc46e8a23b29018d6eb94b62f897f1819c"
+    },
+    {
+      "path": "src/components/memory/MemoryPromotion.tsx",
+      "latestUnit": "B02",
+      "expected": "03d00066422847126d56b74fb256a345118c0da51a0d1951fea91049b5de38fa",
+      "current": "03d00066422847126d56b74fb256a345118c0da51a0d1951fea91049b5de38fa"
+    },
+    {
+      "path": "src/components/agent/TaskWrapup.tsx",
+      "latestUnit": "B02",
+      "expected": "e3dfd7266c829e9201fe40de48a04edfdf5db05a2e43de31cc09a4af28d77403",
+      "current": "e3dfd7266c829e9201fe40de48a04edfdf5db05a2e43de31cc09a4af28d77403"
+    },
+    {
+      "path": "src/components/memory/MemoryEditor.tsx",
+      "latestUnit": "B02",
+      "expected": "a2edba2fe43c8bb1585061000403fc32c24b259ccac692b6b4fd4a8ceb241451",
+      "current": "a2edba2fe43c8bb1585061000403fc32c24b259ccac692b6b4fd4a8ceb241451"
+    },
+    {
+      "path": "tests/b02MemoryPromotion.test.ts",
+      "latestUnit": "B02",
+      "expected": "7036d8e7cfd72e864872126f07c352f3500824f27b3285c5b2fb2dec23a117f6",
+      "current": "7036d8e7cfd72e864872126f07c352f3500824f27b3285c5b2fb2dec23a117f6"
+    },
+    {
+      "path": "src/components/agent/ContextParameters.tsx",
+      "latestUnit": "B03",
+      "expected": "436e0f779181f61661c36bb83e10c4fa97e762c8140e6cb748712bdc42f8348a",
+      "current": "436e0f779181f61661c36bb83e10c4fa97e762c8140e6cb748712bdc42f8348a"
+    },
+    {
+      "path": "src/db/contextSettings.ts",
+      "latestUnit": "B03",
+      "expected": "e599b1ada783a7aa31c2e3234186a91cf05d63ba2fb49ed6b08a116320f28109",
+      "current": "e599b1ada783a7aa31c2e3234186a91cf05d63ba2fb49ed6b08a116320f28109"
+    },
+    {
+      "path": "src/db/repo.ts",
+      "latestUnit": "B03",
+      "expected": "f87b802e9b9eea8a4642e60bd8ed9180d1f1b9113c3de42d2e6717176f2792cd",
+      "current": "f87b802e9b9eea8a4642e60bd8ed9180d1f1b9113c3de42d2e6717176f2792cd"
+    },
+    {
+      "path": "tests/b03IntentBoundaries.test.ts",
+      "latestUnit": "B03",
+      "expected": "c4619b7cf76ea84b42945777df36e96d8a360d57a342585be9784dd25432d528",
+      "current": "c4619b7cf76ea84b42945777df36e96d8a360d57a342585be9784dd25432d528"
+    },
+    {
+      "path": "src/lib/ai/openaiCompatible.ts",
+      "latestUnit": "B04",
+      "expected": "58af82f28f70dbd361d9bfc43b4201186407060c67ad6fd3f342e20a65c29912",
+      "current": "58af82f28f70dbd361d9bfc43b4201186407060c67ad6fd3f342e20a65c29912"
+    },
+    {
+      "path": "tests/openaiCompatible.test.ts",
+      "latestUnit": "B04",
+      "expected": "5e9a68d32f76c79fdcfbba647280b7af85202c0a8867cb0daeb3c0bdd86b9fbf",
+      "current": "5e9a68d32f76c79fdcfbba647280b7af85202c0a8867cb0daeb3c0bdd86b9fbf"
+    },
+    {
+      "path": "tests/connectors.test.ts",
+      "latestUnit": "B04",
+      "expected": "e5d146330a2f663bff417f8a03479393b351436e954d1614cc5e530e65751d68",
+      "current": "e5d146330a2f663bff417f8a03479393b351436e954d1614cc5e530e65751d68"
+    },
+    {
+      "path": "tests/modelMetadata.test.ts",
+      "latestUnit": "B04",
+      "expected": "91d2f9e15f232a20ecb66c84daca31e989d1e32f3423e0a3322b0771e4cf3f57",
+      "current": "91d2f9e15f232a20ecb66c84daca31e989d1e32f3423e0a3322b0771e4cf3f57"
+    }
+  ],
+  "priorUnitsPreserved": true,
+  "scope": "No B06/C06/provider request policy, ledger/task/spec/status changes; no commits/push/install/archive/agent dispatch.",
+  "verdict": "PASS",
+  "specReadSHA256": {
+    ".trellis/spec/frontend/audio-music.md": "d54dd14a0a417eda9dd000c00d610229d34131341769bd611a9156f318223b7f"
+  },
+  "specDrift": "None against coordinator-updated B05 executable section, including unpaired-surrogate rejection and UTF-16 length semantics.",
+  "focusedTests": {
+    "files": 9,
+    "passed": 203,
+    "failed": 0,
+    "pending": 0
+  }
+}

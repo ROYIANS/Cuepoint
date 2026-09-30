@@ -1,0 +1,53 @@
+{
+  "recordedAt": "2026-09-30T14:19:08.690222+08:00",
+  "baseHEAD": "20b0204c9fab43e1265b94761ee880649be2fca9",
+  "productFiles": [
+    "src/components/assets/CharacterDetailPage.tsx",
+    "src/components/assets/PropDetailPage.tsx",
+    "src/components/assets/SceneDetailPage.tsx",
+    "src/components/assets/StyleDetailPage.tsx",
+    "src/components/produce/StoryboardPrintPage.tsx",
+    "src/components/shots/ShotEditorPage.tsx",
+    "src/components/slots/GenerationSlotCard.tsx",
+    "src/components/studio/materials/MaterialControls.tsx",
+    "src/components/studio/materials/MaterialDetailPanel.tsx",
+    "src/components/workspace/ProjectSettingsPanel.tsx",
+    "src/components/workspace/WorkspaceChrome.tsx",
+    "src/lib/useManualDraftGuard.tsx",
+    "src/lib/workspaceAvailability.ts",
+    "src/routes/p.$projectId.index.tsx",
+    "src/routes/p.$projectId.tsx"
+  ],
+  "productSnapshotSHA256": "75cbd5734afd96c1f4e6b440bfd71e59350af251cc611af0ed6243eeeda8374f",
+  "sha256": {
+    "src/components/assets/CharacterDetailPage.tsx": "32799fd89a73500718c080ebbf4ca9f30d112ed1af2eeb7ff1827ff7cb72c8b1",
+    "src/components/assets/PropDetailPage.tsx": "7c1808e144aba36b11c116aedd1e8c2931257646b8cd8e010ebab2c6718b4048",
+    "src/components/assets/SceneDetailPage.tsx": "df368bf17aac8edbc765a1540646ba25086c877c3c9457705b504bb264e53ffb",
+    "src/components/assets/StyleDetailPage.tsx": "a23e41314f3b9a36ebeee8d46bc7b02f563606a1c7a8c85b4eb37686f59b28ce",
+    "src/components/produce/StoryboardPrintPage.tsx": "0d63f4fd666d5ccd4dfa5c015cb7b65817b4ec8e1960ac98f8d81dc2b353b278",
+    "src/components/shots/ShotEditorPage.tsx": "48ec869e76d0874cba98f208d24769fc58703b7a8274876a5e70040802814bfb",
+    "src/components/slots/GenerationSlotCard.tsx": "4bc8efdc5a898252e93f315f7788fc0d4705bb42b0c3c42652828fec5780a097",
+    "src/components/studio/materials/MaterialControls.tsx": "624805744af6db6bea5d4bd40cd7e8ccac9824d977ea1d273dc0cd01b26f59bb",
+    "src/components/studio/materials/MaterialDetailPanel.tsx": "e100e01b18ed5303d8f682c0d0c2988da29233704fb2e9c6091f49001d0839a1",
+    "src/components/workspace/ProjectSettingsPanel.tsx": "fb33365b5124d8d69fe556fc5d2b92b3087c33842f8c8d733d0f6e1c842ea1ca",
+    "src/components/workspace/WorkspaceChrome.tsx": "9dd23617dcf89f9fc1cac484cfca7d61c7135d577e16be353d76f9b17ce2418d",
+    "src/lib/useManualDraftGuard.tsx": "a5a93b4da49c5aa67b900d2e57ea531500943309173b5556cacad03450c12722",
+    "src/lib/workspaceAvailability.ts": "c1de467519f3a83b305c3557c0d0a876f2da7e1a8f70670f53661bdb57ac0b1b",
+    "src/routes/p.$projectId.index.tsx": "0a20cef48da89ebf46de8555d34a0d27c39ddc8b2d8464941610994ff61be63f",
+    "src/routes/p.$projectId.tsx": "900667d80ce5146e342830ede57859f9c5feed2fd50bd7abfac3e4ce1b6c658b",
+    "tests/b01QueryIdentity.test.ts": "10fde936dd92dc595e83e884451748cd4e0350585d8cea2871396912b09bdca4",
+    "tests/manualDraftWiring.test.ts": "8f38529fa161cbd49af5672be13b079e99ef85c7a5766dae879dc4f1f3a53cba",
+    "tests/manualDraftBaseline.test.ts": "d674fe4421c01ec9cba6c489872f513f43b3885d6d7321a6723dcb7c623c8e79",
+    "tests/draftMedia.test.ts": "5dc8232bc48ba89cdbed5232c1965612f9e444fa35b959cff776d37aa367dd41",
+    "tests/debouncedDraft.test.ts": "7182bf42ec6a83e063a31d64c9e698fc1ac3c94105664998fb93f4367973c4cd",
+    "tests/useShotMedia.test.ts": "cece53d706f1fad688d755e2987c9a5804ef54cfb7caac66a25765642c5cbecf",
+    "tests/episodeDelivery.test.ts": "abce7785daf5fef73f81fc15490022c954e1cf381ec9c4bdfd2286327f370224",
+    "tests/fixtures/b01/index.html": "f4365ab59b46ab1d180674efacd8223aa258ec750bdd1ff9d59a4b0a919bb881",
+    "tests/fixtures/b01/harness.tsx": "dee38264ed884675145d87a295819757003791d3f0ea515b1d7ee2d868bbdfd2",
+    "scripts/b01-browser-regression.mjs": "bc5a3418020b1b293906a24b969e60cc46e8a23b29018d6eb94b62f897f1819c"
+  },
+  "specReadSHA256": {
+    ".trellis/spec/frontend/hook-guidelines.md": "2862ab952f130b5ea85d3c875fcb306bba5a09a1566d63b4495e4963964341d6",
+    ".trellis/spec/frontend/state-management.md": "c0cda5af45a31e71c938873501cd388500678bb1ec467d035265b5b1990a23b5"
+  }
+}

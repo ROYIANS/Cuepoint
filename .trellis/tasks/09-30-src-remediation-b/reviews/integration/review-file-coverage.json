@@ -1,0 +1,456 @@
+{
+  "completedReviewUnits": [
+    "B01",
+    "B02",
+    "B03",
+    "B04",
+    "B05",
+    "B06",
+    "B07"
+  ],
+  "files": [
+    {
+      "path": "scripts/b01-browser-regression.mjs",
+      "sha256": "bc5a3418020b1b293906a24b969e60cc46e8a23b29018d6eb94b62f897f1819c",
+      "review": {
+        "unit": "B01",
+        "sha256": "bc5a3418020b1b293906a24b969e60cc46e8a23b29018d6eb94b62f897f1819c"
+      },
+      "matches": true
+    },
+    {
+      "path": "scripts/b07-browser-regression.mjs",
+      "sha256": "4e288edb5535310937a98667690ddcdddce0cec176619fcb5e5bf506fe422077",
+      "review": {
+        "unit": "B07",
+        "sha256": "4e288edb5535310937a98667690ddcdddce0cec176619fcb5e5bf506fe422077"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/agent/AgentChatPage.tsx",
+      "sha256": "e59b75a283eeaf80084d7b8769ca842003a21460ad3e9347c288fdfa8a5d6487",
+      "review": {
+        "unit": "B07",
+        "sha256": "e59b75a283eeaf80084d7b8769ca842003a21460ad3e9347c288fdfa8a5d6487"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/agent/ContextParameters.tsx",
+      "sha256": "436e0f779181f61661c36bb83e10c4fa97e762c8140e6cb748712bdc42f8348a",
+      "review": {
+        "unit": "B03",
+        "sha256": "436e0f779181f61661c36bb83e10c4fa97e762c8140e6cb748712bdc42f8348a"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/agent/TaskWrapup.tsx",
+      "sha256": "e3dfd7266c829e9201fe40de48a04edfdf5db05a2e43de31cc09a4af28d77403",
+      "review": {
+        "unit": "B02",
+        "sha256": "e3dfd7266c829e9201fe40de48a04edfdf5db05a2e43de31cc09a4af28d77403"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/agent/useReferenceDraft.ts",
+      "sha256": "c2649c23d53889a4d6bdacbaa533858001746cba4400ab4b8e1baf60ad3cf48f",
+      "review": {
+        "unit": "B07",
+        "sha256": "c2649c23d53889a4d6bdacbaa533858001746cba4400ab4b8e1baf60ad3cf48f"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/assets/CharacterDetailPage.tsx",
+      "sha256": "32799fd89a73500718c080ebbf4ca9f30d112ed1af2eeb7ff1827ff7cb72c8b1",
+      "review": {
+        "unit": "B01",
+        "sha256": "32799fd89a73500718c080ebbf4ca9f30d112ed1af2eeb7ff1827ff7cb72c8b1"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/assets/PropDetailPage.tsx",
+      "sha256": "7c1808e144aba36b11c116aedd1e8c2931257646b8cd8e010ebab2c6718b4048",
+      "review": {
+        "unit": "B01",
+        "sha256": "7c1808e144aba36b11c116aedd1e8c2931257646b8cd8e010ebab2c6718b4048"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/assets/SceneDetailPage.tsx",
+      "sha256": "df368bf17aac8edbc765a1540646ba25086c877c3c9457705b504bb264e53ffb",
+      "review": {
+        "unit": "B01",
+        "sha256": "df368bf17aac8edbc765a1540646ba25086c877c3c9457705b504bb264e53ffb"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/assets/StyleDetailPage.tsx",
+      "sha256": "a23e41314f3b9a36ebeee8d46bc7b02f563606a1c7a8c85b4eb37686f59b28ce",
+      "review": {
+        "unit": "B01",
+        "sha256": "a23e41314f3b9a36ebeee8d46bc7b02f563606a1c7a8c85b4eb37686f59b28ce"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/memory/MemoryEditor.tsx",
+      "sha256": "a2edba2fe43c8bb1585061000403fc32c24b259ccac692b6b4fd4a8ceb241451",
+      "review": {
+        "unit": "B02",
+        "sha256": "a2edba2fe43c8bb1585061000403fc32c24b259ccac692b6b4fd4a8ceb241451"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/memory/MemoryPromotion.tsx",
+      "sha256": "03d00066422847126d56b74fb256a345118c0da51a0d1951fea91049b5de38fa",
+      "review": {
+        "unit": "B02",
+        "sha256": "03d00066422847126d56b74fb256a345118c0da51a0d1951fea91049b5de38fa"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/produce/StoryboardPrintPage.tsx",
+      "sha256": "0d63f4fd666d5ccd4dfa5c015cb7b65817b4ec8e1960ac98f8d81dc2b353b278",
+      "review": {
+        "unit": "B01",
+        "sha256": "0d63f4fd666d5ccd4dfa5c015cb7b65817b4ec8e1960ac98f8d81dc2b353b278"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/shots/ShotEditorPage.tsx",
+      "sha256": "c2e83c197b71236a2f09985012fcc8447b51392db5ca2b43499bc057fcaac428",
+      "review": {
+        "unit": "B03",
+        "sha256": "c2e83c197b71236a2f09985012fcc8447b51392db5ca2b43499bc057fcaac428"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/slots/GenerationSlotCard.tsx",
+      "sha256": "4bc8efdc5a898252e93f315f7788fc0d4705bb42b0c3c42652828fec5780a097",
+      "review": {
+        "unit": "B01",
+        "sha256": "4bc8efdc5a898252e93f315f7788fc0d4705bb42b0c3c42652828fec5780a097"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/story/StoryPage.tsx",
+      "sha256": "d4393a2fc0890d747cc71449de29a5327b06b1ed7b0e865491576781126b8abc",
+      "review": {
+        "unit": "B06",
+        "sha256": "d4393a2fc0890d747cc71449de29a5327b06b1ed7b0e865491576781126b8abc"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/studio/ConnectorsPage.tsx",
+      "sha256": "7c41e1b5c33211ab50d3db89dec67b2c6c98efbf3452030fae09d27ce50e4c76",
+      "review": {
+        "unit": "B06",
+        "sha256": "7c41e1b5c33211ab50d3db89dec67b2c6c98efbf3452030fae09d27ce50e4c76",
+        "authority": "B-final-check attributed update"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/studio/materials/MaterialControls.tsx",
+      "sha256": "624805744af6db6bea5d4bd40cd7e8ccac9824d977ea1d273dc0cd01b26f59bb",
+      "review": {
+        "unit": "B01",
+        "sha256": "624805744af6db6bea5d4bd40cd7e8ccac9824d977ea1d273dc0cd01b26f59bb"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/studio/materials/MaterialDetailPanel.tsx",
+      "sha256": "e100e01b18ed5303d8f682c0d0c2988da29233704fb2e9c6091f49001d0839a1",
+      "review": {
+        "unit": "B01",
+        "sha256": "e100e01b18ed5303d8f682c0d0c2988da29233704fb2e9c6091f49001d0839a1"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/workspace/ProjectSettingsPanel.tsx",
+      "sha256": "fb33365b5124d8d69fe556fc5d2b92b3087c33842f8c8d733d0f6e1c842ea1ca",
+      "review": {
+        "unit": "B01",
+        "sha256": "fb33365b5124d8d69fe556fc5d2b92b3087c33842f8c8d733d0f6e1c842ea1ca"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/components/workspace/WorkspaceChrome.tsx",
+      "sha256": "9dd23617dcf89f9fc1cac484cfca7d61c7135d577e16be353d76f9b17ce2418d",
+      "review": {
+        "unit": "B01",
+        "sha256": "9dd23617dcf89f9fc1cac484cfca7d61c7135d577e16be353d76f9b17ce2418d"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/db/contextSettings.ts",
+      "sha256": "e599b1ada783a7aa31c2e3234186a91cf05d63ba2fb49ed6b08a116320f28109",
+      "review": {
+        "unit": "B03",
+        "sha256": "e599b1ada783a7aa31c2e3234186a91cf05d63ba2fb49ed6b08a116320f28109"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/db/repo.ts",
+      "sha256": "f87b802e9b9eea8a4642e60bd8ed9180d1f1b9113c3de42d2e6717176f2792cd",
+      "review": {
+        "unit": "B03",
+        "sha256": "f87b802e9b9eea8a4642e60bd8ed9180d1f1b9113c3de42d2e6717176f2792cd"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/ai/apimartAudio.ts",
+      "sha256": "072ef52ecadf96230346389a22bb14e3f630cc0ac590a9e538abdb0d7caa3611",
+      "review": {
+        "unit": "B05",
+        "sha256": "072ef52ecadf96230346389a22bb14e3f630cc0ac590a9e538abdb0d7caa3611"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/ai/openaiCompatible.ts",
+      "sha256": "58af82f28f70dbd361d9bfc43b4201186407060c67ad6fd3f342e20a65c29912",
+      "review": {
+        "unit": "B04",
+        "sha256": "58af82f28f70dbd361d9bfc43b4201186407060c67ad6fd3f342e20a65c29912"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/audioGeneration/observations.ts",
+      "sha256": "3a4eaa6f6cf3c0186ff5d129bdaa07acf59df509b19523301d7237d502963cbe",
+      "review": {
+        "unit": "B05",
+        "sha256": "3a4eaa6f6cf3c0186ff5d129bdaa07acf59df509b19523301d7237d502963cbe"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/audioGeneration/runtime.ts",
+      "sha256": "e63f2ea630494265031c7110a7beac4dd190dfe61e7dbefbb7d10caf7cefb054",
+      "review": {
+        "unit": "B05",
+        "sha256": "e63f2ea630494265031c7110a7beac4dd190dfe61e7dbefbb7d10caf7cefb054"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/audioGeneration/taskIds.ts",
+      "sha256": "9c6a060ef497e2b41ed783ce5ce628770623c3afc1b7f8f62173373cc66f6a9f",
+      "review": {
+        "unit": "B05",
+        "sha256": "9c6a060ef497e2b41ed783ce5ce628770623c3afc1b7f8f62173373cc66f6a9f"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/useManualDraftGuard.tsx",
+      "sha256": "a5a93b4da49c5aa67b900d2e57ea531500943309173b5556cacad03450c12722",
+      "review": {
+        "unit": "B01",
+        "sha256": "a5a93b4da49c5aa67b900d2e57ea531500943309173b5556cacad03450c12722"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/lib/workspaceAvailability.ts",
+      "sha256": "c1de467519f3a83b305c3557c0d0a876f2da7e1a8f70670f53661bdb57ac0b1b",
+      "review": {
+        "unit": "B01",
+        "sha256": "c1de467519f3a83b305c3557c0d0a876f2da7e1a8f70670f53661bdb57ac0b1b"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/routes/p.$projectId.index.tsx",
+      "sha256": "0a20cef48da89ebf46de8555d34a0d27c39ddc8b2d8464941610994ff61be63f",
+      "review": {
+        "unit": "B01",
+        "sha256": "0a20cef48da89ebf46de8555d34a0d27c39ddc8b2d8464941610994ff61be63f"
+      },
+      "matches": true
+    },
+    {
+      "path": "src/routes/p.$projectId.tsx",
+      "sha256": "900667d80ce5146e342830ede57859f9c5feed2fd50bd7abfac3e4ce1b6c658b",
+      "review": {
+        "unit": "B01",
+        "sha256": "900667d80ce5146e342830ede57859f9c5feed2fd50bd7abfac3e4ce1b6c658b"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/apimartAudio.test.ts",
+      "sha256": "b109ec2bd706dac444166ce939572ad7fa954cb432e245f646075d7598acbbcd",
+      "review": {
+        "unit": "B05",
+        "sha256": "b109ec2bd706dac444166ce939572ad7fa954cb432e245f646075d7598acbbcd"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/audioGenerationRecoveryAudit.test.ts",
+      "sha256": "87a38cdc581c79375692eab741dba09a40e22d756654939ce2762adc4c8d9ace",
+      "review": {
+        "unit": "B05",
+        "sha256": "87a38cdc581c79375692eab741dba09a40e22d756654939ce2762adc4c8d9ace"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/audioTaskEvidence.test.ts",
+      "sha256": "55726461495950bea18a3cfe2479be9f2078231fd76c242d9ffaa69faad6ceb2",
+      "review": {
+        "unit": "B05",
+        "sha256": "55726461495950bea18a3cfe2479be9f2078231fd76c242d9ffaa69faad6ceb2"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/b01QueryIdentity.test.ts",
+      "sha256": "10fde936dd92dc595e83e884451748cd4e0350585d8cea2871396912b09bdca4",
+      "review": {
+        "unit": "B01",
+        "sha256": "10fde936dd92dc595e83e884451748cd4e0350585d8cea2871396912b09bdca4"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/b02MemoryPromotion.test.ts",
+      "sha256": "7036d8e7cfd72e864872126f07c352f3500824f27b3285c5b2fb2dec23a117f6",
+      "review": {
+        "unit": "B02",
+        "sha256": "7036d8e7cfd72e864872126f07c352f3500824f27b3285c5b2fb2dec23a117f6"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/b03IntentBoundaries.test.ts",
+      "sha256": "c4619b7cf76ea84b42945777df36e96d8a360d57a342585be9784dd25432d528",
+      "review": {
+        "unit": "B03",
+        "sha256": "c4619b7cf76ea84b42945777df36e96d8a360d57a342585be9784dd25432d528"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/b06EditorSessions.test.ts",
+      "sha256": "cc0995a69fca18bcd9e63b556cc242b6479a2722ecec300a5b9876cdca92ed34",
+      "review": {
+        "unit": "B06",
+        "sha256": "cc0995a69fca18bcd9e63b556cc242b6479a2722ecec300a5b9876cdca92ed34"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/b07ComposeSessions.test.ts",
+      "sha256": "cefe76be8b32e1d247f58416e39c781bb5cd1e239754823fca16caff0c1e8b13",
+      "review": {
+        "unit": "B07",
+        "sha256": "cefe76be8b32e1d247f58416e39c781bb5cd1e239754823fca16caff0c1e8b13"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/connectors.test.ts",
+      "sha256": "e5d146330a2f663bff417f8a03479393b351436e954d1614cc5e530e65751d68",
+      "review": {
+        "unit": "B04",
+        "sha256": "e5d146330a2f663bff417f8a03479393b351436e954d1614cc5e530e65751d68"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/fixtures/b01/harness.tsx",
+      "sha256": "dee38264ed884675145d87a295819757003791d3f0ea515b1d7ee2d868bbdfd2",
+      "review": {
+        "unit": "B01",
+        "sha256": "dee38264ed884675145d87a295819757003791d3f0ea515b1d7ee2d868bbdfd2"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/fixtures/b01/index.html",
+      "sha256": "f4365ab59b46ab1d180674efacd8223aa258ec750bdd1ff9d59a4b0a919bb881",
+      "review": {
+        "unit": "B01",
+        "sha256": "f4365ab59b46ab1d180674efacd8223aa258ec750bdd1ff9d59a4b0a919bb881"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/fixtures/b07/harness.tsx",
+      "sha256": "1e7d5485ba34753d20f2c06e375cf7ce27a8c3928e222f10f4b2e6711e58ef53",
+      "review": {
+        "unit": "B07",
+        "sha256": "1e7d5485ba34753d20f2c06e375cf7ce27a8c3928e222f10f4b2e6711e58ef53"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/fixtures/b07/index.html",
+      "sha256": "f3d13595619adc85cd86846ae1d28badd918a956f58a9ce0d3e222caa0623b20",
+      "review": {
+        "unit": "B07",
+        "sha256": "f3d13595619adc85cd86846ae1d28badd918a956f58a9ce0d3e222caa0623b20"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/fixtures/b07/surface.tsx",
+      "sha256": "a733f584d25d7a7ee9fd52716bf8ba1976f377b6dd9f73086698bf5aeb1aad08",
+      "review": {
+        "unit": "B07",
+        "sha256": "a733f584d25d7a7ee9fd52716bf8ba1976f377b6dd9f73086698bf5aeb1aad08"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/manualDraftWiring.test.ts",
+      "sha256": "8f38529fa161cbd49af5672be13b079e99ef85c7a5766dae879dc4f1f3a53cba",
+      "review": {
+        "unit": "B01",
+        "sha256": "8f38529fa161cbd49af5672be13b079e99ef85c7a5766dae879dc4f1f3a53cba"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/modelMetadata.test.ts",
+      "sha256": "91d2f9e15f232a20ecb66c84daca31e989d1e32f3423e0a3322b0771e4cf3f57",
+      "review": {
+        "unit": "B04",
+        "sha256": "91d2f9e15f232a20ecb66c84daca31e989d1e32f3423e0a3322b0771e4cf3f57"
+      },
+      "matches": true
+    },
+    {
+      "path": "tests/openaiCompatible.test.ts",
+      "sha256": "5e9a68d32f76c79fdcfbba647280b7af85202c0a8867cb0daeb3c0bdd86b9fbf",
+      "review": {
+        "unit": "B04",
+        "sha256": "5e9a68d32f76c79fdcfbba647280b7af85202c0a8867cb0daeb3c0bdd86b9fbf"
+      },
+      "matches": true
+    }
+  ],
+  "missingOrChanged": []
+}

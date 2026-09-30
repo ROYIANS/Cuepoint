@@ -1,0 +1,16 @@
+{
+  "before": {
+    "src/components/studio/ConnectorsPage.tsx": "98df061541d783f27e0942c28a8a8424f26dd2ff61212ca655b284f7dee09313",
+    "src/components/story/StoryPage.tsx": "324c0fc0aae26791e298fc3e8a269287476c56dfcbc81431afd7a07884cb68c1",
+    "tests/b06EditorSessions.test.ts": "85596f99c51f638a75775ff0f6c90c783a37890a17d09cc9cdf2d0adce3b5b0e"
+  },
+  "after": {
+    "src/components/studio/ConnectorsPage.tsx": "98df061541d783f27e0942c28a8a8424f26dd2ff61212ca655b284f7dee09313",
+    "src/components/story/StoryPage.tsx": "d4393a2fc0890d747cc71449de29a5327b06b1ed7b0e865491576781126b8abc",
+    "tests/b06EditorSessions.test.ts": "cc0995a69fca18bcd9e63b556cc242b6479a2722ecec300a5b9876cdca92ed34"
+  },
+  "checkerChanged": [
+    "src/components/story/StoryPage.tsx",
+    "tests/b06EditorSessions.test.ts"
+  ]
+}

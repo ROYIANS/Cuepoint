@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "tests/b07ComposeSessions.test.ts",
+    "tests/agentReferences.test.ts",
+    "tests/agentRunReview.test.ts",
+    "tests/references.test.ts"
+  ],
+  "startedAt": "2026-09-30T10:35:22.902189+00:00",
+  "seconds": 2.012,
+  "exit": 0
+}

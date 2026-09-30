@@ -1,0 +1,56 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/b06EditorSessions.test.ts (2 tests | 2 failed) 29ms
+   ❯ B06 deferred risk proof through actual callbacks (2)
+     × ignores A probe completion after close/open B and does not release B busy 15ms
+     × preserves edits including edit-then-revert during File.text and offers adoption 13ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/b06EditorSessions.test.ts > B06 deferred risk proof through actual callbacks > ignores A probe completion after close/open B and does not release B busy
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "探活成功，可见 1 个模型",
+    ]
+
+
+Number of calls: 1
+
+ ❯ tests/b06EditorSessions.test.ts:130:35
+    128|         click(button(ui.open(1), "拉取模型探活"));
+    129|         a.resolve({ok: true, models: ["old-model"]}); await settle();
+    130|         expect(toast.success).not.toHaveBeenCalled();
+       |                                   ^
+    131|         expect(button(ui.render(), "拉取中…")).toBeDefined();
+    132|         expect(ui.render().some(node => text(node).includes("old-model…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/b06EditorSessions.test.ts > B06 deferred risk proof through actual callbacks > preserves edits including edit-then-revert during File.text and offers adoption
+AssertionError: expected 'imported' to be 'original' // Object.is equality
+
+Expected: "original"
+Received: "imported"
+
+ ❯ tests/b06EditorSessions.test.ts:141:41
+    139|         const textarea = ui.script(); change(textarea, "edited"); chan…
+    140|         gate.resolve("imported"); await settle();
+    141|         expect(ui.script().props.value).toBe("original");
+       |                                         ^
+    142|         expect(button(ui.render(), "采用导入正文")).toBeDefined();
+    143|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  17:19:27
+   Duration  500ms (transform 56%, import 26%, setup 11%, tests 7%, worker 1%)
+

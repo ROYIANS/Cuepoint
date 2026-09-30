@@ -1,0 +1,13 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.1 [39m[90m/Users/xiaomengdao/WebstormProjects/aifenjing[39m
+
+ [32m✓[39m tests/modelMetadata.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 85[2mms[22m[39m
+ [32m✓[39m tests/connectors.test.ts [2m([22m[2m99 tests[22m[2m)[22m[33m 755[2mms[22m[39m
+ [32m✓[39m tests/openaiCompatible.test.ts [2m([22m[2m185 tests[22m[2m)[22m[33m 1125[2mms[22m[39m
+ [32m✓[39m tests/agentAuditRemediation.test.ts [2m([22m[2m40 tests[22m[2m)[22m[33m 780[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[32m331 passed[39m[22m[90m (331)[39m
+[2m   Start at [22m 15:47:20
+[2m   Duration [22m 1.90s[2m (tests 59%, transform 30%, setup 6%, import 4%)[22m
+

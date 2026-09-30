@@ -1,0 +1,15 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.1 [39m[90m/Users/xiaomengdao/WebstormProjects/aifenjing[39m
+
+ [32m✓[39m tests/debouncedDraft.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 107[2mms[22m[39m
+ [32m✓[39m tests/connectorMigration.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 49[2mms[22m[39m
+ [32m✓[39m tests/draftConcurrency.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 75[2mms[22m[39m
+ [32m✓[39m tests/connectors.test.ts [2m([22m[2m99 tests[22m[2m)[22m[33m 469[2mms[22m[39m
+ [32m✓[39m tests/b06EditorSessions.test.ts [2m([22m[2m56 tests[22m[2m)[22m[33m 1055[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m      Tests [22m [1m[32m176 passed[39m[22m[90m (176)[39m
+[2m   Start at [22m 17:51:15
+[2m   Duration [22m 1.79s[2m (tests 45%, transform 36%, setup 12%, import 6%)[22m
+
+JSON report written to /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-remediation-b/reviews/B06-check-self-fix-tests.json

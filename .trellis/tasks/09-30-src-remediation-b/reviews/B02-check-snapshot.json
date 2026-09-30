@@ -1,0 +1,83 @@
+{
+  "verdict": "PASS",
+  "scope": "B02 AU-01",
+  "capturedAt": "2026-09-30T15:09:44.654971+08:00",
+  "baseRevision": "20b0204c9fab43e1265b94761ee880649be2fca9",
+  "focusedTestFiles": 7,
+  "focusedTests": 71,
+  "b02Tests": 14,
+  "browserPassClaim": false,
+  "realReactDOMClaim": false,
+  "files": [
+    {
+      "path": "src/components/memory/MemoryPromotion.tsx",
+      "sha256": "03d00066422847126d56b74fb256a345118c0da51a0d1951fea91049b5de38fa",
+      "bytes": 823
+    },
+    {
+      "path": "src/components/agent/TaskWrapup.tsx",
+      "sha256": "e3dfd7266c829e9201fe40de48a04edfdf5db05a2e43de31cc09a4af28d77403",
+      "bytes": 32968
+    },
+    {
+      "path": "src/components/memory/MemoryEditor.tsx",
+      "sha256": "a2edba2fe43c8bb1585061000403fc32c24b259ccac692b6b4fd4a8ceb241451",
+      "bytes": 22448
+    },
+    {
+      "path": "tests/b02MemoryPromotion.test.ts",
+      "sha256": "7036d8e7cfd72e864872126f07c352f3500824f27b3285c5b2fb2dec23a117f6",
+      "bytes": 27898
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-b/reviews/B02-check.md",
+      "sha256": "0da73b98ff39d6fcce0a37c8ef1ea136f11755375ffdb4065195eb27b2e0dbdc",
+      "bytes": 7378
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-b/reviews/B02-check-runs.json",
+      "sha256": "1a3f1b2e6ff14aa3ba05af3125231e335ddae736835b356fb272cfc8bb8185c8",
+      "bytes": 1069
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-b/reviews/B02-check-focused.log",
+      "sha256": "5d8b366a98fbeec41711c746fc82379c99b37a3d85a618b20ff977498d921c3d",
+      "bytes": 463
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-b/reviews/B02-check-lint.log",
+      "sha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+      "bytes": 94
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-b/reviews/B02-check-diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-b/reviews/B02-check-red.log",
+      "sha256": "341c1fb4a24cb0f59aacd5bd1b28741fdff95b010e04eebeaf5508a049fdc2fc",
+      "bytes": 8203
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-b/reviews/B02-check-green.log",
+      "sha256": "a3f8a7fef9f5246db570256bc86556bfe0304d4f7a0753de5d35b0578c430736",
+      "bytes": 207
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-b/reviews/B02-check-eslint.json",
+      "sha256": "6804578edfda958f73a1c4dfd6036114646cf38a297acdadc4d85e7bc3080213",
+      "bytes": 61193
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-b/reviews/B02-check-eslint-run.json",
+      "sha256": "098f0a7a9310526fb0b122885c7b639b925deab0c444b80e808724dbc6b28a81",
+      "bytes": 844
+    },
+    {
+      "path": ".trellis/tasks/09-30-src-remediation-b/reviews/B02-check-eslint-summary.json",
+      "sha256": "c03b77c00f75c7060403f7b0818d00a068d5a51cdc78e44e46f89c6f0f4b78ef",
+      "bytes": 3873
+    }
+  ]
+}

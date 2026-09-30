@@ -1,0 +1,90 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/b07ComposeSessions.test.ts (30 tests | 4 failed | 26 skipped) 39ms
+   ❯ B07 actual compose callbacks (4)
+     × keeps text and attachments together across A/B/back 14ms
+     × failed new-topic creation preserves unsent old text and references 10ms
+     × a late begin cannot clear edited-then-reverted text 8ms
+     × a late begin cannot clear equal text belonging to another thread 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/b07ComposeSessions.test.ts > B07 actual compose callbacks > keeps text and attachments together across A/B/back
+AssertionError: expected 'draft A' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ draft A
+
+ ❯ tests/b07ComposeSessions.test.ts:159:37
+    157|         const ui = page("A"); ui.type("draft A"); ui.attach("refA");
+    158|         (ui.surface().props.onSelectThread as (id: string) => void)("B…
+    159|         expect(ui.composer().value).toBe(""); ui.type("draft B"); ui.a…
+       |                                     ^
+    160|         (ui.surface().props.onSelectThread as (id: string) => void)("A…
+    161|         expect(ui.composer().value).toBe("draft A");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/b07ComposeSessions.test.ts > B07 actual compose callbacks > failed new-topic creation preserves unsent old text and references
+AssertionError: expected '' to be 'unsent' // Object.is equality
+
+- Expected
++ Received
+
+- unsent
+
+ ❯ tests/b07ComposeSessions.test.ts:169:37
+    167|         io.create.mockRejectedValue(new Error("creation failed"));
+    168|         (ui.surface().props.onNewTopic as () => void)(); await settle(…
+    169|         expect(ui.composer().value).toBe("unsent"); expect(ui.composer…
+       |                                     ^
+    170|         expect(toast.error).toHaveBeenCalledWith("creation failed");
+    171|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/b07ComposeSessions.test.ts > B07 actual compose callbacks > a late begin cannot clear edited-then-reverted text
+AssertionError: expected '' to be 'same' // Object.is equality
+
+- Expected
++ Received
+
+- same
+
+ ❯ tests/b07ComposeSessions.test.ts:176:37
+    174|         const pending = ui.send(); await settle(); ui.type("changed");…
+    175|         gate.resolve({id: "run"}); await pending; await settle();
+    176|         expect(ui.composer().value).toBe("same");
+       |                                     ^
+    177|     });
+    178|     it("a late begin cannot clear equal text belonging to another thre…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/b07ComposeSessions.test.ts > B07 actual compose callbacks > a late begin cannot clear equal text belonging to another thread
+AssertionError: expected '' to be 'same' // Object.is equality
+
+- Expected
++ Received
+
+- same
+
+ ❯ tests/b07ComposeSessions.test.ts:182:37
+    180|         const pending = ui.send(); await settle(); ui.select("B"); ui.…
+    181|         gate.resolve({id: "run"}); await pending; await settle();
+    182|         expect(ui.composer().value).toBe("same");
+       |                                     ^
+    183|     });
+    184| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 26 skipped (30)
+   Start at  18:35:23
+   Duration  1.22s (transform 70%, import 19%, setup 7%, tests 3%)
+

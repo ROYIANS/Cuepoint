@@ -3,7 +3,7 @@
   "startRevision": "bbc8200e67ab828cf45201f5fa9208ac92e02e04",
   "auditTask": ".trellis/tasks/09-30-src-quality-architecture-audit",
   "approvedSequence": "A→B→C→D→E",
-  "currentUnit": "B01",
+  "currentUnit": "C01",
   "units": [
     {
       "id": "A01",
@@ -116,10 +116,38 @@
         "SS-01",
         "PU-05"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        "src/components/assets/CharacterDetailPage.tsx",
+        "src/components/assets/PropDetailPage.tsx",
+        "src/components/assets/SceneDetailPage.tsx",
+        "src/components/assets/StyleDetailPage.tsx",
+        "src/components/produce/StoryboardPrintPage.tsx",
+        "src/components/shots/ShotEditorPage.tsx",
+        "src/components/slots/GenerationSlotCard.tsx",
+        "src/components/studio/materials/MaterialControls.tsx",
+        "src/components/studio/materials/MaterialDetailPanel.tsx",
+        "src/components/workspace/ProjectSettingsPanel.tsx",
+        "src/components/workspace/WorkspaceChrome.tsx",
+        "src/lib/useManualDraftGuard.tsx",
+        "src/lib/workspaceAvailability.ts",
+        "src/routes/p.$projectId.index.tsx",
+        "src/routes/p.$projectId.tsx",
+        "tests/manualDraftWiring.test.ts",
+        "tests/b01QueryIdentity.test.ts",
+        "tests/fixtures/b01/harness.tsx",
+        "tests/fixtures/b01/index.html",
+        "scripts/b01-browser-regression.mjs",
+        ".trellis/spec/frontend/hook-guidelines.md",
+        ".trellis/spec/frontend/state-management.md"
+      ],
+      "checks": [
+        "Independent final: 7 focused files/66 tests; typecheck and diffcheck passed",
+        "19 styled actual ReactDOM/router/Dexie browser scenarios passed; controlled fixture seams explicitly documented",
+        "Independent15-file ESLint: no new non-complexity signatures; inherited naming/complexity signals retained",
+        "Coordinator matched25 deliverable SHA256 values to final check snapshot"
+      ],
+      "review": ".trellis/tasks/09-30-src-remediation-b/reviews/B01-check.md"
     },
     {
       "id": "B02",
@@ -128,10 +156,20 @@
       "findings": [
         "AU-01"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        "src/components/memory/MemoryPromotion.tsx",
+        "src/components/agent/TaskWrapup.tsx",
+        "src/components/memory/MemoryEditor.tsx",
+        "tests/b02MemoryPromotion.test.ts",
+        ".trellis/spec/frontend/project-memory.md"
+      ],
+      "checks": [
+        "Independent7files/71tests including14B02 tests passed; six new defects regressions red/green",
+        "lint and diffcheck passed; threefileisolatedESLintexit0 nonew noncomplexitysignatures",
+        "Coordinator verified14handoff evidence/sourcehashes; hookhost/DB limits explicit"
+      ],
+      "review": ".trellis/tasks/09-30-src-remediation-b/reviews/B02-check.md"
     },
     {
       "id": "B03",
@@ -141,10 +179,21 @@
         "AU-03",
         "PU-04"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        "src/components/agent/ContextParameters.tsx",
+        "src/db/contextSettings.ts",
+        "src/db/repo.ts",
+        "src/components/shots/ShotEditorPage.tsx",
+        "tests/b03IntentBoundaries.test.ts",
+        ".trellis/spec/frontend/state-management.md"
+      ],
+      "checks": [
+        "Independent11files166tests including22B03 actualcallback/transactioncases passed",
+        "lint/diffcheck passed; 5source/testhashes equalhandoff andunchanged",
+        "Partialmerge andfullreplacement/reset semantics; selectedmembership andatomicvalidation; A02/A04/B01/B02 compatibility"
+      ],
+      "review": ".trellis/tasks/09-30-src-remediation-b/reviews/B03-check.md"
     },
     {
       "id": "B04",
@@ -153,10 +202,20 @@
       "findings": [
         "PM-02"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        "src/lib/ai/openaiCompatible.ts",
+        "tests/openaiCompatible.test.ts",
+        "tests/connectors.test.ts",
+        "tests/modelMetadata.test.ts",
+        ".trellis/spec/frontend/ai-connectors.md"
+      ],
+      "checks": [
+        "Independent4files331tests passed; exactGET/POSTcountmatrix verified",
+        "lint/diffcheck passed; adapter isolatedESLint0errors0warnings",
+        "Coordinator4hashesmatchesreview; protocolfailurebodyTypeError neverpaidfallback; specializedprovidersread-only"
+      ],
+      "review": ".trellis/tasks/09-30-src-remediation-b/reviews/B04-check.md"
     },
     {
       "id": "B05",
@@ -167,10 +226,23 @@
         "PM-04",
         "PM-06"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        "src/lib/ai/apimartAudio.ts",
+        "src/lib/audioGeneration/taskIds.ts",
+        "src/lib/audioGeneration/observations.ts",
+        "src/lib/audioGeneration/runtime.ts",
+        "tests/apimartAudio.test.ts",
+        "tests/audioGenerationRecoveryAudit.test.ts",
+        "tests/audioTaskEvidence.test.ts",
+        ".trellis/spec/frontend/audio-music.md"
+      ],
+      "checks": [
+        "Independent9files203tests passed including malformed-surrogate red→green and valid Unicode boundaries",
+        "lint/diffcheck passed; isolatedESLint0errors12inheritedwarnings, no new noncomplexity signatures",
+        "Coordinator7finalhashes matched; legacy unique checkpoint preserves evidence/results, recovery0POST"
+      ],
+      "review": ".trellis/tasks/09-30-src-remediation-b/reviews/B05-check.md"
     },
     {
       "id": "B06",
@@ -180,10 +252,20 @@
         "SS-07",
         "PU-07"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        "src/components/studio/ConnectorsPage.tsx",
+        "src/components/story/StoryPage.tsx",
+        "tests/b06EditorSessions.test.ts",
+        ".trellis/spec/frontend/hook-guidelines.md"
+      ],
+      "checks": [
+        "Independent5files176tests incl56B06 passed; actual deferred callbacks and400ms autosave/DB",
+        "lint/diffcheck passed; isolatedESLint2inheritederrors8warnings, no new noncomplexity signatures; added cognitive26 documented",
+        "Coordinator3hashesmatched; prior risks concretely reproduced red2fail before implement",
+        "FinalBfullscope earlyfailure-return removed introducedcognitive26;176focused +134files2099full +19/5browser, explicitfinalB06hashattribution"
+      ],
+      "review": ".trellis/tasks/09-30-src-remediation-b/reviews/B06-check.md"
     },
     {
       "id": "B07",
@@ -192,10 +274,23 @@
       "findings": [
         "AU-10"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        "src/components/agent/AgentChatPage.tsx",
+        "src/components/agent/useReferenceDraft.ts",
+        "tests/b07ComposeSessions.test.ts",
+        "scripts/b07-browser-regression.mjs",
+        "tests/fixtures/b07/index.html",
+        "tests/fixtures/b07/harness.tsx",
+        "tests/fixtures/b07/surface.tsx",
+        ".trellis/spec/frontend/agent-references.md"
+      ],
+      "checks": [
+        "Independent4files60tests incl30B07 and5nativebrowser scenarios passed; oldsource4productassertionsfail + browsercross-topicred",
+        "lint/diffcheck passed; isolatedESLint0errors13inheritedwarnings no new signatures",
+        "Coordinator7afterhashes matched; actual browserhistory/WebLock/Dexie begin payload/POPabort and no externalrequests"
+      ],
+      "review": ".trellis/tasks/09-30-src-remediation-b/reviews/B07-check.md"
     },
     {
       "id": "C01",
@@ -706,10 +801,14 @@
         "src/components/memory/MemoryEditor.tsx:60",
         "src/db/projectMemories.ts:117"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "B02",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Parent synchronous shared candidate lock/owner/epoch across latest/history; frozen input/source/excerpt editor session; stale callbacks/completions and retired saved sessions cannot rebind or resubmit. Explicit latest-revision reconciliation unchanged.",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-b/research/B02-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B02-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B02-check-snapshot.json"
+      ]
     },
     {
       "id": "AU-02",
@@ -742,10 +841,14 @@
         "src/components/agent/ContextParameters.tsx:14",
         "src/db/contextSettings.ts:7"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "B03",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Changed-field context patches merge transaction-latest policy; resets/default copies explicitly replace including absent tokens. ShotRow submits selected boolean membership intent applied to latest shot with owner/reference checks and caught errors; bulk/full-array replacement unchanged.",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-b/research/B03-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B03-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B03-check-snapshot.json"
+      ]
     },
     {
       "id": "AU-04",
@@ -866,10 +969,14 @@
         "src/lib/agent/tools.ts:55",
         "src/lib/agent/runChat.ts:149"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "B07",
-      "resolution": null,
-      "evidence": []
+      "resolution": "One thread/project compose scope owns text revision, references/import resources. Capture synchronously; transfer captured home payload only, guarded nav restore/retrylocation, acknowledge only submitted scope/version afterbegin; newtopic failure retainsdraft. Actual callbacks and nativebrowser reproduced former risk.",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-b/research/B07-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B07-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B07-check-coverage.json"
+      ]
     },
     {
       "id": "PU-01",
@@ -955,10 +1062,14 @@
         "src/components/shots/ShotEditorPage.tsx:1829",
         "src/components/story/StoryPage.tsx:300"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "B03",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Changed-field context patches merge transaction-latest policy; resets/default copies explicitly replace including absent tokens. ShotRow submits selected boolean membership intent applied to latest shot with owner/reference checks and caught errors; bulk/full-array replacement unchanged.",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-b/research/B03-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B03-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B03-check-snapshot.json"
+      ]
     },
     {
       "id": "PU-05",
@@ -975,10 +1086,14 @@
         "src/main.tsx:9",
         "src/routes/p.$projectId.index.tsx:48"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "B01",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Tag query identity including null/empty, key target lifecycle before query/state hooks, protect manual dirty/pending navigation and parent-driven material selection; preserve same-target frozen baseline and readable unavailable sessions. Independent check fixed cleanup/unmount bookkeeping and passed final19browser/66test evidence.",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-b/research/B01-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B01-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B01-check-snapshot.json"
+      ]
     },
     {
       "id": "PU-06",
@@ -1003,10 +1118,16 @@
       "locations": [
         "src/components/story/StoryPage.tsx:96"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "B06",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Editor/operation ownership freezes credentials and guards success/error/nestedread/finally; synchronous writes block duplicate/dismissal/input/open. Script imports use latest request+editrevision; explicit conflict adoption/discard and useLatest retire old reads; actual callbacks confirm former risks.",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-b/research/B06-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B06-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B06-check-snapshot.json",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B-final-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B-final-check-snapshot.json"
+      ]
     },
     {
       "id": "PU-08",
@@ -1089,10 +1210,14 @@
         "src/lib/ai/openaiCompatible.ts:73",
         "src/lib/ai/connectors.ts:55"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "B04",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Shared strictunknown directorydecoder and validatedchatprobe; validempty preserved. Only404/405/GETfetchTypeError entersonesingleminimalPOST, body/protocolerrorsreturnfailurewithnoretry; redactionbeforetruncate.",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-b/research/B04-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B04-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B04-check-snapshot.json"
+      ]
     },
     {
       "id": "PM-03",
@@ -1106,10 +1231,14 @@
         "src/lib/audioGeneration/runtime.ts:240",
         "src/lib/audioGeneration/observations.ts:14"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "B05",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Shared opaque encodable ID guard validates submit/query/store/package; valid duplicates canonicalize first-order and legacy CAS checkpoint precedes queries while preserving history/results. AbortError recognized during fetch/body; ambiguous paid outcome never auto-resubmits.",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-b/research/B05-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B05-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B05-check-snapshot.json"
+      ]
     },
     {
       "id": "PM-04",
@@ -1123,10 +1252,14 @@
         "src/lib/ai/apimart.ts:376",
         "src/lib/ai/aihubmix.ts:129"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "B05",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Shared opaque encodable ID guard validates submit/query/store/package; valid duplicates canonicalize first-order and legacy CAS checkpoint precedes queries while preserving history/results. AbortError recognized during fetch/body; ambiguous paid outcome never auto-resubmits.",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-b/research/B05-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B05-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B05-check-snapshot.json"
+      ]
     },
     {
       "id": "PM-05",
@@ -1158,10 +1291,14 @@
       "locations": [
         "src/lib/ai/apimartAudio.ts:135"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "B05",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Shared opaque encodable ID guard validates submit/query/store/package; valid duplicates canonicalize first-order and legacy CAS checkpoint precedes queries while preserving history/results. AbortError recognized during fetch/body; ambiguous paid outcome never auto-resubmits.",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-b/research/B05-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B05-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B05-check-snapshot.json"
+      ]
     },
     {
       "id": "PM-07",
@@ -1202,10 +1339,14 @@
         "src/main.tsx:9",
         "src/components/studio/materials/MaterialDetailPanel.tsx:47"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "B01",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Tag query identity including null/empty, key target lifecycle before query/state hooks, protect manual dirty/pending navigation and parent-driven material selection; preserve same-target frozen baseline and readable unavailable sessions. Independent check fixed cleanup/unmount bookkeeping and passed final19browser/66test evidence.",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-b/research/B01-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B01-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B01-check-snapshot.json"
+      ]
     },
     {
       "id": "SS-02",
@@ -1316,10 +1457,16 @@
       "locations": [
         "src/components/studio/ConnectorsPage.tsx:50"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "B06",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Editor/operation ownership freezes credentials and guards success/error/nestedread/finally; synchronous writes block duplicate/dismissal/input/open. Script imports use latest request+editrevision; explicit conflict adoption/discard and useLatest retire old reads; actual callbacks confirm former risks.",
+      "evidence": [
+        ".trellis/tasks/09-30-src-remediation-b/research/B06-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B06-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B06-check-snapshot.json",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B-final-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B-final-check-snapshot.json"
+      ]
     },
     {
       "id": "SS-08",
@@ -1401,6 +1548,15 @@
       "file": "src/lib/memory/retrieval.ts",
       "status": "pending",
       "scope": "提前返回空entries；source保留白名单并用明确穷尽分支。保持信封/字段/顺序/预算兼容，不新增策略类。",
+      "evidence": []
+    },
+    {
+      "id": "QG-01",
+      "origin": "父PRD正式门禁要求；用户授权工具辅助及全部源码质量整改",
+      "unit": "E07",
+      "file": "package.json / .github/workflows/ghcr.yml / quality tooling",
+      "status": "pending",
+      "scope": "可复现类型/ESLint-SonarJS/依赖架构/引用门禁；已核验基线逐项记录，不批量ignore；不改发布行为。",
       "evidence": []
     }
   ]

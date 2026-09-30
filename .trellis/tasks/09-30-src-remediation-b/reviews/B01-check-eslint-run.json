@@ -1,0 +1,30 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+    "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-source-audit-n21f357d/node_modules/eslint/bin/eslint.js",
+    "src/components/assets/CharacterDetailPage.tsx",
+    "src/components/assets/PropDetailPage.tsx",
+    "src/components/assets/SceneDetailPage.tsx",
+    "src/components/assets/StyleDetailPage.tsx",
+    "src/components/produce/StoryboardPrintPage.tsx",
+    "src/components/shots/ShotEditorPage.tsx",
+    "src/components/slots/GenerationSlotCard.tsx",
+    "src/components/studio/materials/MaterialControls.tsx",
+    "src/components/studio/materials/MaterialDetailPanel.tsx",
+    "src/components/workspace/ProjectSettingsPanel.tsx",
+    "src/components/workspace/WorkspaceChrome.tsx",
+    "src/lib/useManualDraftGuard.tsx",
+    "src/lib/workspaceAvailability.ts",
+    "src/routes/p.$projectId.index.tsx",
+    "src/routes/p.$projectId.tsx",
+    "--config",
+    "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-source-audit-n21f357d/eslint.config.mjs",
+    "--format",
+    "json",
+    "--output-file",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-remediation-b/reviews/B01-check-eslint.json"
+  ],
+  "exit": 1,
+  "seconds": 5.66,
+  "stderr": ""
+}

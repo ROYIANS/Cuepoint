@@ -1,0 +1,13 @@
+{
+  "path": "src/lib/ai/openaiCompatible.ts",
+  "baseline": ".trellis/tasks/09-30-src-quality-architecture-audit/research/tools/eslint-results.json",
+  "ignoredRules": [
+    "complexity",
+    "sonarjs/cognitive-complexity"
+  ],
+  "newNonComplexity": [],
+  "remainingNonComplexity": {},
+  "diagnostics": [],
+  "errorCount": 0,
+  "warningCount": 0
+}

@@ -1,0 +1,13 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--check"
+  ],
+  "environment": {
+    "PATH": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+  },
+  "startedAt": "2026-09-30T09:54:06.244Z",
+  "seconds": 0.041,
+  "exit": 0
+}

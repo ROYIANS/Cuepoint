@@ -1,0 +1,9 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "lint"
+  ],
+  "startedAt": "2026-09-30T09:46:40.343Z",
+  "seconds": 0.007,
+  "exit": 127
+}

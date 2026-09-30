@@ -1,0 +1,93 @@
+{
+  "latestAScan": ".trellis/tasks/09-30-src-remediation-a/reviews/integration/eslint-results.json",
+  "auditBaseline": ".trellis/tasks/09-30-src-quality-architecture-audit/research/tools/eslint-results.json",
+  "signatureNormalization": "Ignore location fields and embedded (at line N) references; preserve rule, severity, message and occurrence count.",
+  "sources": {
+    "src/components/agent/AgentChatPage.tsx": {
+      "baselineSource": ".trellis/tasks/09-30-src-quality-architecture-audit/research/tools/eslint-results.json",
+      "latestAContainsFile": false,
+      "baselineCounts": {
+        "errors": 0,
+        "warnings": 12
+      },
+      "finalCounts": {
+        "errors": 0,
+        "warnings": 12
+      },
+      "added": [],
+      "removed": [],
+      "unchanged": [
+        {
+          "rule": "complexity",
+          "severity": 1,
+          "message": "Function 'AgentChatInner' has a complexity of 133. Maximum allowed is 20.",
+          "count": 1
+        },
+        {
+          "rule": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 64 to the 20 allowed.",
+          "count": 1
+        },
+        {
+          "rule": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "The 'threadList' logical expression could make the dependencies of useMemo Hook (at line <relocated>) change on every render. To fix this, wrap the initialization of 'threadList' in its own useMemo() Hook.",
+          "count": 1
+        },
+        {
+          "rule": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "The 'connectorList' logical expression could make the dependencies of useMemo Hook (at line <relocated>) change on every render. To fix this, wrap the initialization of 'connectorList' in its own useMemo() Hook.",
+          "count": 1
+        },
+        {
+          "rule": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "React Hook useEffect has a missing dependency: 'activeThread'. Either include it or remove the dependency array.",
+          "count": 1
+        },
+        {
+          "rule": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "React Hook useEffect has a missing dependency: 'selectedConnector'. Either include it or remove the dependency array.",
+          "count": 1
+        },
+        {
+          "rule": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "React Hook useCallback has missing dependencies: 'catalogMatches' and 'modelCatalog?.metadata'. Either include them or remove the dependency array.",
+          "count": 1
+        },
+        {
+          "rule": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "count": 5
+        }
+      ]
+    },
+    "src/components/agent/useReferenceDraft.ts": {
+      "baselineSource": ".trellis/tasks/09-30-src-quality-architecture-audit/research/tools/eslint-results.json",
+      "latestAContainsFile": false,
+      "baselineCounts": {
+        "errors": 0,
+        "warnings": 1
+      },
+      "finalCounts": {
+        "errors": 0,
+        "warnings": 1
+      },
+      "added": [],
+      "removed": [],
+      "unchanged": [
+        {
+          "rule": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "The ref value 'controllers.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'controllers.current' to a variable inside the effect, and use that variable in the cleanup function.",
+          "count": 1
+        }
+      ]
+    }
+  }
+}

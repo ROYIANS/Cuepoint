@@ -1,0 +1,7 @@
+{
+  "baseRevision": "20b0204c9fab43e1265b94761ee880649be2fca9",
+  "files": {
+    "src/components/agent/AgentChatPage.tsx": "15df4e905c6e496bf87ce3829237d33b00fdf8d3a3fb67a2eee94ec7400e40a2",
+    "src/components/agent/useReferenceDraft.ts": "b559bb8351c53b13451443ae84733c88f620bcb0fb1a8142bcbe24dacf2b5687"
+  }
+}

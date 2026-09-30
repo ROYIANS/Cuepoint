@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "exec",
+    "node",
+    "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-source-audit-n21f357d/node_modules/eslint/bin/eslint.js",
+    "src/components/studio/ConnectorsPage.tsx",
+    "src/components/story/StoryPage.tsx",
+    "--config",
+    "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-source-audit-n21f357d/eslint.config.mjs",
+    "--format",
+    "json",
+    "--output-file",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-remediation-b/reviews/B06-check-initial-eslint.json"
+  ],
+  "startedAt": "2026-09-30T09:46:40.345Z",
+  "seconds": 0.005,
+  "exit": 127
+}

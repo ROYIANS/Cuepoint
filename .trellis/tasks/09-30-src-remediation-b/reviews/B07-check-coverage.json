@@ -1,0 +1,71 @@
+{
+  "scopedFileCount": 7,
+  "baseRevision": "20b0204c9fab43e1265b94761ee880649be2fca9",
+  "files": [
+    {
+      "path": "src/components/agent/AgentChatPage.tsx",
+      "status": "reviewed",
+      "beforeSha256": "e59b75a283eeaf80084d7b8769ca842003a21460ad3e9347c288fdfa8a5d6487",
+      "sha256": "e59b75a283eeaf80084d7b8769ca842003a21460ad3e9347c288fdfa8a5d6487",
+      "changedDuringCheck": false,
+      "note": "Reviewed full page and send/create/lock/navigation/begin/acknowledgement/error/finally origins, new-topic, route cancellation, selection/settings callbacks, attachment locks and loading gate.",
+      "findings": []
+    },
+    {
+      "path": "src/components/agent/useReferenceDraft.ts",
+      "status": "reviewed",
+      "beforeSha256": "c2649c23d53889a4d6bdacbaa533858001746cba4400ab4b8e1baf60ad3cf48f",
+      "sha256": "c2649c23d53889a4d6bdacbaa533858001746cba4400ab4b8e1baf60ad3cf48f",
+      "changedDuringCheck": false,
+      "note": "Reviewed full hook; synchronous publication, origin closures on import/progress/success/failure/cancel/retry/unmount, text revisions, captured transfer/restoration and matching reference retirement.",
+      "findings": []
+    },
+    {
+      "path": "tests/b07ComposeSessions.test.ts",
+      "status": "reviewed",
+      "beforeSha256": "cf771c2ed2ba5bdc49cf8be8b82a18db3e89f48add6ab436e84cb6a3e93c22e7",
+      "sha256": "cefe76be8b32e1d247f58416e39c781bb5cd1e239754823fca16caff0c1e8b13",
+      "changedDuringCheck": true,
+      "note": "Reviewed deterministic actual page/hook host and all 30 cases; added actual lock-rejection and edited/reverted target navigation-rejection regressions. Does not replace ReactDOM/browser evidence.",
+      "findings": [
+        "Added missing boundary coverage; fixed in tests."
+      ]
+    },
+    {
+      "path": "scripts/b07-browser-regression.mjs",
+      "status": "reviewed",
+      "beforeSha256": "4e288edb5535310937a98667690ddcdddce0cec176619fcb5e5bf506fe422077",
+      "sha256": "4e288edb5535310937a98667690ddcdddce0cec176619fcb5e5bf506fe422077",
+      "changedDuringCheck": false,
+      "note": "Reviewed full runner, original-source override, UI/transport transforms, isolated origin/network guard, all five scenarios and fail diagnostics. Real run creation and Web Lock retained.",
+      "findings": []
+    },
+    {
+      "path": "tests/fixtures/b07/index.html",
+      "status": "reviewed",
+      "beforeSha256": "f3d13595619adc85cd86846ae1d28badd918a956f58a9ce0d3e222caa0623b20",
+      "sha256": "f3d13595619adc85cd86846ae1d28badd918a956f58a9ce0d3e222caa0623b20",
+      "changedDuringCheck": false,
+      "note": "Reviewed isolated fixture document and harness entrypoint.",
+      "findings": []
+    },
+    {
+      "path": "tests/fixtures/b07/harness.tsx",
+      "status": "reviewed",
+      "beforeSha256": "1e7d5485ba34753d20f2c06e375cf7ce27a8c3928e222f10f4b2e6711e58ef53",
+      "sha256": "1e7d5485ba34753d20f2c06e375cf7ce27a8c3928e222f10f4b2e6711e58ef53",
+      "changedDuringCheck": false,
+      "note": "Reviewed real Dexie seed/import, ReactDOM mount, browser-history routes, gates and record inspection; isolated random-port IndexedDB.",
+      "findings": []
+    },
+    {
+      "path": "tests/fixtures/b07/surface.tsx",
+      "status": "reviewed",
+      "beforeSha256": "a733f584d25d7a7ee9fd52716bf8ba1976f377b6dd9f73086698bf5aeb1aad08",
+      "sha256": "a733f584d25d7a7ee9fd52716bf8ba1976f377b6dd9f73086698bf5aeb1aad08",
+      "changedDuringCheck": false,
+      "note": "Reviewed presentation-only replacement; delegates page composer and navigation callbacks and renders scoped text/references/send status.",
+      "findings": []
+    }
+  ]
+}

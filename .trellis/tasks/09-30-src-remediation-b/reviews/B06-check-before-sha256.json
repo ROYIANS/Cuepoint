@@ -1,0 +1,5 @@
+{
+  "src/components/studio/ConnectorsPage.tsx": "98df061541d783f27e0942c28a8a8424f26dd2ff61212ca655b284f7dee09313",
+  "src/components/story/StoryPage.tsx": "324c0fc0aae26791e298fc3e8a269287476c56dfcbc81431afd7a07884cb68c1",
+  "tests/b06EditorSessions.test.ts": "85596f99c51f638a75775ff0f6c90c783a37890a17d09cc9cdf2d0adce3b5b0e"
+}

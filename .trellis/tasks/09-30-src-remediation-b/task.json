@@ -1,0 +1,28 @@
+{
+  "id": "src-remediation-b",
+  "name": "src-remediation-b",
+  "title": "源码整改B：查询身份、编辑会话与异步边界",
+  "description": "按父台账顺序实现B01至B07的12项发现；逐项回归和独立复核，保护未保存草稿，批末执行整体关口与提交确认。",
+  "status": "completed",
+  "dev_type": "frontend",
+  "scope": "src quality remediation B01–B07",
+  "package": null,
+  "priority": "P2",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-09-30",
+  "completedAt": "2026-09-30",
+  "branch": "main",
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": "a5ce45055c2b015ba41a9a890f0bde3425555174",
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "09-30-src-quality-remediation",
+  "relatedFiles": [
+    ".trellis/tasks/09-30-src-quality-remediation/remediation-ledger.json"
+  ],
+  "notes": "用户ok批准四笔具体B计划；三笔产品提交已执行，证据提交随后执行。B完成保留未归档，继续C01；无push。",
+  "meta": {}
+}

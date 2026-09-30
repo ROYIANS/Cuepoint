@@ -1,0 +1,46 @@
+[
+  {
+    "name": "focused",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "tests/b02MemoryPromotion.test.ts",
+      "tests/projectMemories.test.ts",
+      "tests/projectMemoryPackage.test.ts",
+      "tests/agentMemoryTools.test.ts",
+      "tests/memoryInclusion.test.ts",
+      "tests/memoryRetrieval.test.ts",
+      "tests/agentTaskWrapup.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 1.922,
+    "startedAt": "2026-09-30T15:06:59.198454+08:00",
+    "log": "B02-check-focused.log"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "run",
+      "lint"
+    ],
+    "exit": 0,
+    "seconds": 6.337,
+    "startedAt": "2026-09-30T15:07:01.120477+08:00",
+    "log": "B02-check-lint.log"
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit": 0,
+    "seconds": 0.029,
+    "startedAt": "2026-09-30T15:07:07.457702+08:00",
+    "log": "B02-check-diff-check.log"
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "lint"
+  ],
+  "environment": {
+    "PATH": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+  },
+  "startedAt": "2026-09-30T09:47:14.945Z",
+  "seconds": 8.558,
+  "exit": 0
+}

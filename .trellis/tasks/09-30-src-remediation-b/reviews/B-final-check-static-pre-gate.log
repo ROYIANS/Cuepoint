@@ -1,0 +1,416 @@
+[
+  {
+    "file": "src/components/agent/AgentChatPage.tsx",
+    "before": 12,
+    "after": 12,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/components/agent/ContextParameters.tsx",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/components/agent/TaskWrapup.tsx",
+    "before": 11,
+    "after": 11,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Function 'TaskWrapup' has a complexity of 75. Maximum allowed is 20.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "complexity",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/components/agent/useReferenceDraft.ts",
+    "before": 1,
+    "after": 1,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/components/assets/CharacterDetailPage.tsx",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/components/assets/PropDetailPage.tsx",
+    "before": 0,
+    "after": 1,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Function 'PropDetailContent' has a complexity of 21. Maximum allowed is 20.",
+        "count": 1
+      }
+    ],
+    "reduced": []
+  },
+  {
+    "file": "src/components/assets/SceneDetailPage.tsx",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/components/assets/StyleDetailPage.tsx",
+    "before": 0,
+    "after": 1,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Function 'StyleDetailContent' has a complexity of 21. Maximum allowed is 20.",
+        "count": 1
+      }
+    ],
+    "reduced": []
+  },
+  {
+    "file": "src/components/memory/MemoryEditor.tsx",
+    "before": 3,
+    "after": 3,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Function 'MemoryEditor' has a complexity of 62. Maximum allowed is 20.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "complexity",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/components/memory/MemoryPromotion.tsx",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/components/produce/StoryboardPrintPage.tsx",
+    "before": 0,
+    "after": 1,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Function 'StoryboardPrintPageContent' has a complexity of 31. Maximum allowed is 20.",
+        "count": 1
+      }
+    ],
+    "reduced": []
+  },
+  {
+    "file": "src/components/shots/ShotEditorPage.tsx",
+    "before": 17,
+    "after": 16,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Function 'ShotEditorPageContent' has a complexity of 76. Maximum allowed is 20.",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 41 to the 20 allowed.",
+        "count": 1
+      },
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Function 'onKeyDown' has a complexity of 31. Maximum allowed is 20.",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "complexity",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "count": 1
+      },
+      {
+        "rule": "react-hooks/exhaustive-deps",
+        "count": 1
+      },
+      {
+        "rule": "complexity",
+        "count": 1
+      },
+      {
+        "rule": "no-nested-ternary",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/components/slots/GenerationSlotCard.tsx",
+    "before": 13,
+    "after": 13,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Function 'GenerationSlotEditor' has a complexity of 56. Maximum allowed is 20.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "complexity",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/components/story/StoryPage.tsx",
+    "before": 2,
+    "after": 2,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/components/studio/ConnectorsPage.tsx",
+    "before": 7,
+    "after": 7,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Function 'ConnectorsPage' has a complexity of 34. Maximum allowed is 20.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "complexity",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/components/studio/materials/MaterialControls.tsx",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/components/studio/materials/MaterialDetailPanel.tsx",
+    "before": 4,
+    "after": 4,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Function 'MaterialEditor' has a complexity of 72. Maximum allowed is 20.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "complexity",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/components/workspace/ProjectSettingsPanel.tsx",
+    "before": 6,
+    "after": 6,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Function 'ProjectOutputSettings' has a complexity of 42. Maximum allowed is 20.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "complexity",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/components/workspace/WorkspaceChrome.tsx",
+    "before": 6,
+    "after": 6,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Function 'WorkspaceChrome' has a complexity of 71. Maximum allowed is 20.",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 51 to the 20 allowed.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "complexity",
+        "count": 1
+      },
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/db/contextSettings.ts",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/db/repo.ts",
+    "before": 11,
+    "after": 11,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/ai/apimartAudio.ts",
+    "before": 4,
+    "after": 3,
+    "increased": [],
+    "reduced": [
+      {
+        "rule": "@typescript-eslint/no-unsafe-member-access",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/lib/ai/openaiCompatible.ts",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/audioGeneration/observations.ts",
+    "before": 3,
+    "after": 2,
+    "increased": [
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Function 'validateAudioTaskObservations' has a complexity of 25. Maximum allowed is 20.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "complexity",
+        "count": 1
+      },
+      {
+        "rule": "no-control-regex",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/lib/audioGeneration/runtime.ts",
+    "before": 7,
+    "after": 7,
+    "increased": [
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 46 to the 20 allowed.",
+        "count": 1
+      },
+      {
+        "rule": "complexity",
+        "severity": 1,
+        "message": "Async arrow function has a complexity of 37. Maximum allowed is 20.",
+        "count": 1
+      }
+    ],
+    "reduced": [
+      {
+        "rule": "sonarjs/cognitive-complexity",
+        "count": 1
+      },
+      {
+        "rule": "complexity",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "file": "src/lib/audioGeneration/taskIds.ts",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/useManualDraftGuard.tsx",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/lib/workspaceAvailability.ts",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/routes/p.$projectId.index.tsx",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  },
+  {
+    "file": "src/routes/p.$projectId.tsx",
+    "before": 0,
+    "after": 0,
+    "increased": [],
+    "reduced": []
+  }
+]

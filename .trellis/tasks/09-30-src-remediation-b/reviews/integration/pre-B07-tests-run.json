@@ -1,0 +1,14 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "test",
+    "--reporter=json",
+    "--outputFile=/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-remediation-b/reviews/integration/pre-B07-tests.json"
+  ],
+  "exit": 1,
+  "seconds": 12.92,
+  "scope": "interim integration of B01-B06; not final B gate",
+  "sourceDrift": [
+    "tests/b07ComposeSessions.test.ts"
+  ]
+}

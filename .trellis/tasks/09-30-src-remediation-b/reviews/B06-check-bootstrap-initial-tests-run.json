@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "tests/b06EditorSessions.test.ts",
+    "tests/debouncedDraft.test.ts",
+    "tests/draftConcurrency.test.ts",
+    "tests/connectors.test.ts",
+    "tests/connectorMigration.test.ts"
+  ],
+  "startedAt": "2026-09-30T09:46:40.337Z",
+  "seconds": 0.009,
+  "exit": 127
+}
