@@ -1,9 +1,9 @@
-import {requestOnce, readHttpJson} from "./requestBoundary";
-import {isReadAbort} from "./boundedResponse";
-import {normalizeBaseUrl} from "./baseUrl";
-export {normalizeBaseUrl} from "./baseUrl";
 import {redactCredentials} from "./safeError";
 import {type ChatModelMetadata, collectModelMetadata, parseModelMetadata} from "@/lib/ai/modelMetadata";
+
+export function normalizeBaseUrl(baseUrl: string): string {
+    return baseUrl.trim().replace(/\/+$/, "");
+}
 
 export function authHeaders(apiKey: string): HeadersInit {
     return {
@@ -105,24 +105,11 @@ function validateChatProbe(value: unknown): void {
     }
 }
 
-async function readProtocolBody(response: Response, signal?: AbortSignal): Promise<unknown> {
+async function readProtocolBody(response: Response): Promise<unknown> {
     try {
-        return await readHttpJson(response, {success: {kind: "native-json"}, failure: {kind: "native-json"}}, signal);
+        return await response.json();
     } catch (error) {
-        if (isReadAbort(error, signal)) throw error;
         throw new Error(`服务响应解析失败：${error instanceof Error ? error.message : "无效 JSON"}`);
-    }
-}
-
-async function readHttpError(response: Response, signal?: AbortSignal): Promise<string> {
-    try {
-        signal?.throwIfAborted();
-        const text = await response.text();
-        signal?.throwIfAborted();
-        return text;
-    } catch (error) {
-        if (isReadAbort(error, signal)) throw error;
-        return "";
     }
 }
 
@@ -139,7 +126,6 @@ function failure(error: unknown, apiKey: string): { ok: false; message: string }
 export async function listModels(
     input: { baseUrl: string; apiKey: string },
     fetchImpl: typeof fetch = fetch,
-    options: {signal?: AbortSignal} = {},
 ): Promise<ListModelsResult> {
     const base = normalizeBaseUrl(input.baseUrl);
     const apiKey = input.apiKey.trim();
@@ -147,15 +133,15 @@ export async function listModels(
     if (!apiKey) return {ok: false, message: "请填写 API Key"};
 
     try {
-        const res = await requestOnce(modelsUrl(base), {
+        const res = await fetchImpl(modelsUrl(base), {
             method: "GET",
             headers: authHeaders(apiKey),
-        }, {fetchImpl, signal: options.signal, credentials: "same-origin", redirect: "follow"});
+        });
         if (!res.ok) {
-            const text = await readHttpError(res, options.signal);
+            const text = await res.text().catch(() => "");
             return {ok: false, message: formatHttpError(res.status, text, apiKey)};
         }
-        const {models, metadata} = decodeModelDirectory(await readProtocolBody(res, options.signal));
+        const {models, metadata} = decodeModelDirectory(await readProtocolBody(res));
         return {ok: true, models, ...(metadata ? {metadata} : {})};
     } catch (error) {
         return failure(error, apiKey);
@@ -169,7 +155,6 @@ export async function listModels(
 export async function testConnection(
     input: TestConnectionInput,
     fetchImpl: typeof fetch = fetch,
-    options: {signal?: AbortSignal} = {},
 ): Promise<TestConnectionResult> {
     const base = normalizeBaseUrl(input.baseUrl);
     const apiKey = input.apiKey.trim();
@@ -179,20 +164,19 @@ export async function testConnection(
     const headers = authHeaders(apiKey);
     let modelsRes: Response | undefined;
     try {
-        modelsRes = await requestOnce(modelsUrl(base), {method: "GET", headers}, {fetchImpl, signal: options.signal, credentials: "same-origin", redirect: "follow"});
+        modelsRes = await fetchImpl(modelsUrl(base), {method: "GET", headers});
     } catch (error) {
         // Keep this gate limited to fetch: body/decoder failures must never send a POST.
-        if (isReadAbort(error, options.signal)) return failure(error, apiKey);
         if (!(error instanceof TypeError)) return failure(error, apiKey);
     }
     if (modelsRes) {
         try {
             if (modelsRes.ok) {
-                const {modelCount} = decodeModelDirectory(await readProtocolBody(modelsRes, options.signal));
+                const {modelCount} = decodeModelDirectory(await readProtocolBody(modelsRes));
                 return {ok: true, via: "models", modelCount};
             }
             if (modelsRes.status !== 404 && modelsRes.status !== 405) {
-                const text = await readHttpError(modelsRes, options.signal);
+                const text = await modelsRes.text().catch(() => "");
                 return {ok: false, message: formatHttpError(modelsRes.status, text, apiKey)};
             }
         } catch (error) {
@@ -202,7 +186,7 @@ export async function testConnection(
 
     const model = input.defaultModel?.trim() || "gpt-4o-mini";
     try {
-        const chatRes = await requestOnce(chatCompletionsUrl(base), {
+        const chatRes = await fetchImpl(chatCompletionsUrl(base), {
             method: "POST",
             headers,
             body: JSON.stringify({
@@ -210,12 +194,12 @@ export async function testConnection(
                 messages: [{role: "user", content: "ping"}],
                 max_tokens: 1,
             }),
-        }, {fetchImpl, signal: options.signal, credentials: "same-origin", redirect: "follow"});
+        });
         if (!chatRes.ok) {
-            const text = await readHttpError(chatRes, options.signal);
+            const text = await chatRes.text().catch(() => "");
             return {ok: false, message: formatHttpError(chatRes.status, text, apiKey)};
         }
-        validateChatProbe(await readProtocolBody(chatRes, options.signal));
+        validateChatProbe(await readProtocolBody(chatRes));
         return {ok: true, via: "chat"};
     } catch (error) {
         return failure(error, apiKey);

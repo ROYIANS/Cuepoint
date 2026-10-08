@@ -1,5 +1,3 @@
-import {requestOnce} from "./requestBoundary";
-import {normalizeBaseUrl} from "./baseUrl";
 import {appendedUtf8Bytes, assertResponseBytes, isReadAbort, readErrorText, readResponseJson, utf8Bytes} from "./boundedResponse";
 import {readSseEvents} from "./boundedSse";
 import {MAX_JSON_BYTES, MAX_ERROR_BYTES} from "@/lib/resource/limits";
@@ -7,7 +5,7 @@ import {redactCredentials} from "./safeError";
 import {materializeResponseItems} from "./referenceWire";
 import type {AgentRequestMessage, AgentResponseItem, AgentTokenUsage, AgentWireToolCall} from "@/domain/agent";
 import type {StreamChatHandlers, StreamChatInput, StreamChatResult} from "@/lib/ai/chatStream";
-import {authHeaders} from "@/lib/ai/openaiCompatible";
+import {authHeaders, normalizeBaseUrl} from "@/lib/ai/openaiCompatible";
 import {assertReasoningEffort} from "@/lib/ai/reasoningPolicy";
 
 export type ResponsesResult = StreamChatResult & { responseOutput?: AgentResponseItem[] };
@@ -204,8 +202,8 @@ export async function streamResponses(input: StreamChatInput & {
         if (!input.messages.length && !input.responseItems?.length) throw new Error("消息不能为空");
         if (input.connectorDefinitionId !== "openai-compatible" && input.connectorDefinitionId !== "aihubmix") throw new Error("当前连接尚未支持 Responses 协议");
         assertReasoningEffort({definitionId: input.connectorDefinitionId, baseUrl: base}, model, input.reasoningEffort);
-        const res = await requestOnce(`${base}/responses`, {
-            method: "POST", headers: authHeaders(apiKey),
+        const res = await (handlers.fetchImpl ?? fetch)(`${base}/responses`, {
+            method: "POST", headers: authHeaders(apiKey), signal,
             body: JSON.stringify({
                 model, ...(input.maxOutputTokens ? {max_output_tokens: input.maxOutputTokens} : {}),
                 input: await materializeResponseItems(input.responseItems ?? toResponseInput(input.messages), input, signal),
@@ -225,7 +223,7 @@ export async function streamResponses(input: StreamChatInput & {
                     }))
                 } : {}),
             }),
-        }, {fetchImpl: handlers.fetchImpl, signal, credentials: "same-origin", redirect: "follow"});
+        });
         if (signal?.aborted) {
             await res.body?.cancel().catch(() => undefined);
             signal.throwIfAborted();

@@ -1,12 +1,10 @@
-import {requestOnce} from "./requestBoundary";
-import {normalizeBaseUrl} from "./baseUrl";
 import {appendedUtf8Bytes, assertResponseBytes, isReadAbort, readErrorText, readResponseJson, utf8Bytes} from "./boundedResponse";
 import {readSseEvents} from "./boundedSse";
 import {MAX_JSON_BYTES, MAX_ERROR_BYTES} from "@/lib/resource/limits";
 import {redactCredentials} from "./safeError";
 import {materializeChatMessages} from "./referenceWire";
 import type {AgentVisionCapability} from "@/domain/referenceInput";
-import {authHeaders, chatCompletionsUrl,} from "@/lib/ai/openaiCompatible";
+import {authHeaders, chatCompletionsUrl, normalizeBaseUrl,} from "@/lib/ai/openaiCompatible";
 
 import {assertReasoningEffort} from "@/lib/ai/reasoningPolicy";
 import type {ConnectorDefinitionId} from "@/domain/types";
@@ -364,15 +362,16 @@ export async function streamChatCompletions(
             definitionId: input.connectorDefinitionId,
             baseUrl: base
         } : undefined, model, input.reasoningEffort);
-        const res = await requestOnce(chatCompletionsUrl(base), {
+        const res = await fetchImpl(chatCompletionsUrl(base), {
             method: "POST",
             headers: authHeaders(apiKey),
+            signal,
             body: JSON.stringify({
                 model, ...(input.maxOutputTokens ? (/^(gpt-|o[1-9])/.test(model) ? {max_completion_tokens: input.maxOutputTokens} : {max_tokens: input.maxOutputTokens}) : {}),
                 messages: await materializeChatMessages(input.messages, input, signal),
                 stream: true, ...(input.reasoningEffort !== undefined ? {reasoning_effort: input.reasoningEffort} : {}), ...(input.tools?.length ? {tools: input.tools} : {})
             }),
-        }, {fetchImpl, signal, credentials: "same-origin", redirect: "follow"});
+        });
         signal?.throwIfAborted();
         if (!res.ok) {
             const body = await readErrorText(res, MAX_ERROR_BYTES, signal);

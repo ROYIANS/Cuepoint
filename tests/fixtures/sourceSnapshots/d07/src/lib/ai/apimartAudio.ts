@@ -1,11 +1,10 @@
-import {requestOnce, readHttpJson} from "./requestBoundary";
-import {isReadAbort, readResponseBlob, ResponseLimitError} from "./boundedResponse";
+import {readResponseJson, readResponseBlob, ResponseLimitError} from "./boundedResponse";
 import {MAX_AUDIO_BYTES, MAX_JSON_BYTES, MAX_ERROR_BYTES} from "@/lib/resource/limits";
 import {canonicalizeAudioTaskIds, isAudioTaskId} from "@/lib/audioGeneration/taskIds";
 import {z} from "zod";
 import {MUSIC_DURATION_LIMITS} from "@/domain/music";
 import type {ApimartCredentials, ApimartFailure, ApimartRequestOptions, ApimartResult} from "./apimart";
-import {normalizeBaseUrl} from "./baseUrl";
+import {normalizeBaseUrl} from "./openaiCompatible";
 import {redactCredentials} from "./safeError";
 
 export const SPEECH_VOICES = ["alloy", "echo", "fable", "onyx", "nova", "shimmer"] as const;
@@ -93,6 +92,7 @@ function safeUrl(v: unknown): v is string {
 }
 
 const failure = (kind: ApimartFailure["kind"], message: string): ApimartFailure => ({ok: false, kind, message});
+const aborted = (error: unknown, signal?: AbortSignal) => signal?.aborted || (error instanceof Error || error instanceof DOMException) && error.name === "AbortError";
 const protocol = () => failure("protocol", "APIMart 音频响应不符合接口约定；请保留任务记录，不要自动重复提交");
 
 async function audioRequest(credentials: ApimartCredentials, path: string, input: SpeechInput | MusicInput | undefined, options: ApimartRequestOptions): Promise<ApimartResult<{
@@ -102,17 +102,20 @@ async function audioRequest(credentials: ApimartCredentials, path: string, input
     if (!key || !safeUrl(base) || new URL(base).search || new URL(base).hash) return failure("validation", "请配置有效的 APIMart 地址和 API Key");
     if (options.signal?.aborted) return failure("aborted", "请求已停止；远端生成不会因此取消");
     try {
-        const response = await requestOnce(`${base}${path}`, {
+        const response = await (options.fetchImpl ?? fetch)(`${base}${path}`, {
             method: input ? "POST" : "GET",
             headers: {Authorization: `Bearer ${key}`, ...(input ? {"Content-Type": "application/json"} : {})},
             ...(input ? {body: JSON.stringify(input)} : {}),
-        }, {fetchImpl: options.fetchImpl, signal: options.signal, credentials: "omit", redirect: "error"});
+            signal: options.signal,
+            credentials: "omit",
+            redirect: "error",
+        });
         if (!response.ok) {
             let body: unknown;
             try {
-                body = await readHttpJson(response, {success: {kind: "bounded-json", maxBytes: MAX_JSON_BYTES, fatalUtf8: true}, failure: {kind: "bounded-json", maxBytes: MAX_ERROR_BYTES, fatalUtf8: true}}, options.signal);
+                body = await readResponseJson(response, MAX_ERROR_BYTES, options.signal);
             } catch (error) {
-                if (isReadAbort(error, options.signal)) return failure("aborted", "请求已停止；远端生成不会因此取消");
+                if (aborted(error, options.signal)) return failure("aborted", "请求已停止；远端生成不会因此取消");
                 /* HTTP status remains authoritative for other body failures. */
             }
             const error = record(body) && record(body.error) ? body.error : undefined;
@@ -126,7 +129,7 @@ async function audioRequest(credentials: ApimartCredentials, path: string, input
         }
         return {ok: true, response};
     } catch (error) {
-        return failure(isReadAbort(error, options.signal) ? "aborted" : "network", "音频请求未能完成；提交结果可能尚未确认，请勿自动重复生成");
+        return failure(aborted(error, options.signal) ? "aborted" : "network", "音频请求未能完成；提交结果可能尚未确认，请勿自动重复生成");
     }
 }
 
@@ -137,9 +140,9 @@ async function jsonEnvelope(credentials: ApimartCredentials, path: string, input
     if (!result.ok) return result;
     let body: unknown;
     try {
-        body = await readHttpJson(result.response, {success: {kind: "bounded-json", maxBytes: MAX_JSON_BYTES, fatalUtf8: true}, failure: {kind: "bounded-json", maxBytes: MAX_ERROR_BYTES, fatalUtf8: true}}, options.signal);
+        body = await readResponseJson(result.response, MAX_JSON_BYTES, options.signal);
     } catch (error) {
-        if (isReadAbort(error, options.signal)) return failure("aborted", "请求已停止；远端生成不会因此取消");
+        if (aborted(error, options.signal)) return failure("aborted", "请求已停止；远端生成不会因此取消");
         return error instanceof ResponseLimitError ? failure("protocol", error.message) : protocol();
     }
     if (!record(body)) return protocol();
@@ -151,7 +154,7 @@ async function jsonEnvelope(credentials: ApimartCredentials, path: string, input
 }
 
 function speechReadFailure(error: unknown, signal?: AbortSignal): ApimartFailure {
-    if (isReadAbort(error, signal)) return failure("aborted", "请求已停止；远端生成不会因此取消");
+    if (aborted(error, signal)) return failure("aborted", "请求已停止；远端生成不会因此取消");
     const message = error instanceof ResponseLimitError
         ? "配音响应超过本地读取限制（音频 32 MiB / JSON 4 MiB）；不会自动重新生成"
         : "未能读取完整的配音文件；不会自动重新生成";
@@ -248,7 +251,11 @@ export async function downloadApimartAudio(url: string, options: ApimartRequestO
 }>> {
     if (!safeUrl(url)) return failure("validation", "音频下载地址无效");
     try {
-        const response = await requestOnce(url, {}, {fetchImpl: options.fetchImpl, signal: options.signal, credentials: "omit", redirect: "error"});
+        const response = await (options.fetchImpl ?? fetch)(url, {
+            signal: options.signal,
+            credentials: "omit",
+            redirect: "error"
+        });
         if (!response.ok) {
             await response.body?.cancel().catch(() => undefined);
             return failure("http", `音频下载失败（${response.status}），可以重试下载`);
@@ -257,7 +264,7 @@ export async function downloadApimartAudio(url: string, options: ApimartRequestO
         if (!blob.size || (blob.type && !blob.type.startsWith("audio/") && blob.type !== "application/octet-stream")) return protocol();
         return {ok: true, blob};
     } catch (error) {
-        if (isReadAbort(error, options.signal)) return failure("aborted", "音频下载已停止；无需重新生成");
+        if (aborted(error, options.signal)) return failure("aborted", "音频下载已停止；无需重新生成");
         if (error instanceof ResponseLimitError) return failure("protocol", "音频下载超过本地 32 MiB 限制，已停止读取；保留任务记录，不会重新生成");
         return failure("network", "音频下载未完成，请重试下载；无需重新生成");
     }

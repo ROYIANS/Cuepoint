@@ -1,6 +1,4 @@
-import {requestOnce, readHttpJson} from "./requestBoundary";
-import {normalizeBaseUrl} from "./baseUrl";
-import {isReadAbort, readResponseBlob, ResponseLimitError} from "./boundedResponse";
+import {readResponseBlob, readResponseJson, ResponseLimitError} from "./boundedResponse";
 import {MAX_MEDIA_DOWNLOAD_BYTES, MAX_JSON_BYTES, MAX_ERROR_BYTES} from "@/lib/resource/limits";
 import {redactCredentials} from "./safeError";
 import {type ChatModelMetadata, parseModelMetadata} from "@/lib/ai/modelMetadata";
@@ -110,10 +108,13 @@ function aborted(): AIHubMixFailure {
     return failure("aborted", "请求已中止；已提交的远端任务不会因此取消");
 }
 
+function isAbort(error: unknown, options: AIHubMixRequestOptions) {
+    return options.signal?.aborted || (error instanceof Error && error.name === "AbortError");
+}
 
 function providerRoot(baseUrl: string): string | undefined {
     try {
-        const base = normalizeBaseUrl(baseUrl);
+        const base = baseUrl.trim().replace(/\/+$/, "");
         const url = new URL(base);
         if (!/^https?:$/.test(url.protocol) || url.username || url.password || url.search || url.hash ||
             !url.pathname.endsWith("/v1") || /\\|%(?:2f|5c)/i.test(base)) return undefined;
@@ -158,18 +159,19 @@ async function transport(
     if (authenticated && !credentials.apiKey.trim()) return failure("validation", "请填写 API Key");
     if (options.signal?.aborted) return aborted();
     try {
-        const response = await requestOnce(`${root}${path}`, {
+        const response = await (options.fetchImpl ?? fetch)(`${root}${path}`, {
             method: body === undefined ? "GET" : "POST",
             headers: {
                 ...(authenticated ? {Authorization: `Bearer ${credentials.apiKey.trim()}`} : {}),
                 ...(body !== undefined ? {"Content-Type": "application/json"} : {}),
             },
             ...(body === undefined ? {} : {body}),
-        }, {fetchImpl: options.fetchImpl, signal: options.signal, credentials: "omit", redirect: "error"});
+            signal: options.signal, redirect: "error", credentials: "omit",
+        });
         if (options.signal?.aborted) return aborted();
         return {ok: true, response};
     } catch (error) {
-        return isReadAbort(error, options.signal) ? aborted() : failure("network", "无法连接 AIHubMix，请检查网络、Base URL 和浏览器跨域限制；提交结果可能尚未确认");
+        return isAbort(error, options) ? aborted() : failure("network", "无法连接 AIHubMix，请检查网络、Base URL 和浏览器跨域限制；提交结果可能尚未确认");
     }
 }
 
@@ -182,9 +184,9 @@ async function request(
     const {response} = result;
     let data: unknown;
     try {
-        data = await readHttpJson(response, {success: {kind: "native-json"}, failure: {kind: "native-json"}}, options.signal);
+        data = await response.json();
     } catch (error) {
-        if (isReadAbort(error, options.signal)) return aborted();
+        if (isAbort(error, options)) return aborted();
         return response.ok ? protocol() : responseFailure(response, undefined, credentials.apiKey);
     }
     if (options.signal?.aborted) return aborted();
@@ -385,9 +387,9 @@ export async function downloadAIHubMixResult(credentials: AIHubMixCredentials, t
         if (!result.response.ok || result.response.headers.get("Content-Type")?.includes("application/json")) {
             let body: unknown;
             try {
-                body = await readHttpJson(result.response, {success: {kind: "bounded-json", maxBytes: MAX_JSON_BYTES, fatalUtf8: true}, failure: {kind: "bounded-json", maxBytes: MAX_ERROR_BYTES, fatalUtf8: true}}, options.signal);
+                body = await readResponseJson(result.response, result.response.ok ? MAX_JSON_BYTES : MAX_ERROR_BYTES, options.signal);
             } catch (error) {
-                if (isReadAbort(error, options.signal)) return aborted();
+                if (isAbort(error, options)) return aborted();
             }
             return result.response.ok && !(record(body) && body.error != null) ? protocol(task.id) : responseFailure(result.response, body, credentials.apiKey);
         }
@@ -395,7 +397,7 @@ export async function downloadAIHubMixResult(credentials: AIHubMixCredentials, t
         if (options.signal?.aborted) return aborted();
         return blob.size > 0 ? {ok: true, blob} : protocol(task.id);
     } catch (error) {
-        if (isReadAbort(error, options.signal)) return aborted();
+        if (isAbort(error, options)) return aborted();
         if (error instanceof ResponseLimitError) return failure("protocol", "AIHubMix 图片/视频下载超过本地 256 MiB 限制，已停止读取；保留任务记录，不会重新生成");
         return failure("network", "AIHubMix 结果读取失败，请检查网络和浏览器跨域限制");
     }

@@ -50,7 +50,7 @@ export async function discoverConnectorChatModels(
         };
     }
     if (connector.definitionId !== "apimart") {
-        const result = await listModels(connector, options.fetchImpl);
+        const result = await listModels(connector, options.fetchImpl, {signal: options.signal});
         return result.ok ? {...result, incompatibleModels: []} : result;
     }
     const result = await listApimartModels(connector, {expand: "category"}, options);

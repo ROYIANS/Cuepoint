@@ -1,4 +1,3 @@
-import {requestOnce} from "./requestBoundary";
 import {readResponseJson, ResponseLimitError} from "./boundedResponse";
 import {db} from '@/db/database';
 import {publicWebUrl, type WebFailure, type WebFailureCode, type WebResult, type WebSource} from '@/domain/search';
@@ -49,11 +48,11 @@ async function request(path: 'search' | 'extract' | 'usage', key: string, body: 
     }, options.timeoutMs ?? 30_000);
     const mayHaveRun = path !== 'usage';
     try {
-        const response = await requestOnce(`https://api.tavily.com/${path}`, {
-            method: path === 'usage' ? 'GET' : 'POST',
+        const response = await (options.fetchImpl ?? fetch)(`https://api.tavily.com/${path}`, {
+            method: path === 'usage' ? 'GET' : 'POST', credentials: 'omit', redirect: 'error',
             headers: {Authorization: `Bearer ${key}`, ...(path !== 'usage' ? {'Content-Type': 'application/json'} : {})},
-            ...(path !== 'usage' ? {body: JSON.stringify(body)} : {}),
-        }, {fetchImpl: options.fetchImpl, signal: controller.signal, credentials: 'omit', redirect: 'error'});
+            ...(path !== 'usage' ? {body: JSON.stringify(body)} : {}), signal: controller.signal,
+        });
         if (!response.ok) {
             await response.body?.cancel();
             const code = response.status === 401 || response.status === 403 ? 'authentication' : response.status === 429 ? 'rate_limit' : [402, 432, 433].includes(response.status) ? 'quota' : 'http';

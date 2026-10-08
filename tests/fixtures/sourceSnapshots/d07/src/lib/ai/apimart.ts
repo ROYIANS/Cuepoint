@@ -1,8 +1,6 @@
-import {requestOnce, readHttpJson} from "./requestBoundary";
-import {isReadAbort} from "./boundedResponse";
 import {redactCredentials} from "./safeError";
 import {type ChatModelMetadata, parseModelMetadata} from "@/lib/ai/modelMetadata";
-import {normalizeBaseUrl} from "./baseUrl";
+import {normalizeBaseUrl} from "@/lib/ai/openaiCompatible";
 
 export type ApimartCredentials = { baseUrl: string; apiKey: string };
 export type ApimartRequestOptions = { signal?: AbortSignal; fetchImpl?: typeof fetch; idempotencyKey?: string };
@@ -155,20 +153,23 @@ async function request(
     }
     if (options.signal?.aborted) return failure("aborted", "请求已中止；已提交的远端任务不会因此取消");
     try {
-        const response = await requestOnce(`${base}${path}`, {
+        const response = await (options.fetchImpl ?? fetch)(`${base}${path}`, {
             ...init,
             headers: {
                 ...(typeof init.body === "string" ? {"Content-Type": "application/json"} : {}),
                 ...init.headers,
                 Authorization: `Bearer ${key}`,
             },
-        }, {fetchImpl: options.fetchImpl, signal: options.signal, credentials: "omit", redirect: "error"});
+            signal: options.signal,
+            redirect: "error",
+            credentials: "omit",
+        });
         // Read as unknown even when HTTP is successful: provider errors also use HTTP 200.
         let body: unknown;
         try {
-            body = await readHttpJson(response, {success: {kind: "native-json"}, failure: {kind: "native-json"}}, options.signal);
+            body = await response.json();
         } catch (error) {
-            if (isReadAbort(error, options.signal)) throw error;
+            if (options.signal?.aborted || (error instanceof Error && error.name === "AbortError")) throw error;
             if (response.ok) return protocol();
         }
         const envelope = record(body) ? body : undefined;
@@ -190,7 +191,7 @@ async function request(
         }
         return envelope ? {ok: true, data: envelope} : protocol();
     } catch (error) {
-        if (isReadAbort(error, options.signal)) {
+        if (options.signal?.aborted || (error instanceof Error && error.name === "AbortError")) {
             return failure("aborted", "请求已中止；已提交的远端任务不会因此取消");
         }
         // Do not expose raw transport errors: they may contain credentials or request data.

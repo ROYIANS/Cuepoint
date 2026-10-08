@@ -1,11 +1,9 @@
-import {requestOnce} from "./requestBoundary";
 import {isReadAbort, readErrorText, readResponseText, ResponseLimitError} from "./boundedResponse";
 import {MAX_AUDIO_BYTES, MAX_JSON_BYTES, MAX_ERROR_BYTES, MAX_SPEECH_ENVELOPE_BYTES} from "@/lib/resource/limits";
 import type {MimoSpeechSettings} from "@/domain/audio";
 import {detectAudioMime} from "@/lib/audio/mime";
 import {collectModelMetadata, parseModelMetadata} from "./modelMetadata";
-import type {ListModelsResult} from "./openaiCompatible";
-import {normalizeBaseUrl} from "./baseUrl";
+import {type ListModelsResult, normalizeBaseUrl} from "./openaiCompatible";
 import {redactCredentials} from "./safeError";
 
 export const MIMO_VOICES = ["mimo_default", "冰糖", "茉莉", "苏打", "白桦", "Mia", "Chloe", "Milo", "Dean"] as const;
@@ -68,11 +66,14 @@ async function request(credentials: MimoCredentials, path: "/models" | "/chat/co
     if (!config) return fail("validation", "请配置有效的 MiMo Base URL（以 /v1 结尾）和 API Key");
     if (options.signal?.aborted) return fail("aborted", "请求已停止；远端生成不会因此取消");
     try {
-        const response = await requestOnce(`${config.base}${path}`, {
+        const response = await (options.fetchImpl ?? fetch)(`${config.base}${path}`, {
             method: body === undefined ? "GET" : "POST",
             headers: {Authorization: `Bearer ${config.key}`, ...(body === undefined ? {} : {"Content-Type": "application/json"})},
             ...(body === undefined ? {} : {body: JSON.stringify(body)}),
-        }, {fetchImpl: options.fetchImpl, signal: options.signal, credentials: "omit", redirect: "error"});
+            signal: options.signal,
+            credentials: "omit",
+            redirect: "error",
+        });
         return await readMimoResponse(response, path === "/models" ? MAX_JSON_BYTES : MAX_SPEECH_ENVELOPE_BYTES, config.key, options.signal);
     } catch (error) {
         if (isReadAbort(error, options.signal)) return fail("aborted", "请求已停止；远端生成不会因此取消");
