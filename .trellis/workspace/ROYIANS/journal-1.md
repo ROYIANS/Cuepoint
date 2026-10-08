@@ -1073,3 +1073,29 @@ Added a durable once-per-run finishing checkpoint for current-run unfinished pla
 ### Next Steps
 
 - Continue real-model/no-plan acceptance and remaining R2 claim handling; batch voice and arrangement remain next independent delivery tracks.
+
+
+## Session 43: 源码整改C已提交与D批恢复
+<!-- trellis-session: v=2 fp=bae5e4d9238b0847 -->
+
+**Date**: 2026-10-08
+**Task**: 源码整改C已提交与D批恢复
+**Branch**: `main`
+
+### Summary
+
+C01–C06八项发现及51最终文件独立复核PASS，144文件2402测试、33本地浏览器回归、类型/模型/构建通过；五笔本地提交完成。10月1日暂停，10月8日用户明确继续，当前C归档完成；后续从D01当前三组值循环依赖继续，父台账27fixed24pending，不推送。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `23675ec` | fix: 区分当前生成成果和历史调用来源 |
+| `d0ce22c` | fix: 保持音乐参数与音频导入成果一致 |
+| `6002c4c` | fix: 校验项目关系和媒体写入边界 |
+| `ad3b8b5` | fix: 在读取时限制服务响应大小 |
+| `f062d69` | chore: 记录源码整改C验证与后续关口 |
+
+### Status
+
+[OK] **Completed**
