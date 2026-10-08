@@ -72,3 +72,14 @@ request materialization, withdrawal, source evidence and ZIP lifecycle contracts
 ## Modern ZIP identity and parent ownership (C03)
 
 See [the C03 parent ownership and modern package identity contract](state-management.md#c03-parent-ownership-and-modern-package-identity-contract-2026-09-30) for the seven-section contract. Modern nonempty episodes require original shot/beat ownership before repair; normalized beat identities must also remain unique before remapping. Legacy absent/empty episodes keep their explicit compatibility branch.
+
+
+## Package codec and transaction ownership
+
+Pure project/audio parsing and ID remapping live under `lib/packages/`; root package modules retain ZIP/media IO, snapshot/compression and the whole import transaction. Shared `PackageError` is re-exported by the original root with one constructor identity. Modern raw IDs/FKs are validated before tolerant normalization/remapping; complete audio freshness is checked before allowlisting. A late audio relationship error rolls back previously inserted production/media/audio rows and Blobs. Historical local production-context/generation-intent modules remain test-only contracts pending E07 reference cleanup, not active paid-execution owners. See [the D03 contract](./component-guidelines.md#d03-feature-responsibility-contract-2026-10-08).
+
+## Shared generation capability boundary
+
+Project output defaults delegate overlapping capability facts while preserving permissive historical import parsing, profile versions/native keys and strict editor Save/CAS/rebase/dirty/retry/latest behavior. Saving/applying/clearing defaults makes no paid request. See [D06](./asset-output-foundation.md#d06-shared-generation-capability-contract-2026-10-08).
+
+D08 optional text baselines for `episodes.patchStoryBeat` validate inside the existing transaction. Same-field conflicts and missing baseline-bearing targets reject without false saved state; unrelated changes merge. Legacy no-baseline/nontext omission behavior remains. See `state-management.md` D08 for the actual UI/retention and flush contracts.

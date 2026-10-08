@@ -6,7 +6,7 @@
 
 ## Overview
 
-There is no backend. Durable state lives in IndexedDB (`src/db/database.ts` + `src/db/repo.ts`). UI reads with `useLiveQuery`. Ephemeral UI (search, sort, dialog open) stays in React `useState`.
+There is no backend. Durable state lives in IndexedDB (`src/db/database.ts` + the business command owners listed in the D02 contract below). UI reads with `useLiveQuery`. Ephemeral UI (search, sort, dialog open) stays in React `useState`.
 
 ---
 
@@ -14,7 +14,7 @@ There is no backend. Durable state lives in IndexedDB (`src/db/database.ts` + `s
 
 | Kind | Where | Examples |
 | --- | --- | --- |
-| Durable | Dexie tables via `repo.ts` | Project, Episode, Character, Scene, Prop, VisualStyle, Shot, Media |
+| Durable | Dexie tables via business command owners in `src/db/` | Project, Episode, Character, Scene, Prop, VisualStyle, Shot, Media |
 | URL | TanStack Router | `/characters/$characterId`, `/p/$projectId/world` |
 | Local UI | `useState` | library search, sort, pending delete |
 
@@ -809,3 +809,109 @@ Wrong: add asset, then touch parent separately. Correct: verify parent and commi
 ## C05 generic patch and cover boundary
 
 See [the seven-section generic patch and cover media contract](asset-output-foundation.md#c05-generic-patch-and-cover-media-contract-2026-09-30). Generic asset/shot media properties reject explicitly, including undefined own values. Dedicated setters and cover replacement validate ownership, nonempty media and target kind inside their write transaction, preserving reference/history recycling and CAS/undo.
+
+## D02 production persistence responsibility boundaries
+
+## 1. Scope / Trigger
+Production persistence has explicit business owners rather than a single `repo.ts`. Use these owners from actual source/test/fixture callers; schema and migrations remain in `database.ts`. Cross-domain transactions remain whole commands, not a collection of table CRUD calls.
+
+## 2. Signatures and owners
+| Owner | Actual existing public behavior |
+| --- | --- |
+| `productionRecords` | `emptyProject/Episode/Shot/Character/Scene/Prop/Style` constructors |
+| `productionShared` | `PRODUCTION_TABLES`, timestamp, ownership/reference/order and patch guards |
+| `projects` | Project/video/audio/music creation, metadata/settings/output/cover writers |
+| `episodes` | Episode/story/beat lifecycle, scoped filters/order, deletion and restoration |
+| `shots` | Shot edits, character membership intent, bulk inverse/undo, reorder, slots, committed delete snapshots |
+| `assets` | Four creative asset types and text/slot/delete commands |
+| `media` | `putMedia`, `collectMediaIds`, `deleteMediaIfOrphan`, slot validity/recycling |
+| `assetReuse` | Studio snapshot copies and `releaseMaterialUse` |
+| `connectors` | Saved connection/alias CRUD and `resolveConnector` |
+| `chat` | Ordinary thread/messages, metadata and project binding |
+| `cascadeCommands` | `deleteProject`, `deleteChatThread`, `setProjectArchived` |
+
+Moved command signatures and return values remain unchanged. Existing cross-owner support exports are intentional real consumers, not new forwarding APIs. The five legacy unconsumed read/message exports remain separately tracked for later cleanup; their presence does not authorize using an all-purpose facade.
+
+## 3. Contracts
+Constructors import no database. Shared persistence scope/guards import no command owners. Media retention never imports asset/shot command modules. Episodes/shots share guards without mutually importing commands. Cascade commands preserve original full store sets and atomic ordering, including audio, references, material history and generation outcomes. D01 readers/preparation/selector imports keep their accepted dependency direction.
+
+All actual imports, type queries, module mocks, namespace spies and browser interception paths target the concrete consumed owner. Business tools use named owner functions and retain existing schemas/permissions/atomic receipts; their actual asset dispatch map is not a replacement global repository namespace. No `export *` facade or dynamic import hides the removed owner.
+
+Project creation and media/asset creation retain parent checks, studio exceptions and transaction-local touch. C05 generic patch rejection, dedicated slot/cover validity and global orphan/history protection remain authoritative. Project/thread cascades and studio material release never compose separately committed child delete APIs. Blob preparation, ZIP compression, hashing and transport remain outside write transactions.
+
+## 4. Validation & Error Matrix
+| Condition | Required result |
+| --- | --- |
+| Missing nonstudio parent at create | Reject without child or media insertion |
+| Generic media patch or invalid dedicated target/owned Blob | Existing rejection; no partial mutation/touch/recycle |
+| Field/slot/bulk baseline mismatch | Existing conflict and whole-group atomicity |
+| Any project/thread cascade late storage failure | Roll back all earlier child/history/media/binding changes |
+| Release event/storage failure | Restore copy, binding, retained-media flag and bytes |
+| Media still selected or protected by reference/material/audio/proposal/job/batch history | Retain media under existing owner/global rules |
+| Genuine unreferenced media after successful release | Remove only the existing computed orphan set |
+
+## 5. Good / Base / Bad Cases
+Good: import a named shot command and preserve its transaction-returned inverse for undo; execute thread deletion as one existing lifecycle command and retain selected production media. Base: asset creation for the studio owner does not require an invented project row. Bad: reconstitute the old repo namespace in a barrel or delete each table through separately committed feature APIs.
+
+## 6. Tests Required
+Actual entry tests cover parent, media, scoped relationships, CAS/bulk undo/deletion snapshots, proposals/generation/history and ZIP storage. Mocks/spies must intercept the module the feature imports. Native late-fault tests observe earlier writes, inject failure afterward, and compare durable rows plus Blob bytes before/after; successful retry distinguishes retained references from true orphans. Existing B01/B07/C01/C02 fixtures cover migrated UI/session/native entries. Preserve the stronger D01 single/batch late-ledger/history fault proof through a later import-only verification clone, without rewriting its historical evidence.
+
+Fault-injection fixtures must guarantee a real field update before installing the hook, capture expected rollback state after setup, and assert the hook was reached. An equal millisecond timestamp can be a no-op; neither sleep nor timeout inflation proves transaction rollback.
+
+AST distinguishes value/type edges and must retain zero value SCCs. Static baseline/current programs use the same tool versions and complete separate source roots; moved-body diagnostics remain inherited and absent files contribute zero baseline source-rule diagnostics.
+
+## 7. Wrong vs Correct
+Wrong: `import * as repo` from a new facade and `vi.spyOn` a different wrapper than the UI calls. Correct: named imports from the concrete owner and spies on that same module, while cross-table transaction ownership remains in the explicit lifecycle command.
+
+## D08 shot and beat text draft ownership (2026-10-08)
+
+## 1. Scope / Trigger
+
+Maintain this contract when changing shot scalar text fields or beat title/content/time-of-day editing. Immediate local text, field-specific conflict checks, visible failed-save recovery and registered flush/retention belong to one existing draft protocol. Duration, relationship membership, media slots, reorder/bulk undo and main episode editor drafts remain distinct existing owners.
+
+## 2. Signatures / Owners
+
+- `components/drafts/TextDraftField.tsx` reuses `lib/debouncedDraft.ts` and existing `DraftStatus`, including project flush registration, retained entity-field keys, initial field baseline, retry/useLatest and unload/visibility policy. Its keyed control captures one persist callback for the project/draft-key lifetime; input marks parent retention pending before updating local draft. This is shared text presentation/lifecycle, not a replacement timer/store.
+- `components/shots/ShotTextField.tsx` binds `ShotRow`/typed column mapping to `patchShot` text drafts for shot number/content/notes/category/sound/emotion/camera angle/gear/focal length/closeup. Existing duration and relationship editors keep their own contracts.
+- `components/story/BeatTextField.tsx` binds ShotEditor beat titles and StoryPage beat title/content/time-of-day to `patchStoryBeat` using the same protocol. Main episode title/logline/script already use it; preserve their B06/CAS/import behavior.
+- `lib/useTextDraftRetention.ts` owns readable row/beat pending-status retention only; existing debouncedDraft owns persistence/retry. Missing loaded rows can retain pending/error display without claiming the target still exists.
+- Actual `db/shots.patchShot` supports field baselines. `db/episodes.patchStoryBeat(episodeId, beatId, patch, baseline?: Partial<Pick<StoryBeat, "title" | "content" | "timeOfDay">>)` validates the optional text baseline in the existing transaction; it is not a full-object autosave API.
+
+## 3. Contracts / Invariants
+
+- Local text updates synchronously on input, independently of the live row and database timing. The controller retains the captured field baseline through deferred writes, live notifications and failure; current remote data cannot silently replace an in-progress local draft.
+- Stable draft keys include project, entity and field. Persist callbacks target that same owner for the controller lifetime. Switching scope cannot attach an old draft to another record or publish another owner's completion/error.
+- Same-field remote changes reject and preserve local input; unrelated field/order/reference edits remain mergeable. Validate baseline inside the same mutation transaction before changing the record.
+- Baseline-bearing text saves reject missing project/episode/beat/shot rather than reporting saved. Existing nontext/no-baseline callers retain their original omission/no-op behavior unless a separately accepted invariant requires otherwise. Missing target is not an empty successful write.
+- Pending/error/retained drafts participate in existing row/beat retention and departure protection. Virtualization, unavailable queries, component unmount and route change cannot silently discard registered work. Use existing guard/flush mechanisms rather than adding another timer store or router guard.
+- Failed saves expose status and retry/adopt-latest actions. Retry keeps the same local text and owner; adopting latest is explicit. Reopening a retained field restores the draft/error rather than showing falsely saved live data.
+- Project backup, navigation/dispatch and global flush obey the existing barrier: await latest pending writes; reject on unresolved failures and preserve drafts. A ref/controller pending marker is established before awaiting, not solely through later React state.
+- Preserve IME/composition and caret/focus behavior under live updates and delayed persistence. This protocol does not change sorting, relationship intent, atomic inverse, paid request or model selection behavior.
+
+## 4. Validation / Error Matrix
+
+| Condition | Required behavior |
+| --- | --- |
+| Fast typing/delayed storage | Immediate stable local text, serialized latest persistence |
+| Same field changed remotely | Conflict/error; keep local text and explicit retry/latest options |
+| Unrelated field/order/reference changed | Apply text without overwriting unrelated changes |
+| Target deleted while dirty/pending | Reject save and retain visible/reopenable draft |
+| Virtualized/unmounted/route-switched field | Registered work and owner remain coherent; no cross-target write |
+| Backup/global flush fails | Block success/departure according to existing guard; preserve draft and retry |
+| IME/composition/live row notification | Preserve in-progress text, caret/focus and valid final save |
+| No-baseline/nontext legacy caller | Preserve documented original behavior |
+
+## 5. Good / Base / Bad Cases
+
+- Base: a shot text edit displays immediately, debounces through the existing controller and flushes before project backup.
+- Good: a remote change to another field merges; a same-field conflict keeps local text and offers explicit latest/retry.
+- Good: a virtualized or missing row retains its failed draft and reopening restores it; global flush cannot claim success on a missing target.
+- Bad: a controlled input renders directly from a live row while saving each keystroke, a callback targets the latest route instead of its captured owner, or a missing baseline-bearing target returns success.
+
+## 6. Tests Required
+
+Use actual text component/controller/repository entry points. Cover deferred/rejected writes, same-field versus unrelated updates, retry/adopt-latest/reopen, missing target and owner switching. Retain existing debouncedDraft/draftConcurrency/manualDraftBaseline/parent/shot/beat intent and B01 missing-scope/navigation proofs. Native UI verifies immediate typing, visible failure, global-flush/backup barrier, IME/caret under delayed storage and virtualized/unavailable retention. Demonstrate fault reach rather than increasing timeouts; no source-string tests as substitutes for behavior.
+
+## 7. Migration / Limits
+
+Use current D02 persistence owners and accepted D03 row/command boundaries. No replacement timer store, form library, whole-object autosave, global guard duplication, reorder/CAS rewrite or main-episode editor redesign. A finite local browser fixture does not promise crash-proof persistence or all IME/browser combinations. Existing dirty/manual draft contracts and paid execution barriers remain. Whole-D integration/full-scope independent review and E/QG01 work remain separate acceptance.

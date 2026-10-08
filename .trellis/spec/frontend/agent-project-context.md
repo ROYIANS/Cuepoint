@@ -132,3 +132,7 @@ Correct: compare visible facts; append only changed fields/index rows at safe bo
 Wrong: show active generation approval controls in a deleted project's historical chat.
 Correct: propagate explicit readOnly through MessageList and AgentRunDetails; keep the
 saved preview and technical payload readable while removing mutating controls.
+
+## Coherent context preview ownership
+
+Context preview reads project/task/IP/audio facts in the single explicit outer read-only transaction owned by db/agentContextPreview.ts. Every nested store is included through contextPreviewTables/projectContextTables; model preparation stays outside writes. This display path does not replace execution request construction. See [D04](./agent-context.md#d04-coherent-preview-snapshot-contract-2026-10-08).

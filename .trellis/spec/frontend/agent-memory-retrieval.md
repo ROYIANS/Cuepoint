@@ -118,3 +118,11 @@ and old per-step snapshots, then record the next snapshot at its dispatch checkp
 Wrong: render `useLiveQuery(..., [projectId])` result immediately as the new project's preview.
 Correct: return a query identity with the result, compare it to the current input identity,
 and hide retained results while the new query resolves; scope compaction details too.
+
+## Coherent context preview ownership
+
+Preview memory selection is shared with the trigger/panel rather than recomputed by memory details. Saved-run absent inputs remain absent; historical selections are frozen while current availability and thread-owned exclusions control management. Memory content/envelopes include thread, run/preview and selection project identity. See [D04](./agent-context.md#d04-coherent-preview-snapshot-contract-2026-10-08).
+
+## Typed tool and memory wire compatibility
+
+`serializeMemoryEntries` now uses an empty early return and exhaustive summary/imported/manual source projection, with the existing unknown-runtime manual fallback. Preserve exact prefix/guidance/newline/JSON bytes, entry spread, source whitelist/order, undefined/zero and missing/null error behavior. Entry-level extensions intentionally remain compatible; this is not a claim that all extra entry fields are filtered. See [EX01 in the D05 contract](./agent-tools.md#d05-schema-linked-tool-protocol-2026-10-08).

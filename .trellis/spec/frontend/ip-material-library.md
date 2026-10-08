@@ -12,7 +12,7 @@ Multiple long-lived IP identities organize video/image/copy/podcast/music projec
 - `createFileMaterial(file, scope)`, `promoteLegacyMaterial(kind, entityId, scope)`, `promoteMaterial(id, scope)` create independent snapshots.
 - `addFileMaterialVersion(id, file, expectedRevision)`, `refreshSettingMaterial(id, expectedRevision)`, `updateMaterialMetadata(id, patch, expectedRevision)` preserve prior payloads.
 - `useMaterialInProject(id, projectId)`, `updateMaterialUse(useId)`, `setMaterialArchived(id, archived)`, `deleteMaterial(id)` in `src/db/materials.ts`.
-- `releaseMaterialUse(useId)` in `src/db/repo.ts` shares production reference locks.
+- `releaseMaterialUse(useId)` in `src/db/assetReuse.ts` shares production reference locks.
 
 ## 3. Contracts
 

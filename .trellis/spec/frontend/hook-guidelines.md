@@ -6,7 +6,7 @@
 
 ## Overview
 
-Data reads go through Dexie `useLiveQuery`. Mutations go through `src/db/repo.ts`. Do not fetch records with one-shot `useEffect` + `db.*.get` if the page should update after edits.
+Data reads go through Dexie `useLiveQuery`. Mutations go through the concrete business command owner under `src/db/` (for example `shots.ts`, `assets.ts`, `chat.ts`, or `cascadeCommands.ts`); the D02 ownership table is in [State Management](./state-management.md). Do not fetch records with one-shot `useEffect` + `db.*.get` if the page should update after edits.
 
 ---
 
@@ -116,3 +116,14 @@ Execute actual production component callbacks with deferred provider/File promis
 ### 7. Wrong vs correct
 
 Wrong: reset busy on close, then let any old promise update shared form state. Correct: invalidate the read's owner synchronously, freeze input and check owner at every publication/finally. Writes use a separate synchronous pending lock and retain their initiating form until settlement.
+
+
+## Feature hook ownership
+
+`useChatExecutionSession` owns the synchronous execution mutex, AbortController and token release lifetime. `useChatSelection` owns current field identity/revision reconciliation. `useShotEditorKeyboard` owns the capture listener and latest typed input callbacks. Consume stable returned functions/refs with truthful Hook dependencies; a ref returned by another hook is not automatically recognized as a locally stable ref by the lint rule. Abort/effect replay does not release the execution lock before transport final flush. See [the D03 feature contract](./component-guidelines.md#d03-feature-responsibility-contract-2026-10-08).
+
+## Coherent context preview ownership
+
+Chat preview has one live subscription at ContextUsageTrigger and a complete input-identity gate. Its panel, ring and memory preview consume the same snapshot. Policy/memory management queries retain their own scope envelopes and current availability; old results/callbacks cannot publish in another thread. See [the D04 coherent-preview contract](./agent-context.md#d04-coherent-preview-snapshot-contract-2026-10-08).
+
+Shot/beat text retention follows `state-management.md` D08. `useTextDraftRetention` keeps readable pending rows; synchronous status refs protect the input event and actual pending-ID state participates in memo invalidation. Existing debouncedDraft owns timers, baselines, retry and persistence. Avoid dummy revision dependencies or a second draft store.

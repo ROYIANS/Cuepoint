@@ -75,3 +75,12 @@ Project world owns project-scoped character, scene, prop, and style detail route
 - `/assets` groups the existing studio character/scene/prop/style libraries. Preserve their old list/detail URLs and ownership contracts. Shell provides their return-to-hub breadcrumb.
 - `projectKinds.tsx` is a presentation-only availability catalog: video/image/copy/podcast/music. Video uses existing film/series repository behavior. Unavailable kinds may be inspected, but both UI and submit handler must prevent creating a video record on their behalf. Do not treat this catalog as a database migration or infer persisted IP membership.
 - `/settings` links actual existing connections, project backup and about capabilities; do not fabricate preferences or functioning IP forms.
+
+### Production database owners (D02)
+
+`src/db/` keeps a flat business responsibility structure. Use projects, episodes/beats, shots, creative assets, media retention, studio asset reuse, connectors and chat owners directly; complete cross-domain project/thread lifecycle commands live in `cascadeCommands.ts`. Pure constructors are in `productionRecords.ts`; shared persistence guards and `PRODUCTION_TABLES` are in `productionShared.ts`. Neither support owner imports command owners. Schema/migrations remain in `database.ts`; audio tables remain in `audioShared.ts`. The old omnibus `repo.ts` is removed, with no replacement aggregate facade. See the executable D02 contract in state-management for signatures, rollback/retention and test rules.
+
+
+## Feature command, session and codec owners
+
+Shot pages consume named commands, a keyboard adapter, typed text-column mapping and separate row/relationship owners. Audio/music pages consume pure selection, shared buffer loading, export and variant commands. Chat uses separate execution-session, three named flow and selection owners; reference drafts remain separate. The project home route delegates to `components/workspace/ProjectHomePage.tsx`; shell/gallery share `components/studio/importStudioProject.ts`. Pure package parsing/remapping lives in `lib/packages/`; root package modules retain ZIP/media IO and one whole import transaction. See [the D03 contract](./component-guidelines.md#d03-feature-responsibility-contract-2026-10-08) for exact owners, signatures, lifecycle/error rules and migration limits.

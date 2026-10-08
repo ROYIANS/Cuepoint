@@ -89,3 +89,52 @@ Wrong: every tool-free reply means the user must type “continue”, or every u
 Correct: use one evidence-backed self-check only for a freshly saved unfinished plan, allow the model to explain a genuine boundary, and retain actual results independently of its prose.
 
 This checkpoint adds at most one check request per run; any subsequent tool work consumes the existing segment budget. It is not a semantic truth filter. The candidate already streamed and remains in history. No-plan promises, false all-complete plans and unsupported free-text claims require separate acceptance and are not solved by this mechanism.
+
+## D01 Agent query, selection and preparation boundaries
+
+### 1. Scope / Trigger
+Read when changing generation batch preparation/application, task edit commands or per-request tool offers. Command orchestration must not become the import owner of a read-only guard or pure selector. The three remaining value SCCs were removed on 2026-10-08; preserve this direction when adding callers. This was structural remediation, not a demonstrated initialization-crash fix.
+
+### 2. Signatures
+- `domain/agentToolSelection`: `getOfferedToolNames(run: Pick<AgentRun, "enabledToolNames" | "toolLoading" | "interactionMode">): string[]`, `toolNamesForCall(run: AgentRun, step: number): string[]`; discovery name `load_tool_groups`, loaded-tool ceiling `36`.
+- `db/agentGenerationTarget`: `readGenerationTarget(target: ProductionTarget)` returns the owned entity, current slot, revision and label. It joins an existing caller transaction and opens none.
+- `db/agentTaskGuards`: `editableAgentTask(id: string): Promise<AgentTask>` is a read-only guard; command owners supply their write transaction.
+- `lib/agent/generationPreparation`: `prepareGenerationSnapshot(raw: GenerationSubmitArgs, signal: AbortSignal)`, `loadGenerationInputs(job: AgentGenerationJob): Promise<MediaRecord[]>`, `resolveGenerationConnector(id: string, frozen?: Pick<AgentGenerationJob, "provider" | "baseUrl">)`. Batch uses `Awaited<ReturnType<typeof prepareGenerationSnapshot>>`; do not duplicate its structural return type.
+
+### 3. Contracts
+DB tool ledger, project creation and finishing check import the pure selector leaf directly. Discovery execution stays in `toolLoading`; its compatibility exports serve actual runtime/UI/test consumers, not DB reads. Conversation offers, legacy runs, dedup order, enabled ceilings and historical per-step offers remain unchanged.
+
+Batch imports preparation and the DB target reader; runtime retains paid submit/poll/download/application and durable ownership. Task records and lifecycle commands import the task guard directly. Keep atomic ledger, record/history, batch and wrap-up commands in their existing owners rather than distributing them among readers.
+
+Preparation performs abort/schema checks, draft flush and connector/profile validation before a short read-only target/media snapshot. Blob hashing and image-header inspection follow outside that snapshot and all write transactions. Application rechecks current targets inside the existing outer write transaction before nested slot writes and final ledger/history persistence. Readers must preserve Dexie transaction lifetime through every await.
+
+### 4. Validation & Error Matrix
+| Condition | Required behavior |
+| --- | --- |
+| Missing nonstudio project or foreign/missing entity | Reject before preparation/application mutation |
+| Shot missing or foreign episode, missing slot | Preserve the existing target error; no inferred ownership |
+| Missing task/thread, deleted project, preparing summary or busy run | Refuse manual edit; guard performs no writes |
+| Missing/foreign/empty/wrong-kind input | Reject before hashing/transport; preserve existing message and check order |
+| APIMart oversized reference or invalid MiniMax H3 format/header/dimensions | Preserve 20 MiB and model-specific checks outside writes |
+| AIHubMix encoded inputs plus UTF-8 prompt and overhead exceed 32 MiB | Reject preparation without paid submission |
+| Changed frozen provider/base URL or input revision | Preserve durable job and refuse replacement/replay |
+| Abort or downstream ledger/history failure | Keep cancellation semantics or roll back the complete caller transaction |
+
+### 5. Good / Base / Bad Cases
+Good: prepare a confirmed batch outside writes, recheck targets in its application transaction, then commit slot/job/history together. Base: a studio asset has no project row and still uses the existing owner/slot checks. Bad: DB tool selection imports discovery registration, a target read imports the paid runtime, or a successful nested slot write survives a later ledger failure.
+
+### 6. Tests Required
+Use actual tool/loading/approval/finishing, generation/batch/recovery and task/record/wrap-up entry regressions. `d01DependencyBoundaries.test.ts` covers real leaf consumers; native `tests/fixtures/d01/harness.ts` proves hash/flush outside transactions, real single/batch application and guard recovery. Preserve native fault injection after nested slot/job writes, asserting shot/job/ledger/history rollback. AST must distinguish value/type edges and show no new static or literal-dynamic value SCC. Static comparison uses identical tool versions and separate complete baseline/current TypeScript programs; absent new baseline files are not source-rule errors. Native synthetic media proves exercised persistence, not decoding, providers or full product UI.
+
+### 7. Wrong vs Correct
+Wrong: move files while keeping DB callers importing the orchestration module, or hash a Blob inside the application write callback. Correct: import the meaningful reader/selector/preparation owner directly, prepare before writes, and preserve the existing atomic command and its final ledger/history validation.
+
+## Typed tool and memory wire compatibility
+
+Both preparation/approval and execution-claim boundaries use `toolMetadataMatches` for effect, computed risk, normalized atomic/recovery/confirmation. Typed tool arguments do not authorize metadata or replace durable ledger/transaction/paid recovery checks. Existing frozen offered sets and actionable model argument self-correction remain. See [D05](./agent-tools.md#d05-schema-linked-tool-protocol-2026-10-08).
+
+## Shared generation capability boundary
+
+Generation review, shared single/batch fields and project output settings use the actual dependency-free domain/generationCapabilities.ts facts/projections. Request validation preserves provider lowering/error order and D05 typed schema output. Rendering cannot infer frame mode or silently repair an invalid proposal into authorization; target/input/revision/approval/paid-recovery owners remain. See [D06](./asset-output-foundation.md#d06-shared-generation-capability-contract-2026-10-08).
+
+Provider transport sharing follows `ai-connectors.md` D07: explicit per-adapter browser/JSON policy, retained generic inline-image native parsing, HTTP authority and cancellation/redaction. Paid POST submission remains once-only; existing generic read/probe fallback and separately initiated GET recovery keep their own explicit policies. No shared request helper may replay an uncertain paid submission.

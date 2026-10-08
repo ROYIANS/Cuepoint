@@ -44,7 +44,7 @@ export type ShotStatus = (typeof SHOT_STATUSES)[number];
 
 ```ts
 import type { GenerationSlot, Id } from "@/domain/types";
-import { patchCharacter, setCharacterSlot } from "@/db/repo";
+import { patchCharacter, setCharacterSlot } from "@/db/assets";
 ```
 
 - Prefer `@/` alias over deep relative paths from `src/`.
@@ -113,3 +113,7 @@ Zod schemas live in `src/lib/projectPackage.ts` (`manifestSchema`, passthrough r
 - `src/domain/types.ts`, `slot.ts`, `columns.ts`
 - `src/lib/projectPackage.ts`
 - `src/components/assets/CharacterDetailPage.tsx` (discriminated `back` prop)
+
+## Typed tool and memory wire compatibility
+
+Agent tool definitions retain schema output arguments through function-property callbacks using `defineTool` and `NoInfer`, then erase arguments once at the central heterogeneous registry. Dispatch parses unknown inputs with the selected definition before invoking its callbacks. `Spec<T>` relates parsed output to unknown input/defaults; construction assertions and the registry erasure have separate proof obligations. Actual project compiler positives/16 negatives and original/current parser/schema comparison supplement runtime validation. See [D05](./agent-tools.md#d05-schema-linked-tool-protocol-2026-10-08).

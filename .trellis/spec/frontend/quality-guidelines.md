@@ -6,7 +6,7 @@
 
 ## Overview
 
-Quality gate is TypeScript build + Vitest. There is no ESLint config; `pnpm lint` runs `tsc -b`. Tests cover pure lib helpers and `src/db/repo.ts` with `fake-indexeddb`, not React component RTL.
+Quality gate is TypeScript build + Vitest. There is no ESLint config; `pnpm lint` runs `tsc -b`. Tests cover pure lib helpers and business command owners in `src/db/` with `fake-indexeddb`, not React component RTL.
 
 ---
 
@@ -25,7 +25,7 @@ Vitest setup: `vitest.config.ts` aliases `@` → `src`; `tests/setup.ts` resets 
 
 ## Required Patterns
 
-- Durable mutations only through repository modules `src/db/repo.ts`, `src/db/productionProposals.ts` and the `src/db/agent*.ts` repositories (`add*` / `patch*` / `delete*` / `set*Slot` / reorder helpers).
+- Durable mutations only through business command owners in `src/db/` (see the D02 map in state-management), `src/db/productionProposals.ts` and the `src/db/agent*.ts` repositories (`add*` / `patch*` / `delete*` / `set*Slot` / reorder helpers).
 - Live reads with `useLiveQuery`; detail `get` queries use `?? null` (see hook-guidelines).
 - Shot picture / generation data through `parseShotPictureSlots` / `parseGenerationSlot` so legacy fields stay readable.
 - Filter, reorder, undo, draft, delivery, and shortcut-gating logic live in `src/lib/` and are shared — UI calls helpers, does not reimplement:
@@ -74,7 +74,7 @@ Vitest setup: `vitest.config.ts` aliases `@` → `src`; `tests/setup.ts` resets 
 ## Code Review Checklist
 
 - [ ] `pnpm lint` and `pnpm test` pass for the change set
-- [ ] Mutations go through `repo.ts`; no ad-hoc `db.table.put` in components unless matching existing rare patterns
+- [ ] Mutations go through their concrete business command owner; no ad-hoc `db.table.put` in components unless matching existing rare patterns
 - [ ] Detail liveQuery uses `get(id) ?? null`; missing id shows 找不到, not infinite 加载中
 - [ ] Studio vs project ownership and `back` discriminants are correct
 - [ ] Shot/episode scoping preserved (filters, reorder, delete, delivery)
@@ -106,7 +106,7 @@ Vitest setup: `vitest.config.ts` aliases `@` → `src`; `tests/setup.ts` resets 
 
 - `package.json` scripts
 - `vitest.config.ts`, `tests/setup.ts`
-- `src/db/repo.ts`
+- `src/db/projects.ts`, `episodes.ts`, `shots.ts`, `assets.ts`, `media.ts`, `assetReuse.ts`, `connectors.ts`, `chat.ts`, `cascadeCommands.ts`
 - `src/lib/formFieldFocus.ts`, `reorderIds.ts`, `shotFilters.ts`, `episodeDelivery.ts`
 - `.trellis/spec/frontend/hook-guidelines.md`, `state-management.md`, `delivery-export.md`
 
@@ -140,3 +140,59 @@ Tool success, passing tests and long-file inspection alone do not establish full
 The 2026-09-30 source audit and proposed architecture/tool gates are recorded in
 `.trellis/tasks/09-30-src-quality-architecture-audit/`. The existing project quality
 commands above remain the installed gates until a subsequent implementation changes them.
+
+## Durable original-source comparison fixtures (2026-10-08)
+
+## 1. Scope / Trigger
+Use this rule when a permanent regression compares current behavior with immutable original code captured during a task. Archiving task records must not remove test inputs or make tests write into archived directories.
+
+## 2. Signatures / Owners
+Permanent tests consume the minimal required original module closure under `tests/fixtures/sourceSnapshots/{d05,d06,d07}`. Preserve snapshot bytes and relative import hierarchy, with original-path/hash provenance. Task research/reviews remain immutable evidence, not runtime test dependencies.
+
+## 3. Contracts / Invariants
+Copy needed modules; do not move or edit historical evidence. Resolve relative imports within each snapshot closure. Existing alias imports and intentionally shared untouched dependencies retain their original comparator semantics. Tests remain read-only with respect to task reports. Remove a redundant report write only while keeping its behavioral assertions. Original-versus-current comparison must still execute real parsers/adapters, not canned expected outputs.
+
+## 4. Validation / Error Matrix
+| Condition | Required behavior |
+| --- | --- |
+| Active task folder unavailable after archive | Permanent regression still resolves and executes |
+| Missing transitive snapshot import | Fail fixture completeness proof/test |
+| Snapshot byte differs from recorded original | Fail provenance proof |
+| Test writes task report | Remove side effect, retain asserted behavior |
+
+## 5. Good / Base / Bad Cases
+Base: stable test fixture imports with original bytes. Good: archive-unavailable execution verifies all affected comparisons. Bad: a permanent test imports an active dated task folder, rewrites accepted evidence, or relies on an assertion-free report generator.
+
+## 6. Tests Required
+Run affected original/current behavioral comparisons and demonstrate execution/resolution with the active task directory unavailable in an isolated environment. Verify the minimal relative import closure and original byte hashes; retain any failed attempt and state finite limits.
+
+## 7. Migration / Limits
+This correction preserves comparison semantics and evidence while making test inputs durable. It does not claim snapshot source satisfies current production rules, replace current production owners, or close E/QG01 debt. Archived native research scripts are historical evidence unless separately adopted as stable regression entry points.
+
+## B01 native harness isolation and failure authority (2026-10-08)
+
+### 1. Scope / Trigger
+Maintain when changing the standalone B01 browser runner or its local Vite setup, particularly repeated runs across different fixture configurations.
+
+### 2. Signatures / Owners
+`scripts/b01-browser-regression.mjs` creates a fresh temporary `cacheDir`, explicitly scans the actual B01 fixture HTML via `optimizeDeps.entries`, and removes its cache after closing Vite. Main-frame document requests are counted; only initial fixture loading is allowed during the SPA regression sequence.
+
+### 3. Contracts / Invariants
+Keep every existing business assertion and timeout. Unexpected full-document reload is a failure, not authority to reinitialize fixtures, retry interactions, ignore missing bridge objects or increase waits. Cache separation is test isolation, not a product fix or proof of the original failure cause. Keep prior failures and configuration/runtime inputs.
+
+### 4. Validation / Error Matrix
+| Condition | Required result |
+| --- | --- |
+| Initial fixture document | One allowed main-frame document request |
+| SPA route/history and dialogs | All existing assertions; no extra document request |
+| Extra document navigation/reload | Explicit test failure |
+| Consecutive cold runner instances | Separate temporary caches, same semantic assertions |
+
+### 5. Good / Base / Bad Cases
+Base: all19 scenarios pass from a fresh isolated cache. Good: an unexpected reload fails instead of silently recreating controls. Bad: calling a warm rerun proof that an unobserved root cause was fixed.
+
+### 6. Tests Required
+Preserve exact before/after assertion/timeout comparison and actual consecutive cold runs. Final current-source batch must include this runner. Retain failed logs and distinguish observed behavior from causal inference.
+
+### 7. Migration / Limits
+This scoped correction does not establish why earlier blank-page/bridge failures occurred; observational isolated and forced-cold shared controls both passed. It does not modify product behavior, install dependencies, migrate every other historical native program or close formal E/QG01 work. Local Chromium fixtures do not prove full-product or live-provider behavior.

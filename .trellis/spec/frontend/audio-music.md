@@ -453,3 +453,8 @@ Wrong: blindly refresh fingerprints after import or only remap clipId/mediaId. C
 ## C06 inbound audio resource boundary
 
 See [the seven-section bounded inbound reading contract](ai-connectors.md#c06-bounded-inbound-reading-contract-2026-09-30). The shared 32 MiB raw/decoded-audio policy is enforced during provider reads, before raw media checkpointing. MiMo base64 envelope allowance and exact decoded-size guard are separate. Over-limit paid-submit responses retain uncertain intent without resubmission; existing music task/result checkpoints recover through GET/download. Binary image/video downloads use the independent 256 MiB local policy.
+
+
+## Workspace orchestration owners
+
+The D03 [feature responsibility contract](./component-guidelines.md#d03-feature-responsibility-contract-2026-10-08) defines asymmetric audio selection, the shared playback/waveform/export buffer owner, `exportAudioMix` and `switchMusicVariant`. Export scope uses `NonNullable<AudioExport["scope"]>`; decode/render stays outside writes and repository fingerprint validation precedes UI download. Page-owned player epochs, pointer/history lifetimes, synchronous music action/submission locks and best-effort variant-link storage remain distinct from these commands. D03 does not change the music capability/provider policy or text-draft protocol.
