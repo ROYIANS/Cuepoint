@@ -1,0 +1,4 @@
+[
+  {"phase":"migration", "result":"Python assertion stopped at Responses post-fetch anchor after writing earlier adapters and Chat; source inspected and remaining migration completed"},
+  {"phase":"initial-typecheck", "command":["/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm","exec","tsc","-b","--pretty","false"], "exitCode":2, "diagnostics":["src/lib/ai/apimartAudio.ts(2,22): TS6133 readResponseJson unused"], "fix":"removed unused import; no assertions, timeouts or limits changed"}
+]

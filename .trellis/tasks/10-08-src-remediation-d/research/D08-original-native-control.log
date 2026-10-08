@@ -1,0 +1,16 @@
+PASS original direct write has no project draft/backup barrier while storage is delayed
+{
+  "unit": "D08/PU06",
+  "baseline": true,
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "original direct write has no project draft/backup barrier while storage is delayed",
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "externalRequests": 0,
+  "downloads": 0,
+  "limits": "Actual React pages/router/guards/Dexie/native IndexedDB; controlled command delay/failure, synthetic composition input and force-remount seam. No paid-provider, crash/browser-restart, OS IME, or unmodified full-product E2E claim."
+}

@@ -1,0 +1,14 @@
+{
+  "files": 383,
+  "edges": 2254,
+  "parseErrors": 0,
+  "staticValueCycles": [],
+  "totals": {
+    "anyKeywords": 46,
+    "typeAssertions": 471,
+    "nonNullAssertions": 208,
+    "nestedTernaries": 445,
+    "emptyCatches": 16,
+    "dynamicImports": 8
+  }
+}

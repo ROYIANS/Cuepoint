@@ -1,0 +1,3 @@
+{"group":1,"message":"refactor: 拆分业务职责并统一工具和编辑契约","sourceCount":417,"diagnostics":0,"unresolvedTestImports":0,"programInputMismatches":0}
+{"group":2,"message":"refactor: 共用供应商基础请求与响应读取边界","sourceCount":419,"diagnostics":0,"unresolvedTestImports":0,"programInputMismatches":0}
+{"group":3,"message":"docs: 固化源码整改D的架构与运行约束","sourceCount":419,"diagnostics":0,"unresolvedTestImports":0,"programInputMismatches":0}

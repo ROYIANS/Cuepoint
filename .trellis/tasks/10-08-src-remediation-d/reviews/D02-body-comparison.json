@@ -1,0 +1,944 @@
+{
+  "originalDeclarations": 117,
+  "originalExports": 94,
+  "allPreserved": true,
+  "comparison": "TypeScript scanner tokens for complete declarations; skip trivia and only leading export modifier",
+  "declarations": [
+    {
+      "name": "PRODUCTION_TABLES",
+      "owner": "src/db/productionShared.ts",
+      "originalLine": 61,
+      "movedLine": 7,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "pickPatch",
+      "owner": "src/db/productionShared.ts",
+      "originalLine": 67,
+      "movedLine": 13,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "assertTextPatch",
+      "owner": "src/db/productionShared.ts",
+      "originalLine": 71,
+      "movedLine": 17,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "touch",
+      "owner": "src/db/productionShared.ts",
+      "originalLine": 77,
+      "movedLine": 23,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "touchProject",
+      "owner": "src/db/productionShared.ts",
+      "originalLine": 81,
+      "movedLine": 27,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "assertProjectOwner",
+      "owner": "src/db/productionShared.ts",
+      "originalLine": 86,
+      "movedLine": 32,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "emptyProject",
+      "owner": "src/db/productionRecords.ts",
+      "originalLine": 91,
+      "movedLine": 23,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "emptyCharacter",
+      "owner": "src/db/productionRecords.ts",
+      "originalLine": 114,
+      "movedLine": 46,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "emptyScene",
+      "owner": "src/db/productionRecords.ts",
+      "originalLine": 129,
+      "movedLine": 61,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "emptyProp",
+      "owner": "src/db/productionRecords.ts",
+      "originalLine": 145,
+      "movedLine": 77,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "emptyStyle",
+      "owner": "src/db/productionRecords.ts",
+      "originalLine": 159,
+      "movedLine": 91,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "emptyEpisode",
+      "owner": "src/db/productionRecords.ts",
+      "originalLine": 172,
+      "movedLine": 104,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "emptyShot",
+      "owner": "src/db/productionRecords.ts",
+      "originalLine": 186,
+      "movedLine": 118,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "listProjects",
+      "owner": "src/db/projects.ts",
+      "originalLine": 219,
+      "movedLine": 26,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "createProject",
+      "owner": "src/db/projects.ts",
+      "originalLine": 224,
+      "movedLine": 31,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "renameProject",
+      "owner": "src/db/projects.ts",
+      "originalLine": 244,
+      "movedLine": 51,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "ProjectDetailsPatch",
+      "owner": "src/db/projects.ts",
+      "originalLine": 253,
+      "movedLine": 60,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "assertProjectDetailsBaseline",
+      "owner": "src/db/projects.ts",
+      "originalLine": 255,
+      "movedLine": 62,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "patchProjectDetails",
+      "owner": "src/db/projects.ts",
+      "originalLine": 268,
+      "movedLine": 75,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "setProjectArchived",
+      "owner": "src/db/cascadeCommands.ts",
+      "originalLine": 304,
+      "movedLine": 9,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "deleteProject",
+      "owner": "src/db/cascadeCommands.ts",
+      "originalLine": 326,
+      "movedLine": 31,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "updateProject",
+      "owner": "src/db/projects.ts",
+      "originalLine": 383,
+      "movedLine": 110,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "patchProjectOutput",
+      "owner": "src/db/projects.ts",
+      "originalLine": 410,
+      "movedLine": 137,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "updateShotSettings",
+      "owner": "src/db/projects.ts",
+      "originalLine": 444,
+      "movedLine": 171,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "updateSeriesLogline",
+      "owner": "src/db/projects.ts",
+      "originalLine": 462,
+      "movedLine": 189,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "updateWorldSetting",
+      "owner": "src/db/projects.ts",
+      "originalLine": 475,
+      "movedLine": 202,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "listEpisodes",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 492,
+      "movedLine": 28,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "firstEpisode",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 497,
+      "movedLine": 33,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "ensureFirstEpisode",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 502,
+      "movedLine": 38,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "addEpisode",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 516,
+      "movedLine": 52,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "updateEpisode",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 530,
+      "movedLine": 66,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "updateEpisodeDraft",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 543,
+      "movedLine": 79,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "DeletedEpisodeSnapshot",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 567,
+      "movedLine": 103,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "deleteEpisode",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 573,
+      "movedLine": 109,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "restoreEpisode",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 596,
+      "movedLine": 132,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "assertCompleteOrder",
+      "owner": "src/db/productionShared.ts",
+      "originalLine": 624,
+      "movedLine": 37,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "reorderEpisodes",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 634,
+      "movedLine": 160,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "collectMediaIds",
+      "owner": "src/db/media.ts",
+      "originalLine": 648,
+      "movedLine": 6,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "releaseMaterialUse",
+      "owner": "src/db/assetReuse.ts",
+      "originalLine": 689,
+      "movedLine": 17,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "recycleSlotMedia",
+      "owner": "src/db/media.ts",
+      "originalLine": 716,
+      "movedLine": 46,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "putMedia",
+      "owner": "src/db/media.ts",
+      "originalLine": 726,
+      "movedLine": 56,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "deleteMediaIfOrphan",
+      "owner": "src/db/media.ts",
+      "originalLine": 736,
+      "movedLine": 66,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "SnapshotAsset",
+      "owner": "src/db/assetReuse.ts",
+      "originalLine": 757,
+      "movedLine": 44,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "SnapshotKind",
+      "owner": "src/db/assetReuse.ts",
+      "originalLine": 758,
+      "movedLine": 46,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "SNAPSHOT_PREFIX",
+      "owner": "src/db/assetReuse.ts",
+      "originalLine": 760,
+      "movedLine": 48,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "copyStudioSnapshot",
+      "owner": "src/db/assetReuse.ts",
+      "originalLine": 767,
+      "movedLine": 55,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "copyStudioCharacter",
+      "owner": "src/db/assetReuse.ts",
+      "originalLine": 864,
+      "movedLine": 152,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "copyStudioScene",
+      "owner": "src/db/assetReuse.ts",
+      "originalLine": 868,
+      "movedLine": 156,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "copyStudioProp",
+      "owner": "src/db/assetReuse.ts",
+      "originalLine": 872,
+      "movedLine": 160,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "copyStudioStyle",
+      "owner": "src/db/assetReuse.ts",
+      "originalLine": 876,
+      "movedLine": 164,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "addCharacter",
+      "owner": "src/db/assets.ts",
+      "originalLine": 880,
+      "movedLine": 28,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "patchCharacter",
+      "owner": "src/db/assets.ts",
+      "originalLine": 890,
+      "movedLine": 38,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "assertSlotMedia",
+      "owner": "src/db/media.ts",
+      "originalLine": 906,
+      "movedLine": 87,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "setCharacterSlot",
+      "owner": "src/db/assets.ts",
+      "originalLine": 923,
+      "movedLine": 54,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "deleteCharacter",
+      "owner": "src/db/assets.ts",
+      "originalLine": 943,
+      "movedLine": 74,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "addScene",
+      "owner": "src/db/assets.ts",
+      "originalLine": 974,
+      "movedLine": 105,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "patchScene",
+      "owner": "src/db/assets.ts",
+      "originalLine": 984,
+      "movedLine": 115,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "setSceneSlot",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1000,
+      "movedLine": 131,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "deleteScene",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1018,
+      "movedLine": 149,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "addProp",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1045,
+      "movedLine": 176,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "patchProp",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1055,
+      "movedLine": 186,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "setPropSlot",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1071,
+      "movedLine": 202,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "deleteProp",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1089,
+      "movedLine": 220,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "addStyle",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1103,
+      "movedLine": 234,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "patchStyle",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1113,
+      "movedLine": 244,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "setStyleSlot",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1129,
+      "movedLine": 260,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "deleteStyle",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1147,
+      "movedLine": 278,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "nextShotNumber",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1163,
+      "movedLine": 29,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "reindexShots",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1172,
+      "movedLine": 38,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "beatRank",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1181,
+      "movedLine": 47,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "insertOrderForBeat",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1187,
+      "movedLine": 53,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "addStoryBeat",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 1199,
+      "movedLine": 174,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "patchStoryBeat",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 1235,
+      "movedLine": 210,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "reorderBeats",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 1261,
+      "movedLine": 236,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "duplicateBeat",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 1291,
+      "movedLine": 266,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "restoreStoryBeat",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 1346,
+      "movedLine": 321,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "deleteStoryBeat",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 1373,
+      "movedLine": 348,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "updateEpisodeShotFilters",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 1393,
+      "movedLine": 368,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "assertAssetReferences",
+      "owner": "src/db/productionShared.ts",
+      "originalLine": 1408,
+      "movedLine": 47,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "assertShotReferences",
+      "owner": "src/db/productionShared.ts",
+      "originalLine": 1426,
+      "movedLine": 65,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "addShots",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1434,
+      "movedLine": 65,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "addShot",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1489,
+      "movedLine": 120,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "patchShot",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1499,
+      "movedLine": 130,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "setShotCharacterSelected",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1524,
+      "movedLine": 155,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "EpisodeShotBulkPatch",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1547,
+      "movedLine": 178,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "SHOT_BULK_FIELDS",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1551,
+      "movedLine": 182,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "ShotBulkField",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1552,
+      "movedLine": 184,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "EpisodeShotBulkUndo",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1554,
+      "movedLine": 186,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "shotBulkSnapshot",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1560,
+      "movedLine": 192,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "sameShotBulkValue",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1569,
+      "movedLine": 201,
+      "exportedOriginally": false,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "patchEpisodeShots",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1576,
+      "movedLine": 208,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "undoEpisodeShotBulkPatch",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1620,
+      "movedLine": 252,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "reorderShots",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1658,
+      "movedLine": 290,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "duplicateShot",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1676,
+      "movedLine": 308,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "restoreShots",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1705,
+      "movedLine": 337,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "setShotSlot",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1737,
+      "movedLine": 369,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "deleteShots",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1755,
+      "movedLine": 387,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "DeletedShotsSnapshot",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1779,
+      "movedLine": 411,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "deleteEpisodeShots",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1786,
+      "movedLine": 418,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "setVisibleColumns",
+      "owner": "src/db/projects.ts",
+      "originalLine": 1813,
+      "movedLine": 219,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "listConnectors",
+      "owner": "src/db/connectors.ts",
+      "originalLine": 1820,
+      "movedLine": 6,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "getConnectorByDefinition",
+      "owner": "src/db/connectors.ts",
+      "originalLine": 1824,
+      "movedLine": 10,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "UpsertConnectorInput",
+      "owner": "src/db/connectors.ts",
+      "originalLine": 1830,
+      "movedLine": 16,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "upsertConnector",
+      "owner": "src/db/connectors.ts",
+      "originalLine": 1839,
+      "movedLine": 25,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "resolveConnector",
+      "owner": "src/db/connectors.ts",
+      "originalLine": 1866,
+      "movedLine": 52,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "deleteConnector",
+      "owner": "src/db/connectors.ts",
+      "originalLine": 1870,
+      "movedLine": 56,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "listChatThreads",
+      "owner": "src/db/chat.ts",
+      "originalLine": 1879,
+      "movedLine": 14,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "getChatThread",
+      "owner": "src/db/chat.ts",
+      "originalLine": 1883,
+      "movedLine": 18,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "createChatThread",
+      "owner": "src/db/chat.ts",
+      "originalLine": 1887,
+      "movedLine": 22,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "updateChatThread",
+      "owner": "src/db/chat.ts",
+      "originalLine": 1913,
+      "movedLine": 48,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "deleteChatThread",
+      "owner": "src/db/cascadeCommands.ts",
+      "originalLine": 1941,
+      "movedLine": 88,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "listChatMessages",
+      "owner": "src/db/chat.ts",
+      "originalLine": 1966,
+      "movedLine": 76,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "appendChatMessage",
+      "owner": "src/db/chat.ts",
+      "originalLine": 1970,
+      "movedLine": 80,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "updateChatMessage",
+      "owner": "src/db/chat.ts",
+      "originalLine": 1994,
+      "movedLine": 104,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "bindChatThreadProject",
+      "owner": "src/db/chat.ts",
+      "originalLine": 2006,
+      "movedLine": 116,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "assertVideoProject",
+      "owner": "src/db/productionShared.ts",
+      "originalLine": 2017,
+      "movedLine": 73,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    },
+    {
+      "name": "createAudioMusicProject",
+      "owner": "src/db/projects.ts",
+      "originalLine": 2024,
+      "movedLine": 226,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true
+    }
+  ]
+}

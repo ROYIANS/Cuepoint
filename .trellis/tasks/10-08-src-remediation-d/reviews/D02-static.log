@@ -1,0 +1,162 @@
+{
+  "unit": "D02",
+  "files": 61,
+  "versions": {
+    "eslint": "9.39.5",
+    "typescript-eslint": "8.71.1",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-sonarjs": "3.0.7",
+    "typescript": "5.9.2"
+  },
+  "before": [
+    117,
+    171
+  ],
+  "after": [
+    116,
+    164
+  ],
+  "addedNoncomplexity": [],
+  "addedComplexity": [],
+  "newFileDiagnostics": [
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/assetReuse.ts",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 33 to the 20 allowed.",
+      "line": 64,
+      "column": 18,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 64,
+      "endColumn": 20
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/assetReuse.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Async arrow function has a complexity of 23. Maximum allowed is 20.",
+      "line": 64,
+      "column": 18,
+      "nodeType": "ArrowFunctionExpression",
+      "messageId": "complex",
+      "endLine": 64,
+      "endColumn": 20
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/assetReuse.ts",
+      "ruleId": "no-nested-ternary",
+      "severity": 1,
+      "message": "Do not nest ternary expressions.",
+      "line": 69,
+      "column": 17,
+      "nodeType": "ConditionalExpression",
+      "messageId": "noNestedTernary",
+      "endLine": 75,
+      "endColumn": 60
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/assetReuse.ts",
+      "ruleId": "no-nested-ternary",
+      "severity": 1,
+      "message": "Do not nest ternary expressions.",
+      "line": 71,
+      "column": 23,
+      "nodeType": "ConditionalExpression",
+      "messageId": "noNestedTernary",
+      "endLine": 75,
+      "endColumn": 60
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/assetReuse.ts",
+      "ruleId": "no-nested-ternary",
+      "severity": 1,
+      "message": "Do not nest ternary expressions.",
+      "line": 81,
+      "column": 17,
+      "nodeType": "ConditionalExpression",
+      "messageId": "noNestedTernary",
+      "endLine": 87,
+      "endColumn": 93
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/assetReuse.ts",
+      "ruleId": "no-nested-ternary",
+      "severity": 1,
+      "message": "Do not nest ternary expressions.",
+      "line": 83,
+      "column": 23,
+      "nodeType": "ConditionalExpression",
+      "messageId": "noNestedTernary",
+      "endLine": 87,
+      "endColumn": 93
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/episodes.ts",
+      "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+      "severity": 2,
+      "message": "This assertion is unnecessary since it does not change the type of the expression.",
+      "line": 278,
+      "column": 24,
+      "nodeType": "TSNonNullExpression",
+      "messageId": "unnecessaryAssertion",
+      "endLine": 278,
+      "endColumn": 49,
+      "fix": {
+        "range": [
+          11567,
+          11568
+        ],
+        "text": ""
+      }
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/media.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Async function 'collectMediaIds' has a complexity of 32. Maximum allowed is 20.",
+      "line": 6,
+      "column": 8,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 6,
+      "endColumn": 38
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/media.ts",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 39 to the 20 allowed.",
+      "line": 6,
+      "column": 23,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 6,
+      "endColumn": 38
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/projects.ts",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 24 to the 20 allowed.",
+      "line": 80,
+      "column": 65,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 80,
+      "endColumn": 67
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/shots.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Async arrow function has a complexity of 21. Maximum allowed is 20.",
+      "line": 72,
+      "column": 61,
+      "nodeType": "ArrowFunctionExpression",
+      "messageId": "complex",
+      "endLine": 72,
+      "endColumn": 63
+    }
+  ]
+}

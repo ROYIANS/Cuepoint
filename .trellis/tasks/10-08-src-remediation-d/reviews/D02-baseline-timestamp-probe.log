@@ -1,0 +1,9 @@
+
+ RUN  v5.0.1 /private/tmp/cuepoint-d02/baseline
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  10:44:26
+   Duration  237ms (transform 60%, setup 24%, tests 9%, import 6%, worker 1%)
+

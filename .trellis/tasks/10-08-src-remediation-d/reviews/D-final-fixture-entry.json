@@ -1,0 +1,2793 @@
+{
+  "status": "CAPTURED_BEFORE",
+  "capturedAt": "2026-10-08T07:30:51.392Z",
+  "typescript": "5.9.3",
+  "before": {
+    "tests/d05SchemaEquivalence.test.ts": "2546159f90c80d5a4bf1e0cf56dafa622206fcee7444862b5d3ed23eb2c93ffb",
+    "tests/d06Capabilities.test.ts": "8f7f7372be0298c1795428e89d949bcca26235db60e446e1d4325b0f2c18c74f",
+    "tests/d07RequestWire.test.ts": "ae006a78ba25b7bfd21050cbc659b75fab244c66f464d97eec6d5316d4ef9e06",
+    "tests/memoryRetrieval.test.ts": "3c3e5b316b205d71710458fbd605f95cc4731ead37954ef61e110c7eea52f456",
+    "tests/d05ToolCatalog.test.ts": "f09ccfb5112cf6875fddd12dc6f64a4efd52f2d6df4bad39974a51d11d44d1fd",
+    "src/components/studio/ProjectGalleryPage.tsx": "d7ad89db117469718b22d17f3538a87c6833fa1b978bc7b4cfc4a92964e42248",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/tools.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationProfiles.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/memory/retrieval.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/ipTools.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/audioTools.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/musicTools.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/audioGenerationTools.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialTools.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/toolLoading.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/webTools.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceTools.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/memoryTools.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/projectScope.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/taskTools.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationTools.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessTools.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/toolErrors.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/memory/schema.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessSchemas.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/libraryToolHelpers.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/soundWriteReceipt.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/mimoSpeechSpec.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialContent.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialImageInput.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialToolNames.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/skills.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/imageDiscovery.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceContext.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/imageQueue.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceEvidence.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/memoryToolNames.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceToolNames.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/taskState.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationSelection.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationRuntime.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessWriteReceipt.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessStore.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessToolNames.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/writeReceipt.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/ipToolNames.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/audioMusicToolNames.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/webToolNames.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationPreparation.ts": null,
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationMedia.ts": null,
+    "tests/fixtures/sourceSnapshots/d06/src/lib/agent/generationProfiles.ts": null,
+    "tests/fixtures/sourceSnapshots/d06/src/domain/output.ts": null,
+    "tests/fixtures/sourceSnapshots/d06/src/lib/agent/businessSchemas.ts": null,
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/apimart.ts": null,
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/apimartAudio.ts": null,
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/aihubmix.ts": null,
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/mimoSpeech.ts": null,
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/openaiCompatible.ts": null,
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/chatStream.ts": null,
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/responsesStream.ts": null,
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/tavily.ts": null,
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/safeError.ts": null,
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/boundedResponse.ts": null,
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/modelMetadata.ts": null,
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/boundedSse.ts": null,
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/referenceWire.ts": null,
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/visionCapability.ts": null
+  },
+  "accepted": {
+    "tests/d05SchemaEquivalence.test.ts": {
+      "unit": "D05",
+      "acceptedAfter": "2546159f90c80d5a4bf1e0cf56dafa622206fcee7444862b5d3ed23eb2c93ffb",
+      "snapshot": ".trellis/tasks/10-08-src-remediation-d/reviews/D05-check-snapshot.json",
+      "snapshotSha256": "a31bde56b660b1089ef58759e1a12ff13974e3126851edda036b4b0b4a8af4be",
+      "equal": true
+    },
+    "tests/d06Capabilities.test.ts": {
+      "unit": "D06",
+      "acceptedAfter": "8f7f7372be0298c1795428e89d949bcca26235db60e446e1d4325b0f2c18c74f",
+      "snapshot": ".trellis/tasks/10-08-src-remediation-d/reviews/D06-check-snapshot.json",
+      "snapshotSha256": "465789597e7b7a289c6722df2bc8b1865c3e340be7ed6a11ee457fccb5ab2abb",
+      "equal": true
+    },
+    "tests/d07RequestWire.test.ts": {
+      "unit": "D07",
+      "acceptedAfter": "ae006a78ba25b7bfd21050cbc659b75fab244c66f464d97eec6d5316d4ef9e06",
+      "snapshot": ".trellis/tasks/10-08-src-remediation-d/reviews/D07-check-snapshot.json",
+      "snapshotSha256": "ce3c3aec1650a40d52c2d35e31ecb13d86c1cd732df89522af7386eebc22e522",
+      "equal": true
+    },
+    "tests/memoryRetrieval.test.ts": {
+      "unit": "D05",
+      "acceptedAfter": "3c3e5b316b205d71710458fbd605f95cc4731ead37954ef61e110c7eea52f456",
+      "snapshot": ".trellis/tasks/10-08-src-remediation-d/reviews/D05-check-snapshot.json",
+      "snapshotSha256": "a31bde56b660b1089ef58759e1a12ff13974e3126851edda036b4b0b4a8af4be",
+      "equal": true
+    },
+    "tests/d05ToolCatalog.test.ts": {
+      "unit": "D05",
+      "acceptedAfter": "f09ccfb5112cf6875fddd12dc6f64a4efd52f2d6df4bad39974a51d11d44d1fd",
+      "snapshot": ".trellis/tasks/10-08-src-remediation-d/reviews/D05-check-snapshot.json",
+      "snapshotSha256": "a31bde56b660b1089ef58759e1a12ff13974e3126851edda036b4b0b4a8af4be",
+      "equal": true
+    },
+    "src/components/studio/ProjectGalleryPage.tsx": {
+      "unit": "D03",
+      "acceptedAfter": "d7ad89db117469718b22d17f3538a87c6833fa1b978bc7b4cfc4a92964e42248",
+      "snapshot": ".trellis/tasks/10-08-src-remediation-d/reviews/D03-check-snapshot.json",
+      "snapshotSha256": "c472259ecaea7fc35c3b34612efab437a111229bc02dd5bc3939dea871349597",
+      "equal": true
+    }
+  },
+  "unitAttribution": {
+    "tests/d05SchemaEquivalence.test.ts": "D05",
+    "tests/d06Capabilities.test.ts": "D06",
+    "tests/d07RequestWire.test.ts": "D07",
+    "tests/memoryRetrieval.test.ts": "D05",
+    "tests/d05ToolCatalog.test.ts": "D05",
+    "src/components/studio/ProjectGalleryPage.tsx": "D03",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/tools.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationProfiles.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/memory/retrieval.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/ipTools.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/audioTools.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/musicTools.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/audioGenerationTools.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialTools.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/toolLoading.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/webTools.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceTools.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/memoryTools.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/projectScope.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/taskTools.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationTools.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessTools.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/toolErrors.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/memory/schema.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessSchemas.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/libraryToolHelpers.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/soundWriteReceipt.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/mimoSpeechSpec.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialContent.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialImageInput.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialToolNames.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/skills.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/imageDiscovery.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceContext.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/imageQueue.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceEvidence.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/memoryToolNames.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceToolNames.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/taskState.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationSelection.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationRuntime.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessWriteReceipt.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessStore.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessToolNames.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/writeReceipt.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/ipToolNames.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/audioMusicToolNames.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/webToolNames.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationPreparation.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationMedia.ts": "D05",
+    "tests/fixtures/sourceSnapshots/d06/src/lib/agent/generationProfiles.ts": "D06",
+    "tests/fixtures/sourceSnapshots/d06/src/domain/output.ts": "D06",
+    "tests/fixtures/sourceSnapshots/d06/src/lib/agent/businessSchemas.ts": "D06",
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/apimart.ts": "D07",
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/apimartAudio.ts": "D07",
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/aihubmix.ts": "D07",
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/mimoSpeech.ts": "D07",
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/openaiCompatible.ts": "D07",
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/chatStream.ts": "D07",
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/responsesStream.ts": "D07",
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/tavily.ts": "D07",
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/safeError.ts": "D07",
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/boundedResponse.ts": "D07",
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/modelMetadata.ts": "D07",
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/boundedSse.ts": "D07",
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/referenceWire.ts": "D07",
+    "tests/fixtures/sourceSnapshots/d07/src/lib/ai/visionCapability.ts": "D07"
+  },
+  "originalManifest": [
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/tools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/tools.ts",
+      "sha256": "f02a84a492891364673df245242e2da1ca889277e9a670fce0dfea963c914bbd",
+      "bytes": 8319
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationProfiles.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationProfiles.ts",
+      "sha256": "1e4e6c2b546b43b2c6801057edc4ef7b75e84ab2ddba4caf1f3c989b5b511a93",
+      "bytes": 11049
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/memory/retrieval.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/memory/retrieval.ts",
+      "sha256": "7ae1edf41af85276a2ffb9c8005b3e1c43d7790adb8545a2ad01d0aa03e70893",
+      "bytes": 7255
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/ipTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/ipTools.ts",
+      "sha256": "c0752fa767e48b16b71d49c86d5b6d3aa7627fbab600db59e97b8c5f85c8cdda",
+      "bytes": 10820
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/audioTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/audioTools.ts",
+      "sha256": "2d994f95a740cc35221a4ee4c444ce497cea0357c40e0b187fba97b90d926aae",
+      "bytes": 18619
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/musicTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/musicTools.ts",
+      "sha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+      "bytes": 9460
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/audioGenerationTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/audioGenerationTools.ts",
+      "sha256": "34c64b4d254425d6334370239e007774cf6297bf594cb91603627e92f93ce507",
+      "bytes": 18211
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/materialTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialTools.ts",
+      "sha256": "702b461e56f59b16b252147287077fa026b7c6b272fc41eb1e38d811c5039c48",
+      "bytes": 28413
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/toolLoading.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/toolLoading.ts",
+      "sha256": "1599a871d8e10e822237b1cac3f7eed517254e6fd5f8db281a9dc6cde660851e",
+      "bytes": 10607
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/webTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/webTools.ts",
+      "sha256": "bff9ac8007c6b2e0321fba6d63e7564f5175645dc29a6d867de494ac8092da49",
+      "bytes": 3977
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/referenceTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceTools.ts",
+      "sha256": "66e8b7bfd81f3f04e238d05a4c6741991af62e1a6d9590d42614bedb75b4f93a",
+      "bytes": 11558
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/memoryTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/memoryTools.ts",
+      "sha256": "5d89097a581570f7431a2613d67d67da5928762f86ecb945d7fcb58ea8495eb8",
+      "bytes": 17409
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/projectScope.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/projectScope.ts",
+      "sha256": "d590590a610b2a4546dd6b8c01a1468542cbb923afdcc939cd17d00046165faf",
+      "bytes": 2830
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/taskTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/taskTools.ts",
+      "sha256": "6e55619e39b36159f4956f8f16429bcd740bb6d5ed06d424bd4c0f40e8bd48fa",
+      "bytes": 15332
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationTools.ts",
+      "sha256": "048e10ff8601ff57053293d3b6fc1d9c1fefe8f3d3344d6aaf01cc1854bc833f",
+      "bytes": 12484
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/businessTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessTools.ts",
+      "sha256": "53350cfd60ac4e86cda8bd843dbde122ab50539d8c5ed3e3698604a5dc6441a5",
+      "bytes": 44251
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/toolErrors.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/toolErrors.ts",
+      "sha256": "0b2f17d2595bc6df471be1c3dd5c41505326ba401c603e1461e8f9787600e799",
+      "bytes": 6988
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/memory/schema.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/memory/schema.ts",
+      "sha256": "ccddefc631d808e0ec77a07b6be57cafee746fcf8cfbb09969a3ff0e1b754946",
+      "bytes": 3146
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/businessSchemas.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessSchemas.ts",
+      "sha256": "db589d94729d8229ccc1b7919d2e912015bc68b432423ed2bce7718e5ce39a70",
+      "bytes": 7609
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/libraryToolHelpers.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/libraryToolHelpers.ts",
+      "sha256": "201ae3605c573ea16ff9b082b7d17b2edb888971b350dd4b55cc66072f520f92",
+      "bytes": 4635
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/soundWriteReceipt.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/soundWriteReceipt.ts",
+      "sha256": "27e0ae6fe74a34b9542d4d0f00875ebff4e45402509e728872d297c9eb85aed5",
+      "bytes": 1401
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/mimoSpeechSpec.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/mimoSpeechSpec.ts",
+      "sha256": "fcb3e6ac4e75eeab44c71ff23b8164dec3e0d99e3f58d36266ea926ea7e1fe1e",
+      "bytes": 498
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/materialContent.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialContent.ts",
+      "sha256": "be1ae9dcdc35d3819e16bf2c22643741258f09cfc9bbebd0ea8c209a1275aaeb",
+      "bytes": 5265
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/materialImageInput.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialImageInput.ts",
+      "sha256": "b61919a40e730952cd499b04e26f908a5bf827a6382837f534066dba68cb42b5",
+      "bytes": 5205
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/materialToolNames.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialToolNames.ts",
+      "sha256": "b1023b87ee512d4ef97487d4c890c716e2bea21c714b528177cbc195597ec813",
+      "bytes": 330
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/skills.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/skills.ts",
+      "sha256": "5ac7b4a93941047d115a62915c9fdaf8b439e484a0139d932084a07f8d3c1cad",
+      "bytes": 15569
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/imageDiscovery.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/imageDiscovery.ts",
+      "sha256": "fc8571b38c847e6ed4e0504bd04d3f5140a6772a202d94fc7b4261292f95bc58",
+      "bytes": 18633
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/referenceContext.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceContext.ts",
+      "sha256": "b3b2fe419b730c9c884bbe3a1785d8ff97791b0e3d9b6d215e0d2ec79dfb1f07",
+      "bytes": 6565
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/imageQueue.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/imageQueue.ts",
+      "sha256": "6261436bf2dc4d86815f0b8c0b0075f61b0f6824f0869eaefea4db3408a0317a",
+      "bytes": 2028
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/referenceEvidence.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceEvidence.ts",
+      "sha256": "e8950b149b044d303b979762fcc6f7bb71bcc6e4d7b43ea02b4eb48f0c013208",
+      "bytes": 9238
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/memoryToolNames.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/memoryToolNames.ts",
+      "sha256": "0dc6e4453673dff641208e3e915eedd53aa477202e92ff3ad597ab6594d62ab4",
+      "bytes": 697
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/referenceToolNames.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceToolNames.ts",
+      "sha256": "577cdbe4f5d689f91e86bb17900844131131a1872aae9b95f6ea9c27d8fadbd1",
+      "bytes": 150
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/taskState.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/taskState.ts",
+      "sha256": "e83ffaaf911424d8e7e831e55500e91a5e68b0818ff8b76d6502abebe7f01053",
+      "bytes": 3475
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationSelection.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationSelection.ts",
+      "sha256": "f86880a721807bad8c252113098047f1f5b770d26c77ebdb22ce351cc433a040",
+      "bytes": 9192
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationRuntime.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationRuntime.ts",
+      "sha256": "a7218954e91ddeaf0eeed62608ab0e6a9b1dea0509d8bb97f22f888c398d8ec4",
+      "bytes": 29058
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/businessWriteReceipt.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessWriteReceipt.ts",
+      "sha256": "626537317a0c0a239c66b4c1b756251faead3eb400690a69274ce63cbf693096",
+      "bytes": 7062
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/businessStore.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessStore.ts",
+      "sha256": "407558e99438728dcf9979655d9b7815de13de1268b5096dbb7db8967ecf6666",
+      "bytes": 17981
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/businessToolNames.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessToolNames.ts",
+      "sha256": "0abb4cb362354b0dc5e22f60fa78e6d4864b23f2d5eb034cec3c33debd40ce04",
+      "bytes": 868
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/writeReceipt.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/writeReceipt.ts",
+      "sha256": "2dd25204832ceabdfec153b2f52dbf0d4afe3c21eebc41c6c35052258a9ebb1c",
+      "bytes": 1422
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/ipToolNames.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/ipToolNames.ts",
+      "sha256": "a1e8d0086956df8e0c69abb69334fe4a78475025babf165cd4da372768dc8e41",
+      "bytes": 128
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/audioMusicToolNames.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/audioMusicToolNames.ts",
+      "sha256": "2af929c2c55dc34886165c35ecc2882d764b6e0d6d0ff14e4b96d5c0901d819f",
+      "bytes": 448
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/webToolNames.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/webToolNames.ts",
+      "sha256": "a247f85125ad56d9b83bd56556ac935cb050bcfa3b66acc5cc6445984b27f37c",
+      "bytes": 67
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationPreparation.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationPreparation.ts",
+      "sha256": "9f04785d944d98852726da709d630f1c712b2f08e32b353c2e40564362b3e0f0",
+      "bytes": 5517
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationMedia.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationMedia.ts",
+      "sha256": "82f6aced544ad2c8aafe62dc0b33973859d8b7fa63851b7ff9ce7cba39a71709",
+      "bytes": 2318
+    },
+    {
+      "unit": "D06",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/generationProfiles.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d06/src/lib/agent/generationProfiles.ts",
+      "sha256": "9c2f3f28f8d78306c4db005af6c60a5809a8c2bf73c84479392f9482ca8fd69d",
+      "bytes": 12860
+    },
+    {
+      "unit": "D06",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/output.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d06/src/domain/output.ts",
+      "sha256": "b43d58fa0b6b6f5a4b001e75f8bac6e8b613794cd0f422d40d6d64992d98dd33",
+      "bytes": 10281
+    },
+    {
+      "unit": "D06",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/businessSchemas.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d06/src/lib/agent/businessSchemas.ts",
+      "sha256": "b86d694989c3353c4c8ab09edc915ac72e8a9710289da09b881e771dc050b9ef",
+      "bytes": 8174
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/apimart.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/apimart.ts",
+      "sha256": "0aaf9904b526ce8ca63cdc67535f7b245fbf182e5e4b93a6185633916118c65e",
+      "bytes": 17674
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/apimartAudio.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/apimartAudio.ts",
+      "sha256": "b039e073947defcfc5b69a1e33fd2b7a39779c33159ba4eb65cd632509362d9e",
+      "bytes": 15359
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/aihubmix.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/aihubmix.ts",
+      "sha256": "c6a66b5fdb0904d1765b70f04b38769f55ec5a6c70feae757396adffbb4233c9",
+      "bytes": 21806
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/mimoSpeech.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/mimoSpeech.ts",
+      "sha256": "0be180a9ed8767321126cc7b49ba3f16836e625466e3d43c105c46e9dcaf62c8",
+      "bytes": 11047
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/openaiCompatible.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/openaiCompatible.ts",
+      "sha256": "58af82f28f70dbd361d9bfc43b4201186407060c67ad6fd3f342e20a65c29912",
+      "bytes": 7765
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/chatStream.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/chatStream.ts",
+      "sha256": "ede7b8806f165128a864f948435defc700c226a4656041c6a485c0f3342cdf6d",
+      "bytes": 19377
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/responsesStream.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/responsesStream.ts",
+      "sha256": "7a641a8da7404523939998ea6618989e9823bb1f63e24dec9aad5076e2eabee7",
+      "bytes": 15060
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/tavily.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/tavily.ts",
+      "sha256": "b24c36e3ef77e85585b6d72ca684b40e2f7c7e5d758696abea5ea945a0c98ae4",
+      "bytes": 8753
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/safeError.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/safeError.ts",
+      "sha256": "aaca8cbeafa33d6d2d7f12668f858827de788b1b3737bf9a909cdb255dca5d12",
+      "bytes": 307
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/boundedResponse.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/boundedResponse.ts",
+      "sha256": "92cc47f78623f8c1c8e7d864a9f4af655c5b498077f8b0e93de25eefc9be8384",
+      "bytes": 3895
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/modelMetadata.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/modelMetadata.ts",
+      "sha256": "9ea70a6c9172cbab757550440888fbda56a5ec6f89aa95111405accd3db175aa",
+      "bytes": 3533
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/boundedSse.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/boundedSse.ts",
+      "sha256": "8626015eebd251a1956992f6274d679f8e3cd6af556e2e4acb9acf72fe925894",
+      "bytes": 4080
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/referenceWire.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/referenceWire.ts",
+      "sha256": "12e661d548816a5e99285ccef20aeb0bb7353f7f289d61a4ac763ff941bd74a8",
+      "bytes": 5260
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/visionCapability.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/visionCapability.ts",
+      "sha256": "a4d73f99782eea0fa7bd3611b56a540909f34baf879f6bc1dd108479a436f349",
+      "bytes": 897
+    }
+  ],
+  "relativeEdges": [
+    {
+      "group": "d05",
+      "from": "lib/agent/tools.ts",
+      "specifier": "./ipTools",
+      "to": "lib/agent/ipTools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/tools.ts",
+      "specifier": "./audioTools",
+      "to": "lib/agent/audioTools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/tools.ts",
+      "specifier": "./musicTools",
+      "to": "lib/agent/musicTools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/tools.ts",
+      "specifier": "./audioGenerationTools",
+      "to": "lib/agent/audioGenerationTools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/tools.ts",
+      "specifier": "./materialTools",
+      "to": "lib/agent/materialTools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/tools.ts",
+      "specifier": "./toolLoading",
+      "to": "lib/agent/toolLoading.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/tools.ts",
+      "specifier": "./webTools",
+      "to": "lib/agent/webTools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/tools.ts",
+      "specifier": "./referenceTools",
+      "to": "lib/agent/referenceTools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/tools.ts",
+      "specifier": "./memoryTools",
+      "to": "lib/agent/memoryTools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/tools.ts",
+      "specifier": "./projectScope",
+      "to": "lib/agent/projectScope.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/tools.ts",
+      "specifier": "./taskTools",
+      "to": "lib/agent/taskTools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/tools.ts",
+      "specifier": "./generationTools",
+      "to": "lib/agent/generationTools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/tools.ts",
+      "specifier": "./businessTools",
+      "to": "lib/agent/businessTools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/tools.ts",
+      "specifier": "./toolErrors",
+      "to": "lib/agent/toolErrors.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/memory/retrieval.ts",
+      "specifier": "./schema",
+      "to": "lib/memory/schema.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/ipTools.ts",
+      "specifier": "./tools",
+      "to": "lib/agent/tools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/ipTools.ts",
+      "specifier": "./businessSchemas",
+      "to": "lib/agent/businessSchemas.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/ipTools.ts",
+      "specifier": "./libraryToolHelpers",
+      "to": "lib/agent/libraryToolHelpers.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/ipTools.ts",
+      "specifier": "./projectScope",
+      "to": "lib/agent/projectScope.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioTools.ts",
+      "specifier": "./soundWriteReceipt",
+      "to": "lib/agent/soundWriteReceipt.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioTools.ts",
+      "specifier": "./tools",
+      "to": "lib/agent/tools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioTools.ts",
+      "specifier": "./businessSchemas",
+      "to": "lib/agent/businessSchemas.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioTools.ts",
+      "specifier": "./libraryToolHelpers",
+      "to": "lib/agent/libraryToolHelpers.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioTools.ts",
+      "specifier": "./projectScope",
+      "to": "lib/agent/projectScope.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioTools.ts",
+      "specifier": "./mimoSpeechSpec",
+      "to": "lib/agent/mimoSpeechSpec.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/musicTools.ts",
+      "specifier": "./soundWriteReceipt",
+      "to": "lib/agent/soundWriteReceipt.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/musicTools.ts",
+      "specifier": "./libraryToolHelpers",
+      "to": "lib/agent/libraryToolHelpers.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/musicTools.ts",
+      "specifier": "./audioTools",
+      "to": "lib/agent/audioTools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/musicTools.ts",
+      "specifier": "./tools",
+      "to": "lib/agent/tools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/musicTools.ts",
+      "specifier": "./businessSchemas",
+      "to": "lib/agent/businessSchemas.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioGenerationTools.ts",
+      "specifier": "./tools",
+      "to": "lib/agent/tools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioGenerationTools.ts",
+      "specifier": "./projectScope",
+      "to": "lib/agent/projectScope.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioGenerationTools.ts",
+      "specifier": "./mimoSpeechSpec",
+      "to": "lib/agent/mimoSpeechSpec.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioGenerationTools.ts",
+      "specifier": "./businessSchemas",
+      "to": "lib/agent/businessSchemas.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialTools.ts",
+      "specifier": "./tools",
+      "to": "lib/agent/tools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialTools.ts",
+      "specifier": "./businessSchemas",
+      "to": "lib/agent/businessSchemas.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialTools.ts",
+      "specifier": "./libraryToolHelpers",
+      "to": "lib/agent/libraryToolHelpers.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialTools.ts",
+      "specifier": "./materialContent",
+      "to": "lib/agent/materialContent.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialTools.ts",
+      "specifier": "./projectScope",
+      "to": "lib/agent/projectScope.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialTools.ts",
+      "specifier": "./materialImageInput",
+      "to": "lib/agent/materialImageInput.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialTools.ts",
+      "specifier": "./materialToolNames",
+      "to": "lib/agent/materialToolNames.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/toolLoading.ts",
+      "specifier": "./skills",
+      "to": "lib/agent/skills.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/toolLoading.ts",
+      "specifier": "./tools",
+      "to": "lib/agent/tools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/webTools.ts",
+      "specifier": "./tools",
+      "to": "lib/agent/tools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/webTools.ts",
+      "specifier": "./projectScope",
+      "to": "lib/agent/projectScope.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceTools.ts",
+      "specifier": "./imageDiscovery",
+      "to": "lib/agent/imageDiscovery.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceTools.ts",
+      "specifier": "./tools",
+      "to": "lib/agent/tools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceTools.ts",
+      "specifier": "./projectScope",
+      "to": "lib/agent/projectScope.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceTools.ts",
+      "specifier": "./referenceContext",
+      "to": "lib/agent/referenceContext.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceTools.ts",
+      "specifier": "./imageQueue",
+      "to": "lib/agent/imageQueue.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/memoryTools.ts",
+      "specifier": "./referenceEvidence",
+      "to": "lib/agent/referenceEvidence.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/memoryTools.ts",
+      "specifier": "./tools",
+      "to": "lib/agent/tools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/memoryTools.ts",
+      "specifier": "./projectScope",
+      "to": "lib/agent/projectScope.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/memoryTools.ts",
+      "specifier": "./businessSchemas",
+      "to": "lib/agent/businessSchemas.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/memoryTools.ts",
+      "specifier": "./memoryToolNames",
+      "to": "lib/agent/memoryToolNames.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/memoryTools.ts",
+      "specifier": "./referenceToolNames",
+      "to": "lib/agent/referenceToolNames.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/projectScope.ts",
+      "specifier": "./tools",
+      "to": "lib/agent/tools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/taskTools.ts",
+      "specifier": "./referenceEvidence",
+      "to": "lib/agent/referenceEvidence.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/taskTools.ts",
+      "specifier": "./projectScope",
+      "to": "lib/agent/projectScope.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/taskTools.ts",
+      "specifier": "./taskState",
+      "to": "lib/agent/taskState.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/taskTools.ts",
+      "specifier": "./tools",
+      "to": "lib/agent/tools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/taskTools.ts",
+      "specifier": "./businessSchemas",
+      "to": "lib/agent/businessSchemas.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationTools.ts",
+      "specifier": "./projectScope",
+      "to": "lib/agent/projectScope.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationTools.ts",
+      "specifier": "./generationSelection",
+      "to": "lib/agent/generationSelection.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationTools.ts",
+      "specifier": "./tools",
+      "to": "lib/agent/tools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationTools.ts",
+      "specifier": "./generationProfiles",
+      "to": "lib/agent/generationProfiles.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationTools.ts",
+      "specifier": "./generationRuntime",
+      "to": "lib/agent/generationRuntime.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "./projectScope",
+      "to": "lib/agent/projectScope.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "./tools",
+      "to": "lib/agent/tools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "./businessSchemas",
+      "to": "lib/agent/businessSchemas.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "./businessWriteReceipt",
+      "to": "lib/agent/businessWriteReceipt.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "./businessStore",
+      "to": "lib/agent/businessStore.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "./businessToolNames",
+      "to": "lib/agent/businessToolNames.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/libraryToolHelpers.ts",
+      "specifier": "./tools",
+      "to": "lib/agent/tools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/libraryToolHelpers.ts",
+      "specifier": "./businessSchemas",
+      "to": "lib/agent/businessSchemas.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/libraryToolHelpers.ts",
+      "specifier": "./projectScope",
+      "to": "lib/agent/projectScope.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/libraryToolHelpers.ts",
+      "specifier": "./writeReceipt",
+      "to": "lib/agent/writeReceipt.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/soundWriteReceipt.ts",
+      "specifier": "./writeReceipt",
+      "to": "lib/agent/writeReceipt.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/mimoSpeechSpec.ts",
+      "specifier": "./businessSchemas",
+      "to": "lib/agent/businessSchemas.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialContent.ts",
+      "specifier": "./tools",
+      "to": "lib/agent/tools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialContent.ts",
+      "specifier": "./projectScope",
+      "to": "lib/agent/projectScope.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialImageInput.ts",
+      "specifier": "./tools",
+      "to": "lib/agent/tools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialImageInput.ts",
+      "specifier": "./materialContent",
+      "to": "lib/agent/materialContent.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialImageInput.ts",
+      "specifier": "./projectScope",
+      "to": "lib/agent/projectScope.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialImageInput.ts",
+      "specifier": "./imageQueue",
+      "to": "lib/agent/imageQueue.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/skills.ts",
+      "specifier": "./ipToolNames",
+      "to": "lib/agent/ipToolNames.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/skills.ts",
+      "specifier": "./audioMusicToolNames",
+      "to": "lib/agent/audioMusicToolNames.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/skills.ts",
+      "specifier": "./materialToolNames",
+      "to": "lib/agent/materialToolNames.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/skills.ts",
+      "specifier": "./webToolNames",
+      "to": "lib/agent/webToolNames.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/skills.ts",
+      "specifier": "./referenceToolNames",
+      "to": "lib/agent/referenceToolNames.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/skills.ts",
+      "specifier": "./memoryToolNames",
+      "to": "lib/agent/memoryToolNames.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/skills.ts",
+      "specifier": "./businessToolNames",
+      "to": "lib/agent/businessToolNames.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/imageDiscovery.ts",
+      "specifier": "./tools",
+      "to": "lib/agent/tools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/imageDiscovery.ts",
+      "specifier": "./projectScope",
+      "to": "lib/agent/projectScope.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceContext.ts",
+      "specifier": "./materialImageInput",
+      "to": "lib/agent/materialImageInput.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceContext.ts",
+      "specifier": "./imageDiscovery",
+      "to": "lib/agent/imageDiscovery.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/imageQueue.ts",
+      "specifier": "./tools",
+      "to": "lib/agent/tools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceEvidence.ts",
+      "specifier": "./referenceToolNames",
+      "to": "lib/agent/referenceToolNames.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/memoryToolNames.ts",
+      "specifier": "./referenceToolNames",
+      "to": "lib/agent/referenceToolNames.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationSelection.ts",
+      "specifier": "./generationProfiles",
+      "to": "lib/agent/generationProfiles.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "./projectScope",
+      "to": "lib/agent/projectScope.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "./tools",
+      "to": "lib/agent/tools.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "./toolErrors",
+      "to": "lib/agent/toolErrors.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "./generationProfiles",
+      "to": "lib/agent/generationProfiles.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "./generationPreparation",
+      "to": "lib/agent/generationPreparation.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessWriteReceipt.ts",
+      "specifier": "./businessStore",
+      "to": "lib/agent/businessStore.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessWriteReceipt.ts",
+      "specifier": "./writeReceipt",
+      "to": "lib/agent/writeReceipt.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationPreparation.ts",
+      "specifier": "./generationMedia",
+      "to": "lib/agent/generationMedia.ts"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationPreparation.ts",
+      "specifier": "./generationProfiles",
+      "to": "lib/agent/generationProfiles.ts"
+    },
+    {
+      "group": "d06",
+      "from": "lib/agent/generationProfiles.ts",
+      "specifier": "./businessSchemas",
+      "to": "lib/agent/businessSchemas.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/apimart.ts",
+      "specifier": "./safeError",
+      "to": "lib/ai/safeError.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/apimartAudio.ts",
+      "specifier": "./boundedResponse",
+      "to": "lib/ai/boundedResponse.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/apimartAudio.ts",
+      "specifier": "./apimart",
+      "to": "lib/ai/apimart.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/apimartAudio.ts",
+      "specifier": "./openaiCompatible",
+      "to": "lib/ai/openaiCompatible.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/apimartAudio.ts",
+      "specifier": "./safeError",
+      "to": "lib/ai/safeError.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/aihubmix.ts",
+      "specifier": "./boundedResponse",
+      "to": "lib/ai/boundedResponse.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/aihubmix.ts",
+      "specifier": "./safeError",
+      "to": "lib/ai/safeError.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/mimoSpeech.ts",
+      "specifier": "./boundedResponse",
+      "to": "lib/ai/boundedResponse.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/mimoSpeech.ts",
+      "specifier": "./modelMetadata",
+      "to": "lib/ai/modelMetadata.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/mimoSpeech.ts",
+      "specifier": "./openaiCompatible",
+      "to": "lib/ai/openaiCompatible.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/mimoSpeech.ts",
+      "specifier": "./safeError",
+      "to": "lib/ai/safeError.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/openaiCompatible.ts",
+      "specifier": "./safeError",
+      "to": "lib/ai/safeError.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/chatStream.ts",
+      "specifier": "./boundedResponse",
+      "to": "lib/ai/boundedResponse.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/chatStream.ts",
+      "specifier": "./boundedSse",
+      "to": "lib/ai/boundedSse.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/chatStream.ts",
+      "specifier": "./safeError",
+      "to": "lib/ai/safeError.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/chatStream.ts",
+      "specifier": "./referenceWire",
+      "to": "lib/ai/referenceWire.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/responsesStream.ts",
+      "specifier": "./boundedResponse",
+      "to": "lib/ai/boundedResponse.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/responsesStream.ts",
+      "specifier": "./boundedSse",
+      "to": "lib/ai/boundedSse.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/responsesStream.ts",
+      "specifier": "./safeError",
+      "to": "lib/ai/safeError.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/responsesStream.ts",
+      "specifier": "./referenceWire",
+      "to": "lib/ai/referenceWire.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/tavily.ts",
+      "specifier": "./boundedResponse",
+      "to": "lib/ai/boundedResponse.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/boundedSse.ts",
+      "specifier": "./boundedResponse",
+      "to": "lib/ai/boundedResponse.ts"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/referenceWire.ts",
+      "specifier": "./visionCapability",
+      "to": "lib/ai/visionCapability.ts"
+    }
+  ],
+  "externalImports": [
+    {
+      "group": "d05",
+      "from": "lib/agent/tools.ts",
+      "specifier": "zod",
+      "policy": "existing-package"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/tools.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/tools.ts",
+      "specifier": "@/db/agentTools",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/tools.ts",
+      "specifier": "@/domain/agent",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationProfiles.ts",
+      "specifier": "zod",
+      "policy": "existing-package"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationProfiles.ts",
+      "specifier": "@/domain/output",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationProfiles.ts",
+      "specifier": "@/lib/productionRevision",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationProfiles.ts",
+      "specifier": "@/domain/production",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/memory/retrieval.ts",
+      "specifier": "@/domain/agent",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/memory/retrieval.ts",
+      "specifier": "@/domain/projectMemory",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/memory/retrieval.ts",
+      "specifier": "@/domain/memoryRetrieval",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/memory/retrieval.ts",
+      "specifier": "@/lib/agent/contextUsage",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/memory/retrieval.ts",
+      "specifier": "@/lib/productionRevision",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/ipTools.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/ipTools.ts",
+      "specifier": "@/db/ipProfiles",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/ipTools.ts",
+      "specifier": "@/domain/materials",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioTools.ts",
+      "specifier": "zod",
+      "policy": "existing-package"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioTools.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioTools.ts",
+      "specifier": "@/db/audio",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioTools.ts",
+      "specifier": "@/db/audioShared",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioTools.ts",
+      "specifier": "@/lib/audio/commands",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioTools.ts",
+      "specifier": "@/lib/ai/apimartAudio",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioTools.ts",
+      "specifier": "@/lib/ai/mimoSpeech",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioTools.ts",
+      "specifier": "@/lib/audioGeneration/defaults",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/musicTools.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/musicTools.ts",
+      "specifier": "@/db/music",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/musicTools.ts",
+      "specifier": "@/db/audioShared",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/musicTools.ts",
+      "specifier": "@/domain/music",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioGenerationTools.ts",
+      "specifier": "zod",
+      "policy": "existing-package"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioGenerationTools.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioGenerationTools.ts",
+      "specifier": "@/db/connectors",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioGenerationTools.ts",
+      "specifier": "@/db/audioShared",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioGenerationTools.ts",
+      "specifier": "@/db/agentTools",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioGenerationTools.ts",
+      "specifier": "@/domain/agent",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioGenerationTools.ts",
+      "specifier": "@/domain/audioGeneration",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioGenerationTools.ts",
+      "specifier": "@/lib/productionRevision",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioGenerationTools.ts",
+      "specifier": "@/lib/audioGeneration/runtime",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioGenerationTools.ts",
+      "specifier": "@/lib/audioGeneration/input",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioGenerationTools.ts",
+      "specifier": "@/lib/ai/apimartAudio",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioGenerationTools.ts",
+      "specifier": "@/lib/ai/mimoSpeech",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioGenerationTools.ts",
+      "specifier": "@/lib/audioGeneration/defaults",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/audioGenerationTools.ts",
+      "specifier": "@/lib/audioGeneration/reference",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialTools.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialTools.ts",
+      "specifier": "@/db/materials",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialTools.ts",
+      "specifier": "@/db/assetReuse",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialTools.ts",
+      "specifier": "@/domain/materials",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialTools.ts",
+      "specifier": "@/domain/types",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/toolLoading.ts",
+      "specifier": "@/domain/agentToolSelection",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/toolLoading.ts",
+      "specifier": "zod",
+      "policy": "existing-package"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/toolLoading.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/toolLoading.ts",
+      "specifier": "@/db/agentTools",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/toolLoading.ts",
+      "specifier": "@/domain/agent",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/toolLoading.ts",
+      "specifier": "@/lib/ai/responsesStream",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/toolLoading.ts",
+      "specifier": "@/domain/types",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/webTools.ts",
+      "specifier": "zod",
+      "policy": "existing-package"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/webTools.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/webTools.ts",
+      "specifier": "@/db/searchConnections",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/webTools.ts",
+      "specifier": "@/domain/search",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/webTools.ts",
+      "specifier": "@/lib/ai/tavily",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceTools.ts",
+      "specifier": "zod",
+      "policy": "existing-package"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceTools.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceTools.ts",
+      "specifier": "@/db/references",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceTools.ts",
+      "specifier": "@/domain/referenceInput",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/memoryTools.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/memoryTools.ts",
+      "specifier": "@/db/memoryRetrieval",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/memoryTools.ts",
+      "specifier": "@/db/projectMemories",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/memoryTools.ts",
+      "specifier": "@/lib/memory/retrieval",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/memoryTools.ts",
+      "specifier": "@/lib/memory/schema",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/memoryTools.ts",
+      "specifier": "@/domain/agent",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/projectScope.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/projectScope.ts",
+      "specifier": "@/domain/types",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/taskTools.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/taskTools.ts",
+      "specifier": "@/db/agentTasks",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/taskTools.ts",
+      "specifier": "@/db/agentTaskRecords",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/taskTools.ts",
+      "specifier": "@/db/agentTools",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/taskTools.ts",
+      "specifier": "@/domain/agent",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/taskTools.ts",
+      "specifier": "@/domain/agentTaskRecords",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/taskTools.ts",
+      "specifier": "@/lib/ids",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/taskTools.ts",
+      "specifier": "@/db/taskAudioGenerationEvidence",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationTools.ts",
+      "specifier": "@/db/agentGenerationBatches",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationTools.ts",
+      "specifier": "@/domain/agentGenerationBatch",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationTools.ts",
+      "specifier": "zod",
+      "policy": "existing-package"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationTools.ts",
+      "specifier": "@/db/generationPreferences",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationTools.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationTools.ts",
+      "specifier": "@/db/agentGeneration",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "@/db/agentProjectCreation",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "@/db/projects",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "@/db/episodes",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "@/db/cascadeCommands",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "@/db/shots",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "@/db/assets",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "@/db/assetReuse",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "@/db/media",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "@/db/agentTools",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "@/lib/debouncedDraft",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "@/domain/output",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "@/domain/slot",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "@/domain/types",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessTools.ts",
+      "specifier": "@/domain/agent",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/toolErrors.ts",
+      "specifier": "zod",
+      "policy": "existing-package"
+    },
+    {
+      "group": "d05",
+      "from": "lib/memory/schema.ts",
+      "specifier": "zod",
+      "policy": "existing-package"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessSchemas.ts",
+      "specifier": "zod",
+      "policy": "existing-package"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessSchemas.ts",
+      "specifier": "@/domain/types",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessSchemas.ts",
+      "specifier": "@/domain/output",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/libraryToolHelpers.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/libraryToolHelpers.ts",
+      "specifier": "@/db/agentTools",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/libraryToolHelpers.ts",
+      "specifier": "@/lib/debouncedDraft",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/libraryToolHelpers.ts",
+      "specifier": "@/lib/productionRevision",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/libraryToolHelpers.ts",
+      "specifier": "@/domain/agent",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/mimoSpeechSpec.ts",
+      "specifier": "@/lib/audioGeneration/input",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/mimoSpeechSpec.ts",
+      "specifier": "@/domain/audio",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialContent.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialContent.ts",
+      "specifier": "@/domain/materials",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialContent.ts",
+      "specifier": "@/domain/referenceInput",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialContent.ts",
+      "specifier": "@/lib/references/parse",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialContent.ts",
+      "specifier": "@/lib/references/import",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialImageInput.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialImageInput.ts",
+      "specifier": "@/domain/referenceInput",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialImageInput.ts",
+      "specifier": "@/lib/productionRevision",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialImageInput.ts",
+      "specifier": "@/lib/references/parse",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/materialImageInput.ts",
+      "specifier": "@/lib/references/import",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/imageDiscovery.ts",
+      "specifier": "zod",
+      "policy": "existing-package"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/imageDiscovery.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/imageDiscovery.ts",
+      "specifier": "@/db/references",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/imageDiscovery.ts",
+      "specifier": "@/domain/types",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/imageDiscovery.ts",
+      "specifier": "@/domain/slot",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/imageDiscovery.ts",
+      "specifier": "@/domain/imageDiscovery",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/imageDiscovery.ts",
+      "specifier": "@/domain/referenceInput",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/imageDiscovery.ts",
+      "specifier": "@/lib/productionRevision",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceContext.ts",
+      "specifier": "zod",
+      "policy": "existing-package"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceContext.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceContext.ts",
+      "specifier": "@/db/references",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceContext.ts",
+      "specifier": "@/domain/references",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceContext.ts",
+      "specifier": "@/domain/referenceInput",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceContext.ts",
+      "specifier": "@/domain/types",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/imageQueue.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/imageQueue.ts",
+      "specifier": "@/domain/agent",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/imageQueue.ts",
+      "specifier": "@/domain/referenceInput",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/imageQueue.ts",
+      "specifier": "@/lib/ai/visionCapability",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceEvidence.ts",
+      "specifier": "@/domain/imageDiscovery",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceEvidence.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceEvidence.ts",
+      "specifier": "@/domain/references",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/referenceEvidence.ts",
+      "specifier": "@/domain/agentTaskWrapup",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/taskState.ts",
+      "specifier": "@/domain/agent",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationSelection.ts",
+      "specifier": "zod",
+      "policy": "existing-package"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationSelection.ts",
+      "specifier": "@/domain/types",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationSelection.ts",
+      "specifier": "@/domain/output",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationSelection.ts",
+      "specifier": "@/domain/generationPreferences",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/lib/ai/boundedResponse",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/lib/resource/limits",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/lib/ai/safeError",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/db/agentGenerationBatches",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/db/agentGeneration",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/db/agentTools",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/db/connectors",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/db/assets",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/db/shots",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/domain/agentGeneration",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/domain/agent",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/domain/production",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/domain/types",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/lib/debouncedDraft",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/lib/ids",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/domain/output",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/lib/ai/apimart",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/lib/ai/aihubmix",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationRuntime.ts",
+      "specifier": "@/db/agentGenerationTarget",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessWriteReceipt.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessStore.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessStore.ts",
+      "specifier": "@/db/productionShared",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessStore.ts",
+      "specifier": "@/domain/types",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessStore.ts",
+      "specifier": "@/lib/productionRevision",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/businessStore.ts",
+      "specifier": "@/domain/slot",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/writeReceipt.ts",
+      "specifier": "zod",
+      "policy": "existing-package"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationPreparation.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationPreparation.ts",
+      "specifier": "@/db/agentGenerationTarget",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationPreparation.ts",
+      "specifier": "@/db/connectors",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationPreparation.ts",
+      "specifier": "@/domain/agentGeneration",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationPreparation.ts",
+      "specifier": "@/domain/types",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationPreparation.ts",
+      "specifier": "@/domain/production",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationPreparation.ts",
+      "specifier": "@/lib/debouncedDraft",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d05",
+      "from": "lib/agent/generationPreparation.ts",
+      "specifier": "@/lib/productionRevision",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d06",
+      "from": "lib/agent/generationProfiles.ts",
+      "specifier": "zod",
+      "policy": "existing-package"
+    },
+    {
+      "group": "d06",
+      "from": "lib/agent/generationProfiles.ts",
+      "specifier": "@/domain/output",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d06",
+      "from": "lib/agent/generationProfiles.ts",
+      "specifier": "@/lib/productionRevision",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d06",
+      "from": "lib/agent/generationProfiles.ts",
+      "specifier": "@/domain/production",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d06",
+      "from": "lib/agent/businessSchemas.ts",
+      "specifier": "zod",
+      "policy": "existing-package"
+    },
+    {
+      "group": "d06",
+      "from": "lib/agent/businessSchemas.ts",
+      "specifier": "@/domain/types",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d06",
+      "from": "lib/agent/businessSchemas.ts",
+      "specifier": "@/domain/output",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/apimart.ts",
+      "specifier": "@/lib/ai/modelMetadata",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/apimart.ts",
+      "specifier": "@/lib/ai/openaiCompatible",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/apimartAudio.ts",
+      "specifier": "@/lib/resource/limits",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/apimartAudio.ts",
+      "specifier": "@/lib/audioGeneration/taskIds",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/apimartAudio.ts",
+      "specifier": "zod",
+      "policy": "existing-package"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/apimartAudio.ts",
+      "specifier": "@/domain/music",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/aihubmix.ts",
+      "specifier": "@/lib/resource/limits",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/aihubmix.ts",
+      "specifier": "@/lib/ai/modelMetadata",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/mimoSpeech.ts",
+      "specifier": "@/lib/resource/limits",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/mimoSpeech.ts",
+      "specifier": "@/domain/audio",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/mimoSpeech.ts",
+      "specifier": "@/lib/audio/mime",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/openaiCompatible.ts",
+      "specifier": "@/lib/ai/modelMetadata",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/chatStream.ts",
+      "specifier": "@/lib/resource/limits",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/chatStream.ts",
+      "specifier": "@/domain/referenceInput",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/chatStream.ts",
+      "specifier": "@/lib/ai/openaiCompatible",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/chatStream.ts",
+      "specifier": "@/lib/ai/reasoningPolicy",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/chatStream.ts",
+      "specifier": "@/domain/types",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/chatStream.ts",
+      "specifier": "@/domain/agent",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/responsesStream.ts",
+      "specifier": "@/lib/resource/limits",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/responsesStream.ts",
+      "specifier": "@/domain/agent",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/responsesStream.ts",
+      "specifier": "@/lib/ai/chatStream",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/responsesStream.ts",
+      "specifier": "@/lib/ai/openaiCompatible",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/responsesStream.ts",
+      "specifier": "@/lib/ai/reasoningPolicy",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/tavily.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/tavily.ts",
+      "specifier": "@/domain/search",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/tavily.ts",
+      "specifier": "@/lib/ids",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/boundedSse.ts",
+      "specifier": "@/lib/resource/limits",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/referenceWire.ts",
+      "specifier": "@/lib/agent/referenceEvidence",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/referenceWire.ts",
+      "specifier": "@/lib/agent/materialImageInput",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/referenceWire.ts",
+      "specifier": "@/db/database",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/referenceWire.ts",
+      "specifier": "@/domain/agent",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/referenceWire.ts",
+      "specifier": "@/domain/referenceInput",
+      "policy": "existing-current-src-alias"
+    },
+    {
+      "group": "d07",
+      "from": "lib/ai/referenceWire.ts",
+      "specifier": "@/lib/agent/referenceContext",
+      "policy": "existing-current-src-alias"
+    }
+  ],
+  "sharedMockBoundaries": [
+    {
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/modelMetadata.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/modelMetadata.ts",
+      "actualCurrent": "src/lib/ai/modelMetadata.ts",
+      "sha256": "9ea70a6c9172cbab757550440888fbda56a5ec6f89aa95111405accd3db175aa",
+      "outgoingSnapshotImportsNotExecuted": [
+        "./modelBank"
+      ],
+      "policy": "existing-vi.mock-factory-imports-current-unmodified-module"
+    },
+    {
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/visionCapability.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/visionCapability.ts",
+      "actualCurrent": "src/lib/ai/visionCapability.ts",
+      "sha256": "a4d73f99782eea0fa7bd3611b56a540909f34baf879f6bc1dd108479a436f349",
+      "outgoingSnapshotImportsNotExecuted": [
+        "@/domain/referenceInput",
+        "./modelMetadata",
+        "./modelBank"
+      ],
+      "policy": "existing-vi.mock-factory-imports-current-unmodified-module"
+    }
+  ],
+  "protectedHistoricalHashes": {
+    ".trellis/tasks/10-08-src-remediation-d/tools/d05/runtime-catalog.json": "8b82eca074055620fe17c161606e707ed9466bfb89f4ec58a68ae73f13a0218e",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D05-check-snapshot.json": "a31bde56b660b1089ef58759e1a12ff13974e3126851edda036b4b0b4a8af4be",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D06-check-snapshot.json": "465789597e7b7a289c6722df2bc8b1865c3e340be7ed6a11ee457fccb5ab2abb",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D07-check-snapshot.json": "ce3c3aec1650a40d52c2d35e31ecb13d86c1cd732df89522af7386eebc22e522",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D03-check-snapshot.json": "c472259ecaea7fc35c3b34612efab437a111229bc02dd5bc3939dea871349597"
+  }
+}

@@ -1,0 +1,2 @@
+tests/typecheck/agentToolDefinition.ts(100,79): error TS2345: Argument of type '{}' is not assignable to parameter of type 'GenerationSlot'.
+  Type '{}' is missing the following properties from type 'GenerationSlot': prompt, referenceImageIds, referenceVideoIds

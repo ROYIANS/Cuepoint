@@ -1,0 +1,3 @@
+4:14:08 PM [vite] (client) Re-optimizing dependencies because vite config has changed
+Port 5173 is in use, trying another one...
+{"single":{"hashes":3,"flushes":3,"hashOutsideTransactions":true,"flushOutsideTransactions":true},"batch":{"hashes":4,"flushes":3,"hashOutsideTransactions":true,"flushOutsideTransactions":true},"guard":{"blockedManualCommands":2,"guardRecovered":true},"externalRequests":0,"browser":"Chromium native IndexedDB","limitation":"Local synthetic downloaded media; no provider, decoding or full product UI"}

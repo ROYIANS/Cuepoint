@@ -1,0 +1,15 @@
+{
+  "checks": [
+    "独立整D08复核PASS：14实现路径/61after路径，704输入和123静态文件哈希匹配",
+    "修复后类型/10文件169重点测试/13实际原生浏览器场景PASS；修复前159文件2552全量/core/models/build明确分开记录，最终整批将验证当前版本",
+    "累计静态123TS路径142/286→128/273，0新增非复杂度诊断；419TS/2492边0解析错误和值依赖环"
+  ],
+  "resolution": "镜头十个自由文本字段、镜头页场次标题及StoryPage场次标题/内容/时段接入既有debouncedDraft/DraftStatus；共享文本控件固定scope/key/persist生命周期，真实pendingIds状态与同步ref保留缺失/虚拟化行的失败草稿。patchStoryBeat可选文字基线在原事务校验同字段冲突和缺失目标，旧无基线/非文字语义保持；备份/导航/globalflush沿用已有屏障，无新timer/store/全局guard。实际原生13场景及旧实现缺少flush屏障对照有界证明；合成IME/强制detach/本地fixtures限制保留。",
+  "evidence": [
+    ".trellis/tasks/10-08-src-remediation-d/research/D08-implementation.md",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D08-static-summary.json",
+    ".trellis/tasks/10-08-src-remediation-d/research/D08-current-ast-summary.json",
+    ".trellis/tasks/10-08-src-remediation-d/research/D08-native-current.json"
+  ],
+  "progress": "2026-10-08 D08/PU06整项独立PASS后关闭，D01–D08全部单元已验证，共38/51修复、E阶段13项待处理。EX01附加serializer整改仍已验证。文字草稿统一既有控制器/字段基线/失败保留和已有flush路由屏障，当前类型/169重点/13原生PASS，静态0新增非复杂度、419TS2492边0值环。修复前全量2552明确保留历史适用性，接下来对最终当前代码运行完整D批次17关口并全范围独立复核，再一次性确认具体提交计划。未提交D代码。"
+}

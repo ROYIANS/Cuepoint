@@ -1,0 +1,32 @@
+[
+  {
+    "name": "typecheck",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "lint"
+    ],
+    "exit": 0,
+    "seconds": 6.93
+  },
+  {
+    "name": "tests",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "test",
+      "--reporter=dot",
+      "--maxWorkers",
+      "4"
+    ],
+    "exit": 0,
+    "seconds": 17.96
+  },
+  {
+    "name": "b01-browser",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/b01-browser-regression.mjs"
+    ],
+    "exit": 1,
+    "seconds": 14.16
+  }
+]

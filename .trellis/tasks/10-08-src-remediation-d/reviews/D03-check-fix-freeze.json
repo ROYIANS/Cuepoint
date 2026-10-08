@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-10-08T11:50:57.177193+08:00",
+  "productFixesFrozen": true,
+  "heavyGatesFinished": true,
+  "scope": "Audio export domain type and UI state; preserve chapter iff chapter, otherwise project fallback",
+  "changed": {
+    "src/components/audio/AudioTimeline.tsx": {
+      "writerAfter": "23ab9178838d924d74a4c6f9e13aaab3bd42a6fe9ada3640a33e772722570d17",
+      "checkAfter": "8ca4c41ba7e4d56bee5c03a6c9223a4d59f9c793f4a95496bbe6ffb4f34eebb5"
+    },
+    "src/lib/audio/exportMix.ts": {
+      "writerAfter": "fb7bd207a2679a565450c0e5224c523ec28080248ecb339eef969be6896e122e",
+      "checkAfter": "acd1f90ce5be24d71e8cfe6b567b65305d253b5885d079449c8f77dc641979be"
+    }
+  },
+  "gates": [
+    {
+      "name": "typecheck",
+      "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D03-check-typecheck.log",
+      "sha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+      "exitCode": 0
+    },
+    {
+      "name": "audio 3 files / 19 tests",
+      "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D03-check-audio-tests.log",
+      "sha256": "cd255a5d8f3b1659df2d218cee503e073abda4b80b3470e8afa4ad765b001655",
+      "exitCode": 0
+    },
+    {
+      "name": "D03 native 0 external / 0 pageerrors",
+      "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D03-check-native.log",
+      "sha256": "ea396d5ebc2849d274f869e48989a71ef3e9292b3721d2c10e4ddce934ecf28c",
+      "exitCode": 0
+    }
+  ],
+  "requiresCoordinatorStaticAstRefresh": true
+}

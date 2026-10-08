@@ -1,0 +1,18 @@
+FAIL output settings SPA guard continues and disallows pending discard; 7 passed; artifacts: /var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/b01-browser-failure-isvokR
+visible dialogs/status []
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.evaluate: TypeError: Cannot read properties of undefined (reading 'navigate')
+    at eval (eval at evaluate (:311:30), <anonymous>:1:20)
+    at UtilityScript.evaluate (<anonymous>:313:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+    at navigate (/Users/xiaomengdao/WebstormProjects/aifenjing/scripts/b01-browser-regression.mjs:62:48)
+    at /Users/xiaomengdao/WebstormProjects/aifenjing/scripts/b01-browser-regression.mjs:166:15
+    at async test (/Users/xiaomengdao/WebstormProjects/aifenjing/scripts/b01-browser-regression.mjs:70:13)
+    at async file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/b01-browser-regression.mjs:162:5 {
+  log: []
+}
+
+Node.js v24.11.0

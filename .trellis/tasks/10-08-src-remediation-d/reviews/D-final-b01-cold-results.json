@@ -1,0 +1,22 @@
+[
+  {
+    "name": "isolated-cold-1",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/b01-browser-regression.mjs"
+    ],
+    "exitCode": 0,
+    "seconds": 21.469087542,
+    "log": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-cold-1.log"
+  },
+  {
+    "name": "isolated-cold-2",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/b01-browser-regression.mjs"
+    ],
+    "exitCode": 0,
+    "seconds": 22.3486765,
+    "log": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-cold-2.log"
+  }
+]

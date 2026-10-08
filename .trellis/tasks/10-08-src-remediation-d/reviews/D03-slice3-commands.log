@@ -1,0 +1,27 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/d03AudioCommands.test.ts (3 tests | 1 failed) 29ms
+   ❯ D03 selection and audio commands (3)
+     × flushes before snapshot, shares decoded buffers, renders outside writes and saves current export evidence 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/d03AudioCommands.test.ts > D03 selection and audio commands > flushes before snapshot, shares decoded buffers, renders outside writes and saves current export evidence
+TypeError: registerDraftFlush is not a function
+ ❯ tests/d03AudioCommands.test.ts:54:25
+     52|             return {blob: new Blob(["rendered"]), durationSec: 3, atte…
+     53|         });
+     54|         const dispose = registerDraftFlush(project.id, async () => {
+       |                         ^
+     55|             expect(Dexie.currentTransaction).toBeNull();
+     56|             const current = await db.audioSegments.get(segment.id);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  11:14:14
+   Duration  250ms (transform 60%, setup 15%, tests 14%, import 10%, worker 1%)
+

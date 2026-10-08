@@ -1,0 +1,8 @@
+
+> cuepoint@0.1.0 lint /Users/xiaomengdao/WebstormProjects/aifenjing
+> tsc -b --pretty false
+
+src/components/agent/chatExecutionFlows.ts(2,26): error TS2305: Module '"@/domain/types"' has no exported member 'Connector'.
+src/components/audio/AudioTimeline.tsx(29,1): error TS6133: 'db' is declared but its value is never read.
+src/components/shots/ShotRow.tsx(36,39): error TS6133: 'column' is declared but its value is never read.
+ ELIFECYCLE  Command failed with exit code 2.

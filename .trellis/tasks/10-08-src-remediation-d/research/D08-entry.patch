@@ -1,0 +1,1187 @@
+NEW src/components/drafts/TextDraftField.tsx
+import {useEffect, useRef} from "react";
+import {useDebouncedDraft, type DraftSaveStatus} from "@/lib/debouncedDraft";
+import {DraftStatus} from "@/components/ui/draft-status";
+import {Input} from "@/components/ui/input";
+import {Textarea} from "@/components/ui/textarea";
+
+type Props = {
+    projectId: string;
+    draftKey: string;
+    value: string;
+    persist: (value: string, baseline: string) => Promise<void>;
+    onStatusChange?: (status: DraftSaveStatus) => void;
+    multiline?: boolean;
+    rows?: number;
+    placeholder?: string;
+    ariaLabel?: string;
+    className?: string;
+    containerClassName?: string;
+    unavailable?: boolean;
+};
+
+/** The key is also a persistence boundary: a controller can never change owners. */
+export function TextDraftField(props: Props) {
+    return <TextDraftControl key={JSON.stringify([props.projectId, props.draftKey])} {...props}/>;
+}
+
+function TextDraftControl({projectId, draftKey, value, persist, onStatusChange, multiline, rows,
+                              placeholder, ariaLabel, className, containerClassName, unavailable}: Props) {
+    const save = useRef(persist).current;
+    const {draft, setDraft, status, error, retry, useLatest} = useDebouncedDraft({
+        initialValue: value, persist: save, scope: projectId, draftKey,
+    });
+    useEffect(() => {onStatusChange?.(status);}, [onStatusChange, status]);
+    const Control = multiline ? Textarea : Input;
+    return <div className={containerClassName} data-text-draft={draftKey}>
+        <Control value={draft} rows={multiline ? rows : undefined} readOnly={unavailable}
+                 placeholder={placeholder} aria-label={ariaLabel} className={className}
+                 onChange={event => {
+                     // Parent retention must see the pending marker before any async write/read.
+                     onStatusChange?.("saving");
+                     setDraft(event.target.value);
+                 }}/>
+        <DraftStatus status={status} error={error} onRetry={() => void retry()} onUseLatest={useLatest}/>
+    </div>;
+}
+
+
+NEW src/components/shots/ShotTextField.tsx
+import {patchShot} from "@/db/shots";
+import type {Shot} from "@/domain/types";
+import {TextDraftField} from "@/components/drafts/TextDraftField";
+import type {TextDraftStatusChange} from "@/lib/useTextDraftRetention";
+import type {TextShotField} from "./shotColumnFields";
+
+export function ShotTextField({shot, field, onDraftStatus, ...control}: {
+    shot: Shot;
+    field: TextShotField | "shotNumber";
+    onDraftStatus?: TextDraftStatusChange;
+} & Pick<Parameters<typeof TextDraftField>[0], "multiline" | "rows" | "placeholder" | "ariaLabel" | "className" | "containerClassName" | "unavailable">) {
+    return <TextDraftField {...control} projectId={shot.projectId} draftKey={`shot:${shot.id}:${field}`}
+                           value={shot[field] ?? ""}
+                           persist={(value, baseline) => patchShot(shot.id, {[field]: value}, {[field]: baseline})}
+                           onStatusChange={status => onDraftStatus?.(shot.id, field, status)}/>;
+}
+
+
+NEW src/components/story/BeatTextField.tsx
+import {patchStoryBeat} from "@/db/episodes";
+import type {StoryBeat} from "@/domain/types";
+import {TextDraftField} from "@/components/drafts/TextDraftField";
+import type {TextDraftStatusChange} from "@/lib/useTextDraftRetention";
+
+export function BeatTextField({projectId, episodeId, beat, field, onDraftStatus, ...control}: {
+    projectId: string;
+    episodeId: string;
+    beat: StoryBeat;
+    field: "title" | "content" | "timeOfDay";
+    onDraftStatus?: TextDraftStatusChange;
+} & Pick<Parameters<typeof TextDraftField>[0], "multiline" | "rows" | "placeholder" | "ariaLabel" | "className" | "containerClassName" | "unavailable">) {
+    return <TextDraftField {...control} projectId={projectId} draftKey={`episode:${episodeId}:beat:${beat.id}:${field}`}
+                           value={beat[field] ?? ""}
+                           persist={(value, baseline) => patchStoryBeat(episodeId, beat.id, {[field]: value}, {[field]: baseline})}
+                           onStatusChange={status => onDraftStatus?.(beat.id, field, status)}/>;
+}
+
+
+NEW src/lib/useTextDraftRetention.ts
+import {useCallback, useMemo, useRef, useState} from "react";
+import type {DraftSaveStatus} from "./debouncedDraft";
+
+export type TextDraftStatusChange = (id: string, field: string, status: DraftSaveStatus) => void;
+
+/** Readable row retention only; persistence and retry belong to debouncedDraft. */
+export function useTextDraftRetention<T extends {id: string}>(loadedRows: T[] | undefined) {
+    const statuses = useRef(new Map<string, Map<string, DraftSaveStatus>>());
+    // The render snapshot drives memo invalidation; the ref above protects the
+    // same input event before React commits this state. Neither owns persistence.
+    const [pendingIds, setPendingIds] = useState<ReadonlySet<string>>(() => new Set());
+    const onStatusChange: TextDraftStatusChange = useCallback((id, field, status) => {
+        const fields = statuses.current.get(id) ?? new Map<string, DraftSaveStatus>();
+        if ((fields.get(field) ?? "saved") === status) return;
+        if (status === "saved") fields.delete(field);
+        else fields.set(field, status);
+        if (fields.size) statuses.current.set(id, fields);
+        else statuses.current.delete(id);
+        setPendingIds(new Set(statuses.current.keys()));
+    }, []);
+    const lastRows = useRef<T[]>([]);
+    const {rows, retainedCount} = useMemo(() => {
+        const retained = lastRows.current.filter(row => pendingIds.has(row.id) &&
+            !loadedRows?.some(current => current.id === row.id));
+        const rows = [...(loadedRows ?? []), ...retained];
+        lastRows.current = rows;
+        return {rows, retainedCount: retained.length};
+    }, [loadedRows, pendingIds]);
+    return {rows, retainedCount, pending: statuses.current.size > 0,
+        isPending: (id: string) => statuses.current.has(id), onStatusChange};
+}
+
+
+--- /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-originals/src/components/shots/ShotRow.tsx	2026-10-08 11:11:25
++++ /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/shots/ShotRow.tsx	2026-10-08 15:34:14
+@@ -1,3 +1,5 @@
++import {ShotTextField} from "./ShotTextField";
++import type {TextDraftStatusChange} from "@/lib/useTextDraftRetention";
+ import {toast} from "sonner";
+ import {useCallback, type CSSProperties} from "react";
+ import {useSortable} from "@dnd-kit/sortable";
+@@ -13,12 +15,10 @@
+ import {Button} from "@/components/ui/button";
+ import {Checkbox} from "@/components/ui/checkbox";
+ import {DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
+-import {Input} from "@/components/ui/input";
+ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+-import {Textarea} from "@/components/ui/textarea";
+ import {DurationInput} from "./DurationInput";
+ import {useShotRowViewport} from "./ShotRowViewport";
+-import {gridColumns, TEXT_SHOT_FIELDS, textShotPatch} from "./shotColumnFields";
++import {gridColumns, TEXT_SHOT_FIELDS} from "./shotColumnFields";
+ 
+ function columnPlaceholder(id: ShotColumnId): string {
+     switch (id) {
+@@ -79,43 +79,10 @@
+ const FLUSH_SELECT_TRIGGER =
+     `${DESIGN_CELL_CHROME} w-full rounded-none border-0 bg-transparent shadow-none focus:ring-0 focus-visible:ring-0 data-[size=default]:h-full dark:bg-transparent dark:hover:bg-transparent`;
+ 
+-function PlainCell({
+-                       value,
+-                       placeholder,
+-                       onCommit,
+-                       chrome = false,
+-                   }: {
+-    value: string;
+-    placeholder: string;
+-    onCommit: (value: string) => void;
+-    /** Capped/centered chrome for design + media shot rows. */
+-    chrome?: boolean;
+-}) {
+-    return (
+-        <div
+-            className={cn(
+-                chrome
+-                    ? // Full-width band: avoid justify-center + field-sizing-content shrinking to a skinny strip
+-                    `${DESIGN_ROW_H} flex w-full min-w-0 items-center overflow-hidden px-2 py-3`
+-                    : "h-full min-h-[124px]",
+-                "w-full min-h-0",
+-            )}
+-        >
+-            <Textarea
+-                value={value}
+-                rows={4}
+-                placeholder={placeholder}
+-                onChange={(event) => onCommit(event.target.value)}
+-                className={cn(
+-                    "h-full w-full min-w-0 resize-none rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 field-sizing-fixed dark:bg-transparent",
+-                    chrome ? "max-h-full overflow-auto" : "min-h-[124px]",
+-                )}
+-            />
+-        </div>
+-    );
+-}
+ 
+ export function ShotRow({
++                     textPending,
++                     onDraftStatus,
+                      shot,
+                      striped,
+                      initiallyVisible,
+@@ -140,6 +107,8 @@
+                      onSlotOpenChange,
+                      unavailable,
+                  }: {
++    textPending?: boolean;
++    onDraftStatus?: TextDraftStatusChange;
+     shot: Shot;
+     striped: boolean;
+     initiallyVisible: boolean;
+@@ -183,7 +152,7 @@
+         setNodeRef(element);
+         rowRef(element);
+     }, [setNodeRef, rowRef]);
+-    const renderContents = nearViewport || active || isDragging;
++    const renderContents = nearViewport || active || isDragging || textPending;
+     const selectedScene = scenes.find((scene) => scene.id === shot.sceneId);
+     const selectedCharacters = characters.filter((character) =>
+         shot.characterIds.includes(character.id),
+@@ -280,10 +249,8 @@
+                         )}
+                     </div>
+                     <div className={cn(DESIGN_CELL_CHROME, "flex-col gap-2")}>
+-                        <Input
+-                            aria-label="镜号"
+-                            value={shot.shotNumber}
+-                            onChange={(event) => void patchShot(shot.id, {shotNumber: event.target.value})}
++                        <ShotTextField shot={shot} field="shotNumber" onDraftStatus={onDraftStatus} unavailable={unavailable}
++                            ariaLabel="镜号"
+                             className="h-8 w-10 border-0 bg-transparent text-center shadow-none focus-visible:ring-0"
+                         />
+                         <Button size="sm" variant="ghost" className="h-7 px-1 text-xs"
+@@ -352,12 +319,10 @@
+                                 />
+                             </div>
+                             <div className="flex h-full min-w-0 border-l">
+-                                <PlainCell
+-                                    chrome
+-                                    value={shot.content}
+-                                    placeholder={columnPlaceholder("content")}
+-                                    onCommit={(content) => void patchShot(shot.id, {content})}
+-                                />
++                                <ShotTextField shot={shot} field="content" onDraftStatus={onDraftStatus} unavailable={unavailable}
++                                    multiline rows={4} placeholder="镜头内容" ariaLabel="镜头内容"
++                                    containerClassName="flex h-full w-full min-w-0 flex-col px-2 py-3"
++                                    className="h-full w-full min-w-0 resize-none border-0 bg-transparent shadow-none field-sizing-fixed"/>
+                             </div>
+                         </>
+                     ) : visibleDefs.map(({id}) => (
+@@ -513,14 +478,10 @@
+                                     </SelectContent>
+                                 </Select>
+                             ) : (
+-                                <PlainCell
+-                                    chrome
+-                                    value={String(shot[TEXT_SHOT_FIELDS[id]] ?? "")}
+-                                    placeholder={columnPlaceholder(id)}
+-                                    onCommit={(value) =>
+-                                        void patchShot(shot.id, textShotPatch(id, value))
+-                                    }
+-                                />
++                                <ShotTextField shot={shot} field={TEXT_SHOT_FIELDS[id]} onDraftStatus={onDraftStatus} unavailable={unavailable}
++                                    multiline rows={4} placeholder={columnPlaceholder(id)} ariaLabel={columnPlaceholder(id)}
++                                    containerClassName="flex h-full w-full min-w-0 flex-col px-2 py-3"
++                                    className="h-full w-full min-w-0 resize-none border-0 bg-transparent shadow-none field-sizing-fixed"/>
+                             )}
+                         </div>
+                     ))}
+
+--- /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-originals/src/components/shots/ShotEditorPage.tsx	2026-10-08 11:09:14
++++ /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/shots/ShotEditorPage.tsx	2026-10-08 15:34:14
+@@ -1,3 +1,5 @@
++import {BeatTextField} from "@/components/story/BeatTextField";
++import {useTextDraftRetention, type TextDraftStatusChange} from "@/lib/useTextDraftRetention";
+ import {gridColumns} from "./shotColumnFields";
+ import {ShotRow} from "./ShotRow";
+ import {ShotRelationsEditor} from "./ShotRelationsEditor";
+@@ -54,7 +56,7 @@
+ } from "react";
+ import {db} from "@/db/database";
+ import {addShot, addShots, deleteShots, duplicateShot, type EpisodeShotBulkPatch, } from "@/db/shots";
+-import {addStoryBeat, deleteStoryBeat, patchStoryBeat, reorderBeats, restoreStoryBeat, updateEpisodeShotFilters} from "@/db/episodes";
++import {addStoryBeat, deleteStoryBeat, reorderBeats, restoreStoryBeat, updateEpisodeShotFilters} from "@/db/episodes";
+ import {setVisibleColumns, updateShotSettings} from "@/db/projects";
+ import {type ColumnDef, normalizeVisibleColumns, SHOT_COLUMNS} from "@/domain/columns";
+ import {
+@@ -163,7 +165,10 @@
+     const onSlotOpenChange = useCallback((shotId: string, open: boolean) => {
+         setOpenSlotShots(counts => ({...counts, [shotId]: Math.max(0, (counts[shotId] ?? 0) + (open ? 1 : -1))}));
+     }, []);
+-    const manualSession = Object.values(openSlotShots).some(count => count > 0) || relationStatus !== "saved";
++    const shotText = useTextDraftRetention(loadedShots);
++    const loadedBeats = useMemo(() => loadedEpisode ? normalizeEpisodeStory(loadedEpisode.story).beats : undefined, [loadedEpisode]);
++    const beatText = useTextDraftRetention(loadedBeats);
++    const manualSession = shotText.pending || beatText.pending || Object.values(openSlotShots).some(count => count > 0) || relationStatus !== "saved";
+     const lastProject = useRef(loadedProject);
+     const lastEpisode = useRef(loadedEpisode);
+     const lastShots = useRef(loadedShots ?? []);
+@@ -172,15 +177,15 @@
+     const {shots, retainedCount} = useMemo(() => {
+         const retained = lastShots.current.filter(shot =>
+             ((openSlotShots[shot.id] ?? 0) > 0 || relationStatus !== "saved" && relationShotId === shot.id) &&
+-            !loadedShots?.some(current => current.id === shot.id));
+-        const current = retained.length > 0 ? [...(loadedShots ?? []), ...retained] : loadedShots ?? [];
++            !shotText.rows.some(current => current.id === shot.id));
++        const current = retained.length > 0 ? [...shotText.rows, ...retained] : shotText.rows;
+         lastShots.current = current;
+-        return {shots: current, retainedCount: retained.length};
+-    }, [loadedShots, openSlotShots, relationStatus, relationShotId]);
++        return {shots: current, retainedCount: retained.length + shotText.retainedCount};
++    }, [shotText.rows, shotText.retainedCount, openSlotShots, relationStatus, relationShotId]);
+     const project = loadedProject ?? (manualSession ? lastProject.current : loadedProject);
+     const episode = loadedEpisode ?? (manualSession ? lastEpisode.current : loadedEpisode);
+-    const unavailable = workspaceUnavailable || !loadedProject || !loadedEpisode || retainedCount > 0;
+-    const relationNavigationGuard = useManualDraftGuard(relationStatus === "error", relationStatus === "saving", () => {
++    const unavailable = workspaceUnavailable || !loadedProject || !loadedEpisode || retainedCount > 0 || beatText.retainedCount > 0;
++    const relationNavigationGuard = useManualDraftGuard(relationStatus === "error", relationStatus === "saving" || shotText.pending || beatText.pending, () => {
+         setRelationStatus("saved");
+         setRelationShotId(undefined);
+     });
+@@ -192,7 +197,10 @@
+     const filters = getEpisodeShotFilters(episode ?? {story: normalizeEpisodeStory(undefined)}, project ?? undefined);
+     const media = useShotMedia(shots);
+     const filtersOn = shotFiltersActive(filters);
+-    const visibleShots = useMemo(() => filterShots(shots, filters, media), [shots, filters, media]);
++    const filteredShots = useMemo(() => filterShots(shots, filters, media), [shots, filters, media]);
++    // A filter change must leave an unresolved field readable, just like virtualization.
++    const visibleShots = filteredShots.concat(shots.filter(shot => shotText.isPending(shot.id) &&
++        !filteredShots.some(current => current.id === shot.id)));
+     const [selecting, setSelecting] = useState(false);
+     const [selected, setSelected] = useState<Set<string>>(new Set());
+     const [confirmDelete, setConfirmDelete] = useState(false);
+@@ -211,7 +219,7 @@
+         useSensor(KeyboardSensor, {coordinateGetter: sortableKeyboardCoordinates}),
+     );
+ 
+-    const beats = normalizeEpisodeStory(episode?.story).beats;
++    const beats = beatText.rows;
+     const beatIdList = beats.map((beat) => beat.id);
+     const grouped = beats.map((beat) => ({
+         beat,
+@@ -220,7 +228,7 @@
+     // Keep SortableContext items in sync with mounted beat blocks; filtered-out
+     // empty groups must not remain in the sortable id list.
+     const visibleGrouped = grouped.filter(
+-        ({shots: beatShots}) => !(filtersOn && beatShots.length === 0),
++        ({beat, shots: beatShots}) => beatText.isPending(beat.id) || !(filtersOn && beatShots.length === 0),
+     );
+     const ungrouped = visibleShots.filter(
+         (shot) => !shot.beatId || !beats.some((beat) => beat.id === shot.beatId),
+@@ -976,6 +984,9 @@
+                                         onDeleteBeat={() => setPendingBeatId(beat.id)}
+                                         onReorderShots={commitShotReorder}
+                                         unavailable={unavailable}
++                                        onShotDraftStatus={shotText.onStatusChange}
++                                        onBeatDraftStatus={beatText.onStatusChange}
++                                        pendingShotIds={shots.filter(shot => shotText.isPending(shot.id)).map(shot => shot.id)}
+                                         onSlotOpenChange={onSlotOpenChange}
+                                         onEditRelations={setRelationShotId}
+                                         onDuplicateShot={(shotId) => void copyShot(shotId)}
+@@ -1005,6 +1016,9 @@
+                                 sensors={sensors}
+                                 onReorderShots={commitShotReorder}
+                                 unavailable={unavailable}
++                                        onShotDraftStatus={shotText.onStatusChange}
++                                        onBeatDraftStatus={beatText.onStatusChange}
++                                        pendingShotIds={shots.filter(shot => shotText.isPending(shot.id)).map(shot => shot.id)}
+                                         onSlotOpenChange={onSlotOpenChange}
+                                         onEditRelations={setRelationShotId}
+                                 onDuplicateShot={(shotId) => void copyShot(shotId)}
+@@ -1125,6 +1139,9 @@
+     onReorderShots: (groupIds: string[], activeId: string, overId: string) => Promise<void>;
+     unavailable: boolean;
+     onSlotOpenChange: (shotId: string, open: boolean) => void;
++    onShotDraftStatus: TextDraftStatusChange;
++    onBeatDraftStatus: TextDraftStatusChange;
++    pendingShotIds: string[];
+     onEditRelations: (shotId: string) => void;
+     onDuplicateShot: (shotId: string) => void;
+ };
+@@ -1162,6 +1179,9 @@
+                            onDuplicateShot,
+                            onEditRelations,
+                            onSlotOpenChange,
++                           onShotDraftStatus,
++                           onBeatDraftStatus,
++                           pendingShotIds,
+                            unavailable,
+                            sortableState,
+                        }: BeatBlockProps & {
+@@ -1205,13 +1225,9 @@
+                     {loose ? (
+                         <p className="text-sm font-medium">未分场</p>
+                     ) : (
+-                        <Input
+-                            value={beat.title}
+-                            onChange={(event) =>
+-                                void patchStoryBeat(episodeId, beat.id, {title: event.target.value})
+-                            }
+-                            className="h-8 max-w-xs"
+-                        />
++                        <BeatTextField projectId={projectId} episodeId={episodeId} beat={beat} field="title"
++                                       onDraftStatus={onBeatDraftStatus} unavailable={unavailable} ariaLabel="场次标题"
++                                       containerClassName="max-w-xs" className="h-8"/>
+                     )}
+                     <p className="text-muted-foreground text-xs">
+                         {shots.length} 镜 · {formatDuration(duration)}
+@@ -1250,6 +1266,8 @@
+                     <SortableContext items={shotIds} strategy={verticalListSortingStrategy}>
+                         {shots.map((shot, index) => (
+                             <ShotRow
++                                textPending={pendingShotIds.includes(shot.id)}
++                                onDraftStatus={onShotDraftStatus}
+                                 key={shot.id}
+                                 shot={shot}
+                                 striped={index % 2 === 1}
+@@ -1289,4 +1307,3 @@
+         </section>
+     );
+ }
+-
+
+--- /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-originals/src/components/story/StoryPage.tsx	2026-10-08 10:34:59
++++ /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/story/StoryPage.tsx	2026-10-08 15:34:14
+@@ -1,7 +1,10 @@
++import {useManualDraftGuard} from "@/lib/useManualDraftGuard";
++import {BeatTextField} from "./BeatTextField";
++import {useTextDraftRetention, type TextDraftStatusChange} from "@/lib/useTextDraftRetention";
+ import {changedDraftFields} from "@/lib/draftConflict";
+ import {useLiveQuery} from "dexie-react-hooks";
+ import {ArrowDown, ArrowUp, Copy, CopyPlus, Plus, Trash2} from "lucide-react";
+-import {useEffect, useRef, useState} from "react";
++import {useEffect, useMemo, useRef, useState} from "react";
+ import {db} from "@/db/database";
+ import {addStoryBeat, deleteStoryBeat, duplicateBeat, patchStoryBeat, reorderBeats, restoreStoryBeat, updateEpisodeDraft} from "@/db/episodes";
+ import {deleteShots} from "@/db/shots";
+@@ -23,9 +26,13 @@
+     return file.type === "text/plain" || file.type === "text/markdown" || file.type === "text/x-markdown";
+ }
+ 
+-export function StoryPage({projectId, episodeId}: { projectId: string; episodeId: string }) {
+-    const project = useLiveQuery(async () => (await db.projects.get(projectId)) ?? null, [projectId]);
+-    const episode = useLiveQuery(
++export function StoryPage(props: {projectId: string; episodeId: string}) {
++    return <StoryScope key={JSON.stringify([props.projectId, props.episodeId])} {...props}/>;
++}
++
++function StoryScope({projectId, episodeId}: {projectId: string; episodeId: string}) {
++    const loadedProject = useLiveQuery(async () => (await db.projects.get(projectId)) ?? null, [projectId]);
++    const loadedEpisode = useLiveQuery(
+         async () => (await db.episodes.get(episodeId)) ?? null,
+         [episodeId],
+     );
+@@ -36,6 +43,17 @@
+         ) ?? [];
+     const scenes =
+         useLiveQuery(() => db.scenes.where("projectId").equals(projectId).toArray(), [projectId]) ?? [];
++    const loadedBeats = useMemo(() => loadedEpisode?.projectId === projectId
++        ? normalizeEpisodeStory(loadedEpisode.story).beats : undefined, [loadedEpisode, projectId]);
++    const beatText = useTextDraftRetention(loadedBeats);
++    const lastProject = useRef(loadedProject);
++    const lastEpisode = useRef(loadedEpisode);
++    if (loadedProject) lastProject.current = loadedProject;
++    if (loadedEpisode?.projectId === projectId) lastEpisode.current = loadedEpisode;
++    const project = loadedProject ?? (beatText.pending ? lastProject.current : loadedProject);
++    const episode = loadedEpisode ?? (beatText.pending ? lastEpisode.current : loadedEpisode);
++    const unavailable = !loadedProject || !loadedEpisode || beatText.retainedCount > 0;
++    const textNavigationGuard = useManualDraftGuard(false, beatText.pending, () => undefined);
+     if (episode === undefined || project === undefined) {
+         return <div className="text-muted-foreground p-8 text-sm">加载故事…</div>;
+     }
+@@ -44,13 +62,19 @@
+     }
+ 
+     return (
++        <>
++        {textNavigationGuard}
+         <StoryEditor
+-            key={episode.id}
++            key={JSON.stringify([episode.projectId, episode.id])}
++            beats={beatText.rows}
++            onBeatDraftStatus={beatText.onStatusChange}
++            unavailable={unavailable}
+             episode={episode}
+             film={project.mode === "film"}
+             characters={characters}
+             scenes={scenes}
+         />
++        </>
+     );
+ }
+ 
+@@ -59,11 +83,17 @@
+ 
+ function StoryEditor({
+                          episode,
++                         beats,
++                         onBeatDraftStatus,
++                         unavailable,
+                          film,
+                          characters,
+                          scenes,
+                      }: {
+     episode: Episode;
++    beats: StoryBeat[];
++    onBeatDraftStatus: TextDraftStatusChange;
++    unavailable: boolean;
+     film: boolean;
+     characters: { id: string; name: string }[];
+     scenes: { id: string; name: string }[];
+@@ -82,7 +112,6 @@
+     const [dragging, setDragging] = useState(false);
+     const scriptRef = useRef<HTMLTextAreaElement>(null);
+     const {registerUndo} = useUndo();
+-    const beats = normalizeEpisodeStory(episode.story).beats;
+ 
+     function updateBeat(id: string, change: Partial<StoryBeat>) {
+         void patchStoryBeat(episode.id, id, change);
+@@ -207,6 +236,7 @@
+ 
+     return (
+         <div className="app-scroll h-full overflow-auto">
++            {unavailable && <p role="alert" className="p-4">当前项目、故事或场次已不可用，未完成的文字仍保留。</p>}
+             <div
+                 className="mx-auto grid max-w-6xl gap-8 px-4 py-6 sm:px-8 sm:py-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(20rem,0.8fr)]">
+                 <section className="min-w-0">
+@@ -307,11 +337,8 @@
+                                 <li key={beat.id} className="bg-card rounded-2xl border p-3">
+                                     <div className="flex items-center gap-2">
+                                         <span className="text-muted-foreground w-6 text-xs">{index + 1}</span>
+-                                        <Input
+-                                            value={beat.title}
+-                                            onChange={(event) => updateBeat(beat.id, {title: event.target.value})}
+-                                            className="h-8"
+-                                        />
++                                        <BeatTextField projectId={episode.projectId} episodeId={episode.id} beat={beat} field="title"
++                                                       onDraftStatus={onBeatDraftStatus} unavailable={unavailable} ariaLabel="场次标题" className="h-8"/>
+                                         <Button
+                                             size="icon-sm"
+                                             variant="ghost"
+@@ -355,12 +382,10 @@
+                                             <Trash2/>
+                                         </Button>
+                                     </div>
+-                                    <Textarea
+-                                        className="mt-2 min-h-20 resize-none"
+-                                        value={beat.content}
+-                                        placeholder="这场发生什么"
+-                                        onChange={(event) => updateBeat(beat.id, {content: event.target.value})}
+-                                    />
++                                    <BeatTextField projectId={episode.projectId} episodeId={episode.id} beat={beat} field="content"
++                                                   onDraftStatus={onBeatDraftStatus} unavailable={unavailable} multiline
++                                                   containerClassName="mt-2" className="min-h-20 resize-none"
++                                                   placeholder="这场发生什么" ariaLabel="场次内容"/>
+                                     <Label className="mt-3 text-[11px]">出场角色</Label>
+                                     <div
+                                         className="mt-1 max-h-28 space-y-1 overflow-auto rounded-lg border px-2 py-1.5">
+@@ -407,12 +432,9 @@
+                                         </div>
+                                         <div>
+                                             <Label className="text-[11px]">时段</Label>
+-                                            <Input
+-                                                className="mt-1 h-8"
+-                                                value={beat.timeOfDay}
+-                                                placeholder="日 / 夜"
+-                                                onChange={(event) => updateBeat(beat.id, {timeOfDay: event.target.value})}
+-                                            />
++                                            <BeatTextField projectId={episode.projectId} episodeId={episode.id} beat={beat} field="timeOfDay"
++                                                           onDraftStatus={onBeatDraftStatus} unavailable={unavailable} className="h-8" containerClassName="mt-1"
++                                                           placeholder="日 / 夜" ariaLabel="时段"/>
+                                         </div>
+                                     </div>
+                                 </li>
+
+--- /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-originals/src/db/episodes.ts	2026-10-08 10:38:30
++++ /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/episodes.ts	2026-10-08 15:29:53
+@@ -216,12 +216,27 @@
+             "title" | "content" | "characterIds" | "sceneId" | "timeOfDay" | "scriptRange"
+         >
+     >,
++    baseline?: Partial<Pick<StoryBeat, "title" | "content" | "timeOfDay">>,
+ ): Promise<void> {
+     await db.transaction("rw", PRODUCTION_TABLES, async () => {
+         const episode = await db.episodes.get(episodeId);
+-        if (!episode) return;
+-        await assertAssetReferences(episode.projectId, patch);
++        if (!episode) {
++            if (baseline) throw new Error("集不存在，无法保存场次文字");
++            return;
++        }
+         const story = normalizeEpisodeStory(episode.story);
++        if (baseline) {
++            await assertVideoProject(episode.projectId);
++            const beat = story.beats.find(item => item.id === beatId);
++            if (!beat) throw new Error("场次不存在，无法保存文字");
++            const textPatch = {
++                ...(Object.hasOwn(patch, "title") ? {title: patch.title} : {}),
++                ...(Object.hasOwn(patch, "content") ? {content: patch.content} : {}),
++                ...(Object.hasOwn(patch, "timeOfDay") ? {timeOfDay: patch.timeOfDay} : {}),
++            };
++            assertDraftBaseline(beat, textPatch, baseline);
++        }
++        await assertAssetReferences(episode.projectId, patch);
+         await db.episodes.put(touch({
+             ...episode,
+             story: {
+
+--- /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-originals/tests/b06EditorSessions.test.ts	2026-10-08 15:34:14
++++ /Users/xiaomengdao/WebstormProjects/aifenjing/tests/b06EditorSessions.test.ts	2026-10-08 15:34:14
+@@ -48,6 +48,7 @@
+ vi.mock("dexie-react-hooks", () => ({useLiveQuery: () => {
+     const host = runtime.active!; return host.results[host.queryIndex++];
+ }}));
++vi.mock("@tanstack/react-router", () => ({useBlocker: () => ({status: "idle"})}));
+ vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
+ vi.mock("@/lib/undo", () => ({useUndo: () => ({registerUndo: vi.fn()})}));
+ 
+@@ -111,7 +112,9 @@
+     await repoEpisodes.updateEpisodeDraft(episode.id, {script: "original", title: "title", logline: "logline"});
+     let current = (await db.episodes.get(episode.id))!;
+     const pageHost = mount([project, current, [], []]);
+-    const element = draw(pageHost, () => StoryPage({projectId: project.id, episodeId: episode.id}))[0];
++    const scope = StoryPage({projectId: project.id, episodeId: episode.id});
++    const element = draw(pageHost, () => (scope.type as (props: unknown) => unknown)(scope.props))
++        .find(node => typeof node.type === "function" && node.type.name === "StoryEditor")!;
+     const host = mount();
+     const render = () => draw(host, () => (element.type as (props: unknown) => unknown)({...element.props, episode: current}));
+     const script = () => render().find(node => node.type === Textarea)!;
+
+NEW tests/d08TextDraftRepository.test.ts
+import {describe, expect, it} from "vitest";
+import {db} from "@/db/database";
+import {createProject} from "@/db/projects";
+import {addStoryBeat, firstEpisode, patchStoryBeat, reorderBeats} from "@/db/episodes";
+import {addShot, patchShot} from "@/db/shots";
+import {addCharacter} from "@/db/assets";
+import {DraftConflictError} from "@/lib/draftConflict";
+import {normalizeEpisodeStory} from "@/domain/types";
+
+async function fixture() {
+    const project = await createProject("D08", "series");
+    const episode = (await firstEpisode(project.id))!;
+    const beat = await addStoryBeat(episode.id);
+    const shot = await addShot(project.id, episode.id, {beatId: beat.id});
+    return {project, episode, beat, shot};
+}
+async function beatRow(episodeId: string, beatId: string) {
+    return normalizeEpisodeStory((await db.episodes.get(episodeId))?.story).beats.find(beat => beat.id === beatId)!;
+}
+
+describe("D08 actual text persistence boundary", () => {
+    it.each(["title", "content", "timeOfDay"] as const)("compares %s in the transaction, preserves unrelated beat changes, and permits convergence", async field => {
+        const {project, episode, beat} = await fixture();
+        const other = await addStoryBeat(episode.id);
+        const character = await addCharacter(project.id);
+        await patchStoryBeat(episode.id, beat.id, {characterIds: [character.id], sceneId: undefined});
+        await reorderBeats(episode.id, [other.id, beat.id]);
+        await patchStoryBeat(episode.id, beat.id, {[field]: "mine"}, {[field]: beat[field]});
+        expect(await beatRow(episode.id, beat.id)).toMatchObject({[field]: "mine", characterIds: [character.id]});
+        expect(normalizeEpisodeStory((await db.episodes.get(episode.id))?.story).beats.map(row => row.id)).toEqual([other.id, beat.id]);
+        await patchStoryBeat(episode.id, beat.id, {[field]: "mine"}, {[field]: beat[field]});
+        await expect(patchStoryBeat(episode.id, beat.id, {[field]: "stale"}, {[field]: beat[field]})).rejects.toBeInstanceOf(DraftConflictError);
+        expect((await beatRow(episode.id, beat.id))[field]).toBe("mine");
+    });
+    it("serializes competing baseline writers and rolls back the whole patch on a conflict", async () => {
+        const {project, episode, beat} = await fixture();
+        const results = await Promise.allSettled([
+            patchStoryBeat(episode.id, beat.id, {content: "A"}, {content: beat.content}),
+            patchStoryBeat(episode.id, beat.id, {content: "B"}, {content: beat.content}),
+        ]);
+        expect(results.map(result => result.status).sort()).toEqual(["fulfilled", "rejected"]);
+        const before = await db.episodes.get(episode.id); const parent = await db.projects.get(project.id);
+        await expect(patchStoryBeat(episode.id, beat.id, {title: "must rollback", content: "C"}, {content: beat.content, title: beat.title})).rejects.toBeInstanceOf(DraftConflictError);
+        expect(await db.episodes.get(episode.id)).toEqual(before);
+        expect(await db.projects.get(project.id)).toEqual(parent);
+    });
+    it.each(["project", "episode", "beat"] as const)("rejects missing %s only for the new baseline path", async missing => {
+        const {project, episode, beat} = await fixture();
+        if (missing === "project") await db.projects.delete(project.id);
+        if (missing === "episode") await db.episodes.delete(episode.id);
+        if (missing === "beat") await db.episodes.update(episode.id, {story: {...normalizeEpisodeStory(episode.story), beats: []}});
+        const before = await db.episodes.get(episode.id);
+        await expect(patchStoryBeat(episode.id, beat.id, {title: "mine"}, {title: beat.title})).rejects.toThrow(/不存在/);
+        expect(await db.episodes.get(episode.id)).toEqual(before);
+        // Legacy text/nontext calls still omit/no-op on missing episode/beat, or touch an orphan episode.
+        await expect(patchStoryBeat(episode.id, beat.id, {title: "legacy", characterIds: []})).resolves.toBeUndefined();
+        if (missing === "beat") expect(normalizeEpisodeStory((await db.episodes.get(episode.id))?.story).beats).toEqual([]);
+    });
+    it("keeps old nontext behavior and normalizes an absent optional text baseline", async () => {
+        const {episode, beat} = await fixture();
+        const current = (await db.episodes.get(episode.id))!;
+        const story = normalizeEpisodeStory(current.story);
+        await db.episodes.update(episode.id, {story: {...story, script: "xy", beats: story.beats.map(row => ({...row, timeOfDay: undefined}))}});
+        await patchStoryBeat(episode.id, beat.id, {timeOfDay: "夜"}, {timeOfDay: ""});
+        await patchStoryBeat(episode.id, beat.id, {scriptRange: {start: 0, end: 2, excerpt: "xy"}, characterIds: []});
+        expect(await beatRow(episode.id, beat.id)).toMatchObject({timeOfDay: "夜", scriptRange: {start: 0, end: 2, excerpt: "xy"}});
+    });
+    it.each(["shotNumber", "content", "notes", "category", "sound", "emotion", "cameraAngle", "cameraGear", "focalLength", "sceneCloseup"] as const)("shot %s uses the accepted field baseline without replacing unrelated actions", async field => {
+        const {shot} = await fixture();
+        await patchShot(shot.id, {durationSec: 7, status: "ready"});
+        await patchShot(shot.id, {[field]: "mine"}, {[field]: shot[field] ?? ""});
+        await expect(patchShot(shot.id, {[field]: "stale"}, {[field]: shot[field] ?? ""})).rejects.toBeInstanceOf(DraftConflictError);
+        expect(await db.shots.get(shot.id)).toMatchObject({[field]: "mine", durationSec: 7, status: "ready", beatId: shot.beatId});
+    });
+    it.each(["project", "episode", "beat", "shot"] as const)("shot text rejects missing %s without resurrecting or mutating a row", async missing => {
+        const {project, episode, beat, shot} = await fixture();
+        if (missing === "project") await db.projects.delete(project.id);
+        if (missing === "episode") await db.episodes.delete(episode.id);
+        if (missing === "beat") await db.episodes.update(episode.id, {story: {...normalizeEpisodeStory(episode.story), beats: []}});
+        if (missing === "shot") await db.shots.delete(shot.id);
+        const before = await db.shots.get(shot.id);
+        await expect(patchShot(shot.id, {content: "mine"}, {content: shot.content})).rejects.toThrow();
+        expect(await db.shots.get(shot.id)).toEqual(before);
+        expect(beat.id).toBe(shot.beatId);
+    });
+});
+
+
+NEW tests/d08TextDraftComponents.test.ts
+import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
+import type {ReactElement} from "react";
+type Effect = {deps?: unknown[]; setup: () => void | (() => void); cleanup?: () => void};
+type Host = {cells: unknown[]; cursor: number; effects: Array<() => void>};
+const runtime = vi.hoisted(() => ({active: undefined as Host | undefined}));
+vi.mock("react", async original => {
+    const react = await original<typeof import("react")>();
+    return {...react,
+        useState: (initial: unknown) => {
+            const host = runtime.active!; const index = host.cursor++;
+            if (!(index in host.cells)) host.cells[index] = typeof initial === "function" ? initial() : initial;
+            return [host.cells[index], (next: unknown) => {
+                host.cells[index] = typeof next === "function" ? next(host.cells[index]) : next;
+            }];
+        },
+        useRef: (initial: unknown) => {
+            const host = runtime.active!; const index = host.cursor++;
+            if (!(index in host.cells)) host.cells[index] = {current: initial};
+            return host.cells[index];
+        },
+        useEffect: (setup: Effect["setup"], deps?: unknown[]) => {
+            const host = runtime.active!; const index = host.cursor++; const previous = host.cells[index] as Effect | undefined;
+            if (!previous || !deps || deps.some((value, i) => !Object.is(value, previous.deps?.[i]))) {
+                const cell: Effect = {deps, setup}; host.cells[index] = cell;
+                host.effects.push(() => {previous?.cleanup?.(); cell.cleanup = setup() || undefined;});
+            }
+        },
+        useMemo: (compute: () => unknown, deps: unknown[]) => {
+            const host = runtime.active!; const index = host.cursor++;
+            const previous = host.cells[index] as {deps: unknown[]; value: unknown} | undefined;
+            if (!previous || deps.some((value, i) => !Object.is(value, previous.deps[i]))) host.cells[index] = {deps, value: compute()};
+            return (host.cells[index] as {value: unknown}).value;
+        },
+        useCallback: (callback: unknown, deps: unknown[]) => {
+            const host = runtime.active!; const index = host.cursor++;
+            const previous = host.cells[index] as {deps: unknown[]; value: unknown} | undefined;
+            if (!previous || deps.some((value, i) => !Object.is(value, previous.deps[i]))) host.cells[index] = {deps, value: callback};
+            return (host.cells[index] as {value: unknown}).value;
+        },
+    };
+});
+import {TextDraftField} from "@/components/drafts/TextDraftField";
+import {ShotTextField} from "@/components/shots/ShotTextField";
+import {BeatTextField} from "@/components/story/BeatTextField";
+import {useTextDraftRetention} from "@/lib/useTextDraftRetention";
+import {flushPendingDrafts} from "@/lib/debouncedDraft";
+import {DraftStatus} from "@/components/ui/draft-status";
+import {Input} from "@/components/ui/input";
+import {DraftConflictError} from "@/lib/draftConflict";
+import {createProject} from "@/db/projects";
+import {addStoryBeat, firstEpisode, patchStoryBeat} from "@/db/episodes";
+import {addShot, patchShot} from "@/db/shots";
+import {db} from "@/db/database";
+
+type Node = ReactElement<Record<string, unknown>>;
+const hosts: Host[] = [];
+function mount() {const host: Host = {cells: [], cursor: 0, effects: []}; hosts.push(host); return host;}
+function nodes(tree: unknown): Node[] {
+    if (Array.isArray(tree)) return tree.flatMap(nodes);
+    if (!tree || typeof tree !== "object" || !("props" in tree)) return [];
+    const node = tree as Node; return [node, ...nodes(node.props.children)];
+}
+function draw<T>(host: Host, run: () => T): T {
+    runtime.active = host; host.cursor = 0;
+    const result = run(); host.effects.splice(0).forEach(effect => effect()); return result;
+}
+function unmount(host: Host) {
+    host.cells.forEach(cell => {
+        if (cell && typeof cell === "object" && "setup" in cell) (cell as Effect).cleanup?.();
+    }); host.cells = [];
+}
+function control(props: Parameters<typeof TextDraftField>[0]) {
+    const host = mount(); let current = props;
+    const render = () => nodes(draw(host, () => {
+        const wrapper = TextDraftField(current);
+        return (wrapper.type as (props: unknown) => unknown)(wrapper.props);
+    }));
+    const change = (value: string) => {
+        (render().find(node => node.type === Input)!.props.onChange as (event: unknown) => void)({target: {value}});
+    };
+    const status = () => render().find(node => node.type === DraftStatus)!.props;
+    return {host, render, change, status, external: (value: string) => {current = {...current, value}; render();},
+        props: (next: typeof props) => {current = next; render();}, value: () => render().find(node => node.type === Input)!.props.value};
+}
+async function settle() {for (let i = 0; i < 8; i++) await Promise.resolve();}
+function deferred() {let resolve!: () => void; const promise = new Promise<void>(done => {resolve = done;}); return {promise, resolve};}
+beforeEach(() => {
+    vi.stubGlobal("document", {visibilityState: "visible", addEventListener: vi.fn(), removeEventListener: vi.fn()});
+    vi.stubGlobal("window", {addEventListener: vi.fn(), removeEventListener: vi.fn()});
+});
+afterEach(async () => {hosts.splice(0).forEach(unmount); await Promise.resolve(); vi.unstubAllGlobals();});
+
+describe("D08 actual shared text control and retention", () => {
+    it("shows edits immediately, marks retention before persistence, serializes newer text and freezes the callback owner", async () => {
+        const gate = deferred(); const writes: Array<[string, string]> = [];
+        const persist = vi.fn(async (value: string, baseline: string) => {writes.push([value, baseline]); if (writes.length === 1) await gate.promise;});
+        const pending = vi.fn(); const foreign = vi.fn(async () => {});
+        const field = control({projectId: "d08-delayed", draftKey: "shot:A:content", value: "original", persist, onStatusChange: pending});
+        field.render(); field.change("first");
+        expect(pending).toHaveBeenLastCalledWith("saving"); expect(writes).toEqual([]); expect(field.value()).toBe("first");
+        const flush = flushPendingDrafts("d08-delayed");
+        expect(writes).toEqual([["first", "original"]]);
+        field.change("newest"); field.props({projectId: "d08-delayed", draftKey: "shot:A:content", value: "original", persist: foreign, onStatusChange: pending});
+        gate.resolve(); await flush;
+        expect(writes).toEqual([["first", "original"], ["newest", "first"]]);
+        expect(foreign).not.toHaveBeenCalled(); expect(field.value()).toBe("newest"); expect(field.status().status).toBe("saved");
+    });
+    it("keeps the initial scalar baseline through remote notifications, failure, retry and explicit latest adoption", async () => {
+        const writes: Array<[string, string]> = []; let reject = true;
+        const field = control({projectId: "d08-conflict", draftKey: "beat:A:title", value: "base", persist: async (value, baseline) => {
+            writes.push([value, baseline]); if (reject) throw new DraftConflictError();
+        }});
+        field.render(); field.change("mine"); field.external("remote");
+        await expect(flushPendingDrafts("d08-conflict")).rejects.toBeInstanceOf(DraftConflictError);
+        expect(field.value()).toBe("mine"); expect(field.status().status).toBe("error");
+        (field.status().onRetry as () => void)(); await settle();
+        expect(writes).toEqual([["mine", "base"], ["mine", "base"]]);
+        (field.status().onUseLatest as () => void)(); expect(field.value()).toBe("remote");
+        reject = false; field.change("merged"); await flushPendingDrafts("d08-conflict");
+        expect(writes.at(-1)).toEqual(["merged", "remote"]);
+    });
+    it("retains an unmounted failure for project flush and restores it on reopen", async () => {
+        let fail = true; const writes: Array<[string, string]> = [];
+        const props = {projectId: "d08-reopen", draftKey: "shot:A:notes", value: "base", persist: async (value: string, baseline: string) => {
+            writes.push([value, baseline]); if (fail) throw new Error("storage unavailable");
+        }};
+        const first = control(props); first.render(); first.change("retained");
+        await expect(flushPendingDrafts(props.projectId)).rejects.toThrow("storage unavailable");
+        unmount(first.host); await expect(flushPendingDrafts(props.projectId)).rejects.toThrow("storage unavailable");
+        const reopened = control(props); reopened.render(); await settle(); expect(reopened.value()).toBe("retained"); expect(reopened.status().status).toBe("error");
+        fail = false; await flushPendingDrafts(props.projectId);
+        expect(writes.at(-1)).toEqual(["retained", "base"]); expect(reopened.status().status).toBe("saved");
+    });
+    it("pins only unresolved matched rows, including a same-turn empty/missing query", () => {
+        const host = mount(); let rows = [{id: "A", title: "A"}, {id: "B", title: "B"}];
+        const render = () => draw(host, () => useTextDraftRetention(rows));
+        const initial = render(); initial.onStatusChange("A", "title", "saving");
+        expect(initial.isPending("A")).toBe(true); rows = []; expect(render().rows).toEqual([{id: "A", title: "A"}]);
+        render().onStatusChange("A", "title", "error"); expect(render().retainedCount).toBe(1);
+        render().onStatusChange("A", "title", "saved"); expect(render().rows).toEqual([]);
+    });
+    it("real shot and beat adapters save through their respective repository baselines", async () => {
+        const project = await createProject("adapter", "series"); const episode = (await firstEpisode(project.id))!;
+        const beat = await addStoryBeat(episode.id); const shot = await addShot(project.id, episode.id);
+        const shotElement = ShotTextField({shot, field: "notes"});
+        const shotField = control(shotElement.props); shotField.render(); shotField.change("note draft");
+        await patchShot(shot.id, {durationSec: 3}); await flushPendingDrafts(project.id);
+        expect(await db.shots.get(shot.id)).toMatchObject({notes: "note draft", durationSec: 3});
+        const beatElement = BeatTextField({projectId: project.id, episodeId: episode.id, beat, field: "title"});
+        const beatField = control(beatElement.props); beatField.render(); beatField.change("local title");
+        await patchStoryBeat(episode.id, beat.id, {title: "remote title"}); beatField.external("remote title");
+        await expect(flushPendingDrafts(project.id)).rejects.toBeInstanceOf(DraftConflictError);
+        expect(beatField.value()).toBe("local title"); (beatField.status().onUseLatest as () => void)();
+        await flushPendingDrafts(project.id); expect(beatField.value()).toBe("remote title");
+    });
+});
+
+
+NEW tests/fixtures/d08/harness.tsx
+import {createRoot} from "react-dom/client";
+import {createRootRoute, createRoute, createRouter, createBrowserHistory, Outlet, RouterProvider} from "@tanstack/react-router";
+import {Toaster} from "sonner";
+import {db} from "@/db/database";
+import * as projects from "@/db/projects";
+import * as episodes from "@/db/episodes";
+import * as shots from "@/db/shots";
+import {StoryPage} from "@/components/story/StoryPage";
+import {ShotEditorPage} from "@/components/shots/ShotEditorPage";
+import {Route as ProjectRoute} from "@/routes/p.$projectId";
+import {UndoProvider} from "@/lib/undo";
+import {flushPendingDrafts} from "@/lib/debouncedDraft";
+import {SHOT_COLUMNS} from "@/domain/columns";
+import {normalizeEpisodeStory} from "@/domain/types";
+import "@/styles.css";
+
+const gates = new Map<string, {promise: Promise<void>; release: () => void}>();
+function hold(key: string) {
+    let release!: () => void;
+    const promise = new Promise<void>(resolve => {release = resolve;});
+    gates.set(key, {promise, release});
+}
+function release(key: string) {gates.get(key)?.release(); gates.delete(key);}
+const root = createRootRoute({component: () => <UndoProvider><Outlet/><Toaster/></UndoProvider>});
+const project = createRoute({getParentRoute: () => root, path: "p/$projectId", component: ProjectRoute.options.component});
+const episode = createRoute({getParentRoute: () => project, path: "e/$episodeId", component: Outlet});
+const story = createRoute({getParentRoute: () => episode, path: "/", component: () => <StoryPage {...story.useParams()}/>});
+const storyboard = createRoute({getParentRoute: () => episode, path: "shots", component: () => <ShotEditorPage {...storyboard.useParams()}/>});
+const away = createRoute({getParentRoute: () => root, path: "away", component: () => <p>left D08 fixture</p>});
+const routeTree = root.addChildren([project.addChildren([episode.addChildren([story, storyboard])]), away]);
+window.history.replaceState(null, "", "/away");
+const router = createRouter({routeTree, history: createBrowserHistory()});
+await db.open();
+async function seed(name: string) {
+    const project = await projects.createProject(name, "series");
+    await db.projects.update(project.id, {columnSettings: {visible: SHOT_COLUMNS.map(column => column.id)}});
+    const episode = (await episodes.firstEpisode(project.id))!;
+    const beat = await episodes.addStoryBeat(episode.id);
+    await episodes.patchStoryBeat(episode.id, beat.id, {title: `${name}场次`, content: `${name}内容`, timeOfDay: "日"});
+    const shot = await shots.addShot(project.id, episode.id, {beatId: beat.id});
+    await shots.patchShot(shot.id, {content: `${name}镜头`, notes: `${name}备注`});
+    // A long actual shot list exercises the existing IntersectionObserver viewport.
+    for (let i = 0; i < 32; i++) await shots.addShot(project.id, episode.id, {beatId: beat.id});
+    return {project, episode: (await db.episodes.get(episode.id))!, beat: normalizeEpisodeStory((await db.episodes.get(episode.id))?.story).beats[0], shot: (await db.shots.get(shot.id))!};
+}
+const a = await seed("A"); const b = await seed("B");
+const control = {db, projects, episodes, shots, a, b, router, hold, release,
+    calls: [] as Array<{command: string; args: unknown[]}>, failures: new Set<string>(),
+    wait: (key: string) => gates.get(key)?.promise,
+    navigate: (url: string) => {void router.navigate({to: url});},
+    location: () => router.history.location.pathname,
+    flush: flushPendingDrafts,
+    detached: false,
+};
+Object.assign(window, {d08: control});
+const view = createRoot(document.getElementById("root")!);
+Object.assign(control, {
+    // Force-remount seam tests retained controller recovery beyond normal guarded navigation.
+    detach: () => {view.render(<p>detached D08 fixture</p>); control.detached = true;},
+    reopen: () => {view.render(<RouterProvider router={router}/>); control.detached = false;},
+});
+view.render(<RouterProvider router={router}/>);
+
+
+NEW tests/fixtures/d08/index.html
+<!doctype html><html lang="zh"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>D08 actual text drafts</title></head><body><div id="root"></div><script type="module" src="./harness.tsx"></script></body></html>
+
+
+NEW scripts/d08-browser-regression.mjs
+import assert from "node:assert/strict";
+import {readFile, writeFile} from "node:fs/promises";
+import {join} from "node:path";
+import {fileURLToPath} from "node:url";
+import {createServer} from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+const {chromium} = await import(process.env.D08_PLAYWRIGHT_PATH ?? "playwright");
+const commands = {"/src/db/shots.ts": "patchShot", "/src/db/episodes.ts": "patchStoryBeat"};
+const originals = ["src/components/shots/ShotRow.tsx", "src/components/shots/ShotEditorPage.tsx", "src/components/story/StoryPage.tsx", "src/db/episodes.ts"];
+const transport = {name: "d08-controlled-storage", enforce: "pre", async transform(source, id) {
+    if (process.env.D08_BASELINE_ROOT) {
+        const path = originals.find(path => id.endsWith(`/${path}`));
+        if (path) source = await readFile(join(process.env.D08_BASELINE_ROOT, path), "utf8");
+    }
+    for (const [suffix, command] of Object.entries(commands)) {
+        if (id.endsWith(suffix)) {
+            source = source.replace(`export async function ${command}(`, `async function _d08_${command}(`);
+            source += `\nexport async function ${command}(...args: Parameters<typeof _d08_${command}>) {
+                const fixture = typeof window === "undefined" ? undefined : window.d08;
+                if (fixture) {
+                    fixture.calls.push({command: "${command}", args});
+                    await fixture.wait("${command}");
+                    if (fixture.failures.has("${command}")) throw new Error("fixture ${command} storage failure");
+                }
+                return _d08_${command}(...args);
+            }`;
+        }
+    }
+    return source;
+}};
+const server = await createServer({configFile: false, plugins: [transport, react(), tailwindcss()],
+    resolve: {alias: {"@": fileURLToPath(new URL("../src", import.meta.url))}}, server: {host: "127.0.0.1", port: 0}});
+let browser;
+const report = {unit: "D08/PU06", baseline: Boolean(process.env.D08_BASELINE_ROOT), status: "running", checks: [], errors: [], externalRequests: 0, downloads: 0,
+    limits: "Actual React pages/router/guards/Dexie/native IndexedDB; controlled command delay/failure, synthetic composition input and force-remount seam. No paid-provider, crash/browser-restart, OS IME, or unmodified full-product E2E claim."};
+try {
+    await server.listen();
+    browser = await chromium.launch({headless: true, ...(process.env.D08_CHROMIUM_PATH ? {executablePath: process.env.D08_CHROMIUM_PATH} : {})});
+    const page = await browser.newPage({viewport: {width: 1440, height: 900}, acceptDownloads: true});
+    page.setDefaultTimeout(10000);
+    page.on("pageerror", error => {report.errors.push(error.message);});
+    page.on("download", () => {report.downloads++;});
+    await page.route("**/*", route => {
+        if (new URL(route.request().url()).hostname !== "127.0.0.1") {report.externalRequests++; return route.abort();}
+        return route.continue();
+    });
+    await page.goto(server.resolvedUrls.local[0] + "tests/fixtures/d08/");
+    await page.waitForFunction(() => Boolean(window.d08));
+    const ids = await page.evaluate(() => ({a: {project: window.d08.a.project.id, episode: window.d08.a.episode.id, beat: window.d08.a.beat.id, shot: window.d08.a.shot.id},
+        b: {project: window.d08.b.project.id, episode: window.d08.b.episode.id, beat: window.d08.b.beat.id, shot: window.d08.b.shot.id}}));
+    const shotPath = owner => `/p/${ids[owner].project}/e/${ids[owner].episode}/shots`;
+    const storyPath = owner => `/p/${ids[owner].project}/e/${ids[owner].episode}`;
+    const navigate = async path => {
+        await page.waitForFunction(() => window.d08.router.history._getBlockers().every(blocker => blocker.enableBeforeUnload !== true));
+        await page.evaluate(path => window.d08.navigate(path), path);
+        await page.waitForFunction(path => window.d08.location() === path, path);
+    };
+    const row = () => page.locator(`#shot-${ids.a.shot}`);
+    const shotField = (label = "备注") => report.baseline ? row().getByPlaceholder(label) : row().getByRole("textbox", {name: label, exact: true});
+    const beatField = (field = "title") => page.locator(`[data-text-draft="episode:${ids.a.episode}:beat:${ids.a.beat}:${field}"]`).getByRole("textbox");
+    const hold = key => page.evaluate(key => window.d08.hold(key), key);
+    const release = key => page.evaluate(key => window.d08.release(key), key);
+    const flush = scope => page.evaluate(scope => window.d08.flush(scope), scope);
+    const expectValue = async (field, value) => {
+        await page.waitForFunction(({selector, value}) => document.querySelector(selector)?.value === value, {selector: await field.evaluate(el => {
+            const owner = el.closest("[data-text-draft]"); return `[data-text-draft="${owner.dataset.textDraft}"] ${el.tagName.toLowerCase()}`;
+        }), value});
+    };
+    const test = async (name, run) => {
+        await run(); assert.deepEqual(report.errors, []); assert.equal(report.externalRequests, 0);
+        report.checks.push({name, status: "PASS"}); console.error(`PASS ${name}`);
+    };
+    await navigate(shotPath("a")); await shotField().waitFor();
+    if (report.baseline) {
+        await test("original direct write has no project draft/backup barrier while storage is delayed", async () => {
+            await hold("patchShot"); await shotField().fill("original delayed text");
+            await page.waitForFunction(() => window.d08.calls.some(call => call.command === "patchShot"));
+            await flush(ids.a.project);
+            assert.equal(await page.evaluate(id => window.d08.db.shots.get(id).then(row => row.notes), ids.a.shot), "A备注");
+            assert.equal(await row().locator("[data-text-draft]").count(), 0);
+            await release("patchShot");
+            await page.waitForFunction(id => window.d08.db.shots.get(id).then(row => row.notes === "original delayed text"), ids.a.shot);
+        });
+    } else {
+        await test("immediate local text, original baseline, serialized newest value and unrelated live merge", async () => {
+            await hold("patchShot"); await shotField().fill("first delayed"); assert.equal(await shotField().inputValue(), "first delayed");
+            await page.waitForFunction(() => window.d08.calls.some(call => call.command === "patchShot"));
+            const first = await page.evaluate(() => window.d08.calls.find(call => call.command === "patchShot"));
+            assert.deepEqual(first.args[2], {notes: "A备注"});
+            await page.evaluate(id => window.d08.db.shots.update(id, {durationSec: 4}), ids.a.shot);
+            await shotField().fill("newest delayed"); assert.equal(await shotField().inputValue(), "newest delayed");
+            await release("patchShot"); await flush(ids.a.project);
+            assert.deepEqual(await page.evaluate(id => window.d08.db.shots.get(id).then(row => ({notes: row.notes, duration: row.durationSec})), ids.a.shot), {notes: "newest delayed", duration: 4});
+            assert.equal(await shotField().inputValue(), "newest delayed");
+        });
+        await test("same-field conflict stays visible through retry, explicit latest then merge", async () => {
+            await hold("patchShot"); await shotField().fill("local conflict");
+            await page.evaluate(id => window.d08.db.shots.update(id, {notes: "remote notes"}), ids.a.shot);
+            assert.equal(await shotField().inputValue(), "local conflict"); await release("patchShot");
+            await row().getByRole("alert").filter({hasText: "其他页面"}).waitFor();
+            await row().getByRole("button", {name: "重试", exact: true}).click();
+            await row().getByRole("alert").filter({hasText: "其他页面"}).waitFor();
+            assert.equal(await shotField().inputValue(), "local conflict");
+            await row().getByRole("button", {name: "采用最新内容", exact: true}).click(); await expectValue(shotField(), "remote notes");
+            await shotField().fill("merged notes"); await flush(ids.a.project);
+            assert.equal(await page.evaluate(id => window.d08.db.shots.get(id).then(row => row.notes), ids.a.shot), "merged notes");
+        });
+        await test("actual project backup blocks failure, retry persists and download contains latest text", async () => {
+            await page.evaluate(() => window.d08.failures.add("patchShot")); await shotField().fill("backup latest");
+            const before = report.downloads;
+            await page.getByRole("button", {name: "备份项目", exact: true}).click();
+            await page.getByText(/备份失败：fixture patchShot storage failure/).waitFor();
+            assert.equal(report.downloads, before); assert.equal(await shotField().inputValue(), "backup latest");
+            await page.evaluate(() => window.d08.failures.delete("patchShot")); await row().getByRole("button", {name: "重试", exact: true}).click();
+            await flush(ids.a.project);
+            const download = page.waitForEvent("download"); await page.getByRole("button", {name: "备份项目", exact: true}).click();
+            const saved = await download; const bytes = await readFile(await saved.path());
+            const {default: JSZip} = await import("jszip"); const zip = await JSZip.loadAsync(bytes);
+            const entry = Object.keys(zip.files).find(name => name.endsWith("shots.json")); assert.ok(entry);
+            const rows = JSON.parse(await zip.file(entry).async("string")); assert.equal(rows.find(row => row.id === ids.a.shot).notes, "backup latest");
+        });
+        await test("pending route departure remains on original owner and permits switching only after save", async () => {
+            await hold("patchShot"); await shotField().fill("A owner final");
+            await page.evaluate(path => window.d08.navigate(path), shotPath("b"));
+            await page.getByRole("alertdialog").filter({hasText: "正在处理修改"}).waitFor();
+            assert.equal(await page.evaluate(() => window.d08.location()), shotPath("a"));
+            assert.equal(await page.getByRole("button", {name: "放弃并离开", exact: true}).count(), 0);
+            await page.getByRole("button", {name: "继续编辑", exact: true}).click();
+            await release("patchShot"); await flush(ids.a.project);
+            await page.waitForFunction(id => document.querySelector(`#shot-${id} [data-text-draft$=":notes"] [role="status"]`)?.textContent === "已保存", ids.a.shot);
+            await navigate(shotPath("b"));
+            await page.locator(`#shot-${ids.b.shot}`).getByRole("textbox", {name: "备注", exact: true}).waitFor();
+            assert.equal(await page.evaluate(id => window.d08.db.shots.get(id).then(row => row.notes), ids.b.shot), "B备注");
+            await navigate(shotPath("a")); await expectValue(shotField(), "A owner final");
+        });
+        await test("synthetic IME composition preserves actual local Chinese text, focus and caret through live writes", async () => {
+            await hold("patchShot"); const input = shotField("镜头内容"); await input.focus();
+            await input.evaluate(el => {
+                el.dispatchEvent(new CompositionEvent("compositionstart", {bubbles: true}));
+                const set = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value").set;
+                set.call(el, "前中文后"); el.dispatchEvent(new InputEvent("input", {bubbles: true, inputType: "insertCompositionText", data: "中文", isComposing: true}));
+                el.setSelectionRange(3, 3);
+            });
+            await page.waitForFunction(() => window.d08.calls.some(call => call.command === "patchShot" && call.args[1].content === "前中文后"));
+            await page.evaluate(id => window.d08.db.shots.update(id, {durationSec: 6}), ids.a.shot);
+            await page.waitForFunction(id => document.querySelector(`#shot-${id} [aria-label="时长（秒）"]`)?.value === "6", ids.a.shot);
+            assert.deepEqual(await input.evaluate(el => ({value: el.value, start: el.selectionStart, end: el.selectionEnd, focused: document.activeElement === el})), {value: "前中文后", start: 3, end: 3, focused: true});
+            await input.evaluate(el => {
+                el.dispatchEvent(new CompositionEvent("compositionend", {bubbles: true, data: "中文"}));
+                el.dispatchEvent(new InputEvent("input", {bubbles: true, inputType: "insertText", data: "中文"}));
+            });
+            await release("patchShot"); await flush(ids.a.project);
+            assert.equal(await page.evaluate(id => window.d08.db.shots.get(id).then(row => row.content), ids.a.shot), "前中文后");
+        });
+        await test("offscreen dirty row remains mounted, clean row virtualizes and reopens persisted text", async () => {
+            await hold("patchShot"); await shotField().fill("virtualized draft");
+            const other = page.locator('[id^="shot-"]').nth(1); await other.click({position: {x: 10, y: 20}});
+            await page.locator("[data-shot-scrollport]").evaluate(el => {el.scrollTop = el.scrollHeight;});
+            await page.waitForFunction(id => {
+                const scroll = document.querySelector("[data-shot-scrollport]"); const row = document.getElementById(`shot-${id}`);
+                return scroll.scrollTop > 2000 && row.getBoundingClientRect().bottom < scroll.getBoundingClientRect().top - 640;
+            }, ids.a.shot);
+            assert.equal(await row().getAttribute("data-shot-mounted"), "true"); assert.equal(await shotField().inputValue(), "virtualized draft");
+            await release("patchShot"); await flush(ids.a.project);
+            await page.waitForFunction(id => document.getElementById(`shot-${id}`).dataset.shotMounted === "false", ids.a.shot);
+            await page.locator("[data-shot-scrollport]").evaluate(el => {el.scrollTop = 0;}); await shotField().waitFor(); await expectValue(shotField(), "virtualized draft");
+        });
+        await test("missing shot retains readable draft, rejects backup/flush and retries on restored original row", async () => {
+            await page.evaluate(async id => {window.d08.savedShot = await window.d08.db.shots.get(id);}, ids.a.shot);
+            await hold("patchShot"); await shotField().fill("missing row local");
+            await page.evaluate(id => window.d08.db.shots.delete(id), ids.a.shot);
+            await page.getByRole("alert").filter({hasText: "不可用"}).waitFor(); assert.equal(await shotField().inputValue(), "missing row local");
+            assert.equal(await shotField().getAttribute("readonly"), ""); await release("patchShot");
+            await assert.rejects(flush(ids.a.project), /镜头不存在/);
+            await row().getByRole("alert").filter({hasText: "镜头不存在"}).waitFor();
+            await page.evaluate(() => window.d08.db.shots.put(window.d08.savedShot));
+            await page.waitForFunction(id => !document.querySelector(`#shot-${id} [aria-label="备注"]`).readOnly, ids.a.shot);
+            await row().getByRole("button", {name: "重试", exact: true}).click(); await flush(ids.a.project); await expectValue(shotField(), "missing row local");
+        });
+        await test("forced unmount keeps failed controller in barrier and reopening restores error/text", async () => {
+            await page.evaluate(() => window.d08.failures.add("patchShot")); await shotField().fill("reopened local");
+            await assert.rejects(flush(ids.a.project), /storage failure/);
+            await page.evaluate(() => window.d08.detach()); await page.getByText("detached D08 fixture").waitFor();
+            await assert.rejects(flush(ids.a.project), /storage failure/);
+            await page.evaluate(() => window.d08.reopen()); await shotField().waitFor(); await expectValue(shotField(), "reopened local");
+            await row().getByRole("alert").filter({hasText: "storage failure"}).waitFor();
+            await page.evaluate(() => window.d08.failures.delete("patchShot")); await row().getByRole("button", {name: "重试", exact: true}).click(); await flush(ids.a.project);
+        });
+        await navigate(storyPath("a")); await beatField().waitFor();
+        await test("StoryPage title/content/time text merge with live episode data and use original per-field baselines", async () => {
+            await hold("patchStoryBeat"); await beatField().fill("new title"); await beatField("content").fill("new content"); await beatField("timeOfDay").fill("夜");
+            await page.evaluate(id => window.d08.db.episodes.update(id, {title: "independent episode title"}), ids.a.episode);
+            assert.equal(await beatField().inputValue(), "new title"); assert.equal(await beatField("content").inputValue(), "new content");
+            await release("patchStoryBeat"); await flush(ids.a.project);
+            const result = await page.evaluate(({episode, beat}) => window.d08.db.episodes.get(episode).then(row => ({title: row.title, beat: row.story.beats.find(row => row.id === beat)})), ids.a);
+            assert.equal(result.title, "independent episode title"); assert.equal(result.beat.title, "new title"); assert.equal(result.beat.content, "new content"); assert.equal(result.beat.timeOfDay, "夜");
+        });
+        await test("missing beat remains visible with error and can retry after the original beat is restored", async () => {
+            await page.evaluate(async id => {window.d08.savedEpisode = await window.d08.db.episodes.get(id);}, ids.a.episode);
+            await hold("patchStoryBeat"); await beatField().fill("missing beat title");
+            await page.evaluate(({episode, beat}) => window.d08.db.episodes.get(episode).then(row => window.d08.db.episodes.update(episode, {story: {...row.story, beats: row.story.beats.filter(row => row.id !== beat)}})), ids.a);
+            await page.getByRole("alert").filter({hasText: "场次已不可用"}).waitFor(); assert.equal(await beatField().inputValue(), "missing beat title");
+            await release("patchStoryBeat"); await assert.rejects(flush(ids.a.project), /场次不存在/);
+            await page.evaluate(() => window.d08.db.episodes.put(window.d08.savedEpisode));
+            await page.waitForFunction(key => !document.querySelector(`[data-text-draft="${key}"] input`).readOnly, `episode:${ids.a.episode}:beat:${ids.a.beat}:title`);
+            await beatField().locator("..").getByRole("button", {name: "重试", exact: true}).click(); await flush(ids.a.project);
+        });
+        await test("missing episode and project keep the current beat text under the actual unavailable shell", async () => {
+            for (const table of ["episodes", "projects"]) {
+                const id = table === "episodes" ? ids.a.episode : ids.a.project;
+                await page.evaluate(async ({table, id}) => {window.d08.savedOwner = await window.d08.db[table].get(id);}, {table, id});
+                await hold("patchStoryBeat"); await beatField("content").fill(`missing ${table} local`);
+                await page.evaluate(({table, id}) => window.d08.db[table].delete(id), {table, id});
+                await page.getByRole("alert").filter({hasText: /不可用/}).first().waitFor(); assert.equal(await beatField("content").inputValue(), `missing ${table} local`);
+                await release("patchStoryBeat"); await assert.rejects(flush(ids.a.project), /不存在/);
+                await page.evaluate(({table}) => window.d08.db[table].put(window.d08.savedOwner), {table});
+                await page.waitForFunction(key => !document.querySelector(`[data-text-draft="${key}"] textarea`).readOnly, `episode:${ids.a.episode}:beat:${ids.a.beat}:content`);
+                await flush(ids.a.project);
+            }
+        });
+        await test("all ten actual shot text controls persist independent field patches with baselines", async () => {
+            await navigate(shotPath("a")); await shotField().waitFor(); await hold("patchShot");
+            const fields = {shotNumber: "镜号", content: "镜头内容", notes: "备注", category: "类别", sound: "声音", emotion: "情绪", cameraAngle: "摄像机角度", cameraGear: "摄像机装备", focalLength: "镜头焦段", sceneCloseup: "场景特写"};
+            const before = await page.evaluate(id => window.d08.db.shots.get(id), ids.a.shot);
+            for (const [field, label] of Object.entries(fields)) {
+                await shotField(label).fill(`all-${field}`); assert.equal(await shotField(label).inputValue(), `all-${field}`);
+            }
+            await release("patchShot"); await flush(ids.a.project);
+            const after = await page.evaluate(id => window.d08.db.shots.get(id), ids.a.shot);
+            for (const field of Object.keys(fields)) assert.equal(after[field], `all-${field}`);
+            for (const field of ["durationSec", "status", "characterIds", "sceneId", "beatId", "firstFrame", "lastFrame", "clip"]) assert.deepEqual(after[field], before[field]);
+        });
+        await test("shot-page beat title uses the shared draft and preserves independent story text", async () => {
+            await navigate(shotPath("a")); const title = beatField(); await title.waitFor();
+            await hold("patchStoryBeat"); await title.fill("shot page beat title");
+            await page.evaluate(({episode, beat}) => window.d08.db.episodes.get(episode).then(row => window.d08.db.episodes.update(episode, {story: {...row.story, beats: row.story.beats.map(row => row.id === beat ? {...row, timeOfDay: "独立时段"} : row)}})), ids.a);
+            assert.equal(await title.inputValue(), "shot page beat title"); await release("patchStoryBeat"); await flush(ids.a.project);
+            const beat = await page.evaluate(({episode, beat}) => window.d08.db.episodes.get(episode).then(row => row.story.beats.find(row => row.id === beat)), ids.a);
+            assert.equal(beat.title, "shot page beat title"); assert.equal(beat.timeOfDay, "独立时段");
+        });
+    }
+    assert.deepEqual(report.errors, []); assert.equal(report.externalRequests, 0); report.status = "PASS";
+} catch (error) {
+    report.status = "FAIL"; report.failure = {message: error.message, stack: error.stack}; process.exitCode = 1;
+} finally {
+    await browser?.close(); await server.close();
+    const output = JSON.stringify(report, null, 2); console.log(output);
+    const reportPath = process.env.D08_REPORT_PATH ?? process.env.REPORT_PATH;
+    if (reportPath) await writeFile(reportPath, output + "\n");
+}
+

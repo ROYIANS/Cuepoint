@@ -1,0 +1,6 @@
+{
+  "before": "dd8688fd18f01ea775a9f17124a2765ef62fc0d7f96794343308e09aaebd11d3",
+  "after": "72f6a6143b5f55043c41bfe6b915a2e566196c5d4d99c16d3216c306f66fc5a6",
+  "scope": "Isolated optimizer cache +explicit actual fixture entries +positive no-extra-document assertion; business assertions/timeouts unchanged",
+  "rootCauseLimit": "Prior blank/missing bridge failures not causally established. Observational cold isolated and forced-cold shared runs each passed19. Port5173 is another repository, not evidence of same-cache concurrency."
+}

@@ -1,0 +1,155 @@
+{
+  "compilerVersion": "5.9.3",
+  "proofs": [
+    {
+      "path": "src/lib/agent/generationProfiles.ts",
+      "start": "const idSpec =",
+      "end": "export function profileRequest",
+      "oldSpanSha256": "ffab46814da46a6d7d41246ffe1a674f1b75ccda62031e401ae0118fc0fddd12",
+      "currentSpanSha256": "ffab46814da46a6d7d41246ffe1a674f1b75ccda62031e401ae0118fc0fddd12",
+      "sameText": true,
+      "sameTokens": true,
+      "tokenCount": 677
+    },
+    {
+      "path": "src/domain/output.ts",
+      "start": "function record",
+      "end": "export function validateGenerationDefaults",
+      "oldSpanSha256": "7319857c220c9f236f7dc1b1a97c134f03ad7cc350eacd1c47dc640d5ddae2f8",
+      "currentSpanSha256": "7319857c220c9f236f7dc1b1a97c134f03ad7cc350eacd1c47dc640d5ddae2f8",
+      "sameText": true,
+      "sameTokens": true,
+      "tokenCount": 52
+    },
+    {
+      "path": "src/domain/output.ts",
+      "start": "/** Common native parameters",
+      "end": "EOF",
+      "oldSpanSha256": "db7c5274178d2428f77efc841e8b6683962b266dddab6dbf9972ed53ea6baa33",
+      "currentSpanSha256": "db7c5274178d2428f77efc841e8b6683962b266dddab6dbf9972ed53ea6baa33",
+      "sameText": true,
+      "sameTokens": true,
+      "tokenCount": 229
+    }
+  ],
+  "sameOwners": [
+    {
+      "path": "src/components/agent/GenerationReview.tsx",
+      "name": "GenerationReview",
+      "sameText": true,
+      "sameTokens": true,
+      "before": "ed34af23026d9fb38d6c5c730d256aad718c05a02a77bf6885e492f4b31d52f6",
+      "after": "ed34af23026d9fb38d6c5c730d256aad718c05a02a77bf6885e492f4b31d52f6"
+    },
+    {
+      "path": "src/components/agent/GenerationReview.tsx",
+      "name": "GenerationReviewForm",
+      "sameText": true,
+      "sameTokens": true,
+      "before": "fddeb6350de36219d20e2186ba11f0829aff2ee71e220a16b901ae24cbb27bf1",
+      "after": "fddeb6350de36219d20e2186ba11f0829aff2ee71e220a16b901ae24cbb27bf1"
+    },
+    {
+      "path": "src/components/workspace/ProjectSettingsPanel.tsx",
+      "name": "SettingSelect",
+      "sameText": true,
+      "sameTokens": true,
+      "before": "dc40a80babb5ec98a3a052a4c75618497e998d406c0b489002b47f9bce79e495",
+      "after": "dc40a80babb5ec98a3a052a4c75618497e998d406c0b489002b47f9bce79e495"
+    },
+    {
+      "path": "src/components/workspace/ProjectSettingsPanel.tsx",
+      "name": "ProjectSettingsPanel",
+      "sameText": true,
+      "sameTokens": true,
+      "before": "fb83ec4526f9ffe95af338175195f921948d04aa86cf81961d2d6b5b5a8e34e1",
+      "after": "fb83ec4526f9ffe95af338175195f921948d04aa86cf81961d2d6b5b5a8e34e1"
+    }
+  ],
+  "fullUnchanged": [
+    {
+      "path": "src/components/agent/AgentGenerationBatches.tsx",
+      "before": "534a1e18afd9053102b33eda9c00b8c2343d465a68ff92183d461b2f9763c1f9",
+      "after": "534a1e18afd9053102b33eda9c00b8c2343d465a68ff92183d461b2f9763c1f9",
+      "sameText": true
+    },
+    {
+      "path": "src/lib/agent/generationReviewDraft.ts",
+      "before": "b7fbbc07965516308c49372b49de3d71c5e04c090b280a42c139e692f011ec6f",
+      "after": "b7fbbc07965516308c49372b49de3d71c5e04c090b280a42c139e692f011ec6f",
+      "sameText": true
+    },
+    {
+      "path": "src/lib/agent/generationSelection.ts",
+      "before": "f86880a721807bad8c252113098047f1f5b770d26c77ebdb22ce351cc433a040",
+      "after": "f86880a721807bad8c252113098047f1f5b770d26c77ebdb22ce351cc433a040",
+      "sameText": true
+    },
+    {
+      "path": "src/lib/agent/generationReview.ts",
+      "before": "21a3f5422428aad9f328b61543a0b4e934cb6438bbd3d0443079f5fa3cb26cf8",
+      "after": "21a3f5422428aad9f328b61543a0b4e934cb6438bbd3d0443079f5fa3cb26cf8",
+      "sameText": true
+    },
+    {
+      "path": "src/lib/agent/generationPreparation.ts",
+      "before": "9f04785d944d98852726da709d630f1c712b2f08e32b353c2e40564362b3e0f0",
+      "after": "9f04785d944d98852726da709d630f1c712b2f08e32b353c2e40564362b3e0f0",
+      "sameText": true
+    },
+    {
+      "path": "src/lib/agent/generationRuntime.ts",
+      "before": "a7218954e91ddeaf0eeed62608ab0e6a9b1dea0509d8bb97f22f888c398d8ec4",
+      "after": "a7218954e91ddeaf0eeed62608ab0e6a9b1dea0509d8bb97f22f888c398d8ec4",
+      "sameText": true
+    },
+    {
+      "path": "src/lib/agent/generationBatchRuntime.ts",
+      "before": "d473de0cc390f7c6975f110f8a8f902f0b7c53dcfc7151b4be585d5ae5a0d1a0",
+      "after": "d473de0cc390f7c6975f110f8a8f902f0b7c53dcfc7151b4be585d5ae5a0d1a0",
+      "sameText": true
+    },
+    {
+      "path": "src/db/projects.ts",
+      "before": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+      "after": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+      "sameText": true
+    },
+    {
+      "path": "src/db/agentTools.ts",
+      "before": "51fc482601a428161a348d750c5b478c036275fb07ac548ef9ea339497022299",
+      "after": "51fc482601a428161a348d750c5b478c036275fb07ac548ef9ea339497022299",
+      "sameText": true
+    },
+    {
+      "path": "src/db/agentGenerationBatches.ts",
+      "before": "e493af7796a052dd00d2c70f7bf9503e894e89d1052b0b9fc57b410867a4c00c",
+      "after": "e493af7796a052dd00d2c70f7bf9503e894e89d1052b0b9fc57b410867a4c00c",
+      "sameText": true
+    },
+    {
+      "path": "src/lib/projectOutputDraft.ts",
+      "before": "82d056980b5bfd8ce0f66f72e77431f3003959de9f08243b0925dc380db7f7ec",
+      "after": "82d056980b5bfd8ce0f66f72e77431f3003959de9f08243b0925dc380db7f7ec",
+      "sameText": true
+    },
+    {
+      "path": "src/db/connectors.ts",
+      "before": "9d4b1ec444561cb578d5cc78184e74e78f7092a68a43551b996dfd6f95a4c91b",
+      "after": "9d4b1ec444561cb578d5cc78184e74e78f7092a68a43551b996dfd6f95a4c91b",
+      "sameText": true
+    },
+    {
+      "path": "src/db/generationPreferences.ts",
+      "before": "c52616d3c3cb4f52836b6a790c2eca05ec7d60416471813624678d441bee9386",
+      "after": "c52616d3c3cb4f52836b6a790c2eca05ec7d60416471813624678d441bee9386",
+      "sameText": true
+    }
+  ],
+  "compilerClone": {
+    "onlyOutputDestinationChanged": true,
+    "originalSha256": "f22e91a160b20d564a172e8f27e167193e8eb87ac4acd1bdf423494ea8a12f9e",
+    "cloneSha256": "627eded1f30a81da79a44be025550a09baa877d44447820993901708cff34298"
+  },
+  "limitations": "Text/token proofs name only inspected complete declarations and unchanged owners, not whole-unit acceptance. Capability/render/default adapters are intentionally changed and require original matrix/native and independent review."
+}

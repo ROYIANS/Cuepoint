@@ -1,0 +1,500 @@
+--- src/lib/ai/apimart.ts (actual entry)
++++ src/lib/ai/apimart.ts (current)
+@@ -1,6 +1,8 @@
++import {requestOnce, readHttpJson} from "./requestBoundary";
++import {isReadAbort} from "./boundedResponse";
+ import {redactCredentials} from "./safeError";
+ import {type ChatModelMetadata, parseModelMetadata} from "@/lib/ai/modelMetadata";
+-import {normalizeBaseUrl} from "@/lib/ai/openaiCompatible";
++import {normalizeBaseUrl} from "./baseUrl";
+ 
+ export type ApimartCredentials = { baseUrl: string; apiKey: string };
+ export type ApimartRequestOptions = { signal?: AbortSignal; fetchImpl?: typeof fetch; idempotencyKey?: string };
+@@ -153,23 +155,20 @@
+     }
+     if (options.signal?.aborted) return failure("aborted", "请求已中止；已提交的远端任务不会因此取消");
+     try {
+-        const response = await (options.fetchImpl ?? fetch)(`${base}${path}`, {
++        const response = await requestOnce(`${base}${path}`, {
+             ...init,
+             headers: {
+                 ...(typeof init.body === "string" ? {"Content-Type": "application/json"} : {}),
+                 ...init.headers,
+                 Authorization: `Bearer ${key}`,
+             },
+-            signal: options.signal,
+-            redirect: "error",
+-            credentials: "omit",
+-        });
++        }, {fetchImpl: options.fetchImpl, signal: options.signal, credentials: "omit", redirect: "error"});
+         // Read as unknown even when HTTP is successful: provider errors also use HTTP 200.
+         let body: unknown;
+         try {
+-            body = await response.json();
++            body = await readHttpJson(response, {success: {kind: "native-json"}, failure: {kind: "native-json"}}, options.signal);
+         } catch (error) {
+-            if (options.signal?.aborted || (error instanceof Error && error.name === "AbortError")) throw error;
++            if (isReadAbort(error, options.signal)) throw error;
+             if (response.ok) return protocol();
+         }
+         const envelope = record(body) ? body : undefined;
+@@ -191,7 +190,7 @@
+         }
+         return envelope ? {ok: true, data: envelope} : protocol();
+     } catch (error) {
+-        if (options.signal?.aborted || (error instanceof Error && error.name === "AbortError")) {
++        if (isReadAbort(error, options.signal)) {
+             return failure("aborted", "请求已中止；已提交的远端任务不会因此取消");
+         }
+         // Do not expose raw transport errors: they may contain credentials or request data.
+--- src/lib/ai/apimartAudio.ts (actual entry)
++++ src/lib/ai/apimartAudio.ts (current)
+@@ -1,10 +1,11 @@
+-import {readResponseJson, readResponseBlob, ResponseLimitError} from "./boundedResponse";
++import {requestOnce, readHttpJson} from "./requestBoundary";
++import {isReadAbort, readResponseBlob, ResponseLimitError} from "./boundedResponse";
+ import {MAX_AUDIO_BYTES, MAX_JSON_BYTES, MAX_ERROR_BYTES} from "@/lib/resource/limits";
+ import {canonicalizeAudioTaskIds, isAudioTaskId} from "@/lib/audioGeneration/taskIds";
+ import {z} from "zod";
+ import {MUSIC_DURATION_LIMITS} from "@/domain/music";
+ import type {ApimartCredentials, ApimartFailure, ApimartRequestOptions, ApimartResult} from "./apimart";
+-import {normalizeBaseUrl} from "./openaiCompatible";
++import {normalizeBaseUrl} from "./baseUrl";
+ import {redactCredentials} from "./safeError";
+ 
+ export const SPEECH_VOICES = ["alloy", "echo", "fable", "onyx", "nova", "shimmer"] as const;
+@@ -92,7 +93,6 @@
+ }
+ 
+ const failure = (kind: ApimartFailure["kind"], message: string): ApimartFailure => ({ok: false, kind, message});
+-const aborted = (error: unknown, signal?: AbortSignal) => signal?.aborted || (error instanceof Error || error instanceof DOMException) && error.name === "AbortError";
+ const protocol = () => failure("protocol", "APIMart 音频响应不符合接口约定；请保留任务记录，不要自动重复提交");
+ 
+ async function audioRequest(credentials: ApimartCredentials, path: string, input: SpeechInput | MusicInput | undefined, options: ApimartRequestOptions): Promise<ApimartResult<{
+@@ -102,20 +102,17 @@
+     if (!key || !safeUrl(base) || new URL(base).search || new URL(base).hash) return failure("validation", "请配置有效的 APIMart 地址和 API Key");
+     if (options.signal?.aborted) return failure("aborted", "请求已停止；远端生成不会因此取消");
+     try {
+-        const response = await (options.fetchImpl ?? fetch)(`${base}${path}`, {
++        const response = await requestOnce(`${base}${path}`, {
+             method: input ? "POST" : "GET",
+             headers: {Authorization: `Bearer ${key}`, ...(input ? {"Content-Type": "application/json"} : {})},
+             ...(input ? {body: JSON.stringify(input)} : {}),
+-            signal: options.signal,
+-            credentials: "omit",
+-            redirect: "error",
+-        });
++        }, {fetchImpl: options.fetchImpl, signal: options.signal, credentials: "omit", redirect: "error"});
+         if (!response.ok) {
+             let body: unknown;
+             try {
+-                body = await readResponseJson(response, MAX_ERROR_BYTES, options.signal);
++                body = await readHttpJson(response, {success: {kind: "bounded-json", maxBytes: MAX_JSON_BYTES, fatalUtf8: true}, failure: {kind: "bounded-json", maxBytes: MAX_ERROR_BYTES, fatalUtf8: true}}, options.signal);
+             } catch (error) {
+-                if (aborted(error, options.signal)) return failure("aborted", "请求已停止；远端生成不会因此取消");
++                if (isReadAbort(error, options.signal)) return failure("aborted", "请求已停止；远端生成不会因此取消");
+                 /* HTTP status remains authoritative for other body failures. */
+             }
+             const error = record(body) && record(body.error) ? body.error : undefined;
+@@ -129,7 +126,7 @@
+         }
+         return {ok: true, response};
+     } catch (error) {
+-        return failure(aborted(error, options.signal) ? "aborted" : "network", "音频请求未能完成；提交结果可能尚未确认，请勿自动重复生成");
++        return failure(isReadAbort(error, options.signal) ? "aborted" : "network", "音频请求未能完成；提交结果可能尚未确认，请勿自动重复生成");
+     }
+ }
+ 
+@@ -140,9 +137,9 @@
+     if (!result.ok) return result;
+     let body: unknown;
+     try {
+-        body = await readResponseJson(result.response, MAX_JSON_BYTES, options.signal);
+-    } catch (error) {
+-        if (aborted(error, options.signal)) return failure("aborted", "请求已停止；远端生成不会因此取消");
++        body = await readHttpJson(result.response, {success: {kind: "bounded-json", maxBytes: MAX_JSON_BYTES, fatalUtf8: true}, failure: {kind: "bounded-json", maxBytes: MAX_ERROR_BYTES, fatalUtf8: true}}, options.signal);
++    } catch (error) {
++        if (isReadAbort(error, options.signal)) return failure("aborted", "请求已停止；远端生成不会因此取消");
+         return error instanceof ResponseLimitError ? failure("protocol", error.message) : protocol();
+     }
+     if (!record(body)) return protocol();
+@@ -154,7 +151,7 @@
+ }
+ 
+ function speechReadFailure(error: unknown, signal?: AbortSignal): ApimartFailure {
+-    if (aborted(error, signal)) return failure("aborted", "请求已停止；远端生成不会因此取消");
++    if (isReadAbort(error, signal)) return failure("aborted", "请求已停止；远端生成不会因此取消");
+     const message = error instanceof ResponseLimitError
+         ? "配音响应超过本地读取限制（音频 32 MiB / JSON 4 MiB）；不会自动重新生成"
+         : "未能读取完整的配音文件；不会自动重新生成";
+@@ -251,11 +248,7 @@
+ }>> {
+     if (!safeUrl(url)) return failure("validation", "音频下载地址无效");
+     try {
+-        const response = await (options.fetchImpl ?? fetch)(url, {
+-            signal: options.signal,
+-            credentials: "omit",
+-            redirect: "error"
+-        });
++        const response = await requestOnce(url, {}, {fetchImpl: options.fetchImpl, signal: options.signal, credentials: "omit", redirect: "error"});
+         if (!response.ok) {
+             await response.body?.cancel().catch(() => undefined);
+             return failure("http", `音频下载失败（${response.status}），可以重试下载`);
+@@ -264,7 +257,7 @@
+         if (!blob.size || (blob.type && !blob.type.startsWith("audio/") && blob.type !== "application/octet-stream")) return protocol();
+         return {ok: true, blob};
+     } catch (error) {
+-        if (aborted(error, options.signal)) return failure("aborted", "音频下载已停止；无需重新生成");
++        if (isReadAbort(error, options.signal)) return failure("aborted", "音频下载已停止；无需重新生成");
+         if (error instanceof ResponseLimitError) return failure("protocol", "音频下载超过本地 32 MiB 限制，已停止读取；保留任务记录，不会重新生成");
+         return failure("network", "音频下载未完成，请重试下载；无需重新生成");
+     }
+--- src/lib/ai/aihubmix.ts (actual entry)
++++ src/lib/ai/aihubmix.ts (current)
+@@ -1,4 +1,6 @@
+-import {readResponseBlob, readResponseJson, ResponseLimitError} from "./boundedResponse";
++import {requestOnce, readHttpJson} from "./requestBoundary";
++import {normalizeBaseUrl} from "./baseUrl";
++import {isReadAbort, readResponseBlob, ResponseLimitError} from "./boundedResponse";
+ import {MAX_MEDIA_DOWNLOAD_BYTES, MAX_JSON_BYTES, MAX_ERROR_BYTES} from "@/lib/resource/limits";
+ import {redactCredentials} from "./safeError";
+ import {type ChatModelMetadata, parseModelMetadata} from "@/lib/ai/modelMetadata";
+@@ -108,13 +110,10 @@
+     return failure("aborted", "请求已中止；已提交的远端任务不会因此取消");
+ }
+ 
+-function isAbort(error: unknown, options: AIHubMixRequestOptions) {
+-    return options.signal?.aborted || (error instanceof Error && error.name === "AbortError");
+-}
+ 
+ function providerRoot(baseUrl: string): string | undefined {
+     try {
+-        const base = baseUrl.trim().replace(/\/+$/, "");
++        const base = normalizeBaseUrl(baseUrl);
+         const url = new URL(base);
+         if (!/^https?:$/.test(url.protocol) || url.username || url.password || url.search || url.hash ||
+             !url.pathname.endsWith("/v1") || /\\|%(?:2f|5c)/i.test(base)) return undefined;
+@@ -159,19 +158,18 @@
+     if (authenticated && !credentials.apiKey.trim()) return failure("validation", "请填写 API Key");
+     if (options.signal?.aborted) return aborted();
+     try {
+-        const response = await (options.fetchImpl ?? fetch)(`${root}${path}`, {
++        const response = await requestOnce(`${root}${path}`, {
+             method: body === undefined ? "GET" : "POST",
+             headers: {
+                 ...(authenticated ? {Authorization: `Bearer ${credentials.apiKey.trim()}`} : {}),
+                 ...(body !== undefined ? {"Content-Type": "application/json"} : {}),
+             },
+             ...(body === undefined ? {} : {body}),
+-            signal: options.signal, redirect: "error", credentials: "omit",
+-        });
++        }, {fetchImpl: options.fetchImpl, signal: options.signal, credentials: "omit", redirect: "error"});
+         if (options.signal?.aborted) return aborted();
+         return {ok: true, response};
+     } catch (error) {
+-        return isAbort(error, options) ? aborted() : failure("network", "无法连接 AIHubMix，请检查网络、Base URL 和浏览器跨域限制；提交结果可能尚未确认");
++        return isReadAbort(error, options.signal) ? aborted() : failure("network", "无法连接 AIHubMix，请检查网络、Base URL 和浏览器跨域限制；提交结果可能尚未确认");
+     }
+ }
+ 
+@@ -184,9 +182,9 @@
+     const {response} = result;
+     let data: unknown;
+     try {
+-        data = await response.json();
++        data = await readHttpJson(response, {success: {kind: "native-json"}, failure: {kind: "native-json"}}, options.signal);
+     } catch (error) {
+-        if (isAbort(error, options)) return aborted();
++        if (isReadAbort(error, options.signal)) return aborted();
+         return response.ok ? protocol() : responseFailure(response, undefined, credentials.apiKey);
+     }
+     if (options.signal?.aborted) return aborted();
+@@ -387,9 +385,9 @@
+         if (!result.response.ok || result.response.headers.get("Content-Type")?.includes("application/json")) {
+             let body: unknown;
+             try {
+-                body = await readResponseJson(result.response, result.response.ok ? MAX_JSON_BYTES : MAX_ERROR_BYTES, options.signal);
++                body = await readHttpJson(result.response, {success: {kind: "bounded-json", maxBytes: MAX_JSON_BYTES, fatalUtf8: true}, failure: {kind: "bounded-json", maxBytes: MAX_ERROR_BYTES, fatalUtf8: true}}, options.signal);
+             } catch (error) {
+-                if (isAbort(error, options)) return aborted();
++                if (isReadAbort(error, options.signal)) return aborted();
+             }
+             return result.response.ok && !(record(body) && body.error != null) ? protocol(task.id) : responseFailure(result.response, body, credentials.apiKey);
+         }
+@@ -397,7 +395,7 @@
+         if (options.signal?.aborted) return aborted();
+         return blob.size > 0 ? {ok: true, blob} : protocol(task.id);
+     } catch (error) {
+-        if (isAbort(error, options)) return aborted();
++        if (isReadAbort(error, options.signal)) return aborted();
+         if (error instanceof ResponseLimitError) return failure("protocol", "AIHubMix 图片/视频下载超过本地 256 MiB 限制，已停止读取；保留任务记录，不会重新生成");
+         return failure("network", "AIHubMix 结果读取失败，请检查网络和浏览器跨域限制");
+     }
+--- src/lib/ai/mimoSpeech.ts (actual entry)
++++ src/lib/ai/mimoSpeech.ts (current)
+@@ -1,9 +1,11 @@
++import {requestOnce} from "./requestBoundary";
+ import {isReadAbort, readErrorText, readResponseText, ResponseLimitError} from "./boundedResponse";
+ import {MAX_AUDIO_BYTES, MAX_JSON_BYTES, MAX_ERROR_BYTES, MAX_SPEECH_ENVELOPE_BYTES} from "@/lib/resource/limits";
+ import type {MimoSpeechSettings} from "@/domain/audio";
+ import {detectAudioMime} from "@/lib/audio/mime";
+ import {collectModelMetadata, parseModelMetadata} from "./modelMetadata";
+-import {type ListModelsResult, normalizeBaseUrl} from "./openaiCompatible";
++import type {ListModelsResult} from "./openaiCompatible";
++import {normalizeBaseUrl} from "./baseUrl";
+ import {redactCredentials} from "./safeError";
+ 
+ export const MIMO_VOICES = ["mimo_default", "冰糖", "茉莉", "苏打", "白桦", "Mia", "Chloe", "Milo", "Dean"] as const;
+@@ -66,14 +68,11 @@
+     if (!config) return fail("validation", "请配置有效的 MiMo Base URL（以 /v1 结尾）和 API Key");
+     if (options.signal?.aborted) return fail("aborted", "请求已停止；远端生成不会因此取消");
+     try {
+-        const response = await (options.fetchImpl ?? fetch)(`${config.base}${path}`, {
++        const response = await requestOnce(`${config.base}${path}`, {
+             method: body === undefined ? "GET" : "POST",
+             headers: {Authorization: `Bearer ${config.key}`, ...(body === undefined ? {} : {"Content-Type": "application/json"})},
+             ...(body === undefined ? {} : {body: JSON.stringify(body)}),
+-            signal: options.signal,
+-            credentials: "omit",
+-            redirect: "error",
+-        });
++        }, {fetchImpl: options.fetchImpl, signal: options.signal, credentials: "omit", redirect: "error"});
+         return await readMimoResponse(response, path === "/models" ? MAX_JSON_BYTES : MAX_SPEECH_ENVELOPE_BYTES, config.key, options.signal);
+     } catch (error) {
+         if (isReadAbort(error, options.signal)) return fail("aborted", "请求已停止；远端生成不会因此取消");
+--- src/lib/ai/tavily.ts (actual entry)
++++ src/lib/ai/tavily.ts (current)
+@@ -1,3 +1,4 @@
++import {requestOnce} from "./requestBoundary";
+ import {readResponseJson, ResponseLimitError} from "./boundedResponse";
+ import {db} from '@/db/database';
+ import {publicWebUrl, type WebFailure, type WebFailureCode, type WebResult, type WebSource} from '@/domain/search';
+@@ -48,11 +49,11 @@
+     }, options.timeoutMs ?? 30_000);
+     const mayHaveRun = path !== 'usage';
+     try {
+-        const response = await (options.fetchImpl ?? fetch)(`https://api.tavily.com/${path}`, {
+-            method: path === 'usage' ? 'GET' : 'POST', credentials: 'omit', redirect: 'error',
++        const response = await requestOnce(`https://api.tavily.com/${path}`, {
++            method: path === 'usage' ? 'GET' : 'POST',
+             headers: {Authorization: `Bearer ${key}`, ...(path !== 'usage' ? {'Content-Type': 'application/json'} : {})},
+-            ...(path !== 'usage' ? {body: JSON.stringify(body)} : {}), signal: controller.signal,
+-        });
++            ...(path !== 'usage' ? {body: JSON.stringify(body)} : {}),
++        }, {fetchImpl: options.fetchImpl, signal: controller.signal, credentials: 'omit', redirect: 'error'});
+         if (!response.ok) {
+             await response.body?.cancel();
+             const code = response.status === 401 || response.status === 403 ? 'authentication' : response.status === 429 ? 'rate_limit' : [402, 432, 433].includes(response.status) ? 'quota' : 'http';
+--- src/lib/ai/openaiCompatible.ts (actual entry)
++++ src/lib/ai/openaiCompatible.ts (current)
+@@ -1,9 +1,9 @@
++import {requestOnce, readHttpJson} from "./requestBoundary";
++import {isReadAbort} from "./boundedResponse";
++import {normalizeBaseUrl} from "./baseUrl";
++export {normalizeBaseUrl} from "./baseUrl";
+ import {redactCredentials} from "./safeError";
+ import {type ChatModelMetadata, collectModelMetadata, parseModelMetadata} from "@/lib/ai/modelMetadata";
+-
+-export function normalizeBaseUrl(baseUrl: string): string {
+-    return baseUrl.trim().replace(/\/+$/, "");
+-}
+ 
+ export function authHeaders(apiKey: string): HeadersInit {
+     return {
+@@ -105,11 +105,24 @@
+     }
+ }
+ 
+-async function readProtocolBody(response: Response): Promise<unknown> {
+-    try {
+-        return await response.json();
+-    } catch (error) {
++async function readProtocolBody(response: Response, signal?: AbortSignal): Promise<unknown> {
++    try {
++        return await readHttpJson(response, {success: {kind: "native-json"}, failure: {kind: "native-json"}}, signal);
++    } catch (error) {
++        if (isReadAbort(error, signal)) throw error;
+         throw new Error(`服务响应解析失败：${error instanceof Error ? error.message : "无效 JSON"}`);
++    }
++}
++
++async function readHttpError(response: Response, signal?: AbortSignal): Promise<string> {
++    try {
++        signal?.throwIfAborted();
++        const text = await response.text();
++        signal?.throwIfAborted();
++        return text;
++    } catch (error) {
++        if (isReadAbort(error, signal)) throw error;
++        return "";
+     }
+ }
+ 
+@@ -126,6 +139,7 @@
+ export async function listModels(
+     input: { baseUrl: string; apiKey: string },
+     fetchImpl: typeof fetch = fetch,
++    options: {signal?: AbortSignal} = {},
+ ): Promise<ListModelsResult> {
+     const base = normalizeBaseUrl(input.baseUrl);
+     const apiKey = input.apiKey.trim();
+@@ -133,15 +147,15 @@
+     if (!apiKey) return {ok: false, message: "请填写 API Key"};
+ 
+     try {
+-        const res = await fetchImpl(modelsUrl(base), {
++        const res = await requestOnce(modelsUrl(base), {
+             method: "GET",
+             headers: authHeaders(apiKey),
+-        });
++        }, {fetchImpl, signal: options.signal, credentials: "same-origin", redirect: "follow"});
+         if (!res.ok) {
+-            const text = await res.text().catch(() => "");
++            const text = await readHttpError(res, options.signal);
+             return {ok: false, message: formatHttpError(res.status, text, apiKey)};
+         }
+-        const {models, metadata} = decodeModelDirectory(await readProtocolBody(res));
++        const {models, metadata} = decodeModelDirectory(await readProtocolBody(res, options.signal));
+         return {ok: true, models, ...(metadata ? {metadata} : {})};
+     } catch (error) {
+         return failure(error, apiKey);
+@@ -155,6 +169,7 @@
+ export async function testConnection(
+     input: TestConnectionInput,
+     fetchImpl: typeof fetch = fetch,
++    options: {signal?: AbortSignal} = {},
+ ): Promise<TestConnectionResult> {
+     const base = normalizeBaseUrl(input.baseUrl);
+     const apiKey = input.apiKey.trim();
+@@ -164,19 +179,20 @@
+     const headers = authHeaders(apiKey);
+     let modelsRes: Response | undefined;
+     try {
+-        modelsRes = await fetchImpl(modelsUrl(base), {method: "GET", headers});
++        modelsRes = await requestOnce(modelsUrl(base), {method: "GET", headers}, {fetchImpl, signal: options.signal, credentials: "same-origin", redirect: "follow"});
+     } catch (error) {
+         // Keep this gate limited to fetch: body/decoder failures must never send a POST.
++        if (isReadAbort(error, options.signal)) return failure(error, apiKey);
+         if (!(error instanceof TypeError)) return failure(error, apiKey);
+     }
+     if (modelsRes) {
+         try {
+             if (modelsRes.ok) {
+-                const {modelCount} = decodeModelDirectory(await readProtocolBody(modelsRes));
++                const {modelCount} = decodeModelDirectory(await readProtocolBody(modelsRes, options.signal));
+                 return {ok: true, via: "models", modelCount};
+             }
+             if (modelsRes.status !== 404 && modelsRes.status !== 405) {
+-                const text = await modelsRes.text().catch(() => "");
++                const text = await readHttpError(modelsRes, options.signal);
+                 return {ok: false, message: formatHttpError(modelsRes.status, text, apiKey)};
+             }
+         } catch (error) {
+@@ -186,7 +202,7 @@
+ 
+     const model = input.defaultModel?.trim() || "gpt-4o-mini";
+     try {
+-        const chatRes = await fetchImpl(chatCompletionsUrl(base), {
++        const chatRes = await requestOnce(chatCompletionsUrl(base), {
+             method: "POST",
+             headers,
+             body: JSON.stringify({
+@@ -194,12 +210,12 @@
+                 messages: [{role: "user", content: "ping"}],
+                 max_tokens: 1,
+             }),
+-        });
++        }, {fetchImpl, signal: options.signal, credentials: "same-origin", redirect: "follow"});
+         if (!chatRes.ok) {
+-            const text = await chatRes.text().catch(() => "");
++            const text = await readHttpError(chatRes, options.signal);
+             return {ok: false, message: formatHttpError(chatRes.status, text, apiKey)};
+         }
+-        validateChatProbe(await readProtocolBody(chatRes));
++        validateChatProbe(await readProtocolBody(chatRes, options.signal));
+         return {ok: true, via: "chat"};
+     } catch (error) {
+         return failure(error, apiKey);
+--- src/lib/ai/chatStream.ts (actual entry)
++++ src/lib/ai/chatStream.ts (current)
+@@ -1,10 +1,12 @@
++import {requestOnce} from "./requestBoundary";
++import {normalizeBaseUrl} from "./baseUrl";
+ import {appendedUtf8Bytes, assertResponseBytes, isReadAbort, readErrorText, readResponseJson, utf8Bytes} from "./boundedResponse";
+ import {readSseEvents} from "./boundedSse";
+ import {MAX_JSON_BYTES, MAX_ERROR_BYTES} from "@/lib/resource/limits";
+ import {redactCredentials} from "./safeError";
+ import {materializeChatMessages} from "./referenceWire";
+ import type {AgentVisionCapability} from "@/domain/referenceInput";
+-import {authHeaders, chatCompletionsUrl, normalizeBaseUrl,} from "@/lib/ai/openaiCompatible";
++import {authHeaders, chatCompletionsUrl,} from "@/lib/ai/openaiCompatible";
+ 
+ import {assertReasoningEffort} from "@/lib/ai/reasoningPolicy";
+ import type {ConnectorDefinitionId} from "@/domain/types";
+@@ -362,16 +364,15 @@
+             definitionId: input.connectorDefinitionId,
+             baseUrl: base
+         } : undefined, model, input.reasoningEffort);
+-        const res = await fetchImpl(chatCompletionsUrl(base), {
++        const res = await requestOnce(chatCompletionsUrl(base), {
+             method: "POST",
+             headers: authHeaders(apiKey),
+-            signal,
+             body: JSON.stringify({
+                 model, ...(input.maxOutputTokens ? (/^(gpt-|o[1-9])/.test(model) ? {max_completion_tokens: input.maxOutputTokens} : {max_tokens: input.maxOutputTokens}) : {}),
+                 messages: await materializeChatMessages(input.messages, input, signal),
+                 stream: true, ...(input.reasoningEffort !== undefined ? {reasoning_effort: input.reasoningEffort} : {}), ...(input.tools?.length ? {tools: input.tools} : {})
+             }),
+-        });
++        }, {fetchImpl, signal, credentials: "same-origin", redirect: "follow"});
+         signal?.throwIfAborted();
+         if (!res.ok) {
+             const body = await readErrorText(res, MAX_ERROR_BYTES, signal);
+--- src/lib/ai/responsesStream.ts (actual entry)
++++ src/lib/ai/responsesStream.ts (current)
+@@ -1,3 +1,5 @@
++import {requestOnce} from "./requestBoundary";
++import {normalizeBaseUrl} from "./baseUrl";
+ import {appendedUtf8Bytes, assertResponseBytes, isReadAbort, readErrorText, readResponseJson, utf8Bytes} from "./boundedResponse";
+ import {readSseEvents} from "./boundedSse";
+ import {MAX_JSON_BYTES, MAX_ERROR_BYTES} from "@/lib/resource/limits";
+@@ -5,7 +7,7 @@
+ import {materializeResponseItems} from "./referenceWire";
+ import type {AgentRequestMessage, AgentResponseItem, AgentTokenUsage, AgentWireToolCall} from "@/domain/agent";
+ import type {StreamChatHandlers, StreamChatInput, StreamChatResult} from "@/lib/ai/chatStream";
+-import {authHeaders, normalizeBaseUrl} from "@/lib/ai/openaiCompatible";
++import {authHeaders} from "@/lib/ai/openaiCompatible";
+ import {assertReasoningEffort} from "@/lib/ai/reasoningPolicy";
+ 
+ export type ResponsesResult = StreamChatResult & { responseOutput?: AgentResponseItem[] };
+@@ -202,8 +204,8 @@
+         if (!input.messages.length && !input.responseItems?.length) throw new Error("消息不能为空");
+         if (input.connectorDefinitionId !== "openai-compatible" && input.connectorDefinitionId !== "aihubmix") throw new Error("当前连接尚未支持 Responses 协议");
+         assertReasoningEffort({definitionId: input.connectorDefinitionId, baseUrl: base}, model, input.reasoningEffort);
+-        const res = await (handlers.fetchImpl ?? fetch)(`${base}/responses`, {
+-            method: "POST", headers: authHeaders(apiKey), signal,
++        const res = await requestOnce(`${base}/responses`, {
++            method: "POST", headers: authHeaders(apiKey),
+             body: JSON.stringify({
+                 model, ...(input.maxOutputTokens ? {max_output_tokens: input.maxOutputTokens} : {}),
+                 input: await materializeResponseItems(input.responseItems ?? toResponseInput(input.messages), input, signal),
+@@ -223,7 +225,7 @@
+                     }))
+                 } : {}),
+             }),
+-        });
++        }, {fetchImpl: handlers.fetchImpl, signal, credentials: "same-origin", redirect: "follow"});
+         if (signal?.aborted) {
+             await res.body?.cancel().catch(() => undefined);
+             signal.throwIfAborted();
+--- src/lib/ai/connectors.ts (actual entry)
++++ src/lib/ai/connectors.ts (current)
+@@ -50,7 +50,7 @@
+         };
+     }
+     if (connector.definitionId !== "apimart") {
+-        const result = await listModels(connector, options.fetchImpl);
++        const result = await listModels(connector, options.fetchImpl, {signal: options.signal});
+         return result.ok ? {...result, incompatibleModels: []} : result;
+     }
+     const result = await listApimartModels(connector, {expand: "category"}, options);

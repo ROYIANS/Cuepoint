@@ -1,0 +1,26 @@
+import {it, expect, vi} from "vitest";
+import {db} from "@/db/database";
+import {createProject, addStyle, addShot, patchEpisodeShots, undoEpisodeShotBulkPatch} from "@/db/repo";
+import * as ids from "@/lib/ids";
+
+it("observes original commands skipping updating hooks on an unchanged touch timestamp", async () => {
+    const clock = vi.spyOn(ids, "nowIso").mockReturnValue("2026-10-08T00:00:00.000Z");
+    try {
+        const project = await createProject("unchanged timestamp probe");
+        let parentHookReached = false;
+        const failCreate = () => {parentHookReached = true; throw new Error("touch fault");};
+        db.projects.hook("updating", failCreate);
+        try {await addStyle(project.id);} finally {db.projects.hook("updating").unsubscribe(failCreate);}
+        expect(parentHookReached).toBe(false);
+        const episode = (await db.episodes.where("projectId").equals(project.id).first())!;
+        const shots = [await addShot(project.id, episode.id), await addShot(project.id, episode.id)];
+        const undo = (await patchEpisodeShots(episode.id, shots.map(s => s.id), {notes: "bulk"}))!;
+        let undoHookReached = false;
+        const failUndo = () => {undoHookReached = true; throw new Error("undo touch fault");};
+        db.projects.hook("updating", failUndo);
+        try {await undoEpisodeShotBulkPatch(undo);} finally {db.projects.hook("updating").unsubscribe(failUndo);}
+        expect(undoHookReached).toBe(false);
+        expect((await db.projects.get(project.id))?.updatedAt).toBe(project.updatedAt);
+        console.log(JSON.stringify({originalRepo: true, parentHookReached, undoHookReached, fixedTimestamp: project.updatedAt, explanation: "unchanged timestamps produce no effective project update"}));
+    } finally {clock.mockRestore();}
+});

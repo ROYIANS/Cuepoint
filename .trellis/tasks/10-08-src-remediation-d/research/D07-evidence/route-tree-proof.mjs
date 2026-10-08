@@ -1,0 +1,20 @@
+import ts from 'typescript';
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+const root='.trellis/tasks/10-08-src-remediation-d/research/D07-evidence';
+const path='src/routeTree.gen.ts';
+const entry=JSON.parse(fs.readFileSync(`${root}/entry.json`,'utf8'));
+const freeze=JSON.parse(fs.readFileSync(`${root}/PRODUCTFROZEN.json`,'utf8'));
+const predecessor='.trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routeTree.gen.ts';
+const original=fs.readFileSync(predecessor,'utf8'),built=fs.readFileSync(path,'utf8');
+const hash=value=>createHash('sha256').update(value).digest('hex');
+if(hash(original)!==entry.hashes[path] || hash(built)!==freeze.testedInputs[path])throw new Error('Route input changed outside this build; do not restore');
+function tokens(text){const scan=ts.createScanner(ts.ScriptTarget.Latest,true,ts.LanguageVariant.Standard,text),result=[];for(let t=scan.scan();t!==ts.SyntaxKind.EndOfFileToken;t=scan.scan())result.push([t,scan.getTokenValue()??scan.getTokenText()]);return result;}
+const a=tokens(original),b=tokens(built);
+if(JSON.stringify(a)!==JSON.stringify(b))throw new Error('Generated routes differ semantically; do not restore');
+fs.writeFileSync(`${root}/route-tree-built.txt`,built);
+fs.mkdirSync(`${root}/before/src`,{recursive:true});fs.writeFileSync(`${root}/before/src/routeTree.gen.ts`,original);
+fs.writeFileSync(`${root}/PRODUCTFROZEN-build.json`,fs.readFileSync(`${root}/PRODUCTFROZEN.json`));
+fs.writeFileSync(path,original);
+const report={path,originalSHA256:hash(original),builtSHA256:hash(built),currentSHA256:hash(fs.readFileSync(path)),sameTokens:true,tokens:a.length,compilerVersion:ts.version,predecessor,provenance:'D07 actual entry hash equals accepted D06 original bytes; current build output equals first D07 freeze hash. Restore only build-generated trivia/quote formatting to original input already type/focused/full tested. No adapter/test/config/runner edits.'};
+fs.writeFileSync(`${root}/route-tree-proof.json`,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));

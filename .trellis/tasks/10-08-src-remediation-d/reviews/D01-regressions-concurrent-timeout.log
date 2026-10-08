@@ -1,0 +1,28 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/agentTools.test.ts (22 tests | 1 failed) 6920ms
+   ❯ durable bounded tool loop (20)
+     × pauses each 32-request segment and resumes without replay or resetting cumulative steps 5008ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/agentTools.test.ts > durable bounded tool loop > pauses each 32-request segment and resumes without replay or resetting cumulative steps
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/agentTools.test.ts:136:3
+    134|     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
+    135|   });
+    136|   it("pauses each 32-request segment and resumes without replay or res…
+       |   ^
+    137|     const run = await begin("full"); const tool = controlled(); let re…
+    138|     const fetcher = vi.fn(async () => toolResponse(tool.name, "{}", `c…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 24 passed (25)
+      Tests  1 failed | 489 passed (490)
+   Start at  10:10:57
+   Duration  11.58s (tests 72%, transform 16%, import 7%, setup 4%)
+

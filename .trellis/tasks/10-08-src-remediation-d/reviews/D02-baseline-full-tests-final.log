@@ -1,0 +1,52 @@
+
+> cuepoint@0.1.0 test /private/tmp/cuepoint-d02/baseline
+> vitest run --maxWorkers 4
+
+
+ RUN  v5.0.1 /private/tmp/cuepoint-d02/baseline
+
+ ❯ tests/parentProjectWrites.test.ts (21 tests | 1 failed) 159ms
+   ❯ prop parent project writes (4)
+     × rolls back the child if touching the existing parent fails 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/parentProjectWrites.test.ts > prop parent project writes > rolls back the child if touching the existing parent fails
+AssertionError: promise resolved "{ …(8) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "createdAt": "2026-10-08T02:44:59.224Z",
++   "id": "prp_e0d3c37c-9847-4aeb-8ab0-24da42710242",
++   "kind": "",
++   "name": "未命名道具",
++   "notes": "",
++   "projectId": "prj_c1e9062d-23f6-4c61-8f26-5b14fc905b86",
++   "slots": {},
++   "updatedAt": "2026-10-08T02:44:59.224Z",
+  }
+
+ ❯ tests/parentProjectWrites.test.ts:44:38
+     42|     db.projects.hook("updating", fail);
+     43|     try {
+     44|       await expect(create(project.id)).rejects.toThrow("injected paren…
+       |                                      ^
+     45|     } finally {
+     46|       db.projects.hook("updating").unsubscribe(fail);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 144 passed (145)
+      Tests  1 failed | 2404 passed (2405)
+   Start at  10:44:48
+   Duration  14.77s (tests 69%, import 11%, setup 11%, transform 8%, worker 1%)
+
+    Isolate  145 workers spawned · ~54ms startup each (spawn + environment, per file)
+             at least ~1.90s faster with isolate: false — reuses workers across files instead of one per file
+
+ ELIFECYCLE  Test failed. See above for more details.

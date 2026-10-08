@@ -1,0 +1,49 @@
+FAIL actual single form model/connector options preserve identity and proposal artifacts /var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/d06-native-failure-h1XYNL
+alerts []
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  [
++   'GPT Image 2',
++   'GPT Image 2.5 Flare',
++   'GPT Image 2.5 Sunburst',
++   'GPT Image 2.5 Ext'
+-   '1:1',
+-   '16:9',
+-   '9:16',
+-   '4:3',
+-   '3:4',
+-   '3:2',
+-   '2:3',
+-   '5:4',
+-   '4:5',
+-   '21:9',
+-   'auto'
+  ]
+
+    at file:///Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/reviews/D06-native.mjs:61:16
+    at async test (file:///Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/reviews/D06-native.mjs:48:14)
+    at async file:///Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/reviews/D06-native.mjs:55:5 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [
+    'GPT Image 2',
+    'GPT Image 2.5 Flare',
+    'GPT Image 2.5 Sunburst',
+    'GPT Image 2.5 Ext'
+  ],
+  expected: [
+    '1:1',  '16:9', '9:16',
+    '4:3',  '3:4',  '3:2',
+    '2:3',  '5:4',  '4:5',
+    '21:9', 'auto'
+  ],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.11.0

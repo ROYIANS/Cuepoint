@@ -1,0 +1,8 @@
+
+> cuepoint@0.1.0 lint /Users/xiaomengdao/WebstormProjects/aifenjing
+> tsc -b --pretty false
+
+src/components/workspace/ProjectSettingsPanel.tsx(228,53): error TS2304: Cannot find name 'apimartImageSizes'.
+src/components/workspace/ProjectSettingsPanel.tsx(235,100): error TS2304: Cannot find name 'IMAGE_QUALITIES'.
+src/domain/generationCapabilities.ts(226,39): error TS2345: Argument of type 'string' is not assignable to parameter of type '"16:9" | "9:16"'.
+ ELIFECYCLE  Command failed with exit code 2.

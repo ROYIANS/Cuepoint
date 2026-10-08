@@ -1,0 +1,202 @@
+{
+  "policy": "Same installed ESLint config; normalize embedded source line numbers as coordinator aggregate comparison does; scoped to five static-remediation sources",
+  "files": [
+    "src/components/agent/AgentChatPage.tsx",
+    "src/components/agent/useChatExecutionSession.ts",
+    "src/components/agent/chatExecutionFlows.ts",
+    "src/components/agent/useChatSelection.ts",
+    "src/components/audio/audioSelection.ts"
+  ],
+  "unresolvedFirstAdded": [],
+  "addedNoncomplexity": [],
+  "results": [
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'AgentChatInner' has a complexity of 104. Maximum allowed is 20.",
+          "line": 56,
+          "column": 1,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 56,
+          "endColumn": 24
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 57 to the 20 allowed.",
+          "line": 56,
+          "column": 10,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 56,
+          "endColumn": 24
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "The 'threadList' logical expression could make the dependencies of useMemo Hook (at line 132) change on every render. To fix this, wrap the initialization of 'threadList' in its own useMemo() Hook.",
+          "line": 88,
+          "column": 11,
+          "nodeType": "VariableDeclarator",
+          "endLine": 88,
+          "endColumn": 37
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "React Hook useEffect has a missing dependency: 'selectedConnector'. Either include it or remove the dependency array.",
+          "line": 205,
+          "column": 8,
+          "nodeType": "ArrayExpression",
+          "endLine": 205,
+          "endColumn": 119,
+          "suggestions": [
+            {
+              "desc": "Update the dependencies array to be: [selectedConnector.id, selectedConnector.definitionId, selectedConnector.baseUrl, selectedConnector.apiKey, selectedConnector]",
+              "fix": {
+                "range": [
+                  9708,
+                  9819
+                ],
+                "text": "[selectedConnector.id, selectedConnector.definitionId, selectedConnector.baseUrl, selectedConnector.apiKey, selectedConnector]"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 448,
+          "column": 32,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 448,
+          "endColumn": 315
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 448,
+          "column": 134,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 448,
+          "endColumn": 315
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 448,
+          "column": 189,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 448,
+          "endColumn": 315
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 473,
+          "column": 23,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 477,
+          "endColumn": 24
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 491,
+          "column": 14,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 522,
+          "endColumn": 14
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 0,
+      "fatalErrorCount": 0,
+      "warningCount": 9,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/useChatExecutionSession.ts",
+      "messages": [],
+      "suppressedMessages": [],
+      "errorCount": 0,
+      "fatalErrorCount": 0,
+      "warningCount": 0,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/chatExecutionFlows.ts",
+      "messages": [],
+      "suppressedMessages": [],
+      "errorCount": 0,
+      "fatalErrorCount": 0,
+      "warningCount": 0,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/useChatSelection.ts",
+      "messages": [
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "React Hook useEffect has a missing dependency: 'activeThread'. Either include it or remove the dependency array.",
+          "line": 39,
+          "column": 8,
+          "nodeType": "ArrayExpression",
+          "endLine": 39,
+          "endColumn": 97,
+          "suggestions": [
+            {
+              "desc": "Update the dependencies array to be: [loaded, activeThread.id, activeThread.connectorId, activeThread.model, connectorList, activeThread]",
+              "fix": {
+                "range": [
+                  2500,
+                  2589
+                ],
+                "text": "[loaded, activeThread.id, activeThread.connectorId, activeThread.model, connectorList, activeThread]"
+              }
+            }
+          ]
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 0,
+      "fatalErrorCount": 0,
+      "warningCount": 1,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/audioSelection.ts",
+      "messages": [],
+      "suppressedMessages": [],
+      "errorCount": 0,
+      "fatalErrorCount": 0,
+      "warningCount": 0,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    }
+  ]
+}

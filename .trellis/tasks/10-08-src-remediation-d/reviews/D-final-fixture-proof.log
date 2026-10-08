@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "testsExactEdits": 5,
+  "exactByteCopies": 61,
+  "relativeEdgesVerified": 133,
+  "protectedHistoryUnchanged": 5,
+  "galleryTokenProof": {
+    "path": "src/components/studio/ProjectGalleryPage.tsx",
+    "typescript": "5.9.3",
+    "kind": "TSX-parser-terminal-kind-and-text",
+    "beforeTokenCount": 3451,
+    "afterTokenCount": 3451,
+    "beforeTokenSha256": "2e4a0c5c63abc4f30a454590e01b76366518003e81819681516f90b40a60737b",
+    "afterTokenSha256": "2e4a0c5c63abc4f30a454590e01b76366518003e81819681516f90b40a60737b",
+    "semanticTokensEqual": true,
+    "exactTrailingNewlinesOnly": true,
+    "removedBytes": 1,
+    "parseErrors": 0
+  }
+}

@@ -1,0 +1,966 @@
+{
+  "status": "PASS",
+  "scope": "All tracked dirty paths plus every untracked root src/tests/scripts file; original task evidence is not production source.",
+  "trackedCommand": [
+    "git",
+    "diff",
+    "--check"
+  ],
+  "trackedExitCode": 0,
+  "trackedDiagnostics": "",
+  "untrackedFiles": [
+    {
+      "path": "scripts/d08-browser-regression.mjs",
+      "sha256": "7414292fb72e33d4b5a38ad0d7e385f0da6ca141d9d9cdb1582fac37df4a47f6",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/components/agent/chatExecutionFlows.ts",
+      "sha256": "edf6a40a9fcca57dd5c64d758a9f69c787dbf294bfb5304b3d92ea0e73a99d3a",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/components/agent/useChatExecutionSession.ts",
+      "sha256": "f70ddaf9b83b5216791efa8ca1a51bef87664fca3f1125d0b492661f2612429b",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/components/agent/useChatSelection.ts",
+      "sha256": "4cb97e08af1420c24d8a9b558fa6620e79871805ed1a4da41e9ada66af8fd676",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/components/audio/audioSelection.ts",
+      "sha256": "8c9c24662529bc32914beb2267ae92e6be4d8ba1408502ef4e5666af05220bb1",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/components/drafts/TextDraftField.tsx",
+      "sha256": "5dc9257466ab21fa752edacdc8ea6f8eb1efbdb14952123400a2cabdc8c696bf",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/components/music/switchMusicVariant.ts",
+      "sha256": "0678ae9a4c7c20c5bfb927e409bad0cb5c21da6c7bc8d0a82f44ec49c7eec58c",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/components/shots/ShotRelationsEditor.tsx",
+      "sha256": "4e7214798e753711170161cbecb33098cf16e29c735d7d5a2972a68829851b22",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/components/shots/ShotRow.tsx",
+      "sha256": "d9091a5004b9a3951e19ffadc46b63f5d366820371fb21598b5b3c827a15a87b",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/components/shots/ShotTextField.tsx",
+      "sha256": "825f7b01d0cfb7457f09a6b938f149299b50abe927f2001aaf3da96664d706d9",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/components/shots/shotColumnFields.ts",
+      "sha256": "2a32f957320a8e53568a3fabed0c9ce18b3295d621cb4d3948345f4f17244973",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/components/shots/shotEditorCommands.ts",
+      "sha256": "6625e197bc6929f90789a722fe5cece14263432a780ea0a32aa03e85d88ba1f3",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/components/shots/useShotEditorKeyboard.ts",
+      "sha256": "e15abfc68d6d63716b92329cb63047d00542dfa53e9a1c9a9f359865c50ef818",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/components/story/BeatTextField.tsx",
+      "sha256": "238f1896beac886ddd2902bd34b8f0a092902f38d74e44984c0c6b2611971c99",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/components/studio/importStudioProject.ts",
+      "sha256": "0e1fead05919ca6de4ea3b975aa71bfeae7cafdf26f1abd51127a2d1d1ef65dd",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/components/workspace/ProjectHomePage.tsx",
+      "sha256": "4571910239f78294664afc3c5b9ba349b9dc3635c89fda5821b18045de13bc11",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/db/agentContextPreview.ts",
+      "sha256": "34f41a02cf66f47c59beccaa224d85f7ce95ca6c8ab3d3800a0224d6095de3c4",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/db/agentGenerationTarget.ts",
+      "sha256": "7fe43005a118308586ba832d00c459a90a772f525b901e6d4cdfd4d13fdebd18",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/db/agentTaskGuards.ts",
+      "sha256": "8df6820136145e10a82aef4c1db89d7c763150858fa96661b92b35a259cd6e7c",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/db/assetReuse.ts",
+      "sha256": "bb81b6f8d9d94255de378db349f0a187600ed2f7146e6c19ac79bfa5b43795b3",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/db/assets.ts",
+      "sha256": "32362eff2c660aaa4f020e093591be90f541e9741468e3e7d2e606164490068d",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/db/cascadeCommands.ts",
+      "sha256": "01363e5054728ccd17aeeadfab92c123dc6411e12ec2ba63530900d0e45e9526",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/db/chat.ts",
+      "sha256": "de30d5a29de339e06f48eeb9c94945c9bad8579c4a5bdd07ce78ecfc34d10287",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/db/connectors.ts",
+      "sha256": "9d4b1ec444561cb578d5cc78184e74e78f7092a68a43551b996dfd6f95a4c91b",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/db/episodes.ts",
+      "sha256": "832812e48f1508d22cbe2bae35752315b3e99209c28bd37f7d3d76cef93b6ea3",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/db/media.ts",
+      "sha256": "0b2105050422434e9f9955f94ee7d3bc165310e62c7fe418eec23944a8efd675",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/db/productionRecords.ts",
+      "sha256": "c4be1a9cbedebbbd11a3a4435fd06f97a7270b05376f50c0e3efe515d51d73e7",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/db/productionShared.ts",
+      "sha256": "afd0e5b49aeb0f00c9f58f69f028e01f21062a2f6ba71741b056aec720797fc3",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/db/projects.ts",
+      "sha256": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/db/shots.ts",
+      "sha256": "fe48dc9ee40950096d91dde9119b56de03a9c1523aa872e5cce090fb833189b2",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/domain/agentToolSelection.ts",
+      "sha256": "2efea8c45ad514225a5c22d78ccd1ecf5525cab7e88d175070a8a53b86eaa097",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/domain/generationCapabilities.ts",
+      "sha256": "4398fc99a4003bda5ea903c54be5673bbc0dd748710d6a58ad9661ca545decef",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/lib/agent/generationPreparation.ts",
+      "sha256": "9f04785d944d98852726da709d630f1c712b2f08e32b353c2e40564362b3e0f0",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/lib/agent/toolDefinition.ts",
+      "sha256": "02c4be1c59dee37c6ef109b6e64f10f515de290e1516e70e9e413f6c60be858a",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/lib/ai/baseUrl.ts",
+      "sha256": "ae51424b8ebac68bf252d235e284694a5793bcb387a3f2deeb58ca71faaa9c7c",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/lib/ai/requestBoundary.ts",
+      "sha256": "c72677ed1736c47f45b64db9145a40405bfc38b2de73ef6af5cde455f968b155",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/lib/audio/buffers.ts",
+      "sha256": "8ae1943a1b592b82faa8bda84e2bfe2d771b453bdd3b552e8fe033fae34a392b",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/lib/audio/exportMix.ts",
+      "sha256": "acd1f90ce5be24d71e8cfe6b567b65305d253b5885d079449c8f77dc641979be",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/lib/packages/audioPackageCodec.ts",
+      "sha256": "e9efd6af64d536bb6319be184d9d550e5f6e316f9e3954927472db0348e2e1ac",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/lib/packages/packageError.ts",
+      "sha256": "88bd42e3b80e971078902ed82aa244128ed998db2364673a46201462982f6f02",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/lib/packages/projectPackageCodec.ts",
+      "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "src/lib/useTextDraftRetention.ts",
+      "sha256": "846dccb58893bf8f3a973c9512cc137eb93022b116e391c99c07486c9f12bf99",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/contextPreviewSnapshot.test.ts",
+      "sha256": "76761422d6614ef86d66681dd1c946981f57895d90bacadb69f7d971eb00eb24",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/d01DependencyBoundaries.test.ts",
+      "sha256": "ae3aa2a154c44fb17cffaff5a68d867eac66efd1aa3faa68606cc0ce97b42f73",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/d02CascadeTransactions.test.ts",
+      "sha256": "150a3d1432ab9f3222ebf19447cefb702333719ac4298b2eb079375bc06502c1",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/d03AudioCommands.test.ts",
+      "sha256": "646e3c5e57815faeed2ce801a673b892c2a2a3ddd9ac6588827a89b9c132e98c",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/d03ChatOwners.test.ts",
+      "sha256": "393e3ae0a7095ea2d8fb94a1853831f03cb6453cb7f332757f324cb126fc0191",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/d03ShotCommands.test.ts",
+      "sha256": "5c2b39b0c74b26fe7cf8f7712793903ae1ed49982553b26ef6b5bc8f4028c33e",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/d05BusinessBranches.test.ts",
+      "sha256": "88406876ac0bf1d346273a22476982e63f4ce60dbf5f8e2ac8bcf92318f95dfd",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/d05SchemaEquivalence.test.ts",
+      "sha256": "336648b590a172fbaad0fe1ebb3f5f8cc6b209c5c1a47a4173f7964dea3d6567",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/d05ToolCatalog.test.ts",
+      "sha256": "cee9063c182c80906a0d03f16a637f0869b7145180274b443e008c69857f0d7b",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/d05ToolMetadata.test.ts",
+      "sha256": "9eaa92b597459ef4f2fc023ba72e1d6d23b45e52cfbec9ff1aea48745b6f5da2",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/d06Capabilities.test.ts",
+      "sha256": "6a80ad83d97a24df1481b91c3aa64d18defb5c68eaab327a6167e8ef5f6c54ac",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/d07RequestBoundary.test.ts",
+      "sha256": "5da6ac89d9e4b3bc5f35f993b88a4c8649e0eb4c3aa0fb43f5867d2fc91d01ea",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/d07RequestWire.test.ts",
+      "sha256": "e88a7a3dd865c44598907608060b0bb8bebb9267c75ed38089660aa749b3ae34",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/d08TextDraftComponents.test.ts",
+      "sha256": "742d3d305ab267a9176f5720829f1c218f3aee287bb59814141aa6eed1830a1f",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/d08TextDraftRepository.test.ts",
+      "sha256": "b330e7270ed33fb10cbad92abcf75cd1bf06aec09c9264d92b2b559d1833a528",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/d01/harness.ts",
+      "sha256": "0ac395c761340e5360502b189a8daba4c8e2c4f0ad1b06c0e1db5621a55c5f8b",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/d02/harness.ts",
+      "sha256": "11c8e579ba22470cfa6cc3cc78a0fc1e2ce1e4065fba7d4f68dd0788752b181b",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/d02/index.html",
+      "sha256": "42cf444746873731995aebf22f352daaf4cfe745bd287b34fb0daeb0917247e0",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/d03/harness.tsx",
+      "sha256": "8261d252968cdd00ea52d74390114599ea443e5acd7e58d9254195d743517e3f",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/d03/index.html",
+      "sha256": "98ea3859da9847e467d3677087d7e55d93d0a24d1edeb622ecd7be46a3e3502e",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/d04/harness.tsx",
+      "sha256": "dcd693c73f5b8627e7978401da272f8055aaf0e5aaca1235325407129627b6c6",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/d04/index.html",
+      "sha256": "1b39f0aae342e11d9bfdbd7e7bc500506d31d100a4972a466ecfd45d67676227",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/d05/catalog.json",
+      "sha256": "e65fd7347d3f0f4f7558d0ce013a388085e026fa4c7528896391358b190a3f21",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/d06/harness.tsx",
+      "sha256": "b6fd8192a90daf0243444ca238838e131f40b12b9216299fe98d426b135cb7b6",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/d06/index.html",
+      "sha256": "646a79caf2be99833fc57820c8c802854d684d254da320cc66f92b1e8acc0f42",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/d08/harness.tsx",
+      "sha256": "919daf2f8a7463dcc357dddb7ed0767df9a22e84c290d8b0d9e5a341cfec3fd4",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/d08/index.html",
+      "sha256": "39d066b347bb2a3f01261f0dd179c71dd5af016bf0e01c0fb2f08789c0c7957d",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/README.md",
+      "sha256": "60e255540838db4cd0be1d74bc51fea062696a67ae3e5d5c7a109737f6a7928d",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/audioGenerationTools.ts",
+      "sha256": "34c64b4d254425d6334370239e007774cf6297bf594cb91603627e92f93ce507",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/audioMusicToolNames.ts",
+      "sha256": "2af929c2c55dc34886165c35ecc2882d764b6e0d6d0ff14e4b96d5c0901d819f",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/audioTools.ts",
+      "sha256": "2d994f95a740cc35221a4ee4c444ce497cea0357c40e0b187fba97b90d926aae",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessSchemas.ts",
+      "sha256": "db589d94729d8229ccc1b7919d2e912015bc68b432423ed2bce7718e5ce39a70",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessStore.ts",
+      "sha256": "407558e99438728dcf9979655d9b7815de13de1268b5096dbb7db8967ecf6666",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessToolNames.ts",
+      "sha256": "0abb4cb362354b0dc5e22f60fa78e6d4864b23f2d5eb034cec3c33debd40ce04",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessTools.ts",
+      "sha256": "53350cfd60ac4e86cda8bd843dbde122ab50539d8c5ed3e3698604a5dc6441a5",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessWriteReceipt.ts",
+      "sha256": "626537317a0c0a239c66b4c1b756251faead3eb400690a69274ce63cbf693096",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationMedia.ts",
+      "sha256": "82f6aced544ad2c8aafe62dc0b33973859d8b7fa63851b7ff9ce7cba39a71709",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationPreparation.ts",
+      "sha256": "9f04785d944d98852726da709d630f1c712b2f08e32b353c2e40564362b3e0f0",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationProfiles.ts",
+      "sha256": "1e4e6c2b546b43b2c6801057edc4ef7b75e84ab2ddba4caf1f3c989b5b511a93",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationRuntime.ts",
+      "sha256": "a7218954e91ddeaf0eeed62608ab0e6a9b1dea0509d8bb97f22f888c398d8ec4",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationSelection.ts",
+      "sha256": "f86880a721807bad8c252113098047f1f5b770d26c77ebdb22ce351cc433a040",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationTools.ts",
+      "sha256": "048e10ff8601ff57053293d3b6fc1d9c1fefe8f3d3344d6aaf01cc1854bc833f",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/imageDiscovery.ts",
+      "sha256": "fc8571b38c847e6ed4e0504bd04d3f5140a6772a202d94fc7b4261292f95bc58",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/imageQueue.ts",
+      "sha256": "6261436bf2dc4d86815f0b8c0b0075f61b0f6824f0869eaefea4db3408a0317a",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/ipToolNames.ts",
+      "sha256": "a1e8d0086956df8e0c69abb69334fe4a78475025babf165cd4da372768dc8e41",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/ipTools.ts",
+      "sha256": "c0752fa767e48b16b71d49c86d5b6d3aa7627fbab600db59e97b8c5f85c8cdda",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/libraryToolHelpers.ts",
+      "sha256": "201ae3605c573ea16ff9b082b7d17b2edb888971b350dd4b55cc66072f520f92",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialContent.ts",
+      "sha256": "be1ae9dcdc35d3819e16bf2c22643741258f09cfc9bbebd0ea8c209a1275aaeb",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialImageInput.ts",
+      "sha256": "b61919a40e730952cd499b04e26f908a5bf827a6382837f534066dba68cb42b5",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialToolNames.ts",
+      "sha256": "b1023b87ee512d4ef97487d4c890c716e2bea21c714b528177cbc195597ec813",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialTools.ts",
+      "sha256": "702b461e56f59b16b252147287077fa026b7c6b272fc41eb1e38d811c5039c48",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/memoryToolNames.ts",
+      "sha256": "0dc6e4453673dff641208e3e915eedd53aa477202e92ff3ad597ab6594d62ab4",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/memoryTools.ts",
+      "sha256": "5d89097a581570f7431a2613d67d67da5928762f86ecb945d7fcb58ea8495eb8",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/mimoSpeechSpec.ts",
+      "sha256": "fcb3e6ac4e75eeab44c71ff23b8164dec3e0d99e3f58d36266ea926ea7e1fe1e",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/musicTools.ts",
+      "sha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/projectScope.ts",
+      "sha256": "d590590a610b2a4546dd6b8c01a1468542cbb923afdcc939cd17d00046165faf",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceContext.ts",
+      "sha256": "b3b2fe419b730c9c884bbe3a1785d8ff97791b0e3d9b6d215e0d2ec79dfb1f07",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceEvidence.ts",
+      "sha256": "e8950b149b044d303b979762fcc6f7bb71bcc6e4d7b43ea02b4eb48f0c013208",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceToolNames.ts",
+      "sha256": "577cdbe4f5d689f91e86bb17900844131131a1872aae9b95f6ea9c27d8fadbd1",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceTools.ts",
+      "sha256": "66e8b7bfd81f3f04e238d05a4c6741991af62e1a6d9590d42614bedb75b4f93a",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/skills.ts",
+      "sha256": "5ac7b4a93941047d115a62915c9fdaf8b439e484a0139d932084a07f8d3c1cad",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/soundWriteReceipt.ts",
+      "sha256": "27e0ae6fe74a34b9542d4d0f00875ebff4e45402509e728872d297c9eb85aed5",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/taskState.ts",
+      "sha256": "e83ffaaf911424d8e7e831e55500e91a5e68b0818ff8b76d6502abebe7f01053",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/taskTools.ts",
+      "sha256": "6e55619e39b36159f4956f8f16429bcd740bb6d5ed06d424bd4c0f40e8bd48fa",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/toolErrors.ts",
+      "sha256": "0b2f17d2595bc6df471be1c3dd5c41505326ba401c603e1461e8f9787600e799",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/toolLoading.ts",
+      "sha256": "1599a871d8e10e822237b1cac3f7eed517254e6fd5f8db281a9dc6cde660851e",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/tools.ts",
+      "sha256": "f02a84a492891364673df245242e2da1ca889277e9a670fce0dfea963c914bbd",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/webToolNames.ts",
+      "sha256": "a247f85125ad56d9b83bd56556ac935cb050bcfa3b66acc5cc6445984b27f37c",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/webTools.ts",
+      "sha256": "bff9ac8007c6b2e0321fba6d63e7564f5175645dc29a6d867de494ac8092da49",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/writeReceipt.ts",
+      "sha256": "2dd25204832ceabdfec153b2f52dbf0d4afe3c21eebc41c6c35052258a9ebb1c",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/memory/retrieval.ts",
+      "sha256": "7ae1edf41af85276a2ffb9c8005b3e1c43d7790adb8545a2ad01d0aa03e70893",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d05/src/lib/memory/schema.ts",
+      "sha256": "ccddefc631d808e0ec77a07b6be57cafee746fcf8cfbb09969a3ff0e1b754946",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d06/README.md",
+      "sha256": "2eb088f38c38f50d196b2064e2ac3449b25f115903e032cb5543b0f63fe00610",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d06/src/domain/output.ts",
+      "sha256": "b43d58fa0b6b6f5a4b001e75f8bac6e8b613794cd0f422d40d6d64992d98dd33",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d06/src/lib/agent/businessSchemas.ts",
+      "sha256": "b86d694989c3353c4c8ab09edc915ac72e8a9710289da09b881e771dc050b9ef",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d06/src/lib/agent/generationProfiles.ts",
+      "sha256": "9c2f3f28f8d78306c4db005af6c60a5809a8c2bf73c84479392f9482ca8fd69d",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d07/README.md",
+      "sha256": "9af0c2c4849930fa09db5a1d438e57171ebbe9f1fdaba09579575eeaaf248264",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/aihubmix.ts",
+      "sha256": "c6a66b5fdb0904d1765b70f04b38769f55ec5a6c70feae757396adffbb4233c9",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/apimart.ts",
+      "sha256": "0aaf9904b526ce8ca63cdc67535f7b245fbf182e5e4b93a6185633916118c65e",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/apimartAudio.ts",
+      "sha256": "b039e073947defcfc5b69a1e33fd2b7a39779c33159ba4eb65cd632509362d9e",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/boundedResponse.ts",
+      "sha256": "92cc47f78623f8c1c8e7d864a9f4af655c5b498077f8b0e93de25eefc9be8384",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/boundedSse.ts",
+      "sha256": "8626015eebd251a1956992f6274d679f8e3cd6af556e2e4acb9acf72fe925894",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/chatStream.ts",
+      "sha256": "ede7b8806f165128a864f948435defc700c226a4656041c6a485c0f3342cdf6d",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/mimoSpeech.ts",
+      "sha256": "0be180a9ed8767321126cc7b49ba3f16836e625466e3d43c105c46e9dcaf62c8",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/modelMetadata.ts",
+      "sha256": "9ea70a6c9172cbab757550440888fbda56a5ec6f89aa95111405accd3db175aa",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/openaiCompatible.ts",
+      "sha256": "58af82f28f70dbd361d9bfc43b4201186407060c67ad6fd3f342e20a65c29912",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/referenceWire.ts",
+      "sha256": "12e661d548816a5e99285ccef20aeb0bb7353f7f289d61a4ac763ff941bd74a8",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/responsesStream.ts",
+      "sha256": "7a641a8da7404523939998ea6618989e9823bb1f63e24dec9aad5076e2eabee7",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/safeError.ts",
+      "sha256": "aaca8cbeafa33d6d2d7f12668f858827de788b1b3737bf9a909cdb255dca5d12",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/tavily.ts",
+      "sha256": "b24c36e3ef77e85585b6d72ca684b40e2f7c7e5d758696abea5ea945a0c98ae4",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/visionCapability.ts",
+      "sha256": "a4d73f99782eea0fa7bd3611b56a540909f34baf879f6bc1dd108479a436f349",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/helpers/registeredTools.ts",
+      "sha256": "67238586c67dc8f2b8dfb4cfcb4dd29083e6ecb013091fd92fd56bb988a11691",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/typecheck/agentToolDefinition.ts",
+      "sha256": "751a4d44c532cdd9b69504c06e4142b58caa65c0e06c1a8a07edf6bc616b9798",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    },
+    {
+      "path": "tests/typecheck/tsconfig.agent-tools.json",
+      "sha256": "02a2128b3d34c6a9939e5a11c5e6493fb78f38f426610485eda6f68e5cd4b90e",
+      "exitCode": 1,
+      "diagnostics": "",
+      "pass": true
+    }
+  ],
+  "note": "Diff-exists exit 1 is permitted only with no check diagnostic; git check-error exits (e.g.3) fail."
+}

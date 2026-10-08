@@ -1,0 +1,16 @@
+{
+  businessToolsBodyEquivalent: true,
+  promotedSharedHelpers: [
+    'pickPatch',
+    'assertTextPatch',
+    'touch',
+    'assertProjectOwner',
+    'assertCompleteOrder',
+    'recycleSlotMedia',
+    'assertSlotMedia',
+    'assertAssetReferences',
+    'assertShotReferences'
+  ],
+  all155HashesCurrent: true,
+  configsMatchD01: true
+}

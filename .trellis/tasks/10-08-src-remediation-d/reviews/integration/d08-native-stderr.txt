@@ -1,0 +1,13 @@
+PASS immediate local text, original baseline, serialized newest value and unrelated live merge
+PASS same-field conflict stays visible through retry, explicit latest then merge
+PASS actual project backup blocks failure, retry persists and download contains latest text
+PASS pending route departure remains on original owner and permits switching only after save
+PASS synthetic IME composition preserves actual local Chinese text, focus and caret through live writes
+PASS offscreen dirty row remains mounted, clean row virtualizes and reopens persisted text
+PASS missing shot retains readable draft, rejects backup/flush and retries on restored original row
+PASS forced unmount keeps failed controller in barrier and reopening restores error/text
+PASS StoryPage title/content/time text merge with live episode data and use original per-field baselines
+PASS missing beat remains visible with error and can retry after the original beat is restored
+PASS missing episode and project keep the current beat text under the actual unavailable shell
+PASS all ten actual shot text controls persist independent field patches with baselines
+PASS shot-page beat title uses the shared draft and preserves independent story text

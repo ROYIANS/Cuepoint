@@ -1,0 +1,13 @@
+
+> cuepoint@0.1.0 test /Users/xiaomengdao/WebstormProjects/aifenjing
+> vitest run tests/d05SchemaEquivalence.test.ts tests/d06Capabilities.test.ts tests/d07RequestWire.test.ts tests/memoryRetrieval.test.ts tests/d05ToolCatalog.test.ts --maxWorkers 4
+
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+
+ Test Files  5 passed (5)
+      Tests  53 passed (53)
+   Start at  15:31:51
+   Duration  953ms (transform 48%, tests 33%, import 11%, setup 9%)
+

@@ -1,0 +1,33 @@
+
+> cuepoint@0.1.0 test /private/tmp/cuepoint-d02/baseline
+> vitest run --maxWorkers 4
+
+
+ RUN  v5.0.1 /private/tmp/cuepoint-d02/baseline
+
+ ❯ tests/modelBank.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/modelBank.test.ts [ tests/modelBank.test.ts ]
+Error: Cannot find module '../scripts/model-bank-snapshot.mjs' imported from /private/tmp/cuepoint-d02/baseline/tests/modelBank.test.ts
+ ❯ tests/modelBank.test.ts:6:1
+      4| import { getReasoningPolicy } from "@/lib/ai/reasoningPolicy";
+      5| import { formatTokenCount } from "@/lib/agent/contextUsage";
+      6| import { verifySnapshot, deriveDataset } from "../scripts/model-bank-s…
+       | ^
+      7| import { readFileSync } from "node:fs";
+      8|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 144 passed (145)
+      Tests  2397 passed (2397)
+   Start at  10:40:07
+   Duration  13.59s (tests 69%, setup 11%, import 11%, transform 8%, worker 1%)
+
+    Isolate  145 workers spawned · ~51ms startup each (spawn + environment, per file)
+             at least ~1.79s faster with isolate: false — reuses workers across files instead of one per file
+
+ ELIFECYCLE  Test failed. See above for more details.

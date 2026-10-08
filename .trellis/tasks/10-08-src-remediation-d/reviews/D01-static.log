@@ -1,0 +1,22 @@
+{
+  "unit": "D01",
+  "files": 12,
+  "versions": {
+    "eslint": "9.39.5",
+    "typescript-eslint": "8.71.1",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-sonarjs": "3.0.7",
+    "typescript": "5.9.2"
+  },
+  "before": [
+    12,
+    32
+  ],
+  "after": [
+    7,
+    25
+  ],
+  "addedNoncomplexity": [],
+  "addedComplexity": [],
+  "newFileDiagnostics": []
+}

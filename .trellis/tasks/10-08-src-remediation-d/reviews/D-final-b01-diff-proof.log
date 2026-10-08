@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "exitCode": 0,
+  "scope": [
+    "scripts/b01-browser-regression.mjs"
+  ],
+  "before": "dd8688fd18f01ea775a9f17124a2765ef62fc0d7f96794343308e09aaebd11d3",
+  "after": "72f6a6143b5f55043c41bfe6b915a2e566196c5d4d99c16d3216c306f66fc5a6",
+  "latestAcceptedOwner": "D02",
+  "exactAcceptedD02AfterMatchesBefore": true,
+  "inverseFiveHarnessChangesRestoresBeforeByteForByte": true,
+  "entireBusinessControlBodyByteEqual": true,
+  "allExistingAssertionsAndTimeoutsRetained": true,
+  "additionalAssertions": 1,
+  "documentAssertionAppliesToEveryExistingScenarioViaSharedTestWrapper": true,
+  "listenerInstalledBeforeOnlyGoto": true,
+  "documentCountNeverReset": true,
+  "mainFrameDocumentFilter": true,
+  "noBootstrapRetryOrReloadSuppressionOrTimeoutIncrease": true,
+  "syntaxCheckExitCode": 0,
+  "installedGlobCheckExitCode": 0,
+  "installedGlobProof": {
+    "vite": "7.3.6",
+    "tinyglobby": "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/tinyglobby@0.2.17/node_modules/tinyglobby/dist/index.cjs",
+    "entries": [
+      "/Users/xiaomengdao/WebstormProjects/aifenjing/tests/fixtures/b01/index.html"
+    ]
+  },
+  "coldRuns": [
+    {
+      "name": "isolated-cold-1",
+      "exitCode": 0,
+      "passed": 19,
+      "cacheDirectory": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/b01-vite-cache-2lv7wa",
+      "cacheRemovedAtReview": true,
+      "log": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-cold-1.log"
+    },
+    {
+      "name": "isolated-cold-2",
+      "exitCode": 0,
+      "passed": 19,
+      "cacheDirectory": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/b01-vite-cache-juiSRT",
+      "cacheRemovedAtReview": true,
+      "log": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-cold-2.log"
+    }
+  ]
+}

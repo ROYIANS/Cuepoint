@@ -1,0 +1,170 @@
+{
+  "D01": {
+    "src/lib/agent/toolLoading.ts": {
+      "acceptedAfter": "1599a871d8e10e822237b1cac3f7eed517254e6fd5f8db281a9dc6cde660851e",
+      "entryBefore": "1599a871d8e10e822237b1cac3f7eed517254e6fd5f8db281a9dc6cde660851e",
+      "currentAfter": "12201c7905fc761e38bc2110e5a0c55668d149f9ffa6f97514db6a804d8e4a15",
+      "matchesAcceptedBefore": true
+    }
+  },
+  "D02": {
+    "src/lib/agent/audioGenerationTools.ts": {
+      "acceptedAfter": "34c64b4d254425d6334370239e007774cf6297bf594cb91603627e92f93ce507",
+      "entryBefore": "34c64b4d254425d6334370239e007774cf6297bf594cb91603627e92f93ce507",
+      "currentAfter": "224a69998aa924e9592f3ffbe4273d61f25ab81588a47c16c00211f8dbfbb641",
+      "matchesAcceptedBefore": true
+    },
+    "src/lib/agent/businessStore.ts": {
+      "acceptedAfter": "407558e99438728dcf9979655d9b7815de13de1268b5096dbb7db8967ecf6666",
+      "entryBefore": "407558e99438728dcf9979655d9b7815de13de1268b5096dbb7db8967ecf6666",
+      "currentAfter": "53571ee862b15d05e4782048c5f393b7afe50132f1f3983cccb375ab10d99bcc",
+      "matchesAcceptedBefore": true
+    },
+    "src/lib/agent/businessTools.ts": {
+      "acceptedAfter": "53350cfd60ac4e86cda8bd843dbde122ab50539d8c5ed3e3698604a5dc6441a5",
+      "entryBefore": "53350cfd60ac4e86cda8bd843dbde122ab50539d8c5ed3e3698604a5dc6441a5",
+      "currentAfter": "f97ebf8ae4265aa456ce4570962146444f55d066ce08a9f1b34da8fb2b2d308d",
+      "matchesAcceptedBefore": true
+    },
+    "src/lib/agent/materialTools.ts": {
+      "acceptedAfter": "702b461e56f59b16b252147287077fa026b7c6b272fc41eb1e38d811c5039c48",
+      "entryBefore": "702b461e56f59b16b252147287077fa026b7c6b272fc41eb1e38d811c5039c48",
+      "currentAfter": "4256632f8525af7d51f1ce11d06cc1576612e74cb1d9c2de8c05fd160a0e4db7",
+      "matchesAcceptedBefore": true
+    },
+    "tests/agentAuditRemediation.test.ts": {
+      "acceptedAfter": "939450aa4bae7da389fdd593e87608645940623828cdd8a3f0e7632c9c26dfc3",
+      "entryBefore": "939450aa4bae7da389fdd593e87608645940623828cdd8a3f0e7632c9c26dfc3",
+      "currentAfter": "432ade65dfca652bc80f30741b5d76d282281c0cfff534da626665223ebeec6d",
+      "matchesAcceptedBefore": true
+    },
+    "tests/agentBusiness.test.ts": {
+      "acceptedAfter": "86ac1bea87ff262f79d71a0f2261e942448163620ab5f0eb9a2f93d174b44b06",
+      "entryBefore": "86ac1bea87ff262f79d71a0f2261e942448163620ab5f0eb9a2f93d174b44b06",
+      "currentAfter": "645b62a3d2c63363c7d04c7a24c7553672eae165a6f26f6d41040bf30f06b1c5",
+      "matchesAcceptedBefore": true
+    },
+    "tests/agentGeneration.test.ts": {
+      "acceptedAfter": "14ea9bf7c58265fdb7121465de6afce12cdc98be5bc5a4d27703dcdc77962bb2",
+      "entryBefore": "14ea9bf7c58265fdb7121465de6afce12cdc98be5bc5a4d27703dcdc77962bb2",
+      "currentAfter": "62dde595dc336c91083bcd5808cf2d4b0a87974d5f73cfba5b0aa494167a7a80",
+      "matchesAcceptedBefore": true
+    },
+    "tests/agentGenerationBatch.test.ts": {
+      "acceptedAfter": "a952d6c68f69e791d0ba71a9205622263d7fe0d76970083bbacb318b202bd504",
+      "entryBefore": "a952d6c68f69e791d0ba71a9205622263d7fe0d76970083bbacb318b202bd504",
+      "currentAfter": "ce7160a01570488c62d982f4fb7ad5f060d68e323163cf5a8530900d33fb33fc",
+      "matchesAcceptedBefore": true
+    },
+    "tests/agentGenerationBatchSafety.test.ts": {
+      "acceptedAfter": "9b3b36030986484df38d762a6499205d027c77eb34be95aba5f1bad08aaa1924",
+      "entryBefore": "9b3b36030986484df38d762a6499205d027c77eb34be95aba5f1bad08aaa1924",
+      "currentAfter": "e8cbfd64935c9da0022ce4421d67fc8bfe227c0f83159902f0c9373c9c41a216",
+      "matchesAcceptedBefore": true
+    },
+    "tests/agentGenerationReview.test.ts": {
+      "acceptedAfter": "edb28155f742266655edc9b55aa4c1064dd6c1497fddd8e039c581dec47e53e4",
+      "entryBefore": "edb28155f742266655edc9b55aa4c1064dd6c1497fddd8e039c581dec47e53e4",
+      "currentAfter": "052cc40fc408e19c54131ffc37cc936d19bb779f29e29b7addb9f44edcd28b74",
+      "matchesAcceptedBefore": true
+    },
+    "tests/agentIpTools.test.ts": {
+      "acceptedAfter": "5c8f4d8197d7324529b898f450706b2d892031936cb157007dc2949071a12b8a",
+      "entryBefore": "5c8f4d8197d7324529b898f450706b2d892031936cb157007dc2949071a12b8a",
+      "currentAfter": "eee7e6120ed240252c469d903bf9a6bf358e2db1ddae3409094197fc0ce0a96b",
+      "matchesAcceptedBefore": true
+    },
+    "tests/agentMaterialTools.test.ts": {
+      "acceptedAfter": "9fad1e85bdbb251af11d6248c6a8db6f06e4677071f85eb85339c6ee5aecd7f3",
+      "entryBefore": "9fad1e85bdbb251af11d6248c6a8db6f06e4677071f85eb85339c6ee5aecd7f3",
+      "currentAfter": "604e42a3dbfd3ca937aba5d976ce51fc8409712c449441ee57fb02b52e24a643",
+      "matchesAcceptedBefore": true
+    },
+    "tests/agentMemoryTools.test.ts": {
+      "acceptedAfter": "2f6992c44cc651a9766f6e446b6b63e67e2070cde53eeac25d9ccdfdabc7f00a",
+      "entryBefore": "2f6992c44cc651a9766f6e446b6b63e67e2070cde53eeac25d9ccdfdabc7f00a",
+      "currentAfter": "0c7d2b8168f9d321cb2307c59142b81f7356c8722db611be85a65ebcb2a49af8",
+      "matchesAcceptedBefore": true
+    },
+    "tests/agentProjectContext.test.ts": {
+      "acceptedAfter": "c75fba903caadc979a28c1c9d663b7e7d8b21969239a5b44950e39e7a2b74089",
+      "entryBefore": "c75fba903caadc979a28c1c9d663b7e7d8b21969239a5b44950e39e7a2b74089",
+      "currentAfter": "739cd92e48b721e2dd95f8f0edbad25aa0c106efcfd5d4f641910b96eda1ee90",
+      "matchesAcceptedBefore": true
+    },
+    "tests/agentProjectCreation.test.ts": {
+      "acceptedAfter": "4cd2f345f5e7515c31fa4535f1ebe0e6966b8833a230ca106fb1b47bbe785529",
+      "entryBefore": "4cd2f345f5e7515c31fa4535f1ebe0e6966b8833a230ca106fb1b47bbe785529",
+      "currentAfter": "69972a3d2fc25feba80487d7fee33aaa1df7c90b727e48b7154ebea696f9ce2f",
+      "matchesAcceptedBefore": true
+    },
+    "tests/agentReferences.test.ts": {
+      "acceptedAfter": "7c0f5471e377640043cc8ab41ee5a0b87cf15ca8a99d18b78910fae281ee554c",
+      "entryBefore": "7c0f5471e377640043cc8ab41ee5a0b87cf15ca8a99d18b78910fae281ee554c",
+      "currentAfter": "13dd2f2f574696b13aaae35cdb54098f3efcee4f60a50fd2d6303807d9440e5e",
+      "matchesAcceptedBefore": true
+    },
+    "tests/agentTaskOrchestration.test.ts": {
+      "acceptedAfter": "9db8aead604610df6ecd77ed0c7e0f5bb2f291986bb6fb020aaaff1314fae1fe",
+      "entryBefore": "9db8aead604610df6ecd77ed0c7e0f5bb2f291986bb6fb020aaaff1314fae1fe",
+      "currentAfter": "c0c40587357167c8f71adf38ac480b46487f543afd7c4450e5814c74d81a358c",
+      "matchesAcceptedBefore": true
+    },
+    "tests/agentTaskOrchestrationReview.test.ts": {
+      "acceptedAfter": "ba3bd074d2cd929fe1a2550423935955cb0eaf72370858444bed32274202d670",
+      "entryBefore": "ba3bd074d2cd929fe1a2550423935955cb0eaf72370858444bed32274202d670",
+      "currentAfter": "9de861c6f5ddf26455aa90cead54d3905451aab3f643bbe56b6c920e1d2adfdd",
+      "matchesAcceptedBefore": true
+    },
+    "tests/audioGenerationAgent.test.ts": {
+      "acceptedAfter": "dc97886878c3f64c67ff15febb55c55ff0f958f7468983bdf7fdf0084460fe8d",
+      "entryBefore": "dc97886878c3f64c67ff15febb55c55ff0f958f7468983bdf7fdf0084460fe8d",
+      "currentAfter": "c6a8d8ccc2fbf3a360ba4bf63eb7cc71eff03c2757cf5a8c43082f43976d5329",
+      "matchesAcceptedBefore": true
+    },
+    "tests/audioMusicAgentTools.test.ts": {
+      "acceptedAfter": "344f809c3f33904a3509495b83c6de74a0c3e148b9e1471cdb6459630b06981f",
+      "entryBefore": "344f809c3f33904a3509495b83c6de74a0c3e148b9e1471cdb6459630b06981f",
+      "currentAfter": "05eed99b0e304be24299ed0d6b5c369b3a63ed29e5c805e2bd5cb1e87f070e16",
+      "matchesAcceptedBefore": true
+    },
+    "tests/audioTaskEvidence.test.ts": {
+      "acceptedAfter": "b128c63a8eee1693935ea2d5a9be19e175a073a91c6c9f2a8f1982f1fe00b245",
+      "entryBefore": "b128c63a8eee1693935ea2d5a9be19e175a073a91c6c9f2a8f1982f1fe00b245",
+      "currentAfter": "148c3d6488d4fbe9d1212c644760617118939d2861e9cb17317ddfb8cc0746ce",
+      "matchesAcceptedBefore": true
+    },
+    "tests/imageDiscovery.test.ts": {
+      "acceptedAfter": "e61c752ec66b39ad4a170b3b4d4c343b8849a6c76fb72e15bc206221df8f7d8a",
+      "entryBefore": "e61c752ec66b39ad4a170b3b4d4c343b8849a6c76fb72e15bc206221df8f7d8a",
+      "currentAfter": "0380a7542614fd7dfc5efee54232417ff259d4d6564a230ad0e5583af61f455e",
+      "matchesAcceptedBefore": true
+    },
+    "tests/memoryRetrieval.test.ts": {
+      "acceptedAfter": "01dfe2b89d6033c3ddea1350dac7806c363a2601dc8d8beab9443258a91f88a6",
+      "entryBefore": "01dfe2b89d6033c3ddea1350dac7806c363a2601dc8d8beab9443258a91f88a6",
+      "currentAfter": "3c3e5b316b205d71710458fbd605f95cc4731ead37954ef61e110c7eea52f456",
+      "matchesAcceptedBefore": true
+    },
+    "tests/musicDurationContract.test.ts": {
+      "acceptedAfter": "6027a37618f05dfda181b157c410412c4eed69110022ceeb107066eb17109bb8",
+      "entryBefore": "6027a37618f05dfda181b157c410412c4eed69110022ceeb107066eb17109bb8",
+      "currentAfter": "51845093a1c21def6c108d51a994f0cce6b4f78945fe74745c71b4d4d95b9786",
+      "matchesAcceptedBefore": true
+    },
+    "tests/musicGenerationReview.test.ts": {
+      "acceptedAfter": "53300477fb4e9ca0e50e9c14cb8cde8383d690e2e53dfb1bbde33ddc9875b0d5",
+      "entryBefore": "53300477fb4e9ca0e50e9c14cb8cde8383d690e2e53dfb1bbde33ddc9875b0d5",
+      "currentAfter": "32342995080465549b4b7a890235bd8e2142115637d8f9ef9ef9baa97a085058",
+      "matchesAcceptedBefore": true
+    },
+    "tests/referenceEvidence.test.ts": {
+      "acceptedAfter": "bb046d6cd790d7765bbd9ae39101dc90a894022baccb0f6dfb7a48d17679620a",
+      "entryBefore": "bb046d6cd790d7765bbd9ae39101dc90a894022baccb0f6dfb7a48d17679620a",
+      "currentAfter": "b74558e3a505d82579cfdd504edeb6d52d1b11ca3f8386a3f53105c891b8e82e",
+      "matchesAcceptedBefore": true
+    }
+  },
+  "D03": {},
+  "D04": {}
+}

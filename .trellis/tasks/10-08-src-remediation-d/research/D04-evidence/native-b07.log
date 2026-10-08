@@ -1,0 +1,7 @@
+12:19:52 PM [vite] (client) Re-optimizing dependencies because vite config has changed
+PASS actual browser history A/B/back/forward keeps thread text and references aligned
+PASS real Web Lock/new-thread navigation preserves captured persisted payload and later home edits
+PASS begin failure after navigation remains visible and retries without creating another topic
+PASS actual back event aborts old execution without clearing equal text in another owner
+PASS failed new-topic action keeps old unsent payload and no provider call
+B07 browser: 5 scenarios passed; external/provider requests: 0

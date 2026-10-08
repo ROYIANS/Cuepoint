@@ -1,0 +1,64 @@
+4:32:59 PM [vite] (client) Re-optimizing dependencies because vite config has changed
+{
+  "unit": "D08/PU06",
+  "baseline": false,
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "immediate local text, original baseline, serialized newest value and unrelated live merge",
+      "status": "PASS"
+    },
+    {
+      "name": "same-field conflict stays visible through retry, explicit latest then merge",
+      "status": "PASS"
+    },
+    {
+      "name": "actual project backup blocks failure, retry persists and download contains latest text",
+      "status": "PASS"
+    },
+    {
+      "name": "pending route departure remains on original owner and permits switching only after save",
+      "status": "PASS"
+    },
+    {
+      "name": "synthetic IME composition preserves actual local Chinese text, focus and caret through live writes",
+      "status": "PASS"
+    },
+    {
+      "name": "offscreen dirty row remains mounted, clean row virtualizes and reopens persisted text",
+      "status": "PASS"
+    },
+    {
+      "name": "missing shot retains readable draft, rejects backup/flush and retries on restored original row",
+      "status": "PASS"
+    },
+    {
+      "name": "forced unmount keeps failed controller in barrier and reopening restores error/text",
+      "status": "PASS"
+    },
+    {
+      "name": "StoryPage title/content/time text merge with live episode data and use original per-field baselines",
+      "status": "PASS"
+    },
+    {
+      "name": "missing beat remains visible with error and can retry after the original beat is restored",
+      "status": "PASS"
+    },
+    {
+      "name": "missing episode and project keep the current beat text under the actual unavailable shell",
+      "status": "PASS"
+    },
+    {
+      "name": "all ten actual shot text controls persist independent field patches with baselines",
+      "status": "PASS"
+    },
+    {
+      "name": "shot-page beat title uses the shared draft and preserves independent story text",
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "externalRequests": 0,
+  "downloads": 1,
+  "limits": "Actual React pages/router/guards/Dexie/native IndexedDB; controlled command delay/failure, synthetic composition input and force-remount seam. No paid-provider, crash/browser-restart, OS IME, or unmodified full-product E2E claim."
+}

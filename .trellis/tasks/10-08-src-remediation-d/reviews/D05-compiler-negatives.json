@@ -1,0 +1,122 @@
+{
+  "compilerVersion": "5.9.3",
+  "config": "tests/typecheck/tsconfig.agent-tools.json",
+  "expectedLines": [
+    21,
+    26,
+    32,
+    45,
+    51,
+    55,
+    60,
+    65,
+    75,
+    80,
+    86,
+    92,
+    96,
+    98,
+    100,
+    105
+  ],
+  "actual": [
+    {
+      "path": "tests/typecheck/agentToolDefinition.ts",
+      "line": 21,
+      "code": 2322,
+      "message": "Type '(_args: z.output<typeof generationJobSchema>) => Promise<{}>' is not assignable to type '(args: NoInfer<{ target: { slot: string; projectId: string; kind: \"style\" | \"shot\" | \"character\" | \"scene\" | \"prop\"; entityId: string; episodeId?: string | undefined; }; prompt: string; model: \"gpt-image-2\" | ... 4 more ... | \"veo-3.1-fast-generate-preview\"; parameters: { ...; }; inputs: { ...; }[]; connectorId: str...'.\n  Types of parameters '_args' and 'args' are incompatible.\n    Property 'jobId' is missing in type '{ target: { slot: string; projectId: string; kind: \"style\" | \"shot\" | \"character\" | \"scene\" | \"prop\"; entityId: string; episodeId?: string | undefined; }; prompt: string; model: \"gpt-image-2\" | ... 4 more ... | \"veo-3.1-fast-generate-preview\"; parameters: { ...; }; inputs: { ...; }[]; connectorId: string; }' but required in type '{ jobId: string; }'."
+    },
+    {
+      "path": "tests/typecheck/agentToolDefinition.ts",
+      "line": 26,
+      "code": 2345,
+      "message": "Argument of type '{ jobId: string; }' is not assignable to parameter of type '{ target: { slot: string; projectId: string; kind: \"style\" | \"shot\" | \"character\" | \"scene\" | \"prop\"; entityId: string; episodeId?: string | undefined; }; prompt: string; model: \"gpt-image-2\" | ... 4 more ... | \"veo-3.1-fast-generate-preview\"; parameters: { ...; }; inputs: { ...; }[]; connectorId: string; }'.\n  Type '{ jobId: string; }' is missing the following properties from type '{ target: { slot: string; projectId: string; kind: \"style\" | \"shot\" | \"character\" | \"scene\" | \"prop\"; entityId: string; episodeId?: string | undefined; }; prompt: string; model: \"gpt-image-2\" | ... 4 more ... | \"veo-3.1-fast-generate-preview\"; parameters: { ...; }; inputs: { ...; }[]; connectorId: string; }': target, prompt, model, parameters, and 2 more."
+    },
+    {
+      "path": "tests/typecheck/agentToolDefinition.ts",
+      "line": 32,
+      "code": 2322,
+      "message": "Type '(_args: { prompt: string; }) => false' is not assignable to type '(args: NoInfer<{ jobId: string; }>) => boolean'.\n  Types of parameters '_args' and 'args' are incompatible.\n    Property 'prompt' is missing in type '{ jobId: string; }' but required in type '{ prompt: string; }'."
+    },
+    {
+      "path": "tests/typecheck/agentToolDefinition.ts",
+      "line": 45,
+      "code": 2353,
+      "message": "Object literal may only specify known properties, and 'parseArguments' does not exist in type 'ToolBody<NoInfer<{}>, \"compile_parser\">'."
+    },
+    {
+      "path": "tests/typecheck/agentToolDefinition.ts",
+      "line": 51,
+      "code": 2353,
+      "message": "Object literal may only specify known properties, and 'parameters' does not exist in type 'ToolBody<NoInfer<{}>, \"compile_advertisement\">'."
+    },
+    {
+      "path": "tests/typecheck/agentToolDefinition.ts",
+      "line": 55,
+      "code": 2322,
+      "message": "Type '\"finished\"' is not assignable to type '\"pending\" | \"completed\" | \"in_progress\"'."
+    },
+    {
+      "path": "tests/typecheck/agentToolDefinition.ts",
+      "line": 60,
+      "code": 2322,
+      "message": "Type '(_args: { text: number; }) => Promise<{}>' is not assignable to type '(args: NoInfer<{ text: string; }>, context: AgentToolContext) => Promise<unknown>'.\n  Types of parameters '_args' and 'args' are incompatible.\n    Type '{ text: string; }' is not assignable to type '{ text: number; }'.\n      Types of property 'text' are incompatible.\n        Type 'string' is not assignable to type 'number'."
+    },
+    {
+      "path": "tests/typecheck/agentToolDefinition.ts",
+      "line": 65,
+      "code": 2322,
+      "message": "Type '(_args: { text: number; }) => Promise<{ state: {}; changes: never[]; }>' is not assignable to type '(args: NoInfer<{ text: string; }>, context: AgentToolContext) => Promise<LibraryPreviewState>'.\n  Types of parameters '_args' and 'args' are incompatible.\n    Type '{ text: string; }' is not assignable to type '{ text: number; }'.\n      Types of property 'text' are incompatible.\n        Type 'string' is not assignable to type 'number'."
+    },
+    {
+      "path": "tests/typecheck/agentToolDefinition.ts",
+      "line": 75,
+      "code": 2322,
+      "message": "Type 'string' is not assignable to type 'number'."
+    },
+    {
+      "path": "tests/typecheck/agentToolDefinition.ts",
+      "line": 80,
+      "code": 2339,
+      "message": "Property 'voice' does not exist on type '{ title: string; order: number; projectId: string; kind: \"chapter\"; }'."
+    },
+    {
+      "path": "tests/typecheck/agentToolDefinition.ts",
+      "line": 86,
+      "code": 2322,
+      "message": "Type 'TypedToolDefinition<{ text: string; }, string>' is not assignable to type 'TypedToolDefinition<unknown, string>'.\n  Types of property 'highRisk' are incompatible.\n    Type '(args: { text: string; }) => boolean' is not assignable to type '(args: unknown) => boolean'.\n      Types of parameters 'args' and 'args' are incompatible.\n        Type 'unknown' is not assignable to type '{ text: string; }'."
+    },
+    {
+      "path": "tests/typecheck/agentToolDefinition.ts",
+      "line": 92,
+      "code": 2345,
+      "message": "Argument of type '{ title?: string | undefined; content?: string | undefined; sceneId?: string | null | undefined; characterIds?: string[] | undefined; timeOfDay?: string | undefined; }' is not assignable to parameter of type 'Partial<Pick<StoryBeat, \"title\" | \"content\" | \"sceneId\" | \"characterIds\" | \"timeOfDay\" | \"scriptRange\">>'.\n  Types of property 'sceneId' are incompatible.\n    Type 'string | null | undefined' is not assignable to type 'string | undefined'.\n      Type 'null' is not assignable to type 'string | undefined'."
+    },
+    {
+      "path": "tests/typecheck/agentToolDefinition.ts",
+      "line": 96,
+      "code": 2322,
+      "message": "Type 'number' is not assignable to type 'string'."
+    },
+    {
+      "path": "tests/typecheck/agentToolDefinition.ts",
+      "line": 98,
+      "code": 2353,
+      "message": "Object literal may only specify known properties, and 'admin' does not exist in type '{ content?: string | undefined; status?: \"ready\" | \"approved\" | \"draft\" | \"framed\" | \"clipped\" | undefined; sceneId?: string | null | undefined; styleId?: string | null | undefined; ... 13 more ...; inheritStyle?: boolean | undefined; }'."
+    },
+    {
+      "path": "tests/typecheck/agentToolDefinition.ts",
+      "line": 100,
+      "code": 2345,
+      "message": "Argument of type 'string' is not assignable to parameter of type 'CharacterImageSlot'."
+    },
+    {
+      "path": "tests/typecheck/agentToolDefinition.ts",
+      "line": 105,
+      "code": 2322,
+      "message": "Type 'number' is not assignable to type 'string'."
+    }
+  ],
+  "missing": [],
+  "unrelated": []
+}

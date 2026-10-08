@@ -1,0 +1,27 @@
+
+ RUN  v5.0.1 /private/tmp/cuepoint-d02/baseline
+
+ ❯ tests/shotBulkUndo.test.ts (0 test)
+ ❯ tests/parentProjectWrites.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/parentProjectWrites.test.ts [ tests/parentProjectWrites.test.ts ]
+ FAIL  tests/shotBulkUndo.test.ts [ tests/shotBulkUndo.test.ts ]
+Error: Cannot find module '../../../../vendor/lobehub/manifest.json' imported from /private/tmp/cuepoint-d02/baseline/src/lib/ai/modelBank/index.ts
+ ❯ src/lib/ai/modelBank/index.ts:2:1
+      1| import lookup from "./lookup.generated.json";
+      2| import manifest from "../../../../vendor/lobehub/manifest.json";
+       | ^
+      3|
+      4| export const MODEL_BANK_REVISION = manifest.revision;
+ ❯ src/lib/ai/modelMetadata.ts:1:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  no tests
+   Start at  10:39:25
+   Duration  222ms (setup 50%, transform 49%, worker 2%)
+

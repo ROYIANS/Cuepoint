@@ -1,0 +1,63 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/d05ToolMetadata.test.ts (17 tests | 6 failed) 250ms
+   ❯ effect metadata agreement (3)
+     × rejects before initial preparation or approval using the actual parser/loop 83ms
+   ❯ computed highRisk metadata agreement (3)
+     × rejects before initial preparation or approval using the actual parser/loop 8ms
+   ❯ atomic metadata agreement (3)
+     × rejects before initial preparation or approval using the actual parser/loop 8ms
+   ❯ recovery metadata agreement (3)
+     × rejects before initial preparation or approval using the actual parser/loop 8ms
+   ❯ requiresConfirmation metadata agreement (3)
+     × rejects before initial preparation or approval using the actual parser/loop 8ms
+   × normalizes absent versus false legacy flags at both checks without granting new permissions 16ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/d05ToolMetadata.test.ts > effect metadata agreement > rejects before initial preparation or approval using the actual parser/loop
+ FAIL  tests/d05ToolMetadata.test.ts > computed highRisk metadata agreement > rejects before initial preparation or approval using the actual parser/loop
+ FAIL  tests/d05ToolMetadata.test.ts > atomic metadata agreement > rejects before initial preparation or approval using the actual parser/loop
+ FAIL  tests/d05ToolMetadata.test.ts > recovery metadata agreement > rejects before initial preparation or approval using the actual parser/loop
+ FAIL  tests/d05ToolMetadata.test.ts > requiresConfirmation metadata agreement > rejects before initial preparation or approval using the actual parser/loop
+AssertionError: expected { …(14) } to match object { status: 'pending', …(2) }
+(13 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "decision": undefined,
+-   "preview": undefined,
+    "status": "pending",
+  }
+
+ ❯ tests/d05ToolMetadata.test.ts:54:57
+     52|         expect(await db.agentRuns.get(run.id)).toMatchObject({status: …
+     53|         const calls = await db.agentToolCalls.where('runId').equals(ru…
+     54|         expect(calls).toHaveLength(1); expect(calls[0]).toMatchObject(…
+       |                                                         ^
+     55|     });
+     56|     it('rejects an approved resume before execution without reusing ap…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/d05ToolMetadata.test.ts > normalizes absent versus false legacy flags at both checks without granting new permissions
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ tests/d05ToolMetadata.test.ts:94:74
+     92|     let round = 0;
+     93|     await executeChatRun(run, connector.apiKey, new AbortController(),…
+     94|     expect(tool.execute).toHaveBeenCalledTimes(1); expect(later.execut…
+       |                                                                          ^
+     95|     expect(await db.agentRuns.get(run.id)).toMatchObject({status: 'com…
+     96| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  6 failed | 17 passed (23)
+   Start at  13:07:11
+   Duration  841ms (transform 65%, tests 15%, import 13%, setup 7%)
+

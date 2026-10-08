@@ -1,0 +1,211 @@
+{
+  "status": "PASS",
+  "role": "trellis-check",
+  "completedAt": "2026-10-08T08:18:34.318311+00:00",
+  "scope": "Only three authorized trailing EOF LF corrections; not whole-D acceptance",
+  "algorithm": "SHA-256",
+  "before": {
+    "src/components/shots/ShotRow.tsx": "334bfe329e39a0ddac7deab9f72e0ea14ca9e6ae7b658bed5da211414cdf16e5",
+    "src/lib/packages/audioPackageCodec.ts": "6ffb2dec2d936e381b17b00151e96a498938abb732be04442fc8ecb85a2146a9",
+    "src/lib/packages/packageError.ts": "7f0bff1911c72887aa98417705bba9ecc62b87d2b21ae5320384001d326c232a"
+  },
+  "after": {
+    "src/components/shots/ShotRow.tsx": "d9091a5004b9a3951e19ffadc46b63f5d366820371fb21598b5b3c827a15a87b",
+    "src/lib/packages/audioPackageCodec.ts": "e9efd6af64d536bb6319be184d9d550e5f6e316f9e3954927472db0348e2e1ac",
+    "src/lib/packages/packageError.ts": "88bd42e3b80e971078902ed82aa244128ed998db2364673a46201462982f6f02"
+  },
+  "unitAttribution": {
+    "src/components/shots/ShotRow.tsx": "D08",
+    "src/lib/packages/audioPackageCodec.ts": "D03",
+    "src/lib/packages/packageError.ts": "D03"
+  },
+  "productPaths": [
+    "src/components/shots/ShotRow.tsx",
+    "src/lib/packages/audioPackageCodec.ts",
+    "src/lib/packages/packageError.ts"
+  ],
+  "acceptedBefore": {
+    "src/components/shots/ShotRow.tsx": {
+      "unit": "D08",
+      "snapshot": ".trellis/tasks/10-08-src-remediation-d/reviews/D08-check-snapshot.json",
+      "snapshotSha256": "6d1c19943fee70b323541b47cae9cb2f438e335229c956d733b3130f5df2b264",
+      "map": "after",
+      "sha256": "334bfe329e39a0ddac7deab9f72e0ea14ca9e6ae7b658bed5da211414cdf16e5"
+    },
+    "src/lib/packages/audioPackageCodec.ts": {
+      "unit": "D03",
+      "snapshot": ".trellis/tasks/10-08-src-remediation-d/reviews/D03-check-snapshot.json",
+      "snapshotSha256": "c472259ecaea7fc35c3b34612efab437a111229bc02dd5bc3939dea871349597",
+      "map": "after",
+      "sha256": "6ffb2dec2d936e381b17b00151e96a498938abb732be04442fc8ecb85a2146a9"
+    },
+    "src/lib/packages/packageError.ts": {
+      "unit": "D03",
+      "snapshot": ".trellis/tasks/10-08-src-remediation-d/reviews/D03-check-snapshot.json",
+      "snapshotSha256": "c472259ecaea7fc35c3b34612efab437a111229bc02dd5bc3939dea871349597",
+      "map": "after",
+      "sha256": "7f0bff1911c72887aa98417705bba9ecc62b87d2b21ae5320384001d326c232a"
+    }
+  },
+  "sourceBeforeCopies": [
+    {
+      "path": "src/components/shots/ShotRow.tsx",
+      "beforeCopy": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-before/src/components/shots/ShotRow.tsx",
+      "beforeHash": "334bfe329e39a0ddac7deab9f72e0ea14ca9e6ae7b658bed5da211414cdf16e5"
+    },
+    {
+      "path": "src/lib/packages/audioPackageCodec.ts",
+      "beforeCopy": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-before/src/lib/packages/audioPackageCodec.ts",
+      "beforeHash": "6ffb2dec2d936e381b17b00151e96a498938abb732be04442fc8ecb85a2146a9"
+    },
+    {
+      "path": "src/lib/packages/packageError.ts",
+      "beforeCopy": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-before/src/lib/packages/packageError.ts",
+      "beforeHash": "7f0bff1911c72887aa98417705bba9ecc62b87d2b21ae5320384001d326c232a"
+    }
+  ],
+  "byteProof": [
+    {
+      "path": "src/components/shots/ShotRow.tsx",
+      "beforeBytes": 26321,
+      "afterBytes": 26320,
+      "removedBytes": 1,
+      "removedHex": "0a",
+      "beforeTrailingLF": 2,
+      "afterTrailingLF": 1,
+      "entireBeforeAfterOnlyTrailingNewlineBytes": true,
+      "unchangedPrefixSha256": "34d07e8e6cd4375c92191c6a0557387b8684f3c8a377938c78c26abd3b6e471e"
+    },
+    {
+      "path": "src/lib/packages/audioPackageCodec.ts",
+      "beforeBytes": 10833,
+      "afterBytes": 10832,
+      "removedBytes": 1,
+      "removedHex": "0a",
+      "beforeTrailingLF": 2,
+      "afterTrailingLF": 1,
+      "entireBeforeAfterOnlyTrailingNewlineBytes": true,
+      "unchangedPrefixSha256": "60638f32170709698daac586055c943f8847cf352a671913ab1a965ba6ab45de"
+    },
+    {
+      "path": "src/lib/packages/packageError.ts",
+      "beforeBytes": 146,
+      "afterBytes": 145,
+      "removedBytes": 1,
+      "removedHex": "0a",
+      "beforeTrailingLF": 2,
+      "afterTrailingLF": 1,
+      "entireBeforeAfterOnlyTrailingNewlineBytes": true,
+      "unchangedPrefixSha256": "1ec9bbe2cf6b62c5ab50b0fc3c9e8d4e57903e4f4450b0882d977c29855e2c49"
+    }
+  ],
+  "terminalTokenProof": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-token-proof.json",
+  "focusedChecks": [
+    {
+      "name": "Entire byte equality except EOF LF and exact TS5.9.3 parser terminal equality, zero parse diagnostics",
+      "command": [
+        "python3",
+        ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-proof.py"
+      ],
+      "semanticCommand": [
+        "node",
+        "-e",
+        "<NODE_PROOF embedded verbatim in proof.py>"
+      ],
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-token-proof.log",
+      "proof": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-token-proof.json"
+    },
+    {
+      "name": "Untracked whitespace for all three source files",
+      "exitCode": 0,
+      "proof": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-untracked-whitespace.json",
+      "fileChecks": [
+        {
+          "path": "src/components/shots/ShotRow.tsx",
+          "command": [
+            "git",
+            "diff",
+            "--no-index",
+            "--check",
+            "/dev/null",
+            "src/components/shots/ShotRow.tsx"
+          ],
+          "rawExitCode": 1,
+          "exitCode": 0,
+          "stdout": "",
+          "stderr": "",
+          "noDiagnostics": true,
+          "exitInterpretation": "0/1 without diagnostics succeeds; --no-index 1 denotes file difference"
+        },
+        {
+          "path": "src/lib/packages/audioPackageCodec.ts",
+          "command": [
+            "git",
+            "diff",
+            "--no-index",
+            "--check",
+            "/dev/null",
+            "src/lib/packages/audioPackageCodec.ts"
+          ],
+          "rawExitCode": 1,
+          "exitCode": 0,
+          "stdout": "",
+          "stderr": "",
+          "noDiagnostics": true,
+          "exitInterpretation": "0/1 without diagnostics succeeds; --no-index 1 denotes file difference"
+        },
+        {
+          "path": "src/lib/packages/packageError.ts",
+          "command": [
+            "git",
+            "diff",
+            "--no-index",
+            "--check",
+            "/dev/null",
+            "src/lib/packages/packageError.ts"
+          ],
+          "rawExitCode": 1,
+          "exitCode": 0,
+          "stdout": "",
+          "stderr": "",
+          "noDiagnostics": true,
+          "exitInterpretation": "0/1 without diagnostics succeeds; --no-index 1 denotes file difference"
+        }
+      ]
+    }
+  ],
+  "protectedHistoricalHashes": {
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-fixes-check-snapshot.json": "10baf27b0f067b19890d08b9dcbd78aa3aab483227f3432328e4116c2f5320cc",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-fixture-check-snapshot.json": "a933858b805655ad5c81683345738c0e1a0b98a81574d0ad783799a85510c818"
+  },
+  "protectedHistoricalAfterHashes": {
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-fixes-check-snapshot.json": "10baf27b0f067b19890d08b9dcbd78aa3aab483227f3432328e4116c2f5320cc",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-fixture-check-snapshot.json": "a933858b805655ad5c81683345738c0e1a0b98a81574d0ad783799a85510c818"
+  },
+  "protectedHistoricalUnchanged": true,
+  "checkerToolPaths": [],
+  "report": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-check.md",
+  "evidenceHashes": {
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-proof.py": "146f91e257ccbb42dda98a150ed6645b82fe1e48c0aead50e7cb969673f454b1",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-entry.json": "aef3b199c5f3c1669a5b2a43dbf0c9190ff390b34dc6245a8b735df3af3784b5",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-token-proof.json": "8493a02142a1c26176209ced8a4642ebff973b50fab46675283d7863471397a7",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-token-proof.log": "1971430b199a86af88db672b3194f106981b6aa79fe2c713935c4ac05c862f39",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-untracked-whitespace.json": "f6ca0d9f5c64cad09abac4ecf0c8ec231c85d5e07e30d9c789d6eaa835509b63",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-check.md": "0c600b34dad473eac5c214c4572b0f9ce59a8164eed143c72cd8af6f8e9129d0",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-before/src/components/shots/ShotRow.tsx": "334bfe329e39a0ddac7deab9f72e0ea14ca9e6ae7b658bed5da211414cdf16e5",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-before/src/lib/packages/audioPackageCodec.ts": "6ffb2dec2d936e381b17b00151e96a498938abb732be04442fc8ecb85a2146a9",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-before/src/lib/packages/packageError.ts": "7f0bff1911c72887aa98417705bba9ecc62b87d2b21ae5320384001d326c232a",
+    "src/components/shots/ShotRow.tsx": "d9091a5004b9a3951e19ffadc46b63f5d366820371fb21598b5b3c827a15a87b",
+    "src/lib/packages/audioPackageCodec.ts": "e9efd6af64d536bb6319be184d9d550e5f6e316f9e3954927472db0348e2e1ac",
+    "src/lib/packages/packageError.ts": "88bd42e3b80e971078902ed82aa244128ed998db2364673a46201462982f6f02",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D03-check-snapshot.json": "c472259ecaea7fc35c3b34612efab437a111229bc02dd5bc3939dea871349597",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D08-check-snapshot.json": "6d1c19943fee70b323541b47cae9cb2f438e335229c956d733b3130f5df2b264"
+  },
+  "limitations": [
+    "Focused EOF-only PASS; whole D and pending final integration remain main-owned",
+    "No tests required for exact byte-only EOF normalization",
+    "No full/type/build/native gate rerun",
+    "Snapshot self hash excluded to avoid circularity; no new .mjs helper or extra product classification"
+  ]
+}

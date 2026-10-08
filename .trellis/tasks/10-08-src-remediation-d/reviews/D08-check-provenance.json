@@ -1,0 +1,248 @@
+{
+  "status": "PASS",
+  "role": "independent trellis-check",
+  "capturedAt": "2026-10-08T16:07:33.335791+08:00",
+  "head": "abb7a91d255666fc8f772cddecd66676b9f2848c",
+  "scope": "All14 implementation paths and all58 writer-owned after paths. Remaining704 inputs hash-only. No product mutation/heavy gate rerun.",
+  "checks": {
+    "writerOwnedAfter": {
+      "pass": true,
+      "details": {
+        "count": 58,
+        "mismatches": []
+      }
+    },
+    "frozenTestInputs": {
+      "pass": true,
+      "details": {
+        "count": 704,
+        "mismatches": []
+      }
+    },
+    "staticCurrentInputs": {
+      "pass": true,
+      "details": {
+        "count": 123,
+        "mismatches": []
+      }
+    },
+    "immutableMainStaticASTArtifacts": {
+      "pass": true,
+      "details": {
+        "count": 13,
+        "mismatches": []
+      }
+    },
+    "actualPreeditOriginals": {
+      "pass": true,
+      "details": {
+        "copies": 8,
+        "manifestCount": 631,
+        "mismatches": []
+      }
+    },
+    "staticBaselineBytes": {
+      "pass": true,
+      "details": {
+        "ref": "f062d694e61da6bcb574f7fb548803b9e54197eb",
+        "count": 123,
+        "mismatches": []
+      }
+    },
+    "staticRawDifferential": {
+      "pass": true,
+      "details": {
+        "counts": {
+          "baseline": [
+            142,
+            286
+          ],
+          "current": [
+            128,
+            273
+          ]
+        },
+        "newNoncomplexity": [],
+        "newComplexityCount": 23,
+        "policy": "Same-signature relocation accounting, not clean lint."
+      }
+    },
+    "memoWarningGenuinelyRemoved": {
+      "pass": true,
+      "details": {
+        "newD08Leaves": [
+          "src/components/drafts/TextDraftField.tsx",
+          "src/components/shots/ShotTextField.tsx",
+          "src/components/story/BeatTextField.tsx",
+          "src/lib/useTextDraftRetention.ts"
+        ],
+        "currentDiagnostics": [],
+        "stateConsumedByMemo": "pendingIds.has(row.id); [loadedRows,pendingIds]",
+        "immediateRef": "statuses.current updated synchronously before setPendingIds"
+      }
+    },
+    "astRawSummary": {
+      "pass": true,
+      "details": {
+        "files": 419,
+        "edges": 2492,
+        "parseErrors": 0,
+        "valueSCCs": [],
+        "totals": {
+          "anyKeywords": 46,
+          "typeAssertions": 437,
+          "nonNullAssertions": 198,
+          "nestedTernaries": 442,
+          "emptyCatches": 16,
+          "dynamicImports": 8
+        }
+      }
+    },
+    "priorSnapshotD01": {
+      "pass": true,
+      "details": {
+        "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-snapshot.json",
+        "sha256": "ef719af94410d7a0e71402a556dc7b265cb56e0db21d70e5acd7b78ddefed539"
+      }
+    },
+    "priorSnapshotD02": {
+      "pass": true,
+      "details": {
+        "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D02-check-snapshot.json",
+        "sha256": "8e850c26c983c7023e4fca22a097c4411100886a747f723909b19144a29ad600"
+      }
+    },
+    "priorSnapshotD03": {
+      "pass": true,
+      "details": {
+        "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D03-check-snapshot.json",
+        "sha256": "c472259ecaea7fc35c3b34612efab437a111229bc02dd5bc3939dea871349597"
+      }
+    },
+    "priorSnapshotD04": {
+      "pass": true,
+      "details": {
+        "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D04-check-snapshot.json",
+        "sha256": "f253efb88b7f560245c18aa005443a6d6c09d29f73a9ec179e4c4e8e78aad031"
+      }
+    },
+    "priorSnapshotD05": {
+      "pass": true,
+      "details": {
+        "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D05-check-snapshot.json",
+        "sha256": "a31bde56b660b1089ef58759e1a12ff13974e3126851edda036b4b0b4a8af4be"
+      }
+    },
+    "priorSnapshotD06": {
+      "pass": true,
+      "details": {
+        "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D06-check-snapshot.json",
+        "sha256": "465789597e7b7a289c6722df2bc8b1865c3e340be7ed6a11ee457fccb5ab2abb"
+      }
+    },
+    "priorSnapshotD07": {
+      "pass": true,
+      "details": {
+        "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D07-check-snapshot.json",
+        "sha256": "ce3c3aec1650a40d52c2d35e31ecb13d86c1cd732df89522af7386eebc22e522"
+      }
+    },
+    "acceptedDirectOwnerOverlaps": {
+      "pass": true,
+      "details": {
+        "src/components/shots/ShotRow.tsx": {
+          "unit": "D03",
+          "acceptedHash": "6b27b9b5366ece0a78866841bb8b187e7354936eee325de3fda7dd9b370732d4",
+          "entryHash": "6b27b9b5366ece0a78866841bb8b187e7354936eee325de3fda7dd9b370732d4",
+          "matches": true
+        },
+        "src/components/shots/ShotEditorPage.tsx": {
+          "unit": "D03",
+          "acceptedHash": "aa0b5135865eb7b40aa973200cf36afcb502c4b44137586a43503e7bc1241bd1",
+          "entryHash": "aa0b5135865eb7b40aa973200cf36afcb502c4b44137586a43503e7bc1241bd1",
+          "matches": true
+        },
+        "src/components/story/StoryPage.tsx": {
+          "unit": "D02",
+          "acceptedHash": "f7d635f69d1702962d6177d72710f80c86f63176c04121af340fd9839a1f246a",
+          "entryHash": "f7d635f69d1702962d6177d72710f80c86f63176c04121af340fd9839a1f246a",
+          "matches": true
+        },
+        "src/db/episodes.ts": {
+          "unit": "D02",
+          "acceptedHash": "92236d81fa13ecbb3b59740fb4b868e985710691df6bcefd2c926e57368819d4",
+          "entryHash": "92236d81fa13ecbb3b59740fb4b868e985710691df6bcefd2c926e57368819d4",
+          "matches": true
+        }
+      }
+    },
+    "disjointFixtureCorrection": {
+      "pass": true,
+      "details": {
+        "paths": 72,
+        "mismatches": [],
+        "implementationOverlap": []
+      }
+    },
+    "postMemoCurrentGates": {
+      "pass": true,
+      "details": [
+        {
+          "name": "typecheck",
+          "exitCode": 0,
+          "startedAt": "2026-10-08T15:52:20.745949+08:00",
+          "logSHA256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa"
+        },
+        {
+          "name": "focused",
+          "exitCode": 0,
+          "startedAt": "2026-10-08T15:52:27.298745+08:00",
+          "logSHA256": "62b279be4bd2261fc3224a3395d316c185f85f03cb1cf497475865ea7836cc8f"
+        },
+        {
+          "name": "native",
+          "exitCode": 0,
+          "startedAt": "2026-10-08T15:52:29.179924+08:00",
+          "logSHA256": "71bb200e7c2dbfd5a3ffa97c17766ae0ef8fb4e31e3e14b5f62edae9f87dd4f1"
+        }
+      ]
+    },
+    "postMemoNative": {
+      "pass": true,
+      "details": {
+        "checks": 13,
+        "errors": [],
+        "externalRequests": 0,
+        "limits": "Actual React pages/router/guards/Dexie/native IndexedDB; controlled command delay/failure, synthetic composition input and force-remount seam. No paid-provider, crash/browser-restart, OS IME, or unmodified full-product E2E claim."
+      }
+    },
+    "generatedRouteRestored": {
+      "pass": true,
+      "details": {
+        "equal": true,
+        "entryTokens": 3995,
+        "builtTokens": 3995
+      }
+    }
+  },
+  "gateCurrency": {
+    "currentAfterMemoFix": {
+      "TypeScript": "PASS",
+      "focused": "10 files /169 tests PASS",
+      "D08native": "13 scenarios PASS, zero page errors/external requests"
+    },
+    "preMemoFixOnly": {
+      "full": "159 files /2552 tests PASS",
+      "B01": "19 PASS",
+      "B07": "5 PASS",
+      "C01": "6 PASS",
+      "C02": "3 PASS",
+      "models": "197 files/85 providers/1855 models verified",
+      "build": "PASS with inherited chunk warning; 519 built files preserved"
+    },
+    "note": "PRE full/core/models/build are not current after memo correction. Whole batch runs final current gates after independent D08 acceptance."
+  },
+  "sourceSetSHA256": "d82794cbf7796306763f37a7399c35f16330e9af6e88a62f06a0d4b783ee6f81",
+  "inputSetSHA256": "9287d6e16e4f03280ea0d4673e255f140c95f4170eed98cea943d119c561064d",
+  "noProductFixRequired": true
+}

@@ -1,0 +1,25 @@
+PASS actual trigger and Radix panel keep one preview subscription across open/close
+PASS late A/B/error/model/draft/attachment completions show loading and never publish foreign facts
+PASS same-project memory sheet follows thread identity and pending exclusion stays with its origin
+PASS policy query pending/missing/error and delayed mutation honor the current thread session
+native failure after 4 passed; artifacts /var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/d04-native-failure-b4dnGY
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The input did not match the regular expression /OLD MEMORY/. Input:
+
+'{"projectId":"prj_2da0a70a-f848-4eec-9632-10e921826f1f","query":"consistency","plannerVersion":1,"fingerprint":"sha256-v1:89a66ef6c0d260db025078fdedccc969ef773fbde5eede8cd32cab82f8c3e14d","entries":[],"envelope":"","estimatedTokens":0,"budget":4096,"eligibleCount":0,"selectedCount":0,"omittedCount":0}'
+
+    at file:///Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D04-native.mjs:118:16
+    at async test (file:///Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D04-native.mjs:46:46)
+    at async file:///Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D04-native.mjs:112:5 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: '{"projectId":"prj_2da0a70a-f848-4eec-9632-10e921826f1f","query":"consistency","plannerVersion":1,"fingerprint":"sha256-v1:89a66ef6c0d260db025078fdedccc969ef773fbde5eede8cd32cab82f8c3e14d","entries":[],"envelope":"","estimatedTokens":0,"budget":4096,"eligibleCount":0,"selectedCount":0,"omittedCount":0}',
+  expected: /OLD MEMORY/,
+  operator: 'match',
+  diff: 'simple'
+}
+
+Node.js v24.11.0

@@ -1,0 +1,18 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Frontend quality and package conventions"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "D02 responsibility split must preserve complete relevant contract; disk-read sections if injection truncated"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "D02 responsibility split must preserve complete relevant contract; disk-read sections if injection truncated"}
+{"file": ".trellis/spec/frontend/directory-structure.md", "reason": "D02 responsibility split must preserve complete relevant contract; disk-read sections if injection truncated"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "D02 responsibility split must preserve complete relevant contract; disk-read sections if injection truncated"}
+{"file": ".trellis/spec/frontend/production-contracts.md", "reason": "D02 responsibility split must preserve complete relevant contract; disk-read sections if injection truncated"}
+{"file": ".trellis/spec/frontend/asset-output-foundation.md", "reason": "D02 responsibility split must preserve complete relevant contract; disk-read sections if injection truncated"}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "D02 responsibility split must preserve complete relevant contract; disk-read sections if injection truncated"}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "D02 responsibility split must preserve complete relevant contract; disk-read sections if injection truncated"}
+{"file": ".trellis/spec/frontend/agent-task-wrapup.md", "reason": "D02 responsibility split must preserve complete relevant contract; disk-read sections if injection truncated"}
+{"file": ".trellis/spec/frontend/agent-batch-generation.md", "reason": "D02 responsibility split must preserve complete relevant contract; disk-read sections if injection truncated"}
+{"file": ".trellis/spec/frontend/audio-music.md", "reason": "D02 responsibility split must preserve complete relevant contract; disk-read sections if injection truncated"}
+{"file": ".trellis/spec/frontend/project-memory.md", "reason": "D02 responsibility split must preserve complete relevant contract; disk-read sections if injection truncated"}
+{"file": ".trellis/spec/frontend/hook-guidelines.md", "reason": "D02 responsibility split must preserve complete relevant contract; disk-read sections if injection truncated"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/research/D02-repository-plan.md", "reason": "Concrete owner/export/caller migration and atomic invariants"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/research/D02-scope.md", "reason": "Current coordinator bounded D02 authorization/acceptance"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/research/D01-implementation.md", "reason": "Accepted D01 leaves preserved (requires final checker PASS first)"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/research/static-runtime-restoration.md", "reason": "Same-version separate full-source TypeScript baseline"}

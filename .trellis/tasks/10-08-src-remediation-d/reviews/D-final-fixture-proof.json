@@ -1,0 +1,996 @@
+{
+  "status": "PASS",
+  "capturedAt": "2026-10-08T07:36:02.820Z",
+  "typescript": "5.9.3",
+  "testChanges": [
+    {
+      "path": "tests/d05SchemaEquivalence.test.ts",
+      "exactAuthorizedTransformation": true,
+      "allAssertionsPreserved": true,
+      "beforeExpectCalls": 5,
+      "afterExpectCalls": 5,
+      "noTaskImportOrWrite": true
+    },
+    {
+      "path": "tests/d06Capabilities.test.ts",
+      "exactAuthorizedTransformation": true,
+      "allAssertionsPreserved": true,
+      "beforeExpectCalls": 27,
+      "afterExpectCalls": 27,
+      "noTaskImportOrWrite": true
+    },
+    {
+      "path": "tests/d07RequestWire.test.ts",
+      "exactAuthorizedTransformation": true,
+      "allAssertionsPreserved": true,
+      "beforeExpectCalls": 15,
+      "afterExpectCalls": 15,
+      "noTaskImportOrWrite": true
+    },
+    {
+      "path": "tests/memoryRetrieval.test.ts",
+      "exactAuthorizedTransformation": true,
+      "allAssertionsPreserved": true,
+      "beforeExpectCalls": 75,
+      "afterExpectCalls": 75,
+      "noTaskImportOrWrite": true
+    },
+    {
+      "path": "tests/d05ToolCatalog.test.ts",
+      "exactAuthorizedTransformation": true,
+      "allAssertionsPreserved": true,
+      "beforeExpectCalls": 18,
+      "afterExpectCalls": 18,
+      "noTaskImportOrWrite": true
+    }
+  ],
+  "originalByteProof": [
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/tools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/tools.ts",
+      "sha256": "f02a84a492891364673df245242e2da1ca889277e9a670fce0dfea963c914bbd",
+      "bytes": 8319,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationProfiles.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationProfiles.ts",
+      "sha256": "1e4e6c2b546b43b2c6801057edc4ef7b75e84ab2ddba4caf1f3c989b5b511a93",
+      "bytes": 11049,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/memory/retrieval.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/memory/retrieval.ts",
+      "sha256": "7ae1edf41af85276a2ffb9c8005b3e1c43d7790adb8545a2ad01d0aa03e70893",
+      "bytes": 7255,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/ipTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/ipTools.ts",
+      "sha256": "c0752fa767e48b16b71d49c86d5b6d3aa7627fbab600db59e97b8c5f85c8cdda",
+      "bytes": 10820,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/audioTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/audioTools.ts",
+      "sha256": "2d994f95a740cc35221a4ee4c444ce497cea0357c40e0b187fba97b90d926aae",
+      "bytes": 18619,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/musicTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/musicTools.ts",
+      "sha256": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+      "bytes": 9460,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/audioGenerationTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/audioGenerationTools.ts",
+      "sha256": "34c64b4d254425d6334370239e007774cf6297bf594cb91603627e92f93ce507",
+      "bytes": 18211,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/materialTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialTools.ts",
+      "sha256": "702b461e56f59b16b252147287077fa026b7c6b272fc41eb1e38d811c5039c48",
+      "bytes": 28413,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/toolLoading.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/toolLoading.ts",
+      "sha256": "1599a871d8e10e822237b1cac3f7eed517254e6fd5f8db281a9dc6cde660851e",
+      "bytes": 10607,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/webTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/webTools.ts",
+      "sha256": "bff9ac8007c6b2e0321fba6d63e7564f5175645dc29a6d867de494ac8092da49",
+      "bytes": 3977,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/referenceTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceTools.ts",
+      "sha256": "66e8b7bfd81f3f04e238d05a4c6741991af62e1a6d9590d42614bedb75b4f93a",
+      "bytes": 11558,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/memoryTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/memoryTools.ts",
+      "sha256": "5d89097a581570f7431a2613d67d67da5928762f86ecb945d7fcb58ea8495eb8",
+      "bytes": 17409,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/projectScope.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/projectScope.ts",
+      "sha256": "d590590a610b2a4546dd6b8c01a1468542cbb923afdcc939cd17d00046165faf",
+      "bytes": 2830,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/taskTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/taskTools.ts",
+      "sha256": "6e55619e39b36159f4956f8f16429bcd740bb6d5ed06d424bd4c0f40e8bd48fa",
+      "bytes": 15332,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationTools.ts",
+      "sha256": "048e10ff8601ff57053293d3b6fc1d9c1fefe8f3d3344d6aaf01cc1854bc833f",
+      "bytes": 12484,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/businessTools.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessTools.ts",
+      "sha256": "53350cfd60ac4e86cda8bd843dbde122ab50539d8c5ed3e3698604a5dc6441a5",
+      "bytes": 44251,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/toolErrors.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/toolErrors.ts",
+      "sha256": "0b2f17d2595bc6df471be1c3dd5c41505326ba401c603e1461e8f9787600e799",
+      "bytes": 6988,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/memory/schema.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/memory/schema.ts",
+      "sha256": "ccddefc631d808e0ec77a07b6be57cafee746fcf8cfbb09969a3ff0e1b754946",
+      "bytes": 3146,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/businessSchemas.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessSchemas.ts",
+      "sha256": "db589d94729d8229ccc1b7919d2e912015bc68b432423ed2bce7718e5ce39a70",
+      "bytes": 7609,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/libraryToolHelpers.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/libraryToolHelpers.ts",
+      "sha256": "201ae3605c573ea16ff9b082b7d17b2edb888971b350dd4b55cc66072f520f92",
+      "bytes": 4635,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/soundWriteReceipt.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/soundWriteReceipt.ts",
+      "sha256": "27e0ae6fe74a34b9542d4d0f00875ebff4e45402509e728872d297c9eb85aed5",
+      "bytes": 1401,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/mimoSpeechSpec.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/mimoSpeechSpec.ts",
+      "sha256": "fcb3e6ac4e75eeab44c71ff23b8164dec3e0d99e3f58d36266ea926ea7e1fe1e",
+      "bytes": 498,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/materialContent.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialContent.ts",
+      "sha256": "be1ae9dcdc35d3819e16bf2c22643741258f09cfc9bbebd0ea8c209a1275aaeb",
+      "bytes": 5265,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/materialImageInput.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialImageInput.ts",
+      "sha256": "b61919a40e730952cd499b04e26f908a5bf827a6382837f534066dba68cb42b5",
+      "bytes": 5205,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/materialToolNames.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialToolNames.ts",
+      "sha256": "b1023b87ee512d4ef97487d4c890c716e2bea21c714b528177cbc195597ec813",
+      "bytes": 330,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/skills.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/skills.ts",
+      "sha256": "5ac7b4a93941047d115a62915c9fdaf8b439e484a0139d932084a07f8d3c1cad",
+      "bytes": 15569,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/imageDiscovery.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/imageDiscovery.ts",
+      "sha256": "fc8571b38c847e6ed4e0504bd04d3f5140a6772a202d94fc7b4261292f95bc58",
+      "bytes": 18633,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/referenceContext.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceContext.ts",
+      "sha256": "b3b2fe419b730c9c884bbe3a1785d8ff97791b0e3d9b6d215e0d2ec79dfb1f07",
+      "bytes": 6565,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/imageQueue.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/imageQueue.ts",
+      "sha256": "6261436bf2dc4d86815f0b8c0b0075f61b0f6824f0869eaefea4db3408a0317a",
+      "bytes": 2028,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/referenceEvidence.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceEvidence.ts",
+      "sha256": "e8950b149b044d303b979762fcc6f7bb71bcc6e4d7b43ea02b4eb48f0c013208",
+      "bytes": 9238,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/memoryToolNames.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/memoryToolNames.ts",
+      "sha256": "0dc6e4453673dff641208e3e915eedd53aa477202e92ff3ad597ab6594d62ab4",
+      "bytes": 697,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/referenceToolNames.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceToolNames.ts",
+      "sha256": "577cdbe4f5d689f91e86bb17900844131131a1872aae9b95f6ea9c27d8fadbd1",
+      "bytes": 150,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/taskState.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/taskState.ts",
+      "sha256": "e83ffaaf911424d8e7e831e55500e91a5e68b0818ff8b76d6502abebe7f01053",
+      "bytes": 3475,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationSelection.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationSelection.ts",
+      "sha256": "f86880a721807bad8c252113098047f1f5b770d26c77ebdb22ce351cc433a040",
+      "bytes": 9192,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationRuntime.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationRuntime.ts",
+      "sha256": "a7218954e91ddeaf0eeed62608ab0e6a9b1dea0509d8bb97f22f888c398d8ec4",
+      "bytes": 29058,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/businessWriteReceipt.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessWriteReceipt.ts",
+      "sha256": "626537317a0c0a239c66b4c1b756251faead3eb400690a69274ce63cbf693096",
+      "bytes": 7062,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/businessStore.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessStore.ts",
+      "sha256": "407558e99438728dcf9979655d9b7815de13de1268b5096dbb7db8967ecf6666",
+      "bytes": 17981,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/businessToolNames.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessToolNames.ts",
+      "sha256": "0abb4cb362354b0dc5e22f60fa78e6d4864b23f2d5eb034cec3c33debd40ce04",
+      "bytes": 868,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/writeReceipt.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/writeReceipt.ts",
+      "sha256": "2dd25204832ceabdfec153b2f52dbf0d4afe3c21eebc41c6c35052258a9ebb1c",
+      "bytes": 1422,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/ipToolNames.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/ipToolNames.ts",
+      "sha256": "a1e8d0086956df8e0c69abb69334fe4a78475025babf165cd4da372768dc8e41",
+      "bytes": 128,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/audioMusicToolNames.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/audioMusicToolNames.ts",
+      "sha256": "2af929c2c55dc34886165c35ecc2882d764b6e0d6d0ff14e4b96d5c0901d819f",
+      "bytes": 448,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/webToolNames.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/webToolNames.ts",
+      "sha256": "a247f85125ad56d9b83bd56556ac935cb050bcfa3b66acc5cc6445984b27f37c",
+      "bytes": 67,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationPreparation.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationPreparation.ts",
+      "sha256": "9f04785d944d98852726da709d630f1c712b2f08e32b353c2e40564362b3e0f0",
+      "bytes": 5517,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D05",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationMedia.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationMedia.ts",
+      "sha256": "82f6aced544ad2c8aafe62dc0b33973859d8b7fa63851b7ff9ce7cba39a71709",
+      "bytes": 2318,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D06",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/generationProfiles.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d06/src/lib/agent/generationProfiles.ts",
+      "sha256": "9c2f3f28f8d78306c4db005af6c60a5809a8c2bf73c84479392f9482ca8fd69d",
+      "bytes": 12860,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D06",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/output.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d06/src/domain/output.ts",
+      "sha256": "b43d58fa0b6b6f5a4b001e75f8bac6e8b613794cd0f422d40d6d64992d98dd33",
+      "bytes": 10281,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D06",
+      "original": ".trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/businessSchemas.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d06/src/lib/agent/businessSchemas.ts",
+      "sha256": "b86d694989c3353c4c8ab09edc915ac72e8a9710289da09b881e771dc050b9ef",
+      "bytes": 8174,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/apimart.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/apimart.ts",
+      "sha256": "0aaf9904b526ce8ca63cdc67535f7b245fbf182e5e4b93a6185633916118c65e",
+      "bytes": 17674,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/apimartAudio.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/apimartAudio.ts",
+      "sha256": "b039e073947defcfc5b69a1e33fd2b7a39779c33159ba4eb65cd632509362d9e",
+      "bytes": 15359,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/aihubmix.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/aihubmix.ts",
+      "sha256": "c6a66b5fdb0904d1765b70f04b38769f55ec5a6c70feae757396adffbb4233c9",
+      "bytes": 21806,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/mimoSpeech.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/mimoSpeech.ts",
+      "sha256": "0be180a9ed8767321126cc7b49ba3f16836e625466e3d43c105c46e9dcaf62c8",
+      "bytes": 11047,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/openaiCompatible.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/openaiCompatible.ts",
+      "sha256": "58af82f28f70dbd361d9bfc43b4201186407060c67ad6fd3f342e20a65c29912",
+      "bytes": 7765,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/chatStream.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/chatStream.ts",
+      "sha256": "ede7b8806f165128a864f948435defc700c226a4656041c6a485c0f3342cdf6d",
+      "bytes": 19377,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/responsesStream.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/responsesStream.ts",
+      "sha256": "7a641a8da7404523939998ea6618989e9823bb1f63e24dec9aad5076e2eabee7",
+      "bytes": 15060,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/tavily.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/tavily.ts",
+      "sha256": "b24c36e3ef77e85585b6d72ca684b40e2f7c7e5d758696abea5ea945a0c98ae4",
+      "bytes": 8753,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/safeError.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/safeError.ts",
+      "sha256": "aaca8cbeafa33d6d2d7f12668f858827de788b1b3737bf9a909cdb255dca5d12",
+      "bytes": 307,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/boundedResponse.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/boundedResponse.ts",
+      "sha256": "92cc47f78623f8c1c8e7d864a9f4af655c5b498077f8b0e93de25eefc9be8384",
+      "bytes": 3895,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/modelMetadata.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/modelMetadata.ts",
+      "sha256": "9ea70a6c9172cbab757550440888fbda56a5ec6f89aa95111405accd3db175aa",
+      "bytes": 3533,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/boundedSse.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/boundedSse.ts",
+      "sha256": "8626015eebd251a1956992f6274d679f8e3cd6af556e2e4acb9acf72fe925894",
+      "bytes": 4080,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/referenceWire.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/referenceWire.ts",
+      "sha256": "12e661d548816a5e99285ccef20aeb0bb7353f7f289d61a4ac763ff941bd74a8",
+      "bytes": 5260,
+      "equalOriginal": true
+    },
+    {
+      "unit": "D07",
+      "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/visionCapability.ts",
+      "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/visionCapability.ts",
+      "sha256": "a4d73f99782eea0fa7bd3611b56a540909f34baf879f6bc1dd108479a436f349",
+      "bytes": 897,
+      "equalOriginal": true
+    }
+  ],
+  "relativeClosure": {
+    "edgeCount": 133,
+    "allResolvedToCopiedHierarchy": true,
+    "sharedMockBoundaries": [
+      {
+        "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/modelMetadata.ts",
+        "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/modelMetadata.ts",
+        "actualCurrent": "src/lib/ai/modelMetadata.ts",
+        "sha256": "9ea70a6c9172cbab757550440888fbda56a5ec6f89aa95111405accd3db175aa",
+        "outgoingSnapshotImportsNotExecuted": [
+          "./modelBank"
+        ],
+        "policy": "existing-vi.mock-factory-imports-current-unmodified-module"
+      },
+      {
+        "original": ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/visionCapability.ts",
+        "destination": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/visionCapability.ts",
+        "actualCurrent": "src/lib/ai/visionCapability.ts",
+        "sha256": "a4d73f99782eea0fa7bd3611b56a540909f34baf879f6bc1dd108479a436f349",
+        "outgoingSnapshotImportsNotExecuted": [
+          "@/domain/referenceInput",
+          "./modelMetadata",
+          "./modelBank"
+        ],
+        "policy": "existing-vi.mock-factory-imports-current-unmodified-module"
+      }
+    ],
+    "requiredSnapshotJsonFiles": []
+  },
+  "protectedHistory": [
+    {
+      "path": ".trellis/tasks/10-08-src-remediation-d/tools/d05/runtime-catalog.json",
+      "sha256": "8b82eca074055620fe17c161606e707ed9466bfb89f4ec58a68ae73f13a0218e",
+      "unchanged": true
+    },
+    {
+      "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D05-check-snapshot.json",
+      "sha256": "a31bde56b660b1089ef58759e1a12ff13974e3126851edda036b4b0b4a8af4be",
+      "unchanged": true
+    },
+    {
+      "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D06-check-snapshot.json",
+      "sha256": "465789597e7b7a289c6722df2bc8b1865c3e340be7ed6a11ee457fccb5ab2abb",
+      "unchanged": true
+    },
+    {
+      "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D07-check-snapshot.json",
+      "sha256": "ce3c3aec1650a40d52c2d35e31ecb13d86c1cd732df89522af7386eebc22e522",
+      "unchanged": true
+    },
+    {
+      "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D03-check-snapshot.json",
+      "sha256": "c472259ecaea7fc35c3b34612efab437a111229bc02dd5bc3939dea871349597",
+      "unchanged": true
+    }
+  ],
+  "newFixtureWhitespace": {
+    "commandTemplate": [
+      "git",
+      "diff",
+      "--no-index",
+      "--check",
+      "/dev/null",
+      "<new fixture>"
+    ],
+    "expectedDifferenceExitCode": 1,
+    "fileChecks": [
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/tools.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationProfiles.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/memory/retrieval.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/ipTools.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/audioTools.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/musicTools.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/audioGenerationTools.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialTools.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/toolLoading.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/webTools.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceTools.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/memoryTools.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/projectScope.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/taskTools.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationTools.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessTools.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/toolErrors.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/memory/schema.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessSchemas.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/libraryToolHelpers.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/soundWriteReceipt.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/mimoSpeechSpec.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialContent.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialImageInput.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/materialToolNames.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/skills.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/imageDiscovery.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceContext.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/imageQueue.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceEvidence.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/memoryToolNames.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/referenceToolNames.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/taskState.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationSelection.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationRuntime.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessWriteReceipt.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessStore.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/businessToolNames.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/writeReceipt.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/ipToolNames.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/audioMusicToolNames.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/webToolNames.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationPreparation.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d05/src/lib/agent/generationMedia.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d06/src/lib/agent/generationProfiles.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d06/src/domain/output.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d06/src/lib/agent/businessSchemas.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/apimart.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/apimartAudio.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/aihubmix.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/mimoSpeech.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/openaiCompatible.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/chatStream.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/responsesStream.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/tavily.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/safeError.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/boundedResponse.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/modelMetadata.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/boundedSse.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/referenceWire.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      },
+      {
+        "path": "tests/fixtures/sourceSnapshots/d07/src/lib/ai/visionCapability.ts",
+        "rawExitCode": 1,
+        "diagnosticOutput": "",
+        "noWhitespaceDiagnostics": true
+      }
+    ]
+  },
+  "galleryTokenProof": {
+    "path": "src/components/studio/ProjectGalleryPage.tsx",
+    "typescript": "5.9.3",
+    "kind": "TSX-parser-terminal-kind-and-text",
+    "beforeTokenCount": 3451,
+    "afterTokenCount": 3451,
+    "beforeTokenSha256": "2e4a0c5c63abc4f30a454590e01b76366518003e81819681516f90b40a60737b",
+    "afterTokenSha256": "2e4a0c5c63abc4f30a454590e01b76366518003e81819681516f90b40a60737b",
+    "semanticTokensEqual": true,
+    "exactTrailingNewlinesOnly": true,
+    "removedBytes": 1,
+    "parseErrors": 0
+  },
+  "galleryWhitespaceCheck": {
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "src/components/studio/ProjectGalleryPage.tsx"
+    ],
+    "exitCode": 0,
+    "output": ""
+  }
+}

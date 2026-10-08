@@ -1,0 +1,205 @@
+ M .trellis/spec/frontend/agent-execution.md
+ M .trellis/spec/frontend/audio-music.md
+ M .trellis/spec/frontend/component-guidelines.md
+ M .trellis/spec/frontend/directory-structure.md
+ M .trellis/spec/frontend/hook-guidelines.md
+ M .trellis/spec/frontend/ip-material-library.md
+ M .trellis/spec/frontend/production-contracts.md
+ M .trellis/spec/frontend/quality-guidelines.md
+ M .trellis/spec/frontend/state-management.md
+ M .trellis/spec/frontend/type-safety.md
+ M .trellis/tasks/09-30-src-quality-remediation/implement.md
+ M .trellis/tasks/09-30-src-quality-remediation/progress.md
+ M .trellis/tasks/09-30-src-quality-remediation/remediation-ledger.json
+ M .trellis/tasks/09-30-src-quality-remediation/remediation-ledger.md
+ M .trellis/tasks/09-30-src-quality-remediation/task.json
+ M scripts/b01-browser-regression.mjs
+ M scripts/b07-browser-regression.mjs
+ M src/components/agent/AgentChatPage.tsx
+ M src/components/agent/AgentGenerationBatches.tsx
+ M src/components/agent/CreatedEntityLinks.tsx
+ M src/components/agent/ProjectPicker.tsx
+ M src/components/assets/AssetLibraryPage.tsx
+ M src/components/assets/CharacterDetailPage.tsx
+ M src/components/assets/PropDetailPage.tsx
+ M src/components/assets/SceneDetailPage.tsx
+ M src/components/assets/StyleDetailPage.tsx
+ M src/components/assets/WorldSettingPanel.tsx
+ M src/components/audio/AudioTimeline.tsx
+ M src/components/audio/AudioWorkspacePage.tsx
+ M src/components/audio/MimoConnection.tsx
+ M src/components/music/MusicWorkspacePage.tsx
+ M src/components/shots/DurationInput.tsx
+ M src/components/shots/ShotEditorPage.tsx
+ M src/components/slots/GenerationSlotCard.tsx
+ M src/components/story/StoryPage.tsx
+ M src/components/studio/AssetLibraryPages.tsx
+ M src/components/studio/ConnectorsPage.tsx
+ M src/components/studio/ProjectGalleryPage.tsx
+ M src/components/studio/materials/MaterialDetailPanel.tsx
+ M src/components/workspace/EpisodeListPage.tsx
+ M src/components/workspace/ProjectSettingsPanel.tsx
+ M src/components/workspace/WorkspaceChrome.tsx
+ M src/db/agentFinishingCheck.ts
+ M src/db/agentGenerationBatches.ts
+ M src/db/agentProjectCreation.ts
+ M src/db/agentTaskRecords.ts
+ M src/db/agentTasks.ts
+ M src/db/agentTools.ts
+ M src/db/productionProposals.ts
+ M src/db/references.ts
+ D src/db/repo.ts
+ M src/lib/agent/audioGenerationTools.ts
+ M src/lib/agent/businessStore.ts
+ M src/lib/agent/businessTools.ts
+ M src/lib/agent/generationBatchRuntime.ts
+ M src/lib/agent/generationRuntime.ts
+ M src/lib/agent/materialTools.ts
+ M src/lib/agent/toolLoading.ts
+ M src/lib/audioGeneration/runtime.ts
+ M src/lib/audioProjectPackage.ts
+ M src/lib/generationIntent.ts
+ M src/lib/media.ts
+ M src/lib/productionContext.ts
+ M src/lib/projectPackage.ts
+ M src/routes/_studio.tsx
+ M src/routes/p.$projectId.index.tsx
+ M src/routes/p.$projectId.plan.tsx
+ M src/routes/p.$projectId.produce.tsx
+ M src/routes/p.$projectId.report.tsx
+ M src/routes/p.$projectId.shots.tsx
+ M tests/agentActivityPersistence.test.ts
+ M tests/agentAuditRemediation.test.ts
+ M tests/agentBatchPreparationRecovery.test.ts
+ M tests/agentBusiness.test.ts
+ M tests/agentFinishingCheck.test.ts
+ M tests/agentGeneration.test.ts
+ M tests/agentGenerationBatch.test.ts
+ M tests/agentGenerationBatchSafety.test.ts
+ M tests/agentGenerationEvidence.test.ts
+ M tests/agentGenerationRecovery.test.ts
+ M tests/agentGenerationReview.test.ts
+ M tests/agentGenerationReviewTransactions.test.ts
+ M tests/agentIpTools.test.ts
+ M tests/agentMaterialTools.test.ts
+ M tests/agentMemoryTools.test.ts
+ M tests/agentProjectContext.test.ts
+ M tests/agentProjectCreation.test.ts
+ M tests/agentReferences.test.ts
+ M tests/agentRunReview.test.ts
+ M tests/agentRuns.test.ts
+ M tests/agentSettings.test.ts
+ M tests/agentTaskOrchestration.test.ts
+ M tests/agentTaskOrchestrationReview.test.ts
+ M tests/agentTaskWrapup.test.ts
+ M tests/agentTasks.test.ts
+ M tests/agentToolTransactions.test.ts
+ M tests/agentTools.test.ts
+ M tests/agentToolsReview.test.ts
+ M tests/agentUsage.test.ts
+ M tests/assetFoundation.test.ts
+ M tests/audioAgentExecution.test.ts
+ M tests/audioEngineCommands.test.ts
+ M tests/audioFingerprint.test.ts
+ M tests/audioFoundation.test.ts
+ M tests/audioGenerationAgent.test.ts
+ M tests/audioGenerationRecoveryAudit.test.ts
+ M tests/audioGenerationRuntime.test.ts
+ M tests/audioMusicAgentTools.test.ts
+ M tests/audioOutputEvidence.test.ts
+ M tests/audioScriptImport.test.ts
+ M tests/audioTaskEvidence.test.ts
+ M tests/auditDataIntegrity.test.ts
+ M tests/b01QueryIdentity.test.ts
+ M tests/b02MemoryPromotion.test.ts
+ M tests/b03IntentBoundaries.test.ts
+ M tests/b06EditorSessions.test.ts
+ M tests/b07ComposeSessions.test.ts
+ M tests/boundedAudioRuntime.test.ts
+ M tests/connectorMigration.test.ts
+ M tests/connectors.test.ts
+ M tests/contextManagement.test.ts
+ M tests/draftConcurrency.test.ts
+ M tests/draftMedia.test.ts
+ M tests/fixtures/b01/harness.tsx
+ M tests/fixtures/b07/harness.tsx
+ M tests/fixtures/c01/harness.ts
+ M tests/fixtures/c02/harness.tsx
+ M tests/generationIntent.test.ts
+ M tests/imageDiscovery.test.ts
+ M tests/manualDraftBaseline.test.ts
+ M tests/manualDraftWiring.test.ts
+ M tests/materialImageQueue.test.ts
+ M tests/materialIntegration.test.ts
+ M tests/materialLibrary.test.ts
+ M tests/materialReferenceWire.test.ts
+ M tests/mediaMetadata.test.ts
+ M tests/mediaPatchBoundary.test.ts
+ M tests/memoryInclusion.test.ts
+ M tests/memoryRetrieval.test.ts
+ M tests/mimoRuntime.test.ts
+ M tests/musicDraftVariants.test.ts
+ M tests/musicDurationContract.test.ts
+ M tests/musicGenerationReview.test.ts
+ M tests/musicLegacyDurationRepair.test.ts
+ M tests/parentProjectWrites.test.ts
+ M tests/productionContext.test.ts
+ M tests/productionHandoff.test.ts
+ M tests/productionProposals.test.ts
+ M tests/projectMemories.test.ts
+ M tests/projectMemoryPackage.test.ts
+ M tests/projectPackage.test.ts
+ M tests/projectPackageRelations.test.ts
+ M tests/reasoningPolicy.test.ts
+ M tests/referenceEvidence.test.ts
+ M tests/references.test.ts
+ M tests/repo.test.ts
+ M tests/repoReliability.test.ts
+ M tests/responsesStream.test.ts
+ M tests/shotBulkUndo.test.ts
+ M tests/shotDeleteUndo.test.ts
+ M tests/toolLoading.test.ts
+ M tests/toolLoadingMeasurement.test.ts
+ M tests/toolValidationDiagnostics.test.ts
+ M tests/toolValidationSafety.test.ts
+ M tests/useShotMedia.test.ts
+ M tests/webResearchRuntime.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/
+?? src/components/agent/chatExecutionFlows.ts
+?? src/components/agent/useChatExecutionSession.ts
+?? src/components/agent/useChatSelection.ts
+?? src/components/audio/audioSelection.ts
+?? src/components/music/switchMusicVariant.ts
+?? src/components/shots/ShotRelationsEditor.tsx
+?? src/components/shots/ShotRow.tsx
+?? src/components/shots/shotColumnFields.ts
+?? src/components/shots/shotEditorCommands.ts
+?? src/components/shots/useShotEditorKeyboard.ts
+?? src/components/studio/importStudioProject.ts
+?? src/components/workspace/ProjectHomePage.tsx
+?? src/db/agentGenerationTarget.ts
+?? src/db/agentTaskGuards.ts
+?? src/db/assetReuse.ts
+?? src/db/assets.ts
+?? src/db/cascadeCommands.ts
+?? src/db/chat.ts
+?? src/db/connectors.ts
+?? src/db/episodes.ts
+?? src/db/media.ts
+?? src/db/productionRecords.ts
+?? src/db/productionShared.ts
+?? src/db/projects.ts
+?? src/db/shots.ts
+?? src/domain/agentToolSelection.ts
+?? src/lib/agent/generationPreparation.ts
+?? src/lib/audio/buffers.ts
+?? src/lib/audio/exportMix.ts
+?? src/lib/packages/
+?? tests/d01DependencyBoundaries.test.ts
+?? tests/d02CascadeTransactions.test.ts
+?? tests/d03AudioCommands.test.ts
+?? tests/d03ChatOwners.test.ts
+?? tests/d03ShotCommands.test.ts
+?? tests/fixtures/d01/
+?? tests/fixtures/d02/
+?? tests/fixtures/d03/

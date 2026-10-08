@@ -1,0 +1,6446 @@
+{
+  "scope": "Targeted named imports, owner namespace member accesses/spies, same-owner references; not a whole-source value graph or runtime proof",
+  "originalRepoDirectImports": {
+    "src": 40,
+    "tests": 91,
+    "fixtures": 5
+  },
+  "oldImportFiles": [
+    "src/routes/p.$projectId.plan.tsx",
+    "src/routes/p.$projectId.index.tsx",
+    "src/routes/p.$projectId.shots.tsx",
+    "src/routes/p.$projectId.report.tsx",
+    "src/routes/p.$projectId.produce.tsx",
+    "tests/musicDurationContract.test.ts",
+    "tests/audioGenerationRecoveryAudit.test.ts",
+    "tests/agentIpTools.test.ts",
+    "tests/audioEngineCommands.test.ts",
+    "tests/agentMaterialTools.test.ts",
+    "tests/agentActivityPersistence.test.ts",
+    "tests/b01QueryIdentity.test.ts",
+    "tests/connectors.test.ts",
+    "tests/imageDiscovery.test.ts",
+    "tests/repoReliability.test.ts",
+    "tests/memoryInclusion.test.ts",
+    "tests/agentGenerationBatchSafety.test.ts",
+    "tests/audioScriptImport.test.ts",
+    "tests/toolValidationSafety.test.ts",
+    "tests/agentSettings.test.ts",
+    "tests/parentProjectWrites.test.ts",
+    "tests/shotDeleteUndo.test.ts",
+    "tests/draftMedia.test.ts",
+    "tests/useShotMedia.test.ts",
+    "tests/materialReferenceWire.test.ts",
+    "src/db/references.ts",
+    "src/db/productionProposals.ts",
+    "src/db/agentGenerationBatches.ts",
+    "tests/fixtures/b07/harness.tsx",
+    "src/lib/media.ts",
+    "tests/fixtures/b01/harness.tsx",
+    "tests/fixtures/c02/harness.tsx",
+    "tests/fixtures/d01/harness.ts",
+    "tests/fixtures/c01/harness.ts",
+    "tests/agentGenerationEvidence.test.ts",
+    "tests/webResearchRuntime.test.ts",
+    "tests/projectMemories.test.ts",
+    "tests/toolLoadingMeasurement.test.ts",
+    "tests/agentGenerationRecovery.test.ts",
+    "tests/agentFinishingCheck.test.ts",
+    "tests/connectorMigration.test.ts",
+    "tests/audioFingerprint.test.ts",
+    "tests/agentToolTransactions.test.ts",
+    "tests/agentAuditRemediation.test.ts",
+    "tests/memoryRetrieval.test.ts",
+    "tests/agentProjectContext.test.ts",
+    "tests/materialIntegration.test.ts",
+    "tests/projectPackage.test.ts",
+    "tests/manualDraftWiring.test.ts",
+    "tests/repo.test.ts",
+    "tests/agentGenerationReview.test.ts",
+    "tests/agentMemoryTools.test.ts",
+    "tests/b03IntentBoundaries.test.ts",
+    "tests/musicGenerationReview.test.ts",
+    "tests/musicLegacyDurationRepair.test.ts",
+    "tests/audioFoundation.test.ts",
+    "tests/productionHandoff.test.ts",
+    "tests/agentProjectCreation.test.ts",
+    "tests/agentUsage.test.ts",
+    "tests/referenceEvidence.test.ts",
+    "tests/references.test.ts",
+    "tests/productionContext.test.ts",
+    "tests/agentToolsReview.test.ts",
+    "tests/agentGenerationBatch.test.ts",
+    "tests/agentGenerationReviewTransactions.test.ts",
+    "tests/audioMusicAgentTools.test.ts",
+    "tests/agentTaskOrchestrationReview.test.ts",
+    "tests/agentTaskOrchestration.test.ts",
+    "tests/audioAgentExecution.test.ts",
+    "tests/agentRunReview.test.ts",
+    "tests/productionProposals.test.ts",
+    "tests/materialImageQueue.test.ts",
+    "tests/agentGeneration.test.ts",
+    "tests/agentTaskWrapup.test.ts",
+    "tests/reasoningPolicy.test.ts",
+    "tests/boundedAudioRuntime.test.ts",
+    "tests/b02MemoryPromotion.test.ts",
+    "tests/responsesStream.test.ts",
+    "tests/assetFoundation.test.ts",
+    "tests/manualDraftBaseline.test.ts",
+    "tests/agentReferences.test.ts",
+    "tests/agentBatchPreparationRecovery.test.ts",
+    "tests/mimoRuntime.test.ts",
+    "tests/auditDataIntegrity.test.ts",
+    "tests/audioGenerationRuntime.test.ts",
+    "tests/materialLibrary.test.ts",
+    "tests/mediaPatchBoundary.test.ts",
+    "tests/audioTaskEvidence.test.ts",
+    "tests/toolLoading.test.ts",
+    "tests/agentTasks.test.ts",
+    "tests/musicDraftVariants.test.ts",
+    "tests/b06EditorSessions.test.ts",
+    "tests/projectPackageRelations.test.ts",
+    "tests/agentRuns.test.ts",
+    "tests/generationIntent.test.ts",
+    "tests/audioGenerationAgent.test.ts",
+    "tests/toolValidationDiagnostics.test.ts",
+    "tests/agentTools.test.ts",
+    "tests/mediaMetadata.test.ts",
+    "tests/shotBulkUndo.test.ts",
+    "tests/contextManagement.test.ts",
+    "tests/audioOutputEvidence.test.ts",
+    "tests/projectMemoryPackage.test.ts",
+    "tests/draftConcurrency.test.ts",
+    "tests/agentBusiness.test.ts",
+    "src/lib/audioGeneration/runtime.ts",
+    "src/lib/agent/businessStore.ts",
+    "src/lib/agent/generationBatchRuntime.ts",
+    "src/lib/agent/businessTools.ts",
+    "src/lib/agent/generationPreparation.ts",
+    "src/lib/agent/materialTools.ts",
+    "src/lib/agent/generationRuntime.ts",
+    "src/lib/agent/audioGenerationTools.ts",
+    "src/lib/projectPackage.ts",
+    "src/components/shots/DurationInput.tsx",
+    "src/components/shots/ShotEditorPage.tsx",
+    "src/components/story/StoryPage.tsx",
+    "src/components/slots/GenerationSlotCard.tsx",
+    "src/components/assets/SceneDetailPage.tsx",
+    "src/components/assets/PropDetailPage.tsx",
+    "src/components/assets/AssetLibraryPage.tsx",
+    "src/components/assets/WorldSettingPanel.tsx",
+    "src/components/assets/CharacterDetailPage.tsx",
+    "src/components/assets/StyleDetailPage.tsx",
+    "src/components/studio/ConnectorsPage.tsx",
+    "src/components/studio/ProjectGalleryPage.tsx",
+    "src/components/studio/AssetLibraryPages.tsx",
+    "src/components/audio/MimoConnection.tsx",
+    "src/components/studio/materials/MaterialDetailPanel.tsx",
+    "src/components/agent/AgentChatPage.tsx",
+    "src/components/agent/ProjectPicker.tsx",
+    "src/components/agent/AgentGenerationBatches.tsx",
+    "src/components/agent/CreatedEntityLinks.tsx",
+    "src/components/workspace/EpisodeListPage.tsx",
+    "src/components/workspace/WorkspaceChrome.tsx",
+    "src/components/workspace/ProjectSettingsPanel.tsx"
+  ],
+  "exports": [
+    {
+      "name": "PRODUCTION_TABLES",
+      "owner": "src/db/productionShared.ts",
+      "originalLine": 61,
+      "movedLine": 7,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/parentProjectWrites.test.ts",
+          "kind": "named import",
+          "local": "PRODUCTION_TABLES",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/shotDeleteUndo.test.ts",
+          "kind": "named import",
+          "local": "PRODUCTION_TABLES",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "src/db/shots.ts",
+          "kind": "named import",
+          "local": "PRODUCTION_TABLES",
+          "typeOnly": false,
+          "line": 16
+        },
+        {
+          "path": "src/db/media.ts",
+          "kind": "named import",
+          "local": "PRODUCTION_TABLES",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "src/db/assetReuse.ts",
+          "kind": "named import",
+          "local": "PRODUCTION_TABLES",
+          "typeOnly": false,
+          "line": 13
+        },
+        {
+          "path": "src/db/references.ts",
+          "kind": "named import",
+          "local": "PRODUCTION_TABLES",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/db/assets.ts",
+          "kind": "named import",
+          "local": "PRODUCTION_TABLES",
+          "typeOnly": false,
+          "line": 17
+        },
+        {
+          "path": "src/db/cascadeCommands.ts",
+          "kind": "named import",
+          "local": "PRODUCTION_TABLES",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/db/episodes.ts",
+          "kind": "named import",
+          "local": "PRODUCTION_TABLES",
+          "typeOnly": false,
+          "line": 16
+        },
+        {
+          "path": "src/db/projects.ts",
+          "kind": "named import",
+          "local": "PRODUCTION_TABLES",
+          "typeOnly": false,
+          "line": 23
+        },
+        {
+          "path": "src/db/productionProposals.ts",
+          "kind": "named import",
+          "local": "PRODUCTION_TABLES",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "PRODUCTION_TABLES",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "src/lib/agent/businessStore.ts",
+          "kind": "named import",
+          "local": "PRODUCTION_TABLES",
+          "typeOnly": false,
+          "line": 2
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 10,
+      "testOrFixtureCallers": 3,
+      "status": "reachable"
+    },
+    {
+      "name": "touchProject",
+      "owner": "src/db/productionShared.ts",
+      "originalLine": 81,
+      "movedLine": 27,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "touchProject",
+          "typeOnly": false,
+          "line": 9
+        },
+        {
+          "path": "src/db/shots.ts",
+          "kind": "named import",
+          "local": "touchProject",
+          "typeOnly": false,
+          "line": 16
+        },
+        {
+          "path": "src/db/media.ts",
+          "kind": "named import",
+          "local": "touchProject",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "src/db/assets.ts",
+          "kind": "named import",
+          "local": "touchProject",
+          "typeOnly": false,
+          "line": 17
+        },
+        {
+          "path": "src/db/episodes.ts",
+          "kind": "named import",
+          "local": "touchProject",
+          "typeOnly": false,
+          "line": 16
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "touchProject",
+          "typeOnly": false,
+          "line": 9
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 4,
+      "testOrFixtureCallers": 2,
+      "status": "reachable"
+    },
+    {
+      "name": "emptyProject",
+      "owner": "src/db/productionRecords.ts",
+      "originalLine": 91,
+      "movedLine": 23,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "src/db/projects.ts",
+          "kind": "named import",
+          "local": "emptyProject",
+          "typeOnly": false,
+          "line": 22
+        },
+        {
+          "path": "tests/auditDataIntegrity.test.ts",
+          "kind": "named import",
+          "local": "emptyProject",
+          "typeOnly": false,
+          "line": 7
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "emptyCharacter",
+      "owner": "src/db/productionRecords.ts",
+      "originalLine": 114,
+      "movedLine": 46,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "src/db/assets.ts",
+          "kind": "named import",
+          "local": "emptyCharacter",
+          "typeOnly": false,
+          "line": 25
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 0,
+      "status": "reachable"
+    },
+    {
+      "name": "emptyScene",
+      "owner": "src/db/productionRecords.ts",
+      "originalLine": 129,
+      "movedLine": 61,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "src/db/assets.ts",
+          "kind": "named import",
+          "local": "emptyScene",
+          "typeOnly": false,
+          "line": 25
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 0,
+      "status": "reachable"
+    },
+    {
+      "name": "emptyProp",
+      "owner": "src/db/productionRecords.ts",
+      "originalLine": 145,
+      "movedLine": 77,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "src/db/assets.ts",
+          "kind": "named import",
+          "local": "emptyProp",
+          "typeOnly": false,
+          "line": 25
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 0,
+      "status": "reachable"
+    },
+    {
+      "name": "emptyStyle",
+      "owner": "src/db/productionRecords.ts",
+      "originalLine": 159,
+      "movedLine": 91,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "src/db/assets.ts",
+          "kind": "named import",
+          "local": "emptyStyle",
+          "typeOnly": false,
+          "line": 25
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 0,
+      "status": "reachable"
+    },
+    {
+      "name": "emptyEpisode",
+      "owner": "src/db/productionRecords.ts",
+      "originalLine": 172,
+      "movedLine": 104,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "src/db/episodes.ts",
+          "kind": "named import",
+          "local": "emptyEpisode",
+          "typeOnly": false,
+          "line": 25
+        },
+        {
+          "path": "src/db/projects.ts",
+          "kind": "named import",
+          "local": "emptyEpisode",
+          "typeOnly": false,
+          "line": 22
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 0,
+      "status": "reachable"
+    },
+    {
+      "name": "emptyShot",
+      "owner": "src/db/productionRecords.ts",
+      "originalLine": 186,
+      "movedLine": 118,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "src/db/shots.ts",
+          "kind": "named import",
+          "local": "emptyShot",
+          "typeOnly": false,
+          "line": 26
+        },
+        {
+          "path": "tests/auditDataIntegrity.test.ts",
+          "kind": "named import",
+          "local": "emptyShot",
+          "typeOnly": false,
+          "line": 7
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "listProjects",
+      "owner": "src/db/projects.ts",
+      "originalLine": 219,
+      "movedLine": 26,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [],
+      "localOwnerReferences": [],
+      "sourceCallers": 0,
+      "testOrFixtureCallers": 0,
+      "status": "pre-existing unconsumed retained"
+    },
+    {
+      "name": "createProject",
+      "owner": "src/db/projects.ts",
+      "originalLine": 224,
+      "movedLine": 31,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/agentIpTools.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/agentMaterialTools.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/b01QueryIdentity.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoProjects.createProject",
+          "line": 106
+        },
+        {
+          "path": "tests/imageDiscovery.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/memoryInclusion.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 2
+        },
+        {
+          "path": "tests/agentGenerationBatchSafety.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 9
+        },
+        {
+          "path": "tests/parentProjectWrites.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/shotDeleteUndo.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/draftMedia.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/useShotMedia.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/materialReferenceWire.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/fixtures/b07/harness.tsx",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/fixtures/d02/harness.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 2
+        },
+        {
+          "path": "tests/fixtures/b01/harness.tsx",
+          "kind": "owner namespace member",
+          "local": "repoProjects.createProject",
+          "line": 92
+        },
+        {
+          "path": "tests/fixtures/d01/harness.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/fixtures/c01/harness.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/agentGenerationEvidence.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/projectMemories.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/agentToolTransactions.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/agentAuditRemediation.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 12
+        },
+        {
+          "path": "tests/memoryRetrieval.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/agentProjectContext.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoProjects.createProject",
+          "line": 27
+        },
+        {
+          "path": "tests/materialIntegration.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 9
+        },
+        {
+          "path": "tests/manualDraftWiring.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoProjects.createProject",
+          "line": 141
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/agentGenerationReview.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 11
+        },
+        {
+          "path": "tests/agentMemoryTools.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 17
+        },
+        {
+          "path": "tests/b03IntentBoundaries.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoProjects.createProject",
+          "line": 76
+        },
+        {
+          "path": "tests/audioFoundation.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/productionHandoff.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/agentProjectCreation.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/referenceEvidence.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 9
+        },
+        {
+          "path": "tests/references.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/productionContext.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/agentGenerationBatch.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 9
+        },
+        {
+          "path": "tests/agentGenerationReviewTransactions.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/agentTaskOrchestrationReview.test.ts",
+          "kind": "named import",
+          "local": "createBoundTestProject",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/agentTaskOrchestration.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/audioAgentExecution.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/productionProposals.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/agentGeneration.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 9
+        },
+        {
+          "path": "tests/agentTaskWrapup.test.ts",
+          "kind": "named import",
+          "local": "createBoundTestProject",
+          "typeOnly": false,
+          "line": 1
+        },
+        {
+          "path": "tests/b02MemoryPromotion.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 54
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/manualDraftBaseline.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/agentReferences.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/agentBatchPreparationRecovery.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 9
+        },
+        {
+          "path": "tests/auditDataIntegrity.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/materialLibrary.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/agentTasks.test.ts",
+          "kind": "named import",
+          "local": "createBoundTestProject",
+          "typeOnly": false,
+          "line": 2
+        },
+        {
+          "path": "tests/b06EditorSessions.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoProjects.createProject",
+          "line": 109
+        },
+        {
+          "path": "tests/projectPackageRelations.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/generationIntent.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/toolValidationDiagnostics.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/mediaMetadata.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/shotBulkUndo.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/contextManagement.test.ts",
+          "kind": "named import",
+          "local": "createBoundTestProject",
+          "typeOnly": false,
+          "line": 1
+        },
+        {
+          "path": "tests/projectMemoryPackage.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/draftConcurrency.test.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoProjects.createProject",
+          "line": 273
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/components/studio/ProjectGalleryPage.tsx",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 31
+        },
+        {
+          "path": "src/components/agent/ProjectPicker.tsx",
+          "kind": "named import",
+          "local": "createProject",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 3,
+      "testOrFixtureCallers": 63,
+      "status": "reachable"
+    },
+    {
+      "name": "renameProject",
+      "owner": "src/db/projects.ts",
+      "originalLine": 244,
+      "movedLine": 51,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "renameProject",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "src/components/studio/ProjectGalleryPage.tsx",
+          "kind": "named import",
+          "local": "renameProject",
+          "typeOnly": false,
+          "line": 31
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "patchProjectDetails",
+      "owner": "src/db/projects.ts",
+      "originalLine": 268,
+      "movedLine": 75,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/manualDraftWiring.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoProjects.patchProjectDetails",
+          "line": 261
+        },
+        {
+          "path": "tests/productionContext.test.ts",
+          "kind": "named import",
+          "local": "patchProjectDetails",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "patchProjectDetails",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/manualDraftBaseline.test.ts",
+          "kind": "named import",
+          "local": "patchProjectDetails",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/generationIntent.test.ts",
+          "kind": "named import",
+          "local": "patchProjectDetails",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "patchProjectDetails",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/components/workspace/ProjectSettingsPanel.tsx",
+          "kind": "named import",
+          "local": "patchProjectDetails",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 5,
+      "status": "reachable"
+    },
+    {
+      "name": "setProjectArchived",
+      "owner": "src/db/cascadeCommands.ts",
+      "originalLine": 304,
+      "movedLine": 9,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/materialIntegration.test.ts",
+          "kind": "named import",
+          "local": "setProjectArchived",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/components/studio/ProjectGalleryPage.tsx",
+          "kind": "named import",
+          "local": "setProjectArchived",
+          "typeOnly": false,
+          "line": 32
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "deleteProject",
+      "owner": "src/db/cascadeCommands.ts",
+      "originalLine": 326,
+      "movedLine": 31,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/parentProjectWrites.test.ts",
+          "kind": "named import",
+          "local": "deleteProject",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/fixtures/d02/harness.ts",
+          "kind": "named import",
+          "local": "deleteProject",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/projectMemories.test.ts",
+          "kind": "named import",
+          "local": "deleteProject",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/agentProjectContext.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoCascadeCommands.deleteProject",
+          "line": 42
+        },
+        {
+          "path": "tests/materialIntegration.test.ts",
+          "kind": "named import",
+          "local": "deleteProject",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/agentMemoryTools.test.ts",
+          "kind": "named import",
+          "local": "deleteProject",
+          "typeOnly": false,
+          "line": 18
+        },
+        {
+          "path": "tests/audioFoundation.test.ts",
+          "kind": "named import",
+          "local": "deleteProject",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/references.test.ts",
+          "kind": "named import",
+          "local": "deleteProject",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/agentGenerationBatch.test.ts",
+          "kind": "named import",
+          "local": "deleteProject",
+          "typeOnly": false,
+          "line": 12
+        },
+        {
+          "path": "tests/productionProposals.test.ts",
+          "kind": "named import",
+          "local": "deleteProject",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/agentGeneration.test.ts",
+          "kind": "named import",
+          "local": "deleteProject",
+          "typeOnly": false,
+          "line": 10
+        },
+        {
+          "path": "tests/materialLibrary.test.ts",
+          "kind": "named import",
+          "local": "deleteProject",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "deleteProject",
+          "typeOnly": false,
+          "line": 24
+        },
+        {
+          "path": "src/components/studio/ProjectGalleryPage.tsx",
+          "kind": "named import",
+          "local": "deleteProject",
+          "typeOnly": false,
+          "line": 32
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 12,
+      "status": "reachable"
+    },
+    {
+      "name": "updateProject",
+      "owner": "src/db/projects.ts",
+      "originalLine": 383,
+      "movedLine": 110,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "updateProject",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "updateProject",
+          "typeOnly": false,
+          "line": 9
+        },
+        {
+          "path": "tests/references.test.ts",
+          "kind": "named import",
+          "local": "updateProject",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/mediaMetadata.test.ts",
+          "kind": "named import",
+          "local": "updateProject",
+          "typeOnly": false,
+          "line": 4
+        }
+      ],
+      "localOwnerReferences": [
+        {
+          "line": 223,
+          "text": "updateProject(projectId, {columnSettings: {visible}})"
+        }
+      ],
+      "sourceCallers": 0,
+      "testOrFixtureCallers": 4,
+      "status": "reachable"
+    },
+    {
+      "name": "patchProjectOutput",
+      "owner": "src/db/projects.ts",
+      "originalLine": 410,
+      "movedLine": 137,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "patchProjectOutput",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/materialIntegration.test.ts",
+          "kind": "named import",
+          "local": "patchProjectOutput",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "patchProjectOutput",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "patchProjectOutput",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "patchProjectOutput",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/components/workspace/WorkspaceChrome.tsx",
+          "kind": "named import",
+          "local": "patchProjectOutput",
+          "typeOnly": false,
+          "line": 23
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 4,
+      "status": "reachable"
+    },
+    {
+      "name": "updateShotSettings",
+      "owner": "src/db/projects.ts",
+      "originalLine": 444,
+      "movedLine": 171,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "updateShotSettings",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "updateShotSettings",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "updateShotSettings",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "updateShotSettings",
+          "typeOnly": false,
+          "line": 57
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 2,
+      "status": "reachable"
+    },
+    {
+      "name": "updateSeriesLogline",
+      "owner": "src/db/projects.ts",
+      "originalLine": 462,
+      "movedLine": 189,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/draftConcurrency.test.ts",
+          "kind": "named import",
+          "local": "updateSeriesLogline",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "updateSeriesLogline",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/components/workspace/EpisodeListPage.tsx",
+          "kind": "named import",
+          "local": "updateSeriesLogline",
+          "typeOnly": false,
+          "line": 21
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "updateWorldSetting",
+      "owner": "src/db/projects.ts",
+      "originalLine": 475,
+      "movedLine": 202,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "updateWorldSetting",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/draftConcurrency.test.ts",
+          "kind": "named import",
+          "local": "updateWorldSetting",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "updateWorldSetting",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/components/assets/WorldSettingPanel.tsx",
+          "kind": "named import",
+          "local": "updateWorldSetting",
+          "typeOnly": false,
+          "line": 4
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 2,
+      "status": "reachable"
+    },
+    {
+      "name": "listEpisodes",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 492,
+      "movedLine": 28,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/b06EditorSessions.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoEpisodes.listEpisodes",
+          "line": 110
+        }
+      ],
+      "localOwnerReferences": [
+        {
+          "line": 34,
+          "text": "listEpisodes(projectId)"
+        },
+        {
+          "line": 57,
+          "text": "listEpisodes(projectId)"
+        },
+        {
+          "line": 113,
+          "text": "listEpisodes(episode.projectId)"
+        },
+        {
+          "line": 124,
+          "text": "listEpisodes(episode.projectId)"
+        }
+      ],
+      "sourceCallers": 0,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "firstEpisode",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 497,
+      "movedLine": 33,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "src/routes/p.$projectId.plan.tsx",
+          "kind": "named import",
+          "local": "firstEpisode",
+          "typeOnly": false,
+          "line": 2
+        },
+        {
+          "path": "src/routes/p.$projectId.shots.tsx",
+          "kind": "named import",
+          "local": "firstEpisode",
+          "typeOnly": false,
+          "line": 2
+        },
+        {
+          "path": "src/routes/p.$projectId.report.tsx",
+          "kind": "named import",
+          "local": "firstEpisode",
+          "typeOnly": false,
+          "line": 2
+        },
+        {
+          "path": "src/routes/p.$projectId.produce.tsx",
+          "kind": "named import",
+          "local": "firstEpisode",
+          "typeOnly": false,
+          "line": 2
+        },
+        {
+          "path": "tests/b01QueryIdentity.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoEpisodes.firstEpisode",
+          "line": 129
+        },
+        {
+          "path": "tests/imageDiscovery.test.ts",
+          "kind": "named import",
+          "local": "firstEpisode",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/fixtures/b01/harness.tsx",
+          "kind": "owner namespace member",
+          "local": "repoEpisodes.firstEpisode",
+          "line": 95
+        },
+        {
+          "path": "tests/manualDraftWiring.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoEpisodes.firstEpisode",
+          "line": 229
+        },
+        {
+          "path": "tests/manualDraftBaseline.test.ts",
+          "kind": "named import",
+          "local": "firstEpisode",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/auditDataIntegrity.test.ts",
+          "kind": "named import",
+          "local": "firstEpisode",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/toolValidationDiagnostics.test.ts",
+          "kind": "named import",
+          "local": "firstEpisode",
+          "typeOnly": false,
+          "line": 9
+        },
+        {
+          "path": "tests/draftConcurrency.test.ts",
+          "kind": "named import",
+          "local": "firstEpisode",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "firstEpisode",
+          "typeOnly": false,
+          "line": 12
+        }
+      ],
+      "localOwnerReferences": [
+        {
+          "line": 43,
+          "text": "firstEpisode(projectId)"
+        }
+      ],
+      "sourceCallers": 5,
+      "testOrFixtureCallers": 8,
+      "status": "reachable"
+    },
+    {
+      "name": "ensureFirstEpisode",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 502,
+      "movedLine": 38,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "src/routes/p.$projectId.index.tsx",
+          "kind": "named import",
+          "local": "ensureFirstEpisode",
+          "typeOnly": false,
+          "line": 9
+        },
+        {
+          "path": "tests/b01QueryIdentity.test.ts",
+          "kind": "same-owner spy",
+          "local": "repoEpisodes.ensureFirstEpisode",
+          "line": 183
+        },
+        {
+          "path": "tests/audioFoundation.test.ts",
+          "kind": "named import",
+          "local": "ensureFirstEpisode",
+          "typeOnly": false,
+          "line": 5
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 2,
+      "status": "reachable"
+    },
+    {
+      "name": "addEpisode",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 516,
+      "movedLine": 52,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/b01QueryIdentity.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoEpisodes.addEpisode",
+          "line": 129
+        },
+        {
+          "path": "tests/imageDiscovery.test.ts",
+          "kind": "named import",
+          "local": "addEpisode",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "addEpisode",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/shotDeleteUndo.test.ts",
+          "kind": "named import",
+          "local": "addEpisode",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/fixtures/b01/harness.tsx",
+          "kind": "owner namespace member",
+          "local": "repoEpisodes.addEpisode",
+          "line": 96
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "addEpisode",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/productionHandoff.test.ts",
+          "kind": "named import",
+          "local": "addEpisode",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "addEpisode",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/shotBulkUndo.test.ts",
+          "kind": "named import",
+          "local": "addEpisode",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "addEpisode",
+          "typeOnly": false,
+          "line": 12
+        },
+        {
+          "path": "src/components/workspace/EpisodeListPage.tsx",
+          "kind": "named import",
+          "local": "addEpisode",
+          "typeOnly": false,
+          "line": 20
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 9,
+      "status": "reachable"
+    },
+    {
+      "name": "updateEpisode",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 530,
+      "movedLine": 66,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "updateEpisode",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/fixtures/b01/harness.tsx",
+          "kind": "owner namespace member",
+          "local": "repoEpisodes.updateEpisode",
+          "line": 97
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 0,
+      "testOrFixtureCallers": 2,
+      "status": "reachable"
+    },
+    {
+      "name": "updateEpisodeDraft",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 543,
+      "movedLine": 79,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "updateEpisodeDraft",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "updateEpisodeDraft",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/b06EditorSessions.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoEpisodes.updateEpisodeDraft",
+          "line": 111
+        },
+        {
+          "path": "tests/toolValidationDiagnostics.test.ts",
+          "kind": "named import",
+          "local": "updateEpisodeDraft",
+          "typeOnly": false,
+          "line": 9
+        },
+        {
+          "path": "tests/draftConcurrency.test.ts",
+          "kind": "named import",
+          "local": "updateEpisodeDraft",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoEpisodes.updateEpisodeDraft",
+          "line": 425
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "updateEpisodeDraft",
+          "typeOnly": false,
+          "line": 12
+        },
+        {
+          "path": "src/components/story/StoryPage.tsx",
+          "kind": "named import",
+          "local": "updateEpisodeDraft",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 6,
+      "status": "reachable"
+    },
+    {
+      "name": "DeletedEpisodeSnapshot",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 567,
+      "movedLine": 103,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [],
+      "localOwnerReferences": [
+        {
+          "line": 109,
+          "text": "DeletedEpisodeSnapshot"
+        },
+        {
+          "line": 132,
+          "text": "DeletedEpisodeSnapshot"
+        }
+      ],
+      "sourceCallers": 0,
+      "testOrFixtureCallers": 0,
+      "status": "reachable"
+    },
+    {
+      "name": "deleteEpisode",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 573,
+      "movedLine": 109,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "deleteEpisode",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "deleteEpisode",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "deleteEpisode",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "deleteEpisode",
+          "typeOnly": false,
+          "line": 12
+        },
+        {
+          "path": "src/components/workspace/EpisodeListPage.tsx",
+          "kind": "named import",
+          "local": "deleteEpisode",
+          "typeOnly": false,
+          "line": 20
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 3,
+      "status": "reachable"
+    },
+    {
+      "name": "restoreEpisode",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 596,
+      "movedLine": 132,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "restoreEpisode",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "restoreEpisode",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/components/workspace/EpisodeListPage.tsx",
+          "kind": "named import",
+          "local": "restoreEpisode",
+          "typeOnly": false,
+          "line": 20
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 2,
+      "status": "reachable"
+    },
+    {
+      "name": "reorderEpisodes",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 634,
+      "movedLine": 160,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "reorderEpisodes",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "reorderEpisodes",
+          "typeOnly": false,
+          "line": 12
+        },
+        {
+          "path": "src/components/workspace/EpisodeListPage.tsx",
+          "kind": "named import",
+          "local": "reorderEpisodes",
+          "typeOnly": false,
+          "line": 20
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "collectMediaIds",
+      "owner": "src/db/media.ts",
+      "originalLine": 648,
+      "movedLine": 6,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/materialIntegration.test.ts",
+          "kind": "named import",
+          "local": "collectMediaIds",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/audioFoundation.test.ts",
+          "kind": "named import",
+          "local": "collectMediaIds",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/mimoRuntime.test.ts",
+          "kind": "named import",
+          "local": "collectMediaIds",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/lib/projectPackage.ts",
+          "kind": "named import",
+          "local": "collectMediaIds",
+          "typeOnly": false,
+          "line": 41
+        }
+      ],
+      "localOwnerReferences": [
+        {
+          "line": 71,
+          "text": "collectMediaIds()"
+        }
+      ],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 3,
+      "status": "reachable"
+    },
+    {
+      "name": "releaseMaterialUse",
+      "owner": "src/db/assetReuse.ts",
+      "originalLine": 689,
+      "movedLine": 17,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/fixtures/d02/harness.ts",
+          "kind": "named import",
+          "local": "releaseMaterialUse",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/materialIntegration.test.ts",
+          "kind": "named import",
+          "local": "releaseMaterialUse",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "src/lib/agent/materialTools.ts",
+          "kind": "named import",
+          "local": "releaseMaterialUse",
+          "typeOnly": false,
+          "line": 10
+        },
+        {
+          "path": "src/components/studio/materials/MaterialDetailPanel.tsx",
+          "kind": "named import",
+          "local": "releaseMaterialUse",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 2,
+      "status": "reachable"
+    },
+    {
+      "name": "putMedia",
+      "owner": "src/db/media.ts",
+      "originalLine": 726,
+      "movedLine": 56,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/parentProjectWrites.test.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/shotDeleteUndo.test.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/draftMedia.test.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/lib/media.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/fixtures/d02/harness.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/fixtures/d01/harness.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/fixtures/c01/harness.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/agentAuditRemediation.test.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 13
+        },
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 10
+        },
+        {
+          "path": "tests/manualDraftWiring.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoMedia.putMedia",
+          "line": 144
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/references.test.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/productionContext.test.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/agentGenerationBatch.test.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 13
+        },
+        {
+          "path": "tests/productionProposals.test.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/agentGeneration.test.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 11
+        },
+        {
+          "path": "tests/manualDraftBaseline.test.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/auditDataIntegrity.test.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/projectPackageRelations.test.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/generationIntent.test.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/mediaMetadata.test.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/shotBulkUndo.test.ts",
+          "kind": "named import",
+          "local": "putMedia",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoMedia.putMedia",
+          "line": 343
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 23,
+      "status": "reachable"
+    },
+    {
+      "name": "deleteMediaIfOrphan",
+      "owner": "src/db/media.ts",
+      "originalLine": 736,
+      "movedLine": 66,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "deleteMediaIfOrphan",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/draftMedia.test.ts",
+          "kind": "named import",
+          "local": "deleteMediaIfOrphan",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/db/shots.ts",
+          "kind": "named import",
+          "local": "deleteMediaIfOrphan",
+          "typeOnly": false,
+          "line": 27
+        },
+        {
+          "path": "src/db/assetReuse.ts",
+          "kind": "named import",
+          "local": "deleteMediaIfOrphan",
+          "typeOnly": false,
+          "line": 14
+        },
+        {
+          "path": "src/db/references.ts",
+          "kind": "named import",
+          "local": "deleteMediaIfOrphan",
+          "typeOnly": false,
+          "line": 2
+        },
+        {
+          "path": "src/db/assets.ts",
+          "kind": "named import",
+          "local": "deleteMediaIfOrphan",
+          "typeOnly": false,
+          "line": 26
+        },
+        {
+          "path": "src/db/cascadeCommands.ts",
+          "kind": "named import",
+          "local": "deleteMediaIfOrphan",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "src/db/episodes.ts",
+          "kind": "named import",
+          "local": "deleteMediaIfOrphan",
+          "typeOnly": false,
+          "line": 26
+        },
+        {
+          "path": "src/db/projects.ts",
+          "kind": "named import",
+          "local": "deleteMediaIfOrphan",
+          "typeOnly": false,
+          "line": 24
+        },
+        {
+          "path": "tests/materialIntegration.test.ts",
+          "kind": "named import",
+          "local": "deleteMediaIfOrphan",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/manualDraftWiring.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoMedia.deleteMediaIfOrphan",
+          "line": 147
+        },
+        {
+          "path": "tests/audioFoundation.test.ts",
+          "kind": "named import",
+          "local": "deleteMediaIfOrphan",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/references.test.ts",
+          "kind": "named import",
+          "local": "deleteMediaIfOrphan",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/agentGenerationBatch.test.ts",
+          "kind": "named import",
+          "local": "deleteMediaIfOrphan",
+          "typeOnly": false,
+          "line": 13
+        },
+        {
+          "path": "tests/productionProposals.test.ts",
+          "kind": "named import",
+          "local": "deleteMediaIfOrphan",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/agentGeneration.test.ts",
+          "kind": "named import",
+          "local": "deleteMediaIfOrphan",
+          "typeOnly": false,
+          "line": 11
+        },
+        {
+          "path": "tests/mimoRuntime.test.ts",
+          "kind": "named import",
+          "local": "deleteMediaIfOrphan",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoMedia.deleteMediaIfOrphan",
+          "line": 501
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "deleteMediaIfOrphan",
+          "typeOnly": false,
+          "line": 45
+        },
+        {
+          "path": "src/components/slots/GenerationSlotCard.tsx",
+          "kind": "named import",
+          "local": "deleteMediaIfOrphan",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [
+        {
+          "line": 52,
+          "text": "deleteMediaIfOrphan(mediaId)"
+        }
+      ],
+      "sourceCallers": 9,
+      "testOrFixtureCallers": 11,
+      "status": "reachable"
+    },
+    {
+      "name": "copyStudioCharacter",
+      "owner": "src/db/assetReuse.ts",
+      "originalLine": 864,
+      "movedLine": 152,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "copyStudioCharacter",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "copyStudioCharacter",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "copyStudioCharacter",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "copyStudioCharacter",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssetReuse.copyStudioCharacter",
+          "line": 475
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "copyStudioCharacter",
+          "typeOnly": false,
+          "line": 44
+        },
+        {
+          "path": "src/components/assets/AssetLibraryPage.tsx",
+          "kind": "named import",
+          "local": "copyStudioCharacter",
+          "typeOnly": false,
+          "line": 11
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 5,
+      "status": "reachable"
+    },
+    {
+      "name": "copyStudioScene",
+      "owner": "src/db/assetReuse.ts",
+      "originalLine": 868,
+      "movedLine": 156,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "copyStudioScene",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "copyStudioScene",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "copyStudioScene",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "copyStudioScene",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "copyStudioScene",
+          "typeOnly": false,
+          "line": 44
+        },
+        {
+          "path": "src/components/assets/AssetLibraryPage.tsx",
+          "kind": "named import",
+          "local": "copyStudioScene",
+          "typeOnly": false,
+          "line": 11
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 4,
+      "status": "reachable"
+    },
+    {
+      "name": "copyStudioProp",
+      "owner": "src/db/assetReuse.ts",
+      "originalLine": 872,
+      "movedLine": 160,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "copyStudioProp",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "copyStudioProp",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "copyStudioProp",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "copyStudioProp",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "copyStudioProp",
+          "typeOnly": false,
+          "line": 44
+        },
+        {
+          "path": "src/components/assets/AssetLibraryPage.tsx",
+          "kind": "named import",
+          "local": "copyStudioProp",
+          "typeOnly": false,
+          "line": 11
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 4,
+      "status": "reachable"
+    },
+    {
+      "name": "copyStudioStyle",
+      "owner": "src/db/assetReuse.ts",
+      "originalLine": 876,
+      "movedLine": 164,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "copyStudioStyle",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "copyStudioStyle",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "copyStudioStyle",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "copyStudioStyle",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "copyStudioStyle",
+          "typeOnly": false,
+          "line": 44
+        },
+        {
+          "path": "src/components/assets/AssetLibraryPage.tsx",
+          "kind": "named import",
+          "local": "copyStudioStyle",
+          "typeOnly": false,
+          "line": 11
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 4,
+      "status": "reachable"
+    },
+    {
+      "name": "addCharacter",
+      "owner": "src/db/assets.ts",
+      "originalLine": 880,
+      "movedLine": 28,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/agentMaterialTools.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/b01QueryIdentity.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.addCharacter",
+          "line": 98
+        },
+        {
+          "path": "tests/imageDiscovery.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/parentProjectWrites.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/draftMedia.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/fixtures/b01/harness.tsx",
+          "kind": "owner namespace member",
+          "local": "repoAssets.addCharacter",
+          "line": 102
+        },
+        {
+          "path": "tests/fixtures/c01/harness.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/agentGenerationEvidence.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/agentAuditRemediation.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 10
+        },
+        {
+          "path": "tests/agentProjectContext.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.addCharacter",
+          "line": 31
+        },
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/manualDraftWiring.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.addCharacter",
+          "line": 195
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/b03IntentBoundaries.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.addCharacter",
+          "line": 79
+        },
+        {
+          "path": "tests/productionContext.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/agentTaskOrchestrationReview.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 2
+        },
+        {
+          "path": "tests/productionProposals.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/agentGeneration.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/agentTaskWrapup.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/manualDraftBaseline.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/materialLibrary.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/projectPackageRelations.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/shotBulkUndo.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/draftConcurrency.test.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.addCharacter",
+          "line": 75
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 26
+        },
+        {
+          "path": "src/components/assets/AssetLibraryPage.tsx",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 10
+        },
+        {
+          "path": "src/components/studio/AssetLibraryPages.tsx",
+          "kind": "named import",
+          "local": "addCharacter",
+          "typeOnly": false,
+          "line": 17
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 3,
+      "testOrFixtureCallers": 28,
+      "status": "reachable"
+    },
+    {
+      "name": "patchCharacter",
+      "owner": "src/db/assets.ts",
+      "originalLine": 890,
+      "movedLine": 38,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "patchCharacter",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "patchCharacter",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/productionContext.test.ts",
+          "kind": "named import",
+          "local": "patchCharacter",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "patchCharacter",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/manualDraftBaseline.test.ts",
+          "kind": "named import",
+          "local": "patchCharacter",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/materialLibrary.test.ts",
+          "kind": "named import",
+          "local": "patchCharacter",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "patchCharacter",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/draftConcurrency.test.ts",
+          "kind": "named import",
+          "local": "patchCharacter",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.patchCharacter",
+          "line": 379
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "patchCharacter",
+          "typeOnly": false,
+          "line": 26
+        },
+        {
+          "path": "src/components/assets/CharacterDetailPage.tsx",
+          "kind": "named import",
+          "local": "patchCharacter",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 9,
+      "status": "reachable"
+    },
+    {
+      "name": "setCharacterSlot",
+      "owner": "src/db/assets.ts",
+      "originalLine": 923,
+      "movedLine": 54,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "setCharacterSlot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/draftMedia.test.ts",
+          "kind": "named import",
+          "local": "setCharacterSlot",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/db/productionProposals.ts",
+          "kind": "named import",
+          "local": "setCharacterSlot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "src/db/agentGenerationBatches.ts",
+          "kind": "named import",
+          "local": "setCharacterSlot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/fixtures/c01/harness.ts",
+          "kind": "named import",
+          "local": "setCharacterSlot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "setCharacterSlot",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/manualDraftWiring.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.setCharacterSlot",
+          "line": 195
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "setCharacterSlot",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/manualDraftBaseline.test.ts",
+          "kind": "named import",
+          "local": "setCharacterSlot",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "setCharacterSlot",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.setCharacterSlot",
+          "line": 483
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "setCharacterSlot",
+          "typeOnly": false,
+          "line": 26
+        },
+        {
+          "path": "src/lib/agent/generationRuntime.ts",
+          "kind": "named import",
+          "local": "setCharacterSlot",
+          "typeOnly": false,
+          "line": 15
+        },
+        {
+          "path": "src/components/assets/CharacterDetailPage.tsx",
+          "kind": "named import",
+          "local": "setCharacterSlot",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 5,
+      "testOrFixtureCallers": 9,
+      "status": "reachable"
+    },
+    {
+      "name": "deleteCharacter",
+      "owner": "src/db/assets.ts",
+      "originalLine": 943,
+      "movedLine": 74,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "deleteCharacter",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "deleteCharacter",
+          "typeOnly": false,
+          "line": 26
+        },
+        {
+          "path": "src/components/assets/AssetLibraryPage.tsx",
+          "kind": "named import",
+          "local": "deleteCharacter",
+          "typeOnly": false,
+          "line": 10
+        },
+        {
+          "path": "src/components/studio/AssetLibraryPages.tsx",
+          "kind": "named import",
+          "local": "deleteCharacter",
+          "typeOnly": false,
+          "line": 17
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 3,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "addScene",
+      "owner": "src/db/assets.ts",
+      "originalLine": 974,
+      "movedLine": 105,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/b01QueryIdentity.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.addScene",
+          "line": 99
+        },
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "addScene",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/parentProjectWrites.test.ts",
+          "kind": "named import",
+          "local": "addScene",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/fixtures/b01/harness.tsx",
+          "kind": "owner namespace member",
+          "local": "repoAssets.addScene",
+          "line": 102
+        },
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "addScene",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/manualDraftWiring.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.addScene",
+          "line": 196
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "addScene",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/productionHandoff.test.ts",
+          "kind": "named import",
+          "local": "addScene",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/productionContext.test.ts",
+          "kind": "named import",
+          "local": "addScene",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/productionProposals.test.ts",
+          "kind": "named import",
+          "local": "addScene",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "addScene",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/manualDraftBaseline.test.ts",
+          "kind": "named import",
+          "local": "addScene",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "addScene",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/shotBulkUndo.test.ts",
+          "kind": "named import",
+          "local": "addScene",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.addScene",
+          "line": 75
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "addScene",
+          "typeOnly": false,
+          "line": 26
+        },
+        {
+          "path": "src/components/assets/AssetLibraryPage.tsx",
+          "kind": "named import",
+          "local": "addScene",
+          "typeOnly": false,
+          "line": 10
+        },
+        {
+          "path": "src/components/studio/AssetLibraryPages.tsx",
+          "kind": "named import",
+          "local": "addScene",
+          "typeOnly": false,
+          "line": 17
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 3,
+      "testOrFixtureCallers": 15,
+      "status": "reachable"
+    },
+    {
+      "name": "patchScene",
+      "owner": "src/db/assets.ts",
+      "originalLine": 984,
+      "movedLine": 115,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "patchScene",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "patchScene",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "patchScene",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "patchScene",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "patchScene",
+          "typeOnly": false,
+          "line": 26
+        },
+        {
+          "path": "src/components/assets/SceneDetailPage.tsx",
+          "kind": "named import",
+          "local": "patchScene",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 4,
+      "status": "reachable"
+    },
+    {
+      "name": "setSceneSlot",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1000,
+      "movedLine": 131,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "setSceneSlot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "src/db/productionProposals.ts",
+          "kind": "named import",
+          "local": "setSceneSlot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "src/db/agentGenerationBatches.ts",
+          "kind": "named import",
+          "local": "setSceneSlot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/manualDraftWiring.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.setSceneSlot",
+          "line": 196
+        },
+        {
+          "path": "tests/manualDraftBaseline.test.ts",
+          "kind": "named import",
+          "local": "setSceneSlot",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "setSceneSlot",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "setSceneSlot",
+          "typeOnly": false,
+          "line": 26
+        },
+        {
+          "path": "src/lib/agent/generationRuntime.ts",
+          "kind": "named import",
+          "local": "setSceneSlot",
+          "typeOnly": false,
+          "line": 15
+        },
+        {
+          "path": "src/components/assets/SceneDetailPage.tsx",
+          "kind": "named import",
+          "local": "setSceneSlot",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 5,
+      "testOrFixtureCallers": 4,
+      "status": "reachable"
+    },
+    {
+      "name": "deleteScene",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1018,
+      "movedLine": 149,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "deleteScene",
+          "typeOnly": false,
+          "line": 26
+        },
+        {
+          "path": "src/components/assets/AssetLibraryPage.tsx",
+          "kind": "named import",
+          "local": "deleteScene",
+          "typeOnly": false,
+          "line": 10
+        },
+        {
+          "path": "src/components/studio/AssetLibraryPages.tsx",
+          "kind": "named import",
+          "local": "deleteScene",
+          "typeOnly": false,
+          "line": 17
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 3,
+      "testOrFixtureCallers": 0,
+      "status": "reachable"
+    },
+    {
+      "name": "addProp",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1045,
+      "movedLine": 176,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/b01QueryIdentity.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.addProp",
+          "line": 100
+        },
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "addProp",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/parentProjectWrites.test.ts",
+          "kind": "named import",
+          "local": "addProp",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/fixtures/b01/harness.tsx",
+          "kind": "owner namespace member",
+          "local": "repoAssets.addProp",
+          "line": 102
+        },
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "addProp",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/manualDraftWiring.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.addProp",
+          "line": 197
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "addProp",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/productionContext.test.ts",
+          "kind": "named import",
+          "local": "addProp",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/productionProposals.test.ts",
+          "kind": "named import",
+          "local": "addProp",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "addProp",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/manualDraftBaseline.test.ts",
+          "kind": "named import",
+          "local": "addProp",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "addProp",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/shotBulkUndo.test.ts",
+          "kind": "named import",
+          "local": "addProp",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.addProp",
+          "line": 75
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "addProp",
+          "typeOnly": false,
+          "line": 26
+        },
+        {
+          "path": "src/components/assets/AssetLibraryPage.tsx",
+          "kind": "named import",
+          "local": "addProp",
+          "typeOnly": false,
+          "line": 10
+        },
+        {
+          "path": "src/components/studio/AssetLibraryPages.tsx",
+          "kind": "named import",
+          "local": "addProp",
+          "typeOnly": false,
+          "line": 17
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 3,
+      "testOrFixtureCallers": 14,
+      "status": "reachable"
+    },
+    {
+      "name": "patchProp",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1055,
+      "movedLine": 186,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "patchProp",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "patchProp",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "patchProp",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "patchProp",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "patchProp",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "patchProp",
+          "typeOnly": false,
+          "line": 26
+        },
+        {
+          "path": "src/components/assets/PropDetailPage.tsx",
+          "kind": "named import",
+          "local": "patchProp",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 5,
+      "status": "reachable"
+    },
+    {
+      "name": "setPropSlot",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1071,
+      "movedLine": 202,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "setPropSlot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "src/db/productionProposals.ts",
+          "kind": "named import",
+          "local": "setPropSlot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "src/db/agentGenerationBatches.ts",
+          "kind": "named import",
+          "local": "setPropSlot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "setPropSlot",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/manualDraftWiring.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.setPropSlot",
+          "line": 197
+        },
+        {
+          "path": "tests/manualDraftBaseline.test.ts",
+          "kind": "named import",
+          "local": "setPropSlot",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "setPropSlot",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "setPropSlot",
+          "typeOnly": false,
+          "line": 26
+        },
+        {
+          "path": "src/lib/agent/generationRuntime.ts",
+          "kind": "named import",
+          "local": "setPropSlot",
+          "typeOnly": false,
+          "line": 15
+        },
+        {
+          "path": "src/components/assets/PropDetailPage.tsx",
+          "kind": "named import",
+          "local": "setPropSlot",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 5,
+      "testOrFixtureCallers": 5,
+      "status": "reachable"
+    },
+    {
+      "name": "deleteProp",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1089,
+      "movedLine": 220,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "deleteProp",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "deleteProp",
+          "typeOnly": false,
+          "line": 26
+        },
+        {
+          "path": "src/components/assets/AssetLibraryPage.tsx",
+          "kind": "named import",
+          "local": "deleteProp",
+          "typeOnly": false,
+          "line": 10
+        },
+        {
+          "path": "src/components/studio/AssetLibraryPages.tsx",
+          "kind": "named import",
+          "local": "deleteProp",
+          "typeOnly": false,
+          "line": 17
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 3,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "addStyle",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1103,
+      "movedLine": 234,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/b01QueryIdentity.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.addStyle",
+          "line": 101
+        },
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "addStyle",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/parentProjectWrites.test.ts",
+          "kind": "named import",
+          "local": "addStyle",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/fixtures/b01/harness.tsx",
+          "kind": "owner namespace member",
+          "local": "repoAssets.addStyle",
+          "line": 102
+        },
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "addStyle",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/manualDraftWiring.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.addStyle",
+          "line": 198
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "addStyle",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/productionContext.test.ts",
+          "kind": "named import",
+          "local": "addStyle",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/productionProposals.test.ts",
+          "kind": "named import",
+          "local": "addStyle",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "addStyle",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/manualDraftBaseline.test.ts",
+          "kind": "named import",
+          "local": "addStyle",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "addStyle",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/shotBulkUndo.test.ts",
+          "kind": "named import",
+          "local": "addStyle",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.addStyle",
+          "line": 76
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "addStyle",
+          "typeOnly": false,
+          "line": 26
+        },
+        {
+          "path": "src/components/assets/AssetLibraryPage.tsx",
+          "kind": "named import",
+          "local": "addStyle",
+          "typeOnly": false,
+          "line": 10
+        },
+        {
+          "path": "src/components/studio/AssetLibraryPages.tsx",
+          "kind": "named import",
+          "local": "addStyle",
+          "typeOnly": false,
+          "line": 17
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 3,
+      "testOrFixtureCallers": 14,
+      "status": "reachable"
+    },
+    {
+      "name": "patchStyle",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1113,
+      "movedLine": 244,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "patchStyle",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "patchStyle",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "patchStyle",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "patchStyle",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "patchStyle",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.patchStyle",
+          "line": 77
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "patchStyle",
+          "typeOnly": false,
+          "line": 26
+        },
+        {
+          "path": "src/components/assets/StyleDetailPage.tsx",
+          "kind": "named import",
+          "local": "patchStyle",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 6,
+      "status": "reachable"
+    },
+    {
+      "name": "setStyleSlot",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1129,
+      "movedLine": 260,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "setStyleSlot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "src/db/productionProposals.ts",
+          "kind": "named import",
+          "local": "setStyleSlot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "src/db/agentGenerationBatches.ts",
+          "kind": "named import",
+          "local": "setStyleSlot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/manualDraftWiring.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoAssets.setStyleSlot",
+          "line": 198
+        },
+        {
+          "path": "tests/manualDraftBaseline.test.ts",
+          "kind": "named import",
+          "local": "setStyleSlot",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "setStyleSlot",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "setStyleSlot",
+          "typeOnly": false,
+          "line": 26
+        },
+        {
+          "path": "src/lib/agent/generationRuntime.ts",
+          "kind": "named import",
+          "local": "setStyleSlot",
+          "typeOnly": false,
+          "line": 15
+        },
+        {
+          "path": "src/components/assets/StyleDetailPage.tsx",
+          "kind": "named import",
+          "local": "setStyleSlot",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 5,
+      "testOrFixtureCallers": 4,
+      "status": "reachable"
+    },
+    {
+      "name": "deleteStyle",
+      "owner": "src/db/assets.ts",
+      "originalLine": 1147,
+      "movedLine": 278,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "deleteStyle",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "deleteStyle",
+          "typeOnly": false,
+          "line": 26
+        },
+        {
+          "path": "src/components/assets/AssetLibraryPage.tsx",
+          "kind": "named import",
+          "local": "deleteStyle",
+          "typeOnly": false,
+          "line": 10
+        },
+        {
+          "path": "src/components/studio/AssetLibraryPages.tsx",
+          "kind": "named import",
+          "local": "deleteStyle",
+          "typeOnly": false,
+          "line": 17
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 3,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "addStoryBeat",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 1199,
+      "movedLine": 174,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "addStoryBeat",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "addStoryBeat",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/productionContext.test.ts",
+          "kind": "named import",
+          "local": "addStoryBeat",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "addStoryBeat",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/auditDataIntegrity.test.ts",
+          "kind": "named import",
+          "local": "addStoryBeat",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/shotBulkUndo.test.ts",
+          "kind": "named import",
+          "local": "addStoryBeat",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/draftConcurrency.test.ts",
+          "kind": "named import",
+          "local": "addStoryBeat",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "addStoryBeat",
+          "typeOnly": false,
+          "line": 12
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "addStoryBeat",
+          "typeOnly": false,
+          "line": 56
+        },
+        {
+          "path": "src/components/story/StoryPage.tsx",
+          "kind": "named import",
+          "local": "addStoryBeat",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 3,
+      "testOrFixtureCallers": 7,
+      "status": "reachable"
+    },
+    {
+      "name": "patchStoryBeat",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 1235,
+      "movedLine": 210,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "patchStoryBeat",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/productionContext.test.ts",
+          "kind": "named import",
+          "local": "patchStoryBeat",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "patchStoryBeat",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "patchStoryBeat",
+          "typeOnly": false,
+          "line": 12
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "patchStoryBeat",
+          "typeOnly": false,
+          "line": 56
+        },
+        {
+          "path": "src/components/story/StoryPage.tsx",
+          "kind": "named import",
+          "local": "patchStoryBeat",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 3,
+      "testOrFixtureCallers": 3,
+      "status": "reachable"
+    },
+    {
+      "name": "reorderBeats",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 1261,
+      "movedLine": 236,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "reorderBeats",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "reorderBeats",
+          "typeOnly": false,
+          "line": 12
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "reorderBeats",
+          "typeOnly": false,
+          "line": 56
+        },
+        {
+          "path": "src/components/story/StoryPage.tsx",
+          "kind": "named import",
+          "local": "reorderBeats",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 3,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "duplicateBeat",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 1291,
+      "movedLine": 266,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "duplicateBeat",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "duplicateBeat",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "duplicateBeat",
+          "typeOnly": false,
+          "line": 12
+        },
+        {
+          "path": "src/components/story/StoryPage.tsx",
+          "kind": "named import",
+          "local": "duplicateBeat",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 2,
+      "status": "reachable"
+    },
+    {
+      "name": "restoreStoryBeat",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 1346,
+      "movedLine": 321,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/auditDataIntegrity.test.ts",
+          "kind": "named import",
+          "local": "restoreStoryBeat",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "restoreStoryBeat",
+          "typeOnly": false,
+          "line": 56
+        },
+        {
+          "path": "src/components/story/StoryPage.tsx",
+          "kind": "named import",
+          "local": "restoreStoryBeat",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "deleteStoryBeat",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 1373,
+      "movedLine": 348,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "deleteStoryBeat",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/auditDataIntegrity.test.ts",
+          "kind": "named import",
+          "local": "deleteStoryBeat",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "deleteStoryBeat",
+          "typeOnly": false,
+          "line": 12
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "deleteStoryBeat",
+          "typeOnly": false,
+          "line": 56
+        },
+        {
+          "path": "src/components/story/StoryPage.tsx",
+          "kind": "named import",
+          "local": "deleteStoryBeat",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 3,
+      "testOrFixtureCallers": 2,
+      "status": "reachable"
+    },
+    {
+      "name": "updateEpisodeShotFilters",
+      "owner": "src/db/episodes.ts",
+      "originalLine": 1393,
+      "movedLine": 368,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "updateEpisodeShotFilters",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "updateEpisodeShotFilters",
+          "typeOnly": false,
+          "line": 11
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "updateEpisodeShotFilters",
+          "typeOnly": false,
+          "line": 56
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 2,
+      "status": "reachable"
+    },
+    {
+      "name": "addShots",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1434,
+      "movedLine": 65,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "addShots",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "addShots",
+          "typeOnly": false,
+          "line": 25
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "addShots",
+          "typeOnly": false,
+          "line": 55
+        }
+      ],
+      "localOwnerReferences": [
+        {
+          "line": 125,
+          "text": "addShots(projectId, episodeId, 1, options)"
+        }
+      ],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "addShot",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1489,
+      "movedLine": 120,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/imageDiscovery.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/agentGenerationBatchSafety.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 10
+        },
+        {
+          "path": "tests/shotDeleteUndo.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/useShotMedia.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/fixtures/d02/harness.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/fixtures/b01/harness.tsx",
+          "kind": "owner namespace member",
+          "local": "repoShots.addShot",
+          "line": 99
+        },
+        {
+          "path": "tests/fixtures/d01/harness.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/agentGenerationEvidence.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/manualDraftWiring.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoShots.addShot",
+          "line": 230
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/agentGenerationReview.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 9
+        },
+        {
+          "path": "tests/b03IntentBoundaries.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoShots.addShot",
+          "line": 78
+        },
+        {
+          "path": "tests/productionHandoff.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/productionContext.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/agentGenerationBatch.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 10
+        },
+        {
+          "path": "tests/agentGenerationReviewTransactions.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/productionProposals.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/agentGeneration.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/manualDraftBaseline.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/agentBatchPreparationRecovery.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/auditDataIntegrity.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/generationIntent.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/shotBulkUndo.test.ts",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoShots.addShot",
+          "line": 383
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "addShot",
+          "typeOnly": false,
+          "line": 55
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 28,
+      "status": "reachable"
+    },
+    {
+      "name": "patchShot",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1499,
+      "movedLine": 130,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/imageDiscovery.test.ts",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/shotDeleteUndo.test.ts",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "src/db/productionProposals.ts",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 2
+        },
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/manualDraftWiring.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoShots.patchShot",
+          "line": 281
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/agentGenerationReview.test.ts",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 9
+        },
+        {
+          "path": "tests/b03IntentBoundaries.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoShots.patchShot",
+          "line": 201
+        },
+        {
+          "path": "tests/productionHandoff.test.ts",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/productionContext.test.ts",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/agentGenerationBatch.test.ts",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 10
+        },
+        {
+          "path": "tests/productionProposals.test.ts",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/agentGeneration.test.ts",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/manualDraftBaseline.test.ts",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/auditDataIntegrity.test.ts",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/generationIntent.test.ts",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/shotBulkUndo.test.ts",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoShots.patchShot",
+          "line": 384
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 25
+        },
+        {
+          "path": "src/components/shots/DurationInput.tsx",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "patchShot",
+          "typeOnly": false,
+          "line": 55
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 4,
+      "testOrFixtureCallers": 20,
+      "status": "reachable"
+    },
+    {
+      "name": "setShotCharacterSelected",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1524,
+      "movedLine": 155,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/b03IntentBoundaries.test.ts",
+          "kind": "same-owner spy",
+          "local": "repoShots.setShotCharacterSelected",
+          "line": 196
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "setShotCharacterSelected",
+          "typeOnly": false,
+          "line": 55
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "EpisodeShotBulkPatch",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1547,
+      "movedLine": 178,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/shotBulkUndo.test.ts",
+          "kind": "named import",
+          "local": "EpisodeShotBulkPatch",
+          "typeOnly": true,
+          "line": 8
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "EpisodeShotBulkPatch",
+          "typeOnly": true,
+          "line": 55
+        }
+      ],
+      "localOwnerReferences": [
+        {
+          "line": 189,
+          "text": "EpisodeShotBulkPatch"
+        },
+        {
+          "line": 189,
+          "text": "EpisodeShotBulkPatch"
+        },
+        {
+          "line": 192,
+          "text": "EpisodeShotBulkPatch"
+        },
+        {
+          "line": 201,
+          "text": "EpisodeShotBulkPatch"
+        },
+        {
+          "line": 201,
+          "text": "EpisodeShotBulkPatch"
+        },
+        {
+          "line": 211,
+          "text": "EpisodeShotBulkPatch"
+        },
+        {
+          "line": 231,
+          "text": "EpisodeShotBulkPatch"
+        }
+      ],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "EpisodeShotBulkUndo",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1554,
+      "movedLine": 186,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/shotBulkUndo.test.ts",
+          "kind": "named import",
+          "local": "EpisodeShotBulkUndo",
+          "typeOnly": true,
+          "line": 8
+        }
+      ],
+      "localOwnerReferences": [
+        {
+          "line": 212,
+          "text": "EpisodeShotBulkUndo"
+        },
+        {
+          "line": 238,
+          "text": "EpisodeShotBulkUndo"
+        },
+        {
+          "line": 252,
+          "text": "EpisodeShotBulkUndo"
+        }
+      ],
+      "sourceCallers": 0,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "patchEpisodeShots",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1576,
+      "movedLine": 208,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "patchEpisodeShots",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "patchEpisodeShots",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/shotBulkUndo.test.ts",
+          "kind": "named import",
+          "local": "patchEpisodeShots",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "patchEpisodeShots",
+          "typeOnly": false,
+          "line": 55
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 3,
+      "status": "reachable"
+    },
+    {
+      "name": "undoEpisodeShotBulkPatch",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1620,
+      "movedLine": 252,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/shotBulkUndo.test.ts",
+          "kind": "named import",
+          "local": "undoEpisodeShotBulkPatch",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "undoEpisodeShotBulkPatch",
+          "typeOnly": false,
+          "line": 55
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "reorderShots",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1658,
+      "movedLine": 290,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "reorderShots",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "reorderShots",
+          "typeOnly": false,
+          "line": 25
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "reorderShots",
+          "typeOnly": false,
+          "line": 55
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "duplicateShot",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1676,
+      "movedLine": 308,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "duplicateShot",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "duplicateShot",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "duplicateShot",
+          "typeOnly": false,
+          "line": 25
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "duplicateShot",
+          "typeOnly": false,
+          "line": 55
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 2,
+      "status": "reachable"
+    },
+    {
+      "name": "restoreShots",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1705,
+      "movedLine": 337,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/shotDeleteUndo.test.ts",
+          "kind": "named import",
+          "local": "restoreShots",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "restoreShots",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "restoreShots",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "restoreShots",
+          "typeOnly": false,
+          "line": 55
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 3,
+      "status": "reachable"
+    },
+    {
+      "name": "setShotSlot",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1737,
+      "movedLine": 369,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/imageDiscovery.test.ts",
+          "kind": "named import",
+          "local": "setShotSlot",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/repoReliability.test.ts",
+          "kind": "named import",
+          "local": "setShotSlot",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/shotDeleteUndo.test.ts",
+          "kind": "named import",
+          "local": "setShotSlot",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "src/db/productionProposals.ts",
+          "kind": "named import",
+          "local": "setShotSlot",
+          "typeOnly": false,
+          "line": 2
+        },
+        {
+          "path": "src/db/agentGenerationBatches.ts",
+          "kind": "named import",
+          "local": "setShotSlot",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/fixtures/d02/harness.ts",
+          "kind": "named import",
+          "local": "setShotSlot",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "setShotSlot",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/manualDraftWiring.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoShots.setShotSlot",
+          "line": 246
+        },
+        {
+          "path": "tests/b03IntentBoundaries.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoShots.setShotSlot",
+          "line": 201
+        },
+        {
+          "path": "tests/productionContext.test.ts",
+          "kind": "named import",
+          "local": "setShotSlot",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/productionProposals.test.ts",
+          "kind": "named import",
+          "local": "setShotSlot",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "setShotSlot",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/manualDraftBaseline.test.ts",
+          "kind": "named import",
+          "local": "setShotSlot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/auditDataIntegrity.test.ts",
+          "kind": "named import",
+          "local": "setShotSlot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/mediaPatchBoundary.test.ts",
+          "kind": "named import",
+          "local": "setShotSlot",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/shotBulkUndo.test.ts",
+          "kind": "named import",
+          "local": "setShotSlot",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "setShotSlot",
+          "typeOnly": false,
+          "line": 25
+        },
+        {
+          "path": "src/lib/agent/generationRuntime.ts",
+          "kind": "named import",
+          "local": "setShotSlot",
+          "typeOnly": false,
+          "line": 16
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "setShotSlot",
+          "typeOnly": false,
+          "line": 55
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 5,
+      "testOrFixtureCallers": 14,
+      "status": "reachable"
+    },
+    {
+      "name": "deleteShots",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1755,
+      "movedLine": 387,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "deleteShots",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "kind": "named import",
+          "local": "deleteShots",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "deleteShots",
+          "typeOnly": false,
+          "line": 55
+        },
+        {
+          "path": "src/components/story/StoryPage.tsx",
+          "kind": "named import",
+          "local": "deleteShots",
+          "typeOnly": false,
+          "line": 7
+        }
+      ],
+      "localOwnerReferences": [
+        {
+          "line": 440,
+          "text": "deleteShots(ids)"
+        }
+      ],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 2,
+      "status": "reachable"
+    },
+    {
+      "name": "DeletedShotsSnapshot",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1779,
+      "movedLine": 411,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [],
+      "localOwnerReferences": [
+        {
+          "line": 418,
+          "text": "DeletedShotsSnapshot"
+        }
+      ],
+      "sourceCallers": 0,
+      "testOrFixtureCallers": 0,
+      "status": "reachable"
+    },
+    {
+      "name": "deleteEpisodeShots",
+      "owner": "src/db/shots.ts",
+      "originalLine": 1786,
+      "movedLine": 418,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/shotDeleteUndo.test.ts",
+          "kind": "named import",
+          "local": "deleteEpisodeShots",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/repo.test.ts",
+          "kind": "named import",
+          "local": "deleteEpisodeShots",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "deleteEpisodeShots",
+          "typeOnly": false,
+          "line": 25
+        },
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "deleteEpisodeShots",
+          "typeOnly": false,
+          "line": 55
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 2,
+      "status": "reachable"
+    },
+    {
+      "name": "setVisibleColumns",
+      "owner": "src/db/projects.ts",
+      "originalLine": 1813,
+      "movedLine": 219,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "src/components/shots/ShotEditorPage.tsx",
+          "kind": "named import",
+          "local": "setVisibleColumns",
+          "typeOnly": false,
+          "line": 57
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 0,
+      "status": "reachable"
+    },
+    {
+      "name": "listConnectors",
+      "owner": "src/db/connectors.ts",
+      "originalLine": 1820,
+      "movedLine": 6,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/connectors.test.ts",
+          "kind": "named import",
+          "local": "listConnectors",
+          "typeOnly": false,
+          "line": 5
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 0,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "getConnectorByDefinition",
+      "owner": "src/db/connectors.ts",
+      "originalLine": 1824,
+      "movedLine": 10,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [],
+      "localOwnerReferences": [
+        {
+          "line": 32,
+          "text": "getConnectorByDefinition(input.definitionId)"
+        }
+      ],
+      "sourceCallers": 0,
+      "testOrFixtureCallers": 0,
+      "status": "reachable"
+    },
+    {
+      "name": "UpsertConnectorInput",
+      "owner": "src/db/connectors.ts",
+      "originalLine": 1830,
+      "movedLine": 16,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [],
+      "localOwnerReferences": [
+        {
+          "line": 25,
+          "text": "UpsertConnectorInput"
+        }
+      ],
+      "sourceCallers": 0,
+      "testOrFixtureCallers": 0,
+      "status": "reachable"
+    },
+    {
+      "name": "upsertConnector",
+      "owner": "src/db/connectors.ts",
+      "originalLine": 1839,
+      "movedLine": 25,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/connectors.test.ts",
+          "kind": "named import",
+          "local": "upsertConnector",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/fixtures/d02/harness.ts",
+          "kind": "named import",
+          "local": "upsertConnector",
+          "typeOnly": false,
+          "line": 11
+        },
+        {
+          "path": "tests/connectorMigration.test.ts",
+          "kind": "named import",
+          "local": "upsertConnector",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "upsertConnector",
+          "typeOnly": false,
+          "line": 12
+        },
+        {
+          "path": "tests/auditDataIntegrity.test.ts",
+          "kind": "named import",
+          "local": "upsertConnector",
+          "typeOnly": false,
+          "line": 9
+        },
+        {
+          "path": "tests/b06EditorSessions.test.ts",
+          "kind": "same-owner spy",
+          "local": "repoConnectors.upsertConnector",
+          "line": 263
+        },
+        {
+          "path": "src/components/studio/ConnectorsPage.tsx",
+          "kind": "named import",
+          "local": "upsertConnector",
+          "typeOnly": false,
+          "line": 20
+        },
+        {
+          "path": "src/components/audio/MimoConnection.tsx",
+          "kind": "named import",
+          "local": "upsertConnector",
+          "typeOnly": false,
+          "line": 2
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 6,
+      "status": "reachable"
+    },
+    {
+      "name": "resolveConnector",
+      "owner": "src/db/connectors.ts",
+      "originalLine": 1866,
+      "movedLine": 52,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "src/db/agentGenerationBatches.ts",
+          "kind": "named import",
+          "local": "resolveConnector",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/connectorMigration.test.ts",
+          "kind": "named import",
+          "local": "resolveConnector",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "src/lib/audioGeneration/runtime.ts",
+          "kind": "named import",
+          "local": "resolveConnector",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/lib/agent/generationBatchRuntime.ts",
+          "kind": "named import",
+          "local": "resolveConnector",
+          "typeOnly": false,
+          "line": 1
+        },
+        {
+          "path": "src/lib/agent/generationPreparation.ts",
+          "kind": "named import",
+          "local": "resolveConnector",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/lib/agent/generationRuntime.ts",
+          "kind": "named import",
+          "local": "resolveConnector",
+          "typeOnly": false,
+          "line": 14
+        },
+        {
+          "path": "src/lib/agent/audioGenerationTools.ts",
+          "kind": "named import",
+          "local": "resolveConnector",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/components/agent/AgentChatPage.tsx",
+          "kind": "named import",
+          "local": "resolveConnector",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/components/agent/AgentGenerationBatches.tsx",
+          "kind": "named import",
+          "local": "resolveConnector",
+          "typeOnly": false,
+          "line": 20
+        }
+      ],
+      "localOwnerReferences": [
+        {
+          "line": 58,
+          "text": "resolveConnector(id)"
+        }
+      ],
+      "sourceCallers": 8,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "deleteConnector",
+      "owner": "src/db/connectors.ts",
+      "originalLine": 1870,
+      "movedLine": 56,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/connectors.test.ts",
+          "kind": "named import",
+          "local": "deleteConnector",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/connectorMigration.test.ts",
+          "kind": "named import",
+          "local": "deleteConnector",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/b06EditorSessions.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoConnectors.deleteConnector",
+          "line": 311
+        },
+        {
+          "path": "src/components/studio/ConnectorsPage.tsx",
+          "kind": "named import",
+          "local": "deleteConnector",
+          "typeOnly": false,
+          "line": 20
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 3,
+      "status": "reachable"
+    },
+    {
+      "name": "listChatThreads",
+      "owner": "src/db/chat.ts",
+      "originalLine": 1879,
+      "movedLine": 14,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [],
+      "localOwnerReferences": [],
+      "sourceCallers": 0,
+      "testOrFixtureCallers": 0,
+      "status": "pre-existing unconsumed retained"
+    },
+    {
+      "name": "getChatThread",
+      "owner": "src/db/chat.ts",
+      "originalLine": 1883,
+      "movedLine": 18,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [],
+      "localOwnerReferences": [],
+      "sourceCallers": 0,
+      "testOrFixtureCallers": 0,
+      "status": "pre-existing unconsumed retained"
+    },
+    {
+      "name": "createChatThread",
+      "owner": "src/db/chat.ts",
+      "originalLine": 1887,
+      "movedLine": 22,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/musicDurationContract.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/agentIpTools.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/agentMaterialTools.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/agentActivityPersistence.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/connectors.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/imageDiscovery.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/agentGenerationBatchSafety.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 11
+        },
+        {
+          "path": "tests/toolValidationSafety.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/agentSettings.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/materialReferenceWire.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/fixtures/b07/harness.tsx",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/fixtures/d02/harness.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/fixtures/d01/harness.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/webResearchRuntime.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/toolLoadingMeasurement.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/agentGenerationRecovery.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/agentFinishingCheck.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/agentToolTransactions.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/agentAuditRemediation.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 11
+        },
+        {
+          "path": "tests/memoryRetrieval.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/agentProjectContext.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoChat.createChatThread",
+          "line": 21
+        },
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/agentGenerationReview.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 10
+        },
+        {
+          "path": "tests/agentMemoryTools.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 16
+        },
+        {
+          "path": "tests/b03IntentBoundaries.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoChat.createChatThread",
+          "line": 116
+        },
+        {
+          "path": "tests/musicGenerationReview.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/agentProjectCreation.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/agentUsage.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/references.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/agentToolsReview.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/agentGenerationBatch.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 11
+        },
+        {
+          "path": "tests/agentGenerationReviewTransactions.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/audioMusicAgentTools.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/agentTaskOrchestration.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/audioAgentExecution.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/agentRunReview.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/materialImageQueue.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/agentGeneration.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/reasoningPolicy.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/responsesStream.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/agentReferences.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/agentBatchPreparationRecovery.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/toolLoading.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/agentTasks.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/agentRuns.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/audioGenerationAgent.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/toolValidationDiagnostics.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/agentTools.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/contextManagement.test.ts",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 2
+        },
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoChat.createChatThread",
+          "line": 28
+        },
+        {
+          "path": "src/components/agent/AgentChatPage.tsx",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 1
+        },
+        {
+          "path": "src/components/agent/CreatedEntityLinks.tsx",
+          "kind": "named import",
+          "local": "createChatThread",
+          "typeOnly": false,
+          "line": 8
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 2,
+      "testOrFixtureCallers": 50,
+      "status": "reachable"
+    },
+    {
+      "name": "updateChatThread",
+      "owner": "src/db/chat.ts",
+      "originalLine": 1913,
+      "movedLine": 48,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/agentRunReview.test.ts",
+          "kind": "named import",
+          "local": "updateChatThread",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/reasoningPolicy.test.ts",
+          "kind": "named import",
+          "local": "updateChatThread",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "src/components/agent/AgentChatPage.tsx",
+          "kind": "named import",
+          "local": "updateChatThread",
+          "typeOnly": false,
+          "line": 1
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 2,
+      "status": "reachable"
+    },
+    {
+      "name": "deleteChatThread",
+      "owner": "src/db/cascadeCommands.ts",
+      "originalLine": 1941,
+      "movedLine": 88,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/imageDiscovery.test.ts",
+          "kind": "named import",
+          "local": "deleteChatThread",
+          "typeOnly": false,
+          "line": 8
+        },
+        {
+          "path": "tests/fixtures/d02/harness.ts",
+          "kind": "named import",
+          "local": "deleteChatThread",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/webResearchRuntime.test.ts",
+          "kind": "named import",
+          "local": "deleteChatThread",
+          "typeOnly": false,
+          "line": 9
+        },
+        {
+          "path": "tests/projectMemories.test.ts",
+          "kind": "named import",
+          "local": "deleteChatThread",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/agentMemoryTools.test.ts",
+          "kind": "named import",
+          "local": "deleteChatThread",
+          "typeOnly": false,
+          "line": 18
+        },
+        {
+          "path": "tests/agentUsage.test.ts",
+          "kind": "named import",
+          "local": "deleteChatThread",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/references.test.ts",
+          "kind": "named import",
+          "local": "deleteChatThread",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/agentToolsReview.test.ts",
+          "kind": "named import",
+          "local": "deleteChatThread",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/agentGenerationBatch.test.ts",
+          "kind": "named import",
+          "local": "deleteChatThread",
+          "typeOnly": false,
+          "line": 12
+        },
+        {
+          "path": "tests/agentTaskOrchestration.test.ts",
+          "kind": "named import",
+          "local": "deleteChatThread",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/agentGeneration.test.ts",
+          "kind": "named import",
+          "local": "deleteChatThread",
+          "typeOnly": false,
+          "line": 10
+        },
+        {
+          "path": "tests/agentTaskWrapup.test.ts",
+          "kind": "named import",
+          "local": "deleteChatThread",
+          "typeOnly": false,
+          "line": 2
+        },
+        {
+          "path": "tests/agentTasks.test.ts",
+          "kind": "named import",
+          "local": "deleteChatThread",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/agentRuns.test.ts",
+          "kind": "named import",
+          "local": "deleteChatThread",
+          "typeOnly": false,
+          "line": 6
+        },
+        {
+          "path": "tests/agentTools.test.ts",
+          "kind": "named import",
+          "local": "deleteChatThread",
+          "typeOnly": false,
+          "line": 7
+        },
+        {
+          "path": "tests/contextManagement.test.ts",
+          "kind": "named import",
+          "local": "deleteChatThread",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoCascadeCommands.deleteChatThread",
+          "line": 531
+        },
+        {
+          "path": "src/components/agent/AgentChatPage.tsx",
+          "kind": "named import",
+          "local": "deleteChatThread",
+          "typeOnly": false,
+          "line": 2
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 17,
+      "status": "reachable"
+    },
+    {
+      "name": "listChatMessages",
+      "owner": "src/db/chat.ts",
+      "originalLine": 1966,
+      "movedLine": 76,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [],
+      "localOwnerReferences": [],
+      "sourceCallers": 0,
+      "testOrFixtureCallers": 0,
+      "status": "pre-existing unconsumed retained"
+    },
+    {
+      "name": "appendChatMessage",
+      "owner": "src/db/chat.ts",
+      "originalLine": 1970,
+      "movedLine": 80,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/connectors.test.ts",
+          "kind": "named import",
+          "local": "appendChatMessage",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/projectPackage.test.ts",
+          "kind": "named import",
+          "local": "appendChatMessage",
+          "typeOnly": false,
+          "line": 7
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 0,
+      "testOrFixtureCallers": 2,
+      "status": "reachable"
+    },
+    {
+      "name": "updateChatMessage",
+      "owner": "src/db/chat.ts",
+      "originalLine": 1994,
+      "movedLine": 104,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [],
+      "localOwnerReferences": [],
+      "sourceCallers": 0,
+      "testOrFixtureCallers": 0,
+      "status": "pre-existing unconsumed retained"
+    },
+    {
+      "name": "bindChatThreadProject",
+      "owner": "src/db/chat.ts",
+      "originalLine": 2006,
+      "movedLine": 116,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/agentProjectContext.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoChat.bindChatThreadProject",
+          "line": 62
+        },
+        {
+          "path": "src/components/agent/AgentChatPage.tsx",
+          "kind": "named import",
+          "local": "bindChatThreadProject",
+          "typeOnly": false,
+          "line": 1
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 1,
+      "testOrFixtureCallers": 1,
+      "status": "reachable"
+    },
+    {
+      "name": "assertVideoProject",
+      "owner": "src/db/productionShared.ts",
+      "originalLine": 2017,
+      "movedLine": 73,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "src/db/shots.ts",
+          "kind": "named import",
+          "local": "assertVideoProject",
+          "typeOnly": false,
+          "line": 16
+        },
+        {
+          "path": "src/db/episodes.ts",
+          "kind": "named import",
+          "local": "assertVideoProject",
+          "typeOnly": false,
+          "line": 16
+        },
+        {
+          "path": "src/db/projects.ts",
+          "kind": "named import",
+          "local": "assertVideoProject",
+          "typeOnly": false,
+          "line": 23
+        }
+      ],
+      "localOwnerReferences": [
+        {
+          "line": 66,
+          "text": "assertVideoProject(shot.projectId)"
+        }
+      ],
+      "sourceCallers": 3,
+      "testOrFixtureCallers": 0,
+      "status": "reachable"
+    },
+    {
+      "name": "createAudioMusicProject",
+      "owner": "src/db/projects.ts",
+      "originalLine": 2024,
+      "movedLine": 226,
+      "exportedOriginally": true,
+      "exactTokensExceptExportModifier": true,
+      "callers": [
+        {
+          "path": "tests/musicDurationContract.test.ts",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/audioGenerationRecoveryAudit.test.ts",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 9
+        },
+        {
+          "path": "tests/audioEngineCommands.test.ts",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/audioScriptImport.test.ts",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/fixtures/d02/harness.ts",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 2
+        },
+        {
+          "path": "tests/fixtures/c02/harness.tsx",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 5
+        },
+        {
+          "path": "tests/audioFingerprint.test.ts",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/musicGenerationReview.test.ts",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/musicLegacyDurationRepair.test.ts",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 42
+        },
+        {
+          "path": "tests/audioFoundation.test.ts",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/audioMusicAgentTools.test.ts",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/audioAgentExecution.test.ts",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/boundedAudioRuntime.test.ts",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/mimoRuntime.test.ts",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/audioGenerationRuntime.test.ts",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/audioTaskEvidence.test.ts",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/musicDraftVariants.test.ts",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/audioGenerationAgent.test.ts",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "tests/audioOutputEvidence.test.ts",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 4
+        },
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "kind": "owner namespace member",
+          "local": "repoProjects.createAudioMusicProject",
+          "line": 262
+        },
+        {
+          "path": "src/lib/agent/businessTools.ts",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 3
+        },
+        {
+          "path": "src/components/studio/ProjectGalleryPage.tsx",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 31
+        },
+        {
+          "path": "src/components/agent/ProjectPicker.tsx",
+          "kind": "named import",
+          "local": "createAudioMusicProject",
+          "typeOnly": false,
+          "line": 6
+        }
+      ],
+      "localOwnerReferences": [],
+      "sourceCallers": 3,
+      "testOrFixtureCallers": 20,
+      "status": "reachable"
+    }
+  ]
+}

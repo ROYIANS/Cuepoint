@@ -1,0 +1,39 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/d03ChatOwners.test.ts (3 tests | 1 failed) 37ms
+   ❯ D03 execution and selection owners (3)
+     × scopes interaction to thread and effort to connector/base/model, updates revision before persistence settles 16ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/d03ChatOwners.test.ts > D03 execution and selection owners > scopes interaction to thread and effort to connector/base/model, updates revision before persistence settles
+AssertionError: expected { …(8) } to match object { model: 'original', …(2) }
+(11 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "interactionMode": "conversation",
++   "interactionMode": "smart",
+    "model": "original",
+    "scope": "cth_15c06cef-2ae6-40ea-8d2a-bec735b1db06",
+  }
+
+ ❯ tests/d03ChatOwners.test.ts:60:36
+     58|         render(read);
+     59|         let selection = render(read);
+     60|         expect(selection.snapshot).toMatchObject({model: "original", i…
+       |                                    ^
+     61|         const revision = selection.selectionRevisionRef.current;
+     62|         const pending = selection.handleInteractionModeChange("smart");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 38 passed (39)
+   Start at  11:15:34
+   Duration  846ms (transform 62%, tests 18%, import 13%, setup 7%)
+

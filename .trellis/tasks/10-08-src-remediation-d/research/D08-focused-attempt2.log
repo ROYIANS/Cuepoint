@@ -1,0 +1,13 @@
+
+> cuepoint@0.1.0 test /Users/xiaomengdao/WebstormProjects/aifenjing
+> vitest run --maxWorkers=4 tests/d08TextDraftRepository.test.ts tests/d08TextDraftComponents.test.ts tests/debouncedDraft.test.ts tests/draftConcurrency.test.ts tests/manualDraftBaseline.test.ts tests/manualDraftWiring.test.ts tests/b01QueryIdentity.test.ts tests/b03IntentBoundaries.test.ts tests/b06EditorSessions.test.ts tests/d03ShotCommands.test.ts
+
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+
+ Test Files  10 passed (10)
+      Tests  169 passed (169)
+   Start at  15:38:40
+   Duration  1.61s (tests 47%, transform 29%, import 14%, setup 10%)
+

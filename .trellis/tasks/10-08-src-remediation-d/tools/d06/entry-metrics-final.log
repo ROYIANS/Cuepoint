@@ -1,0 +1,212 @@
+[
+  {
+    "path": "src/components/agent/GenerationReview.tsx",
+    "beforeSha256": "46d18772536208e0499dcb6fd66943f10c2cd32ce1c40c1408b0c28c651732bd",
+    "afterSha256": "262c605639542e9e33eec6abac13a20b4bc3c125fcc2b78164a1ae46d853d40b",
+    "sameBytes": false,
+    "entryMetrics": [
+      {
+        "line": 65,
+        "rule": "complexity",
+        "message": "Function 'GenerationReviewForm' has a complexity of 42. Maximum allowed is 20."
+      },
+      {
+        "line": 187,
+        "rule": "complexity",
+        "message": "Function 'GenerationConfigurationFields' has a complexity of 49. Maximum allowed is 20."
+      },
+      {
+        "line": 187,
+        "rule": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 47 to the 20 allowed."
+      }
+    ],
+    "currentMetrics": [
+      {
+        "line": 65,
+        "rule": "complexity",
+        "message": "Function 'GenerationReviewForm' has a complexity of 42. Maximum allowed is 20."
+      },
+      {
+        "line": 187,
+        "rule": "complexity",
+        "message": "Function 'GenerationConfigurationFields' has a complexity of 74. Maximum allowed is 20."
+      },
+      {
+        "line": 187,
+        "rule": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 29 to the 20 allowed."
+      }
+    ]
+  },
+  {
+    "path": "src/components/workspace/ProjectSettingsPanel.tsx",
+    "beforeSha256": "634de344c9f1f2af4d012b7cf7fb229e78df52a755c6656c3853c3fe5287bbfb",
+    "afterSha256": "71307ac9885854eca4785cea67b03931c93221f980c1673425bdad81060d4b1c",
+    "sameBytes": false,
+    "entryMetrics": [
+      {
+        "line": 134,
+        "rule": "complexity",
+        "message": "Function 'ProjectOutputSettings' has a complexity of 42. Maximum allowed is 20."
+      },
+      {
+        "line": 134,
+        "rule": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 24 to the 20 allowed."
+      }
+    ],
+    "currentMetrics": [
+      {
+        "line": 129,
+        "rule": "complexity",
+        "message": "Function 'ProjectOutputSettings' has a complexity of 60. Maximum allowed is 20."
+      },
+      {
+        "line": 129,
+        "rule": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 23 to the 20 allowed."
+      }
+    ]
+  },
+  {
+    "path": "src/lib/agent/generationProfiles.ts",
+    "beforeSha256": "9c2f3f28f8d78306c4db005af6c60a5809a8c2bf73c84479392f9482ca8fd69d",
+    "afterSha256": "7471dcfaed2e6eefa71162551550b0979eea155f6d50749a4b8455fdfa82e91d",
+    "sameBytes": false,
+    "entryMetrics": [
+      {
+        "line": 57,
+        "rule": "complexity",
+        "message": "Function 'profileRequest' has a complexity of 78. Maximum allowed is 20."
+      },
+      {
+        "line": 57,
+        "rule": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 107 to the 20 allowed."
+      }
+    ],
+    "currentMetrics": [
+      {
+        "line": 53,
+        "rule": "complexity",
+        "message": "Function 'profileRequest' has a complexity of 68. Maximum allowed is 20."
+      },
+      {
+        "line": 53,
+        "rule": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 96 to the 20 allowed."
+      }
+    ]
+  },
+  {
+    "path": "src/lib/audioGeneration/runtime.ts",
+    "beforeSha256": "1fb88b77565be67d97e1a22f7b926ae33e34adef57392de9d49637bbccc445dc",
+    "afterSha256": "1fb88b77565be67d97e1a22f7b926ae33e34adef57392de9d49637bbccc445dc",
+    "sameBytes": true,
+    "entryMetrics": [
+      {
+        "line": 140,
+        "rule": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 23 to the 20 allowed."
+      },
+      {
+        "line": 175,
+        "rule": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 29 to the 20 allowed."
+      },
+      {
+        "line": 175,
+        "rule": "complexity",
+        "message": "Async arrow function has a complexity of 31. Maximum allowed is 20."
+      },
+      {
+        "line": 247,
+        "rule": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 46 to the 20 allowed."
+      },
+      {
+        "line": 247,
+        "rule": "complexity",
+        "message": "Async arrow function has a complexity of 37. Maximum allowed is 20."
+      }
+    ],
+    "currentMetrics": [
+      {
+        "line": 140,
+        "rule": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 23 to the 20 allowed."
+      },
+      {
+        "line": 175,
+        "rule": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 29 to the 20 allowed."
+      },
+      {
+        "line": 175,
+        "rule": "complexity",
+        "message": "Async arrow function has a complexity of 31. Maximum allowed is 20."
+      },
+      {
+        "line": 247,
+        "rule": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 46 to the 20 allowed."
+      },
+      {
+        "line": 247,
+        "rule": "complexity",
+        "message": "Async arrow function has a complexity of 37. Maximum allowed is 20."
+      }
+    ]
+  },
+  {
+    "path": "src/lib/generationIntent.ts",
+    "beforeSha256": "9d5e5e59271d8797c0d3dd99b64f8ddf3c83418a0f53225b67b006b57cac2c5a",
+    "afterSha256": "9d5e5e59271d8797c0d3dd99b64f8ddf3c83418a0f53225b67b006b57cac2c5a",
+    "sameBytes": true,
+    "entryMetrics": [
+      {
+        "line": 55,
+        "rule": "complexity",
+        "message": "Function 'validateGenerationIntent' has a complexity of 60. Maximum allowed is 20."
+      },
+      {
+        "line": 55,
+        "rule": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 53 to the 20 allowed."
+      },
+      {
+        "line": 131,
+        "rule": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed."
+      },
+      {
+        "line": 131,
+        "rule": "complexity",
+        "message": "Async arrow function has a complexity of 22. Maximum allowed is 20."
+      }
+    ],
+    "currentMetrics": [
+      {
+        "line": 55,
+        "rule": "complexity",
+        "message": "Function 'validateGenerationIntent' has a complexity of 60. Maximum allowed is 20."
+      },
+      {
+        "line": 55,
+        "rule": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 53 to the 20 allowed."
+      },
+      {
+        "line": 131,
+        "rule": "sonarjs/cognitive-complexity",
+        "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed."
+      },
+      {
+        "line": 131,
+        "rule": "complexity",
+        "message": "Async arrow function has a complexity of 22. Maximum allowed is 20."
+      }
+    ]
+  }
+]

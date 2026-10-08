@@ -1,0 +1,20 @@
+
+> cuepoint@0.1.0 lint /Users/xiaomengdao/WebstormProjects/aifenjing
+> tsc -b --pretty false
+
+src/components/shots/ShotEditorPage.tsx(28,5): error TS6133: 'ArrowDown' is declared but its value is never read.
+src/components/shots/ShotEditorPage.tsx(29,5): error TS6133: 'ArrowUp' is declared but its value is never read.
+src/components/shots/ShotEditorPage.tsx(63,10): error TS6133: 'Project' is declared but its value is never read.
+src/components/shots/ShotEditorPage.tsx(64,10): error TS6133: 'Prop' is declared but its value is never read.
+src/components/shots/ShotEditorPage.tsx(77,10): error TS6133: 'VisualStyle' is declared but its value is never read.
+src/components/shots/ShotEditorPage.tsx(163,30): error TS2304: Cannot find name 'useCallback'.
+src/components/shots/ShotEditorPage.tsx(499,34): error TS2304: Cannot find name 'CopyPlus'.
+src/components/shots/ShotEditorPage.tsx(503,34): error TS2304: Cannot find name 'CopyPlus'.
+src/components/shots/ShotEditorPage.tsx(761,55): error TS2552: Cannot find name 'normalizeShotStatus'. Did you mean 'normalizeShotSettings'?
+src/components/shots/ShotEditorPage.tsx(1179,18): error TS2304: Cannot find name 'CSSProperties'.
+src/components/shots/ShotRow.tsx(227,50): error TS2304: Cannot find name 'gridColumns'.
+src/components/shots/ShotRow.tsx(438,50): error TS2304: Cannot find name 'DropdownMenuSeparator'.
+src/components/shots/ShotRow.tsx(449,82): error TS2304: Cannot find name 'toast'.
+src/components/shots/ShotRow.tsx(520,79): error TS2345: Argument of type 'ShotColumnId' is not assignable to parameter of type 'TextShotColumnId'.
+  Type '"characters"' is not assignable to type 'TextShotColumnId'.
+ ELIFECYCLE  Command failed with exit code 2.

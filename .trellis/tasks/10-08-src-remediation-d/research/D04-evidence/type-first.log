@@ -1,0 +1,11 @@
+
+> cuepoint@0.1.0 lint /Users/xiaomengdao/WebstormProjects/aifenjing
+> tsc -b --pretty false
+
+src/components/agent/ContextUsagePanel.tsx(88,167): error TS2345: Argument of type 'string[] | undefined' is not assignable to parameter of type 'readonly string[]'.
+  Type 'undefined' is not assignable to type 'readonly string[]'.
+src/components/agent/ContextUsagePanel.tsx(90,45): error TS2488: Type 'string[] | undefined' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/components/agent/ContextUsagePanel.tsx(198,18): error TS18048: 'capabilityCount' is possibly 'undefined'.
+src/components/agent/ContextUsagePanel.tsx(199,29): error TS18048: 'loadedCapabilities' is possibly 'undefined'.
+src/components/agent/ContextUsagePanel.tsx(199,64): error TS18048: 'loadedCapabilities' is possibly 'undefined'.
+ ELIFECYCLE  Command failed with exit code 2.

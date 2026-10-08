@@ -1,0 +1,38 @@
+[
+  {
+    "command": [
+      "rg",
+      "-n",
+      "ContextUsagePanel|ContextUsageTrigger|readAgentContextPreview|contextPreviewTables|contextPreviewIdentity|ContextParameters|MemoryContextDetails",
+      "src",
+      "tests",
+      "scripts",
+      "-g",
+      "*.{ts,tsx,mjs}"
+    ],
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "exitCode": 0,
+    "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/consumer-search.log",
+    "logSha256": "8d0665f920bcadee013afeff599bfe9303bb9e8ed6fa8cdb30017c627330aa3e"
+  },
+  {
+    "command": [
+      "rg",
+      "-n",
+      "transaction|db\\.",
+      "src/lib/agent/taskContext.ts",
+      "src/lib/agent/projectContext.ts",
+      "src/lib/agent/audioProjectContext.ts",
+      "src/db/memoryRetrieval.ts",
+      "src/lib/agent/referenceContext.ts",
+      "src/db/references.ts",
+      "src/db/agentTaskRecords.ts",
+      "src/db/contextSettings.ts",
+      "src/db/projectMemories.ts"
+    ],
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "exitCode": 0,
+    "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/nested-readgraph.log",
+    "logSha256": "be30ffca77514f949e60f2995de25ca4adf2ca8004b18477e767e5fe66784b33"
+  }
+]

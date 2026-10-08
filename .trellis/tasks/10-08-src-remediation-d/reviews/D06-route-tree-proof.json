@@ -1,0 +1,13 @@
+{
+  "compilerVersion": "5.9.3",
+  "path": "src/routeTree.gen.ts",
+  "beforePath": ".trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routeTree.gen.ts",
+  "beforeSha256": "f1572df02731d204a1ef38e4b744a39aa5b2c9dc7a3d85d1d6d3d3b6b6b09d65",
+  "buildSha256": "0df423ad2603ed30010d0c28c127b7b7d5a59c3bb0a1c24ddc39f55933cd4efd",
+  "tokensBefore": 3995,
+  "tokensAfter": 3995,
+  "sameTokens": true,
+  "policy": "Actual TypeScript scanner skips trivia; decoded token values preserve identifiers/literals/punctuation, independent of source formatting. Restore original entry bytes only when token sequences match.",
+  "restored": true,
+  "finalSha256": "f1572df02731d204a1ef38e4b744a39aa5b2c9dc7a3d85d1d6d3d3b6b6b09d65"
+}

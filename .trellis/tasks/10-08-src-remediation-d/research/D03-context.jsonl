@@ -1,0 +1,19 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Frontend Quality Check and predevelopment checklist"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "D03 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "D03 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "D03 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/hook-guidelines.md", "reason": "D03 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "D03 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/production-contracts.md", "reason": "D03 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/asset-output-foundation.md", "reason": "D03 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/audio-music.md", "reason": "D03 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "D03 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "D03 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/agent-batch-generation.md", "reason": "D03 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/agent-task-wrapup.md", "reason": "D03 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/project-memory.md", "reason": "D03 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/delivery-export.md", "reason": "D03 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/research/D03-page-responsibility-plan.md", "reason": "D03 scoped prior-source proposal; reread accepted predecessor changes before implementation"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/research/D03-scope.md", "reason": "D03 scoped prior-source proposal; reread accepted predecessor changes before implementation"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/research/D02-repository-plan.md", "reason": "D03 scoped prior-source proposal; reread accepted predecessor changes before implementation"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/research/static-runtime-restoration.md", "reason": "Identical tool versions and separate complete baseline TS programs required"}

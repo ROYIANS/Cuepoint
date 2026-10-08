@@ -1,0 +1,24 @@
+{
+  "firstFreeze": ".trellis/tasks/10-08-src-remediation-d/reviews/D05-product-freeze-first.json",
+  "changesSinceFirst": [
+    {
+      "path": "src/lib/agent/businessTools.ts",
+      "firstAfter": "f97ebf8ae4265aa456ce4570962146444f55d066ce08a9f1b34da8fb2b2d308d",
+      "currentAfter": "0aad3a5e1d3792952da4980ed003aa863e3ecb9e87bdc30cab4bef6d18e63274"
+    },
+    {
+      "path": "tests/d05BusinessBranches.test.ts",
+      "firstAfter": null,
+      "currentAfter": "88406876ac0bf1d346273a22476982e63f4ce60dbf5f8e2ac8bcf92318f95dfd"
+    }
+  ],
+  "fullSuite": {
+    "recordedAtFirstFreeze": "153 files / 2465 tests PASS",
+    "currentApplicability": "Broad first-freeze pass remains prior evidence; only explicit unsupported project/episode/beat/media cases now share the unchanged original default invalid() branch. The current 7-file/110-test fix gate covers four schema rejections, four unexpected owned-record rollback paths, all five actual supported slot writes, schema/catalog/metadata/project-create/atomic controls. No unrelated broad rerun; final whole-batch gate belongs to coordinator."
+  },
+  "native": {
+    "recordedAtFirstFreeze": "real native IndexedDB, D01 single/batch nested-write rollback + D05 character_update approval/receipt late rollback and positive retry",
+    "currentApplicability": "All native harness files, actual character_update consumers and D01 owners are unchanged; added unsupported slot switch cases are covered by current actual command/transaction tests. The native pass is not relabeled as a new run."
+  },
+  "compiler": "project TS5.9.3; final app and dedicated compile gate rerun on corrected source; negative fixture unchanged with previous actual16/16 rejection proof."
+}

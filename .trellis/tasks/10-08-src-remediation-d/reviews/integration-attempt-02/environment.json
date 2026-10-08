@@ -1,0 +1,17 @@
+{
+  "node": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+  "pnpm": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+  "browserPaths": {
+    "B01_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+    "B01_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell",
+    "B07_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+    "B07_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell",
+    "C01_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+    "C01_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell",
+    "C02_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+    "C02_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell",
+    "D08_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+    "D08_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+  },
+  "baselineOverrides": false
+}

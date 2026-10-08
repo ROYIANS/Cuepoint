@@ -1,0 +1,11 @@
+{
+  "path": "src/routeTree.gen.ts",
+  "originalSHA256": "f1572df02731d204a1ef38e4b744a39aa5b2c9dc7a3d85d1d6d3d3b6b6b09d65",
+  "builtSHA256": "0df423ad2603ed30010d0c28c127b7b7d5a59c3bb0a1c24ddc39f55933cd4efd",
+  "currentSHA256": "f1572df02731d204a1ef38e4b744a39aa5b2c9dc7a3d85d1d6d3d3b6b6b09d65",
+  "sameTokens": true,
+  "tokens": 3995,
+  "compilerVersion": "5.9.3",
+  "predecessor": ".trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routeTree.gen.ts",
+  "provenance": "D07 actual entry hash equals accepted D06 original bytes; current build output equals first D07 freeze hash. Restore only build-generated trivia/quote formatting to original input already type/focused/full tested. No adapter/test/config/runner edits."
+}

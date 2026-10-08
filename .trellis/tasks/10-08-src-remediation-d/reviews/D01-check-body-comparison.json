@@ -1,0 +1,540 @@
+{
+  "baselineRevision": "f062d694e61da6bcb574f7fb548803b9e54197eb",
+  "existingOwnerFunctionBodies": 80,
+  "identicalBodies": 79,
+  "connectorRenameOnly": [
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "name": "checkAgentGeneration",
+      "unchanged": false,
+      "onlyConnectorRename": true
+    }
+  ],
+  "otherChangedBodies": [],
+  "moved": [
+    {
+      "from": "src/lib/agent/toolLoading.ts",
+      "to": "src/domain/agentToolSelection.ts",
+      "name": "getOfferedToolNames",
+      "afterName": "getOfferedToolNames",
+      "bodyIdentical": true
+    },
+    {
+      "from": "src/lib/agent/toolLoading.ts",
+      "to": "src/domain/agentToolSelection.ts",
+      "name": "toolNamesForCall",
+      "afterName": "toolNamesForCall",
+      "bodyIdentical": true
+    },
+    {
+      "from": "src/db/agentTasks.ts",
+      "to": "src/db/agentTaskGuards.ts",
+      "name": "editableAgentTask",
+      "afterName": "editableAgentTask",
+      "bodyIdentical": true
+    },
+    {
+      "from": "src/lib/agent/generationRuntime.ts",
+      "to": "src/lib/agent/generationPreparation.ts",
+      "name": "connector",
+      "afterName": "resolveGenerationConnector",
+      "bodyIdentical": true
+    },
+    {
+      "from": "src/lib/agent/generationRuntime.ts",
+      "to": "src/lib/agent/generationPreparation.ts",
+      "name": "inputRevision",
+      "afterName": "inputRevision",
+      "bodyIdentical": true
+    },
+    {
+      "from": "src/lib/agent/generationRuntime.ts",
+      "to": "src/lib/agent/generationPreparation.ts",
+      "name": "loadGenerationInputs",
+      "afterName": "loadGenerationInputs",
+      "bodyIdentical": true
+    }
+  ],
+  "rows": [
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "frozenGeneration",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "recheck",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "ownedGenerationBatch",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "readGenerationBatch",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "prepareGenerationBatch",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "prepareGenerationBatchDraft",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "batchDraftSummary",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "requireRevision",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "immutableContext",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "writeBatch",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "saveGenerationBatchDraft",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "changeGenerationBatchItems",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "confirmGenerationBatch",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "controlGenerationBatch",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "assertBatchDispatch",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "claimBatchItem",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "settleGenerationBatch",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "selectBatchCandidate",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "applyBatchSelections",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "retryFailedBatch",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "name": "recoverAbandonedGenerationBatches",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTaskRecords.ts",
+      "name": "listTaskRecords",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTaskRecords.ts",
+      "name": "listTaskRecordVersions",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTaskRecords.ts",
+      "name": "provesCompletedEffect",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTaskRecords.ts",
+      "name": "validateTaskSources",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTaskRecords.ts",
+      "name": "writeTaskRecord",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTaskRecords.ts",
+      "name": "saveTaskRecord",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTaskRecords.ts",
+      "name": "taskGenerationSource",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTaskRecords.ts",
+      "name": "listTaskGenerationSources",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTasks.ts",
+      "name": "taskFields",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTasks.ts",
+      "name": "createAgentTaskForThread",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTasks.ts",
+      "name": "createAgentTask",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTasks.ts",
+      "name": "updateAgentTask",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTasks.ts",
+      "name": "setAgentTaskLifecycle",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTasks.ts",
+      "name": "pinAgentTaskResult",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTasks.ts",
+      "name": "unpinAgentTaskResult",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "canResumeAgentRun",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "requireRun",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "requireProject",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "requireLatestRun",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "pauseAtModelStepLimit",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "startModelStep",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "saveToolRound",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "transitionToolCall",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "pauseForApproval",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "resolveAgentToolApproval",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "resumeAgentRun",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "appendToolResults",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "updateRunPlanAndComplete",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "cancelAgentRun",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "markRunningToolsUnknown",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "saveToolPreview",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "executeAtomicTool",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "requireGenerationReviewCall",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "readGenerationReviewCall",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "name": "commitGenerationReview",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "name": "generationTargetHref",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "name": "safeTaskId",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "name": "cleanError",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "name": "prepareAgentGeneration",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "name": "jobForContext",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "name": "dataUri",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "name": "nativeRequest",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "name": "submitAgentGeneration",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "name": "submitClaimedGeneration",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "name": "validateBlob",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "name": "saveBlob",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "name": "acceptHubTask",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "name": "checkAgentGeneration",
+      "unchanged": false,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "name": "wait",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "name": "monitorAgentGeneration",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "name": "prepareGenerationApply",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "name": "applyAgentGeneration",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/toolLoading.ts",
+      "name": "createToolLoading",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/toolLoading.ts",
+      "name": "toolLoadingInstructions",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/lib/agent/toolLoading.ts",
+      "name": "refreshRunToolLoading",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentFinishingCheck.ts",
+      "name": "parsePlan",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentFinishingCheck.ts",
+      "name": "saveAgentFinishingCheck",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentProjectCreation.ts",
+      "name": "assertAgentProjectCreation",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    },
+    {
+      "file": "src/db/agentProjectCreation.ts",
+      "name": "bindCreatedAgentProject",
+      "unchanged": true,
+      "onlyConnectorRename": true
+    }
+  ]
+}

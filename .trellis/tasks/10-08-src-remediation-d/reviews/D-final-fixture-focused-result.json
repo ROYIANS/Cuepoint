@@ -1,0 +1,18 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "test",
+    "tests/d05SchemaEquivalence.test.ts",
+    "tests/d06Capabilities.test.ts",
+    "tests/d07RequestWire.test.ts",
+    "tests/memoryRetrieval.test.ts",
+    "tests/d05ToolCatalog.test.ts",
+    "--maxWorkers",
+    "4"
+  ],
+  "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+  "exitCode": 0,
+  "elapsedSeconds": 1.456,
+  "timeoutSeconds": 180,
+  "log": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-fixture-focused.log"
+}

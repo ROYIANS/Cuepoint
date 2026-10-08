@@ -1,0 +1,74 @@
+scripts/b07-browser-regression.mjs:25:            "/components/agent/ContextUsagePanel.tsx": "Leaf as ContextUsageTrigger",
+tests/b07ComposeSessions.test.ts:73:vi.mock("@/components/agent/ContextUsagePanel", () => ({ContextUsageTrigger: "context"}));
+src/db/agentContextPreview.ts:25:export function contextPreviewIdentity(input: ContextPreviewInput): string {
+src/db/agentContextPreview.ts:31:export function contextPreviewTables() {
+src/db/agentContextPreview.ts:81:    return db.transaction("r", contextPreviewTables(), async () => {
+src/db/agentContextPreview.ts:105:export async function readAgentContextPreview(input: ContextPreviewInput): Promise<ContextPreviewRead> {
+src/db/agentContextPreview.ts:106:    const identity = contextPreviewIdentity(input);
+tests/contextPreviewSnapshot.test.ts:4:import {ContextUsageTrigger, ContextUsagePanel} from "@/components/agent/ContextUsagePanel";
+tests/contextPreviewSnapshot.test.ts:5:import {MemoryContextDetails} from "@/components/agent/MemoryContextDetails";
+tests/contextPreviewSnapshot.test.ts:24:import {contextPreviewIdentity, contextPreviewTables, readAgentContextPreview, type ContextPreviewInput} from "@/db/agentContextPreview";
+tests/contextPreviewSnapshot.test.ts:32:function ready(value: Awaited<ReturnType<typeof readAgentContextPreview>>) {
+tests/contextPreviewSnapshot.test.ts:58:        const home = ready(await readAgentContextPreview(input));
+tests/contextPreviewSnapshot.test.ts:63:        expect(ready(await readAgentContextPreview(request)).taskContext?.task).toBeUndefined();
+tests/contextPreviewSnapshot.test.ts:64:        expect(await readAgentContextPreview({...input, threadId: "missing", projectId: request.projectId})).toMatchObject({status: "missing", entity: "thread"});
+tests/contextPreviewSnapshot.test.ts:65:        expect(await readAgentContextPreview({...input, projectId: "missing"})).toMatchObject({status: "missing", entity: "project"});
+tests/contextPreviewSnapshot.test.ts:67:        expect(await readAgentContextPreview(input)).toMatchObject({status: "missing", entity: "agent"});
+tests/contextPreviewSnapshot.test.ts:77:            const facts = ready(await readAgentContextPreview(request));
+tests/contextPreviewSnapshot.test.ts:87:                expect([...tx.storeNames].sort()).toEqual(contextPreviewTables().map(table => table.name).sort());
+tests/contextPreviewSnapshot.test.ts:97:        expect(await readAgentContextPreview({...request, projectId: other.id})).toMatchObject({status: "unavailable"});
+tests/contextPreviewSnapshot.test.ts:100:        expect(await readAgentContextPreview(request)).toMatchObject({status: "unavailable"});
+tests/contextPreviewSnapshot.test.ts:104:        expect(await readAgentContextPreview(request)).toMatchObject({status: "unavailable"});
+tests/contextPreviewSnapshot.test.ts:112:        const facts = ready(await readAgentContextPreview(request));
+tests/contextPreviewSnapshot.test.ts:125:        expect(await readAgentContextPreview(input)).toEqual({identity: contextPreviewIdentity(input), status: "error", message: "fixture read failure"});
+tests/contextPreviewSnapshot.test.ts:126:        const identity = contextPreviewIdentity(input);
+tests/contextPreviewSnapshot.test.ts:128:            expect(contextPreviewIdentity({...input, ...changed})).not.toBe(identity);
+tests/contextPreviewSnapshot.test.ts:130:        expect(ready(await readAgentContextPreview({...input, interactionMode: "conversation"})).taskContext?.taskToolNames).toEqual([]);
+tests/contextPreviewSnapshot.test.ts:140:        const result = await readAgentContextPreview({...request, attachments: [attachment]});
+tests/contextPreviewSnapshot.test.ts:148:        const text = ready(await readAgentContextPreview({...request, metadata: {source: "provider", vision: false}, attachments: [attachment]}));
+tests/contextPreviewSnapshot.test.ts:152:        const rejected = await readAgentContextPreview({...request, metadata: {source: "provider", vision: false}, attachments: [attachment]});
+tests/contextPreviewSnapshot.test.ts:154:        const accepted = ready(await readAgentContextPreview({...request, attachments: [attachment]}));
+tests/contextPreviewSnapshot.test.ts:164:        const facts = ready(await readAgentContextPreview({...request, attachments: [{referenceId: "deleted", revision: 1}]}));
+tests/contextPreviewSnapshot.test.ts:177:        const read = await readAgentContextPreview(request);
+tests/contextPreviewSnapshot.test.ts:180:        const tree = nodes(ContextUsageTrigger(props));
+tests/contextPreviewSnapshot.test.ts:181:        const panel = tree.find(node => isValidElement(node) && node.type === ContextUsagePanel);
+tests/contextPreviewSnapshot.test.ts:182:        if (!isValidElement<Parameters<typeof ContextUsagePanel>[0]>(panel)) throw new Error("actual panel absent");
+tests/contextPreviewSnapshot.test.ts:184:        const memory = tree.find(node => isValidElement(node) && node.type === MemoryContextDetails);
+tests/contextPreviewSnapshot.test.ts:185:        if (!isValidElement<Parameters<typeof MemoryContextDetails>[0]>(memory)) throw new Error("memory details absent");
+tests/contextPreviewSnapshot.test.ts:188:        ContextUsagePanel(panel.props);
+tests/contextPreviewSnapshot.test.ts:196:            const changed = nodes(ContextUsageTrigger({...props, ...changes}));
+tests/contextPreviewSnapshot.test.ts:197:            const changedPanel = changed.find(node => isValidElement(node) && node.type === ContextUsagePanel);
+tests/contextPreviewSnapshot.test.ts:198:            if (!isValidElement<Parameters<typeof ContextUsagePanel>[0]>(changedPanel)) throw new Error("changed panel absent");
+tests/b03IntentBoundaries.test.ts:50:import {ContextParameters} from "@/components/agent/ContextParameters";
+tests/b03IntentBoundaries.test.ts:119:        const ui = host([{scopeKey: threadId ?? GENERAL_AGENT_ID, source}]); const tree = draw(ui, () => ContextParameters({threadId, onBack: vi.fn()}));
+tests/b03IntentBoundaries.test.ts:133:        const render = () => draw(host([{scopeKey: threadId ?? GENERAL_AGENT_ID, source}]), () => ContextParameters({threadId, onBack: vi.fn()}));
+tests/b03IntentBoundaries.test.ts:152:        const old = draw(ui, () => ContextParameters({threadId: a.id, onBack: vi.fn()}));
+tests/b03IntentBoundaries.test.ts:156:            const pending = draw(ui, () => ContextParameters({threadId: b.id, onBack: vi.fn()}));
+tests/b03IntentBoundaries.test.ts:163:        const current = draw(ui, () => ContextParameters({threadId: b.id, onBack: vi.fn()}));
+tests/b03IntentBoundaries.test.ts:173:        const tree = draw(host([{scopeKey: thread.id, source}]), () => ContextParameters({threadId: thread.id, onBack: vi.fn()}));
+tests/b03IntentBoundaries.test.ts:185:        const tree = draw(host([{scopeKey: thread.id, source}]), () => ContextParameters({threadId: thread.id, onBack: vi.fn()}));
+tests/fixtures/d04/harness.tsx:6:import {ContextUsageTrigger} from "@/components/agent/ContextUsagePanel";
+tests/fixtures/d04/harness.tsx:7:import {ContextParameters} from "@/components/agent/ContextParameters";
+tests/fixtures/d04/harness.tsx:12:import {contextPreviewTables, readAgentContextPreview, type ContextPreviewInput} from "@/db/agentContextPreview";
+tests/fixtures/d04/harness.tsx:50:        <ContextUsageTrigger {...target} open={open} onOpenChange={setOpen}/>
+tests/fixtures/d04/harness.tsx:51:        {parameters && <ContextParameters threadId={parameters.threadId} onBack={hideParameters}/>}
+tests/fixtures/d04/harness.tsx:83:    try {before = await readAgentContextPreview(request); finishedAtRead = writerFinished;}
+tests/fixtures/d04/harness.tsx:86:    const after = await readAgentContextPreview(request);
+tests/fixtures/d04/harness.tsx:90:        expectedStores: contextPreviewTables().map(table => table.name)};
+tests/fixtures/d04/harness.tsx:108:    read(input: ContextPreviewInput) {return readAgentContextPreview(input);},
+src/components/agent/MemoryContextDetails.tsx:26:export function MemoryContextDetails({
+src/components/agent/MemoryContextDetails.tsx:321:            <MemoryContextDetails
+src/components/agent/ContextUsagePanel.tsx:10:import {MemoryContextDetails} from "./MemoryContextDetails";
+src/components/agent/ContextUsagePanel.tsx:24:import {contextPreviewIdentity, readAgentContextPreview} from "@/db/agentContextPreview";
+src/components/agent/ContextUsagePanel.tsx:51:    const identity = contextPreviewIdentity(input);
+src/components/agent/ContextUsagePanel.tsx:52:    const loaded = useLiveQuery(() => readAgentContextPreview(input), [input]);
+src/components/agent/ContextUsagePanel.tsx:167:export function ContextUsagePanel({snapshot, onClose, onMemoryOpen}: {
+src/components/agent/ContextUsagePanel.tsx:334:export function ContextUsageTrigger({
+src/components/agent/ContextUsagePanel.tsx:395:                        <ContextUsagePanel
+src/components/agent/ContextUsagePanel.tsx:406:            <MemoryContextDetails
+src/components/agent/ContextParameters.tsx:28:export function ContextParameters({threadId, onBack}: { threadId?: string; onBack: () => void }) {
+src/components/agent/AgentControls.tsx:2:import {ContextParameters} from "./ContextParameters";
+src/components/agent/AgentControls.tsx:241:            <ContextParameters threadId={threadId} onBack={() => {
+src/components/agent/MessageList.tsx:21:import {MemoryRunHistory} from "./MemoryContextDetails";
+src/components/agent/AgentChatPage.tsx:15:import {ContextUsageTrigger} from "./ContextUsagePanel";
+src/components/agent/AgentChatPage.tsx:453:        contextUsage: <ContextUsageTrigger attachments={references.attachments} projectId={projectId}

@@ -1,0 +1,1385 @@
+{
+  "status": "IMPLEMENTED",
+  "notes": "Named declarations and callbacks account for original bodies and retained wrappers. Accepted D02 preserved consumer non-import tokens; names were cross-checked against the inherited tracked source. Exact pre-edit working-tree hashes are in the snapshot; this map does not claim token-identical extraction. Inherited audioProjectPackage parse/remap compatibility exports have no current direct consumer; no fictitious test caller is claimed. Their codec implementations have the concrete consumers listed below.",
+  "functions": [
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "columnPlaceholder",
+      "destinationFile": "src/components/shots/ShotRow.tsx",
+      "destinationFunction": "columnPlaceholder",
+      "responsibility": "Sortable/viewport row, media and typed column presentation; PlainCell still commits on each change",
+      "actualConsumers": [
+        "ShotEditorPage.tsx: BeatBlockView -> ShotRow; ShotRow local visual helpers"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "coverMediaId",
+      "destinationFile": "src/components/shots/ShotRow.tsx",
+      "destinationFunction": "coverMediaId",
+      "responsibility": "Sortable/viewport row, media and typed column presentation; PlainCell still commits on each change",
+      "actualConsumers": [
+        "ShotEditorPage.tsx: BeatBlockView -> ShotRow; ShotRow local visual helpers"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "AssetStill",
+      "destinationFile": "src/components/shots/ShotRow.tsx",
+      "destinationFunction": "AssetStill",
+      "responsibility": "Sortable/viewport row, media and typed column presentation; PlainCell still commits on each change",
+      "actualConsumers": [
+        "ShotEditorPage.tsx: BeatBlockView -> ShotRow; ShotRow local visual helpers"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "PlainCell",
+      "destinationFile": "src/components/shots/ShotRow.tsx",
+      "destinationFunction": "PlainCell",
+      "responsibility": "Sortable/viewport row, media and typed column presentation; PlainCell still commits on each change",
+      "actualConsumers": [
+        "ShotEditorPage.tsx: BeatBlockView -> ShotRow; ShotRow local visual helpers"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "ShotEditorPage",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "ShotEditorPage",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "ShotEditorPageContent",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "ShotEditorPageContent",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "commitShotReorder",
+      "destinationFile": "src/components/shots/shotEditorCommands.ts",
+      "destinationFunction": "reorderShotGroupCommand",
+      "responsibility": "Atomic repository result -> UndoAction; original page wrapper retains registration/control reset",
+      "actualConsumers": [
+        "ShotEditorPage.moveShotByOffset from keyboard",
+        "ShotRow.onMove through BeatBlockView",
+        "BeatBlockView.onShotDragEnd -> page commitShotReorder"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "moveShotByOffset",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "moveShotByOffset",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "onKeyDown",
+      "destinationFile": "src/components/shots/useShotEditorKeyboard.ts",
+      "destinationFunction": "onKeyDown",
+      "responsibility": "Latest-ref capture listener, form/overlay exclusion and typed UI callbacks",
+      "actualConsumers": [
+        "ShotEditorPageContent -> useShotEditorKeyboard"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "persistFilters",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "persistFilters",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "toggleFilterStatus",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "toggleFilterStatus",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "toggleFilterBeat",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "toggleFilterBeat",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "toggleFilterGap",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "toggleFilterGap",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "toggleColumn",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "toggleColumn",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "onBeatDragEnd",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "onBeatDragEnd",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "removeSelectedShots",
+      "destinationFile": "src/components/shots/shotEditorCommands.ts",
+      "destinationFunction": "deleteShotSelectionCommand",
+      "responsibility": "Atomic repository result -> UndoAction; original page wrapper retains registration/control reset",
+      "actualConsumers": [
+        "ShotEditorPage deletion confirmation from toolbar/keyboard selection intent"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "applyBulkPatch",
+      "destinationFile": "src/components/shots/shotEditorCommands.ts",
+      "destinationFunction": "applyShotBulkCommand",
+      "responsibility": "Atomic repository result -> UndoAction; original page wrapper retains registration/control reset",
+      "actualConsumers": [
+        "ShotEditorPage bulk beat/duration/status/scene/notes/characters controls"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "assignSelectedBeat",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "assignSelectedBeat",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "setSelectedDuration",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "setSelectedDuration",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "assignSelectedStatus",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "assignSelectedStatus",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "assignSelectedScene",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "assignSelectedScene",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "assignSelectedNotes",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "assignSelectedNotes",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "assignSelectedCharacters",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "assignSelectedCharacters",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "selectAllVisible",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "selectAllVisible",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "setWorkspaceView",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "setWorkspaceView",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "removeBeat",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "removeBeat",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "copyShot",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "copyShot",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "gridColumns",
+      "destinationFile": "src/components/shots/shotColumnFields.ts",
+      "destinationFunction": "gridColumns",
+      "responsibility": "Shared explicit row/header grid contract",
+      "actualConsumers": [
+        "ShotEditorPage header",
+        "ShotRow grid"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "BeatBlock",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "BeatBlock",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "SortableBeatBlock",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "SortableBeatBlock",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "BeatBlockView",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "BeatBlockView",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "onShotDragEnd",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "onShotDragEnd",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "ShotRow",
+      "destinationFile": "src/components/shots/ShotRow.tsx",
+      "destinationFunction": "ShotRow",
+      "responsibility": "Sortable/viewport row, media and typed column presentation; PlainCell still commits on each change",
+      "actualConsumers": [
+        "ShotEditorPage.tsx: BeatBlockView -> ShotRow; ShotRow local visual helpers"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "ShotRelationsEditor",
+      "destinationFile": "src/components/shots/ShotRelationsEditor.tsx",
+      "destinationFunction": "ShotRelationsEditor",
+      "responsibility": "Relationship controls, pending lock, narrow retry patch and error/status publication",
+      "actualConsumers": [
+        "ShotEditorPage relationship dialog keyed by shot.id",
+        "ShotRelationsEditor local control callbacks"
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "save",
+      "destinationFile": "src/components/shots/ShotRelationsEditor.tsx",
+      "destinationFunction": "save",
+      "responsibility": "Relationship controls, pending lock, narrow retry patch and error/status publication",
+      "actualConsumers": [
+        "ShotEditorPage relationship dialog keyed by shot.id",
+        "ShotRelationsEditor local control callbacks"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "originalFunction": "useInspectorSheet",
+      "destinationFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "destinationFunction": "useInspectorSheet",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioWorkspacePage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "originalFunction": "AudioWorkspacePage",
+      "destinationFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "destinationFunction": "AudioWorkspacePage",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioWorkspacePage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "originalFunction": "action",
+      "destinationFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "destinationFunction": "action",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioWorkspacePage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "originalFunction": "selectSegment",
+      "destinationFile": "src/components/audio/audioSelection.ts",
+      "destinationFunction": "deriveAudioSelection",
+      "responsibility": "Pure named intent -> asymmetric selection patch/optional seek; page wrapper applies setters, token and inspector effects",
+      "actualConsumers": [
+        "ScriptDocument -> selectSegment",
+        "AudioTimeline -> selectClip",
+        "AudioInspector -> selectTake",
+        "AudioSources -> saved"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "originalFunction": "selectClip",
+      "destinationFile": "src/components/audio/audioSelection.ts",
+      "destinationFunction": "deriveAudioSelection",
+      "responsibility": "Pure named intent -> asymmetric selection patch/optional seek; page wrapper applies setters, token and inspector effects",
+      "actualConsumers": [
+        "ScriptDocument -> selectSegment",
+        "AudioTimeline -> selectClip",
+        "AudioInspector -> selectTake",
+        "AudioSources -> saved"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "originalFunction": "selectTake",
+      "destinationFile": "src/components/audio/audioSelection.ts",
+      "destinationFunction": "deriveAudioSelection",
+      "responsibility": "Pure named intent -> asymmetric selection patch/optional seek; page wrapper applies setters, token and inspector effects",
+      "actualConsumers": [
+        "ScriptDocument -> selectSegment",
+        "AudioTimeline -> selectClip",
+        "AudioInspector -> selectTake",
+        "AudioSources -> saved"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "originalFunction": "inspect",
+      "destinationFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "destinationFunction": "inspect",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioWorkspacePage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "originalFunction": "saved",
+      "destinationFile": "src/components/audio/audioSelection.ts",
+      "destinationFunction": "deriveAudioSelection",
+      "responsibility": "Pure named intent -> asymmetric selection patch/optional seek; page wrapper applies setters, token and inspector effects",
+      "actualConsumers": [
+        "ScriptDocument -> selectSegment",
+        "AudioTimeline -> selectClip",
+        "AudioInspector -> selectTake",
+        "AudioSources -> saved"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "originalFunction": "openVoices",
+      "destinationFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "destinationFunction": "openVoices",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioWorkspacePage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "loadBuffers",
+      "destinationFile": "src/lib/audio/buffers.ts",
+      "destinationFunction": "loadBuffers + loadAudioBuffer",
+      "responsibility": "Resource preflight and one shared decoded-buffer cache",
+      "actualConsumers": [
+        "AudioTimeline.startPlayback",
+        "Waveform",
+        "exportAudioMix"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "AudioTimeline",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "AudioTimeline",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "updatePosition",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "updatePosition",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "action",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "action",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "startPlayback",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "startPlayback",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "play",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "play",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "seek",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "seek",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "exportMix",
+      "destinationFile": "src/lib/audio/exportMix.ts",
+      "destinationFunction": "exportAudioMix",
+      "responsibility": "Flush, fresh repository snapshot, schedule, decode/render outside writes, then atomic addAudioExport; UI wrapper downloads/notifies",
+      "actualConsumers": [
+        "AudioTimeline.exportMix"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "removeClip",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "removeClip",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "duplicateClip",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "duplicateClip",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "openClipMenu",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "openClipMenu",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "scrub",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "scrub",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "beginDrag",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "beginDrag",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "moveDrag",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "moveDrag",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "endDrag",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "endDrag",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "cancelDrag",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "cancelDrag",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "addTrack",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "addTrack",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "Waveform",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "Waveform",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "ClipInspector",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "ClipInspector",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/music/MusicWorkspacePage.tsx",
+      "originalFunction": "MusicWorkspacePage",
+      "destinationFile": "src/components/music/MusicWorkspacePage.tsx",
+      "destinationFunction": "MusicWorkspacePage",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/music/MusicWorkspacePage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/music/MusicWorkspacePage.tsx",
+      "originalFunction": "MusicWorkspace",
+      "destinationFile": "src/components/music/MusicWorkspacePage.tsx",
+      "destinationFunction": "MusicWorkspace",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/music/MusicWorkspacePage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/music/MusicWorkspacePage.tsx",
+      "originalFunction": "action",
+      "destinationFile": "src/components/music/MusicWorkspacePage.tsx",
+      "destinationFunction": "action",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/music/MusicWorkspacePage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/music/MusicWorkspacePage.tsx",
+      "originalFunction": "play",
+      "destinationFile": "src/components/music/MusicWorkspacePage.tsx",
+      "destinationFunction": "play",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/music/MusicWorkspacePage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/music/MusicWorkspacePage.tsx",
+      "originalFunction": "switchVariant",
+      "destinationFile": "src/components/music/switchMusicVariant.ts",
+      "destinationFunction": "switchMusicVariant",
+      "responsibility": "Flush, reread owner, validate/reuse or create variant, return links; original page retains synchronous locks and best-effort localStorage",
+      "actualConsumers": [
+        "MusicWorkspace.switchVariant -> action"
+      ]
+    },
+    {
+      "originalFile": "src/components/music/MusicWorkspacePage.tsx",
+      "originalFunction": "MusicDetails",
+      "destinationFile": "src/components/music/MusicWorkspacePage.tsx",
+      "destinationFunction": "MusicDetails",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/music/MusicWorkspacePage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/music/MusicWorkspacePage.tsx",
+      "originalFunction": "MusicParameterSummary",
+      "destinationFile": "src/components/music/MusicWorkspacePage.tsx",
+      "destinationFunction": "MusicParameterSummary",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/music/MusicWorkspacePage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "AgentChatPage",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "AgentChatPage",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "AgentChatInner",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "AgentChatInner",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "openThread",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "openThread",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleNewTopic",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "handleNewTopic",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleRenameThread",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "handleRenameThread",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "commitRename",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "commitRename",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleDeleteThread",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "handleDeleteThread",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "commitDelete",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "commitDelete",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleConnectorChange",
+      "destinationFile": "src/components/agent/useChatSelection.ts",
+      "destinationFunction": "handleConnectorChange",
+      "responsibility": "Selection revision and field-scoped optimistic metadata persistence",
+      "actualConsumers": [
+        "AgentChatInner composer props"
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleModelChange",
+      "destinationFile": "src/components/agent/useChatSelection.ts",
+      "destinationFunction": "handleModelChange",
+      "responsibility": "Selection revision and field-scoped optimistic metadata persistence",
+      "actualConsumers": [
+        "AgentChatInner composer props"
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleProjectChange",
+      "destinationFile": "src/components/agent/useChatSelection.ts",
+      "destinationFunction": "handleProjectChange",
+      "responsibility": "Selection revision and field-scoped optimistic metadata persistence",
+      "actualConsumers": [
+        "AgentChatInner composer props"
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleStop",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "handleStop",
+      "responsibility": "Page callback aborts the controller owned by useChatExecutionSession",
+      "actualConsumers": [
+        "Composer stop"
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleSend",
+      "destinationFile": "src/components/agent/chatExecutionFlows.ts",
+      "destinationFunction": "executeNewChatMessage",
+      "responsibility": "Named business execution flow; page wrapper retains UI preflight/feedback and acquires/releases the shared execution session",
+      "actualConsumers": [
+        "AgentChatInner.handleSend -> HomeWelcome/ChatWorkspace composer.onSend"
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleRetry",
+      "destinationFile": "src/components/agent/chatExecutionFlows.ts",
+      "destinationFunction": "retryFrozenChatRun",
+      "responsibility": "Named business execution flow; page wrapper retains UI preflight/feedback and acquires/releases the shared execution session",
+      "actualConsumers": [
+        "AgentChatInner.handleRetry -> ChatWorkspace.onRetryRun"
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleRunAction",
+      "destinationFile": "src/components/agent/chatExecutionFlows.ts",
+      "destinationFunction": "resolveChatRunAction",
+      "responsibility": "Named business execution flow; page wrapper retains UI preflight/feedback and acquires/releases the shared execution session",
+      "actualConsumers": [
+        "AgentChatInner.handleRunAction -> ChatWorkspace.onRunAction -> AgentRunDetails"
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "onRunAction",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "onRunAction",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "onRetryRun",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "onRetryRun",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/routes/p.$projectId.index.tsx",
+      "originalFunction": "SeriesHomeRoute",
+      "destinationFile": "src/routes/p.$projectId.index.tsx",
+      "destinationFunction": "ProjectHomeRoute",
+      "responsibility": "Params-only route adapter",
+      "actualConsumers": [
+        "TanStack /p/$projectId/ route"
+      ]
+    },
+    {
+      "originalFile": "src/routes/p.$projectId.index.tsx",
+      "originalFunction": "SeriesHome",
+      "destinationFile": "src/components/workspace/ProjectHomePage.tsx",
+      "destinationFunction": "ProjectHomePage",
+      "responsibility": "Keyed identity queries, kind dispatch, film repair/error/retry and compatibility redirect",
+      "actualConsumers": [
+        "ProjectHomeRoute"
+      ]
+    },
+    {
+      "originalFile": "src/components/studio/ProjectGalleryPage.tsx",
+      "originalFunction": "coverOfProject",
+      "destinationFile": "src/components/studio/ProjectGalleryPage.tsx",
+      "destinationFunction": "coverOfProject",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/studio/ProjectGalleryPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/studio/ProjectGalleryPage.tsx",
+      "originalFunction": "ProjectGalleryPage",
+      "destinationFile": "src/components/studio/ProjectGalleryPage.tsx",
+      "destinationFunction": "ProjectGalleryPage",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/studio/ProjectGalleryPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/studio/ProjectGalleryPage.tsx",
+      "originalFunction": "handleCreate",
+      "destinationFile": "src/components/studio/ProjectGalleryPage.tsx",
+      "destinationFunction": "handleCreate",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/studio/ProjectGalleryPage.tsx"
+      ]
+    },
+    {
+      "originalFile": "src/components/studio/ProjectGalleryPage.tsx",
+      "originalFunction": "importStudioProject",
+      "destinationFile": "src/components/studio/importStudioProject.ts",
+      "destinationFunction": "importStudioProject",
+      "responsibility": "Studio import error/toast adapter",
+      "actualConsumers": [
+        "src/routes/_studio.tsx: StudioLayout.onImport"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "asRecord",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "asRecord",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows",
+        "projectPackage root metadata/media ZIP adapter"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "asArray",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "asArray",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows",
+        "projectPackage root metadata/media ZIP adapter"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "pickExtra",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "pickExtra",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "extFor",
+      "destinationFile": "src/lib/projectPackage.ts",
+      "destinationFunction": "extFor",
+      "responsibility": "Retained ZIP IO/snapshot/compression/atomic import or browser download owner",
+      "actualConsumers": [
+        "WorkspaceChrome backup",
+        "ProjectGalleryPage backup",
+        "importStudioProject",
+        "audio/music/produce download callers"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "mimeForFilename",
+      "destinationFile": "src/lib/projectPackage.ts",
+      "destinationFunction": "mimeForFilename",
+      "responsibility": "Retained ZIP IO/snapshot/compression/atomic import or browser download owner",
+      "actualConsumers": [
+        "WorkspaceChrome backup",
+        "ProjectGalleryPage backup",
+        "importStudioProject",
+        "audio/music/produce download callers"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "optionalText",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "optionalText",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "optionalIds",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "optionalIds",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "parseProject",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "parseProject",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "parseCharacter",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "parseCharacter",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "parseScene",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "parseScene",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "parseProp",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "parseProp",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "parseStyle",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "parseStyle",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "originalId",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "originalId",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "assertUniqueOriginalIds",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "assertUniqueOriginalIds",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "originalBeatIds",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "originalBeatIds",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "validateModernShotRelations",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "validateModernShotRelations",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "parseEpisode",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "parseEpisode",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "synthesizeFirstEpisode",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "synthesizeFirstEpisode",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "parseShot",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "parseShot",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "remapShotStoryScope",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "remapShotStoryScope",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "remapId",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "remapId",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows",
+        "projectPackage root metadata/media ZIP adapter"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "parseMemoryPackage",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "parseMemoryPackage",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "detachedMemorySource",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "detachedMemorySource",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "remapMemoryPackage",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "remapMemoryPackage",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "exportProjectZip",
+      "destinationFile": "src/lib/projectPackage.ts",
+      "destinationFunction": "exportProjectZip",
+      "responsibility": "Retained ZIP IO/snapshot/compression/atomic import or browser download owner",
+      "actualConsumers": [
+        "WorkspaceChrome backup",
+        "ProjectGalleryPage backup",
+        "importStudioProject",
+        "audio/music/produce download callers"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "importProjectZip",
+      "destinationFile": "src/lib/projectPackage.ts",
+      "destinationFunction": "importProjectZip",
+      "responsibility": "Retained ZIP IO/snapshot/compression/atomic import or browser download owner",
+      "actualConsumers": [
+        "WorkspaceChrome backup",
+        "ProjectGalleryPage backup",
+        "importStudioProject",
+        "audio/music/produce download callers"
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "downloadBlob",
+      "destinationFile": "src/lib/projectPackage.ts",
+      "destinationFunction": "downloadBlob",
+      "responsibility": "Retained ZIP IO/snapshot/compression/atomic import or browser download owner",
+      "actualConsumers": [
+        "WorkspaceChrome backup",
+        "ProjectGalleryPage backup",
+        "importStudioProject",
+        "audio/music/produce download callers"
+      ]
+    },
+    {
+      "originalFile": "src/lib/audioProjectPackage.ts",
+      "originalFunction": "parseAudioPackageData",
+      "destinationFile": "src/lib/packages/audioPackageCodec.ts",
+      "destinationFunction": "parseAudioPackageData",
+      "responsibility": "Pure allowlist/C04 full fingerprint preservation, validation and audio identities remap",
+      "actualConsumers": [
+        "snapshotAudioPackage",
+        "audioPackageCodec.parseAudioPackage"
+      ]
+    },
+    {
+      "originalFile": "src/lib/audioProjectPackage.ts",
+      "originalFunction": "snapshotAudioPackage",
+      "destinationFile": "src/lib/audioProjectPackage.ts",
+      "destinationFunction": "snapshotAudioPackage",
+      "responsibility": "Retained DB snapshot or full-import transaction insertion/DB relationship validation",
+      "actualConsumers": [
+        "projectPackage export readonly snapshot",
+        "projectPackage atomic full rw import"
+      ]
+    },
+    {
+      "originalFile": "src/lib/audioProjectPackage.ts",
+      "originalFunction": "parseAudioPackage",
+      "destinationFile": "src/lib/packages/audioPackageCodec.ts",
+      "destinationFunction": "parseAudioPackage",
+      "responsibility": "Pure allowlist/C04 full fingerprint preservation, validation and audio identities remap",
+      "actualConsumers": [
+        "projectPackageCodec.parseProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/audioProjectPackage.ts",
+      "originalFunction": "remapAudioPackage",
+      "destinationFile": "src/lib/packages/audioPackageCodec.ts",
+      "destinationFunction": "remapAudioPackage",
+      "responsibility": "Pure allowlist/C04 full fingerprint preservation, validation and audio identities remap",
+      "actualConsumers": [
+        "projectPackageCodec.remapProjectPackageRows"
+      ]
+    },
+    {
+      "originalFile": "src/lib/audioProjectPackage.ts",
+      "originalFunction": "insertAudioPackage",
+      "destinationFile": "src/lib/audioProjectPackage.ts",
+      "destinationFunction": "insertAudioPackage",
+      "responsibility": "Retained DB snapshot or full-import transaction insertion/DB relationship validation",
+      "actualConsumers": [
+        "projectPackage export readonly snapshot",
+        "projectPackage atomic full rw import"
+      ]
+    }
+  ],
+  "stateAndBlockMovements": [
+    {
+      "original": "AgentChatInner send/retry/action duplicated UI state, controller and cleanup",
+      "owner": "src/components/agent/useChatExecutionSession.ts",
+      "consumers": [
+        "AgentChatInner.acquire/release",
+        "stop/openThread/newTopic/delete/route cleanup"
+      ],
+      "contract": "Synchronous lock; controller/epoch release identity; effect replay holds lock through final flush; no generation job polling owner"
+    },
+    {
+      "original": "AgentChatInner connector/model/effort/interaction/project/taskMode state/effects/inline setters",
+      "owner": "src/components/agent/useChatSelection.ts",
+      "consumers": [
+        "AgentChatInner selection.snapshot projection",
+        "send compatibility identity refs",
+        "composer setters"
+      ],
+      "contract": "Thread and connector/base/model scopes stay distinct; revision increments before awaited mutations; reference draft remains separate"
+    },
+    {
+      "original": "projectPackage entity/episode/memory/asset/slot remap block inside importProjectZip",
+      "owner": "src/lib/packages/projectPackageCodec.ts: parseProjectPackageRows/remapProjectPackageRows",
+      "consumers": [
+        "importProjectZip"
+      ],
+      "contract": "C03 raw FK before normalization/remap; reference Blob verification remains root; all prepared rows enter one whole import rw"
+    },
+    {
+      "original": "audioProjectPackage schemas/allowlists/fingerprintPackageSchema",
+      "owner": "src/lib/packages/audioPackageCodec.ts",
+      "consumers": [
+        "snapshotAudioPackage",
+        "parseProjectPackageRows/remapProjectPackageRows"
+      ],
+      "contract": "C04 full raw fingerprint stale comparison precedes allowlisting; imported jobs manual/dormant/unclaimed"
+    },
+    {
+      "original": "projectPackage PackageError class",
+      "owner": "src/lib/packages/packageError.ts",
+      "consumers": [
+        "projectPackage re-export/catches",
+        "projectPackageCodec",
+        "importStudioProject"
+      ],
+      "contract": "Same class object at public root and codec; name/message compatibility preserved"
+    },
+    {
+      "original": "ShotRow text fallback cast and visual constants",
+      "owner": "src/components/shots/shotColumnFields.ts + ShotRow.tsx",
+      "consumers": [
+        "ShotRow text cells",
+        "ShotEditorPage header"
+      ],
+      "contract": "Nine explicit text fields; no keyof Shot/Partial<Shot> fallback; row constants/PlainCell move intact"
+    },
+    {
+      "original": "productionContext.ts / generationIntent.ts",
+      "owner": "same files; comment-only",
+      "consumers": [
+        "tests/productionContext.test.ts",
+        "tests/generationIntent.test.ts",
+        "generationIntent type-import ProductionContext"
+      ],
+      "contract": "No production value consumer; retained historical local read/preflight semantics; durable generation remains runtime-owned; no E07 removal"
+    }
+  ]
+}

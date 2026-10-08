@@ -1,0 +1,2591 @@
+{
+  "compilerVersion": "5.9.3",
+  "before": [
+    {
+      "file": "src/components/agent/ContextUsagePanel.tsx",
+      "line": 1,
+      "module": "@/lib/agent/toolLoading",
+      "owner": "src/lib/agent/toolLoading.ts",
+      "typeOnly": false,
+      "bindings": "{\n    createToolLoading,\n    DISCOVERY_TOOL_NAME,\n    getOfferedToolNames,\n    toolLoadingInstructions\n}"
+    },
+    {
+      "file": "src/components/agent/ContextUsagePanel.tsx",
+      "line": 29,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{toolSchemas}"
+    },
+    {
+      "file": "src/components/agent/AgentGenerationBatches.tsx",
+      "line": 40,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{type GenerationSubmitArgs, generationSubmitSchema, profileRequest}"
+    },
+    {
+      "file": "src/components/agent/GenerationReview.tsx",
+      "line": 13,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{\n    GENERATION_PROFILES,\n    type GenerationSubmitArgs,\n    generationSubmitSchema,\n    profileRequest\n}"
+    },
+    {
+      "file": "src/lib/agent/audioGenerationTools.ts",
+      "line": 7,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext, AgentToolDefinition}"
+    },
+    {
+      "file": "src/lib/agent/audioGenerationTools.ts",
+      "line": 23,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "* as s"
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "line": 1,
+      "module": "./toolLoading",
+      "owner": "src/lib/agent/toolLoading.ts",
+      "typeOnly": false,
+      "bindings": "{getOfferedToolNames, refreshRunToolLoading, toolNamesForCall}"
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "line": 26,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{\n    type AgentToolDefinition,\n    BUILTIN_TOOLS,\n    requiresToolApproval,\n    toolSchemas,\n    validateToolCall\n}"
+    },
+    {
+      "file": "src/lib/agent/materialContent.ts",
+      "line": 3,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/generationSelection.ts",
+      "line": 11,
+      "module": "./generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{generationSubmitSchema, profileRequest}"
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "line": 38,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "line": 40,
+      "module": "./generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": true,
+      "bindings": "{GenerationSubmitArgs}"
+    },
+    {
+      "file": "src/lib/agent/referenceTools.ts",
+      "line": 5,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext, AgentToolDefinition}"
+    },
+    {
+      "file": "src/lib/agent/projectScope.ts",
+      "line": 2,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/generationTools.ts",
+      "line": 9,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolDefinition}"
+    },
+    {
+      "file": "src/lib/agent/generationTools.ts",
+      "line": 10,
+      "module": "./generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{\n    GENERATION_PROFILES,\n    generationJobSchema,\n    type GenerationSubmitArgs,\n    generationSubmitSchema\n}"
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "line": 20,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext, AgentToolDefinition}"
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "line": 21,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "{array, bool, choice, id, nonempty, number, object, optional, text}"
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "line": 22,
+      "module": "./libraryToolHelpers",
+      "owner": "src/lib/agent/libraryToolHelpers.ts",
+      "typeOnly": false,
+      "bindings": "{libraryReadTool, libraryWriteTool}"
+    },
+    {
+      "file": "src/lib/agent/webTools.ts",
+      "line": 6,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext, AgentToolDefinition}"
+    },
+    {
+      "file": "src/lib/agent/businessWriteReceipt.ts",
+      "line": 2,
+      "module": "./businessStore",
+      "owner": "src/lib/agent/businessStore.ts",
+      "typeOnly": false,
+      "bindings": "{bounded, type BusinessRow, getRow, projection, targetRevision}"
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "line": 6,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext, AgentToolDefinition}"
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "line": 7,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": true,
+      "bindings": "{Spec}"
+    },
+    {
+      "file": "src/lib/agent/musicGenerationReview.ts",
+      "line": 6,
+      "module": "./audioGenerationTools",
+      "owner": "src/lib/agent/audioGenerationTools.ts",
+      "typeOnly": false,
+      "bindings": "{AUDIO_GENERATION_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/mimoSpeechSpec.ts",
+      "line": 1,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "* as s"
+    },
+    {
+      "file": "src/lib/agent/taskTools.ts",
+      "line": 18,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext, AgentToolDefinition}"
+    },
+    {
+      "file": "src/lib/agent/taskTools.ts",
+      "line": 19,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "{array, choice, number, object, optional, type Spec, text}"
+    },
+    {
+      "file": "src/lib/agent/wrapupEvidence.ts",
+      "line": 13,
+      "module": "./businessStore",
+      "owner": "src/lib/agent/businessStore.ts",
+      "typeOnly": false,
+      "bindings": "{type BusinessKind, getRow, navigation, projection}"
+    },
+    {
+      "file": "src/lib/agent/materialImageInput.ts",
+      "line": 3,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/ipTools.ts",
+      "line": 4,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext, AgentToolDefinition}"
+    },
+    {
+      "file": "src/lib/agent/ipTools.ts",
+      "line": 5,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "* as s"
+    },
+    {
+      "file": "src/lib/agent/ipTools.ts",
+      "line": 6,
+      "module": "./libraryToolHelpers",
+      "owner": "src/lib/agent/libraryToolHelpers.ts",
+      "typeOnly": false,
+      "bindings": "{libraryReadTool, libraryWriteTool}"
+    },
+    {
+      "file": "src/lib/agent/toolLoading.ts",
+      "line": 9,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolDefinition}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 1,
+      "module": "./ipTools",
+      "owner": "src/lib/agent/ipTools.ts",
+      "typeOnly": false,
+      "bindings": "{IP_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 2,
+      "module": "./audioTools",
+      "owner": "src/lib/agent/audioTools.ts",
+      "typeOnly": false,
+      "bindings": "{AUDIO_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 3,
+      "module": "./musicTools",
+      "owner": "src/lib/agent/musicTools.ts",
+      "typeOnly": false,
+      "bindings": "{MUSIC_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 4,
+      "module": "./audioGenerationTools",
+      "owner": "src/lib/agent/audioGenerationTools.ts",
+      "typeOnly": false,
+      "bindings": "{AUDIO_GENERATION_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 5,
+      "module": "./materialTools",
+      "owner": "src/lib/agent/materialTools.ts",
+      "typeOnly": false,
+      "bindings": "{MATERIAL_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 6,
+      "module": "./toolLoading",
+      "owner": "src/lib/agent/toolLoading.ts",
+      "typeOnly": false,
+      "bindings": "{DISCOVERY_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 7,
+      "module": "./webTools",
+      "owner": "src/lib/agent/webTools.ts",
+      "typeOnly": false,
+      "bindings": "{WEB_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 8,
+      "module": "./referenceTools",
+      "owner": "src/lib/agent/referenceTools.ts",
+      "typeOnly": false,
+      "bindings": "{REFERENCE_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 9,
+      "module": "./memoryTools",
+      "owner": "src/lib/agent/memoryTools.ts",
+      "typeOnly": false,
+      "bindings": "{MEMORY_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 11,
+      "module": "./taskTools",
+      "owner": "src/lib/agent/taskTools.ts",
+      "typeOnly": false,
+      "bindings": "{TASK_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 12,
+      "module": "./generationTools",
+      "owner": "src/lib/agent/generationTools.ts",
+      "typeOnly": false,
+      "bindings": "{GENERATION_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 13,
+      "module": "./businessTools",
+      "owner": "src/lib/agent/businessTools.ts",
+      "typeOnly": false,
+      "bindings": "{BUSINESS_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/imageDiscovery.ts",
+      "line": 17,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/generationPreparation.ts",
+      "line": 10,
+      "module": "./generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{type GenerationSubmitArgs, generationSubmitSchema, profileRequest}"
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "line": 67,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext, AgentToolDefinition}"
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "line": 69,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "* as s"
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "line": 71,
+      "module": "./businessStore",
+      "owner": "src/lib/agent/businessStore.ts",
+      "typeOnly": false,
+      "bindings": "{\n  type AssetKind,\n  assetMediaDependencies,\n  bounded,\n  BUSINESS_LABELS,\n  type BusinessKind,\n  type BusinessRow,\n  getRow,\n  isReadableBusinessFieldPath,\n  listRows,\n  mediaRetention,\n  mediaUsage,\n  navigation,\n  ownerSnapshot,\n  projection,\n  readTables,\n  relationsAt,\n  requireEpisode,\n  requireOwner,\n  summarize,\n  targetRevision,\n  textAt\n}"
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "line": 21,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext, AgentToolDefinition}"
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "line": 22,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": true,
+      "bindings": "{Spec}"
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "line": 23,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "* as s"
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "line": 24,
+      "module": "./libraryToolHelpers",
+      "owner": "src/lib/agent/libraryToolHelpers.ts",
+      "typeOnly": false,
+      "bindings": "{libraryReadTool, libraryWriteTool}"
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "line": 8,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext, AgentToolDefinition}"
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "line": 10,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "{choice, number, object, optional, type Spec, text,}"
+    },
+    {
+      "file": "src/lib/agent/generationReviewDraft.ts",
+      "line": 2,
+      "module": "./generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{type GenerationSubmitArgs, generationSubmitSchema}"
+    },
+    {
+      "file": "src/lib/agent/projectContext.ts",
+      "line": 1,
+      "module": "./businessStore",
+      "owner": "src/lib/agent/businessStore.ts",
+      "typeOnly": false,
+      "bindings": "{projection}"
+    },
+    {
+      "file": "src/lib/agent/imageQueue.ts",
+      "line": 4,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/musicTools.ts",
+      "line": 5,
+      "module": "./libraryToolHelpers",
+      "owner": "src/lib/agent/libraryToolHelpers.ts",
+      "typeOnly": false,
+      "bindings": "{libraryReadTool, libraryWriteTool}"
+    },
+    {
+      "file": "src/lib/agent/musicTools.ts",
+      "line": 6,
+      "module": "./audioTools",
+      "owner": "src/lib/agent/audioTools.ts",
+      "typeOnly": false,
+      "bindings": "{\n    assertAudioMusicToolScope,\n    audioMusicRevision,\n    audioMusicTarget,\n    audioMusicUnion,\n    boundedAudioText\n}"
+    },
+    {
+      "file": "src/lib/agent/musicTools.ts",
+      "line": 13,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext, AgentToolDefinition}"
+    },
+    {
+      "file": "src/lib/agent/musicTools.ts",
+      "line": 14,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "* as s"
+    },
+    {
+      "file": "src/lib/agent/generationReview.ts",
+      "line": 2,
+      "module": "./generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{generationSubmitSchema}"
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "line": 15,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{type GenerationSubmitArgs, generationSubmitSchema}"
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "line": 19,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "line": 6,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{generationSubmitSchema}"
+    },
+    {
+      "file": "src/db/agentRuns.ts",
+      "line": 1,
+      "module": "@/lib/agent/toolLoading",
+      "owner": "src/lib/agent/toolLoading.ts",
+      "typeOnly": false,
+      "bindings": "{createToolLoading, DISCOVERY_TOOL_NAME, toolLoadingInstructions}"
+    },
+    {
+      "file": "src/db/agentProjectCreation.ts",
+      "line": 4,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/domain/agentGenerationBatch.ts",
+      "line": 2,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": true,
+      "bindings": "{GenerationSubmitArgs}"
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "line": 2,
+      "module": "@/lib/agent/businessStore",
+      "owner": "src/lib/agent/businessStore.ts",
+      "typeOnly": false,
+      "bindings": "{ ownerSnapshot, targetRevision }"
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "line": 15,
+      "module": "@/lib/agent/businessTools",
+      "owner": "src/lib/agent/businessTools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUSINESS_TOOLS, BUSINESS_TOOL_GROUPS }"
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "line": 16,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "line": 22,
+      "module": "@/lib/agent/toolLoading",
+      "owner": "src/lib/agent/toolLoading.ts",
+      "typeOnly": false,
+      "bindings": "{ createToolLoading, MAX_LOADED_TOOLS }"
+    },
+    {
+      "file": "tests/contextManagement.test.ts",
+      "line": 13,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS }"
+    },
+    {
+      "file": "tests/agentTools.test.ts",
+      "line": 9,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS, requiresToolApproval, validateToolCall, type AgentToolDefinition }"
+    },
+    {
+      "file": "tests/toolValidationDiagnostics.test.ts",
+      "line": 11,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS, getLegacyToolValidationFailure, validateToolCall }"
+    },
+    {
+      "file": "tests/audioGenerationAgent.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/audioGenerationTools",
+      "owner": "src/lib/agent/audioGenerationTools.ts",
+      "typeOnly": false,
+      "bindings": "{ AUDIO_GENERATION_TOOLS, AUDIO_GENERATION_TOOL_NAMES }"
+    },
+    {
+      "file": "tests/toolLoading.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS, toolSchemas, type AgentToolDefinition }"
+    },
+    {
+      "file": "tests/toolLoading.test.ts",
+      "line": 15,
+      "module": "@/lib/agent/toolLoading",
+      "owner": "src/lib/agent/toolLoading.ts",
+      "typeOnly": false,
+      "bindings": "{ createToolLoading, DISCOVERY_TOOL_NAME, getOfferedToolNames, refreshRunToolLoading, toolLoadingInstructions, toolNamesForCall }"
+    },
+    {
+      "file": "tests/audioTaskEvidence.test.ts",
+      "line": 15,
+      "module": "@/lib/agent/taskTools",
+      "owner": "src/lib/agent/taskTools.ts",
+      "typeOnly": false,
+      "bindings": "{ TASK_TOOLS }"
+    },
+    {
+      "file": "tests/agentBatchPreparationRecovery.test.ts",
+      "line": 10,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{ generationSubmitSchema }"
+    },
+    {
+      "file": "tests/agentReferences.test.ts",
+      "line": 11,
+      "module": "@/lib/agent/referenceTools",
+      "owner": "src/lib/agent/referenceTools.ts",
+      "typeOnly": false,
+      "bindings": "{ REFERENCE_TOOLS }"
+    },
+    {
+      "file": "tests/responsesStream.test.ts",
+      "line": 9,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS, toolSchemas, type AgentToolDefinition }"
+    },
+    {
+      "file": "tests/reasoningPolicy.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS, type AgentToolDefinition }"
+    },
+    {
+      "file": "tests/agentGeneration.test.ts",
+      "line": 15,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{ generationSubmitSchema, profileRequest, type GenerationSubmitArgs }"
+    },
+    {
+      "file": "tests/agentGeneration.test.ts",
+      "line": 16,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/agentGeneration.test.ts",
+      "line": 17,
+      "module": "@/lib/agent/generationTools",
+      "owner": "src/lib/agent/generationTools.ts",
+      "typeOnly": false,
+      "bindings": "{ GENERATION_TOOLS }"
+    },
+    {
+      "file": "tests/materialImageQueue.test.ts",
+      "line": 8,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/audioAgentExecution.test.ts",
+      "line": 8,
+      "module": "@/lib/agent/toolLoading",
+      "owner": "src/lib/agent/toolLoading.ts",
+      "typeOnly": false,
+      "bindings": "{ getOfferedToolNames, MAX_LOADED_TOOLS }"
+    },
+    {
+      "file": "tests/agentTaskOrchestration.test.ts",
+      "line": 11,
+      "module": "@/lib/agent/taskTools",
+      "owner": "src/lib/agent/taskTools.ts",
+      "typeOnly": false,
+      "bindings": "{ TASK_TOOLS }"
+    },
+    {
+      "file": "tests/agentTaskOrchestrationReview.test.ts",
+      "line": 5,
+      "module": "@/lib/agent/taskTools",
+      "owner": "src/lib/agent/taskTools.ts",
+      "typeOnly": false,
+      "bindings": "{ TASK_TOOLS }"
+    },
+    {
+      "file": "tests/audioMusicAgentTools.test.ts",
+      "line": 10,
+      "module": "@/lib/agent/audioTools",
+      "owner": "src/lib/agent/audioTools.ts",
+      "typeOnly": false,
+      "bindings": "{ AUDIO_TOOLS }"
+    },
+    {
+      "file": "tests/audioMusicAgentTools.test.ts",
+      "line": 11,
+      "module": "@/lib/agent/musicTools",
+      "owner": "src/lib/agent/musicTools.ts",
+      "typeOnly": false,
+      "bindings": "{ MUSIC_TOOLS }"
+    },
+    {
+      "file": "tests/audioMusicAgentTools.test.ts",
+      "line": 13,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS }"
+    },
+    {
+      "file": "tests/audioMusicAgentTools.test.ts",
+      "line": 14,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/agentGenerationReviewTransactions.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": true,
+      "bindings": "{ GenerationSubmitArgs }"
+    },
+    {
+      "file": "tests/agentGenerationBatch.test.ts",
+      "line": 17,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{ generationSubmitSchema, type GenerationSubmitArgs }"
+    },
+    {
+      "file": "tests/agentGenerationBatch.test.ts",
+      "line": 19,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/agentGenerationBatch.test.ts",
+      "line": 21,
+      "module": "@/lib/agent/generationTools",
+      "owner": "src/lib/agent/generationTools.ts",
+      "typeOnly": false,
+      "bindings": "{ GENERATION_TOOLS }"
+    },
+    {
+      "file": "tests/webResearch.test.ts",
+      "line": 7,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ validateToolCall }"
+    },
+    {
+      "file": "tests/agentToolsReview.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS, type AgentToolDefinition }"
+    },
+    {
+      "file": "tests/referenceEvidence.test.ts",
+      "line": 4,
+      "module": "@/lib/agent/referenceTools",
+      "owner": "src/lib/agent/referenceTools.ts",
+      "typeOnly": false,
+      "bindings": "{ REFERENCE_TOOLS }"
+    },
+    {
+      "file": "tests/agentProjectCreation.test.ts",
+      "line": 7,
+      "module": "@/lib/agent/businessTools",
+      "owner": "src/lib/agent/businessTools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUSINESS_TOOLS }"
+    },
+    {
+      "file": "tests/agentProjectCreation.test.ts",
+      "line": 8,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS }"
+    },
+    {
+      "file": "tests/agentProjectCreation.test.ts",
+      "line": 11,
+      "module": "@/lib/agent/toolLoading",
+      "owner": "src/lib/agent/toolLoading.ts",
+      "typeOnly": false,
+      "bindings": "{ createToolLoading, getOfferedToolNames }"
+    },
+    {
+      "file": "tests/agentProjectCreation.test.ts",
+      "line": 15,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/musicGenerationReview.test.ts",
+      "line": 11,
+      "module": "@/lib/agent/audioGenerationTools",
+      "owner": "src/lib/agent/audioGenerationTools.ts",
+      "typeOnly": false,
+      "bindings": "{ AUDIO_GENERATION_TOOLS, AUDIO_GENERATION_TOOL_NAMES }"
+    },
+    {
+      "file": "tests/agentMemoryTools.test.ts",
+      "line": 21,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/agentMemoryTools.test.ts",
+      "line": 22,
+      "module": "@/lib/agent/memoryTools",
+      "owner": "src/lib/agent/memoryTools.ts",
+      "typeOnly": false,
+      "bindings": "{ MEMORY_TOOLS, MEMORY_TOOL_NAMES }"
+    },
+    {
+      "file": "tests/agentMemoryTools.test.ts",
+      "line": 23,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{\n  BUILTIN_TOOLS,\n  requiresToolApproval,\n  validateToolCall,\n}"
+    },
+    {
+      "file": "tests/agentGenerationReview.test.ts",
+      "line": 16,
+      "module": "@/lib/agent/generationTools",
+      "owner": "src/lib/agent/generationTools.ts",
+      "typeOnly": false,
+      "bindings": "{ GENERATION_TOOLS }"
+    },
+    {
+      "file": "tests/agentGenerationReview.test.ts",
+      "line": 17,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": true,
+      "bindings": "{ GenerationSubmitArgs }"
+    },
+    {
+      "file": "tests/generationReviewDraft.test.ts",
+      "line": 3,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{ profileRequest, type GenerationSubmitArgs }"
+    },
+    {
+      "file": "tests/agentProjectContext.test.ts",
+      "line": 14,
+      "module": "@/lib/agent/businessTools",
+      "owner": "src/lib/agent/businessTools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUSINESS_TOOLS }"
+    },
+    {
+      "file": "tests/agentProjectContext.test.ts",
+      "line": 16,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/agentAuditRemediation.test.ts",
+      "line": 2,
+      "module": "@/lib/agent/businessTools",
+      "owner": "src/lib/agent/businessTools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUSINESS_TOOLS }"
+    },
+    {
+      "file": "tests/agentAuditRemediation.test.ts",
+      "line": 15,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS, type AgentToolContext }"
+    },
+    {
+      "file": "tests/agentAuditRemediation.test.ts",
+      "line": 17,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": true,
+      "bindings": "{ GenerationSubmitArgs }"
+    },
+    {
+      "file": "tests/agentAuditRemediation.test.ts",
+      "line": 18,
+      "module": "@/lib/agent/referenceTools",
+      "owner": "src/lib/agent/referenceTools.ts",
+      "typeOnly": false,
+      "bindings": "{ REFERENCE_TOOLS }"
+    },
+    {
+      "file": "tests/agentToolTransactions.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolDefinition }"
+    },
+    {
+      "file": "tests/agentFinishingCheck.test.ts",
+      "line": 13,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS }"
+    },
+    {
+      "file": "tests/agentGenerationRecovery.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolDefinition }"
+    },
+    {
+      "file": "tests/toolLoadingMeasurement.test.ts",
+      "line": 10,
+      "module": "@/lib/agent/toolLoading",
+      "owner": "src/lib/agent/toolLoading.ts",
+      "typeOnly": false,
+      "bindings": "{ createToolLoading, DISCOVERY_TOOL_NAME, getOfferedToolNames, toolLoadingInstructions }"
+    },
+    {
+      "file": "tests/toolLoadingMeasurement.test.ts",
+      "line": 11,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ toolSchemas }"
+    },
+    {
+      "file": "tests/toolValidationSafety.test.ts",
+      "line": 7,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS, toolSchemas, validateToolCall }"
+    },
+    {
+      "file": "tests/agentGenerationBatchSafety.test.ts",
+      "line": 14,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{ type GenerationSubmitArgs }"
+    },
+    {
+      "file": "tests/agentGenerationBatchSafety.test.ts",
+      "line": 16,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/agentGenerationBatchSafety.test.ts",
+      "line": 18,
+      "module": "@/lib/agent/businessTools",
+      "owner": "src/lib/agent/businessTools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUSINESS_TOOLS }"
+    },
+    {
+      "file": "tests/imageDiscovery.test.ts",
+      "line": 13,
+      "module": "@/lib/agent/referenceTools",
+      "owner": "src/lib/agent/referenceTools.ts",
+      "typeOnly": false,
+      "bindings": "{ REFERENCE_TOOLS }"
+    },
+    {
+      "file": "tests/agentMaterialTools.test.ts",
+      "line": 9,
+      "module": "@/lib/agent/materialTools",
+      "owner": "src/lib/agent/materialTools.ts",
+      "typeOnly": false,
+      "bindings": "{ MATERIAL_TOOLS }"
+    },
+    {
+      "file": "tests/agentMaterialTools.test.ts",
+      "line": 11,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ requiresToolApproval }"
+    },
+    {
+      "file": "tests/agentMaterialTools.test.ts",
+      "line": 13,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/agentIpTools.test.ts",
+      "line": 8,
+      "module": "@/lib/agent/ipTools",
+      "owner": "src/lib/agent/ipTools.ts",
+      "typeOnly": false,
+      "bindings": "{ IP_TOOLS }"
+    },
+    {
+      "file": "tests/agentIpTools.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ requiresToolApproval, type AgentToolContext }"
+    },
+    {
+      "file": "tests/musicDurationContract.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "tests/musicDurationContract.test.ts",
+      "line": 13,
+      "module": "@/lib/agent/musicTools",
+      "owner": "src/lib/agent/musicTools.ts",
+      "typeOnly": false,
+      "bindings": "{MUSIC_TOOLS}"
+    },
+    {
+      "file": "tests/fixtures/d01/harness.ts",
+      "line": 24,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": true,
+      "bindings": "{GenerationSubmitArgs}"
+    }
+  ],
+  "after": [
+    {
+      "file": "src/components/agent/ContextUsagePanel.tsx",
+      "line": 1,
+      "module": "@/lib/agent/toolLoading",
+      "owner": "src/lib/agent/toolLoading.ts",
+      "typeOnly": false,
+      "bindings": "{\n    createToolLoading,\n    DISCOVERY_TOOL_NAME,\n    getOfferedToolNames,\n    toolLoadingInstructions\n}"
+    },
+    {
+      "file": "src/components/agent/ContextUsagePanel.tsx",
+      "line": 29,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{toolSchemas}"
+    },
+    {
+      "file": "src/components/agent/AgentGenerationBatches.tsx",
+      "line": 40,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{type GenerationSubmitArgs, generationSubmitSchema, profileRequest}"
+    },
+    {
+      "file": "src/components/agent/GenerationReview.tsx",
+      "line": 13,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{\n    GENERATION_PROFILES,\n    type GenerationSubmitArgs,\n    generationSubmitSchema,\n    profileRequest\n}"
+    },
+    {
+      "file": "src/lib/agent/audioGenerationTools.ts",
+      "line": 1,
+      "module": "./toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": false,
+      "bindings": "{defineTool}"
+    },
+    {
+      "file": "src/lib/agent/audioGenerationTools.ts",
+      "line": 8,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/audioGenerationTools.ts",
+      "line": 24,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "* as s"
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "line": 1,
+      "module": "./toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": false,
+      "bindings": "{toolMetadataMatches}"
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "line": 2,
+      "module": "./toolLoading",
+      "owner": "src/lib/agent/toolLoading.ts",
+      "typeOnly": false,
+      "bindings": "{getOfferedToolNames, refreshRunToolLoading, toolNamesForCall}"
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "line": 27,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{\n    type AgentToolDefinition,\n    BUILTIN_TOOLS,\n    requiresToolApproval,\n    toolSchemas,\n    validateToolCall\n}"
+    },
+    {
+      "file": "src/lib/agent/materialContent.ts",
+      "line": 3,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/generationSelection.ts",
+      "line": 11,
+      "module": "./generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{generationSubmitSchema, profileRequest}"
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "line": 38,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/generationRuntime.ts",
+      "line": 40,
+      "module": "./generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": true,
+      "bindings": "{GenerationSubmitArgs}"
+    },
+    {
+      "file": "src/lib/agent/referenceTools.ts",
+      "line": 1,
+      "module": "./toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": false,
+      "bindings": "{defineTool}"
+    },
+    {
+      "file": "src/lib/agent/referenceTools.ts",
+      "line": 6,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/generationProfiles.ts",
+      "line": 2,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "* as s"
+    },
+    {
+      "file": "src/lib/agent/projectScope.ts",
+      "line": 2,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/generationTools.ts",
+      "line": 1,
+      "module": "./toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": false,
+      "bindings": "{defineTool}"
+    },
+    {
+      "file": "src/lib/agent/generationTools.ts",
+      "line": 10,
+      "module": "./generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{\n    GENERATION_PROFILES,\n    generationSubmitSpec,\n    generationJobSpec,\n    generationSubmitSchema\n}"
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "line": 1,
+      "module": "./toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": false,
+      "bindings": "{defineTool}"
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "line": 21,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "line": 22,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "{array, bool, choice, id, nonempty, number, object, optional, text}"
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "line": 23,
+      "module": "./libraryToolHelpers",
+      "owner": "src/lib/agent/libraryToolHelpers.ts",
+      "typeOnly": false,
+      "bindings": "{libraryReadTool, libraryWriteTool}"
+    },
+    {
+      "file": "src/lib/agent/webTools.ts",
+      "line": 1,
+      "module": "./toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": false,
+      "bindings": "{defineTool}"
+    },
+    {
+      "file": "src/lib/agent/webTools.ts",
+      "line": 7,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/businessWriteReceipt.ts",
+      "line": 2,
+      "module": "./businessStore",
+      "owner": "src/lib/agent/businessStore.ts",
+      "typeOnly": false,
+      "bindings": "{bounded, type BusinessRow, getRow, projection, targetRevision}"
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "line": 1,
+      "module": "./toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": true,
+      "bindings": "{TypedToolDefinition}"
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "line": 2,
+      "module": "./toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": false,
+      "bindings": "{defineTool}"
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "line": 8,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "line": 9,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": true,
+      "bindings": "{Spec}"
+    },
+    {
+      "file": "src/lib/agent/musicGenerationReview.ts",
+      "line": 6,
+      "module": "./audioGenerationTools",
+      "owner": "src/lib/agent/audioGenerationTools.ts",
+      "typeOnly": false,
+      "bindings": "{musicGenerateTool}"
+    },
+    {
+      "file": "src/lib/agent/toolDefinition.ts",
+      "line": 2,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": true,
+      "bindings": "{Spec}"
+    },
+    {
+      "file": "src/lib/agent/mimoSpeechSpec.ts",
+      "line": 1,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "* as s"
+    },
+    {
+      "file": "src/lib/agent/taskTools.ts",
+      "line": 1,
+      "module": "./toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": true,
+      "bindings": "{TypedToolDefinition}"
+    },
+    {
+      "file": "src/lib/agent/taskTools.ts",
+      "line": 2,
+      "module": "./toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": false,
+      "bindings": "{defineTool}"
+    },
+    {
+      "file": "src/lib/agent/taskTools.ts",
+      "line": 20,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/taskTools.ts",
+      "line": 21,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "{array, choice, number, object, optional, type Spec, text}"
+    },
+    {
+      "file": "src/lib/agent/wrapupEvidence.ts",
+      "line": 13,
+      "module": "./businessStore",
+      "owner": "src/lib/agent/businessStore.ts",
+      "typeOnly": false,
+      "bindings": "{type BusinessKind, getRow, navigation, projection}"
+    },
+    {
+      "file": "src/lib/agent/materialImageInput.ts",
+      "line": 3,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/ipTools.ts",
+      "line": 4,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/ipTools.ts",
+      "line": 5,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "* as s"
+    },
+    {
+      "file": "src/lib/agent/ipTools.ts",
+      "line": 6,
+      "module": "./libraryToolHelpers",
+      "owner": "src/lib/agent/libraryToolHelpers.ts",
+      "typeOnly": false,
+      "bindings": "{libraryReadTool, libraryWriteTool}"
+    },
+    {
+      "file": "src/lib/agent/toolLoading.ts",
+      "line": 1,
+      "module": "./toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": false,
+      "bindings": "{defineTool}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 1,
+      "module": "./toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": false,
+      "bindings": "{defineTool}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 2,
+      "module": "./ipTools",
+      "owner": "src/lib/agent/ipTools.ts",
+      "typeOnly": false,
+      "bindings": "{IP_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 3,
+      "module": "./audioTools",
+      "owner": "src/lib/agent/audioTools.ts",
+      "typeOnly": false,
+      "bindings": "{AUDIO_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 4,
+      "module": "./musicTools",
+      "owner": "src/lib/agent/musicTools.ts",
+      "typeOnly": false,
+      "bindings": "{MUSIC_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 5,
+      "module": "./audioGenerationTools",
+      "owner": "src/lib/agent/audioGenerationTools.ts",
+      "typeOnly": false,
+      "bindings": "{AUDIO_GENERATION_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 6,
+      "module": "./materialTools",
+      "owner": "src/lib/agent/materialTools.ts",
+      "typeOnly": false,
+      "bindings": "{MATERIAL_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 7,
+      "module": "./toolLoading",
+      "owner": "src/lib/agent/toolLoading.ts",
+      "typeOnly": false,
+      "bindings": "{DISCOVERY_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 8,
+      "module": "./webTools",
+      "owner": "src/lib/agent/webTools.ts",
+      "typeOnly": false,
+      "bindings": "{WEB_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 9,
+      "module": "./referenceTools",
+      "owner": "src/lib/agent/referenceTools.ts",
+      "typeOnly": false,
+      "bindings": "{REFERENCE_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 10,
+      "module": "./memoryTools",
+      "owner": "src/lib/agent/memoryTools.ts",
+      "typeOnly": false,
+      "bindings": "{MEMORY_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 12,
+      "module": "./taskTools",
+      "owner": "src/lib/agent/taskTools.ts",
+      "typeOnly": false,
+      "bindings": "{TASK_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 13,
+      "module": "./generationTools",
+      "owner": "src/lib/agent/generationTools.ts",
+      "typeOnly": false,
+      "bindings": "{GENERATION_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 14,
+      "module": "./businessTools",
+      "owner": "src/lib/agent/businessTools.ts",
+      "typeOnly": false,
+      "bindings": "{BUSINESS_TOOLS}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 26,
+      "module": "./toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolDefinition}"
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "line": 27,
+      "module": "./toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": false,
+      "bindings": "{assertUniqueToolNames}"
+    },
+    {
+      "file": "src/lib/agent/imageDiscovery.ts",
+      "line": 17,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/generationPreparation.ts",
+      "line": 10,
+      "module": "./generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{type GenerationSubmitArgs, generationSubmitSchema, profileRequest}"
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "line": 2,
+      "module": "./toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": true,
+      "bindings": "{TypedToolDefinition}"
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "line": 3,
+      "module": "./toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": false,
+      "bindings": "{defineTool}"
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "line": 70,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "line": 72,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "* as s"
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "line": 74,
+      "module": "./businessStore",
+      "owner": "src/lib/agent/businessStore.ts",
+      "typeOnly": false,
+      "bindings": "{\n  assetMediaDependencies,\n  bounded,\n  BUSINESS_LABELS,\n  type BusinessKind,\n  type BusinessRow,\n  getRow,\n  readBusinessRecord,\n  listBusinessRecords,\n  isReadableBusinessFieldPath,\n  listRows,\n  mediaRetention,\n  mediaUsage,\n  navigation,\n  ownerSnapshot,\n  projection,\n  readTables,\n  relationsAt,\n  requireEpisode,\n  requireOwner,\n  summarize,\n  targetRevision,\n  textAt\n}"
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "line": 21,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "line": 22,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": true,
+      "bindings": "{Spec}"
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "line": 23,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "* as s"
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "line": 24,
+      "module": "./libraryToolHelpers",
+      "owner": "src/lib/agent/libraryToolHelpers.ts",
+      "typeOnly": false,
+      "bindings": "{libraryReadTool, libraryWriteTool}"
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "line": 1,
+      "module": "./toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": true,
+      "bindings": "{TypedToolDefinition}"
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "line": 2,
+      "module": "./toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": false,
+      "bindings": "{defineTool}"
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "line": 10,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "line": 12,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "{choice, number, object, optional, type Spec, text,}"
+    },
+    {
+      "file": "src/lib/agent/generationReviewDraft.ts",
+      "line": 2,
+      "module": "./generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{type GenerationSubmitArgs, generationSubmitSchema}"
+    },
+    {
+      "file": "src/lib/agent/projectContext.ts",
+      "line": 1,
+      "module": "./businessStore",
+      "owner": "src/lib/agent/businessStore.ts",
+      "typeOnly": false,
+      "bindings": "{projection}"
+    },
+    {
+      "file": "src/lib/agent/imageQueue.ts",
+      "line": 4,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/musicTools.ts",
+      "line": 5,
+      "module": "./libraryToolHelpers",
+      "owner": "src/lib/agent/libraryToolHelpers.ts",
+      "typeOnly": false,
+      "bindings": "{libraryReadTool, libraryWriteTool}"
+    },
+    {
+      "file": "src/lib/agent/musicTools.ts",
+      "line": 6,
+      "module": "./audioTools",
+      "owner": "src/lib/agent/audioTools.ts",
+      "typeOnly": false,
+      "bindings": "{\n    assertAudioMusicToolScope,\n    audioMusicRevision,\n    audioMusicTarget,\n    audioMusicUnion,\n    boundedAudioText\n}"
+    },
+    {
+      "file": "src/lib/agent/musicTools.ts",
+      "line": 13,
+      "module": "./tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/lib/agent/musicTools.ts",
+      "line": 14,
+      "module": "./businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "* as s"
+    },
+    {
+      "file": "src/lib/agent/generationReview.ts",
+      "line": 2,
+      "module": "./generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{generationSubmitSchema}"
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "line": 15,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{type GenerationSubmitArgs, generationSubmitSchema}"
+    },
+    {
+      "file": "src/db/agentGenerationBatches.ts",
+      "line": 19,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/db/agentTools.ts",
+      "line": 6,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{generationSubmitSchema}"
+    },
+    {
+      "file": "src/db/agentRuns.ts",
+      "line": 1,
+      "module": "@/lib/agent/toolLoading",
+      "owner": "src/lib/agent/toolLoading.ts",
+      "typeOnly": false,
+      "bindings": "{createToolLoading, DISCOVERY_TOOL_NAME, toolLoadingInstructions}"
+    },
+    {
+      "file": "src/db/agentProjectCreation.ts",
+      "line": 4,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "src/domain/agentGenerationBatch.ts",
+      "line": 2,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": true,
+      "bindings": "{GenerationSubmitArgs}"
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "line": 3,
+      "module": "@/lib/agent/businessStore",
+      "owner": "src/lib/agent/businessStore.ts",
+      "typeOnly": false,
+      "bindings": "{ ownerSnapshot, targetRevision }"
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "line": 16,
+      "module": "@/lib/agent/businessTools",
+      "owner": "src/lib/agent/businessTools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUSINESS_TOOLS as BUSINESS_TOOLS_DEFINITIONS, BUSINESS_TOOL_GROUPS }"
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "line": 17,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "line": 23,
+      "module": "@/lib/agent/toolLoading",
+      "owner": "src/lib/agent/toolLoading.ts",
+      "typeOnly": false,
+      "bindings": "{ createToolLoading, MAX_LOADED_TOOLS }"
+    },
+    {
+      "file": "tests/contextManagement.test.ts",
+      "line": 13,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS }"
+    },
+    {
+      "file": "tests/agentTools.test.ts",
+      "line": 9,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS, requiresToolApproval, validateToolCall, type AgentToolDefinition }"
+    },
+    {
+      "file": "tests/toolValidationDiagnostics.test.ts",
+      "line": 11,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS, getLegacyToolValidationFailure, validateToolCall }"
+    },
+    {
+      "file": "tests/d05SchemaEquivalence.test.ts",
+      "line": 2,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{BUILTIN_TOOLS}"
+    },
+    {
+      "file": "tests/d05SchemaEquivalence.test.ts",
+      "line": 4,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{generationSubmitSchema}"
+    },
+    {
+      "file": "tests/audioGenerationAgent.test.ts",
+      "line": 13,
+      "module": "@/lib/agent/audioGenerationTools",
+      "owner": "src/lib/agent/audioGenerationTools.ts",
+      "typeOnly": false,
+      "bindings": "{ AUDIO_GENERATION_TOOLS as AUDIO_GENERATION_TOOLS_DEFINITIONS, AUDIO_GENERATION_TOOL_NAMES }"
+    },
+    {
+      "file": "tests/toolLoading.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS, toolSchemas, type AgentToolDefinition }"
+    },
+    {
+      "file": "tests/toolLoading.test.ts",
+      "line": 15,
+      "module": "@/lib/agent/toolLoading",
+      "owner": "src/lib/agent/toolLoading.ts",
+      "typeOnly": false,
+      "bindings": "{ createToolLoading, DISCOVERY_TOOL_NAME, getOfferedToolNames, refreshRunToolLoading, toolLoadingInstructions, toolNamesForCall }"
+    },
+    {
+      "file": "tests/audioTaskEvidence.test.ts",
+      "line": 16,
+      "module": "@/lib/agent/taskTools",
+      "owner": "src/lib/agent/taskTools.ts",
+      "typeOnly": false,
+      "bindings": "{ TASK_TOOLS as TASK_TOOLS_DEFINITIONS }"
+    },
+    {
+      "file": "tests/agentBatchPreparationRecovery.test.ts",
+      "line": 10,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{ generationSubmitSchema }"
+    },
+    {
+      "file": "tests/agentReferences.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/referenceTools",
+      "owner": "src/lib/agent/referenceTools.ts",
+      "typeOnly": false,
+      "bindings": "{ REFERENCE_TOOLS as REFERENCE_TOOLS_DEFINITIONS }"
+    },
+    {
+      "file": "tests/responsesStream.test.ts",
+      "line": 9,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS, toolSchemas, type AgentToolDefinition }"
+    },
+    {
+      "file": "tests/reasoningPolicy.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS, type AgentToolDefinition }"
+    },
+    {
+      "file": "tests/agentGeneration.test.ts",
+      "line": 16,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{ generationSubmitSchema, profileRequest, type GenerationSubmitArgs }"
+    },
+    {
+      "file": "tests/agentGeneration.test.ts",
+      "line": 17,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/agentGeneration.test.ts",
+      "line": 18,
+      "module": "@/lib/agent/generationTools",
+      "owner": "src/lib/agent/generationTools.ts",
+      "typeOnly": false,
+      "bindings": "{ GENERATION_TOOLS as GENERATION_TOOLS_DEFINITIONS }"
+    },
+    {
+      "file": "tests/materialImageQueue.test.ts",
+      "line": 8,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/audioAgentExecution.test.ts",
+      "line": 8,
+      "module": "@/lib/agent/toolLoading",
+      "owner": "src/lib/agent/toolLoading.ts",
+      "typeOnly": false,
+      "bindings": "{ getOfferedToolNames, MAX_LOADED_TOOLS }"
+    },
+    {
+      "file": "tests/d05ToolMetadata.test.ts",
+      "line": 9,
+      "module": "@/lib/agent/toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolDefinition}"
+    },
+    {
+      "file": "tests/agentTaskOrchestration.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/taskTools",
+      "owner": "src/lib/agent/taskTools.ts",
+      "typeOnly": false,
+      "bindings": "{ TASK_TOOLS as TASK_TOOLS_DEFINITIONS }"
+    },
+    {
+      "file": "tests/agentTaskOrchestrationReview.test.ts",
+      "line": 6,
+      "module": "@/lib/agent/taskTools",
+      "owner": "src/lib/agent/taskTools.ts",
+      "typeOnly": false,
+      "bindings": "{ TASK_TOOLS as TASK_TOOLS_DEFINITIONS }"
+    },
+    {
+      "file": "tests/audioMusicAgentTools.test.ts",
+      "line": 11,
+      "module": "@/lib/agent/audioTools",
+      "owner": "src/lib/agent/audioTools.ts",
+      "typeOnly": false,
+      "bindings": "{ AUDIO_TOOLS as AUDIO_TOOLS_DEFINITIONS }"
+    },
+    {
+      "file": "tests/audioMusicAgentTools.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/musicTools",
+      "owner": "src/lib/agent/musicTools.ts",
+      "typeOnly": false,
+      "bindings": "{ MUSIC_TOOLS as MUSIC_TOOLS_DEFINITIONS }"
+    },
+    {
+      "file": "tests/audioMusicAgentTools.test.ts",
+      "line": 14,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS }"
+    },
+    {
+      "file": "tests/audioMusicAgentTools.test.ts",
+      "line": 15,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/agentGenerationReviewTransactions.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": true,
+      "bindings": "{ GenerationSubmitArgs }"
+    },
+    {
+      "file": "tests/agentGenerationBatch.test.ts",
+      "line": 18,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{ generationSubmitSchema, type GenerationSubmitArgs }"
+    },
+    {
+      "file": "tests/agentGenerationBatch.test.ts",
+      "line": 20,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/agentGenerationBatch.test.ts",
+      "line": 22,
+      "module": "@/lib/agent/generationTools",
+      "owner": "src/lib/agent/generationTools.ts",
+      "typeOnly": false,
+      "bindings": "{ GENERATION_TOOLS as GENERATION_TOOLS_DEFINITIONS }"
+    },
+    {
+      "file": "tests/webResearch.test.ts",
+      "line": 7,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ validateToolCall }"
+    },
+    {
+      "file": "tests/agentToolsReview.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS, type AgentToolDefinition }"
+    },
+    {
+      "file": "tests/referenceEvidence.test.ts",
+      "line": 5,
+      "module": "@/lib/agent/referenceTools",
+      "owner": "src/lib/agent/referenceTools.ts",
+      "typeOnly": false,
+      "bindings": "{ REFERENCE_TOOLS as REFERENCE_TOOLS_DEFINITIONS }"
+    },
+    {
+      "file": "tests/agentProjectCreation.test.ts",
+      "line": 8,
+      "module": "@/lib/agent/businessTools",
+      "owner": "src/lib/agent/businessTools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUSINESS_TOOLS as BUSINESS_TOOLS_DEFINITIONS }"
+    },
+    {
+      "file": "tests/agentProjectCreation.test.ts",
+      "line": 9,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS }"
+    },
+    {
+      "file": "tests/agentProjectCreation.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/toolLoading",
+      "owner": "src/lib/agent/toolLoading.ts",
+      "typeOnly": false,
+      "bindings": "{ createToolLoading, getOfferedToolNames }"
+    },
+    {
+      "file": "tests/agentProjectCreation.test.ts",
+      "line": 16,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/musicGenerationReview.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/audioGenerationTools",
+      "owner": "src/lib/agent/audioGenerationTools.ts",
+      "typeOnly": false,
+      "bindings": "{ AUDIO_GENERATION_TOOLS as AUDIO_GENERATION_TOOLS_DEFINITIONS, AUDIO_GENERATION_TOOL_NAMES }"
+    },
+    {
+      "file": "tests/agentMemoryTools.test.ts",
+      "line": 22,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/agentMemoryTools.test.ts",
+      "line": 23,
+      "module": "@/lib/agent/memoryTools",
+      "owner": "src/lib/agent/memoryTools.ts",
+      "typeOnly": false,
+      "bindings": "{ MEMORY_TOOLS as MEMORY_TOOLS_DEFINITIONS, MEMORY_TOOL_NAMES }"
+    },
+    {
+      "file": "tests/agentMemoryTools.test.ts",
+      "line": 24,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{\n  BUILTIN_TOOLS,\n  requiresToolApproval,\n  validateToolCall,\n}"
+    },
+    {
+      "file": "tests/agentGenerationReview.test.ts",
+      "line": 17,
+      "module": "@/lib/agent/generationTools",
+      "owner": "src/lib/agent/generationTools.ts",
+      "typeOnly": false,
+      "bindings": "{ GENERATION_TOOLS as GENERATION_TOOLS_DEFINITIONS }"
+    },
+    {
+      "file": "tests/agentGenerationReview.test.ts",
+      "line": 18,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": true,
+      "bindings": "{ GenerationSubmitArgs }"
+    },
+    {
+      "file": "tests/generationReviewDraft.test.ts",
+      "line": 3,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{ profileRequest, type GenerationSubmitArgs }"
+    },
+    {
+      "file": "tests/agentProjectContext.test.ts",
+      "line": 15,
+      "module": "@/lib/agent/businessTools",
+      "owner": "src/lib/agent/businessTools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUSINESS_TOOLS as BUSINESS_TOOLS_DEFINITIONS }"
+    },
+    {
+      "file": "tests/agentProjectContext.test.ts",
+      "line": 17,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/agentAuditRemediation.test.ts",
+      "line": 3,
+      "module": "@/lib/agent/businessTools",
+      "owner": "src/lib/agent/businessTools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUSINESS_TOOLS as BUSINESS_TOOLS_DEFINITIONS }"
+    },
+    {
+      "file": "tests/agentAuditRemediation.test.ts",
+      "line": 16,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS, type AgentToolContext }"
+    },
+    {
+      "file": "tests/agentAuditRemediation.test.ts",
+      "line": 18,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": true,
+      "bindings": "{ GenerationSubmitArgs }"
+    },
+    {
+      "file": "tests/agentAuditRemediation.test.ts",
+      "line": 19,
+      "module": "@/lib/agent/referenceTools",
+      "owner": "src/lib/agent/referenceTools.ts",
+      "typeOnly": false,
+      "bindings": "{ REFERENCE_TOOLS as REFERENCE_TOOLS_DEFINITIONS }"
+    },
+    {
+      "file": "tests/agentToolTransactions.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolDefinition }"
+    },
+    {
+      "file": "tests/agentFinishingCheck.test.ts",
+      "line": 13,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS }"
+    },
+    {
+      "file": "tests/agentGenerationRecovery.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolDefinition }"
+    },
+    {
+      "file": "tests/toolLoadingMeasurement.test.ts",
+      "line": 10,
+      "module": "@/lib/agent/toolLoading",
+      "owner": "src/lib/agent/toolLoading.ts",
+      "typeOnly": false,
+      "bindings": "{ createToolLoading, DISCOVERY_TOOL_NAME, getOfferedToolNames, toolLoadingInstructions }"
+    },
+    {
+      "file": "tests/toolLoadingMeasurement.test.ts",
+      "line": 11,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ toolSchemas }"
+    },
+    {
+      "file": "tests/d05BusinessBranches.test.ts",
+      "line": 9,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{BUILTIN_TOOLS, validateToolCall}"
+    },
+    {
+      "file": "tests/d05BusinessBranches.test.ts",
+      "line": 10,
+      "module": "@/lib/agent/businessStore",
+      "owner": "src/lib/agent/businessStore.ts",
+      "typeOnly": false,
+      "bindings": "* as store"
+    },
+    {
+      "file": "tests/d05BusinessBranches.test.ts",
+      "line": 11,
+      "module": "@/lib/agent/toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "tests/toolValidationSafety.test.ts",
+      "line": 7,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUILTIN_TOOLS, toolSchemas, validateToolCall }"
+    },
+    {
+      "file": "tests/agentGenerationBatchSafety.test.ts",
+      "line": 15,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{ type GenerationSubmitArgs }"
+    },
+    {
+      "file": "tests/agentGenerationBatchSafety.test.ts",
+      "line": 17,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/agentGenerationBatchSafety.test.ts",
+      "line": 19,
+      "module": "@/lib/agent/businessTools",
+      "owner": "src/lib/agent/businessTools.ts",
+      "typeOnly": false,
+      "bindings": "{ BUSINESS_TOOLS as BUSINESS_TOOLS_DEFINITIONS }"
+    },
+    {
+      "file": "tests/imageDiscovery.test.ts",
+      "line": 14,
+      "module": "@/lib/agent/referenceTools",
+      "owner": "src/lib/agent/referenceTools.ts",
+      "typeOnly": false,
+      "bindings": "{ REFERENCE_TOOLS as REFERENCE_TOOLS_DEFINITIONS }"
+    },
+    {
+      "file": "tests/agentMaterialTools.test.ts",
+      "line": 10,
+      "module": "@/lib/agent/materialTools",
+      "owner": "src/lib/agent/materialTools.ts",
+      "typeOnly": false,
+      "bindings": "{ MATERIAL_TOOLS as MATERIAL_TOOLS_DEFINITIONS }"
+    },
+    {
+      "file": "tests/agentMaterialTools.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ requiresToolApproval }"
+    },
+    {
+      "file": "tests/agentMaterialTools.test.ts",
+      "line": 14,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{ AgentToolContext }"
+    },
+    {
+      "file": "tests/d05ToolCatalog.test.ts",
+      "line": 3,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{BUILTIN_TOOLS, toolSchemas, validateToolCall}"
+    },
+    {
+      "file": "tests/d05ToolCatalog.test.ts",
+      "line": 4,
+      "module": "@/lib/agent/ipTools",
+      "owner": "src/lib/agent/ipTools.ts",
+      "typeOnly": false,
+      "bindings": "{IP_TOOLS}"
+    },
+    {
+      "file": "tests/d05ToolCatalog.test.ts",
+      "line": 5,
+      "module": "@/lib/agent/audioTools",
+      "owner": "src/lib/agent/audioTools.ts",
+      "typeOnly": false,
+      "bindings": "{AUDIO_TOOLS}"
+    },
+    {
+      "file": "tests/d05ToolCatalog.test.ts",
+      "line": 6,
+      "module": "@/lib/agent/musicTools",
+      "owner": "src/lib/agent/musicTools.ts",
+      "typeOnly": false,
+      "bindings": "{MUSIC_TOOLS}"
+    },
+    {
+      "file": "tests/d05ToolCatalog.test.ts",
+      "line": 7,
+      "module": "@/lib/agent/audioGenerationTools",
+      "owner": "src/lib/agent/audioGenerationTools.ts",
+      "typeOnly": false,
+      "bindings": "{AUDIO_GENERATION_TOOLS}"
+    },
+    {
+      "file": "tests/d05ToolCatalog.test.ts",
+      "line": 8,
+      "module": "@/lib/agent/materialTools",
+      "owner": "src/lib/agent/materialTools.ts",
+      "typeOnly": false,
+      "bindings": "{MATERIAL_TOOLS}"
+    },
+    {
+      "file": "tests/d05ToolCatalog.test.ts",
+      "line": 9,
+      "module": "@/lib/agent/toolLoading",
+      "owner": "src/lib/agent/toolLoading.ts",
+      "typeOnly": false,
+      "bindings": "{DISCOVERY_TOOLS, toolNamesForCall, getOfferedToolNames}"
+    },
+    {
+      "file": "tests/d05ToolCatalog.test.ts",
+      "line": 10,
+      "module": "@/lib/agent/taskTools",
+      "owner": "src/lib/agent/taskTools.ts",
+      "typeOnly": false,
+      "bindings": "{TASK_TOOLS}"
+    },
+    {
+      "file": "tests/d05ToolCatalog.test.ts",
+      "line": 11,
+      "module": "@/lib/agent/businessTools",
+      "owner": "src/lib/agent/businessTools.ts",
+      "typeOnly": false,
+      "bindings": "{BUSINESS_TOOLS, BUSINESS_TOOL_GROUPS}"
+    },
+    {
+      "file": "tests/d05ToolCatalog.test.ts",
+      "line": 12,
+      "module": "@/lib/agent/generationTools",
+      "owner": "src/lib/agent/generationTools.ts",
+      "typeOnly": false,
+      "bindings": "{GENERATION_TOOLS}"
+    },
+    {
+      "file": "tests/d05ToolCatalog.test.ts",
+      "line": 13,
+      "module": "@/lib/agent/memoryTools",
+      "owner": "src/lib/agent/memoryTools.ts",
+      "typeOnly": false,
+      "bindings": "{MEMORY_TOOLS}"
+    },
+    {
+      "file": "tests/d05ToolCatalog.test.ts",
+      "line": 14,
+      "module": "@/lib/agent/referenceTools",
+      "owner": "src/lib/agent/referenceTools.ts",
+      "typeOnly": false,
+      "bindings": "{REFERENCE_TOOLS}"
+    },
+    {
+      "file": "tests/d05ToolCatalog.test.ts",
+      "line": 15,
+      "module": "@/lib/agent/webTools",
+      "owner": "src/lib/agent/webTools.ts",
+      "typeOnly": false,
+      "bindings": "{WEB_TOOLS}"
+    },
+    {
+      "file": "tests/d05ToolCatalog.test.ts",
+      "line": 17,
+      "module": "@/lib/agent/toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": false,
+      "bindings": "{defineTool, assertUniqueToolNames}"
+    },
+    {
+      "file": "tests/d05ToolCatalog.test.ts",
+      "line": 18,
+      "module": "@/lib/agent/businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "* as s"
+    },
+    {
+      "file": "tests/agentIpTools.test.ts",
+      "line": 9,
+      "module": "@/lib/agent/ipTools",
+      "owner": "src/lib/agent/ipTools.ts",
+      "typeOnly": false,
+      "bindings": "{ IP_TOOLS as IP_TOOLS_DEFINITIONS }"
+    },
+    {
+      "file": "tests/agentIpTools.test.ts",
+      "line": 13,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{ requiresToolApproval, type AgentToolContext }"
+    },
+    {
+      "file": "tests/musicDurationContract.test.ts",
+      "line": 13,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": true,
+      "bindings": "{AgentToolContext}"
+    },
+    {
+      "file": "tests/musicDurationContract.test.ts",
+      "line": 14,
+      "module": "@/lib/agent/musicTools",
+      "owner": "src/lib/agent/musicTools.ts",
+      "typeOnly": false,
+      "bindings": "{MUSIC_TOOLS as MUSIC_TOOLS_DEFINITIONS}"
+    },
+    {
+      "file": "tests/fixtures/d01/harness.ts",
+      "line": 24,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": true,
+      "bindings": "{GenerationSubmitArgs}"
+    },
+    {
+      "file": "tests/typecheck/agentToolDefinition.ts",
+      "line": 4,
+      "module": "@/lib/agent/toolDefinition",
+      "owner": "src/lib/agent/toolDefinition.ts",
+      "typeOnly": false,
+      "bindings": "{defineTool, type TypedToolDefinition}"
+    },
+    {
+      "file": "tests/typecheck/agentToolDefinition.ts",
+      "line": 5,
+      "module": "@/lib/agent/businessSchemas",
+      "owner": "src/lib/agent/businessSchemas.ts",
+      "typeOnly": false,
+      "bindings": "* as s"
+    },
+    {
+      "file": "tests/typecheck/agentToolDefinition.ts",
+      "line": 6,
+      "module": "@/lib/agent/generationProfiles",
+      "owner": "src/lib/agent/generationProfiles.ts",
+      "typeOnly": false,
+      "bindings": "{generationSubmitSpec, generationJobSpec, generationJobSchema}"
+    },
+    {
+      "file": "tests/typecheck/agentToolDefinition.ts",
+      "line": 8,
+      "module": "@/lib/agent/libraryToolHelpers",
+      "owner": "src/lib/agent/libraryToolHelpers.ts",
+      "typeOnly": false,
+      "bindings": "{libraryReadTool, libraryWriteTool}"
+    },
+    {
+      "file": "tests/typecheck/agentToolDefinition.ts",
+      "line": 9,
+      "module": "@/lib/agent/audioTools",
+      "owner": "src/lib/agent/audioTools.ts",
+      "typeOnly": false,
+      "bindings": "{AUDIO_TOOLS, audioMusicUnion}"
+    },
+    {
+      "file": "tests/typecheck/agentToolDefinition.ts",
+      "line": 10,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{planSchema}"
+    },
+    {
+      "file": "tests/typecheck/agentToolDefinition.ts",
+      "line": 14,
+      "module": "@/lib/agent/businessTools",
+      "owner": "src/lib/agent/businessTools.ts",
+      "typeOnly": false,
+      "bindings": "{isCharacterSlot}"
+    },
+    {
+      "file": "tests/helpers/registeredTools.ts",
+      "line": 1,
+      "module": "@/lib/agent/tools",
+      "owner": "src/lib/agent/tools.ts",
+      "typeOnly": false,
+      "bindings": "{BUILTIN_TOOLS}"
+    }
+  ]
+}

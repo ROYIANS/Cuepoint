@@ -1,0 +1,56 @@
+FAIL actual single form model/connector options preserve identity and proposal artifacts /var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/d06-native-failure-TeGZOU
+alerts [ '请选择已配置密钥的生成连接。' ]
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  [
+    'auto',
+    '1:1',
++   '16:9',
++   '9:16',
++   '4:3',
++   '3:4',
+    '3:2',
+    '2:3',
+-   '4:3',
+-   '3:4',
+    '5:4',
+    '4:5',
+-   '16:9',
+-   '9:16',
+-   '2:1',
+-   '1:2',
+-   '3:1',
+-   '1:3',
+    '21:9',
+-   '9:21'
+  ]
+
+    at file:///Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/reviews/D06-native.mjs:87:16
+    at async test (file:///Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/reviews/D06-native.mjs:63:14)
+    at async file:///Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/reviews/D06-native.mjs:70:5 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [
+    'auto', '1:1',  '16:9',
+    '9:16', '4:3',  '3:4',
+    '3:2',  '2:3',  '5:4',
+    '4:5',  '21:9'
+  ],
+  expected: [
+    'auto', '1:1', '3:2',
+    '2:3',  '4:3', '3:4',
+    '5:4',  '4:5', '16:9',
+    '9:16', '2:1', '1:2',
+    '3:1',  '1:3', '21:9',
+    '9:21'
+  ],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.11.0

@@ -1,0 +1,1129 @@
+{
+  "baseline": [
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentFinishingCheck.ts",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-argument",
+          "severity": 2,
+          "message": "Unsafe argument of type `any[]` assigned to a parameter of type `AgentPlanItem[]`.",
+          "line": 13,
+          "column": 41,
+          "nodeType": "Identifier",
+          "messageId": "unsafeArgument",
+          "endLine": 13,
+          "endColumn": 44
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+          "line": 27,
+          "column": 138,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 27,
+          "endColumn": 140
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 66. Maximum allowed is 20.",
+          "line": 27,
+          "column": 138,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 27,
+          "endColumn": 140
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-assignment",
+          "severity": 2,
+          "message": "Unsafe assignment of an `any` value.",
+          "line": 52,
+          "column": 19,
+          "nodeType": "VariableDeclarator",
+          "messageId": "anyAssignment",
+          "endLine": 52,
+          "endColumn": 52
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .plan on an `any` value.",
+          "line": 53,
+          "column": 46,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 53,
+          "endColumn": 50
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .steps on an `any` value.",
+          "line": 54,
+          "column": 69,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 54,
+          "endColumn": 74
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 4,
+      "fatalErrorCount": 0,
+      "warningCount": 2,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentGenerationBatches.ts",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'ownedGenerationBatch' has a complexity of 23. Maximum allowed is 20.",
+          "line": 52,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 52,
+          "endColumn": 43
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 285,
+          "column": 21,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 285,
+          "endColumn": 143
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 24. Maximum allowed is 20.",
+          "line": 377,
+          "column": 60,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 377,
+          "endColumn": 62
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 0,
+      "fatalErrorCount": 0,
+      "warningCount": 3,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentGenerationTarget.ts",
+      "messages": [
+        {
+          "ruleId": null,
+          "nodeType": null,
+          "fatal": true,
+          "severity": 2,
+          "message": "Parsing error: ESLint was configured to lint `<tsconfigRootDir>/src/db/agentGenerationTarget.ts` with type information from `parserOptions.project`: <tsconfigRootDir>/tsconfig.app.json\nHowever, that TSConfig does not include this file, so type information is not available for it. Either:\n- Change ESLint's list of included files to not include this file\n- Change that TSConfig to include this file\n- Create a new TSConfig that includes this file and include it in your parserOptions.project\nSee the typescript-eslint docs for more info: https://tseslint.com/none-of-those-tsconfigs-include-this-file"
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 1,
+      "fatalErrorCount": 1,
+      "warningCount": 0,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentProjectCreation.ts",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'assertAgentProjectCreation' has a complexity of 48. Maximum allowed is 20.",
+          "line": 8,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 8,
+          "endColumn": 49
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .referenceInput on an `any` value.",
+          "line": 34,
+          "column": 48,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 34,
+          "endColumn": 62
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 57,
+          "column": 23,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 57,
+          "endColumn": 148
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 1,
+      "fatalErrorCount": 0,
+      "warningCount": 2,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTaskGuards.ts",
+      "messages": [
+        {
+          "ruleId": null,
+          "nodeType": null,
+          "fatal": true,
+          "severity": 2,
+          "message": "Parsing error: ESLint was configured to lint `<tsconfigRootDir>/src/db/agentTaskGuards.ts` with type information from `parserOptions.project`: <tsconfigRootDir>/tsconfig.app.json\nHowever, that TSConfig does not include this file, so type information is not available for it. Either:\n- Change ESLint's list of included files to not include this file\n- Change that TSConfig to include this file\n- Create a new TSConfig that includes this file and include it in your parserOptions.project\nSee the typescript-eslint docs for more info: https://tseslint.com/none-of-those-tsconfigs-include-this-file"
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 1,
+      "fatalErrorCount": 1,
+      "warningCount": 0,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTaskRecords.ts",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'validateTaskSources' has a complexity of 41. Maximum allowed is 20.",
+          "line": 41,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 41,
+          "endColumn": 42
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 28 to the 20 allowed.",
+          "line": 41,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 41,
+          "endColumn": 42
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'writeTaskRecord' has a complexity of 28. Maximum allowed is 20.",
+          "line": 72,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 72,
+          "endColumn": 38
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 0,
+      "fatalErrorCount": 0,
+      "warningCount": 3,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTasks.ts",
+      "messages": [],
+      "suppressedMessages": [],
+      "errorCount": 0,
+      "fatalErrorCount": 0,
+      "warningCount": 0,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTools.ts",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 22. Maximum allowed is 20.",
+          "line": 106,
+          "column": 51,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 106,
+          "endColumn": 53
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 26 to the 20 allowed.",
+          "line": 216,
+          "column": 51,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 216,
+          "endColumn": 53
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 27. Maximum allowed is 20.",
+          "line": 216,
+          "column": 51,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 216,
+          "endColumn": 53
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+          "line": 238,
+          "column": 129,
+          "nodeType": "TSAsExpression",
+          "messageId": "contextuallyUnnecessary",
+          "endLine": 238,
+          "endColumn": 177,
+          "fix": {
+            "range": [
+              13669,
+              13708
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-return",
+          "severity": 2,
+          "message": "Unsafe return of a value of type `any`.",
+          "line": 354,
+          "column": 61,
+          "nodeType": "ReturnStatement",
+          "messageId": "unsafeReturn",
+          "endLine": 354,
+          "endColumn": 92
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 2,
+      "fatalErrorCount": 0,
+      "warningCount": 3,
+      "fixableErrorCount": 1,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/domain/agentToolSelection.ts",
+      "messages": [
+        {
+          "ruleId": null,
+          "nodeType": null,
+          "fatal": true,
+          "severity": 2,
+          "message": "Parsing error: ESLint was configured to lint `<tsconfigRootDir>/src/domain/agentToolSelection.ts` with type information from `parserOptions.project`: <tsconfigRootDir>/tsconfig.app.json\nHowever, that TSConfig does not include this file, so type information is not available for it. Either:\n- Change ESLint's list of included files to not include this file\n- Change that TSConfig to include this file\n- Create a new TSConfig that includes this file and include it in your parserOptions.project\nSee the typescript-eslint docs for more info: https://tseslint.com/none-of-those-tsconfigs-include-this-file"
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 1,
+      "fatalErrorCount": 1,
+      "warningCount": 0,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/generationPreparation.ts",
+      "messages": [
+        {
+          "ruleId": null,
+          "nodeType": null,
+          "fatal": true,
+          "severity": 2,
+          "message": "Parsing error: ESLint was configured to lint `<tsconfigRootDir>/src/lib/agent/generationPreparation.ts` with type information from `parserOptions.project`: <tsconfigRootDir>/tsconfig.app.json\nHowever, that TSConfig does not include this file, so type information is not available for it. Either:\n- Change ESLint's list of included files to not include this file\n- Change that TSConfig to include this file\n- Create a new TSConfig that includes this file and include it in your parserOptions.project\nSee the typescript-eslint docs for more info: https://tseslint.com/none-of-those-tsconfigs-include-this-file"
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 1,
+      "fatalErrorCount": 1,
+      "warningCount": 0,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/generationRuntime.ts",
+      "messages": [
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+          "line": 58,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 58,
+          "endColumn": 43
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 60,
+          "column": 20,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 61,
+          "endColumn": 175
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 60,
+          "column": 83,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 61,
+          "endColumn": 175
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 61,
+          "column": 11,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 61,
+          "endColumn": 175
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 68,
+          "column": 18,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 69,
+          "endColumn": 70
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 69,
+          "column": 43,
+          "nodeType": "TSNonNullExpression",
+          "messageId": "unnecessaryAssertion",
+          "endLine": 69,
+          "endColumn": 55,
+          "fix": {
+            "range": [
+              3400,
+              3401
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 81,
+          "column": 20,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 81,
+          "endColumn": 145
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 81,
+          "column": 65,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 81,
+          "endColumn": 145
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'prepareGenerationSnapshot' has a complexity of 22. Maximum allowed is 20.",
+          "line": 112,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 112,
+          "endColumn": 48
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 22 to the 20 allowed.",
+          "line": 112,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 112,
+          "endColumn": 48
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 24 to the 20 allowed.",
+          "line": 191,
+          "column": 16,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 191,
+          "endColumn": 29
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'submitClaimedGeneration' has a complexity of 25. Maximum allowed is 20.",
+          "line": 289,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 289,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 46 to the 20 allowed.",
+          "line": 289,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 289,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 347,
+          "column": 29,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 347,
+          "endColumn": 208
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 364,
+          "column": 21,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 364,
+          "endColumn": 97
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'checkAgentGeneration' has a complexity of 26. Maximum allowed is 20.",
+          "line": 442,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 442,
+          "endColumn": 43
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 23 to the 20 allowed.",
+          "line": 442,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 442,
+          "endColumn": 43
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 23. Maximum allowed is 20.",
+          "line": 583,
+          "column": 48,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 583,
+          "endColumn": 50
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 1,
+      "fatalErrorCount": 0,
+      "warningCount": 17,
+      "fixableErrorCount": 1,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/toolLoading.ts",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 24,
+          "column": 23,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 24,
+          "endColumn": 124
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 22. Maximum allowed is 20.",
+          "line": 128,
+          "column": 77,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 128,
+          "endColumn": 79
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 0,
+      "fatalErrorCount": 0,
+      "warningCount": 2,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    }
+  ],
+  "current": [
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentFinishingCheck.ts",
+      "messages": [
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-argument",
+          "severity": 2,
+          "message": "Unsafe argument of type `any[]` assigned to a parameter of type `AgentPlanItem[]`.",
+          "line": 13,
+          "column": 41,
+          "nodeType": "Identifier",
+          "messageId": "unsafeArgument",
+          "endLine": 13,
+          "endColumn": 44
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+          "line": 27,
+          "column": 138,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 27,
+          "endColumn": 140
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 66. Maximum allowed is 20.",
+          "line": 27,
+          "column": 138,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 27,
+          "endColumn": 140
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-assignment",
+          "severity": 2,
+          "message": "Unsafe assignment of an `any` value.",
+          "line": 52,
+          "column": 19,
+          "nodeType": "VariableDeclarator",
+          "messageId": "anyAssignment",
+          "endLine": 52,
+          "endColumn": 52
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .plan on an `any` value.",
+          "line": 53,
+          "column": 46,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 53,
+          "endColumn": 50
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .steps on an `any` value.",
+          "line": 54,
+          "column": 69,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 54,
+          "endColumn": 74
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 4,
+      "fatalErrorCount": 0,
+      "warningCount": 2,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentGenerationBatches.ts",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'ownedGenerationBatch' has a complexity of 23. Maximum allowed is 20.",
+          "line": 53,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 53,
+          "endColumn": 43
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 286,
+          "column": 21,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 286,
+          "endColumn": 143
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 24. Maximum allowed is 20.",
+          "line": 378,
+          "column": 60,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 378,
+          "endColumn": 62
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 0,
+      "fatalErrorCount": 0,
+      "warningCount": 3,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentGenerationTarget.ts",
+      "messages": [],
+      "suppressedMessages": [],
+      "errorCount": 0,
+      "fatalErrorCount": 0,
+      "warningCount": 0,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentProjectCreation.ts",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'assertAgentProjectCreation' has a complexity of 48. Maximum allowed is 20.",
+          "line": 8,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 8,
+          "endColumn": 49
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .referenceInput on an `any` value.",
+          "line": 34,
+          "column": 48,
+          "nodeType": "Identifier",
+          "messageId": "unsafeMemberExpression",
+          "endLine": 34,
+          "endColumn": 62
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 57,
+          "column": 23,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 57,
+          "endColumn": 148
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 1,
+      "fatalErrorCount": 0,
+      "warningCount": 2,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTaskGuards.ts",
+      "messages": [],
+      "suppressedMessages": [],
+      "errorCount": 0,
+      "fatalErrorCount": 0,
+      "warningCount": 0,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTaskRecords.ts",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'validateTaskSources' has a complexity of 41. Maximum allowed is 20.",
+          "line": 41,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 41,
+          "endColumn": 42
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 28 to the 20 allowed.",
+          "line": 41,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 41,
+          "endColumn": 42
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'writeTaskRecord' has a complexity of 28. Maximum allowed is 20.",
+          "line": 72,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 72,
+          "endColumn": 38
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 0,
+      "fatalErrorCount": 0,
+      "warningCount": 3,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTasks.ts",
+      "messages": [],
+      "suppressedMessages": [],
+      "errorCount": 0,
+      "fatalErrorCount": 0,
+      "warningCount": 0,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTools.ts",
+      "messages": [
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 22. Maximum allowed is 20.",
+          "line": 106,
+          "column": 51,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 106,
+          "endColumn": 53
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 26 to the 20 allowed.",
+          "line": 216,
+          "column": 51,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 216,
+          "endColumn": 53
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 27. Maximum allowed is 20.",
+          "line": 216,
+          "column": 51,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 216,
+          "endColumn": 53
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+          "line": 238,
+          "column": 129,
+          "nodeType": "TSAsExpression",
+          "messageId": "contextuallyUnnecessary",
+          "endLine": 238,
+          "endColumn": 177,
+          "fix": {
+            "range": [
+              13673,
+              13712
+            ],
+            "text": ""
+          }
+        },
+        {
+          "ruleId": "@typescript-eslint/no-unsafe-return",
+          "severity": 2,
+          "message": "Unsafe return of a value of type `any`.",
+          "line": 354,
+          "column": 61,
+          "nodeType": "ReturnStatement",
+          "messageId": "unsafeReturn",
+          "endLine": 354,
+          "endColumn": 92
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 2,
+      "fatalErrorCount": 0,
+      "warningCount": 3,
+      "fixableErrorCount": 1,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/domain/agentToolSelection.ts",
+      "messages": [],
+      "suppressedMessages": [],
+      "errorCount": 0,
+      "fatalErrorCount": 0,
+      "warningCount": 0,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/generationPreparation.ts",
+      "messages": [],
+      "suppressedMessages": [],
+      "errorCount": 0,
+      "fatalErrorCount": 0,
+      "warningCount": 0,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/generationRuntime.ts",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 58,
+          "column": 20,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 58,
+          "endColumn": 145
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 58,
+          "column": 65,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 58,
+          "endColumn": 145
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 24 to the 20 allowed.",
+          "line": 98,
+          "column": 16,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 98,
+          "endColumn": 29
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'submitClaimedGeneration' has a complexity of 25. Maximum allowed is 20.",
+          "line": 196,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 196,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 46 to the 20 allowed.",
+          "line": 196,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 196,
+          "endColumn": 46
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 254,
+          "column": 29,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 254,
+          "endColumn": 208
+        },
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 271,
+          "column": 21,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 271,
+          "endColumn": 97
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async function 'checkAgentGeneration' has a complexity of 26. Maximum allowed is 20.",
+          "line": 349,
+          "column": 8,
+          "nodeType": "FunctionDeclaration",
+          "messageId": "complex",
+          "endLine": 349,
+          "endColumn": 43
+        },
+        {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 23 to the 20 allowed.",
+          "line": 349,
+          "column": 23,
+          "nodeType": null,
+          "messageId": "refactorFunction",
+          "endLine": 349,
+          "endColumn": 43
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 23. Maximum allowed is 20.",
+          "line": 490,
+          "column": 48,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 490,
+          "endColumn": 50
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 0,
+      "fatalErrorCount": 0,
+      "warningCount": 10,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    },
+    {
+      "filePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/toolLoading.ts",
+      "messages": [
+        {
+          "ruleId": "no-nested-ternary",
+          "severity": 1,
+          "message": "Do not nest ternary expressions.",
+          "line": 25,
+          "column": 23,
+          "nodeType": "ConditionalExpression",
+          "messageId": "noNestedTernary",
+          "endLine": 25,
+          "endColumn": 124
+        },
+        {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Async arrow function has a complexity of 22. Maximum allowed is 20.",
+          "line": 116,
+          "column": 77,
+          "nodeType": "ArrowFunctionExpression",
+          "messageId": "complex",
+          "endLine": 116,
+          "endColumn": 79
+        }
+      ],
+      "suppressedMessages": [],
+      "errorCount": 0,
+      "fatalErrorCount": 0,
+      "warningCount": 2,
+      "fixableErrorCount": 0,
+      "fixableWarningCount": 0,
+      "usedDeprecatedRules": []
+    }
+  ]
+}

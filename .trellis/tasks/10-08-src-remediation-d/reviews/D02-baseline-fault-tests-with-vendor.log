@@ -1,0 +1,44 @@
+
+ RUN  v5.0.1 /private/tmp/cuepoint-d02/baseline
+
+ ❯ tests/parentProjectWrites.test.ts (21 tests | 1 failed) 113ms
+   ❯ prop parent project writes (4)
+     × rolls back the child if touching the existing parent fails 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/parentProjectWrites.test.ts > prop parent project writes > rolls back the child if touching the existing parent fails
+AssertionError: promise resolved "{ …(8) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "createdAt": "2026-10-08T02:39:40.706Z",
++   "id": "prp_f2db1f36-fc28-48b9-98fc-5a5c0ad37f62",
++   "kind": "",
++   "name": "未命名道具",
++   "notes": "",
++   "projectId": "prj_7918db7c-6be4-4a49-b385-3a2689e21db5",
++   "slots": {},
++   "updatedAt": "2026-10-08T02:39:40.706Z",
+  }
+
+ ❯ tests/parentProjectWrites.test.ts:44:38
+     42|     db.projects.hook("updating", fail);
+     43|     try {
+     44|       await expect(create(project.id)).rejects.toThrow("injected paren…
+       |                                      ^
+     45|     } finally {
+     46|       db.projects.hook("updating").unsubscribe(fail);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 51 passed (52)
+   Start at  10:39:40
+   Duration  414ms (tests 48%, transform 34%, setup 13%, import 4%, worker 1%)
+

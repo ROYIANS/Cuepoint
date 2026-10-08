@@ -1,0 +1,44 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/d03AudioCommands.test.ts (5 tests | 1 failed) 71ms
+   ❯ D03 selection and audio commands (5)
+     × chooses an adopted segment take before latest, while placement fallback can seek another take 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/d03AudioCommands.test.ts > D03 selection and audio commands > chooses an adopted segment take before latest, while placement fallback can seek another take
+AssertionError: expected { patch: { …(3) }, seek: { …(2) } } to deeply equal { patch: { …(3) }, seek: { …(2) } }
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  {
+    "patch": {
+      "clipId": "acl_e99e6806-db6f-43d0-a44e-14a2d5018908",
+      "segmentId": "asg_6c4b8b26-1502-43ab-b667-d8e6e16943a5",
+-     "takeId": "atk_1ff3825c-5177-4fae-a538-d198f3af5d98",
++     "takeId": "atk_5ccb442d-fb67-490a-b561-14271c754905",
+    },
+    "seek": {
+      "clipId": "acl_e99e6806-db6f-43d0-a44e-14a2d5018908",
+      "position": 2,
+    },
+
+ ❯ tests/d03AudioCommands.test.ts:50:91
+     48|         const previous = {chapterId: chapter.id, segmentId: "", takeId…
+     49|         const snapshot = await getAudioProjectSnapshot(project.id);
+     50|         expect(deriveAudioSelection(snapshot, previous, {kind: "segmen…
+       |                                                                                           ^
+     51|             patch: {segmentId: segment.id, takeId: latest.id, clipId: …
+     52|         const adopted = await patchAudioSegment(project.id, segment.id…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 6 passed (7)
+      Tests  1 failed | 83 passed (84)
+   Start at  11:35:04
+   Duration  1.04s (transform 42%, tests 34%, import 13%, setup 11%)
+

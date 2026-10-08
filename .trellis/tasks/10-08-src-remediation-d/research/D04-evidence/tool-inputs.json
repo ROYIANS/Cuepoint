@@ -1,0 +1,36 @@
+{
+  "toolsRoot": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools",
+  "versions": {
+    "eslint": {
+      "version": "9.39.5",
+      "packageJsonSha256": "361210aa42b55fd814c48a01e3724559ec6f0f3e1c021d0f8aa2e8b00276060e"
+    },
+    "typescript-eslint": {
+      "version": "8.71.1",
+      "packageJsonSha256": "2b907d09df3378dc1df90d0e1cb5059a2a8e35f55f7be4f997d605f00d8a3f6e"
+    },
+    "eslint-plugin-react-hooks": {
+      "version": "7.1.1",
+      "packageJsonSha256": "c745f6ec0ce838f395eb5da17e3f907094fcd14c87c30b94810f217fe5e7b476"
+    },
+    "eslint-plugin-sonarjs": {
+      "version": "3.0.7",
+      "packageJsonSha256": "8c4ff6d654b87c3eb9b1b021b7fbad1e7c089b15df40fbf8e60b19097717cdbd"
+    },
+    "typescript": {
+      "version": "5.9.2",
+      "packageJsonSha256": "5a0bb7f286c4b3f1413a42c05f902311b161f70e5f52d9da10490443bfd595a3"
+    }
+  },
+  "config": {
+    "path": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/eslint.config.mjs",
+    "sha256": "71fec4e76e3e26f5e21e6412d7847a5c7e0b8e828af4fba41237351faa24ccce"
+  },
+  "projectConfigHashes": {
+    "package.json": "894cca99189d6e0535ed623d3e4d702868adcc3d4afef27a141b7e7da176033b",
+    "pnpm-lock.yaml": "c989c9f9af4da94f0483606f9a4f0d4756136fb01e30640757bd7c0248ed31b4",
+    "tsconfig.app.json": "c40f7db8652b3433532289c87edd6898d4de984614f8a99dcf7bfbd8856e3bb3",
+    "tsconfig.json": "770b4140bbb581e2dfd9ea9946ffc9c75a1d86ba7d2db5f77c83e37cbdf9d808"
+  },
+  "policy": "No dependencies installed or manifests changed. Narrow current-only scan; independent cumulative baseline/current separate-program scan owned by coordinator."
+}

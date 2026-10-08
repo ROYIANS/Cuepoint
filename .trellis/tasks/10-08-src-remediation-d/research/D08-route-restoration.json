@@ -1,0 +1,10 @@
+{
+  "entrySHA256": "f1572df02731d204a1ef38e4b744a39aa5b2c9dc7a3d85d1d6d3d3b6b6b09d65",
+  "builtSHA256": "0df423ad2603ed30010d0c28c127b7b7d5a59c3bb0a1c24ddc39f55933cd4efd",
+  "tokensEqual": true,
+  "entryTokenCount": 3995,
+  "builtTokenCount": 3995,
+  "changed": true,
+  "restored": true,
+  "currentSHA256": "f1572df02731d204a1ef38e4b744a39aa5b2c9dc7a3d85d1d6d3d3b6b6b09d65"
+}

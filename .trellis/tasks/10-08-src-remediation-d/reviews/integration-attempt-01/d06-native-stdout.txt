@@ -1,0 +1,13 @@
+4:14:29 PM [vite] (client) Re-optimizing dependencies because vite config has changed
+Port 5173 is in use, trying another one...
+PASS actual single form model/connector options preserve identity and proposal
+PASS hidden incompatible parameters remain rejected until explicit model reselection
+PASS Veo invalid proposal is retained; explicit resolution transition alone sets eight seconds
+PASS H3 fixed frame ratio and missing mode are never repaired by hidden controls
+PASS actual batch uses shared transitions and isolates candidate edits; save does not submit
+PASS project import retained, explicit profile/mode correction and strict Save/reopen
+PASS defaults Save busy/failure/retry retains dirty choices and performs zero generation
+PASS latest project edit conflicts with dirty defaults; adopt-latest remains explicit
+PASS applying and clearing global defaults preserve target/input context with zero approval or submit
+PASS real approval is synchronous-busy, immutable, and default storage failure does not reapprove
+{"status":"PASS","baselineUI":false,"paidSubmitRequests":0,"browser":"151.0.7922.34","checks":["actual single form model/connector options preserve identity and proposal","hidden incompatible parameters remain rejected until explicit model reselection","Veo invalid proposal is retained; explicit resolution transition alone sets eight seconds","H3 fixed frame ratio and missing mode are never repaired by hidden controls","actual batch uses shared transitions and isolates candidate edits; save does not submit","project import retained, explicit profile/mode correction and strict Save/reopen","defaults Save busy/failure/retry retains dirty choices and performs zero generation","latest project edit conflicts with dirty defaults; adopt-latest remains explicit","applying and clearing global defaults preserve target/input context with zero approval or submit","real approval is synchronous-busy, immutable, and default storage failure does not reapprove"],"externalRequests":0,"pageErrors":[],"counts":{"chatFixtureCalls":1,"actions":1,"storageCalls":["patchProjectDetails","patchProjectDetails","patchProjectDetails","patchProjectDetails","saveGenerationPreference","saveGenerationPreference","reviewAndApproveGeneration","saveGenerationPreference"]},"limitations":"Actual Ant Design/Radix forms and IndexedDB with local gates; no paid transport or entitlement verification. onAction records resume without running it. Synthetic illegal proposal fixtures exercise actual schema/profile render validation; valid approval fixture uses actual executeChatRun preparation."}

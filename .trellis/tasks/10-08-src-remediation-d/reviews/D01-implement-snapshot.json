@@ -1,0 +1,452 @@
+{
+  "baselineRevision": "abb7a91d255666fc8f772cddecd66676b9f2848c",
+  "algorithm": "sha256",
+  "before": {
+    "src/db/agentGenerationBatches.ts": "15da94e10a2b46600b616b39ad5be1fd60862c7aeaf800423af71b93a8d64d99",
+    "src/db/agentTaskRecords.ts": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+    "src/db/agentTasks.ts": "6d45437549027d4a11d6cfe68f34ceaeeaf284bb3351e68c0f16f9142cc4cc95",
+    "src/db/agentTools.ts": "61cc501686e8c0ccac5221cc84bfc14168be36ea1c483f01c432c46cfe60a50a",
+    "src/lib/agent/generationRuntime.ts": "3b8666ffe35474cd811cc34ae55290526a11ca14b9ac0b212d6d19ee49b6fb86",
+    "src/lib/agent/toolLoading.ts": "8543e884202c7d1b6b853297280e2c7ca9d4317dd17002a28c71a8bec8c92261",
+    "src/db/agentFinishingCheck.ts": "f2cbdc26539e013b3f6341eea1b3b5508ef695e859db68a67105b0487b0fbd12",
+    "src/db/agentProjectCreation.ts": "eb3c19cd5542f2ff4c82b49cb270c523ecf7f52ba012c65a07c794041f4eea48",
+    "src/domain/agentToolSelection.ts": null,
+    "src/db/agentGenerationTarget.ts": null,
+    "src/db/agentTaskGuards.ts": null,
+    "src/lib/agent/generationPreparation.ts": null,
+    "tests/d01DependencyBoundaries.test.ts": null,
+    "tests/fixtures/d01/harness.ts": null,
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-native-regression.mjs": null
+  },
+  "after": {
+    "src/db/agentGenerationBatches.ts": "13ab30f0e1ad917f964041d2e1dac914c2277a584e890419966ed7c7ac61a62e",
+    "src/db/agentTaskRecords.ts": "818022669a64f4fe8cf55c0e285582a62d196ab953fd357b47f027f65320533d",
+    "src/db/agentTasks.ts": "837fbd04efd0ea2aa07c6570beb9e88722d3cf62e0a37a4d1e4cc58b0b2edca6",
+    "src/db/agentTools.ts": "51fc482601a428161a348d750c5b478c036275fb07ac548ef9ea339497022299",
+    "src/lib/agent/generationRuntime.ts": "34f5eaa76d2d1001c1c15571c00a77faacb8719c01ebe44eb2b1a1a172951087",
+    "src/lib/agent/toolLoading.ts": "1599a871d8e10e822237b1cac3f7eed517254e6fd5f8db281a9dc6cde660851e",
+    "src/db/agentFinishingCheck.ts": "6410fb3478e6675eefb0a1d215bccb5e9d1271ba18b5bf89f6c1a4c0df903c59",
+    "src/db/agentProjectCreation.ts": "43a3bb9a90089c1a4ffa4f0cf9cc0a52769a781e99ac84b6ef8a582ff6462951",
+    "src/domain/agentToolSelection.ts": "2efea8c45ad514225a5c22d78ccd1ecf5525cab7e88d175070a8a53b86eaa097",
+    "src/db/agentGenerationTarget.ts": "7fe43005a118308586ba832d00c459a90a772f525b901e6d4cdfd4d13fdebd18",
+    "src/db/agentTaskGuards.ts": "8df6820136145e10a82aef4c1db89d7c763150858fa96661b92b35a259cd6e7c",
+    "src/lib/agent/generationPreparation.ts": "4447b50240976b0beef00d0e2b706344542ba35c222c8e475a4a43ec6e581d80",
+    "tests/d01DependencyBoundaries.test.ts": "ae3aa2a154c44fb17cffaff5a68d867eac66efd1aa3faa68606cc0ce97b42f73",
+    "tests/fixtures/d01/harness.ts": "fd844cf682f1a6e58946cf52f67757f750be7c23114092cf5483812ccaf33218",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-native-regression.mjs": "df360e2198c9ed6844d28f1c1d38268014daa1a0dde37d8e265dc47c55e842d0"
+  },
+  "unownedProductChanges": [],
+  "unit": "D01",
+  "capturedDate": "2026-10-08",
+  "reviewBoundary": "Implementation handoff only; main final AST/static differential and independent acceptance remain required.",
+  "productPaths": [
+    "src/db/agentGenerationBatches.ts",
+    "src/db/agentTaskRecords.ts",
+    "src/db/agentTasks.ts",
+    "src/db/agentTools.ts",
+    "src/lib/agent/generationRuntime.ts",
+    "src/lib/agent/toolLoading.ts",
+    "src/db/agentFinishingCheck.ts",
+    "src/db/agentProjectCreation.ts",
+    "src/domain/agentToolSelection.ts",
+    "src/db/agentGenerationTarget.ts",
+    "src/db/agentTaskGuards.ts",
+    "src/lib/agent/generationPreparation.ts",
+    "tests/d01DependencyBoundaries.test.ts",
+    "tests/fixtures/d01/harness.ts"
+  ],
+  "files": [
+    {
+      "path": "src/db/agentGenerationBatches.ts",
+      "before": "15da94e10a2b46600b616b39ad5be1fd60862c7aeaf800423af71b93a8d64d99",
+      "after": "13ab30f0e1ad917f964041d2e1dac914c2277a584e890419966ed7c7ac61a62e",
+      "change": "modified",
+      "attribution": "D01 trellis-implement"
+    },
+    {
+      "path": "src/db/agentTaskRecords.ts",
+      "before": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+      "after": "818022669a64f4fe8cf55c0e285582a62d196ab953fd357b47f027f65320533d",
+      "change": "modified",
+      "attribution": "D01 trellis-implement"
+    },
+    {
+      "path": "src/db/agentTasks.ts",
+      "before": "6d45437549027d4a11d6cfe68f34ceaeeaf284bb3351e68c0f16f9142cc4cc95",
+      "after": "837fbd04efd0ea2aa07c6570beb9e88722d3cf62e0a37a4d1e4cc58b0b2edca6",
+      "change": "modified",
+      "attribution": "D01 trellis-implement"
+    },
+    {
+      "path": "src/db/agentTools.ts",
+      "before": "61cc501686e8c0ccac5221cc84bfc14168be36ea1c483f01c432c46cfe60a50a",
+      "after": "51fc482601a428161a348d750c5b478c036275fb07ac548ef9ea339497022299",
+      "change": "modified",
+      "attribution": "D01 trellis-implement"
+    },
+    {
+      "path": "src/lib/agent/generationRuntime.ts",
+      "before": "3b8666ffe35474cd811cc34ae55290526a11ca14b9ac0b212d6d19ee49b6fb86",
+      "after": "34f5eaa76d2d1001c1c15571c00a77faacb8719c01ebe44eb2b1a1a172951087",
+      "change": "modified",
+      "attribution": "D01 trellis-implement"
+    },
+    {
+      "path": "src/lib/agent/toolLoading.ts",
+      "before": "8543e884202c7d1b6b853297280e2c7ca9d4317dd17002a28c71a8bec8c92261",
+      "after": "1599a871d8e10e822237b1cac3f7eed517254e6fd5f8db281a9dc6cde660851e",
+      "change": "modified",
+      "attribution": "D01 trellis-implement"
+    },
+    {
+      "path": "src/db/agentFinishingCheck.ts",
+      "before": "f2cbdc26539e013b3f6341eea1b3b5508ef695e859db68a67105b0487b0fbd12",
+      "after": "6410fb3478e6675eefb0a1d215bccb5e9d1271ba18b5bf89f6c1a4c0df903c59",
+      "change": "modified",
+      "attribution": "D01 trellis-implement"
+    },
+    {
+      "path": "src/db/agentProjectCreation.ts",
+      "before": "eb3c19cd5542f2ff4c82b49cb270c523ecf7f52ba012c65a07c794041f4eea48",
+      "after": "43a3bb9a90089c1a4ffa4f0cf9cc0a52769a781e99ac84b6ef8a582ff6462951",
+      "change": "modified",
+      "attribution": "D01 trellis-implement"
+    },
+    {
+      "path": "src/domain/agentToolSelection.ts",
+      "before": null,
+      "after": "2efea8c45ad514225a5c22d78ccd1ecf5525cab7e88d175070a8a53b86eaa097",
+      "change": "new",
+      "attribution": "D01 trellis-implement"
+    },
+    {
+      "path": "src/db/agentGenerationTarget.ts",
+      "before": null,
+      "after": "7fe43005a118308586ba832d00c459a90a772f525b901e6d4cdfd4d13fdebd18",
+      "change": "new",
+      "attribution": "D01 trellis-implement"
+    },
+    {
+      "path": "src/db/agentTaskGuards.ts",
+      "before": null,
+      "after": "8df6820136145e10a82aef4c1db89d7c763150858fa96661b92b35a259cd6e7c",
+      "change": "new",
+      "attribution": "D01 trellis-implement"
+    },
+    {
+      "path": "src/lib/agent/generationPreparation.ts",
+      "before": null,
+      "after": "4447b50240976b0beef00d0e2b706344542ba35c222c8e475a4a43ec6e581d80",
+      "change": "new",
+      "attribution": "D01 trellis-implement"
+    },
+    {
+      "path": "tests/d01DependencyBoundaries.test.ts",
+      "before": null,
+      "after": "ae3aa2a154c44fb17cffaff5a68d867eac66efd1aa3faa68606cc0ce97b42f73",
+      "change": "new",
+      "attribution": "D01 trellis-implement"
+    },
+    {
+      "path": "tests/fixtures/d01/harness.ts",
+      "before": null,
+      "after": "fd844cf682f1a6e58946cf52f67757f750be7c23114092cf5483812ccaf33218",
+      "change": "new",
+      "attribution": "D01 trellis-implement"
+    },
+    {
+      "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D01-native-regression.mjs",
+      "before": null,
+      "after": "df360e2198c9ed6844d28f1c1d38268014daa1a0dde37d8e265dc47c55e842d0",
+      "change": "new",
+      "kind": "task-owned native verification runner",
+      "attribution": "D01 trellis-implement"
+    }
+  ],
+  "entryMap": "D01-entry-before.json",
+  "entryBeforeMatchesGitRef": true,
+  "commands": [
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "tests/toolLoading.test.ts",
+        "tests/toolLoadingMeasurement.test.ts",
+        "tests/agentFinishingCheck.test.ts",
+        "tests/agentProjectCreation.test.ts",
+        "tests/agentToolTransactions.test.ts",
+        "tests/agentTools.test.ts",
+        "tests/agentToolsReview.test.ts",
+        "tests/audioAgentExecution.test.ts",
+        "tests/agentGeneration.test.ts",
+        "tests/agentGenerationReview.test.ts",
+        "tests/agentGenerationReviewTransactions.test.ts",
+        "tests/agentGenerationRecovery.test.ts",
+        "tests/agentGenerationBatch.test.ts",
+        "tests/agentGenerationBatchSafety.test.ts",
+        "tests/agentBatchPreparationRecovery.test.ts",
+        "tests/agentTasks.test.ts",
+        "tests/agentTaskOrchestration.test.ts",
+        "tests/agentTaskOrchestrationReview.test.ts",
+        "tests/agentTaskWrapup.test.ts",
+        "tests/agentAuditRemediation.test.ts",
+        "tests/audioGenerationAgent.test.ts",
+        "tests/audioGenerationRecoveryAudit.test.ts",
+        "tests/audioTaskEvidence.test.ts",
+        "tests/agentGenerationEvidence.test.ts",
+        "tests/d01DependencyBoundaries.test.ts",
+        "--maxWorkers",
+        "1"
+      ],
+      "exitCode": 0,
+      "log": "D01-final-regressions.log",
+      "result": {
+        "files": 25,
+        "passed": 490,
+        "failed": 0,
+        "existingTests": 487,
+        "newTests": 3,
+        "workerCount": 1,
+        "timeoutChanged": false
+      }
+    },
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "lint"
+      ],
+      "exitCode": 0,
+      "log": "D01-typescript-final.log",
+      "result": "TypeScript project build passed"
+    },
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/eslint/bin/eslint.js",
+        "--config",
+        "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/eslint.config.mjs",
+        "src/db/agentGenerationTarget.ts",
+        "src/db/agentTaskGuards.ts",
+        "src/domain/agentToolSelection.ts",
+        "src/lib/agent/generationPreparation.ts",
+        "--format",
+        "json"
+      ],
+      "exitCode": 0,
+      "log": "D01-new-leaves-eslint.json",
+      "result": {
+        "errors": 0,
+        "warnings": 0,
+        "leaves": 4
+      }
+    },
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/eslint/bin/eslint.js",
+        "--config",
+        "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/eslint.config.mjs",
+        "src/db/agentGenerationBatches.ts",
+        "src/db/agentTaskRecords.ts",
+        "src/db/agentTasks.ts",
+        "src/db/agentTools.ts",
+        "src/lib/agent/generationRuntime.ts",
+        "src/lib/agent/toolLoading.ts",
+        "src/db/agentFinishingCheck.ts",
+        "src/db/agentProjectCreation.ts",
+        "src/domain/agentToolSelection.ts",
+        "src/db/agentGenerationTarget.ts",
+        "src/db/agentTaskGuards.ts",
+        "src/lib/agent/generationPreparation.ts",
+        "--format",
+        "json"
+      ],
+      "exitCode": 1,
+      "log": "D01-changed-source-eslint-final.json",
+      "result": {
+        "errors": 7,
+        "warnings": 25,
+        "interpretation": "Remaining existing-owner diagnostics; main owns the final separate-program baseline/current differential."
+      }
+    },
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "exec",
+        "node",
+        "scripts/c01-browser-regression.mjs"
+      ],
+      "environment": {
+        "C01_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+        "C01_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+      },
+      "exitCode": 0,
+      "log": "D01-native-c01.log",
+      "result": {
+        "checks": 6,
+        "generations": 160,
+        "calls": 161,
+        "nativeIndexedDB": true,
+        "provenanceRefused": true,
+        "externalRequests": 0,
+        "browser": "Chromium native IndexedDB",
+        "limitation": "Synthetic nonempty media metadata, no pixel decode, external provider or full product UI"
+      }
+    },
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "exec",
+        "node",
+        ".trellis/tasks/10-08-src-remediation-d/reviews/D01-native-regression.mjs"
+      ],
+      "environment": {
+        "C01_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+        "C01_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+      },
+      "exitCode": 0,
+      "log": "D01-native-boundaries.log",
+      "result": {
+        "single": {
+          "hashes": 3,
+          "flushes": 3,
+          "hashOutsideTransactions": true,
+          "flushOutsideTransactions": true
+        },
+        "batch": {
+          "hashes": 4,
+          "flushes": 3,
+          "hashOutsideTransactions": true,
+          "flushOutsideTransactions": true
+        },
+        "guard": {
+          "blockedManualCommands": 2,
+          "guardRecovered": true
+        },
+        "externalRequests": 0,
+        "browser": "Chromium native IndexedDB",
+        "limitation": "Local synthetic downloaded media; no provider, decoding or full product UI"
+      }
+    }
+  ],
+  "testPartitions": [
+    {
+      "category": "tools/loading/approvals/project creation/finishing/audio loading",
+      "files": 8,
+      "tests": 150
+    },
+    {
+      "category": "generation/review/recovery/batch",
+      "files": 7,
+      "tests": 90
+    },
+    {
+      "category": "tasks/wrapup/audit/audio evidence",
+      "files": 8,
+      "tests": 166
+    },
+    {
+      "category": "C01 generation evidence",
+      "files": 1,
+      "tests": 81
+    },
+    {
+      "category": "new D01 boundaries",
+      "files": 1,
+      "tests": 3
+    }
+  ],
+  "nativeTransactionProof": [
+    {
+      "path": "tests/fixtures/d01/harness.ts",
+      "lines": [
+        100,
+        101,
+        102
+      ],
+      "entry": "applyAgentGeneration",
+      "proof": "Actual executeAtomicTool rw transaction reads target, then nested setShotSlot and job/ledger writes commit; stored slot and completed ledger asserted."
+    },
+    {
+      "path": "tests/fixtures/d01/harness.ts",
+      "lines": [
+        113,
+        119,
+        120,
+        121
+      ],
+      "entry": "confirmGenerationBatch -> applyBatchSelections",
+      "proof": "Reviewed batch is claimed/downloaded locally/selected; actual grouped rw target read -> nested slot write -> job/batch application-history writes succeeds and stored current target is asserted."
+    },
+    {
+      "path": "tests/fixtures/d01/harness.ts",
+      "lines": [
+        126,
+        128,
+        129,
+        130
+      ],
+      "entry": "readGenerationTarget",
+      "proof": "Direct leaf joins outer rw transaction, sees uncommitted shot change; deliberate exception rolls back and original pending draft is verified after execution."
+    }
+  ],
+  "astCheckpoint": {
+    "baselineSummary": "../research/D-entry-ast-summary.json",
+    "currentSummary": "../research/D01-current-ast-summary.json",
+    "entryFiles": 379,
+    "entryEdges": 2233,
+    "entryValueSCCs": 3,
+    "checkpointFiles": 383,
+    "checkpointEdges": 2253,
+    "checkpointParseErrors": 0,
+    "checkpointValueSCCs": 0,
+    "limitation": "Main-produced checkpoint predates final reader/preparation cleanup. Main must refresh final AST against these hashes; not independent acceptance."
+  },
+  "preservedAttempts": [
+    {
+      "log": "D01-regressions-concurrent-timeout.log",
+      "result": "489 passed, one existing agentTools 32-request test hit its unchanged 5000ms timeout. Concurrent native/static processes were observed; cause is not established."
+    },
+    {
+      "log": "D01-regressions-workers4.log",
+      "result": "25 files / 490 passed; superseded by final single-worker run, not additional unique tests."
+    },
+    {
+      "log": "D01-typescript.log",
+      "result": "First extraction left unused targetRevision import; removed before final TypeScript pass."
+    },
+    {
+      "log": "D01-native-boundaries-launch-failed.log",
+      "result": "Initial supplementary invocation used incorrect executable path; corrected to supplied installed Chromium, no install or source fix."
+    },
+    {
+      "log": "D01-new-leaves-eslint-pre-exhaustive-fix.json",
+      "result": "One missing explicit style case; fixed with case style/default shared original fallback, no suppression."
+    }
+  ],
+  "limitations": [
+    "Original AR04/PD04 findings are structural debt, not demonstrated initialization or TDZ crashes.",
+    "No paid requests, external provider validation, pixel decode, playback, creative quality, or full UI/inspector scheduling claim.",
+    "No main static baseline counts inferred from same-program lintText; main final separate full-source program comparison and AST remain pending.",
+    "No specs, ledger, task status, commits or archive changed by implement role; D02-D08 and independent acceptance remain pending."
+  ],
+  "verificationArtifactPaths": [
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-native-regression.mjs"
+  ],
+  "unchangedNativeDependencyHashes": {
+    "scripts/c01-browser-regression.mjs": {
+      "before": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+      "after": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6"
+    },
+    "tests/fixtures/c01/harness.ts": {
+      "before": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+      "after": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502"
+    },
+    "tests/helpers/toolDispatch.ts": {
+      "before": "04a8234fb4aeffae1ae618fdfbf0fe582a848d453b4a8b5ed3b3dd7013c316c0",
+      "after": "04a8234fb4aeffae1ae618fdfbf0fe582a848d453b4a8b5ed3b3dd7013c316c0"
+    }
+  }
+}

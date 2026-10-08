@@ -1,0 +1,108 @@
+src/db/contextSettings.ts:12:    await db.transaction("rw", [db.chatThreads, db.agents], async () => {
+src/db/contextSettings.ts:14:            const thread = await db.chatThreads.get(threadId);
+src/db/contextSettings.ts:17:            await db.chatThreads.update(threadId, {contextPolicy, updatedAt: nowIso()});
+src/db/contextSettings.ts:21:            await db.agents.update(agent.id, {contextPolicy, updatedAt: nowIso()});
+src/db/contextSettings.ts:26:// Each explicit field is applied to the transaction's latest policy; same-field
+src/db/contextSettings.ts:33:    await db.transaction("rw", [db.chatThreads, db.agents], async () => {
+src/db/contextSettings.ts:40:    await db.transaction("rw", [db.chatThreads, db.agents], async () => {
+src/db/contextSettings.ts:41:        const thread = await db.chatThreads.get(threadId);
+src/db/agentTaskRecords.ts:16:    return db.agentTaskRecords.where("taskId").equals(taskId).sortBy("updatedAt");
+src/db/agentTaskRecords.ts:20:    const record = await db.agentTaskRecords.get(recordId);
+src/db/agentTaskRecords.ts:22:    return db.agentTaskRecordVersions.where("recordId").equals(recordId).sortBy("revision");
+src/db/agentTaskRecords.ts:47:            const message = await db.chatMessages.get(source.id);
+src/db/agentTaskRecords.ts:51:            const call = await db.agentToolCalls.get(source.id);
+src/db/agentTaskRecords.ts:52:            const run = call && await db.agentRuns.get(call.runId);
+src/db/agentTaskRecords.ts:83:    const existing = options.id ? await db.agentTaskRecords.get(options.id) : undefined;
+src/db/agentTaskRecords.ts:104:    await db.agentTaskRecords.put(record);
+src/db/agentTaskRecords.ts:105:    await db.agentTaskRecordVersions.add({
+src/db/agentTaskRecords.ts:110:    await db.agentTasks.update(task.id, {updatedAt: at});
+src/db/agentTaskRecords.ts:118:    return db.transaction("rw", db.tables, async () => writeTaskRecord(await editableAgentTask(taskId), input, {
+src/db/agentTaskRecords.ts:126:    const soundJob = await db.audioGenerationJobs.get(jobId);
+src/db/agentTaskRecords.ts:128:    const job = await db.agentGenerationJobs.get(jobId);
+src/db/agentTaskRecords.ts:155:    return db.transaction("r", db.tables, async () => {
+src/db/agentTaskRecords.ts:157:        const runs = await db.agentRuns.where("taskId").equals(task.id).toArray();
+src/db/agentTaskRecords.ts:159:        const jobs = await db.agentGenerationJobs.where("threadId").equals(task.threadId).toArray();
+src/db/agentTaskRecords.ts:163:        const soundJobs = await db.audioGenerationJobs.where("projectId").equals(task.projectId).toArray();
+src/db/projectMemories.ts:26:    if (projectId === "studio" || !(await db.projects.get(projectId)))
+src/db/projectMemories.ts:32:    const row = await db.projectMemories.get(id);
+src/db/projectMemories.ts:44:    await db.projectMemories.put(row);
+src/db/projectMemories.ts:45:    await db.projectMemoryVersions.add({
+src/db/projectMemories.ts:71:        await db.projectMemories.where("projectId").equals(projectId).toArray()
+src/db/projectMemories.ts:92:        task = await db.agentTasks.get(ref.taskId);
+src/db/projectMemories.ts:95:    const thread = await db.chatThreads.get(task.threadId);
+src/db/projectMemories.ts:98:    const current = await db.agentTaskWrapups.get(ref.summaryId);
+src/db/projectMemories.ts:102:            : await db.agentTaskWrapupVersions
+src/db/projectMemories.ts:154:    return db.transaction("r", db.tables, async () => {
+src/db/projectMemories.ts:157:            await db.projectMemories.where("projectId").equals(projectId).toArray()
+src/db/projectMemories.ts:169:    return db.transaction("r", db.tables, async () => {
+src/db/projectMemories.ts:171:        const row = await db.projectMemories.get(id);
+src/db/projectMemories.ts:182:    return db.transaction("r", db.tables, async () => {
+src/db/projectMemories.ts:185:            await db.projectMemoryVersions.where("memoryId").equals(id).toArray()
+src/db/projectMemories.ts:196:    return db.transaction("r", db.tables, async () => {
+src/db/projectMemories.ts:241:    return db.transaction("r", db.tables, async () => {
+src/db/projectMemories.ts:243:        const task = await db.agentTasks.get(taskId);
+src/db/projectMemories.ts:246:        const current = await db.agentTaskWrapups.get(summaryId);
+src/db/projectMemories.ts:250:                : await db.agentTaskWrapupVersions
+src/db/projectMemories.ts:340:    return db.transaction("rw", db.tables, () =>
+src/db/projectMemories.ts:352:    return db.transaction("rw", db.tables, async () => {
+src/db/projectMemories.ts:365:    return db.transaction("rw", db.tables, async () => {
+src/db/projectMemories.ts:399:    return db.transaction("rw", db.tables, async () => {
+src/db/projectMemories.ts:408:                await db.projectMemories.where("projectId").equals(projectId).toArray()
+src/db/projectMemories.ts:437:    return db.transaction("rw", db.tables, async () => {
+src/db/projectMemories.ts:482:    await db.transaction("rw", db.tables, async () => {
+src/db/projectMemories.ts:485:        await db.projectMemories.delete(id);
+src/db/projectMemories.ts:486:        await db.projectMemoryVersions
+src/db/memoryRetrieval.ts:7:    if (projectId === "studio" || !(await db.projects.get(projectId)))
+src/db/memoryRetrieval.ts:10:    const thread = await db.chatThreads.get(threadId);
+src/db/memoryRetrieval.ts:20:    return db.transaction("r", [db.projects, db.chatThreads], async () => [
+src/db/memoryRetrieval.ts:29:    return db.transaction(
+src/db/memoryRetrieval.ts:31:        [db.projects, db.chatThreads, db.projectMemories],
+src/db/memoryRetrieval.ts:36:                await db.projectMemories.where("projectId").equals(projectId).toArray()
+src/db/memoryRetrieval.ts:46:    return db.transaction(
+src/db/memoryRetrieval.ts:48:        [db.projects, db.chatThreads, db.projectMemories],
+src/db/memoryRetrieval.ts:65:    await db.transaction(
+src/db/memoryRetrieval.ts:67:        [db.projects, db.chatThreads, db.projectMemories],
+src/db/memoryRetrieval.ts:72:            const memory = await db.projectMemories.get(memoryId);
+src/db/memoryRetrieval.ts:78:            await db.chatThreads.update(threadId, {
+src/lib/agent/audioProjectContext.ts:11:        db.audioChapters.where("projectId").equals(projectId).sortBy("order"), db.audioSpeakers.where("projectId").equals(projectId).toArray(),
+src/lib/agent/audioProjectContext.ts:12:        db.audioSegments.where("projectId").equals(projectId).sortBy("order"), db.audioTracks.where("projectId").equals(projectId).sortBy("order"),
+src/lib/agent/audioProjectContext.ts:13:        db.audioTakes.where("projectId").equals(projectId).toArray(), db.audioClips.where("projectId").equals(projectId).toArray(),
+src/lib/agent/audioProjectContext.ts:14:        db.musicDrafts.where("projectId").equals(projectId).toArray(), db.musicWorks.where("projectId").equals(projectId).toArray(),
+src/lib/agent/audioProjectContext.ts:15:        db.audioGenerationJobs.where("projectId").equals(projectId).toArray(), db.projectIpLinks.get(projectId),
+src/lib/agent/audioProjectContext.ts:17:    const ip = ipLink ? await db.ipProfiles.get(ipLink.ipId) : undefined;
+src/lib/agent/projectContext.ts:10:export const projectContextTables = () => [db.projects, db.episodes, db.characters, db.scenes, db.props, db.styles, db.shots, db.ipProfiles, db.projectIpLinks, ...AUDIO_TABLES];
+src/lib/agent/projectContext.ts:13:    return db.transaction('r', projectContextTables(), async () => {
+src/lib/agent/projectContext.ts:14:        const project = await db.projects.get(projectId);
+src/lib/agent/projectContext.ts:17:        const episodes = (await db.episodes.where('projectId').equals(projectId).sortBy('order'));
+src/lib/agent/projectContext.ts:18:        const assets = (await Promise.all(([['character', db.characters], ['scene', db.scenes], ['prop', db.props], ['style', db.styles]] as const).map(async ([kind, table]) => (await table.where('projectId').equals(projectId).toArray()).map(row => ({
+src/lib/agent/projectContext.ts:25:        const shots = await db.shots.where('projectId').equals(projectId).toArray();
+src/lib/agent/projectContext.ts:32:        const ipLink = await db.projectIpLinks.get(projectId);
+src/lib/agent/projectContext.ts:33:        const ip = ipLink ? await db.ipProfiles.get(ipLink.ipId) : undefined;
+src/lib/agent/projectContext.ts:45:        const style = project.defaultStyleId ? await db.styles.get(project.defaultStyleId) : undefined;
+src/lib/agent/projectContext.ts:122:    return db.transaction('rw', [db.agentRuns, db.chatThreads, db.agentToolCalls, ...projectContextTables()], async () => {
+src/lib/agent/projectContext.ts:123:        const run = await db.agentRuns.get(runId);
+src/lib/agent/projectContext.ts:125:        const thread = await db.chatThreads.get(run.threadId);
+src/lib/agent/projectContext.ts:130:        if ((await db.agentToolCalls.where('runId').equals(run.id).toArray()).some(c => !['completed', 'failed', 'rejected'].includes(c.status))) throw new Error('请先处理工具步骤，再更新项目上下文');
+src/lib/agent/projectContext.ts:133:            await db.agentRuns.put(next);
+src/lib/agent/projectContext.ts:145:        await db.agentRuns.put(next);
+src/lib/agent/referenceContext.ts:104:    if (!projectId || input.projectId !== projectId || !await db.projects.get(projectId)) throw new Error("参考资料项目归属已失效");
+src/lib/agent/referenceContext.ts:109:        const media = await db.media.get(image.mediaId);
+src/lib/agent/referenceContext.ts:118:            const sources = await db.projectReferences.where("mediaId").equals(image.mediaId).toArray();
+src/lib/agent/taskContext.ts:13:    const thread = threadId ? await db.chatThreads.get(threadId) : undefined;
+src/lib/agent/taskContext.ts:16:    const project = boundProjectId ? await db.projects.get(boundProjectId) : undefined;
+src/lib/agent/taskContext.ts:18:    const task = threadId ? await db.agentTasks.where("threadId").equals(threadId).first() : undefined;
+src/db/references.ts:9:    if (isStudioLibrary(projectId) || !(await db.projects.get(projectId))) return [];
+src/db/references.ts:10:    return (await db.projectReferences.where("projectId").equals(projectId).toArray())
+src/db/references.ts:16:    return db.transaction("r", [db.projects, db.projectReferences, db.referenceChunks, db.media], async () => {
+src/db/references.ts:17:        if (isStudioLibrary(projectId) || !(await db.projects.get(projectId))) throw new Error("项目不存在");
+src/db/references.ts:18:        const reference = await db.projectReferences.get(attachment.referenceId);
+src/db/references.ts:22:        const media = await db.media.get(reference.mediaId);
+src/db/references.ts:24:        const chunks = (await db.referenceChunks.where("referenceId").equals(reference.id).toArray())
+src/db/references.ts:57:    return db.transaction("r", [db.projects, db.projectReferences, db.referenceChunks], async () => {
+src/db/references.ts:58:        if (isStudioLibrary(projectId) || !(await db.projects.get(projectId))) throw new Error("项目不存在");
+src/db/references.ts:59:        const references = (await db.projectReferences.where("projectId").equals(projectId).toArray()).filter((row) => row.status === "ready" || row.status === "partial");
+src/db/references.ts:63:            const chunks = await db.referenceChunks.where("referenceId").equals(reference.id).toArray();
+src/db/references.ts:79:    await db.transaction("rw", PRODUCTION_TABLES, async () => {
+src/db/references.ts:80:        const reference = await db.projectReferences.get(referenceId);
+src/db/references.ts:83:        await db.projectReferences.put({
+src/db/references.ts:89:        await db.referenceChunks.where("referenceId").equals(referenceId).delete();

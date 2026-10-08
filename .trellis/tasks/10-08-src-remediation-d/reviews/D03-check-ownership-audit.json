@@ -1,0 +1,2885 @@
+{
+  "reference": "Original bodies were read with git show HEAD at entryHEAD. baselineSourceRevision is the C product/source baseline; intervening C archive/journal bookkeeping leaves these source files byte-identical. D02 imported-owner migrations are separately evidenced by accepted D02 review and preserved owner/consumer hashes.",
+  "method": "TypeScript AST named declarations/variables and trivia-free body tokens; transformed owners require manual semantic review, not token identity claims.",
+  "rows": [
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "columnPlaceholder",
+      "destinationFile": "src/components/shots/ShotRow.tsx",
+      "destinationFunction": "columnPlaceholder",
+      "responsibility": "Sortable/viewport row, media and typed column presentation; PlainCell still commits on each change",
+      "actualConsumers": [
+        "ShotEditorPage.tsx: BeatBlockView -> ShotRow; ShotRow local visual helpers"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "68a911ec6cb1a0a9c1f3cea3876676109ca1a3b7fc8f450015e9f2ad6d378bd3",
+      "currentBodyTokenHash": "68a911ec6cb1a0a9c1f3cea3876676109ca1a3b7fc8f450015e9f2ad6d378bd3",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "columnPlaceholder",
+          "found": true,
+          "hash": "68a911ec6cb1a0a9c1f3cea3876676109ca1a3b7fc8f450015e9f2ad6d378bd3"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "coverMediaId",
+      "destinationFile": "src/components/shots/ShotRow.tsx",
+      "destinationFunction": "coverMediaId",
+      "responsibility": "Sortable/viewport row, media and typed column presentation; PlainCell still commits on each change",
+      "actualConsumers": [
+        "ShotEditorPage.tsx: BeatBlockView -> ShotRow; ShotRow local visual helpers"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "8f2ddc411dc4a8a6e26fe75e49964470d2339284ec4dae851d25fa580f6e9da4",
+      "currentBodyTokenHash": "8f2ddc411dc4a8a6e26fe75e49964470d2339284ec4dae851d25fa580f6e9da4",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "coverMediaId",
+          "found": true,
+          "hash": "8f2ddc411dc4a8a6e26fe75e49964470d2339284ec4dae851d25fa580f6e9da4"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "AssetStill",
+      "destinationFile": "src/components/shots/ShotRow.tsx",
+      "destinationFunction": "AssetStill",
+      "responsibility": "Sortable/viewport row, media and typed column presentation; PlainCell still commits on each change",
+      "actualConsumers": [
+        "ShotEditorPage.tsx: BeatBlockView -> ShotRow; ShotRow local visual helpers"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "a38d793ff953bb7a63740c5eba12c18e031f737005f3bcc4f70a02570a47a2f4",
+      "currentBodyTokenHash": "a38d793ff953bb7a63740c5eba12c18e031f737005f3bcc4f70a02570a47a2f4",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "AssetStill",
+          "found": true,
+          "hash": "a38d793ff953bb7a63740c5eba12c18e031f737005f3bcc4f70a02570a47a2f4"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "PlainCell",
+      "destinationFile": "src/components/shots/ShotRow.tsx",
+      "destinationFunction": "PlainCell",
+      "responsibility": "Sortable/viewport row, media and typed column presentation; PlainCell still commits on each change",
+      "actualConsumers": [
+        "ShotEditorPage.tsx: BeatBlockView -> ShotRow; ShotRow local visual helpers"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "6e05001e1db2e132de7eab338f5893d82559a1e9b3772fb7db62aef24d024f30",
+      "currentBodyTokenHash": "6e05001e1db2e132de7eab338f5893d82559a1e9b3772fb7db62aef24d024f30",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "PlainCell",
+          "found": true,
+          "hash": "6e05001e1db2e132de7eab338f5893d82559a1e9b3772fb7db62aef24d024f30"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "ShotEditorPage",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "ShotEditorPage",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "5164b7302a312eabda4f93a876036ab485b62275498ea50a4934ad17e6dc03e7",
+      "currentBodyTokenHash": "5164b7302a312eabda4f93a876036ab485b62275498ea50a4934ad17e6dc03e7",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "ShotEditorPage",
+          "found": true,
+          "hash": "5164b7302a312eabda4f93a876036ab485b62275498ea50a4934ad17e6dc03e7"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "ShotEditorPageContent",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "ShotEditorPageContent",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "be8f20d6e54c44246c489563bd2ca73505a6e2537512369fc29a3b6ddd75d5cc",
+      "currentBodyTokenHash": "bf2b3c8a7b8a4ea1986d9855f4aa28e0e8f6a7e565ba466f35667b0358fe5c35",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "ShotEditorPageContent",
+          "found": true,
+          "hash": "bf2b3c8a7b8a4ea1986d9855f4aa28e0e8f6a7e565ba466f35667b0358fe5c35"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "commitShotReorder",
+      "destinationFile": "src/components/shots/shotEditorCommands.ts",
+      "destinationFunction": "reorderShotGroupCommand",
+      "responsibility": "Atomic repository result -> UndoAction; original page wrapper retains registration/control reset",
+      "actualConsumers": [
+        "ShotEditorPage.moveShotByOffset from keyboard",
+        "ShotRow.onMove through BeatBlockView",
+        "BeatBlockView.onShotDragEnd -> page commitShotReorder"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "bd3f0547fe149a00cd3a35b26d68fe5fe0d94d94d1ec07760a42be17ef3c19cc",
+      "currentBodyTokenHash": "8e455f81d389279734c2c608ef5f5809c36f953c1233f97364288486c095ac99",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "reorderShotGroupCommand",
+          "found": true,
+          "hash": "8e455f81d389279734c2c608ef5f5809c36f953c1233f97364288486c095ac99"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "moveShotByOffset",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "moveShotByOffset",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "771db8896cc553ef4c8cfe80cee1c4d79c3cfcc5c9727cfa23541ca700442d86",
+      "currentBodyTokenHash": "ee4df3b45a4c5a419952673c4bd2c5168ef0ad5ef3f70104aadb5dfcdf207503",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "moveShotByOffset",
+          "found": true,
+          "hash": "ee4df3b45a4c5a419952673c4bd2c5168ef0ad5ef3f70104aadb5dfcdf207503"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "onKeyDown",
+      "destinationFile": "src/components/shots/useShotEditorKeyboard.ts",
+      "destinationFunction": "onKeyDown",
+      "responsibility": "Latest-ref capture listener, form/overlay exclusion and typed UI callbacks",
+      "actualConsumers": [
+        "ShotEditorPageContent -> useShotEditorKeyboard"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "462b3fcd9fca03e0e4569334b4e8810bd3cbc9be0f7d7d8c79b4af85e0a8ce30",
+      "currentBodyTokenHash": "2bfbd811a941ee64c067175dbbca05abfb05995c89a08ef92a368bb4efb5dedc",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "onKeyDown",
+          "found": true,
+          "hash": "2bfbd811a941ee64c067175dbbca05abfb05995c89a08ef92a368bb4efb5dedc"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "persistFilters",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "persistFilters",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "7b98fa6c4c5d8a657500d711aacbae2bf132732da99dacb61fabe8ad460c1537",
+      "currentBodyTokenHash": "7b98fa6c4c5d8a657500d711aacbae2bf132732da99dacb61fabe8ad460c1537",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "persistFilters",
+          "found": true,
+          "hash": "7b98fa6c4c5d8a657500d711aacbae2bf132732da99dacb61fabe8ad460c1537"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "toggleFilterStatus",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "toggleFilterStatus",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "eca257e77c7234f3d2f29cf1ad71a15022c4b5242aecca3c03610e780dcc51a6",
+      "currentBodyTokenHash": "eca257e77c7234f3d2f29cf1ad71a15022c4b5242aecca3c03610e780dcc51a6",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "toggleFilterStatus",
+          "found": true,
+          "hash": "eca257e77c7234f3d2f29cf1ad71a15022c4b5242aecca3c03610e780dcc51a6"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "toggleFilterBeat",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "toggleFilterBeat",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "a688c00161c47dc1dea362eab46a8893da49d15956747b72b22a146beb0dc435",
+      "currentBodyTokenHash": "a688c00161c47dc1dea362eab46a8893da49d15956747b72b22a146beb0dc435",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "toggleFilterBeat",
+          "found": true,
+          "hash": "a688c00161c47dc1dea362eab46a8893da49d15956747b72b22a146beb0dc435"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "toggleFilterGap",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "toggleFilterGap",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "e8cdd4ee1f5c32cd8d0711bf8d2833f95fe23c04f4dc6d8f33c9a7d4897b6648",
+      "currentBodyTokenHash": "e8cdd4ee1f5c32cd8d0711bf8d2833f95fe23c04f4dc6d8f33c9a7d4897b6648",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "toggleFilterGap",
+          "found": true,
+          "hash": "e8cdd4ee1f5c32cd8d0711bf8d2833f95fe23c04f4dc6d8f33c9a7d4897b6648"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "toggleColumn",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "toggleColumn",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "24fb135df7482d94fabfb36b7cfe633b82483ec3f0f54e0768f6f453910fc35e",
+      "currentBodyTokenHash": "24fb135df7482d94fabfb36b7cfe633b82483ec3f0f54e0768f6f453910fc35e",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "toggleColumn",
+          "found": true,
+          "hash": "24fb135df7482d94fabfb36b7cfe633b82483ec3f0f54e0768f6f453910fc35e"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "onBeatDragEnd",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "onBeatDragEnd",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "696e76cfc3977731834ff247846ebd15d64929423a014c516f6fd7896466591d",
+      "currentBodyTokenHash": "696e76cfc3977731834ff247846ebd15d64929423a014c516f6fd7896466591d",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "onBeatDragEnd",
+          "found": true,
+          "hash": "696e76cfc3977731834ff247846ebd15d64929423a014c516f6fd7896466591d"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "removeSelectedShots",
+      "destinationFile": "src/components/shots/shotEditorCommands.ts",
+      "destinationFunction": "deleteShotSelectionCommand",
+      "responsibility": "Atomic repository result -> UndoAction; original page wrapper retains registration/control reset",
+      "actualConsumers": [
+        "ShotEditorPage deletion confirmation from toolbar/keyboard selection intent"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "764bec689a338d91f048c7a8d62562e8e588f4fef0834ccad94401b3ef7c0bd6",
+      "currentBodyTokenHash": "3339bac9274ac2bd78869c2c6d9fbef25b6ec43970cd4d4d72bb3a4a2618f7b7",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "deleteShotSelectionCommand",
+          "found": true,
+          "hash": "3339bac9274ac2bd78869c2c6d9fbef25b6ec43970cd4d4d72bb3a4a2618f7b7"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "applyBulkPatch",
+      "destinationFile": "src/components/shots/shotEditorCommands.ts",
+      "destinationFunction": "applyShotBulkCommand",
+      "responsibility": "Atomic repository result -> UndoAction; original page wrapper retains registration/control reset",
+      "actualConsumers": [
+        "ShotEditorPage bulk beat/duration/status/scene/notes/characters controls"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "096bb269bd781511beda95a7954010a10c49febd134fbff9be10438e51499523",
+      "currentBodyTokenHash": "e9742edb12cb94d821e96cd204f7b281b9c4045b4821caf304ae0954c16cdb08",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "applyShotBulkCommand",
+          "found": true,
+          "hash": "e9742edb12cb94d821e96cd204f7b281b9c4045b4821caf304ae0954c16cdb08"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "assignSelectedBeat",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "assignSelectedBeat",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "20aa1c4fcfd2f4ba83b108479f8f3e27653baac87e49440ccb55b895f70b2a9f",
+      "currentBodyTokenHash": "20aa1c4fcfd2f4ba83b108479f8f3e27653baac87e49440ccb55b895f70b2a9f",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "assignSelectedBeat",
+          "found": true,
+          "hash": "20aa1c4fcfd2f4ba83b108479f8f3e27653baac87e49440ccb55b895f70b2a9f"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "setSelectedDuration",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "setSelectedDuration",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "1b6b86a96a93287bc567e64bd6e771dda69e5ba7034f21c7edef10b544723f3a",
+      "currentBodyTokenHash": "1b6b86a96a93287bc567e64bd6e771dda69e5ba7034f21c7edef10b544723f3a",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "setSelectedDuration",
+          "found": true,
+          "hash": "1b6b86a96a93287bc567e64bd6e771dda69e5ba7034f21c7edef10b544723f3a"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "assignSelectedStatus",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "assignSelectedStatus",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "5aee2186a08bac04632e88ba67dd885bc683dab661d7891595ed33da0f330e87",
+      "currentBodyTokenHash": "5aee2186a08bac04632e88ba67dd885bc683dab661d7891595ed33da0f330e87",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "assignSelectedStatus",
+          "found": true,
+          "hash": "5aee2186a08bac04632e88ba67dd885bc683dab661d7891595ed33da0f330e87"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "assignSelectedScene",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "assignSelectedScene",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "5ec6c83f7413d57b22e4d21bb6c0b936dfe77c7e4ea90254b32404c6a1f24f10",
+      "currentBodyTokenHash": "5ec6c83f7413d57b22e4d21bb6c0b936dfe77c7e4ea90254b32404c6a1f24f10",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "assignSelectedScene",
+          "found": true,
+          "hash": "5ec6c83f7413d57b22e4d21bb6c0b936dfe77c7e4ea90254b32404c6a1f24f10"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "assignSelectedNotes",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "assignSelectedNotes",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "ff1be38fb34d429d51c6a18e35f03c22a6bb9ecee743305cacb9da1af6001d56",
+      "currentBodyTokenHash": "ff1be38fb34d429d51c6a18e35f03c22a6bb9ecee743305cacb9da1af6001d56",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "assignSelectedNotes",
+          "found": true,
+          "hash": "ff1be38fb34d429d51c6a18e35f03c22a6bb9ecee743305cacb9da1af6001d56"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "assignSelectedCharacters",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "assignSelectedCharacters",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "ec489fcb224be355e779a909aeaeafcd09f1938dd871225713f9bd154e90d9cd",
+      "currentBodyTokenHash": "ec489fcb224be355e779a909aeaeafcd09f1938dd871225713f9bd154e90d9cd",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "assignSelectedCharacters",
+          "found": true,
+          "hash": "ec489fcb224be355e779a909aeaeafcd09f1938dd871225713f9bd154e90d9cd"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "selectAllVisible",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "selectAllVisible",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "37eb0dc83736a8048bc8d913ef9a8c5a810f5e47ed24698f002b54b54e3a26aa",
+      "currentBodyTokenHash": "37eb0dc83736a8048bc8d913ef9a8c5a810f5e47ed24698f002b54b54e3a26aa",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "selectAllVisible",
+          "found": true,
+          "hash": "37eb0dc83736a8048bc8d913ef9a8c5a810f5e47ed24698f002b54b54e3a26aa"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "setWorkspaceView",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "setWorkspaceView",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "ee4c60ae058472f86e9888a67625a192c3168e09c622905f469c4e2932f4311e",
+      "currentBodyTokenHash": "ee4c60ae058472f86e9888a67625a192c3168e09c622905f469c4e2932f4311e",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "setWorkspaceView",
+          "found": true,
+          "hash": "ee4c60ae058472f86e9888a67625a192c3168e09c622905f469c4e2932f4311e"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "removeBeat",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "removeBeat",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "a9e7fe19785e007c8500d037675e5dda28524d844d53d05b23ac77134e3a2541",
+      "currentBodyTokenHash": "a9e7fe19785e007c8500d037675e5dda28524d844d53d05b23ac77134e3a2541",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "removeBeat",
+          "found": true,
+          "hash": "a9e7fe19785e007c8500d037675e5dda28524d844d53d05b23ac77134e3a2541"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "copyShot",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "copyShot",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "e30316dac89d243a5014f71fd73f426aa72f339891ca85d7e4df224efbac6aee",
+      "currentBodyTokenHash": "e30316dac89d243a5014f71fd73f426aa72f339891ca85d7e4df224efbac6aee",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "copyShot",
+          "found": true,
+          "hash": "e30316dac89d243a5014f71fd73f426aa72f339891ca85d7e4df224efbac6aee"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "gridColumns",
+      "destinationFile": "src/components/shots/shotColumnFields.ts",
+      "destinationFunction": "gridColumns",
+      "responsibility": "Shared explicit row/header grid contract",
+      "actualConsumers": [
+        "ShotEditorPage header",
+        "ShotRow grid"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "80367c539167c7ff1d5fc1f187fc19b2d3518e1475110b0db30282d4006514e4",
+      "currentBodyTokenHash": "80367c539167c7ff1d5fc1f187fc19b2d3518e1475110b0db30282d4006514e4",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "gridColumns",
+          "found": true,
+          "hash": "80367c539167c7ff1d5fc1f187fc19b2d3518e1475110b0db30282d4006514e4"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "BeatBlock",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "BeatBlock",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "edd091dac0a49cef33d8b8558ef2fe881e86c795859cb4b2f2cbcebec0cad6ba",
+      "currentBodyTokenHash": "edd091dac0a49cef33d8b8558ef2fe881e86c795859cb4b2f2cbcebec0cad6ba",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "BeatBlock",
+          "found": true,
+          "hash": "edd091dac0a49cef33d8b8558ef2fe881e86c795859cb4b2f2cbcebec0cad6ba"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "SortableBeatBlock",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "SortableBeatBlock",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "ba46e6a6804cc6ba1dc94c0596f7cb5ba68dde5741b8c9a80ae9faba3ff93891",
+      "currentBodyTokenHash": "ba46e6a6804cc6ba1dc94c0596f7cb5ba68dde5741b8c9a80ae9faba3ff93891",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "SortableBeatBlock",
+          "found": true,
+          "hash": "ba46e6a6804cc6ba1dc94c0596f7cb5ba68dde5741b8c9a80ae9faba3ff93891"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "BeatBlockView",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "BeatBlockView",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "0b4c41935e2132d155d44257280fa0b170d1710ac9fb1238b8a40bab4cc1cc6e",
+      "currentBodyTokenHash": "31af5a11c2e3cf3c4b0ab9b351d9fb51bf396e2950dd8a33789cfe21a135c351",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "BeatBlockView",
+          "found": true,
+          "hash": "31af5a11c2e3cf3c4b0ab9b351d9fb51bf396e2950dd8a33789cfe21a135c351"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "onShotDragEnd",
+      "destinationFile": "src/components/shots/ShotEditorPage.tsx",
+      "destinationFunction": "onShotDragEnd",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/shots/ShotEditorPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "34da5042edb10ff27212621ea5e38203eb0e558885eb87aaa2b7dd8d1901e227",
+      "currentBodyTokenHash": "34da5042edb10ff27212621ea5e38203eb0e558885eb87aaa2b7dd8d1901e227",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "onShotDragEnd",
+          "found": true,
+          "hash": "34da5042edb10ff27212621ea5e38203eb0e558885eb87aaa2b7dd8d1901e227"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "ShotRow",
+      "destinationFile": "src/components/shots/ShotRow.tsx",
+      "destinationFunction": "ShotRow",
+      "responsibility": "Sortable/viewport row, media and typed column presentation; PlainCell still commits on each change",
+      "actualConsumers": [
+        "ShotEditorPage.tsx: BeatBlockView -> ShotRow; ShotRow local visual helpers"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "ef48a7282918c3788923a9c189935dc6fc889e2d520b0359f521d1fe85efe308",
+      "currentBodyTokenHash": "85f7eda28ae551a94530d38b95c13faf339109bd3e13ea07d8e3bac71c3f8006",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "ShotRow",
+          "found": true,
+          "hash": "85f7eda28ae551a94530d38b95c13faf339109bd3e13ea07d8e3bac71c3f8006"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "ShotRelationsEditor",
+      "destinationFile": "src/components/shots/ShotRelationsEditor.tsx",
+      "destinationFunction": "ShotRelationsEditor",
+      "responsibility": "Relationship controls, pending lock, narrow retry patch and error/status publication",
+      "actualConsumers": [
+        "ShotEditorPage relationship dialog keyed by shot.id",
+        "ShotRelationsEditor local control callbacks"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "10d0304a0f1e9866b06b3419582ab37bc795457c1deb64b6a7a8e038a9ac2144",
+      "currentBodyTokenHash": "3a7998ff980a36572a629ef15f5b2937a4538642b9edc1ab76e0d9af5edb9daf",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "ShotRelationsEditor",
+          "found": true,
+          "hash": "3a7998ff980a36572a629ef15f5b2937a4538642b9edc1ab76e0d9af5edb9daf"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/shots/ShotEditorPage.tsx",
+      "originalFunction": "save",
+      "destinationFile": "src/components/shots/ShotRelationsEditor.tsx",
+      "destinationFunction": "save",
+      "responsibility": "Relationship controls, pending lock, narrow retry patch and error/status publication",
+      "actualConsumers": [
+        "ShotEditorPage relationship dialog keyed by shot.id",
+        "ShotRelationsEditor local control callbacks"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "ff10f33a7fc57117cd5b9587e9cc2e71d8dd66f11f4538d7dfe46af22d70e539",
+      "currentBodyTokenHash": "ff10f33a7fc57117cd5b9587e9cc2e71d8dd66f11f4538d7dfe46af22d70e539",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "save",
+          "found": true,
+          "hash": "ff10f33a7fc57117cd5b9587e9cc2e71d8dd66f11f4538d7dfe46af22d70e539"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "originalFunction": "useInspectorSheet",
+      "destinationFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "destinationFunction": "useInspectorSheet",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioWorkspacePage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "5baeaaf6d60fe89eb3434e529a0a9737e3c1caf1c889e6a45b4cd600c0ece478",
+      "currentBodyTokenHash": "5baeaaf6d60fe89eb3434e529a0a9737e3c1caf1c889e6a45b4cd600c0ece478",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "useInspectorSheet",
+          "found": true,
+          "hash": "5baeaaf6d60fe89eb3434e529a0a9737e3c1caf1c889e6a45b4cd600c0ece478"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "originalFunction": "AudioWorkspacePage",
+      "destinationFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "destinationFunction": "AudioWorkspacePage",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioWorkspacePage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "0da9ec9df64fa7e966f965bd895db765120186695d6e5d62351f58748d17d07b",
+      "currentBodyTokenHash": "113c25b09510ede031cfd8bdf30432e3e783ef637242c1d08d8f523622f7ba15",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "AudioWorkspacePage",
+          "found": true,
+          "hash": "113c25b09510ede031cfd8bdf30432e3e783ef637242c1d08d8f523622f7ba15"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "originalFunction": "action",
+      "destinationFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "destinationFunction": "action",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioWorkspacePage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "9de801f226b843c9b9dfee661a2dc05042b96142cba60b25bbc8afb4f61cbe9f",
+      "currentBodyTokenHash": "9de801f226b843c9b9dfee661a2dc05042b96142cba60b25bbc8afb4f61cbe9f",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "action",
+          "found": true,
+          "hash": "9de801f226b843c9b9dfee661a2dc05042b96142cba60b25bbc8afb4f61cbe9f"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "originalFunction": "selectSegment",
+      "destinationFile": "src/components/audio/audioSelection.ts",
+      "destinationFunction": "deriveAudioSelection -> selectionForSegment",
+      "responsibility": "Repeated segment preserves other selection; explicit adopted take or last input take; placement fallback supplies optional seek; page wrapper applies setters/seek token/inspector effects",
+      "actualConsumers": [
+        "ScriptDocument -> AudioWorkspacePage.selectSegment -> deriveAudioSelection(segment)"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "90c1a78c56fa494e214acfeb845d61a440257f5c7933a17927d5b4e4282fc467",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "selectionForSegment",
+          "found": true,
+          "hash": "93d11dfc59d3a004b4f48a4d97469e3266af948a5d5bbc9205f7eb7e37d02f6d"
+        }
+      ],
+      "currentBodyTokenHash": "93d11dfc59d3a004b4f48a4d97469e3266af948a5d5bbc9205f7eb7e37d02f6d"
+    },
+    {
+      "originalFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "originalFunction": "selectClip",
+      "destinationFile": "src/components/audio/audioSelection.ts",
+      "destinationFunction": "deriveAudioSelection -> selectionForClip",
+      "responsibility": "Clip ID updates even if missing; existing take supplies take/segment fields; page wrapper applies setters/seek token/inspector effects",
+      "actualConsumers": [
+        "AudioTimeline -> AudioWorkspacePage.selectClip -> deriveAudioSelection(clip)"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "95a5f2afcf7199b770bb742952b4c8d978df5825a642458adf6e84550376c12d",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "selectionForClip",
+          "found": true,
+          "hash": "728c948d47381ec79e8ecf634dc4d172fdd4deb08aa345d774f465e3dc486656"
+        }
+      ],
+      "currentBodyTokenHash": "728c948d47381ec79e8ecf634dc4d172fdd4deb08aa345d774f465e3dc486656"
+    },
+    {
+      "originalFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "originalFunction": "selectTake",
+      "destinationFile": "src/components/audio/audioSelection.ts",
+      "destinationFunction": "deriveAudioSelection -> selectionForTake",
+      "responsibility": "Take owner determines chapter; placement uses owner chapter or current chapter and supplies optional seek; page wrapper applies setters/seek token/inspector effects",
+      "actualConsumers": [
+        "AudioInspector -> AudioWorkspacePage.selectTake -> deriveAudioSelection(take)"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "1477598aa0f752b4083a5392be5330012f3cf718a3d304ad25c847d51232181e",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "selectionForTake",
+          "found": true,
+          "hash": "d149b6153250c27559e7b59721391a093ab939146225fe48906c55af5cf42cf6"
+        }
+      ],
+      "currentBodyTokenHash": "d149b6153250c27559e7b59721391a093ab939146225fe48906c55af5cf42cf6"
+    },
+    {
+      "originalFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "originalFunction": "inspect",
+      "destinationFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "destinationFunction": "inspect",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioWorkspacePage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "9dc5a0de06227dbe02ae7629344758511e5f0bbb1de2fe3e26e28164377c576b",
+      "currentBodyTokenHash": "9dc5a0de06227dbe02ae7629344758511e5f0bbb1de2fe3e26e28164377c576b",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "inspect",
+          "found": true,
+          "hash": "9dc5a0de06227dbe02ae7629344758511e5f0bbb1de2fe3e26e28164377c576b"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "originalFunction": "saved",
+      "destinationFile": "src/components/audio/audioSelection.ts",
+      "destinationFunction": "deriveAudioSelection -> selectionForSavedTake",
+      "responsibility": "Saved take clears clip, retains declared segment ID even if owner missing; chapter changes only for a real owner; page wrapper applies setters/seek token/inspector effects",
+      "actualConsumers": [
+        "AudioSources -> AudioWorkspacePage.saved -> deriveAudioSelection(saved)"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "764ae1ccb30f1d86085c1cd34f1a374b53c9c6f84c8a289f4e311d4a4c9889a8",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "selectionForSavedTake",
+          "found": true,
+          "hash": "daedde126ac15eeb3bdb37cae5b34d056e3c3ea672f244b1a55e3bf1b0c3da50"
+        }
+      ],
+      "currentBodyTokenHash": "daedde126ac15eeb3bdb37cae5b34d056e3c3ea672f244b1a55e3bf1b0c3da50"
+    },
+    {
+      "originalFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "originalFunction": "openVoices",
+      "destinationFile": "src/components/audio/AudioWorkspacePage.tsx",
+      "destinationFunction": "openVoices",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioWorkspacePage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "38152086aadc1b77bf7e5b82567ea710f262ab7a889b604f10175951a236340e",
+      "currentBodyTokenHash": "38152086aadc1b77bf7e5b82567ea710f262ab7a889b604f10175951a236340e",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "openVoices",
+          "found": true,
+          "hash": "38152086aadc1b77bf7e5b82567ea710f262ab7a889b604f10175951a236340e"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "loadBuffers",
+      "destinationFile": "src/lib/audio/buffers.ts",
+      "destinationFunction": "loadBuffers + loadAudioBuffer",
+      "responsibility": "Resource preflight and one shared decoded-buffer cache",
+      "actualConsumers": [
+        "AudioTimeline.startPlayback",
+        "Waveform",
+        "exportAudioMix"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "879a876fc5272baf5a231585305a7bf895555bfeb51e7789c735dceb294e318c",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "loadBuffers",
+          "found": true,
+          "hash": "fb438bddbc278eb5947541accd1dcf0d8c7951d754d5be975cbc0fd45ed3cbfb"
+        },
+        {
+          "name": "loadAudioBuffer",
+          "found": true,
+          "hash": "35c3b45cdfac066ddfae89f04cd015373c0d98c9fe5146fe204325bea96fdf1e"
+        }
+      ],
+      "currentBodyTokenHash": "fb438bddbc278eb5947541accd1dcf0d8c7951d754d5be975cbc0fd45ed3cbfb+35c3b45cdfac066ddfae89f04cd015373c0d98c9fe5146fe204325bea96fdf1e"
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "AudioTimeline",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "AudioTimeline",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "39c4646d38c61738520bc5e44079bd4b1dcab32618f2f3756bf39d969370fb7e",
+      "currentBodyTokenHash": "7b62512db00b654fd91e9d866ddb8da82a1c4c5d8d9d744381643f0f596670d8",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "AudioTimeline",
+          "found": true,
+          "hash": "7b62512db00b654fd91e9d866ddb8da82a1c4c5d8d9d744381643f0f596670d8"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "updatePosition",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "updatePosition",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "2b5f6ac274b62518d7c25ae9b7b56fdd9793d961ae9c5b1a41b2dd5424e6169b",
+      "currentBodyTokenHash": "2b5f6ac274b62518d7c25ae9b7b56fdd9793d961ae9c5b1a41b2dd5424e6169b",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "updatePosition",
+          "found": true,
+          "hash": "2b5f6ac274b62518d7c25ae9b7b56fdd9793d961ae9c5b1a41b2dd5424e6169b"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "action",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "action",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "3470c35617d9f6e30325b9ed182753fd6c2f0022876f4b967858e8480e24eb63",
+      "currentBodyTokenHash": "3470c35617d9f6e30325b9ed182753fd6c2f0022876f4b967858e8480e24eb63",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "action",
+          "found": true,
+          "hash": "3470c35617d9f6e30325b9ed182753fd6c2f0022876f4b967858e8480e24eb63"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "startPlayback",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "startPlayback",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "da1a4b913a70e67d1d8cc69f12e8a61d316f5e4cc5cb7b124597365850ce92b9",
+      "currentBodyTokenHash": "da1a4b913a70e67d1d8cc69f12e8a61d316f5e4cc5cb7b124597365850ce92b9",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "startPlayback",
+          "found": true,
+          "hash": "da1a4b913a70e67d1d8cc69f12e8a61d316f5e4cc5cb7b124597365850ce92b9"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "play",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "play",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "71600cc93e40fa1615fea2bc3a499c6a572194c4b200e0cb217f0ad710f1b3ee",
+      "currentBodyTokenHash": "71600cc93e40fa1615fea2bc3a499c6a572194c4b200e0cb217f0ad710f1b3ee",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "play",
+          "found": true,
+          "hash": "71600cc93e40fa1615fea2bc3a499c6a572194c4b200e0cb217f0ad710f1b3ee"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "seek",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "seek",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "e394f1ed9fc28ac1e10a3d3f3c8a99e8d1f4bafb911eb985b88c3ec4d3488fba",
+      "currentBodyTokenHash": "e394f1ed9fc28ac1e10a3d3f3c8a99e8d1f4bafb911eb985b88c3ec4d3488fba",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "seek",
+          "found": true,
+          "hash": "e394f1ed9fc28ac1e10a3d3f3c8a99e8d1f4bafb911eb985b88c3ec4d3488fba"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "exportMix",
+      "destinationFile": "src/lib/audio/exportMix.ts",
+      "destinationFunction": "exportAudioMix",
+      "responsibility": "Flush, fresh repository snapshot, schedule, decode/render outside writes, then atomic addAudioExport; UI wrapper downloads/notifies",
+      "actualConsumers": [
+        "AudioTimeline.exportMix"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "37e3af359728a3e9e94c932c8287b239f19209a2cd7e5687180b306750b23e80",
+      "currentBodyTokenHash": "aa4f8a67e007486321e9a2763a745f5c7086e5554cdcb8215d008982fb8a7630",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "exportAudioMix",
+          "found": true,
+          "hash": "aa4f8a67e007486321e9a2763a745f5c7086e5554cdcb8215d008982fb8a7630"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "removeClip",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "removeClip",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "65658f3ca78eba0bd6435155f1c4c30fe59e3fc6994a9128f51af397cd23e6a4",
+      "currentBodyTokenHash": "65658f3ca78eba0bd6435155f1c4c30fe59e3fc6994a9128f51af397cd23e6a4",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "removeClip",
+          "found": true,
+          "hash": "65658f3ca78eba0bd6435155f1c4c30fe59e3fc6994a9128f51af397cd23e6a4"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "duplicateClip",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "duplicateClip",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "4fb3ba8d87468cf56b2bdf9b772a8f6a879e086c5df555251e5f0562572050ff",
+      "currentBodyTokenHash": "4fb3ba8d87468cf56b2bdf9b772a8f6a879e086c5df555251e5f0562572050ff",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "duplicateClip",
+          "found": true,
+          "hash": "4fb3ba8d87468cf56b2bdf9b772a8f6a879e086c5df555251e5f0562572050ff"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "openClipMenu",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "openClipMenu",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "08ea7b5a2bd8bf121ea0b2d52a43c1b4e9317a2a3b07b966575612c4987bbc37",
+      "currentBodyTokenHash": "08ea7b5a2bd8bf121ea0b2d52a43c1b4e9317a2a3b07b966575612c4987bbc37",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "openClipMenu",
+          "found": true,
+          "hash": "08ea7b5a2bd8bf121ea0b2d52a43c1b4e9317a2a3b07b966575612c4987bbc37"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "scrub",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "scrub",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "b1929e495fddb63846f53d16e2359fe63ae433345e6709780fe32daf5271df8f",
+      "currentBodyTokenHash": "b1929e495fddb63846f53d16e2359fe63ae433345e6709780fe32daf5271df8f",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "scrub",
+          "found": true,
+          "hash": "b1929e495fddb63846f53d16e2359fe63ae433345e6709780fe32daf5271df8f"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "beginDrag",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "beginDrag",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "f08b850c6b583b93ba4f24d6a8a5b222357faafb1757f0b15eace30af3127393",
+      "currentBodyTokenHash": "f08b850c6b583b93ba4f24d6a8a5b222357faafb1757f0b15eace30af3127393",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "beginDrag",
+          "found": true,
+          "hash": "f08b850c6b583b93ba4f24d6a8a5b222357faafb1757f0b15eace30af3127393"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "moveDrag",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "moveDrag",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "70542246c3971f010174afe035ed91dd5cce41d7993d08d158ee5fb1e3afda72",
+      "currentBodyTokenHash": "70542246c3971f010174afe035ed91dd5cce41d7993d08d158ee5fb1e3afda72",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "moveDrag",
+          "found": true,
+          "hash": "70542246c3971f010174afe035ed91dd5cce41d7993d08d158ee5fb1e3afda72"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "endDrag",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "endDrag",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "45f8eb6aa3509ef8a0be608f02d172383d0bb37bb809def82ea31e6b556dbf46",
+      "currentBodyTokenHash": "45f8eb6aa3509ef8a0be608f02d172383d0bb37bb809def82ea31e6b556dbf46",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "endDrag",
+          "found": true,
+          "hash": "45f8eb6aa3509ef8a0be608f02d172383d0bb37bb809def82ea31e6b556dbf46"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "cancelDrag",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "cancelDrag",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "0d5f7b4b14adfb39a276d4c3d27cfa7765245bfc5a1a9730bb04d34cb187adb1",
+      "currentBodyTokenHash": "0d5f7b4b14adfb39a276d4c3d27cfa7765245bfc5a1a9730bb04d34cb187adb1",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "cancelDrag",
+          "found": true,
+          "hash": "0d5f7b4b14adfb39a276d4c3d27cfa7765245bfc5a1a9730bb04d34cb187adb1"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "addTrack",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "addTrack",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "eeb72ed8a01adb2e07b93b8e5d9930392b0c63a595215807cb5fbe3c6cecee06",
+      "currentBodyTokenHash": "eeb72ed8a01adb2e07b93b8e5d9930392b0c63a595215807cb5fbe3c6cecee06",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "addTrack",
+          "found": true,
+          "hash": "eeb72ed8a01adb2e07b93b8e5d9930392b0c63a595215807cb5fbe3c6cecee06"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "Waveform",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "Waveform",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "537258c60ee31ffb11c9b10b99a3b5e03ceff6fefaa1b7ec635b33ba3e9b4fcc",
+      "currentBodyTokenHash": "f4cf7ad82d34d9b1b4a5af634a0d4e09620396eef9d9beb995e3acc90b200bc0",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "Waveform",
+          "found": true,
+          "hash": "f4cf7ad82d34d9b1b4a5af634a0d4e09620396eef9d9beb995e3acc90b200bc0"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/audio/AudioTimeline.tsx",
+      "originalFunction": "ClipInspector",
+      "destinationFile": "src/components/audio/AudioTimeline.tsx",
+      "destinationFunction": "ClipInspector",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/audio/AudioTimeline.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "96fa7ede25d70d8e5015b77a41b0f4a02f3220d6bb75fdf50ddc7486eb711885",
+      "currentBodyTokenHash": "96fa7ede25d70d8e5015b77a41b0f4a02f3220d6bb75fdf50ddc7486eb711885",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "ClipInspector",
+          "found": true,
+          "hash": "96fa7ede25d70d8e5015b77a41b0f4a02f3220d6bb75fdf50ddc7486eb711885"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/music/MusicWorkspacePage.tsx",
+      "originalFunction": "MusicWorkspacePage",
+      "destinationFile": "src/components/music/MusicWorkspacePage.tsx",
+      "destinationFunction": "MusicWorkspacePage",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/music/MusicWorkspacePage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "579af1899eb6d95fd94a7f85a5f3be7447ff8f9964b25cdd5443a91b4f7401c5",
+      "currentBodyTokenHash": "579af1899eb6d95fd94a7f85a5f3be7447ff8f9964b25cdd5443a91b4f7401c5",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "MusicWorkspacePage",
+          "found": true,
+          "hash": "579af1899eb6d95fd94a7f85a5f3be7447ff8f9964b25cdd5443a91b4f7401c5"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/music/MusicWorkspacePage.tsx",
+      "originalFunction": "MusicWorkspace",
+      "destinationFile": "src/components/music/MusicWorkspacePage.tsx",
+      "destinationFunction": "MusicWorkspace",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/music/MusicWorkspacePage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "e5e0406a854ac0b5d8a0e79ceb612ca2f24104c40ebce81e6783519a89c8d75d",
+      "currentBodyTokenHash": "9dd068d0b9d1f7f86a65bdf58dd1221cde256aeb24ebde8e0e56b1cd90343ee5",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "MusicWorkspace",
+          "found": true,
+          "hash": "9dd068d0b9d1f7f86a65bdf58dd1221cde256aeb24ebde8e0e56b1cd90343ee5"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/music/MusicWorkspacePage.tsx",
+      "originalFunction": "action",
+      "destinationFile": "src/components/music/MusicWorkspacePage.tsx",
+      "destinationFunction": "action",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/music/MusicWorkspacePage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "636d94fca74b1b31b836dccc54b43515fdfb3ecb2fcb48d2aa09a517587c3528",
+      "currentBodyTokenHash": "636d94fca74b1b31b836dccc54b43515fdfb3ecb2fcb48d2aa09a517587c3528",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "action",
+          "found": true,
+          "hash": "636d94fca74b1b31b836dccc54b43515fdfb3ecb2fcb48d2aa09a517587c3528"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/music/MusicWorkspacePage.tsx",
+      "originalFunction": "play",
+      "destinationFile": "src/components/music/MusicWorkspacePage.tsx",
+      "destinationFunction": "play",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/music/MusicWorkspacePage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "70bace51319d18ce43dcb9e8682e8dafce2a5a93d00ffd06abc060ecd9de2177",
+      "currentBodyTokenHash": "70bace51319d18ce43dcb9e8682e8dafce2a5a93d00ffd06abc060ecd9de2177",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "play",
+          "found": true,
+          "hash": "70bace51319d18ce43dcb9e8682e8dafce2a5a93d00ffd06abc060ecd9de2177"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/music/MusicWorkspacePage.tsx",
+      "originalFunction": "switchVariant",
+      "destinationFile": "src/components/music/switchMusicVariant.ts",
+      "destinationFunction": "switchMusicVariant",
+      "responsibility": "Flush, reread owner, validate/reuse or create variant, return links; original page retains synchronous locks and best-effort localStorage",
+      "actualConsumers": [
+        "MusicWorkspace.switchVariant -> action"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "f3f275db350ffed480a704271e426ff9ace3f1989670a9c6ead8cfb6ce486e60",
+      "currentBodyTokenHash": "5bf570c219f1f4cbaa83dad6c8a1a240f0e851f362c2477119305b479a9db610",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "switchMusicVariant",
+          "found": true,
+          "hash": "5bf570c219f1f4cbaa83dad6c8a1a240f0e851f362c2477119305b479a9db610"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/music/MusicWorkspacePage.tsx",
+      "originalFunction": "MusicDetails",
+      "destinationFile": "src/components/music/MusicWorkspacePage.tsx",
+      "destinationFunction": "MusicDetails",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/music/MusicWorkspacePage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "adc78e6b07e6f236b29aa5e6dd74865dd76e391f51d2d2a04951013fe07d4e43",
+      "currentBodyTokenHash": "adc78e6b07e6f236b29aa5e6dd74865dd76e391f51d2d2a04951013fe07d4e43",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "MusicDetails",
+          "found": true,
+          "hash": "adc78e6b07e6f236b29aa5e6dd74865dd76e391f51d2d2a04951013fe07d4e43"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/music/MusicWorkspacePage.tsx",
+      "originalFunction": "MusicParameterSummary",
+      "destinationFile": "src/components/music/MusicWorkspacePage.tsx",
+      "destinationFunction": "MusicParameterSummary",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/music/MusicWorkspacePage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "b7e3143389c834f263e3989576b9baea6e78ba8fc963ab14e69910e72c2e8a92",
+      "currentBodyTokenHash": "b7e3143389c834f263e3989576b9baea6e78ba8fc963ab14e69910e72c2e8a92",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "MusicParameterSummary",
+          "found": true,
+          "hash": "b7e3143389c834f263e3989576b9baea6e78ba8fc963ab14e69910e72c2e8a92"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "AgentChatPage",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "AgentChatPage",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "be71d793263711b135cce7a229864e858ff2e93f1f0521f72d157c4410ebb290",
+      "currentBodyTokenHash": "be71d793263711b135cce7a229864e858ff2e93f1f0521f72d157c4410ebb290",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "AgentChatPage",
+          "found": true,
+          "hash": "be71d793263711b135cce7a229864e858ff2e93f1f0521f72d157c4410ebb290"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "AgentChatInner",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "AgentChatInner",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "7c74aeee966f63af335be3c0d4990913b9193955da9d793bbcebe853761a750d",
+      "currentBodyTokenHash": "2d2d18d69f5de1c77e3b8c29579fb4d4911d60db612e1fbdfa5651a7bac0dc89",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "AgentChatInner",
+          "found": true,
+          "hash": "2d2d18d69f5de1c77e3b8c29579fb4d4911d60db612e1fbdfa5651a7bac0dc89"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "openThread",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "openThread",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "64be2cf9bf239fcca801098c2acac593863438259a0e932efc65d1938cdff85f",
+      "currentBodyTokenHash": "64be2cf9bf239fcca801098c2acac593863438259a0e932efc65d1938cdff85f",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "openThread",
+          "found": true,
+          "hash": "64be2cf9bf239fcca801098c2acac593863438259a0e932efc65d1938cdff85f"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleNewTopic",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "handleNewTopic",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "fd27ded70b234da0408898ab70dac0cd34b137236dcda2d38703d5fd7758433f",
+      "currentBodyTokenHash": "fd27ded70b234da0408898ab70dac0cd34b137236dcda2d38703d5fd7758433f",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "handleNewTopic",
+          "found": true,
+          "hash": "fd27ded70b234da0408898ab70dac0cd34b137236dcda2d38703d5fd7758433f"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleRenameThread",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "handleRenameThread",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "ed61a24f3f7c53b703c1b7532e9574db574af44c65fadea8828718c0b5ea7ee9",
+      "currentBodyTokenHash": "ed61a24f3f7c53b703c1b7532e9574db574af44c65fadea8828718c0b5ea7ee9",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "handleRenameThread",
+          "found": true,
+          "hash": "ed61a24f3f7c53b703c1b7532e9574db574af44c65fadea8828718c0b5ea7ee9"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "commitRename",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "commitRename",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "2195de2363b321c70444dcb0e5d4dc04f5b19464ed1a75c80e79e772d6ed28a4",
+      "currentBodyTokenHash": "2195de2363b321c70444dcb0e5d4dc04f5b19464ed1a75c80e79e772d6ed28a4",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "commitRename",
+          "found": true,
+          "hash": "2195de2363b321c70444dcb0e5d4dc04f5b19464ed1a75c80e79e772d6ed28a4"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleDeleteThread",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "handleDeleteThread",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "cbf2ef4487cab892937cc46d8f9c88a53ace0efd54484dc4d706fd7057c5111f",
+      "currentBodyTokenHash": "cbf2ef4487cab892937cc46d8f9c88a53ace0efd54484dc4d706fd7057c5111f",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "handleDeleteThread",
+          "found": true,
+          "hash": "cbf2ef4487cab892937cc46d8f9c88a53ace0efd54484dc4d706fd7057c5111f"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "commitDelete",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "commitDelete",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "25bafaf5ac2a0ed684a2c50a43034f66e20e4af1d4c7e415a4af87e1f797f887",
+      "currentBodyTokenHash": "25bafaf5ac2a0ed684a2c50a43034f66e20e4af1d4c7e415a4af87e1f797f887",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "commitDelete",
+          "found": true,
+          "hash": "25bafaf5ac2a0ed684a2c50a43034f66e20e4af1d4c7e415a4af87e1f797f887"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleConnectorChange",
+      "destinationFile": "src/components/agent/useChatSelection.ts",
+      "destinationFunction": "handleConnectorChange",
+      "responsibility": "Selection revision and field-scoped optimistic metadata persistence",
+      "actualConsumers": [
+        "AgentChatInner composer props"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "dd4f3b0d8c055f8e0f1af8be46834f77d0f74a8f1028ede346b64220d67e4267",
+      "currentBodyTokenHash": "dd4f3b0d8c055f8e0f1af8be46834f77d0f74a8f1028ede346b64220d67e4267",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "handleConnectorChange",
+          "found": true,
+          "hash": "dd4f3b0d8c055f8e0f1af8be46834f77d0f74a8f1028ede346b64220d67e4267"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleModelChange",
+      "destinationFile": "src/components/agent/useChatSelection.ts",
+      "destinationFunction": "handleModelChange",
+      "responsibility": "Selection revision and field-scoped optimistic metadata persistence",
+      "actualConsumers": [
+        "AgentChatInner composer props"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "2fb9b392e55e8ed85c34eb7e5417c2f750e88001e85027a2d335c688a3e48da8",
+      "currentBodyTokenHash": "2fb9b392e55e8ed85c34eb7e5417c2f750e88001e85027a2d335c688a3e48da8",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "handleModelChange",
+          "found": true,
+          "hash": "2fb9b392e55e8ed85c34eb7e5417c2f750e88001e85027a2d335c688a3e48da8"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleProjectChange",
+      "destinationFile": "src/components/agent/useChatSelection.ts",
+      "destinationFunction": "handleProjectChange",
+      "responsibility": "Selection revision and field-scoped optimistic metadata persistence",
+      "actualConsumers": [
+        "AgentChatInner composer props"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "e613dbfaa9664a75cf1548ed9722fd2b37023a6413326b79ff8b47f174445bf2",
+      "currentBodyTokenHash": "e613dbfaa9664a75cf1548ed9722fd2b37023a6413326b79ff8b47f174445bf2",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "handleProjectChange",
+          "found": true,
+          "hash": "e613dbfaa9664a75cf1548ed9722fd2b37023a6413326b79ff8b47f174445bf2"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleStop",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "handleStop",
+      "responsibility": "Page callback aborts the controller owned by useChatExecutionSession",
+      "actualConsumers": [
+        "Composer stop"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "5930e39c0740c40d48498c9c2c1159a5cded9ead9ee07c43c418652a271a4e36",
+      "currentBodyTokenHash": "5930e39c0740c40d48498c9c2c1159a5cded9ead9ee07c43c418652a271a4e36",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "handleStop",
+          "found": true,
+          "hash": "5930e39c0740c40d48498c9c2c1159a5cded9ead9ee07c43c418652a271a4e36"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleSend",
+      "destinationFile": "src/components/agent/chatExecutionFlows.ts",
+      "destinationFunction": "executeNewChatMessage",
+      "responsibility": "Named business execution flow; page wrapper retains UI preflight/feedback and acquires/releases the shared execution session",
+      "actualConsumers": [
+        "AgentChatInner.handleSend -> HomeWelcome/ChatWorkspace composer.onSend"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "06a0e317024c625798dc56c5f23c84ebe4800bc2d407d1b6dcde23e119ce506e",
+      "currentBodyTokenHash": "b5a5b04ea25c25c8972be63803d0fdff7e2a4ca3664b4582fbb4dcd75177387a",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "executeNewChatMessage",
+          "found": true,
+          "hash": "b5a5b04ea25c25c8972be63803d0fdff7e2a4ca3664b4582fbb4dcd75177387a"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleRetry",
+      "destinationFile": "src/components/agent/chatExecutionFlows.ts",
+      "destinationFunction": "retryFrozenChatRun",
+      "responsibility": "Named business execution flow; page wrapper retains UI preflight/feedback and acquires/releases the shared execution session",
+      "actualConsumers": [
+        "AgentChatInner.handleRetry -> ChatWorkspace.onRetryRun"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "8f11997f5808bb69849d10ce9d6338c713b5d3dbb14b84b1d6365153fd3c71c5",
+      "currentBodyTokenHash": "c9514c2788a9e1878b5d3dbff9a04fdeb09e9d74b23aa140c0301c696b5b51d6",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "retryFrozenChatRun",
+          "found": true,
+          "hash": "c9514c2788a9e1878b5d3dbff9a04fdeb09e9d74b23aa140c0301c696b5b51d6"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "handleRunAction",
+      "destinationFile": "src/components/agent/chatExecutionFlows.ts",
+      "destinationFunction": "resolveChatRunAction",
+      "responsibility": "Named business execution flow; page wrapper retains UI preflight/feedback and acquires/releases the shared execution session",
+      "actualConsumers": [
+        "AgentChatInner.handleRunAction -> ChatWorkspace.onRunAction -> AgentRunDetails"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "131e44e96c8978dd159029291ff2de1913084bd23983ee603482cf16dfa64f2b",
+      "currentBodyTokenHash": "d1257992dfa3e6e2802a25afd90494fde524305da7c5e19e910724157f3dac54",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "resolveChatRunAction",
+          "found": true,
+          "hash": "d1257992dfa3e6e2802a25afd90494fde524305da7c5e19e910724157f3dac54"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "onRunAction",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "onRunAction",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "a31a47be2f5be4874ffbf5cd7118cd825b99f45fef481e90b53696b5c3081a53",
+      "currentBodyTokenHash": "a31a47be2f5be4874ffbf5cd7118cd825b99f45fef481e90b53696b5c3081a53",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "onRunAction",
+          "found": true,
+          "hash": "a31a47be2f5be4874ffbf5cd7118cd825b99f45fef481e90b53696b5c3081a53"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/agent/AgentChatPage.tsx",
+      "originalFunction": "onRetryRun",
+      "destinationFile": "src/components/agent/AgentChatPage.tsx",
+      "destinationFunction": "onRetryRun",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/agent/AgentChatPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "76d8ade7cd3dd11f28b24dac403adaac0aed479eded4e604d098fc81be2fa5c6",
+      "currentBodyTokenHash": "76d8ade7cd3dd11f28b24dac403adaac0aed479eded4e604d098fc81be2fa5c6",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "onRetryRun",
+          "found": true,
+          "hash": "76d8ade7cd3dd11f28b24dac403adaac0aed479eded4e604d098fc81be2fa5c6"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/routes/p.$projectId.index.tsx",
+      "originalFunction": "SeriesHomeRoute",
+      "destinationFile": "src/routes/p.$projectId.index.tsx",
+      "destinationFunction": "ProjectHomeRoute",
+      "responsibility": "Params-only route adapter",
+      "actualConsumers": [
+        "TanStack /p/$projectId/ route"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "3f295f30332f6561a4f8aaeb45f8f065c565bcce0a7c7e0593f064ab946bd03d",
+      "currentBodyTokenHash": "ec4ea4561e522082b1c336225ec7bd94410e83d20a16219f185507ddeb45a221",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "ProjectHomeRoute",
+          "found": true,
+          "hash": "ec4ea4561e522082b1c336225ec7bd94410e83d20a16219f185507ddeb45a221"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/routes/p.$projectId.index.tsx",
+      "originalFunction": "SeriesHome",
+      "destinationFile": "src/components/workspace/ProjectHomePage.tsx",
+      "destinationFunction": "ProjectHomePage",
+      "responsibility": "Keyed identity queries, kind dispatch, film repair/error/retry and compatibility redirect",
+      "actualConsumers": [
+        "ProjectHomeRoute"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "c00aae0d9a5040879eb9320cd57a43c10ae66d9e83f96df627517d1fbac386bb",
+      "currentBodyTokenHash": "c00aae0d9a5040879eb9320cd57a43c10ae66d9e83f96df627517d1fbac386bb",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "ProjectHomePage",
+          "found": true,
+          "hash": "c00aae0d9a5040879eb9320cd57a43c10ae66d9e83f96df627517d1fbac386bb"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/studio/ProjectGalleryPage.tsx",
+      "originalFunction": "coverOfProject",
+      "destinationFile": "src/components/studio/ProjectGalleryPage.tsx",
+      "destinationFunction": "coverOfProject",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/studio/ProjectGalleryPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "141d0d9b60a0ea9f01309c0fda4141d832db84d2e2808b24c28aa7dcfd3f8c2d",
+      "currentBodyTokenHash": "141d0d9b60a0ea9f01309c0fda4141d832db84d2e2808b24c28aa7dcfd3f8c2d",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "coverOfProject",
+          "found": true,
+          "hash": "141d0d9b60a0ea9f01309c0fda4141d832db84d2e2808b24c28aa7dcfd3f8c2d"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/studio/ProjectGalleryPage.tsx",
+      "originalFunction": "ProjectGalleryPage",
+      "destinationFile": "src/components/studio/ProjectGalleryPage.tsx",
+      "destinationFunction": "ProjectGalleryPage",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/studio/ProjectGalleryPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "b92e562c716cb784ee9bf62126250a44e4d5df2badc7f84e2527a32b06fe415b",
+      "currentBodyTokenHash": "b92e562c716cb784ee9bf62126250a44e4d5df2badc7f84e2527a32b06fe415b",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "ProjectGalleryPage",
+          "found": true,
+          "hash": "b92e562c716cb784ee9bf62126250a44e4d5df2badc7f84e2527a32b06fe415b"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/studio/ProjectGalleryPage.tsx",
+      "originalFunction": "handleCreate",
+      "destinationFile": "src/components/studio/ProjectGalleryPage.tsx",
+      "destinationFunction": "handleCreate",
+      "responsibility": "Retained UI orchestration and existing local callers in this owner",
+      "actualConsumers": [
+        "src/components/studio/ProjectGalleryPage.tsx"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "8dee1f324be8a0a77c65dec4fb85c358b2b4c6baa8d098ee3ae39b3d82ccf991",
+      "currentBodyTokenHash": "8dee1f324be8a0a77c65dec4fb85c358b2b4c6baa8d098ee3ae39b3d82ccf991",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "handleCreate",
+          "found": true,
+          "hash": "8dee1f324be8a0a77c65dec4fb85c358b2b4c6baa8d098ee3ae39b3d82ccf991"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/components/studio/ProjectGalleryPage.tsx",
+      "originalFunction": "importStudioProject",
+      "destinationFile": "src/components/studio/importStudioProject.ts",
+      "destinationFunction": "importStudioProject",
+      "responsibility": "Studio import error/toast adapter",
+      "actualConsumers": [
+        "src/routes/_studio.tsx: StudioLayout.onImport"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "477b7acf0096b3f4220820296bfb829fa3a46544db69e11cd70bb6e684e0d32b",
+      "currentBodyTokenHash": "477b7acf0096b3f4220820296bfb829fa3a46544db69e11cd70bb6e684e0d32b",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "importStudioProject",
+          "found": true,
+          "hash": "477b7acf0096b3f4220820296bfb829fa3a46544db69e11cd70bb6e684e0d32b"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "asRecord",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "asRecord",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows",
+        "projectPackage root metadata/media ZIP adapter"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "549b5f7b821a6be0137478472921d0343fd4fd246f6b2b79032bad420925a721",
+      "currentBodyTokenHash": "549b5f7b821a6be0137478472921d0343fd4fd246f6b2b79032bad420925a721",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "asRecord",
+          "found": true,
+          "hash": "549b5f7b821a6be0137478472921d0343fd4fd246f6b2b79032bad420925a721"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "asArray",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "asArray",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows",
+        "projectPackage root metadata/media ZIP adapter"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "71d40db49e4f73f88f25963fd97cd5a2a83f6ec79b1e37231bb9cef7fdde6222",
+      "currentBodyTokenHash": "71d40db49e4f73f88f25963fd97cd5a2a83f6ec79b1e37231bb9cef7fdde6222",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "asArray",
+          "found": true,
+          "hash": "71d40db49e4f73f88f25963fd97cd5a2a83f6ec79b1e37231bb9cef7fdde6222"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "pickExtra",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "pickExtra",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "e6882a1cf701f9f50aa5d9ee0c4045ad062953bdafbbe4791490b0fd7db57a14",
+      "currentBodyTokenHash": "e6882a1cf701f9f50aa5d9ee0c4045ad062953bdafbbe4791490b0fd7db57a14",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "pickExtra",
+          "found": true,
+          "hash": "e6882a1cf701f9f50aa5d9ee0c4045ad062953bdafbbe4791490b0fd7db57a14"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "extFor",
+      "destinationFile": "src/lib/projectPackage.ts",
+      "destinationFunction": "extFor",
+      "responsibility": "Retained ZIP IO/snapshot/compression/atomic import or browser download owner",
+      "actualConsumers": [
+        "WorkspaceChrome backup",
+        "ProjectGalleryPage backup",
+        "importStudioProject",
+        "audio/music/produce download callers"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "abb8040b8397d669160c4b9c00d1d05c33ecdb88428af1096c6f4a3321234d83",
+      "currentBodyTokenHash": "abb8040b8397d669160c4b9c00d1d05c33ecdb88428af1096c6f4a3321234d83",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "extFor",
+          "found": true,
+          "hash": "abb8040b8397d669160c4b9c00d1d05c33ecdb88428af1096c6f4a3321234d83"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "mimeForFilename",
+      "destinationFile": "src/lib/projectPackage.ts",
+      "destinationFunction": "mimeForFilename",
+      "responsibility": "Retained ZIP IO/snapshot/compression/atomic import or browser download owner",
+      "actualConsumers": [
+        "WorkspaceChrome backup",
+        "ProjectGalleryPage backup",
+        "importStudioProject",
+        "audio/music/produce download callers"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "31fd8be5745b5bea69ed18f4a31042ffd166583e0429735a4097532d1d5eca0a",
+      "currentBodyTokenHash": "31fd8be5745b5bea69ed18f4a31042ffd166583e0429735a4097532d1d5eca0a",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "mimeForFilename",
+          "found": true,
+          "hash": "31fd8be5745b5bea69ed18f4a31042ffd166583e0429735a4097532d1d5eca0a"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "optionalText",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "optionalText",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "abd9e4f7a144f4213155aff8fc0533a05513a003ba9c6b32a1211441fd8cce97",
+      "currentBodyTokenHash": "abd9e4f7a144f4213155aff8fc0533a05513a003ba9c6b32a1211441fd8cce97",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "optionalText",
+          "found": true,
+          "hash": "abd9e4f7a144f4213155aff8fc0533a05513a003ba9c6b32a1211441fd8cce97"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "optionalIds",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "optionalIds",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "cf6573c6fdcaa20515e267e91e5a152061004628a4a3a1610f22f287bc834171",
+      "currentBodyTokenHash": "cf6573c6fdcaa20515e267e91e5a152061004628a4a3a1610f22f287bc834171",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "optionalIds",
+          "found": true,
+          "hash": "cf6573c6fdcaa20515e267e91e5a152061004628a4a3a1610f22f287bc834171"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "parseProject",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "parseProject",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "0616feae42518e0a3270b455dcd4c01b4af0f3e880283820a6b3c83a92d5e4ec",
+      "currentBodyTokenHash": "0616feae42518e0a3270b455dcd4c01b4af0f3e880283820a6b3c83a92d5e4ec",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "parseProject",
+          "found": true,
+          "hash": "0616feae42518e0a3270b455dcd4c01b4af0f3e880283820a6b3c83a92d5e4ec"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "parseCharacter",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "parseCharacter",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "eda64f5f482713c1629391fae529bf0cc606ae213024546420884a48b7742e9b",
+      "currentBodyTokenHash": "eda64f5f482713c1629391fae529bf0cc606ae213024546420884a48b7742e9b",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "parseCharacter",
+          "found": true,
+          "hash": "eda64f5f482713c1629391fae529bf0cc606ae213024546420884a48b7742e9b"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "parseScene",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "parseScene",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "64b2fbbbd454e2bd489b421a2615478a35a97f8e47776eafa99c01ecf768c2f5",
+      "currentBodyTokenHash": "64b2fbbbd454e2bd489b421a2615478a35a97f8e47776eafa99c01ecf768c2f5",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "parseScene",
+          "found": true,
+          "hash": "64b2fbbbd454e2bd489b421a2615478a35a97f8e47776eafa99c01ecf768c2f5"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "parseProp",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "parseProp",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "3ae69960d866e4433a2e9946fcc04b4b46b78baaa758e8a2e6ec15ff2828d9dc",
+      "currentBodyTokenHash": "3ae69960d866e4433a2e9946fcc04b4b46b78baaa758e8a2e6ec15ff2828d9dc",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "parseProp",
+          "found": true,
+          "hash": "3ae69960d866e4433a2e9946fcc04b4b46b78baaa758e8a2e6ec15ff2828d9dc"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "parseStyle",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "parseStyle",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "0f4ae442bff147d265dfcfcdc65005f27e233334f01df755f260067e3481fd42",
+      "currentBodyTokenHash": "0f4ae442bff147d265dfcfcdc65005f27e233334f01df755f260067e3481fd42",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "parseStyle",
+          "found": true,
+          "hash": "0f4ae442bff147d265dfcfcdc65005f27e233334f01df755f260067e3481fd42"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "originalId",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "originalId",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "7d82ed0a55dda7210b2709170a2f4c994e2ac104011308a4e98fbb8c68b710c0",
+      "currentBodyTokenHash": "7d82ed0a55dda7210b2709170a2f4c994e2ac104011308a4e98fbb8c68b710c0",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "originalId",
+          "found": true,
+          "hash": "7d82ed0a55dda7210b2709170a2f4c994e2ac104011308a4e98fbb8c68b710c0"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "assertUniqueOriginalIds",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "assertUniqueOriginalIds",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "36605f2a16f4dbc35cf7067c48c49ba21c8dffcb2b808629cf31701e324aedbe",
+      "currentBodyTokenHash": "36605f2a16f4dbc35cf7067c48c49ba21c8dffcb2b808629cf31701e324aedbe",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "assertUniqueOriginalIds",
+          "found": true,
+          "hash": "36605f2a16f4dbc35cf7067c48c49ba21c8dffcb2b808629cf31701e324aedbe"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "originalBeatIds",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "originalBeatIds",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "b0f97a33ea372ca94a6d35428bad1976aa8b82f45d58403b6ddc7fe49407d428",
+      "currentBodyTokenHash": "b0f97a33ea372ca94a6d35428bad1976aa8b82f45d58403b6ddc7fe49407d428",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "originalBeatIds",
+          "found": true,
+          "hash": "b0f97a33ea372ca94a6d35428bad1976aa8b82f45d58403b6ddc7fe49407d428"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "validateModernShotRelations",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "validateModernShotRelations",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "402cac1b1f4b2886e59614086dfd41095bc27293db15fd2ed3236c6bb191ea38",
+      "currentBodyTokenHash": "402cac1b1f4b2886e59614086dfd41095bc27293db15fd2ed3236c6bb191ea38",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "validateModernShotRelations",
+          "found": true,
+          "hash": "402cac1b1f4b2886e59614086dfd41095bc27293db15fd2ed3236c6bb191ea38"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "parseEpisode",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "parseEpisode",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "b4dc3b62be19e59d77461187877d0c070842249658b26229136ff81f813e2600",
+      "currentBodyTokenHash": "b4dc3b62be19e59d77461187877d0c070842249658b26229136ff81f813e2600",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "parseEpisode",
+          "found": true,
+          "hash": "b4dc3b62be19e59d77461187877d0c070842249658b26229136ff81f813e2600"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "synthesizeFirstEpisode",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "synthesizeFirstEpisode",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "96b868df82c92537d5c8e0e3f9b1998057f7b89b7028c4c16194521d6ef739fb",
+      "currentBodyTokenHash": "96b868df82c92537d5c8e0e3f9b1998057f7b89b7028c4c16194521d6ef739fb",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "synthesizeFirstEpisode",
+          "found": true,
+          "hash": "96b868df82c92537d5c8e0e3f9b1998057f7b89b7028c4c16194521d6ef739fb"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "parseShot",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "parseShot",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "9e68dd74e36ccf11159cd24ddce3353b4afc6ecaca534d7073c7c545c203f088",
+      "currentBodyTokenHash": "9e68dd74e36ccf11159cd24ddce3353b4afc6ecaca534d7073c7c545c203f088",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "parseShot",
+          "found": true,
+          "hash": "9e68dd74e36ccf11159cd24ddce3353b4afc6ecaca534d7073c7c545c203f088"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "remapShotStoryScope",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "remapShotStoryScope",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "295a426432456945e6c4c7977c467a4f9380d3e428de2e1090cef036d7edf853",
+      "currentBodyTokenHash": "295a426432456945e6c4c7977c467a4f9380d3e428de2e1090cef036d7edf853",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "remapShotStoryScope",
+          "found": true,
+          "hash": "295a426432456945e6c4c7977c467a4f9380d3e428de2e1090cef036d7edf853"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "remapId",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "remapId",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows",
+        "projectPackage root metadata/media ZIP adapter"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "f5452c3121b99f8bdab10043f34fc69e527bab3db24e49469ee48321f03454f7",
+      "currentBodyTokenHash": "f5452c3121b99f8bdab10043f34fc69e527bab3db24e49469ee48321f03454f7",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "remapId",
+          "found": true,
+          "hash": "f5452c3121b99f8bdab10043f34fc69e527bab3db24e49469ee48321f03454f7"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "parseMemoryPackage",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "parseMemoryPackage",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "1b793f7fe13cd1ef86ea53535e028c8315ff0eb2eb726308d0659c353557699d",
+      "currentBodyTokenHash": "1b793f7fe13cd1ef86ea53535e028c8315ff0eb2eb726308d0659c353557699d",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "parseMemoryPackage",
+          "found": true,
+          "hash": "1b793f7fe13cd1ef86ea53535e028c8315ff0eb2eb726308d0659c353557699d"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "detachedMemorySource",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "detachedMemorySource",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "91b17551714b3c07617482a00a88a8bf7efbeededf8ece77bf19b5de4b14a76b",
+      "currentBodyTokenHash": "91b17551714b3c07617482a00a88a8bf7efbeededf8ece77bf19b5de4b14a76b",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "detachedMemorySource",
+          "found": true,
+          "hash": "91b17551714b3c07617482a00a88a8bf7efbeededf8ece77bf19b5de4b14a76b"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "remapMemoryPackage",
+      "destinationFile": "src/lib/packages/projectPackageCodec.ts",
+      "destinationFunction": "remapMemoryPackage",
+      "responsibility": "Pure entity/raw identity/memory parse or identity remap",
+      "actualConsumers": [
+        "parseProjectPackageRows",
+        "remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "4b3b3cdab1e2326edc7b87728554ba27b3fb5f97e7282808056b19daa54bf04b",
+      "currentBodyTokenHash": "4b3b3cdab1e2326edc7b87728554ba27b3fb5f97e7282808056b19daa54bf04b",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "remapMemoryPackage",
+          "found": true,
+          "hash": "4b3b3cdab1e2326edc7b87728554ba27b3fb5f97e7282808056b19daa54bf04b"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "exportProjectZip",
+      "destinationFile": "src/lib/projectPackage.ts",
+      "destinationFunction": "exportProjectZip",
+      "responsibility": "Retained ZIP IO/snapshot/compression/atomic import or browser download owner",
+      "actualConsumers": [
+        "WorkspaceChrome backup",
+        "ProjectGalleryPage backup",
+        "importStudioProject",
+        "audio/music/produce download callers"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "f7fa78ddba25894e8a8e9ca4349dd8efb38c56d232dce92254e45c27ac3360c8",
+      "currentBodyTokenHash": "f7fa78ddba25894e8a8e9ca4349dd8efb38c56d232dce92254e45c27ac3360c8",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "exportProjectZip",
+          "found": true,
+          "hash": "f7fa78ddba25894e8a8e9ca4349dd8efb38c56d232dce92254e45c27ac3360c8"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "importProjectZip",
+      "destinationFile": "src/lib/projectPackage.ts",
+      "destinationFunction": "importProjectZip",
+      "responsibility": "Retained ZIP IO/snapshot/compression/atomic import or browser download owner",
+      "actualConsumers": [
+        "WorkspaceChrome backup",
+        "ProjectGalleryPage backup",
+        "importStudioProject",
+        "audio/music/produce download callers"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "a03a0a55027c9b1cb238318c318e15126e751a34b5985dda5d1de39af0dcec34",
+      "currentBodyTokenHash": "76267687c9d675a2194183cc0f73beae3bb8eb3a6a864566e5395139379470ad",
+      "tokenIdentical": false,
+      "resolvedDestinationBodies": [
+        {
+          "name": "importProjectZip",
+          "found": true,
+          "hash": "76267687c9d675a2194183cc0f73beae3bb8eb3a6a864566e5395139379470ad"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/projectPackage.ts",
+      "originalFunction": "downloadBlob",
+      "destinationFile": "src/lib/projectPackage.ts",
+      "destinationFunction": "downloadBlob",
+      "responsibility": "Retained ZIP IO/snapshot/compression/atomic import or browser download owner",
+      "actualConsumers": [
+        "WorkspaceChrome backup",
+        "ProjectGalleryPage backup",
+        "importStudioProject",
+        "audio/music/produce download callers"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "39942bfe98c85c9e11371718592752780df689e3110dc4071f402fa86a4b912f",
+      "currentBodyTokenHash": "39942bfe98c85c9e11371718592752780df689e3110dc4071f402fa86a4b912f",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "downloadBlob",
+          "found": true,
+          "hash": "39942bfe98c85c9e11371718592752780df689e3110dc4071f402fa86a4b912f"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/audioProjectPackage.ts",
+      "originalFunction": "parseAudioPackageData",
+      "destinationFile": "src/lib/packages/audioPackageCodec.ts",
+      "destinationFunction": "parseAudioPackageData",
+      "responsibility": "Pure allowlist/C04 full fingerprint preservation, validation and audio identities remap",
+      "actualConsumers": [
+        "snapshotAudioPackage",
+        "audioPackageCodec.parseAudioPackage"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "bad7d182a39ea9a5730ee3401d8f8be5067ad10e8be6360b7cb7f015e473a08d",
+      "currentBodyTokenHash": "bad7d182a39ea9a5730ee3401d8f8be5067ad10e8be6360b7cb7f015e473a08d",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "parseAudioPackageData",
+          "found": true,
+          "hash": "bad7d182a39ea9a5730ee3401d8f8be5067ad10e8be6360b7cb7f015e473a08d"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/audioProjectPackage.ts",
+      "originalFunction": "snapshotAudioPackage",
+      "destinationFile": "src/lib/audioProjectPackage.ts",
+      "destinationFunction": "snapshotAudioPackage",
+      "responsibility": "Retained DB snapshot or full-import transaction insertion/DB relationship validation",
+      "actualConsumers": [
+        "projectPackage export readonly snapshot",
+        "projectPackage atomic full rw import"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "db0da60a31b63bf5cc12c5e57a235115b345489b5018ea028e953c8e30fe88ad",
+      "currentBodyTokenHash": "db0da60a31b63bf5cc12c5e57a235115b345489b5018ea028e953c8e30fe88ad",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "snapshotAudioPackage",
+          "found": true,
+          "hash": "db0da60a31b63bf5cc12c5e57a235115b345489b5018ea028e953c8e30fe88ad"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/audioProjectPackage.ts",
+      "originalFunction": "parseAudioPackage",
+      "destinationFile": "src/lib/packages/audioPackageCodec.ts",
+      "destinationFunction": "parseAudioPackage",
+      "responsibility": "Pure allowlist/C04 full fingerprint preservation, validation and audio identities remap",
+      "actualConsumers": [
+        "projectPackageCodec.parseProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "04a2dc13908353f0907beb33645710b9830dff3bfc73a5026caa904e954f06d0",
+      "currentBodyTokenHash": "04a2dc13908353f0907beb33645710b9830dff3bfc73a5026caa904e954f06d0",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "parseAudioPackage",
+          "found": true,
+          "hash": "04a2dc13908353f0907beb33645710b9830dff3bfc73a5026caa904e954f06d0"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/audioProjectPackage.ts",
+      "originalFunction": "remapAudioPackage",
+      "destinationFile": "src/lib/packages/audioPackageCodec.ts",
+      "destinationFunction": "remapAudioPackage",
+      "responsibility": "Pure allowlist/C04 full fingerprint preservation, validation and audio identities remap",
+      "actualConsumers": [
+        "projectPackageCodec.remapProjectPackageRows"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "751600be56a1fb1caa3d7a3682ef4fa98c5f105eab6c5422661f7750a80512d4",
+      "currentBodyTokenHash": "751600be56a1fb1caa3d7a3682ef4fa98c5f105eab6c5422661f7750a80512d4",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "remapAudioPackage",
+          "found": true,
+          "hash": "751600be56a1fb1caa3d7a3682ef4fa98c5f105eab6c5422661f7750a80512d4"
+        }
+      ]
+    },
+    {
+      "originalFile": "src/lib/audioProjectPackage.ts",
+      "originalFunction": "insertAudioPackage",
+      "destinationFile": "src/lib/audioProjectPackage.ts",
+      "destinationFunction": "insertAudioPackage",
+      "responsibility": "Retained DB snapshot or full-import transaction insertion/DB relationship validation",
+      "actualConsumers": [
+        "projectPackage export readonly snapshot",
+        "projectPackage atomic full rw import"
+      ],
+      "originalExists": true,
+      "currentExists": true,
+      "originalBodyTokenHash": "96ba7fcdfbe4e167a8f359f3512859878741587b8e2929fe4f9b67842f2e3f95",
+      "currentBodyTokenHash": "96ba7fcdfbe4e167a8f359f3512859878741587b8e2929fe4f9b67842f2e3f95",
+      "tokenIdentical": true,
+      "resolvedDestinationBodies": [
+        {
+          "name": "insertAudioPackage",
+          "found": true,
+          "hash": "96ba7fcdfbe4e167a8f359f3512859878741587b8e2929fe4f9b67842f2e3f95"
+        }
+      ]
+    }
+  ],
+  "tokenIdentical": 99,
+  "missing": [],
+  "commentOnlyBodies": [
+    {
+      "file": "src/lib/generationIntent.ts",
+      "currentTokenHash": "56f433f08f0bce945248e1012212e5c5c7f01a1b62e72e73484017dc247c6b97",
+      "baselineTokenHash": "56f433f08f0bce945248e1012212e5c5c7f01a1b62e72e73484017dc247c6b97"
+    },
+    {
+      "file": "src/lib/productionContext.ts",
+      "currentTokenHash": "e199fe102c8f3cce7822b0857f5daec77fd6ac923c863d7786345b86e90a39f4",
+      "baselineTokenHash": "e199fe102c8f3cce7822b0857f5daec77fd6ac923c863d7786345b86e90a39f4"
+    }
+  ],
+  "baselineSourceRevision": "f062d694e61da6bcb574f7fb548803b9e54197eb",
+  "entryHEAD": "abb7a91d255666fc8f772cddecd66676b9f2848c",
+  "originalBodiesReadRevision": "abb7a91d255666fc8f772cddecd66676b9f2848c",
+  "baselineToEntrySourceProof": {
+    "src/components/agent/AgentChatPage.tsx": {
+      "baselineSourceSha256": "e59b75a283eeaf80084d7b8769ca842003a21460ad3e9347c288fdfa8a5d6487",
+      "entryHeadSourceSha256": "e59b75a283eeaf80084d7b8769ca842003a21460ad3e9347c288fdfa8a5d6487",
+      "equal": true
+    },
+    "src/components/audio/AudioTimeline.tsx": {
+      "baselineSourceSha256": "607778048835edc4aae79c144a9c86f8a43733707aeabc5f3d602a4d6d3a84b2",
+      "entryHeadSourceSha256": "607778048835edc4aae79c144a9c86f8a43733707aeabc5f3d602a4d6d3a84b2",
+      "equal": true
+    },
+    "src/components/audio/AudioWorkspacePage.tsx": {
+      "baselineSourceSha256": "dc6d7f4c154c9d6e7a032a06a7c767c193e9ceeefb270f4e9b864b7af68beb3e",
+      "entryHeadSourceSha256": "dc6d7f4c154c9d6e7a032a06a7c767c193e9ceeefb270f4e9b864b7af68beb3e",
+      "equal": true
+    },
+    "src/components/music/MusicWorkspacePage.tsx": {
+      "baselineSourceSha256": "7ad5b9465b7ed4a63a27e604eb457655c4a218068954dcea4ddada49e5f9c47c",
+      "entryHeadSourceSha256": "7ad5b9465b7ed4a63a27e604eb457655c4a218068954dcea4ddada49e5f9c47c",
+      "equal": true
+    },
+    "src/components/shots/ShotEditorPage.tsx": {
+      "baselineSourceSha256": "c2e83c197b71236a2f09985012fcc8447b51392db5ca2b43499bc057fcaac428",
+      "entryHeadSourceSha256": "c2e83c197b71236a2f09985012fcc8447b51392db5ca2b43499bc057fcaac428",
+      "equal": true
+    },
+    "src/components/studio/ProjectGalleryPage.tsx": {
+      "baselineSourceSha256": "6e9edd15fc9ba44921ba810533c6b40337b81e75a4da75cc8e5677362234f79c",
+      "entryHeadSourceSha256": "6e9edd15fc9ba44921ba810533c6b40337b81e75a4da75cc8e5677362234f79c",
+      "equal": true
+    },
+    "src/lib/audioProjectPackage.ts": {
+      "baselineSourceSha256": "8412440a2fc31960d444d71e6a3d5b5cd8c3e4dd2c713d03db3be6bb95737331",
+      "entryHeadSourceSha256": "8412440a2fc31960d444d71e6a3d5b5cd8c3e4dd2c713d03db3be6bb95737331",
+      "equal": true
+    },
+    "src/lib/generationIntent.ts": {
+      "baselineSourceSha256": "0b6e2e30b66317927754feb9f888fedbbcb61f8f3db3bbdb0fc005b01ddc85ae",
+      "entryHeadSourceSha256": "0b6e2e30b66317927754feb9f888fedbbcb61f8f3db3bbdb0fc005b01ddc85ae",
+      "equal": true
+    },
+    "src/lib/productionContext.ts": {
+      "baselineSourceSha256": "00b0cf737985565c0c30aa6be63280b497d1453f939327041909885436a751fb",
+      "entryHeadSourceSha256": "00b0cf737985565c0c30aa6be63280b497d1453f939327041909885436a751fb",
+      "equal": true
+    },
+    "src/lib/projectPackage.ts": {
+      "baselineSourceSha256": "ee0ef3c984a4454f5d90e9ac7b8c0570f919024fb2078d9862fad93efc2cb555",
+      "entryHeadSourceSha256": "ee0ef3c984a4454f5d90e9ac7b8c0570f919024fb2078d9862fad93efc2cb555",
+      "equal": true
+    },
+    "src/routes/p.$projectId.index.tsx": {
+      "baselineSourceSha256": "0a20cef48da89ebf46de8555d34a0d27c39ddc8b2d8464941610994ff61be63f",
+      "entryHeadSourceSha256": "0a20cef48da89ebf46de8555d34a0d27c39ddc8b2d8464941610994ff61be63f",
+      "equal": true
+    }
+  }
+}

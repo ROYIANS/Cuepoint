@@ -1,0 +1,84 @@
+4:24:42 PM [vite] (client) Forced re-optimization of dependencies
+Port 5173 is in use, trying another one...
+DOCUMENT http://127.0.0.1:5174/tests/fixtures/b01/
+NAVIGATION http://127.0.0.1:5174/tests/fixtures/b01/
+CLIENT debug [vite] connecting...
+CLIENT debug [vite] connected.
+CLIENT info %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+NAVIGATION http://127.0.0.1:5174/away
+NAVIGATION http://127.0.0.1:5174/away
+NAVIGATION http://127.0.0.1:5174/p/prj_81f7497e-b386-4951-963d-1f36041937ed/e/ep_cd8b0ea1-2937-4af5-8829-9b7790674504/shots
+NAVIGATION http://127.0.0.1:5174/p/prj_81f7497e-b386-4951-963d-1f36041937ed/e/ep_59ff273e-f57d-420d-8987-9360b42bb6f8/shots
+NAVIGATION http://127.0.0.1:5174/p/prj_f6d25a86-8e3c-4f10-bdc3-661dd0e1bbf4/world
+PASS project route key and same-project episode envelope keep settings mounted
+NAVIGATION http://127.0.0.1:5174/p/prj_72178ab1-8397-4493-a741-cf3de2a5ca3f
+NAVIGATION http://127.0.0.1:5174/p/prj_72178ab1-8397-4493-a741-cf3de2a5ca3f/e/ep_98571c71-7466-4b74-852c-3dae38434644
+PASS home waits for matching null episode before repair
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/character/chr_4f93a626-81ee-49f1-94ac-0628d81e7501
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/character/chr_7325b6f9-0bb5-4d62-8503-bcfc3c414206
+PASS character: router blocks dirty target switch; continue preserves; discard remounts
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/scene/scn_28244254-c6f9-400a-9e85-415ebf1df284
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/scene/scn_9fd508ab-05ed-477d-b5c1-3cf6556444a0
+PASS scene: router blocks dirty target switch; continue preserves; discard remounts
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/prop/prp_f178741f-746e-44ed-9e28-e8685a2ed66c
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/prop/prp_35ebb260-5b45-4710-8baf-357a9210c3d4
+PASS prop: router blocks dirty target switch; continue preserves; discard remounts
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/style/sty_72d7f642-3834-4abc-91a9-026a2d6ef8dd
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/style/sty_a8e29f99-27c2-49a5-979f-43538d3206ee
+PASS style: router blocks dirty target switch; continue preserves; discard remounts
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/character/chr_4f93a626-81ee-49f1-94ac-0628d81e7501
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/character/chr_7325b6f9-0bb5-4d62-8503-bcfc3c414206
+PASS slot upload pending blocks discard; failed File retry and same-target draft survive
+NAVIGATION http://127.0.0.1:5174/p/prj_81f7497e-b386-4951-963d-1f36041937ed/world
+PASS output settings SPA guard continues and disallows pending discard
+NAVIGATION http://127.0.0.1:5174/materials
+NAVIGATION http://127.0.0.1:5174/away
+PASS material parent selection is guarded; latest C wins and continue allows reselect B
+NAVIGATION http://127.0.0.1:5174/p/prj_81f7497e-b386-4951-963d-1f36041937ed/e/ep_cd8b0ea1-2937-4af5-8829-9b7790674504/shots
+NAVIGATION http://127.0.0.1:5174/p/prj_81f7497e-b386-4951-963d-1f36041937ed/e/ep_59ff273e-f57d-420d-8987-9360b42bb6f8/shots
+NAVIGATION http://127.0.0.1:5174/p/prj_81f7497e-b386-4951-963d-1f36041937ed/e/ep_cd8b0ea1-2937-4af5-8829-9b7790674504/produce/storyboard
+NAVIGATION http://127.0.0.1:5174/p/prj_81f7497e-b386-4951-963d-1f36041937ed/e/ep_59ff273e-f57d-420d-8987-9360b42bb6f8/produce/storyboard
+NAVIGATION http://127.0.0.1:5174/p/prj_81f7497e-b386-4951-963d-1f36041937ed/e/missing/produce/storyboard
+PASS shots and print wait for matching empty lists across two episodes
+NAVIGATION http://127.0.0.1:5174/p/prj_81f7497e-b386-4951-963d-1f36041937ed/e/ep_cd8b0ea1-2937-4af5-8829-9b7790674504/shots
+NAVIGATION http://127.0.0.1:5174/p/prj_81f7497e-b386-4951-963d-1f36041937ed/e/ep_cd8b0ea1-2937-4af5-8829-9b7790674504/shots?shot=sht_0b3da719-abbb-453d-bc31-91989fde36af
+NAVIGATION http://127.0.0.1:5174/p/prj_81f7497e-b386-4951-963d-1f36041937ed/e/ep_59ff273e-f57d-420d-8987-9360b42bb6f8/shots
+PASS shot slot locate search keeps draft and dirty navigation blocks episode switch
+NAVIGATION http://127.0.0.1:5174/p/prj_81f7497e-b386-4951-963d-1f36041937ed/e/ep_cd8b0ea1-2937-4af5-8829-9b7790674504/shots
+CLIENT warning Select is changing from controlled to uncontrolled. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.
+NAVIGATION http://127.0.0.1:5174/p/prj_81f7497e-b386-4951-963d-1f36041937ed/e/ep_59ff273e-f57d-420d-8987-9360b42bb6f8/shots
+PASS relations pending/error router departure requires resolve or discard
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/prop/prp_f178741f-746e-44ed-9e28-e8685a2ed66c
+NAVIGATION http://127.0.0.1:5174/away
+NAVIGATION http://127.0.0.1:5174/materials
+NAVIGATION http://127.0.0.1:5174/away
+PASS deleted asset/material keeps active dirty sessions and blocks departure
+NAVIGATION http://127.0.0.1:5174/p/prj_81f7497e-b386-4951-963d-1f36041937ed/e/ep_cd8b0ea1-2937-4af5-8829-9b7790674504/shots
+NAVIGATION http://127.0.0.1:5174/away
+PASS deleted episode keeps its shot slot and guard mounted through read gates
+NAVIGATION http://127.0.0.1:5174/p/prj_4b70eeaa-a2af-4406-861d-d9cb56a73a29/world
+NAVIGATION http://127.0.0.1:5174/away
+NAVIGATION http://127.0.0.1:5174/p/prj_4b70eeaa-a2af-4406-861d-d9cb56a73a29/world
+PASS clean deleted project exposes not-found with project controls hidden
+NAVIGATION http://127.0.0.1:5174/p/prj_07e7676a-33fd-47bc-973e-5921fbb591a7/world
+NAVIGATION http://127.0.0.1:5174/away
+PASS dirty output deletion preserves readable draft and explicit close/discard
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/character/missing
+NAVIGATION http://127.0.0.1:5174/asset/prj_f6d25a86-8e3c-4f10-bdc3-661dd0e1bbf4/character/chr_7325b6f9-0bb5-4d62-8503-bcfc3c414206
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/scene/missing
+NAVIGATION http://127.0.0.1:5174/asset/prj_f6d25a86-8e3c-4f10-bdc3-661dd0e1bbf4/scene/scn_9fd508ab-05ed-477d-b5c1-3cf6556444a0
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/prop/missing
+NAVIGATION http://127.0.0.1:5174/asset/prj_f6d25a86-8e3c-4f10-bdc3-661dd0e1bbf4/prop/prp_35ebb260-5b45-4710-8baf-357a9210c3d4
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/style/missing
+NAVIGATION http://127.0.0.1:5174/asset/prj_f6d25a86-8e3c-4f10-bdc3-661dd0e1bbf4/style/sty_a8e29f99-27c2-49a5-979f-43538d3206ee
+NAVIGATION http://127.0.0.1:5174/p/prj_f6d25a86-8e3c-4f10-bdc3-661dd0e1bbf4/e/ep_59ff273e-f57d-420d-8987-9360b42bb6f8/shots
+PASS missing and foreign-owner asset identities never expose an editor
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/scene/scn_28244254-c6f9-400a-9e85-415ebf1df284
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/scene/scn_9fd508ab-05ed-477d-b5c1-3cf6556444a0
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/scene/scn_28244254-c6f9-400a-9e85-415ebf1df284
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/scene/scn_9fd508ab-05ed-477d-b5c1-3cf6556444a0
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/scene/scn_28244254-c6f9-400a-9e85-415ebf1df284
+PASS history back honors dirty guard and registers unload protection
+NAVIGATION http://127.0.0.1:5174/asset/prj_81f7497e-b386-4951-963d-1f36041937ed/character/chr_7325b6f9-0bb5-4d62-8503-bcfc3c414206
+PASS slot pending save blocks navigation until completion and persists original target
+B01 browser regressions: 19 passed

@@ -1,0 +1,7 @@
+Captured first finalizer tool stdout, exit 1 (evidence-only; no product/input modification):
+Traceback (most recent call last):
+  File "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-finalize-snapshot.py", line 46, in <module>
+    assert all(current.get(p)==h for p,h in correction['after'].items())
+AssertionError
+
+Correction: the disjoint checker's 72-path after set includes two .trellis evidence producers outside the frozen product/test input manifest. Finalizer now verifies all 72 actual file bytes against accepted hashes. All 704 tested input hashes remain matched. No source or gate changed.

@@ -21,10 +21,18 @@
   "children": [
     "09-30-src-remediation-a",
     "09-30-src-remediation-b",
-    "09-30-src-remediation-c"
+    "09-30-src-remediation-c",
+    "10-08-src-remediation-d"
   ],
   "parent": "09-30-src-quality-architecture-audit",
   "relatedFiles": [],
-  "notes": "27/51 findings fixed;24 pending. C complete integration/full-scope independent review PASS, five local commits approved2026-10-01. User explicitly requested pausing after commits. D01 remains pending; no D implementation, push or archive.",
-  "meta": {}
+  "notes": "2026-10-08 用户批准四组本地提交并要求提交后暂停。D01–D08及整批独立PASS，335路径/2345证据哈希吻合；17关口、159files/2552tests通过。38/51修复+EX01已验证，E13/QG01待处理；提交后仅完成D归档与journal，不开始E、不推送。",
+  "meta": {
+    "workCommitRevisions": [
+      "d4384975e414b070065d757387df4b3f170ca8d5",
+      "502b8ae1dced383d9c97e435f7d4dce045c877f2",
+      "ec68cb004f4e92a742bf2a7bc6b4813557b238cb"
+    ],
+    "recordCommitLookup": "chore: 记录源码整改D验证与后续关口 (fourth approved commit)"
+  }
 }

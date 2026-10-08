@@ -1,0 +1,15 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Frontend Quality Check and predevelopment checklist"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "D07 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "D07 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/ai-connectors.md", "reason": "D07 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "D07 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/agent-batch-generation.md", "reason": "D07 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/audio-music.md", "reason": "D07 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/agent-web-research.md", "reason": "D07 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/research/D07-request-boundary-plan.md", "reason": "D07 scoped prior-source proposal; reread accepted predecessor changes before implementation"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/research/static-runtime-restoration.md", "reason": "Identical tool versions and separate complete baseline TS programs required"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/research/D07-scope.md", "reason": "Coordinator bounded implementation/acceptance"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "D03 accepted command/session/codec boundary and feature UI contracts"}
+{"file": ".trellis/spec/guides/index.md", "reason": "Mandatory shared thinking guide index"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "Read/write and UI/domain boundaries"}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "Reuse actual behavior owners without speculative abstraction"}

@@ -1,0 +1,47 @@
+[
+  {
+    "name": "d01-native",
+    "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D01-native-regression.mjs"
+  },
+  {
+    "name": "d02-cascades-native",
+    "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D02-native-regression.mjs"
+  },
+  {
+    "name": "d02-d01-rollback-native",
+    "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D02-native-d01-rollback.mjs"
+  },
+  {
+    "name": "d03-native",
+    "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D03-native-regression.mjs"
+  },
+  {
+    "name": "d04-native",
+    "path": ".trellis/tasks/10-08-src-remediation-d/research/D04-native.mjs"
+  },
+  {
+    "name": "d05-native",
+    "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D05-native.mjs"
+  },
+  {
+    "name": "d06-native",
+    "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D06-native.mjs",
+    "environment": {
+      "D06_NATIVE_REPORT_PATH": ".trellis/tasks/10-08-src-remediation-d/reviews/integration/d06-native-report.json"
+    }
+  },
+  {
+    "name": "d06-compiler-negatives",
+    "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D06-compiler-negatives.mjs",
+    "environment": {
+      "D06_COMPILER_REPORT_PATH": ".trellis/tasks/10-08-src-remediation-d/reviews/integration/d06-compiler-report.json"
+    }
+  },
+  {
+    "name": "d08-native",
+    "path": "scripts/d08-browser-regression.mjs",
+    "environment": {
+      "D08_REPORT_PATH": ".trellis/tasks/10-08-src-remediation-d/reviews/integration/d08-native-report.json"
+    }
+  }
+]

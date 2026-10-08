@@ -1,0 +1,11 @@
+11:18:11 AM [vite] (client) Re-optimizing dependencies because vite config has changed
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.waitForFunction: DexieError2
+    at /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/reviews/D03-native-regression.mjs:34:16 {
+  log: []
+}
+
+Node.js v24.11.0

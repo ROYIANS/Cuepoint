@@ -17,20 +17,20 @@
 | B05 | 音乐任务ID与取消恢复 | PM-03, PM-04, PM-06 | 验证完成 | [B05复核](../09-30-src-remediation-b/reviews/B05-check.md) |
 | B06 | 异步连接与文件导入会话 | SS-07, PU-07 | 验证完成 | [B06复核](../09-30-src-remediation-b/reviews/B06-check.md) |
 | B07 | 主题文本与附件草稿作用域 | AU-10 | 验证完成 | [B07复核](../09-30-src-remediation-b/reviews/B07-check.md) |
-| C01 | 当前成果与调用账本区分 | AR-01, AR-02 | 验证完成 | [C01复核](../09-30-src-remediation-c/reviews/C01-check.md) |
-| C02 | 音乐草稿生成参数一致性 | AR-03 | 验证完成 | [C02复核](../09-30-src-remediation-c/reviews/C02-check.md) |
-| C03 | 父项目和现代包外键不变量 | PD-01, SS-04 | 验证完成 | [C03复核](../09-30-src-remediation-c/reviews/C03-check.md) |
-| C04 | 音频包成品标识重映射 | SS-03 | 验证完成 | [C04复核](../09-30-src-remediation-c/reviews/C04-check.md) |
-| C05 | 收窄宽patch媒体入口 | PD-03 | 验证完成 | [C05复核](../09-30-src-remediation-c/reviews/C05-check.md) |
-| C06 | 入站读取资源边界 | PM-05 | 验证完成 | [C06复核](../09-30-src-remediation-c/reviews/C06-check.md) |
-| D01 | 解除八文件值依赖环 | AR-04, PD-04 | 待处理 | — |
-| D02 | 按业务分解综合repository | PD-05 | 待处理 | — |
-| D03 | 页面编排与共享能力职责 | PU-08, SS-08, AU-08 | 待处理 | — |
-| D04 | 上下文查询统一快照 | AU-06 | 待处理 | — |
-| D05 | 工具schema和参数类型关联 | AR-05 | 待处理 | — |
-| D06 | 生成表单共用能力模型 | AU-07 | 待处理 | — |
-| D07 | provider共用基础请求边界 | PM-07 | 待处理 | — |
-| D08 | 镜头和场次文字草稿协议 | PU-06 | 待处理 | — |
+| C01 | 当前成果与调用账本区分 | AR-01, AR-02 | 验证完成 | [C01复核](../archive/2026-10/09-30-src-remediation-c/reviews/C01-check.md) |
+| C02 | 音乐草稿生成参数一致性 | AR-03 | 验证完成 | [C02复核](../archive/2026-10/09-30-src-remediation-c/reviews/C02-check.md) |
+| C03 | 父项目和现代包外键不变量 | PD-01, SS-04 | 验证完成 | [C03复核](../archive/2026-10/09-30-src-remediation-c/reviews/C03-check.md) |
+| C04 | 音频包成品标识重映射 | SS-03 | 验证完成 | [C04复核](../archive/2026-10/09-30-src-remediation-c/reviews/C04-check.md) |
+| C05 | 收窄宽patch媒体入口 | PD-03 | 验证完成 | [C05复核](../archive/2026-10/09-30-src-remediation-c/reviews/C05-check.md) |
+| C06 | 入站读取资源边界 | PM-05 | 验证完成 | [C06复核](../archive/2026-10/09-30-src-remediation-c/reviews/C06-check.md) |
+| D01 | 解除八文件值依赖环 | AR-04, PD-04 | 验证完成 | [D01复核](../archive/2026-10/10-08-src-remediation-d/reviews/D01-check.md) |
+| D02 | 按业务分解综合repository | PD-05 | 验证完成 | [D02复核](../archive/2026-10/10-08-src-remediation-d/reviews/D02-check.md) |
+| D03 | 页面编排与共享能力职责 | PU-08, SS-08, AU-08 | 验证完成 | [D03复核](../archive/2026-10/10-08-src-remediation-d/reviews/D03-check.md) |
+| D04 | 上下文查询统一快照 | AU-06 | 验证完成 | [D04复核](../archive/2026-10/10-08-src-remediation-d/reviews/D04-check.md) |
+| D05 | 工具schema和参数类型关联 | AR-05 | 验证完成 | [D05复核](../archive/2026-10/10-08-src-remediation-d/reviews/D05-check.md) |
+| D06 | 生成表单共用能力模型 | AU-07 | 验证完成 | [D06复核](../archive/2026-10/10-08-src-remediation-d/reviews/D06-check.md) |
+| D07 | provider共用基础请求边界 | PM-07 | 验证完成 | [D07复核](../archive/2026-10/10-08-src-remediation-d/reviews/D07-check.md) |
+| D08 | 镜头和场次文字草稿协议 | PU-06 | 验证完成 | [D08复核](../archive/2026-10/10-08-src-remediation-d/reviews/D08-check.md) |
 | E01 | 编辑草稿离开保护与写入错误出口 | AU-02, PU-10, SS-06 | 待处理 | — |
 | E02 | 键盘动作及移动端布局 | AU-04, AU-05 | 待处理 | — |
 | E03 | 清理旧音频CSS | PU-09 | 待处理 | — |
@@ -39,11 +39,11 @@
 | E06 | 富消息和图标加载优化 | AU-09 | 待处理 | — |
 | E07 | 收窄未用出口和控件 | PD-08, SS-10 | 待处理 | — |
 
-下一未完成单元：D01。
+下一未完成单元：E01。
 
 ## 用户示例与附加整理
 
 这些事项不加入51项已审查发现计数，仍按关联单元执行并保留证据。
 
-- EX-01 / D05：src/lib/memory/retrieval.ts — 提前返回空entries；source保留白名单并用明确穷尽分支。保持信封/字段/顺序/预算兼容，不新增策略类。（待处理）
+- EX-01 / D05：src/lib/memory/retrieval.ts — 提前返回空entries；source保留白名单并用明确穷尽分支。保持信封/字段/顺序/预算兼容，不新增策略类。（验证完成）
 - QG-01 / E07：package.json / .github/workflows/ghcr.yml / quality tooling — 可复现类型/ESLint-SonarJS/依赖架构/引用门禁；已核验基线逐项记录，不批量ignore；不改发布行为。（待处理）

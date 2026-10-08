@@ -1,0 +1,22 @@
+FAIL actual single form model/connector options preserve identity and proposal artifacts /var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/d06-native-failure-s3DWpb
+alerts [ '请选择已配置密钥的生成连接。' ]
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.waitFor: Error: strict mode violation: getByText('原连接已不可用', { exact: true }) resolved to 2 elements:
+    1) <span aria-live="polite">原连接已不可用</span> aka locator('span').filter({ hasText: '原连接已不可用' })
+    2) <div title="原连接已不可用" class="ant-select-content ant-select-content-has-value">…</div> aka getByTitle('原连接已不可用')
+
+Call log:
+[2m  - waiting for getByText('原连接已不可用', { exact: true }) to be visible[22m
+
+    at /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/reviews/D06-native.mjs:81:56
+    at async test (/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/reviews/D06-native.mjs:58:14)
+    at async file:///Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/reviews/D06-native.mjs:65:5 {
+  log: [
+    "  - waiting for getByText('原连接已不可用', { exact: true }) to be visible"
+  ]
+}
+
+Node.js v24.11.0

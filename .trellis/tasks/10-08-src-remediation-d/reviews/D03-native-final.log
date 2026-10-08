@@ -1,0 +1,13 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.evaluate: Error: audio late validator boundary not exercised: rejected=false, observed=true, error=
+    at check (http://127.0.0.1:5173/tests/fixtures/d03/harness.tsx:27:21)
+    at Object.packages (http://127.0.0.1:5173/tests/fixtures/d03/harness.tsx:190:9)
+    at async <anonymous>:337:30
+    at /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/reviews/D03-native-regression.mjs:48:33 {
+  log: []
+}
+
+Node.js v24.11.0

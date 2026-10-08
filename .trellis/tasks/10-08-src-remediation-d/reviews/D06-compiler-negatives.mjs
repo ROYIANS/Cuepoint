@@ -1,0 +1,26 @@
+import ts from '/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/typescript/lib/typescript.js';
+import fs from 'node:fs';
+import path from 'node:path';
+const root = process.cwd();
+const fixture = path.resolve('tests/typecheck/agentToolDefinition.ts');
+const configPath = path.resolve('tests/typecheck/tsconfig.agent-tools.json');
+const config = ts.readConfigFile(configPath, ts.sys.readFile);
+if (config.error) throw new Error(ts.flattenDiagnosticMessageText(config.error.messageText, '\n'));
+const parsed = ts.parseJsonConfigFileContent(config.config, ts.sys, path.dirname(configPath));
+if (parsed.errors.length) throw new Error('Invalid actual project compiler configuration');
+const original = fs.readFileSync(fixture, 'utf8');
+const expected = original.split('\n').flatMap((line, index) => line.includes('@ts-expect-error') ? [index + 2] : []);
+// A read-only compiler host removes directives in memory, retaining source lines.
+const host = ts.createCompilerHost(parsed.options);
+const readFile = host.readFile.bind(host);
+host.readFile = file => path.resolve(file) === fixture ? original.replace(/@ts-expect-error/g, 'expected rejection') : readFile(file);
+const program = ts.createProgram(parsed.fileNames, {...parsed.options, incremental: false, noEmit: true}, host);
+const diagnostics = ts.getPreEmitDiagnostics(program);
+const records = diagnostics.map(diagnostic => ({path: diagnostic.file ? path.relative(root, diagnostic.file.fileName) : null, line: diagnostic.file && diagnostic.start !== undefined ? diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start).line + 1 : null, code: diagnostic.code, message: ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')}));
+const actual = records.filter(record => record.path === path.relative(root, fixture));
+const missing = expected.filter(line => !actual.some(record => record.line === line));
+const unrelated = records.filter(record => record.path !== path.relative(root, fixture));
+const report = {compilerVersion: ts.version, config: path.relative(root, configPath), expectedLines: expected, actual, missing, unrelated};
+fs.writeFileSync(process.env.D06_COMPILER_REPORT_PATH ?? '.trellis/tasks/10-08-src-remediation-d/reviews/D06-compiler-negatives.json', JSON.stringify(report, null, 2) + '\n');
+console.log(JSON.stringify({compilerVersion: ts.version, expected: expected.length, rejected: actual.length, missing, unrelated: unrelated.length}));
+if (missing.length || unrelated.length || actual.length !== expected.length) throw new Error('Actual compiler negative proof is incomplete');

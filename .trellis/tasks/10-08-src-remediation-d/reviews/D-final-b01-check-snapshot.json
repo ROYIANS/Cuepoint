@@ -1,0 +1,225 @@
+{
+  "unit": "D-final-b01",
+  "role": "trellis-check",
+  "status": "PASS",
+  "focusedOnly": true,
+  "capturedAt": "2026-10-08T08:30:33.747484+00:00",
+  "scopePaths": [
+    "scripts/b01-browser-regression.mjs"
+  ],
+  "scopeCount": 1,
+  "before": {
+    "scripts/b01-browser-regression.mjs": "dd8688fd18f01ea775a9f17124a2765ef62fc0d7f96794343308e09aaebd11d3"
+  },
+  "after": {
+    "scripts/b01-browser-regression.mjs": "72f6a6143b5f55043c41bfe6b915a2e566196c5d4d99c16d3216c306f66fc5a6"
+  },
+  "unitAttribution": {
+    "scripts/b01-browser-regression.mjs": "D02"
+  },
+  "reviewBoundary": "Final B01 harness correction only; does not accept whole batch or pending whole 17-gate integration.",
+  "checkerChangedProductFiles": [],
+  "productFixes": [],
+  "blockers": [],
+  "focusedChecks": [
+    {
+      "name": "isolated-cold-1",
+      "owner": "main session 12213",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "scripts/b01-browser-regression.mjs"
+      ],
+      "exitCode": 0,
+      "passed": 19,
+      "log": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-cold-1.log",
+      "result": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-cold-results.json"
+    },
+    {
+      "name": "isolated-cold-2",
+      "owner": "main session 12213",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "scripts/b01-browser-regression.mjs"
+      ],
+      "exitCode": 0,
+      "passed": 19,
+      "log": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-cold-2.log",
+      "result": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-cold-results.json"
+    },
+    {
+      "name": "independent-exact-diff-preservation-installed-api-proof",
+      "owner": "checker",
+      "command": [
+        "python3",
+        ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-diff-proof.py"
+      ],
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-diff-proof.log",
+      "result": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-diff-proof.json"
+    }
+  ],
+  "proof": {
+    "status": "PASS",
+    "exitCode": 0,
+    "scope": [
+      "scripts/b01-browser-regression.mjs"
+    ],
+    "before": "dd8688fd18f01ea775a9f17124a2765ef62fc0d7f96794343308e09aaebd11d3",
+    "after": "72f6a6143b5f55043c41bfe6b915a2e566196c5d4d99c16d3216c306f66fc5a6",
+    "latestAcceptedOwner": "D02",
+    "exactAcceptedD02AfterMatchesBefore": true,
+    "inverseFiveHarnessChangesRestoresBeforeByteForByte": true,
+    "entireBusinessControlBodyByteEqual": true,
+    "allExistingAssertionsAndTimeoutsRetained": true,
+    "additionalAssertions": 1,
+    "documentAssertionAppliesToEveryExistingScenarioViaSharedTestWrapper": true,
+    "listenerInstalledBeforeOnlyGoto": true,
+    "documentCountNeverReset": true,
+    "mainFrameDocumentFilter": true,
+    "noBootstrapRetryOrReloadSuppressionOrTimeoutIncrease": true,
+    "syntaxCheckExitCode": 0,
+    "installedGlobCheckExitCode": 0,
+    "installedGlobProof": {
+      "vite": "7.3.6",
+      "tinyglobby": "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/tinyglobby@0.2.17/node_modules/tinyglobby/dist/index.cjs",
+      "entries": [
+        "/Users/xiaomengdao/WebstormProjects/aifenjing/tests/fixtures/b01/index.html"
+      ]
+    },
+    "coldRuns": [
+      {
+        "name": "isolated-cold-1",
+        "exitCode": 0,
+        "passed": 19,
+        "cacheDirectory": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/b01-vite-cache-2lv7wa",
+        "cacheRemovedAtReview": true,
+        "log": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-cold-1.log"
+      },
+      {
+        "name": "isolated-cold-2",
+        "exitCode": 0,
+        "passed": 19,
+        "cacheDirectory": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/b01-vite-cache-juiSRT",
+        "cacheRemovedAtReview": true,
+        "log": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-cold-2.log"
+      }
+    ]
+  },
+  "perFileCoverage": [
+    {
+      "path": "scripts/b01-browser-regression.mjs",
+      "status": "reviewed",
+      "findings": [],
+      "note": "All diff regions manually reviewed; exact inverse proves original assertions/timeouts/control body and D02 barriers retained; additive guard and installed cache/entry API verified."
+    }
+  ],
+  "preservedAttempts": {
+    "integrationAttempt01Original": {
+      "exitCode": 1,
+      "passedBeforeFailure": 7,
+      "scenario": 8
+    },
+    "integrationAttempt01SameInputRetry": {
+      "exitCode": 0,
+      "passed": 19
+    },
+    "integrationAttempt02": {
+      "exitCode": 1,
+      "passedBeforeFailure": 4,
+      "scenario": 5
+    },
+    "checkerProofSetup": {
+      "exitCode": 1,
+      "reason": "pnpm dependency realpath resolution; corrected helper exit0"
+    }
+  },
+  "rootCause": "UNPROVEN",
+  "observations": {
+    "coldIsolatedDebug": {
+      "exitCode": 0,
+      "passed": 19
+    },
+    "forcedColdSharedDebug": {
+      "exitCode": 0,
+      "passed": 19
+    },
+    "port5173": "Coordinator identifies unrelated GlyphSilk; not proof of same-cache concurrency",
+    "durableFailureHtml": [
+      {
+        "failure": 1,
+        "html": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-failure-1.html",
+        "screenshot": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-failure-1.png",
+        "scriptSources": [
+          "/@vite/client",
+          "/src/main.tsx"
+        ],
+        "rootMainPresent": true,
+        "fixtureHarnessAbsent": true
+      },
+      {
+        "failure": 2,
+        "html": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-failure-2.html",
+        "screenshot": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-failure-2.png",
+        "scriptSources": [
+          "/@vite/client",
+          "/src/main.tsx"
+        ],
+        "rootMainPresent": true,
+        "fixtureHarnessAbsent": true
+      }
+    ],
+    "failureHtmlInference": "Both retained documents load the root /src/main.tsx rather than the expected fixture harness. This supports unexpected document replacement/root-app fallback, without proving the trigger or Vite/optimizer causality."
+  },
+  "limitations": [
+    "Harness strengthening is not a confirmed root-cause fix or business bug fix.",
+    "Native local component fixture does not establish full-product E2E or provider coverage.",
+    "Cache cleanup observed after successful runs; exceptional creation/interrupted teardown not established.",
+    "No heavy/native/full gate rerun by checker; final whole 17-gate attempt remains pending.",
+    "Source AST/static scope unchanged by this review."
+  ],
+  "evidenceHashes": {
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-before.txt": "dd8688fd18f01ea775a9f17124a2765ef62fc0d7f96794343308e09aaebd11d3",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-entry.json": "e5424f57787ef44745a497a69c22c96d76b3bb206e1572704584d55df80ff603",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D02-check.md": "a47c01c82a1781933090d7c88853a8fe05fe98152bf7d3f868324808d41c9f66",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D02-check-snapshot.json": "8e850c26c983c7023e4fca22a097c4411100886a747f723909b19144a29ad600",
+    "scripts/b01-browser-regression.mjs": "72f6a6143b5f55043c41bfe6b915a2e566196c5d4d99c16d3216c306f66fc5a6",
+    "tests/fixtures/b01/index.html": "f4365ab59b46ab1d180674efacd8223aa258ec750bdd1ff9d59a4b0a919bb881",
+    "tests/fixtures/b01/harness.tsx": "f0c68eb5787bddd4ce834b938dfe6e3b18757ab658eae10ab0d0652e1e156ab1",
+    "node_modules/vite/package.json": "e5ed0f85215f871fe22a48987dcd77fcfbe14064a53c0c9f7f48186a6b7e2cf0",
+    "node_modules/vite/dist/node/index.d.ts": "cbb1c5ba5dbabe42c19ca31b83e48fec95895484fe1d1a8fb649b69ea224c5b8",
+    "node_modules/vite/dist/node/chunks/config.js": "c2fcfa51206dc1f8d22120ef4a82af8b9acdc02f4476520b6a0897d12a724ba3",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-diff-proof.py": "963f6394a3dc4e9306311def284ec73a3471085fd91548e0aab2d8e6f5e4251b",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-diff-proof.json": "6939e3dc6a62c020340102e4de03d34b7bd232f2bc6bb40d9b2c7f4fea9c1d91",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-diff-proof.log": "6939e3dc6a62c020340102e4de03d34b7bd232f2bc6bb40d9b2c7f4fea9c1d91",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-diff-proof-first-attempt.txt": "9c83c270d4f6be442d8529254d77e974701530c452616749f94d9dababd6027f",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-check.md": "5b23126d60020db0b7412e5f9851dce157d695d5b808f62ef6eacbcf46e79686",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-cold-1.log": "6c3a88967a0b3797d7eeb7b5cc5986a24e9d42e669984dcf9376fb1c2b50c23a",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-cold-2.log": "e8d50f972c3c022a040ba5f119a16f3ae923319c431fa8c85ff00a13798557a7",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-cold-results.json": "26fc15ea4bf6df10e0eb04828a1bc374a3719f362b7ed0abe131bbdf7c969092",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-debug-entry.json": "01b53bbffc1f6befd477d3017636db307f248c1452428a4c5a779aba08e812f6",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-debug-result.json": "a88c434ec4101b0b8ba093b4d72a16084ce0222f3fa1c90315ad9add7eeb8d96",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-debug-source.txt": "2941a8f89fde871e86bc349ba2e24694c0b242bd3c8a4fc65bc548e2e6e9e70a",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-debug.log": "b7f4b48fa9d6ad810fc4d96acba625398956b76fba780f730339757d93ce928e",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-shared-debug-entry.json": "e49781e6438fc2916a9b1a474b8c82ff28fd4e16b50e494ba3d919283b2e791d",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-shared-debug-result.json": "ccfbabf8fa6792f70447f973a01712e9015b44cda769b8c2b9dcc7833d67f6a4",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-shared-debug-source.txt": "9ee2ab9aa179a50459104613aaa7084c687a46db3eb0e05d8a821d1764d3e5ee",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-shared-debug.log": "b8dbd926eca2319e94cd98517254f67f412d1c9e14687a3eea10a9e7949fa54d",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/integration-attempt-01/first-attempt-commands.json": "1130f9326048acc12ae65a1e3777069e3bc0432a1e5dd00f636e84d0c264dcec",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/integration-attempt-01/first-attempt-b01-browser-stdout.txt": "eff68506bf840eba806c9e2ee585bdfd6cc88da90fe237f5820bfc7bce08fc18",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/integration-attempt-01/first-attempt-b01-browser-stderr.txt": "4d0aa63f4dd1a16a094b48fafac06646de4d2d27f822ece432db883ac1c56399",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/integration-attempt-01/commands.json": "c34b4bcf968dda46bcab13fe9fc910df846bcaeaada16a5679b37f577b8972f9",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/integration-attempt-01/b01-browser-stdout.txt": "94ebca7b41b7a5eda4312874e0d70095b2f4d5c797da0f7afaf8dedb392a997d",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/integration-attempt-01/b01-browser-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/integration-attempt-02/commands.json": "6da0742419ebc35f3975f2ea93c6b29fba76003c17eb6b5523021f2d8274beef",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/integration-attempt-02/b01-browser-stdout.txt": "03665c97ad377ccb909ed7fbbf6d7fea027d6821bb878084ee827951dbf2faa4",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/integration-attempt-02/b01-browser-stderr.txt": "4cba3522345682d9a7b145a22a6cfb6c6c37243810b5cd815fe44a998563306a",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/tinyglobby@0.2.17/node_modules/tinyglobby/dist/index.cjs": "ee408bbc9665cba5800a6b2a0c89dd3df9820baa30d4ff3ba2f2435f16ce9f94",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-failure-1.html": "e4ee48ec01e9804fedccfa13162db4cb09a8f688b11aeb9f9e3caf505f9ab7db",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-failure-1.png": "3878570f4a62a0d65f57cf1754e0269e56ec797f4e36e26b44c172eb6e800401",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-failure-2.html": "f37300fcc3d360eb9718494d4355dad08d3dab2abca0577fe48e45b4f80a48fd",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-b01-failure-2.png": "c87d6f295f623a001fd04da0611226f9783b61f7bff5caae4f87357881249276",
+    "src/db/shots.ts": "fe48dc9ee40950096d91dde9119b56de03a9c1523aa872e5cce090fb833189b2",
+    "src/db/projects.ts": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+    "src/db/assets.ts": "32362eff2c660aaa4f020e093591be90f541e9741468e3e7d2e606164490068d"
+  }
+}

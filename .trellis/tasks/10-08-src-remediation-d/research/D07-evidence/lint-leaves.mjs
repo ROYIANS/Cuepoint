@@ -1,0 +1,10 @@
+import {createRequire} from 'node:module';
+import {writeFile} from 'node:fs/promises';
+const require = createRequire('/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/package.json');
+const {ESLint} = require('eslint');
+const eslint = new ESLint({overrideConfigFile:'/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/eslint.config.mjs'});
+const rows = await eslint.lintFiles(['src/lib/ai/baseUrl.ts','src/lib/ai/requestBoundary.ts']);
+for(const row of rows) delete row.source;
+await writeFile('.trellis/tasks/10-08-src-remediation-d/research/D07-evidence/leaf-static.json',JSON.stringify(rows,null,2)+'\n');
+console.log(JSON.stringify(rows.map(row=>({path:row.filePath,messages:row.messages}))));
+if(rows.some(row=>row.messages.length))process.exitCode=1;

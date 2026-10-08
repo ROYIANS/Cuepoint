@@ -1,0 +1,16 @@
+12:12:54 PM [vite] (client) Re-optimizing dependencies because vite config has changed
+native failure after 0 passed; artifacts /var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/d04-native-failure-u1tU9k
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.waitForFunction: Timeout 10000ms exceeded.
+    at ready (/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D04-native.mjs:41:43)
+    at /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D04-native.mjs:48:29
+    at async test (/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D04-native.mjs:46:46)
+    at async file:///Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D04-native.mjs:47:5 {
+  log: [],
+  name: 'TimeoutError'
+}
+
+Node.js v24.11.0

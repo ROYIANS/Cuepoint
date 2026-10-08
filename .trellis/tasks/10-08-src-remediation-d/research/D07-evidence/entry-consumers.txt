@@ -1,0 +1,1112 @@
+tests/audioOutputEvidence.test.ts:19:  const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/audioOutputEvidence.test.ts:20:    if (String(url).includes("/music/generations") && init?.method === "POST") return Response.json({ code: 200, data: [{ task_id: "remote" }] });
+tests/audioOutputEvidence.test.ts:21:    if (String(url).includes("/music/tasks/")) return Response.json({ code: 200, data: { id: "remote", status: "completed", result: { music: [{ title: "作品", audio_url: "https://cdn.test/signed.wav?secret=example" }] } } });
+tests/audioOutputEvidence.test.ts:25:  await submitAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/audioOutputEvidence.test.ts:26:  if (kind === "music") await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/audioOutputEvidence.test.ts:28:  return { project, job, segment, chapter, read, fetchImpl };
+tests/audioOutputEvidence.test.ts:33:    const f = await fixture(); const count = f.fetchImpl.mock.calls.length;
+tests/audioOutputEvidence.test.ts:39:    expect(f.fetchImpl).toHaveBeenCalledTimes(count);
+tests/musicDurationContract.test.ts:17:import {submitApimartMusic, type MusicInput} from "@/lib/ai/apimartAudio";
+tests/musicDurationContract.test.ts:87:        const fetchImpl = vi.fn<typeof fetch>(async () => Response.json({code: 200, data: [{task_id: "task"}]}));
+tests/musicDurationContract.test.ts:88:        expect(await submitApimartMusic(credentials, musicWireInput(value), {fetchImpl})).toEqual({ok: true, taskIds: ["task"]});
+tests/musicDurationContract.test.ts:89:        expect(JSON.parse(String(fetchImpl.mock.calls[0][1]?.body))).toEqual(wire(engine, duration));
+tests/musicDurationContract.test.ts:90:        expect(fetchImpl).toHaveBeenCalledOnce();
+tests/musicDurationContract.test.ts:114:        const fetchImpl = vi.fn<typeof fetch>();
+tests/musicDurationContract.test.ts:115:        expect(await submitApimartMusic(credentials, wire(engine, duration), {fetchImpl})).toMatchObject({ok: false, kind: "validation"});
+tests/musicDurationContract.test.ts:116:        expect(fetchImpl).not.toHaveBeenCalled();
+tests/audioGenerationRecoveryAudit.test.ts:11:import { getApimartMusicTask } from "@/lib/ai/apimartAudio";
+tests/audioGenerationRecoveryAudit.test.ts:22:const complete = (id: string, urls: string[]) => Response.json({ code: 200, data: { id, status: "completed", result: { music: urls.map((url, i) => ({ audio_url: url, title: `${id}:${i}` })) } } });
+tests/audioGenerationRecoveryAudit.test.ts:27:    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/audioGenerationRecoveryAudit.test.ts:28:      if (init?.method === "POST") return Response.json({ code: 200, data: [{ task_id: "good" }, { task_id: "bad" }] });
+tests/audioGenerationRecoveryAudit.test.ts:30:      if (String(url).includes("/music/tasks/bad")) return Response.json({ code: 200, data: { id: "bad", status: "failed", error: { message: "provider failure" } } });
+tests/audioGenerationRecoveryAudit.test.ts:33:    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRecoveryAudit.test.ts:34:    const state = await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/audioGenerationRecoveryAudit.test.ts:37:    expect(fetchImpl.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(1);
+tests/audioGenerationRecoveryAudit.test.ts:41:    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/audioGenerationRecoveryAudit.test.ts:42:      if (init?.method === "POST") return Response.json({ code: 200, data: [{ task_id: "both" }] });
+tests/audioGenerationRecoveryAudit.test.ts:47:    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRecoveryAudit.test.ts:48:    const state = await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/audioGenerationRecoveryAudit.test.ts:55:    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/audioGenerationRecoveryAudit.test.ts:56:      if (init?.method === "POST") return Response.json({ code: 200, data: [{ task_id: "wav" }] });
+tests/audioGenerationRecoveryAudit.test.ts:60:    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRecoveryAudit.test.ts:61:    await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/audioGenerationRecoveryAudit.test.ts:66:    const fetchImpl = vi.fn<typeof fetch>(async (_url, init) => init?.method === "POST"
+tests/audioGenerationRecoveryAudit.test.ts:67:      ? Response.json({ code: 200, data: [{ task_id: "future" }] })
+tests/audioGenerationRecoveryAudit.test.ts:68:      : Response.json({ code: 200, data: { id: "future", status: "provider-new-status" } }));
+tests/audioGenerationRecoveryAudit.test.ts:69:    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRecoveryAudit.test.ts:70:    const state = await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/audioGenerationRecoveryAudit.test.ts:76:    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/audioGenerationRecoveryAudit.test.ts:77:      if (init?.method === "POST") return Response.json({ code: 200, data: [{ task_id: "early" }, { task_id: "late" }] });
+tests/audioGenerationRecoveryAudit.test.ts:82:    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRecoveryAudit.test.ts:86:    const state = await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/audioGenerationRecoveryAudit.test.ts:93:    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/audioGenerationRecoveryAudit.test.ts:94:      if (init?.method === "POST") return Response.json({ code: 200, data: [{ task_id: "pair" }] });
+tests/audioGenerationRecoveryAudit.test.ts:99:    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRecoveryAudit.test.ts:100:    await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/audioGenerationRecoveryAudit.test.ts:108:    const recovered = await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/audioGenerationRecoveryAudit.test.ts:120:    await refreshAudioGeneration(imported.id, history.id, { fetchImpl: historicalFetch });
+tests/audioGenerationRecoveryAudit.test.ts:126:    const result = await getApimartMusicTask(credentials, "mixed", { fetchImpl: vi.fn(async () => Response.json({ code: 200, data: { id: "mixed", status: "completed", result: { music: [
+tests/audioGenerationRecoveryAudit.test.ts:138:    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/audioGenerationRecoveryAudit.test.ts:139:      if (init?.method === "POST") return Response.json({ code: 200, data: ["early", "late", "early"].map(task_id => ({ task_id })) });
+tests/audioGenerationRecoveryAudit.test.ts:146:    const submitted = await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRecoveryAudit.test.ts:149:    const saved = await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/audioGenerationRecoveryAudit.test.ts:153:    expect(fetchImpl.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(1);
+tests/audioGenerationRecoveryAudit.test.ts:154:    expect(fetchImpl.mock.calls.filter(([url]) => String(url).includes("/music/tasks/"))).toHaveLength(2);
+tests/audioGenerationRecoveryAudit.test.ts:155:    expect(fetchImpl).toHaveBeenCalledTimes(5);
+tests/audioGenerationRecoveryAudit.test.ts:161:    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/audioGenerationRecoveryAudit.test.ts:171:    const saved = await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/audioGenerationRecoveryAudit.test.ts:175:    expect(fetchImpl.mock.calls.filter(([url]) => String(url).includes("/music/tasks/"))).toHaveLength(2);
+tests/audioGenerationRecoveryAudit.test.ts:176:    expect(fetchImpl.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(0);
+tests/audioGenerationRecoveryAudit.test.ts:177:    expect(fetchImpl).toHaveBeenCalledTimes(4);
+tests/audioGenerationRecoveryAudit.test.ts:191:    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/audioGenerationRecoveryAudit.test.ts:207:        return Response.json({ code: 200, data: { id, status: lateStatus } });
+tests/audioGenerationRecoveryAudit.test.ts:212:    const running = await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/audioGenerationRecoveryAudit.test.ts:222:    const failedQuery = await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/audioGenerationRecoveryAudit.test.ts:227:    const saved = await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/audioGenerationRecoveryAudit.test.ts:234:    expect(fetchImpl).toHaveBeenCalledTimes(8);
+tests/audioGenerationRecoveryAudit.test.ts:235:    expect(fetchImpl.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(0);
+tests/audioGenerationRecoveryAudit.test.ts:245:    const fetchImpl = vi.fn<typeof fetch>();
+tests/audioGenerationRecoveryAudit.test.ts:246:    await expect(refreshAudioGeneration(project.id, job.id, { fetchImpl, decode })).rejects.toThrow("音乐任务 ID");
+tests/audioGenerationRecoveryAudit.test.ts:247:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/audioGenerationRecoveryAudit.test.ts:249:    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRecoveryAudit.test.ts:250:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/audioGenerationRecoveryAudit.test.ts:258:    const fetchImpl = vi.fn<typeof fetch>(async () => Response.json({ code: 200, data: taskIds.map(task_id => ({ task_id })) }));
+tests/audioGenerationRecoveryAudit.test.ts:259:    const uncertain = await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRecoveryAudit.test.ts:263:    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRecoveryAudit.test.ts:264:    await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/audioGenerationRecoveryAudit.test.ts:265:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/audioGenerationRecoveryAudit.test.ts:272:    const response = Response.json({});
+tests/audioGenerationRecoveryAudit.test.ts:278:    const fetchImpl = vi.fn<typeof fetch>(async () => response);
+tests/audioGenerationRecoveryAudit.test.ts:279:    const uncertain = await submitAudioGeneration(project.id, job.id, { fetchImpl, signal: controller.signal });
+tests/audioGenerationRecoveryAudit.test.ts:281:    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRecoveryAudit.test.ts:282:    await refreshAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRecoveryAudit.test.ts:283:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/audioGenerationRecoveryAudit.test.ts:284:    expect(fetchImpl.mock.calls[0][1]?.method).toBe("POST");
+tests/agentBatchPreparationRecovery.test.ts:17:const answer = () => Response.json({ choices: [{ message: { content: "草稿已准备，等待确认" }, finish_reason: "stop" }] });
+tests/agentBatchPreparationRecovery.test.ts:29:const response = (candidate: unknown, id: string) => Response.json({ choices: [{ message: { content: "", tool_calls: [{ id, type: "function", function: { name: "prepare_generation_batch", arguments: JSON.stringify({ title: "三组参考", candidates: [candidate] }) } }] }, finish_reason: "tool_calls" }] });
+tests/mimoRuntime.test.ts:16:const response = (final_text_preview?: string) => Response.json({ choices: [{ finish_reason: "stop", message: { audio: { data: btoa(String.fromCharCode(...bytes)) }, ...(final_text_preview ? { final_text_preview } : {}) } }] });
+tests/mimoRuntime.test.ts:31:    const fetchImpl = vi.fn<typeof fetch>(async () => response("润色后的播报稿"));
+tests/mimoRuntime.test.ts:32:    const submitted = await submitAudioGeneration(project.id, job.id, { fetchImpl, decode: async () => { throw new Error("decode interrupted"); } });
+tests/mimoRuntime.test.ts:36:    const saved = await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/mimoRuntime.test.ts:37:    await submitAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/mimoRuntime.test.ts:38:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/mimoRuntime.test.ts:51:    const fetchImpl = vi.fn<typeof fetch>(async () => { throw new Error("offline"); });
+tests/mimoRuntime.test.ts:52:    const outcomes = await Promise.all([submitAudioGeneration(project.id, job.id, { fetchImpl }), submitAudioGeneration(project.id, job.id, { fetchImpl })]);
+tests/mimoRuntime.test.ts:54:    expect((await refreshAudioGeneration(project.id, job.id, { fetchImpl })).status).toBe("uncertain");
+tests/mimoRuntime.test.ts:55:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/mimoRuntime.test.ts:78:    const fetchImpl = vi.fn<typeof fetch>(async () => response());
+tests/mimoRuntime.test.ts:79:    await expect(submitAudioGeneration(project.id, job.id, { fetchImpl, decode })).rejects.toThrow("已变化");
+tests/mimoRuntime.test.ts:80:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/mimoRuntime.test.ts:82:    const changedDuringReview = await submitAudioGeneration(project.id, job.id, { fetchImpl, decode, beforeSubmit: async () => {
+tests/mimoRuntime.test.ts:86:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/mimoRuntime.test.ts:106:    const fetchImpl = vi.fn<typeof fetch>(async () => response());
+tests/mimoRuntime.test.ts:107:    expect((await submitAudioGeneration(imported.id, importedJob.id, { fetchImpl })).id).toBe(importedJob.id);
+tests/mimoRuntime.test.ts:108:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/agentIpTools.test.ts:31:const response = (name: string, args: unknown) => Response.json({ choices: [{ message: { content: '', tool_calls: [{ id: 'provider-call', type: 'function', function: { name, arguments: JSON.stringify(args) } }] }, finish_reason: 'tool_calls' }] });
+tests/agentIpTools.test.ts:32:const answer = () => Response.json({ choices: [{ message: { content: '已处理' }, finish_reason: 'stop' }] });
+tests/providerCacheUsage.test.ts:2:import { streamChatCompletions } from '@/lib/ai/chatStream';
+tests/providerCacheUsage.test.ts:3:import { streamResponses } from '@/lib/ai/responsesStream';
+tests/providerCacheUsage.test.ts:10:    const result = await transport(input, { fetchImpl: async () => Response.json(responses
+tests/audioGenerationRuntime.test.ts:23:    const fetchImpl = vi.fn<typeof fetch>(async () => binary());
+tests/audioGenerationRuntime.test.ts:24:    const jobs = await Promise.all([submitAudioGeneration(project.id, job.id, { fetchImpl, decode }), submitAudioGeneration(project.id, job.id, { fetchImpl, decode })]);
+tests/audioGenerationRuntime.test.ts:26:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/audioGenerationRuntime.test.ts:34:    const fetchImpl = vi.fn<typeof fetch>(async () => { throw new Error("connection lost"); });
+tests/audioGenerationRuntime.test.ts:35:    expect((await submitAudioGeneration(project.id, job.id, { fetchImpl })).status).toBe("uncertain");
+tests/audioGenerationRuntime.test.ts:36:    expect((await refreshAudioGeneration(project.id, job.id, { fetchImpl })).status).toBe("uncertain");
+tests/audioGenerationRuntime.test.ts:37:    expect((await submitAudioGeneration(project.id, job.id, { fetchImpl })).status).toBe("uncertain");
+tests/audioGenerationRuntime.test.ts:38:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/audioGenerationRuntime.test.ts:43:    const fetchImpl = vi.fn<typeof fetch>(async () => binary());
+tests/audioGenerationRuntime.test.ts:44:    expect((await submitAudioGeneration(project.id, job.id, { fetchImpl, decode: async () => { throw new Error("temporary decode failure"); } })).status).toBe("remote-completed");
+tests/audioGenerationRuntime.test.ts:45:    expect((await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode })).status).toBe("saved");
+tests/audioGenerationRuntime.test.ts:46:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/audioGenerationRuntime.test.ts:53:    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/audioGenerationRuntime.test.ts:54:      if (init?.method === "POST") return Response.json({ code: 200, data: [{ task_id: "remote" }] });
+tests/audioGenerationRuntime.test.ts:55:      if (String(url).includes("/music/tasks/")) return Response.json({ code: 200, data: { id: "remote", status: "completed", result: { music: [1, 2, 3].map(i => ({ title: `Song ${i}`, clip_id: `clip-${i}`, audio_url: `https://cdn.example/${i}.wav` })) } } });
+tests/audioGenerationRuntime.test.ts:60:    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRuntime.test.ts:61:    expect((await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode })).status).toBe("remote-completed");
+tests/audioGenerationRuntime.test.ts:63:    expect((await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode })).status).toBe("saved");
+tests/audioGenerationRuntime.test.ts:64:    expect(fetchImpl.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(1);
+tests/audioGenerationRuntime.test.ts:73:    const fetchImpl = vi.fn<typeof fetch>(async () => binary());
+tests/audioGenerationRuntime.test.ts:74:    await expect(submitAudioGeneration(project.id, job.id, { fetchImpl })).rejects.toThrow("修改");
+tests/audioGenerationRuntime.test.ts:75:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/audioGenerationRuntime.test.ts:77:    const result = await submitAudioGeneration(project.id, next.id, { fetchImpl, beforeSubmit: async () => { await db.connectors.update(connector.id, { apiKey: "changed" }); } });
+tests/audioGenerationRuntime.test.ts:79:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/audioGenerationRuntime.test.ts:92:const taskResponse = (id: string, status: string) => Response.json({ code: 200, data: { id, status,
+tests/audioGenerationRuntime.test.ts:99:    const fetchImpl = vi.fn<typeof fetch>(async (_url, init) => init?.method === "POST"
+tests/audioGenerationRuntime.test.ts:100:      ? Response.json({ code: 200, data: [{ task_id: "remote" }] }) : taskResponse("remote", status));
+tests/audioGenerationRuntime.test.ts:101:    const submitted = await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRuntime.test.ts:104:    const pending = await refreshAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRuntime.test.ts:108:    const running = await refreshAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRuntime.test.ts:112:    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRuntime.test.ts:113:    expect(fetchImpl.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(1);
+tests/audioGenerationRuntime.test.ts:119:    const fetchImpl = vi.fn<typeof fetch>(async (_url, init) => {
+tests/audioGenerationRuntime.test.ts:120:      if (init?.method === "POST") return Response.json({ code: 200, data: [{ task_id: "remote" }] });
+tests/audioGenerationRuntime.test.ts:123:      if (failure === "protocol") return Response.json({ nonsense: "secret" });
+tests/audioGenerationRuntime.test.ts:126:    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRuntime.test.ts:127:    const running = await refreshAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRuntime.test.ts:131:    const result = await refreshAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRuntime.test.ts:137:    expect(fetchImpl.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(1);
+tests/audioGenerationRuntime.test.ts:143:    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/audioGenerationRuntime.test.ts:144:      if (init?.method === "POST") return Response.json({ code: 200, data: [{ task_id: "early" }, { task_id: "later" }] });
+tests/audioGenerationRuntime.test.ts:154:    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRuntime.test.ts:155:    const partial = await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/audioGenerationRuntime.test.ts:160:    expect((await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode })).status).toBe("saved");
+tests/audioGenerationRuntime.test.ts:162:    expect(fetchImpl.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(1);
+tests/audioGenerationRuntime.test.ts:168:    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/audioGenerationRuntime.test.ts:169:      if (init?.method === "POST") return Response.json({ code: 200, data: ["done", "bad", "lost", "active"].map(task_id => ({ task_id })) });
+tests/audioGenerationRuntime.test.ts:178:    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRuntime.test.ts:179:    const partial = await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/audioGenerationRuntime.test.ts:184:    const completed = await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/audioGenerationRuntime.test.ts:188:    await refreshAudioGeneration(project.id, job.id, { fetchImpl, decode });
+tests/audioGenerationRuntime.test.ts:190:    expect(fetchImpl.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(1);
+tests/audioGenerationRuntime.test.ts:196:    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/audioGenerationRuntime.test.ts:197:      if (init?.method === "POST") return Response.json({ code: 200, data: [{ task_id: "first" }, { task_id: "second" }] });
+tests/audioGenerationRuntime.test.ts:201:    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRuntime.test.ts:210:      stopped = await refreshAudioGeneration(project.id, job.id, { fetchImpl, signal: controller.signal });
+tests/audioGenerationRuntime.test.ts:218:    expect(fetchImpl).toHaveBeenCalledTimes(2);
+tests/audioGenerationRuntime.test.ts:224:    const fetchImpl = vi.fn<typeof fetch>(async (_url, init) => {
+tests/audioGenerationRuntime.test.ts:225:      if (init?.method === "POST") return Response.json({ code: 200, data: [{ task_id: "first" }, { task_id: "second" }] });
+tests/audioGenerationRuntime.test.ts:229:    await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRuntime.test.ts:230:    const stopped = await refreshAudioGeneration(project.id, job.id, { fetchImpl, signal: controller.signal });
+tests/audioGenerationRuntime.test.ts:234:    expect(fetchImpl).toHaveBeenCalledTimes(2);
+tests/audioGenerationRuntime.test.ts:243:    const fetchImpl = vi.fn<typeof fetch>(async () => Response.json({ code: 200, data: [{ task_id: "remote" }] }));
+tests/audioGenerationRuntime.test.ts:244:    const submitted = await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/audioGenerationRuntime.test.ts:252:    const fetchImpl = vi.fn<typeof fetch>(async () => Response.json({ code: 200, data: [{ task_id: "remote" }] }));
+tests/audioGenerationRuntime.test.ts:253:    const submitted = await submitAudioGeneration(project.id, job.id, { fetchImpl });
+tests/agentActivityPersistence.test.ts:32:    const fetchImpl: typeof fetch = async () => {
+tests/agentActivityPersistence.test.ts:37:      if (protocol === "responses") return Response.json({ id: `response-${requestCount}`, status: "completed", output: [
+tests/agentActivityPersistence.test.ts:42:      return Response.json({ choices: [{ message: { content, reasoning_content: reasoning, ...(isToolRound ? { tool_calls: [{ id: `call-${requestCount}`, type: "function", function: { name: "workspace_overview", arguments: "{}" } }] } : {}) }, finish_reason: isToolRound ? "tool_calls" : "stop" }] });
+tests/agentActivityPersistence.test.ts:44:    await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
+tests/connectors.test.ts:3:import { streamChatCompletions } from "@/lib/ai/chatStream";
+tests/connectors.test.ts:18:    const fetchImpl = vi.fn<typeof fetch>().mockImplementation(async () => Response.json({
+tests/connectors.test.ts:30:    const all = await listConnectorModels(apimart, "all", fetchImpl);
+tests/connectors.test.ts:32:    expect(await listConnectorModels(apimart, "chat", fetchImpl)).toEqual({ ok: true, models: ["gpt-chat"] });
+tests/connectors.test.ts:33:    expect(String(fetchImpl.mock.calls[0][0])).toBe(`${apimart.baseUrl}/models?expand=category`);
+tests/connectors.test.ts:37:    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(new Response("missing", { status: 404 }));
+tests/connectors.test.ts:38:    const result = await testConnectorConnection(apimart, fetchImpl);
+tests/connectors.test.ts:40:    expect(fetchImpl).toHaveBeenCalledTimes(1);
+tests/connectors.test.ts:41:    expect(fetchImpl.mock.calls[0][1]?.method ?? "GET").toBe("GET");
+tests/connectors.test.ts:45:    const fetchImpl = vi.fn<typeof fetch>().mockImplementation(async () => Response.json({
+tests/connectors.test.ts:48:    expect(await testConnectorConnection(apimart, fetchImpl)).toEqual({ ok: true, via: "models", modelCount: 1 });
+tests/connectors.test.ts:49:    expect(await listConnectorModels(apimart, "chat", fetchImpl)).toEqual({ ok: true, models: [] });
+tests/connectors.test.ts:54:    const discover = vi.fn<typeof fetch>().mockResolvedValue(Response.json({ data: [{ id: "custom" }] }));
+tests/connectors.test.ts:59:      .mockResolvedValueOnce(Response.json({ choices: [{ message: { role: "assistant", content: "pong" } }] }));
+tests/connectors.test.ts:74:    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(Response.json({ data: {} }));
+tests/connectors.test.ts:75:    expect((await listConnectorModels(apimart, "chat", fetchImpl)).ok).toBe(false);
+tests/connectors.test.ts:109:      ? Response.json(connector.definitionId === "apimart" ? modelResponse : { success: true, data: modelResponse.data.map((row) => ({ model_id: row.id, types: ({ chat: "llm", image: "image_generation", video: "video", audio: "tts", unknown: "" })[row.category] })) })
+tests/connectors.test.ts:110:      : Response.json({ choices: [{ message: { content: "reply" } }] }));
+tests/connectors.test.ts:112:  function sendAction(model: string, fetchImpl: typeof fetch) {
+tests/connectors.test.ts:116:      return streamChatCompletions({ ...connector, model, messages: [{ role: "user", content: "draft" }] }, { fetchImpl });
+tests/connectors.test.ts:123:    const fetchImpl = transport();
+tests/connectors.test.ts:124:    const action = sendAction(model, fetchImpl);
+tests/connectors.test.ts:125:    expect(await runWithCompatibleChatModel(connector, model, action, { fetchImpl })).toMatchObject({ ok: false, message: expect.stringContaining("无法用于对话") });
+tests/connectors.test.ts:127:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/connectors.test.ts:128:    expect(fetchImpl.mock.calls[0][1]?.method).toBe("GET");
+tests/connectors.test.ts:134:    const fetchImpl = transport();
+tests/connectors.test.ts:135:    const action = sendAction(model, fetchImpl);
+tests/connectors.test.ts:136:    expect(await runWithCompatibleChatModel(connector, model, action, { fetchImpl })).toMatchObject({ ok: true, value: { ok: true, content: "reply" } });
+tests/connectors.test.ts:138:    expect(fetchImpl.mock.calls.map((call) => call[1]?.method)).toEqual(["GET", "POST"]);
+tests/connectors.test.ts:139:    expect(JSON.parse(String(fetchImpl.mock.calls[1][1]?.body)).model).toBe(model);
+tests/connectors.test.ts:144:    const fetchImpl = transport();
+tests/connectors.test.ts:145:    const action = sendAction("image-model", fetchImpl);
+tests/connectors.test.ts:146:    expect(await runWithCompatibleChatModel({ ...connector, definitionId: "openai-compatible" }, "image-model", action, { fetchImpl })).toMatchObject({ ok: true });
+tests/connectors.test.ts:147:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/connectors.test.ts:148:    expect(fetchImpl.mock.calls[0][1]?.method).toBe("POST");
+tests/connectors.test.ts:151:  it.each([Response.json({ error: { message: "offline" } }, { status: 503 }), Response.json({ data: {} })])("rejects failed/unusable metadata before mutations", async (response) => {
+tests/connectors.test.ts:152:    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(response);
+tests/connectors.test.ts:154:    const mutateAndSend = sendAction("custom", fetchImpl);
+tests/connectors.test.ts:159:    expect(await runWithCompatibleChatModel(connector, "custom", action, { fetchImpl })).toMatchObject({ ok: false, message: expect.stringContaining("无法确认") });
+tests/connectors.test.ts:164:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/connectors.test.ts:169:    const fetchImpl = vi.fn<typeof fetch>(() => new Promise<Response>((done) => { resolve = done; }));
+tests/connectors.test.ts:172:    const action = sendAction("chat-model", fetchImpl);
+tests/connectors.test.ts:173:    const pending = runWithCompatibleChatModel(connector, "chat-model", action, { fetchImpl, signal: controller.signal, isCurrent: () => current });
+tests/connectors.test.ts:177:    resolve(Response.json(connector.definitionId === "apimart" ? modelResponse : { success: true, data: modelResponse.data.map((row) => ({ model_id: row.id, types: ({ chat: "llm", image: "image_generation", video: "video", audio: "tts", unknown: "" })[row.category] })) }));
+tests/connectors.test.ts:181:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/connectors.test.ts:185:    const fetchImpl = transport();
+tests/connectors.test.ts:186:    const action = sendAction("", fetchImpl);
+tests/connectors.test.ts:187:    expect(await runWithCompatibleChatModel(connector, " ", action, { fetchImpl })).toMatchObject({ ok: false });
+tests/connectors.test.ts:189:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/connectors.test.ts:213:    const fetchImpl = vi.fn<typeof fetch>(async () => Response.json({ success: true, data: rows }));
+tests/connectors.test.ts:214:    const result = await discoverConnectorChatModels(aihubmix, { fetchImpl });
+tests/connectors.test.ts:216:    expect(fetchImpl.mock.calls[0][0]).toBe("https://aihubmix.com/api/v1/models");
+tests/connectors.test.ts:217:    expect(new Headers(fetchImpl.mock.calls[0][1]?.headers).has("Authorization")).toBe(false);
+tests/connectors.test.ts:218:    const all = await listConnectorModels(aihubmix, "all", fetchImpl);
+tests/connectors.test.ts:223:    const fetchImpl = vi.fn<typeof fetch>(async () => Response.json({ object: "list", data: [], has_more: false, next_after: null }));
+tests/connectors.test.ts:224:    expect(await testConnectorConnection(aihubmix, fetchImpl)).toEqual({ ok: true, via: "authenticated-read" });
+tests/connectors.test.ts:225:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/connectors.test.ts:226:    expect(fetchImpl.mock.calls[0][0]).toBe("https://aihubmix.com/ai/v1/images?limit=1");
+tests/connectors.test.ts:227:    expect(fetchImpl.mock.calls[0][1]?.method).toBe("GET");
+tests/connectors.test.ts:228:    expect(new Headers(fetchImpl.mock.calls[0][1]?.headers).get("Authorization")).toBe("Bearer test-key");
+tests/connectors.test.ts:232:    const fetchImpl = vi.fn<typeof fetch>(async () => Response.json({ error: { message: "denied" } }, { status }));
+tests/connectors.test.ts:233:    expect(await testConnectorConnection(aihubmix, fetchImpl)).toMatchObject({ ok: false });
+tests/connectors.test.ts:234:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/connectors.test.ts:235:    expect(fetchImpl.mock.calls[0][1]?.method).toBe("GET");
+tests/connectors.test.ts:242:    const fetchImpl = vi.fn<typeof fetch>().mockImplementation(async () => Response.json({ data: ["mimo-v2.5", "mimo-v2.5-tts", "mimo-v2.5-tts-voicedesign", "mimo-v2.5-tts-voiceclone", "mimo-v2.5-asr"].map(id => ({ id })) }));
+tests/connectors.test.ts:243:    expect(await listConnectorModels(mimo, "all", fetchImpl)).toMatchObject({ ok: true, models: expect.arrayContaining(["mimo-v2.5-tts"]) });
+tests/connectors.test.ts:244:    expect(await listConnectorModels(mimo, "chat", fetchImpl)).toEqual({ ok: true, models: ["mimo-v2.5"] });
+tests/connectors.test.ts:245:    expect(await testConnectorConnection(mimo, fetchImpl)).toEqual({ ok: true, via: "models", modelCount: 5 });
+tests/connectors.test.ts:248:    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(new Response("error", { status }));
+tests/connectors.test.ts:249:    expect(await testConnectorConnection(mimo, fetchImpl)).toMatchObject({ ok: false });
+tests/connectors.test.ts:250:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/connectors.test.ts:251:    expect(fetchImpl.mock.calls[0][1]?.method).toBe("GET");
+tests/connectors.test.ts:254:    const action = vi.fn(), fetchImpl = vi.fn<typeof fetch>();
+tests/connectors.test.ts:255:    expect(await runWithCompatibleChatModel(mimo, model, action, { fetchImpl })).toMatchObject({ ok: false });
+tests/connectors.test.ts:256:    expect(action).not.toHaveBeenCalled(); expect(fetchImpl).not.toHaveBeenCalled();
+tests/connectors.test.ts:270:      ["all", (fetchImpl: typeof fetch) => listConnectorModels(connector, "all", fetchImpl)],
+tests/connectors.test.ts:271:      ["chat", (fetchImpl: typeof fetch) => listConnectorModels(connector, "chat", fetchImpl)],
+tests/connectors.test.ts:272:      ["discover", (fetchImpl: typeof fetch) => discoverConnectorChatModels(connector, { fetchImpl })],
+tests/connectors.test.ts:273:      ["probe", (fetchImpl: typeof fetch) => testConnectorConnection(connector, fetchImpl)],
+tests/connectors.test.ts:278:        ["bad envelope", () => Response.json({ data: {} })],
+tests/connectors.test.ts:279:        ["bad row", () => Response.json({ data: [{ id: "valid" }, { id: " " }] })],
+tests/connectors.test.ts:280:        ["error", () => Response.json({ error: { message: "denied test-key" }, data: [] })],
+tests/connectors.test.ts:282:        const fetchImpl = vi.fn<typeof fetch>(async (_url, init) => init?.method === "POST"
+tests/connectors.test.ts:283:          ? Response.json({ choices: [{ message: { role: "assistant", content: "pong" } }] }) : response());
+tests/connectors.test.ts:284:        const result = await call(fetchImpl);
+tests/connectors.test.ts:287:        expect(fetchImpl).toHaveBeenCalledOnce();
+tests/connectors.test.ts:288:        expect(fetchImpl.mock.calls[0][1]?.method).toBe("GET");
+tests/connectors.test.ts:289:        expect(fetchImpl.mock.calls[0][0]).toBe(`${connector.baseUrl}/models`);
+tests/connectors.test.ts:299:    ["bad envelope", () => Response.json({ data: {} })],
+tests/connectors.test.ts:300:    ["error", () => Response.json({ error: { message: "denied" }, data: [] })],
+tests/connectors.test.ts:304:    const fetchImpl = vi.fn<typeof fetch>(async (_url, init) => init?.method === "POST"
+tests/connectors.test.ts:305:      ? Response.json({ choices: [{ message: { role: "assistant", content: "pong" } }] }) : response());
+tests/connectors.test.ts:306:    expect((await testConnectorConnection(connector, fetchImpl)).ok).toBe(false);
+tests/connectors.test.ts:307:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/connectors.test.ts:308:    expect(fetchImpl.mock.calls[0][1]?.method).toBe("GET");
+tests/audioTaskEvidence.test.ts:126:    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/audioTaskEvidence.test.ts:129:      return Response.json({ code: 200, data: { id: taskId, status: taskId === "later" ? "processing" : "provider-new-status" } });
+tests/audioTaskEvidence.test.ts:131:    const recovered = await refreshAudioGeneration(f.project.id, f.job.id, { fetchImpl });
+tests/audioTaskEvidence.test.ts:137:    expect(fetchImpl).toHaveBeenCalledTimes(2);
+tests/imageDiscovery.test.ts:19:import { toResponseInput } from '@/lib/ai/responsesStream';
+tests/imageDiscovery.test.ts:199:      if (protocol === 'responses') return Response.json({ status: 'completed', output: call ? [{ type: 'reasoning', summary: [], encrypted_content: 'opaque-kept' }, { type: 'function_call', call_id: call.id, name: call.function.name, arguments: call.function.arguments }] : [{ type: 'message', role: 'assistant', content: [{ type: 'output_text', text: '看到了画面', annotations: [] }] }] });
+tests/imageDiscovery.test.ts:200:      return Response.json({ choices: [{ message: call ? { content: '', tool_calls: [call] } : { content: '看到了画面' }, finish_reason: call ? 'tool_calls' : 'stop' }] });
+tests/toolLoading.test.ts:3:import { toResponseInput } from "@/lib/ai/responsesStream";
+tests/toolLoading.test.ts:29:  if (protocol === "responses") return Response.json({ id: "response", status: "completed", output: calls.length ? calls.map((item) => ({ type: "function_call", call_id: item.id, name: item.function.name, arguments: item.function.arguments })) : [{ type: "message", role: "assistant", content: [{ type: "output_text", text: "完成", annotations: [] }] }] });
+tests/toolLoading.test.ts:30:  return Response.json({ choices: [{ message: { content: calls.length ? "" : "完成", ...(calls.length ? { tool_calls: calls } : {}) }, finish_reason: calls.length ? "tool_calls" : "stop" }] });
+tests/toolLoading.test.ts:150:    const fetcher = vi.fn(async () => protocol === "responses" ? Response.json({ status: "completed", output: [{ type: "message", role: "assistant", content: [{ type: "output_text", text: "历史目标已保留。", annotations: [] }] }] }) : Response.json({ choices: [{ message: { content: "历史目标已保留。" }, finish_reason: "stop" }] }));
+tests/chatStream.test.ts:7:} from "@/lib/ai/chatStream";
+tests/chatStream.test.ts:83:        fetchImpl: fetchMock as typeof fetch,
+tests/chatStream.test.ts:133:        fetchImpl: fetchMock as typeof fetch,
+tests/chatStream.test.ts:168:        fetchImpl: fetchMock as typeof fetch,
+tests/chatStream.test.ts:178:    const result = await streamChatCompletions(input, { fetchImpl: fetchMock });
+tests/chatStream.test.ts:185:      return Response.json({
+tests/chatStream.test.ts:208:        fetchImpl: fetchMock as typeof fetch,
+tests/chatStream.test.ts:268:    expect(await streamChatCompletions(input, { fetchImpl: fetchMock })).toMatchObject({
+tests/chatStream.test.ts:289:    const result = await streamChatCompletions(input, { fetchImpl: fetchMock, onDelta: (text) => deltas.push(text) });
+tests/chatStream.test.ts:298:      expect(await streamChatCompletions(input, { fetchImpl: fetchMock })).toMatchObject({ ok: false, finishReason });
+tests/chatStream.test.ts:309:      fetchImpl: vi.fn(async () => sse(answer + body)), onDelta: (text) => deltas.push(text),
+tests/chatStream.test.ts:324:    expect(await streamChatCompletions(input, { fetchImpl: vi.fn(async () => new Response(stream, { headers: { "content-type": "text/event-stream" } })) })).toMatchObject({ ok: true, content: "你好", finishReason: "stop" });
+tests/chatStream.test.ts:330:    expect(await streamChatCompletions(input, { fetchImpl: vi.fn(async () => new Response(stream, { headers: { "content-type": "text/event-stream" } })) })).toMatchObject({ ok: true });
+tests/chatStream.test.ts:338:    expect(await streamChatCompletions(input, { signal: controller.signal, fetchImpl: fetchMock })).toMatchObject({ ok: false, message: "已停止", aborted: true });
+tests/chatStream.test.ts:345:    expect(await streamChatCompletions(input, { signal: controller.signal, onDelta, fetchImpl: vi.fn(async () => sse(answer + answer + 'data: [DONE]\n\n')) })).toMatchObject({ ok: false, aborted: true });
+tests/chatStream.test.ts:355:      fetchImpl: vi.fn(async () => new Response(stream, { headers: { "content-type": "text/event-stream" } })),
+tests/chatStream.test.ts:363:    const fetchMock = vi.fn(async () => Response.json(body));
+tests/chatStream.test.ts:364:    const result = await streamChatCompletions(input, { fetchImpl: fetchMock });
+tests/chatStream.test.ts:372:    expect(await streamChatCompletions(input, { fetchImpl: fetchMock })).toMatchObject({ ok: false });
+tests/chatStream.test.ts:377:    for (const fetchImpl of [
+tests/chatStream.test.ts:381:      const result = await streamChatCompletions(input, { fetchImpl });
+tests/chatStream.test.ts:398:    const result = await streamChatCompletions(input, { fetchImpl: fetcher });
+tests/chatStream.test.ts:404:    const fetcher = vi.fn(async () => Response.json({ choices: [{ message: { content: null, tool_calls: [call] }, finish_reason: "tool_calls" }] }));
+tests/chatStream.test.ts:405:    expect(await streamChatCompletions(input, { fetchImpl: fetcher })).toMatchObject({ ok: true, content: "", toolCalls: [call] });
+tests/chatStream.test.ts:418:    expect(await streamChatCompletions(input, { fetchImpl: fetcher })).toMatchObject({ ok: false });
+tests/chatStream.test.ts:423:    expect(await streamChatCompletions(input, { fetchImpl: vi.fn(async () => sse(payload)) })).toMatchObject({ ok: false });
+tests/chatStream.test.ts:424:    expect(await streamChatCompletions({ ...input, tools: [] }, { fetchImpl: vi.fn(async () => sse(payload)) })).toMatchObject({ ok: false });
+tests/chatStream.test.ts:430:    expect(await streamChatCompletions(input, { fetchImpl: fetcher })).toMatchObject({ ok: false, message: "模型在结束状态后继续返回内容" });
+tests/chatStream.test.ts:444:  const result = await streamChatCompletions({baseUrl:"https://fixture.test/v1",apiKey:"fixture-key",model:"fixture",messages:[{role:"user",content:"test"}]}, {fetchImpl:vi.fn(async()=>new Response(stream,{headers:{"content-type":"text/event-stream"}}))});
+tests/agentTasks.test.ts:79:      ? Response.json({ choices: [{ message: { content: "", tool_calls: [{ id: "plan-call", type: "function", function: { name: "update_run_plan", arguments: JSON.stringify({ steps: nextPlan }) } }] }, finish_reason: "tool_calls" }] })
+tests/agentTasks.test.ts:80:      : Response.json({ choices: [{ message: { content: "主题已整理" }, finish_reason: "stop" }] }));
+tests/boundedChatInput.test.ts:2:import {streamChatCompletions} from "@/lib/ai/chatStream";
+tests/boundedChatInput.test.ts:3:import {streamResponses} from "@/lib/ai/responsesStream";
+tests/boundedChatInput.test.ts:18:    const fetchImpl = vi.fn<typeof fetch>(async () => new Response(body, {headers: {"content-type": "text/event-stream"}}));
+tests/boundedChatInput.test.ts:19:    return {body, cancel, fetchImpl};
+tests/boundedChatInput.test.ts:27:        const result = await streamChatCompletions(input, {fetchImpl: fixture.fetchImpl});
+tests/boundedChatInput.test.ts:29:        expect(fixture.fetchImpl).toHaveBeenCalledOnce();
+tests/boundedChatInput.test.ts:37:        expect(await streamChatCompletions(input, {fetchImpl: fixture.fetchImpl, onDelta, onReasoning})).toMatchObject({ok: false, message: expect.stringContaining("资源限制")});
+tests/boundedChatInput.test.ts:45:        const result = await streamChatCompletions(input, {fetchImpl: fixture.fetchImpl, onDelta, onReasoning});
+tests/boundedChatInput.test.ts:56:        expect(await streamChatCompletions({...input, tools}, {fetchImpl: fixture.fetchImpl})).toMatchObject({ok: true, toolCalls: [{id, function: {name: "tool", arguments: "{}"}}]});
+tests/boundedChatInput.test.ts:59:        expect(await streamChatCompletions({...input, tools}, {fetchImpl: overflow.fetchImpl, onDelta})).toMatchObject({ok: false});
+tests/boundedChatInput.test.ts:67:            expect(await streamChatCompletions({...input, tools}, {fetchImpl: fixture.fetchImpl})).toMatchObject({ok: false});
+tests/boundedChatInput.test.ts:74:        expect(await streamChatCompletions(input, {fetchImpl: fixture.fetchImpl, onDelta})).toMatchObject({ok: false});
+tests/boundedChatInput.test.ts:90:        const result = await transport(input, {fetchImpl: fixture.fetchImpl, onDelta, onReasoning});
+tests/boundedChatInput.test.ts:96:        expect(fixture.fetchImpl).toHaveBeenCalledOnce();
+tests/boundedChatInput.test.ts:106:        const fetchImpl = vi.fn<typeof fetch>(async () => new Response(body, {headers: {"content-type": "application/json", "content-length": "1"}}));
+tests/boundedChatInput.test.ts:108:        expect(await streamResponses(input, {fetchImpl, onDelta})).toMatchObject({ok: false, message: expect.stringContaining("资源限制")});
+tests/boundedChatInput.test.ts:109:        expect(onDelta).not.toHaveBeenCalled(); expect(fetchImpl).toHaveBeenCalledOnce();
+tests/boundedChatInput.test.ts:118:        expect(await streamResponses(input, {fetchImpl: fixture.fetchImpl, onDelta, onReasoning})).toMatchObject({ok: false});
+tests/boundedChatInput.test.ts:125:        expect(await streamResponses(input, {fetchImpl: fixture.fetchImpl})).toMatchObject({ok: true, content: "done"});
+tests/boundedChatInput.test.ts:126:        expect(fixture.fetchImpl).toHaveBeenCalledOnce(); expect(fixture.body.locked).toBe(false);
+tests/boundedChatInput.test.ts:134:        const fetchImpl = vi.fn<typeof fetch>(async () => new Response(body, {status: 403}));
+tests/boundedChatInput.test.ts:135:        expect(await transport(input, {fetchImpl})).toMatchObject({ok: false, message: expect.stringContaining("403")});
+tests/boundedChatInput.test.ts:136:        expect(cancel).toHaveBeenCalledOnce(); expect(fetchImpl).toHaveBeenCalledOnce(); expect(body.locked).toBe(false);
+tests/boundedChatInput.test.ts:141:            const fetchImpl = vi.fn<typeof fetch>(async () => new Response(body, {status, headers: {"content-type": "application/json"}}));
+tests/boundedChatInput.test.ts:142:            expect(await transport(input, {fetchImpl})).toMatchObject({ok: false, aborted: true});
+tests/boundedChatInput.test.ts:143:            expect(body.locked).toBe(false); expect(fetchImpl).toHaveBeenCalledOnce();
+tests/agentGenerationBatchSafety.test.ts:46:  const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/agentGenerationBatchSafety.test.ts:47:    if (init?.method === 'POST') { posts++; return behavior ? behavior(posts) : Response.json({ code: 200, data: [{ task_id: `task-${posts}`, status: 'submitted' }] }); }
+tests/agentGenerationBatchSafety.test.ts:48:    if (String(url).includes('/tasks/')) return Response.json({ code: 200, data: { id: new URL(String(url)).pathname.split('/').at(-1), status: 'completed', progress: 100, result: { images: [{ url: 'https://cdn.test/output' }] } } });
+tests/agentGenerationBatchSafety.test.ts:51:  return { fetchImpl, posts: () => posts };
+tests/agentGenerationBatchSafety.test.ts:54:async function run(f: Awaited<ReturnType<typeof fixture>>, fetchImpl: typeof fetch) { await startGenerationBatch(f.id, f.thread.id, { locks: f.locks, fetchImpl, pollIntervalMs: 0, maxPolls: 2 }); return readGenerationBatch(f.id, f.thread.id); }
+tests/agentGenerationBatchSafety.test.ts:59:    const state = await run(f, apimartMock().fetchImpl);
+tests/agentGenerationBatchSafety.test.ts:78:      releases.push(() => resolve(index === 1 ? new Response('gateway unavailable', { status: 503 }) : Response.json({ code: 200, data: [{ task_id: 'still-in-flight' }] })));
+tests/agentGenerationBatchSafety.test.ts:86:    const running = startGenerationBatch(f.id, f.thread.id, { locks: f.locks, fetchImpl: mock.fetchImpl, pollIntervalMs: 0 }).catch(() => undefined);
+tests/agentGenerationBatchSafety.test.ts:114:      await run(f, mock.fetchImpl).catch(() => undefined);
+tests/agentGenerationBatchSafety.test.ts:119:    await run(f, mock.fetchImpl);
+tests/agentGenerationBatchSafety.test.ts:127:    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/agentGenerationBatchSafety.test.ts:128:      if (init?.method === 'POST') return Response.json({ code: 200, data: [{ task_id: `accepted-${++posts}` }] });
+tests/agentGenerationBatchSafety.test.ts:131:        return Response.json({ code: 200, data: { id: new URL(String(url)).pathname.split('/').at(-1), status: complete ? 'completed' : 'processing', ...(complete ? { result: { images: [{ url: 'https://cdn.test/result' }] } } : {}) } });
+tests/agentGenerationBatchSafety.test.ts:135:    const running = startGenerationBatch(f.id, f.thread.id, { locks: f.locks, fetchImpl, pollIntervalMs: 10000 });
+tests/agentGenerationBatchSafety.test.ts:142:    const recovered = await run(f, fetchImpl);
+tests/agentGenerationBatchSafety.test.ts:151:    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/agentGenerationBatchSafety.test.ts:159:        ? Response.json({ code: 200, data: [{ task_id: `video-${posts}` }] })
+tests/agentGenerationBatchSafety.test.ts:160:        : Response.json({ code: 200, data: { id: new URL(address).pathname.split('/').at(-1), status: 'completed', progress: 100, result: { videos: [{ url: 'https://cdn.test/video' }] } } });
+tests/agentGenerationBatchSafety.test.ts:162:      return Response.json({ id, object: 'video', model: f.candidates[0].model, status: init?.method === 'POST' ? 'in_progress' : 'completed', output: init?.method === 'POST' ? [] : [{ index: 0, type: 'file', content_url: `https://aihubmix.test/ai/v1/videos/${id}/content` }] });
+tests/agentGenerationBatchSafety.test.ts:164:    const state = await run(f, fetchImpl);
+tests/apimartAudio.test.ts:2:import { generateApimartSpeech, submitApimartMusic, getApimartMusicTask, downloadApimartAudio, type SpeechInput } from "@/lib/ai/apimartAudio";
+tests/apimartAudio.test.ts:6:const json = (body: unknown) => vi.fn<typeof fetch>(async () => Response.json(body));
+tests/apimartAudio.test.ts:10:    const fetchImpl = vi.fn<typeof fetch>(async () => new Response(new Uint8Array([82, 73, 70, 70]), { headers: { "Content-Type": "audio/wav" } }));
+tests/apimartAudio.test.ts:11:    const result = await generateApimartSpeech(credentials, { ...speech, input: "🎙".repeat(4096) }, { fetchImpl });
+tests/apimartAudio.test.ts:13:    expect(fetchImpl).toHaveBeenCalledExactlyOnceWith("https://api.apimart.ai/v1/audio/speech", expect.objectContaining({ method: "POST", redirect: "error", credentials: "omit" }));
+tests/apimartAudio.test.ts:14:    expect(await generateApimartSpeech(credentials, { ...speech, input: "🎙".repeat(4097) }, { fetchImpl })).toMatchObject({ ok: false, kind: "validation" });
+tests/apimartAudio.test.ts:15:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/apimartAudio.test.ts:18:    const result = await generateApimartSpeech(credentials, speech, { fetchImpl: json({ error: { message: "test-secret refused Bearer another-secret" } }) });
+tests/apimartAudio.test.ts:22:    expect(await generateApimartSpeech(credentials, speech, { fetchImpl: vi.fn(async () => new Response("<html>error</html>", { headers: { "Content-Type": "text/html" } })) })).toMatchObject({ ok: false, kind: "protocol" });
+tests/apimartAudio.test.ts:25:    const fetchImpl = json({ code: 200, data: [{ task_id: "flow-1" }] });
+tests/apimartAudio.test.ts:27:    expect(await submitApimartMusic(credentials, input, { fetchImpl })).toEqual({ ok: true, taskIds: ["flow-1"] });
+tests/apimartAudio.test.ts:28:    expect(JSON.parse(String(fetchImpl.mock.calls[0][1]?.body))).toEqual(input);
+tests/apimartAudio.test.ts:29:    expect(await submitApimartMusic(credentials, { ...input, instrumental: true } as typeof input, { fetchImpl })).toMatchObject({ ok: false, kind: "validation" });
+tests/apimartAudio.test.ts:30:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/apimartAudio.test.ts:33:    const fetchImpl = json({ code: 200, data: [{ task_id: "suno-1" }] });
+tests/apimartAudio.test.ts:35:    expect((await submitApimartMusic(credentials, input, { fetchImpl })).ok).toBe(true);
+tests/apimartAudio.test.ts:36:    expect(JSON.parse(String(fetchImpl.mock.calls[0][1]?.body))).toEqual(input);
+tests/apimartAudio.test.ts:37:    expect(await submitApimartMusic(credentials, { ...input, custom: false, prompt: "a song" }, { fetchImpl })).toMatchObject({ ok: false, kind: "validation" });
+tests/apimartAudio.test.ts:38:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/apimartAudio.test.ts:41:    const fetchImpl = json({ code: 200, data: { id: "task/1", status: "completed", progress: 100, cost: 0, result: { music: [
+tests/apimartAudio.test.ts:46:    const result = await getApimartMusicTask(credentials, "task/1", { fetchImpl });
+tests/apimartAudio.test.ts:48:    expect(fetchImpl.mock.calls[0][0]).toBe("https://api.apimart.ai/v1/music/tasks/task%2F1?language=zh");
+tests/apimartAudio.test.ts:52:      expect(await getApimartMusicTask(credentials, "t", { fetchImpl: json({ code: 200, data }) })).toMatchObject({ ok: false, kind: "protocol" });
+tests/apimartAudio.test.ts:56:    expect(await getApimartMusicTask(credentials, "t", { fetchImpl: json({ code: 200, data: { id: "t", status: "completed", result: { music: [{ audio_url: "javascript:alert(1)" }, { audio_url: "https://cdn.example/t.wav" }] } } }) })).toMatchObject({ ok: true, task: { tracks: [{ audioIndex: 2 }], error: "第 1 首音频缺少有效下载地址" } });
+tests/apimartAudio.test.ts:59:    expect(await getApimartMusicTask(credentials, "t", { fetchImpl: json({ code: 200, data: { id: "t", status: "unknown" } }) })).toMatchObject({ ok: true, task: { status: "unknown", id: "t" } });
+tests/apimartAudio.test.ts:60:    const fetchImpl = vi.fn<typeof fetch>(async () => { throw new Error("network test-secret"); });
+tests/apimartAudio.test.ts:61:    expect(await submitApimartMusic(credentials, { model: "flowmusic", sound_prompt: "piano" }, { fetchImpl })).toMatchObject({ ok: false, kind: "network" });
+tests/apimartAudio.test.ts:62:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/apimartAudio.test.ts:65:    const fetchImpl = vi.fn<typeof fetch>(async () => new Response(new Uint8Array([1, 2]), { headers: { "Content-Type": "audio/mpeg" } }));
+tests/apimartAudio.test.ts:66:    expect((await downloadApimartAudio("https://cdn.example/result", { fetchImpl })).ok).toBe(true);
+tests/apimartAudio.test.ts:67:    expect(fetchImpl.mock.calls[0][1]).toEqual({ signal: undefined, credentials: "omit", redirect: "error" });
+tests/apimartAudio.test.ts:68:    expect(await downloadApimartAudio("https://cdn.example/error", { fetchImpl: json({ error: "no file" }) })).toMatchObject({ ok: false, kind: "protocol" });
+tests/apimartAudio.test.ts:76:    const fetchImpl = json({ code: 200, data: [...taskIds, ...taskIds].map(task_id => ({ task_id })) });
+tests/apimartAudio.test.ts:77:    expect(await submitApimartMusic(credentials, { model: "flowmusic", sound_prompt: "piano" }, { fetchImpl })).toEqual({ ok: true, taskIds });
+tests/apimartAudio.test.ts:78:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/apimartAudio.test.ts:82:    const fetchImpl = json({ code: 200, data: [{ task_id: "valid" }, { task_id }] });
+tests/apimartAudio.test.ts:83:    expect(await submitApimartMusic(credentials, { model: "flowmusic", sound_prompt: "piano" }, { fetchImpl })).toMatchObject({ ok: false, kind: "protocol" });
+tests/apimartAudio.test.ts:84:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/apimartAudio.test.ts:88:    const fetchImpl = json({ code: 200, data: Array.from({ length: 101 }, (_, i) => ({ task_id: `task-${i}` })) });
+tests/apimartAudio.test.ts:89:    expect(await submitApimartMusic(credentials, { model: "flowmusic", sound_prompt: "piano" }, { fetchImpl })).toMatchObject({ ok: false, kind: "protocol" });
+tests/apimartAudio.test.ts:90:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/apimartAudio.test.ts:94:    const fetchImpl = vi.fn<typeof fetch>();
+tests/apimartAudio.test.ts:95:    expect(await getApimartMusicTask(credentials, taskId, { fetchImpl })).toMatchObject({ ok: false, kind: "validation" });
+tests/apimartAudio.test.ts:96:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/apimartAudio.test.ts:100:    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/apimartAudio.test.ts:104:      return Response.json({ code: 200, data: { id: taskId, status: "processing" } });
+tests/apimartAudio.test.ts:106:    expect(await getApimartMusicTask(credentials, taskId, { fetchImpl })).toMatchObject({ ok: true, task: { id: taskId } });
+tests/apimartAudio.test.ts:107:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/apimartAudio.test.ts:121:      const fetchImpl = vi.fn<typeof fetch>(async () => response);
+tests/apimartAudio.test.ts:122:      const options = { fetchImpl, signal: controller.signal };
+tests/apimartAudio.test.ts:127:      expect(fetchImpl).toHaveBeenCalledOnce();
+tests/apimartAudio.test.ts:136:      const fetchImpl = vi.fn<typeof fetch>(async () => response);
+tests/apimartAudio.test.ts:137:      expect(await submitApimartMusic(credentials, { model: "flowmusic", sound_prompt: "piano" }, { fetchImpl })).toMatchObject({ ok: false, kind: cancelled ? "aborted" : "http" });
+tests/apimartAudio.test.ts:138:      expect(fetchImpl).toHaveBeenCalledOnce();
+tests/apimartAudio.test.ts:146:        const fetchImpl = vi.fn<typeof fetch>(async () => {
+tests/apimartAudio.test.ts:150:        const options = { fetchImpl, signal: new AbortController().signal };
+tests/apimartAudio.test.ts:155:        expect(fetchImpl).toHaveBeenCalledOnce();
+tests/aihubmix.test.ts:5:} from "@/lib/ai/aihubmix";
+tests/aihubmix.test.ts:6:import type { AIHubMixGenerationRequest, AIHubMixImageGenerationRequest, AIHubMixTask } from "@/lib/ai/aihubmix";
+tests/aihubmix.test.ts:9:const fetchResponse = (body: unknown, status = 200) => vi.fn<typeof fetch>(async () => Response.json(body, { status }));
+tests/aihubmix.test.ts:22:    const fetchImpl = fetchResponse({ success: true, data: [
+tests/aihubmix.test.ts:28:    const result = await listAIHubMixModels({ ...credentials, apiKey: "" }, { fetchImpl });
+tests/aihubmix.test.ts:35:    expect(fetchImpl).toHaveBeenCalledExactlyOnceWith("https://aihubmix.com/api/v1/models", expect.objectContaining({ method: "GET", headers: {}, redirect: "error", credentials: "omit" }));
+tests/aihubmix.test.ts:39:    expect(await listAIHubMixModels(credentials, { fetchImpl: fetchResponse({ success: true, data: [
+tests/aihubmix.test.ts:45:    expect(await listAIHubMixModels(credentials, { fetchImpl: fetchResponse(body) })).toMatchObject({ ok: false, kind: "protocol" });
+tests/aihubmix.test.ts:49:    expect(await listAIHubMixModels(credentials, { fetchImpl: fetchResponse({ success: true, data: [] }) })).toEqual({ ok: true, models: [] });
+tests/aihubmix.test.ts:50:    const fetchImpl = fetchResponse({ object: "list", data: [], has_more: false, next_after: null });
+tests/aihubmix.test.ts:51:    expect(await testAIHubMixConnection(credentials, { fetchImpl })).toEqual({ ok: true });
+tests/aihubmix.test.ts:52:    expect(fetchImpl).toHaveBeenCalledExactlyOnceWith("https://aihubmix.com/ai/v1/images?limit=1", expect.objectContaining({ method: "GET", headers: { Authorization: "Bearer sk-secret-key" } }));
+tests/aihubmix.test.ts:56:    expect(await testAIHubMixConnection(credentials, { fetchImpl: fetchResponse(body) })).toMatchObject({ ok: false, kind: "protocol" });
+tests/aihubmix.test.ts:60:    const fetchImpl = fetchResponse({ error: { code: "async_not_enabled", message: "Enable async" } }, status);
+tests/aihubmix.test.ts:61:    expect(await testAIHubMixConnection(credentials, { fetchImpl })).toMatchObject({ ok: false, kind: "http", httpStatus: status, providerCode: "async_not_enabled" });
+tests/aihubmix.test.ts:62:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/aihubmix.test.ts:63:    expect(fetchImpl.mock.calls[0]?.[1]?.method).toBe("GET");
+tests/aihubmix.test.ts:70:    const fetchImpl = fetchResponse({ modality: "image", endpoints: [
+tests/aihubmix.test.ts:75:    expect(await getAIHubMixModelSchema(credentials, "vendor/model", "image", { fetchImpl })).toEqual({ ok: true, status: "available", path: "/ai/v1/images/generations", schema });
+tests/aihubmix.test.ts:76:    expect(fetchImpl).toHaveBeenCalledExactlyOnceWith("https://aihubmix.com/call/schema/models/vendor%2Fmodel/endpoints", expect.objectContaining({ headers: {} }));
+tests/aihubmix.test.ts:86:    expect(await getAIHubMixModelSchema(credentials, "model", "video", { fetchImpl: fetchResponse(body) })).toMatchObject({ ok: true, status });
+tests/aihubmix.test.ts:90:    expect(await getAIHubMixModelSchema(credentials, "model", "image", { fetchImpl: fetchResponse({ error: { code: "model_not_found", message: "missing" } }, status) })).toMatchObject({ ok: false, kind: "http", httpStatus: status });
+tests/aihubmix.test.ts:98:    const fetchImpl = fetchResponse(taskBody({ status: "completed", output: [artifact(), { index: 1, type: "file", b64_json: "YWJj", content_url: null }] }));
+tests/aihubmix.test.ts:99:    expect(await submitAIHubMixImageGeneration(credentials, input, { fetchImpl })).toMatchObject({ ok: true, task: { outputs: [{ index: 0, contentUrl: artifact().content_url }, { index: 1, b64Json: "YWJj" }] } });
+tests/aihubmix.test.ts:100:    expect(fetchImpl).toHaveBeenCalledExactlyOnceWith("https://aihubmix.com/ai/v1/images/generations", expect.objectContaining({ method: "POST", body: JSON.stringify(input), headers: { Authorization: "Bearer sk-secret-key", "Content-Type": "application/json" } }));
+tests/aihubmix.test.ts:108:    const fetchImpl = fetchResponse(taskBody({ object: "video", status: "in_progress" }));
+tests/aihubmix.test.ts:109:    expect(await submitAIHubMixVideoGeneration(credentials, input, { fetchImpl })).toMatchObject({ ok: true, task: { kind: "video", status: "running" } });
+tests/aihubmix.test.ts:110:    expect(fetchImpl).toHaveBeenCalledExactlyOnceWith("https://aihubmix.com/ai/v1/videos", expect.objectContaining({ method: "POST", body: JSON.stringify(input) }));
+tests/aihubmix.test.ts:114:    const fetchImpl = fetchResponse(taskBody());
+tests/aihubmix.test.ts:115:    expect(await submitAIHubMixImageGeneration(credentials, input as AIHubMixImageGenerationRequest, { fetchImpl })).toMatchObject({ ok: false, kind: "validation" });
+tests/aihubmix.test.ts:116:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/aihubmix.test.ts:120:    const fetchImpl = fetchResponse(taskBody());
+tests/aihubmix.test.ts:121:    expect(await submitAIHubMixVideoGeneration(credentials, { model: "m", prompt: "p", duration }, { fetchImpl })).toMatchObject({ ok: false, kind: "validation" });
+tests/aihubmix.test.ts:122:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/aihubmix.test.ts:128:    const fetchImpl = fetchResponse(taskBody());
+tests/aihubmix.test.ts:129:    expect(await submitAIHubMixImageGeneration(credentials, input, { fetchImpl })).toMatchObject({ ok: false, kind: "validation" });
+tests/aihubmix.test.ts:130:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/aihubmix.test.ts:136:    const fetchImpl = fetchResponse(taskBody({ status, ...(status === "completed" ? { output: [artifact()] } : {}) }));
+tests/aihubmix.test.ts:137:    expect(await getAIHubMixImageTask(credentials, "task_1", { fetchImpl })).toMatchObject({ ok: true, task: { id: "task_1", status: expected, createdAt: 1000, completedAt: null, expiresAt: null } });
+tests/aihubmix.test.ts:138:    expect(fetchImpl).toHaveBeenCalledExactlyOnceWith("https://aihubmix.com/ai/v1/images/task_1", expect.objectContaining({ method: "GET" }));
+tests/aihubmix.test.ts:142:    const fetchImpl = fetchResponse(taskBody({ object: "video", status: "failed", error: { code: "upstream_rejected", message: "sk-secret-key denied", upstream_detail: { nested: ["Bearer other-secret", "sk-secret-key"] } } }));
+tests/aihubmix.test.ts:143:    const result = await getAIHubMixVideoTask(credentials, "task_1", { fetchImpl });
+tests/aihubmix.test.ts:146:    expect(fetchImpl.mock.calls[0]?.[0]).toBe("https://aihubmix.com/ai/v1/videos/task_1");
+tests/aihubmix.test.ts:150:    const fetchImpl = fetchResponse(taskBody({ status: "completed", completed_at: 1010, expires_at: 2000, output: [artifact(1), artifact(0)] }));
+tests/aihubmix.test.ts:151:    expect(await getAIHubMixImageTask(credentials, "task_1", { fetchImpl })).toMatchObject({ ok: true, task: { completedAt: 1010, expiresAt: 2000, outputs: [{ index: 1, requiresAuthentication: true }, { index: 0 }] } });
+tests/aihubmix.test.ts:152:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/aihubmix.test.ts:160:    expect(await getAIHubMixImageTask(credentials, "task_1", { fetchImpl: fetchResponse(body) })).toMatchObject({ ok: false, kind: "protocol" });
+tests/aihubmix.test.ts:167:    const fetchImpl = vi.fn<typeof fetch>(async () => new Response("image bytes", { headers: { "Content-Type": "image/png" } }));
+tests/aihubmix.test.ts:168:    const result = await downloadAIHubMixResult(credentials, task, task.outputs[0]!, { fetchImpl });
+tests/aihubmix.test.ts:171:    expect(fetchImpl).toHaveBeenCalledExactlyOnceWith(artifact().content_url, expect.objectContaining({ method: "GET", headers: { Authorization: "Bearer sk-secret-key" }, redirect: "error", credentials: "omit" }));
+tests/aihubmix.test.ts:177:    const fetchImpl = vi.fn<typeof fetch>(async () => new Response("video", { headers: { "Content-Type": "video/mp4" } }));
+tests/aihubmix.test.ts:178:    expect((await downloadAIHubMixResult(proxy, task, task.outputs[0]!, { fetchImpl })).ok).toBe(true);
+tests/aihubmix.test.ts:179:    expect(fetchImpl.mock.calls[0]?.[0]).toBe("https://proxy.example/provider/ai/v1/videos/task_1/content");
+tests/aihubmix.test.ts:194:    const fetchImpl = vi.fn<typeof fetch>();
+tests/aihubmix.test.ts:195:    expect(await downloadAIHubMixResult(credentials, task, task.outputs[0]!, { fetchImpl })).toMatchObject({ ok: false, kind: "validation" });
+tests/aihubmix.test.ts:196:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/aihubmix.test.ts:200:    const task = completedTask(); const fetchImpl = vi.fn<typeof fetch>();
+tests/aihubmix.test.ts:201:    expect(await downloadAIHubMixResult(credentials, task, { ...task.outputs[0]!, index: 3 }, { fetchImpl })).toMatchObject({ ok: false, kind: "validation" });
+tests/aihubmix.test.ts:202:    expect(await downloadAIHubMixResult(credentials, { ...task, status: "running" }, task.outputs[0]!, { fetchImpl })).toMatchObject({ ok: false, providerCode: "result_not_ready" });
+tests/aihubmix.test.ts:204:    expect(await downloadAIHubMixResult(credentials, task, task.outputs[0]!, { fetchImpl })).toMatchObject({ ok: false, kind: "validation" });
+tests/aihubmix.test.ts:205:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/aihubmix.test.ts:210:    expect(await downloadAIHubMixResult(credentials, task, task.outputs[0]!, { fetchImpl: fetchResponse({ error: { code, message: "not available" } }, status as number) })).toMatchObject({ ok: false, kind: "http", httpStatus: status, providerCode: code });
+tests/aihubmix.test.ts:215:    expect(await downloadAIHubMixResult(credentials, task, task.outputs[0]!, { fetchImpl: fetchResponse({ error: { code: "upstream", message: "failed" } }) })).toMatchObject({ ok: false, kind: "provider" });
+tests/aihubmix.test.ts:216:    expect(await downloadAIHubMixResult(credentials, task, task.outputs[0]!, { fetchImpl: async () => new Response("") })).toMatchObject({ ok: false, kind: "protocol" });
+tests/aihubmix.test.ts:222:    const result = await listAIHubMixModels(credentials, { fetchImpl: fetchResponse({ error: { code: "sk-secret-key", type: "Bearer other-secret", message: "sk-secret-key refused" } }, status) });
+tests/aihubmix.test.ts:228:    const fetchImpl = vi.fn<typeof fetch>(async () => { throw new Error("sk-secret-key transport"); });
+tests/aihubmix.test.ts:229:    const result = await submitAIHubMixVideoGeneration(credentials, { model: "m", prompt: "p" }, { fetchImpl });
+tests/aihubmix.test.ts:232:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/aihubmix.test.ts:236:    expect(await listAIHubMixModels(credentials, { fetchImpl: async () => new Response("invalid") })).toMatchObject({ ok: false, kind: "protocol" });
+tests/aihubmix.test.ts:237:    expect(await listAIHubMixModels(credentials, { fetchImpl: async () => new Response("sk-secret-key", { status: 502 }) })).toMatchObject({ ok: false, kind: "http", httpStatus: 502 });
+tests/aihubmix.test.ts:242:    const fetchImpl = vi.fn<typeof fetch>(async (_url, init) => { expect(init?.signal).toBe(controller.signal); controller.abort(); throw new DOMException("abort", "AbortError"); });
+tests/aihubmix.test.ts:243:    expect(await submitAIHubMixVideoGeneration(credentials, { model: "m", prompt: "p" }, { fetchImpl, signal: controller.signal })).toMatchObject({ ok: false, kind: "aborted" });
+tests/aihubmix.test.ts:244:    expect(fetchImpl).toHaveBeenCalledOnce(); fetchImpl.mockClear();
+tests/aihubmix.test.ts:245:    expect(await testAIHubMixConnection(credentials, { fetchImpl, signal: controller.signal })).toMatchObject({ ok: false, kind: "aborted" });
+tests/aihubmix.test.ts:246:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/aihubmix.test.ts:251:    expect(await testAIHubMixConnection(credentials, { fetchImpl: async () => jsonResponse })).toMatchObject({ ok: false, kind: "aborted" });
+tests/aihubmix.test.ts:254:    expect(await downloadAIHubMixResult(credentials, task, task.outputs[0]!, { fetchImpl: async () => binaryResponse })).toMatchObject({ ok: false, kind: "aborted" });
+tests/aihubmix.test.ts:258:    const fetchImpl = vi.fn<typeof fetch>();
+tests/aihubmix.test.ts:259:    expect(await testAIHubMixConnection({ ...credentials, baseUrl }, { fetchImpl })).toMatchObject({ ok: false, kind: "validation" });
+tests/aihubmix.test.ts:260:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/aihubmix.test.ts:264:    const fetchImpl = fetchResponse({ object: "list", data: [], has_more: false, next_after: null });
+tests/aihubmix.test.ts:265:    expect(await testAIHubMixConnection({ ...credentials, apiKey: "" }, { fetchImpl })).toMatchObject({ ok: false, kind: "validation" });
+tests/aihubmix.test.ts:266:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/aihubmix.test.ts:267:    expect(await testAIHubMixConnection({ ...credentials, baseUrl: "https://proxy.example/aihubmix/v1/" }, { fetchImpl })).toEqual({ ok: true });
+tests/aihubmix.test.ts:268:    expect(fetchImpl.mock.calls[0]?.[0]).toBe("https://proxy.example/aihubmix/ai/v1/images?limit=1");
+tests/agentRuns.test.ts:55:      return Response.json({ choices: [{ message: { content: "answer" }, finish_reason: "stop" }] });
+tests/agentRuns.test.ts:173:    await executeChatRun(complete, connector.apiKey, new AbortController(), vi.fn(async () => Response.json({ choices: [{ message: { content: "answer" }, finish_reason: "stop" }] })));
+tests/audioGenerationAgent.test.ts:22:const answer = () => Response.json({ choices: [{ message: { content: "处理完成" }, finish_reason: "stop" }] });
+tests/audioGenerationAgent.test.ts:23:const toolResponse = (name: string, args: unknown) => Response.json({ choices: [{ message: { content: "", tool_calls: [{ id: "paid-call", type: "function", function: { name, arguments: JSON.stringify(args) } }] }, finish_reason: "tool_calls" }] });
+tests/audioGenerationAgent.test.ts:136:    const paidFetch = vi.fn<typeof fetch>(async () => Response.json({ choices: [{ finish_reason: "stop", message: { audio: { data: encoded } } }] }));
+tests/audioGenerationAgent.test.ts:198:    const paidFetch = vi.fn<typeof fetch>(async () => Response.json({ choices: [{ finish_reason: "stop", message: { audio: { data: encoded }, final_text_preview: "润色后的播报" } }] }));
+tests/audioGenerationAgent.test.ts:215:    const paidFetch = vi.fn<typeof fetch>(async () => Response.json({ code: 200, data: [{ task_id: "remote-task" }] }));
+tests/audioGenerationAgent.test.ts:248:      ? Response.json({ code: 200, data: [{ task_id: "remote-task" }] })
+tests/audioGenerationAgent.test.ts:249:      : Response.json({ code: 200, data: { id: "remote-task", status: "running", progress: 20 } }));
+tests/toolValidationSafety.test.ts:58:      return Response.json({ choices: [{ message: { content: "", tool_calls: [{ id: `call-${requests}`, type: "function", function: { name: tool.name, arguments: JSON.stringify({ limit: requests === 1 ? 100 : 10 }) } }] }, finish_reason: "tool_calls" }] });
+tests/agentReferences.test.ts:16:import { toResponseInput } from "@/lib/ai/responsesStream";
+tests/agentReferences.test.ts:35:const chatAnswer = () => Response.json({ choices: [{ message: { content: "已查看" }, finish_reason: "stop" }] });
+tests/agentReferences.test.ts:36:const responseAnswer = () => Response.json({ status: "completed", output: [{ type: "message", role: "assistant", content: [{ type: "output_text", text: "已查看", annotations: [] }] }] });
+tests/agentReferences.test.ts:98:        return protocol === "responses" ? Response.json({ status: "completed", output: [{ type: "function_call", call_id: load.id, name: load.function.name, arguments: load.function.arguments }] }) : Response.json({ choices: [{ message: { content: "", tool_calls: [load] }, finish_reason: "tool_calls" }] });
+tests/agentReferences.test.ts:100:      if (bodies.length === 2) return protocol === "responses" ? Response.json({ status: "completed", output: [{ type: "reasoning", summary: [], encrypted_content: "keep-opaque" }, { type: "function_call", call_id: call.id, name: call.function.name, arguments: call.function.arguments }] }) : Response.json({ choices: [{ message: { content: "", tool_calls: [call] }, finish_reason: "tool_calls" }] });
+tests/webResearch.test.ts:5:import { executeWebRequest, testSearchConnection } from '@/lib/ai/tavily';
+tests/webResearch.test.ts:33:    const fetcher = vi.fn(async () => Response.json({ key: secret, total_usage: 5 }));
+tests/webResearch.test.ts:34:    expect(await testSearchConnection(undefined, { fetchImpl: fetcher })).toMatchObject({ ok: true });
+tests/webResearch.test.ts:37:    const bad = await testSearchConnection(secret, { fetchImpl: async () => Response.json({ message: secret }, { status: 401 }) });
+tests/webResearch.test.ts:45:    const fetcher = vi.fn(async () => Response.json({ request_id: 'request-1', results: [
+tests/webResearch.test.ts:51:    const result = await executeWebRequest('search', { query: 'rain', maxResults: 5, timeRange: 'month' }, revision, { fetchImpl: fetcher });
+tests/webResearch.test.ts:61:    const result = await executeWebRequest('search', { query: 'nothing' }, revision, { fetchImpl: async () => Response.json({ results: [] }) });
+tests/webResearch.test.ts:67:    const fetcher = vi.fn(async () => Response.json({ error: secret }, { status }));
+tests/webResearch.test.ts:68:    const result = await executeWebRequest('search', { query: 'q' }, revision, { fetchImpl: fetcher });
+tests/webResearch.test.ts:74:    expect(await executeWebRequest('search', { query: 'q' }, undefined, { fetchImpl: fetcher })).toMatchObject({ code: 'not_configured', serviceMayHaveRun: false });
+tests/webResearch.test.ts:76:    expect(await executeWebRequest('search', { query: 'q' }, revision, { fetchImpl: fetcher })).toMatchObject({ code: 'configuration_changed' });
+tests/webResearch.test.ts:78:    expect(await executeWebRequest('search', { query: 'q' }, revision, { fetchImpl: fetcher })).toMatchObject({ code: 'not_configured' });
+tests/webResearch.test.ts:84:    const result = await executeWebRequest('search', { query: 'q' }, revision, { fetchImpl: fetcher, timeoutMs: 5 });
+tests/webResearch.test.ts:90:    const result = await executeWebRequest('search', { query: 'q' }, revision, { fetchImpl: fetcher, signal: controller.signal });
+tests/webResearch.test.ts:97:    expect(await executeWebRequest('search', { query: 'q' }, revision, { fetchImpl: async () => response })).toMatchObject({ code: 'response_too_large' });
+tests/webResearch.test.ts:99:    expect(await executeWebRequest('search', { query: 'q' }, revision, { fetchImpl: async () => new Response('not-json') })).toMatchObject({ code: 'invalid_response' });
+tests/webResearch.test.ts:103:    const fetcher = vi.fn(async () => Response.json({ results: [{ url: 'https://example.com/', raw_content: '\u0000'.repeat(30000) }] }));
+tests/webResearch.test.ts:104:    const result = await executeWebRequest('read', { url: 'https://example.com/' }, revision, { fetchImpl: fetcher });
+tests/webResearch.test.ts:112:      expect(await executeWebRequest('read', { url: 'https://example.com/' }, revision, { fetchImpl: async () => Response.json(data) })).toMatchObject({ code: 'extraction_failed' });
+tests/webResearch.test.ts:117:    const result = await executeWebRequest('search', { query: '\u0000'.repeat(500), maxResults: 10 }, revision, { fetchImpl: async () => Response.json({ results: Array.from({ length: 10 }, () => ({ title: '\u0000'.repeat(240), url: 'https://example.com/' + 'a'.repeat(1900), content: '\u0000'.repeat(1500) })) }) });
+tests/agentGeneration.test.ts:49:    if (init?.method === "POST" && String(url).includes("/uploads/")) return Response.json({url:"https://upload.test/reference.png"});
+tests/agentGeneration.test.ts:50:    if (init?.method === "POST") return Response.json({code:200,data:[{task_id:"task-1",status:"submitted"}]});
+tests/agentGeneration.test.ts:51:    if (String(url).includes("/tasks/")) return Response.json({code:200,data:{id:"task-1",status:"completed",progress:100,result:{[kind === "image" ? "images":"videos"]:[{url:"https://cdn.test/result"}]}}});
+tests/agentGeneration.test.ts:63:    return Response.json({id:"hub-task",object:kind,model,status:init?.method === "POST" && !base64 ? "in_progress":"completed",output:init?.method === "POST" && !base64 ? []:[{index:0,type:"file",...(base64?{b64_json:btoa(String.fromCharCode(...png))}:{content_url:`https://aihubmix.test/ai/v1/${kind}s/hub-task/content${kind === "image" ? "/result-1":""}`})}]});
+tests/agentGeneration.test.ts:70:    const fetchImpl=provider === "apimart" ? apimartFetch():hubFetch();
+tests/agentGeneration.test.ts:72:    const job=await submitAgentGeneration(f.args,f.context,{fetchImpl,pollIntervalMs:0,maxPolls:3});
+tests/agentGeneration.test.ts:86:    const replay=await submitAgentGeneration(f.args,f.context,{fetchImpl});
+tests/agentGeneration.test.ts:88:    expect(fetchImpl.mock.calls.filter(([,init])=>init?.method === "POST")).toHaveLength(1);
+tests/agentGeneration.test.ts:92:    const fetchImpl=provider === "apimart" ? apimartFetch("video"):hubFetch("video");
+tests/agentGeneration.test.ts:93:    const job=await submitAgentGeneration(f.args,f.context,{fetchImpl,pollIntervalMs:0});
+tests/agentGeneration.test.ts:95:    const request=JSON.parse(String(fetchImpl.mock.calls.find(([,init])=>init?.method === "POST")![1]!.body));
+tests/agentGeneration.test.ts:101:    const f=await setup("aihubmix");const fetchImpl=hubFetch("image",true);
+tests/agentGeneration.test.ts:102:    const job=await submitAgentGeneration(f.args,f.context,{fetchImpl});
+tests/agentGeneration.test.ts:103:    expect(job.status).toBe("downloaded");expect(fetchImpl).toHaveBeenCalledTimes(1);
+tests/agentGeneration.test.ts:111:    await patchShot(f.shot.id,{notes:"用户刚修改"});const fetchImpl=apimartFetch();
+tests/agentGeneration.test.ts:112:    await expect(submitAgentGeneration(f.args,f.context,{fetchImpl})).rejects.toThrow("重新确认");
+tests/agentGeneration.test.ts:113:    expect(fetchImpl).not.toHaveBeenCalled();expect(await db.agentGenerationJobs.count()).toBe(0);
+tests/agentGeneration.test.ts:116:    const f=await setup();const fetchImpl=vi.fn<typeof fetch>(async()=>{throw new TypeError("Network failed");});
+tests/agentGeneration.test.ts:117:    await expect(submitAgentGeneration(f.args,f.context,{fetchImpl})).rejects.toBeInstanceOf(GenerationPendingError);
+tests/agentGeneration.test.ts:119:    await expect(submitAgentGeneration(f.args,f.context,{fetchImpl})).rejects.toBeInstanceOf(GenerationPendingError);
+tests/agentGeneration.test.ts:121:    await expect(submitAgentGeneration(f.args,second,{fetchImpl})).rejects.toThrow("不会重复付费");
+tests/agentGeneration.test.ts:122:    expect(fetchImpl).toHaveBeenCalledTimes(1);
+tests/agentGeneration.test.ts:127:    const fetchImpl=vi.fn<typeof fetch>(async(url,init)=>String(url).includes("/tasks/")&&!completed
+tests/agentGeneration.test.ts:128:      ?Response.json({code:200,data:{id:"task-1",status:"processing",progress:35}}):real(url,init));
+tests/agentGeneration.test.ts:129:    await expect(submitAgentGeneration(f.args,f.context,{fetchImpl,maxPolls:1,pollIntervalMs:0})).rejects.toThrow("等待已暂停");
+tests/agentGeneration.test.ts:131:    completed=true;job=await submitAgentGeneration(f.args,f.context,{fetchImpl,maxPolls:2,pollIntervalMs:0});
+tests/agentGeneration.test.ts:133:    expect(fetchImpl.mock.calls.filter(([,init])=>init?.method === "POST")).toHaveLength(1);
+tests/agentGeneration.test.ts:137:    const fetchImpl=vi.fn<typeof fetch>(async(url,init)=>String(url).includes("cdn.test")&&fail?new Response("CORS/expired",{status:410}):real(url,init));
+tests/agentGeneration.test.ts:138:    await expect(submitAgentGeneration(f.args,f.context,{fetchImpl})).rejects.toThrow("下载失败");
+tests/agentGeneration.test.ts:140:    fail=false;job=await monitorAgentGeneration(job.id,f.context,{fetchImpl});expect(job.status).toBe("downloaded");
+tests/agentGeneration.test.ts:141:    expect(fetchImpl.mock.calls.filter(([,init])=>init?.method === "POST")).toHaveLength(1);
+tests/agentGeneration.test.ts:145:    const fetchImpl=vi.fn<typeof fetch>(async(url,init)=>String(url).includes("cdn.test")?new Response("<html>authentication required</html>",{headers:{"content-type":"image/png"}}):real(url,init));
+tests/agentGeneration.test.ts:146:    await expect(submitAgentGeneration(f.args,f.context,{fetchImpl})).rejects.toThrow("不是可识别");
+tests/agentGeneration.test.ts:150:    const f=await setup();const job=await submitAgentGeneration(f.args,f.context,{fetchImpl:apimartFetch()});
+tests/agentGeneration.test.ts:158:    const f=await setup();const job=await submitAgentGeneration(f.args,f.context,{fetchImpl:apimartFetch()});
+tests/agentGeneration.test.ts:168:    const job=await submitAgentGeneration(f.args,f.context,{fetchImpl:apimartFetch()});
+tests/agentGeneration.test.ts:177:    const fetchImpl=apimartFetch("video");
+tests/agentGeneration.test.ts:178:    await submitAgentGeneration(f.args,f.context,{fetchImpl});
+tests/agentGeneration.test.ts:179:    const request=JSON.parse(String(fetchImpl.mock.calls.find(([url])=>String(url).includes("/videos/generations"))![1]!.body));
+tests/agentGeneration.test.ts:186:    const fetchImpl=hubFetch("video");await submitAgentGeneration(f.args,f.context,{fetchImpl});
+tests/agentGeneration.test.ts:187:    const body=JSON.parse(String(fetchImpl.mock.calls[0][1]!.body));
+tests/agentGeneration.test.ts:191:    const f=await setup();const fetchImpl=apimartFetch();
+tests/agentGeneration.test.ts:192:    const job=await submitAgentGeneration(f.args,f.context,{fetchImpl});
+tests/agentGeneration.test.ts:194:    await db.connectors.update(f.config.id,{baseUrl:"https://different.test/v1"});const calls=fetchImpl.mock.calls.length;
+tests/agentGeneration.test.ts:195:    await expect(checkAgentGeneration(job.id,f.context,{fetchImpl})).rejects.toBeInstanceOf(GenerationPendingError);
+tests/agentGeneration.test.ts:196:    expect(fetchImpl).toHaveBeenCalledTimes(calls);
+tests/agentGeneration.test.ts:234:    await submitAgentGeneration(flare.args,flare.context,{fetchImpl:flareFetch,pollIntervalMs:0,maxPolls:3});
+tests/agentGeneration.test.ts:245:    const extJob=await submitAgentGeneration(ext.args,ext.context,{fetchImpl:extFetch,pollIntervalMs:0,maxPolls:3});
+tests/agentGeneration.test.ts:258:    const f=await setup();const fetchImpl=apimartFetch();
+tests/agentGeneration.test.ts:259:    const results=await Promise.allSettled([submitAgentGeneration(f.args,f.context,{fetchImpl,pollIntervalMs:0}),submitAgentGeneration(f.args,f.context,{fetchImpl,pollIntervalMs:0})]);
+tests/agentGeneration.test.ts:261:    expect(fetchImpl.mock.calls.filter(([,init])=>init?.method === "POST")).toHaveLength(1);
+tests/agentGeneration.test.ts:267:    const fetchImpl=vi.fn<typeof fetch>(async(url,init)=>{if(String(url).includes("/tasks/"))controller.abort();return real(url,init);});
+tests/agentGeneration.test.ts:268:    await expect(submitAgentGeneration(f.args,f.context,{fetchImpl})).rejects.toBeInstanceOf(GenerationPendingError);
+tests/agentGeneration.test.ts:271:    expect((await submitAgentGeneration(f.args,f.context,{fetchImpl:real})).status).toBe("downloaded");
+tests/agentGeneration.test.ts:275:    const f=await setup();const fetchImpl=apimartFetch();
+tests/agentGeneration.test.ts:276:    const job=await submitAgentGeneration(f.args,f.context,{fetchImpl});
+tests/agentGeneration.test.ts:278:    const count=fetchImpl.mock.calls.length;
+tests/agentGeneration.test.ts:279:    await expect(submitAgentGeneration(f.args,f.context,{fetchImpl})).rejects.toBeInstanceOf(GenerationPendingError);
+tests/agentGeneration.test.ts:280:    expect(fetchImpl).toHaveBeenCalledTimes(count);expect((await db.agentGenerationJobs.get(job.id))?.status).toBe("unknown");
+tests/agentGeneration.test.ts:283:    const f=await setup();const fetchImpl=vi.fn<typeof fetch>(async()=>Response.json({code:200,data:[{task_id:"paid-1"},{task_id:"paid-2"}]}));
+tests/agentGeneration.test.ts:284:    await expect(submitAgentGeneration(f.args,f.context,{fetchImpl})).rejects.toBeInstanceOf(GenerationPendingError);
+tests/agentGeneration.test.ts:287:    await expect(submitAgentGeneration(f.args,second,{fetchImpl})).rejects.toThrow("不会重复付费");expect(fetchImpl).toHaveBeenCalledTimes(1);
+tests/agentGeneration.test.ts:291:    const fetchImpl=vi.fn<typeof fetch>(async()=>Response.json({id:"hub-task",object:"image",model:"gpt-image-2",status:"completed",output:[{index:0,type:"file",b64_json:"not base64!"}]}));
+tests/agentGeneration.test.ts:292:    await expect(submitAgentGeneration(f.args,f.context,{fetchImpl})).rejects.toBeInstanceOf(GenerationPendingError);
+tests/agentGeneration.test.ts:294:    expect((await monitorAgentGeneration(job.id,f.context,{fetchImpl:hubFetch()})).status).toBe("downloaded");
+tests/agentGeneration.test.ts:295:    expect(fetchImpl).toHaveBeenCalledTimes(1);
+tests/agentGeneration.test.ts:298:    const f=await setup();const fetchImpl=apimartFetch();
+tests/agentGeneration.test.ts:300:    try {await expect(submitAgentGeneration(f.args,f.context,{fetchImpl})).rejects.toThrow("storage full");}
+tests/agentGeneration.test.ts:303:    job=await monitorAgentGeneration(job.id,f.context,{fetchImpl});expect(job.status).toBe("downloaded");
+tests/agentGeneration.test.ts:304:    expect(fetchImpl.mock.calls.filter(([,init])=>init?.method === "POST")).toHaveLength(1);
+tests/agentGeneration.test.ts:307:    const f=await setup();const job=await submitAgentGeneration(f.args,f.context,{fetchImpl:apimartFetch()});
+tests/agentGeneration.test.ts:320:    const fetchImpl=vi.fn<typeof fetch>(async(url,init)=>{if(String(url).includes("cdn.test"))await deleteChatThread(f.thread.id);return real(url,init);});
+tests/agentGeneration.test.ts:321:    await expect(submitAgentGeneration(f.args,f.context,{fetchImpl})).rejects.toThrow();
+tests/agentGeneration.test.ts:328:    const fetchImpl=apimartFetch();await expect(submitAgentGeneration(f.args,f.context,{fetchImpl})).rejects.toThrow("重新确认");expect(fetchImpl).not.toHaveBeenCalled();
+tests/agentGeneration.test.ts:333:    const fetchImpl=apimartFetch("video");await expect(submitAgentGeneration(f.args,f.context,{fetchImpl})).rejects.toThrow("256");expect(fetchImpl).not.toHaveBeenCalled();
+tests/agentGeneration.test.ts:336:    const f=await setup();const real=apimartFetch();const fetchImpl=vi.fn<typeof fetch>(async(url,init)=>String(url).includes("/tasks/")?Response.json({code:200,data:{id:"task-1",status:"failed",error:{message:`echo ${f.config.apiKey}`}}}):real(url,init));
+tests/agentGeneration.test.ts:337:    const job=await submitAgentGeneration(f.args,f.context,{fetchImpl});expect(job.status).toBe("failed");expect(JSON.stringify(job)).not.toContain(f.config.apiKey);
+tests/d05ToolMetadata.test.ts:14:const answer = () => Response.json({choices: [{message: {content: 'done'}, finish_reason: 'stop'}]});
+tests/d05ToolMetadata.test.ts:15:const response = (names: string[]) => Response.json({choices: [{message: {content: '', tool_calls: names.map((name, index) => ({id: `provider-${index}`, type: 'function', function: {name, arguments: '{}'}}))}, finish_reason: 'tool_calls'}]});
+tests/apimart.test.ts:10:} from "@/lib/ai/apimart";
+tests/apimart.test.ts:13:const fetchResponse = (body: unknown, status = 200) => vi.fn<typeof fetch>(async () => Response.json(body, { status }));
+tests/apimart.test.ts:22:    const fetchImpl = fetchResponse({ success: true, data: [
+tests/apimart.test.ts:30:    const result = await listApimartModels(credentials, { expand: "parameters", category: "video" }, { fetchImpl });
+tests/apimart.test.ts:41:    expect(fetchImpl).toHaveBeenCalledExactlyOnceWith("https://api.apimart.ai/v1/models?expand=parameters&category=video", expect.objectContaining({
+tests/apimart.test.ts:47:    const fetchImpl = fetchResponse({ error: { message: "missing" } }, 404);
+tests/apimart.test.ts:48:    expect(await testApimartConnection(credentials, { fetchImpl })).toMatchObject({ ok: false, kind: "http", httpStatus: 404 });
+tests/apimart.test.ts:49:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/apimart.test.ts:50:    expect(fetchImpl.mock.calls[0]?.[1]?.method).toBe("GET");
+tests/apimart.test.ts:51:    expect(await testApimartConnection(credentials, { fetchImpl: fetchResponse({ data: [{ id: "chat" }] }) })).toEqual({ ok: true, modelCount: 1 });
+tests/apimart.test.ts:55:    expect(await listApimartModels(credentials, {}, { fetchImpl: fetchResponse(payload) })).toMatchObject({ ok: false, kind: "protocol" });
+tests/apimart.test.ts:59:    expect(await listApimartModels(credentials, {}, { fetchImpl: fetchResponse({ data: [] }) })).toEqual({ ok: true, models: [] });
+tests/apimart.test.ts:65:    const fetchImpl = fetchResponse(submitted);
+tests/apimart.test.ts:67:    expect(await submitApimartImageGeneration(credentials, input, { fetchImpl })).toEqual({ ok: true, tasks: [
+tests/apimart.test.ts:70:    expect(fetchImpl).toHaveBeenCalledExactlyOnceWith("https://api.apimart.ai/v1/images/generations", expect.objectContaining({
+tests/apimart.test.ts:79:    const fetchImpl = fetchResponse(submitted);
+tests/apimart.test.ts:80:    expect((await submitApimartVideoGeneration(credentials, input, { fetchImpl })).ok).toBe(true);
+tests/apimart.test.ts:81:    expect(fetchImpl.mock.calls[0]?.[0]).toBe("https://api.apimart.ai/v1/videos/generations");
+tests/apimart.test.ts:82:    expect(JSON.parse(String(fetchImpl.mock.calls[0]?.[1]?.body))).toEqual(input);
+tests/apimart.test.ts:86:    expect(await submitApimartImageGeneration(credentials, { model: "any" }, { fetchImpl: fetchResponse(payload) })).toMatchObject({ ok: false, kind: "protocol" });
+tests/apimart.test.ts:90:    const fetchImpl = fetchResponse({ code: 202, data: { id: "ext-task-1", status: "submitted", poll_url: "https://api.apimart.ai/v1/tasks/ext-task-1" } });
+tests/apimart.test.ts:91:    expect(await submitApimartImageGeneration(credentials, { model: "gpt-image-2.5-ext", prompt: "夜景", version: "flare" }, { fetchImpl })).toEqual({
+tests/apimart.test.ts:94:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/apimart.test.ts:99:    expect(await submitApimartImageGeneration(credentials, { model: "gpt-image-2", prompt: "街景" }, { fetchImpl: imageFetch })).toEqual({
+tests/apimart.test.ts:103:    expect(await submitApimartVideoGeneration(credentials, { model: "MiniMax-H3", prompt: "镜头" }, { fetchImpl: videoFetch })).toMatchObject({ ok: false, kind: "protocol" });
+tests/apimart.test.ts:110:      fetchImpl: extFetch, idempotencyKey: "job-stable-id",
+tests/apimart.test.ts:123:      fetchImpl: flareFetch, idempotencyKey: "job-stable-id",
+tests/apimart.test.ts:131:      fetchImpl: videoFetch, idempotencyKey: "job-stable-id",
+tests/apimart.test.ts:140:    const fetchImpl = vi.fn<typeof fetch>(async () => { throw new TypeError("request failed with sk-secret-key"); });
+tests/apimart.test.ts:141:    const result = await submitApimartVideoGeneration(credentials, { model: "any" }, { fetchImpl });
+tests/apimart.test.ts:144:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/apimart.test.ts:148:    const fetchImpl = fetchResponse(submitted);
+tests/apimart.test.ts:150:      expect(await submitApimartVideoGeneration(credentials, input, { fetchImpl })).toMatchObject({ ok: false, kind: "validation" });
+tests/apimart.test.ts:152:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/apimart.test.ts:159:    const fetchImpl = fetchResponse({ url: "https://upload.apimart.ai/frame.png", filename: "frame.png", content_type: "image/png", bytes: 5, created_at: 1000 });
+tests/apimart.test.ts:160:    expect(await uploadApimartImage(credentials, file, { fetchImpl })).toEqual({ ok: true, image: {
+tests/apimart.test.ts:163:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/apimart.test.ts:164:    const [url, init] = fetchImpl.mock.calls[0]!;
+tests/apimart.test.ts:177:    const fetchImpl = fetchResponse({ url: "https://upload.example/reference" });
+tests/apimart.test.ts:178:    expect((await uploadApimartImage(credentials, new Blob(["data"], { type }), { fetchImpl, filename: "custom-image" })).ok).toBe(true);
+tests/apimart.test.ts:182:    const fetchImpl = fetchResponse({ url: "https://upload.example/reference" });
+tests/apimart.test.ts:184:      expect(await uploadApimartImage(credentials, file, { fetchImpl })).toMatchObject({ ok: false, kind: "validation" });
+tests/apimart.test.ts:186:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/apimart.test.ts:187:    expect((await uploadApimartImage(credentials, new Blob([new Uint8Array(APIMART_MAX_IMAGE_BYTES)], { type: "image/png" }), { fetchImpl })).ok).toBe(true);
+tests/apimart.test.ts:191:    expect(await uploadApimartImage(credentials, new Blob(["image"], { type: "image/png" }), { fetchImpl: fetchResponse(body) })).toMatchObject({ ok: false, kind: "protocol" });
+tests/apimart.test.ts:197:    const fetchImpl = fetchResponse({ code: 200, data: { id: "task/1?", status, progress: 80,
+tests/apimart.test.ts:201:    const result = await getApimartTask(credentials, "task/1?", { fetchImpl });
+tests/apimart.test.ts:206:    expect(fetchImpl).toHaveBeenCalledExactlyOnceWith("https://api.apimart.ai/v1/tasks/task%2F1%3F?language=zh", expect.objectContaining({ method: "GET" }));
+tests/apimart.test.ts:210:    const fetchImpl = fetchResponse({ code: 200, data: { id: "task", status: "completed", progress: 100, cost: 0.15, credits_cost: 1.5, created: 1000, completed: 1019, estimated_time: 60, actual_time: 19,
+tests/apimart.test.ts:213:    const result = await getApimartTask(credentials, "task", { fetchImpl });
+tests/apimart.test.ts:215:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/apimart.test.ts:219:    expect(await getApimartTask(credentials, "task", { fetchImpl: fetchResponse({ code: 200, data }) })).toMatchObject({ ok: false, kind: "protocol" });
+tests/apimart.test.ts:225:    const result = await listApimartModels(credentials, {}, { fetchImpl: fetchResponse({ error: { code: 402, type: "payment_required", message: "invalid sk-secret-key Bearer other-token" } }, status) });
+tests/apimart.test.ts:231:    expect(await listApimartModels(credentials, {}, { fetchImpl: fetchResponse(body) })).toMatchObject({ ok: false, kind: "provider" });
+tests/apimart.test.ts:235:    expect(await listApimartModels(credentials, {}, { fetchImpl: async () => new Response("invalid JSON") })).toMatchObject({ ok: false, kind: "protocol" });
+tests/apimart.test.ts:236:    const result = await listApimartModels(credentials, {}, { fetchImpl: async () => new Response("<html>sk-secret-key</html>", { status: 502 }) });
+tests/apimart.test.ts:243:    const fetchImpl = vi.fn<typeof fetch>(async (_url, init) => {
+tests/apimart.test.ts:248:    expect(await submitApimartVideoGeneration(credentials, { model: "sora-2" }, { fetchImpl, signal: controller.signal })).toMatchObject({ ok: false, kind: "aborted" });
+tests/apimart.test.ts:249:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/apimart.test.ts:250:    fetchImpl.mockClear();
+tests/apimart.test.ts:251:    expect(await getApimartTask(credentials, "task", { fetchImpl, signal: controller.signal })).toMatchObject({ ok: false, kind: "aborted" });
+tests/apimart.test.ts:252:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/apimart.test.ts:258:    expect(await testApimartConnection(credentials, { fetchImpl: async () => response })).toMatchObject({ ok: false, kind: "aborted" });
+tests/apimart.test.ts:267:    const fetchImpl = fetchResponse({ data: [] });
+tests/apimart.test.ts:268:    expect(await listApimartModels(input, {}, { fetchImpl })).toMatchObject({ ok: false, kind: "validation" });
+tests/apimart.test.ts:269:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/agentGenerationBatch.test.ts:49:  const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/agentGenerationBatch.test.ts:50:    if (init?.method === 'POST') { posts++; return behavior ? behavior(posts) : Response.json({ code: 200, data: [{ task_id: `task-${posts}`, status: 'submitted' }] }); }
+tests/agentGenerationBatch.test.ts:51:    if (String(url).includes('/tasks/')) return Response.json({ code: 200, data: { id: new URL(String(url)).pathname.split('/').at(-1), status: 'completed', progress: 100, result: { images: [{ url: 'https://cdn.test/output' }] } } });
+tests/agentGenerationBatch.test.ts:54:  return { fetchImpl, posts: () => posts };
+tests/agentGenerationBatch.test.ts:57:async function run(f: Awaited<ReturnType<typeof fixture>>, fetchImpl: typeof fetch) { await startGenerationBatch(f.id, f.thread.id, { locks: f.locks, fetchImpl, pollIntervalMs: 0, maxPolls: 2 }); return readGenerationBatch(f.id, f.thread.id); }
+tests/agentGenerationBatch.test.ts:109:    const mock = apimartMock(index => new Promise(resolve => { active++; maximum = Math.max(maximum, active); releases.push(() => { active--; resolve(Response.json({ code: 200, data: [{ task_id: `task-${index}`, status: 'submitted' }] })); }); }));
+tests/agentGenerationBatch.test.ts:110:    const executing = run(f, mock.fetchImpl);
+tests/agentGenerationBatch.test.ts:117:    db.close(); await db.open(); await run(f, mock.fetchImpl); expect(mock.posts()).toBe(4);
+tests/agentGenerationBatch.test.ts:122:    const mock = apimartMock(index => index === 1 ? Response.json({ error: { message: 'invalid prompt' } }, { status: 400 }) : Response.json({ code: 200, data: [{ task_id: `task-${index}` }] }));
+tests/agentGenerationBatch.test.ts:123:    const state = await run(f, mock.fetchImpl);
+tests/agentGenerationBatch.test.ts:131:    let state = await run(f, mock.fetchImpl);
+tests/agentGenerationBatch.test.ts:134:    const posts = mock.posts(); db.close(); await db.open(); await run(f, mock.fetchImpl); expect(mock.posts()).toBe(posts);
+tests/agentGenerationBatch.test.ts:141:      if (init?.method === 'POST') return Response.json({ code: 200, data: [{ task_id: 'saved-task' }] });
+tests/agentGenerationBatch.test.ts:142:      if (String(url).includes('/tasks/')) return Response.json({ code: 200, data: { id: 'saved-task', status: complete ? 'completed' : 'processing', ...(complete ? { result: { images: [{ url: 'https://cdn.test/result' }] } } : {}) } });
+tests/agentGenerationBatch.test.ts:163:    const mock = vi.fn<typeof fetch>(async (_url, init) => { expect(init?.method).toBe('POST'); expect(JSON.parse(String(init?.body))).toMatchObject({ model: 'gpt-image-2', n: 1 }); return Response.json({ id: `hub-${Math.random()}`, object: 'image', model: 'gpt-image-2', status: 'completed', output: [{ index: 0, type: 'file', b64_json: btoa(String.fromCharCode(...png)) }] }); });
+tests/agentGenerationBatch.test.ts:170:    const f = await fixture(5); await confirm(f); const mock = apimartMock(); let state = await run(f, mock.fetchImpl);
+tests/agentGenerationBatch.test.ts:184:    const f = await fixture(5); await confirm(f); const state = await run(f, apimartMock().fetchImpl);
+tests/agentGenerationBatch.test.ts:192:    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => { if (String(url).includes('cdn.test')) await deleteProject(f.project.id); return mock.fetchImpl(url, init); });
+tests/agentGenerationBatch.test.ts:193:    await startGenerationBatch(f.id, f.thread.id, { fetchImpl, locks: f.locks, pollIntervalMs: 0 }).catch(() => undefined);
+tests/agentGenerationBatch.test.ts:221:    await confirm(f); const state = await run(f, apimartMock().fetchImpl);
+tests/agentTaskWrapup.test.ts:106:   return Response.json({choices:[{message:{content:JSON.stringify({overview:'等待人工验收',results:[],acceptance:data.criteria.map((criterion:string,criterionIndex:number)=>({criterion,criterionIndex,status:'review',note:'请用户检查',sourceIds:[]})),decisions:[],lessons:[],unresolved:[]})},finish_reason:'stop'}]});});
+tests/audioAgentExecution.test.ts:19:  if (protocol === "responses") return Response.json({ id: "response", status: "completed", output: calls.length
+tests/audioAgentExecution.test.ts:22:  return Response.json({ choices: [{ message: { content: calls.length ? "" : "已写入脚本", ...(calls.length ? { tool_calls: calls } : {}) }, finish_reason: calls.length ? "tool_calls" : "stop" }] });
+tests/audioAgentExecution.test.ts:51:      ? Response.json({ id: "promise", status: "completed", output: [{ type: "message", role: "assistant", content: [{ type: "output_text", text, annotations: [] }] }] })
+tests/audioAgentExecution.test.ts:52:      : Response.json({ choices: [{ message: { content: text }, finish_reason: "stop" }] }));
+tests/agentGenerationReviewTransactions.test.ts:28:  await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => Response.json({ choices: [{ message: { content: "", tool_calls: [{ id: "call", type: "function", function: { name: "submit_generation", arguments: original } }] }, finish_reason: "tool_calls" }] })));
+tests/agentGenerationReviewTransactions.test.ts:60:      return Response.json({ id: "paid", object: "image", model: "gpt-image-2", status: "completed", output: [{ index: 0, type: "file", b64_json: png }] });
+tests/agentGenerationReviewTransactions.test.ts:66:    const next = vi.fn(async () => Response.json({ choices: [{ message: { content: "已保存" }, finish_reason: "stop" }] }));
+tests/openaiCompatible.test.ts:8:  normalizeBaseUrl,
+tests/openaiCompatible.test.ts:10:} from "@/lib/ai/openaiCompatible";
+tests/openaiCompatible.test.ts:18:    expect(normalizeBaseUrl(" https://api.openai.com/v1/ ")).toBe("https://api.openai.com/v1");
+tests/openaiCompatible.test.ts:19:    expect(normalizeBaseUrl("https://api.deepseek.com/v1///")).toBe("https://api.deepseek.com/v1");
+tests/openaiCompatible.test.ts:41:      Response.json({ data: [{ id: "gpt-4o-mini" }, { id: "gpt-4o" }] }),
+tests/openaiCompatible.test.ts:67:      return Response.json({ choices: [{ message: { role: "assistant", content: "pong" } }] });
+tests/openaiCompatible.test.ts:117:const chatSuccess = async () => Response.json({ choices: [{ message: { role: "assistant", content: "pong" }, finish_reason: "stop" }] });
+tests/openaiCompatible.test.ts:124:  const response = Response.json({ data: [] });
+tests/openaiCompatible.test.ts:145:  ].map(([name, body]) => [name as string, () => Response.json(body)] as [string, () => Response]),
+tests/openaiCompatible.test.ts:151:function expectMethods(fetchImpl: ReturnType<typeof vi.fn<typeof fetch>>, methods: string[]) {
+tests/openaiCompatible.test.ts:152:  expect(fetchImpl).toHaveBeenCalledTimes(methods.length);
+tests/openaiCompatible.test.ts:153:  expect(fetchImpl.mock.calls.map(call => call[1]?.method)).toEqual(methods);
+tests/openaiCompatible.test.ts:160:      const fetchImpl = vi.fn<typeof fetch>(async (_url, init) => init?.method === "POST" ? chatSuccess() : response());
+tests/openaiCompatible.test.ts:161:      const result = await operation(credentials, fetchImpl);
+tests/openaiCompatible.test.ts:164:      expectMethods(fetchImpl, ["GET"]);
+tests/openaiCompatible.test.ts:168:      const fetchImpl = vi.fn<typeof fetch>(async () => Response.json(body));
+tests/openaiCompatible.test.ts:169:      expect(await operation(credentials, fetchImpl)).toEqual(name === "list"
+tests/openaiCompatible.test.ts:171:      expectMethods(fetchImpl, ["GET"]);
+tests/openaiCompatible.test.ts:175:      const fetchImpl = vi.fn<typeof fetch>(async () => new Response(JSON.stringify({
+tests/openaiCompatible.test.ts:178:      expect(await operation(credentials, fetchImpl)).toEqual(name === "list"
+tests/openaiCompatible.test.ts:180:      expectMethods(fetchImpl, ["GET"]);
+tests/openaiCompatible.test.ts:184:      const fetchImpl = vi.fn<typeof fetch>(async (_url, init) => init?.method === "POST" ? chatSuccess() : new Response("denied fixture-secret", { status }));
+tests/openaiCompatible.test.ts:185:      const result = await operation(credentials, fetchImpl);
+tests/openaiCompatible.test.ts:188:      expectMethods(fetchImpl, ["GET"]);
+tests/openaiCompatible.test.ts:192:      const fetchImpl = vi.fn<typeof fetch>(async (_url, init) => {
+tests/openaiCompatible.test.ts:196:      expect((await operation(credentials, fetchImpl)).ok).toBe(false);
+tests/openaiCompatible.test.ts:197:      expectMethods(fetchImpl, ["GET"]);
+tests/openaiCompatible.test.ts:204:      const fetchImpl = vi.fn<typeof fetch>();
+tests/openaiCompatible.test.ts:205:      expect((await operation(input, fetchImpl)).ok).toBe(false);
+tests/openaiCompatible.test.ts:206:      expectMethods(fetchImpl, []);
+tests/openaiCompatible.test.ts:234:  ].map(([name, body]) => [name as string, () => Response.json(body)] as [string, () => Response]),
+tests/openaiCompatible.test.ts:245:      const fetchImpl = vi.fn<typeof fetch>().mockImplementationOnce(getResponse).mockImplementation(chatSuccess);
+tests/openaiCompatible.test.ts:246:      expect(await testConnection({ ...credentials, defaultModel }, fetchImpl)).toEqual({ ok: true, via: "chat" });
+tests/openaiCompatible.test.ts:247:      expectMethods(fetchImpl, ["GET", "POST"]);
+tests/openaiCompatible.test.ts:248:      expect(fetchImpl.mock.calls.map(call => call[0])).toEqual([
+tests/openaiCompatible.test.ts:251:      for (const call of fetchImpl.mock.calls) {
+tests/openaiCompatible.test.ts:255:      expect(JSON.parse(String(fetchImpl.mock.calls[1][1]?.body))).toEqual({
+tests/openaiCompatible.test.ts:261:      const fetchImpl = vi.fn<typeof fetch>().mockImplementationOnce(getResponse).mockImplementation(async () => Response.json({
+tests/openaiCompatible.test.ts:264:      expect(await testConnection(credentials, fetchImpl)).toEqual({ ok: true, via: "chat" });
+tests/openaiCompatible.test.ts:265:      expectMethods(fetchImpl, ["GET", "POST"]);
+tests/openaiCompatible.test.ts:269:      const fetchImpl = vi.fn<typeof fetch>().mockImplementationOnce(getResponse)
+tests/openaiCompatible.test.ts:271:      const result = await testConnection(credentials, fetchImpl);
+tests/openaiCompatible.test.ts:274:      expectMethods(fetchImpl, ["GET", "POST"]);
+tests/openaiCompatible.test.ts:278:      const fetchImpl = vi.fn<typeof fetch>().mockImplementationOnce(getResponse)
+tests/openaiCompatible.test.ts:280:      const result = await testConnection(credentials, fetchImpl);
+tests/openaiCompatible.test.ts:283:      expectMethods(fetchImpl, ["GET", "POST"]);
+tests/openaiCompatible.test.ts:289:  const fetchImpl = vi.fn<typeof fetch>().mockImplementationOnce(getResponse).mockImplementation(chatSuccess);
+tests/openaiCompatible.test.ts:290:  expect((await listModels(credentials, fetchImpl)).ok).toBe(false);
+tests/openaiCompatible.test.ts:291:  expectMethods(fetchImpl, ["GET"]);
+tests/openaiCompatible.test.ts:297:  const fetchImpl = vi.fn<typeof fetch>(async () => Response.json({ error: { message: prefix + secret } }));
+tests/openaiCompatible.test.ts:298:  const result = await operation({ ...credentials, apiKey: secret }, fetchImpl);
+tests/openaiCompatible.test.ts:300:  expectMethods(fetchImpl, ["GET"]);
+tests/reasoningPolicy.test.ts:10:import { streamChatCompletions } from "@/lib/ai/chatStream";
+tests/reasoningPolicy.test.ts:15:const answer = () => Response.json({ choices: [{ message: { content: "完成" }, finish_reason: "stop" }] });
+tests/reasoningPolicy.test.ts:45:      const result = await streamChatCompletions({ baseUrl: connector.baseUrl, apiKey: connector.apiKey, connectorDefinitionId: connector.definitionId, model: "gpt-5", reasoningEffort: effort, messages: [{ role: "user", content: "hi" }] }, { fetchImpl: fetcher });
+tests/reasoningPolicy.test.ts:59:      const result = await streamChatCompletions({ baseUrl: connector.baseUrl, apiKey: connector.apiKey, messages: [{ role: "user", content: "hi" }], ...input }, { fetchImpl: fetcher });
+tests/reasoningPolicy.test.ts:96:        return Response.json({ choices: [{ message: { content: "", tool_calls: [{ id: `call-${bodies.length}`, type: "function", function: { name, arguments: args } }] }, finish_reason: "tool_calls" }] });
+tests/boundedAudioRuntime.test.ts:33:        const fetchImpl = vi.fn<typeof fetch>(async () => fixture.response);
+tests/boundedAudioRuntime.test.ts:35:        const first = await submitAudioGeneration(project.id, job.id, {fetchImpl, decode});
+tests/boundedAudioRuntime.test.ts:39:        expect((await submitAudioGeneration(project.id, job.id, {fetchImpl, decode})).status).toBe("uncertain");
+tests/boundedAudioRuntime.test.ts:40:        expect((await refreshAudioGeneration(project.id, job.id, {fetchImpl, decode})).status).toBe("uncertain");
+tests/boundedAudioRuntime.test.ts:41:        expect(fetchImpl).toHaveBeenCalledOnce(); expect(fetchImpl.mock.calls[0][1]?.method).toBe("POST");
+tests/boundedAudioRuntime.test.ts:50:        const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/boundedAudioRuntime.test.ts:51:            if (init?.method === "POST") return Response.json({code: 200, data: [{task_id: "remote"}]});
+tests/boundedAudioRuntime.test.ts:52:            if (String(url).includes("/music/tasks/")) return Response.json({code: 200, data: {id: "remote", status: "completed", result: {music: [{title: "Song", clip_id: "clip-1", audio_url: "https://cdn.example/song.wav"}]}}});
+tests/boundedAudioRuntime.test.ts:57:        await submitAudioGeneration(project.id, job.id, {fetchImpl, decode});
+tests/boundedAudioRuntime.test.ts:58:        const limited = await refreshAudioGeneration(project.id, job.id, {fetchImpl, decode});
+tests/boundedAudioRuntime.test.ts:63:        const before = fetchImpl.mock.calls.length;
+tests/boundedAudioRuntime.test.ts:65:        expect((await refreshAudioGeneration(project.id, job.id, {fetchImpl, decode})).status).toBe("saved");
+tests/boundedAudioRuntime.test.ts:66:        expect(fetchImpl.mock.calls.slice(before)).toHaveLength(1);
+tests/boundedAudioRuntime.test.ts:67:        expect(String(fetchImpl.mock.calls[before][0])).toBe("https://cdn.example/song.wav");
+tests/boundedAudioRuntime.test.ts:68:        expect(fetchImpl.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(1);
+tests/agentAuditRemediation.test.ts:22:import { listModels, testConnection } from '@/lib/ai/openaiCompatible';
+tests/agentAuditRemediation.test.ts:49:    const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
+tests/agentAuditRemediation.test.ts:59:        return Response.json({ url: 'https://cdn.test/upload.png' });
+tests/agentAuditRemediation.test.ts:61:      if (init?.method === 'POST') { paidPosts++; return Response.json({ code: 200, data: [{ task_id: 'paid-after-delete' }] }); }
+tests/agentAuditRemediation.test.ts:64:    await submitAgentGeneration(args, context, { fetchImpl, maxPolls: 1 }).catch(() => undefined);
+tests/agentAuditRemediation.test.ts:65:    expect(fetchImpl.mock.calls.some(([url]) => String(url).includes('/uploads/'))).toBe(true);
+tests/agentAuditRemediation.test.ts:98:    const fetchImpl = vi.fn<typeof fetch>(async (_url, init) => {
+tests/agentAuditRemediation.test.ts:101:      if (protocol === "responses") return Response.json({id:"fixture-response",status:"completed",output:requests.length === 1 ? [{type:"function_call",id:"fc-task",call_id:"task-read",name:"task_read",arguments:args,status:"completed"}] : [{type:"message",id:"msg-done",role:"assistant",status:"completed",content:[{type:"output_text",text:"done",annotations:[]}]}]});
+tests/agentAuditRemediation.test.ts:102:      if (requests.length === 1) return Response.json({ choices: [{ message: { content: '', tool_calls: [{ id: 'task-read', type: 'function', function: { name: 'task_read', arguments: args } }] }, finish_reason: 'tool_calls' }] });
+tests/agentAuditRemediation.test.ts:103:      return Response.json({ choices: [{ message: { content: 'done' }, finish_reason: 'stop' }] });
+tests/agentAuditRemediation.test.ts:105:    await executeChatRun(next, chat.apiKey, new AbortController(), fetchImpl);
+tests/agentAuditRemediation.test.ts:121:    const fetchImpl = vi.fn<typeof fetch>(async () => new Response(`Invalid API key: ${chat.apiKey}`, { status: 401 }));
+tests/agentAuditRemediation.test.ts:122:    const result = await probe(chat, fetchImpl);
+tests/agentAuditRemediation.test.ts:166:  await resumeChatRun(run.id,chat.apiKey,new AbortController(),vi.fn(async()=>Response.json({choices:[{message:{content:"done"},finish_reason:"stop"}]})),BUILTIN_TOOLS.map(tool=>tool.name === completed.name ? {...tool,execute} : tool));
+tests/agentToolsReview.test.ts:16:const toolResponse = (ids = ["call-1"]) => Response.json({ choices: [{ message: { content: "需要执行以下操作", tool_calls: ids.map(wireCall) }, finish_reason: "tool_calls" }] });
+tests/agentToolsReview.test.ts:17:const answer = () => Response.json({ choices: [{ message: { content: "已完成" }, finish_reason: "stop" }] });
+tests/agentToolsReview.test.ts:80:      await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => Response.json({ choices: [{ message: { content: "", tool_calls: [wireCall("first"), wireCall("second")] }, finish_reason: "tool_calls" }] })), [tool, BUILTIN_TOOLS[1]]);
+tests/toolValidationDiagnostics.test.ts:87:    const fetchImpl: typeof fetch = async (_url, init) => {
+tests/toolValidationDiagnostics.test.ts:97:      if (protocol === "responses") return Response.json({ id: `response-${requests}`, status: "completed", output: requests < 3 ? [{ type: "function_call", call_id: `call-${requests}`, name, arguments: raw, status: "completed" }] : [{ type: "message", role: "assistant", status: "completed", content: [{ type: "output_text", text: "已修正后读取", annotations: [] }] }] });
+tests/toolValidationDiagnostics.test.ts:98:      return Response.json({ choices: [{ message: requests < 3 ? { content: "", tool_calls: [{ id: `call-${requests}`, type: "function", function: { name, arguments: raw } }] } : { content: "已修正后读取" }, finish_reason: requests < 3 ? "tool_calls" : "stop" }] });
+tests/toolValidationDiagnostics.test.ts:100:    await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl, BUILTIN_TOOLS.map((item) => item.name === name ? { ...tool, execute } : item));
+tests/memoryRetrieval.test.ts:26:import { toResponseInput } from "@/lib/ai/responsesStream";
+tests/memoryRetrieval.test.ts:71:  Response.json({ choices: [{ message: { content }, finish_reason: "stop" }] });
+tests/memoryRetrieval.test.ts:331:        return Response.json({
+tests/responsesStream.test.ts:3:import { streamResponses, toResponseInput } from "@/lib/ai/responsesStream";
+tests/responsesStream.test.ts:26:      return Response.json(response([reasoning, call]));
+tests/responsesStream.test.ts:29:    const result = await streamResponses({ ...input, reasoningEffort: "high" }, { fetchImpl: fetcher, onReasoning: delta });
+tests/responsesStream.test.ts:46:    const result = await streamResponses(input, { fetchImpl: vi.fn(async () => new Response(stream, { headers: { "Content-Type": "text/event-stream" } })), onDelta: text, onReasoning: summary });
+tests/responsesStream.test.ts:54:      const result = await streamResponses(input, { fetchImpl: vi.fn(async () => Response.json(response(output))) });
+tests/responsesStream.test.ts:58:    const truncated = await streamResponses(input, { fetchImpl: vi.fn(async () => new Response(sse([{ type: "response.function_call_arguments.delta", delta: "{}" }, { type: "response.output_item.done", item: call }]) + "data: [DONE]\n\n", { headers: { "Content-Type": "text/event-stream" } })) });
+tests/responsesStream.test.ts:63:      const result = await streamResponses(input, { fetchImpl: vi.fn(async () => Response.json({ ...response([call]), status })) });
+tests/responsesStream.test.ts:69:    const result = await streamResponses(input, { fetchImpl: fetcher });
+tests/responsesStream.test.ts:78:    const fetcher = vi.fn(async () => Response.json({ ...response([call]), status, error: { message: `invalid key ${apiKey}; Bearer ${bearerKey}` } }));
+tests/responsesStream.test.ts:79:    const result = await streamResponses({ ...input, apiKey }, { fetchImpl: fetcher });
+tests/responsesStream.test.ts:107:    const fetcher = vi.fn(async () => Response.json({ ...response([call]), status: "failed", error: { message: `${prefix}${credential}; diagnostic tail` } }));
+tests/responsesStream.test.ts:108:    const result = await streamResponses({ ...input, apiKey }, { fetchImpl: fetcher });
+tests/responsesStream.test.ts:128:    const fetcher = vi.fn(async () => Response.json({ ...response([call]), status, error: { message: "invalid key secret; Bearer sk-other-fixture" } }));
+tests/responsesStream.test.ts:129:    const result = await streamResponses(input, { fetchImpl: fetcher });
+tests/responsesStream.test.ts:140:    const result = await streamResponses({ ...input, apiKey }, { fetchImpl: fetcher });
+tests/responsesStream.test.ts:150:    const result = await streamResponses(input, { fetchImpl: fetcher });
+tests/responsesStream.test.ts:161:    const result = await streamResponses(input, { signal: controller.signal, fetchImpl: vi.fn(async () => new Response(stream, { headers: { "Content-Type": "text/event-stream" } })) });
+tests/responsesStream.test.ts:172:      const result = await streamResponses(input, { fetchImpl: vi.fn(async () => new Response(sse(events), { headers: { "Content-Type": "text/event-stream" } })) });
+tests/responsesStream.test.ts:176:    const result = await streamResponses(input, { fetchImpl: vi.fn(async () => new Response(sse([{ type: "response.completed", response: response([reasoning, call]) }]), { headers: { "Content-Type": "text/event-stream" } })) });
+tests/responsesStream.test.ts:179:    const terminalAnswer = await streamResponses(input, { fetchImpl: vi.fn(async () => new Response(sse([{ type: "response.completed", response: response() }]), { headers: { "Content-Type": "text/event-stream" } })) });
+tests/responsesStream.test.ts:185:    const result = await streamResponses(input, { fetchImpl: vi.fn(async () => Response.json(response([{ type: "reasoning", id: "not-stored", summary: [] }, message]))) });
+tests/responsesStream.test.ts:198:    const firstFetch = vi.fn(async () => Response.json(response([reasoning, call])));
+tests/responsesStream.test.ts:206:      return Response.json(response());
+tests/responsesStream.test.ts:233:    const fetcher = vi.fn(async (url, init) => { expect(String(url)).toContain("/responses"); bodies.push(JSON.parse(String(init?.body))); return Response.json(response(bodies.length === 1 ? [reasoning, call] : [message])); });
+tests/responsesStream.test.ts:253:    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => ++count === 1 ? Response.json(response([reasoning, call])) : new Response("offline", { status: 500 })), [tool, BUILTIN_TOOLS[1]]);
+tests/responsesStream.test.ts:258:      return Response.json(response());
+tests/responsesStream.test.ts:268:    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => Response.json(response([reasoning, call]))), [tool, BUILTIN_TOOLS[1]]);
+tests/responsesStream.test.ts:277:      return Response.json(response());
+tests/responsesStream.test.ts:286:    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => Response.json(response([reasoning, call]))), [tool, BUILTIN_TOOLS[1]]);
+tests/agentProjectContext.test.ts:45:  const fetcher=vi.fn(async()=>{await repoCascadeCommands.deleteProject(project.id);return Response.json({choices:[{message:{content:'简明摘要'},finish_reason:'stop'}]});});
+tests/agentProjectCreation.test.ts:25:  return protocol === "responses" ? Response.json({ id: "reply", status: "completed", output: calls.length ? calls.map(call => ({ type: "function_call", call_id: call.id, name: call.function.name, arguments: call.function.arguments, status: "completed" })) : [{ type: "message", role: "assistant", status: "completed", content: [{ type: "output_text", text: "已完成本地写入", annotations: [] }] }] })
+tests/agentProjectCreation.test.ts:26:    : Response.json({ choices: [{ message: { content: calls.length ? "" : "已完成本地写入", ...(calls.length ? { tool_calls: calls } : {}) }, finish_reason: calls.length ? "tool_calls" : "stop" }] });
+tests/agentProjectCreation.test.ts:57:      const fetchImpl = vi.fn<typeof fetch>(async (_url, init) => {
+tests/agentProjectCreation.test.ts:73:      await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
+tests/agentProjectCreation.test.ts:76:      expect(fetchImpl).toHaveBeenCalledTimes(4);
+tests/agentProjectCreation.test.ts:202:    const fetchImpl: typeof fetch = async () => ++step === 1 ? response(run.protocol, [wire("project_create", { name: "当前项目", kind: "audio" }, "first"), wire("project_update", { id: foreign.id, patch: { brief: "越界" } }, "foreign"), wire("project_create", { name: "不应创建" }, "second")]) : response(run.protocol);
+tests/agentProjectCreation.test.ts:203:    await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
+tests/agentProjectCreation.test.ts:207:    await resumeChatRun(run.id, connector.apiKey, new AbortController(), fetchImpl);
+tests/agentProjectCreation.test.ts:224:    const fetchImpl = vi.fn<typeof fetch>(async () => response(run.protocol, [wire("project_create", { name: "停止后保留", kind: "audio" })]));
+tests/agentProjectCreation.test.ts:225:    await executeChatRun(run, connector.apiKey, controller, fetchImpl, registry);
+tests/agentProjectCreation.test.ts:230:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/agentUsage.test.ts:2:import { streamChatCompletions } from "@/lib/ai/chatStream";
+tests/agentUsage.test.ts:20:    const result = await streamChatCompletions(input, { fetchImpl: vi.fn(async () => Response.json({ ...answer, usage: { prompt_tokens: 4, completion_tokens: 2, total_tokens: 6 } })) });
+tests/agentUsage.test.ts:24:    const malformed = await streamChatCompletions(input, { fetchImpl: vi.fn(async () => Response.json({ ...answer, usage: { prompt_tokens: -1, completion_tokens: "9", total_tokens: null } })) });
+tests/agentUsage.test.ts:26:    const partial = await streamChatCompletions(input, { fetchImpl: vi.fn(async () => Response.json({ ...answer, usage: { prompt_tokens: 0 } })) });
+tests/agentUsage.test.ts:36:    const result = await streamChatCompletions(input, { fetchImpl: vi.fn(async () => new Response(body, { headers: { "Content-Type": "text/event-stream" } })) });
+tests/agentUsage.test.ts:42:    const result = await streamChatCompletions(input, { fetchImpl: vi.fn(async () => Response.json({ choices: [{ message: { content: "partial" }, finish_reason: "length" }], usage: { total_tokens: 12 } })) });
+tests/agentUsage.test.ts:48:    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => Response.json({ ...answer, usage: { prompt_tokens: 20, completion_tokens: 3, total_tokens: 23 } })));
+tests/agentTools.test.ts:20:const answer = () => Response.json({ choices: [{ message: { content: "完成" }, finish_reason: "stop" }] });
+tests/agentTools.test.ts:21:const toolResponse = (name: string, args = "{}", id = "call-1") => Response.json({ choices: [{ message: { content: "", tool_calls: [{ id, type: "function", function: { name, arguments: args } }] }, finish_reason: "tool_calls" }] });
+tests/agentTools.test.ts:188:    const fetcher = vi.fn(async () => Response.json({ choices: [{ message: { content: "角色已创建，下一步处理场景。", tool_calls: [{ id: "last-call", type: "function", function: { name: tool.name, arguments: "{}" } }] }, finish_reason: "tool_calls" }] }));
+tests/agentTools.test.ts:269:    const fetcher = vi.fn(async () => Response.json({ choices: [{ message: { content: "", tool_calls: ["first", "second"].map((id) => ({ id, type: "function", function: { name: tool.name, arguments: "{}" } })) }, finish_reason: "tool_calls" }] }));
+tests/referenceEvidence.test.ts:75:      return Response.json({ choices: [{ message: { content: JSON.stringify({ overview: "已整理历史过程", results: [], acceptance: [], decisions: [], lessons: [], unresolved: [] }) }, finish_reason: "stop" }] });
+tests/toolLoadingMeasurement.test.ts:42:    return Response.json({ choices: [{ message: step < 3 ? { content: "", tool_calls: [{ id: `call-${step}`, type: "function", function: { name, arguments: JSON.stringify(args) } }] } : { content: "找到你的 INFP 美食博主 IP。" }, finish_reason: step < 3 ? "tool_calls" : "stop" }] });
+tests/agentGenerationReview.test.ts:33:  const fetcher=vi.fn<typeof fetch>(async()=>Response.json(protocol==="responses"?{id:"r1",status:"completed",output:[{type:"reasoning",id:"reason1",summary:[],encrypted_content:"sealed-state"},functionCall]}:{choices:[{message:{content:"",tool_calls:[{id:"call1",type:"function",function:{name:"submit_generation",arguments:original}}]},finish_reason:"tool_calls"}]}));
+tests/agentGenerationReview.test.ts:42:  return Response.json({id:"paid-1",object:"image",model:"gpt-image-2",status:"completed",output:[{index:0,type:"file",b64_json:png}]});
+tests/agentGenerationReview.test.ts:44:const answer=(responses=false)=>Response.json(responses?{id:"r2",status:"completed",output:[{type:"message",id:"m2",role:"assistant",status:"completed",content:[{type:"output_text",text:"已下载",annotations:[]}]}]}:{choices:[{message:{content:"已下载"},finish_reason:"stop"}]});
+tests/agentGenerationReview.test.ts:83:      if(init?.method==="POST") return Response.json({id:"video1",object:"video",model:edited.model,status:"completed",output:[{index:0,type:"file",content_url:"https://hub.test/ai/v1/videos/video1/content"}]});
+tests/agentFinishingCheck.test.ts:9:import { toResponseInput } from "@/lib/ai/responsesStream";
+tests/agentFinishingCheck.test.ts:26:  return protocol === "responses" ? Response.json({ id: "reply", status: "completed", output: [
+tests/agentFinishingCheck.test.ts:30:  ] }) : Response.json({ choices: [{ message: { content, reasoning_content: reasoning, ...(calls.length ? { tool_calls: calls } : {}) }, finish_reason: calls.length ? "tool_calls" : "stop" }] });
+tests/agentFinishingCheck.test.ts:54:    const fetchImpl = vi.fn<typeof fetch>(async (_url, init) => {
+tests/agentFinishingCheck.test.ts:67:    await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
+tests/agentFinishingCheck.test.ts:70:    expect(fetchImpl).toHaveBeenCalledTimes(4);
+tests/agentFinishingCheck.test.ts:88:    const fetchImpl = vi.fn<typeof fetch>(async () => ++count === 1 ? reply(protocol, "", [wire("update_run_plan", { steps: plan })]) : reply(protocol, "用户只需要建议，不进行写入。"));
+tests/agentFinishingCheck.test.ts:89:    await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
+tests/agentFinishingCheck.test.ts:90:    expect(fetchImpl).toHaveBeenCalledTimes(3);
+tests/agentFinishingCheck.test.ts:98:    const fetchImpl = vi.fn<typeof fetch>(async () => reply(run.protocol, "下一步将开始，先说明建议。"));
+tests/agentFinishingCheck.test.ts:99:    await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
+tests/agentFinishingCheck.test.ts:100:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/agentFinishingCheck.test.ts:108:    const fetchImpl = vi.fn<typeof fetch>(async () => ++count === 1 ? reply(protocol, "", [wire("update_run_plan", { steps: plan })]) : reply(protocol, "本段暂时结束。"));
+tests/agentFinishingCheck.test.ts:109:    await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
+tests/agentFinishingCheck.test.ts:112:    expect(fetchImpl).toHaveBeenCalledTimes(2);
+tests/agentFinishingCheck.test.ts:119:    const fetchImpl = vi.fn<typeof fetch>(async () => reply(f.run.protocol, ++count === 1 ? candidate.content : "仍需要用户输入。"));
+tests/agentFinishingCheck.test.ts:120:    await executeChatRun((await db.agentRuns.get(f.run.id))!, connector.apiKey, new AbortController(), fetchImpl);
+tests/agentFinishingCheck.test.ts:123:    expect(fetchImpl).toHaveBeenCalledTimes(2);
+tests/agentFinishingCheck.test.ts:130:    const fetchImpl = vi.fn<typeof fetch>(async () => reply(protocol, candidate.content, [], candidate.reasoning));
+tests/agentFinishingCheck.test.ts:131:    await executeChatRun(f.run, connector.apiKey, controller, fetchImpl);
+tests/agentFinishingCheck.test.ts:134:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/agentFinishingCheck.test.ts:159:    const fetchImpl = vi.fn<typeof fetch>(async () => ++count === 1 ? reply(run.protocol, "", [wire("update_run_plan", { steps: plan })]) : count === 2 ? reply(run.protocol, candidate.content) : reply(run.protocol, "", [wire("paid_fixture", {})]));
+tests/agentFinishingCheck.test.ts:160:    await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl, registry);
+tests/agentFinishingCheck.test.ts:163:    expect(paid).not.toHaveBeenCalled(); expect(fetchImpl).toHaveBeenCalledTimes(3);
+tests/agentFinishingCheck.test.ts:171:    const fetchImpl = vi.fn<typeof fetch>(async () => ++count === 1 ? reply(f.run.protocol, candidate.content) : reply(f.run.protocol, "", [wire("workspace_overview", {})]));
+tests/agentFinishingCheck.test.ts:172:    await executeChatRun((await db.agentRuns.get(f.run.id))!, connector.apiKey, new AbortController(), fetchImpl);
+tests/agentFinishingCheck.test.ts:176:    expect(fetchImpl).toHaveBeenCalledTimes(2);
+tests/agentFinishingCheck.test.ts:257:    const fetchImpl = vi.fn<typeof fetch>(async () => reply(protocol, "历史目标：继续完成创作。"));
+tests/agentFinishingCheck.test.ts:258:    const compacted = await prepareRunContext(run.id, [], connector.apiKey, new AbortController().signal, fetchImpl);
+tests/agentFinishingCheck.test.ts:259:    expect(fetchImpl).toHaveBeenCalled();
+tests/agentToolTransactions.test.ts:49:const responseWithTool = () => Response.json({ choices: [{ message: { content: "", tool_calls: [{ id: "provider-call", type: "function", function: { name: toolName, arguments: "{}" } }] }, finish_reason: "tool_calls" }] });
+tests/agentToolTransactions.test.ts:50:const answer = () => Response.json({ choices: [{ message: { content: "已处理工具结果" }, finish_reason: "stop" }] });
+tests/contextManagement.test.ts:15:import { toResponseInput } from "@/lib/ai/responsesStream";
+tests/contextManagement.test.ts:21:const json = (content: string) => Response.json({ choices: [{ message: { content }, finish_reason: "stop" }], usage: { prompt_tokens: 200, completion_tokens: 30, total_tokens: 230 } });
+tests/contextManagement.test.ts:161:      return Response.json({ status: "completed", output: [{ type: "message", role: "assistant", content: [{ type: "output_text", text: "有效摘要", annotations: [] }] }] });
+tests/contextManagement.test.ts:176:      if (bodies.length === 1) return Response.json({ choices: [{ message: { content: "", tool_calls: [{ id: "call", type: "function", function: { name: "workspace_overview", arguments: "{}" } }] }, finish_reason: "tool_calls" }] });
+tests/modelMetadata.test.ts:18:    const fetchImpl = (async () => new Response(JSON.stringify({ success: true, data: [{ model_id: "example", types: "llm", context_length: 200000 }] }))) as typeof fetch;
+tests/modelMetadata.test.ts:19:    const result = await discoverConnectorChatModels({ definitionId: "aihubmix", baseUrl: "https://example.test/v1", apiKey: "fixture" }, { fetchImpl });
+tests/modelMetadata.test.ts:23:    const fetchImpl = (async () => new Response(JSON.stringify({ data: [{ id: "example", context_window: 64000 }, { id: "unknown" }] }))) as typeof fetch;
+tests/modelMetadata.test.ts:24:    const result = await discoverConnectorChatModels({ definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "fixture" }, { fetchImpl });
+tests/modelMetadata.test.ts:32:    const fetchImpl = (async () => new Response(JSON.stringify({ data: {} }))) as typeof fetch;
+tests/modelMetadata.test.ts:33:    const result = await discoverConnectorChatModels({ definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "fixture" }, { fetchImpl });
+tests/modelMetadata.test.ts:45:  const fetchImpl = (async () => Response.json({ data: [
+tests/modelMetadata.test.ts:51:  const result = await discoverConnectorChatModels({ definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "fixture" }, { fetchImpl });
+tests/mimoSpeech.test.ts:2:import { generateMimoSpeech, listMimoModels, MIMO_MODELS, MIMO_REFERENCE_ENCODED_LIMIT, validateMimoReference } from "@/lib/ai/mimoSpeech";
+tests/mimoSpeech.test.ts:9:  return Response.json({ choices: [{ finish_reason: "stop", message: { audio: { data: encoded }, ...extra } }] });
+tests/mimoSpeech.test.ts:15:    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(await response());
+tests/mimoSpeech.test.ts:16:    const result = await generateMimoSpeech(credentials, input({ mode: "preset", instruction: "轻声慢读" }), { fetchImpl });
+tests/mimoSpeech.test.ts:19:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/mimoSpeech.test.ts:20:    expect(fetchImpl.mock.calls[0][0]).toBe("https://proxy.example/mimo/v1/chat/completions");
+tests/mimoSpeech.test.ts:21:    const init = fetchImpl.mock.calls[0][1]!;
+tests/mimoSpeech.test.ts:28:    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(await response({ final_text_preview: "自动撰写的播报稿。" }));
+tests/mimoSpeech.test.ts:29:    expect(await generateMimoSpeech(credentials, { ...input({ mode: "design", instruction: "温柔女声", optimizeTextPreview: true }), text: "" }, { fetchImpl })).toMatchObject({ ok: true, finalTextPreview: "自动撰写的播报稿。", model: MIMO_MODELS.design });
+tests/mimoSpeech.test.ts:30:    expect(JSON.parse(String(fetchImpl.mock.calls[0][1]?.body))).toEqual({ model: MIMO_MODELS.design, stream: false, messages: [{ role: "user", content: "温柔女声" }], audio: { format: "wav", optimize_text_preview: true } });
+tests/mimoSpeech.test.ts:34:    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(await response());
+tests/mimoSpeech.test.ts:35:    await generateMimoSpeech(credentials, input({ mode: "design", instruction: "成熟男声" }), { fetchImpl });
+tests/mimoSpeech.test.ts:36:    expect(JSON.parse(String(fetchImpl.mock.calls[0][1]?.body))).toMatchObject({ messages: [{ role: "user", content: "成熟男声" }, { role: "assistant", content: "你好。" }], audio: { optimize_text_preview: false } });
+tests/mimoSpeech.test.ts:40:    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(await response());
+tests/mimoSpeech.test.ts:42:    expect(await generateMimoSpeech(credentials, value, { fetchImpl })).toMatchObject({ ok: true, model: MIMO_MODELS.clone });
+tests/mimoSpeech.test.ts:43:    const body = JSON.parse(String(fetchImpl.mock.calls[0][1]?.body));
+tests/mimoSpeech.test.ts:53:    const fetchImpl = vi.fn<typeof fetch>();
+tests/mimoSpeech.test.ts:55:      expect(await generateMimoSpeech(credentials, { ...input({ mode: "clone", instruction: "", referenceMediaId: "ref" }), referenceBlob }, { fetchImpl })).toMatchObject({ ok: false, kind: "validation" });
+tests/mimoSpeech.test.ts:57:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/mimoSpeech.test.ts:74:    const fetchImpl = vi.fn<typeof fetch>();
+tests/mimoSpeech.test.ts:75:    expect(await generateMimoSpeech(credentials, value as ReturnType<typeof input>, { fetchImpl })).toMatchObject({ ok: false, kind: "validation" });
+tests/mimoSpeech.test.ts:76:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/mimoSpeech.test.ts:80:    const fetchImpl = vi.fn<typeof fetch>();
+tests/mimoSpeech.test.ts:81:    expect(await generateMimoSpeech({ ...credentials, baseUrl }, input({ mode: "preset", instruction: "" }), { fetchImpl })).toMatchObject({ ok: false, kind: "validation" });
+tests/mimoSpeech.test.ts:82:    expect(fetchImpl).not.toHaveBeenCalled();
+tests/mimoSpeech.test.ts:86:    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(Response.json(body));
+tests/mimoSpeech.test.ts:87:    expect(await generateMimoSpeech(credentials, input({ mode: "preset", instruction: "" }), { fetchImpl })).toMatchObject({ ok: false, kind: "protocol" });
+tests/mimoSpeech.test.ts:88:    expect(fetchImpl).toHaveBeenCalledOnce();
+tests/mimoSpeech.test.ts:92:    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(Response.json({ error: { message: "x".repeat(292) + credentials.apiKey + credentials.apiKey + " Bearer private-other-key" } }, { status: 401 }));
+tests/mimoSpeech.test.ts:93:    const result = await generateMimoSpeech(credentials, input({ mode: "preset", instruction: "" }), { fetchImpl });
+tests/mimoSpeech.test.ts:101:    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValueOnce(Response.json({ error: { message: "余额不足" } })).mockRejectedValueOnce(new Error(credentials.apiKey));
+tests/mimoSpeech.test.ts:102:    expect(await generateMimoSpeech(credentials, value, { fetchImpl })).toMatchObject({ ok: false, kind: "provider" });
+tests/mimoSpeech.test.ts:103:    const network = await generateMimoSpeech(credentials, value, { fetchImpl });
+tests/mimoSpeech.test.ts:107:    expect(await generateMimoSpeech(credentials, value, { fetchImpl, signal: controller.signal })).toMatchObject({ ok: false, kind: "aborted" });
+tests/mimoSpeech.test.ts:108:    expect(fetchImpl).toHaveBeenCalledTimes(2);
+tests/mimoSpeech.test.ts:112:    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValueOnce(Response.json({ data: [{ id: MIMO_MODELS.preset }, { id: "mimo-v2.5", context_window: 1000 }] })).mockResolvedValueOnce(Response.json({ data: {} }));
+tests/mimoSpeech.test.ts:113:    expect(await listMimoModels(credentials, { fetchImpl })).toMatchObject({ ok: true, models: ["mimo-v2.5", MIMO_MODELS.preset] });
+tests/mimoSpeech.test.ts:114:    expect(fetchImpl.mock.calls[0][0]).toBe("https://proxy.example/mimo/v1/models");
+tests/mimoSpeech.test.ts:115:    expect(fetchImpl.mock.calls[0][1]?.method).toBe("GET");
+tests/mimoSpeech.test.ts:116:    expect(await listMimoModels(credentials, { fetchImpl })).toMatchObject({ ok: false });
+tests/mimoSpeech.test.ts:125:  const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(Response.json({ choices: [{ finish_reason: "stop", message: { audio: { data: btoa(binary) } } }] }));
+tests/mimoSpeech.test.ts:126:  const result = await generateMimoSpeech(credentials, input({ mode: "preset", instruction: "" }), { fetchImpl });
+tests/boundedInput.test.ts:2:import {assertResponseBytes, readResponseBlob, readResponseBytes, readResponseJson, readResponseText, ResponseLimitError} from "@/lib/ai/boundedResponse";
+tests/boundedInput.test.ts:4:import {downloadApimartAudio, generateApimartSpeech, getApimartMusicTask, submitApimartMusic} from "@/lib/ai/apimartAudio";
+tests/boundedInput.test.ts:5:import {generateMimoSpeech, listMimoModels} from "@/lib/ai/mimoSpeech";
+tests/boundedInput.test.ts:6:import {downloadAIHubMixResult, type AIHubMixTask} from "@/lib/ai/aihubmix";
+tests/boundedInput.test.ts:64:        expect(await readResponseJson(fixture.response, bytes.length)).toEqual({value: "中文"});
+tests/boundedInput.test.ts:128:                const fetchImpl = vi.fn<typeof fetch>(async () => fixture.response);
+tests/boundedInput.test.ts:129:                const result = operation === "speech" ? await generateApimartSpeech(credentials, speech, {fetchImpl}) : await downloadApimartAudio("https://cdn.example/audio", {fetchImpl});
+tests/boundedInput.test.ts:136:                expect(fetchImpl).toHaveBeenCalledOnce();
+tests/boundedInput.test.ts:145:            const fetchImpl = vi.fn<typeof fetch>(async () => fixture.response);
+tests/boundedInput.test.ts:146:            const result = operation === "submit" ? await submitApimartMusic(credentials, {model: "flowmusic", sound_prompt: "piano"}, {fetchImpl}) : operation === "detail" ? await getApimartMusicTask(credentials, "task", {fetchImpl}) : await generateApimartSpeech(credentials, speech, {fetchImpl});
+tests/boundedInput.test.ts:148:            expect(fetchImpl).toHaveBeenCalledOnce();
+tests/boundedInput.test.ts:155:            const fetchImpl = vi.fn<typeof fetch>(async () => fixture.response);
+tests/boundedInput.test.ts:156:            const result = provider === "apimart" ? await generateApimartSpeech(credentials, speech, {fetchImpl}) : await generateMimoSpeech({...credentials, baseUrl: "https://api.mimo.ai/v1"}, mimoInput, {fetchImpl});
+tests/boundedInput.test.ts:165:            const fetchImpl = vi.fn<typeof fetch>(async () => fixture.response);
+tests/boundedInput.test.ts:166:            const result = operation === "models" ? await listMimoModels({...credentials, baseUrl: "https://api.mimo.ai/v1"}, {fetchImpl}) : await generateMimoSpeech({...credentials, baseUrl: "https://api.mimo.ai/v1"}, mimoInput, {fetchImpl});
+tests/boundedInput.test.ts:169:            expect(fetchImpl).toHaveBeenCalledOnce();
+tests/boundedInput.test.ts:178:        const fetchImpl = vi.fn<typeof fetch>(async () => Response.json({choices: [{finish_reason: "stop", message: {audio: {data: encoded}}}]}));
+tests/boundedInput.test.ts:179:        expect(await generateMimoSpeech({...credentials, baseUrl: "https://api.mimo.ai/v1"}, mimoInput, {fetchImpl})).toMatchObject({ok: false, kind: "protocol", message: expect.stringContaining("32 MiB")});
+tests/boundedInput.test.ts:181:        expect(fetchImpl).toHaveBeenCalledOnce();
+tests/boundedInput.test.ts:187:        const fetchImpl = vi.fn<typeof fetch>(async () => Response.json({choices: [{finish_reason: "stop", message: {audio: {data: encoded}}}]}));
+tests/boundedInput.test.ts:188:        const result = await generateMimoSpeech({...credentials, baseUrl: "https://api.mimo.ai/v1"}, mimoInput, {fetchImpl});
+tests/boundedInput.test.ts:191:        expect(fetchImpl).toHaveBeenCalledOnce();
+tests/boundedInput.test.ts:197:            const fetchImpl = vi.fn<typeof fetch>(async () => fixture.response);
+tests/boundedInput.test.ts:198:            const result = await downloadAIHubMixResult({baseUrl: "https://aihubmix.com/v1", apiKey: "secret"}, task, task.outputs[0], {fetchImpl});
+tests/boundedInput.test.ts:206:            expect(fetchImpl).toHaveBeenCalledOnce();
+tests/boundedInput.test.ts:207:            expect(fetchImpl.mock.calls[0][1]).toMatchObject({method: "GET", redirect: "error", credentials: "omit"});
+tests/agentGenerationRecovery.test.ts:50:const callResponse = () => Response.json({ choices: [{ message: { content: "", tool_calls: [{ id: "provider-call", type: "function", function: { name, arguments: "{}" } }] }, finish_reason: "tool_calls" }] });
+tests/agentGenerationRecovery.test.ts:51:const answer = () => Response.json({ choices: [{ message: { content: "结果已保存" }, finish_reason: "stop" }] });
+tests/webResearchRuntime.test.ts:21:  return protocol === 'responses' ? Response.json({ status: 'completed', output: [{ type: 'function_call', call_id: name, name, arguments: argumentsText }] }) : Response.json({ choices: [{ message: { content: '', tool_calls: [{ id: name, type: 'function', function: { name, arguments: argumentsText } }] }, finish_reason: 'tool_calls' }] });
+tests/webResearchRuntime.test.ts:23:function answer(protocol = 'chat-completions') { return protocol === 'responses' ? Response.json({ status: 'completed', output: [{ type: 'message', role: 'assistant', content: [{ type: 'output_text', text: '来源 https://example.com/research' }] }] }) : Response.json({ choices: [{ message: { content: '来源 https://example.com/research' }, finish_reason: 'stop' }] }); }
+tests/webResearchRuntime.test.ts:30:const serviceResult = () => Response.json({ results: [{ title: 'Research', url: 'https://example.com/research', content: 'lighting summary', raw_content: 'lighting extracted text' }] });
+tests/materialReferenceWire.test.ts:12:import { toResponseInput } from '@/lib/ai/responsesStream';
+tests/agentTaskOrchestration.test.ts:137:   return Response.json(n<3?{choices:[{message:{content:"",tool_calls:[{id:`wire-${n}`,type:"function",function:{name,arguments:JSON.stringify(args)}}]},finish_reason:"tool_calls"}]}:{choices:[{message:{content:"任务和方案已保存"},finish_reason:"stop"}]});
+src/db/connectors.ts:3:import {normalizeBaseUrl} from "@/lib/ai/openaiCompatible";
+src/db/connectors.ts:26:    const baseUrl = normalizeBaseUrl(input.baseUrl);
+tests/musicGenerationReview.test.ts:32:  await executeChatRun(run, model.apiKey, new AbortController(), vi.fn(async () => Response.json({ choices: [{ message: { content: "", tool_calls: [{ id: "music-call", type: "function", function: { name: "music_generate", arguments: JSON.stringify(args) } }] }, finish_reason: "tool_calls" }] })), AUDIO_GENERATION_TOOLS);
+tests/musicGenerationReview.test.ts:141:    await resumeChatRun(run.id, model.apiKey, new AbortController(), vi.fn(async () => Response.json({ choices: [{ message: { content: "完成检查" }, finish_reason: "stop" }] })), AUDIO_GENERATION_TOOLS);
+tests/fixtures/d06/harness.tsx:45:    return Response.json({choices: [{message: {content: "", tool_calls: [{id: "native-image", type: "function", function: {name: "submit_generation", arguments: JSON.stringify(image)}}]}, finish_reason: "tool_calls"}]});
+src/db/agentTools.ts:21:import {toResponseInput} from "@/lib/ai/responsesStream";
+src/lib/audioGeneration/defaults.ts:3:import {SPEECH_VOICES} from "@/lib/ai/apimartAudio";
+src/db/agentFinishingCheck.ts:3:import {decodeResponseOutput, toResponseInput} from "@/lib/ai/responsesStream";
+src/lib/audioGeneration/runtime.ts:21:} from "@/lib/ai/apimartAudio";
+src/lib/audioGeneration/runtime.ts:22:import {generateMimoSpeech, MIMO_MODELS} from "@/lib/ai/mimoSpeech";
+src/lib/audioGeneration/runtime.ts:24:import type {ApimartRequestOptions} from "@/lib/ai/apimart";
+src/lib/audioGeneration/runtime.ts:25:import {normalizeBaseUrl} from "@/lib/ai/openaiCompatible";
+src/lib/audioGeneration/runtime.ts:60:    if (!value || value.definitionId !== job.connector.provider || !value.apiKey.trim() || normalizeBaseUrl(value.baseUrl) !== normalizeBaseUrl(job.connector.baseUrl)) throw new Error("生成连接已删除或地址发生变化，请恢复原连接后继续查询");
+src/lib/audioGeneration/runtime.ts:92:        connector: {id: connector.id, provider, baseUrl: normalizeBaseUrl(connector.baseUrl)},
+src/lib/audioGeneration/reference.ts:6:import {validateMimoReference} from "@/lib/ai/mimoSpeech";
+src/lib/audioGeneration/reference.ts:8:export {MIMO_REFERENCE_ENCODED_LIMIT, validateMimoReference as validateMimoReferenceBlob} from "@/lib/ai/mimoSpeech";
+src/lib/audioGeneration/input.ts:3:import {MIMO_VOICES} from "@/lib/ai/mimoSpeech";
+src/lib/audioGeneration/input.ts:5:import {type MusicInput, musicInputSchema, type SpeechInput, speechInputSchema} from "@/lib/ai/apimartAudio";
+src/lib/ai/apimart.ts:3:import {normalizeBaseUrl} from "@/lib/ai/openaiCompatible";
+src/lib/ai/apimart.ts:6:export type ApimartRequestOptions = { signal?: AbortSignal; fetchImpl?: typeof fetch; idempotencyKey?: string };
+src/lib/ai/apimart.ts:147:    const base = normalizeBaseUrl(credentials.baseUrl);
+src/lib/ai/apimart.ts:156:        const response = await (options.fetchImpl ?? fetch)(`${base}${path}`, {
+src/lib/ai/apimart.ts:170:            body = await response.json();
+src/lib/agent/audioGenerationTools.ts:19:import {SPEECH_VOICES} from "@/lib/ai/apimartAudio";
+src/lib/agent/audioGenerationTools.ts:20:import {MIMO_MODELS, MIMO_VOICES} from "@/lib/ai/mimoSpeech";
+src/lib/ai/chatStream.ts:1:import {appendedUtf8Bytes, assertResponseBytes, isReadAbort, readErrorText, readResponseJson, utf8Bytes} from "./boundedResponse";
+src/lib/ai/chatStream.ts:7:import {authHeaders, chatCompletionsUrl, normalizeBaseUrl,} from "@/lib/ai/openaiCompatible";
+src/lib/ai/chatStream.ts:46:    fetchImpl?: typeof fetch;
+src/lib/ai/chatStream.ts:335:    const base = normalizeBaseUrl(input.baseUrl);
+src/lib/ai/chatStream.ts:343:    const fetchImpl = handlers.fetchImpl ?? fetch;
+src/lib/ai/chatStream.ts:365:        const res = await fetchImpl(chatCompletionsUrl(base), {
+src/lib/ai/chatStream.ts:377:            const body = await readErrorText(res, MAX_ERROR_BYTES, signal);
+src/lib/ai/chatStream.ts:384:            const data = await readResponseJson(res, MAX_JSON_BYTES, signal);
+src/lib/agent/webTools.ts:6:import {executeWebRequest} from '@/lib/ai/tavily';
+src/lib/ai/openaiCompatible.ts:4:export function normalizeBaseUrl(baseUrl: string): string {
+src/lib/ai/openaiCompatible.ts:16:    return `${normalizeBaseUrl(baseUrl)}/models`;
+src/lib/ai/openaiCompatible.ts:20:    return `${normalizeBaseUrl(baseUrl)}/chat/completions`;
+src/lib/ai/openaiCompatible.ts:110:        return await response.json();
+src/lib/ai/openaiCompatible.ts:128:    fetchImpl: typeof fetch = fetch,
+src/lib/ai/openaiCompatible.ts:130:    const base = normalizeBaseUrl(input.baseUrl);
+src/lib/ai/openaiCompatible.ts:136:        const res = await fetchImpl(modelsUrl(base), {
+src/lib/ai/openaiCompatible.ts:157:    fetchImpl: typeof fetch = fetch,
+src/lib/ai/openaiCompatible.ts:159:    const base = normalizeBaseUrl(input.baseUrl);
+src/lib/ai/openaiCompatible.ts:167:        modelsRes = await fetchImpl(modelsUrl(base), {method: "GET", headers});
+src/lib/ai/openaiCompatible.ts:189:        const chatRes = await fetchImpl(chatCompletionsUrl(base), {
+src/lib/ai/responsesStream.ts:1:import {appendedUtf8Bytes, assertResponseBytes, isReadAbort, readErrorText, readResponseJson, utf8Bytes} from "./boundedResponse";
+src/lib/ai/responsesStream.ts:7:import type {StreamChatHandlers, StreamChatInput, StreamChatResult} from "@/lib/ai/chatStream";
+src/lib/ai/responsesStream.ts:8:import {authHeaders, normalizeBaseUrl} from "@/lib/ai/openaiCompatible";
+src/lib/ai/responsesStream.ts:140:    const base = normalizeBaseUrl(input.baseUrl), apiKey = input.apiKey.trim(), model = input.model.trim();
+src/lib/ai/responsesStream.ts:205:        const res = await (handlers.fetchImpl ?? fetch)(`${base}/responses`, {
+src/lib/ai/responsesStream.ts:233:            message: `请求失败（${res.status}）：${redact(await readErrorText(res, MAX_ERROR_BYTES, signal))}`
+src/lib/ai/responsesStream.ts:235:        if (!(res.headers.get("content-type") ?? "").includes("text/event-stream")) return finish(await readResponseJson(res, MAX_JSON_BYTES, signal), "json");
+src/components/studio/ConnectorsPage.tsx:23:import {maskApiKey} from "@/lib/ai/openaiCompatible";
+src/lib/ai/aihubmix.ts:1:import {readResponseBlob, readResponseJson, ResponseLimitError} from "./boundedResponse";
+src/lib/ai/aihubmix.ts:7:export type AIHubMixRequestOptions = { signal?: AbortSignal; fetchImpl?: typeof fetch };
+src/lib/ai/aihubmix.ts:162:        const response = await (options.fetchImpl ?? fetch)(`${root}${path}`, {
+src/lib/ai/aihubmix.ts:187:        data = await response.json();
+src/lib/ai/aihubmix.ts:390:                body = await readResponseJson(result.response, result.response.ok ? MAX_JSON_BYTES : MAX_ERROR_BYTES, options.signal);
+src/lib/ai/boundedResponse.ts:75:export async function readResponseJson(response: Response, limit: number, signal?: AbortSignal, fatal = true): Promise<unknown> {
+src/lib/ai/boundedResponse.ts:84:export async function readErrorText(response: Response, limit: number, signal?: AbortSignal): Promise<string> {
+src/lib/ai/connectors.ts:4:import {listApimartModels, testApimartConnection} from "@/lib/ai/apimart";
+src/lib/ai/connectors.ts:5:import {listAIHubMixModels, testAIHubMixConnection} from "@/lib/ai/aihubmix";
+src/lib/ai/connectors.ts:8:import {listModels, type ListModelsResult, testConnection, type TestConnectionResult,} from "@/lib/ai/openaiCompatible";
+src/lib/ai/connectors.ts:19:    options: { fetchImpl?: typeof fetch; signal?: AbortSignal } = {},
+src/lib/ai/connectors.ts:53:        const result = await listModels(connector, options.fetchImpl);
+src/lib/ai/connectors.ts:75:    options: { fetchImpl?: typeof fetch; signal?: AbortSignal; isCurrent?: () => boolean } = {},
+src/lib/ai/connectors.ts:105:    fetchImpl: typeof fetch = fetch,
+src/lib/ai/connectors.ts:107:    if (connector.definitionId === "mimo" && usage === "all") return listMimoModels(connector, {fetchImpl});
+src/lib/ai/connectors.ts:109:        const result = await discoverConnectorChatModels(connector, {fetchImpl});
+src/lib/ai/connectors.ts:113:        const result = await listAIHubMixModels(connector, {fetchImpl});
+src/lib/ai/connectors.ts:119:    if (connector.definitionId !== "apimart") return listModels(connector, fetchImpl);
+src/lib/ai/connectors.ts:120:    const result = await listApimartModels(connector, {expand: "category"}, {fetchImpl});
+src/lib/ai/connectors.ts:134:    fetchImpl: typeof fetch = fetch,
+src/lib/ai/connectors.ts:137:        const result = await listMimoModels(connector, {fetchImpl});
+src/lib/ai/connectors.ts:141:        const result = await testAIHubMixConnection(connector, {fetchImpl});
+src/lib/ai/connectors.ts:145:        const result = await testApimartConnection(connector, {fetchImpl});
+src/lib/ai/connectors.ts:151:    }, fetchImpl);
+src/lib/agent/contextCompaction.ts:7:import {streamChatCompletions} from "@/lib/ai/chatStream";
+src/lib/agent/contextCompaction.ts:8:import {streamResponses, toResponseInput} from "@/lib/ai/responsesStream";
+src/lib/agent/contextCompaction.ts:75:export async function prepareRunContext(runId: string, tools: readonly AgentToolSchema[], apiKey: string, signal: AbortSignal, fetchImpl?: typeof fetch): Promise<AgentRun> {
+src/lib/agent/contextCompaction.ts:141:            }, {signal, fetchImpl});
+src/lib/agent/runChat.ts:11:import {type ResponsesResult, streamResponses} from "@/lib/ai/responsesStream";
+src/lib/agent/runChat.ts:42:} from "@/lib/ai/chatStream";
+src/lib/agent/runChat.ts:208:export async function resumeChatRun(runId: string, apiKey: string, controller: AbortController, fetchImpl?: typeof fetch, registry: readonly AgentToolDefinition[] = BUILTIN_TOOLS): Promise<void> {
+src/lib/agent/runChat.ts:211:    await executeChatRun(run, apiKey, controller, fetchImpl, registry);
+src/lib/agent/runChat.ts:214:export async function executeChatRun(initialRun: AgentRun, apiKey: string, controller: AbortController, fetchImpl?: typeof fetch, registry: readonly AgentToolDefinition[] = BUILTIN_TOOLS): Promise<void> {
+src/lib/agent/runChat.ts:246:            run = await prepareRunContext(run.id, toolSchemas(getOfferedToolNames(run), registry), apiKey, controller.signal, fetchImpl);
+src/lib/agent/runChat.ts:276:                signal: controller.signal, fetchImpl,
+src/lib/agent/projectContext.ts:8:import {toResponseInput} from '@/lib/ai/responsesStream';
+src/lib/agent/generationRuntime.ts:29:} from "@/lib/ai/apimart";
+src/lib/agent/generationRuntime.ts:30:import type {AIHubMixGenerationRequest, AIHubMixTask} from "@/lib/ai/aihubmix";
+src/lib/agent/generationRuntime.ts:37:} from "@/lib/ai/aihubmix";
+src/lib/agent/generationRuntime.ts:45:    fetchImpl?: typeof fetch;
+src/lib/agent/generationRuntime.ts:112:                fetchImpl: options.fetchImpl,
+src/lib/agent/generationRuntime.ts:225:                fetchImpl: options.fetchImpl,
+src/lib/agent/generationRuntime.ts:251:                fetchImpl: options.fetchImpl
+src/lib/agent/generationRuntime.ts:342:            fetchImpl: options.fetchImpl
+src/lib/agent/generationRuntime.ts:374:                fetchImpl: options.fetchImpl
+src/lib/agent/generationRuntime.ts:381:            fetchImpl: options.fetchImpl
+src/lib/agent/generationRuntime.ts:407:        const download = await (options.fetchImpl ?? fetch)(url.href, {
+src/lib/ai/tavily.ts:1:import {readResponseJson, ResponseLimitError} from "./boundedResponse";
+src/lib/ai/tavily.ts:13:    fetchImpl?: typeof fetch;
+src/lib/ai/tavily.ts:51:        const response = await (options.fetchImpl ?? fetch)(`https://api.tavily.com/${path}`, {
+src/lib/ai/tavily.ts:63:            return {ok: true, value: await readResponseJson(response, MAX_RESPONSE_BYTES, controller.signal, false)};
+src/lib/agent/toolLoading.ts:7:import {toResponseInput} from "@/lib/ai/responsesStream";
+src/lib/ai/apimartAudio.ts:1:import {readResponseJson, readResponseBlob, ResponseLimitError} from "./boundedResponse";
+src/lib/ai/apimartAudio.ts:7:import {normalizeBaseUrl} from "./openaiCompatible";
+src/lib/ai/apimartAudio.ts:101:    const base = normalizeBaseUrl(credentials.baseUrl), key = credentials.apiKey.trim();
+src/lib/ai/apimartAudio.ts:105:        const response = await (options.fetchImpl ?? fetch)(`${base}${path}`, {
+src/lib/ai/apimartAudio.ts:116:                body = await readResponseJson(response, MAX_ERROR_BYTES, options.signal);
+src/lib/ai/apimartAudio.ts:143:        body = await readResponseJson(result.response, MAX_JSON_BYTES, options.signal);
+src/lib/ai/apimartAudio.ts:254:        const response = await (options.fetchImpl ?? fetch)(url, {
+src/lib/agent/taskWrapup.ts:6:import {streamChatCompletions} from "@/lib/ai/chatStream";
+src/lib/agent/taskWrapup.ts:7:import {streamResponses} from "@/lib/ai/responsesStream";
+src/lib/agent/taskWrapup.ts:22:export async function prepareTaskWrapup(taskId: string, connector: ConnectorConfig, model: string, controller: AbortController, fetchImpl?: typeof fetch, reasoningEffort?: AgentReasoningEffort, modelMetadata?: ChatModelMetadata, locks?: ThreadLockManager) {
+src/lib/agent/taskWrapup.ts:62:            }, {signal: controller.signal, fetchImpl});
+src/lib/ai/mimoSpeech.ts:1:import {isReadAbort, readErrorText, readResponseText, ResponseLimitError} from "./boundedResponse";
+src/lib/ai/mimoSpeech.ts:6:import {type ListModelsResult, normalizeBaseUrl} from "./openaiCompatible";
+src/lib/ai/mimoSpeech.ts:17:export type MimoRequestOptions = { fetchImpl?: typeof fetch; signal?: AbortSignal };
+src/lib/ai/mimoSpeech.ts:28:    const base = normalizeBaseUrl(credentials.baseUrl), key = credentials.apiKey.trim();
+src/lib/ai/mimoSpeech.ts:44:            : await readErrorText(response, MAX_ERROR_BYTES, signal);
+src/lib/ai/mimoSpeech.ts:69:        const response = await (options.fetchImpl ?? fetch)(`${config.base}${path}`, {
+src/lib/agent/memoryContext.ts:3:import {toResponseInput} from "@/lib/ai/responsesStream";
+src/components/studio/SearchConnection.tsx:5:import {testSearchConnection} from '@/lib/ai/tavily';
+src/lib/agent/audioTools.ts:26:import {SPEECH_VOICES} from "@/lib/ai/apimartAudio";
+src/lib/agent/audioTools.ts:27:import {MIMO_VOICES} from "@/lib/ai/mimoSpeech";
+src/components/audio/VoiceLibrary.tsx:7:import {MIMO_VOICES} from "@/lib/ai/mimoSpeech";

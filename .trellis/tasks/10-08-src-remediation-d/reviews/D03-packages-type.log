@@ -1,0 +1,11 @@
+
+> cuepoint@0.1.0 lint /Users/xiaomengdao/WebstormProjects/aifenjing
+> tsc -b --pretty false
+
+src/components/workspace/ProjectHomePage.tsx(12,10): error TS6133: 'SeriesHomeRoute' is declared but its value is never read.
+src/components/workspace/ProjectHomePage.tsx(13,29): error TS2304: Cannot find name 'projectId'.
+src/components/workspace/ProjectHomePage.tsx(13,51): error TS2304: Cannot find name 'projectId'.
+src/lib/packages/projectPackageCodec.ts(10,10): error TS6133: 'MediaRecord' is declared but its value is never read.
+src/lib/packages/projectPackageCodec.ts(31,32): error TS6133: 'remapReferencePackage' is declared but its value is never read.
+src/routes/p.$projectId.index.tsx(2,9): error TS2305: Module '"@/components/workspace/ProjectHomePage"' has no exported member 'ProjectHomePage'.
+ ELIFECYCLE  Command failed with exit code 2.

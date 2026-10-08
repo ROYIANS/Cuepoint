@@ -1,0 +1,67 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/shotBulkUndo.test.ts (31 tests | 1 failed) 404ms
+   ❯ episode bulk undo (31)
+     × rolls back every undo write on project touch storage failure and allows retry 12ms
+ ❯ tests/parentProjectWrites.test.ts (21 tests | 1 failed) 163ms
+   ❯ style parent project writes (4)
+     × rolls back the child if touching the existing parent fails 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/parentProjectWrites.test.ts > style parent project writes > rolls back the child if touching the existing parent fails
+AssertionError: promise resolved "{ …(7) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "createdAt": "2026-10-08T02:38:33.114Z",
++   "id": "sty_b96fe748-71fd-4de5-b3a9-673d0d1d7e23",
++   "name": "未命名风格",
++   "notes": "",
++   "projectId": "prj_5b7c6bff-0403-448d-a96a-d31fb4e9c603",
++   "slots": {},
++   "updatedAt": "2026-10-08T02:38:33.114Z",
+  }
+
+ ❯ tests/parentProjectWrites.test.ts:45:38
+     43|     db.projects.hook("updating", fail);
+     44|     try {
+     45|       await expect(create(project.id)).rejects.toThrow("injected paren…
+       |                                      ^
+     46|     } finally {
+     47|       db.projects.hook("updating").unsubscribe(fail);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/shotBulkUndo.test.ts > episode bulk undo > rolls back every undo write on project touch storage failure and allows retry
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ tests/shotBulkUndo.test.ts:276:50
+    274|     else db.projects.hook("updating", failProject);
+    275|     try {
+    276|       await expect(undoEpisodeShotBulkPatch(undo)).rejects.toThrow("st…
+       |                                                  ^
+    277|     } finally {
+    278|       db.shots.hook("updating").unsubscribe(failShot);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 13 passed (15)
+      Tests  2 failed | 332 passed (334)
+   Start at  10:38:31
+   Duration  2.40s (tests 63%, transform 18%, import 11%, setup 8%)
+

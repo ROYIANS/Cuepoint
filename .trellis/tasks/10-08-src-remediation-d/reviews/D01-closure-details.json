@@ -1,0 +1,16 @@
+{
+  "checks": [
+    "25files490tests maxWorkers1; TypeScript pass",
+    "Native C01 six cases; actual single/batch application/guard and forced ledger/history rollback,0externalrequests",
+    "Final383TS/TSX2254edges0parseerrors0static/literal-dynamicvalueSCC",
+    "Static identical restoredtools/separatebaseline programs: source-rule errors8→7, warnings32→25;0added diagnostics;4newleaf0",
+    "15independent finalpaths and40 evidence hashes recomputed unchanged"
+  ],
+  "resolution": "Separated actual pure tool-selection, DB task guard/target reads and transaction-external generation preparation; redirected actual DB/command callers, preserving permissions, snapshot/input semantics, paid recovery and atomic application/evidence. Removed all three remaining value SCCs; native nested-write and forced rollback proved. Structural debt closure only; no initialization crash claim.",
+  "evidence": [
+    ".trellis/tasks/10-08-src-remediation-d/research/D01-current-ast-summary.json",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-static-summary.json",
+    ".trellis/spec/frontend/agent-execution.md"
+  ],
+  "progress": "D01 independentPASS：15最终路径和40证据hash一致，25files490tests/typecheck/native实际单次/批次应用及故障回滚，383TS/2254edges/0值环；静态实际规则errors8→7、warnings32→25（原始baseline另有4个新文件不存在的parser诊断，不计源缺陷），0新增/4leaf0。AR04/PD04关闭，29fixed21pending1inprogress，currentD02；无D提交。"
+}

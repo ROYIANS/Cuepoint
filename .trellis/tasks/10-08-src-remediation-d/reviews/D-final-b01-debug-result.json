@@ -1,0 +1,7 @@
+{
+  "runner": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/b01-observe-3HUy1y/runner.mjs",
+  "sourceOriginal": "scripts/b01-browser-regression.mjs",
+  "purpose": "Observational client navigation/console plus fresh isolated cache; package imports resolved to same installed modules and source alias remains actual current root",
+  "exitCode": 0,
+  "seconds": 22.581522334
+}

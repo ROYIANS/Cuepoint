@@ -1,0 +1,16 @@
+browser error BulkError
+SETUP failure {
+  errors: [ 'BulkError' ],
+  dir: '/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/d06-native-setup-Sojv9N'
+}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.waitForFunction: Timeout 10000ms exceeded.
+    at /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/reviews/D06-native.mjs:32:21 {
+  log: [],
+  name: 'TimeoutError'
+}
+
+Node.js v24.11.0

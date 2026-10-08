@@ -1,0 +1,15 @@
+{
+  "checks": [
+    "独立全D07路径/原始策略矩阵和证据复核PASS；675冻结输入和119静态差分文件哈希匹配",
+    "类型检查、31文件900重点测试、157文件2525全量测试、构建和模型库验证PASS",
+    "同版本完整独立基线/current类型程序静态差分无新增非复杂度诊断；415TS文件2471依赖边无值环"
+  ],
+  "resolution": "提取真实多调用方使用的baseUrl和requestBoundary轻量叶节点，统一单次fetch与显式原生/有界JSON读取策略；保留各provider真实URL/key/请求字节、成功inline-image原生JSON、256MiB媒体/32MiB音频/原有信封限制、HTTP错误权威/AbortError和全key脱敏先于截断、SSE与付费POST单次提交/独立GET恢复。通用发现转发已有signal并传播取消，保留原有404/405或GET-fetch TypeError探测fallback例外；不引入provider工厂/隐式重试；存量诊断及本地有限回归/无live-provider限制继续记录。",
+  "evidence": [
+    ".trellis/tasks/10-08-src-remediation-d/research/D07-implementation.md",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D07-static-summary.json",
+    ".trellis/tasks/10-08-src-remediation-d/research/D07-current-ast-summary.json",
+    ".trellis/tasks/10-08-src-remediation-d/research/D07-evidence/policy-matrix.md"
+  ],
+  "progress": "2026-10-08 D07/PM07整体独立复核后关闭，共37/51已修复。两个实际多消费者叶节点及九适配器迁移保留显式provider策略；900重点/2525全量测试、类型/构建/模型库PASS，当前静态0新增非复杂度诊断、415TS/2471边0值环。D08顺序继续；本地有限fixtures不代表live-provider或全产品E2E，未提交D代码。"
+}

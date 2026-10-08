@@ -1,0 +1,19 @@
+node:internal/modules/package_json_reader:316
+  throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+        ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'playwright' imported from /Users/xiaomengdao/WebstormProjects/aifenjing/scripts/d08-browser-regression.mjs
+    at Object.getPackageJSONURL (node:internal/modules/package_json_reader:316:9)
+    at packageResolve (node:internal/modules/esm/resolve:768:81)
+    at moduleResolve (node:internal/modules/esm/resolve:858:18)
+    at defaultResolve (node:internal/modules/esm/resolve:990:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:757:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:793:38)
+    at nextStep (node:internal/modules/customization_hooks:189:26)
+    at Ie (file:///Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/@tailwindcss+node@4.3.3/node_modules/@tailwindcss/node/dist/index.mjs:1:539)
+    at nextStep (node:internal/modules/customization_hooks:189:26)
+    at resolveWithHooks (node:internal/modules/customization_hooks:395:10) {
+  code: 'ERR_MODULE_NOT_FOUND'
+}
+
+Node.js v24.11.0

@@ -1,0 +1,21 @@
+3:47:12 PM [vite] (client) Re-optimizing dependencies because vite config has changed
+PASS project route key and same-project episode envelope keep settings mounted
+PASS home waits for matching null episode before repair
+PASS character: router blocks dirty target switch; continue preserves; discard remounts
+PASS scene: router blocks dirty target switch; continue preserves; discard remounts
+PASS prop: router blocks dirty target switch; continue preserves; discard remounts
+PASS style: router blocks dirty target switch; continue preserves; discard remounts
+PASS slot upload pending blocks discard; failed File retry and same-target draft survive
+PASS output settings SPA guard continues and disallows pending discard
+PASS material parent selection is guarded; latest C wins and continue allows reselect B
+PASS shots and print wait for matching empty lists across two episodes
+PASS shot slot locate search keeps draft and dirty navigation blocks episode switch
+PASS relations pending/error router departure requires resolve or discard
+PASS deleted asset/material keeps active dirty sessions and blocks departure
+PASS deleted episode keeps its shot slot and guard mounted through read gates
+PASS clean deleted project exposes not-found with project controls hidden
+PASS dirty output deletion preserves readable draft and explicit close/discard
+PASS missing and foreign-owner asset identities never expose an editor
+PASS history back honors dirty guard and registers unload protection
+PASS slot pending save blocks navigation until completion and persists original target
+B01 browser regressions: 19 passed

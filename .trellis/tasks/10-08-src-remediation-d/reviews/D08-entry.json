@@ -1,0 +1,73 @@
+{
+  "status": "ACTUALENTRYCAPTURED",
+  "at": "2026-10-08T15:27:34.000752+08:00",
+  "head": "abb7a91d255666fc8f772cddecd66676b9f2848c",
+  "sourceBaseline": "actual dirty accepted D01-D07 entry, not reconstructed committed C",
+  "manifest": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-originals/entry-hashes.json",
+  "manifestSHA256": "3654e387a65bec2a03ccacd26760c49a3919fa364270390d110df8a694cdb771",
+  "inputCount": 631,
+  "ownedPaths": [
+    "src/components/drafts/TextDraftField.tsx",
+    "src/components/shots/ShotTextField.tsx",
+    "src/components/story/BeatTextField.tsx",
+    "src/lib/useTextDraftRetention.ts",
+    "src/components/shots/ShotRow.tsx",
+    "src/components/shots/ShotEditorPage.tsx",
+    "src/components/story/StoryPage.tsx",
+    "src/db/episodes.ts",
+    "tests/b06EditorSessions.test.ts",
+    "tests/d08TextDraftRepository.test.ts",
+    "tests/d08TextDraftComponents.test.ts",
+    "tests/fixtures/d08/harness.tsx",
+    "tests/fixtures/d08/index.html",
+    "scripts/d08-browser-regression.mjs"
+  ],
+  "before": {
+    "src/components/drafts/TextDraftField.tsx": null,
+    "src/components/shots/ShotTextField.tsx": null,
+    "src/components/story/BeatTextField.tsx": null,
+    "src/lib/useTextDraftRetention.ts": null,
+    "src/components/shots/ShotRow.tsx": "6b27b9b5366ece0a78866841bb8b187e7354936eee325de3fda7dd9b370732d4",
+    "src/components/shots/ShotEditorPage.tsx": "aa0b5135865eb7b40aa973200cf36afcb502c4b44137586a43503e7bc1241bd1",
+    "src/components/story/StoryPage.tsx": "f7d635f69d1702962d6177d72710f80c86f63176c04121af340fd9839a1f246a",
+    "src/db/episodes.ts": "92236d81fa13ecbb3b59740fb4b868e985710691df6bcefd2c926e57368819d4",
+    "tests/b06EditorSessions.test.ts": "64c8dc3cbf55aeaa2ec12f59bb3edfbb5115d32e98810e7d1d8fb6a945498204",
+    "tests/d08TextDraftRepository.test.ts": null,
+    "tests/d08TextDraftComponents.test.ts": null,
+    "tests/fixtures/d08/harness.tsx": null,
+    "tests/fixtures/d08/index.html": null,
+    "scripts/d08-browser-regression.mjs": null
+  },
+  "originalCopies": {
+    "src/components/shots/ShotRow.tsx": {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-originals/src/components/shots/ShotRow.tsx",
+      "sha256": "6b27b9b5366ece0a78866841bb8b187e7354936eee325de3fda7dd9b370732d4"
+    },
+    "src/components/shots/ShotEditorPage.tsx": {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-originals/src/components/shots/ShotEditorPage.tsx",
+      "sha256": "aa0b5135865eb7b40aa973200cf36afcb502c4b44137586a43503e7bc1241bd1"
+    },
+    "src/components/story/StoryPage.tsx": {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-originals/src/components/story/StoryPage.tsx",
+      "sha256": "f7d635f69d1702962d6177d72710f80c86f63176c04121af340fd9839a1f246a"
+    },
+    "src/db/episodes.ts": {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-originals/src/db/episodes.ts",
+      "sha256": "92236d81fa13ecbb3b59740fb4b868e985710691df6bcefd2c926e57368819d4"
+    },
+    "tests/b06EditorSessions.test.ts": {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-originals/tests/b06EditorSessions.test.ts",
+      "sha256": "64c8dc3cbf55aeaa2ec12f59bb3edfbb5115d32e98810e7d1d8fb6a945498204"
+    }
+  },
+  "excludedConcurrentCorrection": [
+    "tests/d05SchemaEquivalence.test.ts",
+    "tests/d06Capabilities.test.ts",
+    "tests/d07RequestWire.test.ts",
+    "tests/memoryRetrieval.test.ts",
+    "tests/d05ToolCatalog.test.ts",
+    "tests/fixtures/sourceSnapshots/",
+    "src/components/studio/ProjectGalleryPage.tsx"
+  ],
+  "limits": "Original bytes copied before each affected existing file edit. All actual input hashes captured before first D08 mutation; final freeze includes current disjoint checker inputs."
+}

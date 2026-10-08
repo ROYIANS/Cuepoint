@@ -1,0 +1,68 @@
+{
+  "unresolvedFirstAdded": [],
+  "addedNoncomplexity": [
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "ruleId": "react-hooks/exhaustive-deps",
+      "severity": 1,
+      "message": "The 'threadList' logical expression could make the dependencies of useMemo Hook (at line 132) change on every render. To fix this, wrap the initialization of 'threadList' in its own useMemo() Hook.",
+      "line": 88,
+      "column": 11,
+      "nodeType": "VariableDeclarator",
+      "endLine": 88,
+      "endColumn": 37
+    }
+  ],
+  "messages": [
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "rule": "complexity",
+      "message": "Function 'AgentChatInner' has a complexity of 104. Maximum allowed is 20."
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "rule": "sonarjs/cognitive-complexity",
+      "message": "Refactor this function to reduce its Cognitive Complexity from 57 to the 20 allowed."
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "rule": "react-hooks/exhaustive-deps",
+      "message": "The 'threadList' logical expression could make the dependencies of useMemo Hook (at line 132) change on every render. To fix this, wrap the initialization of 'threadList' in its own useMemo() Hook."
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "rule": "react-hooks/exhaustive-deps",
+      "message": "React Hook useEffect has a missing dependency: 'selectedConnector'. Either include it or remove the dependency array."
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "rule": "no-nested-ternary",
+      "message": "Do not nest ternary expressions."
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "rule": "no-nested-ternary",
+      "message": "Do not nest ternary expressions."
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "rule": "no-nested-ternary",
+      "message": "Do not nest ternary expressions."
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "rule": "no-nested-ternary",
+      "message": "Do not nest ternary expressions."
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "rule": "no-nested-ternary",
+      "message": "Do not nest ternary expressions."
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/useChatSelection.ts",
+      "rule": "react-hooks/exhaustive-deps",
+      "message": "React Hook useEffect has a missing dependency: 'activeThread'. Either include it or remove the dependency array."
+    }
+  ]
+}

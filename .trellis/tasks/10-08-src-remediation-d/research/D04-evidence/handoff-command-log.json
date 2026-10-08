@@ -1,0 +1,296 @@
+{
+  "type-summary": {
+    "name": "type-summary",
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "lint"
+    ],
+    "environment": {},
+    "start": "2026-10-08T12:24:30.549487+08:00",
+    "finished": "2026-10-08T12:24:36.670562+08:00",
+    "exitCode": 0,
+    "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/type-summary.log",
+    "logSha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa"
+  },
+  "static-summary": {
+    "name": "static-summary",
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/eslint/bin/eslint.js",
+      "--config",
+      "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/eslint.config.mjs",
+      "src/db/agentContextPreview.ts",
+      "src/components/agent/ContextUsagePanel.tsx",
+      "src/components/agent/ContextParameters.tsx",
+      "src/components/agent/MemoryContextDetails.tsx",
+      "--format",
+      "json"
+    ],
+    "environment": {},
+    "start": "2026-10-08T12:24:36.671021+08:00",
+    "finished": "2026-10-08T12:24:39.494293+08:00",
+    "exitCode": 0,
+    "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/static-summary.json",
+    "logSha256": "335df3ae090e825ce058b9ef2f2b3f6624987502a24a594bd24682cd2975d459"
+  },
+  "full-summary": {
+    "name": "full-summary",
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "test",
+      "--reporter=dot",
+      "--maxWorkers=4"
+    ],
+    "environment": {},
+    "start": "2026-10-08T12:24:39.494637+08:00",
+    "finished": "2026-10-08T12:24:54.586317+08:00",
+    "exitCode": 0,
+    "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/full-summary.log",
+    "logSha256": "3df7c12b12416846ab174e6cc98372eee9b12427a95f6ec02f130f752dea24ca"
+  },
+  "native-summary": {
+    "name": "native-summary",
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/10-08-src-remediation-d/research/D04-native.mjs"
+    ],
+    "environment": {
+      "B01_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+      "B01_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+    },
+    "start": "2026-10-08T12:24:54.586872+08:00",
+    "finished": "2026-10-08T12:24:56.344228+08:00",
+    "exitCode": 0,
+    "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-summary.log",
+    "logSha256": "8ee8675d3eb61c7ce7684dab7ee72abb297781967f3be8abffbe26c2c3b33374"
+  },
+  "focused-summary": {
+    "name": "focused-summary",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "tests/contextPreviewSnapshot.test.ts",
+      "tests/contextUsage.test.ts",
+      "tests/contextManagement.test.ts",
+      "tests/agentProjectContext.test.ts",
+      "tests/agentTaskOrchestration.test.ts",
+      "tests/memoryRetrieval.test.ts",
+      "tests/agentReferences.test.ts",
+      "tests/b03IntentBoundaries.test.ts",
+      "tests/b01QueryIdentity.test.ts",
+      "--maxWorkers=4"
+    ],
+    "exitCode": 0,
+    "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/focused-summary.log",
+    "logSha256": "007f19acb6535b94008097bc075d5e3bed90b83a21c8e6baec818fe17347c823"
+  },
+  "native-b01": {
+    "name": "native-b01",
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/b01-browser-regression.mjs"
+    ],
+    "environment": {
+      "B01_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+      "B01_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+    },
+    "start": "2026-10-08T12:19:29.847861+08:00",
+    "finished": "2026-10-08T12:19:52.040323+08:00",
+    "exitCode": 0,
+    "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-b01.log",
+    "logSha256": "38d6399f688eec0ff0ed2a1efc3236c446a023f1a1907e4452c073bc6167810f",
+    "reused": "All source/fixture/script inputs actually consumed by these isolated tests unchanged since this pass. B01 does not mount context UI; B07 substitutes its context leaf. Later change only saved-run context summary-budget presentation."
+  },
+  "native-b07": {
+    "name": "native-b07",
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/b07-browser-regression.mjs"
+    ],
+    "environment": {
+      "B07_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+      "B07_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+    },
+    "start": "2026-10-08T12:19:52.040944+08:00",
+    "finished": "2026-10-08T12:19:55.016368+08:00",
+    "exitCode": 0,
+    "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-b07.log",
+    "logSha256": "cb2fea50fb785b593aac438a89d0824cb6b0899fe5949ec100fe6060cca9c5f9",
+    "reused": "All source/fixture/script inputs actually consumed by these isolated tests unchanged since this pass. B01 does not mount context UI; B07 substitutes its context leaf. Later change only saved-run context summary-budget presentation."
+  },
+  "historicGates": [
+    {
+      "name": "static-final",
+      "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/eslint/bin/eslint.js",
+        "--config",
+        "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/eslint.config.mjs",
+        "src/db/agentContextPreview.ts",
+        "src/components/agent/ContextUsagePanel.tsx",
+        "src/components/agent/ContextParameters.tsx",
+        "src/components/agent/MemoryContextDetails.tsx",
+        "--format",
+        "json"
+      ],
+      "environment": {},
+      "start": "2026-10-08T12:19:10.015766+08:00",
+      "finished": "2026-10-08T12:19:13.353482+08:00",
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/static-final.json",
+      "logSha256": "8eb269690f89f737793408ef26e943c58ea430ae53b3a75c9477305a2d5d87e7"
+    },
+    {
+      "name": "focused-final",
+      "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "tests/contextPreviewSnapshot.test.ts",
+        "tests/contextUsage.test.ts",
+        "tests/contextManagement.test.ts",
+        "tests/agentProjectContext.test.ts",
+        "tests/agentTaskOrchestration.test.ts",
+        "tests/memoryRetrieval.test.ts",
+        "tests/agentReferences.test.ts",
+        "tests/b03IntentBoundaries.test.ts",
+        "tests/b01QueryIdentity.test.ts",
+        "--maxWorkers=4"
+      ],
+      "environment": {},
+      "start": "2026-10-08T12:19:13.353948+08:00",
+      "finished": "2026-10-08T12:19:15.324865+08:00",
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/focused-final.log",
+      "logSha256": "54d1884a77c223d60510cb6e76b2edaf98829f6bed2e443924d878f5065396a4"
+    },
+    {
+      "name": "full-final",
+      "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "test",
+        "--reporter=dot",
+        "--maxWorkers=4"
+      ],
+      "environment": {},
+      "start": "2026-10-08T12:19:15.325184+08:00",
+      "finished": "2026-10-08T12:19:29.847461+08:00",
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/full-final.log",
+      "logSha256": "4b423f522065f4b79a806fbe4fd9c3a689bec5fdf32ce4880be9ad8a0cd2bab7"
+    },
+    {
+      "name": "native-b01",
+      "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "scripts/b01-browser-regression.mjs"
+      ],
+      "environment": {
+        "B01_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+        "B01_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+      },
+      "start": "2026-10-08T12:19:29.847861+08:00",
+      "finished": "2026-10-08T12:19:52.040323+08:00",
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-b01.log",
+      "logSha256": "38d6399f688eec0ff0ed2a1efc3236c446a023f1a1907e4452c073bc6167810f"
+    },
+    {
+      "name": "native-b07",
+      "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "scripts/b07-browser-regression.mjs"
+      ],
+      "environment": {
+        "B07_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+        "B07_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+      },
+      "start": "2026-10-08T12:19:52.040944+08:00",
+      "finished": "2026-10-08T12:19:55.016368+08:00",
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-b07.log",
+      "logSha256": "cb2fea50fb785b593aac438a89d0824cb6b0899fe5949ec100fe6060cca9c5f9"
+    },
+    {
+      "name": "native-final",
+      "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        ".trellis/tasks/10-08-src-remediation-d/research/D04-native.mjs"
+      ],
+      "environment": {
+        "B01_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+        "B01_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+      },
+      "start": "2026-10-08T12:19:55.016856+08:00",
+      "finished": "2026-10-08T12:19:57.720623+08:00",
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-final.log",
+      "logSha256": "69842913d0bae4335febd955931e9631ef5c11e03ad85c174bd137232ad1256d"
+    }
+  ],
+  "historicalRecordsNotFinalProof": true,
+  "readGraphCommands": [
+    {
+      "command": [
+        "rg",
+        "-n",
+        "ContextUsagePanel|ContextUsageTrigger|readAgentContextPreview|contextPreviewTables|contextPreviewIdentity|ContextParameters|MemoryContextDetails",
+        "src",
+        "tests",
+        "scripts",
+        "-g",
+        "*.{ts,tsx,mjs}"
+      ],
+      "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/consumer-search.log",
+      "logSha256": "8d0665f920bcadee013afeff599bfe9303bb9e8ed6fa8cdb30017c627330aa3e"
+    },
+    {
+      "command": [
+        "rg",
+        "-n",
+        "transaction|db\\.",
+        "src/lib/agent/taskContext.ts",
+        "src/lib/agent/projectContext.ts",
+        "src/lib/agent/audioProjectContext.ts",
+        "src/db/memoryRetrieval.ts",
+        "src/lib/agent/referenceContext.ts",
+        "src/db/references.ts",
+        "src/db/agentTaskRecords.ts",
+        "src/db/contextSettings.ts",
+        "src/db/projectMemories.ts"
+      ],
+      "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/nested-readgraph.log",
+      "logSha256": "be30ffca77514f949e60f2995de25ca4adf2ca8004b18477e767e5fe66784b33"
+    }
+  ],
+  "assertionProbe": {
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/assertion-probe.mjs"
+    ],
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "exitCode": 0,
+    "scriptSha256": "a4f48b88279d3e1ecf10a7420a7245031e1ff24c7af6c79c8f12cede66310297",
+    "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/assertion-probe.log",
+    "logSha256": "f201afa90eb6ebf20a9f10e03e4d810b75674ca8472e78072d4b9eaa7358155f"
+  }
+}

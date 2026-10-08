@@ -1,0 +1,21 @@
+PASS actual trigger and Radix panel keep one preview subscription across open/close
+PASS late A/B/error/model/draft/attachment completions show loading and never publish foreign facts
+native failure after 2 passed; artifacts /var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/d04-native-failure-u2gAhy
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.waitFor: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for getByRole('button', { name: '本对话排除', exact: true }) to be visible[22m
+
+    at /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D04-native.mjs:76:70
+    at async test (/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D04-native.mjs:46:46)
+    at async file:///Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D04-native.mjs:74:5 {
+  log: [
+    "  - waiting for getByRole('button', { name: '本对话排除', exact: true }) to be visible"
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v24.11.0

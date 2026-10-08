@@ -1,0 +1,57 @@
+{
+  "status": "PASS",
+  "exitCode": 0,
+  "fileChecks": [
+    {
+      "path": "src/components/shots/ShotRow.tsx",
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "/dev/null",
+        "src/components/shots/ShotRow.tsx"
+      ],
+      "rawExitCode": 1,
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "",
+      "noDiagnostics": true,
+      "exitInterpretation": "0/1 without diagnostics succeeds; --no-index 1 denotes file difference"
+    },
+    {
+      "path": "src/lib/packages/audioPackageCodec.ts",
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "/dev/null",
+        "src/lib/packages/audioPackageCodec.ts"
+      ],
+      "rawExitCode": 1,
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "",
+      "noDiagnostics": true,
+      "exitInterpretation": "0/1 without diagnostics succeeds; --no-index 1 denotes file difference"
+    },
+    {
+      "path": "src/lib/packages/packageError.ts",
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "/dev/null",
+        "src/lib/packages/packageError.ts"
+      ],
+      "rawExitCode": 1,
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "",
+      "noDiagnostics": true,
+      "exitInterpretation": "0/1 without diagnostics succeeds; --no-index 1 denotes file difference"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+
+> cuepoint@0.1.0 lint /Users/xiaomengdao/WebstormProjects/aifenjing
+> tsc -b --pretty false
+
+src/components/audio/audioSelection.ts(31,67): error TS2339: Property 'take' does not exist on type '{ kind: "clip" | "take"; id: string; } | { kind: "saved"; take: AudioTake; }'.
+  Property 'take' does not exist on type '{ kind: "clip" | "take"; id: string; }'.
+src/components/audio/audioSelection.ts(32,36): error TS2339: Property 'take' does not exist on type '{ kind: "clip" | "take"; id: string; } | { kind: "saved"; take: AudioTake; }'.
+  Property 'take' does not exist on type '{ kind: "clip" | "take"; id: string; }'.
+src/components/audio/audioSelection.ts(32,75): error TS2339: Property 'take' does not exist on type '{ kind: "clip" | "take"; id: string; } | { kind: "saved"; take: AudioTake; }'.
+  Property 'take' does not exist on type '{ kind: "clip" | "take"; id: string; }'.
+src/components/audio/AudioTimeline.tsx(35,1): error TS6133: 'createId' is declared but its value is never read.
+src/components/audio/AudioTimeline.tsx(651,26): error TS2552: Cannot find name 'cache'. Did you mean 'Cache'?
+src/components/audio/AudioTimeline.tsx(655,32): error TS2304: Cannot find name 'decodeAudioBlob'.
+src/components/audio/AudioTimeline.tsx(656,17): error TS2552: Cannot find name 'cache'. Did you mean 'Cache'?
+src/components/shots/ShotRow.tsx(36,39): error TS6133: 'column' is declared but its value is never read.
+src/components/shots/ShotRow.tsx(363,50): error TS6133: 'column' is declared but its value is never read.
+ ELIFECYCLE  Command failed with exit code 2.

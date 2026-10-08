@@ -1,0 +1,6 @@
+4:20:39 PM [vite] (client) Re-optimizing dependencies because vite config has changed
+Port 5173 is in use, trying another one...
+PASS project route key and same-project episode envelope keep settings mounted
+PASS home waits for matching null episode before repair
+PASS character: router blocks dirty target switch; continue preserves; discard remounts
+PASS scene: router blocks dirty target switch; continue preserves; discard remounts

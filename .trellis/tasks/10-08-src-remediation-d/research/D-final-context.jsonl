@@ -1,0 +1,24 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Final whole-scope frontend Quality Check; single repository, frontend sole configured layer"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/research/D-final-review-plan.md", "reason": "Required all-D changed product/native/tool/evidence boundaries and final corrections"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/research/D-gate-command-policy.md", "reason": "Current source gating, explicit native allowlist, identical static versions and resource/provenance limits"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/research/D-commit-grouping-policy.md", "reason": "Concrete dependency-correct commits; no stage or approval claimed"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check.md", "reason": "Accepted whole D01 ownership/contracts; historical evidence immutable, final cumulative source must reviewed"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/reviews/D02-check.md", "reason": "Accepted whole D02 ownership/contracts; historical evidence immutable, final cumulative source must reviewed"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/reviews/D03-check.md", "reason": "Accepted whole D03 ownership/contracts; historical evidence immutable, final cumulative source must reviewed"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/reviews/D04-check.md", "reason": "Accepted whole D04 ownership/contracts; historical evidence immutable, final cumulative source must reviewed"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/reviews/D05-check.md", "reason": "Accepted whole D05 ownership/contracts; historical evidence immutable, final cumulative source must reviewed"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/reviews/D06-check.md", "reason": "Accepted whole D06 ownership/contracts; historical evidence immutable, final cumulative source must reviewed"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/reviews/D07-check.md", "reason": "Accepted whole D07 ownership/contracts; historical evidence immutable, final cumulative source must reviewed"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/reviews/D08-check.md", "reason": "Accepted whole D08 ownership/contracts; historical evidence immutable, final cumulative source must reviewed"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-fixture-check.md", "reason": "Focused durable fixture/EOF correction, assertions/originalbytes/archive-isolated execution; final attribution supplement"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Current final quality and durable fixture contracts"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "D05 native schema/heterogeneous tool erasure contracts"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "D03 session/command/codec and D08 actual local text draft boundaries"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "D02 actual persistence owners and D08 same-transaction text baselines; read complete relevant disk sections"}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "D01 guard/preparation/ownership and paid orchestration preserved"}
+{"file": ".trellis/spec/frontend/agent-context.md", "reason": "D04 consistent readonly context preview"}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "D05 typed native parsers/catalog and metadata checks"}
+{"file": ".trellis/spec/frontend/ai-connectors.md", "reason": "D07 once-only request and explicit JSON/browser/abort/fallback policy"}
+{"file": ".trellis/spec/frontend/asset-output-foundation.md", "reason": "D06 dependency-free capabilities and draft/save distinction"}
+{"file": ".trellis/spec/frontend/audio-music.md", "reason": "D03 shared audio buffers/export/selection and music switching"}
+{"file": ".trellis/spec/guides/index.md", "reason": "Mandatory final shared cross-layer/reuse guide routing"}

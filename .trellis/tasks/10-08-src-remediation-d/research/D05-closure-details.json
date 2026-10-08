@@ -1,0 +1,19 @@
+{
+  "checks": [
+    "IndependentwholeD05PASS all21source30testfixture and346writerpaths+7checkerartifacts;237originalcopies actualpreentryhashesmatch",
+    "13families89tools:alladvertisedorderedbytesoriginal/currentmatch;3212actualparserboundarycases and10independentEX01serializer/token/errors match",
+    "ActualprojectTS5.9.3positive +16negative expectedrejections0unrelated;compilerreportbytererununchanged",
+    "Originalfocus39files647/full153files2465 PASS;4unsupportedcasessame-defaultfix currenttype/compiler/focus7files110 PASS with documentedapplicability",
+    "Nativeactualapproval/receipt/ledgerfaultrollback,observednestedsingle/batchslot/job→ledger/historyrollback+successPASS0external/pageerrors",
+    "Cumulativestatic105sources134errors233warn→121errors222warn0newnoncomplexity;AST412TS2450edges0parse0valueSCC;46any444casts198nonnull443nestedternary"
+  ],
+  "evidence": [
+    ".trellis/tasks/10-08-src-remediation-d/research/D05-implementation.md",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D05-product-freeze.json",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D05-static-summary.json",
+    ".trellis/tasks/10-08-src-remediation-d/research/D05-current-ast-summary.json",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D05-check-runtime.json"
+  ],
+  "resolution": "全部13工具家族保留schema→Args关联，type-only协议叶节点/NoInfer函数属性回调、central registry单处存在类型擦除；原广告字节和3212解析案例兼容。业务行/patch/slot采用实际类型投影，审批前和claim前五字段元数据匹配保持严格，实际编译16负例拒绝并验证模型错误自纠正和原生ledger事务回滚。EX01早返回+穷尽source白名单，输出信封/顺序/entry扩展/异常兼容。存量复杂度及初次full与最终显式拒绝分支修正的验证适用版本均明确，未冒充正式QG01。",
+  "progress": "2026-10-08 D05/AR05+EX01独立PASS：21source30测试/fixture全覆盖，353最终路径/证据哈希核对；13families89工具广告字节/3212parser案例一致、16实际编译负例、10EX01独立字节/错误案例通过。审批前/claim前五字段矩阵及真实nativeledger/业务/history回滚保持。105累积源0新增规则诊断、412TS/2450边/0循环。接续D06共享生成能力，不提前完成D07/D08/E，未提交D。"
+}

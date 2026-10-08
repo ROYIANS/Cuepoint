@@ -1,0 +1,71 @@
+[
+  {
+    "name": "type-summary",
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "lint"
+    ],
+    "environment": {},
+    "start": "2026-10-08T12:24:30.549487+08:00",
+    "finished": "2026-10-08T12:24:36.670562+08:00",
+    "exitCode": 0,
+    "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/type-summary.log",
+    "logSha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa"
+  },
+  {
+    "name": "static-summary",
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/eslint/bin/eslint.js",
+      "--config",
+      "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/eslint.config.mjs",
+      "src/db/agentContextPreview.ts",
+      "src/components/agent/ContextUsagePanel.tsx",
+      "src/components/agent/ContextParameters.tsx",
+      "src/components/agent/MemoryContextDetails.tsx",
+      "--format",
+      "json"
+    ],
+    "environment": {},
+    "start": "2026-10-08T12:24:36.671021+08:00",
+    "finished": "2026-10-08T12:24:39.494293+08:00",
+    "exitCode": 0,
+    "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/static-summary.json",
+    "logSha256": "335df3ae090e825ce058b9ef2f2b3f6624987502a24a594bd24682cd2975d459"
+  },
+  {
+    "name": "full-summary",
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "test",
+      "--reporter=dot",
+      "--maxWorkers=4"
+    ],
+    "environment": {},
+    "start": "2026-10-08T12:24:39.494637+08:00",
+    "finished": "2026-10-08T12:24:54.586317+08:00",
+    "exitCode": 0,
+    "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/full-summary.log",
+    "logSha256": "3df7c12b12416846ab174e6cc98372eee9b12427a95f6ec02f130f752dea24ca"
+  },
+  {
+    "name": "native-summary",
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/10-08-src-remediation-d/research/D04-native.mjs"
+    ],
+    "environment": {
+      "B01_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+      "B01_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+    },
+    "start": "2026-10-08T12:24:54.586872+08:00",
+    "finished": "2026-10-08T12:24:56.344228+08:00",
+    "exitCode": 0,
+    "log": ".trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-summary.log",
+    "logSha256": "8ee8675d3eb61c7ce7684dab7ee72abb297781967f3be8abffbe26c2c3b33374"
+  }
+]

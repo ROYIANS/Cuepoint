@@ -1,0 +1,1626 @@
+ M .trellis/spec/frontend/agent-context.md
+ M .trellis/spec/frontend/agent-execution.md
+ M .trellis/spec/frontend/agent-memory-retrieval.md
+ M .trellis/spec/frontend/agent-project-context.md
+ M .trellis/spec/frontend/agent-tools.md
+ M .trellis/spec/frontend/ai-connectors.md
+ M .trellis/spec/frontend/asset-output-foundation.md
+ M .trellis/spec/frontend/audio-music.md
+ M .trellis/spec/frontend/component-guidelines.md
+ M .trellis/spec/frontend/directory-structure.md
+ M .trellis/spec/frontend/hook-guidelines.md
+ M .trellis/spec/frontend/ip-material-library.md
+ M .trellis/spec/frontend/production-contracts.md
+ M .trellis/spec/frontend/quality-guidelines.md
+ M .trellis/spec/frontend/state-management.md
+ M .trellis/spec/frontend/type-safety.md
+ M .trellis/tasks/09-30-src-quality-remediation/implement.md
+ M .trellis/tasks/09-30-src-quality-remediation/progress.md
+ M .trellis/tasks/09-30-src-quality-remediation/remediation-ledger.json
+ M .trellis/tasks/09-30-src-quality-remediation/remediation-ledger.md
+ M .trellis/tasks/09-30-src-quality-remediation/task.json
+ M scripts/b01-browser-regression.mjs
+ M scripts/b07-browser-regression.mjs
+ M src/components/agent/AgentChatPage.tsx
+ M src/components/agent/AgentGenerationBatches.tsx
+ M src/components/agent/ContextParameters.tsx
+ M src/components/agent/ContextUsagePanel.tsx
+ M src/components/agent/CreatedEntityLinks.tsx
+ M src/components/agent/GenerationReview.tsx
+ M src/components/agent/MemoryContextDetails.tsx
+ M src/components/agent/ProjectPicker.tsx
+ M src/components/assets/AssetLibraryPage.tsx
+ M src/components/assets/CharacterDetailPage.tsx
+ M src/components/assets/PropDetailPage.tsx
+ M src/components/assets/SceneDetailPage.tsx
+ M src/components/assets/StyleDetailPage.tsx
+ M src/components/assets/WorldSettingPanel.tsx
+ M src/components/audio/AudioTimeline.tsx
+ M src/components/audio/AudioWorkspacePage.tsx
+ M src/components/audio/MimoConnection.tsx
+ M src/components/music/MusicWorkspacePage.tsx
+ M src/components/shots/DurationInput.tsx
+ M src/components/shots/ShotEditorPage.tsx
+ M src/components/slots/GenerationSlotCard.tsx
+ M src/components/story/StoryPage.tsx
+ M src/components/studio/AssetLibraryPages.tsx
+ M src/components/studio/ConnectorsPage.tsx
+ M src/components/studio/ProjectGalleryPage.tsx
+ M src/components/studio/materials/MaterialDetailPanel.tsx
+ M src/components/workspace/EpisodeListPage.tsx
+ M src/components/workspace/ProjectSettingsPanel.tsx
+ M src/components/workspace/WorkspaceChrome.tsx
+ M src/db/agentFinishingCheck.ts
+ M src/db/agentGenerationBatches.ts
+ M src/db/agentProjectCreation.ts
+ M src/db/agentTaskRecords.ts
+ M src/db/agentTasks.ts
+ M src/db/agentTools.ts
+ M src/db/productionProposals.ts
+ M src/db/references.ts
+ D src/db/repo.ts
+ M src/domain/output.ts
+ M src/lib/agent/audioGenerationTools.ts
+ M src/lib/agent/audioTools.ts
+ M src/lib/agent/businessSchemas.ts
+ M src/lib/agent/businessStore.ts
+ M src/lib/agent/businessTools.ts
+ M src/lib/agent/generationBatchRuntime.ts
+ M src/lib/agent/generationProfiles.ts
+ M src/lib/agent/generationRuntime.ts
+ M src/lib/agent/generationTools.ts
+ M src/lib/agent/ipTools.ts
+ M src/lib/agent/libraryToolHelpers.ts
+ M src/lib/agent/materialTools.ts
+ M src/lib/agent/memoryTools.ts
+ M src/lib/agent/musicGenerationReview.ts
+ M src/lib/agent/musicTools.ts
+ M src/lib/agent/referenceTools.ts
+ M src/lib/agent/runChat.ts
+ M src/lib/agent/taskTools.ts
+ M src/lib/agent/toolLoading.ts
+ M src/lib/agent/tools.ts
+ M src/lib/agent/webTools.ts
+ M src/lib/ai/aihubmix.ts
+ M src/lib/ai/apimart.ts
+ M src/lib/ai/apimartAudio.ts
+ M src/lib/ai/chatStream.ts
+ M src/lib/ai/connectors.ts
+ M src/lib/ai/mimoSpeech.ts
+ M src/lib/ai/openaiCompatible.ts
+ M src/lib/ai/responsesStream.ts
+ M src/lib/ai/tavily.ts
+ M src/lib/audioGeneration/runtime.ts
+ M src/lib/audioProjectPackage.ts
+ M src/lib/generationIntent.ts
+ M src/lib/media.ts
+ M src/lib/memory/retrieval.ts
+ M src/lib/productionContext.ts
+ M src/lib/projectPackage.ts
+ M src/routes/_studio.tsx
+ M src/routes/p.$projectId.index.tsx
+ M src/routes/p.$projectId.plan.tsx
+ M src/routes/p.$projectId.produce.tsx
+ M src/routes/p.$projectId.report.tsx
+ M src/routes/p.$projectId.shots.tsx
+ M tests/agentActivityPersistence.test.ts
+ M tests/agentAuditRemediation.test.ts
+ M tests/agentBatchPreparationRecovery.test.ts
+ M tests/agentBusiness.test.ts
+ M tests/agentFinishingCheck.test.ts
+ M tests/agentGeneration.test.ts
+ M tests/agentGenerationBatch.test.ts
+ M tests/agentGenerationBatchSafety.test.ts
+ M tests/agentGenerationEvidence.test.ts
+ M tests/agentGenerationRecovery.test.ts
+ M tests/agentGenerationReview.test.ts
+ M tests/agentGenerationReviewTransactions.test.ts
+ M tests/agentIpTools.test.ts
+ M tests/agentMaterialTools.test.ts
+ M tests/agentMemoryTools.test.ts
+ M tests/agentProjectContext.test.ts
+ M tests/agentProjectCreation.test.ts
+ M tests/agentReferences.test.ts
+ M tests/agentRunReview.test.ts
+ M tests/agentRuns.test.ts
+ M tests/agentSettings.test.ts
+ M tests/agentTaskOrchestration.test.ts
+ M tests/agentTaskOrchestrationReview.test.ts
+ M tests/agentTaskWrapup.test.ts
+ M tests/agentTasks.test.ts
+ M tests/agentToolTransactions.test.ts
+ M tests/agentTools.test.ts
+ M tests/agentToolsReview.test.ts
+ M tests/agentUsage.test.ts
+ M tests/assetFoundation.test.ts
+ M tests/audioAgentExecution.test.ts
+ M tests/audioEngineCommands.test.ts
+ M tests/audioFingerprint.test.ts
+ M tests/audioFoundation.test.ts
+ M tests/audioGenerationAgent.test.ts
+ M tests/audioGenerationRecoveryAudit.test.ts
+ M tests/audioGenerationRuntime.test.ts
+ M tests/audioMusicAgentTools.test.ts
+ M tests/audioOutputEvidence.test.ts
+ M tests/audioScriptImport.test.ts
+ M tests/audioTaskEvidence.test.ts
+ M tests/auditDataIntegrity.test.ts
+ M tests/b01QueryIdentity.test.ts
+ M tests/b02MemoryPromotion.test.ts
+ M tests/b03IntentBoundaries.test.ts
+ M tests/b06EditorSessions.test.ts
+ M tests/b07ComposeSessions.test.ts
+ M tests/boundedAudioRuntime.test.ts
+ M tests/connectorMigration.test.ts
+ M tests/connectors.test.ts
+ M tests/contextManagement.test.ts
+ M tests/draftConcurrency.test.ts
+ M tests/draftMedia.test.ts
+ M tests/fixtures/b01/harness.tsx
+ M tests/fixtures/b07/harness.tsx
+ M tests/fixtures/c01/harness.ts
+ M tests/fixtures/c02/harness.tsx
+ M tests/generationIntent.test.ts
+ M tests/imageDiscovery.test.ts
+ M tests/manualDraftBaseline.test.ts
+ M tests/manualDraftWiring.test.ts
+ M tests/materialImageQueue.test.ts
+ M tests/materialIntegration.test.ts
+ M tests/materialLibrary.test.ts
+ M tests/materialReferenceWire.test.ts
+ M tests/mediaMetadata.test.ts
+ M tests/mediaPatchBoundary.test.ts
+ M tests/memoryInclusion.test.ts
+ M tests/memoryRetrieval.test.ts
+ M tests/mimoRuntime.test.ts
+ M tests/musicDraftVariants.test.ts
+ M tests/musicDurationContract.test.ts
+ M tests/musicGenerationReview.test.ts
+ M tests/musicLegacyDurationRepair.test.ts
+ M tests/parentProjectWrites.test.ts
+ M tests/productionContext.test.ts
+ M tests/productionHandoff.test.ts
+ M tests/productionProposals.test.ts
+ M tests/projectMemories.test.ts
+ M tests/projectMemoryPackage.test.ts
+ M tests/projectPackage.test.ts
+ M tests/projectPackageRelations.test.ts
+ M tests/reasoningPolicy.test.ts
+ M tests/referenceEvidence.test.ts
+ M tests/references.test.ts
+ M tests/repo.test.ts
+ M tests/repoReliability.test.ts
+ M tests/responsesStream.test.ts
+ M tests/shotBulkUndo.test.ts
+ M tests/shotDeleteUndo.test.ts
+ M tests/toolLoading.test.ts
+ M tests/toolLoadingMeasurement.test.ts
+ M tests/toolValidationDiagnostics.test.ts
+ M tests/toolValidationSafety.test.ts
+ M tests/useShotMedia.test.ts
+ M tests/webResearchRuntime.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/check.jsonl
+?? .trellis/tasks/10-08-src-remediation-d/design.md
+?? .trellis/tasks/10-08-src-remediation-d/implement.jsonl
+?? .trellis/tasks/10-08-src-remediation-d/implement.md
+?? .trellis/tasks/10-08-src-remediation-d/prd.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D-commit-grouping-policy.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D-entry-ast-results.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D-entry-ast-summary.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D-final-review-plan.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D-gate-command-policy.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D01-check-ast-results.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D01-check-ast-summary.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D01-current-ast-results.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D01-current-ast-summary.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D01-implementation.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D01-scope.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D02-check-preparation.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D02-context.jsonl
+?? .trellis/tasks/10-08-src-remediation-d/research/D02-current-ast-results.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D02-current-ast-summary.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D02-implementation.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D02-repository-plan.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D02-scope.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D02-spec-draft.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D03-closure-details.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D03-context.jsonl
+?? .trellis/tasks/10-08-src-remediation-d/research/D03-current-ast-results.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D03-current-ast-summary.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D03-implementation.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D03-page-responsibility-plan.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D03-scope.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D03-spec-draft.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-closure-details.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-context-snapshot-plan.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-context.jsonl
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-current-ast-results.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-current-ast-summary.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/assertion-probe.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/assertion-probe.mjs
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/before.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/before/src/components/agent/AgentChatPage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/before/src/components/agent/ContextParameters.tsx
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/before/src/components/agent/ContextUsagePanel.tsx
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/before/src/components/agent/MemoryContextDetails.tsx
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/before/tests/b03IntentBoundaries.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/consumer-search.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/focused-final.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/focused-first.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/focused-second.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/focused-summary.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/full-final.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/full-summary.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/gates-summary.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/gates.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/git-status-before.txt
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/git-status-frozen.txt
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/handoff-command-log.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/literal-assertions.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-b01.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-b07.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-failures/native-first/failure.html
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-failures/native-first/failure.png
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-failures/native-fourth/failure.html
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-failures/native-fourth/failure.png
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-failures/native-second/failure.html
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-failures/native-second/failure.png
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-failures/native-third/failure.html
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-failures/native-third/failure.png
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-fifth.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-final.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-first.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-fourth.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-second.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-summary.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/native-third.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/nested-readgraph.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/product-freeze-superseded.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/product-freeze.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/readgraph-commands.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/static-final.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/static-first.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/static-second.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/static-summary.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/tool-inputs.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/type-final.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/type-first.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/type-second.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-evidence/type-summary.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-implementation.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-native.mjs
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-scope.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D04-spec-draft.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D05-closure-details.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D05-context.jsonl
+?? .trellis/tasks/10-08-src-remediation-d/research/D05-current-ast-results.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D05-current-ast-summary.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D05-implementation.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D05-scope.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D05-spec-draft.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D05-typed-tool-plan.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D06-capability-plan.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D06-closure-details.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D06-context.jsonl
+?? .trellis/tasks/10-08-src-remediation-d/research/D06-current-ast-results.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D06-current-ast-summary.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D06-implementation.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D06-scope.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D06-spec-draft.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-context.jsonl
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/PRODUCTFROZEN-build.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/PRODUCTFROZEN.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/attempts.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/aihubmix.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/apimart.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/apimartAudio.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/boundedResponse.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/boundedSse.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/catalog.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/chatModelPolicy.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/chatStream.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/connectors.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/mimoSpeech.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/modelMetadata.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/modelVendors.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/openaiCompatible.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/reasoningPolicy.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/referenceWire.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/responsesStream.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/safeError.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/tavily.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/visionCapability.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/routeTree.gen.ts
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/build-final.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/entry-consumers.txt
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/entry-git-status.txt
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/entry.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/focused-final.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/freeze.py
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/frozen-git-status.txt
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/full-final.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/gates.jsonl
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/leaf-static-final.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/leaf-static.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/lint-leaves.mjs
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/models-final.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/new-tests-01.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/new-tests-02.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/new-tests-03.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/new-tests-04.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/policy-matrix.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/route-tree-built.txt
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/route-tree-proof.json
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/route-tree-proof.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/route-tree-proof.mjs
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/run-gate.py
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/serial-gates.py
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/source-diff.patch
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/type-final.log
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-request-boundary-plan.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-scope.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D07-spec-draft.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D08-context.jsonl
+?? .trellis/tasks/10-08-src-remediation-d/research/D08-scope.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D08-spec-draft.md
+?? .trellis/tasks/10-08-src-remediation-d/research/D08-text-draft-plan.md
+?? .trellis/tasks/10-08-src-remediation-d/research/coordinator-checkpoint.md
+?? .trellis/tasks/10-08-src-remediation-d/research/static-runtime-eslint.config.mjs
+?? .trellis/tasks/10-08-src-remediation-d/research/static-runtime-package.json
+?? .trellis/tasks/10-08-src-remediation-d/research/static-runtime-pnpm-lock.yaml
+?? .trellis/tasks/10-08-src-remediation-d/research/static-runtime-restoration.md
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-boundaries.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-changed-source-eslint-final.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-changed-source-eslint.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-check-ast.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-check-body-comparison.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-check-entry.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-check-native-seed-attempt.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-check-native.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-check-native.mjs
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-check-snapshot.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-check-source-freeze.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-check.md
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-closure-details.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-entry-before.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-final-regressions.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-generation.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-handoff-hashes.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-implement-snapshot.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-native-boundaries-launch-failed.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-native-boundaries.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-native-c01.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-native-regression.mjs
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-new-leaves-eslint-pre-exhaustive-fix.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-new-leaves-eslint.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-regressions-concurrent-timeout.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-regressions-workers4.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-static-results.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-static-summary.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-static.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-tasks-evidence.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-tools.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-typescript-final.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D01-typescript.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-baseline-fault-tests-with-vendor.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-baseline-fault-tests.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-baseline-full-tests-final.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-baseline-full-tests.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-baseline-timestamp-probe-source.txt
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-baseline-timestamp-probe.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-body-comparison.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-check-native-d01-rollback.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-check-snapshot.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-check.md
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-closure-details.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-entry-before.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-export-reachability.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-extraction-map.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-final-scope-check.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-focused-final.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-focused.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-full-tests.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-implement-snapshot.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-migrated-callers.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-native-b01.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-native-b07.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-native-c01.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-native-c02.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-native-cascades.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-native-d01-rollback.mjs
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-native-regression.mjs
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-static-results.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-static-summary.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-static.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-typescript-final.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D02-typescript.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-ast.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-chat-type.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-check-audio-tests.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-check-direct-references.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-check-entry.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-check-fix-freeze.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-check-native.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-check-ownership-audit.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-check-snapshot.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-check-typecheck.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-check.md
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-first-function-ownership.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-first-implement-snapshot.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-first-implementation.md
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-focused-final.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-focused-release.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-full-tests-release.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-full-tests.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-function-ownership.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-implement-snapshot.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-initial-type.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-native-b01.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-native-b07-release.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-native-b07.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-native-c01.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-native-c02.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-native-d01-rollback.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-native-d01.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-native-d02.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-native-deterministic.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-native-final.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-native-regression.mjs
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-native-release.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-native-rerun.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-native-rerun2.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-native.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-packages-type.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-selection-type.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-slice1-tests.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-slice2-tests.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-slice3-commands-rerun.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-slice3-commands.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-slice3-tests.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-slice3-type.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-slice4-tests.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-slice5-tests-rerun.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-slice5-tests.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-slice6-tests.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-static-first-results.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-static-first-summary.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-static-first.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-static-fix-focused-rerun.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-static-fix-focused.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-static-fix-full-tests.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-static-fix-narrow-first.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-static-fix-narrow-first.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-static-fix-narrow.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-static-fix-narrow.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-static-fix-native-b07.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-static-fix-native-d03.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-static-fix-typecheck-final.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-static-fix-typecheck.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-static-remediation-before.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-static-results.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-static-summary.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-static.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-typecheck-pre-native.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-typecheck-release.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D03-typecheck.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D04-ast.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D04-check-snapshot.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D04-check.md
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D04-implement-snapshot.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D04-implement-snapshot.sha256
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D04-static-results.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D04-static-summary.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D04-static.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-ast.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-check-compiler-negatives.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-check-compiler.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-check-positive.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-check-runtime.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-check-runtime.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-check-runtime.mjs
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-check-snapshot.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-check.md
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-compiler-negatives.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-compiler-negatives.mjs
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-consumer-map.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-entry-snapshot.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-finalize-snapshot.py
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-finalizer-first-attempt.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-freeze.py
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-gate-applicability.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-gates.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-implement-snapshot.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-inventory-final.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-inventory.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-inventory.mjs
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-movement-map.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-native.mjs
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-prior-overlaps-final.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-prior-overlaps.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-product-freeze-first.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-product-freeze-tested.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-product-freeze.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-run-gate.py
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-runtime-versions.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-static-first-results.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-static-first-summary.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-static-first.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-static-fix.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-static-results.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-static-summary.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D05-static.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-ast.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-check-compiler-negatives.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-check-compiler.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-check-entry.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-check-finalize.py
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-check-native.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-check-native.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-check-preservation-initial.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-check-preservation.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-check-preservation.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-check-preservation.mjs
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-check-progress.md
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-check-script-freeze.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-check-snapshot.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-check-verification.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-check-verify.py
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-check.md
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-compiler-negatives.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-compiler-negatives.mjs
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-coordinator-scan-entry.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-entry-metrics.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-implement-snapshot.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-native-original.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-native.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-native.mjs
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-product-freeze.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-route-tree-proof.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-semantic-proof.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-static-results.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-static-summary.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D06-static.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D07-entry.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D07-product-freeze.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/D07-static.log
+?? .trellis/tasks/10-08-src-remediation-d/reviews/integration/review-file-coverage.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/native-gate-plan.json
+?? .trellis/tasks/10-08-src-remediation-d/reviews/static-runtime-install.log
+?? .trellis/tasks/10-08-src-remediation-d/task.json
+?? .trellis/tasks/10-08-src-remediation-d/tools/accepted_final_fixes.py
+?? .trellis/tasks/10-08-src-remediation-d/tools/close-unit.py
+?? .trellis/tasks/10-08-src-remediation-d/tools/current-source-ast.cjs
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/activityAttention.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/audioGenerationTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/audioMusicToolNames.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/audioProjectContext.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/audioTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/businessSchemas.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/businessStore.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/businessToolNames.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/businessTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/businessWriteReceipt.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/chatTurns.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/contextCompaction.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/contextPlanner.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/contextPolicy.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/contextUsage.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/executionSummary.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/finishingCheck.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationBatchRuntime.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationMedia.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationPreparation.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationProfiles.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationReview.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationReviewDraft.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationRuntime.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationSelection.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/generationTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/imageDiscovery.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/imageQueue.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/ipToolNames.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/ipTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/libraryToolHelpers.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/materialContent.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/materialImageInput.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/materialToolNames.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/materialTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/memoryContext.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/memoryToolNames.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/memoryTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/mimoSpeechSpec.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/musicGenerationReview.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/musicGenerationReviewSnapshot.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/musicReviewPresentation.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/musicTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/projectContext.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/projectScope.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/referenceContext.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/referenceEvidence.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/referenceToolNames.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/referenceTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/runChat.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/runOwnership.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/runPresentation.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/runWriteOutcomes.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/skills.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/soundWriteReceipt.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/taskContext.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/taskState.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/taskTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/taskWrapup.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/toolErrors.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/toolLoading.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/tools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/webToolNames.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/webTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/wrapupEvidence.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/wrapupSchema.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/agent/writeReceipt.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/memory/retrieval.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/src/lib/memory/schema.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentActivityAttention.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentActivityPersistence.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentAuditRemediation.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentBatchPreparationRecovery.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentBusiness.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentExecutionSummary.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentFinishingCheck.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentFinishingCheckPrompt.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentGeneration.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentGenerationBatch.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentGenerationBatchSafety.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentGenerationEvidence.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentGenerationRecovery.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentGenerationReview.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentGenerationReviewTransactions.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentIpTools.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentMaterialTools.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentMemoryTools.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentProjectContext.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentProjectCreation.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentReferences.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentRunReview.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentRuns.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentSettings.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentTaskOrchestration.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentTaskOrchestrationReview.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentTaskWrapup.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentTasks.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentToolTransactions.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentTools.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentToolsReview.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/agentUsage.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/aihubmix.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/apimart.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/apimartAudio.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/aspectPreset.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/assetFoundation.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/assetLibrary.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/audioAgentExecution.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/audioEngine.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/audioEngineCommands.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/audioEngineRecorder.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/audioEngineTimeline.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/audioEngineWorkspaceRoute.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/audioFingerprint.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/audioFoundation.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/audioGenerationAgent.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/audioGenerationDefaults.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/audioGenerationPresentation.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/audioGenerationRecoveryAudit.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/audioGenerationRuntime.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/audioMime.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/audioMusicAgentTools.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/audioOutputEvidence.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/audioScriptImport.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/audioTaskEvidence.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/audioTimelineShortcuts.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/auditDataIntegrity.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/b01QueryIdentity.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/b02MemoryPromotion.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/b03IntentBoundaries.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/b06EditorSessions.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/b07ComposeSessions.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/boundedAudioRuntime.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/boundedChatInput.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/boundedInput.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/catalog.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/chatModelPolicy.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/chatScroll.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/chatStream.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/chatTurns.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/connectorMigration.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/connectors.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/contextManagement.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/contextPreviewSnapshot.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/contextUsage.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/copySelection.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/d01DependencyBoundaries.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/d02CascadeTransactions.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/d03AudioCommands.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/d03ChatOwners.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/d03ShotCommands.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/debouncedDraft.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/draftConcurrency.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/draftMedia.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/durationInput.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/episodeDelivery.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/filterThreadsByTitle.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/fixtures/b01/harness.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/fixtures/b01/index.html
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/fixtures/b07/harness.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/fixtures/b07/index.html
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/fixtures/b07/surface.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/fixtures/c01/harness.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/fixtures/c01/index.html
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/fixtures/c02/harness.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/fixtures/c02/index.html
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/fixtures/d01/harness.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/fixtures/d02/harness.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/fixtures/d02/index.html
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/fixtures/d03/harness.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/fixtures/d03/index.html
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/fixtures/d04/harness.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/fixtures/d04/index.html
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/formFieldFocus.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/generationIntent.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/generationPreferences.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/generationReviewDraft.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/generationTargetDestination.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/helpers/toolDispatch.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/imageDiscovery.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/manualDraftBaseline.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/manualDraftWiring.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/materialImageQueue.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/materialIntegration.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/materialLibrary.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/materialReferenceWire.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/mediaMetadata.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/mediaPatchBoundary.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/mediaPicker.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/memoryInclusion.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/memoryRetrieval.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/mimoRuntime.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/mimoSpeech.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/modelBank.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/modelMetadata.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/modelVendors.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/musicDraftVariants.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/musicDurationContract.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/musicGenerationReview.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/musicLegacyDurationRepair.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/musicReviewPresentation.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/openaiCompatible.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/output.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/parentProjectWrites.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/productionContext.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/productionHandoff.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/productionProposals.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/projectMemories.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/projectMemoryPackage.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/projectPackage.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/projectPackageRelations.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/providerCacheUsage.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/reasoningPolicy.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/referenceEvidence.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/references.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/reorderIds.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/repo.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/repoReliability.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/responsesStream.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/runPresentation.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/runWriteOutcomes.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/setup.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/shotBulkUndo.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/shotDeleteUndo.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/shotFilters.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/thinkingMatrix.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/thinkingPanel.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/timeGroups.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/toolLoading.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/toolLoadingMeasurement.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/toolValidationDiagnostics.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/toolValidationSafety.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/umami.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/undo.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/useShotMedia.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/webResearch.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/before/tests/webResearchRuntime.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/catalog-01.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/catalog-before.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/compile-01.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/compile-02.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/compile-final.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/compiler-negative.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/consumers-entry.txt
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/entry.json
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/fix-compile.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/fix-focus.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/fix-test-imports.mjs
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/fix-type.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/focused-01.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/focused-02.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/focused-03.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/focused-full-01.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/full-01.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/generation.py
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/imports-entry.txt
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/migrate.mjs
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/native-01.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/native-final.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/next.py
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/projections.py
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/runtime-catalog.json
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/store.py
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/type-01.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/type-02.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/type-03.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/type-04.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/type-05.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/type-06.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/type-07.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d05/type-final.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/PRODUCTFROZEN-current-verification.json
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/PRODUCTFROZEN.json
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/b01-browser-regression-final-fallback-corrected.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/b01-browser-regression-final.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/b07-browser-regression-final-fallback-corrected.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/b07-browser-regression-final.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/package.json
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/pnpm-lock.yaml
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/scripts/b01-browser-regression.mjs
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/scripts/b07-browser-regression.mjs
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/scripts/c01-browser-regression.mjs
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/scripts/c02-browser-regression.mjs
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/scripts/model-bank-snapshot.mjs
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/AgentActivityNavigation.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/AgentChatPage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/AgentComposerAttention.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/AgentControls.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/AgentGenerationBatches.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/AgentGenerationResults.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/AgentRunDetails.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/AgentWriteOutcomes.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/ChatWorkspace.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/ContextCompactionDetails.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/ContextParameters.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/ContextUsagePanel.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/CreatedEntityLinks.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/FloatingComposer.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/GenerationReview.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/Grainient.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/HomeWelcome.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/LobeChatTheme.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/MemoryContextDetails.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/MessageList.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/ModelIconCatalog.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/ModelIcons.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/ModelSelectTrigger.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/ModelSettingsMenu.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/MusicGenerationReview.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/ProjectImageSources.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/ProjectPicker.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/ReferenceAttachments.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/ReferenceLibrary.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/TaskBoard.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/TaskInspector.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/TaskRecords.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/TaskWrapup.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/ThinkingMatrix.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/ThinkingPanel.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/TopicSidebar.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/TurnNavigation.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/WebResearchSources.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/agentChat.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/agentTheme.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/chatExecutionFlows.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/composerAttention.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/composerControls.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/composerTypes.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/contextParameters.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/executionActivity.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/filterThreadsByTitle.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/generationBatch.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/homeGrainient.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/memoryContext.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/references.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/taskWorkspace.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/taskWrapup.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/timeGroups.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/turnNavigation.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/useChatExecutionSession.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/useChatSelection.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/agent/useReferenceDraft.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/assets/AssetLibraryPage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/assets/AssetTextField.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/assets/CharacterDetailPage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/assets/PropDetailPage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/assets/SceneDetailPage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/assets/StyleDetailPage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/assets/WorldSettingPanel.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/audio/AudioExports.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/audio/AudioInspector.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/audio/AudioSources.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/audio/AudioTimeline.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/audio/AudioWorkspacePage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/audio/MimoConnection.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/audio/ScriptDocument.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/audio/SpeechControls.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/audio/VoiceLibrary.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/audio/VoiceReferencePicker.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/audio/audioSelection.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/audio/story-workspace.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/audio/timeline.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/audioMusic/controls.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/audioMusic/shared.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/audioMusic/workspace.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/media/MediaPicker.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/media/MediaThumb.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/memory/MemoryEditor.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/memory/MemoryPromotion.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/memory/ProjectMemoryPage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/memory/memory.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/memory/memoryLabels.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/memory/readMemory.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/music/MusicCreation.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/music/MusicWorkspacePage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/music/draftVariants.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/music/music-workspace.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/music/switchMusicVariant.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/produce/ProducePage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/produce/ProductionProposalsPanel.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/produce/StoryboardPrintPage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/shots/DurationInput.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/shots/ShotEditorPage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/shots/ShotRelationsEditor.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/shots/ShotRow.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/shots/ShotRowViewport.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/shots/shotColumnFields.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/shots/shotEditorCommands.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/shots/useShotEditorKeyboard.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/slots/GenerationSlotCard.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/story/StoryPage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/AboutPage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/AssetLibraryPages.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/ConnectorsPage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/CoverCard.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/IpProfileEditor.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/IpProfilesPage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/LibraryHeader.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/MaterialLibraryPage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/ProjectGalleryPage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/ProjectIpPicker.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/SearchConnection.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/Still.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/StudioShell.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/importStudioProject.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/ipProfiles.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/materials/LegacyMaterialSources.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/materials/MaterialControls.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/materials/MaterialDetailPanel.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/materials/MaterialDocumentPreview.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/materials/MaterialImportDialog.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/materials/MaterialPreview.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/materials/materialLibrary.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/studio/projectKinds.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/alert-dialog.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/badge.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/button.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/card.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/checkbox.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/click-spark.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/dialog.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/draft-status.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/dropdown-menu.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/field.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/input.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/label.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/popover.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/select.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/separator.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/sheet.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/skeleton.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/slider.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/sonner.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/tabs.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/textarea.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/ui/tooltip.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/workspace/EpisodeListPage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/workspace/ProjectHomePage.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/workspace/ProjectSettingsPanel.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/components/workspace/WorkspaceChrome.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/agentContextPreview.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/agentFinishingCheck.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/agentGeneration.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/agentGenerationBatches.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/agentGenerationTarget.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/agentProjectCreation.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/agentRuns.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/agentSettings.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/agentTaskGuards.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/agentTaskRecords.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/agentTaskWrapups.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/agentTasks.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/agentToolRecovery.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/agentTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/assetReuse.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/assets.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/audio.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/audioGeneration.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/audioShared.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/cascadeCommands.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/chat.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/connectors.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/contextSettings.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/database.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/episodes.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/generationPreferences.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/ipProfiles.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/materials.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/media.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/memoryRetrieval.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/music.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/productionProposals.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/productionRecords.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/productionShared.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/projectMemories.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/projects.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/references.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/searchConnections.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/shots.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/taskAudioGenerationEvidence.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/db/taskGenerationEvidence.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/agent.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/agentGeneration.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/agentGenerationBatch.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/agentTaskRecords.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/agentTaskWrapup.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/agentToolSelection.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/audio.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/audioGeneration.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/columns.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/context.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/generationPreferences.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/imageDiscovery.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/materials.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/memoryRetrieval.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/music.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/output.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/production.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/projectContext.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/projectMemory.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/referenceInput.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/references.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/search.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/slot.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/domain/types.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/activityAttention.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/audioGenerationTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/audioMusicToolNames.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/audioProjectContext.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/audioTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/businessSchemas.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/businessStore.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/businessToolNames.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/businessTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/businessWriteReceipt.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/chatTurns.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/contextCompaction.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/contextPlanner.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/contextPolicy.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/contextUsage.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/executionSummary.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/finishingCheck.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/generationBatchRuntime.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/generationMedia.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/generationPreparation.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/generationProfiles.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/generationReview.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/generationReviewDraft.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/generationRuntime.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/generationSelection.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/generationTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/imageDiscovery.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/imageQueue.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/ipToolNames.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/ipTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/libraryToolHelpers.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/materialContent.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/materialImageInput.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/materialToolNames.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/materialTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/memoryContext.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/memoryToolNames.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/memoryTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/mimoSpeechSpec.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/musicGenerationReview.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/musicGenerationReviewSnapshot.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/musicReviewPresentation.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/musicTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/projectContext.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/projectScope.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/referenceContext.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/referenceEvidence.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/referenceToolNames.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/referenceTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/runChat.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/runOwnership.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/runPresentation.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/runWriteOutcomes.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/skills.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/soundWriteReceipt.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/taskContext.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/taskState.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/taskTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/taskWrapup.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/toolDefinition.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/toolErrors.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/toolLoading.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/tools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/webToolNames.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/webTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/wrapupEvidence.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/wrapupSchema.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/agent/writeReceipt.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/aihubmix.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/apimart.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/apimartAudio.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/boundedResponse.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/boundedSse.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/catalog.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/chatModelPolicy.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/chatStream.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/connectors.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/mimoSpeech.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/modelBank/README.md
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/modelBank/index.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/modelBank/lookup.generated.json
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/modelBank/models.generated.json
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/modelMetadata.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/modelVendors.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/openaiCompatible.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/reasoningPolicy.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/referenceWire.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/responsesStream.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/safeError.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/tavily.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ai/visionCapability.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/assetLibrary.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audio/buffers.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audio/commands.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audio/engine.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audio/exportMix.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audio/fingerprint.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audio/mime.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audio/recorder.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audio/schedule.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audio/scriptImport.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audio/shortcuts.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audio/timeline.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audio/wav.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audio/waveform.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audio/workspaceRoute.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audioGeneration/defaults.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audioGeneration/input.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audioGeneration/observations.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audioGeneration/outputEvidence.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audioGeneration/presentation.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audioGeneration/reference.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audioGeneration/runtime.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audioGeneration/taskIds.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/audioProjectPackage.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/brand.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/chatScroll.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/chatTitle.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/copySelection.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/debouncedDraft.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/draftConflict.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/draftMedia.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/durationInput.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/episodeDelivery.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/formFieldFocus.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/format.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/generationIntent.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/generationTargetDestination.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/ids.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/library.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/media.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/mediaPicker.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/memory/retrieval.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/memory/schema.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/packages/audioPackageCodec.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/packages/packageError.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/packages/projectPackageCodec.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/productionContext.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/productionHandoff.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/productionRevision.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/projectOutputDraft.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/projectPackage.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/references/docx.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/references/docx.worker.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/references/import.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/references/mammoth.d.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/references/package.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/references/parse.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/references/pdf.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/reorderIds.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/resource/limits.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/shotFilters.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/shotKeyboard.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/shotMedia.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/shotRelations.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/slotEditSession.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/thinkingTitle.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/umami.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/undo.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/useManualDraftGuard.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/useShotMedia.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/utils.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/lib/workspaceAvailability.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/main.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routeTree.gen.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/__root.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.about.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.agent.$threadId.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.agent.index.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.agent.tasks.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.agent.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.assets.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.characters.$characterId.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.characters.index.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.characters.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.connectors.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.index.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.ips.$ipId.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.ips.index.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.ips.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.projects.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.props.$propId.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.props.index.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.props.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.scenes.$sceneId.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.scenes.index.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.scenes.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.settings.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.styles.$styleId.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.styles.index.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.styles.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/_studio.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.assets.characters.$characterId.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.assets.index.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.assets.props.$propId.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.assets.scenes.$sceneId.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.assets.styles.$styleId.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.assets.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.e.$episodeId.index.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.e.$episodeId.produce.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.e.$episodeId.shots.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.e.$episodeId.storyboard.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.e.$episodeId.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.index.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.memory.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.plan.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.produce.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.report.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.shots.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.storyboard.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/routes/p.$projectId.world.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/styles.css
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/src/vite-env.d.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentActivityAttention.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentActivityPersistence.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentAuditRemediation.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentBatchPreparationRecovery.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentBusiness.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentExecutionSummary.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentFinishingCheck.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentFinishingCheckPrompt.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentGeneration.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentGenerationBatch.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentGenerationBatchSafety.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentGenerationEvidence.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentGenerationRecovery.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentGenerationReview.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentGenerationReviewTransactions.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentIpTools.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentMaterialTools.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentMemoryTools.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentProjectContext.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentProjectCreation.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentReferences.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentRunReview.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentRuns.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentSettings.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentTaskOrchestration.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentTaskOrchestrationReview.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentTaskWrapup.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentTasks.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentToolTransactions.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentTools.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentToolsReview.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/agentUsage.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/aihubmix.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/apimart.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/apimartAudio.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/aspectPreset.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/assetFoundation.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/assetLibrary.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/audioAgentExecution.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/audioEngine.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/audioEngineCommands.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/audioEngineRecorder.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/audioEngineTimeline.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/audioEngineWorkspaceRoute.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/audioFingerprint.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/audioFoundation.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/audioGenerationAgent.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/audioGenerationDefaults.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/audioGenerationPresentation.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/audioGenerationRecoveryAudit.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/audioGenerationRuntime.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/audioMime.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/audioMusicAgentTools.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/audioOutputEvidence.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/audioScriptImport.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/audioTaskEvidence.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/audioTimelineShortcuts.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/auditDataIntegrity.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/b01QueryIdentity.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/b02MemoryPromotion.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/b03IntentBoundaries.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/b06EditorSessions.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/b07ComposeSessions.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/boundedAudioRuntime.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/boundedChatInput.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/boundedInput.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/catalog.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/chatModelPolicy.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/chatScroll.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/chatStream.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/chatTurns.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/connectorMigration.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/connectors.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/contextManagement.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/contextPreviewSnapshot.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/contextUsage.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/copySelection.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/d01DependencyBoundaries.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/d02CascadeTransactions.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/d03AudioCommands.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/d03ChatOwners.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/d03ShotCommands.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/d05BusinessBranches.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/d05SchemaEquivalence.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/d05ToolCatalog.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/d05ToolMetadata.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/debouncedDraft.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/draftConcurrency.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/draftMedia.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/durationInput.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/episodeDelivery.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/filterThreadsByTitle.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/fixtures/b01/harness.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/fixtures/b01/index.html
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/fixtures/b07/harness.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/fixtures/b07/index.html
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/fixtures/b07/surface.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/fixtures/c01/harness.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/fixtures/c01/index.html
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/fixtures/c02/harness.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/fixtures/c02/index.html
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/fixtures/d01/harness.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/fixtures/d02/harness.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/fixtures/d02/index.html
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/fixtures/d03/harness.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/fixtures/d03/index.html
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/fixtures/d04/harness.tsx
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/fixtures/d04/index.html
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/fixtures/d05/catalog.json
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/formFieldFocus.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/generationIntent.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/generationPreferences.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/generationReviewDraft.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/generationTargetDestination.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/helpers/registeredTools.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/helpers/toolDispatch.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/imageDiscovery.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/manualDraftBaseline.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/manualDraftWiring.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/materialImageQueue.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/materialIntegration.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/materialLibrary.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/materialReferenceWire.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/mediaMetadata.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/mediaPatchBoundary.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/mediaPicker.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/memoryInclusion.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/memoryRetrieval.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/mimoRuntime.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/mimoSpeech.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/modelBank.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/modelMetadata.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/modelVendors.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/musicDraftVariants.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/musicDurationContract.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/musicGenerationReview.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/musicLegacyDurationRepair.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/musicReviewPresentation.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/openaiCompatible.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/output.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/parentProjectWrites.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/productionContext.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/productionHandoff.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/productionProposals.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/projectMemories.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/projectMemoryPackage.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/projectPackage.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/projectPackageRelations.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/providerCacheUsage.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/reasoningPolicy.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/referenceEvidence.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/references.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/reorderIds.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/repo.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/repoReliability.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/responsesStream.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/runPresentation.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/runWriteOutcomes.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/setup.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/shotBulkUndo.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/shotDeleteUndo.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/shotFilters.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/thinkingMatrix.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/thinkingPanel.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/timeGroups.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/toolLoading.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/toolLoadingMeasurement.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/toolValidationDiagnostics.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/toolValidationSafety.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/typecheck/agentToolDefinition.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/typecheck/tsconfig.agent-tools.json
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/umami.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/undo.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/useShotMedia.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/webResearch.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tests/webResearchRuntime.test.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/tsconfig.app.json
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/vite.config.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/before/vitest.config.ts
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/build-final-fallback-corrected.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/build-final.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/compiler-negative-final-fallback-corrected.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/compiler-negative-final.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/compiler-positive-final-fallback-corrected.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/compiler-positive-final.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/d05-native-final-fallback-corrected.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/d05-native-final.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/d06-native-final-fallback-corrected.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/d06-native-final.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/entry-focused.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/entry-git-status.txt
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/entry-metrics-final.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/entry-metrics.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/entry-metrics.mjs
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/entry.json
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/extract.py
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/failures/native-02/d06-native-setup-Sojv9N/failure.html
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/failures/native-03/d06-native-failure-h1XYNL/failure.html
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/failures/native-03/d06-native-failure-h1XYNL/failure.png
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/failures/native-04/d06-native-failure-y2EIc4/failure.html
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/failures/native-04/d06-native-failure-y2EIc4/failure.png
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/failures/native-05/d06-native-failure-s3DWpb/failure.html
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/failures/native-05/d06-native-failure-s3DWpb/failure.png
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/failures/native-fallback-negative/d06-native-failure-TeGZOU/failure.html
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/failures/native-fallback-negative/d06-native-failure-TeGZOU/failure.png
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/final-gates.py
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/finalize.py
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/focused-01.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/focused-final-fallback-corrected.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/focused-final.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/freeze.py
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/full-final-fallback-corrected.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/full-final.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/gates.jsonl
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/integrate.py
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/leaf-lint-01.json
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/leaf-lint-01.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/leaf-lint-02.json
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/leaf-lint-02.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/leaf-lint-final-fallback-corrected.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/leaf-lint-final.json
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/leaf-lint-final.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/lint-leaf.mjs
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/models-final-fallback-corrected.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/models-final.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/native-01.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/native-02.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/native-03.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/native-04.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/native-05.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/native-06.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/native-07.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/native-fallback-negative.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/native-original-ui.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/pre-correction-final-gates.json
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/pre-final-gates.json
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/route-tree-built.txt
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/route-tree-proof.mjs
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/run-gate.py
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/semantic-proof.mjs
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/type-01.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/type-02.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/type-final-fallback-corrected.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/type-final.log
+?? .trellis/tasks/10-08-src-remediation-d/tools/d06/ui.py
+?? .trellis/tasks/10-08-src-remediation-d/tools/prepare-unit-context.py
+?? .trellis/tasks/10-08-src-remediation-d/tools/render-commit-plan.py
+?? .trellis/tasks/10-08-src-remediation-d/tools/scan-unit-v2.mjs
+?? .trellis/tasks/10-08-src-remediation-d/tools/scan-unit.mjs
+?? .trellis/tasks/10-08-src-remediation-d/tools/summarize-gate.py
+?? .trellis/tasks/10-08-src-remediation-d/tools/verify-batch.py
+?? .trellis/tasks/10-08-src-remediation-d/tools/verify-reviewed-files.py
+?? src/components/agent/chatExecutionFlows.ts
+?? src/components/agent/useChatExecutionSession.ts
+?? src/components/agent/useChatSelection.ts
+?? src/components/audio/audioSelection.ts
+?? src/components/music/switchMusicVariant.ts
+?? src/components/shots/ShotRelationsEditor.tsx
+?? src/components/shots/ShotRow.tsx
+?? src/components/shots/shotColumnFields.ts
+?? src/components/shots/shotEditorCommands.ts
+?? src/components/shots/useShotEditorKeyboard.ts
+?? src/components/studio/importStudioProject.ts
+?? src/components/workspace/ProjectHomePage.tsx
+?? src/db/agentContextPreview.ts
+?? src/db/agentGenerationTarget.ts
+?? src/db/agentTaskGuards.ts
+?? src/db/assetReuse.ts
+?? src/db/assets.ts
+?? src/db/cascadeCommands.ts
+?? src/db/chat.ts
+?? src/db/connectors.ts
+?? src/db/episodes.ts
+?? src/db/media.ts
+?? src/db/productionRecords.ts
+?? src/db/productionShared.ts
+?? src/db/projects.ts
+?? src/db/shots.ts
+?? src/domain/agentToolSelection.ts
+?? src/domain/generationCapabilities.ts
+?? src/lib/agent/generationPreparation.ts
+?? src/lib/agent/toolDefinition.ts
+?? src/lib/ai/baseUrl.ts
+?? src/lib/ai/requestBoundary.ts
+?? src/lib/audio/buffers.ts
+?? src/lib/audio/exportMix.ts
+?? src/lib/packages/audioPackageCodec.ts
+?? src/lib/packages/packageError.ts
+?? src/lib/packages/projectPackageCodec.ts
+?? tests/contextPreviewSnapshot.test.ts
+?? tests/d01DependencyBoundaries.test.ts
+?? tests/d02CascadeTransactions.test.ts
+?? tests/d03AudioCommands.test.ts
+?? tests/d03ChatOwners.test.ts
+?? tests/d03ShotCommands.test.ts
+?? tests/d05BusinessBranches.test.ts
+?? tests/d05SchemaEquivalence.test.ts
+?? tests/d05ToolCatalog.test.ts
+?? tests/d05ToolMetadata.test.ts
+?? tests/d06Capabilities.test.ts
+?? tests/d07RequestBoundary.test.ts
+?? tests/d07RequestWire.test.ts
+?? tests/fixtures/d01/harness.ts
+?? tests/fixtures/d02/harness.ts
+?? tests/fixtures/d02/index.html
+?? tests/fixtures/d03/harness.tsx
+?? tests/fixtures/d03/index.html
+?? tests/fixtures/d04/harness.tsx
+?? tests/fixtures/d04/index.html
+?? tests/fixtures/d05/catalog.json
+?? tests/fixtures/d06/harness.tsx
+?? tests/fixtures/d06/index.html
+?? tests/helpers/registeredTools.ts
+?? tests/typecheck/agentToolDefinition.ts
+?? tests/typecheck/tsconfig.agent-tools.json

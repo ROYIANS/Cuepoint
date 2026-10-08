@@ -1,0 +1,9 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+
+ Test Files  9 passed (9)
+      Tests  125 passed (125)
+   Start at  12:19:13
+   Duration  1.56s (tests 38%, transform 38%, import 16%, setup 7%)
+

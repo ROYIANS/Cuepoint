@@ -1,0 +1,13 @@
+
+> cuepoint@0.1.0 test /private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/aifenjing-d-final-fixture-archive-9k1ljo2h
+> vitest run tests/d05SchemaEquivalence.test.ts tests/d06Capabilities.test.ts tests/d07RequestWire.test.ts tests/memoryRetrieval.test.ts tests/d05ToolCatalog.test.ts --maxWorkers 4
+
+
+ RUN  v5.0.1 /private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/aifenjing-d-final-fixture-archive-9k1ljo2h
+
+
+ Test Files  5 passed (5)
+      Tests  53 passed (53)
+   Start at  15:34:21
+   Duration  942ms (transform 47%, tests 34%, import 11%, setup 8%)
+

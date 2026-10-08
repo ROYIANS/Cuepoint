@@ -1,0 +1,30 @@
+{
+  "unresolvedFirstAdded": [],
+  "addedNoncomplexity": [],
+  "metricDiagnostics": [
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'AgentChatInner' has a complexity of 104. Maximum allowed is 20.",
+      "line": 56,
+      "column": 1,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 56,
+      "endColumn": 24
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 57 to the 20 allowed.",
+      "line": 56,
+      "column": 10,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 56,
+      "endColumn": 24
+    }
+  ]
+}

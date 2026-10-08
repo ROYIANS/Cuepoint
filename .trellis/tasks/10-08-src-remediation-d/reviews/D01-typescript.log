@@ -1,0 +1,6 @@
+
+> cuepoint@0.1.0 lint /Users/xiaomengdao/WebstormProjects/aifenjing
+> tsc -b --pretty false
+
+src/lib/agent/generationRuntime.ts(19,1): error TS6133: 'targetRevision' is declared but its value is never read.
+ ELIFECYCLE  Command failed with exit code 2.

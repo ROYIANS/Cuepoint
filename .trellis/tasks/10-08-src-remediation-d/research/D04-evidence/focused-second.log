@@ -1,0 +1,32 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/contextPreviewSnapshot.test.ts (15 tests | 1 failed) 147ms
+   ❯ actual context trigger and presentational panel (1)
+     × shares the same ready result with panel/memory details and hides retained ready/error/empty results for every identity 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/contextPreviewSnapshot.test.ts > actual context trigger and presentational panel > shares the same ready result with panel/memory details and hides retained ready/error/empty results for every identity
+ReferenceError: document is not defined
+ ❯ Module.ContextUsageTrigger src/components/agent/ContextUsagePanel.tsx:385:32
+    383|                 </Popover.Trigger>
+    384|                 <Popover.Portal
+    385|                     container={document.querySelector<HTMLElement>(".a…
+       |                                ^
+    386|                 >
+    387|                     <Popover.Content
+ ❯ tests/contextPreviewSnapshot.test.ts:179:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 8 passed (9)
+      Tests  1 failed | 124 passed (125)
+   Start at  12:17:56
+   Duration  1.66s (transform 41%, tests 35%, import 17%, setup 8%)
+
+  Transform  transforming modules took 2.20s · 41% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

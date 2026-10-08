@@ -1,0 +1,3 @@
+stderr | tests/b02MemoryPromotion.test.ts > B02 actual promotion and editor sessions > accepts one promotion and one save after initial effect cleanup/setup replay
+MemoryEditor: `key` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://react.dev/link/special-props)
+

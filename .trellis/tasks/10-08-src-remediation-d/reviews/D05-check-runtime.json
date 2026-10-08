@@ -1,0 +1,368 @@
+{
+  "registered": 89,
+  "originalCatalogSha256": "e65fd7347d3f0f4f7558d0ce013a388085e026fa4c7528896391358b190a3f21",
+  "currentCatalogSha256": "e65fd7347d3f0f4f7558d0ce013a388085e026fa4c7528896391358b190a3f21",
+  "fixtureCatalogSha256": "e65fd7347d3f0f4f7558d0ce013a388085e026fa4c7528896391358b190a3f21",
+  "parserCases": 3212,
+  "perTool": [
+    {
+      "name": "workspace_overview",
+      "cases": 7
+    },
+    {
+      "name": "update_run_plan",
+      "cases": 22
+    },
+    {
+      "name": "ip_search",
+      "cases": 39
+    },
+    {
+      "name": "ip_read",
+      "cases": 50
+    },
+    {
+      "name": "ip_create",
+      "cases": 63
+    },
+    {
+      "name": "ip_update",
+      "cases": 29
+    },
+    {
+      "name": "ip_set_archived",
+      "cases": 29
+    },
+    {
+      "name": "project_bind_ip",
+      "cases": 21
+    },
+    {
+      "name": "audio_read",
+      "cases": 86
+    },
+    {
+      "name": "audio_create",
+      "cases": 7
+    },
+    {
+      "name": "audio_update",
+      "cases": 7
+    },
+    {
+      "name": "audio_place_take",
+      "cases": 69
+    },
+    {
+      "name": "audio_edit_clip",
+      "cases": 37
+    },
+    {
+      "name": "audio_split_clip",
+      "cases": 43
+    },
+    {
+      "name": "audio_remove_clip",
+      "cases": 33
+    },
+    {
+      "name": "music_read",
+      "cases": 73
+    },
+    {
+      "name": "music_save_draft",
+      "cases": 39
+    },
+    {
+      "name": "music_update_work",
+      "cases": 37
+    },
+    {
+      "name": "music_reuse_work",
+      "cases": 33
+    },
+    {
+      "name": "audio_generation_capabilities",
+      "cases": 7
+    },
+    {
+      "name": "audio_generate_speech",
+      "cases": 104
+    },
+    {
+      "name": "music_generate",
+      "cases": 41
+    },
+    {
+      "name": "audio_generation_check",
+      "cases": 23
+    },
+    {
+      "name": "material_search",
+      "cases": 82
+    },
+    {
+      "name": "material_read",
+      "cases": 45
+    },
+    {
+      "name": "material_read_text",
+      "cases": 45
+    },
+    {
+      "name": "material_read_image",
+      "cases": 33
+    },
+    {
+      "name": "material_update_metadata",
+      "cases": 29
+    },
+    {
+      "name": "material_promote",
+      "cases": 43
+    },
+    {
+      "name": "material_use",
+      "cases": 33
+    },
+    {
+      "name": "material_update_use",
+      "cases": 25
+    },
+    {
+      "name": "material_archive",
+      "cases": 29
+    },
+    {
+      "name": "material_release",
+      "cases": 15
+    },
+    {
+      "name": "load_tool_groups",
+      "cases": 22
+    },
+    {
+      "name": "task_read",
+      "cases": 51
+    },
+    {
+      "name": "task_create",
+      "cases": 44
+    },
+    {
+      "name": "task_update",
+      "cases": 47
+    },
+    {
+      "name": "task_record_write",
+      "cases": 81
+    },
+    {
+      "name": "task_record_read",
+      "cases": 45
+    },
+    {
+      "name": "business_search",
+      "cases": 68
+    },
+    {
+      "name": "business_detail",
+      "cases": 48
+    },
+    {
+      "name": "business_read_relations",
+      "cases": 76
+    },
+    {
+      "name": "business_read_text",
+      "cases": 76
+    },
+    {
+      "name": "project_create",
+      "cases": 54
+    },
+    {
+      "name": "project_update",
+      "cases": 19
+    },
+    {
+      "name": "project_delete",
+      "cases": 15
+    },
+    {
+      "name": "episode_create",
+      "cases": 19
+    },
+    {
+      "name": "episode_update",
+      "cases": 27
+    },
+    {
+      "name": "episode_delete",
+      "cases": 23
+    },
+    {
+      "name": "beat_create",
+      "cases": 27
+    },
+    {
+      "name": "beat_update",
+      "cases": 35
+    },
+    {
+      "name": "beat_delete",
+      "cases": 31
+    },
+    {
+      "name": "shot_create",
+      "cases": 45
+    },
+    {
+      "name": "shot_update",
+      "cases": 35
+    },
+    {
+      "name": "shot_delete",
+      "cases": 31
+    },
+    {
+      "name": "character_create",
+      "cases": 19
+    },
+    {
+      "name": "character_update",
+      "cases": 27
+    },
+    {
+      "name": "character_delete",
+      "cases": 23
+    },
+    {
+      "name": "scene_create",
+      "cases": 19
+    },
+    {
+      "name": "scene_update",
+      "cases": 27
+    },
+    {
+      "name": "scene_delete",
+      "cases": 23
+    },
+    {
+      "name": "prop_create",
+      "cases": 19
+    },
+    {
+      "name": "prop_update",
+      "cases": 27
+    },
+    {
+      "name": "prop_delete",
+      "cases": 23
+    },
+    {
+      "name": "style_create",
+      "cases": 19
+    },
+    {
+      "name": "style_update",
+      "cases": 27
+    },
+    {
+      "name": "style_delete",
+      "cases": 23
+    },
+    {
+      "name": "asset_copy_from_studio",
+      "cases": 35
+    },
+    {
+      "name": "creative_duplicate",
+      "cases": 45
+    },
+    {
+      "name": "creative_reorder",
+      "cases": 41
+    },
+    {
+      "name": "slot_update",
+      "cases": 56
+    },
+    {
+      "name": "media_delete_orphan",
+      "cases": 23
+    },
+    {
+      "name": "prepare_generation_batch",
+      "cases": 22
+    },
+    {
+      "name": "read_generation_batch",
+      "cases": 15
+    },
+    {
+      "name": "generation_capabilities",
+      "cases": 15
+    },
+    {
+      "name": "submit_generation",
+      "cases": 52
+    },
+    {
+      "name": "check_generation",
+      "cases": 15
+    },
+    {
+      "name": "apply_generation",
+      "cases": 15
+    },
+    {
+      "name": "list_generation_jobs",
+      "cases": 7
+    },
+    {
+      "name": "memory_search",
+      "cases": 25
+    },
+    {
+      "name": "memory_read",
+      "cases": 45
+    },
+    {
+      "name": "project_history_search",
+      "cases": 25
+    },
+    {
+      "name": "project_history_read",
+      "cases": 59
+    },
+    {
+      "name": "discover_project_images",
+      "cases": 91
+    },
+    {
+      "name": "project_reference_search",
+      "cases": 25
+    },
+    {
+      "name": "project_reference_read",
+      "cases": 45
+    },
+    {
+      "name": "read_project_image",
+      "cases": 31
+    },
+    {
+      "name": "web_search",
+      "cases": 37
+    },
+    {
+      "name": "web_read",
+      "cases": 15
+    }
+  ],
+  "serializerCases": 10,
+  "outputAndIssueByteEquality": true,
+  "limitation": "Finite boundary matrix; unchanged parser/refinement source and original entry provenance provide complementary evidence. No tool execution or provider requests."
+}

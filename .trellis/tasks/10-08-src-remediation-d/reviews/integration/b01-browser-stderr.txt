@@ -1,0 +1,1 @@
+[BABEL] Note: The code generator has deoptimised the styling of /var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/b01-vite-cache-BPRLlv/deps/react-dom_client.js?v=a12380e5 as it exceeds the max of 500KB.

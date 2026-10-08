@@ -1,0 +1,10 @@
+
+> cuepoint@0.1.0 lint /Users/xiaomengdao/WebstormProjects/aifenjing
+> tsc -b --pretty false
+
+src/lib/agent/businessTools.ts(82,3): error TS6133: 'listBusinessRecords' is declared but its value is never read.
+src/lib/agent/businessTools.ts(344,75): error TS18046: 'shot.characterIds' is of type 'unknown'.
+src/lib/agent/businessTools.ts(344,191): error TS2339: Property 'includes' does not exist on type '{}'.
+src/lib/agent/generationSelection.ts(30,76): error TS2339: Property 'removeDefault' does not exist on type 'ZodType<{ mode?: "text" | "reference" | "frames" | undefined; version?: "flare" | "sunburst" | undefined; size?: string | undefined; duration?: number | undefined; resolution?: string | undefined; aspectRatio?: string | undefined; quality?: "auto" | ... 5 more ... | undefined; }, ZodTypeDef, unknown>'.
+src/lib/agent/generationSelection.ts(58,9): error TS18046: 'preference.parameters' is of type 'unknown'.
+ ELIFECYCLE  Command failed with exit code 2.

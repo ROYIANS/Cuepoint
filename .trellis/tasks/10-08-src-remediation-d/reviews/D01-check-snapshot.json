@@ -1,0 +1,732 @@
+{
+  "unit": "D01",
+  "role": "trellis-check",
+  "status": "PASS",
+  "capturedAt": "2026-10-08T02:29:00.823422+00:00",
+  "baselineRevision": "f062d694e61da6bcb574f7fb548803b9e54197eb",
+  "currentHEAD": "abb7a91d255666fc8f772cddecd66676b9f2848c",
+  "reviewBoundary": "All 15 implementation after paths: 12 src, 2 tests/fixtures, 1 task native runner. Additional checker runner/evidence are separate artifacts. Technical acceptance, not commit approval.",
+  "productPaths": [
+    "src/db/agentGenerationBatches.ts",
+    "src/db/agentTaskRecords.ts",
+    "src/db/agentTasks.ts",
+    "src/db/agentTools.ts",
+    "src/lib/agent/generationRuntime.ts",
+    "src/lib/agent/toolLoading.ts",
+    "src/db/agentFinishingCheck.ts",
+    "src/db/agentProjectCreation.ts",
+    "src/domain/agentToolSelection.ts",
+    "src/db/agentGenerationTarget.ts",
+    "src/db/agentTaskGuards.ts",
+    "src/lib/agent/generationPreparation.ts",
+    "tests/d01DependencyBoundaries.test.ts",
+    "tests/fixtures/d01/harness.ts"
+  ],
+  "scopePaths": [
+    "src/db/agentGenerationBatches.ts",
+    "src/db/agentTaskRecords.ts",
+    "src/db/agentTasks.ts",
+    "src/db/agentTools.ts",
+    "src/lib/agent/generationRuntime.ts",
+    "src/lib/agent/toolLoading.ts",
+    "src/db/agentFinishingCheck.ts",
+    "src/db/agentProjectCreation.ts",
+    "src/domain/agentToolSelection.ts",
+    "src/db/agentGenerationTarget.ts",
+    "src/db/agentTaskGuards.ts",
+    "src/lib/agent/generationPreparation.ts",
+    "tests/d01DependencyBoundaries.test.ts",
+    "tests/fixtures/d01/harness.ts",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-native-regression.mjs"
+  ],
+  "before": {
+    "src/db/agentGenerationBatches.ts": "15da94e10a2b46600b616b39ad5be1fd60862c7aeaf800423af71b93a8d64d99",
+    "src/db/agentTaskRecords.ts": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+    "src/db/agentTasks.ts": "6d45437549027d4a11d6cfe68f34ceaeeaf284bb3351e68c0f16f9142cc4cc95",
+    "src/db/agentTools.ts": "61cc501686e8c0ccac5221cc84bfc14168be36ea1c483f01c432c46cfe60a50a",
+    "src/lib/agent/generationRuntime.ts": "3b8666ffe35474cd811cc34ae55290526a11ca14b9ac0b212d6d19ee49b6fb86",
+    "src/lib/agent/toolLoading.ts": "8543e884202c7d1b6b853297280e2c7ca9d4317dd17002a28c71a8bec8c92261",
+    "src/db/agentFinishingCheck.ts": "f2cbdc26539e013b3f6341eea1b3b5508ef695e859db68a67105b0487b0fbd12",
+    "src/db/agentProjectCreation.ts": "eb3c19cd5542f2ff4c82b49cb270c523ecf7f52ba012c65a07c794041f4eea48",
+    "src/domain/agentToolSelection.ts": null,
+    "src/db/agentGenerationTarget.ts": null,
+    "src/db/agentTaskGuards.ts": null,
+    "src/lib/agent/generationPreparation.ts": null,
+    "tests/d01DependencyBoundaries.test.ts": null,
+    "tests/fixtures/d01/harness.ts": null,
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-native-regression.mjs": null
+  },
+  "reviewEntry": {
+    "src/db/agentGenerationBatches.ts": "13ab30f0e1ad917f964041d2e1dac914c2277a584e890419966ed7c7ac61a62e",
+    "src/db/agentTaskRecords.ts": "818022669a64f4fe8cf55c0e285582a62d196ab953fd357b47f027f65320533d",
+    "src/db/agentTasks.ts": "837fbd04efd0ea2aa07c6570beb9e88722d3cf62e0a37a4d1e4cc58b0b2edca6",
+    "src/db/agentTools.ts": "51fc482601a428161a348d750c5b478c036275fb07ac548ef9ea339497022299",
+    "src/lib/agent/generationRuntime.ts": "34f5eaa76d2d1001c1c15571c00a77faacb8719c01ebe44eb2b1a1a172951087",
+    "src/lib/agent/toolLoading.ts": "1599a871d8e10e822237b1cac3f7eed517254e6fd5f8db281a9dc6cde660851e",
+    "src/db/agentFinishingCheck.ts": "6410fb3478e6675eefb0a1d215bccb5e9d1271ba18b5bf89f6c1a4c0df903c59",
+    "src/db/agentProjectCreation.ts": "43a3bb9a90089c1a4ffa4f0cf9cc0a52769a781e99ac84b6ef8a582ff6462951",
+    "src/domain/agentToolSelection.ts": "2efea8c45ad514225a5c22d78ccd1ecf5525cab7e88d175070a8a53b86eaa097",
+    "src/db/agentGenerationTarget.ts": "7fe43005a118308586ba832d00c459a90a772f525b901e6d4cdfd4d13fdebd18",
+    "src/db/agentTaskGuards.ts": "8df6820136145e10a82aef4c1db89d7c763150858fa96661b92b35a259cd6e7c",
+    "src/lib/agent/generationPreparation.ts": "4447b50240976b0beef00d0e2b706344542ba35c222c8e475a4a43ec6e581d80",
+    "tests/d01DependencyBoundaries.test.ts": "ae3aa2a154c44fb17cffaff5a68d867eac66efd1aa3faa68606cc0ce97b42f73",
+    "tests/fixtures/d01/harness.ts": "fd844cf682f1a6e58946cf52f67757f750be7c23114092cf5483812ccaf33218",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-native-regression.mjs": "df360e2198c9ed6844d28f1c1d38268014daa1a0dde37d8e265dc47c55e842d0"
+  },
+  "after": {
+    "src/db/agentGenerationBatches.ts": "13ab30f0e1ad917f964041d2e1dac914c2277a584e890419966ed7c7ac61a62e",
+    "src/db/agentTaskRecords.ts": "818022669a64f4fe8cf55c0e285582a62d196ab953fd357b47f027f65320533d",
+    "src/db/agentTasks.ts": "837fbd04efd0ea2aa07c6570beb9e88722d3cf62e0a37a4d1e4cc58b0b2edca6",
+    "src/db/agentTools.ts": "51fc482601a428161a348d750c5b478c036275fb07ac548ef9ea339497022299",
+    "src/lib/agent/generationRuntime.ts": "34f5eaa76d2d1001c1c15571c00a77faacb8719c01ebe44eb2b1a1a172951087",
+    "src/lib/agent/toolLoading.ts": "1599a871d8e10e822237b1cac3f7eed517254e6fd5f8db281a9dc6cde660851e",
+    "src/db/agentFinishingCheck.ts": "6410fb3478e6675eefb0a1d215bccb5e9d1271ba18b5bf89f6c1a4c0df903c59",
+    "src/db/agentProjectCreation.ts": "43a3bb9a90089c1a4ffa4f0cf9cc0a52769a781e99ac84b6ef8a582ff6462951",
+    "src/domain/agentToolSelection.ts": "2efea8c45ad514225a5c22d78ccd1ecf5525cab7e88d175070a8a53b86eaa097",
+    "src/db/agentGenerationTarget.ts": "7fe43005a118308586ba832d00c459a90a772f525b901e6d4cdfd4d13fdebd18",
+    "src/db/agentTaskGuards.ts": "8df6820136145e10a82aef4c1db89d7c763150858fa96661b92b35a259cd6e7c",
+    "src/lib/agent/generationPreparation.ts": "4447b50240976b0beef00d0e2b706344542ba35c222c8e475a4a43ec6e581d80",
+    "tests/d01DependencyBoundaries.test.ts": "ae3aa2a154c44fb17cffaff5a68d867eac66efd1aa3faa68606cc0ce97b42f73",
+    "tests/fixtures/d01/harness.ts": "fd844cf682f1a6e58946cf52f67757f750be7c23114092cf5483812ccaf33218",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-native-regression.mjs": "df360e2198c9ed6844d28f1c1d38268014daa1a0dde37d8e265dc47c55e842d0"
+  },
+  "checkerChangedFiles": [],
+  "corrections": [],
+  "blockers": [],
+  "checkerArtifactFiles": [
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check.md",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-entry.json",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-body-comparison.json",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-native.mjs",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-native.log",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-native-seed-attempt.log",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-ast.log",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-source-freeze.json",
+    ".trellis/tasks/10-08-src-remediation-d/research/D01-check-ast-results.json",
+    ".trellis/tasks/10-08-src-remediation-d/research/D01-check-ast-summary.json",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-snapshot.json"
+  ],
+  "additionalCheckerRunner": {
+    "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-native.mjs",
+    "before": null,
+    "after": "de53fdc34552cba07c6e6ece58e7e7ebb7ec479e097a75407b8688bdcd58fff1"
+  },
+  "perFileCoverage": {
+    "src/db/agentGenerationBatches.ts": {
+      "reviewed": true,
+      "before": "15da94e10a2b46600b616b39ad5be1fd60862c7aeaf800423af71b93a8d64d99",
+      "reviewEntry": "13ab30f0e1ad917f964041d2e1dac914c2277a584e890419966ed7c7ac61a62e",
+      "after": "13ab30f0e1ad917f964041d2e1dac914c2277a584e890419966ed7c7ac61a62e",
+      "coverage": "All command bodies and actual preparation/target/input callers; ownership, CAS, replay, sibling revisions/history, native history-failure rollback."
+    },
+    "src/db/agentTaskRecords.ts": {
+      "reviewed": true,
+      "before": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+      "reviewEntry": "818022669a64f4fe8cf55c0e285582a62d196ab953fd357b47f027f65320533d",
+      "after": "818022669a64f4fe8cf55c0e285582a62d196ab953fd357b47f027f65320533d",
+      "coverage": "All record/source/version bodies; manual guarded atomic save, source validation/CAS/dedup/history and preserved C01/audio evidence."
+    },
+    "src/db/agentTasks.ts": {
+      "reviewed": true,
+      "before": "6d45437549027d4a11d6cfe68f34ceaeeaf284bb3351e68c0f16f9142cc4cc95",
+      "reviewEntry": "837fbd04efd0ea2aa07c6570beb9e88722d3cf62e0a37a4d1e4cc58b0b2edca6",
+      "after": "837fbd04efd0ea2aa07c6570beb9e88722d3cf62e0a37a4d1e4cc58b0b2edca6",
+      "coverage": "All commands and old guard body; task/thread/project/busy/preparing checks, requirement revision/history, completion/lifecycle and pinning."
+    },
+    "src/db/agentTools.ts": {
+      "reviewed": true,
+      "before": "61cc501686e8c0ccac5221cc84bfc14168be36ea1c483f01c432c46cfe60a50a",
+      "reviewEntry": "51fc482601a428161a348d750c5b478c036275fb07ac548ef9ea339497022299",
+      "after": "51fc482601a428161a348d750c5b478c036275fb07ac548ef9ea339497022299",
+      "coverage": "All ledger/approval/resume/plan/atomic bodies; frozen request offers and historical call checks; real native single ledger rollback."
+    },
+    "src/lib/agent/generationRuntime.ts": {
+      "reviewed": true,
+      "before": "3b8666ffe35474cd811cc34ae55290526a11ca14b9ac0b212d6d19ee49b6fb86",
+      "reviewEntry": "34f5eaa76d2d1001c1c15571c00a77faacb8719c01ebe44eb2b1a1a172951087",
+      "after": "34f5eaa76d2d1001c1c15571c00a77faacb8719c01ebe44eb2b1a1a172951087",
+      "coverage": "All runtime bodies and moved baseline bodies; single/paid/same-call/preflight/query/apply callers, bounds and nested atomic lifetime."
+    },
+    "src/lib/agent/toolLoading.ts": {
+      "reviewed": true,
+      "before": "8543e884202c7d1b6b853297280e2c7ca9d4317dd17002a28c71a8bec8c92261",
+      "reviewEntry": "1599a871d8e10e822237b1cac3f7eed517254e6fd5f8db281a9dc6cde660851e",
+      "after": "1599a871d8e10e822237b1cac3f7eed517254e6fd5f8db281a9dc6cde660851e",
+      "coverage": "Constants and compatibility exports, create/discover/refresh bodies, actual DB/runtime/UI callers, pinning/limits and paired protocol envelopes."
+    },
+    "src/db/agentFinishingCheck.ts": {
+      "reviewed": true,
+      "before": "f2cbdc26539e013b3f6341eea1b3b5508ef695e859db68a67105b0487b0fbd12",
+      "reviewEntry": "6410fb3478e6675eefb0a1d215bccb5e9d1271ba18b5bf89f6c1a4c0df903c59",
+      "after": "6410fb3478e6675eefb0a1d215bccb5e9d1271ba18b5bf89f6c1a4c0df903c59",
+      "coverage": "Import-only diff and complete plan/ownership/step/budget/once-only/protocol save body."
+    },
+    "src/db/agentProjectCreation.ts": {
+      "reviewed": true,
+      "before": "eb3c19cd5542f2ff4c82b49cb270c523ecf7f52ba012c65a07c794041f4eea48",
+      "reviewEntry": "43a3bb9a90089c1a4ffa4f0cf9cc0a52769a781e99ac84b6ef8a582ff6462951",
+      "after": "43a3bb9a90089c1a4ffa4f0cf9cc0a52769a781e99ac84b6ef8a582ff6462951",
+      "coverage": "Import-only diff and complete creation approval/reference/history/binding/loaded-tool-ceiling bodies."
+    },
+    "src/domain/agentToolSelection.ts": {
+      "reviewed": true,
+      "before": null,
+      "reviewEntry": "2efea8c45ad514225a5c22d78ccd1ecf5525cab7e88d175070a8a53b86eaa097",
+      "after": "2efea8c45ad514225a5c22d78ccd1ecf5525cab7e88d175070a8a53b86eaa097",
+      "coverage": "Entire pure leaf versus exact baseline selectors/constants; actual DB owners plus runtime/UI compatibility consumers."
+    },
+    "src/db/agentGenerationTarget.ts": {
+      "reviewed": true,
+      "before": null,
+      "reviewEntry": "7fe43005a118308586ba832d00c459a90a772f525b901e6d4cdfd4d13fdebd18",
+      "after": "7fe43005a118308586ba832d00c459a90a772f525b901e6d4cdfd4d13fdebd18",
+      "coverage": "Entire target dispatch/ownership/episode/slot/revision/label behavior versus baseline; all actual readers and native nested writes/rollback."
+    },
+    "src/db/agentTaskGuards.ts": {
+      "reviewed": true,
+      "before": null,
+      "reviewEntry": "8df6820136145e10a82aef4c1db89d7c763150858fa96661b92b35a259cd6e7c",
+      "after": "8df6820136145e10a82aef4c1db89d7c763150858fa96661b92b35a259cd6e7c",
+      "coverage": "Entire identical read-only moved guard, task/manual-record callers and transaction scope; busy/deleted/preparing gate and recovery."
+    },
+    "src/lib/agent/generationPreparation.ts": {
+      "reviewed": true,
+      "before": null,
+      "reviewEntry": "4447b50240976b0beef00d0e2b706344542ba35c222c8e475a4a43ec6e581d80",
+      "after": "4447b50240976b0beef00d0e2b706344542ba35c222c8e475a4a43ec6e581d80",
+      "coverage": "Entire preparation/connector/media/header/hash/reload behavior versus baseline; actual caller transaction boundaries, error order/byte limits/stale/fingerprint."
+    },
+    "tests/d01DependencyBoundaries.test.ts": {
+      "reviewed": true,
+      "before": null,
+      "reviewEntry": "ae3aa2a154c44fb17cffaff5a68d867eac66efd1aa3faa68606cc0ce97b42f73",
+      "after": "ae3aa2a154c44fb17cffaff5a68d867eac66efd1aa3faa68606cc0ce97b42f73",
+      "coverage": "All three real-entry regressions; no copied algorithms or default timeout changes."
+    },
+    "tests/fixtures/d01/harness.ts": {
+      "reviewed": true,
+      "before": null,
+      "reviewEntry": "fd844cf682f1a6e58946cf52f67757f750be7c23114092cf5483812ccaf33218",
+      "after": "fd844cf682f1a6e58946cf52f67757f750be7c23114092cf5483812ccaf33218",
+      "coverage": "Entire seed/offer/observer/single/batch/guard fixture, restoration and caller-transaction rollback; native writer paths verified."
+    },
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-native-regression.mjs": {
+      "reviewed": true,
+      "before": null,
+      "reviewEntry": "df360e2198c9ed6844d28f1c1d38268014daa1a0dde37d8e265dc47c55e842d0",
+      "after": "df360e2198c9ed6844d28f1c1d38268014daa1a0dde37d8e265dc47c55e842d0",
+      "coverage": "Entire implementation native driver including local-only requests, browser errors, real fixture invocation and cleanup."
+    }
+  },
+  "sourceFreeze": {
+    "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-source-freeze.json",
+    "sha256": "dd00e5cea600b7809b2a7000618abe7af8b6322fcb15f5285ce07142af7b0e97",
+    "canonicalMapDigest": "4d41dbef9d9ea060a1d5e92a2291ed885f1481bdebe6248d9e1b03175d1f2bbd",
+    "sourceTSFiles": 383,
+    "focusedTestFiles": 25,
+    "handoffCurrentMatches": true,
+    "entryToFinalProductChanges": [],
+    "testAndConfigBaselineMatches": {
+      "tests/toolLoading.test.ts": true,
+      "tests/toolLoadingMeasurement.test.ts": true,
+      "tests/agentFinishingCheck.test.ts": true,
+      "tests/agentProjectCreation.test.ts": true,
+      "tests/agentToolTransactions.test.ts": true,
+      "tests/agentTools.test.ts": true,
+      "tests/agentToolsReview.test.ts": true,
+      "tests/audioAgentExecution.test.ts": true,
+      "tests/agentGeneration.test.ts": true,
+      "tests/agentGenerationReview.test.ts": true,
+      "tests/agentGenerationReviewTransactions.test.ts": true,
+      "tests/agentGenerationRecovery.test.ts": true,
+      "tests/agentGenerationBatch.test.ts": true,
+      "tests/agentGenerationBatchSafety.test.ts": true,
+      "tests/agentBatchPreparationRecovery.test.ts": true,
+      "tests/agentTasks.test.ts": true,
+      "tests/agentTaskOrchestration.test.ts": true,
+      "tests/agentTaskOrchestrationReview.test.ts": true,
+      "tests/agentTaskWrapup.test.ts": true,
+      "tests/agentAuditRemediation.test.ts": true,
+      "tests/audioGenerationAgent.test.ts": true,
+      "tests/audioGenerationRecoveryAudit.test.ts": true,
+      "tests/audioTaskEvidence.test.ts": true,
+      "tests/agentGenerationEvidence.test.ts": true,
+      "package.json": true,
+      "pnpm-lock.yaml": true,
+      "tsconfig.json": true,
+      "tsconfig.app.json": true,
+      "tsconfig.node.json": true,
+      "vitest.config.ts": true,
+      "tests/setup.ts": true,
+      "scripts/c01-browser-regression.mjs": true,
+      "tests/fixtures/c01/harness.ts": true,
+      "tests/fixtures/c01/index.html": true,
+      "tests/helpers/toolDispatch.ts": true
+    }
+  },
+  "bodyComparison": {
+    "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-body-comparison.json",
+    "existingOwnerFunctions": 80,
+    "byteIdenticalBodies": 79,
+    "connectorRenameOnly": [
+      {
+        "file": "src/lib/agent/generationRuntime.ts",
+        "name": "checkAgentGeneration",
+        "unchanged": false,
+        "onlyConnectorRename": true
+      }
+    ],
+    "otherChangedOwnerBodies": [],
+    "verbatimMovedBodies": [
+      {
+        "from": "src/lib/agent/toolLoading.ts",
+        "to": "src/domain/agentToolSelection.ts",
+        "name": "getOfferedToolNames",
+        "afterName": "getOfferedToolNames",
+        "bodyIdentical": true
+      },
+      {
+        "from": "src/lib/agent/toolLoading.ts",
+        "to": "src/domain/agentToolSelection.ts",
+        "name": "toolNamesForCall",
+        "afterName": "toolNamesForCall",
+        "bodyIdentical": true
+      },
+      {
+        "from": "src/db/agentTasks.ts",
+        "to": "src/db/agentTaskGuards.ts",
+        "name": "editableAgentTask",
+        "afterName": "editableAgentTask",
+        "bodyIdentical": true
+      },
+      {
+        "from": "src/lib/agent/generationRuntime.ts",
+        "to": "src/lib/agent/generationPreparation.ts",
+        "name": "connector",
+        "afterName": "resolveGenerationConnector",
+        "bodyIdentical": true
+      },
+      {
+        "from": "src/lib/agent/generationRuntime.ts",
+        "to": "src/lib/agent/generationPreparation.ts",
+        "name": "inputRevision",
+        "afterName": "inputRevision",
+        "bodyIdentical": true
+      },
+      {
+        "from": "src/lib/agent/generationRuntime.ts",
+        "to": "src/lib/agent/generationPreparation.ts",
+        "name": "loadGenerationInputs",
+        "afterName": "loadGenerationInputs",
+        "bodyIdentical": true
+      }
+    ]
+  },
+  "static": {
+    "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D01-static-summary.json",
+    "policy": "Baseline/current separate complete-source TypeScript programs, same restored versions/rules; aggregate signatures account for unchanged function relocation; raw per-file diagnostics preserved",
+    "versions": {
+      "eslint": "9.39.5",
+      "typescript-eslint": "8.71.1",
+      "eslint-plugin-react-hooks": "7.1.1",
+      "eslint-plugin-sonarjs": "3.0.7",
+      "typescript": "5.9.2"
+    },
+    "baselineCompleteTrackedSrcFilesVerified": 402,
+    "baselineCompleteTSConfigFilesVerified": 3,
+    "baselineGitContentMismatches": [],
+    "configsSameExceptRoot": true,
+    "rawBaselineErrors": 12,
+    "baselineWarnings": 32,
+    "currentErrors": 7,
+    "currentWarnings": 25,
+    "baselineAbsentNewLeafParserDiagnostics": 4,
+    "baselineSourceRuleErrors": 8,
+    "currentSourceRuleErrors": 7,
+    "addedDiagnosticsAll": [],
+    "newLeafDiagnostics": [],
+    "invalidEarlierSameProgram101To8ExplicitlyExcluded": true,
+    "inheritedDebtStillPresent": true
+  },
+  "ast": {
+    "mainFinal": ".trellis/tasks/10-08-src-remediation-d/research/D01-current-ast-summary.json",
+    "checkerFinal": ".trellis/tasks/10-08-src-remediation-d/research/D01-check-ast-summary.json",
+    "baselineFiles": 379,
+    "baselineEdges": 2233,
+    "baselineValueSCCs": 3,
+    "currentFiles": 383,
+    "currentEdges": 2254,
+    "parseErrors": 0,
+    "staticValueSCCs": [],
+    "valueSelfEdges": [],
+    "valueCyclesIncludingDynamic": [],
+    "mainAndCheckerGraphAndMetricFieldsEqual": true,
+    "dynamicImportsUnchanged": 8
+  },
+  "acceptedImplementationCommands": [
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "tests/toolLoading.test.ts",
+        "tests/toolLoadingMeasurement.test.ts",
+        "tests/agentFinishingCheck.test.ts",
+        "tests/agentProjectCreation.test.ts",
+        "tests/agentToolTransactions.test.ts",
+        "tests/agentTools.test.ts",
+        "tests/agentToolsReview.test.ts",
+        "tests/audioAgentExecution.test.ts",
+        "tests/agentGeneration.test.ts",
+        "tests/agentGenerationReview.test.ts",
+        "tests/agentGenerationReviewTransactions.test.ts",
+        "tests/agentGenerationRecovery.test.ts",
+        "tests/agentGenerationBatch.test.ts",
+        "tests/agentGenerationBatchSafety.test.ts",
+        "tests/agentBatchPreparationRecovery.test.ts",
+        "tests/agentTasks.test.ts",
+        "tests/agentTaskOrchestration.test.ts",
+        "tests/agentTaskOrchestrationReview.test.ts",
+        "tests/agentTaskWrapup.test.ts",
+        "tests/agentAuditRemediation.test.ts",
+        "tests/audioGenerationAgent.test.ts",
+        "tests/audioGenerationRecoveryAudit.test.ts",
+        "tests/audioTaskEvidence.test.ts",
+        "tests/agentGenerationEvidence.test.ts",
+        "tests/d01DependencyBoundaries.test.ts",
+        "--maxWorkers",
+        "1"
+      ],
+      "exitCode": 0,
+      "log": "D01-final-regressions.log",
+      "result": {
+        "files": 25,
+        "passed": 490,
+        "failed": 0,
+        "existingTests": 487,
+        "newTests": 3,
+        "workerCount": 1,
+        "timeoutChanged": false
+      },
+      "evidencePath": ".trellis/tasks/10-08-src-remediation-d/reviews/D01-final-regressions.log",
+      "evidenceHash": "db286754afe64b490a848e5dd9a212f2b0e034d93d59ee90b24be5f663f747a0",
+      "acceptedFrozenEvidence": true
+    },
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "lint"
+      ],
+      "exitCode": 0,
+      "log": "D01-typescript-final.log",
+      "result": "TypeScript project build passed",
+      "evidencePath": ".trellis/tasks/10-08-src-remediation-d/reviews/D01-typescript-final.log",
+      "evidenceHash": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+      "acceptedFrozenEvidence": true
+    },
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/eslint/bin/eslint.js",
+        "--config",
+        "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/eslint.config.mjs",
+        "src/db/agentGenerationTarget.ts",
+        "src/db/agentTaskGuards.ts",
+        "src/domain/agentToolSelection.ts",
+        "src/lib/agent/generationPreparation.ts",
+        "--format",
+        "json"
+      ],
+      "exitCode": 0,
+      "log": "D01-new-leaves-eslint.json",
+      "result": {
+        "errors": 0,
+        "warnings": 0,
+        "leaves": 4
+      },
+      "evidencePath": ".trellis/tasks/10-08-src-remediation-d/reviews/D01-new-leaves-eslint.json",
+      "evidenceHash": "3580293328084044bbdbb23d0945d8a14546283996c1c6165b6f4475092ff99d",
+      "acceptedFrozenEvidence": true
+    },
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/eslint/bin/eslint.js",
+        "--config",
+        "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/eslint.config.mjs",
+        "src/db/agentGenerationBatches.ts",
+        "src/db/agentTaskRecords.ts",
+        "src/db/agentTasks.ts",
+        "src/db/agentTools.ts",
+        "src/lib/agent/generationRuntime.ts",
+        "src/lib/agent/toolLoading.ts",
+        "src/db/agentFinishingCheck.ts",
+        "src/db/agentProjectCreation.ts",
+        "src/domain/agentToolSelection.ts",
+        "src/db/agentGenerationTarget.ts",
+        "src/db/agentTaskGuards.ts",
+        "src/lib/agent/generationPreparation.ts",
+        "--format",
+        "json"
+      ],
+      "exitCode": 1,
+      "log": "D01-changed-source-eslint-final.json",
+      "result": {
+        "errors": 7,
+        "warnings": 25,
+        "interpretation": "Remaining existing-owner diagnostics; main owns the final separate-program baseline/current differential."
+      },
+      "evidencePath": ".trellis/tasks/10-08-src-remediation-d/reviews/D01-changed-source-eslint-final.json",
+      "evidenceHash": "11766b376f4e973ee39096dacf945eabef4051e491a6ea17a1225d7ab422c01e",
+      "acceptedFrozenEvidence": true
+    },
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "exec",
+        "node",
+        "scripts/c01-browser-regression.mjs"
+      ],
+      "environment": {
+        "C01_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+        "C01_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+      },
+      "exitCode": 0,
+      "log": "D01-native-c01.log",
+      "result": {
+        "checks": 6,
+        "generations": 160,
+        "calls": 161,
+        "nativeIndexedDB": true,
+        "provenanceRefused": true,
+        "externalRequests": 0,
+        "browser": "Chromium native IndexedDB",
+        "limitation": "Synthetic nonempty media metadata, no pixel decode, external provider or full product UI"
+      },
+      "evidencePath": ".trellis/tasks/10-08-src-remediation-d/reviews/D01-native-c01.log",
+      "evidenceHash": "7a89e5f007febf9db51aba6575f59a226e07578034f590947272d5ff0438ed8e",
+      "acceptedFrozenEvidence": true
+    },
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "exec",
+        "node",
+        ".trellis/tasks/10-08-src-remediation-d/reviews/D01-native-regression.mjs"
+      ],
+      "environment": {
+        "C01_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+        "C01_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+      },
+      "exitCode": 0,
+      "log": "D01-native-boundaries.log",
+      "result": {
+        "single": {
+          "hashes": 3,
+          "flushes": 3,
+          "hashOutsideTransactions": true,
+          "flushOutsideTransactions": true
+        },
+        "batch": {
+          "hashes": 4,
+          "flushes": 3,
+          "hashOutsideTransactions": true,
+          "flushOutsideTransactions": true
+        },
+        "guard": {
+          "blockedManualCommands": 2,
+          "guardRecovered": true
+        },
+        "externalRequests": 0,
+        "browser": "Chromium native IndexedDB",
+        "limitation": "Local synthetic downloaded media; no provider, decoding or full product UI"
+      },
+      "evidencePath": ".trellis/tasks/10-08-src-remediation-d/reviews/D01-native-boundaries.log",
+      "evidenceHash": "d4a353b48d4df3314e074a8f8ad6c3bdab34e31cf999a6d8d6570d207037ab81",
+      "acceptedFrozenEvidence": true
+    }
+  ],
+  "checkerCommands": [
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "exec",
+        "node",
+        ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-native.mjs"
+      ],
+      "environment": {
+        "C01_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+        "C01_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+      },
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-native.log",
+      "evidenceHash": "4937f6413c54b8d2e7d6c5b3743d9aa3ec0bea6d2bf135f69bd1c6ccbfff3ac5",
+      "result": {
+        "single": {
+          "hashes": 3,
+          "flushes": 3,
+          "hashOutsideTransactions": true,
+          "flushOutsideTransactions": true
+        },
+        "batch": {
+          "hashes": 4,
+          "flushes": 3,
+          "hashOutsideTransactions": true,
+          "flushOutsideTransactions": true
+        },
+        "guard": {
+          "blockedManualCommands": 2,
+          "guardRecovered": true
+        },
+        "singleForcedRollback": {
+          "reachedNestedSlotAndJobWrites": true,
+          "businessJobLedgerUnchanged": true
+        },
+        "batchForcedRollback": {
+          "successfulLedgerAndHistoryProven": true,
+          "reachedNestedSlotAndJobWrites": true,
+          "businessJobHistoryUnchanged": true
+        },
+        "externalRequests": 0,
+        "nativeIndexedDB": true,
+        "limitation": "Local synthetic media; no paid provider, image/video decode or product UI claim"
+      }
+    },
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        ".trellis/tasks/10-08-src-remediation-d/tools/current-source-ast.cjs",
+        "--label",
+        "D01-check"
+      ],
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-ast.log",
+      "evidenceHash": "5d3137ccbb51ec8ac93f8d6b66485a0d9080e8d2e49a5e9b487cc95d1abd264a",
+      "result": {
+        "files": 383,
+        "edges": 2254,
+        "parseErrors": 0,
+        "staticValueCycles": [],
+        "totals": {
+          "anyKeywords": 46,
+          "typeAssertions": 471,
+          "nonNullAssertions": 208,
+          "nestedTernaries": 445,
+          "emptyCatches": 16,
+          "dynamicImports": 8
+        }
+      }
+    }
+  ],
+  "checkerInspections": [
+    {
+      "method": "Python Git byte comparison against immutable complete baseline",
+      "result": "All 402 tracked src files and three tsconfigs match f062d69; static config same except root."
+    },
+    {
+      "method": "TypeScript AST owner/moved-body comparison via explicit local node stdin; output saved",
+      "result": "79 retained owner bodies identical, one connector-call rename; six exact moved bodies identical."
+    },
+    {
+      "method": "Python entry/final/hash/static/AST/source-freeze assertions",
+      "result": "15 unchanged handoff paths, 12 static hashes agree, final graph matches, test/config inputs match Git."
+    }
+  ],
+  "evidenceHashes": {
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-implement-snapshot.json": "26c1d4d79bfe507b8f3b40ccd211a4cce6da5ef860f3c538c718998faba3b628",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-handoff-hashes.json": "e5ef696c4468c876052240ab5ee5120d999004791ef13aa4ef5079f57dd8b593",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-entry-before.json": "4f94f1475f063426f352775d37d24b540070ab6ea77aef047747ca061b8c5f38",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-final-regressions.log": "db286754afe64b490a848e5dd9a212f2b0e034d93d59ee90b24be5f663f747a0",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-typescript-final.log": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-new-leaves-eslint.json": "3580293328084044bbdbb23d0945d8a14546283996c1c6165b6f4475092ff99d",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-changed-source-eslint-final.json": "11766b376f4e973ee39096dacf945eabef4051e491a6ea17a1225d7ab422c01e",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-static-summary.json": "c7f4c4e3412606af49d2164a23ebf10a35a91750e2fca56b79ef6645ca273c56",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-static-results.json": "3a5c3229b4404e1e87c8e8cd869c2798b217fd39a24fe4a05b6fc7b2ec3e325c",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-static.log": "68f839aa53a0677ae073e31fe942cf4b11d19ece26936b2eb03119568238f05a",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-native-c01.log": "7a89e5f007febf9db51aba6575f59a226e07578034f590947272d5ff0438ed8e",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-native-boundaries.log": "d4a353b48d4df3314e074a8f8ad6c3bdab34e31cf999a6d8d6570d207037ab81",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-regressions-concurrent-timeout.log": "43647d88e84c278653b79354fe89169326a722b52cb15fab45cedacce7c10fa4",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-regressions-workers4.log": "03f783afbfe846d9f6fa713e2ea7571b27faa6ec33d1672fbc99738353514984",
+    ".trellis/tasks/10-08-src-remediation-d/research/D-entry-ast-summary.json": "1fda08b628f6a1430aa10346f72153a8fd5bbb4a6b464b8d312f2904071f4549",
+    ".trellis/tasks/10-08-src-remediation-d/research/D-entry-ast-results.json": "a63d9f6aff38b4bac25eb48645cfe3857d8d8c1e8b2b7f923ef28e01e8d774d0",
+    ".trellis/tasks/10-08-src-remediation-d/research/D01-current-ast-summary.json": "5d3137ccbb51ec8ac93f8d6b66485a0d9080e8d2e49a5e9b487cc95d1abd264a",
+    ".trellis/tasks/10-08-src-remediation-d/research/D01-current-ast-results.json": "d4176277941df87925301b2f777f0373ff04b89427c52f9f05d8dfe2b3bafe1b",
+    ".trellis/tasks/10-08-src-remediation-d/research/static-runtime-eslint.config.mjs": "71fec4e76e3e26f5e21e6412d7847a5c7e0b8e828af4fba41237351faa24ccce",
+    ".trellis/tasks/10-08-src-remediation-d/research/static-runtime-package.json": "661075932589d31aedd47fb75727033dcfbacd29d1c08b7d1053df14b251550a",
+    ".trellis/tasks/10-08-src-remediation-d/research/static-runtime-pnpm-lock.yaml": "797ef4c409f40d89d1e58688f87c7e62d303354c4a1fc375938f6cf9d6a63adc",
+    ".trellis/tasks/10-08-src-remediation-d/research/static-runtime-restoration.md": "587fb846f8c64a2f2b726bd0c6ba66f99b393431bf5cd1073931571d6e9285d4",
+    ".trellis/tasks/10-08-src-remediation-d/research/D01-scope.md": "53ee22bbdf93028964d75916870329abb621f45d4adccc8b0b7cd9a97585da70",
+    ".trellis/tasks/10-08-src-remediation-d/research/D01-implementation.md": "bad0ebaf4fa4a2b01a806fc4e3f9537b3d060d72161834c84e791019d9f8606e",
+    ".trellis/tasks/10-08-src-remediation-d/tools/scan-unit.mjs": "364cd1857338d1caa49027db1a65dd330489f12a8eb7e23a796ba397b3c1fdfe",
+    ".trellis/tasks/10-08-src-remediation-d/tools/current-source-ast.cjs": "3f25ad49a5cdf457ed04c4a66d4dd338d6f46351f7727500b7b4ba50afc11268",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check.md": "c02ea86bf7412e4279b0e1f59747ed685a6191f61bca897342667083d6107407",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-entry.json": "be5a81776c5ff74e2dc37f77ceab963811c1ceddb456181217f6d230f15316c4",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-body-comparison.json": "3b6779fca9fa0a7f0a849bb67ccfcf4f66d297ed195e19a1aef41d89df5127e8",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-native.mjs": "de53fdc34552cba07c6e6ece58e7e7ebb7ec479e097a75407b8688bdcd58fff1",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-native.log": "4937f6413c54b8d2e7d6c5b3743d9aa3ec0bea6d2bf135f69bd1c6ccbfff3ac5",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-native-seed-attempt.log": "ee2fb973036f8c13ab0772c74fccbc05725b8638fe2ec3c4b2484b69eb1e261f",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-ast.log": "5d3137ccbb51ec8ac93f8d6b66485a0d9080e8d2e49a5e9b487cc95d1abd264a",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-source-freeze.json": "dd00e5cea600b7809b2a7000618abe7af8b6322fcb15f5285ce07142af7b0e97",
+    ".trellis/tasks/10-08-src-remediation-d/research/D01-check-ast-results.json": "4b3657f2ae338f78be0ebb8db54bb7152a5b2cc613c1b222e42e403dad43efbc",
+    ".trellis/tasks/10-08-src-remediation-d/research/D01-check-ast-summary.json": "5d3137ccbb51ec8ac93f8d6b66485a0d9080e8d2e49a5e9b487cc95d1abd264a",
+    "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/eslint.config.mjs": "71fec4e76e3e26f5e21e6412d7847a5c7e0b8e828af4fba41237351faa24ccce",
+    "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/baseline-f062d69/eslint.config.mjs": "a0b100e527a06d5977160bac2f77f872274e1b98b49439ab6b2103422246ec67",
+    "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/package.json": "661075932589d31aedd47fb75727033dcfbacd29d1c08b7d1053df14b251550a",
+    "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/pnpm-lock.yaml": "797ef4c409f40d89d1e58688f87c7e62d303354c4a1fc375938f6cf9d6a63adc"
+  },
+  "unchangedNativeDependencyHashes": {
+    "scripts/c01-browser-regression.mjs": {
+      "before": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+      "after": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6"
+    },
+    "tests/fixtures/c01/harness.ts": {
+      "before": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502",
+      "after": "c56489b60634ce1d4f90094c593ecbaae3025115b21a21f54bc410de91f87502"
+    },
+    "tests/helpers/toolDispatch.ts": {
+      "before": "04a8234fb4aeffae1ae618fdfbf0fe582a848d453b4a8b5ed3b3dd7013c316c0",
+      "after": "04a8234fb4aeffae1ae618fdfbf0fe582a848d453b4a8b5ed3b3dd7013c316c0"
+    }
+  },
+  "preservedAttempts": [
+    {
+      "log": "D01-regressions-concurrent-timeout.log",
+      "result": "489 passed, one existing agentTools 32-request test hit its unchanged 5000ms timeout. Concurrent native/static processes were observed; cause is not established."
+    },
+    {
+      "log": "D01-regressions-workers4.log",
+      "result": "25 files / 490 passed; superseded by final single-worker run, not additional unique tests."
+    },
+    {
+      "log": "D01-typescript.log",
+      "result": "First extraction left unused targetRevision import; removed before final TypeScript pass."
+    },
+    {
+      "log": "D01-native-boundaries-launch-failed.log",
+      "result": "Initial supplementary invocation used incorrect executable path; corrected to supplied installed Chromium, no install or source fix."
+    },
+    {
+      "log": "D01-new-leaves-eslint-pre-exhaustive-fix.json",
+      "result": "One missing explicit style case; fixed with case style/default shared original fallback, no suppression."
+    },
+    {
+      "log": ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-native-seed-attempt.log",
+      "exitCode": 1,
+      "interpretation": "Checker seed tried to redownload an already-applied job; monotonic commands retained existing result, so planned batch failure was not reached. Only checker synthetic seed corrected; product unchanged. Passing final native proves actual fault paths."
+    }
+  ],
+  "notes": [
+    "Implementation snapshot declares journal tip abb7a91; every before path independently matches canonical committed C f062d69. Frozen handoff metadata not rewritten.",
+    "Implementation report 2253-edge/pending-static checkpoint is historical; final evidence is 2254 edges and reviewed final static.",
+    "Four raw baseline errors are parser diagnostics for absent new leaf paths, not old source defects; actual source-rule errors 8 to 7.",
+    "Previous concurrent 5000ms timeout preserved; final 25/490 single-worker pass accepted at identical sources; repeats do not add unique tests or establish cause.",
+    "Helper scan-unit.mjs hash captured from final written version including later deletion-source support; main D01 algorithm/result unchanged."
+  ],
+  "limitations": [
+    "Original findings are structural debt; no demonstrated initialization/TDZ crash or crash fix claimed.",
+    "Native uses local synthetic media, real Chromium IndexedDB and zero external requests. No paid provider, actual image/video decoding, playback, creative quality, product UI or inspector scheduling claim.",
+    "Current inherited static 7 errors/25 warnings remain; invalid earlier same-program comparison excluded.",
+    "D02-D08/E and parent finding/status/spec/commit/archive actions remain main-owned and unmodified by checker."
+  ]
+}

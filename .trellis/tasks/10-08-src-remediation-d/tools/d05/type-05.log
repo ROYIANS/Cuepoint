@@ -1,0 +1,7 @@
+
+> cuepoint@0.1.0 lint /Users/xiaomengdao/WebstormProjects/aifenjing
+> tsc -b --pretty false
+
+src/lib/agent/businessTools.ts(344,75): error TS18046: 'shot.characterIds' is of type 'unknown'.
+src/lib/agent/businessTools.ts(344,191): error TS2339: Property 'includes' does not exist on type '{}'.
+ ELIFECYCLE  Command failed with exit code 2.

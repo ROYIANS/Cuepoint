@@ -1,0 +1,19 @@
+{
+  "checks": [
+    "IndependentwholeD06PASS all5src3testfixture/711writerpaths+checker final726 paths and evidence hashmatches,621originalcopyentryproof",
+    "Actual7models/orderedfacts/constants/defaults/schema/profile lowering preserved,632testedinputs/436source/108scan/12gates/104predecessorrecords confirmed",
+    "Type/focus18files284/full155files2480/model/build/B01=19/B07=5/D05native/D06native10PASS0external;projectactualcompiler16/16rejections",
+    "Checker two REPORT_PATH runner-only overrides native10/compiler16focusedPASS reportsbyteidentical original;historicalproofimmutable",
+    "Cumulativestatic108sources135errors240warn→121errors227warn0addednoncomplexity;413TS2454edges0parse0SCC,46any437casts198nonnull442nested"
+  ],
+  "evidence": [
+    ".trellis/tasks/10-08-src-remediation-d/research/D06-implementation.md",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D06-product-freeze.json",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D06-semantic-proof.json",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D06-static-summary.json",
+    ".trellis/tasks/10-08-src-remediation-d/research/D06-current-ast-summary.json",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D06-check-preservation.json"
+  ],
+  "resolution": "统一7个既有模型的纯能力事实/有序选项/默认值/参数投影/标量校验，由单项/批量共享表单、项目输出设置、profileRequest及output兼容导出实际消费。保留provider差异、frames跟随比例边界、缺省mode逻辑、目标/输入身份、无效提案可见及原审批/CAS/paid-recovery。真实UI10场景/原始对照/默认保存零提交及类型/schema/事务保留性证明通过。两条验证runner仅增integration报告输出覆盖，旧证据不变。存量复杂度/原生模拟限制明确。",
+  "progress": "2026-10-08 D06/AU07独立PASS：5src3testfixture/726最终路径哈希核对；7模型事实/常量/有序选项和原schema/approval/CAS/transport边界保留。155文件2480测试、16编译负例、10真实表单native零外部/paid请求及models/build通过；108累积源0新增规则诊断、413TS/2454边/0循环。接续D07请求边界，D08/E仍pending，未提交D。"
+}

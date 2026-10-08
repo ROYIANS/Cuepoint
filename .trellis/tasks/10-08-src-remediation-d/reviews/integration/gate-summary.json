@@ -1,0 +1,475 @@
+{
+  "status": "integration-gates-passed-awaiting-fullscope-independent-check",
+  "commands": [
+    {
+      "name": "typecheck",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "lint"
+      ],
+      "exit": 0,
+      "seconds": 7.38
+    },
+    {
+      "name": "tests",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "test",
+        "--reporter=dot",
+        "--maxWorkers",
+        "4"
+      ],
+      "exit": 0,
+      "seconds": 18.27
+    },
+    {
+      "name": "b01-browser",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "scripts/b01-browser-regression.mjs"
+      ],
+      "exit": 0,
+      "seconds": 21.49
+    },
+    {
+      "name": "b07-browser",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "scripts/b07-browser-regression.mjs"
+      ],
+      "exit": 0,
+      "seconds": 3.62
+    },
+    {
+      "name": "c01-browser",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "scripts/c01-browser-regression.mjs"
+      ],
+      "exit": 0,
+      "seconds": 3.51
+    },
+    {
+      "name": "c02-browser",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "scripts/c02-browser-regression.mjs"
+      ],
+      "exit": 0,
+      "seconds": 3.02
+    },
+    {
+      "name": "d01-native",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        ".trellis/tasks/10-08-src-remediation-d/reviews/D01-native-regression.mjs"
+      ],
+      "exit": 0,
+      "seconds": 2.11
+    },
+    {
+      "name": "d02-cascades-native",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        ".trellis/tasks/10-08-src-remediation-d/reviews/D02-native-regression.mjs"
+      ],
+      "exit": 0,
+      "seconds": 0.67
+    },
+    {
+      "name": "d02-d01-rollback-native",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        ".trellis/tasks/10-08-src-remediation-d/reviews/D02-native-d01-rollback.mjs"
+      ],
+      "exit": 0,
+      "seconds": 0.7
+    },
+    {
+      "name": "d03-native",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        ".trellis/tasks/10-08-src-remediation-d/reviews/D03-native-regression.mjs"
+      ],
+      "exit": 0,
+      "seconds": 9.63
+    },
+    {
+      "name": "d04-native",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        ".trellis/tasks/10-08-src-remediation-d/research/D04-native.mjs"
+      ],
+      "exit": 0,
+      "seconds": 3.15
+    },
+    {
+      "name": "d05-native",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        ".trellis/tasks/10-08-src-remediation-d/reviews/D05-native.mjs"
+      ],
+      "exit": 0,
+      "seconds": 2.39
+    },
+    {
+      "name": "d06-native",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        ".trellis/tasks/10-08-src-remediation-d/reviews/D06-native.mjs"
+      ],
+      "exit": 0,
+      "seconds": 17.41,
+      "environment": {
+        "D06_NATIVE_REPORT_PATH": ".trellis/tasks/10-08-src-remediation-d/reviews/integration/d06-native-report.json"
+      }
+    },
+    {
+      "name": "d06-compiler-negatives",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        ".trellis/tasks/10-08-src-remediation-d/reviews/D06-compiler-negatives.mjs"
+      ],
+      "exit": 0,
+      "seconds": 6.55,
+      "environment": {
+        "D06_COMPILER_REPORT_PATH": ".trellis/tasks/10-08-src-remediation-d/reviews/integration/d06-compiler-report.json"
+      }
+    },
+    {
+      "name": "d08-native",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "scripts/d08-browser-regression.mjs"
+      ],
+      "exit": 0,
+      "seconds": 8.42,
+      "environment": {
+        "D08_REPORT_PATH": ".trellis/tasks/10-08-src-remediation-d/reviews/integration/d08-native-report.json"
+      }
+    },
+    {
+      "name": "models",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "model-bank:verify"
+      ],
+      "exit": 0,
+      "seconds": 0.77
+    },
+    {
+      "name": "build",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "build"
+      ],
+      "exit": 0,
+      "seconds": 16.49
+    }
+  ],
+  "frozenSourceTestScriptRunnerAndToolHashes": 759,
+  "reviewedChangedFiles": 333,
+  "testSummary": [
+    "Test Files  159 passed (159)",
+    "Tests  2552 passed (2552)"
+  ],
+  "staticSourceFiles": 123,
+  "astSummary": {
+    "files": 419,
+    "edges": 2492,
+    "parseErrors": 0,
+    "staticValueCycles": [],
+    "totals": {
+      "anyKeywords": 46,
+      "typeAssertions": 437,
+      "nonNullAssertions": 198,
+      "nestedTernaries": 442,
+      "emptyCatches": 16,
+      "dynamicImports": 8
+    }
+  },
+  "newNoncomplexityDiagnostics": [],
+  "changedComplexityDiagnostics": [
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'AgentChatInner' has a complexity of 100. Maximum allowed is 20.",
+      "line": 56,
+      "column": 1,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 56,
+      "endColumn": 24
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 57 to the 20 allowed.",
+      "line": 56,
+      "column": 10,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 56,
+      "endColumn": 24
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/ContextUsagePanel.tsx",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 31 to the 20 allowed.",
+      "line": 54,
+      "column": 23,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 54,
+      "endColumn": 25
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/ContextUsagePanel.tsx",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Arrow function has a complexity of 61. Maximum allowed is 20.",
+      "line": 54,
+      "column": 23,
+      "nodeType": "ArrowFunctionExpression",
+      "messageId": "complex",
+      "endLine": 54,
+      "endColumn": 25
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/ContextUsagePanel.tsx",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'ContextUsagePanel' has a complexity of 46. Maximum allowed is 20.",
+      "line": 167,
+      "column": 8,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 167,
+      "endColumn": 34
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/GenerationReview.tsx",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'GenerationConfigurationFields' has a complexity of 74. Maximum allowed is 20.",
+      "line": 187,
+      "column": 8,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 187,
+      "endColumn": 46
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/MemoryContextDetails.tsx",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'MemoryContextContent' has a complexity of 48. Maximum allowed is 20.",
+      "line": 49,
+      "column": 1,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 49,
+      "endColumn": 30
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/shots/ShotEditorPage.tsx",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'ShotEditorPageContent' has a complexity of 80. Maximum allowed is 20.",
+      "line": 118,
+      "column": 1,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 118,
+      "endColumn": 31
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/shots/useShotEditorKeyboard.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'onKeyDown' has a complexity of 30. Maximum allowed is 20.",
+      "line": 22,
+      "column": 9,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 22,
+      "endColumn": 27
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/workspace/ProjectSettingsPanel.tsx",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'ProjectOutputSettings' has a complexity of 60. Maximum allowed is 20.",
+      "line": 129,
+      "column": 1,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 129,
+      "endColumn": 31
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/generationProfiles.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'profileRequest' has a complexity of 68. Maximum allowed is 20.",
+      "line": 53,
+      "column": 8,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 53,
+      "endColumn": 31
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/generationProfiles.ts",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 96 to the 20 allowed.",
+      "line": 53,
+      "column": 17,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 53,
+      "endColumn": 31
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/musicGenerationReview.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Async function 'inspect' has a complexity of 39. Maximum allowed is 20.",
+      "line": 25,
+      "column": 1,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 25,
+      "endColumn": 23
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/runChat.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Async function 'executePendingTools' has a complexity of 51. Maximum allowed is 20.",
+      "line": 93,
+      "column": 1,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 93,
+      "endColumn": 35
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/aihubmix.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Async function 'downloadAIHubMixResult' has a complexity of 34. Maximum allowed is 20.",
+      "line": 360,
+      "column": 8,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 360,
+      "endColumn": 45
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/apimart.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Async function 'request' has a complexity of 39. Maximum allowed is 20.",
+      "line": 143,
+      "column": 1,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 143,
+      "endColumn": 23
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/apimart.ts",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 31 to the 20 allowed.",
+      "line": 143,
+      "column": 16,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 143,
+      "endColumn": 23
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/responsesStream.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Async function 'streamResponses' has a complexity of 30. Maximum allowed is 20.",
+      "line": 139,
+      "column": 8,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 139,
+      "endColumn": 38
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/tavily.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Async function 'request' has a complexity of 28. Maximum allowed is 20.",
+      "line": 37,
+      "column": 1,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 37,
+      "endColumn": 23
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/runtime.ts",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 23 to the 20 allowed.",
+      "line": 140,
+      "column": 16,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 140,
+      "endColumn": 31
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/runtime.ts",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 29 to the 20 allowed.",
+      "line": 175,
+      "column": 35,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 175,
+      "endColumn": 37
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/generationIntent.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Async arrow function has a complexity of 22. Maximum allowed is 20.",
+      "line": 131,
+      "column": 135,
+      "nodeType": "ArrowFunctionExpression",
+      "messageId": "complex",
+      "endLine": 131,
+      "endColumn": 137
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/projectPackage.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Async function 'importProjectZip' has a complexity of 31. Maximum allowed is 20.",
+      "line": 187,
+      "column": 8,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 187,
+      "endColumn": 39
+    }
+  ],
+  "staticDiagnosticCounts": {
+    "errors": 128,
+    "warnings": 273
+  },
+  "limitations": "Existing static debt remains; browser runs cover local fixtures, not live providers/full product. This tool does not replace independent full-scope review."
+}

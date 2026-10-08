@@ -1,0 +1,6 @@
+
+> cuepoint@0.1.0 lint /Users/xiaomengdao/WebstormProjects/aifenjing
+> tsc -b --pretty false
+
+src/lib/agent/businessTools.ts(480,32): error TS2304: Cannot find name 'repo'.
+ ELIFECYCLE  Command failed with exit code 2.

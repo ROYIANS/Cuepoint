@@ -1,0 +1,260 @@
+{
+  "addedCount": 7,
+  "allAddedAreConstLiteralOrObjectInference": true,
+  "added": [
+    {
+      "path": "src/db/agentContextPreview.ts",
+      "line": 95,
+      "type": "const",
+      "expression": "\"ready\"",
+      "syntax": "\"ready\" as const"
+    },
+    {
+      "path": "src/components/agent/ContextUsagePanel.tsx",
+      "line": 59,
+      "type": "const",
+      "expression": "{identity, status: snapshot?.status ?? \"loading\", model, error}",
+      "syntax": "{identity, status: snapshot?.status ?? \"loading\", model, error} as const"
+    },
+    {
+      "path": "src/components/agent/ContextUsagePanel.tsx",
+      "line": 74,
+      "type": "const",
+      "expression": "\"unknown\"",
+      "syntax": "\"unknown\" as const"
+    },
+    {
+      "path": "src/components/agent/ContextUsagePanel.tsx",
+      "line": 150,
+      "type": "const",
+      "expression": "\"ready\"",
+      "syntax": "\"ready\" as const"
+    },
+    {
+      "path": "src/components/agent/ContextParameters.tsx",
+      "line": 22,
+      "type": "const",
+      "expression": "\"status\"",
+      "syntax": "\"status\" as const"
+    },
+    {
+      "path": "src/components/agent/ContextParameters.tsx",
+      "line": 23,
+      "type": "const",
+      "expression": "\"alert\"",
+      "syntax": "\"alert\" as const"
+    },
+    {
+      "path": "src/components/agent/ContextParameters.tsx",
+      "line": 24,
+      "type": "const",
+      "expression": "\"alert\"",
+      "syntax": "\"alert\" as const"
+    }
+  ],
+  "checkedSatisfies": [
+    {
+      "path": "src/db/agentContextPreview.ts",
+      "line": 83,
+      "type": "Missing",
+      "syntax": "{identity, status: \"missing\", entity: \"thread\"} satisfies Missing"
+    },
+    {
+      "path": "src/db/agentContextPreview.ts",
+      "line": 85,
+      "type": "Unavailable",
+      "syntax": "{identity, status: \"unavailable\", message: \"对话与当前项目范围不匹配\"} satisfies Unavailable"
+    },
+    {
+      "path": "src/db/agentContextPreview.ts",
+      "line": 90,
+      "type": "Unavailable",
+      "syntax": "{identity, status: \"unavailable\", message: \"任务或执行记录与对话范围不匹配\"} satisfies Unavailable"
+    },
+    {
+      "path": "src/db/agentContextPreview.ts",
+      "line": 92,
+      "type": "Missing",
+      "syntax": "{identity, status: \"missing\", entity: \"agent\"} satisfies Missing"
+    },
+    {
+      "path": "src/db/agentContextPreview.ts",
+      "line": 93,
+      "type": "Missing",
+      "syntax": "{identity, status: \"missing\", entity: \"project\"} satisfies Missing"
+    }
+  ],
+  "results": [
+    {
+      "path": "src/db/agentContextPreview.ts",
+      "before": {
+        "assertions": [],
+        "satisfies": []
+      },
+      "after": {
+        "assertions": [
+          {
+            "line": 95,
+            "type": "const",
+            "expression": "\"ready\"",
+            "syntax": "\"ready\" as const"
+          }
+        ],
+        "satisfies": [
+          {
+            "line": 83,
+            "type": "Missing",
+            "syntax": "{identity, status: \"missing\", entity: \"thread\"} satisfies Missing"
+          },
+          {
+            "line": 85,
+            "type": "Unavailable",
+            "syntax": "{identity, status: \"unavailable\", message: \"对话与当前项目范围不匹配\"} satisfies Unavailable"
+          },
+          {
+            "line": 90,
+            "type": "Unavailable",
+            "syntax": "{identity, status: \"unavailable\", message: \"任务或执行记录与对话范围不匹配\"} satisfies Unavailable"
+          },
+          {
+            "line": 92,
+            "type": "Missing",
+            "syntax": "{identity, status: \"missing\", entity: \"agent\"} satisfies Missing"
+          },
+          {
+            "line": 93,
+            "type": "Missing",
+            "syntax": "{identity, status: \"missing\", entity: \"project\"} satisfies Missing"
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/components/agent/ContextUsagePanel.tsx",
+      "before": {
+        "assertions": [],
+        "satisfies": []
+      },
+      "after": {
+        "assertions": [
+          {
+            "line": 59,
+            "type": "const",
+            "expression": "{identity, status: snapshot?.status ?? \"loading\", model, error}",
+            "syntax": "{identity, status: snapshot?.status ?? \"loading\", model, error} as const"
+          },
+          {
+            "line": 74,
+            "type": "const",
+            "expression": "\"unknown\"",
+            "syntax": "\"unknown\" as const"
+          },
+          {
+            "line": 150,
+            "type": "const",
+            "expression": "\"ready\"",
+            "syntax": "\"ready\" as const"
+          }
+        ],
+        "satisfies": []
+      }
+    },
+    {
+      "path": "src/components/agent/ContextParameters.tsx",
+      "before": {
+        "assertions": [],
+        "satisfies": []
+      },
+      "after": {
+        "assertions": [
+          {
+            "line": 22,
+            "type": "const",
+            "expression": "\"status\"",
+            "syntax": "\"status\" as const"
+          },
+          {
+            "line": 23,
+            "type": "const",
+            "expression": "\"alert\"",
+            "syntax": "\"alert\" as const"
+          },
+          {
+            "line": 24,
+            "type": "const",
+            "expression": "\"alert\"",
+            "syntax": "\"alert\" as const"
+          }
+        ],
+        "satisfies": []
+      }
+    },
+    {
+      "path": "src/components/agent/MemoryContextDetails.tsx",
+      "before": {
+        "assertions": [],
+        "satisfies": []
+      },
+      "after": {
+        "assertions": [],
+        "satisfies": []
+      }
+    },
+    {
+      "path": "src/components/agent/AgentChatPage.tsx",
+      "before": {
+        "assertions": [
+          {
+            "line": 60,
+            "type": "AgentRun[]",
+            "expression": "[]",
+            "syntax": "[] as AgentRun[]"
+          },
+          {
+            "line": 102,
+            "type": "Id | null",
+            "expression": "null",
+            "syntax": "null as Id | null"
+          },
+          {
+            "line": 102,
+            "type": "ChatThread | null",
+            "expression": "null",
+            "syntax": "null as ChatThread | null"
+          }
+        ],
+        "satisfies": []
+      },
+      "after": {
+        "assertions": [
+          {
+            "line": 60,
+            "type": "AgentRun[]",
+            "expression": "[]",
+            "syntax": "[] as AgentRun[]"
+          },
+          {
+            "line": 102,
+            "type": "Id | null",
+            "expression": "null",
+            "syntax": "null as Id | null"
+          },
+          {
+            "line": 102,
+            "type": "ChatThread | null",
+            "expression": "null",
+            "syntax": "null as ChatThread | null"
+          }
+        ],
+        "satisfies": []
+      }
+    }
+  ],
+  "sourceHashes": {
+    "src/db/agentContextPreview.ts": "34f41a02cf66f47c59beccaa224d85f7ce95ca6c8ab3d3800a0224d6095de3c4",
+    "src/components/agent/ContextUsagePanel.tsx": "b0ae7970eb7145c49d3e35a5437953c8e1738af4052e16c779e2da819405cceb",
+    "src/components/agent/ContextParameters.tsx": "23bc89fb757bce40225035a6e5c64a680fb271756e4cc8e679133cd2ed450a9f",
+    "src/components/agent/MemoryContextDetails.tsx": "ecc5f6d847018757da6a32bd2640048168a9aa81917e9415f98c5fc988c56ac5",
+    "src/components/agent/AgentChatPage.tsx": "f7ff686baf6314bc1baf0f64463a8e5a0601a56baeffcb76a618b864d54c27b1"
+  }
+}

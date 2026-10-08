@@ -1,0 +1,167 @@
+[
+  {
+    "name": "typecheck",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "lint"
+    ],
+    "exit": 0,
+    "seconds": 7.38
+  },
+  {
+    "name": "tests",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "test",
+      "--reporter=dot",
+      "--maxWorkers",
+      "4"
+    ],
+    "exit": 0,
+    "seconds": 18.27
+  },
+  {
+    "name": "b01-browser",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/b01-browser-regression.mjs"
+    ],
+    "exit": 0,
+    "seconds": 21.49
+  },
+  {
+    "name": "b07-browser",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/b07-browser-regression.mjs"
+    ],
+    "exit": 0,
+    "seconds": 3.62
+  },
+  {
+    "name": "c01-browser",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/c01-browser-regression.mjs"
+    ],
+    "exit": 0,
+    "seconds": 3.51
+  },
+  {
+    "name": "c02-browser",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/c02-browser-regression.mjs"
+    ],
+    "exit": 0,
+    "seconds": 3.02
+  },
+  {
+    "name": "d01-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/10-08-src-remediation-d/reviews/D01-native-regression.mjs"
+    ],
+    "exit": 0,
+    "seconds": 2.11
+  },
+  {
+    "name": "d02-cascades-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/10-08-src-remediation-d/reviews/D02-native-regression.mjs"
+    ],
+    "exit": 0,
+    "seconds": 0.67
+  },
+  {
+    "name": "d02-d01-rollback-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/10-08-src-remediation-d/reviews/D02-native-d01-rollback.mjs"
+    ],
+    "exit": 0,
+    "seconds": 0.7
+  },
+  {
+    "name": "d03-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/10-08-src-remediation-d/reviews/D03-native-regression.mjs"
+    ],
+    "exit": 0,
+    "seconds": 9.63
+  },
+  {
+    "name": "d04-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/10-08-src-remediation-d/research/D04-native.mjs"
+    ],
+    "exit": 0,
+    "seconds": 3.15
+  },
+  {
+    "name": "d05-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/10-08-src-remediation-d/reviews/D05-native.mjs"
+    ],
+    "exit": 0,
+    "seconds": 2.39
+  },
+  {
+    "name": "d06-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/10-08-src-remediation-d/reviews/D06-native.mjs"
+    ],
+    "exit": 0,
+    "seconds": 17.41,
+    "environment": {
+      "D06_NATIVE_REPORT_PATH": ".trellis/tasks/10-08-src-remediation-d/reviews/integration/d06-native-report.json"
+    }
+  },
+  {
+    "name": "d06-compiler-negatives",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/10-08-src-remediation-d/reviews/D06-compiler-negatives.mjs"
+    ],
+    "exit": 0,
+    "seconds": 6.55,
+    "environment": {
+      "D06_COMPILER_REPORT_PATH": ".trellis/tasks/10-08-src-remediation-d/reviews/integration/d06-compiler-report.json"
+    }
+  },
+  {
+    "name": "d08-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/d08-browser-regression.mjs"
+    ],
+    "exit": 0,
+    "seconds": 8.42,
+    "environment": {
+      "D08_REPORT_PATH": ".trellis/tasks/10-08-src-remediation-d/reviews/integration/d08-native-report.json"
+    }
+  },
+  {
+    "name": "models",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "model-bank:verify"
+    ],
+    "exit": 0,
+    "seconds": 0.77
+  },
+  {
+    "name": "build",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "build"
+    ],
+    "exit": 0,
+    "seconds": 16.49
+  }
+]

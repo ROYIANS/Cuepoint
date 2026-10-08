@@ -1,0 +1,35 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+········································x····
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/d07RequestWire.test.ts > D07 original adapter request/result/read controls > retains exact effective request and original decoding: Chat SSE final flush
+AssertionError: expected { ok: false, …(2) } to match object { ok: true }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "ok": true,
++   "ok": false,
+  }
+
+ ❯ tests/d07RequestWire.test.ts:101:28
+     99|             if (test.name === "APIMart Ext image") expect(init?.header…
+    100|             if (test.name === "APIMart standard image") expect(new Hea…
+    101|             expect(result).toMatchObject({ok: true});
+       |                            ^
+    102|             runs.push({wire: await requestWire(url, init), result: awa…
+    103|         }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 44 passed (45)
+   Start at  15:04:46
+   Duration  466ms (transform 49%, tests 30%, setup 12%, import 8%)
+

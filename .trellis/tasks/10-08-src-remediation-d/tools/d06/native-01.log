@@ -1,0 +1,12 @@
+2:02:17 PM [vite] (client) Re-optimizing dependencies because vite config has changed
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.waitForFunction: Timeout 10000ms exceeded.
+    at /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/reviews/D06-native.mjs:32:16 {
+  log: [],
+  name: 'TimeoutError'
+}
+
+Node.js v24.11.0

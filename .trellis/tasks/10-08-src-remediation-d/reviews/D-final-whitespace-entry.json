@@ -1,0 +1,57 @@
+{
+  "capturedAt": "2026-10-08T08:18:34.150252+00:00",
+  "before": {
+    "src/components/shots/ShotRow.tsx": "334bfe329e39a0ddac7deab9f72e0ea14ca9e6ae7b658bed5da211414cdf16e5",
+    "src/lib/packages/audioPackageCodec.ts": "6ffb2dec2d936e381b17b00151e96a498938abb732be04442fc8ecb85a2146a9",
+    "src/lib/packages/packageError.ts": "7f0bff1911c72887aa98417705bba9ecc62b87d2b21ae5320384001d326c232a"
+  },
+  "unitAttribution": {
+    "src/components/shots/ShotRow.tsx": "D08",
+    "src/lib/packages/audioPackageCodec.ts": "D03",
+    "src/lib/packages/packageError.ts": "D03"
+  },
+  "acceptedLatest": {
+    "src/components/shots/ShotRow.tsx": {
+      "unit": "D08",
+      "snapshot": ".trellis/tasks/10-08-src-remediation-d/reviews/D08-check-snapshot.json",
+      "snapshotSha256": "6d1c19943fee70b323541b47cae9cb2f438e335229c956d733b3130f5df2b264",
+      "map": "after",
+      "sha256": "334bfe329e39a0ddac7deab9f72e0ea14ca9e6ae7b658bed5da211414cdf16e5"
+    },
+    "src/lib/packages/audioPackageCodec.ts": {
+      "unit": "D03",
+      "snapshot": ".trellis/tasks/10-08-src-remediation-d/reviews/D03-check-snapshot.json",
+      "snapshotSha256": "c472259ecaea7fc35c3b34612efab437a111229bc02dd5bc3939dea871349597",
+      "map": "after",
+      "sha256": "6ffb2dec2d936e381b17b00151e96a498938abb732be04442fc8ecb85a2146a9"
+    },
+    "src/lib/packages/packageError.ts": {
+      "unit": "D03",
+      "snapshot": ".trellis/tasks/10-08-src-remediation-d/reviews/D03-check-snapshot.json",
+      "snapshotSha256": "c472259ecaea7fc35c3b34612efab437a111229bc02dd5bc3939dea871349597",
+      "map": "after",
+      "sha256": "7f0bff1911c72887aa98417705bba9ecc62b87d2b21ae5320384001d326c232a"
+    }
+  },
+  "sourceCopies": [
+    {
+      "path": "src/components/shots/ShotRow.tsx",
+      "beforeCopy": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-before/src/components/shots/ShotRow.tsx",
+      "beforeHash": "334bfe329e39a0ddac7deab9f72e0ea14ca9e6ae7b658bed5da211414cdf16e5"
+    },
+    {
+      "path": "src/lib/packages/audioPackageCodec.ts",
+      "beforeCopy": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-before/src/lib/packages/audioPackageCodec.ts",
+      "beforeHash": "6ffb2dec2d936e381b17b00151e96a498938abb732be04442fc8ecb85a2146a9"
+    },
+    {
+      "path": "src/lib/packages/packageError.ts",
+      "beforeCopy": ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-whitespace-before/src/lib/packages/packageError.ts",
+      "beforeHash": "7f0bff1911c72887aa98417705bba9ecc62b87d2b21ae5320384001d326c232a"
+    }
+  ],
+  "protectedHistoricalHashes": {
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-fixes-check-snapshot.json": "10baf27b0f067b19890d08b9dcbd78aa3aab483227f3432328e4116c2f5320cc",
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D-final-fixture-check-snapshot.json": "a933858b805655ad5c81683345738c0e1a0b98a81574d0ad783799a85510c818"
+  }
+}

@@ -1,0 +1,1071 @@
+{
+  "method": "Actual final TypeScript AST import/re-export declarations from src/tests/scripts/task review runners; source graph retains literal dynamic/type distinctions. Local calls and callbacks manually reviewed in coverage.",
+  "references": [
+    {
+      "from": "tests/projectPackageRelations.test.ts",
+      "to": "src/lib/projectPackage.ts",
+      "line": 8,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import { exportProjectZip, importProjectZip, PackageError } from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "tests/generationIntent.test.ts",
+      "to": "src/lib/productionContext.ts",
+      "line": 7,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import { buildProductionContext } from \"@/lib/productionContext\";"
+    },
+    {
+      "from": "tests/generationIntent.test.ts",
+      "to": "src/lib/generationIntent.ts",
+      "line": 8,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import { generationIntentToProposalInput, prepareGenerationIntent, transitionGenerationIntent, validateGenerationIntent } from \"@/lib/generationIntent\";"
+    },
+    {
+      "from": "tests/mediaMetadata.test.ts",
+      "to": "src/lib/projectPackage.ts",
+      "line": 6,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import { exportProjectZip, importProjectZip } from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "tests/projectMemoryPackage.test.ts",
+      "to": "src/lib/projectPackage.ts",
+      "line": 18,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {\n  exportProjectZip,\n  importProjectZip,\n  PackageError,\n} from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "tests/agentGeneration.test.ts",
+      "to": "src/lib/projectPackage.ts",
+      "line": 18,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import { exportProjectZip } from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "tests/assetFoundation.test.ts",
+      "to": "src/lib/projectPackage.ts",
+      "line": 12,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import { exportProjectZip, importProjectZip } from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "tests/mimoRuntime.test.ts",
+      "to": "src/lib/projectPackage.ts",
+      "line": 9,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import { exportProjectZip, importProjectZip } from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "tests/auditDataIntegrity.test.ts",
+      "to": "src/lib/projectPackage.ts",
+      "line": 11,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import { exportProjectZip, importProjectZip } from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "tests/b03IntentBoundaries.test.ts",
+      "to": "src/components/shots/ShotEditorPage.tsx",
+      "line": 51,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {ShotEditorPage} from \"@/components/shots/ShotEditorPage\";"
+    },
+    {
+      "from": "tests/audioFoundation.test.ts",
+      "to": "src/lib/projectPackage.ts",
+      "line": 10,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import { exportProjectZip, importProjectZip } from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "tests/references.test.ts",
+      "to": "src/lib/projectPackage.ts",
+      "line": 13,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import { exportProjectZip, importProjectZip } from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "tests/productionContext.test.ts",
+      "to": "src/lib/productionContext.ts",
+      "line": 9,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import { buildProductionContext } from \"@/lib/productionContext\";"
+    },
+    {
+      "from": "tests/materialIntegration.test.ts",
+      "to": "src/lib/projectPackage.ts",
+      "line": 10,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import { exportProjectZip, importProjectZip } from '@/lib/projectPackage';"
+    },
+    {
+      "from": "tests/projectPackage.test.ts",
+      "to": "src/lib/projectPackage.ts",
+      "line": 15,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import { exportProjectZip, importProjectZip, PackageError } from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "tests/manualDraftWiring.test.ts",
+      "to": "src/components/shots/ShotEditorPage.tsx",
+      "line": 74,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {ShotEditorPage} from \"@/components/shots/ShotEditorPage\";"
+    },
+    {
+      "from": "tests/d03AudioCommands.test.ts",
+      "to": "src/components/audio/audioSelection.ts",
+      "line": 7,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {deriveAudioSelection} from \"@/components/audio/audioSelection\";"
+    },
+    {
+      "from": "tests/d03AudioCommands.test.ts",
+      "to": "src/components/music/switchMusicVariant.ts",
+      "line": 8,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {switchMusicVariant} from \"@/components/music/switchMusicVariant\";"
+    },
+    {
+      "from": "tests/d03AudioCommands.test.ts",
+      "to": "src/lib/audio/exportMix.ts",
+      "line": 9,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {exportAudioMix} from \"@/lib/audio/exportMix\";"
+    },
+    {
+      "from": "tests/d03AudioCommands.test.ts",
+      "to": "src/lib/audio/buffers.ts",
+      "line": 10,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {loadAudioBuffer} from \"@/lib/audio/buffers\";"
+    },
+    {
+      "from": "tests/audioFingerprint.test.ts",
+      "to": "src/lib/projectPackage.ts",
+      "line": 13,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {exportProjectZip, importProjectZip} from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "tests/musicDurationContract.test.ts",
+      "to": "src/lib/projectPackage.ts",
+      "line": 17,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {exportProjectZip, importProjectZip} from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "tests/audioGenerationRecoveryAudit.test.ts",
+      "to": "src/lib/audioProjectPackage.ts",
+      "line": 6,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import { snapshotAudioPackage } from \"@/lib/audioProjectPackage\";"
+    },
+    {
+      "from": "tests/audioGenerationRecoveryAudit.test.ts",
+      "to": "src/lib/projectPackage.ts",
+      "line": 8,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import { exportProjectZip, importProjectZip } from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "tests/b07ComposeSessions.test.ts",
+      "to": "src/components/agent/AgentChatPage.tsx",
+      "line": 77,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {AgentChatPage} from \"@/components/agent/AgentChatPage\";"
+    },
+    {
+      "from": "tests/d03ShotCommands.test.ts",
+      "to": "src/components/shots/shotEditorCommands.ts",
+      "line": 6,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {applyShotBulkCommand, deleteShotSelectionCommand, reorderShotGroupCommand} from \"@/components/shots/shotEditorCommands\";"
+    },
+    {
+      "from": "tests/d03ShotCommands.test.ts",
+      "to": "src/components/shots/shotColumnFields.ts",
+      "line": 7,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {TEXT_SHOT_FIELDS, textShotPatch} from \"@/components/shots/shotColumnFields\";"
+    },
+    {
+      "from": "src/routes/_studio.agent.tsx",
+      "to": "src/components/agent/AgentChatPage.tsx",
+      "line": 2,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {AgentChatPage} from \"@/components/agent/AgentChatPage\";"
+    },
+    {
+      "from": "src/routes/_studio.projects.tsx",
+      "to": "src/components/studio/ProjectGalleryPage.tsx",
+      "line": 2,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {ProjectGalleryPage} from \"@/components/studio/ProjectGalleryPage\";"
+    },
+    {
+      "from": "src/routes/p.$projectId.index.tsx",
+      "to": "src/components/workspace/ProjectHomePage.tsx",
+      "line": 2,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {ProjectHomePage} from \"@/components/workspace/ProjectHomePage\";"
+    },
+    {
+      "from": "src/routes/_studio.tsx",
+      "to": "src/components/studio/importStudioProject.ts",
+      "line": 3,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {importStudioProject} from \"@/components/studio/importStudioProject\";"
+    },
+    {
+      "from": "src/routes/p.$projectId.e.$episodeId.shots.tsx",
+      "to": "src/components/shots/ShotEditorPage.tsx",
+      "line": 2,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {ShotEditorPage} from \"@/components/shots/ShotEditorPage\";"
+    },
+    {
+      "from": "src/components/shots/ShotEditorPage.tsx",
+      "to": "src/components/shots/shotColumnFields.ts",
+      "line": 1,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {gridColumns} from \"./shotColumnFields\";"
+    },
+    {
+      "from": "src/components/shots/ShotEditorPage.tsx",
+      "to": "src/components/shots/ShotRow.tsx",
+      "line": 2,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {ShotRow} from \"./ShotRow\";"
+    },
+    {
+      "from": "src/components/shots/ShotEditorPage.tsx",
+      "to": "src/components/shots/ShotRelationsEditor.tsx",
+      "line": 3,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {ShotRelationsEditor} from \"./ShotRelationsEditor\";"
+    },
+    {
+      "from": "src/components/shots/ShotEditorPage.tsx",
+      "to": "src/components/shots/shotEditorCommands.ts",
+      "line": 4,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {applyShotBulkCommand, deleteShotSelectionCommand, reorderShotGroupCommand} from \"./shotEditorCommands\";"
+    },
+    {
+      "from": "src/components/shots/ShotEditorPage.tsx",
+      "to": "src/components/shots/useShotEditorKeyboard.ts",
+      "line": 5,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {useShotEditorKeyboard} from \"./useShotEditorKeyboard\";"
+    },
+    {
+      "from": "src/components/shots/ShotRow.tsx",
+      "to": "src/components/shots/shotColumnFields.ts",
+      "line": 21,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {gridColumns, TEXT_SHOT_FIELDS, textShotPatch} from \"./shotColumnFields\";"
+    },
+    {
+      "from": "src/components/produce/ProducePage.tsx",
+      "to": "src/lib/projectPackage.ts",
+      "line": 4,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {downloadBlob} from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "tests/b01QueryIdentity.test.ts",
+      "to": "src/components/shots/ShotEditorPage.tsx",
+      "line": 63,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {ShotEditorPage} from \"@/components/shots/ShotEditorPage\";"
+    },
+    {
+      "from": "tests/b01QueryIdentity.test.ts",
+      "to": "src/routes/p.$projectId.index.tsx",
+      "line": 68,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {Route as HomeRoute} from \"@/routes/p.$projectId.index\";"
+    },
+    {
+      "from": "tests/memoryInclusion.test.ts",
+      "to": "src/lib/projectPackage.ts",
+      "line": 9,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import { exportProjectZip, importProjectZip } from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "tests/d03ChatOwners.test.ts",
+      "to": "src/components/agent/useChatExecutionSession.ts",
+      "line": 18,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {useChatExecutionSession} from \"@/components/agent/useChatExecutionSession\";"
+    },
+    {
+      "from": "tests/d03ChatOwners.test.ts",
+      "to": "src/components/agent/useChatSelection.ts",
+      "line": 19,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {useChatSelection} from \"@/components/agent/useChatSelection\";"
+    },
+    {
+      "from": "tests/fixtures/b07/harness.tsx",
+      "to": "src/components/agent/AgentChatPage.tsx",
+      "line": 4,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {AgentChatPage} from \"@/components/agent/AgentChatPage\";"
+    },
+    {
+      "from": "src/components/audio/AudioExports.tsx",
+      "to": "src/lib/projectPackage.ts",
+      "line": 6,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {downloadBlob} from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "src/components/audio/AudioTimeline.tsx",
+      "to": "src/lib/audio/buffers.ts",
+      "line": 1,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {loadAudioBuffer, loadBuffers} from \"@/lib/audio/buffers\";"
+    },
+    {
+      "from": "src/components/audio/AudioTimeline.tsx",
+      "to": "src/lib/audio/exportMix.ts",
+      "line": 2,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {exportAudioMix} from \"@/lib/audio/exportMix\";"
+    },
+    {
+      "from": "src/components/audio/AudioTimeline.tsx",
+      "to": "src/lib/projectPackage.ts",
+      "line": 34,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {downloadBlob} from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "src/components/audio/AudioWorkspacePage.tsx",
+      "to": "src/components/audio/audioSelection.ts",
+      "line": 1,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {deriveAudioSelection, type AudioSelectionIntent} from \"./audioSelection\";"
+    },
+    {
+      "from": "src/components/audio/AudioWorkspacePage.tsx",
+      "to": "src/components/audio/AudioTimeline.tsx",
+      "line": 37,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {AudioTimeline} from \"./AudioTimeline\";"
+    },
+    {
+      "from": "tests/fixtures/b01/harness.tsx",
+      "to": "src/routes/p.$projectId.index.tsx",
+      "line": 12,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {Route as HomeRoute} from \"@/routes/p.$projectId.index\";"
+    },
+    {
+      "from": "tests/fixtures/b01/harness.tsx",
+      "to": "src/components/shots/ShotEditorPage.tsx",
+      "line": 13,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {ShotEditorPage} from \"@/components/shots/ShotEditorPage\";"
+    },
+    {
+      "from": "tests/fixtures/d03/harness.tsx",
+      "to": "src/lib/projectPackage.ts",
+      "line": 17,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {exportProjectZip, importProjectZip, PackageError} from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "tests/fixtures/d03/harness.tsx",
+      "to": "src/lib/packages/packageError.ts",
+      "line": 18,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {PackageError as CodecPackageError} from \"@/lib/packages/packageError\";"
+    },
+    {
+      "from": "tests/fixtures/d03/harness.tsx",
+      "to": "src/lib/audio/exportMix.ts",
+      "line": 19,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {exportAudioMix} from \"@/lib/audio/exportMix\";"
+    },
+    {
+      "from": "tests/fixtures/d03/harness.tsx",
+      "to": "src/lib/audio/buffers.ts",
+      "line": 20,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {loadAudioBuffer} from \"@/lib/audio/buffers\";"
+    },
+    {
+      "from": "tests/fixtures/d03/harness.tsx",
+      "to": "src/components/agent/useChatExecutionSession.ts",
+      "line": 24,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {useChatExecutionSession} from \"@/components/agent/useChatExecutionSession\";"
+    },
+    {
+      "from": "tests/fixtures/d03/harness.tsx",
+      "to": "src/components/agent/chatExecutionFlows.ts",
+      "line": 25,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {retryFrozenChatRun, resolveChatRunAction} from \"@/components/agent/chatExecutionFlows\";"
+    },
+    {
+      "from": "src/lib/packages/projectPackageCodec.ts",
+      "to": "src/lib/packages/audioPackageCodec.ts",
+      "line": 37,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {parseAudioPackage, remapAudioPackage} from \"./audioPackageCodec\";"
+    },
+    {
+      "from": "src/lib/packages/projectPackageCodec.ts",
+      "to": "src/lib/packages/packageError.ts",
+      "line": 38,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {PackageError} from \"./packageError\";"
+    },
+    {
+      "from": "src/components/agent/AgentChatPage.tsx",
+      "to": "src/components/agent/useChatSelection.ts",
+      "line": 1,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {useChatSelection} from \"./useChatSelection\";"
+    },
+    {
+      "from": "src/components/agent/AgentChatPage.tsx",
+      "to": "src/components/agent/useChatExecutionSession.ts",
+      "line": 2,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {useChatExecutionSession} from \"./useChatExecutionSession\";"
+    },
+    {
+      "from": "src/components/agent/AgentChatPage.tsx",
+      "to": "src/components/agent/chatExecutionFlows.ts",
+      "line": 3,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {executeNewChatMessage, retryFrozenChatRun, resolveChatRunAction} from \"./chatExecutionFlows\";"
+    },
+    {
+      "from": "src/components/workspace/ProjectHomePage.tsx",
+      "to": "src/components/audio/AudioWorkspacePage.tsx",
+      "line": 1,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {AudioWorkspacePage} from \"@/components/audio/AudioWorkspacePage\";"
+    },
+    {
+      "from": "src/components/workspace/ProjectHomePage.tsx",
+      "to": "src/components/music/MusicWorkspacePage.tsx",
+      "line": 2,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {MusicWorkspacePage} from \"@/components/music/MusicWorkspacePage\";"
+    },
+    {
+      "from": "src/components/workspace/WorkspaceChrome.tsx",
+      "to": "src/lib/projectPackage.ts",
+      "line": 26,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {downloadBlob, exportProjectZip} from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "src/lib/projectPackage.ts",
+      "to": "src/lib/audioProjectPackage.ts",
+      "line": 2,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {insertAudioPackage, snapshotAudioPackage} from \"./audioProjectPackage\";"
+    },
+    {
+      "from": "src/lib/projectPackage.ts",
+      "to": "src/lib/packages/projectPackageCodec.ts",
+      "line": 10,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {asRecord, asArray, remapId, parseProjectPackageRows, remapProjectPackageRows} from \"./packages/projectPackageCodec\";"
+    },
+    {
+      "from": "src/lib/projectPackage.ts",
+      "to": "src/lib/packages/packageError.ts",
+      "line": 11,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {PackageError} from \"./packages/packageError\";"
+    },
+    {
+      "from": "src/lib/projectPackage.ts",
+      "to": "src/lib/packages/packageError.ts",
+      "line": 12,
+      "typeOnly": false,
+      "kind": "re-export",
+      "declaration": "export {PackageError} from \"./packages/packageError\";"
+    },
+    {
+      "from": "src/components/audioMusic/shared.tsx",
+      "to": "src/lib/projectPackage.ts",
+      "line": 13,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {downloadBlob} from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "src/routeTree.gen.ts",
+      "to": "src/routes/_studio.tsx",
+      "line": 12,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {Route as StudioRouteImport} from './routes/_studio'"
+    },
+    {
+      "from": "src/routeTree.gen.ts",
+      "to": "src/routes/p.$projectId.index.tsx",
+      "line": 39,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {Route as PProjectIdIndexRouteImport} from './routes/p.$projectId.index'"
+    },
+    {
+      "from": "src/lib/audio/exportMix.ts",
+      "to": "src/lib/audio/buffers.ts",
+      "line": 6,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {loadBuffers} from \"./buffers\";"
+    },
+    {
+      "from": "src/lib/generationIntent.ts",
+      "to": "src/lib/productionContext.ts",
+      "line": 18,
+      "typeOnly": true,
+      "kind": "import",
+      "declaration": "import type {ProductionContext} from \"@/lib/productionContext\";"
+    },
+    {
+      "from": "src/lib/audioProjectPackage.ts",
+      "to": "src/lib/packages/audioPackageCodec.ts",
+      "line": 17,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {parseAudioPackageData, type AudioPackage} from \"./packages/audioPackageCodec\";"
+    },
+    {
+      "from": "src/lib/audioProjectPackage.ts",
+      "to": "src/lib/packages/audioPackageCodec.ts",
+      "line": 18,
+      "typeOnly": false,
+      "kind": "re-export",
+      "declaration": "export {parseAudioPackage, remapAudioPackage} from \"./packages/audioPackageCodec\";"
+    },
+    {
+      "from": "src/lib/audioProjectPackage.ts",
+      "to": "src/lib/packages/audioPackageCodec.ts",
+      "line": 19,
+      "typeOnly": true,
+      "kind": "re-export",
+      "declaration": "export type {AudioPackage} from \"./packages/audioPackageCodec\";"
+    },
+    {
+      "from": "src/components/music/MusicWorkspacePage.tsx",
+      "to": "src/components/music/switchMusicVariant.ts",
+      "line": 1,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {switchMusicVariant} from \"./switchMusicVariant\";"
+    },
+    {
+      "from": "src/components/music/MusicWorkspacePage.tsx",
+      "to": "src/lib/projectPackage.ts",
+      "line": 13,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {downloadBlob} from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "src/components/studio/ProjectGalleryPage.tsx",
+      "to": "src/lib/projectPackage.ts",
+      "line": 35,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {downloadBlob, exportProjectZip,} from \"@/lib/projectPackage\";"
+    },
+    {
+      "from": "src/components/studio/importStudioProject.ts",
+      "to": "src/lib/projectPackage.ts",
+      "line": 2,
+      "typeOnly": false,
+      "kind": "import",
+      "declaration": "import {importProjectZip, PackageError} from \"@/lib/projectPackage\";"
+    }
+  ],
+  "sourceGraphIncoming": {
+    ".trellis/tasks/10-08-src-remediation-d/reviews/D03-native-regression.mjs": [],
+    "src/components/agent/AgentChatPage.tsx": [
+      {
+        "from": "src/routes/_studio.agent.tsx",
+        "to": "src/components/agent/AgentChatPage.tsx",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 2
+      }
+    ],
+    "src/components/agent/chatExecutionFlows.ts": [
+      {
+        "from": "src/components/agent/AgentChatPage.tsx",
+        "to": "src/components/agent/chatExecutionFlows.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 3
+      }
+    ],
+    "src/components/agent/useChatExecutionSession.ts": [
+      {
+        "from": "src/components/agent/AgentChatPage.tsx",
+        "to": "src/components/agent/useChatExecutionSession.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 2
+      }
+    ],
+    "src/components/agent/useChatSelection.ts": [
+      {
+        "from": "src/components/agent/AgentChatPage.tsx",
+        "to": "src/components/agent/useChatSelection.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 1
+      }
+    ],
+    "src/components/audio/AudioTimeline.tsx": [
+      {
+        "from": "src/components/audio/AudioWorkspacePage.tsx",
+        "to": "src/components/audio/AudioTimeline.tsx",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 37
+      }
+    ],
+    "src/components/audio/AudioWorkspacePage.tsx": [
+      {
+        "from": "src/components/workspace/ProjectHomePage.tsx",
+        "to": "src/components/audio/AudioWorkspacePage.tsx",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 1
+      }
+    ],
+    "src/components/audio/audioSelection.ts": [
+      {
+        "from": "src/components/audio/AudioWorkspacePage.tsx",
+        "to": "src/components/audio/audioSelection.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 1
+      }
+    ],
+    "src/components/music/MusicWorkspacePage.tsx": [
+      {
+        "from": "src/components/workspace/ProjectHomePage.tsx",
+        "to": "src/components/music/MusicWorkspacePage.tsx",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 2
+      }
+    ],
+    "src/components/music/switchMusicVariant.ts": [
+      {
+        "from": "src/components/music/MusicWorkspacePage.tsx",
+        "to": "src/components/music/switchMusicVariant.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 1
+      }
+    ],
+    "src/components/shots/ShotEditorPage.tsx": [
+      {
+        "from": "src/routes/p.$projectId.e.$episodeId.shots.tsx",
+        "to": "src/components/shots/ShotEditorPage.tsx",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 2
+      }
+    ],
+    "src/components/shots/ShotRelationsEditor.tsx": [
+      {
+        "from": "src/components/shots/ShotEditorPage.tsx",
+        "to": "src/components/shots/ShotRelationsEditor.tsx",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 3
+      }
+    ],
+    "src/components/shots/ShotRow.tsx": [
+      {
+        "from": "src/components/shots/ShotEditorPage.tsx",
+        "to": "src/components/shots/ShotRow.tsx",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 2
+      }
+    ],
+    "src/components/shots/shotColumnFields.ts": [
+      {
+        "from": "src/components/shots/ShotEditorPage.tsx",
+        "to": "src/components/shots/shotColumnFields.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 1
+      },
+      {
+        "from": "src/components/shots/ShotRow.tsx",
+        "to": "src/components/shots/shotColumnFields.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 21
+      }
+    ],
+    "src/components/shots/shotEditorCommands.ts": [
+      {
+        "from": "src/components/shots/ShotEditorPage.tsx",
+        "to": "src/components/shots/shotEditorCommands.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 4
+      }
+    ],
+    "src/components/shots/useShotEditorKeyboard.ts": [
+      {
+        "from": "src/components/shots/ShotEditorPage.tsx",
+        "to": "src/components/shots/useShotEditorKeyboard.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 5
+      }
+    ],
+    "src/components/studio/ProjectGalleryPage.tsx": [
+      {
+        "from": "src/routes/_studio.projects.tsx",
+        "to": "src/components/studio/ProjectGalleryPage.tsx",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 2
+      }
+    ],
+    "src/components/studio/importStudioProject.ts": [
+      {
+        "from": "src/routes/_studio.tsx",
+        "to": "src/components/studio/importStudioProject.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 3
+      }
+    ],
+    "src/components/workspace/ProjectHomePage.tsx": [
+      {
+        "from": "src/routes/p.$projectId.index.tsx",
+        "to": "src/components/workspace/ProjectHomePage.tsx",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 2
+      }
+    ],
+    "src/lib/audio/buffers.ts": [
+      {
+        "from": "src/components/audio/AudioTimeline.tsx",
+        "to": "src/lib/audio/buffers.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 1
+      },
+      {
+        "from": "src/lib/audio/exportMix.ts",
+        "to": "src/lib/audio/buffers.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 6
+      }
+    ],
+    "src/lib/audio/exportMix.ts": [
+      {
+        "from": "src/components/audio/AudioTimeline.tsx",
+        "to": "src/lib/audio/exportMix.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 2
+      }
+    ],
+    "src/lib/audioProjectPackage.ts": [
+      {
+        "from": "src/lib/projectPackage.ts",
+        "to": "src/lib/audioProjectPackage.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 2
+      }
+    ],
+    "src/lib/generationIntent.ts": [],
+    "src/lib/packages/audioPackageCodec.ts": [
+      {
+        "from": "src/lib/audioProjectPackage.ts",
+        "to": "src/lib/packages/audioPackageCodec.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 17
+      },
+      {
+        "from": "src/lib/audioProjectPackage.ts",
+        "to": "src/lib/packages/audioPackageCodec.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "re-export",
+        "line": 18
+      },
+      {
+        "from": "src/lib/audioProjectPackage.ts",
+        "to": "src/lib/packages/audioPackageCodec.ts",
+        "internal": true,
+        "typeOnly": true,
+        "kind": "re-export",
+        "line": 19
+      },
+      {
+        "from": "src/lib/packages/projectPackageCodec.ts",
+        "to": "src/lib/packages/audioPackageCodec.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 37
+      }
+    ],
+    "src/lib/packages/packageError.ts": [
+      {
+        "from": "src/lib/packages/projectPackageCodec.ts",
+        "to": "src/lib/packages/packageError.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 38
+      },
+      {
+        "from": "src/lib/projectPackage.ts",
+        "to": "src/lib/packages/packageError.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 11
+      },
+      {
+        "from": "src/lib/projectPackage.ts",
+        "to": "src/lib/packages/packageError.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "re-export",
+        "line": 12
+      }
+    ],
+    "src/lib/packages/projectPackageCodec.ts": [
+      {
+        "from": "src/lib/projectPackage.ts",
+        "to": "src/lib/packages/projectPackageCodec.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 10
+      }
+    ],
+    "src/lib/productionContext.ts": [
+      {
+        "from": "src/lib/generationIntent.ts",
+        "to": "src/lib/productionContext.ts",
+        "internal": true,
+        "typeOnly": true,
+        "kind": "static-import",
+        "line": 18
+      }
+    ],
+    "src/lib/projectPackage.ts": [
+      {
+        "from": "src/components/audio/AudioExports.tsx",
+        "to": "src/lib/projectPackage.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 6
+      },
+      {
+        "from": "src/components/audio/AudioTimeline.tsx",
+        "to": "src/lib/projectPackage.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 34
+      },
+      {
+        "from": "src/components/audioMusic/shared.tsx",
+        "to": "src/lib/projectPackage.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 13
+      },
+      {
+        "from": "src/components/music/MusicWorkspacePage.tsx",
+        "to": "src/lib/projectPackage.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 13
+      },
+      {
+        "from": "src/components/produce/ProducePage.tsx",
+        "to": "src/lib/projectPackage.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 4
+      },
+      {
+        "from": "src/components/studio/ProjectGalleryPage.tsx",
+        "to": "src/lib/projectPackage.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 35
+      },
+      {
+        "from": "src/components/studio/importStudioProject.ts",
+        "to": "src/lib/projectPackage.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 2
+      },
+      {
+        "from": "src/components/workspace/WorkspaceChrome.tsx",
+        "to": "src/lib/projectPackage.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 26
+      }
+    ],
+    "src/routes/_studio.tsx": [
+      {
+        "from": "src/routeTree.gen.ts",
+        "to": "src/routes/_studio.tsx",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 12
+      }
+    ],
+    "src/routes/p.$projectId.index.tsx": [
+      {
+        "from": "src/routeTree.gen.ts",
+        "to": "src/routes/p.$projectId.index.tsx",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 39
+      }
+    ],
+    "tests/b01QueryIdentity.test.ts": [],
+    "tests/d03AudioCommands.test.ts": [],
+    "tests/d03ChatOwners.test.ts": [],
+    "tests/d03ShotCommands.test.ts": [],
+    "tests/fixtures/d03/harness.tsx": [],
+    "tests/fixtures/d03/index.html": []
+  }
+}

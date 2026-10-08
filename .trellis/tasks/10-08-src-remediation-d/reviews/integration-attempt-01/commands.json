@@ -1,0 +1,149 @@
+[
+  {
+    "name": "typecheck",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "lint"
+    ],
+    "exit": 0,
+    "seconds": 6.93
+  },
+  {
+    "name": "tests",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "test",
+      "--reporter=dot",
+      "--maxWorkers",
+      "4"
+    ],
+    "exit": 0,
+    "seconds": 17.96
+  },
+  {
+    "name": "b01-browser",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/b01-browser-regression.mjs"
+    ],
+    "exit": 0,
+    "seconds": 20.87
+  },
+  {
+    "name": "b07-browser",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/b07-browser-regression.mjs"
+    ],
+    "exit": 0,
+    "seconds": 3.74
+  },
+  {
+    "name": "c01-browser",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/c01-browser-regression.mjs"
+    ],
+    "exit": 0,
+    "seconds": 2.76
+  },
+  {
+    "name": "c02-browser",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/c02-browser-regression.mjs"
+    ],
+    "exit": 0,
+    "seconds": 2.82
+  },
+  {
+    "name": "d01-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/10-08-src-remediation-d/reviews/D01-native-regression.mjs"
+    ],
+    "exit": 0,
+    "seconds": 2.76
+  },
+  {
+    "name": "d02-cascades-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/10-08-src-remediation-d/reviews/D02-native-regression.mjs"
+    ],
+    "exit": 0,
+    "seconds": 0.7
+  },
+  {
+    "name": "d02-d01-rollback-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/10-08-src-remediation-d/reviews/D02-native-d01-rollback.mjs"
+    ],
+    "exit": 0,
+    "seconds": 0.68
+  },
+  {
+    "name": "d03-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/10-08-src-remediation-d/reviews/D03-native-regression.mjs"
+    ],
+    "exit": 0,
+    "seconds": 10.73
+  },
+  {
+    "name": "d04-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/10-08-src-remediation-d/research/D04-native.mjs"
+    ],
+    "exit": 0,
+    "seconds": 3.95
+  },
+  {
+    "name": "d05-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/10-08-src-remediation-d/reviews/D05-native.mjs"
+    ],
+    "exit": 0,
+    "seconds": 2.32
+  },
+  {
+    "name": "d06-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/10-08-src-remediation-d/reviews/D06-native.mjs"
+    ],
+    "exit": 0,
+    "seconds": 17.57,
+    "environment": {
+      "D06_NATIVE_REPORT_PATH": ".trellis/tasks/10-08-src-remediation-d/reviews/integration/d06-native-report.json"
+    }
+  },
+  {
+    "name": "d06-compiler-negatives",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      ".trellis/tasks/10-08-src-remediation-d/reviews/D06-compiler-negatives.mjs"
+    ],
+    "exit": 0,
+    "seconds": 6.67,
+    "environment": {
+      "D06_COMPILER_REPORT_PATH": ".trellis/tasks/10-08-src-remediation-d/reviews/integration/d06-compiler-report.json"
+    }
+  },
+  {
+    "name": "d08-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/d08-browser-regression.mjs"
+    ],
+    "exit": 1,
+    "seconds": 0.15,
+    "environment": {
+      "D08_REPORT_PATH": ".trellis/tasks/10-08-src-remediation-d/reviews/integration/d08-native-report.json"
+    }
+  }
+]

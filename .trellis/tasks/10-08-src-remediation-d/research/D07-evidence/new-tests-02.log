@@ -1,0 +1,26 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+··················
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/d07RequestWire.test.ts [ tests/d07RequestWire.test.ts ]
+Error: Cannot find module './modelBank' imported from /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/visionCapability.ts
+ ❯ .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/visionCapability.ts:3:1
+      1| import type {AgentVisionCapability} from "@/domain/referenceInput";
+      2| import type {ChatModelMetadata} from "./modelMetadata";
+      3| import {getModelBankVision} from "./modelBank";
+       | ^
+      4|
+      5| export async function resolveVisionCapability(model: string, providerI…
+ ❯ .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/referenceWire.ts:7:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  18 passed (18)
+   Start at  15:04:26
+   Duration  365ms (transform 47%, tests 24%, setup 22%, import 6%, worker 1%)
+

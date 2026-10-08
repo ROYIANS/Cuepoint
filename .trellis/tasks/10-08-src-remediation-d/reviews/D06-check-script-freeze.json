@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-08T14:40:28.671577+08:00",
+  "productChanged": false,
+  "scripts": [
+    {
+      "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D06-native.mjs",
+      "before": "5d1d23ffd39469a846c4bdf82af21f4b02b3280960d673f22d020a79a80595a6",
+      "after": "45a8c007bc8e34680ee5b17d67d4db6176b31886ef862439c4bdfeb998a6e879"
+    },
+    {
+      "path": ".trellis/tasks/10-08-src-remediation-d/reviews/D06-compiler-negatives.mjs",
+      "before": "627eded1f30a81da79a44be025550a09baa877d44447820993901708cff34298",
+      "after": "b7cff8eeffb254c9ea964cfbef118ae3088bca5e7d5300eb44e67622663914e8"
+    }
+  ],
+  "environment": {
+    "D06_NATIVE_REPORT_PATH": ".trellis/tasks/10-08-src-remediation-d/reviews/D06-check-native.json",
+    "D06_COMPILER_REPORT_PATH": ".trellis/tasks/10-08-src-remediation-d/reviews/D06-check-compiler-negatives.json"
+  },
+  "defaultsUnchanged": true,
+  "baselineComparatorDefaultUnchanged": true,
+  "focusedGates": {
+    "native": "10 PASS, baselineUI false, zero external/paid requests/page errors; report byte-identical to original",
+    "compiler": "TS 5.9.3, 16/16 rejection, no unrelated diagnostics; report byte-identical to original"
+  },
+  "policy": "Only main-controlled integration env; global/per-entry baseline guards and confined output path validation belong to main gate tool. No source graph change; static/AST inputs remain unchanged."
+}

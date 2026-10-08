@@ -1,0 +1,51 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+·················x
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/d07RequestWire.test.ts [ tests/d07RequestWire.test.ts ]
+Error: Cannot find module './modelBank' imported from /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/modelMetadata.ts
+ ❯ .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/modelMetadata.ts:1:1
+      1| import {getModelBankEntry, MODEL_BANK_COPIED_AT} from "./modelBank";
+       | ^
+      2|
+      3| export interface ChatModelMetadata {
+ ❯ .trellis/tasks/10-08-src-remediation-d/research/D07-evidence/before/src/lib/ai/mimoSpeech.ts:5:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/d07RequestBoundary.test.ts > D07 actual adapter status, reading, paid outcome and cancellation > redacts full configured credentials before native adapter truncation and Tavily encoded-key URL filtering
+AssertionError: expected { ok: false, kind: 'validation', …(1) } to match object { ok: false, kind: 'http', …(1) }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "httpStatus": 403,
+-   "kind": "http",
++   "kind": "validation",
+    "ok": false,
+  }
+
+ ❯ tests/d07RequestBoundary.test.ts:202:28
+    200|             const fetchImpl = vi.fn<typeof fetch>(async () => Response…
+    201|             const result = await submit(config, {model: "model"}, {fet…
+    202|             expect(result).toMatchObject({ok: false, kind: "http", htt…
+       |                            ^
+    203|             expect(JSON.stringify(result)).not.toContain("q".repeat(30…
+    204|         }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  1 failed | 17 passed (18)
+   Start at  15:03:34
+   Duration  343ms (transform 45%, tests 25%, setup 23%, import 6%, worker 1%)
+

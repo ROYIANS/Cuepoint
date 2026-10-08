@@ -1,0 +1,18 @@
+
+> cuepoint@0.1.0 lint /Users/xiaomengdao/WebstormProjects/aifenjing
+> tsc -b --pretty false
+
+src/lib/agent/businessTools.ts(75,8): error TS6133: 'AssetKind' is declared but its value is never read.
+src/lib/agent/businessTools.ts(522,72): error TS2345: Argument of type '{ generationDefaults?: ObjectValue<{ readonly image: s.Spec<ObjectValue<{ readonly provider: s.Spec<"apimart">; readonly model: s.Spec<"gpt-image-2" | "gpt-image-2.5-flare" | "gpt-image-2.5-sunburst" | "gpt-image-2.5-ext">; ... 4 more ...; readonly version: s.Spec<...>; }> | undefined>; readonly video: s.Spec<...>; ...' is not assignable to parameter of type 'Partial<Pick<Project, "name" | "defaultStyleId" | "generationDefaults" | "brief" | "genre" | "audience" | "tone" | "aspectPreset">>'.
+  Types of property 'defaultStyleId' are incompatible.
+    Type 'string | null | undefined' is not assignable to type 'string | undefined'.
+      Type 'null' is not assignable to type 'string | undefined'.
+src/lib/agent/businessTools.ts(577,5): error TS2322: Type '{ sceneId?: string | null | undefined; title?: string | undefined; content?: string | undefined; timeOfDay?: string | undefined; characterIds?: string[] | undefined; }' is not assignable to type 'Partial<StoryBeat>'.
+  Types of property 'sceneId' are incompatible.
+    Type 'string | null | undefined' is not assignable to type 'string | undefined'.
+      Type 'null' is not assignable to type 'string | undefined'.
+src/lib/agent/businessTools.ts(583,5): error TS2322: Type '{ styleId?: string | null | undefined; beatId?: string | null | undefined; sceneId?: string | null | undefined; shotNumber?: string | undefined; status?: "ready" | "approved" | "draft" | "framed" | "clipped" | undefined; ... 11 more ...; propIds?: string[] | undefined; }' is not assignable to type 'Partial<Shot>'.
+  Types of property 'sceneId' are incompatible.
+    Type 'string | null | undefined' is not assignable to type 'string | undefined'.
+      Type 'null' is not assignable to type 'string | undefined'.
+ ELIFECYCLE  Command failed with exit code 2.

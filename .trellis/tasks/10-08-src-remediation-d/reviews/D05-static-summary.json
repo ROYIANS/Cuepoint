@@ -1,0 +1,1631 @@
+{
+  "unit": "D05",
+  "baselineRevision": "f062d694e61da6bcb574f7fb548803b9e54197eb",
+  "policy": "Baseline/current separate complete-source TypeScript programs, same restored versions/rules; aggregate signatures account for unchanged function relocation; raw per-file diagnostics preserved",
+  "versions": {
+    "eslint": "9.39.5",
+    "typescript-eslint": "8.71.1",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-sonarjs": "3.0.7",
+    "typescript": "5.9.2"
+  },
+  "files": 105,
+  "hashes": {
+    "src/components/agent/AgentChatPage.tsx": {
+      "before": "e59b75a283eeaf80084d7b8769ca842003a21460ad3e9347c288fdfa8a5d6487",
+      "after": "f7ff686baf6314bc1baf0f64463a8e5a0601a56baeffcb76a618b864d54c27b1"
+    },
+    "src/components/agent/AgentGenerationBatches.tsx": {
+      "before": "fa631d922c11747e8b4457d0f10c618a3997bb7f1c27ba2e6e57c16c29e07355",
+      "after": "534a1e18afd9053102b33eda9c00b8c2343d465a68ff92183d461b2f9763c1f9"
+    },
+    "src/components/agent/ContextParameters.tsx": {
+      "before": "436e0f779181f61661c36bb83e10c4fa97e762c8140e6cb748712bdc42f8348a",
+      "after": "23bc89fb757bce40225035a6e5c64a680fb271756e4cc8e679133cd2ed450a9f"
+    },
+    "src/components/agent/ContextUsagePanel.tsx": {
+      "before": "3a27e22f5e3f49b87f062bb4d1c069f4289299e82138bddc6d24441f3589e431",
+      "after": "b0ae7970eb7145c49d3e35a5437953c8e1738af4052e16c779e2da819405cceb"
+    },
+    "src/components/agent/CreatedEntityLinks.tsx": {
+      "before": "7837116f648061ae5da50d7317b4f49a0a46083563aec4453da321500f44ff08",
+      "after": "ee8c7d8b1022dca6dcd577c9a84d6bb4de2b4de1b0c9e50c0497bb779ff060c5"
+    },
+    "src/components/agent/MemoryContextDetails.tsx": {
+      "before": "09bad7c1f84578a8f4503c593e29a4d1bfaf6f2443e135e0e60c1e1b464ccd9f",
+      "after": "ecc5f6d847018757da6a32bd2640048168a9aa81917e9415f98c5fc988c56ac5"
+    },
+    "src/components/agent/ProjectPicker.tsx": {
+      "before": "859968bde9603de4d5b49fee88950a24c1e1c49488281e45899588f802d3c9da",
+      "after": "0b00ac534d402d25a53878d772938b36fc3b92d58d46315bcf97f46f8c5a023e"
+    },
+    "src/components/agent/chatExecutionFlows.ts": {
+      "before": null,
+      "after": "edf6a40a9fcca57dd5c64d758a9f69c787dbf294bfb5304b3d92ea0e73a99d3a"
+    },
+    "src/components/agent/useChatExecutionSession.ts": {
+      "before": null,
+      "after": "f70ddaf9b83b5216791efa8ca1a51bef87664fca3f1125d0b492661f2612429b"
+    },
+    "src/components/agent/useChatSelection.ts": {
+      "before": null,
+      "after": "4cb97e08af1420c24d8a9b558fa6620e79871805ed1a4da41e9ada66af8fd676"
+    },
+    "src/components/assets/AssetLibraryPage.tsx": {
+      "before": "1b84d725dffca4838f30dbc3156bef2e2820039d9ca6c634892387563e6fc04d",
+      "after": "d9ea19fa0afe07a0d77412f6ad4f6f2aa887557f9488ecdfba04e239d92ee9fd"
+    },
+    "src/components/assets/CharacterDetailPage.tsx": {
+      "before": "32799fd89a73500718c080ebbf4ca9f30d112ed1af2eeb7ff1827ff7cb72c8b1",
+      "after": "1d742f35a1f7a1eb58136380c5a41332bceb4c83818678d0275dad8ba1c36b84"
+    },
+    "src/components/assets/PropDetailPage.tsx": {
+      "before": "7c1808e144aba36b11c116aedd1e8c2931257646b8cd8e010ebab2c6718b4048",
+      "after": "1d2941686ae62f087dada9dae41870550a82914e8ae8e606eb2cc682a51d220d"
+    },
+    "src/components/assets/SceneDetailPage.tsx": {
+      "before": "df368bf17aac8edbc765a1540646ba25086c877c3c9457705b504bb264e53ffb",
+      "after": "c42a4924d692a166e38bdbde01f331904e58b083df0ef25d1b5e204ed0f47117"
+    },
+    "src/components/assets/StyleDetailPage.tsx": {
+      "before": "a23e41314f3b9a36ebeee8d46bc7b02f563606a1c7a8c85b4eb37686f59b28ce",
+      "after": "0c1945ab161ad42eed89c14b50e79a0200e2ff3f243039db41267f39b5c23327"
+    },
+    "src/components/assets/WorldSettingPanel.tsx": {
+      "before": "a88c7cbb72b1f03377ae3f3d44420569cf43a23b2167009a76bda772c874cf06",
+      "after": "819e48b84ee343b25a458979ec360e5d036bd054f904bb3fdf3a3cec422bcf43"
+    },
+    "src/components/audio/AudioTimeline.tsx": {
+      "before": "607778048835edc4aae79c144a9c86f8a43733707aeabc5f3d602a4d6d3a84b2",
+      "after": "8ca4c41ba7e4d56bee5c03a6c9223a4d59f9c793f4a95496bbe6ffb4f34eebb5"
+    },
+    "src/components/audio/AudioWorkspacePage.tsx": {
+      "before": "dc6d7f4c154c9d6e7a032a06a7c767c193e9ceeefb270f4e9b864b7af68beb3e",
+      "after": "56976ab498686e3dcb331c5af78b3d0442f5563bdcad14e230bad0df3f0336e2"
+    },
+    "src/components/audio/MimoConnection.tsx": {
+      "before": "cb8455ae6e5a22bef4838494769b874bb24b9ae40f1a99f5d681e28029185e79",
+      "after": "d914ad1a7de5c5e4b052f69e9f9f23bdfc85e1219f7e4080e37334d9874c6f22"
+    },
+    "src/components/audio/audioSelection.ts": {
+      "before": null,
+      "after": "8c9c24662529bc32914beb2267ae92e6be4d8ba1408502ef4e5666af05220bb1"
+    },
+    "src/components/music/MusicWorkspacePage.tsx": {
+      "before": "7ad5b9465b7ed4a63a27e604eb457655c4a218068954dcea4ddada49e5f9c47c",
+      "after": "759d42e7e2d92fbbdfb92615032e602ca021408737ede2b25dfe3edd66b78650"
+    },
+    "src/components/music/switchMusicVariant.ts": {
+      "before": null,
+      "after": "0678ae9a4c7c20c5bfb927e409bad0cb5c21da6c7bc8d0a82f44ec49c7eec58c"
+    },
+    "src/components/shots/DurationInput.tsx": {
+      "before": "55eaf4db61d6aa1bef7a6648e23f5909783530474e0ae44ea4f9c8ec5a4f2f9f",
+      "after": "630d13780ef5961e0eebc3dbd5f2e805196cbe75a9d290bc1fe4747730b2d451"
+    },
+    "src/components/shots/ShotEditorPage.tsx": {
+      "before": "c2e83c197b71236a2f09985012fcc8447b51392db5ca2b43499bc057fcaac428",
+      "after": "aa0b5135865eb7b40aa973200cf36afcb502c4b44137586a43503e7bc1241bd1"
+    },
+    "src/components/shots/ShotRelationsEditor.tsx": {
+      "before": null,
+      "after": "4e7214798e753711170161cbecb33098cf16e29c735d7d5a2972a68829851b22"
+    },
+    "src/components/shots/ShotRow.tsx": {
+      "before": null,
+      "after": "6b27b9b5366ece0a78866841bb8b187e7354936eee325de3fda7dd9b370732d4"
+    },
+    "src/components/shots/shotColumnFields.ts": {
+      "before": null,
+      "after": "2a32f957320a8e53568a3fabed0c9ce18b3295d621cb4d3948345f4f17244973"
+    },
+    "src/components/shots/shotEditorCommands.ts": {
+      "before": null,
+      "after": "6625e197bc6929f90789a722fe5cece14263432a780ea0a32aa03e85d88ba1f3"
+    },
+    "src/components/shots/useShotEditorKeyboard.ts": {
+      "before": null,
+      "after": "e15abfc68d6d63716b92329cb63047d00542dfa53e9a1c9a9f359865c50ef818"
+    },
+    "src/components/slots/GenerationSlotCard.tsx": {
+      "before": "4bc8efdc5a898252e93f315f7788fc0d4705bb42b0c3c42652828fec5780a097",
+      "after": "84dcab84986f0f3642cc8270cecfdb2b76ce527e9e3d6b6ea68ce8e24aeeb6d0"
+    },
+    "src/components/story/StoryPage.tsx": {
+      "before": "d4393a2fc0890d747cc71449de29a5327b06b1ed7b0e865491576781126b8abc",
+      "after": "f7d635f69d1702962d6177d72710f80c86f63176c04121af340fd9839a1f246a"
+    },
+    "src/components/studio/AssetLibraryPages.tsx": {
+      "before": "8181bb645b406f4d2ad60bd49f520c5061a83b5728cf268f49e1f59988067585",
+      "after": "77c817e0e78e888f2716179cf6f8cc018a7b10d8f19bfdbf3d27d3b6f2b38760"
+    },
+    "src/components/studio/ConnectorsPage.tsx": {
+      "before": "7c41e1b5c33211ab50d3db89dec67b2c6c98efbf3452030fae09d27ce50e4c76",
+      "after": "ca5a6ce7b3debcfefbee743cefa27370efb4650346d717c3725b1329ef87ece7"
+    },
+    "src/components/studio/ProjectGalleryPage.tsx": {
+      "before": "6e9edd15fc9ba44921ba810533c6b40337b81e75a4da75cc8e5677362234f79c",
+      "after": "d7ad89db117469718b22d17f3538a87c6833fa1b978bc7b4cfc4a92964e42248"
+    },
+    "src/components/studio/importStudioProject.ts": {
+      "before": null,
+      "after": "0e1fead05919ca6de4ea3b975aa71bfeae7cafdf26f1abd51127a2d1d1ef65dd"
+    },
+    "src/components/studio/materials/MaterialDetailPanel.tsx": {
+      "before": "e100e01b18ed5303d8f682c0d0c2988da29233704fb2e9c6091f49001d0839a1",
+      "after": "c6926fd5e164ae278731b738c494669ec46169c94c1076b9284419ef844dd514"
+    },
+    "src/components/workspace/EpisodeListPage.tsx": {
+      "before": "38f5bad8c1301af8bbe92b479d34c6c68b11abcce637c699d4c6fe26d1506e3a",
+      "after": "d3e993d6e3a53235670259bcdb684109e7be37445a4d9cf9ce649e4c9e6a04cd"
+    },
+    "src/components/workspace/ProjectHomePage.tsx": {
+      "before": null,
+      "after": "4571910239f78294664afc3c5b9ba349b9dc3635c89fda5821b18045de13bc11"
+    },
+    "src/components/workspace/ProjectSettingsPanel.tsx": {
+      "before": "fb33365b5124d8d69fe556fc5d2b92b3087c33842f8c8d733d0f6e1c842ea1ca",
+      "after": "634de344c9f1f2af4d012b7cf7fb229e78df52a755c6656c3853c3fe5287bbfb"
+    },
+    "src/components/workspace/WorkspaceChrome.tsx": {
+      "before": "9dd23617dcf89f9fc1cac484cfca7d61c7135d577e16be353d76f9b17ce2418d",
+      "after": "3ff742d2f13ab00cf7d365581a408f1205b8f9b0071c397d3d57d5135d8404ba"
+    },
+    "src/db/agentContextPreview.ts": {
+      "before": null,
+      "after": "34f41a02cf66f47c59beccaa224d85f7ce95ca6c8ab3d3800a0224d6095de3c4"
+    },
+    "src/db/agentFinishingCheck.ts": {
+      "before": "f2cbdc26539e013b3f6341eea1b3b5508ef695e859db68a67105b0487b0fbd12",
+      "after": "6410fb3478e6675eefb0a1d215bccb5e9d1271ba18b5bf89f6c1a4c0df903c59"
+    },
+    "src/db/agentGenerationBatches.ts": {
+      "before": "15da94e10a2b46600b616b39ad5be1fd60862c7aeaf800423af71b93a8d64d99",
+      "after": "e493af7796a052dd00d2c70f7bf9503e894e89d1052b0b9fc57b410867a4c00c"
+    },
+    "src/db/agentGenerationTarget.ts": {
+      "before": null,
+      "after": "7fe43005a118308586ba832d00c459a90a772f525b901e6d4cdfd4d13fdebd18"
+    },
+    "src/db/agentProjectCreation.ts": {
+      "before": "eb3c19cd5542f2ff4c82b49cb270c523ecf7f52ba012c65a07c794041f4eea48",
+      "after": "43a3bb9a90089c1a4ffa4f0cf9cc0a52769a781e99ac84b6ef8a582ff6462951"
+    },
+    "src/db/agentTaskGuards.ts": {
+      "before": null,
+      "after": "8df6820136145e10a82aef4c1db89d7c763150858fa96661b92b35a259cd6e7c"
+    },
+    "src/db/agentTaskRecords.ts": {
+      "before": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+      "after": "818022669a64f4fe8cf55c0e285582a62d196ab953fd357b47f027f65320533d"
+    },
+    "src/db/agentTasks.ts": {
+      "before": "6d45437549027d4a11d6cfe68f34ceaeeaf284bb3351e68c0f16f9142cc4cc95",
+      "after": "837fbd04efd0ea2aa07c6570beb9e88722d3cf62e0a37a4d1e4cc58b0b2edca6"
+    },
+    "src/db/agentTools.ts": {
+      "before": "61cc501686e8c0ccac5221cc84bfc14168be36ea1c483f01c432c46cfe60a50a",
+      "after": "51fc482601a428161a348d750c5b478c036275fb07ac548ef9ea339497022299"
+    },
+    "src/db/assetReuse.ts": {
+      "before": null,
+      "after": "bb81b6f8d9d94255de378db349f0a187600ed2f7146e6c19ac79bfa5b43795b3"
+    },
+    "src/db/assets.ts": {
+      "before": null,
+      "after": "32362eff2c660aaa4f020e093591be90f541e9741468e3e7d2e606164490068d"
+    },
+    "src/db/cascadeCommands.ts": {
+      "before": null,
+      "after": "01363e5054728ccd17aeeadfab92c123dc6411e12ec2ba63530900d0e45e9526"
+    },
+    "src/db/chat.ts": {
+      "before": null,
+      "after": "de30d5a29de339e06f48eeb9c94945c9bad8579c4a5bdd07ce78ecfc34d10287"
+    },
+    "src/db/connectors.ts": {
+      "before": null,
+      "after": "9d4b1ec444561cb578d5cc78184e74e78f7092a68a43551b996dfd6f95a4c91b"
+    },
+    "src/db/episodes.ts": {
+      "before": null,
+      "after": "92236d81fa13ecbb3b59740fb4b868e985710691df6bcefd2c926e57368819d4"
+    },
+    "src/db/media.ts": {
+      "before": null,
+      "after": "0b2105050422434e9f9955f94ee7d3bc165310e62c7fe418eec23944a8efd675"
+    },
+    "src/db/productionProposals.ts": {
+      "before": "59baa5e7fbc1b24f3b3e9d563fe52942f8b2c177b1863a51503d1a1eb0c42aa4",
+      "after": "ef005c40650c21a2fca7027d16b830150a28e9c6fc04bf09493a0b411153f595"
+    },
+    "src/db/productionRecords.ts": {
+      "before": null,
+      "after": "c4be1a9cbedebbbd11a3a4435fd06f97a7270b05376f50c0e3efe515d51d73e7"
+    },
+    "src/db/productionShared.ts": {
+      "before": null,
+      "after": "afd0e5b49aeb0f00c9f58f69f028e01f21062a2f6ba71741b056aec720797fc3"
+    },
+    "src/db/projects.ts": {
+      "before": null,
+      "after": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7"
+    },
+    "src/db/references.ts": {
+      "before": "fe72389945c57ad0d8d0d56fa03b848c502ffb6bea77395094fa142e04ac2afa",
+      "after": "b4f20572f890d395a8294f6377435a9c5b51d9cc9ab9238d396edb7d8915cb0d"
+    },
+    "src/db/repo.ts": {
+      "before": "614201eb96fce410aebabb18b7f9f6a5864596952f5716e4bda94d5ac5b5a33f",
+      "after": null
+    },
+    "src/db/shots.ts": {
+      "before": null,
+      "after": "fe48dc9ee40950096d91dde9119b56de03a9c1523aa872e5cce090fb833189b2"
+    },
+    "src/domain/agentToolSelection.ts": {
+      "before": null,
+      "after": "2efea8c45ad514225a5c22d78ccd1ecf5525cab7e88d175070a8a53b86eaa097"
+    },
+    "src/lib/agent/audioGenerationTools.ts": {
+      "before": "c42fb72a9e3e023b04582e45a9cfa26f8b5f455276283fe37847e05faf5c1e5f",
+      "after": "224a69998aa924e9592f3ffbe4273d61f25ab81588a47c16c00211f8dbfbb641"
+    },
+    "src/lib/agent/audioTools.ts": {
+      "before": "2d994f95a740cc35221a4ee4c444ce497cea0357c40e0b187fba97b90d926aae",
+      "after": "86da9979c828565347e0aadde1a517a75a0190da85deeee28ac7c7fca96b5366"
+    },
+    "src/lib/agent/businessSchemas.ts": {
+      "before": "db589d94729d8229ccc1b7919d2e912015bc68b432423ed2bce7718e5ce39a70",
+      "after": "b86d694989c3353c4c8ab09edc915ac72e8a9710289da09b881e771dc050b9ef"
+    },
+    "src/lib/agent/businessStore.ts": {
+      "before": "e92ddba5d58e49d1053796b29d00120f7d0e7a4b37d99a6dbf9cf5bc523fb75c",
+      "after": "53571ee862b15d05e4782048c5f393b7afe50132f1f3983cccb375ab10d99bcc"
+    },
+    "src/lib/agent/businessTools.ts": {
+      "before": "7e6cc4bbe28eee8da1d1d7fbb15e8aff6819152ed9404ac61ef04ef31c91d819",
+      "after": "0aad3a5e1d3792952da4980ed003aa863e3ecb9e87bdc30cab4bef6d18e63274"
+    },
+    "src/lib/agent/generationBatchRuntime.ts": {
+      "before": "92c86f14a128112905c8694a4cd3aec59633044e73b902bfc3daf9cd62530c43",
+      "after": "d473de0cc390f7c6975f110f8a8f902f0b7c53dcfc7151b4be585d5ae5a0d1a0"
+    },
+    "src/lib/agent/generationPreparation.ts": {
+      "before": null,
+      "after": "9f04785d944d98852726da709d630f1c712b2f08e32b353c2e40564362b3e0f0"
+    },
+    "src/lib/agent/generationProfiles.ts": {
+      "before": "1e4e6c2b546b43b2c6801057edc4ef7b75e84ab2ddba4caf1f3c989b5b511a93",
+      "after": "9c2f3f28f8d78306c4db005af6c60a5809a8c2bf73c84479392f9482ca8fd69d"
+    },
+    "src/lib/agent/generationRuntime.ts": {
+      "before": "3b8666ffe35474cd811cc34ae55290526a11ca14b9ac0b212d6d19ee49b6fb86",
+      "after": "a7218954e91ddeaf0eeed62608ab0e6a9b1dea0509d8bb97f22f888c398d8ec4"
+    },
+    "src/lib/agent/generationTools.ts": {
+      "before": "048e10ff8601ff57053293d3b6fc1d9c1fefe8f3d3344d6aaf01cc1854bc833f",
+      "after": "67aa3b9b8d81203478b1cae1e1613572aee1a01fbb2adfc1afcb29a7cf6fea9d"
+    },
+    "src/lib/agent/ipTools.ts": {
+      "before": "c0752fa767e48b16b71d49c86d5b6d3aa7627fbab600db59e97b8c5f85c8cdda",
+      "after": "eb3dd60b0376e455541c73b953d50a1e02bdf286a5cb1d869768411b48f84bdf"
+    },
+    "src/lib/agent/libraryToolHelpers.ts": {
+      "before": "201ae3605c573ea16ff9b082b7d17b2edb888971b350dd4b55cc66072f520f92",
+      "after": "81a900b924d37579479e1d5bbec68c318a9103f5c8be817c730b16aa0bc679a7"
+    },
+    "src/lib/agent/materialTools.ts": {
+      "before": "871bce6022e8fe2f8902c503986ab778b38413d811e79dc1615aaaf3c344928e",
+      "after": "4256632f8525af7d51f1ce11d06cc1576612e74cb1d9c2de8c05fd160a0e4db7"
+    },
+    "src/lib/agent/memoryTools.ts": {
+      "before": "5d89097a581570f7431a2613d67d67da5928762f86ecb945d7fcb58ea8495eb8",
+      "after": "8136c13c7ede476d7fc27163ce849f2983cfbff38e78cce6daf608fd843cb9e5"
+    },
+    "src/lib/agent/musicGenerationReview.ts": {
+      "before": "e7fef685f1aa44949195d5b505a67f924a54ea0e9ffc884498fecb9fe0bb3bae",
+      "after": "afb3ec3eb02f38e4236808505395b30a25a853390f946b953eb682b647c713b9"
+    },
+    "src/lib/agent/musicTools.ts": {
+      "before": "b08173c67264a6383d0469fee66d8eae2fdacb1f8b4063410bf3d9a9516c4d87",
+      "after": "7bcc1a948f453b20176b9a23bcc78a9efe282b1ff8dd45d964d0dab6df4d87b3"
+    },
+    "src/lib/agent/referenceTools.ts": {
+      "before": "66e8b7bfd81f3f04e238d05a4c6741991af62e1a6d9590d42614bedb75b4f93a",
+      "after": "e09a6ca411141b70002b37eadc93594f34c825f303296448a5bca00b629b6304"
+    },
+    "src/lib/agent/runChat.ts": {
+      "before": "041b257d68704cd863d98f106704bc5b5eab651199acdf3fb4ae3d0a31b0b984",
+      "after": "66717870c4f48a00f94ed374118af1508e5f2895321f0fe08040aacbedc79471"
+    },
+    "src/lib/agent/taskTools.ts": {
+      "before": "6e55619e39b36159f4956f8f16429bcd740bb6d5ed06d424bd4c0f40e8bd48fa",
+      "after": "17fa84724059d03aa65e2891f76354c83224e8e30e73c698a5ee6c176f8ea341"
+    },
+    "src/lib/agent/toolDefinition.ts": {
+      "before": null,
+      "after": "02c4be1c59dee37c6ef109b6e64f10f515de290e1516e70e9e413f6c60be858a"
+    },
+    "src/lib/agent/toolLoading.ts": {
+      "before": "8543e884202c7d1b6b853297280e2c7ca9d4317dd17002a28c71a8bec8c92261",
+      "after": "12201c7905fc761e38bc2110e5a0c55668d149f9ffa6f97514db6a804d8e4a15"
+    },
+    "src/lib/agent/tools.ts": {
+      "before": "f02a84a492891364673df245242e2da1ca889277e9a670fce0dfea963c914bbd",
+      "after": "fd78896242970d3f1d69a3caae0976d0dfcb94e5b1e66c5984e656f0e0b83760"
+    },
+    "src/lib/agent/webTools.ts": {
+      "before": "bff9ac8007c6b2e0321fba6d63e7564f5175645dc29a6d867de494ac8092da49",
+      "after": "aa3d27fdabe928851f016e4b4f2e46605e622be93bd1a7125dc8dddd95e575bb"
+    },
+    "src/lib/audio/buffers.ts": {
+      "before": null,
+      "after": "8ae1943a1b592b82faa8bda84e2bfe2d771b453bdd3b552e8fe033fae34a392b"
+    },
+    "src/lib/audio/exportMix.ts": {
+      "before": null,
+      "after": "acd1f90ce5be24d71e8cfe6b567b65305d253b5885d079449c8f77dc641979be"
+    },
+    "src/lib/audioGeneration/runtime.ts": {
+      "before": "e63f2ea630494265031c7110a7beac4dd190dfe61e7dbefbb7d10caf7cefb054",
+      "after": "1fb88b77565be67d97e1a22f7b926ae33e34adef57392de9d49637bbccc445dc"
+    },
+    "src/lib/audioProjectPackage.ts": {
+      "before": "8412440a2fc31960d444d71e6a3d5b5cd8c3e4dd2c713d03db3be6bb95737331",
+      "after": "93886389c152de00353d0ca082816c4678f31f55ee554a65b8e243bd74224e63"
+    },
+    "src/lib/generationIntent.ts": {
+      "before": "0b6e2e30b66317927754feb9f888fedbbcb61f8f3db3bbdb0fc005b01ddc85ae",
+      "after": "9d5e5e59271d8797c0d3dd99b64f8ddf3c83418a0f53225b67b006b57cac2c5a"
+    },
+    "src/lib/media.ts": {
+      "before": "41cde151b5d0b378030effc580f583febe49a6dc07552416657685a8067114e2",
+      "after": "bb352b6d1933651ab5cb13fcadfc27f92694c0d13cba4f2881c9b4361c8eb630"
+    },
+    "src/lib/memory/retrieval.ts": {
+      "before": "7ae1edf41af85276a2ffb9c8005b3e1c43d7790adb8545a2ad01d0aa03e70893",
+      "after": "d6223195ad62db7f07730ce3df609d8777a98714a615de9914eb7bb23f014ca1"
+    },
+    "src/lib/packages/audioPackageCodec.ts": {
+      "before": null,
+      "after": "6ffb2dec2d936e381b17b00151e96a498938abb732be04442fc8ecb85a2146a9"
+    },
+    "src/lib/packages/packageError.ts": {
+      "before": null,
+      "after": "7f0bff1911c72887aa98417705bba9ecc62b87d2b21ae5320384001d326c232a"
+    },
+    "src/lib/packages/projectPackageCodec.ts": {
+      "before": null,
+      "after": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da"
+    },
+    "src/lib/productionContext.ts": {
+      "before": "00b0cf737985565c0c30aa6be63280b497d1453f939327041909885436a751fb",
+      "after": "f6b612e67a7fb9ebc0f3c15919db377dc6bf28a832093ed93648748a0c81c8b3"
+    },
+    "src/lib/projectPackage.ts": {
+      "before": "ee0ef3c984a4454f5d90e9ac7b8c0570f919024fb2078d9862fad93efc2cb555",
+      "after": "ad99f320cc1908b8f1bc70c32103b50f36eb3a2d2765e42ebda385c9709bc4c4"
+    },
+    "src/routes/_studio.tsx": {
+      "before": "d6b7686f6cecb140b5b9e06ca41cf813a4cc3590f795c36f2dfe228dfde7c342",
+      "after": "ba052a2d1170a52f3d37835920a6b5af18fde9b035c3d44c38946355cdc5c4ab"
+    },
+    "src/routes/p.$projectId.index.tsx": {
+      "before": "0a20cef48da89ebf46de8555d34a0d27c39ddc8b2d8464941610994ff61be63f",
+      "after": "b4145f2ffb1ed25ee5da29787801d6375f9ba69781f7664b1908d998cb62819b"
+    },
+    "src/routes/p.$projectId.plan.tsx": {
+      "before": "e14dcd6050a0c591ff7ef3069fcc59df29793f91d0dde77daa199cf638f90343",
+      "after": "68a106492dfbe0b50807ecdaa694d1f8e5e5cb59a1155bb93462931f4b2c2af4"
+    },
+    "src/routes/p.$projectId.produce.tsx": {
+      "before": "924fce45945c001b262ee8ac73a1a06522f6949de55b103a428789f67668c32d",
+      "after": "ec26e87ff953a5e050206a13d9e337af4ff3a24a8879ceac8f9d5b04b7cbc2a7"
+    },
+    "src/routes/p.$projectId.report.tsx": {
+      "before": "fa7f2dfd20d06dc9b323784c423352703065f4cdc535822b1f561e14d3b47c43",
+      "after": "3c006d655ecc48684cf16be07bcd39645c4bdaf677f7f4721f522dd0f017d64b"
+    },
+    "src/routes/p.$projectId.shots.tsx": {
+      "before": "7d4ce7d34793465e60a0322043960e4f704357c70cee08d82a1655d6bcfdb647",
+      "after": "1cc9675597b37b91ded81be31bd09f73fe5d716837437e25cb29eb8ec889a195"
+    }
+  },
+  "baselineErrors": 134,
+  "baselineWarnings": 233,
+  "currentErrors": 121,
+  "currentWarnings": 222,
+  "addedNoncomplexity": [],
+  "addedComplexity": [
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'AgentChatInner' has a complexity of 100. Maximum allowed is 20.",
+      "line": 56,
+      "column": 1,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 56,
+      "endColumn": 24
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 57 to the 20 allowed.",
+      "line": 56,
+      "column": 10,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 56,
+      "endColumn": 24
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/ContextUsagePanel.tsx",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 31 to the 20 allowed.",
+      "line": 54,
+      "column": 23,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 54,
+      "endColumn": 25
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/ContextUsagePanel.tsx",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Arrow function has a complexity of 61. Maximum allowed is 20.",
+      "line": 54,
+      "column": 23,
+      "nodeType": "ArrowFunctionExpression",
+      "messageId": "complex",
+      "endLine": 54,
+      "endColumn": 25
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/ContextUsagePanel.tsx",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'ContextUsagePanel' has a complexity of 46. Maximum allowed is 20.",
+      "line": 167,
+      "column": 8,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 167,
+      "endColumn": 34
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/MemoryContextDetails.tsx",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'MemoryContextContent' has a complexity of 48. Maximum allowed is 20.",
+      "line": 49,
+      "column": 1,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 49,
+      "endColumn": 30
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/shots/useShotEditorKeyboard.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'onKeyDown' has a complexity of 30. Maximum allowed is 20.",
+      "line": 22,
+      "column": 9,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 22,
+      "endColumn": 27
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/musicGenerationReview.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Async function 'inspect' has a complexity of 39. Maximum allowed is 20.",
+      "line": 25,
+      "column": 1,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 25,
+      "endColumn": 23
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/runChat.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Async function 'executePendingTools' has a complexity of 51. Maximum allowed is 20.",
+      "line": 93,
+      "column": 1,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 93,
+      "endColumn": 35
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/generationIntent.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Async arrow function has a complexity of 22. Maximum allowed is 20.",
+      "line": 131,
+      "column": 135,
+      "nodeType": "ArrowFunctionExpression",
+      "messageId": "complex",
+      "endLine": 131,
+      "endColumn": 137
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/projectPackage.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Async function 'importProjectZip' has a complexity of 31. Maximum allowed is 20.",
+      "line": 187,
+      "column": 8,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 187,
+      "endColumn": 39
+    }
+  ],
+  "newFileDiagnostics": [
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/useChatSelection.ts",
+      "ruleId": "react-hooks/exhaustive-deps",
+      "severity": 1,
+      "message": "React Hook useEffect has a missing dependency: 'activeThread'. Either include it or remove the dependency array.",
+      "line": 39,
+      "column": 8,
+      "nodeType": "ArrayExpression",
+      "endLine": 39,
+      "endColumn": 97,
+      "suggestions": [
+        {
+          "desc": "Update the dependencies array to be: [loaded, activeThread.id, activeThread.connectorId, activeThread.model, connectorList, activeThread]",
+          "fix": {
+            "range": [
+              2500,
+              2589
+            ],
+            "text": "[loaded, activeThread.id, activeThread.connectorId, activeThread.model, connectorList, activeThread]"
+          }
+        }
+      ]
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/shots/ShotRelationsEditor.tsx",
+      "ruleId": "no-nested-ternary",
+      "severity": 1,
+      "message": "Do not nest ternary expressions.",
+      "line": 25,
+      "column": 24,
+      "nodeType": "ConditionalExpression",
+      "messageId": "noNestedTernary",
+      "endLine": 25,
+      "endColumn": 110
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/shots/ShotRelationsEditor.tsx",
+      "ruleId": "no-nested-ternary",
+      "severity": 1,
+      "message": "Do not nest ternary expressions.",
+      "line": 54,
+      "column": 71,
+      "nodeType": "ConditionalExpression",
+      "messageId": "noNestedTernary",
+      "endLine": 54,
+      "endColumn": 136
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/shots/ShotRelationsEditor.tsx",
+      "ruleId": "no-nested-ternary",
+      "severity": 1,
+      "message": "Do not nest ternary expressions.",
+      "line": 95,
+      "column": 18,
+      "nodeType": "ConditionalExpression",
+      "messageId": "noNestedTernary",
+      "endLine": 108,
+      "endColumn": 28
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/shots/ShotRow.tsx",
+      "ruleId": "@typescript-eslint/switch-exhaustiveness-check",
+      "severity": 2,
+      "message": "Switch is not exhaustive. Cases not matched: \"cameraAngle\" | \"cameraGear\" | \"category\" | \"emotion\" | \"focalLength\" | \"sceneCloseup\" | \"sound\"",
+      "line": 24,
+      "column": 13,
+      "nodeType": "Identifier",
+      "messageId": "switchIsNotExhaustive",
+      "endLine": 24,
+      "endColumn": 15,
+      "suggestions": [
+        {
+          "messageId": "addMissingCases",
+          "fix": {
+            "range": [
+              1796,
+              1796
+            ],
+            "text": "case \"cameraAngle\": { throw new Error('Not implemented yet: \"cameraAngle\" case') }\n        case \"cameraGear\": { throw new Error('Not implemented yet: \"cameraGear\" case') }\n        case \"category\": { throw new Error('Not implemented yet: \"category\" case') }\n        case \"emotion\": { throw new Error('Not implemented yet: \"emotion\" case') }\n        case \"focalLength\": { throw new Error('Not implemented yet: \"focalLength\" case') }\n        case \"sceneCloseup\": { throw new Error('Not implemented yet: \"sceneCloseup\" case') }\n        case \"sound\": { throw new Error('Not implemented yet: \"sound\" case') }\n        "
+          },
+          "desc": "Add branches for missing cases."
+        }
+      ]
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/shots/ShotRow.tsx",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 25 to the 20 allowed.",
+      "line": 363,
+      "column": 48,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 363,
+      "endColumn": 50
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/shots/ShotRow.tsx",
+      "ruleId": "no-nested-ternary",
+      "severity": 1,
+      "message": "Do not nest ternary expressions.",
+      "line": 365,
+      "column": 30,
+      "nodeType": "ConditionalExpression",
+      "messageId": "noNestedTernary",
+      "endLine": 524,
+      "endColumn": 30
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/shots/ShotRow.tsx",
+      "ruleId": "no-nested-ternary",
+      "severity": 1,
+      "message": "Do not nest ternary expressions.",
+      "line": 369,
+      "column": 33,
+      "nodeType": "ConditionalExpression",
+      "messageId": "noNestedTernary",
+      "endLine": 524,
+      "endColumn": 30
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/shots/ShotRow.tsx",
+      "ruleId": "no-nested-ternary",
+      "severity": 1,
+      "message": "Do not nest ternary expressions.",
+      "line": 385,
+      "column": 24,
+      "nodeType": "ConditionalExpression",
+      "messageId": "noNestedTernary",
+      "endLine": 419,
+      "endColumn": 24
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/shots/ShotRow.tsx",
+      "ruleId": "no-nested-ternary",
+      "severity": 1,
+      "message": "Do not nest ternary expressions.",
+      "line": 387,
+      "column": 27,
+      "nodeType": "ConditionalExpression",
+      "messageId": "noNestedTernary",
+      "endLine": 419,
+      "endColumn": 24
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/shots/useShotEditorKeyboard.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'onKeyDown' has a complexity of 30. Maximum allowed is 20.",
+      "line": 22,
+      "column": 9,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 22,
+      "endColumn": 27
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/shots/useShotEditorKeyboard.ts",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+      "line": 22,
+      "column": 18,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 22,
+      "endColumn": 27
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/assetReuse.ts",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 33 to the 20 allowed.",
+      "line": 64,
+      "column": 18,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 64,
+      "endColumn": 20
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/assetReuse.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Async arrow function has a complexity of 23. Maximum allowed is 20.",
+      "line": 64,
+      "column": 18,
+      "nodeType": "ArrowFunctionExpression",
+      "messageId": "complex",
+      "endLine": 64,
+      "endColumn": 20
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/assetReuse.ts",
+      "ruleId": "no-nested-ternary",
+      "severity": 1,
+      "message": "Do not nest ternary expressions.",
+      "line": 69,
+      "column": 17,
+      "nodeType": "ConditionalExpression",
+      "messageId": "noNestedTernary",
+      "endLine": 75,
+      "endColumn": 60
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/assetReuse.ts",
+      "ruleId": "no-nested-ternary",
+      "severity": 1,
+      "message": "Do not nest ternary expressions.",
+      "line": 71,
+      "column": 23,
+      "nodeType": "ConditionalExpression",
+      "messageId": "noNestedTernary",
+      "endLine": 75,
+      "endColumn": 60
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/assetReuse.ts",
+      "ruleId": "no-nested-ternary",
+      "severity": 1,
+      "message": "Do not nest ternary expressions.",
+      "line": 81,
+      "column": 17,
+      "nodeType": "ConditionalExpression",
+      "messageId": "noNestedTernary",
+      "endLine": 87,
+      "endColumn": 93
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/assetReuse.ts",
+      "ruleId": "no-nested-ternary",
+      "severity": 1,
+      "message": "Do not nest ternary expressions.",
+      "line": 83,
+      "column": 23,
+      "nodeType": "ConditionalExpression",
+      "messageId": "noNestedTernary",
+      "endLine": 87,
+      "endColumn": 93
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/episodes.ts",
+      "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+      "severity": 2,
+      "message": "This assertion is unnecessary since it does not change the type of the expression.",
+      "line": 278,
+      "column": 24,
+      "nodeType": "TSNonNullExpression",
+      "messageId": "unnecessaryAssertion",
+      "endLine": 278,
+      "endColumn": 49,
+      "fix": {
+        "range": [
+          11567,
+          11568
+        ],
+        "text": ""
+      }
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/media.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Async function 'collectMediaIds' has a complexity of 32. Maximum allowed is 20.",
+      "line": 6,
+      "column": 8,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 6,
+      "endColumn": 38
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/media.ts",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 39 to the 20 allowed.",
+      "line": 6,
+      "column": 23,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 6,
+      "endColumn": 38
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/projects.ts",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 24 to the 20 allowed.",
+      "line": 80,
+      "column": 65,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 80,
+      "endColumn": 67
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/db/shots.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Async arrow function has a complexity of 21. Maximum allowed is 20.",
+      "line": 72,
+      "column": 61,
+      "nodeType": "ArrowFunctionExpression",
+      "messageId": "complex",
+      "endLine": 72,
+      "endColumn": 63
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/audioPackageCodec.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'remapAudioPackage' has a complexity of 36. Maximum allowed is 20.",
+      "line": 202,
+      "column": 8,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 202,
+      "endColumn": 34
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/audioPackageCodec.ts",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 64 to the 20 allowed.",
+      "line": 202,
+      "column": 17,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 202,
+      "endColumn": 34
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+      "severity": 2,
+      "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+      "line": 45,
+      "column": 12,
+      "nodeType": "TSAsExpression",
+      "messageId": "contextuallyUnnecessary",
+      "endLine": 45,
+      "endColumn": 50,
+      "fix": {
+        "range": [
+          1520,
+          1547
+        ],
+        "text": ""
+      }
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.coverMediaId' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 122,
+      "column": 44,
+      "nodeType": "MemberExpression",
+      "messageId": "baseToString",
+      "endLine": 122,
+      "endColumn": 60
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.coverMediaId' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 123,
+      "column": 22,
+      "nodeType": "MemberExpression",
+      "messageId": "baseToString",
+      "endLine": 123,
+      "endColumn": 38
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.id ?? createId(\"prj\")' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 128,
+      "column": 20,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 128,
+      "endColumn": 45
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.name ?? fallbackName' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 129,
+      "column": 22,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 129,
+      "endColumn": 46
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 139,
+      "column": 27,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 139,
+      "endColumn": 46
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 140,
+      "column": 27,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 140,
+      "endColumn": 46
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+      "severity": 2,
+      "message": "This assertion is unnecessary since it does not change the type of the expression.",
+      "line": 144,
+      "column": 24,
+      "nodeType": "TSAsExpression",
+      "messageId": "unnecessaryAssertion",
+      "endLine": 144,
+      "endColumn": 49,
+      "fix": {
+        "range": [
+          4674,
+          4692
+        ],
+        "text": ""
+      }
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.id ?? createId(\"chr\")' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 202,
+      "column": 20,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 202,
+      "endColumn": 45
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.name ?? \"未命名角色\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 207,
+      "column": 22,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 207,
+      "endColumn": 41
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.bio ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 208,
+      "column": 21,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 208,
+      "endColumn": 34
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.appearance ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 209,
+      "column": 28,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 209,
+      "endColumn": 48
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 210,
+      "column": 23,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 210,
+      "endColumn": 38
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 212,
+      "column": 27,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 212,
+      "endColumn": 46
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 213,
+      "column": 27,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 213,
+      "endColumn": 46
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.id ?? createId(\"scn\")' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 238,
+      "column": 20,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 238,
+      "endColumn": 45
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.name ?? \"未命名场景\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 242,
+      "column": 22,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 242,
+      "endColumn": 41
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.location ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 243,
+      "column": 26,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 243,
+      "endColumn": 44
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.timeOfDay ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 244,
+      "column": 27,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 244,
+      "endColumn": 46
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.atmosphere ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 245,
+      "column": 28,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 245,
+      "endColumn": 48
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 246,
+      "column": 23,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 246,
+      "endColumn": 38
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 248,
+      "column": 27,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 248,
+      "endColumn": 46
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 249,
+      "column": 27,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 249,
+      "endColumn": 46
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.id ?? createId(\"prp\")' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 274,
+      "column": 20,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 274,
+      "endColumn": 45
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.name ?? \"未命名道具\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 281,
+      "column": 22,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 281,
+      "endColumn": 41
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.kind ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 282,
+      "column": 22,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 282,
+      "endColumn": 36
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 283,
+      "column": 23,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 283,
+      "endColumn": 38
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 285,
+      "column": 27,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 285,
+      "endColumn": 46
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 286,
+      "column": 27,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 286,
+      "endColumn": 46
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.id ?? createId(\"sty\")' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 310,
+      "column": 20,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 310,
+      "endColumn": 45
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.name ?? \"未命名风格\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 317,
+      "column": 22,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 317,
+      "endColumn": 41
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 318,
+      "column": 23,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 318,
+      "endColumn": 38
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 320,
+      "column": 27,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 320,
+      "endColumn": 46
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 321,
+      "column": 27,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 321,
+      "endColumn": 46
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.id ?? createId(\"ep\")' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 400,
+      "column": 20,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 400,
+      "endColumn": 44
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.title ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 403,
+      "column": 23,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 403,
+      "endColumn": 38
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 408,
+      "column": 27,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 408,
+      "endColumn": 46
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 409,
+      "column": 27,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 409,
+      "endColumn": 46
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'parseShot' has a complexity of 21. Maximum allowed is 20.",
+      "line": 461,
+      "column": 1,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 461,
+      "endColumn": 19
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.id ?? createId(\"sht\")' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 469,
+      "column": 20,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 469,
+      "endColumn": 45
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.episodeId ?? episodeId' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 471,
+      "column": 27,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 471,
+      "endColumn": 53
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.shotNumber ?? index + 1' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 473,
+      "column": 28,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 473,
+      "endColumn": 55
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.category ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 480,
+      "column": 26,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 480,
+      "endColumn": 44
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.content ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 482,
+      "column": 25,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 482,
+      "endColumn": 42
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 483,
+      "column": 23,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 483,
+      "endColumn": 38
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.sceneCloseup ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 484,
+      "column": 30,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 484,
+      "endColumn": 52
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.sound ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 485,
+      "column": 23,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 485,
+      "endColumn": 38
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.emotion ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 486,
+      "column": 25,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 486,
+      "endColumn": 42
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.cameraAngle ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 487,
+      "column": 29,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 487,
+      "endColumn": 50
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.cameraGear ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 488,
+      "column": 28,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 488,
+      "endColumn": 48
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.focalLength ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 489,
+      "column": 29,
+      "nodeType": "LogicalExpression",
+      "messageId": "baseToString",
+      "endLine": 489,
+      "endColumn": 50
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.sceneId' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 493,
+      "column": 39,
+      "nodeType": "MemberExpression",
+      "messageId": "baseToString",
+      "endLine": 493,
+      "endColumn": 50
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-base-to-string",
+      "severity": 2,
+      "message": "'raw.beatId' will use Object's default stringification format ('[object Object]') when stringified.",
+      "line": 494,
+      "column": 37,
+      "nodeType": "MemberExpression",
+      "messageId": "baseToString",
+      "endLine": 494,
+      "endColumn": 47
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'parseMemoryPackage' has a complexity of 26. Maximum allowed is 20.",
+      "line": 541,
+      "column": 1,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 541,
+      "endColumn": 28
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+      "line": 541,
+      "column": 10,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 541,
+      "endColumn": 28
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+      "severity": 2,
+      "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+      "line": 785,
+      "column": 22,
+      "nodeType": "TSAsExpression",
+      "messageId": "contextuallyUnnecessary",
+      "endLine": 790,
+      "endColumn": 27,
+      "fix": {
+        "range": [
+          26349,
+          26366
+        ],
+        "text": ""
+      }
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+      "severity": 2,
+      "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+      "line": 797,
+      "column": 23,
+      "nodeType": "TSAsExpression",
+      "messageId": "contextuallyUnnecessary",
+      "endLine": 802,
+      "endColumn": 34,
+      "fix": {
+        "range": [
+          26762,
+          26786
+        ],
+        "text": ""
+      }
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/packages/projectPackageCodec.ts",
+      "ruleId": "no-nested-ternary",
+      "severity": 1,
+      "message": "Do not nest ternary expressions.",
+      "line": 809,
+      "column": 28,
+      "nodeType": "ConditionalExpression",
+      "messageId": "noNestedTernary",
+      "endLine": 811,
+      "endColumn": 56
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+[
+  {
+    "name": "typecheck",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "lint"
+    ],
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "environment": {},
+    "startedAt": "2026-10-08T15:52:20.745949+08:00",
+    "seconds": 6.552,
+    "exitCode": 0,
+    "log": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-typecheck-post-static-fix.log",
+    "logSHA256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+    "sourceStage": "after genuine pendingIds memo correction"
+  },
+  {
+    "name": "focused",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "test",
+      "--maxWorkers=4",
+      "tests/d08TextDraftRepository.test.ts",
+      "tests/d08TextDraftComponents.test.ts",
+      "tests/debouncedDraft.test.ts",
+      "tests/draftConcurrency.test.ts",
+      "tests/manualDraftBaseline.test.ts",
+      "tests/manualDraftWiring.test.ts",
+      "tests/b01QueryIdentity.test.ts",
+      "tests/b03IntentBoundaries.test.ts",
+      "tests/b06EditorSessions.test.ts",
+      "tests/d03ShotCommands.test.ts"
+    ],
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "environment": {},
+    "startedAt": "2026-10-08T15:52:27.298745+08:00",
+    "seconds": 1.881,
+    "exitCode": 0,
+    "log": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-focused-post-static-fix.log",
+    "logSHA256": "62b279be4bd2261fc3224a3395d316c185f85f03cb1cf497475865ea7836cc8f",
+    "sourceStage": "after genuine pendingIds memo correction"
+  },
+  {
+    "name": "native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/d08-browser-regression.mjs"
+    ],
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "environment": {
+      "D08_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+      "D08_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell",
+      "D08_REPORT_PATH": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-native-current.json"
+    },
+    "startedAt": "2026-10-08T15:52:29.179924+08:00",
+    "seconds": 7.405,
+    "exitCode": 0,
+    "log": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-native-post-static-fix.log",
+    "logSHA256": "71bb200e7c2dbfd5a3ffa97c17766ae0ef8fb4e31e3e14b5f62edae9f87dd4f1",
+    "sourceStage": "after genuine pendingIds memo correction"
+  }
+]

@@ -1,0 +1,70 @@
+{
+  "unit": "D01",
+  "baselineRevision": "f062d694e61da6bcb574f7fb548803b9e54197eb",
+  "policy": "Baseline/current separate complete-source TypeScript programs, same restored versions/rules; aggregate signatures account for unchanged function relocation; raw per-file diagnostics preserved",
+  "versions": {
+    "eslint": "9.39.5",
+    "typescript-eslint": "8.71.1",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-sonarjs": "3.0.7",
+    "typescript": "5.9.2"
+  },
+  "files": 12,
+  "hashes": {
+    "src/db/agentFinishingCheck.ts": {
+      "before": "f2cbdc26539e013b3f6341eea1b3b5508ef695e859db68a67105b0487b0fbd12",
+      "after": "6410fb3478e6675eefb0a1d215bccb5e9d1271ba18b5bf89f6c1a4c0df903c59"
+    },
+    "src/db/agentGenerationBatches.ts": {
+      "before": "15da94e10a2b46600b616b39ad5be1fd60862c7aeaf800423af71b93a8d64d99",
+      "after": "13ab30f0e1ad917f964041d2e1dac914c2277a584e890419966ed7c7ac61a62e"
+    },
+    "src/db/agentGenerationTarget.ts": {
+      "before": null,
+      "after": "7fe43005a118308586ba832d00c459a90a772f525b901e6d4cdfd4d13fdebd18"
+    },
+    "src/db/agentProjectCreation.ts": {
+      "before": "eb3c19cd5542f2ff4c82b49cb270c523ecf7f52ba012c65a07c794041f4eea48",
+      "after": "43a3bb9a90089c1a4ffa4f0cf9cc0a52769a781e99ac84b6ef8a582ff6462951"
+    },
+    "src/db/agentTaskGuards.ts": {
+      "before": null,
+      "after": "8df6820136145e10a82aef4c1db89d7c763150858fa96661b92b35a259cd6e7c"
+    },
+    "src/db/agentTaskRecords.ts": {
+      "before": "e677199bc8a9698deec76624b74f43b094f0ae25992a8d550c8a9559cc914e25",
+      "after": "818022669a64f4fe8cf55c0e285582a62d196ab953fd357b47f027f65320533d"
+    },
+    "src/db/agentTasks.ts": {
+      "before": "6d45437549027d4a11d6cfe68f34ceaeeaf284bb3351e68c0f16f9142cc4cc95",
+      "after": "837fbd04efd0ea2aa07c6570beb9e88722d3cf62e0a37a4d1e4cc58b0b2edca6"
+    },
+    "src/db/agentTools.ts": {
+      "before": "61cc501686e8c0ccac5221cc84bfc14168be36ea1c483f01c432c46cfe60a50a",
+      "after": "51fc482601a428161a348d750c5b478c036275fb07ac548ef9ea339497022299"
+    },
+    "src/domain/agentToolSelection.ts": {
+      "before": null,
+      "after": "2efea8c45ad514225a5c22d78ccd1ecf5525cab7e88d175070a8a53b86eaa097"
+    },
+    "src/lib/agent/generationPreparation.ts": {
+      "before": null,
+      "after": "4447b50240976b0beef00d0e2b706344542ba35c222c8e475a4a43ec6e581d80"
+    },
+    "src/lib/agent/generationRuntime.ts": {
+      "before": "3b8666ffe35474cd811cc34ae55290526a11ca14b9ac0b212d6d19ee49b6fb86",
+      "after": "34f5eaa76d2d1001c1c15571c00a77faacb8719c01ebe44eb2b1a1a172951087"
+    },
+    "src/lib/agent/toolLoading.ts": {
+      "before": "8543e884202c7d1b6b853297280e2c7ca9d4317dd17002a28c71a8bec8c92261",
+      "after": "1599a871d8e10e822237b1cac3f7eed517254e6fd5f8db281a9dc6cde660851e"
+    }
+  },
+  "baselineErrors": 12,
+  "baselineWarnings": 32,
+  "currentErrors": 7,
+  "currentWarnings": 25,
+  "addedNoncomplexity": [],
+  "addedComplexity": [],
+  "newFileDiagnostics": []
+}

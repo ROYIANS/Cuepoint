@@ -1,0 +1,90 @@
+
+> cuepoint@0.1.0 test /Users/xiaomengdao/WebstormProjects/aifenjing
+> vitest run --maxWorkers=4 tests/d08TextDraftRepository.test.ts tests/d08TextDraftComponents.test.ts tests/debouncedDraft.test.ts tests/draftConcurrency.test.ts tests/manualDraftBaseline.test.ts tests/manualDraftWiring.test.ts tests/b01QueryIdentity.test.ts tests/b03IntentBoundaries.test.ts tests/b06EditorSessions.test.ts tests/d03ShotCommands.test.ts
+
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/d08TextDraftComponents.test.ts (5 tests | 3 failed) 116ms
+   ❯ D08 actual shared text control and retention (5)
+     × keeps the initial scalar baseline through remote notifications, failure, retry and explicit latest adoption 23ms
+     × retains an unmounted failure for project flush and restores it on reopen 9ms
+     × real shot and beat adapters save through their respective repository baselines 30ms
+ ❯ tests/d08TextDraftRepository.test.ts (22 tests | 1 failed) 183ms
+   ❯ D08 actual text persistence boundary (22)
+     × keeps old nontext behavior and normalizes an absent optional text baseline 13ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/d08TextDraftComponents.test.ts > D08 actual shared text control and retention > keeps the initial scalar baseline through remote notifications, failure, retry and explicit latest adoption
+AssertionError: expected 'saving' to be 'error' // Object.is equality
+
+Expected: "error"
+Received: "saving"
+
+ ❯ tests/d08TextDraftComponents.test.ts:103:75
+    101|         field.render(); field.change("mine"); field.external("remote");
+    102|         await expect(flushPendingDrafts("d08-conflict")).rejects.toBeI…
+    103|         expect(field.value()).toBe("mine"); expect(field.status().stat…
+       |                                                                           ^
+    104|         await (field.status().onRetry as () => Promise<void>)();
+    105|         expect(writes).toEqual([["mine", "base"], ["mine", "base"]]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/d08TextDraftComponents.test.ts > D08 actual shared text control and retention > retains an unmounted failure for project flush and restores it on reopen
+AssertionError: expected 'saving' to be 'error' // Object.is equality
+
+Expected: "error"
+Received: "saving"
+
+ ❯ tests/d08TextDraftComponents.test.ts:118:137
+    116|         await expect(flushPendingDrafts(props.projectId)).rejects.toTh…
+    117|         unmount(first.host); await expect(flushPendingDrafts(props.pro…
+    118|         const reopened = control(props); reopened.render(); expect(reo…
+       |                                                                                                                                         ^
+    119|         fail = false; await flushPendingDrafts(props.projectId);
+    120|         expect(writes.at(-1)).toEqual(["retained", "base"]); expect(re…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/d08TextDraftComponents.test.ts > D08 actual shared text control and retention > real shot and beat adapters save through their respective repository baselines
+DraftConflictError: 其他页面已修改此内容。你的草稿已保留；请复制需要保留的文字，再采用最新内容后合并。
+ ❯ assertDraftBaseline src/lib/draftConflict.ts:20:98
+     18|     for (const key of Object.keys(patch) as Array<keyof T>) {
+     19|         // Empty optional text fields have the same editor value as an…
+     20|         if ((current[key] ?? "") !== (baseline[key] ?? "") && current[…
+       |                                                                                                  ^
+     21|     }
+     22| }
+ ❯ Transaction.<anonymous> src/db/episodes.ts:237:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/d08TextDraftRepository.test.ts > D08 actual text persistence boundary > keeps old nontext behavior and normalizes an absent optional text baseline
+AssertionError: expected { …(6) } to match object { timeOfDay: '夜', …(1) }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "scriptRange": {
+-     "end": 2,
+-     "start": 0,
+-   },
+    "timeOfDay": "夜",
+  }
+
+ ❯ tests/d08TextDraftRepository.test.ts:66:52
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed | 8 passed (10)
+      Tests  4 failed | 165 passed (169)
+   Start at  15:37:21
+   Duration  1.70s (tests 46%, transform 31%, import 13%, setup 10%)
+
+ ELIFECYCLE  Test failed. See above for more details.

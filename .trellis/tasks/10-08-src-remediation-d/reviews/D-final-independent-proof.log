@@ -1,0 +1,143 @@
+fatal: path 'src/components/agent/chatExecutionFlows.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/components/agent/useChatExecutionSession.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/components/agent/useChatSelection.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/components/audio/audioSelection.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/components/drafts/TextDraftField.tsx' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/components/music/switchMusicVariant.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/components/shots/ShotRelationsEditor.tsx' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/components/shots/ShotRow.tsx' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/components/shots/ShotTextField.tsx' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/components/shots/shotColumnFields.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/components/shots/shotEditorCommands.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/components/shots/useShotEditorKeyboard.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/components/story/BeatTextField.tsx' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/components/studio/importStudioProject.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/components/workspace/ProjectHomePage.tsx' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/db/agentContextPreview.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/db/agentGenerationTarget.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/db/agentTaskGuards.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/db/assetReuse.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/db/assets.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/db/cascadeCommands.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/db/chat.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/db/connectors.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/db/episodes.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/db/media.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/db/productionRecords.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/db/productionShared.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/db/projects.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/db/shots.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/domain/agentToolSelection.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/domain/generationCapabilities.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/lib/agent/generationPreparation.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/lib/agent/toolDefinition.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/lib/ai/baseUrl.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/lib/ai/requestBoundary.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/lib/audio/buffers.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/lib/audio/exportMix.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/lib/packages/audioPackageCodec.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/lib/packages/packageError.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/lib/packages/projectPackageCodec.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+fatal: path 'src/lib/useTextDraftRetention.ts' exists on disk, but not in 'f062d694e61da6bcb574f7fb548803b9e54197eb'
+{
+  "status": "PASS",
+  "head": "abb7a91d255666fc8f772cddecd66676b9f2848c",
+  "sourceBaseline": "f062d694e61da6bcb574f7fb548803b9e54197eb",
+  "productCount": 335,
+  "coverageInventoryCorrection": {
+    "priorToolCount": 333,
+    "actualDirtyScope": 335,
+    "priorOmissions": {
+      ".trellis/tasks/10-08-src-remediation-d/research/static-runtime-eslint.config.mjs": {
+        "unit": "D01",
+        "sha256": "71fec4e76e3e26f5e21e6412d7847a5c7e0b8e828af4fba41237351faa24ccce"
+      },
+      ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check-native.mjs": {
+        "unit": "D01",
+        "sha256": "de53fdc34552cba07c6e6ece58e7e7ebb7ec479e097a75407b8688bdcd58fff1"
+      }
+    }
+  },
+  "focusedMerge": {
+    "componentCount": 3,
+    "pathCount": 76,
+    "mapsAndChecksIdentical": true,
+    "canonicalMetadataOnly": true
+  },
+  "gate": {
+    "inputCount": 759,
+    "prePostCurrentEqual": true,
+    "completeIndependentInventory": true,
+    "commands": 17,
+    "native": 9,
+    "files": 159,
+    "tests": 2552,
+    "untrackedWhitespace": 136
+  },
+  "static": {
+    "files": 123,
+    "baseline": [
+      142,
+      286
+    ],
+    "current": [
+      128,
+      273
+    ],
+    "addedNoncomplexity": 0,
+    "addedComplexity": 23,
+    "versions": {
+      "eslint": "9.39.5",
+      "typescript-eslint": "8.71.1",
+      "eslint-plugin-react-hooks": "7.1.1",
+      "eslint-plugin-sonarjs": "3.0.7",
+      "typescript": "5.9.2"
+    }
+  },
+  "ast": {
+    "files": 419,
+    "edges": 2492,
+    "parseErrors": 0,
+    "staticValueCycles": [],
+    "totals": {
+      "anyKeywords": 46,
+      "typeAssertions": 437,
+      "nonNullAssertions": 198,
+      "nestedTernaries": 442,
+      "emptyCatches": 16,
+      "dynamicImports": 8
+    }
+  },
+  "compilerGroups": [
+    {
+      "group": 1,
+      "files": 288,
+      "roots": 417,
+      "allRecordedInputsIndependentlyMatched": true
+    },
+    {
+      "group": 2,
+      "files": 28,
+      "roots": 419,
+      "allRecordedInputsIndependentlyMatched": true
+    },
+    {
+      "group": 3,
+      "files": 16,
+      "roots": 419,
+      "allRecordedInputsIndependentlyMatched": true
+    }
+  ],
+  "route": {
+    "changed": true,
+    "beforeSha256": "f1572df02731d204a1ef38e4b744a39aa5b2c9dc7a3d85d1d6d3d3b6b6b09d65",
+    "buildSha256": "0df423ad2603ed30010d0c28c127b7b7d5a59c3bb0a1c24ddc39f55933cd4efd",
+    "formatRestored": true,
+    "tokenComparison": "{\"same\":true,\"beforeTokens\":3995,\"afterTokens\":3995}"
+  },
+  "limits": [
+    "No heavy/native gates rerun; existing final current logs reused after exact input verification.",
+    "Unit source manual checks inherited on exact final bytes; immutable snapshots not newly manually audited.",
+    "Producer review and this independent recomputation supplement rather than prove all execution history."
+  ]
+}

@@ -1,0 +1,2 @@
+11:22:43 AM [vite] (client) Re-optimizing dependencies because vite config has changed
+{"single":{"hashes":3,"flushes":3,"hashOutsideTransactions":true,"flushOutsideTransactions":true},"batch":{"hashes":4,"flushes":3,"hashOutsideTransactions":true,"flushOutsideTransactions":true},"guard":{"blockedManualCommands":2,"guardRecovered":true},"externalRequests":0,"browser":"Chromium native IndexedDB","limitation":"Local synthetic downloaded media; no provider, decoding or full product UI"}

@@ -1,0 +1,21 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Frontend Quality Check and predevelopment checklist"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "D08 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "D08 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/hook-guidelines.md", "reason": "D08 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "D08 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "D08 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/asset-output-foundation.md", "reason": "D08 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/spec/frontend/production-contracts.md", "reason": "D08 applicable contract; read complete relevant disk sections if injection truncates"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/research/D08-text-draft-plan.md", "reason": "D08 scoped prior-source proposal; reread accepted predecessor changes before implementation"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/research/static-runtime-restoration.md", "reason": "Identical tool versions and separate complete baseline TS programs required"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/research/D08-scope.md", "reason": "Coordinator bounded implementation/acceptance"}
+{"file": ".trellis/spec/guides/index.md", "reason": "Mandatory shared thinking guide index"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "Read/write and UI/domain boundaries"}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "Reuse actual behavior owners without speculative abstraction"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/reviews/D01-check.md", "reason": "Accepted D01 concrete ownership/behavior; reread current overlapping source before editing"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/reviews/D02-check.md", "reason": "Accepted D02 concrete ownership/behavior; reread current overlapping source before editing"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/reviews/D03-check.md", "reason": "Accepted D03 concrete ownership/behavior; reread current overlapping source before editing"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/reviews/D04-check.md", "reason": "Accepted D04 concrete ownership/behavior; reread current overlapping source before editing"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/reviews/D05-check.md", "reason": "Accepted D05 concrete ownership/behavior; reread current overlapping source before editing"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/reviews/D06-check.md", "reason": "Accepted D06 concrete ownership/behavior; reread current overlapping source before editing"}
+{"file": ".trellis/tasks/10-08-src-remediation-d/reviews/D07-check.md", "reason": "Accepted D07 concrete ownership/behavior; reread current overlapping source before editing"}

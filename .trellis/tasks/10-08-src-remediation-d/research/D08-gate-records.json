@@ -1,0 +1,161 @@
+[
+  {
+    "name": "typecheck",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "lint"
+    ],
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "environment": {},
+    "baselineEnvironmentsRemoved": true,
+    "startedAt": "2026-10-08T15:46:47.544721+08:00",
+    "seconds": 6.95,
+    "exitCode": 0,
+    "log": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-typecheck-final.log",
+    "logSHA256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa"
+  },
+  {
+    "name": "focused",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "test",
+      "--maxWorkers=4",
+      "tests/d08TextDraftRepository.test.ts",
+      "tests/d08TextDraftComponents.test.ts",
+      "tests/debouncedDraft.test.ts",
+      "tests/draftConcurrency.test.ts",
+      "tests/manualDraftBaseline.test.ts",
+      "tests/manualDraftWiring.test.ts",
+      "tests/b01QueryIdentity.test.ts",
+      "tests/b03IntentBoundaries.test.ts",
+      "tests/b06EditorSessions.test.ts",
+      "tests/d03ShotCommands.test.ts"
+    ],
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "environment": {},
+    "baselineEnvironmentsRemoved": true,
+    "startedAt": "2026-10-08T15:46:54.495655+08:00",
+    "seconds": 1.948,
+    "exitCode": 0,
+    "log": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-focused-final.log",
+    "logSHA256": "b16d9d956c0236d11ef4e504313ab0555414d67e8c77d3de445f43bb45e86c1d"
+  },
+  {
+    "name": "full",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "test",
+      "--maxWorkers=4"
+    ],
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "environment": {},
+    "baselineEnvironmentsRemoved": true,
+    "startedAt": "2026-10-08T15:46:56.444716+08:00",
+    "seconds": 15.951,
+    "exitCode": 0,
+    "log": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-full-final.log",
+    "logSHA256": "f438b662e97eeb1f67331f932c204b4a970d2eece3003abd889f05ad08bc44fb"
+  },
+  {
+    "name": "b01-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/b01-browser-regression.mjs"
+    ],
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "environment": {
+      "B01_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+      "B01_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+    },
+    "baselineEnvironmentsRemoved": true,
+    "startedAt": "2026-10-08T15:47:12.396226+08:00",
+    "seconds": 22.47,
+    "exitCode": 0,
+    "log": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-b01-native-final.log",
+    "logSHA256": "71aaff142c835c0aa687b2d883d3413b9a84e33986851bf6cdae8fc9642def9b"
+  },
+  {
+    "name": "b07-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/b07-browser-regression.mjs"
+    ],
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "environment": {
+      "B07_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+      "B07_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+    },
+    "baselineEnvironmentsRemoved": true,
+    "startedAt": "2026-10-08T15:47:34.867838+08:00",
+    "seconds": 3.777,
+    "exitCode": 0,
+    "log": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-b07-native-final.log",
+    "logSHA256": "9e1852dc6bdcd2a20a8e77482d55ef316cccb1808291c6985fcdd44ed5694343"
+  },
+  {
+    "name": "c01-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/c01-browser-regression.mjs"
+    ],
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "environment": {
+      "C01_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+      "C01_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+    },
+    "baselineEnvironmentsRemoved": true,
+    "startedAt": "2026-10-08T15:47:38.645940+08:00",
+    "seconds": 2.68,
+    "exitCode": 0,
+    "log": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-c01-native-final.log",
+    "logSHA256": "6b4c69e95ddd06d91b3d2381230dc1c3168c0526f198f2b0429178e4501113e4"
+  },
+  {
+    "name": "c02-native",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "scripts/c02-browser-regression.mjs"
+    ],
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "environment": {
+      "C02_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+      "C02_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+    },
+    "baselineEnvironmentsRemoved": true,
+    "startedAt": "2026-10-08T15:47:41.326609+08:00",
+    "seconds": 2.749,
+    "exitCode": 0,
+    "log": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-c02-native-final.log",
+    "logSHA256": "edf161f1e85179128c8f62c02f79eee0abe68e77782b37280d31ab3926801904"
+  },
+  {
+    "name": "models",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "model-bank:verify"
+    ],
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "environment": {},
+    "baselineEnvironmentsRemoved": true,
+    "startedAt": "2026-10-08T15:47:44.076575+08:00",
+    "seconds": 0.771,
+    "exitCode": 0,
+    "log": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-models-final.log",
+    "logSHA256": "f58b777b746a7ebd4198b0b7f1a3fcd25d51250f9683c34e11da47c7468cd87d"
+  },
+  {
+    "name": "build",
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "build"
+    ],
+    "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+    "environment": {},
+    "baselineEnvironmentsRemoved": true,
+    "startedAt": "2026-10-08T15:47:44.848288+08:00",
+    "seconds": 17.807,
+    "exitCode": 0,
+    "log": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-08-src-remediation-d/research/D08-build-final.log",
+    "logSHA256": "a93eb0c96129f5bc9ac2d7e45bbb4bf5809b29e30df00b83b0f5d3c260d6b459"
+  }
+]

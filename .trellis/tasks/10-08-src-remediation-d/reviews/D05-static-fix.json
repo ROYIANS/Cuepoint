@@ -1,0 +1,6 @@
+{
+  "path": "src/lib/agent/businessTools.ts",
+  "freezeBefore": "f97ebf8ae4265aa456ce4570962146444f55d066ce08a9f1b34da8fb2b2d308d",
+  "after": "0aad3a5e1d3792952da4980ed003aa863e3ecb9e87bdc30cab4bef6d18e63274",
+  "change": "Make four unsupported OwnedBusinessRecord kinds explicit; preserve default rejection and the five schema-advertised supported kinds."
+}

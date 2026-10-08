@@ -1,0 +1,17 @@
+
+> cuepoint@0.1.0 lint /Users/xiaomengdao/WebstormProjects/aifenjing
+> tsc -b --pretty false
+
+src/db/agentGenerationBatches.ts(201,20): error TS2540: Cannot assign to 'prompt' because it is a read-only property.
+src/lib/agent/businessTools.ts(491,9): error TS2719: Type '(args: NoInfer<ObjectValue<{ readonly continueInProject: import("/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/businessSchemas").Spec<boolean | undefined>; readonly kind: import("/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/businessSchemas").Spec<"audio" | "video" | "music" | undefined>;...' is not assignable to type '(args: NoInfer<ObjectValue<{ readonly continueInProject: import("/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/businessSchemas").Spec<boolean | undefined>; readonly kind: import("/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/businessSchemas").Spec<"audio" | "video" | "music" | undefined>;...'. Two different types with this name exist, but they are unrelated.
+  Type 'Promise<AgentRun>' is not assignable to type 'Promise<void>'.
+    Type 'AgentRun' is not assignable to type 'void'.
+src/lib/agent/businessTools.ts(492,9): error TS2719: Type '(args: NoInfer<ObjectValue<{ readonly continueInProject: import("/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/businessSchemas").Spec<boolean | undefined>; readonly kind: import("/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/businessSchemas").Spec<"audio" | "video" | "music" | undefined>;...' is not assignable to type '(args: NoInfer<ObjectValue<{ readonly continueInProject: import("/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/businessSchemas").Spec<boolean | undefined>; readonly kind: import("/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/businessSchemas").Spec<"audio" | "video" | "music" | undefined>;...'. Two different types with this name exist, but they are unrelated.
+  Type 'Promise<AgentRun>' is not assignable to type 'Promise<void>'.
+    Type 'AgentRun' is not assignable to type 'void'.
+src/lib/agent/generationReviewDraft.ts(19,41): error TS2339: Property 'omit' does not exist on type 'ZodType<ObjectValue<{ readonly connectorId: Spec<string>; readonly model: Spec<"gpt-image-2" | "gpt-image-2.5-flare" | "gpt-image-2.5-sunburst" | "gpt-image-2.5-ext" | "MiniMax-H3" | "veo-3.1-fast-generate-preview">; readonly target: Spec<...>; readonly prompt: Spec<...>; readonly parameters: Spec<...>; readonly inp...'.
+src/lib/agent/generationSelection.ts(29,48): error TS2339: Property 'pick' does not exist on type 'ZodType<ObjectValue<{ readonly connectorId: Spec<string>; readonly model: Spec<"gpt-image-2" | "gpt-image-2.5-flare" | "gpt-image-2.5-sunburst" | "gpt-image-2.5-ext" | "MiniMax-H3" | "veo-3.1-fast-generate-preview">; readonly target: Spec<...>; readonly prompt: Spec<...>; readonly parameters: Spec<...>; readonly inp...'.
+src/lib/agent/generationSelection.ts(30,59): error TS2339: Property 'shape' does not exist on type 'ZodType<ObjectValue<{ readonly connectorId: Spec<string>; readonly model: Spec<"gpt-image-2" | "gpt-image-2.5-flare" | "gpt-image-2.5-sunburst" | "gpt-image-2.5-ext" | "MiniMax-H3" | "veo-3.1-fast-generate-preview">; readonly target: Spec<...>; readonly prompt: Spec<...>; readonly parameters: Spec<...>; readonly inp...'.
+src/lib/agent/generationTools.ts(55,187): error TS2304: Cannot find name 'id'.
+src/lib/agent/generationTools.ts(90,150): error TS2304: Cannot find name 'id'.
+ ELIFECYCLE  Command failed with exit code 2.

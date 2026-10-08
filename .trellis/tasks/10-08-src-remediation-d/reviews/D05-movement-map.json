@@ -1,0 +1,3176 @@
+{
+  "movements": [
+    {
+      "name": "AgentToolContext / AgentToolDefinition",
+      "before": "tools.ts interfaces",
+      "after": "toolDefinition.ts type protocol; tools.ts compatibility type exports",
+      "behavior": "Function properties preserve schema output until one existential registry projection."
+    },
+    {
+      "name": "toolMetadataMatches",
+      "before": "runChat.ts two inline five-field comparisons",
+      "after": "toolDefinition.ts pure comparison; same two runChat gates",
+      "behavior": "Effect, computed highRisk, normalized atomic, exact recovery, normalized requiresConfirmation; both timing positions unchanged."
+    },
+    {
+      "name": "generation submit/job contract",
+      "before": "generationProfiles.ts Zod recipe + generationTools.ts independent JSON advertisement",
+      "after": "generationProfiles.ts Spec recipes plus explicit legacy wire projections",
+      "behavior": "Defaults, trimming, strictness, public pick/omit/shape, output/wire ordering and wire-only omissions remain preserved."
+    },
+    {
+      "name": "readBusinessRecord / listBusinessRecords",
+      "before": "businessStore.ts getRow/listRows dynamic table read and media casts",
+      "after": "businessStore.ts owned discriminated records; getRow/listRows compatibility presentation projection",
+      "behavior": "Same owners/episode/media checks and original row envelopes; typed slot/shot consumers do not assert domain rows."
+    },
+    {
+      "name": "project_create write hooks",
+      "before": "businessTools.ts writeTool name checks plus Args casts",
+      "after": "businessTools.ts schema-inferred creation-only beforePreview/beforeWrite/completedReplay callbacks",
+      "behavior": "Same read transaction, atomic transaction and preflight replay positions; original binding/replay/seed/receipt contract."
+    },
+    {
+      "name": "asset definitions",
+      "before": "businessTools.ts Object.keys(assetApi).flatMap over heterogeneous fields/commands",
+      "after": "businessTools.ts four concrete schema-bound create/update/delete branches",
+      "behavior": "No generic CRUD factory; original registration ordering, title/description/schema and concrete command owners."
+    },
+    {
+      "name": "slot and patch projections",
+      "before": "businessTools.ts domain patch/slot assertions",
+      "after": "businessTools.ts native typed patch objects and execution-time catalog predicates",
+      "behavior": "Nullable field presence and key ordering preserved; same paid-candidate selection/refinement/atomic restrictions."
+    },
+    {
+      "name": "audioMusicUnion and create branches",
+      "before": "audioTools.ts ZodTypeAny tuple and Extract assertions",
+      "after": "audioTools.ts mapped concrete schema tuple and whole-argument discriminant branches",
+      "behavior": "Real audio Args reject numeric text and wrong-branch fields; runtime default speaker and sound receipts unchanged."
+    },
+    {
+      "name": "musicGenerateTool",
+      "before": "audioGenerationTools.ts inline music_generate definition; musicGenerationReview array lookup",
+      "after": "audioGenerationTools.ts named concrete definition at same registry slot; direct musicGenerationReview consumer",
+      "behavior": "Own parse/prepare relation retained without importing the aggregate registry or replaying paid work."
+    },
+    {
+      "name": "projectMemorySource",
+      "before": "retrieval.ts serializeMemoryEntries nested source ternary",
+      "after": "retrieval.ts local exhaustive source projection plus serializer early-empty return",
+      "behavior": "Original source whitelist, source/entry field ordering, envelope, spread, optional/zero behavior, malformed-source errors and unknown-kind manual fallback."
+    }
+  ],
+  "beforeDeclarations": [
+    {
+      "file": "src/lib/memory/retrieval.ts",
+      "name": "buildMemoryQuery",
+      "kind": "FunctionDeclaration",
+      "line": 13,
+      "endLine": 31
+    },
+    {
+      "file": "src/lib/memory/retrieval.ts",
+      "name": "terms",
+      "kind": "FunctionDeclaration",
+      "line": 33,
+      "endLine": 47
+    },
+    {
+      "file": "src/lib/memory/retrieval.ts",
+      "name": "rankMemoryCandidates",
+      "kind": "FunctionDeclaration",
+      "line": 49,
+      "endLine": 81
+    },
+    {
+      "file": "src/lib/memory/retrieval.ts",
+      "name": "serializeMemoryEntries",
+      "kind": "FunctionDeclaration",
+      "line": 83,
+      "endLine": 114
+    },
+    {
+      "file": "src/lib/memory/retrieval.ts",
+      "name": "memoryEnvelopeTokens",
+      "kind": "FunctionDeclaration",
+      "line": 116,
+      "endLine": 120
+    },
+    {
+      "file": "src/lib/memory/retrieval.ts",
+      "name": "planMemorySelection",
+      "kind": "FunctionDeclaration",
+      "line": 122,
+      "endLine": 191
+    },
+    {
+      "file": "src/lib/memory/retrieval.ts",
+      "name": "withMemoryContext",
+      "kind": "FunctionDeclaration",
+      "line": 194,
+      "endLine": 205
+    },
+    {
+      "file": "src/lib/agent/audioGenerationTools.ts",
+      "name": "Submission",
+      "kind": "TypeAliasDeclaration",
+      "line": 40,
+      "endLine": 46
+    },
+    {
+      "file": "src/lib/agent/audioGenerationTools.ts",
+      "name": "scope",
+      "kind": "FunctionDeclaration",
+      "line": 48,
+      "endLine": 52
+    },
+    {
+      "file": "src/lib/agent/audioGenerationTools.ts",
+      "name": "inputState",
+      "kind": "FunctionDeclaration",
+      "line": 54,
+      "endLine": 100
+    },
+    {
+      "file": "src/lib/agent/audioGenerationTools.ts",
+      "name": "preview",
+      "kind": "FunctionDeclaration",
+      "line": 102,
+      "endLine": 124
+    },
+    {
+      "file": "src/lib/agent/audioGenerationTools.ts",
+      "name": "runSubmission",
+      "kind": "FunctionDeclaration",
+      "line": 126,
+      "endLine": 162
+    },
+    {
+      "file": "src/lib/agent/audioGenerationTools.ts",
+      "name": "speechArgs",
+      "kind": "FunctionDeclaration",
+      "line": 164,
+      "endLine": 207
+    },
+    {
+      "file": "src/lib/agent/audioGenerationTools.ts",
+      "name": "musicArgs",
+      "kind": "FunctionDeclaration",
+      "line": 209,
+      "endLine": 225
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "name": "createRunWriter",
+      "kind": "FunctionDeclaration",
+      "line": 44,
+      "endLine": 80
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "name": "drain",
+      "kind": "FunctionDeclaration",
+      "line": 50,
+      "endLine": 66
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "name": "push",
+      "kind": "FunctionDeclaration",
+      "line": 68,
+      "endLine": 72
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "name": "effectiveToolInput",
+      "kind": "FunctionDeclaration",
+      "line": 85,
+      "endLine": 89
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "name": "executePendingTools",
+      "kind": "FunctionDeclaration",
+      "line": 92,
+      "endLine": 204
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "name": "resumeChatRun",
+      "kind": "FunctionDeclaration",
+      "line": 207,
+      "endLine": 211
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "name": "executeChatRun",
+      "kind": "FunctionDeclaration",
+      "line": 213,
+      "endLine": 324
+    },
+    {
+      "file": "src/lib/agent/referenceTools.ts",
+      "name": "scope",
+      "kind": "FunctionDeclaration",
+      "line": 24,
+      "endLine": 29
+    },
+    {
+      "file": "src/lib/agent/generationProfiles.ts",
+      "name": "GenerationSubmitArgs",
+      "kind": "TypeAliasDeclaration",
+      "line": 35,
+      "endLine": 35
+    },
+    {
+      "file": "src/lib/agent/generationProfiles.ts",
+      "name": "profileRequest",
+      "kind": "FunctionDeclaration",
+      "line": 38,
+      "endLine": 123
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "settingTable",
+      "kind": "FunctionDeclaration",
+      "line": 45,
+      "endLine": 47
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "materialSummary",
+      "kind": "FunctionDeclaration",
+      "line": 49,
+      "endLine": 61
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "versionSummary",
+      "kind": "FunctionDeclaration",
+      "line": 63,
+      "endLine": 80
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "settingSummary",
+      "kind": "FunctionDeclaration",
+      "line": 82,
+      "endLine": 96
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "currentMaterial",
+      "kind": "FunctionDeclaration",
+      "line": 98,
+      "endLine": 104
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "activeMaterial",
+      "kind": "FunctionDeclaration",
+      "line": 106,
+      "endLine": 111
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "scopeState",
+      "kind": "FunctionDeclaration",
+      "line": 113,
+      "endLine": 120
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "destinationScope",
+      "kind": "FunctionDeclaration",
+      "line": 122,
+      "endLine": 126
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "targetProject",
+      "kind": "FunctionDeclaration",
+      "line": 128,
+      "endLine": 134
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "usages",
+      "kind": "FunctionDeclaration",
+      "line": 136,
+      "endLine": 140
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "sourceLegacy",
+      "kind": "FunctionDeclaration",
+      "line": 142,
+      "endLine": 176
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "scopeLabel",
+      "kind": "FunctionDeclaration",
+      "line": 180,
+      "endLine": 184
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "projectUseState",
+      "kind": "FunctionDeclaration",
+      "line": 187,
+      "endLine": 201
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "useState",
+      "kind": "FunctionDeclaration",
+      "line": 203,
+      "endLine": 206
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "useResult",
+      "kind": "FunctionDeclaration",
+      "line": 208,
+      "endLine": 210
+    },
+    {
+      "file": "src/lib/agent/webTools.ts",
+      "name": "assertOwner",
+      "kind": "FunctionDeclaration",
+      "line": 16,
+      "endLine": 21
+    },
+    {
+      "file": "src/lib/agent/webTools.ts",
+      "name": "define",
+      "kind": "FunctionDeclaration",
+      "line": 23,
+      "endLine": 67
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "name": "LibraryPreviewState",
+      "kind": "InterfaceDeclaration",
+      "line": 11,
+      "endLine": 15
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "name": "LibraryToolOptions",
+      "kind": "InterfaceDeclaration",
+      "line": 17,
+      "endLine": 24
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "name": "libraryReadTool",
+      "kind": "FunctionDeclaration",
+      "line": 27,
+      "endLine": 42
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "name": "libraryWriteTool",
+      "kind": "FunctionDeclaration",
+      "line": 45,
+      "endLine": 101
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "name": "check",
+      "kind": "FunctionDeclaration",
+      "line": 52,
+      "endLine": 56
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "name": "flush",
+      "kind": "FunctionDeclaration",
+      "line": 58,
+      "endLine": 61
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "name": "preview",
+      "kind": "FunctionDeclaration",
+      "line": 63,
+      "endLine": 70
+    },
+    {
+      "file": "src/lib/agent/musicGenerationReview.ts",
+      "name": "MusicGenerationReviewState",
+      "kind": "InterfaceDeclaration",
+      "line": 11,
+      "endLine": 14
+    },
+    {
+      "file": "src/lib/agent/musicGenerationReview.ts",
+      "name": "inspect",
+      "kind": "FunctionDeclaration",
+      "line": 25,
+      "endLine": 58
+    },
+    {
+      "file": "src/lib/agent/musicGenerationReview.ts",
+      "name": "readMusicGenerationReview",
+      "kind": "FunctionDeclaration",
+      "line": 61,
+      "endLine": 63
+    },
+    {
+      "file": "src/lib/agent/musicGenerationReview.ts",
+      "name": "approveMusicGenerationReview",
+      "kind": "FunctionDeclaration",
+      "line": 66,
+      "endLine": 72
+    },
+    {
+      "file": "src/lib/agent/taskTools.ts",
+      "name": "historicalTaskToolContent",
+      "kind": "FunctionDeclaration",
+      "line": 23,
+      "endLine": 26
+    },
+    {
+      "file": "src/lib/agent/taskTools.ts",
+      "name": "currentTaskToolContent",
+      "kind": "FunctionDeclaration",
+      "line": 28,
+      "endLine": 34
+    },
+    {
+      "file": "src/lib/agent/taskTools.ts",
+      "name": "owner",
+      "kind": "FunctionDeclaration",
+      "line": 54,
+      "endLine": 68
+    },
+    {
+      "file": "src/lib/agent/taskTools.ts",
+      "name": "taskResult",
+      "kind": "FunctionDeclaration",
+      "line": 71,
+      "endLine": 73
+    },
+    {
+      "file": "src/lib/agent/taskTools.ts",
+      "name": "requiredTask",
+      "kind": "FunctionDeclaration",
+      "line": 75,
+      "endLine": 78
+    },
+    {
+      "file": "src/lib/agent/taskTools.ts",
+      "name": "tool",
+      "kind": "FunctionDeclaration",
+      "line": 80,
+      "endLine": 95
+    },
+    {
+      "file": "src/lib/agent/ipTools.ts",
+      "name": "fieldChanges",
+      "kind": "FunctionDeclaration",
+      "line": 37,
+      "endLine": 40
+    },
+    {
+      "file": "src/lib/agent/ipTools.ts",
+      "name": "requireIp",
+      "kind": "FunctionDeclaration",
+      "line": 42,
+      "endLine": 49
+    },
+    {
+      "file": "src/lib/agent/ipTools.ts",
+      "name": "affectedState",
+      "kind": "FunctionDeclaration",
+      "line": 51,
+      "endLine": 54
+    },
+    {
+      "file": "src/lib/agent/ipTools.ts",
+      "name": "editableIp",
+      "kind": "FunctionDeclaration",
+      "line": 56,
+      "endLine": 60
+    },
+    {
+      "file": "src/lib/agent/ipTools.ts",
+      "name": "bindingProject",
+      "kind": "FunctionDeclaration",
+      "line": 62,
+      "endLine": 68
+    },
+    {
+      "file": "src/lib/agent/toolLoading.ts",
+      "name": "createToolLoading",
+      "kind": "FunctionDeclaration",
+      "line": 17,
+      "endLine": 36
+    },
+    {
+      "file": "src/lib/agent/toolLoading.ts",
+      "name": "toolLoadingInstructions",
+      "kind": "FunctionDeclaration",
+      "line": 38,
+      "endLine": 46
+    },
+    {
+      "file": "src/lib/agent/toolLoading.ts",
+      "name": "refreshRunToolLoading",
+      "kind": "FunctionDeclaration",
+      "line": 115,
+      "endLine": 147
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "name": "AgentToolContext",
+      "kind": "InterfaceDeclaration",
+      "line": 27,
+      "endLine": 34
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "name": "AgentToolDefinition",
+      "kind": "InterfaceDeclaration",
+      "line": 36,
+      "endLine": 53
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "name": "requiresToolApproval",
+      "kind": "FunctionDeclaration",
+      "line": 55,
+      "endLine": 61
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "name": "toolSchemas",
+      "kind": "FunctionDeclaration",
+      "line": 162,
+      "endLine": 168
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "name": "validateToolCall",
+      "kind": "FunctionDeclaration",
+      "line": 170,
+      "endLine": 187
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "name": "getLegacyToolValidationFailure",
+      "kind": "FunctionDeclaration",
+      "line": 190,
+      "endLine": 197
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "PreviewState",
+      "kind": "TypeAliasDeclaration",
+      "line": 95,
+      "endLine": 95
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "changes",
+      "kind": "FunctionDeclaration",
+      "line": 159,
+      "endLine": 181
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "rowResult",
+      "kind": "FunctionDeclaration",
+      "line": 183,
+      "endLine": 185
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "readTool",
+      "kind": "FunctionDeclaration",
+      "line": 187,
+      "endLine": 200
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "writeTool",
+      "kind": "FunctionDeclaration",
+      "line": 202,
+      "endLine": 274
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "preview",
+      "kind": "FunctionDeclaration",
+      "line": 204,
+      "endLine": 212
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "flush",
+      "kind": "FunctionDeclaration",
+      "line": 214,
+      "endLine": 218
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "referenceDetails",
+      "kind": "FunctionDeclaration",
+      "line": 276,
+      "endLine": 305
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "targetPreview",
+      "kind": "FunctionDeclaration",
+      "line": 307,
+      "endLine": 316
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "createPreview",
+      "kind": "FunctionDeclaration",
+      "line": 318,
+      "endLine": 326
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "deletePreview",
+      "kind": "FunctionDeclaration",
+      "line": 328,
+      "endLine": 354
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "beatPatch",
+      "kind": "FunctionDeclaration",
+      "line": 563,
+      "endLine": 565
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "shotPatch",
+      "kind": "FunctionDeclaration",
+      "line": 567,
+      "endLine": 581
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "name": "assertAudioMusicToolScope",
+      "kind": "FunctionDeclaration",
+      "line": 31,
+      "endLine": 35
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "name": "audioMusicUnion",
+      "kind": "FunctionDeclaration",
+      "line": 43,
+      "endLine": 48
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "name": "boundedAudioText",
+      "kind": "FunctionDeclaration",
+      "line": 50,
+      "endLine": 52
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "name": "editable",
+      "kind": "FunctionDeclaration",
+      "line": 129,
+      "endLine": 145
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "name": "previewState",
+      "kind": "FunctionDeclaration",
+      "line": 147,
+      "endLine": 149
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "name": "clipState",
+      "kind": "FunctionDeclaration",
+      "line": 151,
+      "endLine": 155
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "name": "owner",
+      "kind": "FunctionDeclaration",
+      "line": 33,
+      "endLine": 52
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "name": "tool",
+      "kind": "FunctionDeclaration",
+      "line": 54,
+      "endLine": 78
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "name": "slice",
+      "kind": "FunctionDeclaration",
+      "line": 80,
+      "endLine": 91
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "name": "pastTask",
+      "kind": "FunctionDeclaration",
+      "line": 93,
+      "endLine": 108
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "name": "missing",
+      "kind": "FunctionDeclaration",
+      "line": 110,
+      "endLine": 115
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "name": "stale",
+      "kind": "FunctionDeclaration",
+      "line": 117,
+      "endLine": 125
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "name": "publicResult",
+      "kind": "FunctionDeclaration",
+      "line": 128,
+      "endLine": 152
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "BusinessKind",
+      "kind": "TypeAliasDeclaration",
+      "line": 15,
+      "endLine": 15
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "AssetKind",
+      "kind": "TypeAliasDeclaration",
+      "line": 16,
+      "endLine": 16
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "BusinessRow",
+      "kind": "TypeAliasDeclaration",
+      "line": 17,
+      "endLine": 17
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "metadata",
+      "kind": "FunctionDeclaration",
+      "line": 41,
+      "endLine": 49
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "requireOwner",
+      "kind": "FunctionDeclaration",
+      "line": 51,
+      "endLine": 57
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "requireEpisode",
+      "kind": "FunctionDeclaration",
+      "line": 59,
+      "endLine": 64
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "getRow",
+      "kind": "FunctionDeclaration",
+      "line": 66,
+      "endLine": 92
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "listRows",
+      "kind": "FunctionDeclaration",
+      "line": 94,
+      "endLine": 112
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "projection",
+      "kind": "FunctionDeclaration",
+      "line": 127,
+      "endLine": 165
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "summarize",
+      "kind": "FunctionDeclaration",
+      "line": 167,
+      "endLine": 173
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "navigation",
+      "kind": "FunctionDeclaration",
+      "line": 175,
+      "endLine": 197
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "bounded",
+      "kind": "FunctionDeclaration",
+      "line": 200,
+      "endLine": 225
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "clip",
+      "kind": "FunctionDeclaration",
+      "line": 203,
+      "endLine": 215
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "isReadableBusinessFieldPath",
+      "kind": "FunctionDeclaration",
+      "line": 227,
+      "endLine": 230
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "fieldAt",
+      "kind": "FunctionDeclaration",
+      "line": 232,
+      "endLine": 241
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "textAt",
+      "kind": "FunctionDeclaration",
+      "line": 243,
+      "endLine": 247
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "relationsAt",
+      "kind": "FunctionDeclaration",
+      "line": 249,
+      "endLine": 253
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "ownerSnapshot",
+      "kind": "FunctionDeclaration",
+      "line": 256,
+      "endLine": 272
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "mediaUsage",
+      "kind": "FunctionDeclaration",
+      "line": 274,
+      "endLine": 315
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "mediaRetention",
+      "kind": "FunctionDeclaration",
+      "line": 318,
+      "endLine": 332
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "assetMediaDependencies",
+      "kind": "FunctionDeclaration",
+      "line": 335,
+      "endLine": 351
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "Spec",
+      "kind": "InterfaceDeclaration",
+      "line": 15,
+      "endLine": 19
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "Value",
+      "kind": "TypeAliasDeclaration",
+      "line": 21,
+      "endLine": 21
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "ObjectValue",
+      "kind": "TypeAliasDeclaration",
+      "line": 22,
+      "endLine": 24
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "text",
+      "kind": "FunctionDeclaration",
+      "line": 26,
+      "endLine": 31
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "number",
+      "kind": "FunctionDeclaration",
+      "line": 33,
+      "endLine": 39
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "choice",
+      "kind": "FunctionDeclaration",
+      "line": 41,
+      "endLine": 43
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "optional",
+      "kind": "FunctionDeclaration",
+      "line": 47,
+      "endLine": 49
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "nullable",
+      "kind": "FunctionDeclaration",
+      "line": 51,
+      "endLine": 53
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "array",
+      "kind": "FunctionDeclaration",
+      "line": 55,
+      "endLine": 60
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "object",
+      "kind": "FunctionDeclaration",
+      "line": 62,
+      "endLine": 71
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "nonempty",
+      "kind": "FunctionDeclaration",
+      "line": 73,
+      "endLine": 79
+    },
+    {
+      "file": "src/lib/agent/musicTools.ts",
+      "name": "state",
+      "kind": "FunctionDeclaration",
+      "line": 45,
+      "endLine": 50
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "name": "tool",
+      "kind": "FunctionDeclaration",
+      "line": 27,
+      "endLine": 27
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "name": "begin",
+      "kind": "FunctionDeclaration",
+      "line": 28,
+      "endLine": 28
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "name": "prepare",
+      "kind": "FunctionDeclaration",
+      "line": 29,
+      "endLine": 38
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "name": "execute",
+      "kind": "FunctionDeclaration",
+      "line": 39,
+      "endLine": 39
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "name": "fixture",
+      "kind": "FunctionDeclaration",
+      "line": 40,
+      "endLine": 43
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "name": "read",
+      "kind": "FunctionDeclaration",
+      "line": 44,
+      "endLine": 47
+    },
+    {
+      "file": "tests/audioGenerationAgent.test.ts",
+      "name": "fixture",
+      "kind": "FunctionDeclaration",
+      "line": 22,
+      "endLine": 34
+    },
+    {
+      "file": "tests/audioGenerationAgent.test.ts",
+      "name": "awaiting",
+      "kind": "FunctionDeclaration",
+      "line": 35,
+      "endLine": 41
+    },
+    {
+      "file": "tests/audioTaskEvidence.test.ts",
+      "name": "fixture",
+      "kind": "FunctionDeclaration",
+      "line": 20,
+      "endLine": 45
+    },
+    {
+      "file": "tests/agentReferences.test.ts",
+      "name": "source",
+      "kind": "FunctionDeclaration",
+      "line": 20,
+      "endLine": 27
+    },
+    {
+      "file": "tests/agentReferences.test.ts",
+      "name": "begin",
+      "kind": "FunctionDeclaration",
+      "line": 28,
+      "endLine": 31
+    },
+    {
+      "file": "tests/agentGeneration.test.ts",
+      "name": "setup",
+      "kind": "FunctionDeclaration",
+      "line": 24,
+      "endLine": 36
+    },
+    {
+      "file": "tests/agentGeneration.test.ts",
+      "name": "toolContext",
+      "kind": "FunctionDeclaration",
+      "line": 37,
+      "endLine": 43
+    },
+    {
+      "file": "tests/agentGeneration.test.ts",
+      "name": "apimartFetch",
+      "kind": "FunctionDeclaration",
+      "line": 44,
+      "endLine": 52
+    },
+    {
+      "file": "tests/agentGeneration.test.ts",
+      "name": "hubFetch",
+      "kind": "FunctionDeclaration",
+      "line": 53,
+      "endLine": 62
+    },
+    {
+      "file": "tests/agentTaskOrchestration.test.ts",
+      "name": "start",
+      "kind": "FunctionDeclaration",
+      "line": 20,
+      "endLine": 23
+    },
+    {
+      "file": "tests/agentTaskOrchestration.test.ts",
+      "name": "pending",
+      "kind": "FunctionDeclaration",
+      "line": 25,
+      "endLine": 33
+    },
+    {
+      "file": "tests/agentTaskOrchestration.test.ts",
+      "name": "invoke",
+      "kind": "FunctionDeclaration",
+      "line": 34,
+      "endLine": 34
+    },
+    {
+      "file": "tests/agentTaskOrchestration.test.ts",
+      "name": "create",
+      "kind": "FunctionDeclaration",
+      "line": 35,
+      "endLine": 35
+    },
+    {
+      "file": "tests/agentTaskOrchestrationReview.test.ts",
+      "name": "fixture",
+      "kind": "FunctionDeclaration",
+      "line": 14,
+      "endLine": 18
+    },
+    {
+      "file": "tests/agentTaskOrchestrationReview.test.ts",
+      "name": "effect",
+      "kind": "FunctionDeclaration",
+      "line": 19,
+      "endLine": 24
+    },
+    {
+      "file": "tests/audioMusicAgentTools.test.ts",
+      "name": "begin",
+      "kind": "FunctionDeclaration",
+      "line": 22,
+      "endLine": 27
+    },
+    {
+      "file": "tests/audioMusicAgentTools.test.ts",
+      "name": "context",
+      "kind": "FunctionDeclaration",
+      "line": 28,
+      "endLine": 30
+    },
+    {
+      "file": "tests/audioMusicAgentTools.test.ts",
+      "name": "prepareCall",
+      "kind": "FunctionDeclaration",
+      "line": 31,
+      "endLine": 39
+    },
+    {
+      "file": "tests/agentGenerationBatch.test.ts",
+      "name": "lockManager",
+      "kind": "FunctionDeclaration",
+      "line": 24,
+      "endLine": 27
+    },
+    {
+      "file": "tests/agentGenerationBatch.test.ts",
+      "name": "fixture",
+      "kind": "FunctionDeclaration",
+      "line": 28,
+      "endLine": 43
+    },
+    {
+      "file": "tests/agentGenerationBatch.test.ts",
+      "name": "apimartMock",
+      "kind": "FunctionDeclaration",
+      "line": 44,
+      "endLine": 52
+    },
+    {
+      "file": "tests/agentGenerationBatch.test.ts",
+      "name": "confirm",
+      "kind": "FunctionDeclaration",
+      "line": 53,
+      "endLine": 53
+    },
+    {
+      "file": "tests/agentGenerationBatch.test.ts",
+      "name": "run",
+      "kind": "FunctionDeclaration",
+      "line": 54,
+      "endLine": 54
+    },
+    {
+      "file": "tests/referenceEvidence.test.ts",
+      "name": "source",
+      "kind": "FunctionDeclaration",
+      "line": 15,
+      "endLine": 21
+    },
+    {
+      "file": "tests/agentProjectCreation.test.ts",
+      "name": "response",
+      "kind": "FunctionDeclaration",
+      "line": 21,
+      "endLine": 24
+    },
+    {
+      "file": "tests/agentProjectCreation.test.ts",
+      "name": "begin",
+      "kind": "FunctionDeclaration",
+      "line": 25,
+      "endLine": 36
+    },
+    {
+      "file": "tests/agentProjectCreation.test.ts",
+      "name": "direct",
+      "kind": "FunctionDeclaration",
+      "line": 37,
+      "endLine": 46
+    },
+    {
+      "file": "tests/musicGenerationReview.test.ts",
+      "name": "fixture",
+      "kind": "FunctionDeclaration",
+      "line": 20,
+      "endLine": 33
+    },
+    {
+      "file": "tests/musicGenerationReview.test.ts",
+      "name": "save",
+      "kind": "FunctionDeclaration",
+      "line": 155,
+      "endLine": 159
+    },
+    {
+      "file": "tests/agentMemoryTools.test.ts",
+      "name": "runFor",
+      "kind": "FunctionDeclaration",
+      "line": 45,
+      "endLine": 55
+    },
+    {
+      "file": "tests/agentMemoryTools.test.ts",
+      "name": "prepare",
+      "kind": "FunctionDeclaration",
+      "line": 56,
+      "endLine": 86
+    },
+    {
+      "file": "tests/agentMemoryTools.test.ts",
+      "name": "invoke",
+      "kind": "FunctionDeclaration",
+      "line": 87,
+      "endLine": 90
+    },
+    {
+      "file": "tests/agentMemoryTools.test.ts",
+      "name": "historicalTask",
+      "kind": "FunctionDeclaration",
+      "line": 91,
+      "endLine": 117
+    },
+    {
+      "file": "tests/agentGenerationReview.test.ts",
+      "name": "pending",
+      "kind": "FunctionDeclaration",
+      "line": 22,
+      "endLine": 36
+    },
+    {
+      "file": "tests/agentGenerationReview.test.ts",
+      "name": "paidFixture",
+      "kind": "FunctionDeclaration",
+      "line": 37,
+      "endLine": 40
+    },
+    {
+      "file": "tests/agentProjectContext.test.ts",
+      "name": "begin",
+      "kind": "FunctionDeclaration",
+      "line": 21,
+      "endLine": 21
+    },
+    {
+      "file": "tests/agentProjectContext.test.ts",
+      "name": "context",
+      "kind": "FunctionDeclaration",
+      "line": 22,
+      "endLine": 22
+    },
+    {
+      "file": "tests/agentProjectContext.test.ts",
+      "name": "tool",
+      "kind": "FunctionDeclaration",
+      "line": 23,
+      "endLine": 23
+    },
+    {
+      "file": "tests/agentProjectContext.test.ts",
+      "name": "prepare",
+      "kind": "FunctionDeclaration",
+      "line": 24,
+      "endLine": 24
+    },
+    {
+      "file": "tests/memoryRetrieval.test.ts",
+      "name": "memory",
+      "kind": "FunctionDeclaration",
+      "line": 38,
+      "endLine": 54
+    },
+    {
+      "file": "tests/memoryRetrieval.test.ts",
+      "name": "fixture",
+      "kind": "FunctionDeclaration",
+      "line": 55,
+      "endLine": 59
+    },
+    {
+      "file": "tests/memoryRetrieval.test.ts",
+      "name": "begin",
+      "kind": "FunctionDeclaration",
+      "line": 60,
+      "endLine": 68
+    },
+    {
+      "file": "tests/agentAuditRemediation.test.ts",
+      "name": "claim",
+      "kind": "FunctionDeclaration",
+      "line": 24,
+      "endLine": 30
+    },
+    {
+      "file": "tests/agentAuditRemediation.test.ts",
+      "name": "oldPlanFixture",
+      "kind": "FunctionDeclaration",
+      "line": 140,
+      "endLine": 148
+    },
+    {
+      "file": "tests/agentGenerationBatchSafety.test.ts",
+      "name": "lockManager",
+      "kind": "FunctionDeclaration",
+      "line": 21,
+      "endLine": 24
+    },
+    {
+      "file": "tests/agentGenerationBatchSafety.test.ts",
+      "name": "fixture",
+      "kind": "FunctionDeclaration",
+      "line": 25,
+      "endLine": 40
+    },
+    {
+      "file": "tests/agentGenerationBatchSafety.test.ts",
+      "name": "apimartMock",
+      "kind": "FunctionDeclaration",
+      "line": 41,
+      "endLine": 49
+    },
+    {
+      "file": "tests/agentGenerationBatchSafety.test.ts",
+      "name": "confirm",
+      "kind": "FunctionDeclaration",
+      "line": 50,
+      "endLine": 50
+    },
+    {
+      "file": "tests/agentGenerationBatchSafety.test.ts",
+      "name": "run",
+      "kind": "FunctionDeclaration",
+      "line": 51,
+      "endLine": 51
+    },
+    {
+      "file": "tests/imageDiscovery.test.ts",
+      "name": "fixture",
+      "kind": "FunctionDeclaration",
+      "line": 30,
+      "endLine": 37
+    },
+    {
+      "file": "tests/imageDiscovery.test.ts",
+      "name": "begin",
+      "kind": "FunctionDeclaration",
+      "line": 38,
+      "endLine": 42
+    },
+    {
+      "file": "tests/imageDiscovery.test.ts",
+      "name": "context",
+      "kind": "FunctionDeclaration",
+      "line": 43,
+      "endLine": 43
+    },
+    {
+      "file": "tests/imageDiscovery.test.ts",
+      "name": "ledger",
+      "kind": "FunctionDeclaration",
+      "line": 44,
+      "endLine": 47
+    },
+    {
+      "file": "tests/imageDiscovery.test.ts",
+      "name": "discovered",
+      "kind": "FunctionDeclaration",
+      "line": 48,
+      "endLine": 51
+    },
+    {
+      "file": "tests/imageDiscovery.test.ts",
+      "name": "prepared",
+      "kind": "FunctionDeclaration",
+      "line": 52,
+      "endLine": 57
+    },
+    {
+      "file": "tests/imageDiscovery.test.ts",
+      "name": "scope",
+      "kind": "FunctionDeclaration",
+      "line": 58,
+      "endLine": 58
+    },
+    {
+      "file": "tests/agentMaterialTools.test.ts",
+      "name": "runFor",
+      "kind": "FunctionDeclaration",
+      "line": 17,
+      "endLine": 22
+    },
+    {
+      "file": "tests/agentMaterialTools.test.ts",
+      "name": "prepared",
+      "kind": "FunctionDeclaration",
+      "line": 23,
+      "endLine": 32
+    },
+    {
+      "file": "tests/agentMaterialTools.test.ts",
+      "name": "invoke",
+      "kind": "FunctionDeclaration",
+      "line": 33,
+      "endLine": 33
+    },
+    {
+      "file": "tests/agentMaterialTools.test.ts",
+      "name": "file",
+      "kind": "FunctionDeclaration",
+      "line": 34,
+      "endLine": 34
+    },
+    {
+      "file": "tests/agentIpTools.test.ts",
+      "name": "begin",
+      "kind": "FunctionDeclaration",
+      "line": 18,
+      "endLine": 25
+    },
+    {
+      "file": "tests/agentIpTools.test.ts",
+      "name": "context",
+      "kind": "FunctionDeclaration",
+      "line": 26,
+      "endLine": 26
+    },
+    {
+      "file": "tests/agentIpTools.test.ts",
+      "name": "paused",
+      "kind": "FunctionDeclaration",
+      "line": 30,
+      "endLine": 36
+    },
+    {
+      "file": "tests/musicDurationContract.test.ts",
+      "name": "settings",
+      "kind": "FunctionDeclaration",
+      "line": 23,
+      "endLine": 26
+    },
+    {
+      "file": "tests/musicDurationContract.test.ts",
+      "name": "wire",
+      "kind": "FunctionDeclaration",
+      "line": 27,
+      "endLine": 30
+    },
+    {
+      "file": "tests/musicDurationContract.test.ts",
+      "name": "begin",
+      "kind": "FunctionDeclaration",
+      "line": 31,
+      "endLine": 37
+    },
+    {
+      "file": "tests/musicDurationContract.test.ts",
+      "name": "context",
+      "kind": "FunctionDeclaration",
+      "line": 38,
+      "endLine": 40
+    },
+    {
+      "file": "tests/musicDurationContract.test.ts",
+      "name": "preparedCall",
+      "kind": "FunctionDeclaration",
+      "line": 41,
+      "endLine": 51
+    },
+    {
+      "file": "tests/musicDurationContract.test.ts",
+      "name": "snapshot",
+      "kind": "FunctionDeclaration",
+      "line": 52,
+      "endLine": 58
+    },
+    {
+      "file": "tests/musicDurationContract.test.ts",
+      "name": "work",
+      "kind": "FunctionDeclaration",
+      "line": 59,
+      "endLine": 62
+    }
+  ],
+  "afterDeclarations": [
+    {
+      "file": "src/lib/memory/retrieval.ts",
+      "name": "buildMemoryQuery",
+      "kind": "FunctionDeclaration",
+      "line": 13,
+      "endLine": 31
+    },
+    {
+      "file": "src/lib/memory/retrieval.ts",
+      "name": "terms",
+      "kind": "FunctionDeclaration",
+      "line": 33,
+      "endLine": 47
+    },
+    {
+      "file": "src/lib/memory/retrieval.ts",
+      "name": "rankMemoryCandidates",
+      "kind": "FunctionDeclaration",
+      "line": 49,
+      "endLine": 81
+    },
+    {
+      "file": "src/lib/memory/retrieval.ts",
+      "name": "projectMemorySource",
+      "kind": "FunctionDeclaration",
+      "line": 83,
+      "endLine": 99
+    },
+    {
+      "file": "src/lib/memory/retrieval.ts",
+      "name": "serializeMemoryEntries",
+      "kind": "FunctionDeclaration",
+      "line": 101,
+      "endLine": 106
+    },
+    {
+      "file": "src/lib/memory/retrieval.ts",
+      "name": "memoryEnvelopeTokens",
+      "kind": "FunctionDeclaration",
+      "line": 108,
+      "endLine": 112
+    },
+    {
+      "file": "src/lib/memory/retrieval.ts",
+      "name": "planMemorySelection",
+      "kind": "FunctionDeclaration",
+      "line": 114,
+      "endLine": 183
+    },
+    {
+      "file": "src/lib/memory/retrieval.ts",
+      "name": "withMemoryContext",
+      "kind": "FunctionDeclaration",
+      "line": 186,
+      "endLine": 197
+    },
+    {
+      "file": "src/lib/agent/audioGenerationTools.ts",
+      "name": "Submission",
+      "kind": "TypeAliasDeclaration",
+      "line": 41,
+      "endLine": 47
+    },
+    {
+      "file": "src/lib/agent/audioGenerationTools.ts",
+      "name": "scope",
+      "kind": "FunctionDeclaration",
+      "line": 49,
+      "endLine": 53
+    },
+    {
+      "file": "src/lib/agent/audioGenerationTools.ts",
+      "name": "inputState",
+      "kind": "FunctionDeclaration",
+      "line": 55,
+      "endLine": 101
+    },
+    {
+      "file": "src/lib/agent/audioGenerationTools.ts",
+      "name": "preview",
+      "kind": "FunctionDeclaration",
+      "line": 103,
+      "endLine": 125
+    },
+    {
+      "file": "src/lib/agent/audioGenerationTools.ts",
+      "name": "runSubmission",
+      "kind": "FunctionDeclaration",
+      "line": 127,
+      "endLine": 163
+    },
+    {
+      "file": "src/lib/agent/audioGenerationTools.ts",
+      "name": "speechArgs",
+      "kind": "FunctionDeclaration",
+      "line": 165,
+      "endLine": 208
+    },
+    {
+      "file": "src/lib/agent/audioGenerationTools.ts",
+      "name": "musicArgs",
+      "kind": "FunctionDeclaration",
+      "line": 210,
+      "endLine": 226
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "name": "createRunWriter",
+      "kind": "FunctionDeclaration",
+      "line": 45,
+      "endLine": 81
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "name": "drain",
+      "kind": "FunctionDeclaration",
+      "line": 51,
+      "endLine": 67
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "name": "push",
+      "kind": "FunctionDeclaration",
+      "line": 69,
+      "endLine": 73
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "name": "effectiveToolInput",
+      "kind": "FunctionDeclaration",
+      "line": 86,
+      "endLine": 90
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "name": "executePendingTools",
+      "kind": "FunctionDeclaration",
+      "line": 93,
+      "endLine": 205
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "name": "resumeChatRun",
+      "kind": "FunctionDeclaration",
+      "line": 208,
+      "endLine": 212
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "name": "executeChatRun",
+      "kind": "FunctionDeclaration",
+      "line": 214,
+      "endLine": 325
+    },
+    {
+      "file": "src/lib/agent/referenceTools.ts",
+      "name": "scope",
+      "kind": "FunctionDeclaration",
+      "line": 25,
+      "endLine": 30
+    },
+    {
+      "file": "src/lib/agent/generationProfiles.ts",
+      "name": "GenerationSubmitArgs",
+      "kind": "TypeAliasDeclaration",
+      "line": 52,
+      "endLine": 52
+    },
+    {
+      "file": "src/lib/agent/generationProfiles.ts",
+      "name": "profileRequest",
+      "kind": "FunctionDeclaration",
+      "line": 57,
+      "endLine": 142
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "settingTable",
+      "kind": "FunctionDeclaration",
+      "line": 46,
+      "endLine": 48
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "materialSummary",
+      "kind": "FunctionDeclaration",
+      "line": 50,
+      "endLine": 62
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "versionSummary",
+      "kind": "FunctionDeclaration",
+      "line": 64,
+      "endLine": 81
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "settingSummary",
+      "kind": "FunctionDeclaration",
+      "line": 83,
+      "endLine": 97
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "currentMaterial",
+      "kind": "FunctionDeclaration",
+      "line": 99,
+      "endLine": 105
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "activeMaterial",
+      "kind": "FunctionDeclaration",
+      "line": 107,
+      "endLine": 112
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "scopeState",
+      "kind": "FunctionDeclaration",
+      "line": 114,
+      "endLine": 121
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "destinationScope",
+      "kind": "FunctionDeclaration",
+      "line": 123,
+      "endLine": 127
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "targetProject",
+      "kind": "FunctionDeclaration",
+      "line": 129,
+      "endLine": 135
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "usages",
+      "kind": "FunctionDeclaration",
+      "line": 137,
+      "endLine": 141
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "sourceLegacy",
+      "kind": "FunctionDeclaration",
+      "line": 143,
+      "endLine": 177
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "scopeLabel",
+      "kind": "FunctionDeclaration",
+      "line": 181,
+      "endLine": 185
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "projectUseState",
+      "kind": "FunctionDeclaration",
+      "line": 188,
+      "endLine": 202
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "useState",
+      "kind": "FunctionDeclaration",
+      "line": 204,
+      "endLine": 207
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "name": "useResult",
+      "kind": "FunctionDeclaration",
+      "line": 209,
+      "endLine": 211
+    },
+    {
+      "file": "src/lib/agent/webTools.ts",
+      "name": "assertOwner",
+      "kind": "FunctionDeclaration",
+      "line": 17,
+      "endLine": 22
+    },
+    {
+      "file": "src/lib/agent/webTools.ts",
+      "name": "webPreview",
+      "kind": "FunctionDeclaration",
+      "line": 24,
+      "endLine": 31
+    },
+    {
+      "file": "src/lib/agent/webTools.ts",
+      "name": "postflight",
+      "kind": "FunctionDeclaration",
+      "line": 33,
+      "endLine": 39
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "name": "LibraryPreviewState",
+      "kind": "InterfaceDeclaration",
+      "line": 13,
+      "endLine": 17
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "name": "LibraryToolOptions",
+      "kind": "InterfaceDeclaration",
+      "line": 19,
+      "endLine": 26
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "name": "libraryReadTool",
+      "kind": "FunctionDeclaration",
+      "line": 29,
+      "endLine": 46
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "name": "libraryWriteTool",
+      "kind": "FunctionDeclaration",
+      "line": 49,
+      "endLine": 108
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "name": "check",
+      "kind": "FunctionDeclaration",
+      "line": 56,
+      "endLine": 60
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "name": "flush",
+      "kind": "FunctionDeclaration",
+      "line": 62,
+      "endLine": 65
+    },
+    {
+      "file": "src/lib/agent/libraryToolHelpers.ts",
+      "name": "preview",
+      "kind": "FunctionDeclaration",
+      "line": 67,
+      "endLine": 74
+    },
+    {
+      "file": "src/lib/agent/musicGenerationReview.ts",
+      "name": "MusicGenerationReviewState",
+      "kind": "InterfaceDeclaration",
+      "line": 11,
+      "endLine": 14
+    },
+    {
+      "file": "src/lib/agent/musicGenerationReview.ts",
+      "name": "inspect",
+      "kind": "FunctionDeclaration",
+      "line": 25,
+      "endLine": 59
+    },
+    {
+      "file": "src/lib/agent/musicGenerationReview.ts",
+      "name": "readMusicGenerationReview",
+      "kind": "FunctionDeclaration",
+      "line": 62,
+      "endLine": 64
+    },
+    {
+      "file": "src/lib/agent/musicGenerationReview.ts",
+      "name": "approveMusicGenerationReview",
+      "kind": "FunctionDeclaration",
+      "line": 67,
+      "endLine": 73
+    },
+    {
+      "file": "src/lib/agent/toolDefinition.ts",
+      "name": "AgentToolContext",
+      "kind": "InterfaceDeclaration",
+      "line": 4,
+      "endLine": 11
+    },
+    {
+      "file": "src/lib/agent/toolDefinition.ts",
+      "name": "TypedToolDefinition",
+      "kind": "InterfaceDeclaration",
+      "line": 14,
+      "endLine": 27
+    },
+    {
+      "file": "src/lib/agent/toolDefinition.ts",
+      "name": "AgentToolDefinition",
+      "kind": "TypeAliasDeclaration",
+      "line": 29,
+      "endLine": 29
+    },
+    {
+      "file": "src/lib/agent/toolDefinition.ts",
+      "name": "ToolBody",
+      "kind": "TypeAliasDeclaration",
+      "line": 30,
+      "endLine": 30
+    },
+    {
+      "file": "src/lib/agent/toolDefinition.ts",
+      "name": "defineTool",
+      "kind": "FunctionDeclaration",
+      "line": 32,
+      "endLine": 34
+    },
+    {
+      "file": "src/lib/agent/toolDefinition.ts",
+      "name": "assertUniqueToolNames",
+      "kind": "FunctionDeclaration",
+      "line": 36,
+      "endLine": 42
+    },
+    {
+      "file": "src/lib/agent/toolDefinition.ts",
+      "name": "toolMetadataMatches",
+      "kind": "FunctionDeclaration",
+      "line": 45,
+      "endLine": 49
+    },
+    {
+      "file": "src/lib/agent/taskTools.ts",
+      "name": "historicalTaskToolContent",
+      "kind": "FunctionDeclaration",
+      "line": 25,
+      "endLine": 28
+    },
+    {
+      "file": "src/lib/agent/taskTools.ts",
+      "name": "currentTaskToolContent",
+      "kind": "FunctionDeclaration",
+      "line": 30,
+      "endLine": 36
+    },
+    {
+      "file": "src/lib/agent/taskTools.ts",
+      "name": "owner",
+      "kind": "FunctionDeclaration",
+      "line": 56,
+      "endLine": 70
+    },
+    {
+      "file": "src/lib/agent/taskTools.ts",
+      "name": "taskResult",
+      "kind": "FunctionDeclaration",
+      "line": 73,
+      "endLine": 75
+    },
+    {
+      "file": "src/lib/agent/taskTools.ts",
+      "name": "requiredTask",
+      "kind": "FunctionDeclaration",
+      "line": 77,
+      "endLine": 80
+    },
+    {
+      "file": "src/lib/agent/taskTools.ts",
+      "name": "tool",
+      "kind": "FunctionDeclaration",
+      "line": 82,
+      "endLine": 95
+    },
+    {
+      "file": "src/lib/agent/ipTools.ts",
+      "name": "fieldChanges",
+      "kind": "FunctionDeclaration",
+      "line": 37,
+      "endLine": 40
+    },
+    {
+      "file": "src/lib/agent/ipTools.ts",
+      "name": "requireIp",
+      "kind": "FunctionDeclaration",
+      "line": 42,
+      "endLine": 49
+    },
+    {
+      "file": "src/lib/agent/ipTools.ts",
+      "name": "affectedState",
+      "kind": "FunctionDeclaration",
+      "line": 51,
+      "endLine": 54
+    },
+    {
+      "file": "src/lib/agent/ipTools.ts",
+      "name": "editableIp",
+      "kind": "FunctionDeclaration",
+      "line": 56,
+      "endLine": 60
+    },
+    {
+      "file": "src/lib/agent/ipTools.ts",
+      "name": "bindingProject",
+      "kind": "FunctionDeclaration",
+      "line": 62,
+      "endLine": 68
+    },
+    {
+      "file": "src/lib/agent/toolLoading.ts",
+      "name": "createToolLoading",
+      "kind": "FunctionDeclaration",
+      "line": 17,
+      "endLine": 36
+    },
+    {
+      "file": "src/lib/agent/toolLoading.ts",
+      "name": "toolLoadingInstructions",
+      "kind": "FunctionDeclaration",
+      "line": 38,
+      "endLine": 46
+    },
+    {
+      "file": "src/lib/agent/toolLoading.ts",
+      "name": "refreshRunToolLoading",
+      "kind": "FunctionDeclaration",
+      "line": 113,
+      "endLine": 145
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "name": "requiresToolApproval",
+      "kind": "FunctionDeclaration",
+      "line": 29,
+      "endLine": 35
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "name": "toolSchemas",
+      "kind": "FunctionDeclaration",
+      "line": 135,
+      "endLine": 142
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "name": "validateToolCall",
+      "kind": "FunctionDeclaration",
+      "line": 144,
+      "endLine": 162
+    },
+    {
+      "file": "src/lib/agent/tools.ts",
+      "name": "getLegacyToolValidationFailure",
+      "kind": "FunctionDeclaration",
+      "line": 165,
+      "endLine": 172
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "PreviewState",
+      "kind": "TypeAliasDeclaration",
+      "line": 99,
+      "endLine": 99
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "changes",
+      "kind": "FunctionDeclaration",
+      "line": 163,
+      "endLine": 185
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "rowResult",
+      "kind": "FunctionDeclaration",
+      "line": 187,
+      "endLine": 189
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "readTool",
+      "kind": "FunctionDeclaration",
+      "line": 191,
+      "endLine": 207
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "WriteHooks",
+      "kind": "TypeAliasDeclaration",
+      "line": 209,
+      "endLine": 213
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "writeTool",
+      "kind": "FunctionDeclaration",
+      "line": 215,
+      "endLine": 270
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "preview",
+      "kind": "FunctionDeclaration",
+      "line": 217,
+      "endLine": 225
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "flush",
+      "kind": "FunctionDeclaration",
+      "line": 227,
+      "endLine": 231
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "referenceDetails",
+      "kind": "FunctionDeclaration",
+      "line": 272,
+      "endLine": 301
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "targetPreview",
+      "kind": "FunctionDeclaration",
+      "line": 303,
+      "endLine": 312
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "createPreview",
+      "kind": "FunctionDeclaration",
+      "line": 314,
+      "endLine": 322
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "deletePreview",
+      "kind": "FunctionDeclaration",
+      "line": 324,
+      "endLine": 351
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "beatPatch",
+      "kind": "FunctionDeclaration",
+      "line": 588,
+      "endLine": 592
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "shotPatch",
+      "kind": "FunctionDeclaration",
+      "line": 594,
+      "endLine": 602
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "catalogSlot",
+      "kind": "FunctionDeclaration",
+      "line": 822,
+      "endLine": 824
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "isCharacterSlot",
+      "kind": "FunctionDeclaration",
+      "line": 825,
+      "endLine": 825
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "isSceneSlot",
+      "kind": "FunctionDeclaration",
+      "line": 826,
+      "endLine": 826
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "isPropSlot",
+      "kind": "FunctionDeclaration",
+      "line": 827,
+      "endLine": 827
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "isStyleSlot",
+      "kind": "FunctionDeclaration",
+      "line": 828,
+      "endLine": 828
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "name": "isShotSlot",
+      "kind": "FunctionDeclaration",
+      "line": 829,
+      "endLine": 829
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "name": "assertAudioMusicToolScope",
+      "kind": "FunctionDeclaration",
+      "line": 31,
+      "endLine": 35
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "name": "audioMusicUnion",
+      "kind": "FunctionDeclaration",
+      "line": 44,
+      "endLine": 49
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "name": "boundedAudioText",
+      "kind": "FunctionDeclaration",
+      "line": 51,
+      "endLine": 53
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "name": "editable",
+      "kind": "FunctionDeclaration",
+      "line": 130,
+      "endLine": 146
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "name": "previewState",
+      "kind": "FunctionDeclaration",
+      "line": 148,
+      "endLine": 150
+    },
+    {
+      "file": "src/lib/agent/audioTools.ts",
+      "name": "clipState",
+      "kind": "FunctionDeclaration",
+      "line": 152,
+      "endLine": 156
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "name": "owner",
+      "kind": "FunctionDeclaration",
+      "line": 35,
+      "endLine": 54
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "name": "tool",
+      "kind": "FunctionDeclaration",
+      "line": 56,
+      "endLine": 78
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "name": "slice",
+      "kind": "FunctionDeclaration",
+      "line": 80,
+      "endLine": 91
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "name": "pastTask",
+      "kind": "FunctionDeclaration",
+      "line": 93,
+      "endLine": 108
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "name": "missing",
+      "kind": "FunctionDeclaration",
+      "line": 110,
+      "endLine": 115
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "name": "stale",
+      "kind": "FunctionDeclaration",
+      "line": 117,
+      "endLine": 125
+    },
+    {
+      "file": "src/lib/agent/memoryTools.ts",
+      "name": "publicResult",
+      "kind": "FunctionDeclaration",
+      "line": 128,
+      "endLine": 152
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "BusinessKind",
+      "kind": "TypeAliasDeclaration",
+      "line": 17,
+      "endLine": 17
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "AssetKind",
+      "kind": "TypeAliasDeclaration",
+      "line": 18,
+      "endLine": 18
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "BusinessRow",
+      "kind": "TypeAliasDeclaration",
+      "line": 19,
+      "endLine": 19
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "RowByKind",
+      "kind": "TypeAliasDeclaration",
+      "line": 20,
+      "endLine": 25
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "OwnedBusinessRecord",
+      "kind": "TypeAliasDeclaration",
+      "line": 26,
+      "endLine": 26
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "metadata",
+      "kind": "FunctionDeclaration",
+      "line": 51,
+      "endLine": 59
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "requireOwner",
+      "kind": "FunctionDeclaration",
+      "line": 61,
+      "endLine": 67
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "requireEpisode",
+      "kind": "FunctionDeclaration",
+      "line": 69,
+      "endLine": 74
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "readBusinessRecord",
+      "kind": "FunctionDeclaration",
+      "line": 77,
+      "endLine": 113
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "listBusinessRecords",
+      "kind": "FunctionDeclaration",
+      "line": 115,
+      "endLine": 134
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "getRow",
+      "kind": "FunctionDeclaration",
+      "line": 137,
+      "endLine": 139
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "listRows",
+      "kind": "FunctionDeclaration",
+      "line": 140,
+      "endLine": 142
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "projection",
+      "kind": "FunctionDeclaration",
+      "line": 157,
+      "endLine": 195
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "summarize",
+      "kind": "FunctionDeclaration",
+      "line": 197,
+      "endLine": 203
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "navigation",
+      "kind": "FunctionDeclaration",
+      "line": 205,
+      "endLine": 227
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "bounded",
+      "kind": "FunctionDeclaration",
+      "line": 230,
+      "endLine": 255
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "clip",
+      "kind": "FunctionDeclaration",
+      "line": 233,
+      "endLine": 245
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "isReadableBusinessFieldPath",
+      "kind": "FunctionDeclaration",
+      "line": 257,
+      "endLine": 260
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "fieldAt",
+      "kind": "FunctionDeclaration",
+      "line": 262,
+      "endLine": 271
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "textAt",
+      "kind": "FunctionDeclaration",
+      "line": 273,
+      "endLine": 277
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "relationsAt",
+      "kind": "FunctionDeclaration",
+      "line": 279,
+      "endLine": 283
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "ownerSnapshot",
+      "kind": "FunctionDeclaration",
+      "line": 286,
+      "endLine": 302
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "mediaUsage",
+      "kind": "FunctionDeclaration",
+      "line": 304,
+      "endLine": 345
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "mediaRetention",
+      "kind": "FunctionDeclaration",
+      "line": 348,
+      "endLine": 362
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "name": "assetMediaDependencies",
+      "kind": "FunctionDeclaration",
+      "line": 365,
+      "endLine": 381
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "Spec",
+      "kind": "InterfaceDeclaration",
+      "line": 15,
+      "endLine": 19
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "text",
+      "kind": "FunctionDeclaration",
+      "line": 21,
+      "endLine": 26
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "trimmedText",
+      "kind": "FunctionDeclaration",
+      "line": 29,
+      "endLine": 31
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "defaulted",
+      "kind": "FunctionDeclaration",
+      "line": 34,
+      "endLine": 37
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "number",
+      "kind": "FunctionDeclaration",
+      "line": 39,
+      "endLine": 45
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "choice",
+      "kind": "FunctionDeclaration",
+      "line": 47,
+      "endLine": 49
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "optional",
+      "kind": "FunctionDeclaration",
+      "line": 53,
+      "endLine": 55
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "nullable",
+      "kind": "FunctionDeclaration",
+      "line": 57,
+      "endLine": 59
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "array",
+      "kind": "FunctionDeclaration",
+      "line": 61,
+      "endLine": 66
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "object",
+      "kind": "FunctionDeclaration",
+      "line": 68,
+      "endLine": 80
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "name": "nonempty",
+      "kind": "FunctionDeclaration",
+      "line": 82,
+      "endLine": 88
+    },
+    {
+      "file": "src/lib/agent/musicTools.ts",
+      "name": "state",
+      "kind": "FunctionDeclaration",
+      "line": 45,
+      "endLine": 50
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "name": "tool",
+      "kind": "FunctionDeclaration",
+      "line": 30,
+      "endLine": 30
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "name": "begin",
+      "kind": "FunctionDeclaration",
+      "line": 31,
+      "endLine": 31
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "name": "prepare",
+      "kind": "FunctionDeclaration",
+      "line": 32,
+      "endLine": 41
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "name": "execute",
+      "kind": "FunctionDeclaration",
+      "line": 42,
+      "endLine": 42
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "name": "fixture",
+      "kind": "FunctionDeclaration",
+      "line": 43,
+      "endLine": 46
+    },
+    {
+      "file": "tests/agentBusiness.test.ts",
+      "name": "read",
+      "kind": "FunctionDeclaration",
+      "line": 47,
+      "endLine": 50
+    },
+    {
+      "file": "tests/d05SchemaEquivalence.test.ts",
+      "name": "minimal",
+      "kind": "FunctionDeclaration",
+      "line": 7,
+      "endLine": 17
+    },
+    {
+      "file": "tests/d05SchemaEquivalence.test.ts",
+      "name": "outcome",
+      "kind": "FunctionDeclaration",
+      "line": 18,
+      "endLine": 24
+    },
+    {
+      "file": "tests/audioGenerationAgent.test.ts",
+      "name": "fixture",
+      "kind": "FunctionDeclaration",
+      "line": 25,
+      "endLine": 37
+    },
+    {
+      "file": "tests/audioGenerationAgent.test.ts",
+      "name": "awaiting",
+      "kind": "FunctionDeclaration",
+      "line": 38,
+      "endLine": 44
+    },
+    {
+      "file": "tests/audioTaskEvidence.test.ts",
+      "name": "fixture",
+      "kind": "FunctionDeclaration",
+      "line": 23,
+      "endLine": 48
+    },
+    {
+      "file": "tests/agentReferences.test.ts",
+      "name": "source",
+      "kind": "FunctionDeclaration",
+      "line": 23,
+      "endLine": 30
+    },
+    {
+      "file": "tests/agentReferences.test.ts",
+      "name": "begin",
+      "kind": "FunctionDeclaration",
+      "line": 31,
+      "endLine": 34
+    },
+    {
+      "file": "tests/agentGeneration.test.ts",
+      "name": "setup",
+      "kind": "FunctionDeclaration",
+      "line": 27,
+      "endLine": 39
+    },
+    {
+      "file": "tests/agentGeneration.test.ts",
+      "name": "toolContext",
+      "kind": "FunctionDeclaration",
+      "line": 40,
+      "endLine": 46
+    },
+    {
+      "file": "tests/agentGeneration.test.ts",
+      "name": "apimartFetch",
+      "kind": "FunctionDeclaration",
+      "line": 47,
+      "endLine": 55
+    },
+    {
+      "file": "tests/agentGeneration.test.ts",
+      "name": "hubFetch",
+      "kind": "FunctionDeclaration",
+      "line": 56,
+      "endLine": 65
+    },
+    {
+      "file": "tests/d05ToolMetadata.test.ts",
+      "name": "fixture",
+      "kind": "FunctionDeclaration",
+      "line": 16,
+      "endLine": 23
+    },
+    {
+      "file": "tests/d05ToolMetadata.test.ts",
+      "name": "begin",
+      "kind": "FunctionDeclaration",
+      "line": 24,
+      "endLine": 32
+    },
+    {
+      "file": "tests/agentTaskOrchestration.test.ts",
+      "name": "start",
+      "kind": "FunctionDeclaration",
+      "line": 23,
+      "endLine": 26
+    },
+    {
+      "file": "tests/agentTaskOrchestration.test.ts",
+      "name": "pending",
+      "kind": "FunctionDeclaration",
+      "line": 28,
+      "endLine": 36
+    },
+    {
+      "file": "tests/agentTaskOrchestration.test.ts",
+      "name": "invoke",
+      "kind": "FunctionDeclaration",
+      "line": 37,
+      "endLine": 37
+    },
+    {
+      "file": "tests/agentTaskOrchestration.test.ts",
+      "name": "create",
+      "kind": "FunctionDeclaration",
+      "line": 38,
+      "endLine": 38
+    },
+    {
+      "file": "tests/agentTaskOrchestrationReview.test.ts",
+      "name": "fixture",
+      "kind": "FunctionDeclaration",
+      "line": 17,
+      "endLine": 21
+    },
+    {
+      "file": "tests/agentTaskOrchestrationReview.test.ts",
+      "name": "effect",
+      "kind": "FunctionDeclaration",
+      "line": 22,
+      "endLine": 27
+    },
+    {
+      "file": "tests/audioMusicAgentTools.test.ts",
+      "name": "begin",
+      "kind": "FunctionDeclaration",
+      "line": 26,
+      "endLine": 31
+    },
+    {
+      "file": "tests/audioMusicAgentTools.test.ts",
+      "name": "context",
+      "kind": "FunctionDeclaration",
+      "line": 32,
+      "endLine": 34
+    },
+    {
+      "file": "tests/audioMusicAgentTools.test.ts",
+      "name": "prepareCall",
+      "kind": "FunctionDeclaration",
+      "line": 35,
+      "endLine": 43
+    },
+    {
+      "file": "tests/agentGenerationBatch.test.ts",
+      "name": "lockManager",
+      "kind": "FunctionDeclaration",
+      "line": 27,
+      "endLine": 30
+    },
+    {
+      "file": "tests/agentGenerationBatch.test.ts",
+      "name": "fixture",
+      "kind": "FunctionDeclaration",
+      "line": 31,
+      "endLine": 46
+    },
+    {
+      "file": "tests/agentGenerationBatch.test.ts",
+      "name": "apimartMock",
+      "kind": "FunctionDeclaration",
+      "line": 47,
+      "endLine": 55
+    },
+    {
+      "file": "tests/agentGenerationBatch.test.ts",
+      "name": "confirm",
+      "kind": "FunctionDeclaration",
+      "line": 56,
+      "endLine": 56
+    },
+    {
+      "file": "tests/agentGenerationBatch.test.ts",
+      "name": "run",
+      "kind": "FunctionDeclaration",
+      "line": 57,
+      "endLine": 57
+    },
+    {
+      "file": "tests/referenceEvidence.test.ts",
+      "name": "source",
+      "kind": "FunctionDeclaration",
+      "line": 18,
+      "endLine": 24
+    },
+    {
+      "file": "tests/agentProjectCreation.test.ts",
+      "name": "response",
+      "kind": "FunctionDeclaration",
+      "line": 24,
+      "endLine": 27
+    },
+    {
+      "file": "tests/agentProjectCreation.test.ts",
+      "name": "begin",
+      "kind": "FunctionDeclaration",
+      "line": 28,
+      "endLine": 39
+    },
+    {
+      "file": "tests/agentProjectCreation.test.ts",
+      "name": "direct",
+      "kind": "FunctionDeclaration",
+      "line": 40,
+      "endLine": 49
+    },
+    {
+      "file": "tests/musicGenerationReview.test.ts",
+      "name": "fixture",
+      "kind": "FunctionDeclaration",
+      "line": 23,
+      "endLine": 36
+    },
+    {
+      "file": "tests/musicGenerationReview.test.ts",
+      "name": "save",
+      "kind": "FunctionDeclaration",
+      "line": 158,
+      "endLine": 162
+    },
+    {
+      "file": "tests/agentMemoryTools.test.ts",
+      "name": "runFor",
+      "kind": "FunctionDeclaration",
+      "line": 48,
+      "endLine": 58
+    },
+    {
+      "file": "tests/agentMemoryTools.test.ts",
+      "name": "prepare",
+      "kind": "FunctionDeclaration",
+      "line": 59,
+      "endLine": 89
+    },
+    {
+      "file": "tests/agentMemoryTools.test.ts",
+      "name": "invoke",
+      "kind": "FunctionDeclaration",
+      "line": 90,
+      "endLine": 93
+    },
+    {
+      "file": "tests/agentMemoryTools.test.ts",
+      "name": "historicalTask",
+      "kind": "FunctionDeclaration",
+      "line": 94,
+      "endLine": 120
+    },
+    {
+      "file": "tests/agentGenerationReview.test.ts",
+      "name": "pending",
+      "kind": "FunctionDeclaration",
+      "line": 25,
+      "endLine": 39
+    },
+    {
+      "file": "tests/agentGenerationReview.test.ts",
+      "name": "paidFixture",
+      "kind": "FunctionDeclaration",
+      "line": 40,
+      "endLine": 43
+    },
+    {
+      "file": "tests/agentProjectContext.test.ts",
+      "name": "begin",
+      "kind": "FunctionDeclaration",
+      "line": 24,
+      "endLine": 24
+    },
+    {
+      "file": "tests/agentProjectContext.test.ts",
+      "name": "context",
+      "kind": "FunctionDeclaration",
+      "line": 25,
+      "endLine": 25
+    },
+    {
+      "file": "tests/agentProjectContext.test.ts",
+      "name": "tool",
+      "kind": "FunctionDeclaration",
+      "line": 26,
+      "endLine": 26
+    },
+    {
+      "file": "tests/agentProjectContext.test.ts",
+      "name": "prepare",
+      "kind": "FunctionDeclaration",
+      "line": 27,
+      "endLine": 27
+    },
+    {
+      "file": "tests/memoryRetrieval.test.ts",
+      "name": "memory",
+      "kind": "FunctionDeclaration",
+      "line": 39,
+      "endLine": 55
+    },
+    {
+      "file": "tests/memoryRetrieval.test.ts",
+      "name": "fixture",
+      "kind": "FunctionDeclaration",
+      "line": 56,
+      "endLine": 60
+    },
+    {
+      "file": "tests/memoryRetrieval.test.ts",
+      "name": "begin",
+      "kind": "FunctionDeclaration",
+      "line": 61,
+      "endLine": 69
+    },
+    {
+      "file": "tests/memoryRetrieval.test.ts",
+      "name": "serializerEntry",
+      "kind": "FunctionDeclaration",
+      "line": 480,
+      "endLine": 487
+    },
+    {
+      "file": "tests/agentAuditRemediation.test.ts",
+      "name": "claim",
+      "kind": "FunctionDeclaration",
+      "line": 28,
+      "endLine": 34
+    },
+    {
+      "file": "tests/agentAuditRemediation.test.ts",
+      "name": "oldPlanFixture",
+      "kind": "FunctionDeclaration",
+      "line": 144,
+      "endLine": 152
+    },
+    {
+      "file": "tests/d05BusinessBranches.test.ts",
+      "name": "prepared",
+      "kind": "FunctionDeclaration",
+      "line": 16,
+      "endLine": 27
+    },
+    {
+      "file": "tests/agentGenerationBatchSafety.test.ts",
+      "name": "lockManager",
+      "kind": "FunctionDeclaration",
+      "line": 24,
+      "endLine": 27
+    },
+    {
+      "file": "tests/agentGenerationBatchSafety.test.ts",
+      "name": "fixture",
+      "kind": "FunctionDeclaration",
+      "line": 28,
+      "endLine": 43
+    },
+    {
+      "file": "tests/agentGenerationBatchSafety.test.ts",
+      "name": "apimartMock",
+      "kind": "FunctionDeclaration",
+      "line": 44,
+      "endLine": 52
+    },
+    {
+      "file": "tests/agentGenerationBatchSafety.test.ts",
+      "name": "confirm",
+      "kind": "FunctionDeclaration",
+      "line": 53,
+      "endLine": 53
+    },
+    {
+      "file": "tests/agentGenerationBatchSafety.test.ts",
+      "name": "run",
+      "kind": "FunctionDeclaration",
+      "line": 54,
+      "endLine": 54
+    },
+    {
+      "file": "tests/imageDiscovery.test.ts",
+      "name": "fixture",
+      "kind": "FunctionDeclaration",
+      "line": 33,
+      "endLine": 40
+    },
+    {
+      "file": "tests/imageDiscovery.test.ts",
+      "name": "begin",
+      "kind": "FunctionDeclaration",
+      "line": 41,
+      "endLine": 45
+    },
+    {
+      "file": "tests/imageDiscovery.test.ts",
+      "name": "context",
+      "kind": "FunctionDeclaration",
+      "line": 46,
+      "endLine": 46
+    },
+    {
+      "file": "tests/imageDiscovery.test.ts",
+      "name": "ledger",
+      "kind": "FunctionDeclaration",
+      "line": 47,
+      "endLine": 50
+    },
+    {
+      "file": "tests/imageDiscovery.test.ts",
+      "name": "discovered",
+      "kind": "FunctionDeclaration",
+      "line": 51,
+      "endLine": 54
+    },
+    {
+      "file": "tests/imageDiscovery.test.ts",
+      "name": "prepared",
+      "kind": "FunctionDeclaration",
+      "line": 55,
+      "endLine": 60
+    },
+    {
+      "file": "tests/imageDiscovery.test.ts",
+      "name": "scope",
+      "kind": "FunctionDeclaration",
+      "line": 61,
+      "endLine": 61
+    },
+    {
+      "file": "tests/agentMaterialTools.test.ts",
+      "name": "runFor",
+      "kind": "FunctionDeclaration",
+      "line": 20,
+      "endLine": 25
+    },
+    {
+      "file": "tests/agentMaterialTools.test.ts",
+      "name": "prepared",
+      "kind": "FunctionDeclaration",
+      "line": 26,
+      "endLine": 35
+    },
+    {
+      "file": "tests/agentMaterialTools.test.ts",
+      "name": "invoke",
+      "kind": "FunctionDeclaration",
+      "line": 36,
+      "endLine": 36
+    },
+    {
+      "file": "tests/agentMaterialTools.test.ts",
+      "name": "file",
+      "kind": "FunctionDeclaration",
+      "line": 37,
+      "endLine": 37
+    },
+    {
+      "file": "tests/agentIpTools.test.ts",
+      "name": "begin",
+      "kind": "FunctionDeclaration",
+      "line": 21,
+      "endLine": 28
+    },
+    {
+      "file": "tests/agentIpTools.test.ts",
+      "name": "context",
+      "kind": "FunctionDeclaration",
+      "line": 29,
+      "endLine": 29
+    },
+    {
+      "file": "tests/agentIpTools.test.ts",
+      "name": "paused",
+      "kind": "FunctionDeclaration",
+      "line": 33,
+      "endLine": 39
+    },
+    {
+      "file": "tests/musicDurationContract.test.ts",
+      "name": "settings",
+      "kind": "FunctionDeclaration",
+      "line": 26,
+      "endLine": 29
+    },
+    {
+      "file": "tests/musicDurationContract.test.ts",
+      "name": "wire",
+      "kind": "FunctionDeclaration",
+      "line": 30,
+      "endLine": 33
+    },
+    {
+      "file": "tests/musicDurationContract.test.ts",
+      "name": "begin",
+      "kind": "FunctionDeclaration",
+      "line": 34,
+      "endLine": 40
+    },
+    {
+      "file": "tests/musicDurationContract.test.ts",
+      "name": "context",
+      "kind": "FunctionDeclaration",
+      "line": 41,
+      "endLine": 43
+    },
+    {
+      "file": "tests/musicDurationContract.test.ts",
+      "name": "preparedCall",
+      "kind": "FunctionDeclaration",
+      "line": 44,
+      "endLine": 54
+    },
+    {
+      "file": "tests/musicDurationContract.test.ts",
+      "name": "snapshot",
+      "kind": "FunctionDeclaration",
+      "line": 55,
+      "endLine": 61
+    },
+    {
+      "file": "tests/musicDurationContract.test.ts",
+      "name": "work",
+      "kind": "FunctionDeclaration",
+      "line": 62,
+      "endLine": 65
+    },
+    {
+      "file": "tests/typecheck/agentToolDefinition.ts",
+      "name": "IsAny",
+      "kind": "TypeAliasDeclaration",
+      "line": 17,
+      "endLine": 17
+    },
+    {
+      "file": "tests/typecheck/agentToolDefinition.ts",
+      "name": "actualAudio",
+      "kind": "FunctionDeclaration",
+      "line": 70,
+      "endLine": 83
+    },
+    {
+      "file": "tests/typecheck/agentToolDefinition.ts",
+      "name": "noErasure",
+      "kind": "FunctionDeclaration",
+      "line": 84,
+      "endLine": 88
+    },
+    {
+      "file": "tests/typecheck/agentToolDefinition.ts",
+      "name": "nativePatch",
+      "kind": "FunctionDeclaration",
+      "line": 90,
+      "endLine": 107
+    },
+    {
+      "file": "tests/typecheck/agentToolDefinition.ts",
+      "name": "exhaustiveSources",
+      "kind": "FunctionDeclaration",
+      "line": 108,
+      "endLine": 115
+    },
+    {
+      "file": "tests/helpers/registeredTools.ts",
+      "name": "registeredTools",
+      "kind": "FunctionDeclaration",
+      "line": 4,
+      "endLine": 7
+    }
+  ]
+}
