@@ -28,7 +28,7 @@ const transport = {
         if (id.endsWith("/components/agent/AgentChatPage.tsx")) {
             source = source.replace('from "@lobehub/ui"', `from "${surfacePath}"`);
         }
-        if (id.endsWith("/db/repo.ts")) {
+        if (id.endsWith("/db/chat.ts")) {
             source = source.replace("export async function createChatThread(", "async function _b07_createChatThread(");
             source += `\nexport async function createChatThread(...args: Parameters<typeof _b07_createChatThread>) {
                 const fixture = typeof window === "undefined" ? undefined : window.b07;

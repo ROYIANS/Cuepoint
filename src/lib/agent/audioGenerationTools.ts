@@ -1,10 +1,11 @@
+import {defineTool} from './toolDefinition';
 import {z} from "zod";
 import {db} from "@/db/database";
-import {resolveConnector} from "@/db/repo";
+import {resolveConnector} from "@/db/connectors";
 import {assertAudioProject, assertAudioRevision, ownedAudioRow} from "@/db/audioShared";
 import {AtomicToolRollbackError} from "@/db/agentTools";
 import type {AgentToolPreview} from "@/domain/agent";
-import type {AgentToolContext, AgentToolDefinition} from "./tools";
+import type {AgentToolContext} from "./tools";
 import type {AudioGenerationInput} from "@/domain/audioGeneration";
 import {requireBoundProjectScope} from "./projectScope";
 import {targetRevision} from "@/lib/productionRevision";
@@ -225,15 +226,39 @@ async function musicArgs(raw: unknown, context?: AgentToolContext): Promise<Subm
 }
 
 export const AUDIO_GENERATION_TOOL_NAMES = ["audio_generation_capabilities", "audio_generate_speech", "music_generate", "audio_generation_check"] as const;
-export const AUDIO_GENERATION_TOOLS: readonly AgentToolDefinition[] = [
-    {
+export const musicGenerateTool = defineTool({schema: music.schema, json: music.json}, {
+        name: "music_generate",
+        title: "生成音乐",
+        description: "提交当前已保存音乐草稿的指定版本；先用音乐草稿工具准备参数。经用户确认后提交一次，后续只查询已有任务。",
+        effect: "network",
+        recovery: "repeatable",
+        requiresConfirmation: true,
+        highRisk: () => false,
+        prepare: async (raw, context) => {
+            const args = music.schema.parse(raw);
+            await scope(args.projectId, context);
+            return preview(await musicArgs(args), context);
+        },
+        async execute(raw, context) {
+            let args: Submission;
+            // Resolving local draft state has no network side effect. A stale draft
+            // is a known rejection, not an uncertain paid submission.
+            try {
+                args = await musicArgs(raw, context);
+            } catch (error) {
+                throw new AtomicToolRollbackError(error instanceof Error ? error.message : "音乐草稿准备失败");
+            }
+            return runSubmission(args, context);
+        }
+    });
+
+export const AUDIO_GENERATION_TOOLS = [
+    defineTool({schema: z.object({}).strict(), json: {type: "object", properties: {}, additionalProperties: false}}, {
         name: "audio_generation_capabilities",
         title: "查看声音生成能力",
         description: "列出 MiMo/APIMart 音频和音乐连接与已支持能力，不探测付费接口，不保证余额。",
         effect: "read",
         highRisk: () => false,
-        parameters: {type: "object", properties: {}, additionalProperties: false},
-        parseArguments: raw => z.object({}).strict().parse(raw),
         async execute(_args, context) {
             const projectId = await requireBoundProjectScope(context);
             await scope(projectId, context);
@@ -273,8 +298,8 @@ export const AUDIO_GENERATION_TOOLS: readonly AgentToolDefinition[] = [
                 note: "先保存音乐草稿再 music_generate。付费请求必须经用户确认；不支持编曲或音频听取。",
             };
         }
-    },
-    {
+    }),
+    defineTool({schema: speech.schema, json: speech.json}, {
         name: "audio_generate_speech",
         title: "生成配音",
         description: "生成配音或音色试音；默认 MiMo，connectorId/voice/speed 可省略。speakerId 或段落绑定角色可继承已保存的音色；提供段落时需 segmentRevision。明确的 APIMart 参数仍可使用；MiMo 克隆用项目内参考 mediaId，设计默认不改写文本。必须确认后才生成。",
@@ -282,8 +307,6 @@ export const AUDIO_GENERATION_TOOLS: readonly AgentToolDefinition[] = [
         recovery: "repeatable",
         requiresConfirmation: true,
         highRisk: () => false,
-        parameters: speech.json,
-        parseArguments: raw => speech.schema.parse(raw),
         prepare: async (raw, context) => preview(await speechArgs(raw, context), context),
         execute: async (raw, context) => {
             try {
@@ -292,48 +315,20 @@ export const AUDIO_GENERATION_TOOLS: readonly AgentToolDefinition[] = [
                 throw new AtomicToolRollbackError(error instanceof Error ? error.message : "配音准备失败");
             }
         }
-    },
-    {
-        name: "music_generate",
-        title: "生成音乐",
-        description: "提交当前已保存音乐草稿的指定版本；先用音乐草稿工具准备参数。经用户确认后提交一次，后续只查询已有任务。",
-        effect: "network",
-        recovery: "repeatable",
-        requiresConfirmation: true,
-        highRisk: () => false,
-        parameters: music.json,
-        parseArguments: raw => music.schema.parse(raw),
-        prepare: async (raw, context) => {
-            const args = music.schema.parse(raw);
-            await scope(args.projectId, context);
-            return preview(await musicArgs(args), context);
-        },
-        async execute(raw, context) {
-            let args: Submission;
-            // Resolving local draft state has no network side effect. A stale draft
-            // is a known rejection, not an uncertain paid submission.
-            try {
-                args = await musicArgs(raw, context);
-            } catch (error) {
-                throw new AtomicToolRollbackError(error instanceof Error ? error.message : "音乐草稿准备失败");
-            }
-            return runSubmission(args, context);
-        }
-    },
-    {
+    }),
+    musicGenerateTool,
+    defineTool({schema: jobSpec.schema, json: jobSpec.json}, {
         name: "audio_generation_check",
         title: "查询声音生成结果",
         description: "对当前项目已存在的任务查询一次并保存可用结果；不会重新生成。pending/running 不等于成品，不要密集循环查询。",
         effect: "network",
         recovery: "repeatable",
         highRisk: () => false,
-        parameters: jobSpec.json,
-        parseArguments: raw => jobSpec.schema.parse(raw),
         async execute(raw, context) {
             const args = jobSpec.schema.parse(raw);
             await scope(args.projectId, context);
             await refreshAudioGeneration(args.projectId, args.jobId, {signal: context.signal});
             return readAudioJobSummary(args.projectId, args.jobId);
         }
-    },
+    }),
 ];

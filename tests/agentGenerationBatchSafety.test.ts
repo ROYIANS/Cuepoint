@@ -1,3 +1,4 @@
+import {registeredTools} from "./helpers/registeredTools";
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { taskGenerationSource, saveTaskRecord, validateTaskSources } from '@/db/agentTaskRecords';
 import { createAgentTaskForThread } from '@/db/agentTasks';
@@ -6,14 +7,18 @@ import { describe, expect, it, vi } from 'vitest';
 import { db } from '@/db/database';
 import { beginAgentRun, finishAgentRun } from '@/db/agentRuns';
 import {  transitionToolCall } from '@/db/agentTools';
-import { createProject, addShot, createChatThread } from '@/db/repo';
+import {createProject} from "@/db/projects";
+import {addShot} from "@/db/shots";
+import {createChatThread} from "@/db/chat";
 import { prepareGenerationBatch, readGenerationBatch, confirmGenerationBatch, applyBatchSelections, selectBatchCandidate } from '@/db/agentGenerationBatches';
 import { startGenerationBatch, stopGenerationBatch } from '@/lib/agent/generationBatchRuntime';
 import { type GenerationSubmitArgs } from '@/lib/agent/generationProfiles';
 import type { ConnectorConfig } from '@/domain/types';
 import type { AgentToolContext } from '@/lib/agent/tools';
 import type { ThreadLockManager } from '@/lib/agent/runOwnership';
-import { BUSINESS_TOOLS } from '@/lib/agent/businessTools';
+import { BUSINESS_TOOLS as BUSINESS_TOOLS_DEFINITIONS } from '@/lib/agent/businessTools';
+const BUSINESS_TOOLS = registeredTools(BUSINESS_TOOLS_DEFINITIONS);
+
 
 const png = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jFZkAAAAASUVORK5CYII='), c => c.charCodeAt(0));
 function lockManager(): ThreadLockManager {

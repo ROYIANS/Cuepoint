@@ -1,3 +1,4 @@
+/** Historical local read/preflight contract. Durable Agent generation uses agent/generationRuntime and generationBatchRuntime. */
 import {db} from "@/db/database";
 import type {SourceRevision} from "@/domain/production";
 import type {GenerationSlot, Id, MediaKind} from "@/domain/types";

@@ -1,13 +1,15 @@
+import {registeredTools} from "./helpers/registeredTools";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
-import { createProject, createChatThread } from "@/db/repo";
+import {createProject} from "@/db/projects";
+import {createChatThread} from "@/db/chat";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
 import { appendToolResults } from "@/db/agentTools";
 import { updateGeneralAgentConfig } from "@/db/agentSettings";
 import { removeProjectReference } from "@/db/references";
 import { executeChatRun } from "@/lib/agent/runChat";
 import { selectReferenceContext, referenceSelectionCharacterBudget } from "@/lib/agent/referenceContext";
-import { REFERENCE_TOOLS } from "@/lib/agent/referenceTools";
+import { REFERENCE_TOOLS as REFERENCE_TOOLS_DEFINITIONS } from "@/lib/agent/referenceTools";
 import { buildContextMessages, budgetContext, selectContextHistory } from "@/lib/agent/contextPlanner";
 import { materializeChatMessages, materializeResponseItems } from "@/lib/ai/referenceWire";
 import { resolveVisionCapability } from "@/lib/ai/visionCapability";
@@ -15,6 +17,8 @@ import { toResponseInput } from "@/lib/ai/responsesStream";
 import type { ConnectorConfig } from "@/domain/types";
 import type { ProjectReference } from "@/domain/references";
 import type { ContextCompaction } from "@/domain/context";
+const REFERENCE_TOOLS = registeredTools(REFERENCE_TOOLS_DEFINITIONS);
+
 const connector: ConnectorConfig = { id: "cx", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "test-secret", updatedAt: "2026-09-19" };
 async function source(projectId: string, id: string, kind: "text" | "image" = "text", texts = ["资料正文"]) {
   const mediaId = `media-${id}`, mimeType = kind === "image" ? "image/png" : "text/plain", blob = new Blob([kind === "image" ? "actual-pixels" : texts.join("\n")], { type: mimeType });

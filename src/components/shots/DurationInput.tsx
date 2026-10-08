@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {toast} from "sonner";
-import {patchShot} from "@/db/repo";
+import {patchShot} from "@/db/shots";
 import {useDebouncedDraft} from "@/lib/debouncedDraft";
 import {parseDurationInput} from "@/lib/durationInput";
 import {DraftStatus} from "@/components/ui/draft-status";

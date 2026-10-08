@@ -1,10 +1,12 @@
+import {registeredTools} from "./helpers/registeredTools";
 import { describe, expect, it, vi } from 'vitest';
 import { db } from '@/db/database';
 import { beginAgentRun } from '@/db/agentRuns';
 import { resolveAgentToolApproval } from '@/db/agentTools';
-import { createChatThread, createProject } from '@/db/repo';
+import {createChatThread} from "@/db/chat";
+import {createProject} from "@/db/projects";
 import { bindProjectIp, createIpProfile, setIpArchived, updateIpProfile } from '@/db/ipProfiles';
-import { IP_TOOLS } from '@/lib/agent/ipTools';
+import { IP_TOOLS as IP_TOOLS_DEFINITIONS } from '@/lib/agent/ipTools';
 import { IP_TOOL_NAMES } from '@/lib/agent/ipToolNames';
 import { getProjectContext, refreshRunProjectContext } from '@/lib/agent/projectContext';
 import { executeChatRun, resumeChatRun } from '@/lib/agent/runChat';
@@ -12,6 +14,8 @@ import { requiresToolApproval, type AgentToolContext } from '@/lib/agent/tools';
 import type { AgentRun } from '@/domain/agent';
 import type { ConnectorConfig } from '@/domain/types';
 import { createId } from '@/lib/ids';
+const IP_TOOLS = registeredTools(IP_TOOLS_DEFINITIONS);
+
 
 const connector: ConnectorConfig = { id: 'fixture', definitionId: 'openai-compatible', baseUrl: 'https://example.test/v1', apiKey: 'fixture', updatedAt: '2026-09-21' };
 async function begin(projectId?: string) {

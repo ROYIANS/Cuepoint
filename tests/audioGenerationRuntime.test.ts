@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
-import { createAudioMusicProject } from "@/db/repo";
+import {createAudioMusicProject} from "@/db/projects";
 import { addAudioSegment, patchAudioSegment } from "@/db/audio";
 import { prepareAudioGeneration, submitAudioGeneration, refreshAudioGeneration } from "@/lib/audioGeneration/runtime";
 import { patchAudioGenerationJob } from "@/db/audioGeneration";

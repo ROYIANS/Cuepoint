@@ -1,3 +1,5 @@
+import type {TypedToolDefinition} from './toolDefinition';
+import {defineTool} from './toolDefinition';
 import {historicalToolSummary} from "./referenceEvidence";
 import {db} from "@/db/database";
 import {getEligibleProjectMemories} from "@/db/memoryRetrieval";
@@ -5,7 +7,7 @@ import {getMemorySourceState} from "@/db/projectMemories";
 import {rankMemoryCandidates} from "@/lib/memory/retrieval";
 import {normalizeMemoryText} from "@/lib/memory/schema";
 import type {AgentTask} from "@/domain/agent";
-import type {AgentToolContext, AgentToolDefinition} from "./tools";
+import type {AgentToolContext} from "./tools";
 import {frozenProjectScope} from "./projectScope";
 import {choice, number, object, optional, type Spec, text,} from "./businessSchemas";
 
@@ -51,30 +53,28 @@ async function owner(context: AgentToolContext, name: string) {
     return {projectId, run};
 }
 
-function tool<T>(
-    name: string,
+function tool<T, const Name extends string>(
+    name: Name,
     title: string,
     description: string,
     spec: Spec<T>,
     read: (
-        args: T,
+        args: NoInfer<T>,
         context: AgentToolContext,
         state: Awaited<ReturnType<typeof owner>>,
     ) => Promise<unknown>,
-): AgentToolDefinition {
-    return {
+): TypedToolDefinition<T, Name> {
+    return defineTool(spec, {
         name,
         title,
         description,
-        parameters: spec.json,
         effect: "read",
         highRisk: () => false,
-        parseArguments: (raw) => spec.schema.parse(raw),
         execute: (args, context) =>
             db.transaction("r", db.tables, async () =>
                 read(spec.schema.parse(args), context, await owner(context, name)),
-            ),
-    };
+            )
+    });
 }
 
 function slice(
@@ -151,7 +151,7 @@ function publicResult(raw: string | undefined): unknown {
     return clean(value);
 }
 
-export const MEMORY_TOOLS: readonly AgentToolDefinition[] = [
+export const MEMORY_TOOLS = [
     tool(
         "memory_search",
         "搜索项目记忆",

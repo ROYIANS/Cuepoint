@@ -59,7 +59,11 @@ vi.mock("@/lib/media", () => ({IMAGE_ACCEPT: "image/*", VIDEO_ACCEPT: "video/*",
 vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
 
 import {db} from "@/db/database";
-import * as repo from "@/db/repo";
+import * as repoProjects from "@/db/projects";
+import * as repoMedia from "@/db/media";
+import * as repoAssets from "@/db/assets";
+import * as repoEpisodes from "@/db/episodes";
+import * as repoShots from "@/db/shots";
 import {DraftConflictError} from "@/lib/draftConflict";
 import {CharacterDetailPage} from "@/components/assets/CharacterDetailPage";
 import {SceneDetailPage} from "@/components/assets/SceneDetailPage";
@@ -134,16 +138,16 @@ describe("actual manual consumer wiring", () => {
 
     it("failed navigation cleanup keeps owned media and disables the closed session until retry completes", async () => {
         reset();
-        const project = await repo.createProject("navigation cleanup");
+        const project = await repoProjects.createProject("navigation cleanup");
         vi.mocked(pickMediaFile).mockResolvedValue({type: "image/png"} as File);
         vi.mocked(uploadMediaFile).mockImplementation(async owner => {
-            await repo.putMedia({id: "navigation-owned", projectId: owner, mimeType: "image/png", filename: "owned.png", blob: new Blob(["owned"])});
+            await repoMedia.putMedia({id: "navigation-owned", projectId: owner, mimeType: "image/png", filename: "owned.png", blob: new Blob(["owned"])});
             return {id: "navigation-owned", kind: "image"};
         });
-        const originalDelete = repo.deleteMediaIfOrphan;
+        const originalDelete = repoMedia.deleteMediaIfOrphan;
         let failCleanup = true;
         const cleanupGate = deferred();
-        const cleanup = vi.spyOn(repo, "deleteMediaIfOrphan").mockImplementation(async id => {
+        const cleanup = vi.spyOn(repoMedia, "deleteMediaIfOrphan").mockImplementation(async id => {
             if (failCleanup) throw new Error("cleanup unavailable");
             await cleanupGate.promise;
             return originalDelete(id);
@@ -186,12 +190,12 @@ describe("actual manual consumer wiring", () => {
     });
 
     it("passes frozen baselines from every asset page through the actual wrapper/editor to DB", async () => {
-        const project = await repo.createProject("manual assets");
+        const project = await repoProjects.createProject("manual assets");
         const cases = [
-            {row: await repo.addCharacter(project.id), page: (id: string) => CharacterDetailPage({characterId: id, back: {kind: "project", projectId: project.id}}), write: (id: string) => repo.setCharacterSlot(id, "front", {...emptySlot(), prompt: "theirs"})},
-            {row: await repo.addScene(project.id), page: (id: string) => SceneDetailPage({sceneId: id, back: {kind: "project", projectId: project.id}}), write: (id: string) => repo.setSceneSlot(id, "wide", {...emptySlot(), prompt: "theirs"})},
-            {row: await repo.addProp(project.id), page: (id: string) => PropDetailPage({propId: id, back: {kind: "project", projectId: project.id}}), write: (id: string) => repo.setPropSlot(id, "hero", {...emptySlot(), prompt: "theirs"})},
-            {row: await repo.addStyle(project.id), page: (id: string) => StyleDetailPage({styleId: id, back: {kind: "project", projectId: project.id}}), write: (id: string) => repo.setStyleSlot(id, "look", {...emptySlot(), prompt: "theirs"})},
+            {row: await repoAssets.addCharacter(project.id), page: (id: string) => CharacterDetailPage({characterId: id, back: {kind: "project", projectId: project.id}}), write: (id: string) => repoAssets.setCharacterSlot(id, "front", {...emptySlot(), prompt: "theirs"})},
+            {row: await repoAssets.addScene(project.id), page: (id: string) => SceneDetailPage({sceneId: id, back: {kind: "project", projectId: project.id}}), write: (id: string) => repoAssets.setSceneSlot(id, "wide", {...emptySlot(), prompt: "theirs"})},
+            {row: await repoAssets.addProp(project.id), page: (id: string) => PropDetailPage({propId: id, back: {kind: "project", projectId: project.id}}), write: (id: string) => repoAssets.setPropSlot(id, "hero", {...emptySlot(), prompt: "theirs"})},
+            {row: await repoAssets.addStyle(project.id), page: (id: string) => StyleDetailPage({styleId: id, back: {kind: "project", projectId: project.id}}), write: (id: string) => repoAssets.setStyleSlot(id, "look", {...emptySlot(), prompt: "theirs"})},
         ];
         for (const c of cases) {
             reset(); host.row = {ownerId: project.id, id: c.row.id, value: c.row};
@@ -221,9 +225,9 @@ describe("actual manual consumer wiring", () => {
     });
 
     it("wires all three actual shot-row slot callbacks with target identities and baselines", async () => {
-        const project = await repo.createProject("shot callbacks");
-        const episode = (await repo.firstEpisode(project.id))!;
-        const shot = await repo.addShot(project.id, episode.id);
+        const project = await repoProjects.createProject("shot callbacks");
+        const episode = (await repoEpisodes.firstEpisode(project.id))!;
+        const shot = await repoShots.addShot(project.id, episode.id);
         reset();
         host.queries = [{projectId: project.id, project: {...project, shotSettings: {...project.shotSettings, workspaceView: "media"}}}, {projectId: project.id, episodeId: episode.id, episode}, {projectId: project.id, episodeId: episode.id, shots: [shot]}, {projectId: project.id, characters: [], scenes: []}, {projectId: project.id, props: [], styles: []}];
         host.cursor = 0;
@@ -239,7 +243,7 @@ describe("actual manual consumer wiring", () => {
         expect(slots).toHaveLength(3);
         for (const [index, field] of (["firstFrame", "lastFrame", "clip"] as const).entries()) {
             expect(slots[index].props.targetKey).toBe(JSON.stringify([project.id, "shot", shot.id, field]));
-            await repo.setShotSlot(shot.id, field, {...emptySlot(), prompt: "theirs"});
+            await repoShots.setShotSlot(shot.id, field, {...emptySlot(), prompt: "theirs"});
             const save = slots[index].props.onSave as (value: GenerationSlot, baseline: GenerationSlot) => Promise<void>;
             await expect(save({...emptySlot(), prompt: "mine"}, emptySlot())).rejects.toBeInstanceOf(DraftConflictError);
         }
@@ -247,20 +251,20 @@ describe("actual manual consumer wiring", () => {
 
     it("passes all five project text baselines and immediate style baseline", async () => {
         reset();
-        const project = await repo.createProject("project fields");
+        const project = await repoProjects.createProject("project fields");
         host.row = [];
         const tree = render(() => ProjectSettingsPanel({project, onOutputState: () => {}}));
         const fields = tree.filter(n => n.type === AssetTextField);
         expect(fields).toHaveLength(5);
         for (const field of fields) {
             const key = String(field.props.draftKey).split(":").at(-1)!;
-            await repo.patchProjectDetails(project.id, {[key]: "theirs"});
+            await repoProjects.patchProjectDetails(project.id, {[key]: "theirs"});
             const persist = field.props.persist as (value: string, baseline: string) => Promise<void>;
             await expect(persist("mine", key === "name" ? project.name : "")).rejects.toBeInstanceOf(DraftConflictError);
         }
-        const a = await repo.addStyle(project.id);
-        const b = await repo.addStyle(project.id);
-        await repo.patchProjectDetails(project.id, {defaultStyleId: a.id});
+        const a = await repoAssets.addStyle(project.id);
+        const b = await repoAssets.addStyle(project.id);
+        await repoProjects.patchProjectDetails(project.id, {defaultStyleId: a.id});
         const styleSelect = tree.find(n => n.props.label === "项目风格")!;
         (styleSelect.props.onChange as (value: string) => void)(b.id);
         await db.transaction("r", db.projects, () => db.projects.toArray());
@@ -269,12 +273,12 @@ describe("actual manual consumer wiring", () => {
 
     it("DurationInput passes the hook baseline so stale saves fail", async () => {
         reset();
-        const project = await repo.createProject("duration wiring");
-        const episode = (await repo.firstEpisode(project.id))!;
-        const shot = await repo.addShot(project.id, episode.id);
+        const project = await repoProjects.createProject("duration wiring");
+        const episode = (await repoEpisodes.firstEpisode(project.id))!;
+        const shot = await repoShots.addShot(project.id, episode.id);
         render(() => DurationInput({projectId: project.id, shotId: shot.id, value: shot.durationSec}));
         const options = host.draftOptions as {persist: (value: number, baseline: number) => Promise<void>};
-        await repo.patchShot(shot.id, {durationSec: 20});
+        await repoShots.patchShot(shot.id, {durationSec: 20});
         await expect(options.persist(9, shot.durationSec ?? 0)).rejects.toBeInstanceOf(DraftConflictError);
     });
 });
@@ -327,15 +331,15 @@ describe("slot session target and owned media", () => {
 
     it("failed CAS retains actual uploaded media and draft until explicit close", async () => {
         reset();
-        const project = await repo.createProject("owned session");
-        const asset = await repo.addCharacter(project.id);
+        const project = await repoProjects.createProject("owned session");
+        const asset = await repoAssets.addCharacter(project.id);
         vi.mocked(pickMediaFile).mockResolvedValue({type: "image/png"} as File);
         vi.mocked(uploadMediaFile).mockImplementation(async owner => {
-            await repo.putMedia({id: "owned", projectId: owner, mimeType: "image/png", filename: "owned.png", blob: new Blob(["owned"])});
+            await repoMedia.putMedia({id: "owned", projectId: owner, mimeType: "image/png", filename: "owned.png", blob: new Blob(["owned"])});
             return {id: "owned", kind: "image"};
         });
         const props = {open: true, targetKey: `${project.id}:${asset.id}:front`, projectId: project.id, title: "asset", value: emptySlot(),
-            onClose: vi.fn(), onSave: (value: GenerationSlot, baseline: GenerationSlot) => repo.setCharacterSlot(asset.id, "front", value, baseline)};
+            onClose: vi.fn(), onSave: (value: GenerationSlot, baseline: GenerationSlot) => repoAssets.setCharacterSlot(asset.id, "front", value, baseline)};
         const draw = () => render(() => GenerationSlotEditor(props));
         let tree = draw();
         (button(tree, "上传素材").props.onClick as () => void)();
@@ -343,7 +347,7 @@ describe("slot session target and owned media", () => {
         await db.transaction("r", db.media, () => db.media.toArray());
         await settle();
         tree = draw();
-        await repo.setCharacterSlot(asset.id, "front", {...emptySlot(), prompt: "theirs"});
+        await repoAssets.setCharacterSlot(asset.id, "front", {...emptySlot(), prompt: "theirs"});
         (button(tree, "保存").props.onClick as () => void)();
         await settle();
         await db.transaction("r", db.characters, () => db.characters.toArray());
@@ -371,7 +375,7 @@ function outputComponent(project: Project) {
 
 describe("actual explicit output save", () => {
     it.each(["9:16", "16:9"] as const)("acknowledges a later same-field commit to %s during a pending save", async latestRatio => {
-        let project = await repo.createProject("output same-field acknowledgement");
+        let project = await repoProjects.createProject("output same-field acknowledgement");
         const component = outputComponent(project);
         const onOutputState = vi.fn();
         const draw = () => render(() => component({project, onOutputState}));
@@ -379,8 +383,8 @@ describe("actual explicit output save", () => {
         (tree.find(n => n.props.label === "项目目标画幅")!.props.onChange as (value: string) => void)("1:1");
         tree = draw();
         const pending = deferred();
-        const original = repo.patchProjectDetails;
-        const save = vi.spyOn(repo, "patchProjectDetails").mockImplementation(async (...args) => {await original(...args); await pending.promise;});
+        const original = repoProjects.patchProjectDetails;
+        const save = vi.spyOn(repoProjects, "patchProjectDetails").mockImplementation(async (...args) => {await original(...args); await pending.promise;});
         try {
             (button(tree, "保存输出配置").props.onClick as () => void)();
             await settle(); await db.transaction("r", db.projects, () => db.projects.toArray());
@@ -402,7 +406,7 @@ describe("actual explicit output save", () => {
     });
 
     it("follows pending live values when one field becomes clean while another stays dirty", async () => {
-        let project = await repo.createProject("output revert baseline");
+        let project = await repoProjects.createProject("output revert baseline");
         const originalRatio = project.aspectPreset;
         const component = outputComponent(project);
         const onOutputState = vi.fn();
@@ -411,7 +415,7 @@ describe("actual explicit output save", () => {
         (tree.find(n => n.props.label === "项目目标画幅")!.props.onChange as (value: string) => void)("1:1");
         (tree.find(n => n.props.label === "图片模型")!.props.onChange as (value: string) => void)(defaultImageGeneration().model);
         tree = draw();
-        await repo.patchProjectDetails(project.id, {aspectPreset: "9:16"});
+        await repoProjects.patchProjectDetails(project.id, {aspectPreset: "9:16"});
         project = (await db.projects.get(project.id))!;
         draw(); tree = draw();
         expect(tree.some(n => n.props.label === "项目目标画幅" && n.props.value === "1:1")).toBe(true);
@@ -423,7 +427,7 @@ describe("actual explicit output save", () => {
     });
 
     it("rebases clean fields, defers live changes during saving and ignores stale props after ack", async () => {
-        let project = await repo.createProject("output sequence");
+        let project = await repoProjects.createProject("output sequence");
         const component = outputComponent(project);
         const states: Array<{dirty: boolean; saving: boolean}> = [];
         const onOutputState = (state: {dirty: boolean; saving: boolean}) => states.push(state);
@@ -437,8 +441,8 @@ describe("actual explicit output save", () => {
         (tree.find(n => n.props.label === "项目目标画幅")!.props.onChange as (value: string) => void)("1:1");
         tree = draw();
         const pending = deferred();
-        const original = repo.patchProjectDetails;
-        const save = vi.spyOn(repo, "patchProjectDetails").mockImplementation(async (...args) => {await original(...args); await pending.promise;});
+        const original = repoProjects.patchProjectDetails;
+        const save = vi.spyOn(repoProjects, "patchProjectDetails").mockImplementation(async (...args) => {await original(...args); await pending.promise;});
         try {
             (button(tree, "保存输出配置").props.onClick as () => void)();
             await settle();
@@ -472,13 +476,13 @@ describe("actual explicit output save", () => {
     });
 
     it("keeps a conflicted draft/baseline, adopts latest explicitly and uses the next baseline", async () => {
-        let project = await repo.createProject("output conflict");
+        let project = await repoProjects.createProject("output conflict");
         const component = outputComponent(project);
         const onOutputState = vi.fn();
         const draw = () => render(() => component({project, onOutputState}));
         let tree = draw();
         (tree.find(n => n.props.label === "项目目标画幅")!.props.onChange as (value: string) => void)("1:1");
-        await repo.patchProjectDetails(project.id, {aspectPreset: "9:16"});
+        await repoProjects.patchProjectDetails(project.id, {aspectPreset: "9:16"});
         project = (await db.projects.get(project.id))!;
         draw(); tree = draw();
         (button(tree, "保存输出配置").props.onClick as () => void)();

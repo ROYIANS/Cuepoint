@@ -1,18 +1,13 @@
+import {useManualDraftGuard} from "@/lib/useManualDraftGuard";
+import {BeatTextField} from "./BeatTextField";
+import {useTextDraftRetention, type TextDraftStatusChange} from "@/lib/useTextDraftRetention";
 import {changedDraftFields} from "@/lib/draftConflict";
 import {useLiveQuery} from "dexie-react-hooks";
 import {ArrowDown, ArrowUp, Copy, CopyPlus, Plus, Trash2} from "lucide-react";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {db} from "@/db/database";
-import {
-    addStoryBeat,
-    deleteShots,
-    deleteStoryBeat,
-    duplicateBeat,
-    patchStoryBeat,
-    reorderBeats,
-    restoreStoryBeat,
-    updateEpisodeDraft,
-} from "@/db/repo";
+import {addStoryBeat, deleteStoryBeat, duplicateBeat, patchStoryBeat, reorderBeats, restoreStoryBeat, updateEpisodeDraft} from "@/db/episodes";
+import {deleteShots} from "@/db/shots";
 import {type Episode, normalizeEpisodeStory, type StoryBeat} from "@/domain/types";
 import {Button} from "@/components/ui/button";
 import {Checkbox} from "@/components/ui/checkbox";
@@ -31,9 +26,13 @@ function isScriptFile(file: File): boolean {
     return file.type === "text/plain" || file.type === "text/markdown" || file.type === "text/x-markdown";
 }
 
-export function StoryPage({projectId, episodeId}: { projectId: string; episodeId: string }) {
-    const project = useLiveQuery(async () => (await db.projects.get(projectId)) ?? null, [projectId]);
-    const episode = useLiveQuery(
+export function StoryPage(props: {projectId: string; episodeId: string}) {
+    return <StoryScope key={JSON.stringify([props.projectId, props.episodeId])} {...props}/>;
+}
+
+function StoryScope({projectId, episodeId}: {projectId: string; episodeId: string}) {
+    const loadedProject = useLiveQuery(async () => (await db.projects.get(projectId)) ?? null, [projectId]);
+    const loadedEpisode = useLiveQuery(
         async () => (await db.episodes.get(episodeId)) ?? null,
         [episodeId],
     );
@@ -44,6 +43,17 @@ export function StoryPage({projectId, episodeId}: { projectId: string; episodeId
         ) ?? [];
     const scenes =
         useLiveQuery(() => db.scenes.where("projectId").equals(projectId).toArray(), [projectId]) ?? [];
+    const loadedBeats = useMemo(() => loadedEpisode?.projectId === projectId
+        ? normalizeEpisodeStory(loadedEpisode.story).beats : undefined, [loadedEpisode, projectId]);
+    const beatText = useTextDraftRetention(loadedBeats);
+    const lastProject = useRef(loadedProject);
+    const lastEpisode = useRef(loadedEpisode);
+    if (loadedProject) lastProject.current = loadedProject;
+    if (loadedEpisode?.projectId === projectId) lastEpisode.current = loadedEpisode;
+    const project = loadedProject ?? (beatText.pending ? lastProject.current : loadedProject);
+    const episode = loadedEpisode ?? (beatText.pending ? lastEpisode.current : loadedEpisode);
+    const unavailable = !loadedProject || !loadedEpisode || beatText.retainedCount > 0;
+    const textNavigationGuard = useManualDraftGuard(false, beatText.pending, () => undefined);
     if (episode === undefined || project === undefined) {
         return <div className="text-muted-foreground p-8 text-sm">加载故事…</div>;
     }
@@ -52,13 +62,19 @@ export function StoryPage({projectId, episodeId}: { projectId: string; episodeId
     }
 
     return (
+        <>
+        {textNavigationGuard}
         <StoryEditor
-            key={episode.id}
+            key={JSON.stringify([episode.projectId, episode.id])}
+            beats={beatText.rows}
+            onBeatDraftStatus={beatText.onStatusChange}
+            unavailable={unavailable}
             episode={episode}
             film={project.mode === "film"}
             characters={characters}
             scenes={scenes}
         />
+        </>
     );
 }
 
@@ -67,11 +83,17 @@ type ScriptImportSession = {scope: string; request: number; revision: number; ca
 
 function StoryEditor({
                          episode,
+                         beats,
+                         onBeatDraftStatus,
+                         unavailable,
                          film,
                          characters,
                          scenes,
                      }: {
     episode: Episode;
+    beats: StoryBeat[];
+    onBeatDraftStatus: TextDraftStatusChange;
+    unavailable: boolean;
     film: boolean;
     characters: { id: string; name: string }[];
     scenes: { id: string; name: string }[];
@@ -90,7 +112,6 @@ function StoryEditor({
     const [dragging, setDragging] = useState(false);
     const scriptRef = useRef<HTMLTextAreaElement>(null);
     const {registerUndo} = useUndo();
-    const beats = normalizeEpisodeStory(episode.story).beats;
 
     function updateBeat(id: string, change: Partial<StoryBeat>) {
         void patchStoryBeat(episode.id, id, change);
@@ -215,6 +236,7 @@ function StoryEditor({
 
     return (
         <div className="app-scroll h-full overflow-auto">
+            {unavailable && <p role="alert" className="p-4">当前项目、故事或场次已不可用，未完成的文字仍保留。</p>}
             <div
                 className="mx-auto grid max-w-6xl gap-8 px-4 py-6 sm:px-8 sm:py-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(20rem,0.8fr)]">
                 <section className="min-w-0">
@@ -315,11 +337,8 @@ function StoryEditor({
                                 <li key={beat.id} className="bg-card rounded-2xl border p-3">
                                     <div className="flex items-center gap-2">
                                         <span className="text-muted-foreground w-6 text-xs">{index + 1}</span>
-                                        <Input
-                                            value={beat.title}
-                                            onChange={(event) => updateBeat(beat.id, {title: event.target.value})}
-                                            className="h-8"
-                                        />
+                                        <BeatTextField projectId={episode.projectId} episodeId={episode.id} beat={beat} field="title"
+                                                       onDraftStatus={onBeatDraftStatus} unavailable={unavailable} ariaLabel="场次标题" className="h-8"/>
                                         <Button
                                             size="icon-sm"
                                             variant="ghost"
@@ -363,12 +382,10 @@ function StoryEditor({
                                             <Trash2/>
                                         </Button>
                                     </div>
-                                    <Textarea
-                                        className="mt-2 min-h-20 resize-none"
-                                        value={beat.content}
-                                        placeholder="这场发生什么"
-                                        onChange={(event) => updateBeat(beat.id, {content: event.target.value})}
-                                    />
+                                    <BeatTextField projectId={episode.projectId} episodeId={episode.id} beat={beat} field="content"
+                                                   onDraftStatus={onBeatDraftStatus} unavailable={unavailable} multiline
+                                                   containerClassName="mt-2" className="min-h-20 resize-none"
+                                                   placeholder="这场发生什么" ariaLabel="场次内容"/>
                                     <Label className="mt-3 text-[11px]">出场角色</Label>
                                     <div
                                         className="mt-1 max-h-28 space-y-1 overflow-auto rounded-lg border px-2 py-1.5">
@@ -415,12 +432,9 @@ function StoryEditor({
                                         </div>
                                         <div>
                                             <Label className="text-[11px]">时段</Label>
-                                            <Input
-                                                className="mt-1 h-8"
-                                                value={beat.timeOfDay}
-                                                placeholder="日 / 夜"
-                                                onChange={(event) => updateBeat(beat.id, {timeOfDay: event.target.value})}
-                                            />
+                                            <BeatTextField projectId={episode.projectId} episodeId={episode.id} beat={beat} field="timeOfDay"
+                                                           onDraftStatus={onBeatDraftStatus} unavailable={unavailable} className="h-8" containerClassName="mt-1"
+                                                           placeholder="日 / 夜" ariaLabel="时段"/>
                                         </div>
                                     </div>
                                 </li>

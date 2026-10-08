@@ -17,7 +17,7 @@ import {
     X
 } from "lucide-react";
 import {db} from "@/db/database";
-import {resolveConnector} from "@/db/repo";
+import {resolveConnector} from "@/db/connectors";
 import {
     applyBatchSelections,
     changeGenerationBatchItems,

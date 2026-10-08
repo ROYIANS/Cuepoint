@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
-import { createProject, deleteProject, deleteChatThread } from "@/db/repo";
+import {createProject} from "@/db/projects";
+import {deleteProject, deleteChatThread} from "@/db/cascadeCommands";
 import { createAgentTask, setAgentTaskLifecycle } from "@/db/agentTasks";
 import {
   createManualWrapup,

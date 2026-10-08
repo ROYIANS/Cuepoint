@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createProject } from "@/db/repo";
+import {createProject} from "@/db/projects";
 import {
   createProjectMemory,
   updateProjectMemory,

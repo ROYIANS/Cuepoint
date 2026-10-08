@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 import JSZip from "jszip";
 import { db } from "@/db/database";
-import { createAudioMusicProject, collectMediaIds, deleteMediaIfOrphan } from "@/db/repo";
+import {createAudioMusicProject} from "@/db/projects";
+import {collectMediaIds, deleteMediaIfOrphan} from "@/db/media";
 import { addAudioSpeaker, addAudioSegment, patchAudioSpeaker } from "@/db/audio";
 import { prepareAudioGeneration, submitAudioGeneration, refreshAudioGeneration } from "@/lib/audioGeneration/runtime";
 import { validateSpeechReference } from "@/lib/audioGeneration/reference";

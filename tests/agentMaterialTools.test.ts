@@ -1,16 +1,21 @@
+import {registeredTools} from "./helpers/registeredTools";
 import { describe, expect, it, vi } from 'vitest';
 import { db } from '@/db/database';
-import { addCharacter, createChatThread, createProject } from '@/db/repo';
+import {addCharacter} from "@/db/assets";
+import {createChatThread} from "@/db/chat";
+import {createProject} from "@/db/projects";
 import { createIpProfile, bindProjectIp, setIpArchived } from '@/db/ipProfiles';
 import { createFileMaterial, promoteLegacyMaterial, updateMaterialMetadata, useMaterialInProject, setMaterialArchived } from '@/db/materials';
 import { beginAgentRun } from '@/db/agentRuns';
-import { MATERIAL_TOOLS } from '@/lib/agent/materialTools';
+import { MATERIAL_TOOLS as MATERIAL_TOOLS_DEFINITIONS } from '@/lib/agent/materialTools';
 import { MATERIAL_TOOL_NAMES } from '@/lib/agent/materialToolNames';
 import { requiresToolApproval } from '@/lib/agent/tools';
 import type { AgentRun, AgentToolCall } from '@/domain/agent';
 import type { AgentToolContext } from '@/lib/agent/tools';
 import { createId } from '@/lib/ids';
 import { registerPendingDraft } from '@/lib/debouncedDraft';
+const MATERIAL_TOOLS = registeredTools(MATERIAL_TOOLS_DEFINITIONS);
+
 const connector = { id: 'fixture', definitionId: 'openai-compatible', baseUrl: 'https://example.test/v1', apiKey: 'secret', updatedAt: '2026-09-21' };
 async function runFor(projectId?: string) {
   const thread = await createChatThread({ projectId });

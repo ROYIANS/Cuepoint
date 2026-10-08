@@ -4,7 +4,7 @@ import { db } from "@/db/database";
 import { beginAgentRun, interruptThreadRuns } from "@/db/agentRuns";
 import { updateGeneralAgentConfig } from "@/db/agentSettings";
 import { markRunningToolsUnknown, resumeAgentRun, saveToolRound, transitionToolCall } from "@/db/agentTools";
-import { createChatThread } from "@/db/repo";
+import {createChatThread} from "@/db/chat";
 import type { AgentRun, AgentToolCall } from "@/domain/agent";
 import type { AgentGenerationJob } from "@/domain/agentGeneration";
 import type { ConnectorConfig } from "@/domain/types";

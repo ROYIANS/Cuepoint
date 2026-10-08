@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import JSZip from "jszip";
 import { db } from "@/db/database";
-import { createAudioMusicProject, createProject, ensureFirstEpisode, collectMediaIds, deleteMediaIfOrphan, deleteProject } from "@/db/repo";
+import {createAudioMusicProject, createProject} from "@/db/projects";
+import {ensureFirstEpisode} from "@/db/episodes";
+import {collectMediaIds, deleteMediaIfOrphan} from "@/db/media";
+import {deleteProject} from "@/db/cascadeCommands";
 import { addAudioChapter, addAudioSegment, addAudioTake, addAudioClip, patchAudioClip, patchAudioSegment, replaceAudioClips, getAudioProjectSnapshot, deleteAudioSegment, deleteAudioTake, adoptMusicWorkAsAudioTake } from "@/db/audio";
 import { prepareAudioGenerationJob, claimAudioGenerationJob } from "@/db/audioGeneration";
 import { exportProjectZip, importProjectZip } from "@/lib/projectPackage";

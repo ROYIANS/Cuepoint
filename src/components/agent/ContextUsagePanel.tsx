@@ -5,15 +5,10 @@ import {
     toolLoadingInstructions
 } from "@/lib/agent/toolLoading";
 import type {ReferenceAttachment} from "@/domain/references";
-import {referenceSelectionCharacterBudget, selectReferenceContext} from "@/lib/agent/referenceContext";
-import {requireVision, resolveVisionCapability} from "@/lib/ai/visionCapability";
-import {getMemorySelection} from "@/db/memoryRetrieval";
 import {withMemoryContext} from "@/lib/memory/retrieval";
 import {filterProjectMemoryTools} from "@/lib/agent/memoryToolNames";
 import {MemoryContextDetails} from "./MemoryContextDetails";
-import {getTaskContext} from "@/lib/agent/taskContext";
-import type {AgentTask} from "@/domain/agent";
-import {type AgentInteractionMode, type AgentRun, GENERAL_AGENT_ID,} from "@/domain/agent";
+import type {AgentInteractionMode} from "@/domain/agent";
 import {ContextCompactionDetails} from "./ContextCompactionDetails";
 import {normalizeContextPolicy, resolveContextCapacity,} from "@/lib/agent/contextPolicy";
 import {
@@ -24,188 +19,59 @@ import {
 } from "@/lib/agent/contextPlanner";
 import {continuationExtraTokens} from "@/lib/agent/contextCompaction";
 import type {ChatModelMetadata} from "@/lib/ai/modelMetadata";
-import type {ChatMessage, ConnectorConfig} from "@/domain/types";
-import {useDeferredValue, useMemo, useState} from "react";
+import type {ConnectorConfig} from "@/domain/types";
+import {useMemo, useState} from "react";
+import {contextPreviewIdentity, readAgentContextPreview} from "@/db/agentContextPreview";
 import {useLiveQuery} from "dexie-react-hooks";
 import * as Popover from "@radix-ui/react-popover";
 import {X} from "lucide-react";
-import {db} from "@/db/database";
 import {assembleSkills, DEFAULT_SKILL_IDS} from "@/lib/agent/skills";
 import {toolSchemas} from "@/lib/agent/tools";
 import {estimateContextUsage, formatTokenCount,} from "@/lib/agent/contextUsage";
+
+const EMPTY_ATTACHMENTS: ReferenceAttachment[] = [];
 
 type ContextProps = {
     attachments?: ReferenceAttachment[];
     threadId?: string;
     projectId?: string;
-    task?: AgentTask;
     interactionMode?: AgentInteractionMode;
     draft: string;
-    messages: ChatMessage[];
-    runs: AgentRun[];
     model: string;
     connector?: ConnectorConfig;
     modelMetadata?: Record<string, ChatModelMetadata>;
 };
 
-function useContextUsage({
-                             attachments = [],
-                             draft,
-                             messages,
-                             runs,
-                             model,
-                             connector,
-                             modelMetadata,
-                             interactionMode,
-                             task,
-                             threadId,
-                             projectId,
-                         }: ContextProps) {
-    const config = useLiveQuery(() => db.agents.get(GENERAL_AGENT_ID), []);
-    const loadedThread = useLiveQuery(
-        () => (threadId ? db.chatThreads.get(threadId) : undefined),
-        [threadId],
-    );
-    const thread = loadedThread?.id === threadId ? loadedThread : undefined;
-    const records = useLiveQuery(
-        () =>
-            threadId
-                ? db.contextCompactions
-                    .where("threadId")
-                    .equals(threadId)
-                    .sortBy("createdAt")
-                : [],
-        [threadId],
-    );
-    const contextKey = JSON.stringify([
-        threadId,
-        config?.instructions,
-        thread?.taskMode,
-        interactionMode,
-        task?.id,
-        projectId,
-    ]);
-    const loadedContext = useLiveQuery(async () => {
-        try {
-            return {
-                key: contextKey,
-                context: await getTaskContext(
-                    threadId,
-                    config?.instructions ?? "",
-                    thread?.taskMode,
-                    interactionMode,
-                    projectId,
-                ),
-                error: undefined,
-            };
-        } catch (error) {
-            return {
-                key: contextKey,
-                context: undefined,
-                error: error instanceof Error ? error.message : "项目上下文不可用",
-            };
-        }
-    }, [contextKey]);
-    const contextState =
-        loadedContext?.key === contextKey ? loadedContext : undefined;
-    const taskContext = contextState?.context;
-    const deferredDraft = useDeferredValue(draft);
-    const requestDraft = deferredDraft.trim() || (attachments.length ? "请结合附加的参考资料协助我。" : "");
-    const previewPolicy = normalizeContextPolicy(
-        threadId ? thread?.contextPolicy : config?.contextPolicy,
-    );
-    const memoryOptions = taskContext?.projectContext
-        ? {
-            projectId: taskContext.projectContext.projectId,
-            threadId,
-            draft: requestDraft,
-            recentUserTurns: selectContextHistory(
-                messages.filter((message) => message.threadId === threadId),
-                previewPolicy,
-            )
-                .filter((message) => message.role === "user")
-                .map((message) => message.content),
-            taskTitle: taskContext.task?.title,
-            taskGoal: taskContext.task?.goal,
-            capacity: resolveContextCapacity(
-                model,
-                modelMetadata?.[model],
-                connector?.definitionId,
-                previewPolicy,
-            ).capacity,
-        }
-        : undefined;
-    // Dexie retains the previous value while a changed query resolves. Never label
-    // an earlier project/draft's selection as the current request preview.
-    const memoryKey = JSON.stringify(memoryOptions ?? null);
-    const loadedMemory = useLiveQuery(async () => {
-        try {
-            return {
-                key: memoryKey,
-                selection: memoryOptions
-                    ? await getMemorySelection(memoryOptions)
-                    : undefined,
-                error: undefined,
-            };
-        } catch (error) {
-            return {
-                key: memoryKey,
-                selection: undefined,
-                error: error instanceof Error ? error.message : "项目记忆暂时无法读取",
-            };
-        }
-    }, [memoryKey]);
-    const memoryState =
-        loadedMemory?.key === memoryKey ? loadedMemory : undefined;
-    const referenceOptions = {
-        projectId: thread?.projectId ?? projectId,
-        attachments,
-        capacity: resolveContextCapacity(model, modelMetadata?.[model], connector?.definitionId, previewPolicy).capacity,
-    };
-    const referenceKey = JSON.stringify([threadId, contextKey, referenceOptions, model, connector?.definitionId, modelMetadata?.[model]]);
-    const loadedReferences = useLiveQuery(async () => {
-        try {
-            const selection = await selectReferenceContext(referenceOptions.projectId, referenceOptions.attachments, referenceSelectionCharacterBudget(referenceOptions.capacity));
-            if (selection?.images?.length) requireVision(await resolveVisionCapability(model, connector?.definitionId, modelMetadata?.[model]));
-            return {key: referenceKey, selection, error: undefined};
-        } catch (error) {
-            return {
-                key: referenceKey,
-                selection: undefined,
-                error: error instanceof Error ? error.message : "参考资料暂时无法读取"
-            };
-        }
-    }, [referenceKey]);
-    const referenceState = loadedReferences?.key === referenceKey ? loadedReferences : undefined;
-    const latest = runs.at(-1);
-    const activeRun =
-        latest &&
-        latest.threadId === threadId &&
-        (latest.status === "running" ||
-            latest.status === "waiting_approval" ||
-            (latest.hasToolCalls &&
-                (latest.status === "failed" || latest.status === "interrupted")))
-            ? latest
-            : undefined;
+function useContextUsage(props: ContextProps) {
+    const {threadId, projectId, interactionMode, draft, attachments = EMPTY_ATTACHMENTS, model, connector, modelMetadata} = props;
+    const requestDraft = draft.trim() || (attachments.length ? "请结合附加的参考资料协助我。" : "");
+    const input = useMemo(() => ({threadId, projectId, interactionMode, draft: requestDraft, attachments,
+        model, providerId: connector?.definitionId, metadata: modelMetadata?.[model]}),
+        [threadId, projectId, interactionMode, requestDraft, attachments, model, connector?.definitionId, modelMetadata]);
+    const identity = contextPreviewIdentity(input);
+    const loaded = useLiveQuery(() => readAgentContextPreview(input), [input]);
+    const snapshot = loaded?.identity === identity ? loaded : undefined;
     return useMemo(() => {
-        const policy =
-            activeRun?.context?.policy ??
-            normalizeContextPolicy(
-                threadId ? thread?.contextPolicy : config?.contextPolicy,
-            );
+        if (!snapshot || snapshot.status !== "ready") {
+            let error: string | undefined;
+            if (snapshot?.status === "error" || snapshot?.status === "unavailable") error = snapshot.message;
+            if (snapshot?.status === "missing") error = {agent: "助手配置不存在", thread: "对话不存在", project: "关联项目已不存在"}[snapshot.entity];
+            return {identity, status: snapshot?.status ?? "loading", model, error} as const;
+        }
+        const {config, messages, records, taskContext, activeRun, previewPolicy} = snapshot.facts;
+        const policy = activeRun ? normalizeContextPolicy(activeRun.context?.policy) : previewPolicy;
         const selected = selectContextHistory(
             messages.filter((message) => message.threadId === threadId),
             policy,
         );
-        const summary = policy.autoCompress
+        const summary = !activeRun && policy.autoCompress
             ? findApplicableSummary(
                 selected,
-                (records ?? []).filter((record) => record.threadId === threadId),
+                records,
             )
             : undefined;
         const resolved =
-            activeRun?.context ??
-            resolveContextCapacity(
+            activeRun ? (activeRun.context ?? {capacity: undefined, capacitySource: "unknown" as const}) : resolveContextCapacity(
                 model,
                 modelMetadata?.[model],
                 connector?.definitionId,
@@ -218,11 +84,8 @@ function useContextUsage({
                 : (config?.enabledSkillIds ?? DEFAULT_SKILL_IDS),
         );
         const instructions =
-            activeRun?.agentSnapshot.instructions ??
-            taskContext?.instructions ??
-            config?.instructions ??
-            "";
-        const allowedNames = activeRun?.enabledToolNames ?? filterProjectMemoryTools([...new Set([...skills.enabledToolNames, ...(taskContext?.taskToolNames ?? [])])], taskContext?.projectContext?.projectId, interactionMode);
+            activeRun ? activeRun.agentSnapshot.instructions : taskContext?.instructions ?? "";
+        const allowedNames = activeRun ? activeRun.enabledToolNames ?? [] : filterProjectMemoryTools([...new Set([...skills.enabledToolNames, ...(taskContext?.taskToolNames ?? [])])], taskContext?.projectContext?.projectId, interactionMode);
         const loading = activeRun ? activeRun.toolLoading : createToolLoading(interactionMode === "conversation" ? [] : config?.enabledSkillIds ?? DEFAULT_SKILL_IDS, allowedNames, taskContext?.projectKind);
         const offeredNames = activeRun ? getOfferedToolNames(activeRun) : getOfferedToolNames({
             enabledToolNames: loading ? [...allowedNames, DISCOVERY_TOOL_NAME] : allowedNames,
@@ -233,8 +96,8 @@ function useContextUsage({
             ? (activeRun.skillInstructions ?? "")
             : loading ? toolLoadingInstructions(loading) : skills.skillInstructions;
         const memorySelection =
-            activeRun?.memorySelection ?? memoryState?.selection;
-        const selectedReferences = activeRun ? activeRun.context?.selectedReferences : referenceState?.selection;
+            activeRun ? activeRun.memorySelection : snapshot.facts.memorySelection;
+        const selectedReferences = activeRun ? activeRun.context?.selectedReferences : snapshot.facts.selectedReferences;
         const request = activeRun
             ? (activeRun.continuationMessages ?? activeRun.requestMessages)
             : withMemoryContext(
@@ -254,7 +117,7 @@ function useContextUsage({
             request,
             tools,
             capacity,
-            !!(activeRun?.context?.summaryId ?? summary),
+            activeRun ? !!activeRun.context?.summaryId : !!summary,
             activeRun ? continuationExtraTokens(activeRun) : 0,
         );
         const usage = estimateContextUsage({
@@ -264,7 +127,7 @@ function useContextUsage({
             tools,
         });
         const projectContext =
-            activeRun?.projectContext ?? taskContext?.projectContext;
+            activeRun ? activeRun.projectContext : taskContext?.projectContext;
         if (projectContext) usage.categories[0].label = "助手指令与项目事实";
         const overhead = Math.max(0, budget.estimatedTokens - usage.total);
         usage.categories.push({
@@ -284,70 +147,35 @@ function useContextUsage({
             projectContext,
             memorySelection,
             selectedReferences,
-            referencesLoading: !activeRun && attachments.length > 0 && !referenceState,
-            error: activeRun ? undefined : contextState?.error ?? memoryState?.error ?? referenceState?.error,
-            usage:
-                (config &&
-                    taskContext &&
-                    (!taskContext.projectContext || memoryState) &&
-                    (!attachments.length || (referenceState?.selection && !referenceState.error))) ||
-                activeRun
-                    ? usage
-                    : undefined,
+            identity, status: "ready" as const, model,
+            available: snapshot.facts.available,
+            referencesLoading: false,
+            error: undefined,
+            usage,
             capacity,
-            percent: activeRun || !attachments.length || referenceState?.selection ? percent : undefined,
+            percent,
             activeRun,
             source,
             policy,
             budget,
-            selectedCount: activeRun?.context?.history.length ?? selected.length,
-            lastRecord: records?.filter((record) => record.threadId === threadId).at(-1),
+            selectedCount: activeRun ? activeRun.context?.history.length ?? 0 : selected.length,
+            lastRecord: activeRun ? records.find(record => record.id === activeRun.context?.summaryId) : records.at(-1),
         };
-    }, [
-        activeRun,
-        config,
-        thread,
-        threadId,
-        records,
-        messages,
-        requestDraft,
-        attachments.length,
-        referenceState,
-        interactionMode,
-        taskContext,
-        memoryState,
-        contextState?.error,
-        model,
-        modelMetadata,
-        connector,
-    ]);
+    }, [snapshot, identity, threadId, requestDraft, interactionMode, model, modelMetadata, connector]);
 }
 
-export function ContextUsagePanel({
-                                      onClose,
-                                      onMemoryOpen,
-                                      ...props
-                                  }: ContextProps & { onClose: () => void; onMemoryOpen?: () => void }) {
-    const {
-        usage,
-        capacity,
-        percent,
-        activeRun,
-        source,
-        policy,
-        budget,
-        selectedCount,
-        lastRecord,
-        projectContext,
-        memorySelection,
-        selectedReferences,
-        referencesLoading,
-        toolCount,
-        capabilityCount,
-        loadedCapabilities,
-        error,
-    } = useContextUsage(props);
-    const {model} = props;
+export function ContextUsagePanel({snapshot, onClose, onMemoryOpen}: {
+    snapshot: ReturnType<typeof useContextUsage>;
+    onClose: () => void;
+    onMemoryOpen?: () => void;
+}) {
+    if (snapshot.status !== "ready" || !("usage" in snapshot)) return <div className="agent-context-panel" role="region" aria-label="上下文明细">
+        <button type="button" aria-label="关闭上下文明细" onClick={onClose}><X size={16}/></button>
+        <p role={snapshot.error ? "alert" : "status"}>{snapshot.error ?? "正在读取上下文…"}</p>
+    </div>;
+    const {usage, capacity, percent, activeRun, source, policy, budget, selectedCount, lastRecord,
+        projectContext, memorySelection, selectedReferences, referencesLoading, toolCount, capabilityCount,
+        loadedCapabilities, error, model} = snapshot;
     return (
         <div className="agent-context-panel" role="region" aria-label="上下文明细">
             <div className="agent-context-heading">
@@ -359,6 +187,7 @@ export function ContextUsagePanel({
           </button>
         </span>
             </div>
+            {!snapshot.available && <p role="alert">当前范围不可用；已保存的执行上下文仅供查看。</p>}
             <div className="agent-context-scope">
                 {activeRun ? "当前执行 · 已保存的上下文" : "下次发送 · 包含当前草稿"}
             </div>
@@ -507,8 +336,9 @@ export function ContextUsageTrigger({
                                         onOpenChange,
                                         ...props
                                     }: ContextProps & { open: boolean; onOpenChange: (open: boolean) => void }) {
-    const {percent, usage, capacity, memorySelection, activeRun} =
-        useContextUsage(props);
+    const snapshot = useContextUsage(props);
+    const ready = snapshot.status === "ready" && "usage" in snapshot ? snapshot : undefined;
+    const {percent, usage, capacity, memorySelection, activeRun} = ready ?? {};
     const [memoryOpen, setMemoryOpen] = useState(false);
     return (
         <>
@@ -563,7 +393,7 @@ export function ContextUsageTrigger({
                         aria-label="上下文明细"
                     >
                         <ContextUsagePanel
-                            {...props}
+                            snapshot={snapshot}
                             onClose={() => onOpenChange(false)}
                             onMemoryOpen={() => {
                                 onOpenChange(false);
@@ -579,6 +409,7 @@ export function ContextUsageTrigger({
                 selection={memorySelection}
                 threadId={props.threadId}
                 run={activeRun}
+                readOnly={!ready?.available}
             />
         </>
     );

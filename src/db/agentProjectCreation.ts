@@ -1,6 +1,6 @@
 import {db} from "./database";
 import {nowIso} from "@/lib/ids";
-import {MAX_LOADED_TOOLS, toolNamesForCall} from "@/lib/agent/toolLoading";
+import {MAX_LOADED_TOOLS, toolNamesForCall} from "@/domain/agentToolSelection";
 import type {AgentToolContext} from "@/lib/agent/tools";
 import {getProjectKind} from "@/domain/types";
 

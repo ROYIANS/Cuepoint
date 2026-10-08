@@ -17,7 +17,7 @@ import {
 import {Field} from "@/components/ui/field";
 import {Input} from "@/components/ui/input";
 import {db} from "@/db/database";
-import {deleteConnector, upsertConnector} from "@/db/repo";
+import {deleteConnector, upsertConnector} from "@/db/connectors";
 import type {ConnectorConfig, ConnectorDefinitionId} from "@/domain/types";
 import {CONNECTOR_CATALOG, type ConnectorDefinition} from "@/lib/ai/catalog";
 import {maskApiKey} from "@/lib/ai/openaiCompatible";

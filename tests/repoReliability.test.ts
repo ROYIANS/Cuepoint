@@ -1,14 +1,12 @@
 import Dexie from "dexie";
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
-import {
-  addCharacter, addEpisode, addProp, addScene, addShot, addStoryBeat, addStyle,
-  createProject, deleteEpisode, deleteMediaIfOrphan, deleteStoryBeat,
-  patchCharacter, patchProjectOutput, patchProp, patchScene, patchShot, patchStyle,
-  renameProject, setCharacterSlot, setPropSlot, setSceneSlot, setShotSlot, setStyleSlot,
-  touchProject, updateEpisode, updateEpisodeDraft, updateEpisodeShotFilters,
-  updateProject, updateShotSettings, updateWorldSetting,
-} from "@/db/repo";
+import {addCharacter, addProp, addScene, addStyle, patchCharacter, patchProp, patchScene, patchStyle, setCharacterSlot, setPropSlot, setSceneSlot, setStyleSlot} from "@/db/assets";
+import {addEpisode, addStoryBeat, deleteEpisode, deleteStoryBeat, updateEpisode, updateEpisodeDraft, updateEpisodeShotFilters} from "@/db/episodes";
+import {addShot, patchShot, setShotSlot} from "@/db/shots";
+import {createProject, patchProjectOutput, renameProject, updateProject, updateShotSettings, updateWorldSetting} from "@/db/projects";
+import {deleteMediaIfOrphan} from "@/db/media";
+import {touchProject} from "@/db/productionShared";
 import { emptySlot } from "@/domain/slot";
 import { getEpisodeShotFilters, type GenerationSlot } from "@/domain/types";
 

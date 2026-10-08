@@ -1,4 +1,4 @@
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useLiveQuery} from "dexie-react-hooks";
 import {Link} from "@tanstack/react-router";
 import {BookOpen, Check, Minus, RotateCcw} from "lucide-react";
@@ -35,7 +35,7 @@ export function MemoryContextDetails({
         <Sheet open={open} onOpenChange={onOpenChange}>
             {open && (
                 <MemoryContextContent
-                    key={`${run?.id ?? "preview"}:${selection?.projectId}`}
+                    key={JSON.stringify([threadId, run?.id ?? "preview", selection?.projectId])}
                     selection={selection}
                     threadId={threadId}
                     run={run}
@@ -61,46 +61,47 @@ function MemoryContextContent({
             : run?.memoryAudit?.find((item) => item.step === step)?.selection;
     const projectId = shown?.projectId ?? selection?.projectId;
     const [attempt, setAttempt] = useState(0);
-    const state = useLiveQuery(
-        () =>
-            readMemory(async () => {
-                if (!projectId)
-                    return {memories: [], exclusions: [], available: false};
-                const project = await db.projects.get(projectId);
-                if (!project) return {memories: [], exclusions: [], available: false};
-                return {
-                    available: true,
-                    memories: await listProjectMemories(projectId),
-                    exclusions: threadId
-                        ? await getThreadMemoryExclusions(threadId, projectId)
-                        : [],
-                };
-            }),
-        [projectId, threadId, attempt],
+    const scopeKey = JSON.stringify([threadId, projectId]);
+    const loaded = useLiveQuery(
+        async () => ({scopeKey, ...await readMemory(async () => {
+            if (!projectId) return {memories: [], exclusions: [], available: false};
+            const project = await db.projects.get(projectId);
+            if (!project) return {memories: [], exclusions: [], available: false};
+            const exclusions = threadId ? await getThreadMemoryExclusions(threadId, projectId) : [];
+            return {available: true, memories: await listProjectMemories(projectId), exclusions};
+        })}),
+        [scopeKey, projectId, threadId, attempt],
     );
-    const [pending, setPending] = useState<string>();
-    const [error, setError] = useState("");
-    const lock = useRef(false);
+    const state = loaded?.scopeKey === scopeKey ? loaded : undefined;
+    const owner = useRef({scopeKey, live: true, locked: false});
+    if (owner.current.scopeKey !== scopeKey) {
+        owner.current.live = false;
+        owner.current = {scopeKey, live: true, locked: false};
+    }
+    const session = owner.current;
+    useEffect(() => {session.live = true; return () => {session.live = false;};}, [session]);
+    const [pendingWrite, setPending] = useState<{scopeKey: string; id: string}>();
+    const [writeError, setError] = useState<{scopeKey: string; message: string}>();
+    const pending = pendingWrite?.scopeKey === scopeKey ? pendingWrite.id : undefined;
+    const error = writeError?.scopeKey === scopeKey ? writeError.message : undefined;
+    const mutable = !!threadId && !readOnly && state?.data?.available && !state.error;
 
     async function exclude(id: string, excluded: boolean) {
-        if (lock.current || !threadId || !projectId) return;
-        lock.current = true;
-        setPending(id);
-        setError("");
+        if (!mutable || !threadId || !projectId || session.locked || !session.live || owner.current !== session) return;
+        session.locked = true;
+        setPending({scopeKey, id});
+        setError(undefined);
         try {
             await setThreadMemoryExcluded(threadId, projectId, id, excluded);
         } catch (failure) {
-            setError(
-                failure instanceof Error ? failure.message : "保存排除设置失败，请重试",
-            );
+            if (session.live && owner.current === session) setError({scopeKey,
+                message: failure instanceof Error ? failure.message : "保存排除设置失败，请重试"});
         } finally {
-            lock.current = false;
-            setPending(undefined);
+            session.locked = false;
+            if (session.live && owner.current === session) setPending(undefined);
         }
     }
 
-    const mutable =
-        !!threadId && !readOnly && state?.data?.available && !state.error;
     return (
         <SheetContent
             className="memory-context-sheet"
@@ -118,6 +119,8 @@ function MemoryContextContent({
                 </SheetDescription>
             </SheetHeader>
             <div className="memory-context-scroll">
+                {!state && <p role="status">正在读取记忆管理状态…</p>}
+                {state?.data && !state.data.available && <p role="alert">关联项目不可用；记忆快照仅供查看。</p>}
                 {run && (
                     <label className="memory-context-step">
                         查看请求

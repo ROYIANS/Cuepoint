@@ -1,7 +1,7 @@
 import Dexie from "dexie";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
-import { createAudioMusicProject } from "@/db/repo";
+import {createAudioMusicProject} from "@/db/projects";
 import { addAudioClip, addAudioSegment, patchAudioSegment } from "@/db/audio";
 import { deleteMusicWork } from "@/db/music";
 import { prepareAudioGeneration, readAudioJobSummary, refreshAudioGeneration, submitAudioGeneration } from "@/lib/audioGeneration/runtime";

@@ -3,7 +3,7 @@ import {type AgentPlanItem, type AgentResponseItem, type AgentRunOutput, MODEL_S
 import {decodeResponseOutput, toResponseInput} from "@/lib/ai/responsesStream";
 import {validateTaskPlan} from "@/lib/agent/taskState";
 import {targetRevision} from "@/lib/productionRevision";
-import {toolNamesForCall} from "@/lib/agent/toolLoading";
+import {toolNamesForCall} from "@/domain/agentToolSelection";
 import {buildFinishingCheckPrompt} from "@/lib/agent/finishingCheck";
 import {nowIso} from "@/lib/ids";
 

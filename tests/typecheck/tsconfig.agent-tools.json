@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.app.json",
+  "compilerOptions": {
+    "baseUrl": "../..",
+    "incremental": false,
+    "tsBuildInfoFile": "../../node_modules/.tmp/d05.typecheck.tsbuildinfo"
+  },
+  "include": ["../../src", "./agentToolDefinition.ts"]
+}

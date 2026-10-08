@@ -3,7 +3,7 @@ import {useManualDraftGuard} from "@/lib/useManualDraftGuard";
 import {Library, Plus, Trash2, Type} from "lucide-react";
 import {useEffect, useId, useRef, useState} from "react";
 import {toast} from "sonner";
-import {deleteMediaIfOrphan} from "@/db/repo";
+import {deleteMediaIfOrphan} from "@/db/media";
 import {SlotEditSession} from "@/lib/slotEditSession";
 import {DraftMediaSession} from "@/lib/draftMedia";
 import {emptySlot, slotHasBody} from "@/domain/slot";

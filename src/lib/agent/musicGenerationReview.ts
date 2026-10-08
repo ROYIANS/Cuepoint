@@ -3,7 +3,7 @@ import {db} from "@/db/database";
 import {canResumeAgentRun, resolveAgentToolApproval} from "@/db/agentTools";
 import type {AgentToolCall} from "@/domain/agent";
 import {targetRevision} from "@/lib/productionRevision";
-import {AUDIO_GENERATION_TOOLS} from "./audioGenerationTools";
+import {musicGenerateTool} from "./audioGenerationTools";
 import {parseMusicGenerationReview} from "./musicGenerationReviewSnapshot";
 
 export {parseMusicGenerationReview} from "./musicGenerationReviewSnapshot";
@@ -40,9 +40,10 @@ async function inspect(expected: AgentToolCall): Promise<MusicGenerationReviewSt
     if (calls.some(row => row.status === "unknown" || row.status === "running")) return unavailable("有操作结果尚不确定，请先核实，暂不能确认新的音乐生成。");
     if (await db.audioGenerationJobs.where("intentId").equals(`agent-audio:${call.id}`).first()) return unavailable("此请求已有生成任务记录，不能重复确认；请查询已有任务。");
     try {
-        const tool = AUDIO_GENERATION_TOOLS.find(row => row.name === "music_generate")!;
+        const tool = musicGenerateTool;
         const args = tool.parseArguments(JSON.parse(call.arguments));
-        const fresh = await tool.prepare!(args, {
+        if (!tool.prepare) return unavailable();
+        const fresh = await tool.prepare(args, {
             runId: run.id,
             threadId: run.threadId,
             callId: call.id,

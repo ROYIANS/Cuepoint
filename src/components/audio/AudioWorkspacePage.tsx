@@ -1,3 +1,4 @@
+import {deriveAudioSelection, type AudioSelectionIntent} from "./audioSelection";
 import {useEffect, useRef, useState} from "react";
 import {toast} from "sonner";
 import {useLiveQuery} from "dexie-react-hooks";
@@ -99,39 +100,18 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
     if (!chapter) return <div className="p-8">项目缺少音频章节，请重新打开项目。</div>;
     const segment = snapshot.segments.find((row) => row.id === segmentId && row.chapterId === chapter.id);
 
-    function selectSegment(row: AudioSegment) {
-        setSegmentId(row.id);
-        if (segmentId === row.id) return;
-        const takes = snapshot!.takes.filter((take) => take.segmentId === row.id);
-        const adopted = takes.find((take) => take.id === row.selectedTakeId) ?? takes.at(-1);
-        setTakeId(adopted?.id ?? "");
-        const clip = snapshot!.clips.find((item) => item.chapterId === row.chapterId && item.takeId === adopted?.id) ?? snapshot!.clips.find((item) => item.chapterId === row.chapterId && takes.some((take) => take.id === item.takeId));
-        setClipId(clip?.id ?? "");
-        if (clip) setSeekRequest({id: `${clip.id}:${Date.now()}`, position: clip.startSec});
+    function applySelection(intent: AudioSelectionIntent) {
+        const result = deriveAudioSelection(snapshot!, {chapterId: chapter.id, segmentId, takeId, clipId}, intent);
+        if (result.patch.chapterId !== undefined) setChapterId(result.patch.chapterId);
+        if (result.patch.segmentId !== undefined) setSegmentId(result.patch.segmentId);
+        if (result.patch.takeId !== undefined) setTakeId(result.patch.takeId);
+        if (result.patch.clipId !== undefined) setClipId(result.patch.clipId);
+        if (result.seek) setSeekRequest({id: `${result.seek.clipId}:${Date.now()}`, position: result.seek.position});
     }
 
-    function selectClip(id: string) {
-        setClipId(id);
-        const clip = snapshot!.clips.find((row) => row.id === id);
-        const take = snapshot!.takes.find((row) => row.id === clip?.takeId);
-        if (take) {
-            setTakeId(take.id);
-            setSegmentId(take.segmentId ?? "");
-        }
-    }
-
-    function selectTake(id: string) {
-        setTakeId(id);
-        const take = snapshot!.takes.find((row) => row.id === id);
-        const owner = snapshot!.segments.find((row) => row.id === take?.segmentId);
-        if (owner) {
-            setChapterId(owner.chapterId);
-            setSegmentId(owner.id);
-        } else setSegmentId("");
-        const clip = snapshot!.clips.find((row) => row.takeId === id && row.chapterId === (owner?.chapterId ?? chapter.id));
-        setClipId(clip?.id ?? "");
-        if (clip) setSeekRequest({id: `${clip.id}:${Date.now()}`, position: clip.startSec});
-    }
+    function selectSegment(row: AudioSegment) {applySelection({kind: "segment", row});}
+    function selectClip(id: string) {applySelection({kind: "clip", id});}
+    function selectTake(id: string) {applySelection({kind: "take", id});}
 
     function inspect(row?: AudioSegment) {
         if (row) selectSegment(row);
@@ -140,13 +120,7 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
     }
 
     function saved(take: AudioTake) {
-        setTakeId(take.id);
-        setClipId("");
-        if (take.segmentId) {
-            setSegmentId(take.segmentId);
-            const owner = snapshot!.segments.find((row) => row.id === take.segmentId);
-            if (owner) setChapterId(owner.chapterId);
-        } else setSegmentId("");
+        applySelection({kind: "saved", take});
         setInspectorTab(take.segmentId ? "voice" : "sources");
         setInspectorOpen(true);
     }

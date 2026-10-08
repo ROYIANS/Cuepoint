@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
 import { resolveAgentToolApproval } from "@/db/agentTools";
-import { createChatThread, updateChatThread } from "@/db/repo";
+import {createChatThread, updateChatThread} from "@/db/chat";
 import type { AgentReasoningEffort } from "@/domain/agent";
 import type { ConnectorConfig } from "@/domain/types";
 import { assertReasoningEffort, getReasoningPolicy } from "@/lib/ai/reasoningPolicy";

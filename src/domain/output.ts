@@ -1,30 +1,16 @@
 /** Verified APIMart standard-channel profiles, independent of connector credentials. */
 export const OUTPUT_PROFILE_VERSION = "2026-09-18";
-export const IMAGE_RATIOS = ["1:1", "3:2", "2:3", "4:3", "3:4", "5:4", "4:5", "16:9", "9:16", "2:1", "1:2", "3:1", "1:3", "21:9", "9:21"] as const;
-export const IMAGE_EXT_RATIOS = ["1:1", "16:9", "9:16", "4:3", "3:4", "3:2", "2:3", "5:4", "4:5", "21:9"] as const;
-export const VIDEO_RATIOS = ["21:9", "16:9", "4:3", "1:1", "3:4", "9:16"] as const;
-export const IMAGE_RESOLUTIONS = ["1k", "2k", "4k"] as const;
-export const IMAGE_QUALITIES = ["low", "medium", "high", "xhigh", "max", "auto"] as const;
-export const IMAGE_EXT_VERSIONS = ["flare", "sunburst"] as const;
-export const VIDEO_RESOLUTIONS = ["768P", "2K"] as const;
-export const APIMART_IMAGE_MODELS = ["gpt-image-2", "gpt-image-2.5-flare", "gpt-image-2.5-sunburst", "gpt-image-2.5-ext"] as const;
-export type ApimartImageModel = typeof APIMART_IMAGE_MODELS[number];
-
-export function isApimartImageModel(model: string): model is ApimartImageModel {
-    return (APIMART_IMAGE_MODELS as readonly string[]).includes(model);
-}
-
-export function isApimartImage25(model: string): boolean {
-    return model === "gpt-image-2.5-flare" || model === "gpt-image-2.5-sunburst";
-}
-
-export function isApimartImageExt(model: string): boolean {
-    return model === "gpt-image-2.5-ext";
-}
-
-export function apimartImageSizes(model: string): readonly string[] {
-    return isApimartImageExt(model) ? IMAGE_EXT_RATIOS : IMAGE_RATIOS;
-}
+import {
+    defaultImageParameters, defaultVideoParameters,
+    getGenerationCapability, isApimartImageModel, validateGenerationParameters,
+    type ApimartImageModel,
+} from "./generationCapabilities";
+export {
+    IMAGE_RATIOS, IMAGE_EXT_RATIOS, VIDEO_RATIOS, IMAGE_RESOLUTIONS,
+    IMAGE_QUALITIES, IMAGE_EXT_VERSIONS, VIDEO_RESOLUTIONS, APIMART_IMAGE_MODELS,
+    isApimartImageModel, isApimartImage25, isApimartImageExt, apimartImageSizes,
+    type ApimartImageModel,
+} from "./generationCapabilities";
 
 // Strings deliberately retain unknown/older profiles for review after import.
 export interface ImageGenerationDefaults {
@@ -56,24 +42,18 @@ export interface ProjectGenerationDefaults {
 }
 
 export function defaultImageGeneration(ratio = "16:9", model: ApimartImageModel = "gpt-image-2"): ImageGenerationDefaults {
-    const sizes = apimartImageSizes(model);
     return {
         provider: "apimart", model, profileVersion: OUTPUT_PROFILE_VERSION,
-        size: (sizes as readonly string[]).includes(ratio) ? ratio : "16:9", resolution: "1k",
-        ...(isApimartImage25(model) ? {quality: "auto"} : {}),
-        ...(isApimartImageExt(model) ? {version: "flare"} : {}),
+        ...defaultImageParameters(model, {purpose: "project-defaults", targetAspect: ratio}),
     };
 }
 
 export function defaultVideoGeneration(ratio = "16:9"): VideoGenerationDefaults {
+    const parameters = defaultVideoParameters("apimart", {purpose: "project-defaults", mode: "text"}, ratio);
     return {
-        provider: "apimart",
-        model: "MiniMax-H3",
-        profileVersion: OUTPUT_PROFILE_VERSION,
-        mode: "text",
-        aspectRatio: VIDEO_RATIOS.includes(ratio as typeof VIDEO_RATIOS[number]) ? ratio : "16:9",
-        resolution: "2K",
-        duration: 5
+        provider: "apimart", model: "MiniMax-H3", profileVersion: OUTPUT_PROFILE_VERSION,
+        mode: "text", aspectRatio: parameters.aspectRatio ?? "16:9",
+        resolution: parameters.resolution, duration: parameters.duration,
     };
 }
 
@@ -148,20 +128,8 @@ export function validateGenerationDefaults(raw: unknown): string[] {
         if (image.provider !== "apimart" || !isApimartImageModel(image.model) || image.profileVersion !== OUTPUT_PROFILE_VERSION) {
             issues.push("图片配置版本或模型尚不支持，请明确选择已验证的 APIMart 图片模型或清除配置");
         } else {
-            if (![...apimartImageSizes(image.model), "auto"].includes(image.size)) {
-                issues.push(isApimartImageExt(image.model) ? "请选择 GPT Image 2.5 Ext 支持的图片比例" : "请选择 GPT Image 2 支持的图片比例");
-            }
-            if (!(IMAGE_RESOLUTIONS as readonly string[]).includes(image.resolution)) issues.push("图片清晰度须为 1k、2k 或 4k");
-            if (isApimartImage25(image.model)) {
-                if (image.quality !== undefined && !(IMAGE_QUALITIES as readonly string[]).includes(image.quality)) issues.push("请选择 GPT Image 2.5 支持的画质");
-                if (image.version !== undefined) issues.push("标准 GPT Image 2.5 不使用 Ext 版本参数");
-            } else if (isApimartImageExt(image.model)) {
-                if (image.quality !== undefined) issues.push("GPT Image 2.5 Ext 不支持画质参数");
-                if (image.version !== undefined && !(IMAGE_EXT_VERSIONS as readonly string[]).includes(image.version)) issues.push("请选择 Ext 版本 flare 或 sunburst");
-            } else {
-                if (image.quality !== undefined) issues.push("GPT Image 2 不支持画质参数");
-                if (image.version !== undefined) issues.push("GPT Image 2 不使用 Ext 版本参数");
-            }
+            const profile = getGenerationCapability("apimart", image.model, "image");
+            if (profile) issues.push(...validateGenerationParameters(profile, image, {purpose: "project-defaults"}).map(issue => issue.message));
         }
     }
     if (config?.video) {
@@ -169,15 +137,9 @@ export function validateGenerationDefaults(raw: unknown): string[] {
         if (video.provider !== "apimart" || video.model !== "MiniMax-H3" || video.profileVersion !== OUTPUT_PROFILE_VERSION) {
             issues.push("视频配置版本或模型尚不支持，请明确选择 MiniMax H3 或清除配置");
         }
-        if (!(VIDEO_RESOLUTIONS as readonly string[]).includes(video.resolution)) issues.push("MiniMax H3 分辨率须为 768P 或 2K");
-        if (!Number.isInteger(video.duration) || video.duration < 4 || video.duration > 15) issues.push("MiniMax H3 时长须为 4–15 秒整数");
-        if (video.mode === "frames") {
-            if (video.aspectRatio !== "adaptive") issues.push("首尾帧生视频的比例由输入图片决定，请选择跟随输入图片");
-        } else if (video.mode === "text" || video.mode === "reference") {
-            if (!(VIDEO_RATIOS as readonly string[]).includes(video.aspectRatio) && !(video.mode === "reference" && video.aspectRatio === "adaptive")) {
-                issues.push("请选择当前视频方式支持的比例");
-            }
-        } else issues.push("请选择文字、首尾帧或参考素材生视频方式");
+        // Unknown imported video profiles still receive the existing H3 scalar diagnostics.
+        const profile = getGenerationCapability("apimart", "MiniMax-H3", "video");
+        if (profile) issues.push(...validateGenerationParameters(profile, video, {purpose: "project-defaults", mode: video.mode}).map(issue => issue.message));
     }
     return issues;
 }

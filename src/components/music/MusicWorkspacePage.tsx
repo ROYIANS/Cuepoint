@@ -1,3 +1,4 @@
+import {switchMusicVariant} from "./switchMusicVariant";
 import {Disclosure, DisclosureTitle, SelectOption, WorkspaceSelect} from "@/components/audioMusic/controls";
 import {useEffect, useRef, useState} from "react";
 import {useLiveQuery} from "dexie-react-hooks";
@@ -26,10 +27,8 @@ import {
 } from "@/components/audioMusic/shared";
 import {MusicCreation} from "./MusicCreation";
 import {
-    linkMusicVariants,
     musicVariant,
     type MusicVariant,
-    newVariantSettings,
     parseVariantLinks,
     type VariantLinks
 } from "./draftVariants";
@@ -113,18 +112,13 @@ function MusicWorkspace({projectId}: { projectId: string }) {
 
     async function switchVariant(target: MusicVariant) {
         if (!draft || target === musicVariant(draft.settings)) return;
-        await flushPendingDrafts(projectId);
-        const current = await db.musicDrafts.get(draft.id);
-        if (!current || current.projectId !== projectId) throw new Error("创作草稿不存在");
-        const targetId = variantLinks.current[current.id]?.[target];
-        const retained = targetId ? await db.musicDrafts.get(targetId) : undefined;
-        const row = retained?.projectId === projectId && musicVariant(retained.settings) === target ? retained : await addMusicDraft(projectId, {settings: newVariantSettings(current.settings, target)});
-        variantLinks.current = linkMusicVariants(variantLinks.current, current, row);
+        const result = await switchMusicVariant({projectId, draftId: draft.id, target, links: variantLinks.current});
+        variantLinks.current = result.links;
         try {
             localStorage.setItem(storageKey, JSON.stringify(variantLinks.current));
         } catch { /* Draft contents are still durable in Dexie. */
         }
-        setDraftId(row.id);
+        setDraftId(result.draftId);
     }
 
     const details = selected && <MusicDetails key={selected.id} work={selected} busy={busy} action={action}

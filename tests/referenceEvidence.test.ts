@@ -1,16 +1,19 @@
+import {registeredTools} from "./helpers/registeredTools";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
 import { prepareTaskWrapup } from "@/lib/agent/taskWrapup";
 import { saveTaskRecord } from "@/db/agentTaskRecords";
-import { REFERENCE_TOOLS } from "@/lib/agent/referenceTools";
+import { REFERENCE_TOOLS as REFERENCE_TOOLS_DEFINITIONS } from "@/lib/agent/referenceTools";
 import type { ConnectorConfig } from "@/domain/types";
 import type { ThreadLockManager } from "@/lib/agent/runOwnership";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
-import { createProject } from "@/db/repo";
+import {createProject} from "@/db/projects";
 import { createAgentTask } from "@/db/agentTasks";
 import { createManualWrapup, getTaskWrapupState } from "@/db/agentTaskWrapups";
 import { collectReferenceEvidence, toolReferenceAttachments, referenceToolSummary } from "@/lib/agent/referenceEvidence";
 import type { ProjectReference } from "@/domain/references";
+const REFERENCE_TOOLS = registeredTools(REFERENCE_TOOLS_DEFINITIONS);
+
 
 async function source(projectId: string) {
   const id = crypto.randomUUID();

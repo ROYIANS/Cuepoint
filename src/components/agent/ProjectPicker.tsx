@@ -3,7 +3,7 @@ import {ArrowLeft, Check, ChevronDown, Folder, Plus, Search, X} from "lucide-rea
 import {useId, useMemo, useRef, useState} from "react";
 import {toast} from "sonner";
 import type {Id, Project, ProjectKind} from "@/domain/types";
-import {createAudioMusicProject, createProject} from "@/db/repo";
+import {createAudioMusicProject, createProject} from "@/db/projects";
 
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";

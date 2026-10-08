@@ -1,6 +1,8 @@
 import {db} from './database';
 import {AtomicToolRollbackError, executeAtomicTool} from './agentTools';
-import {resolveConnector, setCharacterSlot, setPropSlot, setSceneSlot, setShotSlot, setStyleSlot} from './repo';
+import {resolveConnector} from "./connectors";
+import {setCharacterSlot, setPropSlot, setSceneSlot, setStyleSlot} from "./assets";
+import {setShotSlot} from "./shots";
 import type {AgentGenerationJob} from '@/domain/agentGeneration';
 import {
     type GenerationBatch,
@@ -11,7 +13,8 @@ import {
     validateBatchLimits
 } from '@/domain/agentGenerationBatch';
 import {type GenerationSubmitArgs, generationSubmitSchema} from '@/lib/agent/generationProfiles';
-import {loadGenerationInputs, prepareGenerationSnapshot, readGenerationTarget} from '@/lib/agent/generationRuntime';
+import {loadGenerationInputs, prepareGenerationSnapshot} from '@/lib/agent/generationPreparation';
+import {readGenerationTarget} from './agentGenerationTarget';
 import {assertProjectToolScope} from '@/lib/agent/projectScope';
 import type {AgentToolContext} from '@/lib/agent/tools';
 import {createId, nowIso} from '@/lib/ids';

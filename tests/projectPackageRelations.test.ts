@@ -1,7 +1,9 @@
 import JSZip from "jszip";
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
-import { addCharacter, createProject, putMedia } from "@/db/repo";
+import {addCharacter} from "@/db/assets";
+import {createProject} from "@/db/projects";
+import {putMedia} from "@/db/media";
 import { PACKAGE_FORMAT } from "@/domain/types";
 import { exportProjectZip, importProjectZip, PackageError } from "@/lib/projectPackage";
 

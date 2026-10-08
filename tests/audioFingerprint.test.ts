@@ -1,7 +1,7 @@
 import {describe, expect, it} from "vitest";
 import JSZip from "jszip";
 import {db} from "@/db/database";
-import {createAudioMusicProject} from "@/db/repo";
+import {createAudioMusicProject} from "@/db/projects";
 import {
     addAudioChapter, addAudioClip, addAudioExport, addAudioSegment, addAudioTake, addAudioTrack,
     deleteAudioChapter, getAudioProjectSnapshot, patchAudioClip

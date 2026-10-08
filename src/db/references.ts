@@ -1,5 +1,6 @@
 import {db} from "./database";
-import {deleteMediaIfOrphan, PRODUCTION_TABLES} from "./repo";
+import {deleteMediaIfOrphan} from "./media";
+import {PRODUCTION_TABLES} from "./productionShared";
 import type {ProjectReference, ReferenceAttachment, ReferenceChunk} from "@/domain/references";
 import {isStudioLibrary} from "@/domain/types";
 import {nowIso} from "@/lib/ids";

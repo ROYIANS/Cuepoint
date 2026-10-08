@@ -1,3 +1,5 @@
+import {loadAudioBuffer, loadBuffers} from "@/lib/audio/buffers";
+import {exportAudioMix} from "@/lib/audio/exportMix";
 import {SelectOption, WorkspaceSelect, WorkspaceSlider} from "@/components/audioMusic/controls";
 import {type PointerEvent, useEffect, useMemo, useRef, useState} from "react";
 import {
@@ -23,18 +25,13 @@ import {
     ZoomIn,
     ZoomOut
 } from "lucide-react";
-import type {AudioClip, AudioProjectSnapshot, AudioTake, AudioTrack} from "@/domain/audio";
-import {db} from "@/db/database";
-import {addAudioExport, addAudioTrack, getAudioProjectSnapshot, patchAudioTrack} from "@/db/audio";
-import {AudioBufferCache, AudioPreviewPlayer, decodeAudioBlob, renderAudioMix} from "@/lib/audio/engine";
-import {type AudioSchedule, buildAudioSchedule} from "@/lib/audio/schedule";
-import {createAudioExportFingerprint} from "@/lib/audio/fingerprint";
-import {preflightAudioRender} from "@/lib/audio/wav";
+import type {AudioClip, AudioExport, AudioProjectSnapshot, AudioTake, AudioTrack} from "@/domain/audio";
+import {addAudioTrack, patchAudioTrack} from "@/db/audio";
+import {AudioPreviewPlayer} from "@/lib/audio/engine";
+import {buildAudioSchedule} from "@/lib/audio/schedule";
 import {createWaveformPeaks} from "@/lib/audio/waveform";
 import {formatTimelineTick, snapTimelinePosition, timelineClipLabel, timelineGeometry} from "@/lib/audio/timeline";
-import {createId} from "@/lib/ids";
 import {downloadBlob} from "@/lib/projectPackage";
-import {flushPendingDrafts} from "@/lib/debouncedDraft";
 import {isFormFieldTarget} from "@/lib/formFieldFocus";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
@@ -55,24 +52,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {AudioClipHistory} from "@/lib/audio/commands";
 import "./timeline.css";
-
-const cache = new AudioBufferCache();
-
-async function loadBuffers(schedule: AudioSchedule) {
-    preflightAudioRender(schedule.durationSec, schedule.sources);
-    const buffers = new Map<string, AudioBuffer>();
-    for (const source of schedule.sources) {
-        let buffer = cache.get(source.mediaId);
-        if (!buffer) {
-            const record = await db.media.get(source.mediaId);
-            if (!record) throw new Error("音频原文件已不存在，无法完整播放或导出");
-            buffer = await decodeAudioBlob(record.blob);
-            cache.set(source.mediaId, buffer);
-        }
-        buffers.set(source.mediaId, buffer);
-    }
-    return buffers;
-}
 
 type DragState = {
     clip: AudioClip;
@@ -127,7 +106,7 @@ export function AudioTimeline({
     const [busy, setBusy] = useState(false);
     const busyRef = useRef(false);
     const mounted = useRef(true);
-    const [exportScope, setExportScope] = useState("chapter");
+    const [exportScope, setExportScope] = useState<NonNullable<AudioExport["scope"]>>("chapter");
     const [inspector, setInspector] = useState(false);
     const [menu, setMenu] = useState<{ x: number; y: number; clip?: AudioClip; track?: AudioTrack }>();
     const [drag, setDrag] = useState<DragState>();
@@ -255,25 +234,8 @@ export function AudioTimeline({
     }
 
     async function exportMix() {
-        await flushPendingDrafts(projectId);
-        const frozenSnapshot = await getAudioProjectSnapshot(projectId);
-        const schedule = buildAudioSchedule(frozenSnapshot, exportScope === "chapter" ? chapterId : undefined);
-        if (!schedule.clips.length) throw new Error("请先将音频放入时间线");
-        const buffers = await loadBuffers(schedule);
-        const result = await renderAudioMix(schedule, buffers);
-        const mediaId = createId("med");
-        const chapter = frozenSnapshot.chapters.find((row) => row.id === chapterId);
-        const filename = `${projectName}-${exportScope === "chapter" ? chapter?.title ?? "章节" : "完整项目"}.wav`;
-        await addAudioExport(projectId, {
-            chapterId: exportScope === "chapter" ? chapterId : undefined,
-            scope: exportScope === "chapter" ? "chapter" : "project",
-            chapterTitle: exportScope === "chapter" ? chapter?.title : undefined,
-            fingerprint: createAudioExportFingerprint(schedule),
-            format: "wav",
-            mediaId,
-            durationSec: result.durationSec
-        }, {id: mediaId, projectId, filename, blob: result.blob, mimeType: "audio/wav"});
-        downloadBlob(result.blob, filename);
+        const result = await exportAudioMix({projectId, projectName, chapterId, scope: exportScope});
+        downloadBlob(result.blob, result.filename);
         setNotice(result.attenuation < 1 ? `已导出 WAV；为避免削波，整体降低 ${Math.abs(result.attenuationDb).toFixed(1)} dB。` : "WAV 已保存到项目并开始下载。");
     }
 
@@ -525,7 +487,7 @@ export function AudioTimeline({
                                                                                                             align="end"
                                                                                                             className="at-export-popover"><strong>导出声音作品</strong>
                 <p>48 kHz · 立体声 · WAV</p><Field label="导出范围"><WorkspaceSelect value={exportScope}
-                                                                                     onValueChange={setExportScope}><SelectOption
+                                                                                     onValueChange={value => setExportScope(value === "chapter" ? "chapter" : "project")}><SelectOption
                     value="chapter">当前章节</SelectOption><SelectOption
                     value="project">完整项目</SelectOption></WorkspaceSelect></Field><Button className="w-full"
                                                                                              disabled={busy}
@@ -684,13 +646,7 @@ function Waveform({take, clip}: { take: AudioTake; clip: AudioClip }) {
     useEffect(() => {
         let cancelled = false;
         void (async () => {
-            let buffer = cache.get(take.mediaId);
-            if (!buffer) {
-                const media = await db.media.get(take.mediaId);
-                if (!media) return;
-                buffer = await decodeAudioBlob(media.blob);
-                cache.set(take.mediaId, buffer);
-            }
+            const buffer = await loadAudioBuffer(take.mediaId);
             const next = createWaveformPeaks(buffer, 800);
             if (!cancelled) setPeaks(next);
         })().catch(() => undefined);

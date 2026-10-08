@@ -1,5 +1,5 @@
 import {MUSIC_REVIEW_MAX_BYTES, parseMusicGenerationReview} from "@/lib/agent/musicGenerationReviewSnapshot";
-import {getOfferedToolNames, toolNamesForCall} from "@/lib/agent/toolLoading";
+import {getOfferedToolNames, toolNamesForCall} from "@/domain/agentToolSelection";
 import type {AgentReferenceInput} from "@/domain/referenceInput";
 import {REFERENCE_TOOL_NAMES} from "@/lib/agent/referenceToolNames";
 import {writeTaskRecord} from "./agentTaskRecords";

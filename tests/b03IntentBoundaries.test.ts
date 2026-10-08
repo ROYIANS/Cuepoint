@@ -39,7 +39,10 @@ vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
 
 import {toast} from "sonner";
 import {db} from "@/db/database";
-import * as repo from "@/db/repo";
+import * as repoProjects from "@/db/projects";
+import * as repoShots from "@/db/shots";
+import * as repoAssets from "@/db/assets";
+import * as repoChat from "@/db/chat";
 import * as contextSettings from "@/db/contextSettings";
 import {GENERAL_AGENT_ID} from "@/domain/agent";
 import {DEFAULT_CONTEXT_POLICY} from "@/lib/agent/contextPolicy";
@@ -70,10 +73,10 @@ async function mutations(spy: {mock: {results: Array<{value: unknown}>}}) {
     await Promise.all(spy.mock.results.map(result => result.value)); await settle();
 }
 async function fixture() {
-    const project = await repo.createProject("B03");
+    const project = await repoProjects.createProject("B03");
     const episode = (await db.episodes.where("projectId").equals(project.id).first())!;
-    const shot = await repo.addShot(project.id, episode.id);
-    const a = await repo.addCharacter(project.id); const b = await repo.addCharacter(project.id);
+    const shot = await repoShots.addShot(project.id, episode.id);
+    const a = await repoAssets.addCharacter(project.id); const b = await repoAssets.addCharacter(project.id);
     return {project, episode, shot, a, b};
 }
 async function rowCallbacks(f: Awaited<ReturnType<typeof fixture>>) {
@@ -110,10 +113,10 @@ afterEach(() => {vi.restoreAllMocks();});
 
 describe("B03 context policy intent", () => {
     it.each(["thread", "default"] as const)("preserves two stale-render callbacks on different %s fields", async owner => {
-        const thread = await repo.createChatThread();
+        const thread = await repoChat.createChatThread();
         const threadId = owner === "thread" ? thread.id : undefined;
         const source = owner === "thread" ? thread : (await db.agents.get(GENERAL_AGENT_ID))!;
-        const ui = host([source]); const tree = draw(ui, () => ContextParameters({threadId, onBack: vi.fn()}));
+        const ui = host([{scopeKey: threadId ?? GENERAL_AGENT_ID, source}]); const tree = draw(ui, () => ContextParameters({threadId, onBack: vi.fn()}));
         const update = vi.spyOn(contextSettings, "updateContextPolicy");
         change(tree, "context-auto", false); await mutations(update);
         // The same original render remains captured after storage commits.
@@ -124,10 +127,10 @@ describe("B03 context policy intent", () => {
     });
 
     it.each(["thread", "default"] as const)("merges concurrent actual callbacks and commits same-field %s intent in order", async owner => {
-        const thread = await repo.createChatThread();
+        const thread = await repoChat.createChatThread();
         const threadId = owner === "thread" ? thread.id : undefined;
         const source = owner === "thread" ? thread : (await db.agents.get(GENERAL_AGENT_ID))!;
-        const render = () => draw(host([source]), () => ContextParameters({threadId, onBack: vi.fn()}));
+        const render = () => draw(host([{scopeKey: threadId ?? GENERAL_AGENT_ID, source}]), () => ContextParameters({threadId, onBack: vi.fn()}));
         const first = render(); const second = render();
         const update = vi.spyOn(contextSettings, "updateContextPolicy");
         change(first, "context-auto", false); change(second, "context-history", true); await mutations(update);
@@ -143,11 +146,31 @@ describe("B03 context policy intent", () => {
         expect((await read())?.contextPolicy?.limitHistory).toBe(true);
     });
 
+    it("disables mismatched/pending/missing/error policy reads and rejects callbacks captured before a thread switch", async () => {
+        const a = await repoChat.createChatThread(); const b = await repoChat.createChatThread();
+        const ui = host([{scopeKey: a.id, source: a}]);
+        const old = draw(ui, () => ContextParameters({threadId: a.id, onBack: vi.fn()}));
+        const update = vi.spyOn(contextSettings, "updateContextPolicy");
+        for (const result of [undefined, {scopeKey: a.id, source: a}, {scopeKey: b.id, source: null}, {scopeKey: b.id, source: null, error: "read failed"}]) {
+            ui.results = [result];
+            const pending = draw(ui, () => ContextParameters({threadId: b.id, onBack: vi.fn()}));
+            expect(pending.find(node => node.props.id === "context-auto")?.props.disabled).toBe(true);
+            change(pending, "context-auto", false);
+        }
+        change(old, "context-auto", false); await settle();
+        expect(update).not.toHaveBeenCalled();
+        ui.results = [{scopeKey: b.id, source: b}];
+        const current = draw(ui, () => ContextParameters({threadId: b.id, onBack: vi.fn()}));
+        change(current, "context-history", true); await mutations(update);
+        expect(update).toHaveBeenCalledWith(b.id, {limitHistory: true});
+        expect((await db.chatThreads.get(a.id))?.contextPolicy?.limitHistory).toBe(false);
+    });
+
     it("clears optional local tokens through the actual input while preserving latest independent fields", async () => {
-        const thread = await repo.createChatThread();
+        const thread = await repoChat.createChatThread();
         await contextSettings.updateContextPolicy(thread.id, {customContextTokens: 8192});
         const source = (await db.chatThreads.get(thread.id))!;
-        const tree = draw(host([source]), () => ContextParameters({threadId: thread.id, onBack: vi.fn()}));
+        const tree = draw(host([{scopeKey: thread.id, source}]), () => ContextParameters({threadId: thread.id, onBack: vi.fn()}));
         await contextSettings.updateContextPolicy(thread.id, {historyMessageCount: 77});
         const update = vi.spyOn(contextSettings, "updateContextPolicy");
         change(tree, "context-local-budget", null); await mutations(update);
@@ -156,10 +179,10 @@ describe("B03 context policy intent", () => {
     });
 
     it("reset and save-as-default replace the full latest policy including absent optional tokens", async () => {
-        const thread = await repo.createChatThread();
+        const thread = await repoChat.createChatThread();
         await contextSettings.updateContextPolicy(thread.id, {customContextTokens: 8192, limitHistory: true});
         const source = (await db.chatThreads.get(thread.id))!;
-        const tree = draw(host([source]), () => ContextParameters({threadId: thread.id, onBack: vi.fn()}));
+        const tree = draw(host([{scopeKey: thread.id, source}]), () => ContextParameters({threadId: thread.id, onBack: vi.fn()}));
         await contextSettings.updateContextPolicy(undefined, {historyMessageCount: 44});
         const reset = vi.spyOn(contextSettings, "resetThreadContextPolicy");
         (tree.find(node => node.props.onClick && Array.isArray(node.props.children) && node.props.children.includes("恢复默认"))!.props.onClick as () => void)();
@@ -170,11 +193,11 @@ describe("B03 context policy intent", () => {
         const save = vi.spyOn(contextSettings, "saveContextPolicyAsDefault");
         (tree.find(node => node.props.children === "设为默认")!.props.onClick as () => void)(); await mutations(save);
         expect((await db.agents.get(GENERAL_AGENT_ID))?.contextPolicy).toEqual({...DEFAULT_CONTEXT_POLICY, historyMessageCount: 55});
-        expect((await repo.createChatThread()).contextPolicy).toEqual({...DEFAULT_CONTEXT_POLICY, historyMessageCount: 55});
+        expect((await repoChat.createChatThread()).contextPolicy).toEqual({...DEFAULT_CONTEXT_POLICY, historyMessageCount: 55});
     });
 
     it("normalizes merged fields and rolls back missing-thread reset/default changes", async () => {
-        const thread = await repo.createChatThread();
+        const thread = await repoChat.createChatThread();
         await contextSettings.updateContextPolicy(thread.id, {limitHistory: true, historyMessageCount: 31, customContextTokens: 8192});
         await contextSettings.updateContextPolicy(thread.id, {historyMessageCount: -1, customContextTokens: 1});
         expect((await db.chatThreads.get(thread.id))?.contextPolicy).toEqual({...DEFAULT_CONTEXT_POLICY, limitHistory: true});
@@ -190,20 +213,20 @@ describe("B03 context policy intent", () => {
 describe("B03 shot character selection intent", () => {
     it("keeps rapid add/add from the actual same-render row callbacks and unrelated edits", async () => {
         const f = await fixture(); const ui = await rowCallbacks(f);
-        const select = vi.spyOn(repo, "setShotCharacterSelected");
+        const select = vi.spyOn(repoShots, "setShotCharacterSelected");
         const oldTime = "2000-01-01T00:00:00.000Z";
         await db.projects.update(f.project.id, {updatedAt: oldTime});
         const mediaSlot = {...emptySlot(), prompt: "preserved media draft"};
         ui.select(f.a.id, true); ui.select(f.b.id, true);
-        await Promise.all([mutations(select), repo.patchShot(f.shot.id, {notes: "latest notes"}), repo.setShotSlot(f.shot.id, "firstFrame", mediaSlot)]);
+        await Promise.all([mutations(select), repoShots.patchShot(f.shot.id, {notes: "latest notes"}), repoShots.setShotSlot(f.shot.id, "firstFrame", mediaSlot)]);
         expect(select.mock.calls).toEqual([[f.shot.id, f.a.id, true], [f.shot.id, f.b.id, true]]);
         expect(await db.shots.get(f.shot.id)).toEqual({...f.shot, characterIds: [f.a.id, f.b.id], notes: "latest notes", firstFrame: mediaSlot});
         expect((await db.projects.get(f.project.id))?.updatedAt).not.toBe(oldTime);
     });
 
     it("keeps rapid add/remove and duplicate selected values idempotent on the actual old render", async () => {
-        const f = await fixture(); await repo.patchShot(f.shot.id, {characterIds: [f.a.id]});
-        const ui = await rowCallbacks(f); const select = vi.spyOn(repo, "setShotCharacterSelected");
+        const f = await fixture(); await repoShots.patchShot(f.shot.id, {characterIds: [f.a.id]});
+        const ui = await rowCallbacks(f); const select = vi.spyOn(repoShots, "setShotCharacterSelected");
         ui.select(f.b.id, true); ui.select(f.a.id, false); await mutations(select);
         expect((await db.shots.get(f.shot.id))?.characterIds).toEqual([f.b.id]);
         ui.select(f.b.id, true); ui.select(f.b.id, true); ui.select(f.a.id, false); ui.select(f.a.id, false);
@@ -216,19 +239,19 @@ describe("B03 shot character selection intent", () => {
 
     it("retains whole-array patch and the actual clear command as exact replacements", async () => {
         const f = await fixture(); const ui = await rowCallbacks(f);
-        await repo.setShotCharacterSelected(f.shot.id, f.a.id, true);
-        await repo.setShotCharacterSelected(f.shot.id, f.b.id, true);
-        await repo.patchShot(f.shot.id, {characterIds: [f.b.id]});
+        await repoShots.setShotCharacterSelected(f.shot.id, f.a.id, true);
+        await repoShots.setShotCharacterSelected(f.shot.id, f.b.id, true);
+        await repoShots.patchShot(f.shot.id, {characterIds: [f.b.id]});
         expect((await db.shots.get(f.shot.id))?.characterIds).toEqual([f.b.id]);
-        const patch = vi.spyOn(repo, "patchShot"); ui.clear(); await mutations(patch);
+        const patch = vi.spyOn(repoShots, "patchShot"); ui.clear(); await mutations(patch);
         expect(patch).toHaveBeenCalledWith(f.shot.id, {characterIds: []});
         expect((await db.shots.get(f.shot.id))?.characterIds).toEqual([]);
     });
 
     it.each([true, false])("rejects a foreign target for selected=%s without touching row/project", async selected => {
-        const f = await fixture(); const foreign = await repo.addCharacter((await repo.createProject("foreign")).id);
+        const f = await fixture(); const foreign = await repoAssets.addCharacter((await repoProjects.createProject("foreign")).id);
         const original = await db.shots.get(f.shot.id); const project = await db.projects.get(f.project.id);
-        await expect(repo.setShotCharacterSelected(f.shot.id, foreign.id, selected)).rejects.toThrow("角色不属于当前项目");
+        await expect(repoShots.setShotCharacterSelected(f.shot.id, foreign.id, selected)).rejects.toThrow("角色不属于当前项目");
         expect(await db.shots.get(f.shot.id)).toEqual(original); expect(await db.projects.get(f.project.id)).toEqual(project);
     });
 
@@ -238,7 +261,7 @@ describe("B03 shot character selection intent", () => {
         if (broken === "project") await db.projects.delete(f.project.id);
         if (broken === "episode") await db.episodes.delete(f.episode.id);
         if (broken === "foreign episode") {
-            const other = await repo.createProject("foreign"); await db.episodes.update(f.episode.id, {projectId: other.id});
+            const other = await repoProjects.createProject("foreign"); await db.episodes.update(f.episode.id, {projectId: other.id});
         }
         if (broken === "character") await db.characters.delete(f.a.id);
         if (broken === "surviving character") await db.shots.update(f.shot.id, {characterIds: ["deleted"]});
@@ -246,14 +269,14 @@ describe("B03 shot character selection intent", () => {
         if (broken === "prop") await db.shots.update(f.shot.id, {propIds: ["deleted"]});
         if (broken === "style") await db.shots.update(f.shot.id, {styleId: "deleted"});
         const original = await db.shots.get(f.shot.id); const project = await db.projects.get(f.project.id);
-        await expect(repo.setShotCharacterSelected(f.shot.id, f.a.id, true)).rejects.toThrow();
+        await expect(repoShots.setShotCharacterSelected(f.shot.id, f.a.id, true)).rejects.toThrow();
         expect(await db.shots.get(f.shot.id)).toEqual(original); expect(await db.projects.get(f.project.id)).toEqual(project);
         expect(await db.characters.get("deleted")).toBeUndefined();
     });
 
     it("allows removal to repair one deleted reference, never reselects it, and rejects other invalid survivors", async () => {
-        const f = await fixture(); await repo.patchShot(f.shot.id, {characterIds: [f.a.id, f.b.id]});
-        const ui = await rowCallbacks(f); const select = vi.spyOn(repo, "setShotCharacterSelected");
+        const f = await fixture(); await repoShots.patchShot(f.shot.id, {characterIds: [f.a.id, f.b.id]});
+        const ui = await rowCallbacks(f); const select = vi.spyOn(repoShots, "setShotCharacterSelected");
         await db.characters.delete(f.a.id);
         ui.select(f.a.id, false); await mutations(select);
         expect((await db.shots.get(f.shot.id))?.characterIds).toEqual([f.b.id]);
@@ -264,7 +287,7 @@ describe("B03 shot character selection intent", () => {
         expect(await db.characters.get(f.a.id)).toBeUndefined();
         await db.shots.update(f.shot.id, {characterIds: [f.a.id, "another-deleted"]});
         const original = await db.shots.get(f.shot.id); const project = await db.projects.get(f.project.id);
-        await expect(repo.setShotCharacterSelected(f.shot.id, f.a.id, false)).rejects.toThrow();
+        await expect(repoShots.setShotCharacterSelected(f.shot.id, f.a.id, false)).rejects.toThrow();
         expect(await db.shots.get(f.shot.id)).toEqual(original); expect(await db.projects.get(f.project.id)).toEqual(project);
     });
 });

@@ -1,6 +1,8 @@
 import {describe, expect, it} from "vitest";
 import {db} from "@/db/database";
-import {addCharacter, addShot, createProject} from "@/db/repo";
+import {addCharacter} from "@/db/assets";
+import {addShot} from "@/db/shots";
+import {createProject} from "@/db/projects";
 import {createAgentTask} from "@/db/agentTasks";
 import {beginAgentRun, finishAgentRun} from "@/db/agentRuns";
 import {listTaskGenerationSources, saveTaskRecord, taskGenerationSource, writeTaskRecord} from "@/db/agentTaskRecords";

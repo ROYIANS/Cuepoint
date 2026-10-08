@@ -3,26 +3,21 @@ import {type ReactNode, useEffect, useRef, useState} from "react";
 import {useLiveQuery} from "dexie-react-hooks";
 import {toast} from "sonner";
 import {db} from "@/db/database";
-import {patchProjectDetails} from "@/db/repo";
+import {patchProjectDetails} from "@/db/projects";
 import {ASPECT_PRESET_IDS, type AspectPresetId, getProjectKind, type Project} from "@/domain/types";
 import {
     APIMART_IMAGE_MODELS,
     type ApimartImageModel,
-    apimartImageSizes,
     defaultImageGeneration,
     defaultVideoGeneration,
-    IMAGE_EXT_VERSIONS,
-    IMAGE_QUALITIES,
-    IMAGE_RESOLUTIONS,
     isApimartImage25,
     isApimartImageExt,
     isApimartImageModel,
     OUTPUT_PROFILE_VERSION,
     type ProjectGenerationDefaults,
     validateGenerationDefaults,
-    VIDEO_RATIOS,
-    VIDEO_RESOLUTIONS,
 } from "@/domain/output";
+import {getGenerationCapability, projectGenerationParameters} from "@/domain/generationCapabilities";
 import {acknowledgeOutputDraft, outputDraftPatch, projectOutputValue, rebaseOutputDraft, type ProjectOutputDraft} from "@/lib/projectOutputDraft";
 import {AssetTextField} from "@/components/assets/AssetTextField";
 import {Button} from "@/components/ui/button";
@@ -172,6 +167,10 @@ function ProjectOutputSettings({project, onOutputState, unavailable = false}: {
     const imageKnown = Boolean(image && image.provider === "apimart" && isApimartImageModel(image.model) && image.profileVersion === OUTPUT_PROFILE_VERSION);
     const videoKnown = video?.provider === "apimart" && video.model === "MiniMax-H3" && video.profileVersion === OUTPUT_PROFILE_VERSION;
     const imageModel = imageKnown ? image!.model : undefined;
+    const imageProfile = getGenerationCapability("apimart", image?.model ?? "gpt-image-2", "image") ?? getGenerationCapability("apimart", "gpt-image-2", "image");
+    const videoProfile = getGenerationCapability("apimart", "MiniMax-H3", "video");
+    const imageControls = imageProfile && projectGenerationParameters(imageProfile, image ?? {}, {purpose: "project-defaults"});
+    const videoControls = videoProfile && projectGenerationParameters(videoProfile, video ?? {}, {purpose: "project-defaults", mode: video?.mode});
     const updateImage = (patch: Partial<NonNullable<ProjectGenerationDefaults["image"]>>) => {
         if (image) setDraft({...draft, image: {...image, ...patch}});
     };
@@ -226,18 +225,15 @@ function ProjectOutputSettings({project, onOutputState, unavailable = false}: {
                 {image && <>
                     <div className="grid gap-4 sm:grid-cols-2">
                         <SettingSelect label="图片比例" value={image.size}
-                                       options={[...apimartImageSizes(image.model), {
-                                           value: "auto",
-                                           label: "自动（默认 1:1）"
-                                       }]} onChange={(size) => updateImage({size})}/>
-                        <SettingSelect label="图片清晰度" value={image.resolution} options={IMAGE_RESOLUTIONS}
+                                       options={(imageControls?.sizes ?? []).map(value => value === "auto" ? {value, label: "自动（默认 1:1）"} : value)} onChange={(size) => updateImage({size})}/>
+                        <SettingSelect label="图片清晰度" value={image.resolution} options={imageControls?.resolutions ?? []}
                                        onChange={(resolution) => updateImage({resolution})}/>
                         {imageModel && isApimartImage25(imageModel) &&
-                            <SettingSelect label="画质" value={image.quality ?? "auto"} options={[...IMAGE_QUALITIES]}
+                            <SettingSelect label="画质" value={image.quality ?? "auto"} options={imageControls?.qualities ?? []}
                                            onChange={(quality) => updateImage({quality})}/>}
                         {imageModel && isApimartImageExt(imageModel) &&
                             <SettingSelect label="版本" value={image.version ?? "flare"}
-                                           options={[...IMAGE_EXT_VERSIONS]}
+                                           options={imageControls?.versions ?? []}
                                            onChange={(version) => updateImage({version})}/>}
                     </div>
                     <p className="text-muted-foreground text-xs leading-5">清晰度是模型的输出档位，实际像素随比例而变化。一次生成
@@ -267,14 +263,8 @@ function ProjectOutputSettings({project, onOutputState, unavailable = false}: {
                                    }, {value: "reference", label: "参考素材生视频"}]}
                                    onChange={(mode) => updateVideo({mode})}/>
                     <div className="grid gap-4 sm:grid-cols-2">
-                        <SettingSelect label="视频比例" value={video.aspectRatio} options={video.mode === "frames" ? [{
-                            value: "adaptive",
-                            label: "跟随输入图片"
-                        }] : video.mode === "reference" ? [...VIDEO_RATIOS, {
-                            value: "adaptive",
-                            label: "跟随参考素材"
-                        }] : VIDEO_RATIOS} onChange={(aspectRatio) => updateVideo({aspectRatio})}/>
-                        <SettingSelect label="视频分辨率" value={video.resolution} options={VIDEO_RESOLUTIONS}
+                        <SettingSelect label="视频比例" value={video.aspectRatio} options={(videoControls?.ratios ?? []).map(value => value === "adaptive" ? {value, label: video.mode === "frames" ? "跟随输入图片" : "跟随参考素材"} : value)} onChange={(aspectRatio) => updateVideo({aspectRatio})}/>
+                        <SettingSelect label="视频分辨率" value={video.resolution} options={videoControls?.resolutions ?? []}
                                        onChange={(resolution) => updateVideo({resolution})}/>
                         <label className="grid gap-2 text-xs font-medium">默认生成时长（秒）
                             <Input type="number" min={4} max={15} step={1}

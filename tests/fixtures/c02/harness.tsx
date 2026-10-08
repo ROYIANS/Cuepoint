@@ -2,7 +2,7 @@ import {useState} from "react";
 import {createRoot} from "react-dom/client";
 import {useLiveQuery} from "dexie-react-hooks";
 import {db} from "@/db/database";
-import {createAudioMusicProject} from "@/db/repo";
+import {createAudioMusicProject} from "@/db/projects";
 import {patchMusicDraft} from "@/db/music";
 import type {MusicDraft} from "@/domain/music";
 import {MusicCreation} from "@/components/music/MusicCreation";

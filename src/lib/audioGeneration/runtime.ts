@@ -1,6 +1,6 @@
 import {describeAudioGeneration} from "./presentation";
 import {db} from "@/db/database";
-import {resolveConnector} from "@/db/repo";
+import {resolveConnector} from "@/db/connectors";
 import {addAudioTake} from "@/db/audio";
 import {addMusicWork} from "@/db/music";
 import {claimAudioGenerationJob, patchAudioGenerationJob, prepareAudioGenerationJob} from "@/db/audioGeneration";

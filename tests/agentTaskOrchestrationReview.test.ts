@@ -1,7 +1,9 @@
+import {registeredTools} from "./helpers/registeredTools";
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
-import { addCharacter, createProject as createBoundTestProject } from "@/db/repo";
+import {addCharacter} from "@/db/assets";
+import {createProject as createBoundTestProject} from "@/db/projects";
 import { describe, expect, it } from "vitest";
-import { TASK_TOOLS } from "@/lib/agent/taskTools";
+import { TASK_TOOLS as TASK_TOOLS_DEFINITIONS } from "@/lib/agent/taskTools";
 import { db } from "@/db/database";
 import { createAgentTask, updateAgentTask } from "@/db/agentTasks";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
@@ -9,6 +11,8 @@ import {  transitionToolCall, updateRunPlanAndComplete } from "@/db/agentTools";
 import { validateTaskSources } from "@/db/agentTaskRecords";
 import type { AgentGenerationJob } from "@/domain/agentGeneration";
 import type { ConnectorConfig } from "@/domain/types";
+const TASK_TOOLS = registeredTools(TASK_TOOLS_DEFINITIONS);
+
 const connector:ConnectorConfig={id:"fixture",name:"Fixture",definitionId:"openai-compatible",baseUrl:"https://example.test/v1",apiKey:"fake",updatedAt:"now"};
 async function fixture(){
  const task=await createAgentTask({projectId:(await createBoundTestProject("测试项目")).id,title:"任务",goal:"制作可验证的角色图片"});

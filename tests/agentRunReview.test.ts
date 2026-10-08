@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
-import { createChatThread, updateChatThread } from "@/db/repo";
+import {createChatThread, updateChatThread} from "@/db/chat";
 import type { ConnectorConfig } from "@/domain/types";
 
 const connector: ConnectorConfig = {

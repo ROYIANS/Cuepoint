@@ -1,17 +1,22 @@
+import {registeredTools} from "./helpers/registeredTools";
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
-import { createProject, createChatThread, deleteChatThread } from "@/db/repo";
+import {createProject} from "@/db/projects";
+import {createChatThread} from "@/db/chat";
+import {deleteChatThread} from "@/db/cascadeCommands";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
 import {  transitionToolCall } from "@/db/agentTools";
 import { saveTaskRecord, listTaskRecords, listTaskRecordVersions } from "@/db/agentTaskRecords";
 import { updateAgentTask } from "@/db/agentTasks";
-import { TASK_TOOLS } from "@/lib/agent/taskTools";
+import { TASK_TOOLS as TASK_TOOLS_DEFINITIONS } from "@/lib/agent/taskTools";
 import { getTaskContext } from "@/lib/agent/taskContext";
 import { executeChatRun } from "@/lib/agent/runChat";
 import type { ConnectorConfig } from "@/domain/types";
 import type { AgentRun } from "@/domain/agent";
 import type { TaskRecordInput } from "@/domain/agentTaskRecords";
+const TASK_TOOLS = registeredTools(TASK_TOOLS_DEFINITIONS);
+
 const connector:ConnectorConfig={id:"cx",name:"test",definitionId:"openai-compatible",baseUrl:"https://example.test/v1",apiKey:"fixture",updatedAt:"2026-09-19"};
 const createArgs=(run:AgentRun)=>({title:"建立角色",goal:"创建一位名为小雨的主角",acceptanceCriteria:["工作室中存在小雨角色"],steps:[{id:"create",title:"创建角色",status:"pending"}],sources:[{type:"message",id:run.userMessageId}]});
 const recordInput:TaskRecordInput={kind:"approach",claim:"proposal",title:"实施方案",body:"先整理人物设定，再创建角色",sources:[]};

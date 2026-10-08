@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { db } from '@/db/database';
 import { beginAgentRun } from '@/db/agentRuns';
-import { createChatThread } from '@/db/repo';
+import {createChatThread} from "@/db/chat";
 import { createFileMaterial } from '@/db/materials';
 import { queueMaterialImage } from '@/lib/agent/materialImageInput';
 import { assertImageQueueCapacity } from '@/lib/agent/imageQueue';

@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
-import {
-  addCharacter, addEpisode, addProp, addScene, addShot, addStoryBeat, addStyle,
-  createProject, patchEpisodeShots, patchShot, putMedia, setShotSlot,
-  undoEpisodeShotBulkPatch,
-} from "@/db/repo";
-import type { EpisodeShotBulkPatch, EpisodeShotBulkUndo } from "@/db/repo";
+import {addCharacter, addProp, addScene, addStyle} from "@/db/assets";
+import {addEpisode, addStoryBeat} from "@/db/episodes";
+import {addShot, patchEpisodeShots, patchShot, setShotSlot, undoEpisodeShotBulkPatch} from "@/db/shots";
+import {createProject} from "@/db/projects";
+import {putMedia} from "@/db/media";
+import type {EpisodeShotBulkPatch, EpisodeShotBulkUndo} from "@/db/shots";
+
 import type { Shot } from "@/domain/types";
 import { emptySlot } from "@/domain/slot";
 
@@ -265,10 +266,13 @@ describe("episode bulk undo", () => {
   it.each(["shot write", "project touch"] as const)("rolls back every undo write on %s storage failure and allows retry", async (failure) => {
     const { project, episode, shots } = await seed();
     const undo = await bulkUndo(episode.id, shots, { notes: "bulk" });
+    // A same-millisecond touch is a no-op and would skip the storage hook.
+    if (failure === "project touch") await db.projects.update(project.id, {updatedAt: "2000-01-01T00:00:00.000Z"});
     const rowsBefore = await db.shots.bulkGet(shots.map((shot) => shot.id));
     const projectBefore = await db.projects.get(project.id);
-    const failShot = (_changes: unknown, key: unknown) => { if (key === shots[1].id) throw new Error("storage failure"); };
-    const failProject = () => { throw new Error("storage failure"); };
+    let hookReached = false;
+    const failShot = (_changes: unknown, key: unknown) => { if (key === shots[1].id) {hookReached = true; throw new Error("storage failure");} };
+    const failProject = () => { hookReached = true; throw new Error("storage failure"); };
     if (failure === "shot write") db.shots.hook("updating", failShot);
     else db.projects.hook("updating", failProject);
     try {
@@ -277,6 +281,7 @@ describe("episode bulk undo", () => {
       db.shots.hook("updating").unsubscribe(failShot);
       db.projects.hook("updating").unsubscribe(failProject);
     }
+    expect(hookReached).toBe(true);
     expect(await db.shots.bulkGet(shots.map((shot) => shot.id))).toEqual(rowsBefore);
     expect(await db.projects.get(project.id)).toEqual(projectBefore);
     await undoEpisodeShotBulkPatch(undo);

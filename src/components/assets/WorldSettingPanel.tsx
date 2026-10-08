@@ -1,7 +1,7 @@
 import {changedDraftFields} from "@/lib/draftConflict";
 import {useLiveQuery} from "dexie-react-hooks";
 import {db} from "@/db/database";
-import {updateWorldSetting} from "@/db/repo";
+import {updateWorldSetting} from "@/db/projects";
 import {emptySetting, normalizeSetting, type WorldSetting} from "@/domain/types";
 import {DraftStatus} from "@/components/ui/draft-status";
 import {Label} from "@/components/ui/label";

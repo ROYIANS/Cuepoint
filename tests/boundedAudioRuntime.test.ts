@@ -1,6 +1,6 @@
 import {describe, expect, it, vi} from "vitest";
 import {db} from "@/db/database";
-import {createAudioMusicProject} from "@/db/repo";
+import {createAudioMusicProject} from "@/db/projects";
 import {prepareAudioGeneration, refreshAudioGeneration, submitAudioGeneration} from "@/lib/audioGeneration/runtime";
 import {MAX_AUDIO_BYTES, MAX_JSON_BYTES} from "@/lib/resource/limits";
 import type {ConnectorConfig} from "@/domain/types";

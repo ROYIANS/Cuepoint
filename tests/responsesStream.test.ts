@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { streamResponses, toResponseInput } from "@/lib/ai/responsesStream";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
 import { appendToolResults, resolveAgentToolApproval } from "@/db/agentTools";
-import { createChatThread } from "@/db/repo";
+import {createChatThread} from "@/db/chat";
 import { db } from "@/db/database";
 import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
 import { BUILTIN_TOOLS, toolSchemas, type AgentToolDefinition } from "@/lib/agent/tools";

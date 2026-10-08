@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { AudioClipHistory } from "@/lib/audio/commands";
-import { createAudioMusicProject } from "@/db/repo";
+import {createAudioMusicProject} from "@/db/projects";
 import { addAudioClip, addAudioTake, getAudioProjectSnapshot, patchAudioClip } from "@/db/audio";
 import { db } from "@/db/database";
 

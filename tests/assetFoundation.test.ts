@@ -1,13 +1,11 @@
 import JSZip from "jszip";
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
-import {
-  addCharacter, addEpisode, addProp, addScene, addShot, addShots, addStoryBeat, addStyle,
-  copyStudioCharacter, copyStudioProp, copyStudioScene, copyStudioStyle, createProject,
-  deleteEpisode, deleteProp, deleteShots, deleteStyle, duplicateBeat, duplicateShot,
-  patchCharacter, patchEpisodeShots, patchProjectDetails, patchProp, patchScene, patchShot,
-  patchStoryBeat, patchStyle, restoreEpisode, restoreShots, setShotSlot,
-} from "@/db/repo";
+import {addCharacter, addProp, addScene, addStyle, deleteProp, deleteStyle, patchCharacter, patchProp, patchScene, patchStyle} from "@/db/assets";
+import {addEpisode, addStoryBeat, deleteEpisode, duplicateBeat, patchStoryBeat, restoreEpisode} from "@/db/episodes";
+import {addShot, addShots, deleteShots, duplicateShot, patchEpisodeShots, patchShot, restoreShots, setShotSlot} from "@/db/shots";
+import {copyStudioCharacter, copyStudioProp, copyStudioScene, copyStudioStyle} from "@/db/assetReuse";
+import {createProject, patchProjectDetails} from "@/db/projects";
 import { defaultImageGeneration, defaultVideoGeneration } from "@/domain/output";
 import { PACKAGE_FORMAT, STUDIO_LIBRARY_ID } from "@/domain/types";
 import { emptySlot } from "@/domain/slot";

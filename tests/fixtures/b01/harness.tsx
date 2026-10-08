@@ -3,7 +3,10 @@ import {useState} from "react";
 import {createRootRoute, createRoute, createRouter, createBrowserHistory, Outlet, RouterProvider} from "@tanstack/react-router";
 import {Toaster} from "sonner";
 import {db} from "@/db/database";
-import * as repo from "@/db/repo";
+import * as repoProjects from "@/db/projects";
+import * as repoEpisodes from "@/db/episodes";
+import * as repoShots from "@/db/shots";
+import * as repoAssets from "@/db/assets";
 import {createFileMaterial} from "@/db/materials";
 import {Route as ProjectRoute} from "@/routes/p.$projectId";
 import {Route as HomeRoute} from "@/routes/p.$projectId.index";
@@ -86,17 +89,17 @@ const routeTree = root.addChildren([project.addChildren([home, world, episode.ad
 window.history.replaceState(null, "", "/away");
 const router = createRouter({routeTree, history: createBrowserHistory()});
 await db.open();
-const a = await repo.createProject("Project A", "series");
-const b = await repo.createProject("Project B", "series");
-const film = await repo.createProject("Film", "film");
-const ea = (await repo.firstEpisode(a.id))!;
-const eb = await repo.addEpisode(a.id);
-await repo.updateEpisode(ea.id, {title: "Episode A"});
-await repo.updateEpisode(eb.id, {title: "Episode B"});
-const sa = await repo.addShot(a.id, ea.id);
-const sb = await repo.addShot(a.id, eb.id);
+const a = await repoProjects.createProject("Project A", "series");
+const b = await repoProjects.createProject("Project B", "series");
+const film = await repoProjects.createProject("Film", "film");
+const ea = (await repoEpisodes.firstEpisode(a.id))!;
+const eb = await repoEpisodes.addEpisode(a.id);
+await repoEpisodes.updateEpisode(ea.id, {title: "Episode A"});
+await repoEpisodes.updateEpisode(eb.id, {title: "Episode B"});
+const sa = await repoShots.addShot(a.id, ea.id);
+const sb = await repoShots.addShot(a.id, eb.id);
 const rows: Record<string, Array<{id: string}>> = {};
-for (const [kind, add] of [["character", repo.addCharacter], ["scene", repo.addScene], ["prop", repo.addProp], ["style", repo.addStyle]] as const) {
+for (const [kind, add] of [["character", repoAssets.addCharacter], ["scene", repoAssets.addScene], ["prop", repoAssets.addProp], ["style", repoAssets.addStyle]] as const) {
     rows[kind] = [await add(a.id), await add(a.id)];
 }
 const mc = await createFileMaterial(new File(["c"], "C.txt", {type: "text/plain"}), {kind: "global"}, "Material C");
@@ -108,7 +111,7 @@ materialInitial = ma.id;
 // saves, media cleanup, live queries, UI, ReactDOM and router remain real.
 const media = {file: new File(["owned upload"], "upload.png", {type: "image/png"}), fail: false, picked: 0, uploads: [] as File[]};
 const control = {
-    router, db, repo, ids: {a: a.id, b: b.id, film: film.id, ea: ea.id, eb: eb.id, sa: sa.id, sb: sb.id, rows, ma: ma.id, mb: mb.id, mc: mc.id},
+    router, db, projects: repoProjects, assets: repoAssets, ids: {a: a.id, b: b.id, film: film.id, ea: ea.id, eb: eb.id, sa: sa.id, sb: sb.id, rows, ma: ma.id, mb: mb.id, mc: mc.id},
     hold, release, media,
     wait: (key: string) => gates.get(key)?.promise,
     failures: new Set<string>(),

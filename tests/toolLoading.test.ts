@@ -4,7 +4,7 @@ import { toResponseInput } from "@/lib/ai/responsesStream";
 import { filterProjectMemoryTools } from "@/lib/agent/memoryToolNames";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
-import { createChatThread } from "@/db/repo";
+import {createChatThread} from "@/db/chat";
 import { beginAgentRun } from "@/db/agentRuns";
 import { resolveAgentToolApproval, saveToolRound, startModelStep } from "@/db/agentTools";
 import { updateGeneralAgentConfig } from "@/db/agentSettings";

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { db } from "@/db/database";
 import { beginAgentRun } from "@/db/agentRuns";
 import { updateGeneralAgentConfig } from "@/db/agentSettings";
-import { createChatThread } from "@/db/repo";
+import {createChatThread} from "@/db/chat";
 import { BUILTIN_TOOLS, toolSchemas, validateToolCall } from "@/lib/agent/tools";
 import { executeChatRun } from "@/lib/agent/runChat";
 import { ToolValidationError, readToolValidationFailure } from "@/lib/agent/toolErrors";

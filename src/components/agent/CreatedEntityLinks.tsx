@@ -5,7 +5,7 @@ import {useRef, useState} from "react";
 import {useLiveQuery} from "dexie-react-hooks";
 import {toast} from "sonner";
 import {Button} from "@/components/ui/button";
-import {createChatThread} from "@/db/repo";
+import {createChatThread} from "@/db/chat";
 import {db} from "@/db/database";
 
 function ProjectConversationButton({projectId, sourceThreadId}: { projectId: string; sourceThreadId: string }) {

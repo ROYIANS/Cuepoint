@@ -1,7 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import Dexie from 'dexie';
 import { db } from '@/db/database';
-import { createProject, deleteProject, collectMediaIds, deleteMediaIfOrphan, setProjectArchived, releaseMaterialUse, patchProjectOutput } from '@/db/repo';
+import {createProject, patchProjectOutput} from "@/db/projects";
+import {deleteProject, setProjectArchived} from "@/db/cascadeCommands";
+import {collectMediaIds, deleteMediaIfOrphan} from "@/db/media";
+import {releaseMaterialUse} from "@/db/assetReuse";
 import { createIpProfile, bindProjectIp, setIpArchived } from '@/db/ipProfiles';
 import { createFileMaterial, useMaterialInProject, promoteMaterial } from '@/db/materials';
 import { exportProjectZip, importProjectZip } from '@/lib/projectPackage';

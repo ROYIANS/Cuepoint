@@ -1,9 +1,11 @@
+import type {TypedToolDefinition} from './toolDefinition';
+import {defineTool} from './toolDefinition';
 import {db} from '@/db/database';
 import {AtomicToolRollbackError, executeAtomicTool} from '@/db/agentTools';
 import {flushPendingDrafts} from '@/lib/debouncedDraft';
 import {targetRevision} from '@/lib/productionRevision';
 import type {AgentToolPreview} from '@/domain/agent';
-import type {AgentToolContext, AgentToolDefinition} from './tools';
+import type {AgentToolContext} from './tools';
 import type {Spec} from './businessSchemas';
 import {frozenProjectScope} from './projectScope';
 import type {WriteReceipt} from './writeReceipt';
@@ -14,21 +16,23 @@ export interface LibraryPreviewState {
     changes: string[]
 }
 
-interface LibraryToolOptions<T> {
-    name: string;
+interface LibraryToolOptions<T, Name extends string> {
+    name: Name;
     title: string;
     description: string;
     spec: Spec<T>;
-    scope?: (args: T, context: AgentToolContext) => Promise<void>;
-    execute: (args: T, context: AgentToolContext) => Promise<unknown>;
+    scope?: (args: NoInfer<T>, context: AgentToolContext) => Promise<void>;
+    execute: (args: NoInfer<T>, context: AgentToolContext) => Promise<unknown>;
 }
 
 /** Only local database reads belong in this callback; parsing file bytes runs separately. */
-export function libraryReadTool<T>(options: LibraryToolOptions<T>): AgentToolDefinition {
-    return {
-        name: options.name, title: options.title, description: options.description,
-        effect: 'read', parameters: options.spec.json, highRisk: () => false,
-        parseArguments: raw => options.spec.schema.parse(raw),
+export function libraryReadTool<T, const Name extends string>(options: LibraryToolOptions<T, Name>): TypedToolDefinition<T, Name> {
+    return defineTool(options.spec, {
+        name: options.name,
+        title: options.title,
+        description: options.description,
+        effect: 'read',
+        highRisk: () => false,
         async execute(raw, context) {
             context.signal.throwIfAborted();
             return db.transaction('r', db.tables, async () => {
@@ -37,30 +41,30 @@ export function libraryReadTool<T>(options: LibraryToolOptions<T>): AgentToolDef
                 await options.scope?.(args, context);
                 return options.execute(args, context);
             });
-        },
-    };
+        }
+    });
 }
 
 /** Shared IP/library writes retain the same immutable-preview and atomic-ledger contract as business tools. */
-export function libraryWriteTool<T>(options: LibraryToolOptions<T> & {
-    prepare: (args: T, context: AgentToolContext) => Promise<LibraryPreviewState>;
-    owners?: (args: T) => string[] | Promise<string[]>;
+export function libraryWriteTool<T, const Name extends string>(options: LibraryToolOptions<T, Name> & {
+    prepare: (args: NoInfer<T>, context: AgentToolContext) => Promise<LibraryPreviewState>;
+    owners?: (args: NoInfer<T>) => string[] | Promise<string[]>;
     highRisk?: boolean;
     requiresConfirmation?: boolean;
-    receipt?: (args: T, result: unknown) => WriteReceipt;
-}): AgentToolDefinition {
-    async function check(args: T, context: AgentToolContext) {
+    receipt?: (args: NoInfer<T>, result: unknown) => WriteReceipt;
+}): TypedToolDefinition<T, Name> {
+    async function check(args: NoInfer<T>, context: AgentToolContext) {
         context.signal.throwIfAborted();
         await frozenProjectScope(context);
         await options.scope?.(args, context);
     }
 
-    async function flush(args: T, context: AgentToolContext) {
+    async function flush(args: NoInfer<T>, context: AgentToolContext) {
         for (const owner of new Set(await options.owners?.(args) ?? [])) await flushPendingDrafts(owner);
         context.signal.throwIfAborted();
     }
 
-    async function preview(args: T, context: AgentToolContext): Promise<AgentToolPreview> {
+    async function preview(args: NoInfer<T>, context: AgentToolContext): Promise<AgentToolPreview> {
         await check(args, context);
         const info = await options.prepare(args, context);
         return {
@@ -69,11 +73,14 @@ export function libraryWriteTool<T>(options: LibraryToolOptions<T> & {
         };
     }
 
-    return {
-        name: options.name, title: options.title, description: options.description,
-        effect: 'write', atomic: true, parameters: options.spec.json,
-        highRisk: () => options.highRisk ?? false, requiresConfirmation: options.requiresConfirmation,
-        parseArguments: raw => options.spec.schema.parse(raw),
+    return defineTool(options.spec, {
+        name: options.name,
+        title: options.title,
+        description: options.description,
+        effect: 'write',
+        atomic: true,
+        highRisk: () => options.highRisk ?? false,
+        requiresConfirmation: options.requiresConfirmation,
         async prepare(raw, context) {
             const args = options.spec.schema.parse(raw);
             await check(args, context);
@@ -96,6 +103,6 @@ export function libraryWriteTool<T>(options: LibraryToolOptions<T> & {
                 if (!result || typeof result !== 'object' || Array.isArray(result)) throw new Error('写入记录需要对象结果');
                 return {...result, writeReceipt: options.receipt(args, result)};
             });
-        },
-    };
+        }
+    });
 }

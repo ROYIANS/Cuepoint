@@ -1,6 +1,6 @@
 import {createFileRoute, Outlet, useNavigate} from "@tanstack/react-router";
 import {StudioShell} from "@/components/studio/StudioShell";
-import {importStudioProject} from "@/components/studio/ProjectGalleryPage";
+import {importStudioProject} from "@/components/studio/importStudioProject";
 import {pickZipFile} from "@/lib/library";
 
 export const Route = createFileRoute("/_studio")({

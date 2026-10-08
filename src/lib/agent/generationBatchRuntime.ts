@@ -1,4 +1,4 @@
-import {resolveConnector} from "@/db/repo";
+import {resolveConnector} from "@/db/connectors";
 import {db} from '@/db/database';
 import {
     assertBatchDispatch,

@@ -1,9 +1,11 @@
+import {registeredTools} from "./helpers/registeredTools";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
 import { resolveAgentToolApproval } from "@/db/agentTools";
-import { createChatThread, createProject } from "@/db/repo";
-import { BUSINESS_TOOLS } from "@/lib/agent/businessTools";
+import {createChatThread} from "@/db/chat";
+import {createProject} from "@/db/projects";
+import { BUSINESS_TOOLS as BUSINESS_TOOLS_DEFINITIONS } from "@/lib/agent/businessTools";
 import { BUILTIN_TOOLS } from "@/lib/agent/tools";
 import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
 import { assembleSkills } from "@/lib/agent/skills";
@@ -13,6 +15,8 @@ import { targetRevision } from "@/lib/productionRevision";
 import type { AgentRun, AgentToolCall, AgentWireToolCall } from "@/domain/agent";
 import type { AgentToolContext } from "@/lib/agent/tools";
 import type { ConnectorConfig } from "@/domain/types";
+const BUSINESS_TOOLS = registeredTools(BUSINESS_TOOLS_DEFINITIONS);
+
 
 const connector: ConnectorConfig = { id: "local-test", definitionId: "openai-compatible", baseUrl: "https://test.invalid/v1", apiKey: "not-real", updatedAt: "2026-09-22" };
 const create = BUSINESS_TOOLS.find(tool => tool.name === "project_create")!;

@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
-import { addShot, createProject, patchProjectDetails, patchShot, putMedia } from "@/db/repo";
+import {addShot, patchShot} from "@/db/shots";
+import {createProject, patchProjectDetails} from "@/db/projects";
+import {putMedia} from "@/db/media";
 import { defaultImageGeneration, defaultVideoGeneration } from "@/domain/output";
 import { buildProductionContext } from "@/lib/productionContext";
 import { generationIntentToProposalInput, prepareGenerationIntent, transitionGenerationIntent, validateGenerationIntent } from "@/lib/generationIntent";

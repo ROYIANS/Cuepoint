@@ -1,17 +1,25 @@
+import {registeredTools} from "./helpers/registeredTools";
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { beginAgentRun } from "@/db/agentRuns";
 import {  transitionToolCall } from "@/db/agentTools";
-import { addCharacter, addShot, createChatThread, createProject, deleteChatThread, deleteMediaIfOrphan, deleteProject, patchShot, putMedia } from "@/db/repo";
+import {addCharacter} from "@/db/assets";
+import {addShot, patchShot} from "@/db/shots";
+import {createChatThread} from "@/db/chat";
+import {createProject} from "@/db/projects";
+import {deleteChatThread, deleteProject} from "@/db/cascadeCommands";
+import {deleteMediaIfOrphan, putMedia} from "@/db/media";
 import { updateGenerationJob } from "@/db/agentGeneration";
 import type { ConnectorConfig } from "@/domain/types";
 import { applyAgentGeneration, checkAgentGeneration, GenerationPendingError, monitorAgentGeneration, prepareAgentGeneration, submitAgentGeneration } from "@/lib/agent/generationRuntime";
 import { generationSubmitSchema, profileRequest, type GenerationSubmitArgs } from "@/lib/agent/generationProfiles";
 import type { AgentToolContext } from "@/lib/agent/tools";
-import { GENERATION_TOOLS } from "@/lib/agent/generationTools";
+import { GENERATION_TOOLS as GENERATION_TOOLS_DEFINITIONS } from "@/lib/agent/generationTools";
 import { exportProjectZip } from "@/lib/projectPackage";
 import JSZip from "jszip";
+const GENERATION_TOOLS = registeredTools(GENERATION_TOOLS_DEFINITIONS);
+
 
 const png=Uint8Array.from(atob("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jFZkAAAAASUVORK5CYII="),(char)=>char.charCodeAt(0));
 const referencePng=Uint8Array.from(atob("iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAIAAADTED8xAAAA1UlEQVR4nO3BMQEAAADCoPVP7WULoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAGwEtAAHMpTgHAAAAAElFTkSuQmCC"),(char)=>char.charCodeAt(0));

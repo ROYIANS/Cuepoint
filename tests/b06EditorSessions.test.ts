@@ -48,12 +48,15 @@ vi.mock("react", async original => {
 vi.mock("dexie-react-hooks", () => ({useLiveQuery: () => {
     const host = runtime.active!; return host.results[host.queryIndex++];
 }}));
+vi.mock("@tanstack/react-router", () => ({useBlocker: () => ({status: "idle"})}));
 vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
 vi.mock("@/lib/undo", () => ({useUndo: () => ({registerUndo: vi.fn()})}));
 
 import {toast} from "sonner";
 import {db} from "@/db/database";
-import * as repo from "@/db/repo";
+import * as repoProjects from "@/db/projects";
+import * as repoEpisodes from "@/db/episodes";
+import * as repoConnectors from "@/db/connectors";
 import * as connectors from "@/lib/ai/connectors";
 import {ConnectorsPage} from "@/components/studio/ConnectorsPage";
 import {StoryPage} from "@/components/story/StoryPage";
@@ -104,12 +107,14 @@ function connectorUI(configs: unknown[] = []) {
     return {host, render, open, close, cards};
 }
 async function storyUI() {
-    const project = await repo.createProject("B06");
-    const episode = (await repo.listEpisodes(project.id))[0];
-    await repo.updateEpisodeDraft(episode.id, {script: "original", title: "title", logline: "logline"});
+    const project = await repoProjects.createProject("B06");
+    const episode = (await repoEpisodes.listEpisodes(project.id))[0];
+    await repoEpisodes.updateEpisodeDraft(episode.id, {script: "original", title: "title", logline: "logline"});
     let current = (await db.episodes.get(episode.id))!;
     const pageHost = mount([project, current, [], []]);
-    const element = draw(pageHost, () => StoryPage({projectId: project.id, episodeId: episode.id}))[0];
+    const scope = StoryPage({projectId: project.id, episodeId: episode.id});
+    const element = draw(pageHost, () => (scope.type as (props: unknown) => unknown)(scope.props))
+        .find(node => typeof node.type === "function" && node.type.name === "StoryEditor")!;
     const host = mount();
     const render = () => draw(host, () => (element.type as (props: unknown) => unknown)({...element.props, episode: current}));
     const script = () => render().find(node => node.type === Textarea)!;
@@ -258,7 +263,7 @@ describe("B06 connector operation ownership", () => {
         const gate = deferred<Listed>();
         const list = vi.spyOn(connectors, "listConnectorModels").mockReturnValueOnce(gate.promise);
         const test = vi.spyOn(connectors, "testConnectorConnection");
-        const save = vi.spyOn(repo, "upsertConnector");
+        const save = vi.spyOn(repoConnectors, "upsertConnector");
         const ui = connectorUI(); const tree = ui.open();
         change(credentialInputs(tree)[0], "https://immediate.example/v1");
         change(credentialInputs(tree)[1], " immediate-key ");
@@ -287,7 +292,7 @@ describe("B06 connector operation ownership", () => {
     });
 
     it("keeps one current test/nested list and saved-key fallback", async () => {
-        const config = await repo.upsertConnector({definitionId: "openai-compatible", protocol: "openai-compatible", baseUrl: "https://saved.example/v1", apiKey: "saved-key", label: "saved"});
+        const config = await repoConnectors.upsertConnector({definitionId: "openai-compatible", protocol: "openai-compatible", baseUrl: "https://saved.example/v1", apiKey: "saved-key", label: "saved"});
         const a = deferred<Tested>(); const listed = deferred<Listed>();
         const test = vi.spyOn(connectors, "testConnectorConnection").mockReturnValueOnce(a.promise);
         const list = vi.spyOn(connectors, "listConnectorModels").mockReturnValueOnce(listed.promise);
@@ -304,11 +309,11 @@ describe("B06 connector operation ownership", () => {
     });
 
     it.each(["save", "disconnect"] as const)("synchronously serializes %s and locks dismissal/open/inputs/direct callbacks", async kind => {
-        const config = await repo.upsertConnector({definitionId: "openai-compatible", protocol: "openai-compatible", baseUrl: "https://saved.example/v1", apiKey: "saved-key", label: "saved"});
+        const config = await repoConnectors.upsertConnector({definitionId: "openai-compatible", protocol: "openai-compatible", baseUrl: "https://saved.example/v1", apiKey: "saved-key", label: "saved"});
         const gate = deferred<void>();
-        const actualSave = repo.upsertConnector; const actualDelete = repo.deleteConnector;
-        const save = vi.spyOn(repo, "upsertConnector").mockImplementation(async input => {await gate.promise; return actualSave(input);});
-        const remove = vi.spyOn(repo, "deleteConnector").mockImplementation(async id => {await gate.promise; return actualDelete(id);});
+        const actualSave = repoConnectors.upsertConnector; const actualDelete = repoConnectors.deleteConnector;
+        const save = vi.spyOn(repoConnectors, "upsertConnector").mockImplementation(async input => {await gate.promise; return actualSave(input);});
+        const remove = vi.spyOn(repoConnectors, "deleteConnector").mockImplementation(async id => {await gate.promise; return actualDelete(id);});
         const probe = vi.spyOn(connectors, "listConnectorModels"); const test = vi.spyOn(connectors, "testConnectorConnection");
         const ui = connectorUI([config]); let tree = ui.open();
         change(credentialInputs(tree)[0], "https://frozen.example/v1"); change(credentialInputs(tree)[1], "frozen-key"); tree = ui.render();
@@ -340,12 +345,12 @@ describe("B06 connector operation ownership", () => {
     });
 
     it.each(["probe", "test", "save", "disconnect"] as const)("redacts current %s failure and unlocks for retry", async kind => {
-        const config = await repo.upsertConnector({definitionId: "openai-compatible", protocol: "openai-compatible", baseUrl: "https://saved.example/v1", apiKey: "private-key", label: "saved"});
+        const config = await repoConnectors.upsertConnector({definitionId: "openai-compatible", protocol: "openai-compatible", baseUrl: "https://saved.example/v1", apiKey: "private-key", label: "saved"});
         const gate = deferred<never>();
         const list = vi.spyOn(connectors, "listConnectorModels").mockReturnValueOnce(gate.promise).mockResolvedValue({ok: true, models: []});
         const test = vi.spyOn(connectors, "testConnectorConnection").mockReturnValueOnce(gate.promise).mockResolvedValue({ok: true, via: "authenticated-read"});
-        const save = vi.spyOn(repo, "upsertConnector").mockReturnValueOnce(gate.promise).mockResolvedValue(config);
-        const remove = vi.spyOn(repo, "deleteConnector").mockReturnValueOnce(gate.promise).mockResolvedValue(undefined);
+        const save = vi.spyOn(repoConnectors, "upsertConnector").mockReturnValueOnce(gate.promise).mockResolvedValue(config);
+        const remove = vi.spyOn(repoConnectors, "deleteConnector").mockReturnValueOnce(gate.promise).mockResolvedValue(undefined);
         const ui = connectorUI([config]); const label = {probe: "拉取模型探活", test: "测试连接", save: "保存", disconnect: "断开"}[kind];
         click(button(ui.open(), label)); gate.reject(new Error("private-key Bearer hidden-token " + "x".repeat(400))); await settle();
         const error = vi.mocked(toast.error).mock.calls[0][0] as string;
@@ -356,12 +361,12 @@ describe("B06 connector operation ownership", () => {
     });
 
     it.each(["probe-success", "probe-failure", "test-success", "test-failure", "save-success", "save-failure", "disconnect-success", "disconnect-failure"] as const)("ignores %s completion and captured callbacks after unmount", async caseName => {
-        const config = await repo.upsertConnector({definitionId: "openai-compatible", protocol: "openai-compatible", baseUrl: "https://saved.example/v1", apiKey: "private-key", label: "saved"});
+        const config = await repoConnectors.upsertConnector({definitionId: "openai-compatible", protocol: "openai-compatible", baseUrl: "https://saved.example/v1", apiKey: "private-key", label: "saved"});
         const gate = deferred<unknown>();
         const list = vi.spyOn(connectors, "listConnectorModels").mockReturnValueOnce(gate.promise as Promise<Listed>);
         const test = vi.spyOn(connectors, "testConnectorConnection").mockReturnValueOnce(gate.promise as Promise<Tested>);
-        const save = vi.spyOn(repo, "upsertConnector").mockReturnValueOnce(gate.promise as ReturnType<typeof repo.upsertConnector>);
-        const remove = vi.spyOn(repo, "deleteConnector").mockReturnValueOnce(gate.promise as Promise<void>);
+        const save = vi.spyOn(repoConnectors, "upsertConnector").mockReturnValueOnce(gate.promise as ReturnType<typeof repoConnectors.upsertConnector>);
+        const remove = vi.spyOn(repoConnectors, "deleteConnector").mockReturnValueOnce(gate.promise as Promise<void>);
         const ui = connectorUI([config]); const tree = ui.open();
         const kind = caseName.split("-")[0]; const label = {probe: "拉取模型探活", test: "测试连接", save: "保存", disconnect: "断开"}[kind]!;
         click(button(tree, label)); unmount(ui.host);
@@ -386,7 +391,7 @@ describe("B06 connector operation ownership", () => {
     it("supports effect setup-cleanup-setup replay then exactly one write", async () => {
         const ui = connectorUI(); ui.render(); replay(ui.host);
         let tree = ui.open(); change(credentialInputs(tree)[1], "replay-key"); tree = ui.render();
-        const save = vi.spyOn(repo, "upsertConnector"); click(button(tree, "保存")); click(button(tree, "保存"));
+        const save = vi.spyOn(repoConnectors, "upsertConnector"); click(button(tree, "保存")); click(button(tree, "保存"));
         await Promise.allSettled(save.mock.results.map(result => result.value)); await settle();
         expect(save).toHaveBeenCalledTimes(1); expect(toast.success).toHaveBeenCalledWith("已保存连接");
         expect(dialogOpen(ui.render())).toBe(false);
@@ -469,7 +474,7 @@ describe("B06 actual StoryEditor File.text ownership", () => {
 
     it.each(["resolve", "reject"] as const)("invalidates pending import on useLatest before %s", async outcome => {
         const ui = await storyUI(); const gate = deferred<string>(); ui.drop(scriptFile(gate)); change(ui.script(), "dirty");
-        await repo.updateEpisodeDraft(ui.episode.id, {script: "remote-latest"});
+        await repoEpisodes.updateEpisodeDraft(ui.episode.id, {script: "remote-latest"});
         ui.external((await db.episodes.get(ui.episode.id))!); await conflictStory(ui); latest(ui.render());
         expect(ui.script().props.value).toBe("remote-latest");
         if (outcome === "resolve") gate.resolve("stale-import"); else gate.reject(new Error("stale-read"));
@@ -480,7 +485,7 @@ describe("B06 actual StoryEditor File.text ownership", () => {
     it("useLatest invalidates a visible candidate and captured adoption callback", async () => {
         const ui = await storyUI(); const gate = deferred<string>(); ui.drop(scriptFile(gate)); change(ui.script(), "dirty");
         gate.resolve("candidate"); await settle(); const oldAdopt = button(ui.render(), "采用导入正文");
-        await repo.updateEpisodeDraft(ui.episode.id, {script: "remote-latest"}); ui.external((await db.episodes.get(ui.episode.id))!);
+        await repoEpisodes.updateEpisodeDraft(ui.episode.id, {script: "remote-latest"}); ui.external((await db.episodes.get(ui.episode.id))!);
         await conflictStory(ui); latest(ui.render()); click(oldAdopt);
         expect(ui.script().props.value).toBe("remote-latest"); expect(button(ui.render(), "采用导入正文")).toBeUndefined();
         await persistStory(ui);
@@ -520,7 +525,7 @@ describe("B06 actual StoryEditor File.text ownership", () => {
 
     it.each(["adopt", "discard"] as const)("real debounce saves local text and only explicit %s controls imported persistence", async decision => {
         const ui = await storyUI(); const gate = deferred<string>();
-        const writes = vi.spyOn(repo, "updateEpisodeDraft");
+        const writes = vi.spyOn(repoEpisodes, "updateEpisodeDraft");
         // Control only timeout/Date. IndexedDB scheduling remains real, and no
         // Retry/flush callback is invoked: the production 400ms debounce writes.
         vi.useFakeTimers({toFake: ["setTimeout", "clearTimeout", "Date"]});

@@ -28,10 +28,11 @@ import {
 } from "@/components/ui/dialog";
 import {Input} from "@/components/ui/input";
 import {db} from "@/db/database";
-import {createAudioMusicProject, createProject, deleteProject, renameProject, setProjectArchived} from "@/db/repo";
+import {createAudioMusicProject, createProject, renameProject} from "@/db/projects";
+import {deleteProject, setProjectArchived} from "@/db/cascadeCommands";
 import {formatUpdatedAt} from "@/lib/format";
 import {filterAndSortLibrary, type LibrarySort} from "@/lib/library";
-import {downloadBlob, exportProjectZip, importProjectZip, PackageError,} from "@/lib/projectPackage";
+import {downloadBlob, exportProjectZip,} from "@/lib/projectPackage";
 import {
     ASPECT_PRESET_IDS,
     ASPECT_PRESETS,
@@ -404,13 +405,4 @@ export function ProjectGalleryPage() {
             </AlertDialog>
         </div>
     );
-}
-
-export async function importStudioProject(file: File) {
-    try {
-        return await importProjectZip(file);
-    } catch (err) {
-        toast.error(err instanceof PackageError ? err.message : "导入失败");
-        return undefined;
-    }
 }

@@ -1,7 +1,7 @@
 import {db} from '@/db/database';
 import {bindProjectIp, createIpProfile, setIpArchived, updateIpProfile} from '@/db/ipProfiles';
 import type {IpProfile, IpProfileInput} from '@/domain/materials';
-import type {AgentToolContext, AgentToolDefinition} from './tools';
+import type {AgentToolContext} from './tools';
 import * as s from './businessSchemas';
 import {libraryReadTool, libraryWriteTool} from './libraryToolHelpers';
 import {frozenProjectScope} from './projectScope';
@@ -67,7 +67,7 @@ async function bindingProject(projectId: string, context: AgentToolContext) {
     return project;
 }
 
-export const IP_TOOLS: readonly AgentToolDefinition[] = [
+export const IP_TOOLS = [
     libraryReadTool({
         name: 'ip_search',
         title: '查找 IP',

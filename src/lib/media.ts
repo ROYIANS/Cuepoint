@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {useLiveQuery} from "dexie-react-hooks";
 import {db} from "@/db/database";
-import {putMedia} from "@/db/repo";
+import {putMedia} from "@/db/media";
 import {kindFromMime} from "@/domain/slot";
 import type {Id, MediaKind, MediaRecord} from "@/domain/types";
 import {createId} from "./ids";

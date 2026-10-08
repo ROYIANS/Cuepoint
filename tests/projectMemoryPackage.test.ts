@@ -2,7 +2,7 @@ import Dexie from "dexie";
 import JSZip from "jszip";
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
-import { createProject } from "@/db/repo";
+import {createProject} from "@/db/projects";
 import {
   createProjectMemory,
   MemoryConflictError,

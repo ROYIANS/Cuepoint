@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 import { DraftMediaSession } from "@/lib/draftMedia";
-import { deleteMediaIfOrphan, putMedia, createProject, addCharacter, setCharacterSlot } from "@/db/repo";
+import {deleteMediaIfOrphan, putMedia} from "@/db/media";
+import {createProject} from "@/db/projects";
+import {addCharacter, setCharacterSlot} from "@/db/assets";
 import { db } from "@/db/database";
 import { emptySlot } from "@/domain/slot";
 

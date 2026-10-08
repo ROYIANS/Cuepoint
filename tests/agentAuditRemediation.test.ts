@@ -1,5 +1,6 @@
+import {registeredTools} from "./helpers/registeredTools";
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
-import { BUSINESS_TOOLS } from "@/lib/agent/businessTools";
+import { BUSINESS_TOOLS as BUSINESS_TOOLS_DEFINITIONS } from "@/lib/agent/businessTools";
 import { recoverAbandonedRuns } from "@/lib/agent/runOwnership";
 import { describe, expect, it, vi } from 'vitest';
 import { db } from '@/db/database';
@@ -7,15 +8,21 @@ import { beginAgentRun, finishAgentRun, interruptThreadRuns } from '@/db/agentRu
 import { createAgentTaskForThread } from '@/db/agentTasks';
 import {  transitionToolCall, updateRunPlanAndComplete, AtomicToolRollbackError } from '@/db/agentTools';
 import { getReferenceSource, removeProjectReference } from '@/db/references';
-import { addCharacter, createChatThread, createProject, putMedia } from '@/db/repo';
+import {addCharacter} from "@/db/assets";
+import {createChatThread} from "@/db/chat";
+import {createProject} from "@/db/projects";
+import {putMedia} from "@/db/media";
 import type { ConnectorConfig } from '@/domain/types';
 import { BUILTIN_TOOLS, type AgentToolContext } from '@/lib/agent/tools';
 import { prepareAgentGeneration, submitAgentGeneration } from '@/lib/agent/generationRuntime';
 import type { GenerationSubmitArgs } from '@/lib/agent/generationProfiles';
-import { REFERENCE_TOOLS } from '@/lib/agent/referenceTools';
+import { REFERENCE_TOOLS as REFERENCE_TOOLS_DEFINITIONS } from '@/lib/agent/referenceTools';
 import { executeChatRun, resumeChatRun } from '@/lib/agent/runChat';
 import { getProjectContext, refreshRunProjectContext } from '@/lib/agent/projectContext';
 import { listModels, testConnection } from '@/lib/ai/openaiCompatible';
+const BUSINESS_TOOLS = registeredTools(BUSINESS_TOOLS_DEFINITIONS);
+const REFERENCE_TOOLS = registeredTools(REFERENCE_TOOLS_DEFINITIONS);
+
 
 const chat: ConnectorConfig = { id: 'audit-chat', definitionId: 'openai-compatible', baseUrl: 'https://audit.test/v1', apiKey: 'audit-secret-only', updatedAt: '2026-09-21' };
 async function claim(runId: string, threadId: string, name: string, args: unknown): Promise<AgentToolContext> {

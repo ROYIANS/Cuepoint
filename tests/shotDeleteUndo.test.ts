@@ -1,10 +1,11 @@
 import Dexie, { type Transaction } from "dexie";
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
-import {
-  PRODUCTION_TABLES, addEpisode, addShot, createProject, deleteEpisodeShots,
-  patchShot, putMedia, restoreShots, setShotSlot,
-} from "@/db/repo";
+import {PRODUCTION_TABLES} from "@/db/productionShared";
+import {addEpisode} from "@/db/episodes";
+import {addShot, deleteEpisodeShots, patchShot, restoreShots, setShotSlot} from "@/db/shots";
+import {createProject} from "@/db/projects";
+import {putMedia} from "@/db/media";
 import { emptySlot } from "@/domain/slot";
 import type { MediaRecord, Shot } from "@/domain/types";
 

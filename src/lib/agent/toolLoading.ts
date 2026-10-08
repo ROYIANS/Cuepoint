@@ -1,3 +1,5 @@
+import {defineTool} from './toolDefinition';
+import {DISCOVERY_TOOL_NAME, MAX_LOADED_TOOLS, toolNamesForCall} from "@/domain/agentToolSelection";
 import {z} from "zod";
 import {db} from "@/db/database";
 import {executeAtomicTool} from "@/db/agentTools";
@@ -5,10 +7,9 @@ import type {AgentRun, AgentToolCall, AgentToolLoading} from "@/domain/agent";
 import {toResponseInput} from "@/lib/ai/responsesStream";
 import {AGENT_SKILLS, SMART_EXECUTION_INSTRUCTIONS} from "./skills";
 import type {ProjectKind} from "@/domain/types";
-import type {AgentToolDefinition} from "./tools";
 
-export const DISCOVERY_TOOL_NAME = "load_tool_groups";
-export const MAX_LOADED_TOOLS = 36;
+export {DISCOVERY_TOOL_NAME, MAX_LOADED_TOOLS, getOfferedToolNames, toolNamesForCall} from "@/domain/agentToolSelection";
+
 const settled = (call: AgentToolCall) => ["completed", "failed", "rejected"].includes(call.status);
 const foundation = (name: string) => name === "workspace_overview" || name === "update_run_plan" || name.startsWith("task_");
 
@@ -34,19 +35,6 @@ export function createToolLoading(skillIds: readonly string[], allowedNames: rea
     };
 }
 
-export function getOfferedToolNames(run: Pick<AgentRun, "enabledToolNames" | "toolLoading" | "interactionMode">): string[] {
-    if (run.interactionMode === "conversation") return [];
-    if (!run.toolLoading) return run.enabledToolNames ?? [];
-    const allowed = run.enabledToolNames ?? [];
-    return [...new Set([...run.toolLoading.foundationToolNames, ...run.toolLoading.loadedToolNames])].filter((name) => allowed.includes(name));
-}
-
-/** A call must have been offered in its own request, not merely loaded later. */
-export function toolNamesForCall(run: AgentRun, step: number): string[] {
-    if (!run.toolLoading) return run.enabledToolNames ?? [];
-    return (run.offeredTools?.find((offer) => offer.step === step)?.names ?? []).filter((name) => run.enabledToolNames?.includes(name));
-}
-
 export function toolLoadingInstructions(state: AgentToolLoading): string {
     return [
         SMART_EXECUTION_INSTRUCTIONS,
@@ -61,11 +49,7 @@ const loadingSchema = z.object({
     groupIds: z.array(z.string().min(1).max(80)).max(2),
     query: z.string().trim().max(100).optional()
 }).strict();
-export const DISCOVERY_TOOLS: readonly AgentToolDefinition[] = [{
-    name: DISCOVERY_TOOL_NAME,
-    title: "加载创作工具",
-    description: "按能力目录加载最多两组已授权工具，替换之前的业务组；同次执行的下一次模型请求获得完整定义，无需用户再次发送消息。groupIds=[] 时仅按 query 查询目录，不执行业务。",
-    parameters: {
+export const DISCOVERY_TOOLS = [defineTool({schema: loadingSchema, json: {
         type: "object",
         additionalProperties: false,
         required: ["groupIds"],
@@ -73,12 +57,14 @@ export const DISCOVERY_TOOLS: readonly AgentToolDefinition[] = [{
             groupIds: {type: "array", maxItems: 2, items: {type: "string", minLength: 1, maxLength: 80}},
             query: {type: "string", maxLength: 100}
         }
-    },
-    effect: "bookkeeping",
-    atomic: true,
-    highRisk: () => false,
-    parseArguments: (raw) => loadingSchema.parse(raw),
-    async execute(raw, context) {
+    }}, {
+        name: DISCOVERY_TOOL_NAME,
+        title: "加载创作工具",
+        description: "按能力目录加载最多两组已授权工具，替换之前的业务组；同次执行的下一次模型请求获得完整定义，无需用户再次发送消息。groupIds=[] 时仅按 query 查询目录，不执行业务。",
+        effect: "bookkeeping",
+        atomic: true,
+        highRisk: () => false,
+        async execute(raw, context) {
         const args = loadingSchema.parse(raw);
         return executeAtomicTool(context, async () => {
             const run = await db.agentRuns.get(context.runId);
@@ -120,10 +106,10 @@ export const DISCOVERY_TOOLS: readonly AgentToolDefinition[] = [{
                 note: "工具已准备好，系统会在同一次执行的下一次模型请求提供完整参数；请接着调用所需业务工具，无需用户再发送开始或继续。此操作只加载能力，没有执行任何业务。"
             };
         });
-    },
-}];
+    }
+        })];
 
-/** Replace only the upcoming skill layer; preserve request history and paired tool envelopes. */
+        /** Replace only the upcoming skill layer; preserve request history and paired tool envelopes. */
 export async function refreshRunToolLoading(runId: string): Promise<AgentRun> {
     return db.transaction("rw", [db.agentRuns, db.agentToolCalls], async () => {
         const run = await db.agentRuns.get(runId);
@@ -156,4 +142,4 @@ export async function refreshRunToolLoading(runId: string): Promise<AgentRun> {
         await db.agentRuns.put(next);
         return next;
     });
-}
+        }

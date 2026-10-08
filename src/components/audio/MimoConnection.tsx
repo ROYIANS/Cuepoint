@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {upsertConnector} from "@/db/repo";
+import {upsertConnector} from "@/db/connectors";
 import type {ConnectorConfig} from "@/domain/types";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import {writeFile, mkdtemp} from "node:fs/promises";
+import {writeFile, mkdtemp, rm} from "node:fs/promises";
 import {tmpdir} from "node:os";
 import {join} from "node:path";
 import {fileURLToPath} from "node:url";
@@ -25,8 +25,13 @@ const transport = {
     if (fixture) {fixture.media.picked++; return Promise.resolve(fixture.media.file);}
     return new Promise((resolve) => {`);
         }
-        if (id.endsWith("/src/db/repo.ts")) {
-            for (const name of ["patchShot", "patchProjectDetails", "setCharacterSlot"]) {
+        const commands = {
+            "/src/db/shots.ts": "patchShot",
+            "/src/db/projects.ts": "patchProjectDetails",
+            "/src/db/assets.ts": "setCharacterSlot",
+        };
+        for (const [suffix, name] of Object.entries(commands)) {
+            if (id.endsWith(suffix)) {
                 source = source.replace(`export async function ${name}(`, `async function _b01_${name}(`);
                 source += `\nexport async function ${name}(...args: Parameters<typeof _b01_${name}>) {
                     const fixture = typeof window === "undefined" ? undefined : (window as any).b01;
@@ -41,7 +46,8 @@ const transport = {
         return source;
     },
 };
-const server = await createServer({configFile: false, plugins: [transport, react(), tailwindcss()], resolve: {alias: {"@": fileURLToPath(new URL("../src", import.meta.url))}}, server: {host: "127.0.0.1", port: 0}});
+const cacheDirectory = await mkdtemp(join(tmpdir(), "b01-vite-cache-"));
+const server = await createServer({cacheDir: cacheDirectory, optimizeDeps: {entries: [fileURLToPath(new URL("../tests/fixtures/b01/index.html", import.meta.url))]}, configFile: false, plugins: [transport, react(), tailwindcss()], resolve: {alias: {"@": fileURLToPath(new URL("../src", import.meta.url))}}, server: {host: "127.0.0.1", port: 0}});
 let browser;
 let passed = 0;
 try {
@@ -50,6 +56,10 @@ try {
     browser = await chromium.launch({headless: true, ...(process.env.B01_CHROMIUM_PATH ? {executablePath: process.env.B01_CHROMIUM_PATH} : {})});
     const page = await browser.newPage();
     const errors = [];
+    const documentRequests = [];
+    page.on("request", request => {
+        if (request.resourceType() === "document" && request.frame() === page.mainFrame()) documentRequests.push(request.url());
+    });
     page.on("pageerror", error => {errors.push(error.message); console.error("browser error", error.message);});
     await page.goto(url);
     await page.waitForFunction(() => Boolean(window.b01));
@@ -63,6 +73,7 @@ try {
     const test = async (name, run) => {
         try {
             await run(); assert.equal(errors.length, 0, errors.join("\n"));
+            assert.equal(documentRequests.length, 1, `Unexpected full-document navigation: ${documentRequests.join(" -> ")}`);
             passed++; console.log(`PASS ${name}`);
         } catch (error) {
             const directory = await mkdtemp(join(tmpdir(), "b01-browser-failure-"));
@@ -144,7 +155,7 @@ try {
         assert.equal(await page.evaluate(() => window.b01.media.picked), 1);
         const owned = await page.evaluate(async () => (await window.b01.db.media.toArray()).find(row => row.filename === "upload.png").id);
         await page.getByRole("textbox", {name: "画面描述 / 提示词"}).fill("owned draft");
-        await page.evaluate(async id => window.b01.repo.setCharacterSlot(id, "front", {prompt: "theirs", referenceImageIds: [], referenceVideoIds: []}), ids.rows.character[0].id);
+        await page.evaluate(async id => window.b01.assets.setCharacterSlot(id, "front", {prompt: "theirs", referenceImageIds: [], referenceVideoIds: []}), ids.rows.character[0].id);
         await click("保存"); await eventually("[role=alert]", "内容已保留");
         assert.equal(await page.evaluate(id => window.b01.db.media.get(id).then(Boolean), owned), true);
         await navigate(assetPath("character", 1)); await click("继续编辑");
@@ -271,7 +282,7 @@ try {
     });
 
     await test("clean deleted project exposes not-found with project controls hidden", async () => {
-        const id = await page.evaluate(async () => (await window.b01.repo.createProject("Clean deletion", "series")).id);
+        const id = await page.evaluate(async () => (await window.b01.projects.createProject("Clean deletion", "series")).id);
         await navigate(`/p/${id}/world`); await eventually("span", "Clean deletion");
         await click("项目设定");
         await page.evaluate(id => window.b01.db.projects.delete(id), id);
@@ -286,7 +297,7 @@ try {
     });
 
     await test("dirty output deletion preserves readable draft and explicit close/discard", async () => {
-        const id = await page.evaluate(async () => (await window.b01.repo.createProject("Dirty deletion", "film")).id);
+        const id = await page.evaluate(async () => (await window.b01.projects.createProject("Dirty deletion", "film")).id);
         await navigate(`/p/${id}/world`); await eventually("span", "Dirty deletion"); await click("项目设定");
         await page.getByRole("combobox", {name: "项目目标画幅"}).click();
         await page.getByRole("option", {name: /1:1/}).click();
@@ -363,4 +374,5 @@ try {
 } finally {
     await browser?.close();
     await server.close();
+    await rm(cacheDirectory, {recursive: true, force: true});
 }

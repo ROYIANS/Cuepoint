@@ -3,7 +3,7 @@ import { expect, it } from "vitest";
 import { db } from "@/db/database";
 import { beginAgentRun } from "@/db/agentRuns";
 import { updateGeneralAgentConfig } from "@/db/agentSettings";
-import { createChatThread } from "@/db/repo";
+import {createChatThread} from "@/db/chat";
 import { createIpProfile } from "@/db/ipProfiles";
 import { assembleSkills, DEFAULT_SKILL_IDS } from "@/lib/agent/skills";
 import { filterProjectMemoryTools } from "@/lib/agent/memoryToolNames";

@@ -1,12 +1,14 @@
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
-import { createProject as createBoundTestProject } from "@/db/repo";
+import {createProject as createBoundTestProject} from "@/db/projects";
+import {createChatThread} from "@/db/chat";
+import {deleteChatThread} from "@/db/cascadeCommands";
 import { createManualWrapup, saveWrapup, confirmWrapup } from "@/db/agentTaskWrapups";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { createAgentTask, createAgentTaskForThread, updateAgentTask, setAgentTaskLifecycle, pinAgentTaskResult, unpinAgentTaskResult } from "@/db/agentTasks";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
 import {  transitionToolCall, updateRunPlanAndComplete } from "@/db/agentTools";
-import { createChatThread, deleteChatThread } from "@/db/repo";
+
 import { getTaskDisplayState, isTaskBusy } from "@/lib/agent/taskState";
 import { executeChatRun } from "@/lib/agent/runChat";
 import type { AgentPlanItem } from "@/domain/agent";

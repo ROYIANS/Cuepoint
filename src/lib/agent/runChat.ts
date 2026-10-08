@@ -1,3 +1,4 @@
+import {toolMetadataMatches} from './toolDefinition';
 import {getOfferedToolNames, refreshRunToolLoading, toolNamesForCall} from "./toolLoading";
 import {saveAgentFinishingCheck} from "@/db/agentFinishingCheck";
 import {upgradeLegacyPlanCalls} from "@/db/agentToolRecovery";
@@ -124,7 +125,7 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
             continue;
         }
         const {tool, args} = validated;
-        if (tool.effect !== call.effect || tool.highRisk(args) !== call.highRisk || Boolean(tool.atomic) !== Boolean(call.atomic) || tool.recovery !== call.recovery || Boolean(tool.requiresConfirmation) !== Boolean(call.requiresConfirmation)) throw new Error("工具定义已变化，请结束本次执行后重新发起任务");
+        if (!toolMetadataMatches(tool, args, call)) throw new Error("工具定义已变化，请结束本次执行后重新发起任务");
         if (tool.prepare && !call.preview) {
             try {
                 if (call.status !== "pending") throw new Error("操作缺少批准前预览，请重新发起");
@@ -165,7 +166,7 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
             tool,
             args
         } = validateToolCall(call.name, effectiveToolInput(call).arguments, toolNamesForCall(currentRun, call.step), registry);
-        if (tool.effect !== call.effect || tool.highRisk(args) !== call.highRisk || Boolean(tool.atomic) !== Boolean(call.atomic) || tool.recovery !== call.recovery || Boolean(tool.requiresConfirmation) !== Boolean(call.requiresConfirmation)) throw new Error("工具定义已变化，请结束本次执行后重新发起任务");
+        if (!toolMetadataMatches(tool, args, call)) throw new Error("工具定义已变化，请结束本次执行后重新发起任务");
         // Recheck permission immediately before the claim. A global setting cannot change this run's mode.
         if (requiresToolApproval(run.permissionMode ?? "ask", tool, args) && call.status !== "approved") throw new Error("工具尚未获得批准");
         if (!await transitionToolCall(run.id, call.id, ["pending", "approved"], "running")) throw new Error("工具已被其他执行领取");

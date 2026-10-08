@@ -1,0 +1,2 @@
+export const AUDIO_TOOL_NAMES = ["audio_read", "audio_create", "audio_update", "audio_place_take", "audio_edit_clip", "audio_split_clip", "audio_remove_clip", "audio_generation_capabilities", "audio_generate_speech", "audio_generation_check"] as const;
+export const MUSIC_TOOL_NAMES = ["music_read", "music_save_draft", "music_update_work", "music_reuse_work", "audio_generation_capabilities", "music_generate", "audio_generation_check"] as const;

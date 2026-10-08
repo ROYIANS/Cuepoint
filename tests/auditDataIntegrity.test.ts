@@ -1,10 +1,12 @@
 import Dexie from "dexie";
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
-import {
-  addShot, addStoryBeat, createProject, deleteStoryBeat, emptyProject, emptyShot,
-  firstEpisode, patchShot, putMedia, restoreStoryBeat, setShotSlot, upsertConnector,
-} from "@/db/repo";
+import {addShot, patchShot, setShotSlot} from "@/db/shots";
+import {addStoryBeat, deleteStoryBeat, firstEpisode, restoreStoryBeat} from "@/db/episodes";
+import {createProject} from "@/db/projects";
+import {emptyProject, emptyShot} from "@/db/productionRecords";
+import {putMedia} from "@/db/media";
+import {upsertConnector} from "@/db/connectors";
 import { emptySlot } from "@/domain/slot";
 import { exportProjectZip, importProjectZip } from "@/lib/projectPackage";
 import { validShotMediaId } from "@/lib/shotMedia";

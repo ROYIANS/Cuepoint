@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { streamChatCompletions } from "@/lib/ai/chatStream";
-import { appendChatMessage, createChatThread, deleteConnector, listConnectors, upsertConnector } from "@/db/repo";
+import {appendChatMessage, createChatThread} from "@/db/chat";
+import {deleteConnector, listConnectors, upsertConnector} from "@/db/connectors";
 import { discoverConnectorChatModels, listConnectorModels, runWithCompatibleChatModel, testConnectorConnection } from "@/lib/ai/connectors";
 
 const apimart = {

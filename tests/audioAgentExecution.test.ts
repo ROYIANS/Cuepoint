@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
-import { createAudioMusicProject, createChatThread, createProject } from "@/db/repo";
+import {createAudioMusicProject, createProject} from "@/db/projects";
+import {createChatThread} from "@/db/chat";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
 import { updateGeneralAgentConfig } from "@/db/agentSettings";
 import { executeChatRun } from "@/lib/agent/runChat";

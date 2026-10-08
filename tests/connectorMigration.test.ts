@@ -1,7 +1,7 @@
 import Dexie from "dexie";
 import { expect, it } from "vitest";
 import { db } from "@/db/database";
-import { deleteConnector, resolveConnector, upsertConnector } from "@/db/repo";
+import {deleteConnector, resolveConnector, upsertConnector} from "@/db/connectors";
 
 it("deduplicates legacy connections without changing historical IDs, and rotates/revokes every alias", async () => {
   const schema = Object.fromEntries(db.tables.filter(table => table.name !== "connectorAliases")

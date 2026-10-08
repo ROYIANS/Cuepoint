@@ -1,7 +1,8 @@
+import {registeredTools} from "./helpers/registeredTools";
 import { describe, expect, it, vi } from "vitest";
 import { refreshAudioGeneration } from "@/lib/audioGeneration/runtime";
 import { db } from "@/db/database";
-import { createAudioMusicProject } from "@/db/repo";
+import {createAudioMusicProject} from "@/db/projects";
 import { createAgentTask } from "@/db/agentTasks";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
 import { addAudioClip, addAudioSegment, addAudioTake } from "@/db/audio";
@@ -12,7 +13,9 @@ import { defaultMusicSettings } from "@/domain/music";
 import type { AudioGenerationJob } from "@/domain/audioGeneration";
 import type { AgentToolCall } from "@/domain/agent";
 import type { ConnectorConfig } from "@/domain/types";
-import { TASK_TOOLS } from "@/lib/agent/taskTools";
+import { TASK_TOOLS as TASK_TOOLS_DEFINITIONS } from "@/lib/agent/taskTools";
+const TASK_TOOLS = registeredTools(TASK_TOOLS_DEFINITIONS);
+
 
 const connector: ConnectorConfig = { id: "chat", definitionId: "openai-compatible", baseUrl: "https://fixture.test/v1", apiKey: "fixture", updatedAt: "2026-09-22" };
 const metadata = { durationSec: 3, sampleRate: 24000, channels: 1 };

@@ -1,7 +1,11 @@
 import Dexie from "dexie";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
-import { addCharacter, addProp, addScene, addShot, addStyle, createProject, deleteMediaIfOrphan, deleteProject, patchShot, putMedia, setShotSlot } from "@/db/repo";
+import {addCharacter, addProp, addScene, addStyle} from "@/db/assets";
+import {addShot, patchShot, setShotSlot} from "@/db/shots";
+import {createProject} from "@/db/projects";
+import {deleteMediaIfOrphan, putMedia} from "@/db/media";
+import {deleteProject} from "@/db/cascadeCommands";
 import { applyProductionProposal, cancelProductionProposal, createProductionProposal, undoProductionProposal } from "@/db/productionProposals";
 import { emptySlot } from "@/domain/slot";
 import { targetRevision } from "@/lib/productionRevision";

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
-import { addShot, createProject } from "@/db/repo";
+import {addShot} from "@/db/shots";
+import {createProject} from "@/db/projects";
 import { useShotMedia } from "@/lib/useShotMedia";
 
 const { liveQuery } = vi.hoisted(() => ({ liveQuery: vi.fn() }));

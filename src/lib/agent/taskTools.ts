@@ -1,3 +1,5 @@
+import type {TypedToolDefinition} from './toolDefinition';
+import {defineTool} from './toolDefinition';
 import {historicalToolSummary} from "./referenceEvidence";
 import {frozenProjectScope} from "./projectScope";
 import {formatTaskRequirements} from "./taskState";
@@ -15,7 +17,7 @@ import {executeAtomicTool} from "@/db/agentTools";
 import type {AgentToolCall} from "@/domain/agent";
 import {type AgentTask, GENERAL_AGENT_ID} from "@/domain/agent";
 import {TASK_RECORD_CLAIMS, TASK_RECORD_KINDS} from "@/domain/agentTaskRecords";
-import type {AgentToolContext, AgentToolDefinition} from "./tools";
+import type {AgentToolContext} from "./tools";
 import {array, choice, number, object, optional, type Spec, text} from "./businessSchemas";
 import {createId, nowIso} from "@/lib/ids";
 import {SOUND_GENERATION_TOOLS, taskAudioToolSource} from "@/db/taskAudioGenerationEvidence";
@@ -77,24 +79,22 @@ function requiredTask(task?: AgentTask): AgentTask {
     return task;
 }
 
-function tool<T>(name: string, title: string, description: string, spec: Spec<T>, execute: (args: T, context: AgentToolContext, state: Awaited<ReturnType<typeof owner>>) => Promise<unknown>): AgentToolDefinition {
-    return {
+function tool<T, const Name extends string>(name: Name, title: string, description: string, spec: Spec<T>, execute: (args: NoInfer<T>, context: AgentToolContext, state: Awaited<ReturnType<typeof owner>>) => Promise<unknown>): TypedToolDefinition<T, Name> {
+    return defineTool(spec, {
         name,
         title,
         description,
-        parameters: spec.json,
         effect: "bookkeeping",
         atomic: true,
         highRisk: () => false,
-        parseArguments: (raw) => spec.schema.parse(raw),
         execute: (args, context) => executeAtomicTool(context, async () => {
             const value = await execute(spec.schema.parse(args), context, await owner(context, name));
             return name === "task_read" ? {...(value as Record<string, unknown>), sourceProjectionVersion: 1} : value;
         })
-    };
+    });
 }
 
-export const TASK_TOOLS: readonly AgentToolDefinition[] = [
+export const TASK_TOOLS = [
     tool("task_read", "读取任务工作区", "读取当前任务、记录索引及真实用户消息和工具结果的来源 ID。未建任务时读取需求对话。offset/limit 翻页列表；传 source 和 contentOffset/contentLimit 分段读取来源全文，每次最多6000字，不访问其他任务。", object({
         offset: optional(number(0, 100000, true)),
         limit: optional(number(1, 10, true)),

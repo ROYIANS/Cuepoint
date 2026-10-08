@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { db } from '@/db/database';
-import { createChatThread, createProject } from '@/db/repo';
+import {createChatThread} from "@/db/chat";
+import {createProject} from "@/db/projects";
 import { createIpProfile, bindProjectIp } from '@/db/ipProfiles';
 import { createFileMaterial, setMaterialArchived } from '@/db/materials';
 import { beginAgentRun } from '@/db/agentRuns';

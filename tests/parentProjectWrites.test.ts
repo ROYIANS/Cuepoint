@@ -1,10 +1,11 @@
 import Dexie from "dexie";
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
-import {
-  addCharacter, addProp, addScene, addStyle, createProject, deleteProject,
-  PRODUCTION_TABLES, putMedia,
-} from "@/db/repo";
+import {addCharacter, addProp, addScene, addStyle} from "@/db/assets";
+import {createProject} from "@/db/projects";
+import {deleteProject} from "@/db/cascadeCommands";
+import {PRODUCTION_TABLES} from "@/db/productionShared";
+import {putMedia} from "@/db/media";
 import { STUDIO_LIBRARY_ID, type Id, type MediaRecord } from "@/domain/types";
 
 function media(projectId: Id): MediaRecord {
@@ -38,13 +39,18 @@ describe.each(creators)("$name parent project writes", ({ table, create }) => {
 
   it("rolls back the child if touching the existing parent fails", async () => {
     const project = await createProject("touch failure");
-    const fail = () => { throw new Error("injected parent touch failure"); };
+    // Guarantee a real timestamp change so Dexie invokes the updating hook.
+    project.updatedAt = "2000-01-01T00:00:00.000Z";
+    await db.projects.update(project.id, {updatedAt: project.updatedAt});
+    let hookReached = false;
+    const fail = () => { hookReached = true; throw new Error("injected parent touch failure"); };
     db.projects.hook("updating", fail);
     try {
       await expect(create(project.id)).rejects.toThrow("injected parent touch failure");
     } finally {
       db.projects.hook("updating").unsubscribe(fail);
     }
+    expect(hookReached).toBe(true);
     expect(await table.count()).toBe(0);
     expect(await db.projects.get(project.id)).toEqual(project);
   });

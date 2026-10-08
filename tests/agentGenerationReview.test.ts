@@ -1,3 +1,4 @@
+import {registeredTools} from "./helpers/registeredTools";
 import { preloadFixtureGroups } from "./helpers/toolDispatch";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
@@ -6,13 +7,17 @@ import { saveGenerationPreference } from "@/db/generationPreferences";
 import { defaultImageGeneration } from "@/domain/output";
 import { updateGeneralAgentConfig } from "@/db/agentSettings";
 import { resolveAgentToolApproval } from "@/db/agentTools";
-import { addShot, createChatThread, createProject, patchShot } from "@/db/repo";
+import {addShot, patchShot} from "@/db/shots";
+import {createChatThread} from "@/db/chat";
+import {createProject} from "@/db/projects";
 import type { AgentPermissionMode } from "@/domain/agent";
 import type { ConnectorConfig } from "@/domain/types";
 import { reviewAndApproveGeneration } from "@/lib/agent/generationReview";
 import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
-import { GENERATION_TOOLS } from "@/lib/agent/generationTools";
+import { GENERATION_TOOLS as GENERATION_TOOLS_DEFINITIONS } from "@/lib/agent/generationTools";
 import type { GenerationSubmitArgs } from "@/lib/agent/generationProfiles";
+const GENERATION_TOOLS = registeredTools(GENERATION_TOOLS_DEFINITIONS);
+
 
 const connector:ConnectorConfig={id:"chat",name:"Chat",definitionId:"openai-compatible",baseUrl:"https://chat.test/v1",apiKey:"chat-secret",updatedAt:"now"};
 const png="iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jFZkAAAAASUVORK5CYII=";

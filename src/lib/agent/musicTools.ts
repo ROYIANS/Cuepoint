@@ -10,7 +10,7 @@ import {
     audioMusicUnion,
     boundedAudioText
 } from "./audioTools";
-import type {AgentToolContext, AgentToolDefinition} from "./tools";
+import type {AgentToolContext} from "./tools";
 import * as s from "./businessSchemas";
 import {MUSIC_DURATION_LIMITS} from "@/domain/music";
 
@@ -49,7 +49,7 @@ async function state(projectId: string) {
     };
 }
 
-export const MUSIC_TOOLS: readonly AgentToolDefinition[] = [
+export const MUSIC_TOOLS = [
     libraryReadTool({
         name: "music_read",
         title: "读取音乐作品",

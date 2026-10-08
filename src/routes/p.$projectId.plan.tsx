@@ -1,5 +1,5 @@
 import {createFileRoute, redirect} from "@tanstack/react-router";
-import {firstEpisode} from "@/db/repo";
+import {firstEpisode} from "@/db/episodes";
 
 export const Route = createFileRoute("/p/$projectId/plan")({
     beforeLoad: async ({params}) => {

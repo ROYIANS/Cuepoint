@@ -1,6 +1,8 @@
 import {db} from "@/db/database";
 import {emptySlot} from "@/domain/slot";
-import {createProject, addCharacter, putMedia, setCharacterSlot} from "@/db/repo";
+import {createProject} from "@/db/projects";
+import {addCharacter, setCharacterSlot} from "@/db/assets";
+import {putMedia} from "@/db/media";
 import {createAgentTask} from "@/db/agentTasks";
 import {beginAgentRun, finishAgentRun} from "@/db/agentRuns";
 import {getTaskWrapupState, startTaskWrapup, publishTaskWrapup, cancelTaskWrapup} from "@/db/agentTaskWrapups";

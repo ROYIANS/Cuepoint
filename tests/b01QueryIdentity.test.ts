@@ -52,7 +52,9 @@ vi.mock("@/components/shots/ShotRowViewport", () => ({ShotScrollViewport: () => 
 vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
 
 import {db} from "@/db/database";
-import * as repo from "@/db/repo";
+import * as repoAssets from "@/db/assets";
+import * as repoProjects from "@/db/projects";
+import * as repoEpisodes from "@/db/episodes";
 import {CharacterDetailPage} from "@/components/assets/CharacterDetailPage";
 import {SceneDetailPage} from "@/components/assets/SceneDetailPage";
 import {PropDetailPage} from "@/components/assets/PropDetailPage";
@@ -75,7 +77,7 @@ function nodes(tree: unknown): Node[] {
 }
 function unwrap(tree: unknown): unknown {
     const node = tree as Node;
-    if (node && typeof node.type === "function" && /DetailContent|PageContent|^SeriesHome$/.test(node.type.name)) {
+    if (node && typeof node.type === "function" && /DetailContent|PageContent|^ProjectHomePage$/.test(node.type.name)) {
         return unwrap((node.type as (props: Record<string, unknown>) => unknown)(node.props));
     }
     return tree;
@@ -93,15 +95,15 @@ beforeEach(reset);
 vi.stubGlobal("window", {addEventListener: vi.fn(), removeEventListener: vi.fn()});
 
 const assetCases = [
-    {kind: "character", add: repo.addCharacter, page: (id: string, owner: string) => CharacterDetailPage({characterId: id, back: {kind: "project", projectId: owner}})},
-    {kind: "scene", add: repo.addScene, page: (id: string, owner: string) => SceneDetailPage({sceneId: id, back: {kind: "project", projectId: owner}})},
-    {kind: "prop", add: repo.addProp, page: (id: string, owner: string) => PropDetailPage({propId: id, back: {kind: "project", projectId: owner}})},
-    {kind: "style", add: repo.addStyle, page: (id: string, owner: string) => StyleDetailPage({styleId: id, back: {kind: "project", projectId: owner}})},
+    {kind: "character", add: repoAssets.addCharacter, page: (id: string, owner: string) => CharacterDetailPage({characterId: id, back: {kind: "project", projectId: owner}})},
+    {kind: "scene", add: repoAssets.addScene, page: (id: string, owner: string) => SceneDetailPage({sceneId: id, back: {kind: "project", projectId: owner}})},
+    {kind: "prop", add: repoAssets.addProp, page: (id: string, owner: string) => PropDetailPage({propId: id, back: {kind: "project", projectId: owner}})},
+    {kind: "style", add: repoAssets.addStyle, page: (id: string, owner: string) => StyleDetailPage({styleId: id, back: {kind: "project", projectId: owner}})},
 ];
 
 describe("B01 actual query consumers", () => {
     it.each(assetCases)("$kind rejects retained entity/null and wrong-owner rows; missing querier keeps identity", async c => {
-        const a = await repo.createProject("A"); const b = await repo.createProject("B");
+        const a = await repoProjects.createProject("A"); const b = await repoProjects.createProject("B");
         const first = await c.add(a.id); const second = await c.add(a.id);
         const run = () => c.page(second.id, a.id);
         for (const value of [first, null]) {
@@ -123,8 +125,8 @@ describe("B01 actual query consumers", () => {
     });
 
     it.each([ShotEditorPage, StoryboardPrintPage])("$name gates retained episodes and empty lists before editing/printing", async page => {
-        const project = await repo.createProject("series", "series");
-        const a = (await repo.firstEpisode(project.id))!; const b = await repo.addEpisode(project.id);
+        const project = await repoProjects.createProject("series", "series");
+        const a = (await repoEpisodes.firstEpisode(project.id))!; const b = await repoEpisodes.addEpisode(project.id);
         const valid = [
             {projectId: project.id, project}, {projectId: project.id, episodeId: b.id, episode: b},
             {projectId: project.id, episodeId: b.id, shots: []}, {projectId: project.id, characters: [], scenes: []},
@@ -153,8 +155,8 @@ describe("B01 actual query consumers", () => {
     });
 
     it("Chrome hides old episode/null navigation while keeping settings and Outlet", async () => {
-        const project = await repo.createProject("series", "series");
-        const a = (await repo.firstEpisode(project.id))!; const b = await repo.addEpisode(project.id);
+        const project = await repoProjects.createProject("series", "series");
+        const a = (await repoEpisodes.firstEpisode(project.id))!; const b = await repoEpisodes.addEpisode(project.id);
         const first = {projectId: project.id, episode: a};
         const result = (episodeId: string, episode: unknown) => ({projectId: project.id, episodeId, episode});
         host.pathname = `/p/${project.id}/e/${a.id}/shots`;
@@ -176,9 +178,9 @@ describe("B01 actual query consumers", () => {
     });
 
     it("home never repairs/navigates from retained null or foreign project identity", async () => {
-        const a = await repo.createProject("A"); const b = await repo.createProject("B");
+        const a = await repoProjects.createProject("A"); const b = await repoProjects.createProject("B");
         host.params = {projectId: b.id};
-        const repair = vi.spyOn(repo, "ensureFirstEpisode");
+        const repair = vi.spyOn(repoEpisodes, "ensureFirstEpisode");
         const run = () => (HomeRoute.options.component as () => unknown)();
         const tree = draw(run, [{projectId: a.id, project: a}, {projectId: a.id, episode: null}]);
         expect(texts(tree)).toContain("加载项目…"); expect(repair).not.toHaveBeenCalled();

@@ -20,7 +20,7 @@ import {Still} from "@/components/studio/Still";
 import {Button} from "@/components/ui/button";
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle,} from "@/components/ui/dialog";
 import {db} from "@/db/database";
-import {patchProjectOutput} from "@/db/repo";
+import {patchProjectOutput} from "@/db/projects";
 import {episodeLabel, normalizeProjectMode,} from "@/domain/types";
 import {IMAGE_ACCEPT, pickMediaFile, uploadMediaFile} from "@/lib/media";
 import {downloadBlob, exportProjectZip} from "@/lib/projectPackage";

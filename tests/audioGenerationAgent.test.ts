@@ -1,6 +1,8 @@
+import {registeredTools} from "./helpers/registeredTools";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
-import { createAudioMusicProject, createChatThread } from "@/db/repo";
+import {createAudioMusicProject} from "@/db/projects";
+import {createChatThread} from "@/db/chat";
 import { beginAgentRun, interruptThreadRuns } from "@/db/agentRuns";
 import { resolveAgentToolApproval } from "@/db/agentTools";
 import { addAudioSegment, addAudioSpeaker, patchAudioSpeaker } from "@/db/audio";
@@ -8,10 +10,12 @@ import { addMusicDraft, patchMusicDraft } from "@/db/music";
 import { defaultMusicSettings } from "@/domain/music";
 import type { AgentPermissionMode, AgentRun } from "@/domain/agent";
 import type { ConnectorConfig } from "@/domain/types";
-import { AUDIO_GENERATION_TOOLS, AUDIO_GENERATION_TOOL_NAMES } from "@/lib/agent/audioGenerationTools";
+import { AUDIO_GENERATION_TOOLS as AUDIO_GENERATION_TOOLS_DEFINITIONS, AUDIO_GENERATION_TOOL_NAMES } from "@/lib/agent/audioGenerationTools";
 import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
 import { getProjectContext, refreshRunProjectContext } from "@/lib/agent/projectContext";
 import { encodePcm16Wav } from "@/lib/audio/wav";
+const AUDIO_GENERATION_TOOLS = registeredTools(AUDIO_GENERATION_TOOLS_DEFINITIONS);
+
 
 const chatConnector: ConnectorConfig = { id: "model", definitionId: "openai-compatible", baseUrl: "https://model.example/v1", apiKey: "model-secret", updatedAt: "2026-09-22" };
 const generationConnector: ConnectorConfig = { id: "apimart", definitionId: "apimart", label: "声音", baseUrl: "https://api.apimart.ai/v1", apiKey: "paid-secret", updatedAt: "2026-09-22" };

@@ -1,3 +1,4 @@
+import {defineTool} from './toolDefinition';
 import {db} from '@/db/database';
 import {
     promoteLegacyMaterial,
@@ -7,7 +8,7 @@ import {
     updateMaterialUse,
     useMaterialInProject
 } from '@/db/materials';
-import {releaseMaterialUse} from '@/db/repo';
+import {releaseMaterialUse} from "@/db/assetReuse";
 import type {
     LibraryMaterial,
     MaterialEntity,
@@ -17,7 +18,7 @@ import type {
     SettingMaterialKind
 } from '@/domain/materials';
 import {STUDIO_LIBRARY_ID} from '@/domain/types';
-import type {AgentToolContext, AgentToolDefinition} from './tools';
+import type {AgentToolContext} from './tools';
 import {array, bool, choice, id, nonempty, number, object, optional, text} from './businessSchemas';
 import {libraryReadTool, libraryWriteTool} from './libraryToolHelpers';
 import {assertActiveMaterialScope, assertMaterialAccess, readMaterialText} from './materialContent';
@@ -231,7 +232,7 @@ const promoteSpec = {
     schema: promoteBase.schema.refine(value => value.source !== 'library' || value.expectedRevision !== undefined, '复制版本素材必须提供 expectedRevision；先读取素材详情')
 };
 
-export const MATERIAL_TOOLS: readonly AgentToolDefinition[] = [
+export const MATERIAL_TOOLS = [
     libraryReadTool({
         name: 'material_search',
         title: '查找素材',
@@ -322,29 +323,25 @@ export const MATERIAL_TOOLS: readonly AgentToolDefinition[] = [
             };
         },
     }),
-    {
+    defineTool({schema: textSpec.schema, json: textSpec.json}, {
         name: 'material_read_text',
         title: '读取素材文档片段',
         description: '按 materialId/revision 读取 TXT、Markdown、文字型 PDF、DOCX。start 从 0 开始，每次最多 3 段/12000 字。提取范围、原始行/页/段和 citation 随结果返回；partial 或 hasMore 时不能声称已读全文。仅库内文件，无任意路径/URL读取。',
-        parameters: textSpec.json,
         effect: 'read',
         highRisk: () => false,
-        parseArguments: raw => textSpec.schema.parse(raw),
         execute: (raw, context) => readMaterialText(textSpec.schema.parse(raw), context)
-    },
-    {
+    }),
+    defineTool({schema: imageSpec.schema, json: imageSpec.json}, {
         name: 'material_read_image',
         title: '查看版本素材图片',
         description: '将 materialId/revision 对应图片的真实像素加入当前视觉模型的下一次请求。设定素材须明确 mediaId。queued 仅表示待发送，尚未完成视觉分析；不调用其他模型，不看音视频。',
-        parameters: imageSpec.json,
         effect: 'read',
         highRisk: () => false,
-        parseArguments: raw => imageSpec.schema.parse(raw),
         execute: (raw, context) => {
             const args = imageSpec.schema.parse(raw);
             return queueMaterialImage(args.materialId, args.revision, context, args.mediaId);
         }
-    },
+    }),
     libraryWriteTool({
         name: 'material_update_metadata',
         title: '整理素材名称、标签和备注',

@@ -7,7 +7,7 @@ import {toast} from "sonner";
 import {db} from "@/db/database";
 import {getGenerationPreferenceState, saveGenerationPreference} from "@/db/generationPreferences";
 import type {AgentToolCall} from "@/domain/agent";
-import {IMAGE_RATIOS, VIDEO_RATIOS} from "@/domain/output";
+import {getGenerationCapability, generationResolutionChange, projectGenerationParameters} from "@/domain/generationCapabilities";
 import {Button} from "@/components/ui/button";
 import {Checkbox} from "@/components/ui/checkbox";
 import {
@@ -202,6 +202,12 @@ export function GenerationConfigurationFields({draft, onChange, disabled}: {
     const frames = draft.inputs.some(input => ['first-frame', 'last-frame'].includes(input.role));
     const references = draft.inputs.length > 0 && !frames;
     const referenceVideos = draft.inputs.filter(input => input.role === 'reference-video').length;
+    // Preserve the existing role-based control view; executable validation uses proposal mode.
+    const displayProfile = profile ?? getGenerationCapability(provider === "aihubmix" ? "aihubmix" : "apimart", kind === "image" ? "gpt-image-2" : provider === "aihubmix" ? "veo-3.1-fast-generate-preview" : "MiniMax-H3", kind);
+    const controls = displayProfile && projectGenerationParameters(displayProfile, p, {
+        purpose: "request", mode: frames && validProvider ? "frames" : references ? "reference" : "text",
+        inputRoles: draft.inputs.map(input => input.role),
+    });
     const patch = (parameters: GenerationSubmitArgs['parameters']) => onChange({
         ...draft,
         parameters: {...draft.parameters, ...parameters}
@@ -259,39 +265,36 @@ export function GenerationConfigurationFields({draft, onChange, disabled}: {
         </div>
         <div className="agent-generation-fields agent-generation-parameters">
             {kind === "image" ? <>
-                <Choice label={provider === "aihubmix" ? "图片尺寸" : "图片比例"} value={p.size ?? "auto"}
+                <Choice label={provider === "aihubmix" ? "图片尺寸" : "图片比例"} value={p.size ?? controls?.defaultSize ?? "auto"}
                         disabled={disabled}
-                        options={provider === "aihubmix" ? options(["auto", "1024x1024", "1536x1024", "1024x1536"]) : options(profile && "sizes" in profile ? profile.sizes : ["auto", ...IMAGE_RATIOS])}
+                        options={options(!profile && provider !== "aihubmix" ? ["auto", ...(controls?.sizes ?? []).filter(size => size !== "auto")] : controls?.sizes ?? [])}
                         onChange={(size) => patch({size})}/>
                 {provider === "aihubmix" ? <Choice label="画质" value={p.quality ?? "default"} disabled={disabled}
-                                                   options={[{value: "default", label: "模型默认"}, {
-                                                       value: "low",
-                                                       label: "低"
-                                                   }, {value: "medium", label: "中"}, {value: "high", label: "高"}]}
+                                                   options={[{value: "default", label: "模型默认"}, ...(controls?.qualities ?? []).map(value => ({value, label: value === "low" ? "低" : value === "medium" ? "中" : "高"}))]}
                                                    onChange={(quality) => patch({quality: quality === "default" ? undefined : quality as "low" | "medium" | "high"})}/>
-                    : <Choice label="分辨率" value={p.resolution ?? "1k"} disabled={disabled}
-                              options={options(["1k", "2k", "4k"])} onChange={(resolution) => patch({resolution})}/>}
+                    : <Choice label="分辨率" value={p.resolution ?? controls?.defaultResolution ?? "1k"} disabled={disabled}
+                              options={options(controls?.resolutions ?? [])} onChange={(resolution) => patch({resolution})}/>}
                 {profile && "qualities" in profile &&
-                    <Choice label="画质" value={p.quality ?? "auto"} disabled={disabled}
-                            options={options(profile.qualities)}
+                    <Choice label="画质" value={p.quality ?? controls?.defaultQuality ?? "auto"} disabled={disabled}
+                            options={options(controls?.qualities ?? [])}
                             onChange={(quality) => patch({quality: quality as NonNullable<GenerationSubmitArgs["parameters"]["quality"]>})}/>}
                 {profile && "versions" in profile &&
-                    <Choice label="版本" value={p.version ?? "flare"} disabled={disabled}
-                            options={[{value: "flare", label: "flare"}, {value: "sunburst", label: "sunburst"}]}
+                    <Choice label="版本" value={p.version ?? controls?.defaultVersion ?? "flare"} disabled={disabled}
+                            options={options(controls?.versions ?? [])}
                             onChange={(version) => patch({version: version as "flare" | "sunburst"})}/>}
             </> : <>
-                <Choice label="分辨率" value={p.resolution ?? (provider === "aihubmix" ? "720p" : "2K")}
+                <Choice label="分辨率" value={p.resolution ?? controls?.defaultResolution}
                         disabled={disabled}
-                        options={options(provider === "aihubmix" ? referenceVideos ? ["720p"] : ["720p", "1080p", "4K"] : ["768P", "2K"])}
-                        onChange={(resolution) => patch({resolution, ...(provider === "aihubmix" && resolution !== "720p" ? {duration: 8} : {})})}/>
-                <Choice label="时长（秒）" value={String(p.duration ?? (provider === "aihubmix" ? 8 : 5))}
+                        options={options(controls?.resolutions ?? [])}
+                        onChange={(resolution) => patch(displayProfile ? generationResolutionChange(displayProfile, resolution) : {resolution})}/>
+                <Choice label="时长（秒）" value={String(p.duration ?? controls?.defaultDuration)}
                         disabled={disabled}
-                        options={options(provider === "aihubmix" ? (p.resolution && p.resolution !== "720p" || references) ? [8] : [4, 6, 8] : Array.from({length: 12}, (_, i) => i + 4))}
+                        options={options(controls?.durations ?? [])}
                         onChange={(duration) => patch({duration: Number(duration)})}/>
-                {!(frames && provider === "apimart") && <Choice label="视频比例"
-                                                                value={p.aspectRatio ?? (references && provider === "apimart" ? "adaptive" : "16:9")}
+                {controls?.showAspectRatio && <Choice label="视频比例"
+                                                                value={p.aspectRatio ?? controls?.defaultRatio ?? "16:9"}
                                                                 disabled={disabled}
-                                                                options={options(provider === "aihubmix" ? ["16:9", "9:16"] : [...VIDEO_RATIOS, ...(references ? ["adaptive"] : [])])}
+                                                                options={options(controls?.ratios ?? [])}
                                                                 onChange={(aspectRatio) => patch({aspectRatio})}/>}
             </>}
         </div>

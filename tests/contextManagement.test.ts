@@ -1,8 +1,10 @@
-import { createProject as createBoundTestProject } from "@/db/repo";
+import {createProject as createBoundTestProject} from "@/db/projects";
+import {createChatThread} from "@/db/chat";
+import {deleteChatThread} from "@/db/cascadeCommands";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { beginAgentRun, finishAgentRun, interruptThreadRuns } from "@/db/agentRuns";
-import { createChatThread, deleteChatThread } from "@/db/repo";
+
 import { updateContextPolicy, resetThreadContextPolicy, saveContextPolicyAsDefault } from "@/db/contextSettings";
 import { createAgentTask } from "@/db/agentTasks";
 import { DEFAULT_CONTEXT_POLICY, normalizeContextPolicy, resolveContextCapacity } from "@/lib/agent/contextPolicy";

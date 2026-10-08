@@ -1,7 +1,11 @@
 import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
-import { addCharacter, addProp, addScene, addShot, addStoryBeat, addStyle, createProject, patchCharacter, patchProjectDetails, patchShot, patchStoryBeat, putMedia, setShotSlot } from "@/db/repo";
+import {addCharacter, addProp, addScene, addStyle, patchCharacter} from "@/db/assets";
+import {addShot, patchShot, setShotSlot} from "@/db/shots";
+import {addStoryBeat, patchStoryBeat} from "@/db/episodes";
+import {createProject, patchProjectDetails} from "@/db/projects";
+import {putMedia} from "@/db/media";
 import { buildProductionContext } from "@/lib/productionContext";
 import { targetRevision, validateProductionTarget } from "@/lib/productionRevision";
 import { defaultImageGeneration, defaultVideoGeneration } from "@/domain/output";

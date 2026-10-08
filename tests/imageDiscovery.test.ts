@@ -1,11 +1,17 @@
+import {registeredTools} from "./helpers/registeredTools";
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { db } from '@/db/database';
-import { createProject, firstEpisode, addEpisode, addShot, patchShot, setShotSlot, createChatThread, addCharacter, deleteChatThread } from '@/db/repo';
+import {createProject} from "@/db/projects";
+import {firstEpisode, addEpisode} from "@/db/episodes";
+import {addShot, patchShot, setShotSlot} from "@/db/shots";
+import {createChatThread} from "@/db/chat";
+import {addCharacter} from "@/db/assets";
+import {deleteChatThread} from "@/db/cascadeCommands";
 import { beginAgentRun } from '@/db/agentRuns';
 import { updateGeneralAgentConfig } from '@/db/agentSettings';
 import { appendToolResults } from '@/db/agentTools';
 import { discoverProjectImages, resolveDiscoveredImage } from '@/lib/agent/imageDiscovery';
-import { REFERENCE_TOOLS } from '@/lib/agent/referenceTools';
+import { REFERENCE_TOOLS as REFERENCE_TOOLS_DEFINITIONS } from '@/lib/agent/referenceTools';
 import { filterProjectMemoryTools } from '@/lib/agent/memoryToolNames';
 import { executeChatRun } from '@/lib/agent/runChat';
 import { validateReferenceInput } from '@/lib/agent/referenceContext';
@@ -18,6 +24,8 @@ import type { AgentReferenceInput } from '@/domain/referenceInput';
 import type { ImageDiscoveryResult } from '@/domain/imageDiscovery';
 import { episodeLabel, type ConnectorConfig } from '@/domain/types';
 import type { ProjectReference } from '@/domain/references';
+const REFERENCE_TOOLS = registeredTools(REFERENCE_TOOLS_DEFINITIONS);
+
 
 const connector: ConnectorConfig = { id: 'vision', definitionId: 'openai-compatible', baseUrl: 'https://fixture.test/v1', apiKey: 'fixture-key', updatedAt: '2026-09-19' };
 const discoveryArgs = { projectQuery: '雨夜', entityKind: 'shot', query: '3', slot: 'firstFrame' };

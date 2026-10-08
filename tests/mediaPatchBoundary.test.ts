@@ -1,11 +1,11 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
 import {db} from "@/db/database";
-import {
-    addCharacter, addProp, addScene, addShot, addStyle, copyStudioCharacter, copyStudioProp,
-    copyStudioScene, copyStudioStyle, createProject, patchCharacter, patchProjectOutput,
-    patchProp, patchScene, patchShot, patchStyle, putMedia, setCharacterSlot, setPropSlot,
-    setSceneSlot, setShotSlot, setStyleSlot, PRODUCTION_TABLES,
-} from "@/db/repo";
+import {addCharacter, addProp, addScene, addStyle, patchCharacter, patchProp, patchScene, patchStyle, setCharacterSlot, setPropSlot, setSceneSlot, setStyleSlot} from "@/db/assets";
+import {addShot, patchShot, setShotSlot} from "@/db/shots";
+import {copyStudioCharacter, copyStudioProp, copyStudioScene, copyStudioStyle} from "@/db/assetReuse";
+import {createProject, patchProjectOutput} from "@/db/projects";
+import {putMedia} from "@/db/media";
+import {PRODUCTION_TABLES} from "@/db/productionShared";
 import {applyProductionProposal, createProductionProposal, undoProductionProposal} from "@/db/productionProposals";
 import {emptySlot} from "@/domain/slot";
 import {STUDIO_LIBRARY_ID} from "@/domain/types";

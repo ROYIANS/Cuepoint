@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
-import { createChatThread } from "@/db/repo";
+import {createChatThread} from "@/db/chat";
 import { beginAgentRun } from "@/db/agentRuns";
 import { saveAgentFinishingCheck } from "@/db/agentFinishingCheck";
 import * as finishing from "@/db/agentFinishingCheck";

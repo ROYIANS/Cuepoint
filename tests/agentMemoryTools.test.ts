@@ -1,3 +1,4 @@
+import {registeredTools} from "./helpers/registeredTools";
 import { importReferenceFile } from "@/lib/references/import";
 import { removeProjectReference } from "@/db/references";
 import { REFERENCE_TOOL_NAMES } from "@/lib/agent/referenceToolNames";
@@ -13,16 +14,13 @@ import {
 import { saveTaskRecord } from "@/db/agentTaskRecords";
 import { createProjectMemory, updateProjectMemory } from "@/db/projectMemories";
 import { setThreadMemoryExcluded } from "@/db/memoryRetrieval";
-import {
-  createChatThread,
-  createProject,
-  deleteChatThread,
-  deleteProject,
-} from "@/db/repo";
+import {createChatThread} from "@/db/chat";
+import {createProject} from "@/db/projects";
+import {deleteChatThread, deleteProject} from "@/db/cascadeCommands";
 import type { AgentRun, AgentToolCall } from "@/domain/agent";
 import type { ConnectorConfig } from "@/domain/types";
 import type { AgentToolContext } from "@/lib/agent/tools";
-import { MEMORY_TOOLS, MEMORY_TOOL_NAMES } from "@/lib/agent/memoryTools";
+import { MEMORY_TOOLS as MEMORY_TOOLS_DEFINITIONS, MEMORY_TOOL_NAMES } from "@/lib/agent/memoryTools";
 import {
   BUILTIN_TOOLS,
   requiresToolApproval,
@@ -30,6 +28,8 @@ import {
 } from "@/lib/agent/tools";
 import { assembleSkills, DEFAULT_SKILL_IDS } from "@/lib/agent/skills";
 import { createId } from "@/lib/ids";
+const MEMORY_TOOLS = registeredTools(MEMORY_TOOLS_DEFINITIONS);
+
 const connector: ConnectorConfig = {
   id: "fixture",
   definitionId: "openai-compatible",

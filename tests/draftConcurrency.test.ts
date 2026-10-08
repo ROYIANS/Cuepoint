@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
-import { addCharacter, addStoryBeat, createProject, firstEpisode, patchCharacter, updateEpisodeDraft, updateSeriesLogline, updateWorldSetting } from "@/db/repo";
+import {addCharacter, patchCharacter} from "@/db/assets";
+import {addStoryBeat, firstEpisode, updateEpisodeDraft} from "@/db/episodes";
+import {createProject, updateSeriesLogline, updateWorldSetting} from "@/db/projects";
 import { DebouncedDraftController } from "@/lib/debouncedDraft";
 import { changedDraftFields, DraftConflictError } from "@/lib/draftConflict";
 

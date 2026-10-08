@@ -1,7 +1,9 @@
+import {registeredTools} from "./helpers/registeredTools";
 import JSZip from "jszip";
 import {describe, expect, it, vi} from "vitest";
 import {db} from "@/db/database";
-import {createAudioMusicProject, createChatThread} from "@/db/repo";
+import {createAudioMusicProject} from "@/db/projects";
+import {createChatThread} from "@/db/chat";
 import {addMusicDraft, addMusicWork, patchMusicDraft, patchMusicWork} from "@/db/music";
 import {prepareAudioGenerationJob} from "@/db/audioGeneration";
 import {beginAgentRun} from "@/db/agentRuns";
@@ -9,11 +11,13 @@ import {saveToolPreview, saveToolRound, transitionToolCall} from "@/db/agentTool
 import {defaultMusicSettings, type MusicSettings} from "@/domain/music";
 import type {AgentRun} from "@/domain/agent";
 import type {AgentToolContext} from "@/lib/agent/tools";
-import {MUSIC_TOOLS} from "@/lib/agent/musicTools";
+import {MUSIC_TOOLS as MUSIC_TOOLS_DEFINITIONS} from "@/lib/agent/musicTools";
 import {musicSettingsSchema, musicWireInput, validateGenerationInput} from "@/lib/audioGeneration/input";
 import {prepareAudioGeneration} from "@/lib/audioGeneration/runtime";
 import {submitApimartMusic, type MusicInput} from "@/lib/ai/apimartAudio";
 import {exportProjectZip, importProjectZip} from "@/lib/projectPackage";
+const MUSIC_TOOLS = registeredTools(MUSIC_TOOLS_DEFINITIONS);
+
 
 const engines = ["flowmusic", "suno"] as const;
 const credentials = {baseUrl: "https://api.apimart.ai/v1", apiKey: "fixture"};

@@ -1,11 +1,19 @@
+import {registeredTools} from "./helpers/registeredTools";
 import { importReferenceFile } from "@/lib/references/import";
 import { ownerSnapshot, targetRevision } from "@/lib/agent/businessStore";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
-import * as repo from "@/db/repo";
+import * as repoChat from "@/db/chat";
+import * as repoAssets from "@/db/assets";
+import * as repoProjects from "@/db/projects";
+import * as repoMedia from "@/db/media";
+import * as repoShots from "@/db/shots";
+import * as repoEpisodes from "@/db/episodes";
+import * as repoAssetReuse from "@/db/assetReuse";
+import * as repoCascadeCommands from "@/db/cascadeCommands";
 import { AtomicToolRollbackError } from "@/db/agentTools";
 import { beginAgentRun } from "@/db/agentRuns";
-import { BUSINESS_TOOLS, BUSINESS_TOOL_GROUPS } from "@/lib/agent/businessTools";
+import { BUSINESS_TOOLS as BUSINESS_TOOLS_DEFINITIONS, BUSINESS_TOOL_GROUPS } from "@/lib/agent/businessTools";
 import type { AgentToolContext } from "@/lib/agent/tools";
 import type { AgentRun, AgentToolCall } from "@/domain/agent";
 import type { ConnectorConfig } from "@/domain/types";
@@ -15,10 +23,12 @@ import { assembleSkills } from "@/lib/agent/skills";
 import { createToolLoading, MAX_LOADED_TOOLS } from "@/lib/agent/toolLoading";
 import { readWriteReceipt } from "@/lib/agent/writeReceipt";
 import * as receipts from "@/lib/agent/writeReceipt";
+const BUSINESS_TOOLS = registeredTools(BUSINESS_TOOLS_DEFINITIONS);
+
 
 const connector: ConnectorConfig = { id: "fixture", definitionId: "openai-compatible", baseUrl: "https://fixture.invalid/v1", apiKey: "not-real", updatedAt: "2026-09-19" };
 function tool(name: string) { const result = BUSINESS_TOOLS.find((item) => item.name === name); if (!result) throw new Error(`Missing ${name}`); return result; }
-async function begin() { const thread = await repo.createChatThread(); const initial = await beginAgentRun({ threadId: thread.id, connector, model: "fixture-model", content: "维护创作数据" }); const run = { ...initial, permissionMode: "full" as const, toolLoading: undefined }; await db.agentRuns.put(run); return run; }
+async function begin() { const thread = await repoChat.createChatThread(); const initial = await beginAgentRun({ threadId: thread.id, connector, model: "fixture-model", content: "维护创作数据" }); const run = { ...initial, permissionMode: "full" as const, toolLoading: undefined }; await db.agentRuns.put(run); return run; }
 async function prepare(name: string, raw: unknown, run?: AgentRun) {
   run ??= await begin();
   const definition = tool(name), args = definition.parseArguments(raw);
@@ -65,9 +75,9 @@ describe("committed business write receipts", () => {
 
   it("returns stored shot associations and distinguishes inherited, explicit and disabled style", async () => {
     const scope = await fixture();
-    const character = await repo.addCharacter(scope.ownerId), scene = await repo.addScene(scope.ownerId), prop = await repo.addProp(scope.ownerId);
-    const style = await repo.addStyle(scope.ownerId);
-    await repo.patchStyle(style.id, { name: "柔光" });
+    const character = await repoAssets.addCharacter(scope.ownerId), scene = await repoAssets.addScene(scope.ownerId), prop = await repoAssets.addProp(scope.ownerId);
+    const style = await repoAssets.addStyle(scope.ownerId);
+    await repoAssets.patchStyle(style.id, { name: "柔光" });
     await execute("project_update", { id: scope.ownerId, patch: { defaultStyleId: style.id, defaultDurationSec: 7 } });
     const beat = await execute("beat_create", { ...scope, fields: { characterIds: [character.id], sceneId: scene.id } });
     const created = await execute("shot_create", { ...scope, beatId: beat.id, fields: { propIds: [prop.id], content: "列车远去" } });
@@ -155,7 +165,7 @@ describe("committed business write receipts", () => {
     await db.agentToolCalls.update(rejected.context.callId, { status: "rejected", result: JSON.stringify({ error: "拒绝" }) });
     await expect(rejected.execute()).rejects.toThrow();
     expect((await db.agentToolCalls.get(rejected.context.callId))?.result).not.toContain("writeReceipt");
-    const foreign = await repo.addCharacter(other.ownerId);
+    const foreign = await repoAssets.addCharacter(other.ownerId);
     await expect(prepare("character_update", { ownerId: scope.ownerId, id: foreign.id, patch: { name: "错误归属" } })).rejects.toThrow();
     expect((await db.characters.get(foreign.id))?.name).not.toBe("错误归属");
   });
@@ -252,8 +262,8 @@ describe("Agent creates every supported project kind", () => {
       { name: "错误", kind: "podcast" },
       { name: "越权", kind: "audio", projectId: "other" },
     ]) expect(() => tool("project_create").parseArguments(args)).toThrow();
-    const project = await repo.createAudioMusicProject("已绑定", "audio");
-    const thread = await repo.createChatThread({ projectId: project.id });
+    const project = await repoProjects.createAudioMusicProject("已绑定", "audio");
+    const thread = await repoChat.createChatThread({ projectId: project.id });
     const run = await beginAgentRun({ threadId: thread.id, connector, model: "fixture-model", content: "新建音乐" });
     await expect(prepare("project_create", { name: "另一个", kind: "music" }, run)).rejects.toThrow("项目绑定对话");
     expect((await db.chatThreads.get(thread.id))?.projectId).toBe(project.id);
@@ -263,7 +273,7 @@ describe("Agent creates every supported project kind", () => {
 
 describe("complete manual creative workflow through real repository tools", () => {
   it("includes project reference ownership before approving media cleanup", async () => {
-    const project = await repo.createProject("资料项目");
+    const project = await repoProjects.createProject("资料项目");
     const before = targetRevision(await ownerSnapshot(project.id));
     const reference = await importReferenceFile(project.id, new File(["PRIVATE_REFERENCE_BODY"], "剧本.txt"));
     const detail = await read("business_detail", { kind: "media", ownerId: project.id, id: reference.mediaId });
@@ -333,7 +343,7 @@ describe("complete manual creative workflow through real repository tools", () =
     const { ownerId } = await fixture();
     const source = await execute(`${kind}_create`, { ownerId: "studio", fields: { name: "来源", notes: "原始设定" } });
     const slot = { character: "front", scene: "wide", prop: "hero", style: "look" }[kind];
-    await repo.putMedia({ id: "studio-image", projectId: "studio", filename: "reference.png", mimeType: "image/png", blob: new Blob(["image"]) });
+    await repoMedia.putMedia({ id: "studio-image", projectId: "studio", filename: "reference.png", mimeType: "image/png", blob: new Blob(["image"]) });
     await execute("slot_update", { kind, ownerId: "studio", id: source.id, slot, patch: { result: { mediaId: "studio-image", kind: "image" } } });
     const copy = await execute("asset_copy_from_studio", { kind, sourceId: source.id, ownerId });
     expect(copy.id).not.toBe(source.id);
@@ -369,12 +379,12 @@ describe("business isolation, versioned approval and atomic outcomes", () => {
     const asset = await execute("character_create", { ownerId: scope.ownerId, fields: { name: "用户角色" } });
     const pending = await prepare("character_update", { ownerId: scope.ownerId, id: asset.id, patch: { notes: "AI计划" } });
     expect(pending.context.preview?.changes).toContain("备注：AI计划");
-    await repo.patchCharacter(String(asset.id), { notes: "用户先改" });
+    await repoAssets.patchCharacter(String(asset.id), { notes: "用户先改" });
     await expect(pending.execute()).rejects.toThrow("已变化");
     expect((await db.characters.get(String(asset.id)))?.notes).toBe("用户先改");
     const remove = await prepare("character_delete", { ownerId: scope.ownerId, id: asset.id });
-    const shot = await repo.addShot(scope.ownerId, scope.episodeId);
-    await repo.patchShot(shot.id, { characterIds: [String(asset.id)] });
+    const shot = await repoShots.addShot(scope.ownerId, scope.episodeId);
+    await repoShots.patchShot(shot.id, { characterIds: [String(asset.id)] });
     await expect(remove.execute()).rejects.toThrow("已变化");
     expect((await db.shots.get(shot.id))?.characterIds).toEqual([asset.id]);
   });
@@ -382,7 +392,7 @@ describe("business isolation, versioned approval and atomic outcomes", () => {
     const { ownerId } = await fixture();
     const asset = await execute("character_create", { ownerId });
     let value = "草稿一";
-    const unregister = registerPendingDraft(ownerId, () => repo.patchCharacter(String(asset.id), { notes: value }));
+    const unregister = registerPendingDraft(ownerId, () => repoAssets.patchCharacter(String(asset.id), { notes: value }));
     try {
       const pending = await prepare("character_update", { ownerId, id: asset.id, patch: { name: "AI命名" } });
       expect((await db.characters.get(String(asset.id)))?.notes).toBe("草稿一");
@@ -415,10 +425,10 @@ describe("business isolation, versioned approval and atomic outcomes", () => {
 describe("business reads and media reuse", () => {
   it("pages scoped searches and long text without exposing blobs/extensions/credentials", async () => {
     const scope = await fixture();
-    await repo.updateEpisodeDraft(scope.episodeId, { script: "长".repeat(100000) });
+    await repoEpisodes.updateEpisodeDraft(scope.episodeId, { script: "长".repeat(100000) });
     const first = await execute("character_create", { ownerId: scope.ownerId, fields: { name: "雨中信使", notes: "谨慎" } });
     await execute("character_create", { ownerId: scope.ownerId, fields: { name: "雨中旅人" } });
-    await repo.patchCharacter(String(first.id), { extra: { apiKey: "private-extension" } });
+    await repoAssets.patchCharacter(String(first.id), { extra: { apiKey: "private-extension" } });
     const result = await read("business_search", { kind: "character", ownerId: scope.ownerId, query: "雨中", limit: 1 });
     expect((result.items as unknown[]).length).toBe(1); expect(result.nextOffset).toBe(1);
     expect((await read("business_search", { kind: "character", ownerId: "studio" })).total).toBe(0);
@@ -433,7 +443,7 @@ describe("business reads and media reuse", () => {
     const scope = await fixture();
     const asset = await execute("character_create", { ownerId: scope.ownerId });
     for (const [id, projectId, mimeType] of [["image", scope.ownerId, "image/png"], ["video", scope.ownerId, "video/mp4"], ["foreign", "studio", "image/png"], ["orphan", scope.ownerId, "image/png"]]) {
-      await repo.putMedia({ id, projectId, filename: `${id}.bin`, mimeType, blob: new Blob(["fixture"]) });
+      await repoMedia.putMedia({ id, projectId, filename: `${id}.bin`, mimeType, blob: new Blob(["fixture"]) });
     }
     const target = { kind: "character", ownerId: scope.ownerId, id: asset.id, slot: "front" };
     await execute("slot_update", { ...target, patch: { prompt: "真实参考", referenceImageIds: ["image"], referenceVideoIds: ["video"], result: { mediaId: "image", kind: "image" } } });
@@ -460,22 +470,22 @@ describe("business reads and media reuse", () => {
 describe("business review regressions", () => {
   it.each(["missing", "foreign", "wrong-kind"])("rejects %s studio media before approval and at the repository copy boundary", async (condition) => {
     const { ownerId } = await fixture();
-    const source = await repo.addCharacter("studio");
-    if (condition !== "missing") await repo.putMedia({ id: "damaged", projectId: condition === "foreign" ? ownerId : "studio", filename: "damaged", mimeType: condition === "wrong-kind" ? "video/mp4" : "image/png", blob: new Blob(["content"]) });
+    const source = await repoAssets.addCharacter("studio");
+    if (condition !== "missing") await repoMedia.putMedia({ id: "damaged", projectId: condition === "foreign" ? ownerId : "studio", filename: "damaged", mimeType: condition === "wrong-kind" ? "video/mp4" : "image/png", blob: new Blob(["content"]) });
     // Legacy/corrupt source can predate the strict slot API.
     await db.characters.update(source.id, { slots: { front: { prompt: "", referenceImageIds: [], referenceVideoIds: [], result: { mediaId: "damaged", kind: "image" } } } });
     await expect(prepare("asset_copy_from_studio", { kind: "character", sourceId: source.id, ownerId })).rejects.toThrow();
-    await expect(repo.copyStudioCharacter(ownerId, source.id)).rejects.toThrow();
+    await expect(repoAssetReuse.copyStudioCharacter(ownerId, source.id)).rejects.toThrow();
     expect(await db.characters.where("projectId").equals(ownerId).count()).toBe(0);
   });
   it("binds studio-copy media metadata and enforces new IDs for physical replacement", async () => {
     const { ownerId } = await fixture();
-    const source = await repo.addCharacter("studio");
+    const source = await repoAssets.addCharacter("studio");
     const media = { id: "immutable", projectId: "studio", filename: "first.png", mimeType: "image/png", blob: new Blob(["first"]) };
-    await repo.putMedia(media);
-    await repo.setCharacterSlot(source.id, "front", { prompt: "", referenceImageIds: [media.id], referenceVideoIds: [] });
+    await repoMedia.putMedia(media);
+    await repoAssets.setCharacterSlot(source.id, "front", { prompt: "", referenceImageIds: [media.id], referenceVideoIds: [] });
     const pending = await prepare("asset_copy_from_studio", { kind: "character", sourceId: source.id, ownerId });
-    await expect(repo.putMedia({ ...media, blob: new Blob(["second"]) })).rejects.toThrow();
+    await expect(repoMedia.putMedia({ ...media, blob: new Blob(["second"]) })).rejects.toThrow();
     // Simulate a legacy/external metadata change outside the append-only repository.
     await db.media.update(media.id, { filename: "changed.png" });
     await expect(pending.execute()).rejects.toThrow("已变化");
@@ -483,15 +493,15 @@ describe("business review regressions", () => {
   });
   it("reports proposal and generation retention before orphan deletion approval", async () => {
     const scope = await fixture();
-    const asset = await repo.addCharacter(scope.ownerId);
-    await repo.putMedia({ id: "retained", projectId: scope.ownerId, filename: "result.png", mimeType: "image/png", blob: new Blob(["result"]) });
+    const asset = await repoAssets.addCharacter(scope.ownerId);
+    await repoMedia.putMedia({ id: "retained", projectId: scope.ownerId, filename: "result.png", mimeType: "image/png", blob: new Blob(["result"]) });
     const target = { kind: "character" as const, projectId: scope.ownerId, entityId: asset.id, slot: "front" as const };
     await db.agentGenerationJobs.add({ version: 1, id: "job", runId: "r", threadId: "t", callId: "c", projectId: scope.ownerId, connectorId: "connector", provider: "apimart", baseUrl: "https://fixture.invalid", model: "gpt-image-2", kind: "image", target, baseRevision: "rev", sourceRevisions: [], parameters: {}, inputs: [], fingerprint: "fingerprint", status: "downloaded", result: { mediaId: "retained", kind: "image" }, createdAt: "2026", updatedAt: "2026" });
     const detail = await read("business_detail", { kind: "media", ownerId: scope.ownerId, id: "retained" });
     expect((detail.data as { retention: unknown }).retention).toEqual({ generationJobs: 1, generationBatches: 0, proposals: 0 });
     expect(JSON.stringify(detail)).not.toContain("connector");
     await expect(prepare("media_delete_orphan", { ownerId: scope.ownerId, id: "retained" })).rejects.toThrow("生成任务");
-    await repo.deleteMediaIfOrphan("retained");
+    await repoMedia.deleteMediaIfOrphan("retained");
     expect(await db.media.get("retained")).toBeDefined();
     await execute("project_delete", { id: scope.ownerId });
     expect(await db.agentGenerationJobs.get("job")).toBeUndefined();
@@ -499,7 +509,7 @@ describe("business review regressions", () => {
   });
   it("returns all supported scalar reference IDs rather than truncating at 50", async () => {
     const { ownerId } = await fixture();
-    const character = await repo.addCharacter(ownerId);
+    const character = await repoAssets.addCharacter(ownerId);
     const ids = Array.from({ length: 100 }, (_, index) => `reference-${index}`);
     await db.characters.update(character.id, { slots: { front: { prompt: "", referenceImageIds: ids, referenceVideoIds: [] } } });
     const detail = await read("business_detail", { kind: "character", ownerId, id: character.id });
@@ -514,14 +524,14 @@ describe("business review regressions", () => {
 describe("generation retention lifecycle integration", () => {
   it("deleting a thread removes its jobs and recycles only media no longer retained elsewhere", async () => {
     const { ownerId } = await fixture();
-    const first = await repo.createChatThread(), second = await repo.createChatThread();
-    const asset = await repo.addCharacter(ownerId);
-    for (const id of ["applied", "unassigned", "other-job"]) await repo.putMedia({ id, projectId: ownerId, filename: `${id}.png`, mimeType: "image/png", blob: new Blob([id]) });
-    await repo.setCharacterSlot(asset.id, "front", { prompt: "", referenceImageIds: [], referenceVideoIds: [], result: { mediaId: "applied", kind: "image" } });
+    const first = await repoChat.createChatThread(), second = await repoChat.createChatThread();
+    const asset = await repoAssets.addCharacter(ownerId);
+    for (const id of ["applied", "unassigned", "other-job"]) await repoMedia.putMedia({ id, projectId: ownerId, filename: `${id}.png`, mimeType: "image/png", blob: new Blob([id]) });
+    await repoAssets.setCharacterSlot(asset.id, "front", { prompt: "", referenceImageIds: [], referenceVideoIds: [], result: { mediaId: "applied", kind: "image" } });
     for (const [id, threadId, mediaId] of [["j1", first.id, "applied"], ["j2", first.id, "unassigned"], ["j3", first.id, "other-job"], ["j4", second.id, "other-job"]]) {
       await db.agentGenerationJobs.add({ version: 1, id, runId: "r", threadId, callId: id, projectId: ownerId, connectorId: "c", provider: "apimart", baseUrl: "https://fixture.invalid", model: "gpt-image-2", kind: "image", target: { kind: "character", projectId: ownerId, entityId: asset.id, slot: "front" }, baseRevision: "revision", sourceRevisions: [], parameters: {}, inputs: [], fingerprint: id, status: "downloaded", result: { mediaId, kind: "image" }, createdAt: "2026", updatedAt: "2026" });
     }
-    await repo.deleteChatThread(first.id);
+    await repoCascadeCommands.deleteChatThread(first.id);
     expect(await db.agentGenerationJobs.where("threadId").equals(first.id).count()).toBe(0);
     expect(await db.agentGenerationJobs.get("j4")).toBeDefined();
     expect(await db.media.get("unassigned")).toBeUndefined();

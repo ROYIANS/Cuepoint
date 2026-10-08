@@ -14,16 +14,7 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import {db} from "@/db/database";
-import {
-    addCharacter,
-    addProp,
-    addScene,
-    addStyle,
-    deleteCharacter,
-    deleteProp,
-    deleteScene,
-    deleteStyle,
-} from "@/db/repo";
+import {addCharacter, addProp, addScene, addStyle, deleteCharacter, deleteProp, deleteScene, deleteStyle} from "@/db/assets";
 import {firstResultId} from "@/domain/slot";
 import {
     type Character,

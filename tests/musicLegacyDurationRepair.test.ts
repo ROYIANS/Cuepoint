@@ -39,7 +39,7 @@ vi.mock("react", async original => {
 });
 
 import {db} from "@/db/database";
-import {createAudioMusicProject} from "@/db/repo";
+import {createAudioMusicProject} from "@/db/projects";
 import * as musicRepo from "@/db/music";
 import {defaultMusicSettings, type MusicDraft, type MusicSettings} from "@/domain/music";
 import {MusicCreation} from "@/components/music/MusicCreation";

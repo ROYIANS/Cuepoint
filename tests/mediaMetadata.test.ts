@@ -1,7 +1,8 @@
 import JSZip from "jszip";
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
-import { createProject, putMedia, updateProject } from "@/db/repo";
+import {createProject, updateProject} from "@/db/projects";
+import {putMedia} from "@/db/media";
 import { exportProjectZip, importProjectZip } from "@/lib/projectPackage";
 
 async function fixture() {

@@ -1,19 +1,24 @@
+import {registeredTools} from "./helpers/registeredTools";
 import { describeRunWrites } from "@/lib/agent/runWriteOutcomes";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
-import { createAudioMusicProject, createChatThread } from "@/db/repo";
+import {createAudioMusicProject} from "@/db/projects";
+import {createChatThread} from "@/db/chat";
 import { beginAgentRun } from "@/db/agentRuns";
 import { saveToolPreview, saveToolRound, transitionToolCall } from "@/db/agentTools";
 import { addAudioSegment, addAudioSpeaker, getAudioProjectSnapshot, patchAudioSegment } from "@/db/audio";
 import { addMusicWork } from "@/db/music";
-import { AUDIO_TOOLS } from "@/lib/agent/audioTools";
-import { MUSIC_TOOLS } from "@/lib/agent/musicTools";
+import { AUDIO_TOOLS as AUDIO_TOOLS_DEFINITIONS } from "@/lib/agent/audioTools";
+import { MUSIC_TOOLS as MUSIC_TOOLS_DEFINITIONS } from "@/lib/agent/musicTools";
 import { AUDIO_TOOL_NAMES, MUSIC_TOOL_NAMES } from "@/lib/agent/audioMusicToolNames";
 import { BUILTIN_TOOLS } from "@/lib/agent/tools";
 import type { AgentToolContext } from "@/lib/agent/tools";
 import type { AgentRun } from "@/domain/agent";
 import type { ConnectorConfig } from "@/domain/types";
 import { defaultMusicSettings } from "@/domain/music";
+const AUDIO_TOOLS = registeredTools(AUDIO_TOOLS_DEFINITIONS);
+const MUSIC_TOOLS = registeredTools(MUSIC_TOOLS_DEFINITIONS);
+
 
 const registry = [...AUDIO_TOOLS, ...MUSIC_TOOLS];
 const tool = (name: string) => registry.find((entry) => entry.name === name)!;

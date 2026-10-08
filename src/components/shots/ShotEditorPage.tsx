@@ -1,8 +1,13 @@
+import {BeatTextField} from "@/components/story/BeatTextField";
+import {useTextDraftRetention, type TextDraftStatusChange} from "@/lib/useTextDraftRetention";
+import {gridColumns} from "./shotColumnFields";
+import {ShotRow} from "./ShotRow";
+import {ShotRelationsEditor} from "./ShotRelationsEditor";
+import {applyShotBulkCommand, deleteShotSelectionCommand, reorderShotGroupCommand} from "./shotEditorCommands";
+import {useShotEditorKeyboard} from "./useShotEditorKeyboard";
 import {useWorkspaceUnavailable} from "@/lib/workspaceAvailability";
 import {useManualDraftGuard} from "@/lib/useManualDraftGuard";
-import {ShotScrollViewport, useShotRowViewport} from "./ShotRowViewport";
-import {DurationInput} from "./DurationInput";
-import {shotRelations} from "@/lib/shotRelations";
+import {ShotScrollViewport} from "./ShotRowViewport";
 import {toast} from "sonner";
 import {useShotMedia} from "@/lib/useShotMedia";
 import {
@@ -23,12 +28,10 @@ import {
 import {CSS} from "@dnd-kit/utilities";
 import {useLiveQuery} from "dexie-react-hooks";
 import {
-    ArrowDown,
-    ArrowUp,
     CheckSquare,
     ChevronDown,
-    Columns3,
     CopyPlus,
+    Columns3,
     Filter,
     GripVertical,
     Hash,
@@ -43,50 +46,25 @@ import {
 } from "lucide-react";
 import {
     type CSSProperties,
+    useCallback,
     type Dispatch,
     type SetStateAction,
-    useCallback,
     useEffect,
     useMemo,
     useRef,
     useState,
 } from "react";
 import {db} from "@/db/database";
-import {
-    addShot,
-    addShots,
-    addStoryBeat,
-    deleteEpisodeShots,
-    deleteShots,
-    deleteStoryBeat,
-    duplicateShot,
-    type EpisodeShotBulkPatch,
-    patchEpisodeShots,
-    undoEpisodeShotBulkPatch,
-    patchShot,
-    patchStoryBeat,
-    reorderBeats,
-    reorderShots,
-    restoreShots,
-    restoreStoryBeat,
-    setShotCharacterSelected,
-    setShotSlot,
-    setVisibleColumns,
-    updateEpisodeShotFilters,
-    updateShotSettings,
-} from "@/db/repo";
+import {addShot, addShots, deleteShots, duplicateShot, type EpisodeShotBulkPatch, } from "@/db/shots";
+import {addStoryBeat, deleteStoryBeat, reorderBeats, restoreStoryBeat, updateEpisodeShotFilters} from "@/db/episodes";
+import {setVisibleColumns, updateShotSettings} from "@/db/projects";
 import {type ColumnDef, normalizeVisibleColumns, SHOT_COLUMNS} from "@/domain/columns";
-import {emptySlot} from "@/domain/slot";
 import {
     type Character,
-    type GenerationSlot,
     getEpisodeShotFilters,
-    type Id,
     normalizeEpisodeStory,
-    normalizeShotSettings,
     normalizeShotStatus,
-    type Project,
-    type Prop,
+    normalizeShotSettings,
     type Scene,
     type Shot,
     SHOT_STATUS_LABELS,
@@ -99,17 +77,13 @@ import {
     type ShotStatus,
     type ShotWorkspaceView,
     type StoryBeat,
-    type VisualStyle,
 } from "@/domain/types";
-import {isFormFieldTarget} from "@/lib/formFieldFocus";
 import {formatDuration} from "@/lib/format";
-import {moveIdToPosition, reorderGroupInFullOrder, sameIdOrder,} from "@/lib/reorderIds";
+import {moveIdToPosition, sameIdOrder,} from "@/lib/reorderIds";
 import {filterShots} from "@/lib/shotFilters";
-import {beatGroupIds, retainVisibleSelectedIds, stepActiveShotId,} from "@/lib/shotKeyboard";
+import {beatGroupIds, retainVisibleSelectedIds,} from "@/lib/shotKeyboard";
 import {useUndo} from "@/lib/undo";
 import {cn} from "@/lib/utils";
-import {EditableGenerationSlot} from "@/components/slots/GenerationSlotCard";
-import {Still} from "@/components/studio/Still";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -136,102 +110,6 @@ import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
-import {Textarea} from "@/components/ui/textarea";
-
-function columnPlaceholder(id: ShotColumnId): string {
-    switch (id) {
-        case "content":
-            return "镜头内容";
-        case "durationSec":
-            return "秒";
-        case "notes":
-            return "备注";
-        case "scene":
-            return "未选择场景";
-        case "characters":
-            return "未选择角色";
-        default:
-            return SHOT_COLUMNS.find((column) => column.id === id)?.label ?? "";
-    }
-}
-
-/** Shared shot-row height: min band + hard cap; text scrolls inside. */
-const DESIGN_ROW_H = "h-full min-h-[124px] max-h-[160px]";
-
-/** Shared shot cell chrome: capped height, content centered with vertical padding. */
-const DESIGN_CELL_CHROME =
-    `${DESIGN_ROW_H} flex items-center justify-center overflow-hidden px-2 py-3`;
-
-/** Left reorder stack: centered controls with vertical padding inside the capped row. */
-const SHOT_LEFT_CONTROLS =
-    "box-border flex h-full max-h-[160px] min-h-[124px] flex-col items-center justify-center gap-1.5 overflow-hidden px-1 py-4";
-
-function coverMediaId(
-    slots: Partial<Record<string, GenerationSlot>> | undefined,
-    preferredKeys: string[],
-): Id | undefined {
-    if (!slots) return undefined;
-    for (const key of preferredKeys) {
-        const mediaId = slots[key]?.result?.mediaId;
-        if (mediaId) return mediaId;
-    }
-    return undefined;
-}
-
-function AssetStill({
-                        mediaId,
-                        title,
-                        className,
-                    }: {
-    mediaId?: Id;
-    title: string;
-    className?: string;
-}) {
-    return (
-        <div className={cn("size-10 shrink-0 overflow-hidden rounded-md", className)}>
-            <Still mediaId={mediaId} title={title} className="p-1.5 [&_span]:text-base"/>
-        </div>
-    );
-}
-
-const FLUSH_SELECT_TRIGGER =
-    `${DESIGN_CELL_CHROME} w-full rounded-none border-0 bg-transparent shadow-none focus:ring-0 focus-visible:ring-0 data-[size=default]:h-full dark:bg-transparent dark:hover:bg-transparent`;
-
-function PlainCell({
-                       value,
-                       placeholder,
-                       onCommit,
-                       chrome = false,
-                   }: {
-    value: string;
-    placeholder: string;
-    onCommit: (value: string) => void;
-    /** Capped/centered chrome for design + media shot rows. */
-    chrome?: boolean;
-}) {
-    return (
-        <div
-            className={cn(
-                chrome
-                    ? // Full-width band: avoid justify-center + field-sizing-content shrinking to a skinny strip
-                    `${DESIGN_ROW_H} flex w-full min-w-0 items-center overflow-hidden px-2 py-3`
-                    : "h-full min-h-[124px]",
-                "w-full min-h-0",
-            )}
-        >
-            <Textarea
-                value={value}
-                rows={4}
-                placeholder={placeholder}
-                onChange={(event) => onCommit(event.target.value)}
-                className={cn(
-                    "h-full w-full min-w-0 resize-none rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 field-sizing-fixed dark:bg-transparent",
-                    chrome ? "max-h-full overflow-auto" : "min-h-[124px]",
-                )}
-            />
-        </div>
-    );
-}
 
 export function ShotEditorPage(props: Parameters<typeof ShotEditorPageContent>[0]) {
     return <ShotEditorPageContent key={JSON.stringify([props.projectId, props.episodeId])} {...props}/>;
@@ -287,7 +165,10 @@ function ShotEditorPageContent({
     const onSlotOpenChange = useCallback((shotId: string, open: boolean) => {
         setOpenSlotShots(counts => ({...counts, [shotId]: Math.max(0, (counts[shotId] ?? 0) + (open ? 1 : -1))}));
     }, []);
-    const manualSession = Object.values(openSlotShots).some(count => count > 0) || relationStatus !== "saved";
+    const shotText = useTextDraftRetention(loadedShots);
+    const loadedBeats = useMemo(() => loadedEpisode ? normalizeEpisodeStory(loadedEpisode.story).beats : undefined, [loadedEpisode]);
+    const beatText = useTextDraftRetention(loadedBeats);
+    const manualSession = shotText.pending || beatText.pending || Object.values(openSlotShots).some(count => count > 0) || relationStatus !== "saved";
     const lastProject = useRef(loadedProject);
     const lastEpisode = useRef(loadedEpisode);
     const lastShots = useRef(loadedShots ?? []);
@@ -296,15 +177,15 @@ function ShotEditorPageContent({
     const {shots, retainedCount} = useMemo(() => {
         const retained = lastShots.current.filter(shot =>
             ((openSlotShots[shot.id] ?? 0) > 0 || relationStatus !== "saved" && relationShotId === shot.id) &&
-            !loadedShots?.some(current => current.id === shot.id));
-        const current = retained.length > 0 ? [...(loadedShots ?? []), ...retained] : loadedShots ?? [];
+            !shotText.rows.some(current => current.id === shot.id));
+        const current = retained.length > 0 ? [...shotText.rows, ...retained] : shotText.rows;
         lastShots.current = current;
-        return {shots: current, retainedCount: retained.length};
-    }, [loadedShots, openSlotShots, relationStatus, relationShotId]);
+        return {shots: current, retainedCount: retained.length + shotText.retainedCount};
+    }, [shotText.rows, shotText.retainedCount, openSlotShots, relationStatus, relationShotId]);
     const project = loadedProject ?? (manualSession ? lastProject.current : loadedProject);
     const episode = loadedEpisode ?? (manualSession ? lastEpisode.current : loadedEpisode);
-    const unavailable = workspaceUnavailable || !loadedProject || !loadedEpisode || retainedCount > 0;
-    const relationNavigationGuard = useManualDraftGuard(relationStatus === "error", relationStatus === "saving", () => {
+    const unavailable = workspaceUnavailable || !loadedProject || !loadedEpisode || retainedCount > 0 || beatText.retainedCount > 0;
+    const relationNavigationGuard = useManualDraftGuard(relationStatus === "error", relationStatus === "saving" || shotText.pending || beatText.pending, () => {
         setRelationStatus("saved");
         setRelationShotId(undefined);
     });
@@ -316,7 +197,10 @@ function ShotEditorPageContent({
     const filters = getEpisodeShotFilters(episode ?? {story: normalizeEpisodeStory(undefined)}, project ?? undefined);
     const media = useShotMedia(shots);
     const filtersOn = shotFiltersActive(filters);
-    const visibleShots = useMemo(() => filterShots(shots, filters, media), [shots, filters, media]);
+    const filteredShots = useMemo(() => filterShots(shots, filters, media), [shots, filters, media]);
+    // A filter change must leave an unresolved field readable, just like virtualization.
+    const visibleShots = filteredShots.concat(shots.filter(shot => shotText.isPending(shot.id) &&
+        !filteredShots.some(current => current.id === shot.id)));
     const [selecting, setSelecting] = useState(false);
     const [selected, setSelected] = useState<Set<string>>(new Set());
     const [confirmDelete, setConfirmDelete] = useState(false);
@@ -335,7 +219,7 @@ function ShotEditorPageContent({
         useSensor(KeyboardSensor, {coordinateGetter: sortableKeyboardCoordinates}),
     );
 
-    const beats = normalizeEpisodeStory(episode?.story).beats;
+    const beats = beatText.rows;
     const beatIdList = beats.map((beat) => beat.id);
     const grouped = beats.map((beat) => ({
         beat,
@@ -344,7 +228,7 @@ function ShotEditorPageContent({
     // Keep SortableContext items in sync with mounted beat blocks; filtered-out
     // empty groups must not remain in the sortable id list.
     const visibleGrouped = grouped.filter(
-        ({shots: beatShots}) => !(filtersOn && beatShots.length === 0),
+        ({beat, shots: beatShots}) => beatText.isPending(beat.id) || !(filtersOn && beatShots.length === 0),
     );
     const ungrouped = visibleShots.filter(
         (shot) => !shot.beatId || !beats.some((beat) => beat.id === shot.beatId),
@@ -432,132 +316,29 @@ function ShotEditorPageContent({
             ?.scrollIntoView({block: "nearest"});
     }, [activeShotId]);
 
-    const keyboardRef = useRef({
-        unavailable,
-        visibleShotIds,
-        visibleShots,
-        shots,
-        beatIdList,
-        selected,
-        activeShotId,
-        projectId,
-        episodeId,
-        setSelecting,
-        setSelected,
-        setActiveShotId,
-        setConfirmDelete,
-        moveShotByOffset: (_shotId: string, _offset: -1 | 1) => {
-        },
-    });
-
     async function commitShotReorder(groupIds: string[], activeId: string, overId: string) {
-        const previous = shots.map((shot) => shot.id);
-        const next = reorderGroupInFullOrder(previous, groupIds, activeId, overId);
-        if (!next || sameIdOrder(previous, next)) return;
-        await reorderShots(episodeId, next);
-        registerUndo({
-            label: "已调整镜头顺序",
-            restore: () => reorderShots(episodeId, previous),
-        });
+        const action = await reorderShotGroupCommand({episodeId, fullOrder: shots.map(shot => shot.id), groupIds, activeId, overId});
+        if (action) registerUndo(action);
     }
 
     function moveShotByOffset(shotId: string, offset: -1 | 1) {
         const group = beatGroupIds(visibleShots, shotId, beatIdList);
-        const index = group.indexOf(shotId);
-        const targetId = group[index + offset];
-        if (!targetId) return;
-        void commitShotReorder(group, shotId, targetId);
+        const targetId = group[group.indexOf(shotId) + offset];
+        if (targetId) void commitShotReorder(group, shotId, targetId);
     }
 
-    keyboardRef.current = {
-        unavailable,
-        visibleShotIds,
-        visibleShots,
-        shots,
-        beatIdList,
-        selected,
-        activeShotId,
-        projectId,
-        episodeId,
-        setSelecting,
-        setSelected,
-        setActiveShotId,
-        setConfirmDelete,
-        moveShotByOffset,
-    };
-
-    useEffect(() => {
-        function onKeyDown(event: KeyboardEvent) {
-            if (event.defaultPrevented || isFormFieldTarget(event.target)) return;
-            const ctx = keyboardRef.current;
-            if (ctx.unavailable) return;
-            const meta = event.metaKey || event.ctrlKey;
-            const key = event.key;
-
-            if (meta && (key === "a" || key === "A")) {
-                event.preventDefault();
-                event.stopPropagation();
-                ctx.setSelecting(true);
-                ctx.setSelected(new Set(ctx.visibleShotIds));
-                return;
-            }
-
-            if (event.altKey && (key === "ArrowUp" || key === "ArrowDown")) {
-                const shotId = ctx.activeShotId;
-                if (!shotId) return;
-                event.preventDefault();
-                event.stopPropagation();
-                ctx.moveShotByOffset(shotId, key === "ArrowUp" ? -1 : 1);
-                return;
-            }
-
-            if (meta || event.altKey) return;
-
-            if (key === "j" || key === "ArrowDown" || key === "k" || key === "ArrowUp") {
-                event.preventDefault();
-                event.stopPropagation();
-                const direction: -1 | 1 = key === "j" || key === "ArrowDown" ? 1 : -1;
-                const next = stepActiveShotId(ctx.visibleShotIds, ctx.activeShotId, direction);
-                ctx.setActiveShotId(next);
-                return;
-            }
-
-            if (key === " " || key === "x" || key === "X") {
-                const shotId = ctx.activeShotId;
-                if (!shotId || !ctx.visibleShotIds.includes(shotId)) return;
-                event.preventDefault();
-                event.stopPropagation();
-                ctx.setSelecting(true);
-                ctx.setSelected((current) => {
-                    const next = new Set(current);
-                    if (next.has(shotId)) next.delete(shotId);
-                    else next.add(shotId);
-                    return next;
-                });
-                return;
-            }
-
-            if (key === "n" || key === "N") {
-                event.preventDefault();
-                event.stopPropagation();
-                const active = ctx.shots.find((shot) => shot.id === ctx.activeShotId);
-                void addShot(ctx.projectId, ctx.episodeId, {
-                    beatId: active?.beatId,
-                });
-                return;
-            }
-
-            if (key === "Backspace") {
-                if (ctx.selected.size === 0) return;
-                event.preventDefault();
-                event.stopPropagation();
-                ctx.setConfirmDelete(true);
-            }
-        }
-
-        window.addEventListener("keydown", onKeyDown, true);
-        return () => window.removeEventListener("keydown", onKeyDown, true);
-    }, []);
+    useShotEditorKeyboard({
+        unavailable, visibleShotIds, activeShotId, hasSelection: selected.size > 0,
+        onSelectAll: () => {setSelecting(true); setSelected(new Set(visibleShotIds));},
+        onActivate: setActiveShotId,
+        onToggleSelected: (id) => {
+            setSelecting(true);
+            setSelected(current => {const next = new Set(current); if (next.has(id)) next.delete(id); else next.add(id); return next;});
+        },
+        onReorder: moveShotByOffset,
+        onAdd: () => {void addShot(projectId, episodeId, {beatId: shots.find(shot => shot.id === activeShotId)?.beatId});},
+        onDelete: () => setConfirmDelete(true),
+    });
 
     async function persistFilters(next: ShotFilters) {
         await updateEpisodeShotFilters(episodeId, next).catch((error: unknown) => {
@@ -619,19 +400,15 @@ function ShotEditorPageContent({
     }
 
     async function removeSelectedShots() {
-        const snapshot = await deleteEpisodeShots(episodeId, [...selected]);
-        if (!snapshot?.shots.length) return;
-        registerUndo({
-            label: `已删除 ${snapshot.shots.length} 个镜头`,
-            restore: () => restoreShots(snapshot.shots, snapshot.media),
-        });
+        const action = await deleteShotSelectionCommand({episodeId, selectedIds: [...selected]});
+        if (!action) return;
+        registerUndo(action);
         setSelected(new Set());
     }
 
     async function applyBulkPatch(label: string, patch: EpisodeShotBulkPatch) {
-        const inverse = await patchEpisodeShots(episodeId, [...selected], patch);
-        if (!inverse) return;
-        registerUndo({label, restore: () => undoEpisodeShotBulkPatch(inverse)});
+        const action = await applyShotBulkCommand({episodeId, selectedIds: [...selected], patch, label});
+        if (action) registerUndo(action);
     }
 
     async function assignSelectedBeat(beatId: string | undefined) {
@@ -1207,6 +984,9 @@ function ShotEditorPageContent({
                                         onDeleteBeat={() => setPendingBeatId(beat.id)}
                                         onReorderShots={commitShotReorder}
                                         unavailable={unavailable}
+                                        onShotDraftStatus={shotText.onStatusChange}
+                                        onBeatDraftStatus={beatText.onStatusChange}
+                                        pendingShotIds={shots.filter(shot => shotText.isPending(shot.id)).map(shot => shot.id)}
                                         onSlotOpenChange={onSlotOpenChange}
                                         onEditRelations={setRelationShotId}
                                         onDuplicateShot={(shotId) => void copyShot(shotId)}
@@ -1236,6 +1016,9 @@ function ShotEditorPageContent({
                                 sensors={sensors}
                                 onReorderShots={commitShotReorder}
                                 unavailable={unavailable}
+                                        onShotDraftStatus={shotText.onStatusChange}
+                                        onBeatDraftStatus={beatText.onStatusChange}
+                                        pendingShotIds={shots.filter(shot => shotText.isPending(shot.id)).map(shot => shot.id)}
                                         onSlotOpenChange={onSlotOpenChange}
                                         onEditRelations={setRelationShotId}
                                 onDuplicateShot={(shotId) => void copyShot(shotId)}
@@ -1332,13 +1115,6 @@ function ShotEditorPageContent({
     );
 }
 
-function gridColumns(workspaceView: ShotWorkspaceView, visibleDefs: ColumnDef[]) {
-    // Media: keep frame/clip tiles at a fixed band; only 内容 grows with the viewport.
-    if (workspaceView === "media") {
-        return "52px 64px 108px 220px 220px 220px minmax(220px, 1fr)";
-    }
-    return `52px 64px 108px ${visibleDefs.map((column) => `${column.width}px`).join(" ")}`;
-}
 
 type BeatBlockProps = {
     beat: StoryBeat;
@@ -1363,6 +1139,9 @@ type BeatBlockProps = {
     onReorderShots: (groupIds: string[], activeId: string, overId: string) => Promise<void>;
     unavailable: boolean;
     onSlotOpenChange: (shotId: string, open: boolean) => void;
+    onShotDraftStatus: TextDraftStatusChange;
+    onBeatDraftStatus: TextDraftStatusChange;
+    pendingShotIds: string[];
     onEditRelations: (shotId: string) => void;
     onDuplicateShot: (shotId: string) => void;
 };
@@ -1400,6 +1179,9 @@ function BeatBlockView({
                            onDuplicateShot,
                            onEditRelations,
                            onSlotOpenChange,
+                           onShotDraftStatus,
+                           onBeatDraftStatus,
+                           pendingShotIds,
                            unavailable,
                            sortableState,
                        }: BeatBlockProps & {
@@ -1443,13 +1225,9 @@ function BeatBlockView({
                     {loose ? (
                         <p className="text-sm font-medium">未分场</p>
                     ) : (
-                        <Input
-                            value={beat.title}
-                            onChange={(event) =>
-                                void patchStoryBeat(episodeId, beat.id, {title: event.target.value})
-                            }
-                            className="h-8 max-w-xs"
-                        />
+                        <BeatTextField projectId={projectId} episodeId={episodeId} beat={beat} field="title"
+                                       onDraftStatus={onBeatDraftStatus} unavailable={unavailable} ariaLabel="场次标题"
+                                       containerClassName="max-w-xs" className="h-8"/>
                     )}
                     <p className="text-muted-foreground text-xs">
                         {shots.length} 镜 · {formatDuration(duration)}
@@ -1488,6 +1266,8 @@ function BeatBlockView({
                     <SortableContext items={shotIds} strategy={verticalListSortingStrategy}>
                         {shots.map((shot, index) => (
                             <ShotRow
+                                textPending={pendingShotIds.includes(shot.id)}
+                                onDraftStatus={onShotDraftStatus}
                                 key={shot.id}
                                 shot={shot}
                                 striped={index % 2 === 1}
@@ -1495,8 +1275,12 @@ function BeatBlockView({
                                 projectId={projectId}
                                 episodeId={episodeId}
                                 selecting={selecting}
-                                selected={selected}
-                                setSelected={setSelected}
+                                selected={selected.has(shot.id)}
+                                onSelectedChange={(checked) => setSelected(current => {
+                                    const next = new Set(current);
+                                    if (checked) next.add(shot.id); else next.delete(shot.id);
+                                    return next;
+                                })}
                                 active={activeShotId === shot.id || highlightedShotId === shot.id}
                                 onActivate={() => setActiveShotId(shot.id)}
                                 workspaceView={workspaceView}
@@ -1521,539 +1305,5 @@ function BeatBlockView({
                 </DndContext>
             )}
         </section>
-    );
-}
-
-function ShotRow({
-                     shot,
-                     striped,
-                     initiallyVisible,
-                     projectId,
-                     episodeId,
-                     selecting,
-                     selected,
-                     setSelected,
-                     active,
-                     onActivate,
-                     workspaceView,
-                     visibleDefs,
-                     characters,
-                     scenes,
-                     beatId,
-                     showBelow,
-                     canMoveUp,
-                     canMoveDown,
-                     onMove,
-                     onDuplicate,
-                     onEditRelations,
-                     onSlotOpenChange,
-                     unavailable,
-                 }: {
-    shot: Shot;
-    striped: boolean;
-    initiallyVisible: boolean;
-    projectId: string;
-    episodeId: string;
-    selecting: boolean;
-    selected: Set<string>;
-    setSelected: Dispatch<SetStateAction<Set<string>>>;
-    active?: boolean;
-    onActivate: () => void;
-    workspaceView: ShotWorkspaceView;
-    visibleDefs: ColumnDef[];
-    characters: Character[];
-    scenes: Scene[];
-    beatId?: string;
-    showBelow?: boolean;
-    canMoveUp: boolean;
-    canMoveDown: boolean;
-    onMove: (offset: -1 | 1) => void;
-    onDuplicate: () => void;
-    unavailable: boolean;
-    onSlotOpenChange: (open: boolean) => void;
-    onEditRelations: () => void;
-}) {
-    const {
-        attributes,
-        listeners,
-        setNodeRef,
-        transform,
-        transition,
-        isDragging,
-    } = useSortable({id: shot.id, disabled: selecting});
-    const style: CSSProperties = {
-        transform: CSS.Transform.toString(transform),
-        transition,
-        opacity: isDragging ? 0.72 : undefined,
-        zIndex: isDragging ? 10 : undefined,
-    };
-    const {rowRef, nearViewport} = useShotRowViewport(initiallyVisible);
-    const mountedRowRef = useCallback((element: HTMLDivElement | null) => {
-        setNodeRef(element);
-        rowRef(element);
-    }, [setNodeRef, rowRef]);
-    const renderContents = nearViewport || active || isDragging;
-    const selectedScene = scenes.find((scene) => scene.id === shot.sceneId);
-    const selectedCharacters = characters.filter((character) =>
-        shot.characterIds.includes(character.id),
-    );
-
-    return (
-        <div
-            id={`shot-${shot.id}`}
-            ref={mountedRowRef}
-            style={{...style, height: 160}}
-            tabIndex={renderContents ? undefined : 0}
-            aria-label={renderContents ? undefined : `镜头 ${shot.shotNumber}`}
-            data-shot-mounted={renderContents ? "true" : "false"}
-            className={`group relative scroll-m-20 transition-shadow duration-300 ${
-                active ? "z-10 overflow-visible" : ""
-            }`}
-            onMouseDown={onActivate}
-            onFocusCapture={onActivate}
-        >
-            {renderContents ? <>
-                <Button
-                    type="button"
-                    variant="outline"
-                    size="icon-sm"
-                    className="absolute top-0 left-3.5 z-10 size-6 -translate-y-1/2 rounded-full opacity-0 transition-opacity group-hover:opacity-100"
-                    onClick={() =>
-                        void addShot(projectId, episodeId, {
-                            atOrder: shot.order,
-                            beatId: beatId ?? shot.beatId,
-                        })
-                    }
-                    aria-label="在上方插入镜头"
-                >
-                    <Plus/>
-                </Button>
-                <div
-                    className={cn(
-                        "grid h-[160px] items-stretch border-b",
-                        striped ? "bg-muted/40" : "bg-background",
-                        active && "ring-2 ring-inset ring-brand",
-                    )}
-                    style={{gridTemplateColumns: gridColumns(workspaceView, visibleDefs)}}
-                >
-                    <div className={SHOT_LEFT_CONTROLS}>
-                        {selecting ? (
-                            <Checkbox
-                                aria-label={`选择镜头 ${shot.shotNumber}`}
-                                checked={selected.has(shot.id)}
-                                onCheckedChange={(checked) => {
-                                    setSelected((current) => {
-                                        const next = new Set(current);
-                                        if (checked) next.add(shot.id);
-                                        else next.delete(shot.id);
-                                        return next;
-                                    });
-                                }}
-                            />
-                        ) : (
-                            <>
-                                <Button
-                                    size="icon-sm"
-                                    variant="ghost"
-                                    className="size-6"
-                                    aria-label="上移镜头"
-                                    disabled={!canMoveUp}
-                                    onClick={() => onMove(-1)}
-                                >
-                                    <ArrowUp/>
-                                </Button>
-                                <button
-                                    type="button"
-                                    className="text-muted-foreground hover:text-foreground inline-flex size-6 cursor-grab items-center justify-center rounded-md active:cursor-grabbing"
-                                    aria-label="拖拽调整镜头顺序"
-                                    {...attributes}
-                                    {...listeners}
-                                >
-                                    <GripVertical className="size-3.5"/>
-                                </button>
-                                <Button
-                                    size="icon-sm"
-                                    variant="ghost"
-                                    className="size-6"
-                                    aria-label="下移镜头"
-                                    disabled={!canMoveDown}
-                                    onClick={() => onMove(1)}
-                                >
-                                    <ArrowDown/>
-                                </Button>
-                                <Button
-                                    size="icon-sm"
-                                    variant="ghost"
-                                    className="size-6"
-                                    aria-label="复制镜头"
-                                    onClick={onDuplicate}
-                                >
-                                    <CopyPlus/>
-                                </Button>
-                            </>
-                        )}
-                    </div>
-                    <div className={cn(DESIGN_CELL_CHROME, "flex-col gap-2")}>
-                        <Input
-                            aria-label="镜号"
-                            value={shot.shotNumber}
-                            onChange={(event) => void patchShot(shot.id, {shotNumber: event.target.value})}
-                            className="h-8 w-10 border-0 bg-transparent text-center shadow-none focus-visible:ring-0"
-                        />
-                        <Button size="sm" variant="ghost" className="h-7 px-1 text-xs"
-                                aria-label={`镜头 ${shot.shotNumber} 道具与风格`}
-                                onClick={onEditRelations}>设定</Button>
-                    </div>
-                    <div className={cn(DESIGN_CELL_CHROME, "border-l")}>
-                        <Select
-                            value={normalizeShotStatus(shot.status)}
-                            onValueChange={(value) =>
-                                void patchShot(shot.id, {status: normalizeShotStatus(value)})
-                            }
-                        >
-                            <SelectTrigger
-                                className="h-8 w-full border-0 bg-transparent shadow-none focus:ring-0 focus-visible:ring-0 dark:bg-transparent dark:hover:bg-transparent">
-                                <SelectValue/>
-                            </SelectTrigger>
-                            <SelectContent>
-                                {SHOT_STATUSES.map((status) => (
-                                    <SelectItem key={status} value={status}>
-                                        {SHOT_STATUS_LABELS[status]}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    {workspaceView === "media" ? (
-                        <>
-                            <div className={cn(DESIGN_CELL_CHROME, "w-full")}>
-                                <EditableGenerationSlot
-                                    unavailable={unavailable}
-                                    onEditorOpenChange={onSlotOpenChange}
-                                    projectId={projectId}
-                                    targetKey={JSON.stringify([projectId, "shot", shot.id, "firstFrame"])}
-                                    slot={shot.firstFrame ?? emptySlot()}
-                                    variant="frame"
-                                    size="row"
-                                    title={`镜头 ${shot.shotNumber} · 首帧`}
-                                    onSave={(slot, baseline) => setShotSlot(shot.id, "firstFrame", slot, baseline)}
-                                />
-                            </div>
-                            <div className={cn(DESIGN_CELL_CHROME, "w-full border-l")}>
-                                <EditableGenerationSlot
-                                    unavailable={unavailable}
-                                    onEditorOpenChange={onSlotOpenChange}
-                                    projectId={projectId}
-                                    targetKey={JSON.stringify([projectId, "shot", shot.id, "lastFrame"])}
-                                    slot={shot.lastFrame ?? emptySlot()}
-                                    variant="frame"
-                                    size="row"
-                                    title={`镜头 ${shot.shotNumber} · 尾帧`}
-                                    onSave={(slot, baseline) => setShotSlot(shot.id, "lastFrame", slot, baseline)}
-                                />
-                            </div>
-                            <div className={cn(DESIGN_CELL_CHROME, "w-full border-l")}>
-                                <EditableGenerationSlot
-                                    unavailable={unavailable}
-                                    onEditorOpenChange={onSlotOpenChange}
-                                    projectId={projectId}
-                                    targetKey={JSON.stringify([projectId, "shot", shot.id, "clip"])}
-                                    slot={shot.clip ?? emptySlot()}
-                                    variant="clip"
-                                    size="row"
-                                    title={`镜头 ${shot.shotNumber} · 成片`}
-                                    onSave={(slot, baseline) => setShotSlot(shot.id, "clip", slot, baseline)}
-                                />
-                            </div>
-                            <div className="flex h-full min-w-0 border-l">
-                                <PlainCell
-                                    chrome
-                                    value={shot.content}
-                                    placeholder={columnPlaceholder("content")}
-                                    onCommit={(content) => void patchShot(shot.id, {content})}
-                                />
-                            </div>
-                        </>
-                    ) : visibleDefs.map((column) => (
-                        <div key={column.id} className="flex h-full min-h-0 min-w-0 border-l">
-                            {column.id === "durationSec" ? (
-                                <div className={cn(DESIGN_CELL_CHROME, "w-full")}>
-                                    <DurationInput projectId={projectId} shotId={shot.id} value={shot.durationSec}/>
-                                </div>
-                            ) : column.id === "characters" ? (
-                                <DropdownMenu
-                                    onOpenChange={(open) => {
-                                        if (open) onActivate();
-                                    }}
-                                >
-                                    <DropdownMenuTrigger asChild>
-                                        <button
-                                            type="button"
-                                            aria-label="选择角色"
-                                            className={cn(
-                                                FLUSH_SELECT_TRIGGER,
-                                                "[&_svg]:pointer-events-none [&_svg]:shrink-0",
-                                            )}
-                                        >
-                    <span className="flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5">
-                      {characters.length === 0 ? (
-                          <span className="text-muted-foreground text-sm">先在世界里添加角色</span>
-                      ) : selectedCharacters.length === 0 ? (
-                          <span className="text-muted-foreground text-sm">
-                          {columnPlaceholder("characters")}
-                        </span>
-                      ) : selectedCharacters.length === 1 ? (
-                          <>
-                              <AssetStill
-                                  mediaId={coverMediaId(selectedCharacters[0].slots, ["front"])}
-                                  title={selectedCharacters[0].name}
-                                  className="size-16"
-                              />
-                              <span
-                                  title={selectedCharacters[0].name}
-                                  className="text-muted-foreground max-w-full truncate text-center text-[10px] leading-none"
-                              >
-                            {selectedCharacters[0].name}
-                          </span>
-                          </>
-                      ) : (
-                          <>
-                              <AssetStill
-                                  mediaId={coverMediaId(selectedCharacters[0].slots, ["front"])}
-                                  title={selectedCharacters[0].name}
-                                  className="size-16"
-                              />
-                              <span
-                                  title={selectedCharacters.map((c) => c.name).join("、")}
-                                  className="text-muted-foreground max-w-full truncate text-center text-[10px] leading-none"
-                              >
-                            角色 · {selectedCharacters.length}
-                          </span>
-                          </>
-                      )}
-                    </span>
-                                            <ChevronDown className="size-4 opacity-50"/>
-                                        </button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="start" className="w-56">
-                                        {characters.length === 0 ? (
-                                            <DropdownMenuItem disabled>先在世界里添加角色</DropdownMenuItem>
-                                        ) : (
-                                            <>
-                                                <DropdownMenuItem
-                                                    disabled={selectedCharacters.length === 0}
-                                                    onSelect={(event) => {
-                                                        event.preventDefault();
-                                                        onActivate();
-                                                        void patchShot(shot.id, {characterIds: []});
-                                                    }}
-                                                >
-                                                    清除
-                                                </DropdownMenuItem>
-                                                <DropdownMenuSeparator/>
-                                                {characters.map((character) => {
-                                                    const selectedChar = shot.characterIds.includes(character.id);
-                                                    return (
-                                                        <DropdownMenuCheckboxItem
-                                                            key={character.id}
-                                                            checked={selectedChar}
-                                                            onSelect={(event) => event.preventDefault()}
-                                                            onCheckedChange={(checked) => {
-                                                                onActivate();
-                                                                void setShotCharacterSelected(shot.id, character.id, checked === true)
-                                                                    .catch(() => toast.error("保存角色失败，请重试"));
-                                                            }}
-                                                        >
-                                                            <AssetStill
-                                                                mediaId={coverMediaId(character.slots, ["front"])}
-                                                                title={character.name}
-                                                                className="size-8"
-                                                            />
-                                                            <span className="truncate">{character.name}</span>
-                                                        </DropdownMenuCheckboxItem>
-                                                    );
-                                                })}
-                                            </>
-                                        )}
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            ) : column.id === "scene" ? (
-                                <Select
-                                    value={shot.sceneId ?? "none"}
-                                    onValueChange={(value) =>
-                                        void patchShot(shot.id, {
-                                            sceneId: value === "none" ? undefined : value,
-                                        })
-                                    }
-                                    onOpenChange={(open) => {
-                                        if (open) onActivate();
-                                    }}
-                                >
-                                    <SelectTrigger className={FLUSH_SELECT_TRIGGER}>
-                  <span className="flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5">
-                    {selectedScene ? (
-                        <>
-                            <AssetStill
-                                mediaId={coverMediaId(selectedScene.slots, ["wide"])}
-                                title={selectedScene.name}
-                                className="size-16"
-                            />
-                            <span
-                                title={selectedScene.name}
-                                className="text-muted-foreground max-w-full truncate text-center text-[10px] leading-none"
-                            >
-                          {selectedScene.name}
-                        </span>
-                        </>
-                    ) : (
-                        <span className="text-muted-foreground text-sm">
-                        {columnPlaceholder("scene")}
-                      </span>
-                    )}
-                  </span>
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="none">未选择场景</SelectItem>
-                                        {scenes.map((scene) => (
-                                            <SelectItem key={scene.id} value={scene.id}>
-                                                <AssetStill
-                                                    mediaId={coverMediaId(scene.slots, ["wide"])}
-                                                    title={scene.name}
-                                                    className="size-8"
-                                                />
-                                                <span className="truncate">{scene.name}</span>
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            ) : (
-                                <PlainCell
-                                    chrome
-                                    value={String(shot[column.id as keyof Shot] ?? "")}
-                                    placeholder={columnPlaceholder(column.id)}
-                                    onCommit={(value) =>
-                                        void patchShot(shot.id, {[column.id]: value} as Partial<Shot>)
-                                    }
-                                />
-                            )}
-                        </div>
-                    ))}
-                </div>
-                {showBelow ? (
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="icon-sm"
-                        className="absolute bottom-0 left-3.5 z-10 size-6 translate-y-1/2 rounded-full opacity-0 transition-opacity group-hover:opacity-100"
-                        onClick={() => void addShot(projectId, episodeId, {beatId})}
-                        aria-label="在末尾添加镜头"
-                    >
-                        <Plus/>
-                    </Button>
-                ) : null}
-            </> : null}
-        </div>
-    );
-}
-
-function ShotRelationsEditor({project, shot, props, styles, unavailable, onStatusChange}: {
-    project: Project;
-    shot: Shot;
-    props: Prop[];
-    styles: VisualStyle[];
-    unavailable: boolean;
-    onStatusChange: (status: "saved" | "saving" | "error") => void;
-}) {
-    const [saving, setSaving] = useState(false);
-    const [error, setError] = useState<string>();
-    const pending = useRef(false);
-    const retryPatch = useRef<Partial<Shot> | undefined>(undefined);
-    const relations = shotRelations(project, shot, props, styles);
-    const styleValue = shot.styleId === undefined ? "inherit" : shot.styleId === null ? "none" : shot.styleId;
-    const defaultStyle = styles.find((item) => item.id === project.defaultStyleId);
-    const missingPropIds = (shot.propIds ?? []).filter((id) => !props.some((item) => item.id === id));
-
-    async function save(patch: Partial<Shot>) {
-        if (pending.current || unavailable) return;
-        pending.current = true;
-        setSaving(true);
-        onStatusChange("saving");
-        setError(undefined);
-        retryPatch.current = patch;
-        try {
-            await patchShot(shot.id, patch);
-            retryPatch.current = undefined;
-            onStatusChange("saved");
-        } catch (reason) {
-            setError(reason instanceof Error ? reason.message : "保存失败，请重试");
-            onStatusChange("error");
-        } finally {
-            pending.current = false;
-            setSaving(false);
-        }
-    }
-
-    return (
-        <div className="space-y-5">
-            <div className="space-y-2">
-                <Label htmlFor={`shot-style-${shot.id}`}>镜头风格</Label>
-                <Select value={styleValue} disabled={saving || unavailable}
-                        onValueChange={(value) => void save({styleId: value === "inherit" ? undefined : value === "none" ? null : value})}>
-                    <SelectTrigger id={`shot-style-${shot.id}`} className="w-full"><SelectValue/></SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="inherit">继承项目
-                            · {defaultStyle?.name ?? (project.defaultStyleId ? "默认风格已失效" : "未设默认风格")}</SelectItem>
-                        <SelectItem value="none">不使用风格</SelectItem>
-                        {shot.styleId && !styles.some((item) => item.id === shot.styleId) ?
-                            <SelectItem value={shot.styleId} disabled>已失效的风格</SelectItem> : null}
-                        {styles.map((style) => <SelectItem key={style.id}
-                                                           value={style.id}>{style.name || "未命名风格"}</SelectItem>)}
-                    </SelectContent>
-                </Select>
-                <p className="text-muted-foreground text-xs">当前生效：{relations.style} · {relations.styleSource}</p>
-            </div>
-            <fieldset disabled={saving || unavailable} className="space-y-2">
-                <legend className="mb-2 text-sm font-medium">镜头道具（可多选）</legend>
-                {props.length === 0 ?
-                    <p className="text-muted-foreground text-xs">先在世界的道具库中添加道具，再关联到镜头。</p> : (
-                        <div className="max-h-56 space-y-1 overflow-y-auto rounded-md border p-2">
-                            {props.map((prop) => (
-                                <label key={prop.id}
-                                       className="hover:bg-muted flex cursor-pointer items-center gap-3 rounded px-2 py-2 text-sm">
-                                    <Checkbox disabled={saving || unavailable} checked={(shot.propIds ?? []).includes(prop.id)}
-                                              onCheckedChange={(checked) => {
-                                                  const ids = new Set(shot.propIds ?? []);
-                                                  if (checked) ids.add(prop.id); else ids.delete(prop.id);
-                                                  void save({propIds: [...ids]});
-                                              }}/>
-                                    <span>{prop.name || "未命名道具"}</span>
-                                </label>
-                            ))}
-                        </div>
-                    )}
-                {missingPropIds.length > 0 ? <div className="text-destructive text-xs">
-                    有 {missingPropIds.length} 个道具关联已失效。
-                    <Button size="sm" variant="ghost" disabled={saving || unavailable}
-                            onClick={() => void save({propIds: (shot.propIds ?? []).filter((id) => !missingPropIds.includes(id))})}>移除失效关联</Button>
-                </div> : null}
-                <p className="text-muted-foreground text-xs">已关联：{relations.props || "无道具"}</p>
-            </fieldset>
-            <div role="status" aria-live="polite" className="text-muted-foreground text-xs">
-                {saving ? "保存中…" : error ? (
-                    <div className="text-destructive space-y-2">
-                        <p>{error}</p>
-                        <div className="flex flex-wrap gap-2">
-                            <Button size="sm" variant="outline"
-                                    onClick={() => retryPatch.current && void save(retryPatch.current)}>重试</Button>
-                            <Button size="sm" variant="ghost" onClick={() => {
-                                retryPatch.current = undefined;
-                                setError(undefined);
-                                onStatusChange("saved");
-                            }}>放弃未保存的选择</Button>
-                        </div>
-                    </div>
-                ) : "选择已保存"}
-            </div>
-        </div>
     );
 }

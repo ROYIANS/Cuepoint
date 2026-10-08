@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import { db } from '@/db/database';
-import { createProject, addCharacter, patchCharacter, deleteProject } from '@/db/repo';
+import {createProject} from "@/db/projects";
+import {addCharacter, patchCharacter} from "@/db/assets";
+import {deleteProject} from "@/db/cascadeCommands";
 import { STUDIO_LIBRARY_ID } from '@/domain/types';
 import { emptySlot } from '@/domain/slot';
 import { createIpProfile, bindProjectIp, setIpArchived, updateIpProfile } from '@/db/ipProfiles';

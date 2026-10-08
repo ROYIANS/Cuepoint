@@ -3,7 +3,8 @@ import {createBrowserHistory, createRootRoute, createRoute, createRouter, Router
 import {Toaster} from "sonner";
 import {AgentChatPage} from "@/components/agent/AgentChatPage";
 import {db} from "@/db/database";
-import {createProject, createChatThread} from "@/db/repo";
+import {createProject} from "@/db/projects";
+import {createChatThread} from "@/db/chat";
 import {importReferenceFile} from "@/lib/references/import";
 
 const gates = new Map<string, {promise: Promise<void>; release: () => void}>();

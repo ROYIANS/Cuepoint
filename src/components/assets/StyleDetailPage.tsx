@@ -3,7 +3,7 @@ import {Link, useNavigate} from "@tanstack/react-router";
 import {useLiveQuery} from "dexie-react-hooks";
 import {ChevronLeft} from "lucide-react";
 import {db} from "@/db/database";
-import {patchStyle, setStyleSlot} from "@/db/repo";
+import {patchStyle, setStyleSlot} from "@/db/assets";
 import {STUDIO_LIBRARY_ID, STYLE_SLOTS} from "@/domain/types";
 import {EditableGenerationSlot} from "@/components/slots/GenerationSlotCard";
 import {AssetTextField} from "./AssetTextField";

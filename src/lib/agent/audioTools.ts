@@ -18,7 +18,7 @@ import {
 } from "@/db/audio";
 import {assertAudioProject, assertAudioRevision, ownedAudioRow} from "@/db/audioShared";
 import {splitAudioClip} from "@/lib/audio/commands";
-import type {AgentToolContext, AgentToolDefinition} from "./tools";
+import type {AgentToolContext} from "./tools";
 import type {Spec} from "./businessSchemas";
 import * as s from "./businessSchemas";
 import {libraryReadTool, libraryWriteTool} from "./libraryToolHelpers";
@@ -40,9 +40,10 @@ export const audioMusicTarget = (projectId: string) => ({
     href: `/p/${encodeURIComponent(projectId)}`
 });
 
-export function audioMusicUnion<T extends [Spec<unknown>, Spec<unknown>, ...Spec<unknown>[]]>(...specs: T): Spec<z.infer<T[number]["schema"]>> {
+// Mapping preserves each tuple position and its actual schema output.
+export function audioMusicUnion<const T extends [Spec<unknown>, Spec<unknown>, ...Spec<unknown>[]]>(...specs: T): Spec<z.infer<T[number]["schema"]>> {
     return {
-        schema: z.union(specs.map((spec) => spec.schema) as [z.ZodTypeAny, z.ZodTypeAny, ...z.ZodTypeAny[]]),
+        schema: z.union(specs.map((spec) => spec.schema) as {[K in keyof T]: T[K]["schema"]}),
         json: {type: "object", anyOf: specs.map((spec) => spec.json)}
     };
 }
@@ -154,7 +155,7 @@ async function clipState(args: { projectId: string; id: string; revision: number
     return previewState(args, changes);
 }
 
-export const AUDIO_TOOLS: readonly AgentToolDefinition[] = [
+export const AUDIO_TOOLS = [
     libraryReadTool({
         name: "audio_read",
         title: "读取音频项目",
@@ -250,12 +251,12 @@ export const AUDIO_TOOLS: readonly AgentToolDefinition[] = [
         owners: (args) => [args.projectId],
         prepare: (args) => previewState(args, [`创建${args.kind}：${JSON.stringify(args).slice(0, 1800)}`]),
         async execute(args) {
-            const {projectId, kind, ...input} = args;
-            switch (kind) {
+            const {projectId} = args;
+            switch (args.kind) {
                 case "chapter":
-                    return addAudioChapter(projectId, input as Extract<typeof args, { kind: "chapter" }>);
+                    return addAudioChapter(projectId, {title: args.title, order: args.order});
                 case "speaker": {
-                    const row = input as Extract<typeof args, { kind: "speaker" }>;
+                    const {projectId: _projectId, kind: _kind, ...row} = args;
                     const profile = row.voice || row.mimo ? {
                         voice: row.voice ?? "mimo_default",
                         speed: row.speed ?? 1, ...(row.mimo ? {mimo: row.mimo} : row.voice && (MIMO_VOICES as readonly string[]).includes(row.voice) ? {
@@ -268,7 +269,7 @@ export const AUDIO_TOOLS: readonly AgentToolDefinition[] = [
                     return addAudioSpeaker(projectId, {...row, ...profile});
                 }
                 case "segment": {
-                    const row = args as Extract<typeof args, { kind: "segment" }>;
+                    const row = args;
                     return addAudioSegment(projectId, {
                         chapterId: row.chapterId,
                         text: row.text,
@@ -278,7 +279,7 @@ export const AUDIO_TOOLS: readonly AgentToolDefinition[] = [
                     });
                 }
                 case "track": {
-                    const row = args as Extract<typeof args, { kind: "track" }>;
+                    const row = args;
                     return addAudioTrack(projectId, {
                         chapterId: row.chapterId,
                         name: row.name,

@@ -1,43 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
-import {
-  addCharacter,
-  addEpisode,
-  addProp,
-  addScene,
-  addShot,
-  addStyle,
-  addStoryBeat,
-  copyStudioCharacter,
-  copyStudioProp,
-  copyStudioScene,
-  copyStudioStyle,
-  createProject,
-  deleteCharacter,
-  deleteEpisode,
-  deleteEpisodeShots,
-  deleteShots,
-  duplicateBeat,
-  duplicateShot,
-  patchProjectOutput,
-  patchStoryBeat,
-  patchCharacter,
-  patchProp,
-  patchScene,
-  patchStyle,
-  patchEpisodeShots,
-  putMedia,
-  setCharacterSlot,
-  reorderBeats,
-  reorderEpisodes,
-  reorderShots,
-  restoreEpisode,
-  restoreShots,
-  touchProject,
-  updateEpisodeDraft,
-  updateShotSettings,
-  patchShot,
-} from "@/db/repo";
+import {addCharacter, addProp, addScene, addStyle, deleteCharacter, patchCharacter, patchProp, patchScene, patchStyle, setCharacterSlot} from "@/db/assets";
+import {addEpisode, addStoryBeat, deleteEpisode, duplicateBeat, patchStoryBeat, reorderBeats, reorderEpisodes, restoreEpisode, updateEpisodeDraft} from "@/db/episodes";
+import {addShot, deleteEpisodeShots, deleteShots, duplicateShot, patchEpisodeShots, reorderShots, restoreShots, patchShot} from "@/db/shots";
+import {copyStudioCharacter, copyStudioProp, copyStudioScene, copyStudioStyle} from "@/db/assetReuse";
+import {createProject, patchProjectOutput, updateShotSettings} from "@/db/projects";
+import {putMedia} from "@/db/media";
+import {touchProject} from "@/db/productionShared";
 import { emptySlot } from "@/domain/slot";
 import {
   normalizeAspectPreset,

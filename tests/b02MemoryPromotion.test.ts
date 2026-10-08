@@ -51,7 +51,7 @@ vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
 
 import {toast} from "sonner";
 import {db} from "@/db/database";
-import {createProject} from "@/db/repo";
+import {createProject} from "@/db/projects";
 import {createAgentTask} from "@/db/agentTasks";
 import {confirmWrapup, createManualWrapup, getTaskWrapupState, saveWrapup} from "@/db/agentTaskWrapups";
 import * as memories from "@/db/projectMemories";

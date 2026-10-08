@@ -1,13 +1,7 @@
 import {db} from "./database";
-import {
-    patchShot,
-    PRODUCTION_TABLES,
-    setCharacterSlot,
-    setPropSlot,
-    setSceneSlot,
-    setShotSlot,
-    setStyleSlot
-} from "./repo";
+import {patchShot, setShotSlot} from "./shots";
+import {PRODUCTION_TABLES} from "./productionShared";
+import {setCharacterSlot, setPropSlot, setSceneSlot, setStyleSlot} from "./assets";
 import type {ProductionChange, ProductionProposal, ProductionTarget, ProposalSource} from "@/domain/production";
 import type {GenerationResult, GenerationSlot} from "@/domain/types";
 import {emptySlot} from "@/domain/slot";

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
 import { getGeneralAgentConfig, updateGeneralAgentConfig } from "@/db/agentSettings";
 import { beginAgentRun } from "@/db/agentRuns";
-import { createChatThread } from "@/db/repo";
+import {createChatThread} from "@/db/chat";
 import { GENERAL_AGENT_ID } from "@/domain/agent";
 
 const skills = ["audio-production", "music-creation", "project-references", "project-memory", "workspace", "planning", "business-read", "story-edit", "asset-edit", "media-generation", "ip-management", "material-library"];

@@ -4,7 +4,7 @@ import { db } from "@/db/database";
 import { beginAgentRun } from "@/db/agentRuns";
 import {  } from "@/db/agentTools";
 import { updateGeneralAgentConfig } from "@/db/agentSettings";
-import { createChatThread } from "@/db/repo";
+import {createChatThread} from "@/db/chat";
 import { executeChatRun } from "@/lib/agent/runChat";
 import { buildRunActivity } from "@/lib/agent/runPresentation";
 import type { ConnectorConfig } from "@/domain/types";

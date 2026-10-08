@@ -2,30 +2,14 @@ import Dexie from "dexie";
 import JSZip from "jszip";
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
-import {
-  addCharacter,
-  addProp,
-  addScene,
-  addShot,
-  addStyle,
-  appendChatMessage,
-  copyStudioCharacter,
-  copyStudioProp,
-  copyStudioScene,
-  copyStudioStyle,
-  createChatThread,
-  createProject,
-  patchProp,
-  patchShot,
-  patchStyle,
-  putMedia,
-  setCharacterSlot,
-  setPropSlot,
-  setShotSlot,
-  updateProject,
-  updateEpisodeShotFilters,
-  upsertConnector,
-} from "@/db/repo";
+import {addCharacter, addProp, addScene, addStyle, patchProp, patchStyle, setCharacterSlot, setPropSlot} from "@/db/assets";
+import {addShot, patchShot, setShotSlot} from "@/db/shots";
+import {appendChatMessage, createChatThread} from "@/db/chat";
+import {copyStudioCharacter, copyStudioProp, copyStudioScene, copyStudioStyle} from "@/db/assetReuse";
+import {createProject, updateProject} from "@/db/projects";
+import {putMedia} from "@/db/media";
+import {updateEpisodeShotFilters} from "@/db/episodes";
+import {upsertConnector} from "@/db/connectors";
 import { emptySlot } from "@/domain/slot";
 import { PACKAGE_FORMAT, STUDIO_LIBRARY_ID } from "@/domain/types";
 import { exportProjectZip, importProjectZip, PackageError } from "@/lib/projectPackage";

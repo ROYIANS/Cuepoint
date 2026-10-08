@@ -6,7 +6,7 @@ import { observeAudioTask } from "@/lib/audioGeneration/observations";
 import { snapshotAudioPackage } from "@/lib/audioProjectPackage";
 import { deleteMusicWork } from "@/db/music";
 import { exportProjectZip, importProjectZip } from "@/lib/projectPackage";
-import { createAudioMusicProject } from "@/db/repo";
+import {createAudioMusicProject} from "@/db/projects";
 import { prepareAudioGeneration, submitAudioGeneration, refreshAudioGeneration } from "@/lib/audioGeneration/runtime";
 import { getApimartMusicTask } from "@/lib/ai/apimartAudio";
 

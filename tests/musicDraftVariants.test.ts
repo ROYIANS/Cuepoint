@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { linkMusicVariants, musicVariant, newVariantSettings, parseVariantLinks } from "../src/components/music/draftVariants";
 import { db } from "../src/db/database";
-import { createAudioMusicProject } from "../src/db/repo";
+import {createAudioMusicProject} from "../src/db/projects";
 import { addMusicDraft, patchMusicDraft } from "../src/db/music";
 import type { MusicSettings } from "../src/domain/music";
 

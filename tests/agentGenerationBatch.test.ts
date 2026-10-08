@@ -1,3 +1,4 @@
+import {registeredTools} from "./helpers/registeredTools";
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { taskGenerationSource, saveTaskRecord, validateTaskSources } from '@/db/agentTaskRecords';
 import { createAgentTaskForThread } from '@/db/agentTasks';
@@ -6,7 +7,11 @@ import { describe, expect, it, vi } from 'vitest';
 import { db } from '@/db/database';
 import { beginAgentRun } from '@/db/agentRuns';
 import {  transitionToolCall } from '@/db/agentTools';
-import { createProject, addShot, createChatThread, patchShot, deleteChatThread, deleteProject, deleteMediaIfOrphan, putMedia } from '@/db/repo';
+import {createProject} from "@/db/projects";
+import {addShot, patchShot} from "@/db/shots";
+import {createChatThread} from "@/db/chat";
+import {deleteChatThread, deleteProject} from "@/db/cascadeCommands";
+import {deleteMediaIfOrphan, putMedia} from "@/db/media";
 import { prepareGenerationBatch, readGenerationBatch, saveGenerationBatchDraft, changeGenerationBatchItems, confirmGenerationBatch, applyBatchSelections, selectBatchCandidate, retryFailedBatch, controlGenerationBatch, recoverAbandonedGenerationBatches } from '@/db/agentGenerationBatches';
 import { startGenerationBatch, stopGenerationBatch, batchUserAction } from '@/lib/agent/generationBatchRuntime';
 import { applyAgentGeneration } from '@/lib/agent/generationRuntime';
@@ -14,7 +19,9 @@ import { generationSubmitSchema, type GenerationSubmitArgs } from '@/lib/agent/g
 import type { ConnectorConfig } from '@/domain/types';
 import type { AgentToolContext } from '@/lib/agent/tools';
 import type { ThreadLockManager } from '@/lib/agent/runOwnership';
-import { GENERATION_TOOLS } from '@/lib/agent/generationTools';
+import { GENERATION_TOOLS as GENERATION_TOOLS_DEFINITIONS } from '@/lib/agent/generationTools';
+const GENERATION_TOOLS = registeredTools(GENERATION_TOOLS_DEFINITIONS);
+
 
 const png = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jFZkAAAAASUVORK5CYII='), c => c.charCodeAt(0));
 function lockManager(): ThreadLockManager {

@@ -1,11 +1,13 @@
-import { createProject as createBoundTestProject } from "@/db/repo";
+import {createProject as createBoundTestProject} from "@/db/projects";
+import {deleteChatThread} from "@/db/cascadeCommands";
+import {addCharacter} from "@/db/assets";
 import { describe,it,expect,vi } from 'vitest';
 import {db} from '@/db/database';
 import {createAgentTask,updateAgentTask,setAgentTaskLifecycle} from '@/db/agentTasks';
 import {createManualWrapup,saveWrapup,confirmWrapup,getTaskWrapupState,startTaskWrapup,cancelTaskWrapup,publishTaskWrapup} from '@/db/agentTaskWrapups';
 import {beginAgentRun,finishAgentRun} from '@/db/agentRuns';
 import {saveTaskRecord} from '@/db/agentTaskRecords';
-import {deleteChatThread,addCharacter} from '@/db/repo';
+
 import {prepareTaskWrapup,recoverTaskWrapups} from '@/lib/agent/taskWrapup';
 import type {ThreadLockManager} from '@/lib/agent/runOwnership';
 import type {ConnectorConfig} from '@/domain/types';

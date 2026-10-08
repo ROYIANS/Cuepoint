@@ -3,7 +3,7 @@ import {Link} from "@tanstack/react-router";
 import {useLiveQuery} from "dexie-react-hooks";
 import {Archive, ArrowUpRight, History, Trash2, Upload, X} from "lucide-react";
 import {db} from "@/db/database";
-import {releaseMaterialUse} from "@/db/repo";
+import {releaseMaterialUse} from "@/db/assetReuse";
 import {
     addFileMaterialVersion,
     deleteMaterial,

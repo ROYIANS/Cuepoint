@@ -1,6 +1,10 @@
 import {describe, expect, it, vi} from "vitest";
 import {db} from "@/db/database";
-import {addCharacter, addScene, addProp, addStyle, addShot, createProject, firstEpisode, patchProjectDetails, patchShot, patchCharacter, putMedia, setCharacterSlot, setSceneSlot, setPropSlot, setStyleSlot, setShotSlot} from "@/db/repo";
+import {addCharacter, addScene, addProp, addStyle, patchCharacter, setCharacterSlot, setSceneSlot, setPropSlot, setStyleSlot} from "@/db/assets";
+import {addShot, patchShot, setShotSlot} from "@/db/shots";
+import {createProject, patchProjectDetails} from "@/db/projects";
+import {firstEpisode} from "@/db/episodes";
+import {putMedia} from "@/db/media";
 import {defaultImageGeneration} from "@/domain/output";
 import type {GenerationSlot} from "@/domain/types";
 import {emptySlot} from "@/domain/slot";

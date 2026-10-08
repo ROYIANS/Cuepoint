@@ -1,5 +1,5 @@
 import type {AgentRequestMessage} from "@/domain/agent";
-import type {ProjectMemory} from "@/domain/projectMemory";
+import type {MemorySource, ProjectMemory} from "@/domain/projectMemory";
 import type {MemoryQueryOptions, MemorySelection, MemorySelectionEntry,} from "@/domain/memoryRetrieval";
 import {estimateTokens} from "@/lib/agent/contextUsage";
 import {targetRevision} from "@/lib/productionRevision";
@@ -80,37 +80,29 @@ export function rankMemoryCandidates(
         );
 }
 
-export function serializeMemoryEntries(
-    entries: readonly MemorySelectionEntry[],
-): string {
-    return entries.length
-        ? MEMORY_PREFIX +
-        guidance +
-        "\n" +
-        JSON.stringify(
-            entries.map((entry) => ({
-                ...entry,
-                source:
-                    entry.source.kind === "summary"
-                        ? {
-                            kind: "summary",
-                            taskTitle: entry.source.taskTitle,
-                            taskId: entry.source.taskId,
-                            summaryId: entry.source.summaryId,
-                            summaryRevision: entry.source.summaryRevision,
-                            itemKind: entry.source.itemKind,
-                            itemIndex: entry.source.itemIndex,
-                        }
-                        : entry.source.kind === "imported"
-                            ? {
-                                kind: "imported",
-                                taskTitle: entry.source.taskTitle,
-                                summaryRevision: entry.source.summaryRevision,
-                            }
-                            : {kind: "manual"},
-            })),
-        )
-        : "";
+function projectMemorySource(source: MemorySource) {
+    switch (source.kind) {
+        case "summary":
+            return {
+                kind: "summary", taskTitle: source.taskTitle, taskId: source.taskId,
+                summaryId: source.summaryId, summaryRevision: source.summaryRevision,
+                itemKind: source.itemKind, itemIndex: source.itemIndex,
+            };
+        case "imported":
+            return {kind: "imported", taskTitle: source.taskTitle, summaryRevision: source.summaryRevision};
+        case "manual":
+            return {kind: "manual"};
+        default:
+            void (source satisfies never);
+            return {kind: "manual"};
+    }
+}
+
+export function serializeMemoryEntries(entries: readonly MemorySelectionEntry[]): string {
+    if (entries.length === 0) return "";
+    return MEMORY_PREFIX + guidance + "\n" + JSON.stringify(entries.map(entry => ({
+        ...entry, source: projectMemorySource(entry.source),
+    })));
 }
 
 export function memoryEnvelopeTokens(envelope: string) {

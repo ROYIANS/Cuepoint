@@ -1,3 +1,4 @@
+import {defineTool} from './toolDefinition';
 import {IP_TOOLS} from "./ipTools";
 import {AUDIO_TOOLS} from "./audioTools";
 import {MUSIC_TOOLS} from "./musicTools";
@@ -17,40 +18,13 @@ import {db} from "@/db/database";
 import {updateRunPlanAndComplete} from "@/db/agentTools";
 import type {
     AgentPermissionMode,
-    AgentPlanItem,
     AgentToolCall,
-    AgentToolEffect,
-    AgentToolPreview,
     AgentToolSchema
 } from "@/domain/agent";
 
-export interface AgentToolContext {
-    projectId?: string;
-    runId: string;
-    threadId: string;
-    callId: string;
-    signal: AbortSignal;
-    preview?: AgentToolPreview
-}
-
-export interface AgentToolDefinition {
-    name: string;
-    title: string;
-    description: string;
-    parameters: Record<string, unknown>;
-    effect: AgentToolEffect;
-    atomic?: boolean;
-    requiresConfirmation?: boolean;
-    recovery?: "generation" | "repeatable";
-
-    parseArguments(raw: unknown): unknown;
-
-    highRisk(args: unknown): boolean;
-
-    prepare?(args: unknown, context: AgentToolContext): Promise<AgentToolPreview>;
-
-    execute(args: unknown, context: AgentToolContext): Promise<unknown>;
-}
+export type {AgentToolContext, AgentToolDefinition, TypedToolDefinition} from './toolDefinition';
+import type {AgentToolDefinition} from './toolDefinition';
+import {assertUniqueToolNames} from './toolDefinition';
 
 export function requiresToolApproval(mode: AgentPermissionMode, tool: Pick<AgentToolDefinition, "effect" | "highRisk" | "requiresConfirmation">, args: unknown): boolean {
     if (!["ask", "assist", "full"].includes(mode)) throw new Error("未知授权模式");
@@ -60,7 +34,7 @@ export function requiresToolApproval(mode: AgentPermissionMode, tool: Pick<Agent
     return mode === "ask" && (tool.effect === "write" || tool.effect === "network");
 }
 
-const planSchema = z.object({
+export const planSchema = z.object({
     reason: z.string().trim().min(1).max(1000).optional(),
     steps: z.array(z.object({
         id: z.string().trim().min(1).max(80),
@@ -68,15 +42,13 @@ const planSchema = z.object({
         status: z.enum(["pending", "in_progress", "completed"])
     }).strict()).max(30)
 }).strict().refine((value) => new Set(value.steps.map((step) => step.id)).size === value.steps.length && value.steps.filter((step) => step.status === "in_progress").length <= 1, "步骤标识必须唯一，最多一个步骤进行中");
-export const BUILTIN_TOOLS: readonly AgentToolDefinition[] = [
-    {
+const definitions = [
+    defineTool({schema: z.object({}).strict(), json: {type: "object", properties: {}, additionalProperties: false}}, {
         name: "workspace_overview",
         title: "查看工作区概览",
         description: "读取工作区项目和角色、场景、道具、风格的数量，最多返回 10 个最近项目名称，不读取密钥或完整业务内容。",
-        parameters: {type: "object", properties: {}, additionalProperties: false},
         effect: "read",
         highRisk: () => false,
-        parseArguments: (raw) => z.object({}).strict().parse(raw),
         async execute(_args, context) {
             const {signal} = context;
             signal.throwIfAborted();
@@ -106,13 +78,9 @@ export const BUILTIN_TOOLS: readonly AgentToolDefinition[] = [
                     name: project.name.slice(0, 200)
                 })),
             }));
-        },
-    },
-    {
-        name: "update_run_plan",
-        title: "更新执行计划",
-        description: "维护当前执行及其关联任务的共享计划（最多 30 项），每项有唯一 id、title 和 pending/in_progress/completed 状态。不会修改项目或素材。",
-        parameters: {
+        }
+    }),
+    defineTool({schema: planSchema, json: {
             type: "object",
             additionalProperties: false,
             required: ["steps"],
@@ -133,18 +101,18 @@ export const BUILTIN_TOOLS: readonly AgentToolDefinition[] = [
                     }
                 }
             }
-        },
+        }}, {
+        name: "update_run_plan",
+        title: "更新执行计划",
+        description: "维护当前执行及其关联任务的共享计划（最多 30 项），每项有唯一 id、title 和 pending/in_progress/completed 状态。不会修改项目或素材。",
         effect: "bookkeeping",
         atomic: true,
         highRisk: () => false,
-        parseArguments: (raw) => planSchema.parse(raw),
         async execute(args, {runId, callId, signal}) {
             signal.throwIfAborted();
-            return JSON.parse(await updateRunPlanAndComplete(runId, callId, (args as {
-                steps: AgentPlanItem[]
-            }).steps, (args as { reason?: string }).reason));
-        },
-    },
+            return JSON.parse(await updateRunPlanAndComplete(runId, callId, args.steps, args.reason));
+        }
+    }),
     ...IP_TOOLS,
     ...AUDIO_TOOLS,
     ...MUSIC_TOOLS,
@@ -159,7 +127,13 @@ export const BUILTIN_TOOLS: readonly AgentToolDefinition[] = [
     ...WEB_TOOLS,
 ];
 
-export function toolSchemas(names: readonly string[], registry: readonly AgentToolDefinition[] = BUILTIN_TOOLS): AgentToolSchema[] {
+// Existential registry: dispatch must use the selected definition's own parser before
+// invoking its callbacks. Typed family consumers retain their concrete definitions.
+assertUniqueToolNames(definitions);
+export const BUILTIN_TOOLS = definitions as unknown as readonly AgentToolDefinition[];
+
+export function toolSchemas(names: readonly string[], registry = BUILTIN_TOOLS): AgentToolSchema[] {
+    assertUniqueToolNames(registry);
     return names.map((name) => {
         const tool = registry.find((item) => item.name === name);
         if (!tool) throw new Error("启用的工具不存在");
@@ -167,7 +141,8 @@ export function toolSchemas(names: readonly string[], registry: readonly AgentTo
     });
 }
 
-export function validateToolCall(name: string, raw: string, enabled: readonly string[], registry: readonly AgentToolDefinition[] = BUILTIN_TOOLS) {
+export function validateToolCall(name: string, raw: string, enabled: readonly string[], registry = BUILTIN_TOOLS) {
+    assertUniqueToolNames(registry);
     const tool = registry.find((item) => item.name === name);
     if (!enabled.includes(name) || !tool) throw new Error("模型请求了未启用或未知的工具");
     if (raw.length > 32_768) throw new ToolValidationError(tool.title, name, [{

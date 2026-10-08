@@ -1,4 +1,4 @@
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {InputNumber, Switch} from "antd";
 import {ArrowLeft, RotateCcw} from "lucide-react";
 import {useLiveQuery} from "dexie-react-hooks";
@@ -10,31 +10,63 @@ import {normalizeContextPolicy} from "@/lib/agent/contextPolicy";
 import {resetThreadContextPolicy, saveContextPolicyAsDefault, updateContextPolicy} from "@/db/contextSettings";
 import "./contextParameters.css";
 
+async function readPolicySource(threadId: string | undefined, scopeKey: string) {
+    try {
+        return {scopeKey, source: (threadId ? await db.chatThreads.get(threadId) : await db.agents.get(GENERAL_AGENT_ID)) ?? null, error: undefined};
+    } catch (error) {
+        return {scopeKey, source: null, error: error instanceof Error ? error.message : "参数暂时无法读取"};
+    }
+}
+
+function policyReadStatus(state: Awaited<ReturnType<typeof readPolicySource>> | undefined) {
+    if (!state) return {message: "正在读取参数…", role: "status" as const};
+    if (state.error) return {message: state.error, role: "alert" as const};
+    if (!state.source) return {message: "参数所属对话或助手已不存在", role: "alert" as const};
+    return undefined;
+}
+
 export function ContextParameters({threadId, onBack}: { threadId?: string; onBack: () => void }) {
-    const source = useLiveQuery(async () => threadId ? (await db.chatThreads.get(threadId)) ?? null : (await db.agents.get(GENERAL_AGENT_ID)) ?? null, [threadId]);
-    const policy = normalizeContextPolicy(source?.contextPolicy);
+    const scopeKey = threadId ?? GENERAL_AGENT_ID;
+    const loaded = useLiveQuery(() => readPolicySource(threadId, scopeKey), [scopeKey, threadId]);
+    const state = loaded?.scopeKey === scopeKey ? loaded : undefined;
+    const policy = normalizeContextPolicy(state?.source?.contextPolicy);
     const [saving, setSaving] = useState(false);
-    const lock = useRef(false);
+    const owner = useRef({scopeKey, live: true, locked: false});
+    if (owner.current.scopeKey !== scopeKey) {
+        owner.current.live = false;
+        owner.current = {scopeKey, live: true, locked: false};
+    }
+    const session = owner.current;
+    useEffect(() => {
+        session.live = true;
+        return () => {session.live = false;};
+    }, [session]);
     const save = async (action: () => Promise<void>, message?: string) => {
-        if (lock.current) return;
-        lock.current = true;
+        if (!session.live || owner.current !== session || session.locked || !state?.source || state.error) return;
+        session.locked = true;
         setSaving(true);
         try {
             await action();
-            if (message) toast.success(message);
+            if (session.live && owner.current === session && message) toast.success(message);
         } catch {
-            toast.error("保存参数失败，请重试");
+            if (session.live && owner.current === session) toast.error("保存参数失败，请重试");
         } finally {
-            lock.current = false;
-            setSaving(false);
+            session.locked = false;
+            if (session.live && owner.current === session) setSaving(false);
         }
     };
     const patch = (value: Partial<ContextPolicy>) => void save(() => updateContextPolicy(threadId, value));
-    const disabled = saving || !source;
+    const status = policyReadStatus(state);
+    const editable = !!state?.source && !status;
+    const disabled = (saving && session.locked) || !editable;
+    let saveStatus = "参数不可编辑";
+    if (editable) saveStatus = "设置自动保存";
+    if (session.locked) saveStatus = "正在保存…";
     return <div className="agent-control-panel agent-parameters">
         <div className="agent-skill-heading">
             <button type="button" className="agent-skill-back" onClick={onBack}><ArrowLeft size={16}/>对话参数</button>
             <span>{threadId ? "当前对话" : "新对话默认"}</span></div>
+        {status && <p role={status.role}>{status.message}</p>}
         <div className="agent-parameter-row"><label
             htmlFor="context-auto"><strong>自动压缩上下文</strong><small>接近预算时整理较早的消息，保留原始对话。</small></label><Switch
             aria-label="自动压缩上下文" id="context-auto" size="small" checked={policy.autoCompress} disabled={disabled}
@@ -67,6 +99,6 @@ export function ContextParameters({threadId, onBack}: { threadId?: string; onBac
                     onClick={() => void save(() => saveContextPolicyAsDefault(threadId), "已设为新对话默认参数")}>设为默认
             </button>
         </div>}
-        <span className="agent-parameter-save" role="status">{saving ? "正在保存…" : "设置自动保存"}</span>
+        <span className="agent-parameter-save" role="status">{saveStatus}</span>
     </div>;
 }
