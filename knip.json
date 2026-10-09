@@ -1,0 +1,19 @@
+{
+  "$schema": "https://unpkg.com/knip@6.40.0/schema.json",
+  "entry": [
+    "src/main.tsx!",
+    "scripts/model-bank-snapshot.mjs!",
+    "scripts/*-browser-regression.mjs",
+    "scripts/e06-*.mjs",
+    "tests/**/*.test.{ts,tsx}",
+    "tests/typecheck/agentToolDefinition.ts",
+    "tests/fixtures/*/index.html",
+    "tests/fixtures/*/harness.ts",
+    "scripts/e07-draft-rebase-browser.mjs"
+  ],
+  "project": [
+    "src/**/*.{ts,tsx}!",
+    "scripts/**/*.{mjs,mts}"
+  ],
+  "includeEntryExports": true
+}

@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "contracts": [
+    {
+      "issue": "files",
+      "file": "scripts/e06-icon-data.d.mts",
+      "symbol": "",
+      "count": 1,
+      "reason": "TypeScript companion declaration for the actual .mjs generator imported by the permanent icon entry regression. Not a runtime entry or unused implementation.",
+      "owner": "Icon catalog",
+      "evidence": [
+        {
+          "file": "scripts/e06-icon-data.d.mts",
+          "sha256": "d27e8b2247cec2c11a4b35f529d9d1012e185d6712739a4cbb56350a6d808e49"
+        },
+        {
+          "file": "scripts/e06-icon-data.mjs",
+          "sha256": "972ade191611a3f8d5404386eef59d8e312d0b9fc3f8d14df6305d6904b76267"
+        },
+        {
+          "file": "tests/e06-icon-entries.test.ts",
+          "sha256": "cdb6f542aa6a08c6a7ee205c4e5477efb554f2ba74cd5f1d2e4a9e3bcaab41ae"
+        }
+      ]
+    },
+    {
+      "issue": "dependencies",
+      "file": "package.json",
+      "symbol": "tw-animate-css",
+      "count": 1,
+      "reason": "The actual application stylesheet imports this package via CSS @import. TS/JS Knip import reachability does not own stylesheet dependency discovery.",
+      "owner": "Frontend styling",
+      "evidence": [
+        {
+          "file": "src/styles.css",
+          "sha256": "a8deb89bc36b4d9d3a88ce063c4b5bd81be793d8fc3e4571f2c0b1da91aa7d64"
+        },
+        {
+          "file": "vite.config.ts",
+          "sha256": "c6def92021debbfe5eb29f89bc106d0df2fdc21061716624251cbe8ba4b1a5f4"
+        }
+      ]
+    },
+    {
+      "issue": "devDependencies",
+      "file": "package.json",
+      "symbol": "tailwindcss",
+      "count": 1,
+      "reason": "The actual application stylesheet imports this package via CSS @import. TS/JS Knip import reachability does not own stylesheet dependency discovery.",
+      "owner": "Frontend styling",
+      "evidence": [
+        {
+          "file": "src/styles.css",
+          "sha256": "a8deb89bc36b4d9d3a88ce063c4b5bd81be793d8fc3e4571f2c0b1da91aa7d64"
+        },
+        {
+          "file": "vite.config.ts",
+          "sha256": "c6def92021debbfe5eb29f89bc106d0df2fdc21061716624251cbe8ba4b1a5f4"
+        }
+      ]
+    },
+    {
+      "issue": "unlisted",
+      "file": "scripts/e02-browser-regression.mjs",
+      "symbol": "playwright",
+      "count": 1,
+      "reason": "Optional native regression runtime is explicitly injected with the runner environment module path, or resolved as ordinary external Playwright. It is not a shipped application dependency; no machine cache path is embedded.",
+      "owner": "Native regression",
+      "evidence": [
+        {
+          "file": "scripts/e02-browser-regression.mjs",
+          "sha256": "215aa6f27c5122322af029da3665ad958d8ff74b2629e37751604f9614b10260"
+        }
+      ]
+    },
+    {
+      "issue": "unresolved",
+      "file": "scripts/e06-root-parity.mjs",
+      "symbol": "/e06-fixture-dexie.mjs",
+      "count": 1,
+      "reason": "The page imports this local virtual URL; the same runner intercepts this exact route and serves actual installed Dexie module bytes. No physical root module is expected.",
+      "owner": "Native regression",
+      "evidence": [
+        {
+          "file": "scripts/e06-root-parity.mjs",
+          "sha256": "77a646c469a2c07c5874ecc3a338ab77e976ec5fd4f30dc4de36f00b42bc7446"
+        },
+        {
+          "file": "tests/fixtures/e06/seeds.json",
+          "sha256": "bd7763abb2d1260c7fcf237622d02f299354264fc3c82cf17217d336c8e34134"
+        }
+      ]
+    },
+    {
+      "issue": "exports",
+      "file": "src/db/audio.ts",
+      "symbol": "deleteAudioTrack",
+      "count": 1,
+      "reason": "Retain the explicitly documented audio repository deletion command for X=Chapter/Speaker/Segment/Track/Clip in the canonical audio API. Current UI exposes no caller; this is an intentional retained command contract with owner/CAS/atomic cleanup, not a claimed live UI feature.",
+      "owner": "Audio repositories",
+      "evidence": [
+        {
+          "file": "src/db/audio.ts",
+          "sha256": "2593aa6402414d316835cc0e03a64f28a04a4dc9399e5e43d37038e20badd116"
+        },
+        {
+          "file": ".trellis/spec/frontend/audio-music.md",
+          "sha256": "84c25cff00c0f0dd8eae4420e422ed20c2f729b6495c953801a81fdec568135f"
+        }
+      ]
+    },
+    {
+      "issue": "exports",
+      "file": "src/db/audio.ts",
+      "symbol": "deleteAudioSpeaker",
+      "count": 1,
+      "reason": "Retain the explicitly documented audio repository deletion command for X=Chapter/Speaker/Segment/Track/Clip in the canonical audio API. Current UI exposes no caller; this is an intentional retained command contract with owner/CAS/atomic cleanup, not a claimed live UI feature.",
+      "owner": "Audio repositories",
+      "evidence": [
+        {
+          "file": "src/db/audio.ts",
+          "sha256": "2593aa6402414d316835cc0e03a64f28a04a4dc9399e5e43d37038e20badd116"
+        },
+        {
+          "file": ".trellis/spec/frontend/audio-music.md",
+          "sha256": "84c25cff00c0f0dd8eae4420e422ed20c2f729b6495c953801a81fdec568135f"
+        }
+      ]
+    }
+  ]
+}

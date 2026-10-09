@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "identityVersion": "ts-ast-tokens-v1",
+  "identityProducer": {
+    "sha256": "ceaa7384fb067afe08676efeb7d43341269faf91d47c09071fb2000ef09f58f1",
+    "typescript": "5.9.3"
+  },
+  "allowances": [
+    {
+      "rule": "preserve-caught-error",
+      "file": "src/lib/agent/contextCompaction.ts",
+      "signature": "cd034102c2d6e13ef17b4b787593425937e77106796cd2dea073548ee4381bb7",
+      "count": 1,
+      "reason": "Throw only the already credential-redacted bounded compaction message. Attaching the original provider/parse exception would preserve unredacted transport/request state.",
+      "owner": "Agent context"
+    },
+    {
+      "rule": "@typescript-eslint/only-throw-error",
+      "file": "src/lib/agent/generationBatchRuntime.ts",
+      "signature": "ed27e36ef4cc5bf4bb1b5ae1247029438eb7c962eb06d1e01574c82671629892",
+      "count": 1,
+      "reason": "Propagate the actual rejected worker settlement reason after all workers settle; retain failure identity and existing conservative dispatch stop rather than manufacture a new error.",
+      "owner": "Agent batch runtime"
+    },
+    {
+      "rule": "@typescript-eslint/only-throw-error",
+      "file": "src/lib/agent/runChat.ts",
+      "signature": "98c7a97a7a4b6e983ccc125d4519707f5a70d8165ac6f65346fbacf4e98bb20a",
+      "count": 1,
+      "reason": "Checkpoint flush rethrows the exact stored persistence rejection. E07 error contract verifies identity, one stop notification and zero later checkpoint writes.",
+      "owner": "Agent execution"
+    },
+    {
+      "rule": "preserve-caught-error",
+      "file": "src/lib/agent/runChat.ts",
+      "signature": "5317adafe058b544b846faa0bc32b8aa47ed585ea6fcc26ccdff2c6cdc298533",
+      "count": 1,
+      "reason": "Ambiguous external side effects expose the fixed safe uncertainty diagnostic. Raw cause may contain credentials, provider payloads or implementation details and cannot imply rollback.",
+      "owner": "Agent execution"
+    },
+    {
+      "rule": "preserve-caught-error",
+      "file": "src/lib/agent/runChat.ts",
+      "signature": "b6847d0a2d5f8098978e6f4c12839f7d73b246d5376c564ef1959beec1d47c43",
+      "count": 1,
+      "reason": "Failure during local checkpoint persistence exposes a fixed safe diagnostic after conservative run/call settlement. Do not leak the captured provider exception through cause.",
+      "owner": "Agent execution"
+    },
+    {
+      "rule": "preserve-caught-error",
+      "file": "src/lib/agent/taskWrapup.ts",
+      "signature": "371ccbf1379bcb8c1940601aae483c4480b360f041eb6969c57be519b78e29a0",
+      "count": 1,
+      "reason": "Publish only the bounded credential-redacted failure/cancellation message and retain the original summary. Raw provider/parsing cause is intentionally excluded from user-visible exceptions.",
+      "owner": "Agent task wrapup"
+    },
+    {
+      "rule": "preserve-caught-error",
+      "file": "src/lib/ai/openaiCompatible.ts",
+      "signature": "18fc8111f89b41d4cfc624217b2758c43fe020c4429d28c3694c567c8b8c63be",
+      "count": 1,
+      "reason": "Normalize malformed protocol-body errors into message-only diagnostics which the enclosing credential-aware API redacts; native abort is rethrown unchanged. Raw response/transport cause is not retained.",
+      "owner": "AI transport"
+    },
+    {
+      "rule": "@typescript-eslint/only-throw-error",
+      "file": "src/lib/debouncedDraft.ts",
+      "signature": "f4d5a09adc10fb4c734c28931158104592d9667093361d48230e7ec6f96e3d23",
+      "count": 1,
+      "reason": "The scoped barrier waits for every field then propagates the actual rejected reason; original failure identity and scope ownership remain observable to navigation/backup callers.",
+      "owner": "Draft persistence"
+    },
+    {
+      "rule": "@typescript-eslint/prefer-promise-reject-errors",
+      "file": "src/lib/debouncedDraft.ts",
+      "signature": "265f4846abe1eda2dbcdddff756d121cd9b5124577b81be84ba6e4c8461f0568",
+      "count": 1,
+      "reason": "Convert a synchronous persist throw into the same rejected promise consumed by the unified draft status/retry path; retain the exact object, verified by E07 synchronous-failure/retry test.",
+      "owner": "Draft persistence"
+    },
+    {
+      "rule": "@typescript-eslint/only-throw-error",
+      "file": "src/lib/debouncedDraft.ts",
+      "signature": "bf1c5200de887c9d0f7f3fdd198930e227b6efdc87c6f4a50676061162a66f40",
+      "count": 1,
+      "reason": "Backup flush rethrows the exact remembered persistence failure while retaining the unsaved value. E07 tests verify object identity and successful same-value retry.",
+      "owner": "Draft persistence"
+    },
+    {
+      "rule": "@typescript-eslint/prefer-promise-reject-errors",
+      "file": "src/lib/references/import.ts",
+      "signature": "8a06c80cf5d3d140466bc7f213145cc1b85f0d6a233ee1a6fe9e2c64ccecfb18",
+      "count": 1,
+      "reason": "DOCX worker shutdown propagates AbortSignal.reason exactly after removing listeners, cancelling timeout and terminating its owned worker; E07 test verifies in-flight object-reason identity and termination.",
+      "owner": "Reference import"
+    },
+    {
+      "rule": "@typescript-eslint/only-throw-error",
+      "file": "src/lib/references/pdf.ts",
+      "signature": "ebe6e1615041b999026cbe6526ad9763942b98d34ec2167d3b97f28fd86a5f4f",
+      "count": 1,
+      "reason": "PDF abort forwards AbortSignal.reason instead of wrapping cancellation into a parse failure. Native abort reasons are intentionally allowed at this exact signal-owned node.",
+      "owner": "Reference import"
+    },
+    {
+      "rule": "react-hooks/exhaustive-deps",
+      "file": "src/lib/debouncedDraft.ts",
+      "signature": "7ade399a29cd6d6450d718b4a2287564c6c8e4c1bed020038f5d14f88e5bc8ed",
+      "count": 1,
+      "reason": "Guarded every-render reconciliation must retry an external primitive or memoized value deferred while persistence is in flight. Recording JSON externalVersion only after successful rebase and checking draft equality prevents render loops. Actual independent React/Dexie counterexample proves the suggested dependency array retains stale input marked saved; permanent original/current regression verifies the guarded contract.",
+      "owner": "Draft persistence"
+    }
+  ]
+}

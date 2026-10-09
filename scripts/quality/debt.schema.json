@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "identityVersion",
+    "identityProducer",
+    "allowances"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "identityVersion": {
+      "const": "ts-ast-tokens-v1"
+    },
+    "identityProducer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sha256",
+        "typescript"
+      ],
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "typescript": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "allowances": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rule",
+          "file",
+          "count",
+          "reason",
+          "owner",
+          "signature"
+        ],
+        "properties": {
+          "rule": {
+            "type": "string",
+            "minLength": 1
+          },
+          "file": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 12
+          },
+          "owner": {
+            "type": "string",
+            "minLength": 3
+          },
+          "signature": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      }
+    }
+  }
+}

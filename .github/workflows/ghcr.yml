@@ -28,6 +28,10 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Typecheck
         run: pnpm lint
+      - name: Source quality
+        run: pnpm quality
+      - name: Verify quality gate failure contracts
+        run: pnpm quality:self-test
       - name: Test
         run: pnpm test
       - name: Verify model snapshot
