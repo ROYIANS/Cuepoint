@@ -2,7 +2,7 @@
 
 2026-10-09：批准的 A→B→C→D→E 顺序已完成，全部 51 项发现已修复，32 个单元及 EX-01 / QG-01 已验证。逐项行为证据与独立复核仍由 [台账](../remediation-ledger.md) 链接。
 
-E 的最终验收见 [独立报告](../10-09-src-remediation-e/reviews/E-final-check.md)，三个工作提交及历史路径映射见 [E 收尾记录](../10-09-src-remediation-e/closure/README.md)。
+E 的最终验收见 [独立报告](../../10-09-src-remediation-e/reviews/E-final-check.md)，三个工作提交及历史路径映射见 [E 收尾记录](../../10-09-src-remediation-e/closure/README.md)。
 
 收尾将 E 引用映射到实际归档目录，台账工具通过仓库标识定位根目录并按相对路径生成链接。归档前台账与两个工具原始字节保存在 `pre-archive/`，验收报告和证据包保持不变。历史进度中的等待提交/后续阶段描述保留其当时含义；本记录与 task.json 的最终完成状态为当前状态。
 

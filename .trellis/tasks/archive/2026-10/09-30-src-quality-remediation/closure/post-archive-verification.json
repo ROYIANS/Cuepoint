@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-09",
+  "status": "PASS",
+  "scope": "Post-archive bookkeeping verification only; product checks reuse accepted final evidence because product bytes are unchanged.",
+  "workCommits": [
+    "578bbbef4cc1660bca34f5d7eb4dff304924f589",
+    "202c662126b5e128e0e3da7d44a00471e18f9915",
+    "a66c40908eeb34227686592c79d2d2dee3081d48"
+  ],
+  "archiveMapping": {
+    ".trellis/tasks/10-09-src-remediation-e": ".trellis/tasks/archive/2026-10/10-09-src-remediation-e",
+    ".trellis/tasks/09-30-src-quality-remediation": ".trellis/tasks/archive/2026-10/09-30-src-quality-remediation"
+  },
+  "ledgerVerification": {
+    "findings": 51,
+    "units": 32,
+    "statuses": {
+      "fixed": 51
+    },
+    "currentUnit": null,
+    "errors": []
+  },
+  "validLiveMarkdownLinks": 35,
+  "protectedArtifactsUnchanged": 13,
+  "evidencePackVerification": {
+    "status": "PASS",
+    "manifestSHA256": "443c82ed6fe35e39d128b6e8b370050626035d5e46e6853304ed6d8f87ee0793",
+    "blobIndexSHA256": "da10dc26c20050217372fe22fd463e4852b190d47cf271fbf74cc9016271b9bb",
+    "verifiedBlobs": 10117,
+    "verifiedPaths": 41163,
+    "originalBytes": 2554126083,
+    "compressedBytes": 232240383,
+    "mode": "verify",
+    "restoredRoot": null,
+    "originalsDeleted": false
+  },
+  "productChangesSinceFinalWorkCommit": 0,
+  "archiveCommits": [
+    "13e2bc56d1e2b06099b06302f1ae265b302ccf30",
+    "30185ca2c08c21f2536c52d63c3f762da8661e4f"
+  ],
+  "pushPerformed": false
+}
