@@ -1,0 +1,19 @@
+{
+  "purpose": "Actual corrected inventory compared against all previously inspected accepted sealed paths, no archive/decompression/restore acceptance yet.",
+  "originalPreflight": ".trellis/tasks/10-09-src-remediation-e/reviews/E-final-independent/evidence-transport-inventory-preflight.json",
+  "correctedInventory": "/tmp/aifenjing-e-evidence-inventory-corrected-20261009/manifest.json",
+  "correctedInventorySHA256": "acce32c10a09e5f061e57ded9f8f5162da7a7d0e395aed6e94ca1d739304625e",
+  "sealedRowsChecked": 9544,
+  "missingAcceptedSealedPaths": [],
+  "hashMismatches": [],
+  "allOriginal23OmittedRowsNowCaptured": true,
+  "correctedCounts": {
+    "fileCount": 41109,
+    "originalBytes": 2538102072,
+    "uniqueBlobs": 10067,
+    "uniqueBytes": 1308595486
+  },
+  "preservedEvidenceRoots": [
+    ".trellis/tasks/10-09-src-remediation-e/research/e06/contract-primary-sources/node_modules"
+  ]
+}

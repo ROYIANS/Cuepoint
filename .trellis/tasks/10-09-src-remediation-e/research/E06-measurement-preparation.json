@@ -1,0 +1,37 @@
+{
+  "purpose": "Read-only E06 measurement preparation before activation; no build/metrics/implementation/acceptance",
+  "inputs": {
+    "src/components/agent/ModelIcons.tsx": "cda6197713ec6872748388b8ac41a6fc475948b8757c501601d7dd8a67707e0d",
+    "src/components/agent/ModelIconCatalog.ts": "5faa7fac73c6afffaac855badbf6d461b0834e0c7582c88cfe2ffaeb9da29202",
+    "src/components/agent/MessageList.tsx": "6b13c7b8dd9c2ca12d5bcd83dcc61098c1ef8ec703a4cd68dd43533e9eda44a8",
+    "src/components/agent/AgentRunDetails.tsx": "5202a654cf3aef7610fe2db4fd897368011545e35d5cdef5e6b2085dfbe4b95c",
+    "src/components/agent/ChatWorkspace.tsx": "db06ad95e7115f1b4e050a687c7aecb1ebb9c09e73889610e2aa1f248e65af5e",
+    "src/components/agent/LobeChatTheme.tsx": "dc6409a1d661f150a051b830e1928e6e2abbf801a280be0059cb67a59d1ad7a0",
+    "vite.config.ts": "c6def92021debbfe5eb29f89bc106d0df2fdc21061716624251cbe8ba4b1a5f4"
+  },
+  "currentFacts": [
+    "MessageList is already lazy under ChatWorkspace and owns real ChatItem/Markdown dependencies; no second empty-home lazy claim without module/network proof.",
+    "ModelIcons already lazy-load named ModelIcon/ProviderIcon catalog; chosen model triggers real catalog matching. Named export does not establish bounded catalog bytes.",
+    "D05 tool schema/serialization boundaries already changed; old ContextUsagePanel registry edge in original AU09 must be refreshed, not repeated as current fact.",
+    "LobeChatTheme imports UI Config/Theme providers and motion; shared main chunk contributions may be loaded before any transcript."
+  ],
+  "requiredMeasurement": {
+    "scenarios": [
+      "empty model-less home",
+      "selected-model home",
+      "plain text history",
+      "fenced-code history"
+    ],
+    "productionBuild": "Use actual current root Vite production build with a read-only output-module manifest producer (Rollup chunk.modules renderedLength/originalLength included), isolated outDir/build args; preserve generated route hash and unchanged-source inputfreeze. Baseline before changing E06 source; build actual preE06 WIP not HEAD.",
+    "browser": "Fresh native browser/context per scenario, cold disabled-cache localhost preview actual built app/seededDexie fixture routing, all initial/runtime JS/CSS request URL/resource type/response body byte lengths and performance entries; identify external font/assets and data URL gaps. No paid provider calls.",
+    "attribution": "Scenario transferred/resourceBody bytes distinct from minified/gzip emitted chunk bytes; chunks may overlap/shared. Map chunks to modules and direct/dynamicimports; compute unique asset sets and scenario-exclusive versus shared bytes without adding overlapping totals.",
+    "postChange": "Same node/pnpm/Vite/options/seed/cache/request/raster conditions and exact four scenarios; preserve baselinebundles/network/inputsource snapshots.",
+    "behavior": "Unknown/provider icon fallback/name-size/color contracts, plain/code Markdown formatting/copy/fenced language/math/diagram behavior where currently supported, native transcript scroll following/reveal fallback and E01/E02owner guards."
+  },
+  "limits": [
+    "No current bundle-size/performance claim from source reads.",
+    "No latency improvement claim from bytes alone; actual timings with documented hardware/cache/font/CPU/network sample counts only if meaningful measured.",
+    "No replacing complete rich renderer with an ad hoc impoverished Markdown clone merely to shrink chunks. Scope optimize proven bounded icon or demand highlighter/data entry while retaining compatibility.",
+    "Final exact library subpath public availability/plugin support must be verified from installed publisher source/docs at E06 before adoption."
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "purpose": "Future integration inputs only, not executed E gates. Accepted archived runners retain exact bytes; explicit output overrides prevent archive mutation. Baseline overrides forbidden.",
+  "inputs": [
+    {
+      "name": "d01-native",
+      "path": ".trellis/tasks/archive/2026-10/10-08-src-remediation-d/reviews/D01-native-regression.mjs",
+      "runnerSHA256": "df360e2198c9ed6844d28f1c1d38268014daa1a0dde37d8e265dc47c55e842d0",
+      "environment": {}
+    },
+    {
+      "name": "d02-cascades-native",
+      "path": ".trellis/tasks/archive/2026-10/10-08-src-remediation-d/reviews/D02-native-regression.mjs",
+      "runnerSHA256": "2cca4523dfc75d99d4d09b9a822a5101cd2e40ec3ec69f0bae8f8e1d85fdc140",
+      "environment": {}
+    },
+    {
+      "name": "d02-d01-rollback-native",
+      "path": ".trellis/tasks/archive/2026-10/10-08-src-remediation-d/reviews/D02-native-d01-rollback.mjs",
+      "runnerSHA256": "4528d165194a890e7f81c0637ef66c10b1d41afb54d7c5a8760a7f6244e99b35",
+      "environment": {}
+    },
+    {
+      "name": "d03-native",
+      "path": ".trellis/tasks/archive/2026-10/10-08-src-remediation-d/reviews/D03-native-regression.mjs",
+      "runnerSHA256": "883d59f2e8816e1107a4b991fbc5a604c2d70519ba8cc6f555c25f42d64ed88c",
+      "environment": {}
+    },
+    {
+      "name": "d04-native",
+      "path": ".trellis/tasks/archive/2026-10/10-08-src-remediation-d/research/D04-native.mjs",
+      "runnerSHA256": "ef17103c9f2f780e0cad31c177b85eb7624cf41030dcc8662a72f915ac124a02",
+      "environment": {}
+    },
+    {
+      "name": "d05-native",
+      "path": ".trellis/tasks/archive/2026-10/10-08-src-remediation-d/reviews/D05-native.mjs",
+      "runnerSHA256": "301316401a9c50bf32705b62d9d824c391e7d3e8431c4b4fddde5046ac6cef1c",
+      "environment": {}
+    },
+    {
+      "name": "d06-native",
+      "path": ".trellis/tasks/archive/2026-10/10-08-src-remediation-d/reviews/D06-native.mjs",
+      "runnerSHA256": "45a8c007bc8e34680ee5b17d67d4db6176b31886ef862439c4bdfeb998a6e879",
+      "environment": {
+        "D06_NATIVE_REPORT_PATH": ".trellis/tasks/10-09-src-remediation-e/reviews/integration/d06-native-report.json"
+      }
+    },
+    {
+      "name": "d06-compiler-negatives",
+      "path": ".trellis/tasks/archive/2026-10/10-08-src-remediation-d/reviews/D06-compiler-negatives.mjs",
+      "runnerSHA256": "b7cff8eeffb254c9ea964cfbef118ae3088bca5e7d5300eb44e67622663914e8",
+      "environment": {
+        "D06_COMPILER_REPORT_PATH": ".trellis/tasks/10-09-src-remediation-e/reviews/integration/d06-compiler-report.json"
+      }
+    },
+    {
+      "name": "d08-native",
+      "path": "scripts/d08-browser-regression.mjs",
+      "runnerSHA256": "7414292fb72e33d4b5a38ad0d7e385f0da6ca141d9d9cdb1582fac37df4a47f6",
+      "environment": {
+        "D08_REPORT_PATH": ".trellis/tasks/10-09-src-remediation-e/reviews/integration/d08-native-report.json"
+      }
+    }
+  ]
+}

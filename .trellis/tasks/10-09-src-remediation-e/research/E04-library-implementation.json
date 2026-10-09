@@ -1,0 +1,2418 @@
+{
+  "unit": "E04",
+  "scope": "SS09 library implementer",
+  "status": "READY_FOR_INDEPENDENT_CHECK",
+  "capturedAt": "2026-10-09T05:04:07.392Z",
+  "acceptanceBoundary": "Own scope implementation/native evidence plus unchanged current-source E01 write20. No finding closure, independent PASS or whole-src freeze is claimed.",
+  "beforeEntry": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/research/E04-entry.json",
+    "sha256": "d7226d85662d5060d27e17f96142b1edc3709459ec9a8b630462d9c4638c7772",
+    "revision": "1ecaf5ceec92e022c2b2b8d662e2a92e8eee36c7",
+    "meaning": "Actual accepted postE03 uncommitted working tree, not HEAD; all src/test/script hashes and bounded owner beforecopies"
+  },
+  "changedFiles": [
+    {
+      "path": "scripts/e04-library-browser-regression.mjs",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "72bde650c1ddc62cc5e2ae0d16776e2e448a099b330d90ef914df2fb9fa94b91",
+      "role": "native producer"
+    },
+    {
+      "path": "src/components/studio/AssetLibraryPages.tsx",
+      "beforeEntrySHA256": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+      "afterSHA256": "b462661b8fa3f9ec313de40bbe0bc89195f19f571686517e8063925d438176d2",
+      "role": "product"
+    },
+    {
+      "path": "src/components/studio/ProjectGalleryPage.tsx",
+      "beforeEntrySHA256": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+      "afterSHA256": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1",
+      "role": "product"
+    },
+    {
+      "path": "src/lib/studioLibraryQueries.ts",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "88ee8de4fa4f8d82d2420da7ae9f08c37cdf7b3a81ddc2ab3b591c4d11eb25f1",
+      "role": "product"
+    },
+    {
+      "path": "tests/e04LibraryQueries.test.ts",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "0a6dc2f8368145534c9a17543e3501aa2723a2bc0796e79edc8be5f8578f2b2a",
+      "role": "permanent test/fixture input"
+    },
+    {
+      "path": "tests/fixtures/e04-library/harness.tsx",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "a746f3758e71cc63cd5b32661a8212081ccbf0e5790b9f81afb15baa396e83e8",
+      "role": "permanent test/fixture input"
+    },
+    {
+      "path": "tests/fixtures/e04-library/index.html",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "48929fc2827a3d214135814491ffad1df7f9ea4c758f3b13ad773fef1ba7cf77",
+      "role": "permanent test/fixture input"
+    },
+    {
+      "path": "tests/fixtures/e04-library/tsconfig.json",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "0d0e4ec9004fc3eb593326706c04e81486d5e79113ce96b431fa0838eae05e58",
+      "role": "permanent test/fixture input"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e04-library/independent-transactions/provenance.json",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "55265f0021b0ea6e816163b71dc2bbceb8903936b9ea4b6015cf484f4581d9be",
+      "role": "permanent test/fixture input"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e04-library/independent-transactions/studioLibraryQueries.ts",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "5cb355c2f0ee97297ea3f894f4a0c1e0265f8b493533fcab51155a9a7c2a4f50",
+      "role": "permanent test/fixture input"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e04-library/provenance.json",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "fe35050e7cef297a4f263254df42c3d11c3b39cedad102317f5eaeb7960a87b9",
+      "role": "permanent test/fixture input"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+      "role": "permanent test/fixture input"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage.tsx",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+      "role": "permanent test/fixture input"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectIpPicker.tsx",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+      "role": "permanent test/fixture input"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/projectKinds.tsx",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+      "role": "permanent test/fixture input"
+    }
+  ],
+  "environment": {
+    "node": "v24.11.0",
+    "pnpm": "10.15.0",
+    "typescript": "5.9.3",
+    "dexie": "4.4.6",
+    "playwright": "1.62.1"
+  },
+  "commands": [
+    {
+      "command": "PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm test tests/e04LibraryQueries.test.ts --maxWorkers=4",
+      "exit": 0,
+      "tests": 8,
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/focused-shared-transaction.log"
+    },
+    {
+      "command": "PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec tsc --project tests/fixtures/e04-library/tsconfig.json --pretty false",
+      "exit": 0,
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/fixture-types-shared-transaction.log"
+    },
+    {
+      "command": "PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm lint",
+      "exit": 0,
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/application-lint-shared-transaction.log"
+    },
+    {
+      "command": "PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH E04_PLAYWRIGHT_PATH=/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs E04_CHROMIUM_PATH=/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell E04_LIBRARY_OUTPUT_DIR=<absolute attempt output directory> node scripts/e04-library-browser-regression.mjs",
+      "exit": 0,
+      "scenarios": 16,
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final.log",
+      "report": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/report.json"
+    },
+    {
+      "command": "PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec tsc --project tests/fixtures/e04-library/tsconfig.json --pretty false",
+      "status": "failed preliminary diagnostics",
+      "wrapperExit": 0,
+      "compilerExit": null,
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/fixture-types-attempt1.log",
+      "explanation": "The original wrapper ended with cat. Compiler diagnostics establish failure; its child exit was not separately retained. Corrected invalid fixture shapes, missing CSS ambient declaration and the now-unused product Id import."
+    },
+    {
+      "command": "PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH E04_PLAYWRIGHT_PATH=/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs E04_CHROMIUM_PATH=/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell E04_LIBRARY_OUTPUT_DIR=<absolute attempt output directory> node scripts/e04-library-browser-regression.mjs",
+      "exit": 1,
+      "report": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/report.json",
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1.log",
+      "explanation": "Assertion incorrectly treated a warm live-query callback as a new native read and counted the explicit-cover card as a fallback derivation."
+    },
+    {
+      "command": "PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH E04_PLAYWRIGHT_PATH=/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs E04_CHROMIUM_PATH=/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell E04_LIBRARY_OUTPUT_DIR=<absolute attempt output directory> node scripts/e04-library-browser-regression.mjs",
+      "exit": 1,
+      "report": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/report.json",
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2.log",
+      "explanation": "The explicit-cover case still incorrectly required a physical project read even though Dexie updated its cached project query. Added a separate project callback counter."
+    },
+    {
+      "command": "PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH E04_PLAYWRIGHT_PATH=/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs E04_CHROMIUM_PATH=/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell E04_LIBRARY_OUTPUT_DIR=<absolute attempt output directory> node scripts/e04-library-browser-regression.mjs",
+      "exit": 0,
+      "report": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/report.json",
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3.log",
+      "explanation": "12 scenarios passed before adding explicit-cover clearing/restoring and list deletion coverage; exact source bytes retained."
+    },
+    {
+      "command": "PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH E04_PLAYWRIGHT_PATH=/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs E04_CHROMIUM_PATH=/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell E04_LIBRARY_OUTPUT_DIR=<absolute attempt output directory> node scripts/e04-library-browser-regression.mjs",
+      "exit": 1,
+      "report": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/report.json",
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt.log",
+      "explanation": "Rejected after native ID-gap insertion invalidated the cover subscription"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node scripts/e01-writes-browser-regression.mjs",
+      "exit": 0,
+      "scenarios": 20,
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/e01-current-shared-transaction/run.log",
+      "sourceFingerprint": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/e01-current-shared-transaction/report.json"
+    }
+  ],
+  "native": {
+    "report": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/report.json",
+    "reportSHA256": "8b802e7a11368672b45c83539928cd4f40d95ff0fb7e4da2a9ea2039bad9b8b6",
+    "scenarios": [
+      {
+        "name": "gallery before/current native reads, projection bytes and independent derivation counters",
+        "status": "PASS"
+      },
+      {
+        "name": "original independent owner reads use N native readonly transactions; final exact ranges share one",
+        "status": "PASS"
+      },
+      {
+        "name": "an unselected owner insertion inside selected ID gaps does not rerun the cover subscription",
+        "status": "PASS"
+      },
+      {
+        "name": "filtered-out, archived and explicit-owner shot writes avoid fallback subscription work",
+        "status": "PASS"
+      },
+      {
+        "name": "explicit-cover-only search performs no shot read, while project metadata and explicit cover refresh",
+        "status": "PASS"
+      },
+      {
+        "name": "clearing an explicit project cover starts its fallback query; restoring it drops that shot scope",
+        "status": "PASS"
+      },
+      {
+        "name": "relevant first-frame writes and removal refresh fallback without changing missing-media semantics",
+        "status": "PASS"
+      },
+      {
+        "name": "held intersecting fallback query cannot expose prior scope covers; newer filter wins after old release",
+        "status": "PASS"
+      },
+      {
+        "name": "gallery IP/archive/search/sort transitions retain the visible-owner contract",
+        "status": "PASS"
+      },
+      {
+        "name": "character: actual before/current typed covers; only current table reads; unrelated writes do not rerun",
+        "status": "PASS"
+      },
+      {
+        "name": "scene: actual before/current typed covers; only current table reads; unrelated writes do not rerun",
+        "status": "PASS"
+      },
+      {
+        "name": "prop: actual before/current typed covers; only current table reads; unrelated writes do not rerun",
+        "status": "PASS"
+      },
+      {
+        "name": "style: actual before/current typed covers; only current table reads; unrelated writes do not rerun",
+        "status": "PASS"
+      },
+      {
+        "name": "held character result cannot populate the keyed scene owner",
+        "status": "PASS"
+      },
+      {
+        "name": "current-kind deletion removes its row; empty search remains a settled missing result",
+        "status": "PASS"
+      },
+      {
+        "name": "native selected media pixels and narrow page remain renderable",
+        "status": "PASS"
+      }
+    ],
+    "singleDocumentRequests": [
+      "http://127.0.0.1:5173/tests/fixtures/e04-library/"
+    ],
+    "pageErrors": [],
+    "gallery": {
+      "galleryBeforeCold": {
+        "nativeReturnedShotRows": 1296,
+        "nativeShotQueryCount": 1,
+        "nativeReadonlyCoverTransactionCount": 1,
+        "nativeTransactions": [
+          {
+            "id": 128,
+            "mode": "readonly",
+            "stores": [
+              "projects"
+            ]
+          },
+          {
+            "id": 129,
+            "mode": "readonly",
+            "stores": [
+              "shots"
+            ]
+          },
+          {
+            "id": 130,
+            "mode": "readonly",
+            "stores": [
+              "ipProfiles"
+            ]
+          },
+          {
+            "id": 131,
+            "mode": "readonly",
+            "stores": [
+              "projectIpLinks"
+            ]
+          },
+          {
+            "id": 132,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 133,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 134,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 135,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 136,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 137,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 138,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 139,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 140,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 141,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 142,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 143,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 144,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 145,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 146,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 147,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 148,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 149,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 150,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 151,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 152,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 153,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 154,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 155,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "label": "before-gallery",
+            "entries": 1296,
+            "jsonBytes": 5887166
+          }
+        ],
+        "derivation": {
+          "projectQueryCallbacks": 1,
+          "filterChecks": 62208,
+          "sortComparisons": 8004,
+          "fallbackVisits": 0,
+          "assetFindChecks": 0,
+          "assetCoverCalls": 0
+        },
+        "derivationCounterScope": "Instrumented callback counters only, not total CPU or timing"
+      },
+      "galleryBefore": {
+        "nativeReturnedShotRows": 0,
+        "nativeShotQueryCount": 0,
+        "nativeReadonlyCoverTransactionCount": 0,
+        "nativeTransactions": [
+          {
+            "id": 156,
+            "mode": "readwrite",
+            "stores": [
+              "shots"
+            ]
+          },
+          {
+            "id": 157,
+            "mode": "readonly",
+            "stores": [
+              "shots"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "label": "before-gallery",
+            "entries": 1296,
+            "jsonBytes": 5887184
+          }
+        ],
+        "derivation": {
+          "projectQueryCallbacks": 0,
+          "filterChecks": 3888,
+          "sortComparisons": 142,
+          "fallbackVisits": 0,
+          "assetFindChecks": 0,
+          "assetCoverCalls": 0
+        },
+        "derivationCounterScope": "Instrumented callback counters only, not total CPU or timing"
+      },
+      "galleryCurrentCold": {
+        "nativeReturnedShotRows": 1046,
+        "nativeShotQueryCount": 24,
+        "nativeReadonlyCoverTransactionCount": 1,
+        "nativeTransactions": [
+          {
+            "id": 158,
+            "mode": "readonly",
+            "stores": [
+              "projects"
+            ]
+          },
+          {
+            "id": 159,
+            "mode": "readonly",
+            "stores": [
+              "ipProfiles"
+            ]
+          },
+          {
+            "id": 160,
+            "mode": "readonly",
+            "stores": [
+              "projectIpLinks"
+            ]
+          },
+          {
+            "id": 161,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 162,
+            "mode": "readonly",
+            "stores": [
+              "shots"
+            ]
+          },
+          {
+            "id": 163,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 164,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 165,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 166,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 167,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 168,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 169,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 170,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 171,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 172,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 173,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 174,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 175,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 176,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 177,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 178,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 179,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 180,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 181,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 182,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 183,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 184,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 185,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "label": "current-gallery",
+            "entries": 0,
+            "jsonBytes": 2
+          },
+          {
+            "label": "current-gallery",
+            "entries": 23,
+            "jsonBytes": 645
+          }
+        ],
+        "derivation": {
+          "projectQueryCallbacks": 1,
+          "filterChecks": 0,
+          "sortComparisons": 0,
+          "fallbackVisits": 1046,
+          "assetFindChecks": 0,
+          "assetCoverCalls": 0
+        },
+        "derivationCounterScope": "Instrumented callback counters only, not total CPU or timing"
+      },
+      "galleryCurrentFiltered": {
+        "nativeReturnedShotRows": 45,
+        "nativeShotQueryCount": 3,
+        "nativeReadonlyCoverTransactionCount": 1,
+        "nativeTransactions": [
+          {
+            "id": 186,
+            "mode": "readonly",
+            "stores": [
+              "shots"
+            ]
+          },
+          {
+            "id": 187,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 188,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "label": "current-gallery",
+            "entries": 2,
+            "jsonBytes": 53
+          }
+        ],
+        "derivation": {
+          "projectQueryCallbacks": 0,
+          "filterChecks": 0,
+          "sortComparisons": 0,
+          "fallbackVisits": 45,
+          "assetFindChecks": 0,
+          "assetCoverCalls": 0
+        },
+        "derivationCounterScope": "Instrumented callback counters only, not total CPU or timing"
+      },
+      "galleryCurrent": {
+        "nativeReturnedShotRows": 45,
+        "nativeShotQueryCount": 3,
+        "nativeReadonlyCoverTransactionCount": 1,
+        "nativeTransactions": [
+          {
+            "id": 189,
+            "mode": "readwrite",
+            "stores": [
+              "shots"
+            ]
+          },
+          {
+            "id": 190,
+            "mode": "readonly",
+            "stores": [
+              "shots"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "label": "current-gallery",
+            "entries": 2,
+            "jsonBytes": 53
+          }
+        ],
+        "derivation": {
+          "projectQueryCallbacks": 0,
+          "filterChecks": 0,
+          "sortComparisons": 0,
+          "fallbackVisits": 45,
+          "assetFindChecks": 0,
+          "assetCoverCalls": 0
+        },
+        "derivationCounterScope": "Instrumented callback counters only, not total CPU or timing"
+      },
+      "galleryIrrelevant": {
+        "nativeReturnedShotRows": 0,
+        "nativeShotQueryCount": 0,
+        "nativeReadonlyCoverTransactionCount": 0,
+        "nativeTransactions": [
+          {
+            "id": 197,
+            "mode": "readwrite",
+            "stores": [
+              "shots"
+            ]
+          },
+          {
+            "id": 198,
+            "mode": "readwrite",
+            "stores": [
+              "shots"
+            ]
+          },
+          {
+            "id": 199,
+            "mode": "readwrite",
+            "stores": [
+              "shots"
+            ]
+          }
+        ],
+        "outputs": [],
+        "derivation": {
+          "projectQueryCallbacks": 0,
+          "filterChecks": 0,
+          "sortComparisons": 0,
+          "fallbackVisits": 0,
+          "assetFindChecks": 0,
+          "assetCoverCalls": 0
+        },
+        "derivationCounterScope": "Instrumented callback counters only, not total CPU or timing"
+      },
+      "explicitOnly": {
+        "nativeReturnedShotRows": 0,
+        "nativeShotQueryCount": 0,
+        "nativeReadonlyCoverTransactionCount": 0,
+        "nativeTransactions": [
+          {
+            "id": 200,
+            "mode": "readwrite",
+            "stores": [
+              "shots"
+            ]
+          },
+          {
+            "id": 201,
+            "mode": "readwrite",
+            "stores": [
+              "projects"
+            ]
+          },
+          {
+            "id": 202,
+            "mode": "readonly",
+            "stores": [
+              "projects"
+            ]
+          },
+          {
+            "id": 203,
+            "mode": "readwrite",
+            "stores": [
+              "projects"
+            ]
+          },
+          {
+            "id": 204,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          },
+          {
+            "id": 205,
+            "mode": "readonly",
+            "stores": [
+              "projects"
+            ]
+          }
+        ],
+        "outputs": [],
+        "derivation": {
+          "projectQueryCallbacks": 2,
+          "filterChecks": 0,
+          "sortComparisons": 0,
+          "fallbackVisits": 0,
+          "assetFindChecks": 0,
+          "assetCoverCalls": 0
+        },
+        "derivationCounterScope": "Instrumented callback counters only, not total CPU or timing"
+      },
+      "explicitCleared": {
+        "nativeReturnedShotRows": 200,
+        "nativeShotQueryCount": 1,
+        "nativeReadonlyCoverTransactionCount": 1,
+        "nativeTransactions": [
+          {
+            "id": 209,
+            "mode": "readwrite",
+            "stores": [
+              "projects"
+            ]
+          },
+          {
+            "id": 210,
+            "mode": "readonly",
+            "stores": [
+              "projects"
+            ]
+          },
+          {
+            "id": 211,
+            "mode": "readonly",
+            "stores": [
+              "shots"
+            ]
+          },
+          {
+            "id": 212,
+            "mode": "readonly",
+            "stores": [
+              "media"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "label": "current-gallery",
+            "entries": 1,
+            "jsonBytes": 34
+          }
+        ],
+        "derivation": {
+          "projectQueryCallbacks": 1,
+          "filterChecks": 0,
+          "sortComparisons": 0,
+          "fallbackVisits": 200,
+          "assetFindChecks": 0,
+          "assetCoverCalls": 0
+        },
+        "derivationCounterScope": "Instrumented callback counters only, not total CPU or timing"
+      },
+      "independentOwnerReads": {
+        "nativeReturnedShotRows": 45,
+        "nativeShotQueryCount": 3,
+        "nativeReadonlyCoverTransactionCount": 3,
+        "nativeTransactions": [
+          {
+            "id": 191,
+            "mode": "readonly",
+            "stores": [
+              "shots"
+            ]
+          },
+          {
+            "id": 192,
+            "mode": "readonly",
+            "stores": [
+              "shots"
+            ]
+          },
+          {
+            "id": 193,
+            "mode": "readonly",
+            "stores": [
+              "shots"
+            ]
+          }
+        ],
+        "outputs": [],
+        "derivation": {
+          "projectQueryCallbacks": 0,
+          "filterChecks": 0,
+          "sortComparisons": 0,
+          "fallbackVisits": 0,
+          "assetFindChecks": 0,
+          "assetCoverCalls": 0
+        },
+        "derivationCounterScope": "Immutable old helper is not instrumented by the current-helper reducer counter; its zero fallbackVisits is not a claim of zero derivation work"
+      },
+      "sharedOwnerReads": {
+        "nativeReturnedShotRows": 45,
+        "nativeShotQueryCount": 3,
+        "nativeReadonlyCoverTransactionCount": 1,
+        "nativeTransactions": [
+          {
+            "id": 194,
+            "mode": "readonly",
+            "stores": [
+              "shots"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "label": "current-gallery",
+            "entries": 2,
+            "jsonBytes": 53
+          }
+        ],
+        "derivation": {
+          "projectQueryCallbacks": 0,
+          "filterChecks": 0,
+          "sortComparisons": 0,
+          "fallbackVisits": 45,
+          "assetFindChecks": 0,
+          "assetCoverCalls": 0
+        },
+        "derivationCounterScope": "Instrumented callback counters only, not total CPU or timing"
+      },
+      "galleryGapInsert": {
+        "nativeReturnedShotRows": 0,
+        "nativeShotQueryCount": 0,
+        "nativeReadonlyCoverTransactionCount": 0,
+        "nativeTransactions": [
+          {
+            "id": 195,
+            "mode": "readwrite",
+            "stores": [
+              "shots"
+            ]
+          }
+        ],
+        "outputs": [],
+        "derivation": {
+          "projectQueryCallbacks": 0,
+          "filterChecks": 0,
+          "sortComparisons": 0,
+          "fallbackVisits": 0,
+          "assetFindChecks": 0,
+          "assetCoverCalls": 0
+        },
+        "derivationCounterScope": "Instrumented callback counters only, not total CPU or timing"
+      }
+    },
+    "assets": {
+      "character": {
+        "baseline": {
+          "nativeReturnedRowsByTable": {
+            "characters": 30,
+            "scenes": 30,
+            "props": 30,
+            "styles": 30
+          },
+          "callbackReturnedRows": 120,
+          "callbackOutputJSONBytes": 49154,
+          "metrics": {
+            "projectQueryCallbacks": 0,
+            "filterChecks": 0,
+            "sortComparisons": 0,
+            "fallbackVisits": 0,
+            "assetFindChecks": 930,
+            "assetCoverCalls": 60
+          },
+          "outputs": [
+            {
+              "label": "before-characters",
+              "entries": 30,
+              "jsonBytes": 12491
+            },
+            {
+              "label": "before-scenes",
+              "entries": 30,
+              "jsonBytes": 12851
+            },
+            {
+              "label": "before-props",
+              "entries": 30,
+              "jsonBytes": 11981
+            },
+            {
+              "label": "before-styles",
+              "entries": 30,
+              "jsonBytes": 11831
+            }
+          ]
+        },
+        "current": {
+          "nativeReturnedRowsByTable": {
+            "characters": 0,
+            "scenes": 0,
+            "props": 0,
+            "styles": 0
+          },
+          "callbackReturnedRows": 30,
+          "callbackOutputJSONBytes": 17161,
+          "metrics": {
+            "projectQueryCallbacks": 0,
+            "filterChecks": 0,
+            "sortComparisons": 0,
+            "fallbackVisits": 0,
+            "assetFindChecks": 0,
+            "assetCoverCalls": 30
+          },
+          "outputs": [
+            {
+              "label": "current-characters",
+              "entries": 30,
+              "jsonBytes": 17161
+            }
+          ]
+        },
+        "irrelevant": {
+          "nativeReturnedRowsByTable": {
+            "characters": 0,
+            "scenes": 0,
+            "props": 0,
+            "styles": 0
+          },
+          "callbackReturnedRows": 0,
+          "callbackOutputJSONBytes": 0,
+          "metrics": {
+            "projectQueryCallbacks": 0,
+            "filterChecks": 0,
+            "sortComparisons": 0,
+            "fallbackVisits": 0,
+            "assetFindChecks": 0,
+            "assetCoverCalls": 0
+          },
+          "outputs": []
+        }
+      },
+      "scene": {
+        "baseline": {
+          "nativeReturnedRowsByTable": {
+            "characters": 0,
+            "scenes": 0,
+            "props": 0,
+            "styles": 0
+          },
+          "callbackReturnedRows": 120,
+          "callbackOutputJSONBytes": 49272,
+          "metrics": {
+            "projectQueryCallbacks": 0,
+            "filterChecks": 0,
+            "sortComparisons": 0,
+            "fallbackVisits": 0,
+            "assetFindChecks": 465,
+            "assetCoverCalls": 30
+          },
+          "outputs": [
+            {
+              "label": "before-characters",
+              "entries": 30,
+              "jsonBytes": 12549
+            },
+            {
+              "label": "before-scenes",
+              "entries": 30,
+              "jsonBytes": 12871
+            },
+            {
+              "label": "before-props",
+              "entries": 30,
+              "jsonBytes": 12001
+            },
+            {
+              "label": "before-styles",
+              "entries": 30,
+              "jsonBytes": 11851
+            }
+          ]
+        },
+        "current": {
+          "nativeReturnedRowsByTable": {
+            "characters": 0,
+            "scenes": 0,
+            "props": 0,
+            "styles": 0
+          },
+          "callbackReturnedRows": 30,
+          "callbackOutputJSONBytes": 17301,
+          "metrics": {
+            "projectQueryCallbacks": 0,
+            "filterChecks": 0,
+            "sortComparisons": 0,
+            "fallbackVisits": 0,
+            "assetFindChecks": 0,
+            "assetCoverCalls": 30
+          },
+          "outputs": [
+            {
+              "label": "current-scenes",
+              "entries": 30,
+              "jsonBytes": 17301
+            }
+          ]
+        },
+        "irrelevant": {
+          "nativeReturnedRowsByTable": {
+            "characters": 0,
+            "scenes": 0,
+            "props": 0,
+            "styles": 0
+          },
+          "callbackReturnedRows": 0,
+          "callbackOutputJSONBytes": 0,
+          "metrics": {
+            "projectQueryCallbacks": 0,
+            "filterChecks": 0,
+            "sortComparisons": 0,
+            "fallbackVisits": 0,
+            "assetFindChecks": 0,
+            "assetCoverCalls": 0
+          },
+          "outputs": []
+        }
+      },
+      "prop": {
+        "baseline": {
+          "nativeReturnedRowsByTable": {
+            "characters": 30,
+            "scenes": 0,
+            "props": 30,
+            "styles": 30
+          },
+          "callbackReturnedRows": 120,
+          "callbackOutputJSONBytes": 49338,
+          "metrics": {
+            "projectQueryCallbacks": 0,
+            "filterChecks": 0,
+            "sortComparisons": 0,
+            "fallbackVisits": 0,
+            "assetFindChecks": 465,
+            "assetCoverCalls": 30
+          },
+          "outputs": [
+            {
+              "label": "before-scenes",
+              "entries": 30,
+              "jsonBytes": 12929
+            },
+            {
+              "label": "before-characters",
+              "entries": 30,
+              "jsonBytes": 12565
+            },
+            {
+              "label": "before-props",
+              "entries": 30,
+              "jsonBytes": 11997
+            },
+            {
+              "label": "before-styles",
+              "entries": 30,
+              "jsonBytes": 11847
+            }
+          ]
+        },
+        "current": {
+          "nativeReturnedRowsByTable": {
+            "characters": 0,
+            "scenes": 0,
+            "props": 0,
+            "styles": 0
+          },
+          "callbackReturnedRows": 30,
+          "callbackOutputJSONBytes": 16367,
+          "metrics": {
+            "projectQueryCallbacks": 0,
+            "filterChecks": 0,
+            "sortComparisons": 0,
+            "fallbackVisits": 0,
+            "assetFindChecks": 0,
+            "assetCoverCalls": 30
+          },
+          "outputs": [
+            {
+              "label": "current-props",
+              "entries": 30,
+              "jsonBytes": 16367
+            }
+          ]
+        },
+        "irrelevant": {
+          "nativeReturnedRowsByTable": {
+            "characters": 0,
+            "scenes": 0,
+            "props": 0,
+            "styles": 0
+          },
+          "callbackReturnedRows": 0,
+          "callbackOutputJSONBytes": 0,
+          "metrics": {
+            "projectQueryCallbacks": 0,
+            "filterChecks": 0,
+            "sortComparisons": 0,
+            "fallbackVisits": 0,
+            "assetFindChecks": 0,
+            "assetCoverCalls": 0
+          },
+          "outputs": []
+        }
+      },
+      "style": {
+        "baseline": {
+          "nativeReturnedRowsByTable": {
+            "characters": 0,
+            "scenes": 30,
+            "props": 0,
+            "styles": 0
+          },
+          "callbackReturnedRows": 120,
+          "callbackOutputJSONBytes": 49389,
+          "metrics": {
+            "projectQueryCallbacks": 0,
+            "filterChecks": 0,
+            "sortComparisons": 0,
+            "fallbackVisits": 0,
+            "assetFindChecks": 930,
+            "assetCoverCalls": 60
+          },
+          "outputs": [
+            {
+              "label": "before-characters",
+              "entries": 30,
+              "jsonBytes": 12564
+            },
+            {
+              "label": "before-props",
+              "entries": 30,
+              "jsonBytes": 12055
+            },
+            {
+              "label": "before-styles",
+              "entries": 30,
+              "jsonBytes": 11846
+            },
+            {
+              "label": "before-scenes",
+              "entries": 30,
+              "jsonBytes": 12924
+            }
+          ]
+        },
+        "current": {
+          "nativeReturnedRowsByTable": {
+            "characters": 0,
+            "scenes": 0,
+            "props": 0,
+            "styles": 0
+          },
+          "callbackReturnedRows": 30,
+          "callbackOutputJSONBytes": 16276,
+          "metrics": {
+            "projectQueryCallbacks": 0,
+            "filterChecks": 0,
+            "sortComparisons": 0,
+            "fallbackVisits": 0,
+            "assetFindChecks": 0,
+            "assetCoverCalls": 30
+          },
+          "outputs": [
+            {
+              "label": "current-styles",
+              "entries": 30,
+              "jsonBytes": 16276
+            }
+          ]
+        },
+        "irrelevant": {
+          "nativeReturnedRowsByTable": {
+            "characters": 0,
+            "scenes": 0,
+            "props": 0,
+            "styles": 0
+          },
+          "callbackReturnedRows": 0,
+          "callbackOutputJSONBytes": 0,
+          "metrics": {
+            "projectQueryCallbacks": 0,
+            "filterChecks": 0,
+            "sortComparisons": 0,
+            "fallbackVisits": 0,
+            "assetFindChecks": 0,
+            "assetCoverCalls": 0
+          },
+          "outputs": []
+        }
+      }
+    }
+  },
+  "sourceFreeze": {
+    "ownMatchesFinalNativeReceipt": true,
+    "ownedBeforeAndAfterNative": {
+      "src/components/studio/ProjectGalleryPage.tsx": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1",
+      "src/components/studio/AssetLibraryPages.tsx": "b462661b8fa3f9ec313de40bbe0bc89195f19f571686517e8063925d438176d2",
+      "src/lib/studioLibraryQueries.ts": "88ee8de4fa4f8d82d2420da7ae9f08c37cdf7b3a81ddc2ab3b591c4d11eb25f1",
+      "tests/e04LibraryQueries.test.ts": "0a6dc2f8368145534c9a17543e3501aa2723a2bc0796e79edc8be5f8578f2b2a",
+      "tests/fixtures/e04-library/harness.tsx": "a746f3758e71cc63cd5b32661a8212081ccbf0e5790b9f81afb15baa396e83e8",
+      "tests/fixtures/e04-library/index.html": "48929fc2827a3d214135814491ffad1df7f9ea4c758f3b13ad773fef1ba7cf77",
+      "tests/fixtures/e04-library/tsconfig.json": "0d0e4ec9004fc3eb593326706c04e81486d5e79113ce96b431fa0838eae05e58",
+      "scripts/e04-library-browser-regression.mjs": "72bde650c1ddc62cc5e2ae0d16776e2e448a099b330d90ef914df2fb9fa94b91",
+      "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage.tsx": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+      "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+      "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+      "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+      "tests/fixtures/sourceSnapshots/e04-library/provenance.json": "fe35050e7cef297a4f263254df42c3d11c3b39cedad102317f5eaeb7960a87b9",
+      "tests/fixtures/sourceSnapshots/e04-library/independent-transactions/studioLibraryQueries.ts": "5cb355c2f0ee97297ea3f894f4a0c1e0265f8b493533fcab51155a9a7c2a4f50",
+      "tests/fixtures/sourceSnapshots/e04-library/independent-transactions/provenance.json": "55265f0021b0ea6e816163b71dc2bbceb8903936b9ea4b6015cf484f4581d9be"
+    },
+    "servedModuleClosure": {
+      "tests/fixtures/e04-library/harness.tsx": "a746f3758e71cc63cd5b32661a8212081ccbf0e5790b9f81afb15baa396e83e8",
+      "tests/fixtures/sourceSnapshots/e04-library/independent-transactions/studioLibraryQueries.ts": "5cb355c2f0ee97297ea3f894f4a0c1e0265f8b493533fcab51155a9a7c2a4f50",
+      "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+      "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage.tsx": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+      "src/lib/studioLibraryQueries.ts": "88ee8de4fa4f8d82d2420da7ae9f08c37cdf7b3a81ddc2ab3b591c4d11eb25f1",
+      "src/db/database.ts": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+      "src/db/productionRecords.ts": "c4be1a9cbedebbbd11a3a4435fd06f97a7270b05376f50c0e3efe515d51d73e7",
+      "src/domain/types.ts": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+      "src/domain/slot.ts": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+      "src/components/studio/AssetLibraryPages.tsx": "b462661b8fa3f9ec313de40bbe0bc89195f19f571686517e8063925d438176d2",
+      "src/components/studio/ProjectGalleryPage.tsx": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1",
+      "src/styles.css": "a8deb89bc36b4d9d3a88ce063c4b5bd81be793d8fc3e4571f2c0b1da91aa7d64",
+      "src/lib/ids.ts": "39924822d8b29e298a8d00615d0027b581ba2eb6a32cf210262a253c58ebfa5d",
+      "src/components/studio/CoverCard.tsx": "1cd7b4b4335ad69a6db11f6288e6af04dbe3ea07706860761d798d787cb5fb9f",
+      "src/components/studio/LibraryHeader.tsx": "8561229fd2ec9a508f7b2978e17830144cf5f56c76e965ff3d146bf1c149ed45",
+      "src/lib/assetLibrary.ts": "db8aff1b30cbc4a16310a624cdd9326a5f7a4ec192d3e8cecb616551434facae",
+      "src/lib/format.ts": "de29ecf48ef0a5ca9f852f92c23dcd90ba5edeac6fb66ff9c1a3ecb616674b77",
+      "src/lib/library.ts": "4dd9c343505ed4e10b3e3215b4895331a8a4e107bf084a9cff59e6d58328695e",
+      "src/components/ui/alert-dialog.tsx": "86bc809de1275d1b0d4c8dc653037d4177294ca0bb5390105a81409cc0260ad4",
+      "src/db/assets.ts": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e",
+      "src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+      "src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+      "src/components/ui/select.tsx": "663aad952784b862a96c5b06aad70847ff7b7c2a4463a4111c9cdfff075d1869",
+      "src/components/ui/checkbox.tsx": "4aec3c9b24f538d9420f305314ae77b26824ed680cbf7f01fffc1d32a10cd462",
+      "src/lib/debouncedDraft.ts": "c797901e5318743ca0f87b819067c18f7c3a384516efd87db832aa9f94355f09",
+      "src/db/projects.ts": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+      "src/components/ui/button.tsx": "4e7a70efedb71755b3ff03b27b5c73ef5d891511bb258bc2a8aaa3714abc29b6",
+      "src/db/cascadeCommands.ts": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6",
+      "src/lib/projectPackage.ts": "ad99f320cc1908b8f1bc70c32103b50f36eb3a2d2765e42ebda385c9709bc4c4",
+      "src/db/ipProfiles.ts": "4a48495cca91e75f1214be09fe60719c60a47ae1cde4b32ef0c7db66e8eda3be",
+      "src/lib/utils.ts": "41b88d67f560686e8197d1e884e0585c9beade191d3d9c1d5361acf962bab562",
+      "src/components/ui/input.tsx": "7d0a115d1f1f1ae6da7d733f66b441d63cb58f01845a61522f6cc8d16a973d30",
+      "src/components/ui/dialog.tsx": "3bae376fea3814100be48ac35dddf4498117cbf5d8265080fc8e89c014fd4e6c",
+      "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+      "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+      "src/components/studio/Still.tsx": "0ead47eddd405054ecfd6d01532b069abcf5e10293c3415b9a61c8d4d538beae",
+      "src/components/ui/dropdown-menu.tsx": "6909edc7d0c8cd0736e56463a7a618ac93ad916e570d55047650c7f53fa4471a",
+      "src/db/audioShared.ts": "2dc8545765e9916ac3c8bc07341b56ff87c9a1f78ace95f1535d96c020a801b3",
+      "src/db/productionShared.ts": "afd0e5b49aeb0f00c9f58f69f028e01f21062a2f6ba71741b056aec720797fc3",
+      "src/db/media.ts": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+      "src/lib/draftConflict.ts": "2e94acd524fa20eeb3053f8631852a9d5275d8a2c6698718577dd9bc1a3e5e66",
+      "src/domain/output.ts": "387df36dc4b5a8808477d11620546ce45010c5fe3289d7556ba5cd7bdb02f492",
+      "src/domain/audio.ts": "3d4cef74e3bae43f8e5c439ff8704c028e1ff97da4e47f0e0ed579df78a25e94",
+      "src/domain/music.ts": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+      "src/lib/audioProjectPackage.ts": "93886389c152de00353d0ca082816c4678f31f55ee554a65b8e243bd74224e63",
+      "src/lib/references/package.ts": "6764acaf39fb0d424d30e81265cde8e5c7d6ea5f6b644f38ffefb18c44dc27d2",
+      "src/lib/packages/projectPackageCodec.ts": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+      "src/lib/packages/packageError.ts": "88bd42e3b80e971078902ed82aa244128ed998db2364673a46201462982f6f02",
+      "src/components/media/MediaThumb.tsx": "6e18630ce69617f3666713d82a108d41f515290c920424d567d06aa0527b0a2d",
+      "src/domain/generationCapabilities.ts": "4398fc99a4003bda5ea903c54be5673bbc0dd748710d6a58ad9661ca545decef",
+      "src/lib/audioGeneration/observations.ts": "3a4eaa6f6cf3c0186ff5d129bdaa07acf59df509b19523301d7237d502963cbe",
+      "src/lib/audioGeneration/reference.ts": "036ab41d4d0972e98d4acb8fc9d25286246473579d5d2cce6a9667ad38d39097",
+      "src/lib/audioGeneration/input.ts": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+      "src/lib/packages/audioPackageCodec.ts": "e9efd6af64d536bb6319be184d9d550e5f6e316f9e3954927472db0348e2e1ac",
+      "src/db/music.ts": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+      "src/db/audio.ts": "371d2c2d66fe07e41075d864a26ee980a9b64c46cce333084a50848be4550dfd",
+      "src/lib/references/parse.ts": "e2f02198fd57623e5707685d8848b38522c0667933565b812b465019e5f7d122",
+      "src/domain/references.ts": "b7c4f8a7de8e3284ad27fa72cc4aa6575ace4942ca4216f9194e16c9fa30fcc7",
+      "src/lib/memory/schema.ts": "ccddefc631d808e0ec77a07b6be57cafee746fcf8cfbb09969a3ff0e1b754946",
+      "src/lib/media.ts": "bb352b6d1933651ab5cb13fcadfc27f92694c0d13cba4f2881c9b4361c8eb630",
+      "src/lib/audio/fingerprint.ts": "2e75f9a80cc117c5f9a2b0aa0528f9f28be1e5d00cc3826376e1fedcabb4ef59",
+      "src/lib/ai/mimoSpeech.ts": "3793fedd4a513c73e8b2a84ba30261affb216af43034425b24de8b4542870ae3",
+      "src/lib/audioGeneration/taskIds.ts": "9c6a060ef497e2b41ed783ce5ce628770623c3afc1b7f8f62173373cc66f6a9f",
+      "src/lib/ai/apimartAudio.ts": "b3b05fbbb2c5ae0ba7b3500216a7050f4f066a791fa053d68d7fcda7326d8e9d",
+      "src/lib/audio/schedule.ts": "d67341b2a2a44ca550a36d024c7b5e17500a1f571eeb95dea22b5913a6c3b0d7",
+      "src/lib/ai/requestBoundary.ts": "c72677ed1736c47f45b64db9145a40405bfc38b2de73ef6af5cde455f968b155",
+      "src/lib/ai/boundedResponse.ts": "92cc47f78623f8c1c8e7d864a9f4af655c5b498077f8b0e93de25eefc9be8384",
+      "src/lib/ai/baseUrl.ts": "ae51424b8ebac68bf252d235e284694a5793bcb387a3f2deeb58ca71faaa9c7c",
+      "src/lib/ai/modelMetadata.ts": "9ea70a6c9172cbab757550440888fbda56a5ec6f89aa95111405accd3db175aa",
+      "src/lib/ai/safeError.ts": "aaca8cbeafa33d6d2d7f12668f858827de788b1b3737bf9a909cdb255dca5d12",
+      "src/lib/audio/mime.ts": "dbe81e382e37dbdcecd85dc560bb09c48eed212e67607f0941e5d8015db07076",
+      "src/lib/resource/limits.ts": "aaed95b303a65539344a27c6fbee1670171248995a4e2da3fe4dc9cc4307bb17",
+      "src/lib/ai/modelBank/index.ts": "64e721fc672271586ca09965397ef3f3dab09d36b10976dc94a3b68d4e2ec3df"
+    },
+    "servedModuleCount": 73,
+    "concurrentClosureChangesDuringNative": [],
+    "closureChangedSinceNative": [],
+    "concurrentRoots": [
+      {
+        "path": "src/db/projectMemories.ts",
+        "beforeEntrySHA256": "2385dcc806bd3a6e888e27dd281b704f75abb4acc77fb5a29859ae7409aea1b9",
+        "currentSHA256": "33ea5784a01f3b30583416e01f09c83ce25cf071de2547c40713d6b3b9419cb3",
+        "changedSinceEntry": true,
+        "ownedByThisWriter": false
+      },
+      {
+        "path": "src/db/media.ts",
+        "beforeEntrySHA256": "0b2105050422434e9f9955f94ee7d3bc165310e62c7fe418eec23944a8efd675",
+        "currentSHA256": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+        "changedSinceEntry": true,
+        "ownedByThisWriter": false
+      },
+      {
+        "path": "src/db/shots.ts",
+        "beforeEntrySHA256": "fe48dc9ee40950096d91dde9119b56de03a9c1523aa872e5cce090fb833189b2",
+        "currentSHA256": "a2fa075f0284959659c369b3657cb615d2d10581dbdbef9b1b76479bb2f1a926",
+        "changedSinceEntry": true,
+        "ownedByThisWriter": false
+      },
+      {
+        "path": "src/db/assets.ts",
+        "beforeEntrySHA256": "32362eff2c660aaa4f020e093591be90f541e9741468e3e7d2e606164490068d",
+        "currentSHA256": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e",
+        "changedSinceEntry": true,
+        "ownedByThisWriter": false
+      },
+      {
+        "path": "src/db/assetReuse.ts",
+        "beforeEntrySHA256": "bb81b6f8d9d94255de378db349f0a187600ed2f7146e6c19ac79bfa5b43795b3",
+        "currentSHA256": "d1af1aa4d59bd1ae8f1f04d1d1431903d603d917b4ac26162b0b328a107e0a73",
+        "changedSinceEntry": true,
+        "ownedByThisWriter": false
+      },
+      {
+        "path": "src/db/references.ts",
+        "beforeEntrySHA256": "b4f20572f890d395a8294f6377435a9c5b51d9cc9ab9238d396edb7d8915cb0d",
+        "currentSHA256": "b4f20572f890d395a8294f6377435a9c5b51d9cc9ab9238d396edb7d8915cb0d",
+        "changedSinceEntry": false,
+        "ownedByThisWriter": false
+      },
+      {
+        "path": "src/db/projects.ts",
+        "beforeEntrySHA256": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+        "currentSHA256": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+        "changedSinceEntry": false,
+        "ownedByThisWriter": false
+      },
+      {
+        "path": "src/db/episodes.ts",
+        "beforeEntrySHA256": "832812e48f1508d22cbe2bae35752315b3e99209c28bd37f7d3d76cef93b6ea3",
+        "currentSHA256": "294a068ed80118b5b8b8ab1009e9a8cd0624ddfd91030de783de49f861f65a11",
+        "changedSinceEntry": true,
+        "ownedByThisWriter": false
+      },
+      {
+        "path": "src/db/cascadeCommands.ts",
+        "beforeEntrySHA256": "01363e5054728ccd17aeeadfab92c123dc6411e12ec2ba63530900d0e45e9526",
+        "currentSHA256": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6",
+        "changedSinceEntry": true,
+        "ownedByThisWriter": false
+      }
+    ],
+    "scope": "Only the 15 assigned product/test/fixture/producer inputs are frozen by this writer. Other roots belong to concurrent E04 writers; loaded bytes/hashes are preserved for the actual module closure."
+  },
+  "coordinatorStaticPrecheck": {
+    "attribution": "Coordinator read-only cumulative static precheck, not this writer's independent review or final E04 acceptance",
+    "files": 18,
+    "inputCount": 447,
+    "inputsUnchanged": true,
+    "baselineErrors": 4,
+    "baselineWarnings": 44,
+    "currentErrors": 3,
+    "currentWarnings": 41,
+    "addedNoncomplexity": [],
+    "newFileDiagnostics": [],
+    "newE04MetricCount": 1,
+    "galleryComplexity": {
+      "beforeE03": 31,
+      "currentE04": 32,
+      "rule": "complexity",
+      "increment": 1,
+      "mechanism": "The scoped query-key retained-result guard adds a branch that prevents prior-scope cover data under a new identity. Held-query native evidence exercises its purpose; independent review still must confirm the metric attribution and branch."
+    },
+    "inheritedMetricChanges": "The two AgentChat metrics in the cumulative addedComplexity list belong to E01, not this SS09 implementation.",
+    "versions": {
+      "eslint": "9.39.5",
+      "typescript-eslint": "8.71.1",
+      "eslint-plugin-react-hooks": "7.1.1",
+      "eslint-plugin-sonarjs": "3.0.7",
+      "typescript": "5.9.2"
+    },
+    "rawFiles": {
+      ".trellis/tasks/10-09-src-remediation-e/reviews/E04-in-progress-static/E04-static-summary.json": "7e6bea83ec33e3a438f3ba930eb7f6f3052f4d54e00f18a50e4713d62bf1971f",
+      ".trellis/tasks/10-09-src-remediation-e/reviews/E04-in-progress-static/consistency.json": "1ed1e2e89fe0088b3cad60434f83ae4a9eb9b3707ca6d14e46985fe800852945",
+      ".trellis/tasks/10-09-src-remediation-e/reviews/E04-in-progress-static/E04-static-results.json": "3f0e57905929e0d3ed6cb980ae2d6393f4c23faef6969bd5d592635d11be1d50",
+      ".trellis/tasks/10-09-src-remediation-e/reviews/E04-in-progress-static/pre.json": "0e9f2e62d689ae14260a0501803b33c0c337d00448641d86145d0ebb16193220",
+      ".trellis/tasks/10-09-src-remediation-e/reviews/E04-in-progress-static/post.json": "0e9f2e62d689ae14260a0501803b33c0c337d00448641d86145d0ebb16193220",
+      ".trellis/tasks/10-09-src-remediation-e/reviews/E04-in-progress-static/producer-provenance.json": "ec2aad9674f34c1ba03e4794a9c1aa9d28f22a9d42c7867a766fee4948da38d5",
+      ".trellis/tasks/10-09-src-remediation-e/reviews/E04-in-progress-static/scan-unit.mjs": "5dd73557a4bee5fdc31bf5cb7227920a21ba242afbb648662a78262979b3944a"
+    },
+    "matchingOwnSourceHashes": {
+      "src/components/studio/AssetLibraryPages.tsx": "b462661b8fa3f9ec313de40bbe0bc89195f19f571686517e8063925d438176d2",
+      "src/components/studio/ProjectGalleryPage.tsx": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1"
+    },
+    "staleOwnSourceHashes": {
+      "src/lib/studioLibraryQueries.ts": {
+        "precheck": "5cb355c2f0ee97297ea3f894f4a0c1e0265f8b493533fcab51155a9a7c2a4f50",
+        "current": "88ee8de4fa4f8d82d2420da7ae9f08c37cdf7b3a81ddc2ab3b591c4d11eb25f1",
+        "status": "Needs coordinator final static refresh; earlier diagnostics are not a check of these new bytes"
+      }
+    }
+  },
+  "queryTransactionHistory": {
+    "earlierNTransactions": {
+      "status": "Earlier attempted implementation; superseded by shared readonly transaction",
+      "report": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/query-n-revision/E04-library-implementation.json",
+      "reportSHA256": "8c286001198b4d755132d2ed2a417eae6fb1f83bb215b263f257416e6cbbe74b",
+      "helperSHA256": "5cb355c2f0ee97297ea3f894f4a0c1e0265f8b493533fcab51155a9a7c2a4f50",
+      "nativeEvidence": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/report.json",
+      "immutableComparator": "tests/fixtures/sourceSnapshots/e04-library/independent-transactions/studioLibraryQueries.ts"
+    },
+    "anyOf": {
+      "status": "Rejected after native ID-gap insertion invalidated the cover subscription",
+      "report": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/report.json",
+      "reportSHA256": "71dcd28579500e601b44b358c070d7efc58e74b8ead6dbdde4693e0e1bbc9857",
+      "sourceSHA256": "ff222b905624766317490e0d970e5341e13de79bf2b9659e9a831fe27ad28ad8",
+      "focusedLog": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/focused-single-query.log",
+      "focusedPassed": 8,
+      "gapObservation": {
+        "transactions": [
+          {
+            "id": 191,
+            "mode": "readonly",
+            "stores": [
+              "shots"
+            ]
+          },
+          {
+            "id": 192,
+            "mode": "readwrite",
+            "stores": [
+              "shots"
+            ]
+          },
+          {
+            "id": 193,
+            "mode": "readonly",
+            "stores": [
+              "shots"
+            ]
+          }
+        ],
+        "reads": [
+          {
+            "table": "shots",
+            "transactionId": 193,
+            "method": "openCursor",
+            "index": "projectId",
+            "rows": 47,
+            "returnedJSONBytes": 213034
+          }
+        ],
+        "metrics": {
+          "projectQueryCallbacks": 0,
+          "filterChecks": 0,
+          "sortComparisons": 0,
+          "fallbackVisits": 45,
+          "assetFindChecks": 0,
+          "assetCoverCalls": 0
+        },
+        "outputs": [
+          {
+            "label": "current-gallery",
+            "entries": 2,
+            "jsonBytes": 53
+          }
+        ],
+        "held": [],
+        "published": [
+          "[\"alpha\",\"empty\",\"missing\"]"
+        ]
+      },
+      "limitations": "anyOf uses a min/max bounding range and one cursor. Native video query returned 47 complete cursor rows versus 45 matching reducer visits, and an unselected beta owner insertion inside alpha/empty/missing bounds triggered a cover callback. It is not used by the final helper."
+    },
+    "final": {
+      "strategy": "One explicit db.transaction('r', db.shots, () => Promise.all(ids.map(owner => where('projectId').equals(owner).each(...))))",
+      "helperSHA256": "88ee8de4fa4f8d82d2420da7ae9f08c37cdf7b3a81ddc2ab3b591c4d11eb25f1",
+      "nativeComparedOwnerCount": 3,
+      "beforeTransactions": 3,
+      "finalTransactions": 1,
+      "cursorRequestsBeforeAndAfter": 3,
+      "completeRowsBeforeAndAfter": 45,
+      "defaultGalleryOwnerRequests": 24,
+      "defaultGalleryTransactions": 1,
+      "IDGapInsert": {
+        "nativeReturnedShotRows": 0,
+        "nativeShotQueryCount": 0,
+        "nativeReadonlyCoverTransactionCount": 0,
+        "nativeTransactions": [
+          {
+            "id": 195,
+            "mode": "readwrite",
+            "stores": [
+              "shots"
+            ]
+          }
+        ],
+        "outputs": [],
+        "derivation": {
+          "projectQueryCallbacks": 0,
+          "filterChecks": 0,
+          "sortComparisons": 0,
+          "fallbackVisits": 0,
+          "assetFindChecks": 0,
+          "assetCoverCalls": 0
+        },
+        "derivationCounterScope": "Instrumented callback counters only, not total CPU or timing"
+      }
+    }
+  },
+  "e01Preservation": {
+    "comparison": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/e01-mutation-body-comparison.json",
+    "mutationBodies": [
+      {
+        "path": "src/components/studio/ProjectGalleryPage.tsx",
+        "function": "handleCreate",
+        "beforeSHA256": "409dea59a402ecdcb41d70b48818dab19f566828d1a8298082009989f5c2f053",
+        "afterSHA256": "409dea59a402ecdcb41d70b48818dab19f566828d1a8298082009989f5c2f053",
+        "identical": true
+      },
+      {
+        "path": "src/components/studio/ProjectGalleryPage.tsx",
+        "function": "handleRename",
+        "beforeSHA256": "9284afd23d8d3872ce0ef376a87c95f31f0ee153a07b43c8ea3538cd6b86762d",
+        "afterSHA256": "9284afd23d8d3872ce0ef376a87c95f31f0ee153a07b43c8ea3538cd6b86762d",
+        "identical": true
+      },
+      {
+        "path": "src/components/studio/ProjectGalleryPage.tsx",
+        "function": "handleDelete",
+        "beforeSHA256": "e2cae658848907286b9af07ea3f3723543b3b3bffd25b5694d654c0072451bae",
+        "afterSHA256": "e2cae658848907286b9af07ea3f3723543b3b3bffd25b5694d654c0072451bae",
+        "identical": true
+      },
+      {
+        "path": "src/components/studio/ProjectGalleryPage.tsx",
+        "function": "handleBinding",
+        "beforeSHA256": "91e0950053e7b77421146711e9640ae85f1b049cf9ea50df02477818e7ce71bc",
+        "afterSHA256": "91e0950053e7b77421146711e9640ae85f1b049cf9ea50df02477818e7ce71bc",
+        "identical": true
+      },
+      {
+        "path": "src/components/studio/ProjectGalleryPage.tsx",
+        "function": "handleArchive",
+        "beforeSHA256": "36ea2c7dc0af121e59006caf2fb6958f0d80d618f93a7ce69ae3a39bfdc0e02c",
+        "afterSHA256": "36ea2c7dc0af121e59006caf2fb6958f0d80d618f93a7ce69ae3a39bfdc0e02c",
+        "identical": true
+      },
+      {
+        "path": "src/components/studio/AssetLibraryPages.tsx",
+        "function": "handleCreate",
+        "beforeSHA256": "113c60dfb329f7803bf5a7c1ecfb55a2362fb286e3502244ded7d032216070ce",
+        "afterSHA256": "113c60dfb329f7803bf5a7c1ecfb55a2362fb286e3502244ded7d032216070ce",
+        "identical": true
+      },
+      {
+        "path": "src/components/studio/AssetLibraryPages.tsx",
+        "function": "handleDelete",
+        "beforeSHA256": "01b483ca9b488faa110301521d41a14e084b9212896e4c980cac6bddfe4d3274",
+        "afterSHA256": "01b483ca9b488faa110301521d41a14e084b9212896e4c980cac6bddfe4d3274",
+        "identical": true
+      },
+      {
+        "path": "src/components/studio/AssetLibraryPages.tsx",
+        "function": "openItem",
+        "beforeSHA256": "d2b5789032864a0c3481cb6e6ef5ac16a722c53bab7c7a4bb4f5385ec2263631",
+        "afterSHA256": "d2b5789032864a0c3481cb6e6ef5ac16a722c53bab7c7a4bb4f5385ec2263631",
+        "identical": true
+      }
+    ],
+    "nativeWrite20": {
+      "status": "PASS",
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node scripts/e01-writes-browser-regression.mjs",
+      "environment": {
+        "node": "v24.11.0",
+        "E01_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+        "E01_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+      },
+      "exit": 0,
+      "passed": 20,
+      "inputCount": 450,
+      "sourceParserInputCount": 447,
+      "inputsUnchanged": true,
+      "drift": [],
+      "producerSHA256": "14f937c95d7bdc64f5c4806a220c73275f5879b385bad972c7f2a39de8af3bcf",
+      "fixtureSHA256": {
+        "tests/fixtures/e01-writes/index.html": "8f21ced89184fb7027c8ebba4f11caf602417aeface656a1df5340b6b050ab07",
+        "tests/fixtures/e01-writes/harness.tsx": "b108edcd45ee791860828c4b833912451b888057f8a4633ce514ccaae0c9b397"
+      },
+      "currentHelperSHA256": "88ee8de4fa4f8d82d2420da7ae9f08c37cdf7b3a81ddc2ab3b591c4d11eb25f1",
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/e01-current-shared-transaction/run.log",
+      "scope": "Read-only pre/post comparison of current source/parser and exact unchanged E01 producer/fixture inputs for this run. No global source freeze or other-writer completion is asserted.",
+      "report": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/e01-current-shared-transaction/report.json",
+      "reportSHA256": "3a6c96efa990c2bd0fc5b16deec8c2d517bdc080a56b9a1a9277d69743eb996e",
+      "producer": "scripts/e01-writes-browser-regression.mjs",
+      "unchangedFromEarlierReceipt": true
+    }
+  },
+  "failedEvidence": {
+    "recovery": [
+      {
+        "attempt": "native-attempt1",
+        "ownProducerBytesVerified": true,
+        "missingLoadedDependencyBytes": []
+      },
+      {
+        "attempt": "native-attempt2",
+        "ownProducerBytesVerified": true,
+        "missingLoadedDependencyBytes": []
+      }
+    ],
+    "notes": "Native failures have exact hash-verified own source/producer bytes. Attempt1 producer was reconstructed from recorded edits and verified against its pre-run receipt. Preliminary fixture diagnostics were retained; they did not have a pre-execution complete source freeze."
+  },
+  "specSuggestions": [
+    "Gallery fallback queries read only visible projects with a nullish coverMediaId, using separate projectId equality ranges within one explicit readonly shots transaction. N cursor requests remain N; they share one consistent transaction. anyOf bounding-range observation is not equivalent to exact owner scopes. Retain only bounded project-to-media IDs and temporary order comparisons. Keep explicit covers, first eligible first-frame semantics, primary-key input order ties across episodes, and the selected missing-media ID. Do not create a persisted cover cache.",
+    "A stable serialized sorted fallback-owner set is the gallery query identity. Return the identity with the cover map and reject retained results whose identity differs while a new live query loads. Sorting/card metadata changes that preserve the fallback-owner set do not resubscribe its shot query.",
+    "Each keyed studio asset kind uses one typed studio-owner table query paired with its existing typed cover function. Preserve the original authored source object for search; wrapper/cover IDs and provenance must not become searchable. Relevant writes refresh cards; other-kind and foreign-owner writes do not rerun the current subscription.",
+    "Native performance evidence separates complete IndexedDB returned rows, live-query callback rows, serialized retained projection bytes, and derivation work. Dexie caching can produce a fresh full-query callback without new native reads. No column-projection, latency, disk-IO or universal physical-read improvement follows from a smaller Map."
+  ],
+  "limits": [
+    "Native cursor/getAll counts returned complete rows, not physical disk IO or column projection. Exact owner equals ranges use N cursor requests inside one readonly transaction. Query count, transaction count, complete returned rows and reducer/output counts are separate metrics.",
+    "Default Dexie caching can reuse warmed full-query arrays with zero additional native reads; warm native row counts and callback rows are separate.",
+    "JSON bytes measure object data excluding Blob bytes, not allocations/network bytes.",
+    "Callback counters describe derivation work, not elapsed latency.",
+    "Negative subscription observations are bounded 200ms waits after committed writes.",
+    "Only own scope is frozen; other E04 writers may change shared imported roots. Whole integration belongs to the coordinator.",
+    "Asset wrapper JSON duplicates common metadata plus authored source; it is a serialized output-size measurement, not an allocation profile. Each kind still retains its complete authored record for existing search semantics.",
+    "Gallery projects/IP/link subscriptions remain broad metadata subscriptions; the scoped claim concerns shot fallback reads. Filtered project metadata can rerun the project callback without rerunning its unchanged cover scope.",
+    "The immutable original page snapshots share the currently served alias dependencies; they are a page/query comparator, not an E03 database snapshot. 'Untouched dependencies' in provenance means untouched by this SS09 writer. Exact served versions are preserved in native loaded-sources.",
+    "Only local native Chromium/IndexedDB was exercised, with seeded PNGs; no paid/network model request, install, commit, spec/status/ledger change or independent check was performed.",
+    "Main owns same-version whole-source static/AST analysis, full integration and independent check. The earlier precheck must be refreshed where final helper hashes differ; current-source E01 write20 has passed with its own unchanged-input receipt."
+  ],
+  "artifactHashes": {
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/AssetLibraryPages.tsx.entry.diff": "d1bc9ca16ea2fbc4a82ac313f839ce11c7005be4f04861b44107f331c5c03f8b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/ProjectGalleryPage.tsx.entry.diff": "9b03668989cb684538a4aa224586f76cf3a0d3d3d72e07a2a217c3c2c618acb6",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/application-lint-shared-transaction.log": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/application-lint.log": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/commands.json": "ae614259d2981aeea41bd105f8f48ca290adb8c31420ec00881a9abca6faffed",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/coordinator-static-reference.json": "1ae0eeca1af2f1c440c2018637e18bcf22276f6e302456b33931a06e35e17962",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/e01-current-shared-transaction/post.json": "f7869e388332853b8ac6a1c3d8ade73346b016a7d33d3631246f2e208d35d15c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/e01-current-shared-transaction/pre.json": "f7869e388332853b8ac6a1c3d8ade73346b016a7d33d3631246f2e208d35d15c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/e01-current-shared-transaction/producer-inputs/scripts/e01-writes-browser-regression.mjs": "14f937c95d7bdc64f5c4806a220c73275f5879b385bad972c7f2a39de8af3bcf",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/e01-current-shared-transaction/producer-inputs/tests/fixtures/e01-writes/harness.tsx": "b108edcd45ee791860828c4b833912451b888057f8a4633ce514ccaae0c9b397",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/e01-current-shared-transaction/producer-inputs/tests/fixtures/e01-writes/index.html": "8f21ced89184fb7027c8ebba4f11caf602417aeface656a1df5340b6b050ab07",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/e01-current-shared-transaction/report.json": "3a6c96efa990c2bd0fc5b16deec8c2d517bdc080a56b9a1a9277d69743eb996e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/e01-current-shared-transaction/run.log": "93a5bd7f747a0dca3b71fe7e6908c163ff3d542f0c50233ab52256c87e8cf33e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/e01-mutation-body-comparison.json": "028b347add2fa74344d277798944572bd2ccf1b519c2daff3d4af3215221f7b2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/environment.json": "6af4b1ee213d141f1833654cc83489e9d0ac4bd6c2abe003fa6930c0723099fb",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/failed-producer-recovery.json": "98b5ef772ad4b54d69945db025ac81f62b1abf5619de154c37c197a35772bdb5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/fixture-types-attempt1.log": "b9889e55a30ece921fe9c11ce02a6dde7f9a1f586acae0e6d939c964e0eccf77",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/fixture-types-attempt2.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/fixture-types-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/fixture-types-shared-transaction.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/focused-shared-transaction.log": "ff166cb460f4b5ab6fd8c51760f89fdd841e4f92f7192cac9958813829c92d5c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/focused-single-query.log": "fbfc5e536f658b90867f4e527a9e7034c90c68fdeb18fa2bfc3f2f6346ea6435",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/focused-stable.log": "c149ff191a1ea4c944c9c96afd4c6c895ebe4bd206d9ee8c3e5e396b143a3527",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt.log": "db8202faffac05edd9ff94f95f7b7b5a796f1388aec36f178257cb10c867602b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/failure.html": "6bee357f394a39183c1e7bffb9dc58b335aaf428167229902d3b2763b6f03a7b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/failure.png": "07569b67432744d6314bac7de35adc91245ba617c61225b0c043637ba170550a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/components/media/MediaThumb.tsx": "6e18630ce69617f3666713d82a108d41f515290c920424d567d06aa0527b0a2d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/components/studio/AssetLibraryPages.tsx": "b462661b8fa3f9ec313de40bbe0bc89195f19f571686517e8063925d438176d2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/components/studio/CoverCard.tsx": "1cd7b4b4335ad69a6db11f6288e6af04dbe3ea07706860761d798d787cb5fb9f",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/components/studio/LibraryHeader.tsx": "8561229fd2ec9a508f7b2978e17830144cf5f56c76e965ff3d146bf1c149ed45",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/components/studio/ProjectGalleryPage.tsx": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/components/studio/Still.tsx": "0ead47eddd405054ecfd6d01532b069abcf5e10293c3415b9a61c8d4d538beae",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/components/ui/alert-dialog.tsx": "86bc809de1275d1b0d4c8dc653037d4177294ca0bb5390105a81409cc0260ad4",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/components/ui/button.tsx": "4e7a70efedb71755b3ff03b27b5c73ef5d891511bb258bc2a8aaa3714abc29b6",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/components/ui/checkbox.tsx": "4aec3c9b24f538d9420f305314ae77b26824ed680cbf7f01fffc1d32a10cd462",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/components/ui/dialog.tsx": "3bae376fea3814100be48ac35dddf4498117cbf5d8265080fc8e89c014fd4e6c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/components/ui/dropdown-menu.tsx": "6909edc7d0c8cd0736e56463a7a618ac93ad916e570d55047650c7f53fa4471a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/components/ui/input.tsx": "7d0a115d1f1f1ae6da7d733f66b441d63cb58f01845a61522f6cc8d16a973d30",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/components/ui/select.tsx": "663aad952784b862a96c5b06aad70847ff7b7c2a4463a4111c9cdfff075d1869",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/db/assets.ts": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/db/audio.ts": "371d2c2d66fe07e41075d864a26ee980a9b64c46cce333084a50848be4550dfd",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/db/audioShared.ts": "2dc8545765e9916ac3c8bc07341b56ff87c9a1f78ace95f1535d96c020a801b3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/db/cascadeCommands.ts": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/db/database.ts": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/db/ipProfiles.ts": "4a48495cca91e75f1214be09fe60719c60a47ae1cde4b32ef0c7db66e8eda3be",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/db/media.ts": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/db/music.ts": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/db/productionRecords.ts": "c4be1a9cbedebbbd11a3a4435fd06f97a7270b05376f50c0e3efe515d51d73e7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/db/productionShared.ts": "afd0e5b49aeb0f00c9f58f69f028e01f21062a2f6ba71741b056aec720797fc3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/db/projects.ts": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/domain/audio.ts": "3d4cef74e3bae43f8e5c439ff8704c028e1ff97da4e47f0e0ed579df78a25e94",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/domain/generationCapabilities.ts": "4398fc99a4003bda5ea903c54be5673bbc0dd748710d6a58ad9661ca545decef",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/domain/music.ts": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/domain/output.ts": "387df36dc4b5a8808477d11620546ce45010c5fe3289d7556ba5cd7bdb02f492",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/domain/references.ts": "b7c4f8a7de8e3284ad27fa72cc4aa6575ace4942ca4216f9194e16c9fa30fcc7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/domain/slot.ts": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/domain/types.ts": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/ai/apimartAudio.ts": "b3b05fbbb2c5ae0ba7b3500216a7050f4f066a791fa053d68d7fcda7326d8e9d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/ai/baseUrl.ts": "ae51424b8ebac68bf252d235e284694a5793bcb387a3f2deeb58ca71faaa9c7c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/ai/boundedResponse.ts": "92cc47f78623f8c1c8e7d864a9f4af655c5b498077f8b0e93de25eefc9be8384",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/ai/mimoSpeech.ts": "3793fedd4a513c73e8b2a84ba30261affb216af43034425b24de8b4542870ae3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/ai/modelBank/index.ts": "64e721fc672271586ca09965397ef3f3dab09d36b10976dc94a3b68d4e2ec3df",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/ai/modelMetadata.ts": "9ea70a6c9172cbab757550440888fbda56a5ec6f89aa95111405accd3db175aa",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/ai/requestBoundary.ts": "c72677ed1736c47f45b64db9145a40405bfc38b2de73ef6af5cde455f968b155",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/ai/safeError.ts": "aaca8cbeafa33d6d2d7f12668f858827de788b1b3737bf9a909cdb255dca5d12",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/assetLibrary.ts": "db8aff1b30cbc4a16310a624cdd9326a5f7a4ec192d3e8cecb616551434facae",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/audio/fingerprint.ts": "2e75f9a80cc117c5f9a2b0aa0528f9f28be1e5d00cc3826376e1fedcabb4ef59",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/audio/mime.ts": "dbe81e382e37dbdcecd85dc560bb09c48eed212e67607f0941e5d8015db07076",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/audio/schedule.ts": "d67341b2a2a44ca550a36d024c7b5e17500a1f571eeb95dea22b5913a6c3b0d7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/audioGeneration/input.ts": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/audioGeneration/observations.ts": "3a4eaa6f6cf3c0186ff5d129bdaa07acf59df509b19523301d7237d502963cbe",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/audioGeneration/reference.ts": "036ab41d4d0972e98d4acb8fc9d25286246473579d5d2cce6a9667ad38d39097",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/audioGeneration/taskIds.ts": "9c6a060ef497e2b41ed783ce5ce628770623c3afc1b7f8f62173373cc66f6a9f",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/audioProjectPackage.ts": "93886389c152de00353d0ca082816c4678f31f55ee554a65b8e243bd74224e63",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/debouncedDraft.ts": "c797901e5318743ca0f87b819067c18f7c3a384516efd87db832aa9f94355f09",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/draftConflict.ts": "2e94acd524fa20eeb3053f8631852a9d5275d8a2c6698718577dd9bc1a3e5e66",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/format.ts": "de29ecf48ef0a5ca9f852f92c23dcd90ba5edeac6fb66ff9c1a3ecb616674b77",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/ids.ts": "39924822d8b29e298a8d00615d0027b581ba2eb6a32cf210262a253c58ebfa5d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/library.ts": "4dd9c343505ed4e10b3e3215b4895331a8a4e107bf084a9cff59e6d58328695e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/media.ts": "bb352b6d1933651ab5cb13fcadfc27f92694c0d13cba4f2881c9b4361c8eb630",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/memory/schema.ts": "ccddefc631d808e0ec77a07b6be57cafee746fcf8cfbb09969a3ff0e1b754946",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/packages/audioPackageCodec.ts": "e9efd6af64d536bb6319be184d9d550e5f6e316f9e3954927472db0348e2e1ac",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/packages/packageError.ts": "88bd42e3b80e971078902ed82aa244128ed998db2364673a46201462982f6f02",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/packages/projectPackageCodec.ts": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/projectPackage.ts": "ad99f320cc1908b8f1bc70c32103b50f36eb3a2d2765e42ebda385c9709bc4c4",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/references/package.ts": "6764acaf39fb0d424d30e81265cde8e5c7d6ea5f6b644f38ffefb18c44dc27d2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/references/parse.ts": "e2f02198fd57623e5707685d8848b38522c0667933565b812b465019e5f7d122",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/resource/limits.ts": "aaed95b303a65539344a27c6fbee1670171248995a4e2da3fe4dc9cc4307bb17",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/studioLibraryQueries.ts": "ff222b905624766317490e0d970e5341e13de79bf2b9659e9a831fe27ad28ad8",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/lib/utils.ts": "41b88d67f560686e8197d1e884e0585c9beade191d3d9c1d5361acf962bab562",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/src/styles.css": "a8deb89bc36b4d9d3a88ce063c4b5bd81be793d8fc3e4571f2c0b1da91aa7d64",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/tests/fixtures/e04-library/harness.tsx": "575306a247cbb859ebd86f0bceb1efd212c1dd145c0b0bb35cd5e55c008fe60c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage.tsx": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/report.json": "71dcd28579500e601b44b358c070d7efc58e74b8ead6dbdde4693e0e1bbc9857",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/sources/scripts/e04-library-browser-regression.mjs": "8ec7086e51d970c3b875402d3ef326dec3340d71c3d0e42cb4742d9f9c48361c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/sources/src/components/studio/AssetLibraryPages.tsx": "b462661b8fa3f9ec313de40bbe0bc89195f19f571686517e8063925d438176d2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/sources/src/components/studio/ProjectGalleryPage.tsx": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/sources/src/lib/studioLibraryQueries.ts": "ff222b905624766317490e0d970e5341e13de79bf2b9659e9a831fe27ad28ad8",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/sources/tests/e04LibraryQueries.test.ts": "efe4b41b05459579bd75d7e2e07652c0044aaa6d2ba75c899bb7b7069822ca94",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/sources/tests/fixtures/e04-library/harness.tsx": "575306a247cbb859ebd86f0bceb1efd212c1dd145c0b0bb35cd5e55c008fe60c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/sources/tests/fixtures/e04-library/index.html": "48929fc2827a3d214135814491ffad1df7f9ea4c758f3b13ad773fef1ba7cf77",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/sources/tests/fixtures/e04-library/tsconfig.json": "0d0e4ec9004fc3eb593326706c04e81486d5e79113ce96b431fa0838eae05e58",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/sources/tests/fixtures/sourceSnapshots/e04-library/provenance.json": "fe35050e7cef297a4f263254df42c3d11c3b39cedad102317f5eaeb7960a87b9",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage.tsx": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-anyof-attempt/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1.log": "bac80be20dfb95d11d91f06dbbf7739ec76fb4bf157a207c0c88ee18a179db6a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/failure.html": "9d344a6d65be677f1dab4e242b260873f8b0a5113126ed9382ec506361e069ec",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/failure.png": "5aa005fcd91349943ee675407faccfdeeacad343a892465333138ae1c3121743",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/components/media/MediaThumb.tsx": "6e18630ce69617f3666713d82a108d41f515290c920424d567d06aa0527b0a2d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/components/studio/AssetLibraryPages.tsx": "b462661b8fa3f9ec313de40bbe0bc89195f19f571686517e8063925d438176d2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/components/studio/CoverCard.tsx": "1cd7b4b4335ad69a6db11f6288e6af04dbe3ea07706860761d798d787cb5fb9f",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/components/studio/LibraryHeader.tsx": "8561229fd2ec9a508f7b2978e17830144cf5f56c76e965ff3d146bf1c149ed45",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/components/studio/ProjectGalleryPage.tsx": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/components/studio/Still.tsx": "0ead47eddd405054ecfd6d01532b069abcf5e10293c3415b9a61c8d4d538beae",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/components/ui/alert-dialog.tsx": "86bc809de1275d1b0d4c8dc653037d4177294ca0bb5390105a81409cc0260ad4",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/components/ui/button.tsx": "4e7a70efedb71755b3ff03b27b5c73ef5d891511bb258bc2a8aaa3714abc29b6",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/components/ui/checkbox.tsx": "4aec3c9b24f538d9420f305314ae77b26824ed680cbf7f01fffc1d32a10cd462",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/components/ui/dialog.tsx": "3bae376fea3814100be48ac35dddf4498117cbf5d8265080fc8e89c014fd4e6c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/components/ui/dropdown-menu.tsx": "6909edc7d0c8cd0736e56463a7a618ac93ad916e570d55047650c7f53fa4471a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/components/ui/input.tsx": "7d0a115d1f1f1ae6da7d733f66b441d63cb58f01845a61522f6cc8d16a973d30",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/components/ui/select.tsx": "663aad952784b862a96c5b06aad70847ff7b7c2a4463a4111c9cdfff075d1869",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/db/assets.ts": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/db/audio.ts": "371d2c2d66fe07e41075d864a26ee980a9b64c46cce333084a50848be4550dfd",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/db/audioShared.ts": "2dc8545765e9916ac3c8bc07341b56ff87c9a1f78ace95f1535d96c020a801b3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/db/cascadeCommands.ts": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/db/database.ts": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/db/ipProfiles.ts": "4a48495cca91e75f1214be09fe60719c60a47ae1cde4b32ef0c7db66e8eda3be",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/db/media.ts": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/db/music.ts": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/db/productionRecords.ts": "c4be1a9cbedebbbd11a3a4435fd06f97a7270b05376f50c0e3efe515d51d73e7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/db/productionShared.ts": "afd0e5b49aeb0f00c9f58f69f028e01f21062a2f6ba71741b056aec720797fc3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/db/projects.ts": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/domain/audio.ts": "3d4cef74e3bae43f8e5c439ff8704c028e1ff97da4e47f0e0ed579df78a25e94",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/domain/generationCapabilities.ts": "4398fc99a4003bda5ea903c54be5673bbc0dd748710d6a58ad9661ca545decef",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/domain/music.ts": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/domain/output.ts": "387df36dc4b5a8808477d11620546ce45010c5fe3289d7556ba5cd7bdb02f492",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/domain/references.ts": "b7c4f8a7de8e3284ad27fa72cc4aa6575ace4942ca4216f9194e16c9fa30fcc7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/domain/slot.ts": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/domain/types.ts": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/ai/apimartAudio.ts": "b3b05fbbb2c5ae0ba7b3500216a7050f4f066a791fa053d68d7fcda7326d8e9d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/ai/baseUrl.ts": "ae51424b8ebac68bf252d235e284694a5793bcb387a3f2deeb58ca71faaa9c7c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/ai/boundedResponse.ts": "92cc47f78623f8c1c8e7d864a9f4af655c5b498077f8b0e93de25eefc9be8384",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/ai/mimoSpeech.ts": "3793fedd4a513c73e8b2a84ba30261affb216af43034425b24de8b4542870ae3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/ai/modelBank/index.ts": "64e721fc672271586ca09965397ef3f3dab09d36b10976dc94a3b68d4e2ec3df",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/ai/modelMetadata.ts": "9ea70a6c9172cbab757550440888fbda56a5ec6f89aa95111405accd3db175aa",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/ai/requestBoundary.ts": "c72677ed1736c47f45b64db9145a40405bfc38b2de73ef6af5cde455f968b155",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/ai/safeError.ts": "aaca8cbeafa33d6d2d7f12668f858827de788b1b3737bf9a909cdb255dca5d12",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/assetLibrary.ts": "db8aff1b30cbc4a16310a624cdd9326a5f7a4ec192d3e8cecb616551434facae",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/audio/fingerprint.ts": "2e75f9a80cc117c5f9a2b0aa0528f9f28be1e5d00cc3826376e1fedcabb4ef59",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/audio/mime.ts": "dbe81e382e37dbdcecd85dc560bb09c48eed212e67607f0941e5d8015db07076",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/audio/schedule.ts": "d67341b2a2a44ca550a36d024c7b5e17500a1f571eeb95dea22b5913a6c3b0d7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/audioGeneration/input.ts": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/audioGeneration/observations.ts": "3a4eaa6f6cf3c0186ff5d129bdaa07acf59df509b19523301d7237d502963cbe",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/audioGeneration/reference.ts": "036ab41d4d0972e98d4acb8fc9d25286246473579d5d2cce6a9667ad38d39097",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/audioGeneration/taskIds.ts": "9c6a060ef497e2b41ed783ce5ce628770623c3afc1b7f8f62173373cc66f6a9f",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/audioProjectPackage.ts": "93886389c152de00353d0ca082816c4678f31f55ee554a65b8e243bd74224e63",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/debouncedDraft.ts": "c797901e5318743ca0f87b819067c18f7c3a384516efd87db832aa9f94355f09",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/draftConflict.ts": "2e94acd524fa20eeb3053f8631852a9d5275d8a2c6698718577dd9bc1a3e5e66",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/format.ts": "de29ecf48ef0a5ca9f852f92c23dcd90ba5edeac6fb66ff9c1a3ecb616674b77",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/ids.ts": "39924822d8b29e298a8d00615d0027b581ba2eb6a32cf210262a253c58ebfa5d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/library.ts": "4dd9c343505ed4e10b3e3215b4895331a8a4e107bf084a9cff59e6d58328695e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/media.ts": "bb352b6d1933651ab5cb13fcadfc27f92694c0d13cba4f2881c9b4361c8eb630",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/memory/schema.ts": "ccddefc631d808e0ec77a07b6be57cafee746fcf8cfbb09969a3ff0e1b754946",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/packages/audioPackageCodec.ts": "e9efd6af64d536bb6319be184d9d550e5f6e316f9e3954927472db0348e2e1ac",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/packages/packageError.ts": "88bd42e3b80e971078902ed82aa244128ed998db2364673a46201462982f6f02",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/packages/projectPackageCodec.ts": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/projectPackage.ts": "ad99f320cc1908b8f1bc70c32103b50f36eb3a2d2765e42ebda385c9709bc4c4",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/references/package.ts": "6764acaf39fb0d424d30e81265cde8e5c7d6ea5f6b644f38ffefb18c44dc27d2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/references/parse.ts": "e2f02198fd57623e5707685d8848b38522c0667933565b812b465019e5f7d122",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/resource/limits.ts": "aaed95b303a65539344a27c6fbee1670171248995a4e2da3fe4dc9cc4307bb17",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/studioLibraryQueries.ts": "5cb355c2f0ee97297ea3f894f4a0c1e0265f8b493533fcab51155a9a7c2a4f50",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/lib/utils.ts": "41b88d67f560686e8197d1e884e0585c9beade191d3d9c1d5361acf962bab562",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/src/styles.css": "a8deb89bc36b4d9d3a88ce063c4b5bd81be793d8fc3e4571f2c0b1da91aa7d64",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/tests/fixtures/e04-library/harness.tsx": "1f2ec9c70bd9b9b9ee2920f351b9a78ce5c4d21af6a47811237412219e453e5a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage.tsx": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/report.json": "bd48539ab1b7810a2c5418f74bcda574e98309dbb4de4568d6052d89e04fde1e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/sources/scripts/e04-library-browser-regression.mjs": "067a89a1d01344a993c081a537d1448e4fc7d995bffa011118f6a54f626aa713",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/sources/src/components/studio/AssetLibraryPages.tsx": "b462661b8fa3f9ec313de40bbe0bc89195f19f571686517e8063925d438176d2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/sources/src/components/studio/ProjectGalleryPage.tsx": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/sources/src/lib/studioLibraryQueries.ts": "5cb355c2f0ee97297ea3f894f4a0c1e0265f8b493533fcab51155a9a7c2a4f50",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/sources/tests/e04LibraryQueries.test.ts": "fcd478b9bf5053d75ec331901874ab796594e32e4a18f2c754c2a5316a33474a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/sources/tests/fixtures/e04-library/harness.tsx": "1f2ec9c70bd9b9b9ee2920f351b9a78ce5c4d21af6a47811237412219e453e5a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/sources/tests/fixtures/e04-library/index.html": "48929fc2827a3d214135814491ffad1df7f9ea4c758f3b13ad773fef1ba7cf77",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/sources/tests/fixtures/e04-library/tsconfig.json": "0d0e4ec9004fc3eb593326706c04e81486d5e79113ce96b431fa0838eae05e58",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/sources/tests/fixtures/sourceSnapshots/e04-library/provenance.json": "fe35050e7cef297a4f263254df42c3d11c3b39cedad102317f5eaeb7960a87b9",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage.tsx": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt1/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2.log": "59f721fedde7fbf91b1cc019be2a9039a5d0feed25acc039d3c2d4d8b0b53d1f",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/failure.html": "872310ae73488ca5842d43fac41625a228ecb2742a234816327138df527d3713",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/failure.png": "c89b0d511b566640efd88539ccc77fbd9a1cb743f6dbf889cf18cfd3212534bf",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/components/media/MediaThumb.tsx": "6e18630ce69617f3666713d82a108d41f515290c920424d567d06aa0527b0a2d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/components/studio/AssetLibraryPages.tsx": "b462661b8fa3f9ec313de40bbe0bc89195f19f571686517e8063925d438176d2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/components/studio/CoverCard.tsx": "1cd7b4b4335ad69a6db11f6288e6af04dbe3ea07706860761d798d787cb5fb9f",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/components/studio/LibraryHeader.tsx": "8561229fd2ec9a508f7b2978e17830144cf5f56c76e965ff3d146bf1c149ed45",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/components/studio/ProjectGalleryPage.tsx": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/components/studio/Still.tsx": "0ead47eddd405054ecfd6d01532b069abcf5e10293c3415b9a61c8d4d538beae",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/components/ui/alert-dialog.tsx": "86bc809de1275d1b0d4c8dc653037d4177294ca0bb5390105a81409cc0260ad4",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/components/ui/button.tsx": "4e7a70efedb71755b3ff03b27b5c73ef5d891511bb258bc2a8aaa3714abc29b6",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/components/ui/checkbox.tsx": "4aec3c9b24f538d9420f305314ae77b26824ed680cbf7f01fffc1d32a10cd462",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/components/ui/dialog.tsx": "3bae376fea3814100be48ac35dddf4498117cbf5d8265080fc8e89c014fd4e6c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/components/ui/dropdown-menu.tsx": "6909edc7d0c8cd0736e56463a7a618ac93ad916e570d55047650c7f53fa4471a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/components/ui/input.tsx": "7d0a115d1f1f1ae6da7d733f66b441d63cb58f01845a61522f6cc8d16a973d30",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/components/ui/select.tsx": "663aad952784b862a96c5b06aad70847ff7b7c2a4463a4111c9cdfff075d1869",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/db/assets.ts": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/db/audio.ts": "371d2c2d66fe07e41075d864a26ee980a9b64c46cce333084a50848be4550dfd",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/db/audioShared.ts": "2dc8545765e9916ac3c8bc07341b56ff87c9a1f78ace95f1535d96c020a801b3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/db/cascadeCommands.ts": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/db/database.ts": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/db/ipProfiles.ts": "4a48495cca91e75f1214be09fe60719c60a47ae1cde4b32ef0c7db66e8eda3be",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/db/media.ts": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/db/music.ts": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/db/productionRecords.ts": "c4be1a9cbedebbbd11a3a4435fd06f97a7270b05376f50c0e3efe515d51d73e7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/db/productionShared.ts": "afd0e5b49aeb0f00c9f58f69f028e01f21062a2f6ba71741b056aec720797fc3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/db/projects.ts": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/domain/audio.ts": "3d4cef74e3bae43f8e5c439ff8704c028e1ff97da4e47f0e0ed579df78a25e94",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/domain/generationCapabilities.ts": "4398fc99a4003bda5ea903c54be5673bbc0dd748710d6a58ad9661ca545decef",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/domain/music.ts": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/domain/output.ts": "387df36dc4b5a8808477d11620546ce45010c5fe3289d7556ba5cd7bdb02f492",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/domain/references.ts": "b7c4f8a7de8e3284ad27fa72cc4aa6575ace4942ca4216f9194e16c9fa30fcc7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/domain/slot.ts": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/domain/types.ts": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/ai/apimartAudio.ts": "b3b05fbbb2c5ae0ba7b3500216a7050f4f066a791fa053d68d7fcda7326d8e9d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/ai/baseUrl.ts": "ae51424b8ebac68bf252d235e284694a5793bcb387a3f2deeb58ca71faaa9c7c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/ai/boundedResponse.ts": "92cc47f78623f8c1c8e7d864a9f4af655c5b498077f8b0e93de25eefc9be8384",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/ai/mimoSpeech.ts": "3793fedd4a513c73e8b2a84ba30261affb216af43034425b24de8b4542870ae3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/ai/modelBank/index.ts": "64e721fc672271586ca09965397ef3f3dab09d36b10976dc94a3b68d4e2ec3df",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/ai/modelMetadata.ts": "9ea70a6c9172cbab757550440888fbda56a5ec6f89aa95111405accd3db175aa",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/ai/requestBoundary.ts": "c72677ed1736c47f45b64db9145a40405bfc38b2de73ef6af5cde455f968b155",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/ai/safeError.ts": "aaca8cbeafa33d6d2d7f12668f858827de788b1b3737bf9a909cdb255dca5d12",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/assetLibrary.ts": "db8aff1b30cbc4a16310a624cdd9326a5f7a4ec192d3e8cecb616551434facae",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/audio/fingerprint.ts": "2e75f9a80cc117c5f9a2b0aa0528f9f28be1e5d00cc3826376e1fedcabb4ef59",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/audio/mime.ts": "dbe81e382e37dbdcecd85dc560bb09c48eed212e67607f0941e5d8015db07076",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/audio/schedule.ts": "d67341b2a2a44ca550a36d024c7b5e17500a1f571eeb95dea22b5913a6c3b0d7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/audioGeneration/input.ts": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/audioGeneration/observations.ts": "3a4eaa6f6cf3c0186ff5d129bdaa07acf59df509b19523301d7237d502963cbe",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/audioGeneration/reference.ts": "036ab41d4d0972e98d4acb8fc9d25286246473579d5d2cce6a9667ad38d39097",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/audioGeneration/taskIds.ts": "9c6a060ef497e2b41ed783ce5ce628770623c3afc1b7f8f62173373cc66f6a9f",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/audioProjectPackage.ts": "93886389c152de00353d0ca082816c4678f31f55ee554a65b8e243bd74224e63",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/debouncedDraft.ts": "c797901e5318743ca0f87b819067c18f7c3a384516efd87db832aa9f94355f09",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/draftConflict.ts": "2e94acd524fa20eeb3053f8631852a9d5275d8a2c6698718577dd9bc1a3e5e66",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/format.ts": "de29ecf48ef0a5ca9f852f92c23dcd90ba5edeac6fb66ff9c1a3ecb616674b77",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/ids.ts": "39924822d8b29e298a8d00615d0027b581ba2eb6a32cf210262a253c58ebfa5d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/library.ts": "4dd9c343505ed4e10b3e3215b4895331a8a4e107bf084a9cff59e6d58328695e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/media.ts": "bb352b6d1933651ab5cb13fcadfc27f92694c0d13cba4f2881c9b4361c8eb630",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/memory/schema.ts": "ccddefc631d808e0ec77a07b6be57cafee746fcf8cfbb09969a3ff0e1b754946",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/packages/audioPackageCodec.ts": "e9efd6af64d536bb6319be184d9d550e5f6e316f9e3954927472db0348e2e1ac",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/packages/packageError.ts": "88bd42e3b80e971078902ed82aa244128ed998db2364673a46201462982f6f02",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/packages/projectPackageCodec.ts": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/projectPackage.ts": "ad99f320cc1908b8f1bc70c32103b50f36eb3a2d2765e42ebda385c9709bc4c4",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/references/package.ts": "6764acaf39fb0d424d30e81265cde8e5c7d6ea5f6b644f38ffefb18c44dc27d2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/references/parse.ts": "e2f02198fd57623e5707685d8848b38522c0667933565b812b465019e5f7d122",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/resource/limits.ts": "aaed95b303a65539344a27c6fbee1670171248995a4e2da3fe4dc9cc4307bb17",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/studioLibraryQueries.ts": "5cb355c2f0ee97297ea3f894f4a0c1e0265f8b493533fcab51155a9a7c2a4f50",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/lib/utils.ts": "41b88d67f560686e8197d1e884e0585c9beade191d3d9c1d5361acf962bab562",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/src/styles.css": "a8deb89bc36b4d9d3a88ce063c4b5bd81be793d8fc3e4571f2c0b1da91aa7d64",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/tests/fixtures/e04-library/harness.tsx": "1f2ec9c70bd9b9b9ee2920f351b9a78ce5c4d21af6a47811237412219e453e5a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage.tsx": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/report.json": "fe9801a933c0ae6b5d033a1806a4b5d228759ff49bebe635aef86694faeb76f6",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/sources/scripts/e04-library-browser-regression.mjs": "2c6448781d0b67e152c45aee360190aff4a357b12b512838dc553776bf00d332",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/sources/src/components/studio/AssetLibraryPages.tsx": "b462661b8fa3f9ec313de40bbe0bc89195f19f571686517e8063925d438176d2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/sources/src/components/studio/ProjectGalleryPage.tsx": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/sources/src/lib/studioLibraryQueries.ts": "5cb355c2f0ee97297ea3f894f4a0c1e0265f8b493533fcab51155a9a7c2a4f50",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/sources/tests/e04LibraryQueries.test.ts": "fcd478b9bf5053d75ec331901874ab796594e32e4a18f2c754c2a5316a33474a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/sources/tests/fixtures/e04-library/harness.tsx": "1f2ec9c70bd9b9b9ee2920f351b9a78ce5c4d21af6a47811237412219e453e5a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/sources/tests/fixtures/e04-library/index.html": "48929fc2827a3d214135814491ffad1df7f9ea4c758f3b13ad773fef1ba7cf77",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/sources/tests/fixtures/e04-library/tsconfig.json": "0d0e4ec9004fc3eb593326706c04e81486d5e79113ce96b431fa0838eae05e58",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/sources/tests/fixtures/sourceSnapshots/e04-library/provenance.json": "fe35050e7cef297a4f263254df42c3d11c3b39cedad102317f5eaeb7960a87b9",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage.tsx": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt2/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3.log": "b44a5e27789876bb74adc1be182d9abd6530e274d1bf1b4b2076a48cc05239ad",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/components/media/MediaThumb.tsx": "6e18630ce69617f3666713d82a108d41f515290c920424d567d06aa0527b0a2d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/components/studio/AssetLibraryPages.tsx": "b462661b8fa3f9ec313de40bbe0bc89195f19f571686517e8063925d438176d2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/components/studio/CoverCard.tsx": "1cd7b4b4335ad69a6db11f6288e6af04dbe3ea07706860761d798d787cb5fb9f",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/components/studio/LibraryHeader.tsx": "8561229fd2ec9a508f7b2978e17830144cf5f56c76e965ff3d146bf1c149ed45",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/components/studio/ProjectGalleryPage.tsx": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/components/studio/Still.tsx": "0ead47eddd405054ecfd6d01532b069abcf5e10293c3415b9a61c8d4d538beae",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/components/ui/alert-dialog.tsx": "86bc809de1275d1b0d4c8dc653037d4177294ca0bb5390105a81409cc0260ad4",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/components/ui/button.tsx": "4e7a70efedb71755b3ff03b27b5c73ef5d891511bb258bc2a8aaa3714abc29b6",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/components/ui/checkbox.tsx": "4aec3c9b24f538d9420f305314ae77b26824ed680cbf7f01fffc1d32a10cd462",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/components/ui/dialog.tsx": "3bae376fea3814100be48ac35dddf4498117cbf5d8265080fc8e89c014fd4e6c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/components/ui/dropdown-menu.tsx": "6909edc7d0c8cd0736e56463a7a618ac93ad916e570d55047650c7f53fa4471a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/components/ui/input.tsx": "7d0a115d1f1f1ae6da7d733f66b441d63cb58f01845a61522f6cc8d16a973d30",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/components/ui/select.tsx": "663aad952784b862a96c5b06aad70847ff7b7c2a4463a4111c9cdfff075d1869",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/db/assets.ts": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/db/audio.ts": "371d2c2d66fe07e41075d864a26ee980a9b64c46cce333084a50848be4550dfd",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/db/audioShared.ts": "2dc8545765e9916ac3c8bc07341b56ff87c9a1f78ace95f1535d96c020a801b3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/db/cascadeCommands.ts": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/db/database.ts": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/db/ipProfiles.ts": "4a48495cca91e75f1214be09fe60719c60a47ae1cde4b32ef0c7db66e8eda3be",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/db/media.ts": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/db/music.ts": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/db/productionRecords.ts": "c4be1a9cbedebbbd11a3a4435fd06f97a7270b05376f50c0e3efe515d51d73e7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/db/productionShared.ts": "afd0e5b49aeb0f00c9f58f69f028e01f21062a2f6ba71741b056aec720797fc3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/db/projects.ts": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/domain/audio.ts": "3d4cef74e3bae43f8e5c439ff8704c028e1ff97da4e47f0e0ed579df78a25e94",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/domain/generationCapabilities.ts": "4398fc99a4003bda5ea903c54be5673bbc0dd748710d6a58ad9661ca545decef",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/domain/music.ts": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/domain/output.ts": "387df36dc4b5a8808477d11620546ce45010c5fe3289d7556ba5cd7bdb02f492",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/domain/references.ts": "b7c4f8a7de8e3284ad27fa72cc4aa6575ace4942ca4216f9194e16c9fa30fcc7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/domain/slot.ts": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/domain/types.ts": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/ai/apimartAudio.ts": "b3b05fbbb2c5ae0ba7b3500216a7050f4f066a791fa053d68d7fcda7326d8e9d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/ai/baseUrl.ts": "ae51424b8ebac68bf252d235e284694a5793bcb387a3f2deeb58ca71faaa9c7c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/ai/boundedResponse.ts": "92cc47f78623f8c1c8e7d864a9f4af655c5b498077f8b0e93de25eefc9be8384",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/ai/mimoSpeech.ts": "3793fedd4a513c73e8b2a84ba30261affb216af43034425b24de8b4542870ae3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/ai/modelBank/index.ts": "64e721fc672271586ca09965397ef3f3dab09d36b10976dc94a3b68d4e2ec3df",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/ai/modelMetadata.ts": "9ea70a6c9172cbab757550440888fbda56a5ec6f89aa95111405accd3db175aa",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/ai/requestBoundary.ts": "c72677ed1736c47f45b64db9145a40405bfc38b2de73ef6af5cde455f968b155",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/ai/safeError.ts": "aaca8cbeafa33d6d2d7f12668f858827de788b1b3737bf9a909cdb255dca5d12",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/assetLibrary.ts": "db8aff1b30cbc4a16310a624cdd9326a5f7a4ec192d3e8cecb616551434facae",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/audio/fingerprint.ts": "2e75f9a80cc117c5f9a2b0aa0528f9f28be1e5d00cc3826376e1fedcabb4ef59",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/audio/mime.ts": "dbe81e382e37dbdcecd85dc560bb09c48eed212e67607f0941e5d8015db07076",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/audio/schedule.ts": "d67341b2a2a44ca550a36d024c7b5e17500a1f571eeb95dea22b5913a6c3b0d7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/audioGeneration/input.ts": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/audioGeneration/observations.ts": "3a4eaa6f6cf3c0186ff5d129bdaa07acf59df509b19523301d7237d502963cbe",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/audioGeneration/reference.ts": "036ab41d4d0972e98d4acb8fc9d25286246473579d5d2cce6a9667ad38d39097",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/audioGeneration/taskIds.ts": "9c6a060ef497e2b41ed783ce5ce628770623c3afc1b7f8f62173373cc66f6a9f",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/audioProjectPackage.ts": "93886389c152de00353d0ca082816c4678f31f55ee554a65b8e243bd74224e63",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/debouncedDraft.ts": "c797901e5318743ca0f87b819067c18f7c3a384516efd87db832aa9f94355f09",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/draftConflict.ts": "2e94acd524fa20eeb3053f8631852a9d5275d8a2c6698718577dd9bc1a3e5e66",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/format.ts": "de29ecf48ef0a5ca9f852f92c23dcd90ba5edeac6fb66ff9c1a3ecb616674b77",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/ids.ts": "39924822d8b29e298a8d00615d0027b581ba2eb6a32cf210262a253c58ebfa5d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/library.ts": "4dd9c343505ed4e10b3e3215b4895331a8a4e107bf084a9cff59e6d58328695e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/media.ts": "bb352b6d1933651ab5cb13fcadfc27f92694c0d13cba4f2881c9b4361c8eb630",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/memory/schema.ts": "ccddefc631d808e0ec77a07b6be57cafee746fcf8cfbb09969a3ff0e1b754946",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/packages/audioPackageCodec.ts": "e9efd6af64d536bb6319be184d9d550e5f6e316f9e3954927472db0348e2e1ac",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/packages/packageError.ts": "88bd42e3b80e971078902ed82aa244128ed998db2364673a46201462982f6f02",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/packages/projectPackageCodec.ts": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/projectPackage.ts": "ad99f320cc1908b8f1bc70c32103b50f36eb3a2d2765e42ebda385c9709bc4c4",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/references/package.ts": "6764acaf39fb0d424d30e81265cde8e5c7d6ea5f6b644f38ffefb18c44dc27d2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/references/parse.ts": "e2f02198fd57623e5707685d8848b38522c0667933565b812b465019e5f7d122",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/resource/limits.ts": "aaed95b303a65539344a27c6fbee1670171248995a4e2da3fe4dc9cc4307bb17",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/studioLibraryQueries.ts": "5cb355c2f0ee97297ea3f894f4a0c1e0265f8b493533fcab51155a9a7c2a4f50",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/lib/utils.ts": "41b88d67f560686e8197d1e884e0585c9beade191d3d9c1d5361acf962bab562",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/src/styles.css": "a8deb89bc36b4d9d3a88ce063c4b5bd81be793d8fc3e4571f2c0b1da91aa7d64",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/tests/fixtures/e04-library/harness.tsx": "1ca6a5d9ca2f71d54b2dfa2477b5dc915d62670ae598f58225927e68d07ac97b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage.tsx": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/narrow-assets.png": "9903a997f8bc8211558c59683889bff3492f18fd32b4a190494f70334f4c592b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/narrow-gallery.png": "ab0f6727f8a3b9d3673dcac1dcd772e0ae0d9d72ad23130e19cc78fb8fd6f41f",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/report.json": "5991e9b296dfaeae053dc0808d786106bb29e0fe241e5b35a85a2c58523de643",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/sources/scripts/e04-library-browser-regression.mjs": "9ca33e5a12c3bc873dd83a9a6e69890884b1b87eadc1a46ca9e1d9eea1f2ef33",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/sources/src/components/studio/AssetLibraryPages.tsx": "b462661b8fa3f9ec313de40bbe0bc89195f19f571686517e8063925d438176d2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/sources/src/components/studio/ProjectGalleryPage.tsx": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/sources/src/lib/studioLibraryQueries.ts": "5cb355c2f0ee97297ea3f894f4a0c1e0265f8b493533fcab51155a9a7c2a4f50",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/sources/tests/e04LibraryQueries.test.ts": "fcd478b9bf5053d75ec331901874ab796594e32e4a18f2c754c2a5316a33474a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/sources/tests/fixtures/e04-library/harness.tsx": "1ca6a5d9ca2f71d54b2dfa2477b5dc915d62670ae598f58225927e68d07ac97b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/sources/tests/fixtures/e04-library/index.html": "48929fc2827a3d214135814491ffad1df7f9ea4c758f3b13ad773fef1ba7cf77",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/sources/tests/fixtures/e04-library/tsconfig.json": "0d0e4ec9004fc3eb593326706c04e81486d5e79113ce96b431fa0838eae05e58",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/sources/tests/fixtures/sourceSnapshots/e04-library/provenance.json": "fe35050e7cef297a4f263254df42c3d11c3b39cedad102317f5eaeb7960a87b9",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage.tsx": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-attempt3/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final.log": "dc3f239de8148352835d122a87d3a99177f091559492214fb714a0a118959e6d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/components/media/MediaThumb.tsx": "6e18630ce69617f3666713d82a108d41f515290c920424d567d06aa0527b0a2d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/components/studio/AssetLibraryPages.tsx": "b462661b8fa3f9ec313de40bbe0bc89195f19f571686517e8063925d438176d2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/components/studio/CoverCard.tsx": "1cd7b4b4335ad69a6db11f6288e6af04dbe3ea07706860761d798d787cb5fb9f",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/components/studio/LibraryHeader.tsx": "8561229fd2ec9a508f7b2978e17830144cf5f56c76e965ff3d146bf1c149ed45",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/components/studio/ProjectGalleryPage.tsx": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/components/studio/Still.tsx": "0ead47eddd405054ecfd6d01532b069abcf5e10293c3415b9a61c8d4d538beae",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/components/ui/alert-dialog.tsx": "86bc809de1275d1b0d4c8dc653037d4177294ca0bb5390105a81409cc0260ad4",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/components/ui/button.tsx": "4e7a70efedb71755b3ff03b27b5c73ef5d891511bb258bc2a8aaa3714abc29b6",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/components/ui/checkbox.tsx": "4aec3c9b24f538d9420f305314ae77b26824ed680cbf7f01fffc1d32a10cd462",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/components/ui/dialog.tsx": "3bae376fea3814100be48ac35dddf4498117cbf5d8265080fc8e89c014fd4e6c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/components/ui/dropdown-menu.tsx": "6909edc7d0c8cd0736e56463a7a618ac93ad916e570d55047650c7f53fa4471a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/components/ui/input.tsx": "7d0a115d1f1f1ae6da7d733f66b441d63cb58f01845a61522f6cc8d16a973d30",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/components/ui/select.tsx": "663aad952784b862a96c5b06aad70847ff7b7c2a4463a4111c9cdfff075d1869",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/db/assets.ts": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/db/audio.ts": "371d2c2d66fe07e41075d864a26ee980a9b64c46cce333084a50848be4550dfd",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/db/audioShared.ts": "2dc8545765e9916ac3c8bc07341b56ff87c9a1f78ace95f1535d96c020a801b3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/db/cascadeCommands.ts": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/db/database.ts": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/db/ipProfiles.ts": "4a48495cca91e75f1214be09fe60719c60a47ae1cde4b32ef0c7db66e8eda3be",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/db/media.ts": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/db/music.ts": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/db/productionRecords.ts": "c4be1a9cbedebbbd11a3a4435fd06f97a7270b05376f50c0e3efe515d51d73e7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/db/productionShared.ts": "afd0e5b49aeb0f00c9f58f69f028e01f21062a2f6ba71741b056aec720797fc3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/db/projects.ts": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/domain/audio.ts": "3d4cef74e3bae43f8e5c439ff8704c028e1ff97da4e47f0e0ed579df78a25e94",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/domain/generationCapabilities.ts": "4398fc99a4003bda5ea903c54be5673bbc0dd748710d6a58ad9661ca545decef",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/domain/music.ts": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/domain/output.ts": "387df36dc4b5a8808477d11620546ce45010c5fe3289d7556ba5cd7bdb02f492",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/domain/references.ts": "b7c4f8a7de8e3284ad27fa72cc4aa6575ace4942ca4216f9194e16c9fa30fcc7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/domain/slot.ts": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/domain/types.ts": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/ai/apimartAudio.ts": "b3b05fbbb2c5ae0ba7b3500216a7050f4f066a791fa053d68d7fcda7326d8e9d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/ai/baseUrl.ts": "ae51424b8ebac68bf252d235e284694a5793bcb387a3f2deeb58ca71faaa9c7c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/ai/boundedResponse.ts": "92cc47f78623f8c1c8e7d864a9f4af655c5b498077f8b0e93de25eefc9be8384",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/ai/mimoSpeech.ts": "3793fedd4a513c73e8b2a84ba30261affb216af43034425b24de8b4542870ae3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/ai/modelBank/index.ts": "64e721fc672271586ca09965397ef3f3dab09d36b10976dc94a3b68d4e2ec3df",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/ai/modelMetadata.ts": "9ea70a6c9172cbab757550440888fbda56a5ec6f89aa95111405accd3db175aa",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/ai/requestBoundary.ts": "c72677ed1736c47f45b64db9145a40405bfc38b2de73ef6af5cde455f968b155",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/ai/safeError.ts": "aaca8cbeafa33d6d2d7f12668f858827de788b1b3737bf9a909cdb255dca5d12",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/assetLibrary.ts": "db8aff1b30cbc4a16310a624cdd9326a5f7a4ec192d3e8cecb616551434facae",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/audio/fingerprint.ts": "2e75f9a80cc117c5f9a2b0aa0528f9f28be1e5d00cc3826376e1fedcabb4ef59",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/audio/mime.ts": "dbe81e382e37dbdcecd85dc560bb09c48eed212e67607f0941e5d8015db07076",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/audio/schedule.ts": "d67341b2a2a44ca550a36d024c7b5e17500a1f571eeb95dea22b5913a6c3b0d7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/audioGeneration/input.ts": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/audioGeneration/observations.ts": "3a4eaa6f6cf3c0186ff5d129bdaa07acf59df509b19523301d7237d502963cbe",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/audioGeneration/reference.ts": "036ab41d4d0972e98d4acb8fc9d25286246473579d5d2cce6a9667ad38d39097",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/audioGeneration/taskIds.ts": "9c6a060ef497e2b41ed783ce5ce628770623c3afc1b7f8f62173373cc66f6a9f",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/audioProjectPackage.ts": "93886389c152de00353d0ca082816c4678f31f55ee554a65b8e243bd74224e63",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/debouncedDraft.ts": "c797901e5318743ca0f87b819067c18f7c3a384516efd87db832aa9f94355f09",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/draftConflict.ts": "2e94acd524fa20eeb3053f8631852a9d5275d8a2c6698718577dd9bc1a3e5e66",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/format.ts": "de29ecf48ef0a5ca9f852f92c23dcd90ba5edeac6fb66ff9c1a3ecb616674b77",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/ids.ts": "39924822d8b29e298a8d00615d0027b581ba2eb6a32cf210262a253c58ebfa5d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/library.ts": "4dd9c343505ed4e10b3e3215b4895331a8a4e107bf084a9cff59e6d58328695e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/media.ts": "bb352b6d1933651ab5cb13fcadfc27f92694c0d13cba4f2881c9b4361c8eb630",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/memory/schema.ts": "ccddefc631d808e0ec77a07b6be57cafee746fcf8cfbb09969a3ff0e1b754946",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/packages/audioPackageCodec.ts": "e9efd6af64d536bb6319be184d9d550e5f6e316f9e3954927472db0348e2e1ac",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/packages/packageError.ts": "88bd42e3b80e971078902ed82aa244128ed998db2364673a46201462982f6f02",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/packages/projectPackageCodec.ts": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/projectPackage.ts": "ad99f320cc1908b8f1bc70c32103b50f36eb3a2d2765e42ebda385c9709bc4c4",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/references/package.ts": "6764acaf39fb0d424d30e81265cde8e5c7d6ea5f6b644f38ffefb18c44dc27d2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/references/parse.ts": "e2f02198fd57623e5707685d8848b38522c0667933565b812b465019e5f7d122",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/resource/limits.ts": "aaed95b303a65539344a27c6fbee1670171248995a4e2da3fe4dc9cc4307bb17",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/studioLibraryQueries.ts": "5cb355c2f0ee97297ea3f894f4a0c1e0265f8b493533fcab51155a9a7c2a4f50",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/lib/utils.ts": "41b88d67f560686e8197d1e884e0585c9beade191d3d9c1d5361acf962bab562",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/src/styles.css": "a8deb89bc36b4d9d3a88ce063c4b5bd81be793d8fc3e4571f2c0b1da91aa7d64",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/tests/fixtures/e04-library/harness.tsx": "1ca6a5d9ca2f71d54b2dfa2477b5dc915d62670ae598f58225927e68d07ac97b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage.tsx": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/narrow-assets-top.png": "e65475f78f583a9cde83e80d16abc04b544528d14e5f84545a93393b17c5685e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/narrow-assets.png": "e39b375de21d3084d493a0a32aa04d5714f9cb8508e670cdc1851e4dd9aa3648",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/narrow-gallery-top.png": "2db115fea92073008da215f8cbfbc90026591f6b15fbfee31638e7e9e5597107",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/narrow-gallery.png": "27e7ec7cd9c0dee90b4b827ab332761bef44f8d6584ab5f4e6c4696d3ee1e505",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/report.json": "c69177c55a0af2bafb5b890180d6c0114cd97cc7429ddc0bfdeb52ee4ab90dfe",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/sources/scripts/e04-library-browser-regression.mjs": "0e2468f881359477d7831f8b97cad49dcca2d3d8213b637a5f66ddaeaeff7737",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/sources/src/components/studio/AssetLibraryPages.tsx": "b462661b8fa3f9ec313de40bbe0bc89195f19f571686517e8063925d438176d2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/sources/src/components/studio/ProjectGalleryPage.tsx": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/sources/src/lib/studioLibraryQueries.ts": "5cb355c2f0ee97297ea3f894f4a0c1e0265f8b493533fcab51155a9a7c2a4f50",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/sources/tests/e04LibraryQueries.test.ts": "fcd478b9bf5053d75ec331901874ab796594e32e4a18f2c754c2a5316a33474a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/sources/tests/fixtures/e04-library/harness.tsx": "1ca6a5d9ca2f71d54b2dfa2477b5dc915d62670ae598f58225927e68d07ac97b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/sources/tests/fixtures/e04-library/index.html": "48929fc2827a3d214135814491ffad1df7f9ea4c758f3b13ad773fef1ba7cf77",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/sources/tests/fixtures/e04-library/tsconfig.json": "0d0e4ec9004fc3eb593326706c04e81486d5e79113ce96b431fa0838eae05e58",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/sources/tests/fixtures/sourceSnapshots/e04-library/provenance.json": "fe35050e7cef297a4f263254df42c3d11c3b39cedad102317f5eaeb7960a87b9",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage.tsx": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final.log": "82774930a70132c83ca467b2d946b11235e9c518f4007580c398b98c5f4c8de2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/components/media/MediaThumb.tsx": "6e18630ce69617f3666713d82a108d41f515290c920424d567d06aa0527b0a2d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/components/studio/AssetLibraryPages.tsx": "b462661b8fa3f9ec313de40bbe0bc89195f19f571686517e8063925d438176d2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/components/studio/CoverCard.tsx": "1cd7b4b4335ad69a6db11f6288e6af04dbe3ea07706860761d798d787cb5fb9f",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/components/studio/LibraryHeader.tsx": "8561229fd2ec9a508f7b2978e17830144cf5f56c76e965ff3d146bf1c149ed45",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/components/studio/ProjectGalleryPage.tsx": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/components/studio/Still.tsx": "0ead47eddd405054ecfd6d01532b069abcf5e10293c3415b9a61c8d4d538beae",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/components/ui/alert-dialog.tsx": "86bc809de1275d1b0d4c8dc653037d4177294ca0bb5390105a81409cc0260ad4",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/components/ui/button.tsx": "4e7a70efedb71755b3ff03b27b5c73ef5d891511bb258bc2a8aaa3714abc29b6",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/components/ui/checkbox.tsx": "4aec3c9b24f538d9420f305314ae77b26824ed680cbf7f01fffc1d32a10cd462",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/components/ui/dialog.tsx": "3bae376fea3814100be48ac35dddf4498117cbf5d8265080fc8e89c014fd4e6c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/components/ui/dropdown-menu.tsx": "6909edc7d0c8cd0736e56463a7a618ac93ad916e570d55047650c7f53fa4471a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/components/ui/input.tsx": "7d0a115d1f1f1ae6da7d733f66b441d63cb58f01845a61522f6cc8d16a973d30",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/components/ui/select.tsx": "663aad952784b862a96c5b06aad70847ff7b7c2a4463a4111c9cdfff075d1869",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/db/assets.ts": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/db/audio.ts": "371d2c2d66fe07e41075d864a26ee980a9b64c46cce333084a50848be4550dfd",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/db/audioShared.ts": "2dc8545765e9916ac3c8bc07341b56ff87c9a1f78ace95f1535d96c020a801b3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/db/cascadeCommands.ts": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/db/database.ts": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/db/ipProfiles.ts": "4a48495cca91e75f1214be09fe60719c60a47ae1cde4b32ef0c7db66e8eda3be",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/db/media.ts": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/db/music.ts": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/db/productionRecords.ts": "c4be1a9cbedebbbd11a3a4435fd06f97a7270b05376f50c0e3efe515d51d73e7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/db/productionShared.ts": "afd0e5b49aeb0f00c9f58f69f028e01f21062a2f6ba71741b056aec720797fc3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/db/projects.ts": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/domain/audio.ts": "3d4cef74e3bae43f8e5c439ff8704c028e1ff97da4e47f0e0ed579df78a25e94",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/domain/generationCapabilities.ts": "4398fc99a4003bda5ea903c54be5673bbc0dd748710d6a58ad9661ca545decef",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/domain/music.ts": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/domain/output.ts": "387df36dc4b5a8808477d11620546ce45010c5fe3289d7556ba5cd7bdb02f492",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/domain/references.ts": "b7c4f8a7de8e3284ad27fa72cc4aa6575ace4942ca4216f9194e16c9fa30fcc7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/domain/slot.ts": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/domain/types.ts": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/ai/apimartAudio.ts": "b3b05fbbb2c5ae0ba7b3500216a7050f4f066a791fa053d68d7fcda7326d8e9d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/ai/baseUrl.ts": "ae51424b8ebac68bf252d235e284694a5793bcb387a3f2deeb58ca71faaa9c7c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/ai/boundedResponse.ts": "92cc47f78623f8c1c8e7d864a9f4af655c5b498077f8b0e93de25eefc9be8384",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/ai/mimoSpeech.ts": "3793fedd4a513c73e8b2a84ba30261affb216af43034425b24de8b4542870ae3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/ai/modelBank/index.ts": "64e721fc672271586ca09965397ef3f3dab09d36b10976dc94a3b68d4e2ec3df",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/ai/modelMetadata.ts": "9ea70a6c9172cbab757550440888fbda56a5ec6f89aa95111405accd3db175aa",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/ai/requestBoundary.ts": "c72677ed1736c47f45b64db9145a40405bfc38b2de73ef6af5cde455f968b155",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/ai/safeError.ts": "aaca8cbeafa33d6d2d7f12668f858827de788b1b3737bf9a909cdb255dca5d12",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/assetLibrary.ts": "db8aff1b30cbc4a16310a624cdd9326a5f7a4ec192d3e8cecb616551434facae",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/audio/fingerprint.ts": "2e75f9a80cc117c5f9a2b0aa0528f9f28be1e5d00cc3826376e1fedcabb4ef59",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/audio/mime.ts": "dbe81e382e37dbdcecd85dc560bb09c48eed212e67607f0941e5d8015db07076",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/audio/schedule.ts": "d67341b2a2a44ca550a36d024c7b5e17500a1f571eeb95dea22b5913a6c3b0d7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/audioGeneration/input.ts": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/audioGeneration/observations.ts": "3a4eaa6f6cf3c0186ff5d129bdaa07acf59df509b19523301d7237d502963cbe",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/audioGeneration/reference.ts": "036ab41d4d0972e98d4acb8fc9d25286246473579d5d2cce6a9667ad38d39097",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/audioGeneration/taskIds.ts": "9c6a060ef497e2b41ed783ce5ce628770623c3afc1b7f8f62173373cc66f6a9f",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/audioProjectPackage.ts": "93886389c152de00353d0ca082816c4678f31f55ee554a65b8e243bd74224e63",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/debouncedDraft.ts": "c797901e5318743ca0f87b819067c18f7c3a384516efd87db832aa9f94355f09",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/draftConflict.ts": "2e94acd524fa20eeb3053f8631852a9d5275d8a2c6698718577dd9bc1a3e5e66",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/format.ts": "de29ecf48ef0a5ca9f852f92c23dcd90ba5edeac6fb66ff9c1a3ecb616674b77",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/ids.ts": "39924822d8b29e298a8d00615d0027b581ba2eb6a32cf210262a253c58ebfa5d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/library.ts": "4dd9c343505ed4e10b3e3215b4895331a8a4e107bf084a9cff59e6d58328695e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/media.ts": "bb352b6d1933651ab5cb13fcadfc27f92694c0d13cba4f2881c9b4361c8eb630",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/memory/schema.ts": "ccddefc631d808e0ec77a07b6be57cafee746fcf8cfbb09969a3ff0e1b754946",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/packages/audioPackageCodec.ts": "e9efd6af64d536bb6319be184d9d550e5f6e316f9e3954927472db0348e2e1ac",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/packages/packageError.ts": "88bd42e3b80e971078902ed82aa244128ed998db2364673a46201462982f6f02",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/packages/projectPackageCodec.ts": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/projectPackage.ts": "ad99f320cc1908b8f1bc70c32103b50f36eb3a2d2765e42ebda385c9709bc4c4",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/references/package.ts": "6764acaf39fb0d424d30e81265cde8e5c7d6ea5f6b644f38ffefb18c44dc27d2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/references/parse.ts": "e2f02198fd57623e5707685d8848b38522c0667933565b812b465019e5f7d122",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/resource/limits.ts": "aaed95b303a65539344a27c6fbee1670171248995a4e2da3fe4dc9cc4307bb17",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/studioLibraryQueries.ts": "88ee8de4fa4f8d82d2420da7ae9f08c37cdf7b3a81ddc2ab3b591c4d11eb25f1",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/lib/utils.ts": "41b88d67f560686e8197d1e884e0585c9beade191d3d9c1d5361acf962bab562",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/src/styles.css": "a8deb89bc36b4d9d3a88ce063c4b5bd81be793d8fc3e4571f2c0b1da91aa7d64",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/tests/fixtures/e04-library/harness.tsx": "a746f3758e71cc63cd5b32661a8212081ccbf0e5790b9f81afb15baa396e83e8",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/independent-transactions/studioLibraryQueries.ts": "5cb355c2f0ee97297ea3f894f4a0c1e0265f8b493533fcab51155a9a7c2a4f50",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage.tsx": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/loaded-sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/narrow-assets.png": "e39b375de21d3084d493a0a32aa04d5714f9cb8508e670cdc1851e4dd9aa3648",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/narrow-gallery.png": "196f2a061f243a17322d54221f0c6c1023a810592ccdd484fb206c16c9f30182",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/report.json": "8b802e7a11368672b45c83539928cd4f40d95ff0fb7e4da2a9ea2039bad9b8b6",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/sources/scripts/e04-library-browser-regression.mjs": "72bde650c1ddc62cc5e2ae0d16776e2e448a099b330d90ef914df2fb9fa94b91",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/sources/src/components/studio/AssetLibraryPages.tsx": "b462661b8fa3f9ec313de40bbe0bc89195f19f571686517e8063925d438176d2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/sources/src/components/studio/ProjectGalleryPage.tsx": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/sources/src/lib/studioLibraryQueries.ts": "88ee8de4fa4f8d82d2420da7ae9f08c37cdf7b3a81ddc2ab3b591c4d11eb25f1",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/sources/tests/e04LibraryQueries.test.ts": "0a6dc2f8368145534c9a17543e3501aa2723a2bc0796e79edc8be5f8578f2b2a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/sources/tests/fixtures/e04-library/harness.tsx": "a746f3758e71cc63cd5b32661a8212081ccbf0e5790b9f81afb15baa396e83e8",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/sources/tests/fixtures/e04-library/index.html": "48929fc2827a3d214135814491ffad1df7f9ea4c758f3b13ad773fef1ba7cf77",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/sources/tests/fixtures/e04-library/tsconfig.json": "0d0e4ec9004fc3eb593326706c04e81486d5e79113ce96b431fa0838eae05e58",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/sources/tests/fixtures/sourceSnapshots/e04-library/independent-transactions/provenance.json": "55265f0021b0ea6e816163b71dc2bbceb8903936b9ea4b6015cf484f4581d9be",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/sources/tests/fixtures/sourceSnapshots/e04-library/independent-transactions/studioLibraryQueries.ts": "5cb355c2f0ee97297ea3f894f4a0c1e0265f8b493533fcab51155a9a7c2a4f50",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/sources/tests/fixtures/sourceSnapshots/e04-library/provenance.json": "fe35050e7cef297a4f263254df42c3d11c3b39cedad102317f5eaeb7960a87b9",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage.tsx": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-shared-transaction-final/sources/tests/fixtures/sourceSnapshots/e04-library/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/produce-report.mjs": "ba32b80a1c70556fd46417385740bda25c41291abbe38efccae23101f02392c7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/query-n-revision/E04-library-implementation.json": "8c286001198b4d755132d2ed2a417eae6fb1f83bb215b263f257416e6cbbe74b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/query-n-revision/E04-library-implementation.md": "9da49ee697b298d658c38ce2b577a6622d4896f291a06e97ee310090dd320906",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/query-n-revision/commands.json": "f674320f19622b3a35c698cf284bba287d90adc1544a3a60588fa29db8d6c1c9",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/query-n-revision/coordinator-static-reference.json": "0cc49309cbb80229b1f6861cd391ef0d8de2ba8b9d91dcd77fc1ced3719245bf",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/query-n-revision/preserved-report-hashes.json": "81bcf1b66970b46c7844cdd8315a182669b6d3580743f051c3fc9cb63adba148",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/query-n-revision/produce-report.mjs": "59fdcb30c9b7847676785afad66c6cbcd58a2dff1ae16a728917ad1d9672d4b2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/query-transaction-history.json": "5dfa4d124006e692a2581854a98adf695a764a783f08d5e1f19c86d221caf78a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-library/run-e01-current.mjs": "3e403c09c96d8651c3f3934a748abd0374c4d09be7ace2a9846b2f3d44e479d6"
+  }
+}

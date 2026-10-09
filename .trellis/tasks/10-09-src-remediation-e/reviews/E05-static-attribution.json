@@ -1,0 +1,22 @@
+{
+  "purpose": "Fresh449-ish current source/parser alignment and exact E05 incremental diagnostics attribution; sourceconsistent prior scan adopted after rerehash, no unchangedsource rescan",
+  "inputCount": 447,
+  "allInputsStillMatch": true,
+  "origin": ".trellis/tasks/10-09-src-remediation-e/reviews/E05-in-progress-static",
+  "adoptedProof": {
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E05-static-results.json": "9d3c1c6e672a936771819a19a86c0621542d087eaec5c5c51f2094f684204385",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E05-static-summary.json": "f15fd596a03e4b9f716ab09d37b979783ba397d3a209981e5cd9a215c9385fac"
+  },
+  "currentSourceCount": 19,
+  "before": [
+    5,
+    44
+  ],
+  "after": [
+    3,
+    41
+  ],
+  "newE05Noncomplexity": 0,
+  "newE05Metrics": 0,
+  "inheritedMetrics": "2AgentChatfromE01;Gallery31\u219232acceptedE04;noformalQGdebtacceptance"
+}

@@ -1,0 +1,15 @@
+{
+  "purpose": "Preparation only; E05 remains pending until wholeE04 independentPASS",
+  "source": ".trellis/spec/frontend/component-guidelines.md",
+  "sha256": "91a004c2bf8d91fb297bda0dcae8eb4c368680ecc5c770bf898f627a14b4179e",
+  "ranges": [
+    [
+      1,
+      144
+    ]
+  ],
+  "excerpt": ".trellis/tasks/10-09-src-remediation-e/research/E05-component-context.md",
+  "excerptSHA256": "c7d6d29eba3c36ac496990a5abec09e66d45b588f895786f91e43cf3190f0940",
+  "ownerSource": "src/components/ui/click-spark.tsx",
+  "ownerSHA256": "cb7e68c6c9d5bb4c7844a63611bed04a31077e3b0c70e822a37a851490377c7e"
+}

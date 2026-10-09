@@ -1,0 +1,12 @@
+import {ESLint} from 'eslint';
+import {readFile,writeFile} from 'node:fs/promises';
+import path from 'node:path';
+import {describeDiagnostic,identityProducer} from '../../../../scripts/quality/identity.mjs';
+const base='.trellis/tasks/10-09-src-remediation-e/research/e07-gate-blocker-fix';
+const previous=JSON.parse(await readFile(base+'/quality/debt.json','utf8'));
+const original=JSON.parse(await readFile('.trellis/tasks/10-09-src-remediation-e/research/e07-current-tools/formal-lint-integration-01.json','utf8')).sections.lint.diagnostics.filter(d=>d.severity===2);
+const files=[...new Set(previous.allowances.map(a=>a.file))];const lint=new ESLint({allowInlineConfig:false});const results=await lint.lintFiles(files);const current=[];
+for(const r of results){const file=path.relative(process.cwd(),r.filePath),text=await readFile(r.filePath,'utf8');for(const m of r.messages.filter(m=>m.severity===2))current.push({file,rule:m.ruleId,...describeDiagnostic(file,text,m)});}
+if(current.length!==previous.allowances.length)throw Error('Previously reviewed error cardinality changed; no automatic acceptance');
+const evolution=[];const allowances=previous.allowances.map(a=>{const old=original.find(d=>d.file===a.file&&d.rule===a.rule&&d.signature===a.signature);if(!old)throw Error('Missing original reviewed semantic node');const matches=current.filter(d=>d.file===a.file&&d.rule===a.rule&&d.nodeKind===old.nodeKind&&JSON.stringify(d.nodeTokens)===JSON.stringify(old.nodeTokens));if(matches.length!==1||!matches[0].signature)throw Error('Previously reviewed node missing/ambiguous '+a.file);const fresh=matches[0];evolution.push({file:a.file,rule:a.rule,oldSignature:a.signature,newSignature:fresh.signature,oldOwner:old.semanticOwner,newOwner:fresh.semanticOwner,exactNodeTokensUnchanged:true,reason:a.reason});return {...a,signature:fresh.signature};});
+const updated={...previous,identityProducer:await identityProducer(),allowances};await writeFile('quality/debt.json',JSON.stringify(updated,null,2)+'\n');await writeFile(base+'/reviewed-identity-evolution.json',JSON.stringify({purpose:'Same twelve individually reviewed rule/file/nodes/reasons; exact node tokens and multiplicity unchanged. Re-anchor after verified producer-owner correction; no new diagnostics added as debt.',oldProducer:previous.identityProducer,newProducer:updated.identityProducer,evolution},null,2)+'\n');console.log('Re-anchored exactly',allowances.length,'previously reviewed nodes');

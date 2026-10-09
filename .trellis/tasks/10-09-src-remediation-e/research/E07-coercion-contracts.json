@@ -1,0 +1,3041 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Bounded read-only future E07 coercion contracts preparation while E06 ACTIVE; no activation/acceptance/debt baseline/sourcefix",
+  "generatedAtUtc": "2026-10-09T07:05:07.173062+00:00",
+  "generatedAtAsiaShanghai": "2026-10-09T15:05:07.173062+08:00",
+  "authorizedWriteScope": [
+    "research/e07-coercion-contracts/**",
+    "research/E07-coercion-contracts.md",
+    "research/E07-coercion-contracts.json"
+  ],
+  "historicalRule": {
+    "rule": "@typescript-eslint/no-base-to-string",
+    "count": 76,
+    "owners": {
+      "src/db/database.ts": 1,
+      "src/domain/slot.ts": 3,
+      "src/domain/types.ts": 12,
+      "src/lib/agent/businessStore.ts": 4,
+      "src/lib/agent/businessTools.ts": 2,
+      "src/lib/agent/businessWriteReceipt.ts": 1,
+      "src/lib/agent/imageDiscovery.ts": 1,
+      "src/lib/episodeDelivery.ts": 2,
+      "src/lib/packages/projectPackageCodec.ts": 50
+    },
+    "freshMeasurement": false,
+    "source": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E07-entry-diagnostic-review-candidates.json",
+      "line": 4225,
+      "sha256": "b67664b47aa85d8b45bf0dab9c42642b7ff6a48637c0deb8d6eba44f8e44bd6e"
+    }
+  },
+  "summary": "Preserve explicit modern original identity checks and tested legacy missing/empty-episodes repair. Retain primitive textual behavior only as an explicit characterized compatibility policy; compound known fields have no examined affirmative coercion contract. Fix owned type boundaries/display selectors; no mass acceptance or global String(any) wrapper.",
+  "policies": {
+    "package-prose": {
+      "sourceBehavior": "String(value ?? field default) preserves strings, number/boolean textual forms, empty strings; compound objects/arrays currently stringify. This is source observation only.",
+      "canonicalContract": "Known field is string; missing legacy fields allowed; unknown extension bags preserve JSON structure.",
+      "recommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "coverage": [
+        {
+          "path": "tests/projectPackage.test.ts",
+          "line": 92,
+          "sha256": "e96f763faea5c75fdfd32aeee658deadb62ee1ec70b7570eecf2bcd8d68417f7"
+        },
+        {
+          "path": "tests/projectPackageRelations.test.ts",
+          "line": 85,
+          "sha256": "c3f5ef49fcd4ace15806ac2c0ed89f8a3a27693d2d68b6330d0955ceaac4fede"
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "line": 138,
+          "sha256": "b4e1be5f90e014e7483bc69d6204075b64455509f6c20fb0c93853a557241ec5"
+        }
+      ],
+      "gap": "No affirmative numeric/boolean/null/object/array compatibility fixture for individual legacy prose fields."
+    },
+    "package-name": {
+      "sourceBehavior": "String(value ?? fallbackName/Chinese asset default); empty string remains empty,0 -> \"0\",false -> \"false\".",
+      "canonicalContract": "Names are strings; import does not currently trim or enforce editor nonblank names.",
+      "recommendation": "Same bounded primitive narrowing as legacy prose, retaining empty and whitespace exactly and per-owner fallback strings. Diagnose compound names, without importing editor nonblank-name validation.",
+      "coverage": [
+        {
+          "path": "tests/projectPackage.test.ts",
+          "line": 166,
+          "sha256": "e96f763faea5c75fdfd32aeee658deadb62ee1ec70b7570eecf2bcd8d68417f7"
+        },
+        {
+          "path": "tests/assetFoundation.test.ts",
+          "line": 138,
+          "sha256": "b4e1be5f90e014e7483bc69d6204075b64455509f6c20fb0c93853a557241ec5"
+        }
+      ],
+      "gap": "No per-name primitive/null/empty/compound input matrix."
+    },
+    "package-identity": {
+      "sourceBehavior": "Nullish source IDs synthesize per-entity IDs. Primitive IDs stringified. Empty IDs remain empty and remapId returns undefined. Compound IDs may alias through common String output. Project final ID replaced with fresh ID; entity IDs key remap maps.",
+      "canonicalContract": "Id string; modern FK uses original nonempty strings only; duplicate primitive-coercion collisions reject; unique unreferenced synthesized beats compatible.",
+      "recommendation": "Keep primitive/nullish historical branch and prefixes; reject compound original identity values in package boundary before map construction; do not make coerced IDs eligible modern FK. Separately decide/test empty row IDs; no new nonempty blanket validation justified by current tests.",
+      "coverage": [
+        {
+          "path": "tests/projectPackageRelations.test.ts",
+          "line": 49,
+          "sha256": "c3f5ef49fcd4ace15806ac2c0ed89f8a3a27693d2d68b6330d0955ceaac4fede"
+        },
+        {
+          "path": "tests/projectPackageRelations.test.ts",
+          "line": 85,
+          "sha256": "c3f5ef49fcd4ace15806ac2c0ed89f8a3a27693d2d68b6330d0955ceaac4fede"
+        },
+        {
+          "path": "tests/projectPackageRelations.test.ts",
+          "line": 126,
+          "sha256": "c3f5ef49fcd4ace15806ac2c0ed89f8a3a27693d2d68b6330d0955ceaac4fede"
+        }
+      ],
+      "gap": "7 versus \"7\" rejection tests do not prove noncolliding numeric/boolean identity import success; no empty ID success test."
+    },
+    "package-time": {
+      "sourceBehavior": "String(raw.timestamp ?? now). Empty/number/boolean survive conversion. Project timestamps reset during remap; entity timestamps retained; synthesized legacy episode copies new project timestamps.",
+      "canonicalContract": "Timestamps strings; no examined import contract requires ISO revalidation.",
+      "recommendation": "Preserve primitive textual form/nullish fallback; reject compound timestamps at these package fields. Do not discard parsing as irrelevant solely because project timestamps are replaced. Do not tighten to ISO without separate contract evidence.",
+      "coverage": [
+        {
+          "path": "tests/projectPackage.test.ts",
+          "line": 120,
+          "sha256": "e96f763faea5c75fdfd32aeee658deadb62ee1ec70b7570eecf2bcd8d68417f7"
+        }
+      ],
+      "gap": "No legacy timestamp type/default assertions; canonical exports give indirect string coverage."
+    },
+    "package-cover": {
+      "sourceBehavior": "Nullish/empty/whitespace-only -> absent; numeric0/booleanfalse become truthy \"0\"/\"false\"; trim only determines existence, original string returned. Unknown media key cleared during remap.",
+      "canonicalContract": "Optional media string ID remaps only to included files; metadata owner uses raw project identity.",
+      "recommendation": "Narrow exact cover field to primitive/nullish values, preserve trim-probe versus untrimmed lookup behavior; compound cover should diagnose at ZIP boundary rather than silently map an object artifact. Leave missing string-media pruning intact.",
+      "coverage": [
+        {
+          "path": "tests/projectPackage.test.ts",
+          "line": 183,
+          "sha256": "e96f763faea5c75fdfd32aeee658deadb62ee1ec70b7570eecf2bcd8d68417f7"
+        }
+      ],
+      "gap": "Only genuine string cover roundtrip tested; scalar and whitespace behaviors are source-only."
+    },
+    "package-episode-fk": {
+      "sourceBehavior": "String(raw.episodeId ?? fallback) but modern preflight already requires valid original string. Legacy remap unconditionally replaces old episode ID with synthesized first episode.",
+      "canonicalContract": "Explicit modern original owner, explicit missing/empty-episodes legacy branch.",
+      "recommendation": "Express the existing branch in types: validated modern original episode ID stays string, legacy uses its synthesized episode directly after retaining intended legacy beat lookup. Do not let primitive conversion supply modern ownership. Preserve undefined/[] legacy tests; no need to reject an ignored legacy field merely to quiet String.",
+      "coverage": [
+        {
+          "path": "tests/projectPackageRelations.test.ts",
+          "line": 49,
+          "sha256": "c3f5ef49fcd4ace15806ac2c0ed89f8a3a27693d2d68b6330d0955ceaac4fede"
+        },
+        {
+          "path": "tests/projectPackageRelations.test.ts",
+          "line": 126,
+          "sha256": "c3f5ef49fcd4ace15806ac2c0ed89f8a3a27693d2d68b6330d0955ceaac4fede"
+        }
+      ],
+      "gap": "Modern object/array/boolean episode FK rejected by source but not explicit fixtures; ignored legacy numeric/compound episodeId compatibility untested."
+    },
+    "package-shot-number": {
+      "sourceBehavior": "String(raw.shotNumber ?? index+1); numeric fallback intentionally textual; empty kept.",
+      "canonicalContract": "Shot.shotNumber string, names/display/search need exact existing text.",
+      "recommendation": "Primitive guard retaining number/boolean conversion and nullish numeric fallback; diagnose compound field at package boundary. Add meaningful numeric shot number import/discovery test, not broad strict-string gate.",
+      "coverage": [
+        {
+          "path": "tests/projectPackage.test.ts",
+          "line": 215,
+          "sha256": "e96f763faea5c75fdfd32aeee658deadb62ee1ec70b7570eecf2bcd8d68417f7"
+        },
+        {
+          "path": "tests/imageDiscovery.test.ts",
+          "line": 85,
+          "sha256": "0380a7542614fd7dfc5efee54232417ff259d4d6564a230ad0e5583af61f455e"
+        }
+      ],
+      "gap": "Existing fixtures use string shot numbers; numeric raw shotNumber compatibility is not affirmed."
+    },
+    "package-optional-fk": {
+      "sourceBehavior": "Truthy raw sceneId/beatId stringified;0,false,null,\"\" -> absent; truthy compounds may yield aliases. Modern truthy beatId must original string in same episode; source false/0 skips optional beat validation.",
+      "canonicalContract": "Scene/beat IDs string; modern beats episode scoped; legacy synthesized beat remapping retained; missing scene maps undefined.",
+      "recommendation": "Keep historical absence/truthiness semantics for scalar values. Enforce modern truthy beat string original contract and diagnose compound references before entity map lookup; preserve pruning missing valid strings. Do not accidentally turn0/false into active FKs.",
+      "coverage": [
+        {
+          "path": "tests/projectPackage.test.ts",
+          "line": 251,
+          "sha256": "e96f763faea5c75fdfd32aeee658deadb62ee1ec70b7570eecf2bcd8d68417f7"
+        },
+        {
+          "path": "tests/projectPackageRelations.test.ts",
+          "line": 49,
+          "sha256": "c3f5ef49fcd4ace15806ac2c0ed89f8a3a27693d2d68b6330d0955ceaac4fede"
+        },
+        {
+          "path": "tests/projectPackageRelations.test.ts",
+          "line": 126,
+          "sha256": "c3f5ef49fcd4ace15806ac2c0ed89f8a3a27693d2d68b6330d0955ceaac4fede"
+        }
+      ],
+      "gap": "Null/empty/0/false beatId absence and scalar sceneId policies mostly source-only; no affirmative compound relationship support."
+    },
+    "slot-prompt": {
+      "sourceBehavior": "String(record.prompt ?? \"\") on object raw; empty/default retained, numbers/booleans converted, compound prompt stringifies.",
+      "canonicalContract": "Editable prompt string; missing slot empty; legacy frame/reference merging supplies firstFrame prompt by truthiness.",
+      "recommendation": "For package input, preflight compound known prompt with slot path before domain parsing. For local domain recovery, retain string/number/boolean conversion/nullish empty, use empty fallback for malformed compound prompt only as an explicit future malformed-data repair policy with tests; do not make all normalizers throwing package validators. Preserve prompt || legacyPrompt semantics.",
+      "coverage": [
+        {
+          "path": "tests/auditDataIntegrity.test.ts",
+          "line": 58,
+          "sha256": "e2e5ba3bb923aa228a9d92dbefafb6b1723c72443a76f28be1bdad3b599ba34c"
+        },
+        {
+          "path": "tests/d05BusinessBranches.test.ts",
+          "line": 48,
+          "sha256": "88406876ac0bf1d346273a22476982e63f4ce60dbf5f8e2ac8bcf92318f95dfd"
+        }
+      ],
+      "gap": "No standalone raw scalar/compound prompt tests; valid string writes and migration asserted."
+    },
+    "slot-media": {
+      "sourceBehavior": "Truthy result.mediaId String converted, video only if exact kind; legacy fallback only when no current result and legacyMediaId truthy; references map(String) separately.",
+      "canonicalContract": "Current result wins; legacy reference merges into reference arrays, not result; media map prunes unavailable string IDs.",
+      "recommendation": "Package preflight should diagnose compound result/legacy IDs and compound ID-array elements, preserving existing primitive truthiness distinctions. Local scalar narrowing must not drop valid references, prefer a current result over fallback, or rewrite history/retention. Any compound local-ID repair needs explicit decision plus retention/source-identity test; no safe mass drop supported.",
+      "coverage": [
+        {
+          "path": "tests/auditDataIntegrity.test.ts",
+          "line": 58,
+          "sha256": "e2e5ba3bb923aa228a9d92dbefafb6b1723c72443a76f28be1bdad3b599ba34c"
+        },
+        {
+          "path": "tests/projectPackage.test.ts",
+          "line": 120,
+          "sha256": "e96f763faea5c75fdfd32aeee658deadb62ee1ec70b7570eecf2bcd8d68417f7"
+        },
+        {
+          "path": "tests/imageDiscovery.test.ts",
+          "line": 119,
+          "sha256": "0380a7542614fd7dfc5efee54232417ff259d4d6564a230ad0e5583af61f455e"
+        }
+      ],
+      "gap": "mediaId0/false/null/empty and numeric/boolean legacyMediaId not fixture-tested; frameMediaId/referenceMediaId path not covered by found v1 test; ID array member map(String) accepts compounds not listed by historical rule."
+    },
+    "domain-prose": {
+      "sourceBehavior": "String(field ?? \"\") after tolerant raw object guard, including logline/script/title/content/timeOfDay/worldview/background/rules.",
+      "canonicalContract": "Domain string fields, missing defaults; repository reads and CAS reuse these normalizers.",
+      "recommendation": "Use narrowed primitive behavior for scalar history. Package preflight rejects compound known prose. Local normalizers may default malformed compound prose to empty under explicit repair policy with focused tests, without mutating DB on reads or touching CAS algorithms; document this as new malformed behavior, not tested historical compatibility.",
+      "coverage": [
+        {
+          "path": "tests/repo.test.ts",
+          "line": 176,
+          "sha256": "3a052236d703b9378911882cc2668099d3098dfdcde9afc2d998fa11262defd6"
+        },
+        {
+          "path": "tests/auditDataIntegrity.test.ts",
+          "line": 58,
+          "sha256": "e2e5ba3bb923aa228a9d92dbefafb6b1723c72443a76f28be1bdad3b599ba34c"
+        },
+        {
+          "path": "tests/d08TextDraftRepository.test.ts",
+          "line": 59,
+          "sha256": "b330e7270ed33fb10cbad92abcf75cd1bf06aec09c9264d92b2b559d1833a528"
+        }
+      ],
+      "gap": "No malformed or numeric/boolean/null field matrix, especially setting."
+    },
+    "domain-beat-id": {
+      "sourceBehavior": "String(beat.id ?? beat_index); primitive collisions possible; package checks raw primitive duplicate and normalized collisions.",
+      "canonicalContract": "Unique unreferenced missing ID beat supported; normalized synthesized collisions rejected; original modern referenced beat must string.",
+      "recommendation": "Narrow primitives and keep nullish beat_index fallback. Reject compound package beat IDs before normalization. For local compound IDs, stable recovery strategy must be decided/tested explicitly (e.g. same index fallback as missing), never expose a repaired ID as valid modern original or silently merge existing beats.",
+      "coverage": [
+        {
+          "path": "tests/projectPackageRelations.test.ts",
+          "line": 62,
+          "sha256": "c3f5ef49fcd4ace15806ac2c0ed89f8a3a27693d2d68b6330d0955ceaac4fede"
+        },
+        {
+          "path": "tests/projectPackageRelations.test.ts",
+          "line": 85,
+          "sha256": "c3f5ef49fcd4ace15806ac2c0ed89f8a3a27693d2d68b6330d0955ceaac4fede"
+        },
+        {
+          "path": "tests/projectPackageRelations.test.ts",
+          "line": 126,
+          "sha256": "c3f5ef49fcd4ace15806ac2c0ed89f8a3a27693d2d68b6330d0955ceaac4fede"
+        }
+      ],
+      "gap": "No boolean or noncolliding numeric success fixture; no malformed existing DB beat-ID recovery fixture."
+    },
+    "domain-scene-fk": {
+      "sourceBehavior": "Truthy sceneId stringifies;0,false,empty,null absent; characterIds map(String) separate.",
+      "canonicalContract": "Local scoped relationships, imported asset maps prune unresolved references.",
+      "recommendation": "Preserve scalar absence semantics; reject compound external references, narrow local fields with explicit recovery policy before dropping relationships. Inspect array members in same owner to avoid unseen object-stringification diagnostics.",
+      "coverage": [
+        {
+          "path": "tests/repo.test.ts",
+          "line": 176,
+          "sha256": "3a052236d703b9378911882cc2668099d3098dfdcde9afc2d998fa11262defd6"
+        },
+        {
+          "path": "tests/projectPackageRelations.test.ts",
+          "line": 85,
+          "sha256": "c3f5ef49fcd4ace15806ac2c0ed89f8a3a27693d2d68b6330d0955ceaac4fede"
+        }
+      ],
+      "gap": "No specific malformed/numeric/boolean scene or character-array fixture."
+    },
+    "domain-excerpt": {
+      "sourceBehavior": "String(excerpt ?? \"\") may manufacture text; included only integer valid start/end, UTF16 length, then exact script slice match.",
+      "canonicalContract": "ScriptRange refers to exact substring and UTF16 offsets; stale association removed without removing beat content.",
+      "recommendation": "At local normalizer accept original string excerpt only; malformed scalar/compound excerpt should omit association rather than invent evidence, retaining beat content. Package raw compound excerpt should diagnose if boundary policy so chooses. This stricter scalar excerpt policy is a proposed change; characterize numeric/boolean legacy range before activation.",
+      "coverage": [
+        {
+          "path": "tests/repo.test.ts",
+          "line": 194,
+          "sha256": "3a052236d703b9378911882cc2668099d3098dfdcde9afc2d998fa11262defd6"
+        }
+      ],
+      "gap": "No scalar nonstring excerpt fixture, no compound-string artifact matching script fixture."
+    },
+    "db-episode-fk": {
+      "sourceBehavior": "v3 upgrade keeps String(record.episodeId ?? synthesizedEpisodeId); numeric/boolean existing value retained, compound value creates invalid owner text. Projects with any existing episode skipped.",
+      "canonicalContract": "Real v1 missing owner attaches new first episode; upgrades preserve project/story/media and avoid orphan creation.",
+      "recommendation": "Guard existing owner in v3 upgrade, preserve valid primitive behavior pending compatibility choice; malformed compound owner should explicitly fall back to this generated episode because this branch only runs when no project episodes exist. Do not add DB version or mass rewrite current rows. Prove v1/v2 upgrade atomicity and media preservation.",
+      "coverage": [
+        {
+          "path": "tests/auditDataIntegrity.test.ts",
+          "line": 58,
+          "sha256": "e2e5ba3bb923aa228a9d92dbefafb6b1723c72443a76f28be1bdad3b599ba34c"
+        }
+      ],
+      "gap": "Only absent owner tested, not numeric/boolean/empty/compound owner; retaining scalar existing owner may remain orphan-prone and needs explicit policy rather than assertion of support."
+    },
+    "agent-display": {
+      "sourceBehavior": "Nullish fallback priority chooses first present field then String, preserving empty string and scalar0/false; labels/excerpts truncated. Compounds chosen first prevent fallback.",
+      "canonicalContract": "BusinessRow erases concrete domain field types; production owned records supply typed strings. IDs/revisions/approval state remain raw and exact.",
+      "recommendation": "Prefer kind-aware typed owned-row projections or explicit per-display candidate narrowing. Keep fallback priority, empty string, valid string content, and current limits. If scalar recovery is retained, number/boolean only; skip compounds to next valid label/ID or empty excerpt under new tests. Never JSON.stringify extension bags or hash normalized display in place of raw state.",
+      "coverage": [
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "line": 53,
+          "sha256": "645b62a3d2c63363c7d04c7a24c7553672eae165a6f26f6d41040bf30f06b1c5"
+        },
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "line": 426,
+          "sha256": "645b62a3d2c63363c7d04c7a24c7553672eae165a6f26f6d41040bf30f06b1c5"
+        },
+        {
+          "path": "tests/agentBusiness.test.ts",
+          "line": 377,
+          "sha256": "645b62a3d2c63363c7d04c7a24c7553672eae165a6f26f6d41040bf30f06b1c5"
+        }
+      ],
+      "gap": "No malformed label/excerpt recovery tests; typed string valid label limits tested."
+    },
+    "image-label": {
+      "sourceBehavior": "label accepts unknown then String(nullish empty). All located callers statically provide string or undefined.",
+      "canonicalContract": "Current Entity.name/shotNumber, Project.name and Reference.filename typed strings;120-char display cap; source identity separately hashed with raw name/shotNumber and association.",
+      "recommendation": "Narrow label signature to string | undefined (null only if actual caller requires it), return (value ?? \"\").slice(0,120); type-only source precision fixes warning without broad coercion helper. Keep sourceIdentity hash inputs/locators/association unchanged. Malformed DB runtime robustness is a separate gap, not support for unknown conversion.",
+      "coverage": [
+        {
+          "path": "tests/imageDiscovery.test.ts",
+          "line": 85,
+          "sha256": "0380a7542614fd7dfc5efee54232417ff259d4d6564a230ad0e5583af61f455e"
+        },
+        {
+          "path": "tests/imageDiscovery.test.ts",
+          "line": 96,
+          "sha256": "0380a7542614fd7dfc5efee54232417ff259d4d6564a230ad0e5583af61f455e"
+        },
+        {
+          "path": "tests/imageDiscovery.test.ts",
+          "line": 119,
+          "sha256": "0380a7542614fd7dfc5efee54232417ff259d4d6564a230ad0e5583af61f455e"
+        }
+      ],
+      "gap": "No malformed direct label value fixture; making the signature precise alone does not runtime-validate old corrupt data."
+    },
+    "delivery-column": {
+      "sourceBehavior": "Full keyof Shot cast obscures fixed extra scalar text columns. Current catalog/BASE_COLUMNS excludes numbers/selects; values are seven extra string shot fields (the nine-field text-editor set also includes base content/notes).",
+      "canonicalContract": "Catalog id maps to actual scalar text field; relationships resolve separately.",
+      "recommendation": "Use explicit exhaustive local seven-extra-field selector/guard (or a domain shared field map only if real reuse) returning string; remove broad keyof Shot index cast, not stringify all Shot members. Keep scope/order/relationship resolution/csv. No lib import from component field map.",
+      "coverage": [
+        {
+          "path": "tests/episodeDelivery.test.ts",
+          "line": 124,
+          "sha256": "abce7785daf5fef73f81fc15490022c954e1cf381ec9c4bdfd2286327f370224"
+        }
+      ],
+      "gap": "Only category extra column explicitly tested; add all seven current extras with exact strings."
+    },
+    "csv-cell": {
+      "sourceBehavior": "escapeCsvCell unknown -> String(nullish empty), quotes RFC4180. Production callers records contain string/number, no booleans/objects/arrays.",
+      "canonicalContract": "CSV order/duration numeric, known labels/text string; BOM, CRLF, quoting tested. Exported helper is public but external arbitrary use not demonstrated.",
+      "recommendation": "Constrain cell domain to string|number|null|undefined; optionally retain explicit boolean primitive as deliberate historical helper compatibility with a new test. Reject/avoid compound callers; do not silently serialize objects. No runtime broad helper to suppress typed warning.",
+      "coverage": [
+        {
+          "path": "tests/episodeDelivery.test.ts",
+          "line": 221,
+          "sha256": "abce7785daf5fef73f81fc15490022c954e1cf381ec9c4bdfd2286327f370224"
+        }
+      ],
+      "gap": "Only direct string helper assertion; numeric behavior exercised by full CSV producer but no exact numeric cell assertion; boolean/null/compound direct behavior untested."
+    }
+  },
+  "sourceContractTestRecommendationMatrix": [
+    {
+      "id": "coercion-01",
+      "historicalDiagnostic": {
+        "file": "src/db/database.ts",
+        "line": 175,
+        "column": 47,
+        "severity": 2,
+        "message": "'record.episodeId ?? episodeId' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/db/database.ts",
+        "line": 175,
+        "sha256": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+        "lineText": "                            episodeId: String(record.episodeId ?? episodeId),",
+        "readAtUtc": "2026-10-09T06:42:48.051694+00:00"
+      },
+      "matrixPolicy": "db-episode-fk",
+      "futureRecommendation": "Guard existing owner in v3 upgrade, preserve valid primitive behavior pending compatibility choice; malformed compound owner should explicitly fall back to this generated episode because this branch only runs when no project episodes exist. Do not add DB version or mass rewrite current rows. Prove v1/v2 upgrade atomicity and media preservation.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-02",
+      "historicalDiagnostic": {
+        "file": "src/domain/slot.ts",
+        "line": 28,
+        "column": 30,
+        "severity": 2,
+        "message": "'record.prompt ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/domain/slot.ts",
+        "line": 28,
+        "sha256": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+        "lineText": "        slot.prompt = String(record.prompt ?? \"\");",
+        "readAtUtc": "2026-10-09T06:42:30.628894+00:00"
+      },
+      "matrixPolicy": "slot-prompt",
+      "futureRecommendation": "For package input, preflight compound known prompt with slot path before domain parsing. For local domain recovery, retain string/number/boolean conversion/nullish empty, use empty fallback for malformed compound prompt only as an explicit future malformed-data repair policy with tests; do not make all normalizers throwing package validators. Preserve prompt || legacyPrompt semantics.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-03",
+      "historicalDiagnostic": {
+        "file": "src/domain/slot.ts",
+        "line": 40,
+        "column": 33,
+        "severity": 2,
+        "message": "'result.mediaId' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "MemberExpression"
+      },
+      "currentSource": {
+        "path": "src/domain/slot.ts",
+        "line": 40,
+        "sha256": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+        "lineText": "                mediaId: String(result.mediaId),",
+        "readAtUtc": "2026-10-09T06:42:30.628894+00:00"
+      },
+      "matrixPolicy": "slot-media",
+      "futureRecommendation": "Package preflight should diagnose compound result/legacy IDs and compound ID-array elements, preserving existing primitive truthiness distinctions. Local scalar narrowing must not drop valid references, prefer a current result over fallback, or rewrite history/retention. Any compound local-ID repair needs explicit decision plus retention/source-identity test; no safe mass drop supported.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-04",
+      "historicalDiagnostic": {
+        "file": "src/domain/slot.ts",
+        "line": 46,
+        "column": 40,
+        "severity": 2,
+        "message": "'legacyMediaId' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "Identifier"
+      },
+      "currentSource": {
+        "path": "src/domain/slot.ts",
+        "line": 46,
+        "sha256": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+        "lineText": "        slot.result = {mediaId: String(legacyMediaId), kind: \"image\"};",
+        "readAtUtc": "2026-10-09T06:42:30.628894+00:00"
+      },
+      "matrixPolicy": "slot-media",
+      "futureRecommendation": "Package preflight should diagnose compound result/legacy IDs and compound ID-array elements, preserving existing primitive truthiness distinctions. Local scalar narrowing must not drop valid references, prefer a current result over fallback, or rewrite history/retention. Any compound local-ID repair needs explicit decision plus retention/source-identity test; no safe mass drop supported.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-05",
+      "historicalDiagnostic": {
+        "file": "src/domain/types.ts",
+        "line": 424,
+        "column": 28,
+        "severity": 2,
+        "message": "'record.logline ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/domain/types.ts",
+        "line": 424,
+        "sha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+        "lineText": "    story.logline = String(record.logline ?? \"\");",
+        "readAtUtc": "2026-10-09T06:53:08.316219+00:00"
+      },
+      "matrixPolicy": "domain-prose",
+      "futureRecommendation": "Use narrowed primitive behavior for scalar history. Package preflight rejects compound known prose. Local normalizers may default malformed compound prose to empty under explicit repair policy with focused tests, without mutating DB on reads or touching CAS algorithms; document this as new malformed behavior, not tested historical compatibility.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-06",
+      "historicalDiagnostic": {
+        "file": "src/domain/types.ts",
+        "line": 436,
+        "column": 20,
+        "severity": 2,
+        "message": "'beat.id ?? `beat_${index}`' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/domain/types.ts",
+        "line": 436,
+        "sha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+        "lineText": "        id: String(beat.id ?? `beat_${index}`),",
+        "readAtUtc": "2026-10-09T06:53:08.316219+00:00"
+      },
+      "matrixPolicy": "domain-beat-id",
+      "futureRecommendation": "Narrow primitives and keep nullish beat_index fallback. Reject compound package beat IDs before normalization. For local compound IDs, stable recovery strategy must be decided/tested explicitly (e.g. same index fallback as missing), never expose a repaired ID as valid modern original or silently merge existing beats.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-07",
+      "historicalDiagnostic": {
+        "file": "src/domain/types.ts",
+        "line": 437,
+        "column": 23,
+        "severity": 2,
+        "message": "'beat.title ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/domain/types.ts",
+        "line": 437,
+        "sha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+        "lineText": "        title: String(beat.title ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:53:08.316219+00:00"
+      },
+      "matrixPolicy": "domain-prose",
+      "futureRecommendation": "Use narrowed primitive behavior for scalar history. Package preflight rejects compound known prose. Local normalizers may default malformed compound prose to empty under explicit repair policy with focused tests, without mutating DB on reads or touching CAS algorithms; document this as new malformed behavior, not tested historical compatibility.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-08",
+      "historicalDiagnostic": {
+        "file": "src/domain/types.ts",
+        "line": 438,
+        "column": 25,
+        "severity": 2,
+        "message": "'beat.content ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/domain/types.ts",
+        "line": 438,
+        "sha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+        "lineText": "        content: String(beat.content ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:53:08.316219+00:00"
+      },
+      "matrixPolicy": "domain-prose",
+      "futureRecommendation": "Use narrowed primitive behavior for scalar history. Package preflight rejects compound known prose. Local normalizers may default malformed compound prose to empty under explicit repair policy with focused tests, without mutating DB on reads or touching CAS algorithms; document this as new malformed behavior, not tested historical compatibility.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-09",
+      "historicalDiagnostic": {
+        "file": "src/domain/types.ts",
+        "line": 442,
+        "column": 40,
+        "severity": 2,
+        "message": "'beat.sceneId' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "MemberExpression"
+      },
+      "currentSource": {
+        "path": "src/domain/types.ts",
+        "line": 442,
+        "sha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+        "lineText": "        sceneId: beat.sceneId ? String(beat.sceneId) : undefined,",
+        "readAtUtc": "2026-10-09T06:53:08.316219+00:00"
+      },
+      "matrixPolicy": "domain-scene-fk",
+      "futureRecommendation": "Preserve scalar absence semantics; reject compound external references, narrow local fields with explicit recovery policy before dropping relationships. Inspect array members in same owner to avoid unseen object-stringification diagnostics.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-10",
+      "historicalDiagnostic": {
+        "file": "src/domain/types.ts",
+        "line": 443,
+        "column": 27,
+        "severity": 2,
+        "message": "'beat.timeOfDay ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/domain/types.ts",
+        "line": 443,
+        "sha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+        "lineText": "        timeOfDay: String(beat.timeOfDay ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:53:08.316219+00:00"
+      },
+      "matrixPolicy": "domain-prose",
+      "futureRecommendation": "Use narrowed primitive behavior for scalar history. Package preflight rejects compound known prose. Local normalizers may default malformed compound prose to empty under explicit repair policy with focused tests, without mutating DB on reads or touching CAS algorithms; document this as new malformed behavior, not tested historical compatibility.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-11",
+      "historicalDiagnostic": {
+        "file": "src/domain/types.ts",
+        "line": 449,
+        "column": 32,
+        "severity": 2,
+        "message": "'range.excerpt ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/domain/types.ts",
+        "line": 449,
+        "sha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+        "lineText": "        const excerpt = String(range.excerpt ?? \"\");",
+        "readAtUtc": "2026-10-09T06:53:08.316219+00:00"
+      },
+      "matrixPolicy": "domain-excerpt",
+      "futureRecommendation": "At local normalizer accept original string excerpt only; malformed scalar/compound excerpt should omit association rather than invent evidence, retaining beat content. Package raw compound excerpt should diagnose if boundary policy so chooses. This stricter scalar excerpt policy is a proposed change; characterize numeric/boolean legacy range before activation.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-12",
+      "historicalDiagnostic": {
+        "file": "src/domain/types.ts",
+        "line": 467,
+        "column": 28,
+        "severity": 2,
+        "message": "'record.logline ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/domain/types.ts",
+        "line": 467,
+        "sha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+        "lineText": "    story.logline = String(record.logline ?? \"\");",
+        "readAtUtc": "2026-10-09T06:53:08.316219+00:00"
+      },
+      "matrixPolicy": "domain-prose",
+      "futureRecommendation": "Use narrowed primitive behavior for scalar history. Package preflight rejects compound known prose. Local normalizers may default malformed compound prose to empty under explicit repair policy with focused tests, without mutating DB on reads or touching CAS algorithms; document this as new malformed behavior, not tested historical compatibility.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-13",
+      "historicalDiagnostic": {
+        "file": "src/domain/types.ts",
+        "line": 468,
+        "column": 27,
+        "severity": 2,
+        "message": "'record.script ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/domain/types.ts",
+        "line": 468,
+        "sha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+        "lineText": "    story.script = String(record.script ?? \"\");",
+        "readAtUtc": "2026-10-09T06:53:08.316219+00:00"
+      },
+      "matrixPolicy": "domain-prose",
+      "futureRecommendation": "Use narrowed primitive behavior for scalar history. Package preflight rejects compound known prose. Local normalizers may default malformed compound prose to empty under explicit repair policy with focused tests, without mutating DB on reads or touching CAS algorithms; document this as new malformed behavior, not tested historical compatibility.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-14",
+      "historicalDiagnostic": {
+        "file": "src/domain/types.ts",
+        "line": 499,
+        "column": 32,
+        "severity": 2,
+        "message": "'record.worldview ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/domain/types.ts",
+        "line": 499,
+        "sha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+        "lineText": "    setting.worldview = String(record.worldview ?? \"\");",
+        "readAtUtc": "2026-10-09T06:53:08.316219+00:00"
+      },
+      "matrixPolicy": "domain-prose",
+      "futureRecommendation": "Use narrowed primitive behavior for scalar history. Package preflight rejects compound known prose. Local normalizers may default malformed compound prose to empty under explicit repair policy with focused tests, without mutating DB on reads or touching CAS algorithms; document this as new malformed behavior, not tested historical compatibility.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-15",
+      "historicalDiagnostic": {
+        "file": "src/domain/types.ts",
+        "line": 500,
+        "column": 33,
+        "severity": 2,
+        "message": "'record.background ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/domain/types.ts",
+        "line": 500,
+        "sha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+        "lineText": "    setting.background = String(record.background ?? \"\");",
+        "readAtUtc": "2026-10-09T06:53:08.316219+00:00"
+      },
+      "matrixPolicy": "domain-prose",
+      "futureRecommendation": "Use narrowed primitive behavior for scalar history. Package preflight rejects compound known prose. Local normalizers may default malformed compound prose to empty under explicit repair policy with focused tests, without mutating DB on reads or touching CAS algorithms; document this as new malformed behavior, not tested historical compatibility.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-16",
+      "historicalDiagnostic": {
+        "file": "src/domain/types.ts",
+        "line": 501,
+        "column": 28,
+        "severity": 2,
+        "message": "'record.rules ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/domain/types.ts",
+        "line": 501,
+        "sha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+        "lineText": "    setting.rules = String(record.rules ?? \"\");",
+        "readAtUtc": "2026-10-09T06:53:08.316219+00:00"
+      },
+      "matrixPolicy": "domain-prose",
+      "futureRecommendation": "Use narrowed primitive behavior for scalar history. Package preflight rejects compound known prose. Local normalizers may default malformed compound prose to empty under explicit repair policy with focused tests, without mutating DB on reads or touching CAS algorithms; document this as new malformed behavior, not tested historical compatibility.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-17",
+      "historicalDiagnostic": {
+        "file": "src/lib/agent/businessStore.ts",
+        "line": 200,
+        "column": 23,
+        "severity": 2,
+        "message": "'row.name ?? row.title ?? row.filename ?? row.shotNumber ?? row.id' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/agent/businessStore.ts",
+        "line": 200,
+        "sha256": "53571ee862b15d05e4782048c5f393b7afe50132f1f3983cccb375ab10d99bcc",
+        "lineText": "        label: String(row.name ?? row.title ?? row.filename ?? row.shotNumber ?? row.id).slice(0, 200),",
+        "readAtUtc": "2026-10-09T06:48:07.305408+00:00"
+      },
+      "matrixPolicy": "agent-display",
+      "futureRecommendation": "Prefer kind-aware typed owned-row projections or explicit per-display candidate narrowing. Keep fallback priority, empty string, valid string content, and current limits. If scalar recovery is retained, number/boolean only; skip compounds to next valid label/ID or empty excerpt under new tests. Never JSON.stringify extension bags or hash normalized display in place of raw state.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-18",
+      "historicalDiagnostic": {
+        "file": "src/lib/agent/businessStore.ts",
+        "line": 201,
+        "column": 25,
+        "severity": 2,
+        "message": "'row.content ?? row.bio ?? row.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/agent/businessStore.ts",
+        "line": 201,
+        "sha256": "53571ee862b15d05e4782048c5f393b7afe50132f1f3983cccb375ab10d99bcc",
+        "lineText": "        excerpt: String(row.content ?? row.bio ?? row.notes ?? \"\").slice(0, 300), order: row.order",
+        "readAtUtc": "2026-10-09T06:48:07.305408+00:00"
+      },
+      "matrixPolicy": "agent-display",
+      "futureRecommendation": "Prefer kind-aware typed owned-row projections or explicit per-display candidate narrowing. Keep fallback priority, empty string, valid string content, and current limits. If scalar recovery is retained, number/boolean only; skip compounds to next valid label/ID or empty excerpt under new tests. Never JSON.stringify extension bags or hash normalized display in place of raw state.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-19",
+      "historicalDiagnostic": {
+        "file": "src/lib/agent/businessStore.ts",
+        "line": 207,
+        "column": 56,
+        "severity": 2,
+        "message": "'row.name ?? row.title ?? row.filename ?? row.shotNumber ?? row.id' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/agent/businessStore.ts",
+        "line": 207,
+        "sha256": "53571ee862b15d05e4782048c5f393b7afe50132f1f3983cccb375ab10d99bcc",
+        "lineText": "    const label = `${BUSINESS_LABELS[kind]} · ${String(row.name ?? row.title ?? row.filename ?? row.shotNumber ?? row.id).slice(0, 120)}`;",
+        "readAtUtc": "2026-10-09T06:48:07.305408+00:00"
+      },
+      "matrixPolicy": "agent-display",
+      "futureRecommendation": "Prefer kind-aware typed owned-row projections or explicit per-display candidate narrowing. Keep fallback priority, empty string, valid string content, and current limits. If scalar recovery is retained, number/boolean only; skip compounds to next valid label/ID or empty excerpt under new tests. Never JSON.stringify extension bags or hash normalized display in place of raw state.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-20",
+      "historicalDiagnostic": {
+        "file": "src/lib/agent/businessStore.ts",
+        "line": 330,
+        "column": 35,
+        "severity": 2,
+        "message": "'row.name ?? row.shotNumber ?? row.id' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/agent/businessStore.ts",
+        "line": 330,
+        "sha256": "53571ee862b15d05e4782048c5f393b7afe50132f1f3983cccb375ab10d99bcc",
+        "lineText": "                    label: String(row.name ?? row.shotNumber ?? row.id),",
+        "readAtUtc": "2026-10-09T06:48:07.305408+00:00"
+      },
+      "matrixPolicy": "agent-display",
+      "futureRecommendation": "Prefer kind-aware typed owned-row projections or explicit per-display candidate narrowing. Keep fallback priority, empty string, valid string content, and current limits. If scalar recovery is retained, number/boolean only; skip compounds to next valid label/ID or empty excerpt under new tests. Never JSON.stringify extension bags or hash normalized display in place of raw state.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-21",
+      "historicalDiagnostic": {
+        "file": "src/lib/agent/businessTools.ts",
+        "line": 296,
+        "column": 35,
+        "severity": 2,
+        "message": "'row.name ?? row.title ?? row.filename ?? row.id' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/agent/businessTools.ts",
+        "line": 296,
+        "sha256": "0aad3a5e1d3792952da4980ed003aa863e3ecb9e87bdc30cab4bef6d18e63274",
+        "lineText": "            labels.push(`${String(row.name ?? row.title ?? row.filename ?? row.id)}（${row.id}）`);",
+        "readAtUtc": "2026-10-09T06:48:35.858578+00:00"
+      },
+      "matrixPolicy": "agent-display",
+      "futureRecommendation": "Prefer kind-aware typed owned-row projections or explicit per-display candidate narrowing. Keep fallback priority, empty string, valid string content, and current limits. If scalar recovery is retained, number/boolean only; skip compounds to next valid label/ID or empty excerpt under new tests. Never JSON.stringify extension bags or hash normalized display in place of raw state.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-22",
+      "historicalDiagnostic": {
+        "file": "src/lib/agent/businessTools.ts",
+        "line": 812,
+        "column": 81,
+        "severity": 2,
+        "message": "'order.get(id)?.title ?? order.get(id)?.shotNumber ?? id' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/agent/businessTools.ts",
+        "line": 812,
+        "sha256": "0aad3a5e1d3792952da4980ed003aa863e3ecb9e87bdc30cab4bef6d18e63274",
+        "lineText": "            changes: args.orderedIds.map((id, index) => `${index + 1}. ${String(order.get(id)?.title ?? order.get(id)?.shotNumber ?? id)}`)",
+        "readAtUtc": "2026-10-09T06:48:35.858578+00:00"
+      },
+      "matrixPolicy": "agent-display",
+      "futureRecommendation": "Prefer kind-aware typed owned-row projections or explicit per-display candidate narrowing. Keep fallback priority, empty string, valid string content, and current limits. If scalar recovery is retained, number/boolean only; skip compounds to next valid label/ID or empty excerpt under new tests. Never JSON.stringify extension bags or hash normalized display in place of raw state.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-23",
+      "historicalDiagnostic": {
+        "file": "src/lib/agent/businessWriteReceipt.ts",
+        "line": 36,
+        "column": 33,
+        "severity": 2,
+        "message": "'row.name ?? row.title ?? row.shotNumber ?? row.id' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/agent/businessWriteReceipt.ts",
+        "line": 36,
+        "sha256": "626537317a0c0a239c66b4c1b756251faead3eb400690a69274ce63cbf693096",
+        "lineText": "        revision, label: String(row.name ?? row.title ?? row.shotNumber ?? row.id).slice(0, 160)",
+        "readAtUtc": "2026-10-09T06:46:05.040932+00:00"
+      },
+      "matrixPolicy": "agent-display",
+      "futureRecommendation": "Prefer kind-aware typed owned-row projections or explicit per-display candidate narrowing. Keep fallback priority, empty string, valid string content, and current limits. If scalar recovery is retained, number/boolean only; skip compounds to next valid label/ID or empty excerpt under new tests. Never JSON.stringify extension bags or hash normalized display in place of raw state.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-24",
+      "historicalDiagnostic": {
+        "file": "src/lib/agent/imageDiscovery.ts",
+        "line": 42,
+        "column": 42,
+        "severity": 2,
+        "message": "'value ?? ''' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/agent/imageDiscovery.ts",
+        "line": 42,
+        "sha256": "fc8571b38c847e6ed4e0504bd04d3f5140a6772a202d94fc7b4261292f95bc58",
+        "lineText": "const label = (value: unknown) => String(value ?? '').slice(0, 120);",
+        "readAtUtc": "2026-10-09T06:53:30.787612+00:00"
+      },
+      "matrixPolicy": "image-label",
+      "futureRecommendation": "Narrow label signature to string | undefined (null only if actual caller requires it), return (value ?? \"\").slice(0,120); type-only source precision fixes warning without broad coercion helper. Keep sourceIdentity hash inputs/locators/association unchanged. Malformed DB runtime robustness is a separate gap, not support for unknown conversion.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-25",
+      "historicalDiagnostic": {
+        "file": "src/lib/episodeDelivery.ts",
+        "line": 92,
+        "column": 60,
+        "severity": 2,
+        "message": "'shot[column.id as keyof Shot] ?? \"\"' may use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/episodeDelivery.ts",
+        "line": 92,
+        "sha256": "c30e1b84647ec5f8801bb62cd5d3a84c9678bea3361ca00b787d144a6a2e6b8b",
+        "lineText": "                columns.map((column) => [column.id, String(shot[column.id as keyof Shot] ?? \"\")]),",
+        "readAtUtc": "2026-10-09T06:46:40.285641+00:00"
+      },
+      "matrixPolicy": "delivery-column",
+      "futureRecommendation": "Use explicit exhaustive local seven-extra-field selector/guard (or a domain shared field map only if real reuse) returning string; remove broad keyof Shot index cast, not stringify all Shot members. Keep scope/order/relationship resolution/csv. No lib import from component field map.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-26",
+      "historicalDiagnostic": {
+        "file": "src/lib/episodeDelivery.ts",
+        "line": 136,
+        "column": 25,
+        "severity": 2,
+        "message": "'value ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/episodeDelivery.ts",
+        "line": 136,
+        "sha256": "c30e1b84647ec5f8801bb62cd5d3a84c9678bea3361ca00b787d144a6a2e6b8b",
+        "lineText": "    const text = String(value ?? \"\");",
+        "readAtUtc": "2026-10-09T06:46:40.285641+00:00"
+      },
+      "matrixPolicy": "csv-cell",
+      "futureRecommendation": "Constrain cell domain to string|number|null|undefined; optionally retain explicit boolean primitive as deliberate historical helper compatibility with a new test. Reject/avoid compound callers; do not silently serialize objects. No runtime broad helper to suppress typed warning.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-27",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 122,
+        "column": 44,
+        "severity": 2,
+        "message": "'raw.coverMediaId' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "MemberExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 122,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        raw.coverMediaId != null && String(raw.coverMediaId).trim()",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-cover",
+      "futureRecommendation": "Narrow exact cover field to primitive/nullish values, preserve trim-probe versus untrimmed lookup behavior; compound cover should diagnose at ZIP boundary rather than silently map an object artifact. Leave missing string-media pruning intact.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-28",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 123,
+        "column": 22,
+        "severity": 2,
+        "message": "'raw.coverMediaId' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "MemberExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 123,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "            ? String(raw.coverMediaId)",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-cover",
+      "futureRecommendation": "Narrow exact cover field to primitive/nullish values, preserve trim-probe versus untrimmed lookup behavior; compound cover should diagnose at ZIP boundary rather than silently map an object artifact. Leave missing string-media pruning intact.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-29",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 128,
+        "column": 20,
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"prj\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 128,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        id: String(raw.id ?? createId(\"prj\")),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-identity",
+      "futureRecommendation": "Keep primitive/nullish historical branch and prefixes; reject compound original identity values in package boundary before map construction; do not make coerced IDs eligible modern FK. Separately decide/test empty row IDs; no new nonempty blanket validation justified by current tests.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-30",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 129,
+        "column": 22,
+        "severity": 2,
+        "message": "'raw.name ?? fallbackName' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 129,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        name: String(raw.name ?? fallbackName),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-name",
+      "futureRecommendation": "Same bounded primitive narrowing as legacy prose, retaining empty and whitespace exactly and per-owner fallback strings. Diagnose compound names, without importing editor nonblank-name validation.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-31",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 139,
+        "column": 27,
+        "severity": 2,
+        "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 139,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        createdAt: String(raw.createdAt ?? at),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-time",
+      "futureRecommendation": "Preserve primitive textual form/nullish fallback; reject compound timestamps at these package fields. Do not discard parsing as irrelevant solely because project timestamps are replaced. Do not tighten to ISO without separate contract evidence.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-32",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 140,
+        "column": 27,
+        "severity": 2,
+        "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 140,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        updatedAt: String(raw.updatedAt ?? at),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-time",
+      "futureRecommendation": "Preserve primitive textual form/nullish fallback; reject compound timestamps at these package fields. Do not discard parsing as irrelevant solely because project timestamps are replaced. Do not tighten to ISO without separate contract evidence.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-33",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 202,
+        "column": 20,
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"chr\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 202,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        id: String(raw.id ?? createId(\"chr\")),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-identity",
+      "futureRecommendation": "Keep primitive/nullish historical branch and prefixes; reject compound original identity values in package boundary before map construction; do not make coerced IDs eligible modern FK. Separately decide/test empty row IDs; no new nonempty blanket validation justified by current tests.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-34",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 207,
+        "column": 22,
+        "severity": 2,
+        "message": "'raw.name ?? \"未命名角色\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 207,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        name: String(raw.name ?? \"未命名角色\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-name",
+      "futureRecommendation": "Same bounded primitive narrowing as legacy prose, retaining empty and whitespace exactly and per-owner fallback strings. Diagnose compound names, without importing editor nonblank-name validation.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-35",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 208,
+        "column": 21,
+        "severity": 2,
+        "message": "'raw.bio ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 208,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        bio: String(raw.bio ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-36",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 209,
+        "column": 28,
+        "severity": 2,
+        "message": "'raw.appearance ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 209,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        appearance: String(raw.appearance ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-37",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 210,
+        "column": 23,
+        "severity": 2,
+        "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 210,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        notes: String(raw.notes ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-38",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 212,
+        "column": 27,
+        "severity": 2,
+        "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 212,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        createdAt: String(raw.createdAt ?? at),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-time",
+      "futureRecommendation": "Preserve primitive textual form/nullish fallback; reject compound timestamps at these package fields. Do not discard parsing as irrelevant solely because project timestamps are replaced. Do not tighten to ISO without separate contract evidence.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-39",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 213,
+        "column": 27,
+        "severity": 2,
+        "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 213,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        updatedAt: String(raw.updatedAt ?? at),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-time",
+      "futureRecommendation": "Preserve primitive textual form/nullish fallback; reject compound timestamps at these package fields. Do not discard parsing as irrelevant solely because project timestamps are replaced. Do not tighten to ISO without separate contract evidence.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-40",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 238,
+        "column": 20,
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"scn\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 238,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        id: String(raw.id ?? createId(\"scn\")),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-identity",
+      "futureRecommendation": "Keep primitive/nullish historical branch and prefixes; reject compound original identity values in package boundary before map construction; do not make coerced IDs eligible modern FK. Separately decide/test empty row IDs; no new nonempty blanket validation justified by current tests.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-41",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 242,
+        "column": 22,
+        "severity": 2,
+        "message": "'raw.name ?? \"未命名场景\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 242,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        name: String(raw.name ?? \"未命名场景\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-name",
+      "futureRecommendation": "Same bounded primitive narrowing as legacy prose, retaining empty and whitespace exactly and per-owner fallback strings. Diagnose compound names, without importing editor nonblank-name validation.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-42",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 243,
+        "column": 26,
+        "severity": 2,
+        "message": "'raw.location ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 243,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        location: String(raw.location ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-43",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 244,
+        "column": 27,
+        "severity": 2,
+        "message": "'raw.timeOfDay ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 244,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        timeOfDay: String(raw.timeOfDay ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-44",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 245,
+        "column": 28,
+        "severity": 2,
+        "message": "'raw.atmosphere ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 245,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        atmosphere: String(raw.atmosphere ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-45",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 246,
+        "column": 23,
+        "severity": 2,
+        "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 246,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        notes: String(raw.notes ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-46",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 248,
+        "column": 27,
+        "severity": 2,
+        "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 248,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        createdAt: String(raw.createdAt ?? at),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-time",
+      "futureRecommendation": "Preserve primitive textual form/nullish fallback; reject compound timestamps at these package fields. Do not discard parsing as irrelevant solely because project timestamps are replaced. Do not tighten to ISO without separate contract evidence.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-47",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 249,
+        "column": 27,
+        "severity": 2,
+        "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 249,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        updatedAt: String(raw.updatedAt ?? at),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-time",
+      "futureRecommendation": "Preserve primitive textual form/nullish fallback; reject compound timestamps at these package fields. Do not discard parsing as irrelevant solely because project timestamps are replaced. Do not tighten to ISO without separate contract evidence.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-48",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 274,
+        "column": 20,
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"prp\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 274,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        id: String(raw.id ?? createId(\"prp\")),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-identity",
+      "futureRecommendation": "Keep primitive/nullish historical branch and prefixes; reject compound original identity values in package boundary before map construction; do not make coerced IDs eligible modern FK. Separately decide/test empty row IDs; no new nonempty blanket validation justified by current tests.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-49",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 281,
+        "column": 22,
+        "severity": 2,
+        "message": "'raw.name ?? \"未命名道具\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 281,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        name: String(raw.name ?? \"未命名道具\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-name",
+      "futureRecommendation": "Same bounded primitive narrowing as legacy prose, retaining empty and whitespace exactly and per-owner fallback strings. Diagnose compound names, without importing editor nonblank-name validation.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-50",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 282,
+        "column": 22,
+        "severity": 2,
+        "message": "'raw.kind ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 282,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        kind: String(raw.kind ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-51",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 283,
+        "column": 23,
+        "severity": 2,
+        "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 283,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        notes: String(raw.notes ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-52",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 285,
+        "column": 27,
+        "severity": 2,
+        "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 285,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        createdAt: String(raw.createdAt ?? at),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-time",
+      "futureRecommendation": "Preserve primitive textual form/nullish fallback; reject compound timestamps at these package fields. Do not discard parsing as irrelevant solely because project timestamps are replaced. Do not tighten to ISO without separate contract evidence.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-53",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 286,
+        "column": 27,
+        "severity": 2,
+        "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 286,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        updatedAt: String(raw.updatedAt ?? at),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-time",
+      "futureRecommendation": "Preserve primitive textual form/nullish fallback; reject compound timestamps at these package fields. Do not discard parsing as irrelevant solely because project timestamps are replaced. Do not tighten to ISO without separate contract evidence.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-54",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 310,
+        "column": 20,
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"sty\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 310,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        id: String(raw.id ?? createId(\"sty\")),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-identity",
+      "futureRecommendation": "Keep primitive/nullish historical branch and prefixes; reject compound original identity values in package boundary before map construction; do not make coerced IDs eligible modern FK. Separately decide/test empty row IDs; no new nonempty blanket validation justified by current tests.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-55",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 317,
+        "column": 22,
+        "severity": 2,
+        "message": "'raw.name ?? \"未命名风格\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 317,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        name: String(raw.name ?? \"未命名风格\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-name",
+      "futureRecommendation": "Same bounded primitive narrowing as legacy prose, retaining empty and whitespace exactly and per-owner fallback strings. Diagnose compound names, without importing editor nonblank-name validation.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-56",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 318,
+        "column": 23,
+        "severity": 2,
+        "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 318,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        notes: String(raw.notes ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-57",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 320,
+        "column": 27,
+        "severity": 2,
+        "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 320,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        createdAt: String(raw.createdAt ?? at),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-time",
+      "futureRecommendation": "Preserve primitive textual form/nullish fallback; reject compound timestamps at these package fields. Do not discard parsing as irrelevant solely because project timestamps are replaced. Do not tighten to ISO without separate contract evidence.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-58",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 321,
+        "column": 27,
+        "severity": 2,
+        "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 321,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        updatedAt: String(raw.updatedAt ?? at),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-time",
+      "futureRecommendation": "Preserve primitive textual form/nullish fallback; reject compound timestamps at these package fields. Do not discard parsing as irrelevant solely because project timestamps are replaced. Do not tighten to ISO without separate contract evidence.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-59",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 400,
+        "column": 20,
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"ep\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 400,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        id: String(raw.id ?? createId(\"ep\")),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-identity",
+      "futureRecommendation": "Keep primitive/nullish historical branch and prefixes; reject compound original identity values in package boundary before map construction; do not make coerced IDs eligible modern FK. Separately decide/test empty row IDs; no new nonempty blanket validation justified by current tests.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-60",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 403,
+        "column": 23,
+        "severity": 2,
+        "message": "'raw.title ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 403,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        title: String(raw.title ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-61",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 408,
+        "column": 27,
+        "severity": 2,
+        "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 408,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        createdAt: String(raw.createdAt ?? at),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-time",
+      "futureRecommendation": "Preserve primitive textual form/nullish fallback; reject compound timestamps at these package fields. Do not discard parsing as irrelevant solely because project timestamps are replaced. Do not tighten to ISO without separate contract evidence.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-62",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 409,
+        "column": 27,
+        "severity": 2,
+        "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 409,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        updatedAt: String(raw.updatedAt ?? at),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-time",
+      "futureRecommendation": "Preserve primitive textual form/nullish fallback; reject compound timestamps at these package fields. Do not discard parsing as irrelevant solely because project timestamps are replaced. Do not tighten to ISO without separate contract evidence.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-63",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 469,
+        "column": 20,
+        "severity": 2,
+        "message": "'raw.id ?? createId(\"sht\")' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 469,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        id: String(raw.id ?? createId(\"sht\")),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-identity",
+      "futureRecommendation": "Keep primitive/nullish historical branch and prefixes; reject compound original identity values in package boundary before map construction; do not make coerced IDs eligible modern FK. Separately decide/test empty row IDs; no new nonempty blanket validation justified by current tests.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-64",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 471,
+        "column": 27,
+        "severity": 2,
+        "message": "'raw.episodeId ?? episodeId' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 471,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        episodeId: String(raw.episodeId ?? episodeId),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-episode-fk",
+      "futureRecommendation": "Express the existing branch in types: validated modern original episode ID stays string, legacy uses its synthesized episode directly after retaining intended legacy beat lookup. Do not let primitive conversion supply modern ownership. Preserve undefined/[] legacy tests; no need to reject an ignored legacy field merely to quiet String.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-65",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 473,
+        "column": 28,
+        "severity": 2,
+        "message": "'raw.shotNumber ?? index + 1' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 473,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        shotNumber: String(raw.shotNumber ?? index + 1),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-shot-number",
+      "futureRecommendation": "Primitive guard retaining number/boolean conversion and nullish numeric fallback; diagnose compound field at package boundary. Add meaningful numeric shot number import/discovery test, not broad strict-string gate.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-66",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 480,
+        "column": 26,
+        "severity": 2,
+        "message": "'raw.category ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 480,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        category: String(raw.category ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-67",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 482,
+        "column": 25,
+        "severity": 2,
+        "message": "'raw.content ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 482,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        content: String(raw.content ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-68",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 483,
+        "column": 23,
+        "severity": 2,
+        "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 483,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        notes: String(raw.notes ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-69",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 484,
+        "column": 30,
+        "severity": 2,
+        "message": "'raw.sceneCloseup ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 484,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        sceneCloseup: String(raw.sceneCloseup ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-70",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 485,
+        "column": 23,
+        "severity": 2,
+        "message": "'raw.sound ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 485,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        sound: String(raw.sound ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-71",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 486,
+        "column": 25,
+        "severity": 2,
+        "message": "'raw.emotion ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 486,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        emotion: String(raw.emotion ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-72",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 487,
+        "column": 29,
+        "severity": 2,
+        "message": "'raw.cameraAngle ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 487,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        cameraAngle: String(raw.cameraAngle ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-73",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 488,
+        "column": 28,
+        "severity": 2,
+        "message": "'raw.cameraGear ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 488,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        cameraGear: String(raw.cameraGear ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-74",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 489,
+        "column": 29,
+        "severity": 2,
+        "message": "'raw.focalLength ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "LogicalExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 489,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        focalLength: String(raw.focalLength ?? \"\"),",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-prose",
+      "futureRecommendation": "At owned package row boundary, narrow these exact legacy prose fields to string/number/boolean/null/undefined. Preserve primitive output and the existing nullish default; compound known-field values produce field/path PackageError before persistence. Do not apply this policy to optionalText/new relations/generationDefaults/extra. Add explicit scalar compatibility tests before claiming support.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-75",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 493,
+        "column": 39,
+        "severity": 2,
+        "message": "'raw.sceneId' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "MemberExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 493,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        sceneId: raw.sceneId ? String(raw.sceneId) : undefined,",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-optional-fk",
+      "futureRecommendation": "Keep historical absence/truthiness semantics for scalar values. Enforce modern truthy beat string original contract and diagnose compound references before entity map lookup; preserve pruning missing valid strings. Do not accidentally turn0/false into active FKs.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    },
+    {
+      "id": "coercion-76",
+      "historicalDiagnostic": {
+        "file": "src/lib/packages/projectPackageCodec.ts",
+        "line": 494,
+        "column": 37,
+        "severity": 2,
+        "message": "'raw.beatId' will use Object's default stringification format ('[object Object]') when stringified.",
+        "nodeType": "MemberExpression"
+      },
+      "currentSource": {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "line": 494,
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "lineText": "        beatId: raw.beatId ? String(raw.beatId) : undefined,",
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00"
+      },
+      "matrixPolicy": "package-optional-fk",
+      "futureRecommendation": "Keep historical absence/truthiness semantics for scalar values. Enforce modern truthy beat string original contract and diagnose compound references before entity map lookup; preserve pruning missing valid strings. Do not accidentally turn0/false into active FKs.",
+      "historicalContractAcceptance": false,
+      "freshLintRun": false
+    }
+  ],
+  "scalarCompatibility": [
+    {
+      "family": "Legacy text/name/shotNumber/timestamp + domain prose",
+      "string": "Canonical and valid string paths covered indirectly/directly by listed tests",
+      "number": "String conversion source-only; preserve in proposed bounded compatibility policy, add tests",
+      "boolean": "String conversion source-only, including false retained; add tests",
+      "nullOrMissing": "Per-field nullish fallback source; missing story/name/episode fields exercised, explicit null mostly gap",
+      "empty": "Preserved by ??; title/slot empty valid fixtures, per-known-field raw empty matrix absent",
+      "object": "Object default stringification source-only; no affirmative compatibility test found; proposed external path error/local text fallback",
+      "array": "JS String(array) source-only including comma/empty/join artifacts; unknown extras arrays tested separately; proposed known-text malformed policy"
+    },
+    {
+      "family": "Modern original episode/beat FKs",
+      "string": "Valid local string ownership covered; unknown/cross scope rejected",
+      "number": "numeric episodeId rejects; numeric coerced beat cannot satisfy FK; collisions7/\"7\" rejected",
+      "boolean": "Modern episode rejects by source; false beat skips truthy optional validation (not tested)",
+      "nullOrMissing": "Modern episode absent/null reject explicitly tested; no-episodes legacy synthesize branch supported",
+      "empty": "Modern episode empty rejects explicitly tested; empty beat absent source-only",
+      "object": "Truthy object cannot satisfy modern string FK by source; explicit fixture gap",
+      "array": "Same source rejection/gap; episodes outer [] separately supported legacy"
+    },
+    {
+      "family": "Slots result/legacy media IDs and reference members",
+      "string": "Current/legacy string media ownership and remap tested",
+      "number": "Truthy values converted source-only;0 result absent while references mapString -> \"0\"",
+      "boolean": "true result converted, false result absent; array references both convert source-only",
+      "nullOrMissing": "Empty slot defaults tested indirectly; references mapString null -> \"null\" source-only",
+      "empty": "Result absent; prompt empty supports legacy prompt fallback; arrays members currently preserve empty",
+      "object": "Raw slot object canonical; object-valued prompt/ID not tested; compound ID aliases unsafe",
+      "array": "Reference arrays of genuine string IDs supported; compound members and array-valued result IDs untested"
+    },
+    {
+      "family": "Extensions and generation defaults",
+      "string": "OptionalText fields strict new contracts; future model strings explicitly retained",
+      "number": "unknownProject42 preserved, not stringified",
+      "boolean": "Nested retained:true extension tested",
+      "nullOrMissing": "Absent optional/new fields supported; styleId null explicit no-style tested",
+      "empty": "Do not add trimming/nonblank restrictions to legacy fields",
+      "object": "extra nested structure + defaults schema object preserved explicitly tested",
+      "array": "extra palette/unknownShot arrays preserved explicitly tested; propIds requires string array"
+    },
+    {
+      "family": "Agent labels/CSV",
+      "string": "Label truncation, exact names/search and CSV quoting covered",
+      "number": "CSV producer order/duration uses numbers; exact direct conversion assertion gap",
+      "boolean": "No supported production label or CSV boolean caller demonstrated",
+      "nullOrMissing": "Existing fallback via ?? source; empty labels fixture/owned fields canonical",
+      "empty": "Do not replace nullish fallback with truthy fallback",
+      "object": "No label-object compatibility evidence; choose typed reads or explicit new recovery",
+      "array": "No label-array compatibility evidence; no JSON fallback"
+    }
+  ],
+  "existingTestCoverage": [
+    {
+      "path": "tests/projectPackage.test.ts",
+      "line": 18,
+      "sha256": "e96f763faea5c75fdfd32aeee658deadb62ee1ec70b7570eecf2bcd8d68417f7",
+      "name": "remaps episode filter beats from %s legacy project preferences",
+      "proves": "Per-episode equal original beat IDs remap independently; stale filters prune; none retained; repeat roundtrip",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/projectPackage.test.ts",
+      "line": 47,
+      "sha256": "e96f763faea5c75fdfd32aeee658deadb62ee1ec70b7570eecf2bcd8d68417f7",
+      "name": "migrates project filters in a package predating episodes",
+      "proves": "Missing episodes synthesizes one episode; project legacy beats/filters move to episode scope",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/projectPackage.test.ts",
+      "line": 92,
+      "sha256": "e96f763faea5c75fdfd32aeee658deadb62ee1ec70b7570eecf2bcd8d68417f7",
+      "name": "round-trips props, styles, nested extra data, and inferred media MIME",
+      "proves": "Nested object and array extension payloads retained; string slot result media remapped; typed exported rows accepted",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/projectPackage.test.ts",
+      "line": 120,
+      "sha256": "e96f763faea5c75fdfd32aeee658deadb62ee1ec70b7570eecf2bcd8d68417f7",
+      "name": "round-trips all four snapshot types with source metadata",
+      "proves": "extra.sourceAssetId remains original studio source identity; copied media gets imported project ownership",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/projectPackage.test.ts",
+      "line": 166,
+      "sha256": "e96f763faea5c75fdfd32aeee658deadb62ee1ec70b7570eecf2bcd8d68417f7",
+      "name": "round-trips series mode and treats a missing legacy mode as series",
+      "proves": "Missing legacy mode -> series, aspect 16:9, no cover, workspace design",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/projectPackage.test.ts",
+      "line": 183,
+      "sha256": "e96f763faea5c75fdfd32aeee658deadb62ee1ec70b7570eecf2bcd8d68417f7",
+      "name": "round-trips aspect preset and cover media that is only referenced by the project",
+      "proves": "String cover ID remapped; imported cover bytes/MIME/owner retained",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/projectPackage.test.ts",
+      "line": 215,
+      "sha256": "e96f763faea5c75fdfd32aeee658deadb62ee1ec70b7570eecf2bcd8d68417f7",
+      "name": "round-trips shot status and defaults missing status to draft",
+      "proves": "Missing legacy status defaults draft; missing episode shot still imports",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/projectPackage.test.ts",
+      "line": 251,
+      "sha256": "e96f763faea5c75fdfd32aeee658deadb62ee1ec70b7570eecf2bcd8d68417f7",
+      "name": "remaps legacy beat ids within each episode scope",
+      "proves": "String beat identities same in separate episodes remain separate after remap",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/projectPackage.test.ts",
+      "line": 289,
+      "sha256": "e96f763faea5c75fdfd32aeee658deadb62ee1ec70b7570eecf2bcd8d68417f7",
+      "name": "rejects invalid optional JSON before writing any records",
+      "proves": "Malformed JSON characters file rejected; projects count unchanged, not a scalar shape test",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/projectPackageRelations.test.ts",
+      "line": 77,
+      "sha256": "c3f5ef49fcd4ace15806ac2c0ed89f8a3a27693d2d68b6330d0955ceaac4fede",
+      "name": "rejects $name without changing any existing table",
+      "proves": "Cases lines49-73: missing/null/empty/numeric/foreign modern episodeId; cross-episode/unknown beats; duplicate IDs; 7 versus \"7\" collisions; synthesized collision; coerced numeric beat cannot satisfy original FK",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/projectPackageRelations.test.ts",
+      "line": 85,
+      "sha256": "c3f5ef49fcd4ace15806ac2c0ed89f8a3a27693d2d68b6330d0955ceaac4fede",
+      "name": "roundtrips valid modern links, episode-scoped equal beat IDs and unknown extra fields",
+      "proves": "Unique unreferenced missing-identity beat supported; numeric unknownProject and object/array unknown fields retained in extra",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/projectPackageRelations.test.ts",
+      "line": 111,
+      "sha256": "c3f5ef49fcd4ace15806ac2c0ed89f8a3a27693d2d68b6330d0955ceaac4fede",
+      "name": "rolls back every imported row and media on a storage failure after parent insertion",
+      "proves": "Injected shot creating failure leaves all tables identical",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/projectPackageRelations.test.ts",
+      "line": 126,
+      "sha256": "c3f5ef49fcd4ace15806ac2c0ed89f8a3a27693d2d68b6330d0955ceaac4fede",
+      "name": "retains legacy first-episode and synthesized-beat roundtrip for episodes=%j",
+      "proves": "Both undefined and [] episodes accepted; old-unknown-episode overridden in legacy branch; generated beat_0 resolves legacy shot; repeat roundtrip",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/assetFoundation.test.ts",
+      "line": 138,
+      "sha256": "b4e1be5f90e014e7483bc69d6204075b64455509f6c20fb0c93853a557241ec5",
+      "name": "round trips optional data/settings and remaps default/override/prop references",
+      "proves": "New optional creative string fields accepted; inherited undefined/explicit/null styles preserved; prop/default IDs remapped",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/assetFoundation.test.ts",
+      "line": 167,
+      "sha256": "b4e1be5f90e014e7483bc69d6204075b64455509f6c20fb0c93853a557241ec5",
+      "name": "retains unsupported generation profiles but removes foreign package references",
+      "proves": "Future string model/profile/size preserved; missing explicit style becomes null; inherited stays undefined; props prune; defaults remain editable",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/assetFoundation.test.ts",
+      "line": 185,
+      "sha256": "b4e1be5f90e014e7483bc69d6204075b64455509f6c20fb0c93853a557241ec5",
+      "name": "rejects malformed relation fields atomically",
+      "proves": "propIds string and styleId number42 reject; this supports strict new relation fields, not all legacy text fields",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/auditDataIntegrity.test.ts",
+      "line": 58,
+      "sha256": "e2e5ba3bb923aa228a9d92dbefafb6b1723c72443a76f28be1bdad3b599ba34c",
+      "name": "migrates a real v1 store with legacy frame/reference media to the current schema",
+      "proves": "Real Dexie v1 upgrade restores generated episode owner, old script, frame result, reference-as-image-reference; no frameMediaId/referenceMediaId scalar fixture",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/repo.test.ts",
+      "line": 176,
+      "sha256": "3a052236d703b9378911882cc2668099d3098dfdcde9afc2d998fa11262defd6",
+      "name": "preserves beat fields while saving episode text drafts",
+      "proves": "Concurrent episode script/title update and beat content patch preserve both",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/repo.test.ts",
+      "line": 194,
+      "sha256": "3a052236d703b9378911882cc2668099d3098dfdcde9afc2d998fa11262defd6",
+      "name": "creates a beat from a UTF-16 script range and removes a stale association",
+      "proves": "Emoji excerpt UTF-16 range accepted; script edit drops range but retains beat content; invalid negative/empty range omitted",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/d08TextDraftRepository.test.ts",
+      "line": 35,
+      "sha256": "b330e7270ed33fb10cbad92abcf75cd1bf06aec09c9264d92b2b559d1833a528",
+      "name": "serializes competing baseline writers and rolls back the whole patch on a conflict",
+      "proves": "One competing writer succeeds; stale multi-field patch rolls back episode/project",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/d08TextDraftRepository.test.ts",
+      "line": 59,
+      "sha256": "b330e7270ed33fb10cbad92abcf75cd1bf06aec09c9264d92b2b559d1833a528",
+      "name": "keeps old nontext behavior and normalizes an absent optional text baseline",
+      "proves": "undefined timeOfDay can save using empty baseline; scriptRange and characterIds remain supported; not malformed object coercion support",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/agentBusiness.test.ts",
+      "line": 53,
+      "sha256": "645b62a3d2c63363c7d04c7a24c7553672eae165a6f26f6d41040bf30f06b1c5",
+      "name": "records actual %s project seeds and replays the exact saved receipt",
+      "proves": "Long valid string label truncates to160; exact stored IDs/revisions and replay; project/audio/music initial seeds",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/agentBusiness.test.ts",
+      "line": 173,
+      "sha256": "645b62a3d2c63363c7d04c7a24c7553672eae165a6f26f6d41040bf30f06b1c5",
+      "name": "rolls back business writes when receipt construction fails",
+      "proves": "Receipt error inside atomic write rolls back business and ledger",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/agentBusiness.test.ts",
+      "line": 290,
+      "sha256": "645b62a3d2c63363c7d04c7a24c7553672eae165a6f26f6d41040bf30f06b1c5",
+      "name": "creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion",
+      "proves": "Real owned labels, relation previews, shot/beat/episode complete reorders and cascade relation cleanup; exact label malformed output not asserted",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/agentBusiness.test.ts",
+      "line": 377,
+      "sha256": "645b62a3d2c63363c7d04c7a24c7553672eae165a6f26f6d41040bf30f06b1c5",
+      "name": "revalidates target and delete cascade after approval without overwriting user changes",
+      "proves": "Changed content/relations invalidate approval snapshot",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/agentBusiness.test.ts",
+      "line": 426,
+      "sha256": "645b62a3d2c63363c7d04c7a24c7553672eae165a6f26f6d41040bf30f06b1c5",
+      "name": "pages scoped searches and long text without exposing blobs/extensions/credentials",
+      "proves": "Valid authored strings search/page; bounded detail; extra secrets excluded",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/imageDiscovery.test.ts",
+      "line": 85,
+      "sha256": "0380a7542614fd7dfc5efee54232417ff259d4d6564a230ad0e5583af61f455e",
+      "name": "prefers exact project names, exact shot numbers, exposes missing current slots instead of substituting references",
+      "proves": "String shot numbers/name lookup and current/reference distinction",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/imageDiscovery.test.ts",
+      "line": 96,
+      "sha256": "0380a7542614fd7dfc5efee54232417ff259d4d6564a230ad0e5583af61f455e",
+      "name": "keeps repeated shot numbers and separate slots explicit with stable pagination",
+      "proves": "Identity remains episode/entity/slot based, not display label",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/imageDiscovery.test.ts",
+      "line": 119,
+      "sha256": "0380a7542614fd7dfc5efee54232417ff259d4d6564a230ad0e5583af61f455e",
+      "name": "rejects stale replacement, absent/foreign/cross-run discovery IDs and raw unbound media access",
+      "proves": "Source identity/current slot changes invalidate original discovery access",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/imageDiscovery.test.ts",
+      "line": 161,
+      "sha256": "0380a7542614fd7dfc5efee54232417ff259d4d6564a230ad0e5583af61f455e",
+      "name": "blocks slot replacement during the final asynchronous digest validation",
+      "proves": "Final materialization rechecks association; must survive any label narrowing",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/episodeDelivery.test.ts",
+      "line": 124,
+      "sha256": "abce7785daf5fef73f81fc15490022c954e1cf381ec9c4bdfd2286327f370224",
+      "name": "scopes and orders rows while resolving asset and beat names",
+      "proves": "String category column; local graph/scoped rows; total duration5 implies two2.5 durations",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/episodeDelivery.test.ts",
+      "line": 221,
+      "sha256": "abce7785daf5fef73f81fc15490022c954e1cf381ec9c4bdfd2286327f370224",
+      "name": "writes BOM-prefixed RFC 4180 rows and a safe filename",
+      "proves": "BOM, quotes,newlines,CRLF and safe filename; only direct escapeCsvCell string assertion",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    },
+    {
+      "path": "tests/d06Capabilities.test.ts",
+      "line": 55,
+      "sha256": "6a80ad83d97a24df1481b91c3aa64d18defb5c68eaab327a6167e8ef5f6c54ac",
+      "name": "preserves project defaults, permissive imports and accumulated diagnostics",
+      "proves": "Future supported import profiles and extra object/native keys kept; separate from arbitrary text coercion",
+      "execution": "read-existing-assertions-only; not run in this preparation"
+    }
+  ],
+  "limitations": [
+    "No tests, typecheck, lint, build, native measurement, dependency tooling, install, network or paid requests executed; coverage means existing assertions inspected, not fresh PASS.",
+    "Historical76 count/rule entries remain historical. All76 source-location recommendations use current hashed bytes; counts may change under final supported E07 tool versions.",
+    "Historical baseline omitted vendor/lobehub/manifest.json and produces six unresolved modelBank member-access errors; not a coercion-source fix and not credited here.",
+    "No exhaustive repository-wide malformed fixture proof. Searches bounded to tests, known package/import/migration/normalizer and nine historical owners. Missing affirmative test is stated as not found in inspected tests, not proof no user ever imported that shape.",
+    "No JSON field-by-field published versioned schema found in examined README/spec; README canonical ZIP format and domain interfaces/production contracts establish canonical string records and legacy branching, not every scalar acceptance.",
+    "Observed local read hashes/dates available in read-manifest; copied snapshots are research provenance only, not production tests or baseline producers.",
+    "Read-only source may be concurrently edited; final drift check records current state only and cannot certify E06 acceptance/E07 activation."
+  ],
+  "failures": [
+    {
+      "kind": "read/search",
+      "operation": "zsh glob tests/business** in a search command",
+      "result": "no matches found; search command returned1",
+      "resolution": "Used rg --files to discover actual existing test files, then explicit paths; no dependency command executed."
+    },
+    {
+      "kind": "read",
+      "operation": "capture_read.py src/db/draftBaseline.ts",
+      "result": "FileNotFoundError; no source changed; batch failed before subsequent reads",
+      "resolution": "rg showed import owner src/lib/draftConflict.ts; read and hashed correct file and reran remaining dependent reads."
+    },
+    {
+      "kind": "output-budget",
+      "operation": "Large combined prerequisite/current-source reads",
+      "result": "Tool output repeatedly truncated; metadata/read snapshots preserved after capture script started",
+      "resolution": "Re-read critical source/test ranges in smaller calls; exact bytes stored under content-addressed snapshots. Full large prerequisite text initially inspected only as bounded excerpts; no test results inferred from it."
+    }
+  ],
+  "readEvidence": {
+    "manifest": "e07-coercion-contracts/read-manifest.json",
+    "snapshots": "e07-coercion-contracts/snapshots/<sha256>",
+    "driftCheck": "e07-coercion-contracts/read-drift-check.json",
+    "files": [
+      {
+        "path": ".trellis/spec/frontend/asset-output-foundation.md",
+        "sha256": "00a4cdd87104c3d5d125bc9860dedb03665f93ff834102aa86efd26b4f30ffff",
+        "bytes": 16420,
+        "readAtUtc": "2026-10-09T06:45:59.200577+00:00",
+        "mtimeUtc": "2026-10-08T08:12:31.379862+00:00",
+        "snapshot": "snapshots/00a4cdd87104c3d5d125bc9860dedb03665f93ff834102aa86efd26b4f30ffff",
+        "displayedSelection": "13:35"
+      },
+      {
+        "path": ".trellis/spec/frontend/component-guidelines.md",
+        "sha256": "91a004c2bf8d91fb297bda0dcae8eb4c368680ecc5c770bf898f627a14b4179e",
+        "bytes": 30075,
+        "readAtUtc": "2026-10-09T06:53:17.658864+00:00",
+        "mtimeUtc": "2026-10-09T03:14:53.592803+00:00",
+        "snapshot": "snapshots/91a004c2bf8d91fb297bda0dcae8eb4c368680ecc5c770bf898f627a14b4179e",
+        "displayedSelection": "153:198"
+      },
+      {
+        "path": ".trellis/spec/frontend/production-contracts.md",
+        "sha256": "833ce735ef4182983e790e00f08aedafd5029cf845fbe3f47c450f8a5fc45986",
+        "bytes": 10641,
+        "readAtUtc": "2026-10-09T06:48:00.201693+00:00",
+        "mtimeUtc": "2026-10-08T08:11:30.387947+00:00",
+        "snapshot": "snapshots/833ce735ef4182983e790e00f08aedafd5029cf845fbe3f47c450f8a5fc45986",
+        "displayedSelection": "1:85"
+      },
+      {
+        "path": ".trellis/spec/frontend/quality-guidelines.md",
+        "sha256": "b6056b07c309dfcd76c9552f68848601efe0979280a21f328be216c1025f9cf6",
+        "bytes": 14078,
+        "readAtUtc": "2026-10-09T06:52:57.035419+00:00",
+        "mtimeUtc": "2026-10-08T08:31:18.550327+00:00",
+        "snapshot": "snapshots/b6056b07c309dfcd76c9552f68848601efe0979280a21f328be216c1025f9cf6",
+        "displayedSelection": "1:95"
+      },
+      {
+        "path": ".trellis/spec/frontend/state-management.md",
+        "sha256": "042dd9215864684a9827300385a921549a3214f2369b31704d8b519da96e77bb",
+        "bytes": 66816,
+        "readAtUtc": "2026-10-09T06:45:59.200135+00:00",
+        "mtimeUtc": "2026-10-09T05:36:56.239697+00:00",
+        "snapshot": "snapshots/042dd9215864684a9827300385a921549a3214f2369b31704d8b519da96e77bb",
+        "displayedSelection": "775:806"
+      },
+      {
+        "path": ".trellis/spec/frontend/type-safety.md",
+        "sha256": "e238aa9e9af53b671bd79e850b352ccca544af2179e9ad9c18ee3014503f0746",
+        "bytes": 5097,
+        "readAtUtc": "2026-10-09T06:53:08.315795+00:00",
+        "mtimeUtc": "2026-10-08T05:49:19.051208+00:00",
+        "snapshot": "snapshots/e238aa9e9af53b671bd79e850b352ccca544af2179e9ad9c18ee3014503f0746",
+        "displayedSelection": "117:135"
+      },
+      {
+        "path": ".trellis/tasks/10-09-src-remediation-e/check.jsonl",
+        "sha256": "b6bdd476ee0f40f55cdcc3f4f89476b8ca58d21800de836e8f8e7f162476796f",
+        "bytes": 2345,
+        "readAtUtc": "2026-10-09T07:04:02.311778+00:00",
+        "mtimeUtc": "2026-10-09T07:00:39.790691+00:00",
+        "snapshot": "snapshots/b6bdd476ee0f40f55cdcc3f4f89476b8ca58d21800de836e8f8e7f162476796f",
+        "displayedSelection": "1:14"
+      },
+      {
+        "path": ".trellis/tasks/10-09-src-remediation-e/design.md",
+        "sha256": "654d8ef35d49e8e5afb69ba50bd43faf640bd558bf4a8b0c50080f6f0ea351b0",
+        "bytes": 5647,
+        "readAtUtc": "2026-10-09T06:41:27.248648+00:00",
+        "mtimeUtc": "2026-10-09T01:20:48.654639+00:00",
+        "snapshot": "snapshots/654d8ef35d49e8e5afb69ba50bd43faf640bd558bf4a8b0c50080f6f0ea351b0",
+        "displayedSelection": "all"
+      },
+      {
+        "path": ".trellis/tasks/10-09-src-remediation-e/implement.jsonl",
+        "sha256": "00c26af13fd52be3916509a641671cfa7da33ab8921fd1ee633b045ea1b09d2a",
+        "bytes": 1773,
+        "readAtUtc": "2026-10-09T06:41:21.018690+00:00",
+        "mtimeUtc": "2026-10-09T06:11:04.011300+00:00",
+        "snapshot": "snapshots/00c26af13fd52be3916509a641671cfa7da33ab8921fd1ee633b045ea1b09d2a",
+        "displayedSelection": "all"
+      },
+      {
+        "path": ".trellis/tasks/10-09-src-remediation-e/implement.md",
+        "sha256": "8b5adb94e603cd7ca231a825a81bded1b49541d60e4f3fe53985797caf7e7cac",
+        "bytes": 4599,
+        "readAtUtc": "2026-10-09T06:41:32.575137+00:00",
+        "mtimeUtc": "2026-10-09T06:11:03.883206+00:00",
+        "snapshot": "snapshots/8b5adb94e603cd7ca231a825a81bded1b49541d60e4f3fe53985797caf7e7cac",
+        "displayedSelection": "1:200"
+      },
+      {
+        "path": ".trellis/tasks/10-09-src-remediation-e/prd.md",
+        "sha256": "6d5494ea626cc7cb2bfb21f26cf4580890a069221a4f033dee5b4f1a2f44d148",
+        "bytes": 12036,
+        "readAtUtc": "2026-10-09T06:41:21.019097+00:00",
+        "mtimeUtc": "2026-10-09T01:20:48.654564+00:00",
+        "snapshot": "snapshots/6d5494ea626cc7cb2bfb21f26cf4580890a069221a4f033dee5b4f1a2f44d148",
+        "displayedSelection": "all"
+      },
+      {
+        "path": ".trellis/tasks/10-09-src-remediation-e/research/E07-entry-diagnostic-review-candidates.json",
+        "sha256": "b67664b47aa85d8b45bf0dab9c42642b7ff6a48637c0deb8d6eba44f8e44bd6e",
+        "bytes": 226105,
+        "readAtUtc": "2026-10-09T06:41:58.697955+00:00",
+        "mtimeUtc": "2026-10-09T02:43:25.691875+00:00",
+        "snapshot": "snapshots/b67664b47aa85d8b45bf0dab9c42642b7ff6a48637c0deb8d6eba44f8e44bd6e",
+        "displayedSelection": "hash"
+      },
+      {
+        "path": ".trellis/tasks/10-09-src-remediation-e/research/E07-execution-boundaries.md",
+        "sha256": "6c99cb5762b3ea2519cd807c16899bcd9438d2934d8931c4682a154d3cd83958",
+        "bytes": 6315,
+        "readAtUtc": "2026-10-09T06:53:08.315551+00:00",
+        "mtimeUtc": "2026-10-09T06:28:38.154350+00:00",
+        "snapshot": "snapshots/6c99cb5762b3ea2519cd807c16899bcd9438d2934d8931c4682a154d3cd83958",
+        "displayedSelection": "all"
+      },
+      {
+        "path": ".trellis/tasks/10-09-src-remediation-e/research/E07-historical-baseline-import-closure-qualification.json",
+        "sha256": "b8b1abf422f0f3a3454d75b04f529eb4364ba6a175391c9110ad7868050a2bf5",
+        "bytes": 4466,
+        "readAtUtc": "2026-10-09T06:41:39.593559+00:00",
+        "mtimeUtc": "2026-10-09T06:14:31.663659+00:00",
+        "snapshot": "snapshots/b8b1abf422f0f3a3454d75b04f529eb4364ba6a175391c9110ad7868050a2bf5",
+        "displayedSelection": "all"
+      },
+      {
+        "path": ".trellis/tasks/10-09-src-remediation-e/research/E07-rule-interpretation-preparation.json",
+        "sha256": "a17c5021fe462315019f151694cf3a820dd68326439c5cafdf0e9e24115b10f5",
+        "bytes": 3350,
+        "readAtUtc": "2026-10-09T06:41:58.696628+00:00",
+        "mtimeUtc": "2026-10-09T02:47:23.068433+00:00",
+        "snapshot": "snapshots/a17c5021fe462315019f151694cf3a820dd68326439c5cafdf0e9e24115b10f5",
+        "displayedSelection": "all"
+      },
+      {
+        "path": ".trellis/workflow.md",
+        "sha256": "eb4508a4f6792f3d53705c1f9e7d21807dabd774543bd7b01f56372a704f6ad0",
+        "bytes": 39348,
+        "readAtUtc": "2026-10-09T06:41:21.018244+00:00",
+        "mtimeUtc": "2026-09-30T01:58:41.506575+00:00",
+        "snapshot": "snapshots/eb4508a4f6792f3d53705c1f9e7d21807dabd774543bd7b01f56372a704f6ad0",
+        "displayedSelection": "1:170"
+      },
+      {
+        "path": "README.md",
+        "sha256": "c47f13d67ce7d27677c52ea67f6eeb60fb74711c831bee7b1618d5c84b72c0e1",
+        "bytes": 25483,
+        "readAtUtc": "2026-10-09T06:45:33.894286+00:00",
+        "mtimeUtc": "2026-09-22T07:43:13.411436+00:00",
+        "snapshot": "snapshots/c47f13d67ce7d27677c52ea67f6eeb60fb74711c831bee7b1618d5c84b72c0e1",
+        "displayedSelection": "125:155"
+      },
+      {
+        "path": "src/components/studio/importStudioProject.ts",
+        "sha256": "0e1fead05919ca6de4ea3b975aa71bfeae7cafdf26f1abd51127a2d1d1ef65dd",
+        "bytes": 421,
+        "readAtUtc": "2026-10-09T06:45:33.894797+00:00",
+        "mtimeUtc": "2026-10-08T03:13:14.870258+00:00",
+        "snapshot": "snapshots/0e1fead05919ca6de4ea3b975aa71bfeae7cafdf26f1abd51127a2d1d1ef65dd",
+        "displayedSelection": "all"
+      },
+      {
+        "path": "src/db/database.ts",
+        "sha256": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+        "bytes": 14135,
+        "readAtUtc": "2026-10-09T06:42:48.051694+00:00",
+        "mtimeUtc": "2026-09-30T01:48:34.187000+00:00",
+        "snapshot": "snapshots/9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+        "displayedSelection": "94:195"
+      },
+      {
+        "path": "src/db/episodes.ts",
+        "sha256": "294a068ed80118b5b8b8ab1009e9a8cd0624ddfd91030de783de49f861f65a11",
+        "bytes": 17092,
+        "readAtUtc": "2026-10-09T06:47:25.770438+00:00",
+        "mtimeUtc": "2026-10-09T04:23:04.473092+00:00",
+        "snapshot": "snapshots/294a068ed80118b5b8b8ab1009e9a8cd0624ddfd91030de783de49f861f65a11",
+        "displayedSelection": "210:244"
+      },
+      {
+        "path": "src/db/media.ts",
+        "sha256": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+        "bytes": 7425,
+        "readAtUtc": "2026-10-09T06:48:07.304911+00:00",
+        "mtimeUtc": "2026-10-09T04:23:04.472668+00:00",
+        "snapshot": "snapshots/73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+        "displayedSelection": "1:100"
+      },
+      {
+        "path": "src/db/projects.ts",
+        "sha256": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+        "bytes": 10448,
+        "readAtUtc": "2026-10-09T06:47:25.770514+00:00",
+        "mtimeUtc": "2026-10-08T02:38:30.720506+00:00",
+        "snapshot": "snapshots/ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+        "displayedSelection": "189:217"
+      },
+      {
+        "path": "src/db/shots.ts",
+        "sha256": "a2fa075f0284959659c369b3657cb615d2d10581dbdbef9b1b76479bb2f1a926",
+        "bytes": 19489,
+        "readAtUtc": "2026-10-09T06:47:10.336196+00:00",
+        "mtimeUtc": "2026-10-09T04:23:04.472844+00:00",
+        "snapshot": "snapshots/a2fa075f0284959659c369b3657cb615d2d10581dbdbef9b1b76479bb2f1a926",
+        "displayedSelection": "69:138"
+      },
+      {
+        "path": "src/domain/columns.ts",
+        "sha256": "935e78ed2ebdf5b11733d3cc0fd15ffea10896eb71f3058fbae4f31e9c1120e7",
+        "bytes": 1401,
+        "readAtUtc": "2026-10-09T06:46:40.286109+00:00",
+        "mtimeUtc": "2026-09-30T01:48:34.806000+00:00",
+        "snapshot": "snapshots/935e78ed2ebdf5b11733d3cc0fd15ffea10896eb71f3058fbae4f31e9c1120e7",
+        "displayedSelection": "1:125"
+      },
+      {
+        "path": "src/domain/slot.ts",
+        "sha256": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+        "bytes": 5297,
+        "readAtUtc": "2026-10-09T06:42:30.628894+00:00",
+        "mtimeUtc": "2026-09-30T04:05:42.448703+00:00",
+        "snapshot": "snapshots/13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+        "displayedSelection": "109:160"
+      },
+      {
+        "path": "src/domain/types.ts",
+        "sha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+        "bytes": 16260,
+        "readAtUtc": "2026-10-09T06:53:08.316219+00:00",
+        "mtimeUtc": "2026-09-30T01:48:34.734000+00:00",
+        "snapshot": "snapshots/ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+        "displayedSelection": "333:364"
+      },
+      {
+        "path": "src/lib/agent/businessStore.ts",
+        "sha256": "53571ee862b15d05e4782048c5f393b7afe50132f1f3983cccb375ab10d99bcc",
+        "bytes": 20227,
+        "readAtUtc": "2026-10-09T06:48:07.305408+00:00",
+        "mtimeUtc": "2026-10-08T05:00:15.581592+00:00",
+        "snapshot": "snapshots/53571ee862b15d05e4782048c5f393b7afe50132f1f3983cccb375ab10d99bcc",
+        "displayedSelection": "318:334"
+      },
+      {
+        "path": "src/lib/agent/businessTools.ts",
+        "sha256": "0aad3a5e1d3792952da4980ed003aa863e3ecb9e87bdc30cab4bef6d18e63274",
+        "bytes": 50988,
+        "readAtUtc": "2026-10-09T06:48:35.858578+00:00",
+        "mtimeUtc": "2026-10-08T05:22:21.561506+00:00",
+        "snapshot": "snapshots/0aad3a5e1d3792952da4980ed003aa863e3ecb9e87bdc30cab4bef6d18e63274",
+        "displayedSelection": "1:60"
+      },
+      {
+        "path": "src/lib/agent/businessWriteReceipt.ts",
+        "sha256": "626537317a0c0a239c66b4c1b756251faead3eb400690a69274ce63cbf693096",
+        "bytes": 7062,
+        "readAtUtc": "2026-10-09T06:46:05.040932+00:00",
+        "mtimeUtc": "2026-09-30T01:48:33.323000+00:00",
+        "snapshot": "snapshots/626537317a0c0a239c66b4c1b756251faead3eb400690a69274ce63cbf693096",
+        "displayedSelection": "1:96"
+      },
+      {
+        "path": "src/lib/agent/imageDiscovery.ts",
+        "sha256": "fc8571b38c847e6ed4e0504bd04d3f5140a6772a202d94fc7b4261292f95bc58",
+        "bytes": 18633,
+        "readAtUtc": "2026-10-09T06:53:30.787612+00:00",
+        "mtimeUtc": "2026-09-30T01:48:33.098000+00:00",
+        "snapshot": "snapshots/fc8571b38c847e6ed4e0504bd04d3f5140a6772a202d94fc7b4261292f95bc58",
+        "displayedSelection": "210:227"
+      },
+      {
+        "path": "src/lib/draftConflict.ts",
+        "sha256": "2e94acd524fa20eeb3053f8631852a9d5275d8a2c6698718577dd9bc1a3e5e66",
+        "bytes": 2143,
+        "readAtUtc": "2026-10-09T06:47:25.770014+00:00",
+        "mtimeUtc": "2026-09-30T04:05:42.449034+00:00",
+        "snapshot": "snapshots/2e94acd524fa20eeb3053f8631852a9d5275d8a2c6698718577dd9bc1a3e5e66",
+        "displayedSelection": "all"
+      },
+      {
+        "path": "src/lib/episodeDelivery.ts",
+        "sha256": "c30e1b84647ec5f8801bb62cd5d3a84c9678bea3361ca00b787d144a6a2e6b8b",
+        "bytes": 6439,
+        "readAtUtc": "2026-10-09T06:46:40.285641+00:00",
+        "mtimeUtc": "2026-09-30T01:48:35.836000+00:00",
+        "snapshot": "snapshots/c30e1b84647ec5f8801bb62cd5d3a84c9678bea3361ca00b787d144a6a2e6b8b",
+        "displayedSelection": "140:210"
+      },
+      {
+        "path": "src/lib/packages/audioPackageCodec.ts",
+        "sha256": "e9efd6af64d536bb6319be184d9d550e5f6e316f9e3954927472db0348e2e1ac",
+        "bytes": 10832,
+        "readAtUtc": "2026-10-09T06:53:30.787056+00:00",
+        "mtimeUtc": "2026-10-08T08:18:34.150750+00:00",
+        "snapshot": "snapshots/e9efd6af64d536bb6319be184d9d550e5f6e316f9e3954927472db0348e2e1ac",
+        "displayedSelection": "161:200"
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "bytes": 30203,
+        "readAtUtc": "2026-10-09T06:48:00.201085+00:00",
+        "mtimeUtc": "2026-10-08T03:13:33.473335+00:00",
+        "snapshot": "snapshots/132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+        "displayedSelection": "31:54"
+      },
+      {
+        "path": "src/lib/productionRevision.ts",
+        "sha256": "0cb3b87c2abafef9e3695de699c603fd2a8420e229693879e7d7417e88e9f8cc",
+        "bytes": 5253,
+        "readAtUtc": "2026-10-09T06:47:10.335332+00:00",
+        "mtimeUtc": "2026-09-30T01:48:33.518000+00:00",
+        "snapshot": "snapshots/0cb3b87c2abafef9e3695de699c603fd2a8420e229693879e7d7417e88e9f8cc",
+        "displayedSelection": "all"
+      },
+      {
+        "path": "src/lib/projectPackage.ts",
+        "sha256": "ad99f320cc1908b8f1bc70c32103b50f36eb3a2d2765e42ebda385c9709bc4c4",
+        "bytes": 13632,
+        "readAtUtc": "2026-10-09T06:48:44.141824+00:00",
+        "mtimeUtc": "2026-10-08T03:13:14.871879+00:00",
+        "snapshot": "snapshots/ad99f320cc1908b8f1bc70c32103b50f36eb3a2d2765e42ebda385c9709bc4c4",
+        "displayedSelection": "139:184"
+      },
+      {
+        "path": "src/lib/references/package.ts",
+        "sha256": "6764acaf39fb0d424d30e81265cde8e5c7d6ea5f6b644f38ffefb18c44dc27d2",
+        "bytes": 5923,
+        "readAtUtc": "2026-10-09T06:53:17.659698+00:00",
+        "mtimeUtc": "2026-09-30T01:48:33.624000+00:00",
+        "snapshot": "snapshots/6764acaf39fb0d424d30e81265cde8e5c7d6ea5f6b644f38ffefb18c44dc27d2",
+        "displayedSelection": "1:70"
+      },
+      {
+        "path": "src/routes/_studio.tsx",
+        "sha256": "ba052a2d1170a52f3d37835920a6b5af18fde9b035c3d44c38946355cdc5c4ab",
+        "bytes": 923,
+        "readAtUtc": "2026-10-09T06:47:25.770589+00:00",
+        "mtimeUtc": "2026-10-08T03:13:14.870509+00:00",
+        "snapshot": "snapshots/ba052a2d1170a52f3d37835920a6b5af18fde9b035c3d44c38946355cdc5c4ab",
+        "displayedSelection": "1:30"
+      },
+      {
+        "path": "tests/agentBusiness.test.ts",
+        "sha256": "645b62a3d2c63363c7d04c7a24c7553672eae165a6f26f6d41040bf30f06b1c5",
+        "bytes": 43373,
+        "readAtUtc": "2026-10-09T07:04:02.312185+00:00",
+        "mtimeUtc": "2026-10-08T05:10:25.726498+00:00",
+        "snapshot": "snapshots/645b62a3d2c63363c7d04c7a24c7553672eae165a6f26f6d41040bf30f06b1c5",
+        "displayedSelection": "290:360"
+      },
+      {
+        "path": "tests/assetFoundation.test.ts",
+        "sha256": "b4e1be5f90e014e7483bc69d6204075b64455509f6c20fb0c93853a557241ec5",
+        "bytes": 13770,
+        "readAtUtc": "2026-10-09T06:48:00.201833+00:00",
+        "mtimeUtc": "2026-10-08T02:34:59.199160+00:00",
+        "snapshot": "snapshots/b4e1be5f90e014e7483bc69d6204075b64455509f6c20fb0c93853a557241ec5",
+        "displayedSelection": "129:151"
+      },
+      {
+        "path": "tests/auditDataIntegrity.test.ts",
+        "sha256": "e2e5ba3bb923aa228a9d92dbefafb6b1723c72443a76f28be1bdad3b599ba34c",
+        "bytes": 5099,
+        "readAtUtc": "2026-10-09T06:45:59.198741+00:00",
+        "mtimeUtc": "2026-10-08T02:34:59.204648+00:00",
+        "snapshot": "snapshots/e2e5ba3bb923aa228a9d92dbefafb6b1723c72443a76f28be1bdad3b599ba34c",
+        "displayedSelection": "58:110"
+      },
+      {
+        "path": "tests/d05BusinessBranches.test.ts",
+        "sha256": "88406876ac0bf1d346273a22476982e63f4ce60dbf5f8e2ac8bcf92318f95dfd",
+        "bytes": 6737,
+        "readAtUtc": "2026-10-09T06:46:58.659661+00:00",
+        "mtimeUtc": "2026-10-08T05:22:21.565569+00:00",
+        "snapshot": "snapshots/88406876ac0bf1d346273a22476982e63f4ce60dbf5f8e2ac8bcf92318f95dfd",
+        "displayedSelection": "29:77"
+      },
+      {
+        "path": "tests/d06Capabilities.test.ts",
+        "sha256": "6a80ad83d97a24df1481b91c3aa64d18defb5c68eaab327a6167e8ef5f6c54ac",
+        "bytes": 9520,
+        "readAtUtc": "2026-10-09T06:48:07.305686+00:00",
+        "mtimeUtc": "2026-10-08T07:31:22.756707+00:00",
+        "snapshot": "snapshots/6a80ad83d97a24df1481b91c3aa64d18defb5c68eaab327a6167e8ef5f6c54ac",
+        "displayedSelection": "55:75"
+      },
+      {
+        "path": "tests/d08TextDraftRepository.test.ts",
+        "sha256": "b330e7270ed33fb10cbad92abcf75cd1bf06aec09c9264d92b2b559d1833a528",
+        "bytes": 6448,
+        "readAtUtc": "2026-10-09T06:47:10.336385+00:00",
+        "mtimeUtc": "2026-10-08T07:38:40.224320+00:00",
+        "snapshot": "snapshots/b330e7270ed33fb10cbad92abcf75cd1bf06aec09c9264d92b2b559d1833a528",
+        "displayedSelection": "1:78"
+      },
+      {
+        "path": "tests/episodeDelivery.test.ts",
+        "sha256": "abce7785daf5fef73f81fc15490022c954e1cf381ec9c4bdfd2286327f370224",
+        "bytes": 9861,
+        "readAtUtc": "2026-10-09T06:48:35.858262+00:00",
+        "mtimeUtc": "2026-09-18T12:15:23.550154+00:00",
+        "snapshot": "snapshots/abce7785daf5fef73f81fc15490022c954e1cf381ec9c4bdfd2286327f370224",
+        "displayedSelection": "1:56"
+      },
+      {
+        "path": "tests/imageDiscovery.test.ts",
+        "sha256": "0380a7542614fd7dfc5efee54232417ff259d4d6564a230ad0e5583af61f455e",
+        "bytes": 19796,
+        "readAtUtc": "2026-10-09T06:48:44.141157+00:00",
+        "mtimeUtc": "2026-10-08T05:10:25.756801+00:00",
+        "snapshot": "snapshots/0380a7542614fd7dfc5efee54232417ff259d4d6564a230ad0e5583af61f455e",
+        "displayedSelection": "128:171"
+      },
+      {
+        "path": "tests/projectMemoryPackage.test.ts",
+        "sha256": "1b38e3507beb049b705e315bef8d2ec7ee92bce0179fee7913ffe825fac78e7f",
+        "bytes": 15688,
+        "readAtUtc": "2026-10-09T06:48:44.141429+00:00",
+        "mtimeUtc": "2026-10-08T02:34:59.227596+00:00",
+        "snapshot": "snapshots/1b38e3507beb049b705e315bef8d2ec7ee92bce0179fee7913ffe825fac78e7f",
+        "displayedSelection": "430:441"
+      },
+      {
+        "path": "tests/projectPackage.test.ts",
+        "sha256": "e96f763faea5c75fdfd32aeee658deadb62ee1ec70b7570eecf2bcd8d68417f7",
+        "bytes": 16326,
+        "readAtUtc": "2026-10-09T06:43:20.742021+00:00",
+        "mtimeUtc": "2026-10-08T02:34:59.158121+00:00",
+        "snapshot": "snapshots/e96f763faea5c75fdfd32aeee658deadb62ee1ec70b7570eecf2bcd8d68417f7",
+        "displayedSelection": "183:322"
+      },
+      {
+        "path": "tests/projectPackageRelations.test.ts",
+        "sha256": "c3f5ef49fcd4ace15806ac2c0ed89f8a3a27693d2d68b6330d0955ceaac4fede",
+        "bytes": 7996,
+        "readAtUtc": "2026-10-09T06:48:35.858018+00:00",
+        "mtimeUtc": "2026-10-08T02:34:59.216665+00:00",
+        "snapshot": "snapshots/c3f5ef49fcd4ace15806ac2c0ed89f8a3a27693d2d68b6330d0955ceaac4fede",
+        "displayedSelection": "1:36"
+      },
+      {
+        "path": "tests/repo.test.ts",
+        "sha256": "3a052236d703b9378911882cc2668099d3098dfdcde9afc2d998fa11262defd6",
+        "bytes": 18803,
+        "readAtUtc": "2026-10-09T06:45:59.199759+00:00",
+        "mtimeUtc": "2026-10-08T02:34:59.163409+00:00",
+        "snapshot": "snapshots/3a052236d703b9378911882cc2668099d3098dfdcde9afc2d998fa11262defd6",
+        "displayedSelection": "176:215"
+      },
+      {
+        "path": "tests/repoReliability.test.ts",
+        "sha256": "8595dc556c4402ff2edc79c7568dc6b82df91a272371e2135b23fc51ebf7e9ba",
+        "bytes": 10174,
+        "readAtUtc": "2026-10-09T06:48:07.306110+00:00",
+        "mtimeUtc": "2026-10-08T02:34:59.060651+00:00",
+        "snapshot": "snapshots/8595dc556c4402ff2edc79c7568dc6b82df91a272371e2135b23fc51ebf7e9ba",
+        "displayedSelection": "141:164"
+      }
+    ]
+  },
+  "sourceChanges": [],
+  "statusLedgerSpecChanges": [],
+  "regressionExecution": "none; future proposals only",
+  "finalization": {
+    "atUtc": "2026-10-09T07:05:07.217559+00:00",
+    "freshProductChecksRun": false,
+    "allLastReadInputsMatch": true,
+    "observedConcurrentDrift": [
+      {
+        "observedAtUtc": "2026-10-09T07:03:36.045004+00:00",
+        "path": ".trellis/tasks/10-09-src-remediation-e/check.jsonl",
+        "lastReadSha256": "8eec9eca006a41a80879f4deb08b58f579eeca2035615ca01fc1a5b4c1e31983",
+        "checkedSha256": "b6bdd476ee0f40f55cdcc3f4f89476b8ca58d21800de836e8f8e7f162476796f",
+        "unchanged": false,
+        "interpretation": "Concurrent external input mutation observed. Not written or reverted by this research; reread as context only, no E06 activation/acceptance inferred."
+      }
+    ],
+    "artifactInventory": "e07-coercion-contracts/artifact-hashes.json"
+  },
+  "futureRegressionCases": [
+    {
+      "id": "R1",
+      "scope": "Real ZIP legacy/modern scalar text",
+      "values": [
+        "string",
+        "number0/7",
+        "booleanfalse/true",
+        "null",
+        "missing",
+        "empty",
+        "whitespace"
+      ],
+      "assertions": [
+        "persisted exact per-field output/default",
+        "independent imported IDs",
+        "repeat export/import graph equivalence"
+      ],
+      "status": "proposal; scalar success except canonical strings/missing requires explicit characterization"
+    },
+    {
+      "id": "R2",
+      "scope": "Compound known-field failures versus structured extensions",
+      "values": [
+        "object",
+        "array"
+      ],
+      "assertions": [
+        "field/path PackageError",
+        "all-table equality including seeded media",
+        "same nested value under extra survives roundtrip"
+      ],
+      "status": "proposal; not supported malformed compatibility"
+    },
+    {
+      "id": "R3",
+      "scope": "Modern original identity checks",
+      "values": [
+        "numeric",
+        "boolean",
+        "object",
+        "array",
+        "falsey optional beat",
+        "7 versus string7",
+        "synthesized beat_0 collision"
+      ],
+      "assertions": [
+        "original modern FK eligibility unchanged",
+        "episode scope strict",
+        "unique unreferenced repair supported",
+        "atomic rejection"
+      ],
+      "status": "proposal plus existing meaningful cases"
+    },
+    {
+      "id": "R4",
+      "scope": "Legacy graph/default preservation",
+      "values": [
+        "episodes absent",
+        "episodes empty",
+        "stale old owner",
+        "valid raw provenance/defaults/media"
+      ],
+      "assertions": [
+        "one synthesized episode",
+        "legacy beat/filter mapping",
+        "none filter retained",
+        "prop/explicit/inherited/null style semantics",
+        "sourceAssetId unchanged",
+        "cover bytes and future profiles retained"
+      ],
+      "status": "proposal plus existing meaningful cases; empty row identity policy unresolved"
+    },
+    {
+      "id": "R5",
+      "scope": "Slot parsing and real v1/v2 upgrade",
+      "values": [
+        "current/legacy result precedence",
+        "video/image kind",
+        "prompt fallback",
+        "reference arrays",
+        "0/false/null/empty",
+        "compound ID"
+      ],
+      "assertions": [
+        "canonical associations preserved",
+        "generated owner valid",
+        "no lost rows/media",
+        "failure rollback"
+      ],
+      "status": "proposal; malformed local-ID recovery decision required"
+    },
+    {
+      "id": "R6",
+      "scope": "Story evidence and actual draft CAS",
+      "values": [
+        "UTF16 emoji",
+        "wrong excerpt type/content",
+        "stale script",
+        "competing/independent edits",
+        "absent timeOfDay",
+        "malformed world setting"
+      ],
+      "assertions": [
+        "stale association removed without beat content loss",
+        "same-field conflict rollback",
+        "independent merge",
+        "rendered world baseline matches save representation"
+      ],
+      "status": "proposal; numeric/boolean excerpt behavior characterization needed"
+    },
+    {
+      "id": "R7",
+      "scope": "Owned Agent labels and exact revision/source identity",
+      "values": [
+        "valid/missing/empty/long strings",
+        "selected scalar recovery",
+        "compound chosen label"
+      ],
+      "assertions": [
+        "owner-specific200/300/120/160caps",
+        "fallback priority",
+        "exact href/raw revision/approval drift",
+        "stored receipt replay",
+        "discovery same-run identity/final digest rechecks"
+      ],
+      "status": "proposal; type signature precision alone not malformed runtime validation"
+    },
+    {
+      "id": "R8",
+      "scope": "Delivery seven extra scalar columns and CSV",
+      "values": [
+        "each actual extra field",
+        "base content/notes",
+        "numeric order/duration",
+        "missing optional cell",
+        "quotes/comma/newline"
+      ],
+      "assertions": [
+        "exact cell text",
+        "no slot/object/array selection",
+        "BOM/CRLF/quoting",
+        "safe film/series filename",
+        "local relation name scoping"
+      ],
+      "status": "proposal; no arbitrary object/boolean helper acceptance inferred"
+    }
+  ]
+}

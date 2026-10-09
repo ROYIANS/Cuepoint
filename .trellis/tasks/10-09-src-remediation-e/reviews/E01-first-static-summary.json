@@ -1,0 +1,142 @@
+{
+  "unit": "E01",
+  "baselineRevision": "1ecaf5ceec92e022c2b2b8d662e2a92e8eee36c7",
+  "policy": "Baseline/current separate complete-source TypeScript programs, same restored versions/rules; Temporary delta analysis: complete baseline/current typed programs, per-file rule/severity/message counts with line relocation normalization; no semantic debt acceptance or formal QG01 identity guarantee; manual full-file review required; raw per-file diagnostics preserved",
+  "versions": {
+    "eslint": "9.39.5",
+    "typescript-eslint": "8.71.1",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-sonarjs": "3.0.7",
+    "typescript": "5.9.2"
+  },
+  "files": 9,
+  "hashes": {
+    "src/components/agent/AgentChatPage.tsx": {
+      "before": "f7ff686baf6314bc1baf0f64463a8e5a0601a56baeffcb76a618b864d54c27b1",
+      "after": "ea05a790625b4db05cb6f09436039b71b2d627bdece8cbd3346401769e5be806"
+    },
+    "src/components/agent/TaskInspector.tsx": {
+      "before": "89486dc294d14aa31aba1ff6f5639e6e233d8f25afc75dfa9f67e3f4f0147649",
+      "after": "9e35b5c1fce11029e0ff4b6550141b2f06588cfd9f1fa40364f6ed2c50cd4068"
+    },
+    "src/components/agent/TaskRecords.tsx": {
+      "before": "d0af44a69eebe5027270cf7ee5be839c52770dc7594eb2a43c70105abc2b4a11",
+      "after": "d9c6166b7a55d20edc96e0995a5faadfc3a599df155cbaeeefe8297acd67c5d1"
+    },
+    "src/components/agent/TaskWrapup.tsx": {
+      "before": "e3dfd7266c829e9201fe40de48a04edfdf5db05a2e43de31cc09a4af28d77403",
+      "after": "c5e9f1355b0d8007b1c4893f0a6efa93cc66a09744c781451ef06a5b95a42dfd"
+    },
+    "src/components/audio/VoiceLibrary.tsx": {
+      "before": "aad7de9f26264e34831c025de307a0251fb473f57737a0b8714d24017ae7414e",
+      "after": "74763a35d6fb7093afa5047fb094354ea7de9083b0a675d45f8afac0b48ce71a"
+    },
+    "src/components/studio/AssetLibraryPages.tsx": {
+      "before": "77c817e0e78e888f2716179cf6f8cc018a7b10d8f19bfdbf3d27d3b6f2b38760",
+      "after": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e"
+    },
+    "src/components/studio/ProjectGalleryPage.tsx": {
+      "before": "f3fd110028e6219c298e7ee8bda70f840906effaeb8b1986921784b2120c0c94",
+      "after": "945f07573b7535eee1326c0ff08e50627ccf2152e32069540c14311add186034"
+    },
+    "src/components/workspace/EpisodeListPage.tsx": {
+      "before": "d3e993d6e3a53235670259bcdb684109e7be37445a4d9cf9ce649e4c9e6a04cd",
+      "after": "a881f4c4f1f2e375a03135ae2df50379358d2b1404e184b3b3afc0a22d907ed9"
+    },
+    "src/lib/useManualDraftGuard.tsx": {
+      "before": "a5a93b4da49c5aa67b900d2e57ea531500943309173b5556cacad03450c12722",
+      "after": "5a03a40952c23b909e772f50b2b58e8488069ed6df5c4eca62bae9033923bde8"
+    }
+  },
+  "baselineErrors": 3,
+  "baselineWarnings": 34,
+  "currentErrors": 2,
+  "currentWarnings": 38,
+  "addedNoncomplexity": [
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/TaskInspector.tsx",
+      "ruleId": "react-hooks/exhaustive-deps",
+      "severity": 1,
+      "message": "React Hook useEffect has a missing dependency: 'departure'. Either include it or remove the dependency array.",
+      "line": 92,
+      "column": 8,
+      "nodeType": "ArrayExpression",
+      "endLine": 92,
+      "endColumn": 83,
+      "suggestions": [
+        {
+          "desc": "Update the dependencies array to be: [sameOwner, props, requestedOwner, departure.requestDeparture, updateState, departure]",
+          "fix": {
+            "range": [
+              3638,
+              3713
+            ],
+            "text": "[sameOwner, props, requestedOwner, departure.requestDeparture, updateState, departure]"
+          }
+        }
+      ]
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/VoiceLibrary.tsx",
+      "ruleId": "react-hooks/exhaustive-deps",
+      "severity": 1,
+      "message": "React Hook useEffect has a missing dependency: 'departure'. Either include it or remove the dependency array.",
+      "line": 55,
+      "column": 8,
+      "nodeType": "ArrayExpression",
+      "endLine": 55,
+      "endColumn": 83,
+      "suggestions": [
+        {
+          "desc": "Update the dependencies array to be: [sameOwner, props, requestedOwner, departure.requestDeparture, updateState, departure]",
+          "fix": {
+            "range": [
+              3020,
+              3095
+            ],
+            "text": "[sameOwner, props, requestedOwner, departure.requestDeparture, updateState, departure]"
+          }
+        }
+      ]
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/ProjectGalleryPage.tsx",
+      "ruleId": "no-nested-ternary",
+      "severity": 1,
+      "message": "Do not nest ternary expressions.",
+      "line": 413,
+      "column": 30,
+      "nodeType": "ConditionalExpression",
+      "messageId": "noNestedTernary",
+      "endLine": 413,
+      "endColumn": 92
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/workspace/EpisodeListPage.tsx",
+      "ruleId": "no-nested-ternary",
+      "severity": 1,
+      "message": "Do not nest ternary expressions.",
+      "line": 149,
+      "column": 94,
+      "nodeType": "ConditionalExpression",
+      "messageId": "noNestedTernary",
+      "endLine": 149,
+      "endColumn": 161
+    }
+  ],
+  "addedComplexity": [
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/ProjectGalleryPage.tsx",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'ProjectGalleryPage' has a complexity of 31. Maximum allowed is 20.",
+      "line": 57,
+      "column": 8,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 57,
+      "endColumn": 35
+    }
+  ],
+  "newFileDiagnostics": []
+}

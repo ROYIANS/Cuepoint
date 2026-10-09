@@ -1,0 +1,99 @@
+{
+  "status": "IMPLEMENTATION_COMPLETE",
+  "rootGateStatus": "EXPECTED_BLOCKING_PENDING_MAIN_REVIEW_AND_REPAIRS",
+  "writeScope": [
+    "scripts/quality-check.mjs",
+    "scripts/quality/**",
+    "research/E07-gate-implementation.md/json",
+    "research/e07-gate-implementation/**"
+  ],
+  "productionEntry": "node scripts/quality-check.mjs",
+  "selfTestEntry": "node scripts/quality/self-test.mjs",
+  "node": "v24.11.0",
+  "toolVersions": {
+    "eslint": "10.12.0",
+    "@eslint/js": "10.0.1",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.1",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-sonarjs": "4.2.2",
+    "knip": "6.40.0"
+  },
+  "producer": {
+    "scripts/quality-check.mjs": "7b114c41f6424d77542d1e787f4a9869fd5a41d52ff0101e85286c8987330bbb",
+    "scripts/quality/README.md": "4dde4ee472a770d30e8096e987c6fda6cfcc666d10fc8a2a80a075583dd7e2b6",
+    "scripts/quality/architecture.mjs": "714b7112caf557a004d27f15c8f4e779431dfea120427fa093fbc6eee925b3f3",
+    "scripts/quality/debt.schema.json": "0ddf6f0cb7819e89e88a3e2090483d22618055749fff0c45a8c90859d3f91abd",
+    "scripts/quality/identity.mjs": "3143cfd59f8ab94cdea49665de5fd3cd2654331e62471ed35bea88c586ac4ec9",
+    "scripts/quality/lint.mjs": "dec63514f032bb164a90bf5b3288c4a345653ec2b0431307a4de6cb518e5d62f",
+    "scripts/quality/self-test.mjs": "0711cb2297288506a69de546582d1099311e7082be2a21cd8cd44d449518ca4b",
+    "scripts/quality/shared.mjs": "0278f4c24b95e90c68d47f7fdb4646a888978f7e954d167d732bc94e8c95cbc2",
+    "scripts/quality/unused-contracts.schema.json": "07f0fe11c2bc74fd7f0ed1a5ec54c80248075adf7dbff66f06bef7db6a8502ef",
+    "scripts/quality/unused.mjs": "a6c1f28aec18f3dc4e17b13aa6e7b7e82a4ad8202edaa5eb3277ae86fcdce195"
+  },
+  "before": {
+    "scripts/quality-check.mjs": "new file; no existing tracked version modified",
+    "scripts/quality/README.md": "new file; no existing tracked version modified",
+    "scripts/quality/architecture.mjs": "new file; no existing tracked version modified",
+    "scripts/quality/debt.schema.json": "new file; no existing tracked version modified",
+    "scripts/quality/identity.mjs": "new file; no existing tracked version modified",
+    "scripts/quality/lint.mjs": "new file; no existing tracked version modified",
+    "scripts/quality/self-test.mjs": "new file; no existing tracked version modified",
+    "scripts/quality/shared.mjs": "new file; no existing tracked version modified",
+    "scripts/quality/unused-contracts.schema.json": "new file; no existing tracked version modified",
+    "scripts/quality/unused.mjs": "new file; no existing tracked version modified"
+  },
+  "identityProducer": {
+    "sha256": "3143cfd59f8ab94cdea49665de5fd3cd2654331e62471ed35bea88c586ac4ec9",
+    "typescript": "5.9.3"
+  },
+  "schemaPaths": [
+    "scripts/quality/debt.schema.json",
+    "scripts/quality/unused-contracts.schema.json"
+  ],
+  "selfTest": {
+    "status": "PASS",
+    "cases": 56,
+    "producerUnchanged": true,
+    "summary": ".trellis/tasks/10-09-src-remediation-e/research/e07-gate-implementation/self-test-08/summary.json",
+    "command": "PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH node scripts/quality/self-test.mjs --output .trellis/tasks/10-09-src-remediation-e/research/e07-gate-implementation/self-test-08"
+  },
+  "rootEvidence": {
+    "report": ".trellis/tasks/10-09-src-remediation-e/research/e07-gate-implementation/gate-final-02.json",
+    "command": ".trellis/tasks/10-09-src-remediation-e/research/e07-gate-implementation/gate-command-final-02.json",
+    "exitCode": 1,
+    "lintErrors": 10,
+    "lintWarnings": 512,
+    "allowances": 0,
+    "ownedGraphFiles": 419,
+    "totalImportSites": 2689,
+    "resolvedEdges": 2665,
+    "staticValueEdges": 1644,
+    "literalDynamicEdges": 6,
+    "cycles": 0,
+    "fullUnusedCandidates": 39,
+    "unusedContracts": 0,
+    "productionOnlyReviewSignals": 85
+  },
+  "retainedFailures": [
+    "architecture-01.json: Knip package exports prevented direct manifest lookup; now resolve exported entry then locate named package manifest",
+    "unused-01.json: installed Knip JSON has issues without top-level files; normalized actual reporter schema",
+    "self-test-01: initial single-line else branch fixture did not meet selected Sonar rule conditions",
+    "self-test-02: only-throw-error allows unknown by root policy; bounded object throw used for semantic tests",
+    "self-test-03: relocated fixture accidentally changed object throw to unknown throw; corrected fixture",
+    "self-test-04: diagnostic kind was overwritten by edge metadata; corrected failure record ordering"
+  ],
+  "limits": [
+    "No root config/package/lock/allowance/CI/spec/ledger/source or existing test files changed by this worker.",
+    "No installation, full test suite, model verification, build, native regression, Node22 clean install, independent review, commits or pushes performed.",
+    "Root source/config remains under parallel edits; snapshot inputs are recorded and gate detects mutations during a run. Final integration must use frozen root inputs.",
+    "Metric/style warnings are individually reported review signals, not automatically accepted debt.",
+    "CSS/ambient/native exceptions require individually reviewed exact unused contracts with current source hashes; none authored here.",
+    "Computed import/require reachability is reported outside static proof; literal dynamic edges excluded from static eager SCCs."
+  ],
+  "integrationRequirements": [
+    "Main fills individually reviewed debt and unused-contract JSON according to published schemas.",
+    "Main makes recursive scripts project pattern and quality CLI entries in Knip; no broad source entries/ignored feature trees.",
+    "Main documents policy, adds package/CI commands, independently reviews final gate and performs Node22 clean locked install and whole-project validation."
+  ]
+}

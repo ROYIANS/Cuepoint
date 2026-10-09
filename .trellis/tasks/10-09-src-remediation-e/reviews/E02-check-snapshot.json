@@ -1,0 +1,844 @@
+{
+  "unit": "E02",
+  "date": "2026-10-09",
+  "reviewRole": "Already-dispatched independent trellis-check; no recursion",
+  "status": "PASS",
+  "blockers": [],
+  "changedFiles": [
+    "scripts/e01-drafts-browser-regression.mjs",
+    "scripts/e02-browser-regression.mjs",
+    "src/components/agent/TopicSidebar.tsx",
+    "src/components/agent/agentChat.css",
+    "tests/fixtures/e02/harness.tsx",
+    "tests/fixtures/e02/index.html",
+    "tests/fixtures/e02/tsconfig.json",
+    "tests/fixtures/sourceSnapshots/e02/TopicSidebar.tsx",
+    "tests/fixtures/sourceSnapshots/e02/agentChat.css",
+    "tests/fixtures/sourceSnapshots/e02/provenance.json"
+  ],
+  "before": {
+    "scripts/e01-drafts-browser-regression.mjs": "4511dc6bb5340f9a366bec6ec5ac90dcb14e38502d0232f9917f65862d26b3b7",
+    "scripts/e02-browser-regression.mjs": null,
+    "src/components/agent/TopicSidebar.tsx": "03eb777c98984d75300c9dcfd1533739e3c7308d561d6d72a6bf20be55bc2dc9",
+    "src/components/agent/agentChat.css": "b1e1bd7da07ea2efe595cef9b5c6a8291563abf93dedae4bd90cc2877348fb1e",
+    "tests/fixtures/e02/harness.tsx": null,
+    "tests/fixtures/e02/index.html": null,
+    "tests/fixtures/e02/tsconfig.json": null,
+    "tests/fixtures/sourceSnapshots/e02/TopicSidebar.tsx": null,
+    "tests/fixtures/sourceSnapshots/e02/agentChat.css": null,
+    "tests/fixtures/sourceSnapshots/e02/provenance.json": null
+  },
+  "reviewEntry": {
+    "scripts/e01-drafts-browser-regression.mjs": "2f2ac3abe91a3fba6f626662046d5cb5cbd0f6bc03f8147ed1f3e01fc00d8d5d",
+    "scripts/e02-browser-regression.mjs": "215aa6f27c5122322af029da3665ad958d8ff74b2629e37751604f9614b10260",
+    "src/components/agent/TopicSidebar.tsx": "121d77f9f9b0b094caef74b52c2574837250e9d92366d33a6056eb6204c3f0b7",
+    "src/components/agent/agentChat.css": "e8d456f0a635f79ad163705d8b0504247b95618526fcff97eb0ab371b7b117eb",
+    "tests/fixtures/e02/harness.tsx": "d5f37323e1ba40a524fe266209ed31c958c9e898466d2bc970971e45f859d869",
+    "tests/fixtures/e02/index.html": "e6ca6c03e82fa7b0a5d854c4fc9c3b727dfc3441cc34a3822a66055d0771c73c",
+    "tests/fixtures/e02/tsconfig.json": "cbf2e9e64c5fca6bc1e940e98515e943c495a4128a03630d977c5636f404b04a",
+    "tests/fixtures/sourceSnapshots/e02/TopicSidebar.tsx": "03eb777c98984d75300c9dcfd1533739e3c7308d561d6d72a6bf20be55bc2dc9",
+    "tests/fixtures/sourceSnapshots/e02/agentChat.css": "b1e1bd7da07ea2efe595cef9b5c6a8291563abf93dedae4bd90cc2877348fb1e",
+    "tests/fixtures/sourceSnapshots/e02/provenance.json": "e46e095db1ead5e14fc9b5687589d04a211ac08298e4bd5ac412fd497f7491c7"
+  },
+  "after": {
+    "scripts/e01-drafts-browser-regression.mjs": "2f2ac3abe91a3fba6f626662046d5cb5cbd0f6bc03f8147ed1f3e01fc00d8d5d",
+    "scripts/e02-browser-regression.mjs": "215aa6f27c5122322af029da3665ad958d8ff74b2629e37751604f9614b10260",
+    "src/components/agent/TopicSidebar.tsx": "121d77f9f9b0b094caef74b52c2574837250e9d92366d33a6056eb6204c3f0b7",
+    "src/components/agent/agentChat.css": "e8d456f0a635f79ad163705d8b0504247b95618526fcff97eb0ab371b7b117eb",
+    "tests/fixtures/e02/harness.tsx": "d5f37323e1ba40a524fe266209ed31c958c9e898466d2bc970971e45f859d869",
+    "tests/fixtures/e02/index.html": "e6ca6c03e82fa7b0a5d854c4fc9c3b727dfc3441cc34a3822a66055d0771c73c",
+    "tests/fixtures/e02/tsconfig.json": "cbf2e9e64c5fca6bc1e940e98515e943c495a4128a03630d977c5636f404b04a",
+    "tests/fixtures/sourceSnapshots/e02/TopicSidebar.tsx": "03eb777c98984d75300c9dcfd1533739e3c7308d561d6d72a6bf20be55bc2dc9",
+    "tests/fixtures/sourceSnapshots/e02/agentChat.css": "b1e1bd7da07ea2efe595cef9b5c6a8291563abf93dedae4bd90cc2877348fb1e",
+    "tests/fixtures/sourceSnapshots/e02/provenance.json": "e46e095db1ead5e14fc9b5687589d04a211ac08298e4bd5ac412fd497f7491c7"
+  },
+  "perFileCoverage": [
+    {
+      "path": "scripts/e01-drafts-browser-regression.mjs",
+      "status": "reviewed",
+      "note": "Read all365 lines. Reversing sole line283 native selection-button locator reproduces accepted hash; every assertion/timeout unchanged. Line348 delete locator still targets native child. Independent19 cases pass.",
+      "findings": [],
+      "beforeSHA256": "4511dc6bb5340f9a366bec6ec5ac90dcb14e38502d0232f9917f65862d26b3b7",
+      "reviewEntrySHA256": "2f2ac3abe91a3fba6f626662046d5cb5cbd0f6bc03f8147ed1f3e01fc00d8d5d",
+      "afterSHA256": "2f2ac3abe91a3fba6f626662046d5cb5cbd0f6bc03f8147ed1f3e01fc00d8d5d"
+    },
+    {
+      "path": "scripts/e02-browser-regression.mjs",
+      "status": "reviewed",
+      "note": "Read all264 lines, including original-module hash checks, Vite transforms, isolated fresh cache/HTML entry, Tab-only target discovery, native mutation/dialog assertions, document/page-error guards and computed/scroll/expanded/rail checks. Final11/17/9 independently execute frozen producer.",
+      "findings": [],
+      "beforeSHA256": null,
+      "reviewEntrySHA256": "215aa6f27c5122322af029da3665ad958d8ff74b2629e37751604f9614b10260",
+      "afterSHA256": "215aa6f27c5122322af029da3665ad958d8ff74b2629e37751604f9614b10260"
+    },
+    {
+      "path": "src/components/agent/TopicSidebar.tsx",
+      "status": "reviewed",
+      "note": "Read all320 lines and original331-line module. Unchanged module prefix verified; noninteractive row now contains sibling native buttons with aria-current and named actions. No parent keydown/click interception; callback owners remain production AgentChatPage.",
+      "findings": [],
+      "beforeSHA256": "03eb777c98984d75300c9dcfd1533739e3c7308d561d6d72a6bf20be55bc2dc9",
+      "reviewEntrySHA256": "121d77f9f9b0b094caef74b52c2574837250e9d92366d33a6056eb6204c3f0b7",
+      "afterSHA256": "121d77f9f9b0b094caef74b52c2574837250e9d92366d33a6056eb6204c3f0b7"
+    },
+    {
+      "path": "src/components/agent/agentChat.css",
+      "status": "reviewed",
+      "note": "Read all1666 lines plus exact original/current diff. Original1623-line bytes proved by snapshot. Native focus/hover/active rules keep geometry/theme; narrow media block moved after base content/dock rules. Specific rail and expanded overrides retain authority.",
+      "findings": [],
+      "beforeSHA256": "b1e1bd7da07ea2efe595cef9b5c6a8291563abf93dedae4bd90cc2877348fb1e",
+      "reviewEntrySHA256": "e8d456f0a635f79ad163705d8b0504247b95618526fcff97eb0ab371b7b117eb",
+      "afterSHA256": "e8d456f0a635f79ad163705d8b0504247b95618526fcff97eb0ab371b7b117eb"
+    },
+    {
+      "path": "tests/fixtures/e02/harness.tsx",
+      "status": "reviewed",
+      "note": "Read all44 lines. Actual AgentChatPage/LobeChatTheme/TanStack/real Dexie records, three target identities, current-source transcript, reset and turns bridge; no copied product DOM. Frozen end marker permits actual final-line visibility proof.",
+      "findings": [],
+      "beforeSHA256": null,
+      "reviewEntrySHA256": "d5f37323e1ba40a524fe266209ed31c958c9e898466d2bc970971e45f859d869",
+      "afterSHA256": "d5f37323e1ba40a524fe266209ed31c958c9e898466d2bc970971e45f859d869"
+    },
+    {
+      "path": "tests/fixtures/e02/index.html",
+      "status": "reviewed",
+      "note": "Read complete HTML. Viewport meta, fixed full-height root and exact module script used as optimizeDeps entry. No task-folder imports.",
+      "findings": [],
+      "beforeSHA256": null,
+      "reviewEntrySHA256": "e6ca6c03e82fa7b0a5d854c4fc9c3b727dfc3441cc34a3822a66055d0771c73c",
+      "afterSHA256": "e6ca6c03e82fa7b0a5d854c4fc9c3b727dfc3441cc34a3822a66055d0771c73c"
+    },
+    {
+      "path": "tests/fixtures/e02/tsconfig.json",
+      "status": "reviewed",
+      "note": "Read complete config. Extends strict application config; no relaxed semantic flags, fixture include and existing vite env; independent compiler passes.",
+      "findings": [],
+      "beforeSHA256": null,
+      "reviewEntrySHA256": "cbf2e9e64c5fca6bc1e940e98515e943c495a4128a03630d977c5636f404b04a",
+      "afterSHA256": "cbf2e9e64c5fca6bc1e940e98515e943c495a4128a03630d977c5636f404b04a"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e02/TopicSidebar.tsx",
+      "status": "reviewed",
+      "note": "Read old TopicRow and hash/unchanged-prefix compared complete original module with current reviewed prefix. Byte-exact accepted-E01 entry module, alias closure intentionally reused by Vite transform.",
+      "findings": [],
+      "beforeSHA256": null,
+      "reviewEntrySHA256": "03eb777c98984d75300c9dcfd1533739e3c7308d561d6d72a6bf20be55bc2dc9",
+      "afterSHA256": "03eb777c98984d75300c9dcfd1533739e3c7308d561d6d72a6bf20be55bc2dc9"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e02/agentChat.css",
+      "status": "reviewed",
+      "note": "Compared complete original bytes/hash with E02-before; reviewed current full stylesheet and every original-only rule/diff. Original early media placement reproduces16px narrow gutters/bottom.",
+      "findings": [],
+      "beforeSHA256": null,
+      "reviewEntrySHA256": "b1e1bd7da07ea2efe595cef9b5c6a8291563abf93dedae4bd90cc2877348fb1e",
+      "afterSHA256": "b1e1bd7da07ea2efe595cef9b5c6a8291563abf93dedae4bd90cc2877348fb1e"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e02/provenance.json",
+      "status": "reviewed",
+      "note": "Read complete17-line provenance. Both paths/original SHA256 match704-file accepted-E01 working-tree snapshot; new-file before hashes are null.",
+      "findings": [],
+      "beforeSHA256": null,
+      "reviewEntrySHA256": "e46e095db1ead5e14fc9b5687589d04a211ac08298e4bd5ac412fd497f7491c7",
+      "afterSHA256": "e46e095db1ead5e14fc9b5687589d04a211ac08298e4bd5ac412fd497f7491c7"
+    }
+  ],
+  "sourceFreeze": {
+    "revision": 3,
+    "sha256": "0a4b42ca9451ad18080205a9e9edbb6111f192fedd40a05a5e0c84f08ea3f573",
+    "freeze2NineEntriesIdentical": true
+  },
+  "inputIntegrity": {
+    "entrySnapshotFilesVerified": 704,
+    "entryNonownedDrift": [],
+    "writerArtifactsVerified": 100,
+    "writerArtifactHashes": {
+      ".trellis/tasks/10-09-src-remediation-e/research/E02-fixture-typecheck-attempt-1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      ".trellis/tasks/10-09-src-remediation-e/research/E02-implementation.json": "613f0d3749a3fb54c378c461a3f0692762a399cb47f8dee7da7e9d48ca1ee06e",
+      ".trellis/tasks/10-09-src-remediation-e/research/E02-implementation.md": "ece6778ba048436c442779da9bd1cf9cc7aa78999f818295fdf12f5dbe60d62d",
+      ".trellis/tasks/10-09-src-remediation-e/research/E02-native-after-attempt-1.log": "1fcae3d986490438ac6f14fc1e597532b0ab1a9b7967261ed715d22a22827c67",
+      ".trellis/tasks/10-09-src-remediation-e/research/E02-native-before-attempt-1.log": "f8b70290206f518c0e12c08e72530eba9fd31a10e9eef0a96be76f662d9d52a1",
+      ".trellis/tasks/10-09-src-remediation-e/research/E02-typecheck-attempt-1.log": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/e01-drafts-adapted-final-observations.json": "8b024ba9e2106cbeeeb8c131f2fb5a5b1b746834f5da16c57d31977b3f056874",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/e01-drafts-adapted-final.log": "a5c1ce2fe4c0ef18668e3c6b6d4fcaacc53398ec121ce3fe4484def8170a5122",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/e01-drafts-final.log": "8f10b7b147c5c8acc0a460c8094a37bb6c517059ffd965826b7160d6464bbde3",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/e01-selector-adaptation.json": "cdbc0b0227806f8b7d5cb3eb319fd14af6fed1dc7c308405d45a61567e64a415",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/e01-unchanged-runner-failure/failure.html": "f30d3c3977c009c8cb5d8e2842f9b98017453956e9af71f607dd87fb1cc85b1b",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/e01-unchanged-runner-failure/failure.png": "602455d3234c3ca91d015d84d66008a2b2101859b6e6c34617e47c097e190486",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/e01-unchanged-runner-failure/observations.json": "bef7aaff87f64221c5f5b5c6c4920929456f860368bc152c5dfe48ff894ca66c",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/fixture-typecheck-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/fixture-typecheck-freeze-2.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/focused-final.log": "f17fad4b9e49e1e61cb1189c77358d683713707b593e448a15c117a2a30ddfbe",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/focused-freeze-2.log": "f98c0c9f913d8587b3ad75afbde847f8bada5db70490a480c2dd36e38a2208ae",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-attempt-1/1440-expanded.png": "8132e245a7a86d2b2ef463de0123c279a2b07902fb0842533f74f92a93df8ca9",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-attempt-1/1440.png": "f046598183b0b7ed85fafe8100e925ad51af76db77b8d70ea5a209e094641a7d",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-attempt-1/390-expanded.png": "d0d53f96c6eb8be47ef88ddd5a8e72802c2828a0e9e37c03a615f42a52b0b29b",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-attempt-1/390.png": "c53bc3faf1c2836d76968d99c4744ec8894dd99b55d08c59a8d6a9ad15237d5e",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-attempt-1/767-expanded.png": "4294225ad81b3db7aaa353ba62e36a41888b4898be4b2dc2839b15b60df05064",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-attempt-1/767.png": "f1e28b09f53526b405d10c84b88695d26fc2f2b521caa187a41c3b7e8e8443b3",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-attempt-1/768-expanded.png": "706fcec46bdb857b458fe63f13ee49d3265874ca0066b0c4cb58953c2ba748cb",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-attempt-1/768.png": "0f3f7bc1c49787836e80e849cd8cd39fa35110d1bc3d0ef6c816db479ab69df9",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-attempt-1/observations.json": "4e2aa072f336c66da532f1b1c3f2bcb58374e82ed4bf86589c4d08b6ffb8f63f",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final/1440-expanded.png": "8132e245a7a86d2b2ef463de0123c279a2b07902fb0842533f74f92a93df8ca9",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final/1440.png": "d42d3d3c2aa92b7cc35961852aa7cb291c19aa9c9e7fbaadb71e0d214d4ebb2c",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final/390-expanded.png": "d0d53f96c6eb8be47ef88ddd5a8e72802c2828a0e9e37c03a615f42a52b0b29b",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final/390.png": "c53bc3faf1c2836d76968d99c4744ec8894dd99b55d08c59a8d6a9ad15237d5e",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final/767-expanded.png": "4294225ad81b3db7aaa353ba62e36a41888b4898be4b2dc2839b15b60df05064",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final/767.png": "ebff8112e1b3fa5dafbf3d3b7c72d2646a0621f531e226857abef53943c51e6d",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final/768-expanded.png": "706fcec46bdb857b458fe63f13ee49d3265874ca0066b0c4cb58953c2ba748cb",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final/768.png": "0f3f7bc1c49787836e80e849cd8cd39fa35110d1bc3d0ef6c816db479ab69df9",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final/observations.json": "f2e386b75db1596de1d4e97aefdfbfc4e9391f9119535c00b72abada083be005",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final.log": "a12e2032a854ec3e711b8fcb9341f34fb1622e87f4991c235e9fb760294974fb",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2/1440-expanded.png": "8132e245a7a86d2b2ef463de0123c279a2b07902fb0842533f74f92a93df8ca9",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2/1440.png": "561fb68ebea5ee9350347b0d31cb5dba0921b25d7dc68b6eaab9fdf21a506fef",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2/390-expanded.png": "d0d53f96c6eb8be47ef88ddd5a8e72802c2828a0e9e37c03a615f42a52b0b29b",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2/390.png": "d0771d6f3fdf2f5b341e135042f964e2529dc15f1864aeae086a4511822527be",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2/767-expanded.png": "4294225ad81b3db7aaa353ba62e36a41888b4898be4b2dc2839b15b60df05064",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2/767.png": "9020c0d5e811b975862e3c0523501aba226f254c0600ec887cd615147aa173d9",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2/768-expanded.png": "706fcec46bdb857b458fe63f13ee49d3265874ca0066b0c4cb58953c2ba748cb",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2/768.png": "40602c05ba1fb224c4b6b5641d7952bb5f67d7ad678c75f4058ccc1640901710",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2/observations.json": "d35d9584017ea1d6e5b4777f65e68ea9f0fefcb0f9abdb927c84401975caaf5e",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2.log": "c00b3d4651952f5d0279d3d9296957750850b28c7589a8ccd908d9ea3207b57a",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-attempt-1/1440-expanded.png": "e5382245c4dad24e13713a3a6deeb8bbc85e6f5453ad381ee9dcadba69d1f3a1",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-attempt-1/1440.png": "8bfacb1da3429bceb7176d70cb4c38151daa1255ae250bcc686f2a37a4d7ea98",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-attempt-1/390-expanded.png": "4905567d88819a6071beab4e2209fd56da0f18a0e7e2cf2b25dd05a56309a9e2",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-attempt-1/390.png": "8a34f0e0c639ffef5c7f54bab6634255ceb7c64b9073c8fc2a7ecf649549d94c",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-attempt-1/767-expanded.png": "527a06960f8fa7cbd810b6841769cc3faeed5d96b124c7239992bb90d2bfcf86",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-attempt-1/767.png": "d796e375f5d029dcd390a458381fb2457c6416cb6c902903991eccb4885fc6b8",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-attempt-1/768-expanded.png": "47d782524e1b0e1208a17c68937074d870ad57313670550ac445b69f8ec18111",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-attempt-1/768.png": "72d531dfeab634506a689e675f2a29b727128d198ec391509bde5baa964cc458",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-attempt-1/observations.json": "bb9cdd811f3474c21d789de4e429743de2b97709a9f31b36c6981edd7b127e3b",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final/1440-expanded.png": "e5382245c4dad24e13713a3a6deeb8bbc85e6f5453ad381ee9dcadba69d1f3a1",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final/1440.png": "8bfacb1da3429bceb7176d70cb4c38151daa1255ae250bcc686f2a37a4d7ea98",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final/390-expanded.png": "4905567d88819a6071beab4e2209fd56da0f18a0e7e2cf2b25dd05a56309a9e2",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final/390.png": "8a34f0e0c639ffef5c7f54bab6634255ceb7c64b9073c8fc2a7ecf649549d94c",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final/767-expanded.png": "527a06960f8fa7cbd810b6841769cc3faeed5d96b124c7239992bb90d2bfcf86",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final/767.png": "713488c41e7fe038f3b918b369906625c8ad2fbdaec68823868c40fc4a77087f",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final/768-expanded.png": "47d782524e1b0e1208a17c68937074d870ad57313670550ac445b69f8ec18111",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final/768.png": "72d531dfeab634506a689e675f2a29b727128d198ec391509bde5baa964cc458",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final/observations.json": "14d00557e26e146e9426cdd9904d61c9ed2dd38c7359172fa8307cec1a6c85b1",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final.log": "70d619a80423f802925d7f6387d8309cfe22ce91f8557d28ee5255f82bb77b8a",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2/1440-expanded.png": "e5382245c4dad24e13713a3a6deeb8bbc85e6f5453ad381ee9dcadba69d1f3a1",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2/1440.png": "6b3821db81dbd73688b1835cb625d8221834f6bd0a26d03b1094b9824d0bc555",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2/390-expanded.png": "4905567d88819a6071beab4e2209fd56da0f18a0e7e2cf2b25dd05a56309a9e2",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2/390.png": "eb3e71482cb50924fb9b9f1184ba549a50b25c1aeddcc85a6528951f7a2232d2",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2/767-expanded.png": "527a06960f8fa7cbd810b6841769cc3faeed5d96b124c7239992bb90d2bfcf86",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2/767.png": "fc76c920d18477490c0a3935bc70f75ede7f21e2ea76e1a0e49c48e896db9299",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2/768-expanded.png": "47d782524e1b0e1208a17c68937074d870ad57313670550ac445b69f8ec18111",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2/768.png": "f7a25bb2ccb6b528a5d081d9a5f718c791c544c88ecf758213677a9413e00c6b",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2/observations.json": "f57401679389449b1e5199da8d0af6ff729318c8b826b04b2859f2a5faf0be62",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2.log": "8072915d0d7d3fb14abe17a7aa58462255695af8df220ceba81b03e2a14b45e1",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final/1440-expanded.png": "8132e245a7a86d2b2ef463de0123c279a2b07902fb0842533f74f92a93df8ca9",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final/1440.png": "d5b7745ff8abde79170ee377452d3de66323c911086f0f25beed45b59ce1ed01",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final/390-expanded.png": "4905567d88819a6071beab4e2209fd56da0f18a0e7e2cf2b25dd05a56309a9e2",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final/390.png": "bf57674c73c0931358a0b4b7e810b661157506a4bb67102cb48d401bb1a4b125",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final/767-expanded.png": "527a06960f8fa7cbd810b6841769cc3faeed5d96b124c7239992bb90d2bfcf86",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final/767.png": "b7539bef02112c2c19b91bcdfb30b6ffec2b3aba4291442565925d0795393a5f",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final/768-expanded.png": "706fcec46bdb857b458fe63f13ee49d3265874ca0066b0c4cb58953c2ba748cb",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final/768.png": "d981bbab20064c4569a80715027845a5e04fc48824b269f9c4342e9fe64c8187",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final/observations.json": "d5f1f7ae0f1f00e6f6f89c2f07f7ed4f5eeeecb200078eb4e7ec8049a42b2c46",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final.log": "137a8a0d1a6dd6741e73d6039993bfe852e53f4beb7a936b9b19b2315e66fcb9",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2/1440-expanded.png": "8132e245a7a86d2b2ef463de0123c279a2b07902fb0842533f74f92a93df8ca9",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2/1440.png": "c7cb65d711e24b4b070238acf15df2e504580932dec6a024541e8e27b0fb909c",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2/390-expanded.png": "4905567d88819a6071beab4e2209fd56da0f18a0e7e2cf2b25dd05a56309a9e2",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2/390.png": "a56ed1985189bee55274e7aedbdf77f2760f984d6ecb117ecda03ca7294f5873",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2/767-expanded.png": "527a06960f8fa7cbd810b6841769cc3faeed5d96b124c7239992bb90d2bfcf86",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2/767.png": "8e6b26fdb37820ec689cbe6fca0fd427e1a33d1a95c4635bcc1ec947bcad6834",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2/768-expanded.png": "706fcec46bdb857b458fe63f13ee49d3265874ca0066b0c4cb58953c2ba748cb",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2/768.png": "40602c05ba1fb224c4b6b5641d7952bb5f67d7ad678c75f4058ccc1640901710",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2/observations.json": "3185e00ad0bc99c6efabc7a9fc3aee3a3fa5039b99c152e7a9d2266fbbd1e691",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2.log": "859fbdcd24956b097955f16c39860dd4e0c2d22b3ca9e5c86bea1a2ec7104acc",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/source-freeze-attempt-1.json": "0fb113848c99cc2b2ec424f752332de377a13288caf4b995033bd0ed14b78008",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/source-freeze-attempt-2.json": "3377932581746ad4e931b01c01e3159d552d8808781f3ca6420c2c3e2b82ff85",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/source-freeze.json": "0a4b42ca9451ad18080205a9e9edbb6111f192fedd40a05a5e0c84f08ea3f573",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/typecheck-final.log": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+      ".trellis/tasks/10-09-src-remediation-e/research/e02/typecheck-freeze-2.log": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa"
+    },
+    "priorE01": {
+      "acceptedReportSHA256": "a2f51cae8c423295f9e0cde2fb6863104afd0e0c8847a0752f3f1cdd3e14eed0",
+      "productAndRunnerPaths": 17,
+      "allowedRunnerDelta": [
+        "scripts/e01-drafts-browser-regression.mjs"
+      ],
+      "reversedSoleSelectorMatchesOriginal": true,
+      "acceptedEvidenceHashesVerified": 140,
+      "nestedProducerPreservationHashesVerified": 160,
+      "unexpectedDrift": []
+    },
+    "mainGates": {
+      "status": "PASS",
+      "inputs": 718,
+      "prePostUnchanged": true,
+      "currentMatchesAll": true,
+      "fullTests": {
+        "files": 160,
+        "tests": 2556
+      }
+    }
+  },
+  "native": {
+    "baselineCases": 11,
+    "currentCases": 17,
+    "surrogateCases": 9,
+    "adaptedE01Cases": 19,
+    "independentSupplementCases": 7,
+    "errors": [],
+    "oneDocumentPerRunner": true,
+    "safeAreaLimit": "Actual env0px;32px CSS operand substitution only; no OS/iOS device proof",
+    "observations": {
+      "native-before": ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-before/observations.json",
+      "native-after": ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-after/observations.json",
+      "native-surrogate": ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-surrogate/observations.json",
+      "supplement-attempt3": ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/supplement-attempt3/observations.json"
+    }
+  },
+  "tools": {
+    "node": "v24.11.0",
+    "nodeExecutable": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+    "pnpmExecutable": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "project": {
+      "typescript": "5.9.3",
+      "vite": "7.3.6",
+      "vitest": "5.0.1",
+      "@vitejs/plugin-react": "5.2.0",
+      "@tailwindcss/vite": "4.3.3"
+    },
+    "isolatedStatic": {
+      "eslint": "9.39.5",
+      "typescript-eslint": "8.71.1",
+      "eslint-plugin-react-hooks": "7.1.1",
+      "eslint-plugin-sonarjs": "3.0.7",
+      "typescript": "5.9.2"
+    },
+    "playwrightPath": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+    "chromiumPath": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell",
+    "pnpm": "10.15.0",
+    "toolSHA256": {
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node": "8d66cad090d087ed8fac66d8f7248c8a9a55454680232a6d109f609aa2decf89",
+      "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs": "a0f5715ea22354f922791a9c53dc012d5d5c067ff9cc4cd35ffb7cd272071a9f",
+      "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell": "7687bff7cb2db075f250e6d5848bbc8838cac3802ac3952a899c574f8eccab45"
+    }
+  },
+  "commands": [
+    {
+      "name": "typecheck",
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "lint"
+      ],
+      "env": {
+        "PATH": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/xiaomengdao/.local/bin:/opt/homebrew/opt/python@3.11/bin:/Users/xiaomengdao/.antigravity/antigravity/bin:/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/opt/homebrew/bin:/Users/xiaomengdao/.codex/tmp/arg0/codex-arg0tNfmyL:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/xiaomengdao/.local/bin:/opt/homebrew/opt/python@3.11/bin:/Users/xiaomengdao/.antigravity/antigravity/bin:/Users/xiaomengdao/Library/pnpm:/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS"
+      },
+      "startedAt": "2026-10-09T03:02:59.178477+00:00",
+      "exitCode": 0,
+      "seconds": 6.11,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/typecheck.log"
+    },
+    {
+      "name": "fixture-typecheck",
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tests/fixtures/e02/tsconfig.json",
+        "--pretty",
+        "false"
+      ],
+      "env": {
+        "PATH": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/xiaomengdao/.local/bin:/opt/homebrew/opt/python@3.11/bin:/Users/xiaomengdao/.antigravity/antigravity/bin:/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/opt/homebrew/bin:/Users/xiaomengdao/.codex/tmp/arg0/codex-arg0tNfmyL:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/xiaomengdao/.local/bin:/opt/homebrew/opt/python@3.11/bin:/Users/xiaomengdao/.antigravity/antigravity/bin:/Users/xiaomengdao/Library/pnpm:/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS"
+      },
+      "startedAt": "2026-10-09T03:03:05.289255+00:00",
+      "exitCode": 0,
+      "seconds": 4.91,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/fixture-typecheck.log"
+    },
+    {
+      "name": "native-before",
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "scripts/e02-browser-regression.mjs"
+      ],
+      "env": {
+        "PATH": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/xiaomengdao/.local/bin:/opt/homebrew/opt/python@3.11/bin:/Users/xiaomengdao/.antigravity/antigravity/bin:/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/opt/homebrew/bin:/Users/xiaomengdao/.codex/tmp/arg0/codex-arg0tNfmyL:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/xiaomengdao/.local/bin:/opt/homebrew/opt/python@3.11/bin:/Users/xiaomengdao/.antigravity/antigravity/bin:/Users/xiaomengdao/Library/pnpm:/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS",
+        "E02_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+        "E02_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell",
+        "E02_OUTPUT": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-before",
+        "E02_BASELINE": "1"
+      },
+      "startedAt": "2026-10-09T03:03:10.204618+00:00",
+      "exitCode": 0,
+      "seconds": 5.82,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-before.log"
+    },
+    {
+      "name": "native-after",
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "scripts/e02-browser-regression.mjs"
+      ],
+      "env": {
+        "PATH": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/xiaomengdao/.local/bin:/opt/homebrew/opt/python@3.11/bin:/Users/xiaomengdao/.antigravity/antigravity/bin:/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/opt/homebrew/bin:/Users/xiaomengdao/.codex/tmp/arg0/codex-arg0tNfmyL:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/xiaomengdao/.local/bin:/opt/homebrew/opt/python@3.11/bin:/Users/xiaomengdao/.antigravity/antigravity/bin:/Users/xiaomengdao/Library/pnpm:/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS",
+        "E02_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+        "E02_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell",
+        "E02_OUTPUT": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-after"
+      },
+      "startedAt": "2026-10-09T03:03:16.024423+00:00",
+      "exitCode": 0,
+      "seconds": 9.67,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-after.log"
+    },
+    {
+      "name": "native-surrogate",
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "scripts/e02-browser-regression.mjs"
+      ],
+      "env": {
+        "PATH": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/xiaomengdao/.local/bin:/opt/homebrew/opt/python@3.11/bin:/Users/xiaomengdao/.antigravity/antigravity/bin:/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/opt/homebrew/bin:/Users/xiaomengdao/.codex/tmp/arg0/codex-arg0tNfmyL:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/xiaomengdao/.local/bin:/opt/homebrew/opt/python@3.11/bin:/Users/xiaomengdao/.antigravity/antigravity/bin:/Users/xiaomengdao/Library/pnpm:/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS",
+        "E02_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+        "E02_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell",
+        "E02_OUTPUT": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-surrogate",
+        "E02_SAFE_AREA_SURROGATE": "1"
+      },
+      "startedAt": "2026-10-09T03:03:25.693479+00:00",
+      "exitCode": 0,
+      "seconds": 5.34,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-surrogate.log"
+    },
+    {
+      "name": "e01-drafts",
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "scripts/e01-drafts-browser-regression.mjs"
+      ],
+      "env": {
+        "PATH": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/xiaomengdao/.local/bin:/opt/homebrew/opt/python@3.11/bin:/Users/xiaomengdao/.antigravity/antigravity/bin:/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/opt/homebrew/bin:/Users/xiaomengdao/.codex/tmp/arg0/codex-arg0tNfmyL:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/xiaomengdao/.local/bin:/opt/homebrew/opt/python@3.11/bin:/Users/xiaomengdao/.antigravity/antigravity/bin:/Users/xiaomengdao/Library/pnpm:/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS",
+        "E01_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+        "E01_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell",
+        "E01_OBSERVATIONS": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/e01-drafts-observations.json"
+      },
+      "startedAt": "2026-10-09T03:03:31.030638+00:00",
+      "exitCode": 0,
+      "seconds": 47.2,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/e01-drafts.log"
+    },
+    {
+      "name": "native-supplement-attempt1",
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-supplement.mjs"
+      ],
+      "env": {
+        "PATH": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH"
+      },
+      "exitCode": 1,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-supplement-attempt1.log",
+      "output": ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/supplement-attempt1"
+    },
+    {
+      "name": "native-supplement-attempt2",
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-supplement-attempt2.mjs"
+      ],
+      "env": {
+        "PATH": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH"
+      },
+      "exitCode": 1,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-supplement-attempt2.log",
+      "output": ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/supplement-attempt2"
+    },
+    {
+      "name": "native-supplement-attempt3",
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-supplement-attempt3.mjs"
+      ],
+      "env": {
+        "PATH": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH"
+      },
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-supplement-attempt3.log",
+      "output": ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/supplement-attempt3"
+    }
+  ],
+  "analysis": {
+    "static": {
+      "inputHashes": {
+        "src/components/agent/AgentChatPage.tsx": {
+          "before": "f7ff686baf6314bc1baf0f64463a8e5a0601a56baeffcb76a618b864d54c27b1",
+          "after": "234344a50bb5a9bfce0258bf3b6d32b76be4cf965675b6b0eb8a77b8479f11cc"
+        },
+        "src/components/agent/TaskInspector.tsx": {
+          "before": "89486dc294d14aa31aba1ff6f5639e6e233d8f25afc75dfa9f67e3f4f0147649",
+          "after": "062ea09bbebf438a32eaa78f2d6609e05aa3d40ca064016261d31fd086e88b29"
+        },
+        "src/components/agent/TaskRecords.tsx": {
+          "before": "d0af44a69eebe5027270cf7ee5be839c52770dc7594eb2a43c70105abc2b4a11",
+          "after": "225208420fe596a4c7c6b8f01c298cedec1225ffc45ba3e76ca3d5342d99eea2"
+        },
+        "src/components/agent/TaskWrapup.tsx": {
+          "before": "e3dfd7266c829e9201fe40de48a04edfdf5db05a2e43de31cc09a4af28d77403",
+          "after": "85d9f9442619f8c161d3645f49dda4a43aeb495f13810ce9d41b66cfa24fe99b"
+        },
+        "src/components/agent/TopicSidebar.tsx": {
+          "before": "03eb777c98984d75300c9dcfd1533739e3c7308d561d6d72a6bf20be55bc2dc9",
+          "after": "121d77f9f9b0b094caef74b52c2574837250e9d92366d33a6056eb6204c3f0b7"
+        },
+        "src/components/audio/VoiceLibrary.tsx": {
+          "before": "aad7de9f26264e34831c025de307a0251fb473f57737a0b8714d24017ae7414e",
+          "after": "6c9d39032f747d691a00649419ab843110b9553b628b32aec9ed36c07bb93f7c"
+        },
+        "src/components/studio/AssetLibraryPages.tsx": {
+          "before": "77c817e0e78e888f2716179cf6f8cc018a7b10d8f19bfdbf3d27d3b6f2b38760",
+          "after": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e"
+        },
+        "src/components/studio/ProjectGalleryPage.tsx": {
+          "before": "f3fd110028e6219c298e7ee8bda70f840906effaeb8b1986921784b2120c0c94",
+          "after": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b"
+        },
+        "src/components/workspace/EpisodeListPage.tsx": {
+          "before": "d3e993d6e3a53235670259bcdb684109e7be37445a4d9cf9ce649e4c9e6a04cd",
+          "after": "601fe123c44ca98ff66e4ab00c22fc825b55f3101ef181ab1681ccf1ac3dde51"
+        },
+        "src/lib/useManualDraftGuard.tsx": {
+          "before": "a5a93b4da49c5aa67b900d2e57ea531500943309173b5556cacad03450c12722",
+          "after": "1d735e1811ac25aaa110acc2956ea78184da79a242cfd6d6461221f2785b5f05"
+        }
+      },
+      "rawTotals": {
+        "baseline": {
+          "errors": 3,
+          "warnings": 35
+        },
+        "current": {
+          "errors": 2,
+          "warnings": 34
+        }
+      },
+      "newE02Metrics": [],
+      "newNoncomplexity": [],
+      "versions": {
+        "eslint": "9.39.5",
+        "typescript-eslint": "8.71.1",
+        "eslint-plugin-react-hooks": "7.1.1",
+        "eslint-plugin-sonarjs": "3.0.7",
+        "typescript": "5.9.2"
+      },
+      "configOnlyDifference": "tsconfigRootDir",
+      "configSHA256": "71fec4e76e3e26f5e21e6412d7847a5c7e0b8e828af4fba41237351faa24ccce",
+      "baselineConfigSHA256": "5e8b1edb3879488670c424dd7181ad298d6161b7c54e37d54373009c4cc35e31"
+    },
+    "AST": {
+      "nodes": 419,
+      "edges": 2498,
+      "parseErrors": 0,
+      "staticValueSCC": [],
+      "includingDynamicValueSCC": [],
+      "selfLoopsIncludedInIndependentCheck": true,
+      "methodLimit": "Reviewed literal imports/reexports only; no computed runtime resolution"
+    },
+    "canonicalProducersReviewed": [
+      ".trellis/tasks/10-09-src-remediation-e/tools/scan-unit.mjs",
+      ".trellis/tasks/10-09-src-remediation-e/tools/baseline-static.mjs",
+      ".trellis/tasks/10-09-src-remediation-e/tools/current-source-ast.cjs",
+      ".trellis/tasks/10-09-src-remediation-e/tools/run-e02-root-gates.py",
+      ".trellis/tasks/10-09-src-remediation-e/tools/snapshot-unit.py"
+    ]
+  },
+  "producerCorrections": [
+    {
+      "unadaptedE01ActualPassedCases": 13,
+      "writerProseSays": 12,
+      "finding": "Nonblocking transcription error. Failure target/cause and final19 success are accurate. Original report preserved."
+    },
+    {
+      "attempt": 1,
+      "cause": "Independent harness assumed zero external assets; existing static Lobe fonts/KaTeX requested. Interaction assertions passed. Next attempt intercepts/records static resources and rejects unexpected external/provider requests.",
+      "productChange": false
+    },
+    {
+      "attempt": 2,
+      "cause": "Unscoped mobile panel locator matches both responsive header controls. Attempt3 scopes existing mobile-owner span.",
+      "productChange": false
+    }
+  ],
+  "contextRead": [
+    ".trellis/spec/frontend/index.md",
+    ".trellis/spec/frontend/component-guidelines.md",
+    ".trellis/spec/frontend/type-safety.md",
+    ".trellis/spec/frontend/quality-guidelines.md",
+    ".trellis/spec/frontend/agent-tasks.md",
+    ".trellis/spec/frontend/chat-performance.md",
+    ".trellis/spec/frontend/agent-activity-ui.md",
+    ".trellis/spec/guides/code-reuse-thinking-guide.md",
+    ".trellis/tasks/10-09-src-remediation-e/prd.md",
+    ".trellis/tasks/10-09-src-remediation-e/design.md",
+    ".trellis/tasks/10-09-src-remediation-e/implement.md",
+    ".trellis/tasks/10-09-src-remediation-e/research/E02-current-boundaries.md",
+    ".trellis/tasks/09-30-src-quality-remediation/research/E-next-unit-contracts.md",
+    ".trellis/tasks/10-09-src-remediation-e/research/E02-independent-check-contract.md",
+    ".trellis/tasks/10-09-src-remediation-e/research/E02-implementation.md",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E02-static-attribution.json"
+  ],
+  "specSyncRecommendations": [
+    {
+      "file": ".trellis/spec/frontend/component-guidelines.md",
+      "recommendation": "Native sibling topic buttons; focus-within action visibility; target ownership; real Tab/Enter/Space; retain E01 owner guard."
+    },
+    {
+      "file": ".trellis/spec/frontend/chat-performance.md",
+      "recommendation": "Final-winning767px media cascade;8px narrow gutters/no cap/max(12px,env), desktop800px/16px, header/dock/expanded/rail specificity; honest CSS surrogate limits."
+    }
+  ],
+  "selfFixes": [],
+  "evidenceHashes": {
+    ".trellis/tasks/10-09-src-remediation-e/research/E02-fixture-typecheck-attempt-1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".trellis/tasks/10-09-src-remediation-e/research/E02-implementation.json": "613f0d3749a3fb54c378c461a3f0692762a399cb47f8dee7da7e9d48ca1ee06e",
+    ".trellis/tasks/10-09-src-remediation-e/research/E02-implementation.md": "ece6778ba048436c442779da9bd1cf9cc7aa78999f818295fdf12f5dbe60d62d",
+    ".trellis/tasks/10-09-src-remediation-e/research/E02-native-after-attempt-1.log": "1fcae3d986490438ac6f14fc1e597532b0ab1a9b7967261ed715d22a22827c67",
+    ".trellis/tasks/10-09-src-remediation-e/research/E02-native-before-attempt-1.log": "f8b70290206f518c0e12c08e72530eba9fd31a10e9eef0a96be76f662d9d52a1",
+    ".trellis/tasks/10-09-src-remediation-e/research/E02-typecheck-attempt-1.log": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/e01-drafts-adapted-final-observations.json": "8b024ba9e2106cbeeeb8c131f2fb5a5b1b746834f5da16c57d31977b3f056874",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/e01-drafts-adapted-final.log": "a5c1ce2fe4c0ef18668e3c6b6d4fcaacc53398ec121ce3fe4484def8170a5122",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/e01-drafts-final.log": "8f10b7b147c5c8acc0a460c8094a37bb6c517059ffd965826b7160d6464bbde3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/e01-selector-adaptation.json": "cdbc0b0227806f8b7d5cb3eb319fd14af6fed1dc7c308405d45a61567e64a415",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/e01-unchanged-runner-failure/failure.html": "f30d3c3977c009c8cb5d8e2842f9b98017453956e9af71f607dd87fb1cc85b1b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/e01-unchanged-runner-failure/failure.png": "602455d3234c3ca91d015d84d66008a2b2101859b6e6c34617e47c097e190486",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/e01-unchanged-runner-failure/observations.json": "bef7aaff87f64221c5f5b5c6c4920929456f860368bc152c5dfe48ff894ca66c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/fixture-typecheck-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/fixture-typecheck-freeze-2.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/focused-final.log": "f17fad4b9e49e1e61cb1189c77358d683713707b593e448a15c117a2a30ddfbe",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/focused-freeze-2.log": "f98c0c9f913d8587b3ad75afbde847f8bada5db70490a480c2dd36e38a2208ae",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-attempt-1/1440-expanded.png": "8132e245a7a86d2b2ef463de0123c279a2b07902fb0842533f74f92a93df8ca9",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-attempt-1/1440.png": "f046598183b0b7ed85fafe8100e925ad51af76db77b8d70ea5a209e094641a7d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-attempt-1/390-expanded.png": "d0d53f96c6eb8be47ef88ddd5a8e72802c2828a0e9e37c03a615f42a52b0b29b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-attempt-1/390.png": "c53bc3faf1c2836d76968d99c4744ec8894dd99b55d08c59a8d6a9ad15237d5e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-attempt-1/767-expanded.png": "4294225ad81b3db7aaa353ba62e36a41888b4898be4b2dc2839b15b60df05064",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-attempt-1/767.png": "f1e28b09f53526b405d10c84b88695d26fc2f2b521caa187a41c3b7e8e8443b3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-attempt-1/768-expanded.png": "706fcec46bdb857b458fe63f13ee49d3265874ca0066b0c4cb58953c2ba748cb",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-attempt-1/768.png": "0f3f7bc1c49787836e80e849cd8cd39fa35110d1bc3d0ef6c816db479ab69df9",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-attempt-1/observations.json": "4e2aa072f336c66da532f1b1c3f2bcb58374e82ed4bf86589c4d08b6ffb8f63f",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final/1440-expanded.png": "8132e245a7a86d2b2ef463de0123c279a2b07902fb0842533f74f92a93df8ca9",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final/1440.png": "d42d3d3c2aa92b7cc35961852aa7cb291c19aa9c9e7fbaadb71e0d214d4ebb2c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final/390-expanded.png": "d0d53f96c6eb8be47ef88ddd5a8e72802c2828a0e9e37c03a615f42a52b0b29b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final/390.png": "c53bc3faf1c2836d76968d99c4744ec8894dd99b55d08c59a8d6a9ad15237d5e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final/767-expanded.png": "4294225ad81b3db7aaa353ba62e36a41888b4898be4b2dc2839b15b60df05064",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final/767.png": "ebff8112e1b3fa5dafbf3d3b7c72d2646a0621f531e226857abef53943c51e6d",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final/768-expanded.png": "706fcec46bdb857b458fe63f13ee49d3265874ca0066b0c4cb58953c2ba748cb",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final/768.png": "0f3f7bc1c49787836e80e849cd8cd39fa35110d1bc3d0ef6c816db479ab69df9",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final/observations.json": "f2e386b75db1596de1d4e97aefdfbfc4e9391f9119535c00b72abada083be005",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-final.log": "a12e2032a854ec3e711b8fcb9341f34fb1622e87f4991c235e9fb760294974fb",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2/1440-expanded.png": "8132e245a7a86d2b2ef463de0123c279a2b07902fb0842533f74f92a93df8ca9",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2/1440.png": "561fb68ebea5ee9350347b0d31cb5dba0921b25d7dc68b6eaab9fdf21a506fef",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2/390-expanded.png": "d0d53f96c6eb8be47ef88ddd5a8e72802c2828a0e9e37c03a615f42a52b0b29b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2/390.png": "d0771d6f3fdf2f5b341e135042f964e2529dc15f1864aeae086a4511822527be",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2/767-expanded.png": "4294225ad81b3db7aaa353ba62e36a41888b4898be4b2dc2839b15b60df05064",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2/767.png": "9020c0d5e811b975862e3c0523501aba226f254c0600ec887cd615147aa173d9",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2/768-expanded.png": "706fcec46bdb857b458fe63f13ee49d3265874ca0066b0c4cb58953c2ba748cb",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2/768.png": "40602c05ba1fb224c4b6b5641d7952bb5f67d7ad678c75f4058ccc1640901710",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2/observations.json": "d35d9584017ea1d6e5b4777f65e68ea9f0fefcb0f9abdb927c84401975caaf5e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2.log": "c00b3d4651952f5d0279d3d9296957750850b28c7589a8ccd908d9ea3207b57a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-attempt-1/1440-expanded.png": "e5382245c4dad24e13713a3a6deeb8bbc85e6f5453ad381ee9dcadba69d1f3a1",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-attempt-1/1440.png": "8bfacb1da3429bceb7176d70cb4c38151daa1255ae250bcc686f2a37a4d7ea98",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-attempt-1/390-expanded.png": "4905567d88819a6071beab4e2209fd56da0f18a0e7e2cf2b25dd05a56309a9e2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-attempt-1/390.png": "8a34f0e0c639ffef5c7f54bab6634255ceb7c64b9073c8fc2a7ecf649549d94c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-attempt-1/767-expanded.png": "527a06960f8fa7cbd810b6841769cc3faeed5d96b124c7239992bb90d2bfcf86",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-attempt-1/767.png": "d796e375f5d029dcd390a458381fb2457c6416cb6c902903991eccb4885fc6b8",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-attempt-1/768-expanded.png": "47d782524e1b0e1208a17c68937074d870ad57313670550ac445b69f8ec18111",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-attempt-1/768.png": "72d531dfeab634506a689e675f2a29b727128d198ec391509bde5baa964cc458",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-attempt-1/observations.json": "bb9cdd811f3474c21d789de4e429743de2b97709a9f31b36c6981edd7b127e3b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final/1440-expanded.png": "e5382245c4dad24e13713a3a6deeb8bbc85e6f5453ad381ee9dcadba69d1f3a1",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final/1440.png": "8bfacb1da3429bceb7176d70cb4c38151daa1255ae250bcc686f2a37a4d7ea98",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final/390-expanded.png": "4905567d88819a6071beab4e2209fd56da0f18a0e7e2cf2b25dd05a56309a9e2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final/390.png": "8a34f0e0c639ffef5c7f54bab6634255ceb7c64b9073c8fc2a7ecf649549d94c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final/767-expanded.png": "527a06960f8fa7cbd810b6841769cc3faeed5d96b124c7239992bb90d2bfcf86",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final/767.png": "713488c41e7fe038f3b918b369906625c8ad2fbdaec68823868c40fc4a77087f",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final/768-expanded.png": "47d782524e1b0e1208a17c68937074d870ad57313670550ac445b69f8ec18111",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final/768.png": "72d531dfeab634506a689e675f2a29b727128d198ec391509bde5baa964cc458",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final/observations.json": "14d00557e26e146e9426cdd9904d61c9ed2dd38c7359172fa8307cec1a6c85b1",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-final.log": "70d619a80423f802925d7f6387d8309cfe22ce91f8557d28ee5255f82bb77b8a",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2/1440-expanded.png": "e5382245c4dad24e13713a3a6deeb8bbc85e6f5453ad381ee9dcadba69d1f3a1",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2/1440.png": "6b3821db81dbd73688b1835cb625d8221834f6bd0a26d03b1094b9824d0bc555",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2/390-expanded.png": "4905567d88819a6071beab4e2209fd56da0f18a0e7e2cf2b25dd05a56309a9e2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2/390.png": "eb3e71482cb50924fb9b9f1184ba549a50b25c1aeddcc85a6528951f7a2232d2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2/767-expanded.png": "527a06960f8fa7cbd810b6841769cc3faeed5d96b124c7239992bb90d2bfcf86",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2/767.png": "fc76c920d18477490c0a3935bc70f75ede7f21e2ea76e1a0e49c48e896db9299",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2/768-expanded.png": "47d782524e1b0e1208a17c68937074d870ad57313670550ac445b69f8ec18111",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2/768.png": "f7a25bb2ccb6b528a5d081d9a5f718c791c544c88ecf758213677a9413e00c6b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2/observations.json": "f57401679389449b1e5199da8d0af6ff729318c8b826b04b2859f2a5faf0be62",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2.log": "8072915d0d7d3fb14abe17a7aa58462255695af8df220ceba81b03e2a14b45e1",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final/1440-expanded.png": "8132e245a7a86d2b2ef463de0123c279a2b07902fb0842533f74f92a93df8ca9",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final/1440.png": "d5b7745ff8abde79170ee377452d3de66323c911086f0f25beed45b59ce1ed01",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final/390-expanded.png": "4905567d88819a6071beab4e2209fd56da0f18a0e7e2cf2b25dd05a56309a9e2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final/390.png": "bf57674c73c0931358a0b4b7e810b661157506a4bb67102cb48d401bb1a4b125",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final/767-expanded.png": "527a06960f8fa7cbd810b6841769cc3faeed5d96b124c7239992bb90d2bfcf86",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final/767.png": "b7539bef02112c2c19b91bcdfb30b6ffec2b3aba4291442565925d0795393a5f",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final/768-expanded.png": "706fcec46bdb857b458fe63f13ee49d3265874ca0066b0c4cb58953c2ba748cb",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final/768.png": "d981bbab20064c4569a80715027845a5e04fc48824b269f9c4342e9fe64c8187",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final/observations.json": "d5f1f7ae0f1f00e6f6f89c2f07f7ed4f5eeeecb200078eb4e7ec8049a42b2c46",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-final.log": "137a8a0d1a6dd6741e73d6039993bfe852e53f4beb7a936b9b19b2315e66fcb9",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2/1440-expanded.png": "8132e245a7a86d2b2ef463de0123c279a2b07902fb0842533f74f92a93df8ca9",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2/1440.png": "c7cb65d711e24b4b070238acf15df2e504580932dec6a024541e8e27b0fb909c",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2/390-expanded.png": "4905567d88819a6071beab4e2209fd56da0f18a0e7e2cf2b25dd05a56309a9e2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2/390.png": "a56ed1985189bee55274e7aedbdf77f2760f984d6ecb117ecda03ca7294f5873",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2/767-expanded.png": "527a06960f8fa7cbd810b6841769cc3faeed5d96b124c7239992bb90d2bfcf86",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2/767.png": "8e6b26fdb37820ec689cbe6fca0fd427e1a33d1a95c4635bcc1ec947bcad6834",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2/768-expanded.png": "706fcec46bdb857b458fe63f13ee49d3265874ca0066b0c4cb58953c2ba748cb",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2/768.png": "40602c05ba1fb224c4b6b5641d7952bb5f67d7ad678c75f4058ccc1640901710",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2/observations.json": "3185e00ad0bc99c6efabc7a9fc3aee3a3fa5039b99c152e7a9d2266fbbd1e691",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2.log": "859fbdcd24956b097955f16c39860dd4e0c2d22b3ca9e5c86bea1a2ec7104acc",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/source-freeze-attempt-1.json": "0fb113848c99cc2b2ec424f752332de377a13288caf4b995033bd0ed14b78008",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/source-freeze-attempt-2.json": "3377932581746ad4e931b01c01e3159d552d8808781f3ca6420c2c3e2b82ff85",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/source-freeze.json": "0a4b42ca9451ad18080205a9e9edbb6111f192fedd40a05a5e0c84f08ea3f573",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/typecheck-final.log": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/typecheck-freeze-2.log": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E02-static-summary.json": "9a45dbc607f6d64dd6bf7c5409a43a35a9eae5c59a11b3ceb95d8087fee84ddf",
+    "src/components/agent/LobeChatTheme.tsx": "dc6409a1d661f150a051b830e1928e6e2abbf801a280be0059cb67a59d1ad7a0",
+    ".trellis/tasks/10-09-src-remediation-e/tools/current-source-ast.cjs": "f35c4f692630e602ef1c3c9c15e89bb7c202f4710c73ac22549db7ad3e96d8a5",
+    "tests/fixtures/sourceSnapshots/e02/provenance.json": "e46e095db1ead5e14fc9b5687589d04a211ac08298e4bd5ac412fd497f7491c7",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E02-static-results.json": "2300fc800793dd1f18f8558d68a0c3db7d36b3b404a3feaa12894820cf744ae1",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E02-current-frozen-gates/tests.log": "30b18c49522c1b90c99577d4db52d8b1b47b65aeb06363a3d35ae5525362f786",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E02-current-frozen-gates/commands.json": "35707040a9567c20c95db24d0b84469c25fa5fefcf7a96b7fb45a98702e4fcaa",
+    ".trellis/spec/guides/code-reuse-thinking-guide.md": "28f13937d7768e899ba18f42936debc80af7021ef2af43a8c0152653cad5dd43",
+    ".trellis/tasks/10-09-src-remediation-e/research/e02/artifact-manifest.json": "1d4cb8949adeb3008e8c24849282c3d781badae7feacebb3733bccaae22a2cea",
+    "src/components/agent/AgentChatPage.tsx": "234344a50bb5a9bfce0258bf3b6d32b76be4cf965675b6b0eb8a77b8479f11cc",
+    ".trellis/spec/frontend/type-safety.md": "e238aa9e9af53b671bd79e850b352ccca544af2179e9ad9c18ee3014503f0746",
+    ".trellis/tasks/10-09-src-remediation-e/research/E02-current-boundaries.md": "5c2b5961959d3ea2a3bdeb069bb48952f68db6d21b3bc0ed545b4ffa30d39d97",
+    "pnpm-lock.yaml": "c989c9f9af4da94f0483606f9a4f0d4756136fb01e30640757bd7c0248ed31b4",
+    ".trellis/tasks/10-09-src-remediation-e/design.md": "654d8ef35d49e8e5afb69ba50bd43faf640bd558bf4a8b0c50080f6f0ea351b0",
+    ".trellis/tasks/10-09-src-remediation-e/tools/baseline-static.mjs": "ea6b7aac373598c0eb49c6360a92bfbecbdb36ee2a990e2e876d8bc0ef0c1496",
+    "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/baseline-e-1ecaf5c/eslint.config.mjs": "5e8b1edb3879488670c424dd7181ad298d6161b7c54e37d54373009c4cc35e31",
+    "tests/fixtures/e02/harness.tsx": "d5f37323e1ba40a524fe266209ed31c958c9e898466d2bc970971e45f859d869",
+    "tests/fixtures/sourceSnapshots/e02/agentChat.css": "b1e1bd7da07ea2efe595cef9b5c6a8291563abf93dedae4bd90cc2877348fb1e",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E02-coordinator-preflight.json": "64952a4ed42bcf04fc4d43f070e829034cf3970d66cf47831620b2461baad768",
+    ".trellis/tasks/10-09-src-remediation-e/tools/scan-unit.mjs": "3bbf03c76387bb264d4a2a36acab7831183044bdc591474a7f395b1c82b8fbe5",
+    ".trellis/tasks/10-09-src-remediation-e/research/E02-current-ast-results.json": "00cfb349228382810b880937e24720b482844844f102e55e7312d9ac57bf768e",
+    "src/components/agent/ChatWorkspace.tsx": "db06ad95e7115f1b4e050a687c7aecb1ebb9c09e73889610e2aa1f248e65af5e",
+    "scripts/e02-browser-regression.mjs": "215aa6f27c5122322af029da3665ad958d8ff74b2629e37751604f9614b10260",
+    ".trellis/spec/frontend/agent-tasks.md": "9632d4a24b81e063411b7ce1af82faf40a443625a38fbd171cd1525f4623a7f7",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E02-current-frozen-gates/typecheck.log": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+    ".trellis/spec/frontend/agent-activity-ui.md": "43289b80e6d4085165a87518611d6c2741411b2d7a35e69d23851ff92edb64f9",
+    ".trellis/tasks/10-09-src-remediation-e/tools/run-e02-root-gates.py": "99b72661c5d9a0a14005e1ac456d36e6d896ebf1bb5b38dff0198b6724eb483d",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E02-review-input.json": "938ec084601c3f46017297eb01c9c2d3691118dd21185324c0fef2303535528f",
+    "tests/fixtures/e02/index.html": "e6ca6c03e82fa7b0a5d854c4fc9c3b727dfc3441cc34a3822a66055d0771c73c",
+    "tsconfig.app.json": "c40f7db8652b3433532289c87edd6898d4de984614f8a99dcf7bfbd8856e3bb3",
+    "scripts/e01-drafts-browser-regression.mjs": "2f2ac3abe91a3fba6f626662046d5cb5cbd0f6bc03f8147ed1f3e01fc00d8d5d",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E02-current-frozen-gates/pre.json": "835f15562f3356ea5cff91adf0477706efa45e5935c2390e805d996e78eb2be2",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E01-check-snapshot.json": "a2f51cae8c423295f9e0cde2fb6863104afd0e0c8847a0752f3f1cdd3e14eed0",
+    ".trellis/tasks/10-09-src-remediation-e/tools/snapshot-unit.py": "96cc468ccf55c0a2edc9f21d3eea41ecb45348a931314843d1c34c4e1b50cbb2",
+    "tests/fixtures/sourceSnapshots/e02/TopicSidebar.tsx": "03eb777c98984d75300c9dcfd1533739e3c7308d561d6d72a6bf20be55bc2dc9",
+    ".trellis/spec/frontend/chat-performance.md": "72b8db703467f0dc23c763a720c3fbb208654f608e9a905b6b4377367ba85a91",
+    ".trellis/tasks/10-09-src-remediation-e/implement.md": "16aa23e394c2058a3685fa839d22f64f2da92200c5202add0bfd94e69493959d",
+    "package.json": "894cca99189d6e0535ed623d3e4d702868adcc3d4afef27a141b7e7da176033b",
+    "src/components/agent/agentChat.css": "e8d456f0a635f79ad163705d8b0504247b95618526fcff97eb0ab371b7b117eb",
+    "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/eslint.config.mjs": "71fec4e76e3e26f5e21e6412d7847a5c7e0b8e828af4fba41237351faa24ccce",
+    ".trellis/tasks/10-09-src-remediation-e/research/E02-native-safe-area-capability.json": "87331d12a84a35849cb11266c6c17e92bdeffc73a9fc2dc15dcdc566cc21da04",
+    ".trellis/spec/frontend/component-guidelines.md": "7458d0ac44119d8581470f13ae9d28d1cbf1bde17468b9f0167897cf8a30ef2e",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E02-current-frozen-gates/post.json": "835f15562f3356ea5cff91adf0477706efa45e5935c2390e805d996e78eb2be2",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E02-static-attribution.json": "b26c9ebc573a9ec1cedc58c38b93756e8aad36ab97a816b59965c73d105e7d42",
+    ".trellis/tasks/09-30-src-quality-remediation/research/E-next-unit-contracts.md": "b08bd18908c0a700b8268239633302ebd12c25a4e7c9185c61d4d6981121c0a1",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E02-current-frozen-gates/summary.json": "11c697d8c1ebd412d9473835f1f9c233ff9a042f145ec4d4b7b8dca73c2341d0",
+    ".trellis/tasks/10-09-src-remediation-e/research/E02-entry.json": "b22f3ac7b7325a902c3dd295edb0ca61c112d7fd6ff6e5f16589128fb85d85e7",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E01-check.md": "895373fdbe48a60f944fe046ee945a54f5fb38fb018851670d07b1e364df9c91",
+    ".trellis/tasks/10-09-src-remediation-e/research/E02-current-ast-summary.json": "8db5a9066c53be02a3e09ad1e308191eb9deead02720e97a9ee6bd212671bf9e",
+    "tests/fixtures/e02/tsconfig.json": "cbf2e9e64c5fca6bc1e940e98515e943c495a4128a03630d977c5636f404b04a",
+    ".trellis/spec/frontend/index.md": "5eae5786b9496dfd9c9199c56d3e0adf7793bebd49b32ab6141c144bd1d33284",
+    ".trellis/tasks/10-09-src-remediation-e/prd.md": "6d5494ea626cc7cb2bfb21f26cf4580890a069221a4f033dee5b4f1a2f44d148",
+    ".trellis/spec/frontend/quality-guidelines.md": "b6056b07c309dfcd76c9552f68848601efe0979280a21f328be216c1025f9cf6",
+    "src/components/agent/agentTheme.ts": "ef58c4d533a8447c12c7375bc426db34cfc9266f3b5e57e65c07d325bef06003",
+    ".trellis/tasks/10-09-src-remediation-e/research/E02-independent-check-contract.md": "5de35215f4635623d3f0f5a73a16697f51b99caad254186201776446d45a7550",
+    "src/components/agent/TopicSidebar.tsx": "121d77f9f9b0b094caef74b52c2574837250e9d92366d33a6056eb6204c3f0b7",
+    ".trellis/tasks/10-09-src-remediation-e/research/static-runtime.json": "d2be2acb12133c982bdb2c103d33f2ab70605e661aafa27777b27d9db4c7c6b1",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-supplement.mjs": "289d43da674dcb663b1db23351168786d4bafd946d565f440353d24ba52e3e18",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-supplement-attempt2.mjs": "13e32aa5df85b347f61e4e1782038431d78071d13cb1483199407a5637040d5e",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/e01-drafts.log": "a5c1ce2fe4c0ef18668e3c6b6d4fcaacc53398ec121ce3fe4484def8170a5122",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-surrogate.log": "fd46d06625e759cdf638658f5731c9383a91fc9d4f183046448032696a638288",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-supplement-attempt3.mjs": "2264d5f4ffb91455dabbc78e1821a5b22546af3a389b9447508640a206f0fb0a",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/provenance.json": "4c265160f3bce5e366d7c04d35dd2c0bc88970f9460426ab4a3052e693e868bc",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/review-entry.json": "36329536f3dd7b5abb27f45634fffb4d69daa94078552d81fa95f4d3f5b5bd95",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/contact-sheet-8.jpg": "0f640f91493c8a5f349af70f806292c56f906c68bd5de7a54ab9d7e4a3ba86ca",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/fixture-typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/typecheck.log": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/e01-drafts-observations.json": "8b024ba9e2106cbeeeb8c131f2fb5a5b1b746834f5da16c57d31977b3f056874",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-supplement-attempt1.log": "b3c3c215c2ba34a7de659f3e19427ef7cf4bda1d6b99791c1c7faabcdbfdfb75",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-supplement-attempt3.log": "ab530e3aebb897d047bbc8709f2624c85798e47a22215e41ae6b51aa655d813a",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/commands.json": "b7d7f79fd28a235ed3052e26954992bebe0bd58cbac12e0106bb9685b6b029a7",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-supplement-attempt2.log": "d8e37bd2f2a5960d87b73c0b1112fe128c16dc7d257590b2f3df84e7816f4a3f",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/versions.mjs": "f7640495b18e8049ed3a387985591568d316a1fbcd20fdc33b465df31a01093d",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-before.log": "8facc3b57f2e916dde9e3b791e1066a25b0be1753014103b8ea89b92cb2d5441",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/run_checks.py": "d5d455f2c9e6a58d897c9ffee7d0efbb5b229a49c138976f5fdb8e099bad7c0d",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/contact_sheets.py": "16ad72f182b177c27b63ed48717aae7ae02f9a54ec56fd1757ecf2f9d9290233",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/contact-sheet-5.jpg": "75becb0ec8fca1a365b9f2af23615989e21d915dba2fc66eb93b8bfd93bf6d21",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/provenance.py": "6c16f5cb9ed5f85f1d2531315ea829661063b87c2ca999051557dde0934459f5",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/contact-sheet-4.jpg": "16cee81755846b6bb5c38922b374451432b2bccdf316f2973aff69adf73328fb",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/contact-sheet-6.jpg": "8d2cb95efd6fbba52b00c1c76fc9c75c68cbd5a15875d716b14e3b99ddb2a5bc",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/write_final_review.py": "2521ccbcdc0147fc696e70b39485314b1a3d8aa33a3637ddd7b1c4d8bf5a5051",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/contact-sheet-7.jpg": "3be673f59cf100605e89123472c91ca93565b1ec587768fadb788cdafadd9675",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/contact-sheet-3.jpg": "35704f8d9556832c94028c6bdf848806d2bc567268ca1972b8198e5eb7fedac4",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/contact-sheet-2.jpg": "baf972f180702d1fefbe485da5ea6cbc5e8adda475fc4eebc47243260e8fb368",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/tool-versions.json": "7d62d98fc8c1a5fe05c058f2621f2dbd714f7e149e2aa910c583b210afc804aa",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/contact-sheet-1.jpg": "f19d4460619beed6d6164b386a86809acbeaf12cb1382ac862c921aed37bdd4f",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-after.log": "ef427b0c6982e3d11d701f19580b28b3b0d374cdd41427cc43b6496730866675",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/supplement-attempt3/767.png": "aa811f1f869284db261ed313ca3c203c8320d4c36552600944771bc0946884f0",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/supplement-attempt3/1440.png": "0ff9eb966a9dfc60abb6273c20eee281ad07eb910ff3834fab52dff1d53ff8ea",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/supplement-attempt3/observations.json": "14d389be2fcc8573b2fdfd82fdb70ede1a7c52326a8fe18506691bc20eee9006",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/supplement-attempt3/390.png": "069864301ff9278b4dd26c42639b8f24370b29fb8bd19f7c2ef1387c026f055a",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/supplement-attempt3/768.png": "81a2513bf61f1bf872bd7a30868db4978f1b36202b3774ef16e4a3318776ea64",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/supplement-attempt2/failure.html": "a983f2949f260d7fcb6cba87d730b086717ff230d1163a4046444f6d3102528a",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/supplement-attempt2/observations.json": "20cfdccff756a8f79be7853181238a983154afa472daaff5f11655b1a1277429",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/supplement-attempt2/failure.png": "3c0f578927bc89b909edaf6a2558dbd14a05f4030f3f9a5c385767dfe4148ae7",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-before/390-expanded.png": "4905567d88819a6071beab4e2209fd56da0f18a0e7e2cf2b25dd05a56309a9e2",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-before/767.png": "4d6279d177c862400a8eab6b761ab209c51a8a4cdb66787d896eb4092cdb36b4",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-before/768-expanded.png": "47d782524e1b0e1208a17c68937074d870ad57313670550ac445b69f8ec18111",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-before/1440.png": "3dfc4959f133552ccada57c23e2385686e8756a93a14aa8973c62f5e6bed1ce6",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-before/1440-expanded.png": "e5382245c4dad24e13713a3a6deeb8bbc85e6f5453ad381ee9dcadba69d1f3a1",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-before/observations.json": "f57401679389449b1e5199da8d0af6ff729318c8b826b04b2859f2a5faf0be62",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-before/767-expanded.png": "527a06960f8fa7cbd810b6841769cc3faeed5d96b124c7239992bb90d2bfcf86",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-before/390.png": "8c5db16a31b73ff94fae135f527f116ecac7d6320eea52621ca2ec9608f76d7b",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-before/768.png": "f7a25bb2ccb6b528a5d081d9a5f718c791c544c88ecf758213677a9413e00c6b",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-after/390-expanded.png": "d0d53f96c6eb8be47ef88ddd5a8e72802c2828a0e9e37c03a615f42a52b0b29b",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-after/767.png": "3d539f1a6b3bbfda6ae326bbc2359218586079424fed00f334bf676ff7829941",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-after/768-expanded.png": "706fcec46bdb857b458fe63f13ee49d3265874ca0066b0c4cb58953c2ba748cb",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-after/1440.png": "948095ea558cac6fa4db00f2ee281e089d858275c7057512dd0d32f1b2a6af1a",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-after/1440-expanded.png": "8132e245a7a86d2b2ef463de0123c279a2b07902fb0842533f74f92a93df8ca9",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-after/observations.json": "d35d9584017ea1d6e5b4777f65e68ea9f0fefcb0f9abdb927c84401975caaf5e",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-after/767-expanded.png": "4294225ad81b3db7aaa353ba62e36a41888b4898be4b2dc2839b15b60df05064",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-after/390.png": "d0771d6f3fdf2f5b341e135042f964e2529dc15f1864aeae086a4511822527be",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-after/768.png": "40602c05ba1fb224c4b6b5641d7952bb5f67d7ad678c75f4058ccc1640901710",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-surrogate/390-expanded.png": "4905567d88819a6071beab4e2209fd56da0f18a0e7e2cf2b25dd05a56309a9e2",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-surrogate/767.png": "3b3a60907b7889d81c1fb489c771ea9c3751214ad21987e6ed156c474302b2e4",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-surrogate/768-expanded.png": "706fcec46bdb857b458fe63f13ee49d3265874ca0066b0c4cb58953c2ba748cb",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-surrogate/1440.png": "74911e2c3fa76775af96fe023c23f091c633901afd6ee056b0a846bff4a41761",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-surrogate/1440-expanded.png": "8132e245a7a86d2b2ef463de0123c279a2b07902fb0842533f74f92a93df8ca9",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-surrogate/observations.json": "3185e00ad0bc99c6efabc7a9fc3aee3a3fa5039b99c152e7a9d2266fbbd1e691",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-surrogate/767-expanded.png": "527a06960f8fa7cbd810b6841769cc3faeed5d96b124c7239992bb90d2bfcf86",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-surrogate/390.png": "a56ed1985189bee55274e7aedbdf77f2760f984d6ecb117ecda03ca7294f5873",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/native-surrogate/768.png": "40602c05ba1fb224c4b6b5641d7952bb5f67d7ad678c75f4058ccc1640901710",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/supplement-attempt1/failure.html": "fd128db45d6a9205a48614e1e2badd6ee1405be7173509dba8c134a0d2e2b93a",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/supplement-attempt1/observations.json": "1a9264c1dcdd86f5adf4eec2536178abe32a5ebcd76faadfa23f1ed3d86414fb",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e02-independent/supplement-attempt1/failure.png": "5d80a21955b157a0da5604bd09dbd0f5875b1ffbd686041dd96b22880c41cc0b",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E02-check.md": "2d4873a49057231db5154b0a792d2d9f83884873db94f8ab7b63eaa7f5e6456f"
+  },
+  "reportSHA256": "2d4873a49057231db5154b0a792d2d9f83884873db94f8ab7b63eaa7f5e6456f",
+  "selfHash": "Excluded to avoid circular digest; hash externally after acceptance.",
+  "limits": [
+    "Local installed headless Chromium; no WebKit/device/iOS proof.",
+    "CSS32px surrogate is not native OS inset evidence.",
+    "Production fixture/components, not full-product or paid-provider E2E.",
+    "E01 programmatic controls behind modal inertness prove callback integration, not ordinary pointer accessibility.",
+    "No duplicate full suite: main160files2556tests passes unchanged718 inputs.",
+    "No build/model/CI rerun claimed.",
+    "Temporary static per-file multiset attribution is not QG01 accepted debt.",
+    "AST excludes computed runtime resolution.",
+    "Frozen original reports and failed attempts preserved."
+  ],
+  "scopeCompliance": {
+    "rootEdits": [],
+    "specLedgerStatusEdits": false,
+    "packageCIInstall": false,
+    "commitsPushesAgentsE03": false
+  },
+  "completedAt": "2026-10-09T03:13:27.610455+00:00"
+}

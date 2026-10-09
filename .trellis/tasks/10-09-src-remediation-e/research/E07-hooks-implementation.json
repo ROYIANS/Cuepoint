@@ -1,0 +1,468 @@
+{
+  "status": "COMPLETED",
+  "scope": "E07 slice C assigned UI/Hooks implementation and self-review; coordinator owns independent check and full E07 acceptance",
+  "before": {
+    "src/components/agent/AgentChatPage.tsx": {
+      "sha256": "234344a50bb5a9bfce0258bf3b6d32b76be4cf965675b6b0eb8a77b8479f11cc"
+    },
+    "src/components/agent/AgentRunDetails.tsx": {
+      "sha256": "5202a654cf3aef7610fe2db4fd897368011545e35d5cdef5e6b2085dfbe4b95c"
+    },
+    "src/components/agent/ReferenceAttachments.tsx": {
+      "sha256": "617efc1d4fb59c1bc85ef95bf0ae3f0b483765c1795e313c6d2faa79b5134e10"
+    },
+    "src/components/agent/TaskWrapup.tsx": {
+      "sha256": "85d9f9442619f8c161d3645f49dda4a43aeb495f13810ce9d41b66cfa24fe99b"
+    },
+    "src/components/agent/useChatSelection.ts": {
+      "sha256": "4cb97e08af1420c24d8a9b558fa6620e79871805ed1a4da41e9ada66af8fd676"
+    },
+    "src/components/agent/useReferenceDraft.ts": {
+      "sha256": "c2649c23d53889a4d6bdacbaa533858001746cba4400ab4b8e1baf60ad3cf48f"
+    },
+    "src/components/audio/AudioTimeline.tsx": {
+      "sha256": "8ca4c41ba7e4d56bee5c03a6c9223a4d59f9c793f4a95496bbe6ffb4f34eebb5"
+    },
+    "src/components/audio/AudioSources.tsx": {
+      "sha256": "4613bd5dcb2c218656d6000b2db25c4586de762fadec5c5bee67b0d4519a3580"
+    },
+    "src/components/studio/ConnectorsPage.tsx": {
+      "sha256": "ca5a6ce7b3debcfefbee743cefa27370efb4650346d717c3725b1329ef87ece7"
+    },
+    "src/components/studio/ProjectGalleryPage.tsx": {
+      "sha256": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1"
+    },
+    "src/components/studio/materials/MaterialDetailPanel.tsx": {
+      "sha256": "c6926fd5e164ae278731b738c494669ec46169c94c1076b9284419ef844dd514"
+    },
+    "src/components/shots/ShotRow.tsx": {
+      "sha256": "d9091a5004b9a3951e19ffadc46b63f5d366820371fb21598b5b3c827a15a87b"
+    }
+  },
+  "reviewEntry": {
+    "src/components/agent/AgentChatPage.tsx": {
+      "sha256": "b93fac4d36768b0739075ed63310599bdd80ededb60eb02b83602be845ed6f02"
+    },
+    "src/components/agent/AgentRunDetails.tsx": {
+      "sha256": "d428f9d2cf2de9ca4bf7f3901605ff8b33ca420d05cd2e311a70790a8223e020"
+    },
+    "src/components/agent/ReferenceAttachments.tsx": {
+      "sha256": "73eb869da08ebc02d8f780de9fe31f6471e5a2de708072f8a09d1a24e7f86c7a"
+    },
+    "src/components/agent/TaskWrapup.tsx": {
+      "sha256": "99e3de127ab987a833e372678c3558e20b3d0b69adb40001a1c7e1375b73575e"
+    },
+    "src/components/agent/useChatSelection.ts": {
+      "sha256": "40c0592b8de6c6e59c6f679c678d8853def469f643e65fb379b4b28003153adf"
+    },
+    "src/components/agent/useReferenceDraft.ts": {
+      "sha256": "ff87223b74e607da20fbcb3832a88b5dc8bf8c711d29cecbe9cfe6c9cadb135c"
+    },
+    "src/components/audio/AudioTimeline.tsx": {
+      "sha256": "ec5ba4fda12adf8a42bd4798ff3f0bae9fcbfe19f206c0946183c3e49b590bba"
+    },
+    "src/components/audio/AudioSources.tsx": {
+      "sha256": "4bd751d7e136dacfceefc9c57b62b54721f26b500f513ce46993c0e213a0f532"
+    },
+    "src/components/studio/ConnectorsPage.tsx": {
+      "sha256": "27d1b85031a3f7a7c80f14390fba63c16f01a5fba8225c13d588c0aa5c44f59d"
+    },
+    "src/components/studio/ProjectGalleryPage.tsx": {
+      "sha256": "4a33de135b4edd3b4e5d2caab67fcd6e31cd8665fc461e1d9d72358a23bc1329"
+    },
+    "src/components/studio/materials/MaterialDetailPanel.tsx": {
+      "sha256": "4756ea00e80904c1669d1408575545ad82c58d24836b84d68eebefd9d6f7cf67"
+    },
+    "src/components/shots/ShotRow.tsx": {
+      "sha256": "b33d4c918e1573cc2ec4766eadb6ebebe5ee3698f91822a0d64fa63335942d45"
+    },
+    "tests/e07HookContracts.test.ts": {
+      "sha256": "ed37421149cdcdaddda7104b40bca69778a465e32f8c251e86cbd844a3e91c5b"
+    }
+  },
+  "after": {
+    "src/components/agent/AgentChatPage.tsx": {
+      "sha256": "b93fac4d36768b0739075ed63310599bdd80ededb60eb02b83602be845ed6f02"
+    },
+    "src/components/agent/AgentRunDetails.tsx": {
+      "sha256": "d428f9d2cf2de9ca4bf7f3901605ff8b33ca420d05cd2e311a70790a8223e020"
+    },
+    "src/components/agent/ReferenceAttachments.tsx": {
+      "sha256": "73eb869da08ebc02d8f780de9fe31f6471e5a2de708072f8a09d1a24e7f86c7a"
+    },
+    "src/components/agent/TaskWrapup.tsx": {
+      "sha256": "99e3de127ab987a833e372678c3558e20b3d0b69adb40001a1c7e1375b73575e"
+    },
+    "src/components/agent/useChatSelection.ts": {
+      "sha256": "40c0592b8de6c6e59c6f679c678d8853def469f643e65fb379b4b28003153adf"
+    },
+    "src/components/agent/useReferenceDraft.ts": {
+      "sha256": "ff87223b74e607da20fbcb3832a88b5dc8bf8c711d29cecbe9cfe6c9cadb135c"
+    },
+    "src/components/audio/AudioTimeline.tsx": {
+      "sha256": "ec5ba4fda12adf8a42bd4798ff3f0bae9fcbfe19f206c0946183c3e49b590bba"
+    },
+    "src/components/audio/AudioSources.tsx": {
+      "sha256": "4bd751d7e136dacfceefc9c57b62b54721f26b500f513ce46993c0e213a0f532"
+    },
+    "src/components/studio/ConnectorsPage.tsx": {
+      "sha256": "27d1b85031a3f7a7c80f14390fba63c16f01a5fba8225c13d588c0aa5c44f59d"
+    },
+    "src/components/studio/ProjectGalleryPage.tsx": {
+      "sha256": "4a33de135b4edd3b4e5d2caab67fcd6e31cd8665fc461e1d9d72358a23bc1329"
+    },
+    "src/components/studio/materials/MaterialDetailPanel.tsx": {
+      "sha256": "4756ea00e80904c1669d1408575545ad82c58d24836b84d68eebefd9d6f7cf67"
+    },
+    "src/components/shots/ShotRow.tsx": {
+      "sha256": "b33d4c918e1573cc2ec4766eadb6ebebe5ee3698f91822a0d64fa63335942d45"
+    },
+    "tests/e07HookContracts.test.ts": {
+      "sha256": "ed37421149cdcdaddda7104b40bca69778a465e32f8c251e86cbd844a3e91c5b"
+    }
+  },
+  "changedFiles": [
+    "src/components/agent/AgentChatPage.tsx",
+    "src/components/agent/AgentRunDetails.tsx",
+    "src/components/agent/ReferenceAttachments.tsx",
+    "src/components/agent/TaskWrapup.tsx",
+    "src/components/agent/useChatSelection.ts",
+    "src/components/agent/useReferenceDraft.ts",
+    "src/components/audio/AudioTimeline.tsx",
+    "src/components/audio/AudioSources.tsx",
+    "src/components/studio/ConnectorsPage.tsx",
+    "src/components/studio/ProjectGalleryPage.tsx",
+    "src/components/studio/materials/MaterialDetailPanel.tsx",
+    "src/components/shots/ShotRow.tsx",
+    "tests/e07HookContracts.test.ts"
+  ],
+  "fileCoverage": [
+    {
+      "file": "src/components/agent/AgentChatPage.tsx",
+      "before": {
+        "sha256": "234344a50bb5a9bfce0258bf3b6d32b76be4cf965675b6b0eb8a77b8479f11cc"
+      },
+      "reviewEntry": {
+        "sha256": "b93fac4d36768b0739075ed63310599bdd80ededb60eb02b83602be845ed6f02"
+      },
+      "after": {
+        "sha256": "b93fac4d36768b0739075ed63310599bdd80ededb60eb02b83602be845ed6f02"
+      },
+      "changed": true,
+      "initialErrors": 2,
+      "finalErrors": 0,
+      "initialWarnings": 7,
+      "finalWarnings": 7,
+      "semanticLifecycleReason": "Stable fallback arrays; scalar connection identity reconstructs discovery input without metadata replay; cancellation/task/token/departure preserved."
+    },
+    {
+      "file": "src/components/agent/AgentRunDetails.tsx",
+      "before": {
+        "sha256": "5202a654cf3aef7610fe2db4fd897368011545e35d5cdef5e6b2085dfbe4b95c"
+      },
+      "reviewEntry": {
+        "sha256": "d428f9d2cf2de9ca4bf7f3901605ff8b33ca420d05cd2e311a70790a8223e020"
+      },
+      "after": {
+        "sha256": "d428f9d2cf2de9ca4bf7f3901605ff8b33ca420d05cd2e311a70790a8223e020"
+      },
+      "changed": true,
+      "initialErrors": 1,
+      "finalErrors": 0,
+      "initialWarnings": 10,
+      "finalWarnings": 10,
+      "semanticLifecycleReason": "Validation memo reads exactly status/result, preserving lazy legacy validation cleanup and memo identity."
+    },
+    {
+      "file": "src/components/agent/ReferenceAttachments.tsx",
+      "before": {
+        "sha256": "617efc1d4fb59c1bc85ef95bf0ae3f0b483765c1795e313c6d2faa79b5134e10"
+      },
+      "reviewEntry": {
+        "sha256": "73eb869da08ebc02d8f780de9fe31f6471e5a2de708072f8a09d1a24e7f86c7a"
+      },
+      "after": {
+        "sha256": "73eb869da08ebc02d8f780de9fe31f6471e5a2de708072f8a09d1a24e7f86c7a"
+      },
+      "changed": true,
+      "initialErrors": 2,
+      "finalErrors": 0,
+      "initialWarnings": 3,
+      "finalWarnings": 3,
+      "semanticLifecycleReason": "Blob-specific URL ownership retains envelope/blob guards; verified ReferenceIcon internal-only export narrowed without render changes."
+    },
+    {
+      "file": "src/components/agent/TaskWrapup.tsx",
+      "before": {
+        "sha256": "85d9f9442619f8c161d3645f49dda4a43aeb495f13810ce9d41b66cfa24fe99b"
+      },
+      "reviewEntry": {
+        "sha256": "99e3de127ab987a833e372678c3558e20b3d0b69adb40001a1c7e1375b73575e"
+      },
+      "after": {
+        "sha256": "99e3de127ab987a833e372678c3558e20b3d0b69adb40001a1c7e1375b73575e"
+      },
+      "changed": true,
+      "initialErrors": 3,
+      "finalErrors": 0,
+      "initialWarnings": 8,
+      "finalWarnings": 8,
+      "semanticLifecycleReason": "Named boolean editing-presence dependencies preserve synchronous lock/draft/promotion/route/CAS ownership."
+    },
+    {
+      "file": "src/components/agent/useChatSelection.ts",
+      "before": {
+        "sha256": "4cb97e08af1420c24d8a9b558fa6620e79871805ed1a4da41e9ada66af8fd676"
+      },
+      "reviewEntry": {
+        "sha256": "40c0592b8de6c6e59c6f679c678d8853def469f643e65fb379b4b28003153adf"
+      },
+      "after": {
+        "sha256": "40c0592b8de6c6e59c6f679c678d8853def469f643e65fb379b4b28003153adf"
+      },
+      "changed": true,
+      "initialErrors": 1,
+      "finalErrors": 0,
+      "initialWarnings": 0,
+      "finalWarnings": 0,
+      "semanticLifecycleReason": "Scalar thread fields preserve local selection through unrelated thread metadata refresh, original connector-list reconciliation retained."
+    },
+    {
+      "file": "src/components/agent/useReferenceDraft.ts",
+      "before": {
+        "sha256": "c2649c23d53889a4d6bdacbaa533858001746cba4400ab4b8e1baf60ad3cf48f"
+      },
+      "reviewEntry": {
+        "sha256": "ff87223b74e607da20fbcb3832a88b5dc8bf8c711d29cecbe9cfe6c9cadb135c"
+      },
+      "after": {
+        "sha256": "ff87223b74e607da20fbcb3832a88b5dc8bf8c711d29cecbe9cfe6c9cadb135c"
+      },
+      "changed": true,
+      "initialErrors": 1,
+      "finalErrors": 0,
+      "initialWarnings": 0,
+      "finalWarnings": 0,
+      "semanticLifecycleReason": "Captured Map container aborts current imports added after mount; scope switches retain drafts and cleanup suppresses late publication."
+    },
+    {
+      "file": "src/components/audio/AudioTimeline.tsx",
+      "before": {
+        "sha256": "8ca4c41ba7e4d56bee5c03a6c9223a4d59f9c793f4a95496bbe6ffb4f34eebb5"
+      },
+      "reviewEntry": {
+        "sha256": "ec5ba4fda12adf8a42bd4798ff3f0bae9fcbfe19f206c0946183c3e49b590bba"
+      },
+      "after": {
+        "sha256": "ec5ba4fda12adf8a42bd4798ff3f0bae9fcbfe19f206c0946183c3e49b590bba"
+      },
+      "changed": true,
+      "initialErrors": 4,
+      "finalErrors": 0,
+      "initialWarnings": 4,
+      "finalWarnings": 4,
+      "semanticLifecycleReason": "Stable latest-position callback, current cancellation-epoch container cleanup, single final-stop polling branch, consume-once seek ID with truthful geometry deps, const drag copy."
+    },
+    {
+      "file": "src/components/audio/AudioSources.tsx",
+      "before": {
+        "sha256": "4613bd5dcb2c218656d6000b2db25c4586de762fadec5c5bee67b0d4519a3580"
+      },
+      "reviewEntry": {
+        "sha256": "4bd751d7e136dacfceefc9c57b62b54721f26b500f513ce46993c0e213a0f532"
+      },
+      "after": {
+        "sha256": "4bd751d7e136dacfceefc9c57b62b54721f26b500f513ce46993c0e213a0f532"
+      },
+      "changed": true,
+      "initialErrors": 1,
+      "finalErrors": 0,
+      "initialWarnings": 2,
+      "finalWarnings": 2,
+      "semanticLifecycleReason": "Actual worker-B adoptMaterialInProject business export imported/called with unchanged inputs/action ownership."
+    },
+    {
+      "file": "src/components/studio/ConnectorsPage.tsx",
+      "before": {
+        "sha256": "ca5a6ce7b3debcfefbee743cefa27370efb4650346d717c3725b1329ef87ece7"
+      },
+      "reviewEntry": {
+        "sha256": "27d1b85031a3f7a7c80f14390fba63c16f01a5fba8225c13d588c0aa5c44f59d"
+      },
+      "after": {
+        "sha256": "27d1b85031a3f7a7c80f14390fba63c16f01a5fba8225c13d588c0aa5c44f59d"
+      },
+      "changed": true,
+      "initialErrors": 1,
+      "finalErrors": 0,
+      "initialWarnings": 6,
+      "finalWarnings": 6,
+      "semanticLifecycleReason": "Undefined query remains stable; array fallback moves inside memo; all sessions/probe/write completion untouched."
+    },
+    {
+      "file": "src/components/studio/ProjectGalleryPage.tsx",
+      "before": {
+        "sha256": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1"
+      },
+      "reviewEntry": {
+        "sha256": "4a33de135b4edd3b4e5d2caab67fcd6e31cd8665fc461e1d9d72358a23bc1329"
+      },
+      "after": {
+        "sha256": "4a33de135b4edd3b4e5d2caab67fcd6e31cd8665fc461e1d9d72358a23bc1329"
+      },
+      "changed": true,
+      "initialErrors": 1,
+      "finalErrors": 0,
+      "initialWarnings": 1,
+      "finalWarnings": 1,
+      "semanticLifecycleReason": "Undefined links remain stable; optional consumers preserve held query scope/current-key filters and all E01 actions."
+    },
+    {
+      "file": "src/components/studio/materials/MaterialDetailPanel.tsx",
+      "before": {
+        "sha256": "c6926fd5e164ae278731b738c494669ec46169c94c1076b9284419ef844dd514"
+      },
+      "reviewEntry": {
+        "sha256": "4756ea00e80904c1669d1408575545ad82c58d24836b84d68eebefd9d6f7cf67"
+      },
+      "after": {
+        "sha256": "4756ea00e80904c1669d1408575545ad82c58d24836b84d68eebefd9d6f7cf67"
+      },
+      "changed": true,
+      "initialErrors": 1,
+      "finalErrors": 0,
+      "initialWarnings": 3,
+      "finalWarnings": 3,
+      "semanticLifecycleReason": "Actual worker-B adoptMaterialInProject business export imported/called; manual session/guard/pending/error intact."
+    },
+    {
+      "file": "src/components/shots/ShotRow.tsx",
+      "before": {
+        "sha256": "d9091a5004b9a3951e19ffadc46b63f5d366820371fb21598b5b3c827a15a87b"
+      },
+      "reviewEntry": {
+        "sha256": "b33d4c918e1573cc2ec4766eadb6ebebe5ee3698f91822a0d64fa63335942d45"
+      },
+      "after": {
+        "sha256": "b33d4c918e1573cc2ec4766eadb6ebebe5ee3698f91822a0d64fa63335942d45"
+      },
+      "changed": true,
+      "initialErrors": 1,
+      "finalErrors": 0,
+      "initialWarnings": 5,
+      "finalWarnings": 5,
+      "semanticLifecycleReason": "Seven valid text-column cases enumerated; catalog/default fallback remains for unknown runtime input."
+    }
+  ],
+  "producerInputs": "e07-hooks-implementation/producer-inputs.json",
+  "contextInputs": "e07-hooks-implementation/context-inputs.json",
+  "evidenceManifest": "e07-hooks-implementation/evidence-manifest.json",
+  "ownedPatch": "e07-hooks-implementation/owned.patch",
+  "evidenceCommands": [
+    {
+      "kind": "lint",
+      "producer": "explicit machine pnpm exec eslint (12 file arguments)",
+      "output": "eslint-final.json",
+      "exit": 0,
+      "result": "0 errors, 49 unchanged warnings"
+    },
+    {
+      "kind": "existing-focused-tests",
+      "producer": "explicit machine pnpm test b02MemoryPromotion/e01ManualDraftDeparture/e04LibraryQueries/audioEngineTimeline/audioTimelineShortcuts/referenceDraft filter --maxWorkers=4",
+      "output": "focused-tests-01.log",
+      "exit": 0,
+      "result": "5 discovered files / 61 tests; referenceDraft filter nonexistent (new permanent test covers actual hook)"
+    },
+    {
+      "kind": "new-hook-contracts",
+      "producer": "explicit machine pnpm test tests/e07HookContracts.test.ts --maxWorkers=1",
+      "output": "hook-tests-02.log",
+      "exit": 0,
+      "result": "8 actual-owner deterministic lifecycle tests"
+    },
+    {
+      "kind": "app-typecheck",
+      "producer": "explicit machine pnpm exec tsc -p tsconfig.app.json --pretty false",
+      "output": "typecheck-app-01.log",
+      "exit": 0,
+      "result": "Current shared root TypeScript passes; global source freeze not claimed"
+    },
+    {
+      "kind": "test-harness-typecheck",
+      "producer": "explicit machine pnpm exec tsc -p research/e07-hooks-implementation/tsconfig.json --pretty false",
+      "output": "typecheck-fixtures-final.log",
+      "exit": 0,
+      "result": "Permanent test + current audio/chat harnesses typecheck"
+    },
+    {
+      "kind": "e01-native",
+      "producer": "e01-drafts-browser-regression.mjs",
+      "output": "e01-native-02.json",
+      "exit": 0,
+      "result": "19 cases / no page errors"
+    },
+    {
+      "kind": "e04-native",
+      "producer": "e04-library-browser-regression.mjs",
+      "output": "e04-native-02/report.json",
+      "exit": 0,
+      "result": "16 cases / no page errors / own + loaded closure unchanged"
+    },
+    {
+      "kind": "audio-native",
+      "producer": "native-audio-06.mjs",
+      "output": "native-audio-06/result.json",
+      "exit": 0,
+      "result": "5 cases / no page errors / own hash unchanged"
+    },
+    {
+      "kind": "chat-native",
+      "producer": "native-critical-05.mjs",
+      "output": "native-critical-05/result.json",
+      "exit": 0,
+      "result": "3 cases / no page errors / own hash unchanged; four decorative CSS URLs blocked/recorded"
+    }
+  ],
+  "failures": [
+    {
+      "output": "hook-tests-01.log",
+      "resolvedBy": "Explicit deferred updateChatThread mock in test instead of fake-timer IndexedDB wait"
+    },
+    {
+      "output": "typecheck-tests-01.log",
+      "resolvedBy": "Actual Vite ambient declaration included"
+    },
+    {
+      "output": "e01-native.log",
+      "resolvedBy": "Explicit scanner/dependency preflight; final19 PASS"
+    },
+    {
+      "output": "e04-native.log",
+      "resolvedBy": "Explicit scanner/dependency preflight; final16 PASS"
+    },
+    {
+      "output": "native-critical/failure.json",
+      "resolvedBy": "Split audio and focused chat harness; cold-source load accounted"
+    },
+    {
+      "output": "native-critical-02/failure.json",
+      "resolvedBy": "Actual LobeChatTheme added to research fixture"
+    },
+    {
+      "output": "native-critical-03/failure.json",
+      "resolvedBy": "Exact expected decorative CSS URLs blocked/recorded; reject unexpected others"
+    },
+    {
+      "output": "native-critical-04/failure.json",
+      "resolvedBy": "Installed Vite transformRequest/waitForRequestsIdle preflight; pending original requests retained"
+    }
+  ],
+  "remainingRisks": [
+    "49 inherited review warnings not accepted debt by slice C",
+    "Worker B owns adoptMaterialInProject implementation, callers aligned to current export",
+    "No global frozen source, Node22, locked install, CI/full-suite/build/model or whole E07 acceptance claim",
+    "Native finite negative waits and blocked decorative CSS do not prove device/font parity or latency",
+    "Main must integrate/review on final common source/config/producers"
+  ],
+  "noLateWrites": "All product/test writes finished before reviewEntry; after equals reviewEntry. This JSON and markdown are final evidence writes."
+}

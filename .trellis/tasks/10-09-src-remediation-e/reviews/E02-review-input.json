@@ -1,0 +1,44 @@
+{
+  "unit": "E02",
+  "baselineRevision": "1ecaf5ceec92e022c2b2b8d662e2a92e8eee36c7",
+  "purpose": "Review input inventory only; not independent acceptance",
+  "changedFiles": [
+    "scripts/e01-drafts-browser-regression.mjs",
+    "scripts/e02-browser-regression.mjs",
+    "src/components/agent/TopicSidebar.tsx",
+    "src/components/agent/agentChat.css",
+    "tests/fixtures/e02/harness.tsx",
+    "tests/fixtures/e02/index.html",
+    "tests/fixtures/e02/tsconfig.json",
+    "tests/fixtures/sourceSnapshots/e02/TopicSidebar.tsx",
+    "tests/fixtures/sourceSnapshots/e02/agentChat.css",
+    "tests/fixtures/sourceSnapshots/e02/provenance.json"
+  ],
+  "before": {
+    "scripts/e01-drafts-browser-regression.mjs": "4511dc6bb5340f9a366bec6ec5ac90dcb14e38502d0232f9917f65862d26b3b7",
+    "scripts/e02-browser-regression.mjs": null,
+    "src/components/agent/TopicSidebar.tsx": "03eb777c98984d75300c9dcfd1533739e3c7308d561d6d72a6bf20be55bc2dc9",
+    "src/components/agent/agentChat.css": "b1e1bd7da07ea2efe595cef9b5c6a8291563abf93dedae4bd90cc2877348fb1e",
+    "tests/fixtures/e02/harness.tsx": null,
+    "tests/fixtures/e02/index.html": null,
+    "tests/fixtures/e02/tsconfig.json": null,
+    "tests/fixtures/sourceSnapshots/e02/TopicSidebar.tsx": null,
+    "tests/fixtures/sourceSnapshots/e02/agentChat.css": null,
+    "tests/fixtures/sourceSnapshots/e02/provenance.json": null
+  },
+  "after": {
+    "scripts/e01-drafts-browser-regression.mjs": "2f2ac3abe91a3fba6f626662046d5cb5cbd0f6bc03f8147ed1f3e01fc00d8d5d",
+    "scripts/e02-browser-regression.mjs": "215aa6f27c5122322af029da3665ad958d8ff74b2629e37751604f9614b10260",
+    "src/components/agent/TopicSidebar.tsx": "121d77f9f9b0b094caef74b52c2574837250e9d92366d33a6056eb6204c3f0b7",
+    "src/components/agent/agentChat.css": "e8d456f0a635f79ad163705d8b0504247b95618526fcff97eb0ab371b7b117eb",
+    "tests/fixtures/e02/harness.tsx": "d5f37323e1ba40a524fe266209ed31c958c9e898466d2bc970971e45f859d869",
+    "tests/fixtures/e02/index.html": "e6ca6c03e82fa7b0a5d854c4fc9c3b727dfc3441cc34a3822a66055d0771c73c",
+    "tests/fixtures/e02/tsconfig.json": "cbf2e9e64c5fca6bc1e940e98515e943c495a4128a03630d977c5636f404b04a",
+    "tests/fixtures/sourceSnapshots/e02/TopicSidebar.tsx": "03eb777c98984d75300c9dcfd1533739e3c7308d561d6d72a6bf20be55bc2dc9",
+    "tests/fixtures/sourceSnapshots/e02/agentChat.css": "b1e1bd7da07ea2efe595cef9b5c6a8291563abf93dedae4bd90cc2877348fb1e",
+    "tests/fixtures/sourceSnapshots/e02/provenance.json": "e46e095db1ead5e14fc9b5687589d04a211ac08298e4bd5ac412fd497f7491c7"
+  },
+  "entrySnapshot": ".trellis/tasks/10-09-src-remediation-e/research/E02-entry.json",
+  "sourceFileCount": 442,
+  "testRunnerFileCount": 269
+}

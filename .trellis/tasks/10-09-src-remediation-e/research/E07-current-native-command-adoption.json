@@ -1,0 +1,477 @@
+{
+  "status": "CURRENT_COMMAND_EVIDENCE_RECONCILED_FOR_INDEPENDENT_ACCEPTANCE",
+  "purpose": "Per-command current source/producer adoption only, all raw failed batch summaries preserved. Independent final review remains required.",
+  "currentNativeInputs": 1002,
+  "commandCount": 17,
+  "commands": [
+    {
+      "name": "e01-drafts-browser-regression",
+      "rawRun": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-03",
+      "rawAggregateStatus": "FAIL",
+      "command": {
+        "name": "e01-drafts-browser-regression",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/e01-drafts-browser-regression.mjs"
+        ],
+        "exit": 0,
+        "seconds": 54.85,
+        "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-03/e01-drafts-browser-regression.log"
+      },
+      "rawSummarySHA256": "9cd819d4accb311d8503a42387a477d66d5f1c3e17f17c1edce0b1ef59f05178",
+      "inputManifestSHA256": "599f68c66999fae31745f97590575f8d7b12f8dbc20f856b27665faec44079d5",
+      "allPreviouslyCapturedApplicationInputsMatchCurrent": true,
+      "existingCapturedChanges": [
+        "scripts/b01-browser-regression.mjs"
+      ],
+      "changesOutsideThisCommand": "Only separate B01 command producer changed after E01 runs",
+      "subsequentInputAdditions": [
+        "tests/e07DraftRebase.test.ts",
+        "tests/fixtures/e07-draft-rebase/README.md",
+        "tests/fixtures/e07-draft-rebase/debouncedDraft-before.ts",
+        "tests/fixtures/e07-draft-rebase/harness.tsx",
+        "tests/fixtures/e07-draft-rebase/index.html",
+        "tests/fixtures/e07-draft-rebase/provenance.json",
+        "tests/fixtures/e07-draft-rebase/tsconfig.json"
+      ],
+      "newFixturesQualification": "Only independently reviewed E07 draft-rebase fixture additions, not imported by these older entrypoints; current explicit permanent native regression covers them separately. No claim of raw aggregate unchanged.",
+      "generatedRouteQualification": null,
+      "acceptedCommandExitZero": true
+    },
+    {
+      "name": "e01-writes-browser-regression",
+      "rawRun": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-03",
+      "rawAggregateStatus": "FAIL",
+      "command": {
+        "name": "e01-writes-browser-regression",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/e01-writes-browser-regression.mjs"
+        ],
+        "exit": 0,
+        "seconds": 25.981,
+        "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-03/e01-writes-browser-regression.log"
+      },
+      "rawSummarySHA256": "9cd819d4accb311d8503a42387a477d66d5f1c3e17f17c1edce0b1ef59f05178",
+      "inputManifestSHA256": "599f68c66999fae31745f97590575f8d7b12f8dbc20f856b27665faec44079d5",
+      "allPreviouslyCapturedApplicationInputsMatchCurrent": true,
+      "existingCapturedChanges": [
+        "scripts/b01-browser-regression.mjs"
+      ],
+      "changesOutsideThisCommand": "Only separate B01 command producer changed after E01 runs",
+      "subsequentInputAdditions": [
+        "tests/e07DraftRebase.test.ts",
+        "tests/fixtures/e07-draft-rebase/README.md",
+        "tests/fixtures/e07-draft-rebase/debouncedDraft-before.ts",
+        "tests/fixtures/e07-draft-rebase/harness.tsx",
+        "tests/fixtures/e07-draft-rebase/index.html",
+        "tests/fixtures/e07-draft-rebase/provenance.json",
+        "tests/fixtures/e07-draft-rebase/tsconfig.json"
+      ],
+      "newFixturesQualification": "Only independently reviewed E07 draft-rebase fixture additions, not imported by these older entrypoints; current explicit permanent native regression covers them separately. No claim of raw aggregate unchanged.",
+      "generatedRouteQualification": null,
+      "acceptedCommandExitZero": true
+    },
+    {
+      "name": "b01-browser-regression",
+      "rawRun": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-04",
+      "rawAggregateStatus": "FAIL",
+      "command": {
+        "name": "b01-browser-regression",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/b01-browser-regression.mjs"
+        ],
+        "exit": 0,
+        "seconds": 30.566,
+        "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-04/b01-browser-regression.log"
+      },
+      "rawSummarySHA256": "cad0d174be6151a98a6db66e224fd928adf85aaab23b2b6eab8faa06af37229d",
+      "inputManifestSHA256": "da308340d938e8547dbb855b9e7a08bcdf048f0a0ca5c91310fe8d95b04d7429",
+      "allPreviouslyCapturedApplicationInputsMatchCurrent": true,
+      "existingCapturedChanges": [],
+      "changesOutsideThisCommand": null,
+      "subsequentInputAdditions": [
+        "tests/fixtures/e07-draft-rebase/README.md",
+        "tests/fixtures/e07-draft-rebase/tsconfig.json"
+      ],
+      "newFixturesQualification": "Only independently reviewed E07 draft-rebase fixture additions, not imported by these older entrypoints; current explicit permanent native regression covers them separately. No claim of raw aggregate unchanged.",
+      "generatedRouteQualification": null,
+      "acceptedCommandExitZero": true
+    },
+    {
+      "name": "b07-browser-regression",
+      "rawRun": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-04",
+      "rawAggregateStatus": "FAIL",
+      "command": {
+        "name": "b07-browser-regression",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/b07-browser-regression.mjs"
+        ],
+        "exit": 0,
+        "seconds": 3.865,
+        "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-04/b07-browser-regression.log"
+      },
+      "rawSummarySHA256": "cad0d174be6151a98a6db66e224fd928adf85aaab23b2b6eab8faa06af37229d",
+      "inputManifestSHA256": "da308340d938e8547dbb855b9e7a08bcdf048f0a0ca5c91310fe8d95b04d7429",
+      "allPreviouslyCapturedApplicationInputsMatchCurrent": true,
+      "existingCapturedChanges": [],
+      "changesOutsideThisCommand": null,
+      "subsequentInputAdditions": [
+        "tests/fixtures/e07-draft-rebase/README.md",
+        "tests/fixtures/e07-draft-rebase/tsconfig.json"
+      ],
+      "newFixturesQualification": "Only independently reviewed E07 draft-rebase fixture additions, not imported by these older entrypoints; current explicit permanent native regression covers them separately. No claim of raw aggregate unchanged.",
+      "generatedRouteQualification": null,
+      "acceptedCommandExitZero": true
+    },
+    {
+      "name": "c01-browser-regression",
+      "rawRun": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-04",
+      "rawAggregateStatus": "FAIL",
+      "command": {
+        "name": "c01-browser-regression",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/c01-browser-regression.mjs"
+        ],
+        "exit": 0,
+        "seconds": 5.442,
+        "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-04/c01-browser-regression.log"
+      },
+      "rawSummarySHA256": "cad0d174be6151a98a6db66e224fd928adf85aaab23b2b6eab8faa06af37229d",
+      "inputManifestSHA256": "da308340d938e8547dbb855b9e7a08bcdf048f0a0ca5c91310fe8d95b04d7429",
+      "allPreviouslyCapturedApplicationInputsMatchCurrent": true,
+      "existingCapturedChanges": [],
+      "changesOutsideThisCommand": null,
+      "subsequentInputAdditions": [
+        "tests/fixtures/e07-draft-rebase/README.md",
+        "tests/fixtures/e07-draft-rebase/tsconfig.json"
+      ],
+      "newFixturesQualification": "Only independently reviewed E07 draft-rebase fixture additions, not imported by these older entrypoints; current explicit permanent native regression covers them separately. No claim of raw aggregate unchanged.",
+      "generatedRouteQualification": null,
+      "acceptedCommandExitZero": true
+    },
+    {
+      "name": "c02-browser-regression",
+      "rawRun": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-04",
+      "rawAggregateStatus": "FAIL",
+      "command": {
+        "name": "c02-browser-regression",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/c02-browser-regression.mjs"
+        ],
+        "exit": 0,
+        "seconds": 4.362,
+        "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-04/c02-browser-regression.log"
+      },
+      "rawSummarySHA256": "cad0d174be6151a98a6db66e224fd928adf85aaab23b2b6eab8faa06af37229d",
+      "inputManifestSHA256": "da308340d938e8547dbb855b9e7a08bcdf048f0a0ca5c91310fe8d95b04d7429",
+      "allPreviouslyCapturedApplicationInputsMatchCurrent": true,
+      "existingCapturedChanges": [],
+      "changesOutsideThisCommand": null,
+      "subsequentInputAdditions": [
+        "tests/fixtures/e07-draft-rebase/README.md",
+        "tests/fixtures/e07-draft-rebase/tsconfig.json"
+      ],
+      "newFixturesQualification": "Only independently reviewed E07 draft-rebase fixture additions, not imported by these older entrypoints; current explicit permanent native regression covers them separately. No claim of raw aggregate unchanged.",
+      "generatedRouteQualification": null,
+      "acceptedCommandExitZero": true
+    },
+    {
+      "name": "d08-browser-regression",
+      "rawRun": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-04",
+      "rawAggregateStatus": "FAIL",
+      "command": {
+        "name": "d08-browser-regression",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/d08-browser-regression.mjs"
+        ],
+        "exit": 0,
+        "seconds": 15.15,
+        "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-04/d08-browser-regression.log"
+      },
+      "rawSummarySHA256": "cad0d174be6151a98a6db66e224fd928adf85aaab23b2b6eab8faa06af37229d",
+      "inputManifestSHA256": "da308340d938e8547dbb855b9e7a08bcdf048f0a0ca5c91310fe8d95b04d7429",
+      "allPreviouslyCapturedApplicationInputsMatchCurrent": true,
+      "existingCapturedChanges": [],
+      "changesOutsideThisCommand": null,
+      "subsequentInputAdditions": [
+        "tests/fixtures/e07-draft-rebase/README.md",
+        "tests/fixtures/e07-draft-rebase/tsconfig.json"
+      ],
+      "newFixturesQualification": "Only independently reviewed E07 draft-rebase fixture additions, not imported by these older entrypoints; current explicit permanent native regression covers them separately. No claim of raw aggregate unchanged.",
+      "generatedRouteQualification": null,
+      "acceptedCommandExitZero": true
+    },
+    {
+      "name": "e02-browser-regression",
+      "rawRun": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-04",
+      "rawAggregateStatus": "FAIL",
+      "command": {
+        "name": "e02-browser-regression",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/e02-browser-regression.mjs"
+        ],
+        "exit": 0,
+        "seconds": 16.349,
+        "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-04/e02-browser-regression.log"
+      },
+      "rawSummarySHA256": "cad0d174be6151a98a6db66e224fd928adf85aaab23b2b6eab8faa06af37229d",
+      "inputManifestSHA256": "da308340d938e8547dbb855b9e7a08bcdf048f0a0ca5c91310fe8d95b04d7429",
+      "allPreviouslyCapturedApplicationInputsMatchCurrent": true,
+      "existingCapturedChanges": [],
+      "changesOutsideThisCommand": null,
+      "subsequentInputAdditions": [
+        "tests/fixtures/e07-draft-rebase/README.md",
+        "tests/fixtures/e07-draft-rebase/tsconfig.json"
+      ],
+      "newFixturesQualification": "Only independently reviewed E07 draft-rebase fixture additions, not imported by these older entrypoints; current explicit permanent native regression covers them separately. No claim of raw aggregate unchanged.",
+      "generatedRouteQualification": null,
+      "acceptedCommandExitZero": true
+    },
+    {
+      "name": "e03-browser-regression",
+      "rawRun": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-05",
+      "rawAggregateStatus": "FAIL",
+      "command": {
+        "name": "e03-browser-regression",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/e03-browser-regression.mjs"
+        ],
+        "exit": 0,
+        "seconds": 664.888,
+        "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-05/e03-browser-regression.log"
+      },
+      "rawSummarySHA256": "e990b657cc74d25df3660347f6dee7d1ce83ef3572e51ae7705d68fa5b0b8792",
+      "inputManifestSHA256": "da308340d938e8547dbb855b9e7a08bcdf048f0a0ca5c91310fe8d95b04d7429",
+      "allPreviouslyCapturedApplicationInputsMatchCurrent": true,
+      "existingCapturedChanges": [],
+      "changesOutsideThisCommand": null,
+      "subsequentInputAdditions": [
+        "tests/fixtures/e07-draft-rebase/README.md",
+        "tests/fixtures/e07-draft-rebase/tsconfig.json"
+      ],
+      "newFixturesQualification": "Only independently reviewed E07 draft-rebase fixture additions, not imported by these older entrypoints; current explicit permanent native regression covers them separately. No claim of raw aggregate unchanged.",
+      "generatedRouteQualification": null,
+      "acceptedCommandExitZero": true
+    },
+    {
+      "name": "e04-library-browser-regression",
+      "rawRun": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-05",
+      "rawAggregateStatus": "FAIL",
+      "command": {
+        "name": "e04-library-browser-regression",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/e04-library-browser-regression.mjs"
+        ],
+        "exit": 0,
+        "seconds": 26.962,
+        "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-05/e04-library-browser-regression.log"
+      },
+      "rawSummarySHA256": "e990b657cc74d25df3660347f6dee7d1ce83ef3572e51ae7705d68fa5b0b8792",
+      "inputManifestSHA256": "da308340d938e8547dbb855b9e7a08bcdf048f0a0ca5c91310fe8d95b04d7429",
+      "allPreviouslyCapturedApplicationInputsMatchCurrent": true,
+      "existingCapturedChanges": [],
+      "changesOutsideThisCommand": null,
+      "subsequentInputAdditions": [
+        "tests/fixtures/e07-draft-rebase/README.md",
+        "tests/fixtures/e07-draft-rebase/tsconfig.json"
+      ],
+      "newFixturesQualification": "Only independently reviewed E07 draft-rebase fixture additions, not imported by these older entrypoints; current explicit permanent native regression covers them separately. No claim of raw aggregate unchanged.",
+      "generatedRouteQualification": null,
+      "acceptedCommandExitZero": true
+    },
+    {
+      "name": "e04-media-browser-regression",
+      "rawRun": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-05",
+      "rawAggregateStatus": "FAIL",
+      "command": {
+        "name": "e04-media-browser-regression",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/e04-media-browser-regression.mjs"
+        ],
+        "exit": 0,
+        "seconds": 4.586,
+        "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-05/e04-media-browser-regression.log"
+      },
+      "rawSummarySHA256": "e990b657cc74d25df3660347f6dee7d1ce83ef3572e51ae7705d68fa5b0b8792",
+      "inputManifestSHA256": "da308340d938e8547dbb855b9e7a08bcdf048f0a0ca5c91310fe8d95b04d7429",
+      "allPreviouslyCapturedApplicationInputsMatchCurrent": true,
+      "existingCapturedChanges": [],
+      "changesOutsideThisCommand": null,
+      "subsequentInputAdditions": [
+        "tests/fixtures/e07-draft-rebase/README.md",
+        "tests/fixtures/e07-draft-rebase/tsconfig.json"
+      ],
+      "newFixturesQualification": "Only independently reviewed E07 draft-rebase fixture additions, not imported by these older entrypoints; current explicit permanent native regression covers them separately. No claim of raw aggregate unchanged.",
+      "generatedRouteQualification": null,
+      "acceptedCommandExitZero": true
+    },
+    {
+      "name": "e04-memory-browser-regression",
+      "rawRun": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-05",
+      "rawAggregateStatus": "FAIL",
+      "command": {
+        "name": "e04-memory-browser-regression",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/e04-memory-browser-regression.mjs"
+        ],
+        "exit": 0,
+        "seconds": 0.54,
+        "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-05/e04-memory-browser-regression.log"
+      },
+      "rawSummarySHA256": "e990b657cc74d25df3660347f6dee7d1ce83ef3572e51ae7705d68fa5b0b8792",
+      "inputManifestSHA256": "da308340d938e8547dbb855b9e7a08bcdf048f0a0ca5c91310fe8d95b04d7429",
+      "allPreviouslyCapturedApplicationInputsMatchCurrent": true,
+      "existingCapturedChanges": [],
+      "changesOutsideThisCommand": null,
+      "subsequentInputAdditions": [
+        "tests/fixtures/e07-draft-rebase/README.md",
+        "tests/fixtures/e07-draft-rebase/tsconfig.json"
+      ],
+      "newFixturesQualification": "Only independently reviewed E07 draft-rebase fixture additions, not imported by these older entrypoints; current explicit permanent native regression covers them separately. No claim of raw aggregate unchanged.",
+      "generatedRouteQualification": null,
+      "acceptedCommandExitZero": true
+    },
+    {
+      "name": "e05-browser-regression",
+      "rawRun": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-05",
+      "rawAggregateStatus": "FAIL",
+      "command": {
+        "name": "e05-browser-regression",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/e05-browser-regression.mjs"
+        ],
+        "exit": 0,
+        "seconds": 5.814,
+        "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-05/e05-browser-regression.log"
+      },
+      "rawSummarySHA256": "e990b657cc74d25df3660347f6dee7d1ce83ef3572e51ae7705d68fa5b0b8792",
+      "inputManifestSHA256": "da308340d938e8547dbb855b9e7a08bcdf048f0a0ca5c91310fe8d95b04d7429",
+      "allPreviouslyCapturedApplicationInputsMatchCurrent": true,
+      "existingCapturedChanges": [],
+      "changesOutsideThisCommand": null,
+      "subsequentInputAdditions": [
+        "tests/fixtures/e07-draft-rebase/README.md",
+        "tests/fixtures/e07-draft-rebase/tsconfig.json"
+      ],
+      "newFixturesQualification": "Only independently reviewed E07 draft-rebase fixture additions, not imported by these older entrypoints; current explicit permanent native regression covers them separately. No claim of raw aggregate unchanged.",
+      "generatedRouteQualification": null,
+      "acceptedCommandExitZero": true
+    },
+    {
+      "name": "e06-build",
+      "rawRun": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-06",
+      "rawAggregateStatus": "FAIL",
+      "command": {
+        "name": "e06-build",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/e06-build.mjs",
+          "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-06/e06-build"
+        ],
+        "exit": 0,
+        "seconds": 26.126,
+        "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-06/e06-build.log"
+      },
+      "rawSummarySHA256": "dfb6e5a6f3a1518aa58ee5bf4d2618aabbf3db2b38f28133404e12fb73209f4f",
+      "inputManifestSHA256": "1ee4baa5d3719974a865e2addfc178d4b51047212d0f25d1f22551d24a6c2a8b",
+      "allPreviouslyCapturedApplicationInputsMatchCurrent": true,
+      "existingCapturedChanges": [],
+      "changesOutsideThisCommand": null,
+      "subsequentInputAdditions": [],
+      "newFixturesQualification": null,
+      "generatedRouteQualification": "Raw route-only drift attributed and exact opening bytes restored under actual3995token comparison; see research/e07-native-generated-route-attribution/receipt.json",
+      "acceptedCommandExitZero": true
+    },
+    {
+      "name": "e06-icons",
+      "rawRun": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-06",
+      "rawAggregateStatus": "FAIL",
+      "command": {
+        "name": "e06-icons",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/e06-icons-browser.mjs",
+          "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-06/e06-icons"
+        ],
+        "exit": 0,
+        "seconds": 15.135,
+        "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-06/e06-icons.log"
+      },
+      "rawSummarySHA256": "dfb6e5a6f3a1518aa58ee5bf4d2618aabbf3db2b38f28133404e12fb73209f4f",
+      "inputManifestSHA256": "1ee4baa5d3719974a865e2addfc178d4b51047212d0f25d1f22551d24a6c2a8b",
+      "allPreviouslyCapturedApplicationInputsMatchCurrent": true,
+      "existingCapturedChanges": [],
+      "changesOutsideThisCommand": null,
+      "subsequentInputAdditions": [],
+      "newFixturesQualification": null,
+      "generatedRouteQualification": "Raw route-only drift attributed and exact opening bytes restored under actual3995token comparison; see research/e07-native-generated-route-attribution/receipt.json",
+      "acceptedCommandExitZero": true
+    },
+    {
+      "name": "e06-root",
+      "rawRun": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-06",
+      "rawAggregateStatus": "FAIL",
+      "command": {
+        "name": "e06-root",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/e06-root-browser.mjs",
+          "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-06/e06-build",
+          "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-06/e06-root"
+        ],
+        "exit": 0,
+        "seconds": 13.46,
+        "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-06/e06-root.log"
+      },
+      "rawSummarySHA256": "dfb6e5a6f3a1518aa58ee5bf4d2618aabbf3db2b38f28133404e12fb73209f4f",
+      "inputManifestSHA256": "1ee4baa5d3719974a865e2addfc178d4b51047212d0f25d1f22551d24a6c2a8b",
+      "allPreviouslyCapturedApplicationInputsMatchCurrent": true,
+      "existingCapturedChanges": [],
+      "changesOutsideThisCommand": null,
+      "subsequentInputAdditions": [],
+      "newFixturesQualification": null,
+      "generatedRouteQualification": "Raw route-only drift attributed and exact opening bytes restored under actual3995token comparison; see research/e07-native-generated-route-attribution/receipt.json",
+      "acceptedCommandExitZero": true
+    },
+    {
+      "name": "e06-parity",
+      "rawRun": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-06",
+      "rawAggregateStatus": "FAIL",
+      "command": {
+        "name": "e06-parity",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/e06-root-parity.mjs",
+          "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-06/e06-build",
+          "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-06/e06-parity"
+        ],
+        "exit": 0,
+        "seconds": 3.069,
+        "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-current-native-06/e06-parity.log"
+      },
+      "rawSummarySHA256": "dfb6e5a6f3a1518aa58ee5bf4d2618aabbf3db2b38f28133404e12fb73209f4f",
+      "inputManifestSHA256": "1ee4baa5d3719974a865e2addfc178d4b51047212d0f25d1f22551d24a6c2a8b",
+      "allPreviouslyCapturedApplicationInputsMatchCurrent": true,
+      "existingCapturedChanges": [],
+      "changesOutsideThisCommand": null,
+      "subsequentInputAdditions": [],
+      "newFixturesQualification": null,
+      "generatedRouteQualification": "Raw route-only drift attributed and exact opening bytes restored under actual3995token comparison; see research/e07-native-generated-route-attribution/receipt.json",
+      "acceptedCommandExitZero": true
+    }
+  ],
+  "permanentE07NativeEvidence": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-node22-clean-02/native-draft-regression",
+  "nativeLimits": "Offline real Dexie/generated media; E03 software raster controlled pairs. No paid provider, GitHubLinux, real device, OS scheduling, battery or latency claim."
+}

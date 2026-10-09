@@ -1,0 +1,60 @@
+{
+  "purpose": "Main actual completion notifications received before adopting each report. All original reports byte-preserved; gate final producer hashes independently rechecked againstcurrent. No finalE07 ledgerclosure fromscopedPASS.",
+  "reports": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar-check.json",
+      "sha256": "9498b04e18e30e1980fd9872fe56e1ffe592dd0cb1c2739e152a15b65050c289",
+      "agentActualCompletionReceived": true,
+      "scope": "Completed independent bounded review; wholeE07actualfinal pending"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-typed-sidecar-check.json",
+      "sha256": "895ce678c334d020e1505dab5e7751e6c571d9c96bfe90a6021193ab082dfb17",
+      "agentActualCompletionReceived": true,
+      "scope": "Completed independent bounded review; wholeE07actualfinal pending"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-hooks-sidecar-check.json",
+      "sha256": "d8b93de002b80852952d9265f2df5823b00603b3a7d84e8b66e24304fcf8fc78",
+      "agentActualCompletionReceived": true,
+      "scope": "Completed independent bounded review; wholeE07actualfinal pending"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-hooks-sidecar-followup.json",
+      "sha256": "1ceb8aceea6cf40b7003ed932ef0f6ff89a87fc0c2ec0659b0907cda28b8aa23",
+      "agentActualCompletionReceived": true,
+      "scope": "Completed independent bounded review; wholeE07actualfinal pending"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coordinator-sidecar-check.json",
+      "sha256": "99e8524ac6b979f1ec406f588570165a30870ef83ec43642285372051258ac46",
+      "agentActualCompletionReceived": true,
+      "scope": "Completed independent bounded review; wholeE07actualfinal pending"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-gate-sidecar-check.json",
+      "sha256": "65460020fb4e1dfebaa1dc7b5339d7e3c291a96a0bddc748cb4e5882cb511874",
+      "agentActualCompletionReceived": true,
+      "scope": "Scoped independent review, historical confirmed blockers preserved and fixed only in subsequent reports"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-gate-sidecar-followup/report.json",
+      "sha256": "27c0500ab99d5ecd67cd61f4d1907ce751fb1551bc402b7f392af0c72f33f79d",
+      "agentActualCompletionReceived": true,
+      "scope": "Scoped independent review, historical confirmed blockers preserved and fixed only in subsequent reports"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-gate-owner-context-final/report.json",
+      "sha256": "e8f0f5910548b342b001c774b4a62dcc29915d43a1a452a6c9f46dadda7fc4ab",
+      "agentActualCompletionReceived": true,
+      "scope": "Scoped independent review, historical confirmed blockers preserved and fixed only in subsequent reports"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-gate-named-callback-final/report.json",
+      "sha256": "d98ca87456bf8961492ddc7c064fca873a4c1d2cc09207ba410098b637982b07",
+      "agentActualCompletionReceived": true,
+      "scope": "Scoped independent review, historical confirmed blockers preserved and fixed only in subsequent reports"
+    }
+  ],
+  "finalGateProducerCurrentMismatches": []
+}

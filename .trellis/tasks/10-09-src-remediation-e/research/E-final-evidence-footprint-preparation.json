@@ -1,0 +1,8 @@
+{
+  "purpose": "Read-only E06 evidence commit footprint preparation; no deletion/compression/staging/commit or revised artifactacceptance",
+  "writerFrozenArtifacts": 4814,
+  "writerFrozenArtifactBytes": 706954552,
+  "writerEvidenceRoot": "research/e06",
+  "transientCacheAndAssembliesExcludedByOriginalInventory": true,
+  "note": "Complete E06 frozen proof exceeds700MB before compression; transient caches/assemblies must not be automatically staged. Final concretecommitplan should preserve exact raw evidence hashes/accessibility and distinguish source/tooling/spec from generated reports/bodies/bundles. Any compressed evidence representation must be lossless with fullpaths/hashmanifest/extraction instructions verified, preserve originals locally, and be proposed with final human approval; no evidence deleted or historicalrecords silentlyrepacked."
+}

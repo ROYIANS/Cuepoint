@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "manifestSHA256": "443c82ed6fe35e39d128b6e8b370050626035d5e46e6853304ed6d8f87ee0793",
+  "blobIndexSHA256": "da10dc26c20050217372fe22fd463e4852b190d47cf271fbf74cc9016271b9bb",
+  "verifiedBlobs": 10117,
+  "verifiedPaths": 41163,
+  "originalBytes": 2554126083,
+  "compressedBytes": 232240383,
+  "mode": "verify",
+  "restoredRoot": null,
+  "originalsDeleted": false
+}

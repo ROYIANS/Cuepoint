@@ -1,0 +1,1556 @@
+{
+  "schemaVersion": 1,
+  "sliceStatus": "COMPLETED",
+  "independentReviewStatus": "ready for coordinator-dispatched check; implementer did not dispatch recursively",
+  "wholeE07StatusClaim": false,
+  "generatedAt": "2026-10-09T08:21:09.098599+00:00",
+  "scope": [
+    "src/lib/packages/projectPackageCodec.ts",
+    "src/domain/types.ts",
+    "src/domain/slot.ts",
+    "src/db/database.ts",
+    "src/domain/legacyScalar.ts",
+    "tests/e07CoercionContracts.test.ts"
+  ],
+  "changedFiles": [
+    {
+      "path": "src/lib/packages/projectPackageCodec.ts",
+      "change": "modified",
+      "beforeSha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+      "reviewEntrySha256": "a0b273442d7a8eb3e204e2ab0b6eca42e42d01494cbfb4781c08e1013489167c",
+      "afterSha256": "a0b273442d7a8eb3e204e2ab0b6eca42e42d01494cbfb4781c08e1013489167c",
+      "afterSnapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-coercion-implementation/after/src/lib/packages/projectPackageCodec.ts",
+      "E07entrySha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da"
+    },
+    {
+      "path": "src/domain/types.ts",
+      "change": "modified",
+      "beforeSha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+      "reviewEntrySha256": "2fd6270b0a2a97ed725148046ef67d2875fee04d7107ef22d8f212cdd9cce78f",
+      "afterSha256": "2fd6270b0a2a97ed725148046ef67d2875fee04d7107ef22d8f212cdd9cce78f",
+      "afterSnapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-coercion-implementation/after/src/domain/types.ts",
+      "E07entrySha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204"
+    },
+    {
+      "path": "src/domain/slot.ts",
+      "change": "modified",
+      "beforeSha256": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+      "reviewEntrySha256": "92f23cbcd33bf46b330e6473378f14bcf1ee8aeb50414abeaf7a4b0171f68c91",
+      "afterSha256": "92f23cbcd33bf46b330e6473378f14bcf1ee8aeb50414abeaf7a4b0171f68c91",
+      "afterSnapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-coercion-implementation/after/src/domain/slot.ts",
+      "E07entrySha256": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5"
+    },
+    {
+      "path": "src/db/database.ts",
+      "change": "modified",
+      "beforeSha256": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+      "reviewEntrySha256": "22bcb0693e9b7dc7d559e3a9439566566d9afc125ac7f9c4d32102534f41f37f",
+      "afterSha256": "22bcb0693e9b7dc7d559e3a9439566566d9afc125ac7f9c4d32102534f41f37f",
+      "afterSnapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-coercion-implementation/after/src/db/database.ts",
+      "E07entrySha256": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982"
+    },
+    {
+      "path": "src/domain/legacyScalar.ts",
+      "change": "added",
+      "beforeSha256": null,
+      "reviewEntrySha256": "bfe4effb141c407fa2e4618da3c4fedd623a1cf812798cd6fb9eb45dae2c7a8a",
+      "afterSha256": "bfe4effb141c407fa2e4618da3c4fedd623a1cf812798cd6fb9eb45dae2c7a8a",
+      "afterSnapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-coercion-implementation/after/src/domain/legacyScalar.ts",
+      "E07entrySha256": null
+    },
+    {
+      "path": "tests/e07CoercionContracts.test.ts",
+      "change": "added",
+      "beforeSha256": null,
+      "reviewEntrySha256": "5a691cc4fd08e112119836b1dfe9f88f3cc30b0ab82ec225fa10687b52edaa7b",
+      "afterSha256": "5a691cc4fd08e112119836b1dfe9f88f3cc30b0ab82ec225fa10687b52edaa7b",
+      "afterSnapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-coercion-implementation/after/tests/e07CoercionContracts.test.ts",
+      "E07entrySha256": null
+    }
+  ],
+  "sourceBasis": "actual post-E06 991-path evidence; four original owners exactly match dispatch before snapshots and E07-before, not HEAD",
+  "diagnostics": {
+    "initialErrors": 80,
+    "initialWarnings": 4,
+    "finalErrors": 0,
+    "finalWarnings": 3,
+    "initialNoBaseToString": 66,
+    "newDebtAllowances": 0,
+    "resolutions": [
+      {
+        "path": "src/db/database.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-unsafe-argument",
+          "severity": 2,
+          "message": "Unsafe argument of type `any` assigned to a parameter of type `IndexableType`.",
+          "line": 141,
+          "column": 84,
+          "messageId": "unsafeArgument",
+          "endLine": 141,
+          "endColumn": 94
+        },
+        "resolution": "Typed historical unknown rows; exact original string project identity or atomic upgrade rejection; no-existing-episodes branch always attaches old shots to generated owner.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/db/database.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .id on an `any` value.",
+          "line": 141,
+          "column": 92,
+          "messageId": "unsafeMemberExpression",
+          "endLine": 141,
+          "endColumn": 94
+        },
+        "resolution": "Typed historical unknown rows; exact original string project identity or atomic upgrade rejection; no-existing-episodes branch always attaches old shots to generated owner.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/db/database.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .story on an `any` value.",
+          "line": 145,
+          "column": 33,
+          "messageId": "unsafeMemberExpression",
+          "endLine": 145,
+          "endColumn": 38
+        },
+        "resolution": "Typed historical unknown rows; exact original string project identity or atomic upgrade rejection; no-existing-episodes branch always attaches old shots to generated owner.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/db/database.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .story on an `any` value.",
+          "line": 145,
+          "column": 57,
+          "messageId": "unsafeMemberExpression",
+          "endLine": 145,
+          "endColumn": 62
+        },
+        "resolution": "Typed historical unknown rows; exact original string project identity or atomic upgrade rejection; no-existing-episodes branch always attaches old shots to generated owner.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/db/database.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .story on an `any` value.",
+          "line": 146,
+          "column": 40,
+          "messageId": "unsafeMemberExpression",
+          "endLine": 146,
+          "endColumn": 45
+        },
+        "resolution": "Typed historical unknown rows; exact original string project identity or atomic upgrade rejection; no-existing-episodes branch always attaches old shots to generated owner.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/db/database.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-unsafe-assignment",
+          "severity": 2,
+          "message": "Unsafe assignment of an `any` value.",
+          "line": 152,
+          "column": 25,
+          "messageId": "anyAssignment",
+          "endLine": 152,
+          "endColumn": 46
+        },
+        "resolution": "Typed historical unknown rows; exact original string project identity or atomic upgrade rejection; no-existing-episodes branch always attaches old shots to generated owner.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/db/database.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .id on an `any` value.",
+          "line": 152,
+          "column": 44,
+          "messageId": "unsafeMemberExpression",
+          "endLine": 152,
+          "endColumn": 46
+        },
+        "resolution": "Typed historical unknown rows; exact original string project identity or atomic upgrade rejection; no-existing-episodes branch always attaches old shots to generated owner.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/db/database.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .createdAt on an `any` value.",
+          "line": 156,
+          "column": 51,
+          "messageId": "unsafeMemberExpression",
+          "endLine": 156,
+          "endColumn": 60
+        },
+        "resolution": "Typed historical unknown rows; exact original string project identity or atomic upgrade rejection; no-existing-episodes branch always attaches old shots to generated owner.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/db/database.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-unsafe-argument",
+          "severity": 2,
+          "message": "Unsafe argument of type `any` assigned to a parameter of type `IndexableType`.",
+          "line": 165,
+          "column": 78,
+          "messageId": "unsafeArgument",
+          "endLine": 165,
+          "endColumn": 88
+        },
+        "resolution": "Typed historical unknown rows; exact original string project identity or atomic upgrade rejection; no-existing-episodes branch always attaches old shots to generated owner.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/db/database.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-unsafe-member-access",
+          "severity": 2,
+          "message": "Unsafe member access .id on an `any` value.",
+          "line": 165,
+          "column": 86,
+          "messageId": "unsafeMemberExpression",
+          "endLine": 165,
+          "endColumn": 88
+        },
+        "resolution": "Typed historical unknown rows; exact original string project identity or atomic upgrade rejection; no-existing-episodes branch always attaches old shots to generated owner.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/db/database.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'record.episodeId ?? episodeId' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 175,
+          "column": 47,
+          "messageId": "baseToString",
+          "endLine": 175,
+          "endColumn": 76
+        },
+        "resolution": "Typed historical unknown rows; exact original string project identity or atomic upgrade rejection; no-existing-episodes branch always attaches old shots to generated owner.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/domain/slot.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'record.prompt ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 28,
+          "column": 30,
+          "messageId": "baseToString",
+          "endLine": 28,
+          "endColumn": 49
+        },
+        "resolution": "Explicit local scalar prose/default and reference recovery; genuine current result wins, unusable result may use genuine scalar legacy association.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/domain/slot.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'result.mediaId' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 40,
+          "column": 33,
+          "messageId": "baseToString",
+          "endLine": 40,
+          "endColumn": 47
+        },
+        "resolution": "Explicit local scalar prose/default and reference recovery; genuine current result wins, unusable result may use genuine scalar legacy association.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/domain/slot.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'legacyMediaId' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 46,
+          "column": 40,
+          "messageId": "baseToString",
+          "endLine": 46,
+          "endColumn": 53
+        },
+        "resolution": "Explicit local scalar prose/default and reference recovery; genuine current result wins, unusable result may use genuine scalar legacy association.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/domain/types.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'record.logline ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 424,
+          "column": 28,
+          "messageId": "baseToString",
+          "endLine": 424,
+          "endColumn": 48
+        },
+        "resolution": "Explicit local scalar prose/default and malformed reference recovery; string-only range evidence; deterministic collision-free recovery for compound beat identities.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/domain/types.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'beat.id ?? `beat_${index}`' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 436,
+          "column": 20,
+          "messageId": "baseToString",
+          "endLine": 436,
+          "endColumn": 46
+        },
+        "resolution": "Explicit local scalar prose/default and malformed reference recovery; string-only range evidence; deterministic collision-free recovery for compound beat identities.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/domain/types.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'beat.title ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 437,
+          "column": 23,
+          "messageId": "baseToString",
+          "endLine": 437,
+          "endColumn": 39
+        },
+        "resolution": "Explicit local scalar prose/default and malformed reference recovery; string-only range evidence; deterministic collision-free recovery for compound beat identities.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/domain/types.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'beat.content ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 438,
+          "column": 25,
+          "messageId": "baseToString",
+          "endLine": 438,
+          "endColumn": 43
+        },
+        "resolution": "Explicit local scalar prose/default and malformed reference recovery; string-only range evidence; deterministic collision-free recovery for compound beat identities.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/domain/types.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'beat.sceneId' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 442,
+          "column": 40,
+          "messageId": "baseToString",
+          "endLine": 442,
+          "endColumn": 52
+        },
+        "resolution": "Explicit local scalar prose/default and malformed reference recovery; string-only range evidence; deterministic collision-free recovery for compound beat identities.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/domain/types.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'beat.timeOfDay ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 443,
+          "column": 27,
+          "messageId": "baseToString",
+          "endLine": 443,
+          "endColumn": 47
+        },
+        "resolution": "Explicit local scalar prose/default and malformed reference recovery; string-only range evidence; deterministic collision-free recovery for compound beat identities.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/domain/types.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'range.excerpt ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 449,
+          "column": 32,
+          "messageId": "baseToString",
+          "endLine": 449,
+          "endColumn": 51
+        },
+        "resolution": "Explicit local scalar prose/default and malformed reference recovery; string-only range evidence; deterministic collision-free recovery for compound beat identities.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/domain/types.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'record.logline ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 467,
+          "column": 28,
+          "messageId": "baseToString",
+          "endLine": 467,
+          "endColumn": 48
+        },
+        "resolution": "Explicit local scalar prose/default and malformed reference recovery; string-only range evidence; deterministic collision-free recovery for compound beat identities.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/domain/types.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'record.script ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 468,
+          "column": 27,
+          "messageId": "baseToString",
+          "endLine": 468,
+          "endColumn": 46
+        },
+        "resolution": "Explicit local scalar prose/default and malformed reference recovery; string-only range evidence; deterministic collision-free recovery for compound beat identities.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/domain/types.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'record.worldview ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 499,
+          "column": 32,
+          "messageId": "baseToString",
+          "endLine": 499,
+          "endColumn": 54
+        },
+        "resolution": "Explicit local scalar prose/default and malformed reference recovery; string-only range evidence; deterministic collision-free recovery for compound beat identities.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/domain/types.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'record.background ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 500,
+          "column": 33,
+          "messageId": "baseToString",
+          "endLine": 500,
+          "endColumn": 56
+        },
+        "resolution": "Explicit local scalar prose/default and malformed reference recovery; string-only range evidence; deterministic collision-free recovery for compound beat identities.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/domain/types.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'record.rules ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 501,
+          "column": 28,
+          "messageId": "baseToString",
+          "endLine": 501,
+          "endColumn": 46
+        },
+        "resolution": "Explicit local scalar prose/default and malformed reference recovery; string-only range evidence; deterministic collision-free recovery for compound beat identities.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+          "line": 45,
+          "column": 12,
+          "messageId": "contextuallyUnnecessary",
+          "endLine": 45,
+          "endColumn": 50,
+          "fix": {
+            "range": [
+              1520,
+              1547
+            ],
+            "text": ""
+          }
+        },
+        "resolution": "Removed contextually unnecessary assertion; compiler retains original type.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.coverMediaId' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 122,
+          "column": 44,
+          "messageId": "baseToString",
+          "endLine": 122,
+          "endColumn": 60
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.coverMediaId' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 123,
+          "column": 22,
+          "messageId": "baseToString",
+          "endLine": 123,
+          "endColumn": 38
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.id ?? createId(\"prj\")' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 128,
+          "column": 20,
+          "messageId": "baseToString",
+          "endLine": 128,
+          "endColumn": 45
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.name ?? fallbackName' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 129,
+          "column": 22,
+          "messageId": "baseToString",
+          "endLine": 129,
+          "endColumn": 46
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 139,
+          "column": 27,
+          "messageId": "baseToString",
+          "endLine": 139,
+          "endColumn": 46
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 140,
+          "column": 27,
+          "messageId": "baseToString",
+          "endLine": 140,
+          "endColumn": 46
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since it does not change the type of the expression.",
+          "line": 144,
+          "column": 24,
+          "messageId": "unnecessaryAssertion",
+          "endLine": 144,
+          "endColumn": 49,
+          "fix": {
+            "range": [
+              4674,
+              4692
+            ],
+            "text": ""
+          }
+        },
+        "resolution": "Removed contextually unnecessary assertion; compiler retains original type.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.id ?? createId(\"chr\")' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 202,
+          "column": 20,
+          "messageId": "baseToString",
+          "endLine": 202,
+          "endColumn": 45
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.name ?? \"未命名角色\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 207,
+          "column": 22,
+          "messageId": "baseToString",
+          "endLine": 207,
+          "endColumn": 41
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.bio ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 208,
+          "column": 21,
+          "messageId": "baseToString",
+          "endLine": 208,
+          "endColumn": 34
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.appearance ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 209,
+          "column": 28,
+          "messageId": "baseToString",
+          "endLine": 209,
+          "endColumn": 48
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 210,
+          "column": 23,
+          "messageId": "baseToString",
+          "endLine": 210,
+          "endColumn": 38
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 212,
+          "column": 27,
+          "messageId": "baseToString",
+          "endLine": 212,
+          "endColumn": 46
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 213,
+          "column": 27,
+          "messageId": "baseToString",
+          "endLine": 213,
+          "endColumn": 46
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.id ?? createId(\"scn\")' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 238,
+          "column": 20,
+          "messageId": "baseToString",
+          "endLine": 238,
+          "endColumn": 45
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.name ?? \"未命名场景\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 242,
+          "column": 22,
+          "messageId": "baseToString",
+          "endLine": 242,
+          "endColumn": 41
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.location ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 243,
+          "column": 26,
+          "messageId": "baseToString",
+          "endLine": 243,
+          "endColumn": 44
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.timeOfDay ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 244,
+          "column": 27,
+          "messageId": "baseToString",
+          "endLine": 244,
+          "endColumn": 46
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.atmosphere ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 245,
+          "column": 28,
+          "messageId": "baseToString",
+          "endLine": 245,
+          "endColumn": 48
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 246,
+          "column": 23,
+          "messageId": "baseToString",
+          "endLine": 246,
+          "endColumn": 38
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 248,
+          "column": 27,
+          "messageId": "baseToString",
+          "endLine": 248,
+          "endColumn": 46
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 249,
+          "column": 27,
+          "messageId": "baseToString",
+          "endLine": 249,
+          "endColumn": 46
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.id ?? createId(\"prp\")' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 274,
+          "column": 20,
+          "messageId": "baseToString",
+          "endLine": 274,
+          "endColumn": 45
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.name ?? \"未命名道具\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 281,
+          "column": 22,
+          "messageId": "baseToString",
+          "endLine": 281,
+          "endColumn": 41
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.kind ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 282,
+          "column": 22,
+          "messageId": "baseToString",
+          "endLine": 282,
+          "endColumn": 36
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 283,
+          "column": 23,
+          "messageId": "baseToString",
+          "endLine": 283,
+          "endColumn": 38
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 285,
+          "column": 27,
+          "messageId": "baseToString",
+          "endLine": 285,
+          "endColumn": 46
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 286,
+          "column": 27,
+          "messageId": "baseToString",
+          "endLine": 286,
+          "endColumn": 46
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.id ?? createId(\"sty\")' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 310,
+          "column": 20,
+          "messageId": "baseToString",
+          "endLine": 310,
+          "endColumn": 45
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.name ?? \"未命名风格\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 317,
+          "column": 22,
+          "messageId": "baseToString",
+          "endLine": 317,
+          "endColumn": 41
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 318,
+          "column": 23,
+          "messageId": "baseToString",
+          "endLine": 318,
+          "endColumn": 38
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 320,
+          "column": 27,
+          "messageId": "baseToString",
+          "endLine": 320,
+          "endColumn": 46
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 321,
+          "column": 27,
+          "messageId": "baseToString",
+          "endLine": 321,
+          "endColumn": 46
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.id ?? createId(\"ep\")' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 400,
+          "column": 20,
+          "messageId": "baseToString",
+          "endLine": 400,
+          "endColumn": 44
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.title ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 403,
+          "column": 23,
+          "messageId": "baseToString",
+          "endLine": 403,
+          "endColumn": 38
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.createdAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 408,
+          "column": 27,
+          "messageId": "baseToString",
+          "endLine": 408,
+          "endColumn": 46
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.updatedAt ?? at' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 409,
+          "column": 27,
+          "messageId": "baseToString",
+          "endLine": 409,
+          "endColumn": 46
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.id ?? createId(\"sht\")' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 469,
+          "column": 20,
+          "messageId": "baseToString",
+          "endLine": 469,
+          "endColumn": 45
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.episodeId ?? episodeId' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 471,
+          "column": 27,
+          "messageId": "baseToString",
+          "endLine": 471,
+          "endColumn": 53
+        },
+        "resolution": "Use prevalidated original modern string episode owner or deliberately ignored legacy scope; never manufacture FK eligibility.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.shotNumber ?? index + 1' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 473,
+          "column": 28,
+          "messageId": "baseToString",
+          "endLine": 473,
+          "endColumn": 55
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.category ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 480,
+          "column": 26,
+          "messageId": "baseToString",
+          "endLine": 480,
+          "endColumn": 44
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.content ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 482,
+          "column": 25,
+          "messageId": "baseToString",
+          "endLine": 482,
+          "endColumn": 42
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.notes ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 483,
+          "column": 23,
+          "messageId": "baseToString",
+          "endLine": 483,
+          "endColumn": 38
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.sceneCloseup ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 484,
+          "column": 30,
+          "messageId": "baseToString",
+          "endLine": 484,
+          "endColumn": 52
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.sound ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 485,
+          "column": 23,
+          "messageId": "baseToString",
+          "endLine": 485,
+          "endColumn": 38
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.emotion ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 486,
+          "column": 25,
+          "messageId": "baseToString",
+          "endLine": 486,
+          "endColumn": 42
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.cameraAngle ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 487,
+          "column": 29,
+          "messageId": "baseToString",
+          "endLine": 487,
+          "endColumn": 50
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.cameraGear ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 488,
+          "column": 28,
+          "messageId": "baseToString",
+          "endLine": 488,
+          "endColumn": 48
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.focalLength ?? \"\"' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 489,
+          "column": 29,
+          "messageId": "baseToString",
+          "endLine": 489,
+          "endColumn": 50
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.sceneId' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 493,
+          "column": 39,
+          "messageId": "baseToString",
+          "endLine": 493,
+          "endColumn": 50
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-base-to-string",
+          "severity": 2,
+          "message": "'raw.beatId' will use Object's default stringification format ('[object Object]') when stringified.",
+          "line": 494,
+          "column": 37,
+          "messageId": "baseToString",
+          "endLine": 494,
+          "endColumn": 47
+        },
+        "resolution": "Owned field-list scalar assertions and explicit PackageError paths, unchanged visible per-field defaults; original modern FK validation remains before normalization/remap.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+          "line": 785,
+          "column": 22,
+          "messageId": "contextuallyUnnecessary",
+          "endLine": 790,
+          "endColumn": 27,
+          "fix": {
+            "range": [
+              26349,
+              26366
+            ],
+            "text": ""
+          }
+        },
+        "resolution": "Removed contextually unnecessary assertion; compiler retains original type.",
+        "finalErrorsForPath": 0
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "initialDiagnostic": {
+          "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+          "severity": 2,
+          "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+          "line": 797,
+          "column": 23,
+          "messageId": "contextuallyUnnecessary",
+          "endLine": 802,
+          "endColumn": 34,
+          "fix": {
+            "range": [
+              26762,
+              26786
+            ],
+            "text": ""
+          }
+        },
+        "resolution": "Removed contextually unnecessary assertion; compiler retains original type.",
+        "finalErrorsForPath": 0
+      }
+    ],
+    "reviewedMetrics": [
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "diagnostic": {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'parseShot' has a complexity of 21. Maximum allowed is 20.",
+          "line": 524,
+          "column": 1,
+          "messageId": "complex",
+          "endLine": 524,
+          "endColumn": 19
+        },
+        "reviewReason": "Shot import owns visible scalar/default normalization and asset/media relationships; preserve readable field mapping. No new branching metric compared with initial complexity21.",
+        "owner": "project package codec",
+        "status": "review signal; no allowance/baseline written"
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "diagnostic": {
+          "ruleId": "complexity",
+          "severity": 1,
+          "message": "Function 'parseMemoryPackage' has a complexity of 26. Maximum allowed is 20.",
+          "line": 608,
+          "column": 1,
+          "messageId": "complex",
+          "endLine": 608,
+          "endColumn": 28
+        },
+        "reviewReason": "Whole memory aggregate validation intentionally keeps original project ownership, contiguous history, snapshot equivalence, replacement-cycle checks and topic normalization in one pre-write owner. Body unchanged; complexity26/cognitive21 pre-existing.",
+        "owner": "project package codec",
+        "status": "review signal; no allowance/baseline written"
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "diagnostic": {
+          "ruleId": "sonarjs/cognitive-complexity",
+          "severity": 1,
+          "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+          "line": 608,
+          "column": 10,
+          "messageId": "refactorFunction",
+          "endLine": 608,
+          "endColumn": 28
+        },
+        "reviewReason": "Whole memory aggregate validation intentionally keeps original project ownership, contiguous history, snapshot equivalence, replacement-cycle checks and topic normalization in one pre-write owner. Body unchanged; complexity26/cognitive21 pre-existing.",
+        "owner": "project package codec",
+        "status": "review signal; no allowance/baseline written"
+      }
+    ]
+  },
+  "exportDecisions": [
+    {
+      "path": "src/db/database.ts",
+      "symbol": "AifenjingDB",
+      "decision": "export narrowed to local; entire body retained",
+      "internalConsumer": "db = new AifenjingDB()",
+      "reason": "Fresh scoped full/test Knip and literal/alias/native/spec searches found no external use; private application exposes db singleton/normalizer aggregate contracts, not these implementation details."
+    },
+    {
+      "path": "src/domain/types.ts",
+      "symbol": "normalizeShotWorkspaceView",
+      "decision": "export narrowed to local; entire body retained",
+      "internalConsumer": "normalizeShotSettings",
+      "reason": "Fresh scoped full/test Knip and literal/alias/native/spec searches found no external use; private application exposes db singleton/normalizer aggregate contracts, not these implementation details."
+    },
+    {
+      "path": "src/domain/types.ts",
+      "symbol": "normalizeStoryBeat",
+      "decision": "export narrowed to local; entire body retained",
+      "internalConsumer": "normalizeEpisodeStory",
+      "reason": "Fresh scoped full/test Knip and literal/alias/native/spec searches found no external use; private application exposes db singleton/normalizer aggregate contracts, not these implementation details."
+    },
+    {
+      "path": "src/domain/types.ts",
+      "symbol": "ColumnSettings",
+      "decision": "export narrowed to local; entire body retained",
+      "internalConsumer": "Project.columnSettings",
+      "reason": "Fresh scoped full/test Knip and literal/alias/native/spec searches found no external use; private application exposes db singleton/normalizer aggregate contracts, not these implementation details."
+    },
+    {
+      "path": "src/domain/slot.ts",
+      "symbol": "mergeLegacyReferenceIntoFirstFrame",
+      "decision": "export narrowed to local; entire body retained",
+      "internalConsumer": "parseShotPictureSlots",
+      "reason": "Fresh scoped full/test Knip and literal/alias/native/spec searches found no external use; private application exposes db singleton/normalizer aggregate contracts, not these implementation details."
+    }
+  ],
+  "verification": {
+    "checks": [
+      {
+        "label": "acceptance-targeted-eslint-final",
+        "exitCode": 0,
+        "inputDrift": [
+          {
+            "path": "scripts/quality/debt.schema.json",
+            "before": null,
+            "after": "0ddf6f0cb7819e89e88a3e2090483d22618055749fff0c45a8c90859d3f91abd",
+            "owned": false
+          },
+          {
+            "path": "scripts/quality/unused-contracts.schema.json",
+            "before": null,
+            "after": "07f0fe11c2bc74fd7f0ed1a5ec54c80248075adf7dbff66f06bef7db6a8502ef",
+            "owned": false
+          }
+        ],
+        "outputSha256": "4b78074aa213fb93e06d67adc0e416d47cd8751f86f4abd8354320fadc3e1e3f",
+        "evidence": ".trellis/tasks/10-09-src-remediation-e/research/e07-coercion-implementation/acceptance-targeted-eslint-final.json",
+        "ownedInputDrift": []
+      },
+      {
+        "label": "acceptance-typecheck-integration",
+        "exitCode": 0,
+        "inputDrift": [
+          {
+            "path": "scripts/quality/debt.schema.json",
+            "before": null,
+            "after": "0ddf6f0cb7819e89e88a3e2090483d22618055749fff0c45a8c90859d3f91abd",
+            "owned": false
+          },
+          {
+            "path": "scripts/quality/unused-contracts.schema.json",
+            "before": null,
+            "after": "07f0fe11c2bc74fd7f0ed1a5ec54c80248075adf7dbff66f06bef7db6a8502ef",
+            "owned": false
+          }
+        ],
+        "outputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "evidence": ".trellis/tasks/10-09-src-remediation-e/research/e07-coercion-implementation/acceptance-typecheck-integration.json",
+        "ownedInputDrift": []
+      },
+      {
+        "label": "acceptance-typecheck-contracts",
+        "exitCode": 0,
+        "inputDrift": [
+          {
+            "path": "scripts/quality/debt.schema.json",
+            "before": null,
+            "after": "0ddf6f0cb7819e89e88a3e2090483d22618055749fff0c45a8c90859d3f91abd",
+            "owned": false
+          },
+          {
+            "path": "scripts/quality/unused-contracts.schema.json",
+            "before": null,
+            "after": "07f0fe11c2bc74fd7f0ed1a5ec54c80248075adf7dbff66f06bef7db6a8502ef",
+            "owned": false
+          }
+        ],
+        "outputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "evidence": ".trellis/tasks/10-09-src-remediation-e/research/e07-coercion-implementation/acceptance-typecheck-contracts.json",
+        "ownedInputDrift": []
+      },
+      {
+        "label": "acceptance-focused-tests-final",
+        "exitCode": 0,
+        "inputDrift": [
+          {
+            "path": "scripts/quality/debt.schema.json",
+            "before": null,
+            "after": "0ddf6f0cb7819e89e88a3e2090483d22618055749fff0c45a8c90859d3f91abd",
+            "owned": false
+          },
+          {
+            "path": "scripts/quality/unused-contracts.schema.json",
+            "before": null,
+            "after": "07f0fe11c2bc74fd7f0ed1a5ec54c80248075adf7dbff66f06bef7db6a8502ef",
+            "owned": false
+          }
+        ],
+        "outputSha256": "4871b6102c1ce3493c89a1f7faace9c7021acd7c59ce8842822183c83350e15c",
+        "evidence": ".trellis/tasks/10-09-src-remediation-e/research/e07-coercion-implementation/acceptance-focused-tests-final.json",
+        "ownedInputDrift": []
+      }
+    ],
+    "tests": {
+      "newContractCases": 220,
+      "focusedTotal": 374,
+      "files": 11
+    },
+    "knip": {
+      "globalExitCode": 1,
+      "ownedIssues": [],
+      "inputDrift": [],
+      "globalPassClaim": false
+    },
+    "baseline": {
+      "acceptance-baseline-scalars": {
+        "exitCode": 0,
+        "originalEvidenceUnchanged": true,
+        "runtimeInputDrift": [],
+        "evidence": ".trellis/tasks/10-09-src-remediation-e/research/e07-coercion-implementation/acceptance-baseline-scalars.json",
+        "outputSha256": "465174e5d1386519476929a01874cd874314f1cf76318b8ac58eb6a7019f34e6"
+      },
+      "acceptance-baseline-identities": {
+        "exitCode": 0,
+        "originalEvidenceUnchanged": true,
+        "runtimeInputDrift": [],
+        "evidence": ".trellis/tasks/10-09-src-remediation-e/research/e07-coercion-implementation/acceptance-baseline-identities.json",
+        "outputSha256": "199d842d83f7875aff3e7051e569ac98e3efe02bfd750ce33da64263c7ffcf0c"
+      },
+      "acceptance-baseline-regression": {
+        "exitCode": 1,
+        "originalEvidenceUnchanged": true,
+        "runtimeInputDrift": [],
+        "evidence": ".trellis/tasks/10-09-src-remediation-e/research/e07-coercion-implementation/acceptance-baseline-regression.json",
+        "outputSha256": "91b477df971bcc9213d0530f3636d0ee6b71f1384f3270a931943c91dc85e202"
+      }
+    }
+  },
+  "policy": {
+    "packageLegacyText": "Only enumerated known legacy fields accept string/number/boolean/null/undefined. Existing String scalar spellings and field-specific nullish fallbacks remain visible; whitespace and empty prose retained. Objects/arrays at known fields reject with file/row/field path before DB writes. Extensions/generation profiles not made strict.",
+    "packageIdentity": "Compound and explicitly empty row/beat IDs reject with path; nullish IDs synthesize and noncolliding numeric/boolean IDs remap within independent domains. Modern FKs remain original nonempty strings only. Primitive collision checks and generated beat collision checks retained. False/0/empty optional beat/scene semantics unchanged. Legacy episodeId ignored even compound because absent/empty episode arrays synthesize one owner.",
+    "packageMedia": "Known prompts/results/reference members validate at package edge. Primitive reference members retain map(String) null/false/zero spelling. Cover only trim-probes existence; original untrimmed scalar key remaps. Current image/video association and explicit style null/inheritance retained.",
+    "persistedRecovery": "Read-only scalar prose recovery, compound prose -> explicit empty/default, compound reference members dropped. Compound beat IDs recover deterministically without collision with canonical/nullish-generated identities. Range offset compounds invalidate association; excerpt must be an authored string. Current truthy scalar media wins, invalid/falsey current result may recover from truthy scalar legacy result.",
+    "migration": "No new version. v3 typed unknown project/shot rows. Invalid original project ID aborts entire upgrade; never rekey owner. Within projects with no prior episodes, attach all historical shots to generated owner, including scalar/string/compound orphan episode IDs. Prose recoveries preserve canonical media and remove obsolete keys.",
+    "CAS": "Episode/beat writers already compare normalized story; actual merge/conflict tests pass, absent timeOfDay equals empty. Raw targetRevision remains raw and differs from normalized read. World-setting writer retains raw baseline; malformed rendered prose cannot silently overwrite a raw compound value and conflict/rollback is explicitly tested."
+  },
+  "failuresRetained": [
+    {
+      "evidence": "tests-attempt-1.log",
+      "result": "12 failed/192 passed; fixture assumptions about legacy synthesized title/timestamps, missing beat after story replacement and future extension location fixed. Raw failure retained."
+    },
+    {
+      "evidence": "review-typecheck-integration.log",
+      "result": "TS6133 unused MODEL_BANK_REVISION in concurrent main-owned src/lib/ai/modelBank/index.ts; owned inputs unchanged; subsequent acceptance compiler passed after owner correction."
+    },
+    {
+      "evidence": "review-typecheck-contracts.log",
+      "result": "Same concurrent integration failure, retained."
+    },
+    {
+      "evidence": "acceptance-baseline-regression.log",
+      "result": "Deliberate old/current proof: 173 fail/47 pass on frozen original, while current220 pass. Failure count includes actionable-path assertions against earlier generic FK errors; not173 independent product bugs."
+    },
+    {
+      "evidence": "acceptance-knip.log",
+      "result": "Global exit1 reflects other owners; exact owned rows empty. No claim that repository unused gate passes."
+    }
+  ],
+  "remainingRisks": [
+    "Read recovery does not mutate malformed persisted settings; the raw world-setting CAS intentionally rejects replacement from normalized empty baseline. Changing that writer is outside this slice and would require explicit owner policy.",
+    "Actual v1/v2 tests use fake-indexeddb, not native browser IndexedDB.",
+    "Local Node24 tests share installed dependencies; Node22 locked install, full suite/model/build/native and final quality-gate closure belong to coordinator.",
+    "Other workers continue editing disjoint sources/config/gates; exact command input manifests record additions/drift. Final acceptance source/tests unchanged; only main-owned scripts/quality schema files appeared during commands.",
+    "The source slice is ready for independent review, not whole E07/QG01 acceptance."
+  ]
+}

@@ -1,0 +1,1989 @@
+{
+  "schema": 1,
+  "unit": "E04",
+  "finding": "PD07",
+  "status": "implementation-ready-for-coordinator-and-independent-review",
+  "generatedAt": "2026-10-09T04:47:03.237986+00:00",
+  "ownership": {
+    "productFiles": [
+      "src/db/assetReuse.ts",
+      "src/db/assets.ts",
+      "src/db/cascadeCommands.ts",
+      "src/db/episodes.ts",
+      "src/db/media.ts",
+      "src/db/shots.ts"
+    ],
+    "coordinatorOwns": [
+      "specifications",
+      "task/status/manifest",
+      "ledger",
+      "integration/static/value-AST",
+      "independent acceptance"
+    ],
+    "foreignWriterFilesNotTouched": [
+      "src/db/projectMemories.ts",
+      "src/components/studio/ProjectGalleryPage.tsx",
+      "src/components/studio/AssetLibraryPages.tsx"
+    ],
+    "unchangedScalarAndScopeDependencies": [
+      "src/db/projects.ts",
+      "src/db/references.ts",
+      "src/lib/agent/businessTools.ts",
+      "src/lib/draftMedia.ts",
+      "src/components/slots/GenerationSlotCard.tsx",
+      "src/db/productionShared.ts"
+    ]
+  },
+  "beforeEntry": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/research/E04-entry.json",
+    "sha256": "d7226d85662d5060d27e17f96142b1edc3709459ec9a8b630462d9c4638c7772",
+    "meaning": "Actual accepted postE03 uncommitted working tree, not HEAD; all src/test/script hashes and bounded owner beforecopies",
+    "headRevision": "1ecaf5ceec92e022c2b2b8d662e2a92e8eee36c7"
+  },
+  "preEditInventory": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/research/E04-media-retention-inventory.json",
+    "sha256": "7a607e8a749aacf96bbfcee10aec73b676c86b7ca5a62e24920f26d115a64334",
+    "checkCommand": "python3 .trellis/tasks/10-09-src-remediation-e/research/e04-retention-inventory/produce.py --check",
+    "checkAtDispatchAndBeforeEdits": "passed: 65 inputs, 18 retention tables, 25 production tables, 17 direct invocations and one injected callback path"
+  },
+  "changedFiles": [
+    {
+      "path": "scripts/e04-media-browser-regression.mjs",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "eb989d51cd562122a0011bc3c66fec0a9c106bde7d6aa7b84818b1536b6f56f3",
+      "beforeCopy": null,
+      "change": "added"
+    },
+    {
+      "path": "src/db/assetReuse.ts",
+      "beforeEntrySHA256": "bb81b6f8d9d94255de378db349f0a187600ed2f7146e6c19ac79bfa5b43795b3",
+      "afterSHA256": "d1af1aa4d59bd1ae8f1f04d1d1431903d603d917b4ac26162b0b328a107e0a73",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/E04-before/src/db/assetReuse.ts",
+      "change": "modified"
+    },
+    {
+      "path": "src/db/assets.ts",
+      "beforeEntrySHA256": "32362eff2c660aaa4f020e093591be90f541e9741468e3e7d2e606164490068d",
+      "afterSHA256": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/E04-before/src/db/assets.ts",
+      "change": "modified"
+    },
+    {
+      "path": "src/db/cascadeCommands.ts",
+      "beforeEntrySHA256": "01363e5054728ccd17aeeadfab92c123dc6411e12ec2ba63530900d0e45e9526",
+      "afterSHA256": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/E04-before/src/db/cascadeCommands.ts",
+      "change": "modified"
+    },
+    {
+      "path": "src/db/episodes.ts",
+      "beforeEntrySHA256": "832812e48f1508d22cbe2bae35752315b3e99209c28bd37f7d3d76cef93b6ea3",
+      "afterSHA256": "294a068ed80118b5b8b8ab1009e9a8cd0624ddfd91030de783de49f861f65a11",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/E04-before/src/db/episodes.ts",
+      "change": "modified"
+    },
+    {
+      "path": "src/db/media.ts",
+      "beforeEntrySHA256": "0b2105050422434e9f9955f94ee7d3bc165310e62c7fe418eec23944a8efd675",
+      "afterSHA256": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/E04-before/src/db/media.ts",
+      "change": "modified"
+    },
+    {
+      "path": "src/db/shots.ts",
+      "beforeEntrySHA256": "fe48dc9ee40950096d91dde9119b56de03a9c1523aa872e5cce090fb833189b2",
+      "afterSHA256": "a2fa075f0284959659c369b3657cb615d2d10581dbdbef9b1b76479bb2f1a926",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/E04-before/src/db/shots.ts",
+      "change": "modified"
+    },
+    {
+      "path": "tests/e04MediaRetention.test.ts",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "38b7f464dd69071fb5332ee1817792461b06f1e60a4a2f1aa0ce4503f81977fd",
+      "beforeCopy": null,
+      "change": "added"
+    },
+    {
+      "path": "tests/fixtures/e04-media/commands.ts",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "0fee491f26b9da39ff0dae820d4d5d4d2572c5ad560f84fe34edd172889e7715",
+      "beforeCopy": null,
+      "change": "added"
+    },
+    {
+      "path": "tests/fixtures/e04-media/index.html",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "acb1260fe1fd3ba6901809c80e1268ee2fb311a26d7766d291c32a22d1e66e4a",
+      "beforeCopy": null,
+      "change": "added"
+    },
+    {
+      "path": "tests/fixtures/e04-media/instrumentation.ts",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "cf66948f0e54354eb2050639c0c59b32b2108d56069a00652dee6f7f2912ce04",
+      "beforeCopy": null,
+      "change": "added"
+    },
+    {
+      "path": "tests/fixtures/e04-media/main.ts",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "aa5c397d3a62f5a30c596c90d9bf95ed7eb762fdda463782e44dc7471c0f995f",
+      "beforeCopy": null,
+      "change": "added"
+    },
+    {
+      "path": "tests/fixtures/e04-media/receipt.ts",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "5e5704fcd2a73d0e0fadba0b3283a787cd887cde275c1fed2796f1fe122abd74",
+      "beforeCopy": null,
+      "change": "added"
+    },
+    {
+      "path": "tests/fixtures/e04-media/retention.ts",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "a8ec4448b7c405c5a241daf50765cb1a37afa0e8f1166b546e057e087575a1ed",
+      "beforeCopy": null,
+      "change": "added"
+    },
+    {
+      "path": "tests/fixtures/e04-media/seeds.ts",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "85d97de3b4e839146da0faf235cea001bf83fbefd8f04980c9525b49ea2beab5",
+      "beforeCopy": null,
+      "change": "added"
+    },
+    {
+      "path": "tests/fixtures/e04-media/tsconfig.json",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "cab0c780aca49996eba9fddf27d2d4c2c457cd4bad73938021a288b68e1dec81",
+      "beforeCopy": null,
+      "change": "added"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e04-media/provenance.json",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "a7645493a2baa83f3369709b8b178d6020cfab32ec10f279cb3230c2b9749400",
+      "beforeCopy": null,
+      "change": "added"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e04-media/src/db/database.ts",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "5c28901f9b5073b388aa01c115df43d442480b1ada029f99569569e1b1ef915b",
+      "beforeCopy": null,
+      "change": "added"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e04-media/src/db/media.ts",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "0b2105050422434e9f9955f94ee7d3bc165310e62c7fe418eec23944a8efd675",
+      "beforeCopy": null,
+      "change": "added"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e04-media/src/db/productionShared.ts",
+      "beforeEntrySHA256": null,
+      "afterSHA256": "c0b1ea3860b829ebf56e10d0e727aca19d82e35e097aecf1801b0de21ffbed44",
+      "beforeCopy": null,
+      "change": "added"
+    }
+  ],
+  "actualNativeSourceClosure": [
+    {
+      "path": "tests/fixtures/e04-media/main.ts",
+      "sha256": "aa5c397d3a62f5a30c596c90d9bf95ed7eb762fdda463782e44dc7471c0f995f",
+      "bytes": 2863,
+      "reloadHashes": [],
+      "afterSHA256": "aa5c397d3a62f5a30c596c90d9bf95ed7eb762fdda463782e44dc7471c0f995f"
+    },
+    {
+      "path": "tests/fixtures/e04-media/commands.ts",
+      "sha256": "0fee491f26b9da39ff0dae820d4d5d4d2572c5ad560f84fe34edd172889e7715",
+      "bytes": 16062,
+      "reloadHashes": [],
+      "afterSHA256": "0fee491f26b9da39ff0dae820d4d5d4d2572c5ad560f84fe34edd172889e7715"
+    },
+    {
+      "path": "tests/fixtures/e04-media/receipt.ts",
+      "sha256": "5e5704fcd2a73d0e0fadba0b3283a787cd887cde275c1fed2796f1fe122abd74",
+      "bytes": 5354,
+      "reloadHashes": [],
+      "afterSHA256": "5e5704fcd2a73d0e0fadba0b3283a787cd887cde275c1fed2796f1fe122abd74"
+    },
+    {
+      "path": "tests/fixtures/e04-media/retention.ts",
+      "sha256": "a8ec4448b7c405c5a241daf50765cb1a37afa0e8f1166b546e057e087575a1ed",
+      "bytes": 7235,
+      "reloadHashes": [],
+      "afterSHA256": "a8ec4448b7c405c5a241daf50765cb1a37afa0e8f1166b546e057e087575a1ed"
+    },
+    {
+      "path": "src/db/database.ts",
+      "sha256": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+      "bytes": 14135,
+      "reloadHashes": [],
+      "afterSHA256": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e04-media/src/db/media.ts",
+      "sha256": "0b2105050422434e9f9955f94ee7d3bc165310e62c7fe418eec23944a8efd675",
+      "bytes": 6476,
+      "reloadHashes": [],
+      "afterSHA256": "0b2105050422434e9f9955f94ee7d3bc165310e62c7fe418eec23944a8efd675"
+    },
+    {
+      "path": "tests/fixtures/e04-media/seeds.ts",
+      "sha256": "85d97de3b4e839146da0faf235cea001bf83fbefd8f04980c9525b49ea2beab5",
+      "bytes": 9105,
+      "reloadHashes": [],
+      "afterSHA256": "85d97de3b4e839146da0faf235cea001bf83fbefd8f04980c9525b49ea2beab5"
+    },
+    {
+      "path": "tests/fixtures/e04-media/instrumentation.ts",
+      "sha256": "cf66948f0e54354eb2050639c0c59b32b2108d56069a00652dee6f7f2912ce04",
+      "bytes": 2922,
+      "reloadHashes": [],
+      "afterSHA256": "cf66948f0e54354eb2050639c0c59b32b2108d56069a00652dee6f7f2912ce04"
+    },
+    {
+      "path": "src/db/shots.ts",
+      "sha256": "a2fa075f0284959659c369b3657cb615d2d10581dbdbef9b1b76479bb2f1a926",
+      "bytes": 19489,
+      "reloadHashes": [],
+      "afterSHA256": "a2fa075f0284959659c369b3657cb615d2d10581dbdbef9b1b76479bb2f1a926"
+    },
+    {
+      "path": "src/db/chat.ts",
+      "sha256": "de30d5a29de339e06f48eeb9c94945c9bad8579c4a5bdd07ce78ecfc34d10287",
+      "bytes": 5081,
+      "reloadHashes": [],
+      "afterSHA256": "de30d5a29de339e06f48eeb9c94945c9bad8579c4a5bdd07ce78ecfc34d10287"
+    },
+    {
+      "path": "src/db/projects.ts",
+      "sha256": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+      "bytes": 10448,
+      "reloadHashes": [],
+      "afterSHA256": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7"
+    },
+    {
+      "path": "src/lib/agent/writeReceipt.ts",
+      "sha256": "2dd25204832ceabdfec153b2f52dbf0d4afe3c21eebc41c6c35052258a9ebb1c",
+      "bytes": 1422,
+      "reloadHashes": [],
+      "afterSHA256": "2dd25204832ceabdfec153b2f52dbf0d4afe3c21eebc41c6c35052258a9ebb1c"
+    },
+    {
+      "path": "src/db/agentRuns.ts",
+      "sha256": "f14f334fd659fb48b93375d00bf2a2a10b8672c40a431a824fdcb02f23914b5b",
+      "bytes": 18467,
+      "reloadHashes": [],
+      "afterSHA256": "f14f334fd659fb48b93375d00bf2a2a10b8672c40a431a824fdcb02f23914b5b"
+    },
+    {
+      "path": "src/lib/agent/tools.ts",
+      "sha256": "fd78896242970d3f1d69a3caae0976d0dfcb94e5b1e66c5984e656f0e0b83760",
+      "bytes": 7932,
+      "reloadHashes": [],
+      "afterSHA256": "fd78896242970d3f1d69a3caae0976d0dfcb94e5b1e66c5984e656f0e0b83760"
+    },
+    {
+      "path": "src/db/productionShared.ts",
+      "sha256": "afd0e5b49aeb0f00c9f58f69f028e01f21062a2f6ba71741b056aec720797fc3",
+      "bytes": 3800,
+      "reloadHashes": [],
+      "afterSHA256": "afd0e5b49aeb0f00c9f58f69f028e01f21062a2f6ba71741b056aec720797fc3"
+    },
+    {
+      "path": "src/db/media.ts",
+      "sha256": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+      "bytes": 7425,
+      "reloadHashes": [],
+      "afterSHA256": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e"
+    },
+    {
+      "path": "src/db/episodes.ts",
+      "sha256": "294a068ed80118b5b8b8ab1009e9a8cd0624ddfd91030de783de49f861f65a11",
+      "bytes": 17092,
+      "reloadHashes": [],
+      "afterSHA256": "294a068ed80118b5b8b8ab1009e9a8cd0624ddfd91030de783de49f861f65a11"
+    },
+    {
+      "path": "src/db/assets.ts",
+      "sha256": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e",
+      "bytes": 12086,
+      "reloadHashes": [],
+      "afterSHA256": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e"
+    },
+    {
+      "path": "src/db/assetReuse.ts",
+      "sha256": "d1af1aa4d59bd1ae8f1f04d1d1431903d603d917b4ac26162b0b328a107e0a73",
+      "bytes": 7317,
+      "reloadHashes": [],
+      "afterSHA256": "d1af1aa4d59bd1ae8f1f04d1d1431903d603d917b4ac26162b0b328a107e0a73"
+    },
+    {
+      "path": "src/db/cascadeCommands.ts",
+      "sha256": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6",
+      "bytes": 6267,
+      "reloadHashes": [],
+      "afterSHA256": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6"
+    },
+    {
+      "path": "src/db/materials.ts",
+      "sha256": "5a4fcef0b2421c79fa3c2a84b95c622fe19d91605f375276062406613919511c",
+      "bytes": 19544,
+      "reloadHashes": [],
+      "afterSHA256": "5a4fcef0b2421c79fa3c2a84b95c622fe19d91605f375276062406613919511c"
+    },
+    {
+      "path": "src/db/references.ts",
+      "sha256": "b4f20572f890d395a8294f6377435a9c5b51d9cc9ab9238d396edb7d8915cb0d",
+      "bytes": 5476,
+      "reloadHashes": [],
+      "afterSHA256": "b4f20572f890d395a8294f6377435a9c5b51d9cc9ab9238d396edb7d8915cb0d"
+    },
+    {
+      "path": "src/domain/slot.ts",
+      "sha256": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+      "bytes": 5297,
+      "reloadHashes": [],
+      "afterSHA256": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5"
+    },
+    {
+      "path": "src/db/productionRecords.ts",
+      "sha256": "c4be1a9cbedebbbd11a3a4435fd06f97a7270b05376f50c0e3efe515d51d73e7",
+      "bytes": 3375,
+      "reloadHashes": [],
+      "afterSHA256": "c4be1a9cbedebbbd11a3a4435fd06f97a7270b05376f50c0e3efe515d51d73e7"
+    },
+    {
+      "path": "src/db/agentSettings.ts",
+      "sha256": "b6ce645321520d95bef3941dd1cad411547e6fa7017acb64a100c8cc744aeb5b",
+      "bytes": 3136,
+      "reloadHashes": [],
+      "afterSHA256": "b6ce645321520d95bef3941dd1cad411547e6fa7017acb64a100c8cc744aeb5b"
+    },
+    {
+      "path": "src/lib/ids.ts",
+      "sha256": "39924822d8b29e298a8d00615d0027b581ba2eb6a32cf210262a253c58ebfa5d",
+      "bytes": 365,
+      "reloadHashes": [],
+      "afterSHA256": "39924822d8b29e298a8d00615d0027b581ba2eb6a32cf210262a253c58ebfa5d"
+    },
+    {
+      "path": "src/lib/agent/contextPolicy.ts",
+      "sha256": "313919054a162851204ea0e8298904b20a636af5773d24269405a5a7cc1e14fc",
+      "bytes": 1578,
+      "reloadHashes": [],
+      "afterSHA256": "313919054a162851204ea0e8298904b20a636af5773d24269405a5a7cc1e14fc"
+    },
+    {
+      "path": "src/lib/draftConflict.ts",
+      "sha256": "2e94acd524fa20eeb3053f8631852a9d5275d8a2c6698718577dd9bc1a3e5e66",
+      "bytes": 2143,
+      "reloadHashes": [],
+      "afterSHA256": "2e94acd524fa20eeb3053f8631852a9d5275d8a2c6698718577dd9bc1a3e5e66"
+    },
+    {
+      "path": "src/db/audioShared.ts",
+      "sha256": "2dc8545765e9916ac3c8bc07341b56ff87c9a1f78ace95f1535d96c020a801b3",
+      "bytes": 4426,
+      "reloadHashes": [],
+      "afterSHA256": "2dc8545765e9916ac3c8bc07341b56ff87c9a1f78ace95f1535d96c020a801b3"
+    },
+    {
+      "path": "src/domain/output.ts",
+      "sha256": "387df36dc4b5a8808477d11620546ce45010c5fe3289d7556ba5cd7bdb02f492",
+      "bytes": 7694,
+      "reloadHashes": [],
+      "afterSHA256": "387df36dc4b5a8808477d11620546ce45010c5fe3289d7556ba5cd7bdb02f492"
+    },
+    {
+      "path": "src/domain/types.ts",
+      "sha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+      "bytes": 16260,
+      "reloadHashes": [],
+      "afterSHA256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204"
+    },
+    {
+      "path": "src/domain/audio.ts",
+      "sha256": "3d4cef74e3bae43f8e5c439ff8704c028e1ff97da4e47f0e0ed579df78a25e94",
+      "bytes": 2425,
+      "reloadHashes": [],
+      "afterSHA256": "3d4cef74e3bae43f8e5c439ff8704c028e1ff97da4e47f0e0ed579df78a25e94"
+    },
+    {
+      "path": "src/db/memoryRetrieval.ts",
+      "sha256": "d41a0c6063cc1c8c548fa6af265c7f907a31e0c9a5e7d2152100f9c2846999fa",
+      "bytes": 2971,
+      "reloadHashes": [],
+      "afterSHA256": "d41a0c6063cc1c8c548fa6af265c7f907a31e0c9a5e7d2152100f9c2846999fa"
+    },
+    {
+      "path": "src/db/agentToolRecovery.ts",
+      "sha256": "25d318c6348ce07f5685a0718c2f483b9ce9bc849299a3e2dbf534fdb3ed48fc",
+      "bytes": 5816,
+      "reloadHashes": [],
+      "afterSHA256": "25d318c6348ce07f5685a0718c2f483b9ce9bc849299a3e2dbf534fdb3ed48fc"
+    },
+    {
+      "path": "src/domain/music.ts",
+      "sha256": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+      "bytes": 1472,
+      "reloadHashes": [],
+      "afterSHA256": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da"
+    },
+    {
+      "path": "src/lib/agent/toolLoading.ts",
+      "sha256": "12201c7905fc761e38bc2110e5a0c55668d149f9ffa6f97514db6a804d8e4a15",
+      "bytes": 10593,
+      "reloadHashes": [],
+      "afterSHA256": "12201c7905fc761e38bc2110e5a0c55668d149f9ffa6f97514db6a804d8e4a15"
+    },
+    {
+      "path": "src/lib/agent/memoryToolNames.ts",
+      "sha256": "0dc6e4453673dff641208e3e915eedd53aa477202e92ff3ad597ab6594d62ab4",
+      "bytes": 697,
+      "reloadHashes": [],
+      "afterSHA256": "0dc6e4453673dff641208e3e915eedd53aa477202e92ff3ad597ab6594d62ab4"
+    },
+    {
+      "path": "src/lib/ai/visionCapability.ts",
+      "sha256": "a4d73f99782eea0fa7bd3611b56a540909f34baf879f6bc1dd108479a436f349",
+      "bytes": 897,
+      "reloadHashes": [],
+      "afterSHA256": "a4d73f99782eea0fa7bd3611b56a540909f34baf879f6bc1dd108479a436f349"
+    },
+    {
+      "path": "src/lib/agent/skills.ts",
+      "sha256": "5ac7b4a93941047d115a62915c9fdaf8b439e484a0139d932084a07f8d3c1cad",
+      "bytes": 15569,
+      "reloadHashes": [],
+      "afterSHA256": "5ac7b4a93941047d115a62915c9fdaf8b439e484a0139d932084a07f8d3c1cad"
+    },
+    {
+      "path": "src/lib/agent/contextPlanner.ts",
+      "sha256": "73570e51d99d00b178fd6ea8e8f2a0b419234857b6131965571a2973a2b92532",
+      "bytes": 5756,
+      "reloadHashes": [],
+      "afterSHA256": "73570e51d99d00b178fd6ea8e8f2a0b419234857b6131965571a2973a2b92532"
+    },
+    {
+      "path": "src/lib/agent/taskContext.ts",
+      "sha256": "2a656603d98fac5c09365d9190097a5b4fa9bbe0082e9a11c0f74081feb671e9",
+      "bytes": 3449,
+      "reloadHashes": [],
+      "afterSHA256": "2a656603d98fac5c09365d9190097a5b4fa9bbe0082e9a11c0f74081feb671e9"
+    },
+    {
+      "path": "src/lib/ai/reasoningPolicy.ts",
+      "sha256": "31b1058703804461f4677f7e15601c6e178ab07f399b70f3d7e65120aa66424b",
+      "bytes": 3744,
+      "reloadHashes": [],
+      "afterSHA256": "31b1058703804461f4677f7e15601c6e178ab07f399b70f3d7e65120aa66424b"
+    },
+    {
+      "path": "src/lib/chatTitle.ts",
+      "sha256": "907399748fb233c79ebf4ea2424183940c19b2b495aeaac2b739beccb45aa883",
+      "bytes": 229,
+      "reloadHashes": [],
+      "afterSHA256": "907399748fb233c79ebf4ea2424183940c19b2b495aeaac2b739beccb45aa883"
+    },
+    {
+      "path": "src/db/agentTasks.ts",
+      "sha256": "837fbd04efd0ea2aa07c6570beb9e88722d3cf62e0a37a4d1e4cc58b0b2edca6",
+      "bytes": 7157,
+      "reloadHashes": [],
+      "afterSHA256": "837fbd04efd0ea2aa07c6570beb9e88722d3cf62e0a37a4d1e4cc58b0b2edca6"
+    },
+    {
+      "path": "src/lib/agent/referenceContext.ts",
+      "sha256": "b3b2fe419b730c9c884bbe3a1785d8ff97791b0e3d9b6d215e0d2ec79dfb1f07",
+      "bytes": 6565,
+      "reloadHashes": [],
+      "afterSHA256": "b3b2fe419b730c9c884bbe3a1785d8ff97791b0e3d9b6d215e0d2ec79dfb1f07"
+    },
+    {
+      "path": "src/lib/agent/audioTools.ts",
+      "sha256": "86da9979c828565347e0aadde1a517a75a0190da85deeee28ac7c7fca96b5366",
+      "bytes": 18512,
+      "reloadHashes": [],
+      "afterSHA256": "86da9979c828565347e0aadde1a517a75a0190da85deeee28ac7c7fca96b5366"
+    },
+    {
+      "path": "src/lib/agent/toolDefinition.ts",
+      "sha256": "02c4be1c59dee37c6ef109b6e64f10f515de290e1516e70e9e413f6c60be858a",
+      "bytes": 2225,
+      "reloadHashes": [],
+      "afterSHA256": "02c4be1c59dee37c6ef109b6e64f10f515de290e1516e70e9e413f6c60be858a"
+    },
+    {
+      "path": "src/lib/agent/ipTools.ts",
+      "sha256": "eb3dd60b0376e455541c73b953d50a1e02bdf286a5cb1d869768411b48f84bdf",
+      "bytes": 10767,
+      "reloadHashes": [],
+      "afterSHA256": "eb3dd60b0376e455541c73b953d50a1e02bdf286a5cb1d869768411b48f84bdf"
+    },
+    {
+      "path": "src/lib/agent/audioGenerationTools.ts",
+      "sha256": "224a69998aa924e9592f3ffbe4273d61f25ab81588a47c16c00211f8dbfbb641",
+      "bytes": 18120,
+      "reloadHashes": [],
+      "afterSHA256": "224a69998aa924e9592f3ffbe4273d61f25ab81588a47c16c00211f8dbfbb641"
+    },
+    {
+      "path": "src/lib/agent/materialTools.ts",
+      "sha256": "4256632f8525af7d51f1ce11d06cc1576612e74cb1d9c2de8c05fd160a0e4db7",
+      "bytes": 28337,
+      "reloadHashes": [],
+      "afterSHA256": "4256632f8525af7d51f1ce11d06cc1576612e74cb1d9c2de8c05fd160a0e4db7"
+    },
+    {
+      "path": "src/lib/agent/webTools.ts",
+      "sha256": "aa3d27fdabe928851f016e4b4f2e46605e622be93bd1a7125dc8dddd95e575bb",
+      "bytes": 3917,
+      "reloadHashes": [],
+      "afterSHA256": "aa3d27fdabe928851f016e4b4f2e46605e622be93bd1a7125dc8dddd95e575bb"
+    },
+    {
+      "path": "src/lib/agent/memoryTools.ts",
+      "sha256": "8136c13c7ede476d7fc27163ce849f2983cfbff38e78cce6daf608fd843cb9e5",
+      "bytes": 17432,
+      "reloadHashes": [],
+      "afterSHA256": "8136c13c7ede476d7fc27163ce849f2983cfbff38e78cce6daf608fd843cb9e5"
+    },
+    {
+      "path": "src/lib/agent/musicTools.ts",
+      "sha256": "7bcc1a948f453b20176b9a23bcc78a9efe282b1ff8dd45d964d0dab6df4d87b3",
+      "bytes": 9407,
+      "reloadHashes": [],
+      "afterSHA256": "7bcc1a948f453b20176b9a23bcc78a9efe282b1ff8dd45d964d0dab6df4d87b3"
+    },
+    {
+      "path": "src/lib/agent/taskTools.ts",
+      "sha256": "17fa84724059d03aa65e2891f76354c83224e8e30e73c698a5ee6c176f8ea341",
+      "bytes": 15356,
+      "reloadHashes": [],
+      "afterSHA256": "17fa84724059d03aa65e2891f76354c83224e8e30e73c698a5ee6c176f8ea341"
+    },
+    {
+      "path": "src/lib/agent/referenceTools.ts",
+      "sha256": "e09a6ca411141b70002b37eadc93594f34c825f303296448a5bca00b629b6304",
+      "bytes": 11402,
+      "reloadHashes": [],
+      "afterSHA256": "e09a6ca411141b70002b37eadc93594f34c825f303296448a5bca00b629b6304"
+    },
+    {
+      "path": "src/lib/agent/projectScope.ts",
+      "sha256": "d590590a610b2a4546dd6b8c01a1468542cbb923afdcc939cd17d00046165faf",
+      "bytes": 2830,
+      "reloadHashes": [],
+      "afterSHA256": "d590590a610b2a4546dd6b8c01a1468542cbb923afdcc939cd17d00046165faf"
+    },
+    {
+      "path": "src/lib/agent/generationTools.ts",
+      "sha256": "67aa3b9b8d81203478b1cae1e1613572aee1a01fbb2adfc1afcb29a7cf6fea9d",
+      "bytes": 9636,
+      "reloadHashes": [],
+      "afterSHA256": "67aa3b9b8d81203478b1cae1e1613572aee1a01fbb2adfc1afcb29a7cf6fea9d"
+    },
+    {
+      "path": "src/lib/agent/businessTools.ts",
+      "sha256": "0aad3a5e1d3792952da4980ed003aa863e3ecb9e87bdc30cab4bef6d18e63274",
+      "bytes": 50988,
+      "reloadHashes": [],
+      "afterSHA256": "0aad3a5e1d3792952da4980ed003aa863e3ecb9e87bdc30cab4bef6d18e63274"
+    },
+    {
+      "path": "src/db/agentTools.ts",
+      "sha256": "51fc482601a428161a348d750c5b478c036275fb07ac548ef9ea339497022299",
+      "bytes": 25180,
+      "reloadHashes": [],
+      "afterSHA256": "51fc482601a428161a348d750c5b478c036275fb07ac548ef9ea339497022299"
+    },
+    {
+      "path": "src/lib/agent/toolErrors.ts",
+      "sha256": "0b2f17d2595bc6df471be1c3dd5c41505326ba401c603e1461e8f9787600e799",
+      "bytes": 6988,
+      "reloadHashes": [],
+      "afterSHA256": "0b2f17d2595bc6df471be1c3dd5c41505326ba401c603e1461e8f9787600e799"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e04-media/src/db/database.ts",
+      "sha256": "5c28901f9b5073b388aa01c115df43d442480b1ada029f99569569e1b1ef915b",
+      "bytes": 97,
+      "reloadHashes": [],
+      "afterSHA256": "5c28901f9b5073b388aa01c115df43d442480b1ada029f99569569e1b1ef915b"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e04-media/src/db/productionShared.ts",
+      "sha256": "c0b1ea3860b829ebf56e10d0e727aca19d82e35e097aecf1801b0de21ffbed44",
+      "bytes": 105,
+      "reloadHashes": [],
+      "afterSHA256": "c0b1ea3860b829ebf56e10d0e727aca19d82e35e097aecf1801b0de21ffbed44"
+    },
+    {
+      "path": "src/domain/generationCapabilities.ts",
+      "sha256": "4398fc99a4003bda5ea903c54be5673bbc0dd748710d6a58ad9661ca545decef",
+      "bytes": 15651,
+      "reloadHashes": [],
+      "afterSHA256": "4398fc99a4003bda5ea903c54be5673bbc0dd748710d6a58ad9661ca545decef"
+    },
+    {
+      "path": "src/lib/ai/modelMetadata.ts",
+      "sha256": "9ea70a6c9172cbab757550440888fbda56a5ec6f89aa95111405accd3db175aa",
+      "bytes": 3533,
+      "reloadHashes": [],
+      "afterSHA256": "9ea70a6c9172cbab757550440888fbda56a5ec6f89aa95111405accd3db175aa"
+    },
+    {
+      "path": "src/domain/agent.ts",
+      "sha256": "befae9bbf740b76ea3a0b78561d01b485975ab624aeedd4d2e77b523ddaf9058",
+      "bytes": 7917,
+      "reloadHashes": [],
+      "afterSHA256": "befae9bbf740b76ea3a0b78561d01b485975ab624aeedd4d2e77b523ddaf9058"
+    },
+    {
+      "path": "src/lib/memory/retrieval.ts",
+      "sha256": "d6223195ad62db7f07730ce3df609d8777a98714a615de9914eb7bb23f014ca1",
+      "bytes": 7004,
+      "reloadHashes": [],
+      "afterSHA256": "d6223195ad62db7f07730ce3df609d8777a98714a615de9914eb7bb23f014ca1"
+    },
+    {
+      "path": "src/lib/agent/projectContext.ts",
+      "sha256": "5a84fd9bf100cdb71bbd13141e35304e674f81a73d62e6374ac2de2238ae65ce",
+      "bytes": 9503,
+      "reloadHashes": [],
+      "afterSHA256": "5a84fd9bf100cdb71bbd13141e35304e674f81a73d62e6374ac2de2238ae65ce"
+    },
+    {
+      "path": "src/lib/agent/referenceToolNames.ts",
+      "sha256": "577cdbe4f5d689f91e86bb17900844131131a1872aae9b95f6ea9c27d8fadbd1",
+      "bytes": 150,
+      "reloadHashes": [],
+      "afterSHA256": "577cdbe4f5d689f91e86bb17900844131131a1872aae9b95f6ea9c27d8fadbd1"
+    },
+    {
+      "path": "src/lib/agent/taskState.ts",
+      "sha256": "e83ffaaf911424d8e7e831e55500e91a5e68b0818ff8b76d6502abebe7f01053",
+      "bytes": 3475,
+      "reloadHashes": [],
+      "afterSHA256": "e83ffaaf911424d8e7e831e55500e91a5e68b0818ff8b76d6502abebe7f01053"
+    },
+    {
+      "path": "src/db/agentTaskWrapups.ts",
+      "sha256": "f9dfc0b4866ef55feb69df1eabbfcdc73dfc0153be146b045b4c65be517e5440",
+      "bytes": 13387,
+      "reloadHashes": [],
+      "afterSHA256": "f9dfc0b4866ef55feb69df1eabbfcdc73dfc0153be146b045b4c65be517e5440"
+    },
+    {
+      "path": "src/lib/agent/materialImageInput.ts",
+      "sha256": "b61919a40e730952cd499b04e26f908a5bf827a6382837f534066dba68cb42b5",
+      "bytes": 5205,
+      "reloadHashes": [],
+      "afterSHA256": "b61919a40e730952cd499b04e26f908a5bf827a6382837f534066dba68cb42b5"
+    },
+    {
+      "path": "src/db/agentTaskRecords.ts",
+      "sha256": "818022669a64f4fe8cf55c0e285582a62d196ab953fd357b47f027f65320533d",
+      "bytes": 9757,
+      "reloadHashes": [],
+      "afterSHA256": "818022669a64f4fe8cf55c0e285582a62d196ab953fd357b47f027f65320533d"
+    },
+    {
+      "path": "src/db/agentTaskGuards.ts",
+      "sha256": "8df6820136145e10a82aef4c1db89d7c763150858fa96661b92b35a259cd6e7c",
+      "bytes": 892,
+      "reloadHashes": [],
+      "afterSHA256": "8df6820136145e10a82aef4c1db89d7c763150858fa96661b92b35a259cd6e7c"
+    },
+    {
+      "path": "src/lib/agent/contextUsage.ts",
+      "sha256": "dfe0e795a118eea77cc292050093d12785e9d15a2925f46f43cb7465195043b3",
+      "bytes": 3044,
+      "reloadHashes": [],
+      "afterSHA256": "dfe0e795a118eea77cc292050093d12785e9d15a2925f46f43cb7465195043b3"
+    },
+    {
+      "path": "src/lib/agent/imageDiscovery.ts",
+      "sha256": "fc8571b38c847e6ed4e0504bd04d3f5140a6772a202d94fc7b4261292f95bc58",
+      "bytes": 18633,
+      "reloadHashes": [],
+      "afterSHA256": "fc8571b38c847e6ed4e0504bd04d3f5140a6772a202d94fc7b4261292f95bc58"
+    },
+    {
+      "path": "src/domain/references.ts",
+      "sha256": "b7c4f8a7de8e3284ad27fa72cc4aa6575ace4942ca4216f9194e16c9fa30fcc7",
+      "bytes": 2224,
+      "reloadHashes": [],
+      "afterSHA256": "b7c4f8a7de8e3284ad27fa72cc4aa6575ace4942ca4216f9194e16c9fa30fcc7"
+    },
+    {
+      "path": "src/domain/agentToolSelection.ts",
+      "sha256": "2efea8c45ad514225a5c22d78ccd1ecf5525cab7e88d175070a8a53b86eaa097",
+      "bytes": 928,
+      "reloadHashes": [],
+      "afterSHA256": "2efea8c45ad514225a5c22d78ccd1ecf5525cab7e88d175070a8a53b86eaa097"
+    },
+    {
+      "path": "src/lib/ai/responsesStream.ts",
+      "sha256": "bcec57ea2be65ff065fb97793df2c7148be2ad870458df15a8801e6a281faeaa",
+      "bytes": 15196,
+      "reloadHashes": [],
+      "afterSHA256": "bcec57ea2be65ff065fb97793df2c7148be2ad870458df15a8801e6a281faeaa"
+    },
+    {
+      "path": "src/domain/referenceInput.ts",
+      "sha256": "8afc504786c70cdf6de16d3cb9060a26bc521b3852d5538057340fa3998d61c5",
+      "bytes": 1930,
+      "reloadHashes": [],
+      "afterSHA256": "8afc504786c70cdf6de16d3cb9060a26bc521b3852d5538057340fa3998d61c5"
+    },
+    {
+      "path": "src/lib/agent/ipToolNames.ts",
+      "sha256": "a1e8d0086956df8e0c69abb69334fe4a78475025babf165cd4da372768dc8e41",
+      "bytes": 128,
+      "reloadHashes": [],
+      "afterSHA256": "a1e8d0086956df8e0c69abb69334fe4a78475025babf165cd4da372768dc8e41"
+    },
+    {
+      "path": "src/lib/agent/audioMusicToolNames.ts",
+      "sha256": "2af929c2c55dc34886165c35ecc2882d764b6e0d6d0ff14e4b96d5c0901d819f",
+      "bytes": 448,
+      "reloadHashes": [],
+      "afterSHA256": "2af929c2c55dc34886165c35ecc2882d764b6e0d6d0ff14e4b96d5c0901d819f"
+    },
+    {
+      "path": "src/lib/agent/businessToolNames.ts",
+      "sha256": "0abb4cb362354b0dc5e22f60fa78e6d4864b23f2d5eb034cec3c33debd40ce04",
+      "bytes": 868,
+      "reloadHashes": [],
+      "afterSHA256": "0abb4cb362354b0dc5e22f60fa78e6d4864b23f2d5eb034cec3c33debd40ce04"
+    },
+    {
+      "path": "src/lib/agent/webToolNames.ts",
+      "sha256": "a247f85125ad56d9b83bd56556ac935cb050bcfa3b66acc5cc6445984b27f37c",
+      "bytes": 67,
+      "reloadHashes": [],
+      "afterSHA256": "a247f85125ad56d9b83bd56556ac935cb050bcfa3b66acc5cc6445984b27f37c"
+    },
+    {
+      "path": "src/db/searchConnections.ts",
+      "sha256": "a986e4b894a5890e0798eb23b991dfe661d8ff616164f077b9adb31d2db95228",
+      "bytes": 1537,
+      "reloadHashes": [],
+      "afterSHA256": "a986e4b894a5890e0798eb23b991dfe661d8ff616164f077b9adb31d2db95228"
+    },
+    {
+      "path": "src/lib/ai/modelBank/index.ts",
+      "sha256": "64e721fc672271586ca09965397ef3f3dab09d36b10976dc94a3b68d4e2ec3df",
+      "bytes": 4418,
+      "reloadHashes": [],
+      "afterSHA256": "64e721fc672271586ca09965397ef3f3dab09d36b10976dc94a3b68d4e2ec3df"
+    },
+    {
+      "path": "src/domain/search.ts",
+      "sha256": "4e3967123fefa26ede073572b51ef35d873cb498375525913dfcaf8e84221d8a",
+      "bytes": 4763,
+      "reloadHashes": [],
+      "afterSHA256": "4e3967123fefa26ede073572b51ef35d873cb498375525913dfcaf8e84221d8a"
+    },
+    {
+      "path": "src/lib/agent/materialToolNames.ts",
+      "sha256": "b1023b87ee512d4ef97487d4c890c716e2bea21c714b528177cbc195597ec813",
+      "bytes": 330,
+      "reloadHashes": [],
+      "afterSHA256": "b1023b87ee512d4ef97487d4c890c716e2bea21c714b528177cbc195597ec813"
+    },
+    {
+      "path": "src/lib/ai/tavily.ts",
+      "sha256": "507a256a626d6503e7743c0850ffa0c9f159bd8d5e5a58a700d3c37f5e102479",
+      "bytes": 8815,
+      "reloadHashes": [],
+      "afterSHA256": "507a256a626d6503e7743c0850ffa0c9f159bd8d5e5a58a700d3c37f5e102479"
+    },
+    {
+      "path": "src/lib/agent/libraryToolHelpers.ts",
+      "sha256": "81a900b924d37579479e1d5bbec68c318a9103f5c8be817c730b16aa0bc679a7",
+      "bytes": 4811,
+      "reloadHashes": [],
+      "afterSHA256": "81a900b924d37579479e1d5bbec68c318a9103f5c8be817c730b16aa0bc679a7"
+    },
+    {
+      "path": "src/lib/agent/mimoSpeechSpec.ts",
+      "sha256": "fcb3e6ac4e75eeab44c71ff23b8164dec3e0d99e3f58d36266ea926ea7e1fe1e",
+      "bytes": 498,
+      "reloadHashes": [],
+      "afterSHA256": "fcb3e6ac4e75eeab44c71ff23b8164dec3e0d99e3f58d36266ea926ea7e1fe1e"
+    },
+    {
+      "path": "src/db/ipProfiles.ts",
+      "sha256": "4a48495cca91e75f1214be09fe60719c60a47ae1cde4b32ef0c7db66e8eda3be",
+      "bytes": 3197,
+      "reloadHashes": [],
+      "afterSHA256": "4a48495cca91e75f1214be09fe60719c60a47ae1cde4b32ef0c7db66e8eda3be"
+    },
+    {
+      "path": "src/lib/productionRevision.ts",
+      "sha256": "0cb3b87c2abafef9e3695de699c603fd2a8420e229693879e7d7417e88e9f8cc",
+      "bytes": 5253,
+      "reloadHashes": [],
+      "afterSHA256": "0cb3b87c2abafef9e3695de699c603fd2a8420e229693879e7d7417e88e9f8cc"
+    },
+    {
+      "path": "src/lib/audioGeneration/input.ts",
+      "sha256": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+      "bytes": 4787,
+      "reloadHashes": [],
+      "afterSHA256": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62"
+    },
+    {
+      "path": "src/lib/audioGeneration/runtime.ts",
+      "sha256": "1fb88b77565be67d97e1a22f7b926ae33e34adef57392de9d49637bbccc445dc",
+      "bytes": 20377,
+      "reloadHashes": [],
+      "afterSHA256": "1fb88b77565be67d97e1a22f7b926ae33e34adef57392de9d49637bbccc445dc"
+    },
+    {
+      "path": "src/db/connectors.ts",
+      "sha256": "9d4b1ec444561cb578d5cc78184e74e78f7092a68a43551b996dfd6f95a4c91b",
+      "bytes": 2601,
+      "reloadHashes": [],
+      "afterSHA256": "9d4b1ec444561cb578d5cc78184e74e78f7092a68a43551b996dfd6f95a4c91b"
+    },
+    {
+      "path": "src/lib/ai/mimoSpeech.ts",
+      "sha256": "3793fedd4a513c73e8b2a84ba30261affb216af43034425b24de8b4542870ae3",
+      "bytes": 11099,
+      "reloadHashes": [],
+      "afterSHA256": "3793fedd4a513c73e8b2a84ba30261affb216af43034425b24de8b4542870ae3"
+    },
+    {
+      "path": "src/lib/audioGeneration/defaults.ts",
+      "sha256": "4949fe9d0abe0c3d0fd6c78e329ab6f743840c0513f203f147007f7e16e3848b",
+      "bytes": 1167,
+      "reloadHashes": [],
+      "afterSHA256": "4949fe9d0abe0c3d0fd6c78e329ab6f743840c0513f203f147007f7e16e3848b"
+    },
+    {
+      "path": "src/lib/ai/apimartAudio.ts",
+      "sha256": "b3b05fbbb2c5ae0ba7b3500216a7050f4f066a791fa053d68d7fcda7326d8e9d",
+      "bytes": 15478,
+      "reloadHashes": [],
+      "afterSHA256": "b3b05fbbb2c5ae0ba7b3500216a7050f4f066a791fa053d68d7fcda7326d8e9d"
+    },
+    {
+      "path": "src/lib/agent/businessSchemas.ts",
+      "sha256": "b86d694989c3353c4c8ab09edc915ac72e8a9710289da09b881e771dc050b9ef",
+      "bytes": 8174,
+      "reloadHashes": [],
+      "afterSHA256": "b86d694989c3353c4c8ab09edc915ac72e8a9710289da09b881e771dc050b9ef"
+    },
+    {
+      "path": "src/lib/audioGeneration/reference.ts",
+      "sha256": "036ab41d4d0972e98d4acb8fc9d25286246473579d5d2cce6a9667ad38d39097",
+      "bytes": 1520,
+      "reloadHashes": [],
+      "afterSHA256": "036ab41d4d0972e98d4acb8fc9d25286246473579d5d2cce6a9667ad38d39097"
+    },
+    {
+      "path": "src/lib/memory/schema.ts",
+      "sha256": "ccddefc631d808e0ec77a07b6be57cafee746fcf8cfbb09969a3ff0e1b754946",
+      "bytes": 3146,
+      "reloadHashes": [],
+      "afterSHA256": "ccddefc631d808e0ec77a07b6be57cafee746fcf8cfbb09969a3ff0e1b754946"
+    },
+    {
+      "path": "src/lib/agent/referenceEvidence.ts",
+      "sha256": "e8950b149b044d303b979762fcc6f7bb71bcc6e4d7b43ea02b4eb48f0c013208",
+      "bytes": 9238,
+      "reloadHashes": [],
+      "afterSHA256": "e8950b149b044d303b979762fcc6f7bb71bcc6e4d7b43ea02b4eb48f0c013208"
+    },
+    {
+      "path": "src/db/projectMemories.ts",
+      "sha256": "33ea5784a01f3b30583416e01f09c83ce25cf071de2547c40713d6b3b9419cb3",
+      "bytes": 17419,
+      "reloadHashes": [],
+      "afterSHA256": "33ea5784a01f3b30583416e01f09c83ce25cf071de2547c40713d6b3b9419cb3"
+    },
+    {
+      "path": "src/lib/agent/imageQueue.ts",
+      "sha256": "6261436bf2dc4d86815f0b8c0b0075f61b0f6824f0869eaefea4db3408a0317a",
+      "bytes": 2028,
+      "reloadHashes": [],
+      "afterSHA256": "6261436bf2dc4d86815f0b8c0b0075f61b0f6824f0869eaefea4db3408a0317a"
+    },
+    {
+      "path": "src/lib/agent/soundWriteReceipt.ts",
+      "sha256": "27e0ae6fe74a34b9542d4d0f00875ebff4e45402509e728872d297c9eb85aed5",
+      "bytes": 1401,
+      "reloadHashes": [],
+      "afterSHA256": "27e0ae6fe74a34b9542d4d0f00875ebff4e45402509e728872d297c9eb85aed5"
+    },
+    {
+      "path": "src/db/audio.ts",
+      "sha256": "371d2c2d66fe07e41075d864a26ee980a9b64c46cce333084a50848be4550dfd",
+      "bytes": 15740,
+      "reloadHashes": [],
+      "afterSHA256": "371d2c2d66fe07e41075d864a26ee980a9b64c46cce333084a50848be4550dfd"
+    },
+    {
+      "path": "src/lib/audio/commands.ts",
+      "sha256": "ee0971b7f6f7354e3ef480d7ce9ae5b38872b9cc455d4db60db79607c560f7ac",
+      "bytes": 5424,
+      "reloadHashes": [],
+      "afterSHA256": "ee0971b7f6f7354e3ef480d7ce9ae5b38872b9cc455d4db60db79607c560f7ac"
+    },
+    {
+      "path": "src/lib/agent/generationSelection.ts",
+      "sha256": "f86880a721807bad8c252113098047f1f5b770d26c77ebdb22ce351cc433a040",
+      "bytes": 9192,
+      "reloadHashes": [],
+      "afterSHA256": "f86880a721807bad8c252113098047f1f5b770d26c77ebdb22ce351cc433a040"
+    },
+    {
+      "path": "src/lib/agent/generationProfiles.ts",
+      "sha256": "7471dcfaed2e6eefa71162551550b0979eea155f6d50749a4b8455fdfa82e91d",
+      "bytes": 10809,
+      "reloadHashes": [],
+      "afterSHA256": "7471dcfaed2e6eefa71162551550b0979eea155f6d50749a4b8455fdfa82e91d"
+    },
+    {
+      "path": "src/db/generationPreferences.ts",
+      "sha256": "c52616d3c3cb4f52836b6a790c2eca05ec7d60416471813624678d441bee9386",
+      "bytes": 2444,
+      "reloadHashes": [],
+      "afterSHA256": "c52616d3c3cb4f52836b6a790c2eca05ec7d60416471813624678d441bee9386"
+    },
+    {
+      "path": "src/db/music.ts",
+      "sha256": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54",
+      "bytes": 5627,
+      "reloadHashes": [],
+      "afterSHA256": "bc50aceb5d623a15a0f806d26e2ebe11e5a18d202a50d997d58e2082ab1a1f54"
+    },
+    {
+      "path": "src/db/agentGeneration.ts",
+      "sha256": "885141abde0f9816c435d50126858dc8f010c5785d9fd1b68b996889ba7d97f1",
+      "bytes": 5450,
+      "reloadHashes": [],
+      "afterSHA256": "885141abde0f9816c435d50126858dc8f010c5785d9fd1b68b996889ba7d97f1"
+    },
+    {
+      "path": "src/lib/agent/generationRuntime.ts",
+      "sha256": "a7218954e91ddeaf0eeed62608ab0e6a9b1dea0509d8bb97f22f888c398d8ec4",
+      "bytes": 29058,
+      "reloadHashes": [],
+      "afterSHA256": "a7218954e91ddeaf0eeed62608ab0e6a9b1dea0509d8bb97f22f888c398d8ec4"
+    },
+    {
+      "path": "src/db/agentGenerationBatches.ts",
+      "sha256": "e493af7796a052dd00d2c70f7bf9503e894e89d1052b0b9fc57b410867a4c00c",
+      "bytes": 26865,
+      "reloadHashes": [],
+      "afterSHA256": "e493af7796a052dd00d2c70f7bf9503e894e89d1052b0b9fc57b410867a4c00c"
+    },
+    {
+      "path": "src/domain/agentGenerationBatch.ts",
+      "sha256": "a1b46816b2a6b3ff7c7857e64e47530c6356b343aafd476428e13846035f4aca",
+      "bytes": 3232,
+      "reloadHashes": [],
+      "afterSHA256": "a1b46816b2a6b3ff7c7857e64e47530c6356b343aafd476428e13846035f4aca"
+    },
+    {
+      "path": "src/domain/agentTaskRecords.ts",
+      "sha256": "489f31d62156ce24b5c16be7b11364ddee4200d6af48cbc46b42596dfc7f44ed",
+      "bytes": 835,
+      "reloadHashes": [],
+      "afterSHA256": "489f31d62156ce24b5c16be7b11364ddee4200d6af48cbc46b42596dfc7f44ed"
+    },
+    {
+      "path": "src/db/taskAudioGenerationEvidence.ts",
+      "sha256": "2508c7b72621699fcf5806fd385271876380b163fc95d68d942893d2438a9b6a",
+      "bytes": 5133,
+      "reloadHashes": [],
+      "afterSHA256": "2508c7b72621699fcf5806fd385271876380b163fc95d68d942893d2438a9b6a"
+    },
+    {
+      "path": "src/lib/agent/materialContent.ts",
+      "sha256": "be1ae9dcdc35d3819e16bf2c22643741258f09cfc9bbebd0ea8c209a1275aaeb",
+      "bytes": 5265,
+      "reloadHashes": [],
+      "afterSHA256": "be1ae9dcdc35d3819e16bf2c22643741258f09cfc9bbebd0ea8c209a1275aaeb"
+    },
+    {
+      "path": "src/db/agentProjectCreation.ts",
+      "sha256": "43a3bb9a90089c1a4ffa4f0cf9cc0a52769a781e99ac84b6ef8a582ff6462951",
+      "bytes": 5711,
+      "reloadHashes": [],
+      "afterSHA256": "43a3bb9a90089c1a4ffa4f0cf9cc0a52769a781e99ac84b6ef8a582ff6462951"
+    },
+    {
+      "path": "src/lib/debouncedDraft.ts",
+      "sha256": "c797901e5318743ca0f87b819067c18f7c3a384516efd87db832aa9f94355f09",
+      "bytes": 11810,
+      "reloadHashes": [],
+      "afterSHA256": "c797901e5318743ca0f87b819067c18f7c3a384516efd87db832aa9f94355f09"
+    },
+    {
+      "path": "src/lib/agent/businessWriteReceipt.ts",
+      "sha256": "626537317a0c0a239c66b4c1b756251faead3eb400690a69274ce63cbf693096",
+      "bytes": 7062,
+      "reloadHashes": [],
+      "afterSHA256": "626537317a0c0a239c66b4c1b756251faead3eb400690a69274ce63cbf693096"
+    },
+    {
+      "path": "src/lib/agent/businessStore.ts",
+      "sha256": "53571ee862b15d05e4782048c5f393b7afe50132f1f3983cccb375ab10d99bcc",
+      "bytes": 20227,
+      "reloadHashes": [],
+      "afterSHA256": "53571ee862b15d05e4782048c5f393b7afe50132f1f3983cccb375ab10d99bcc"
+    },
+    {
+      "path": "src/lib/agent/musicGenerationReviewSnapshot.ts",
+      "sha256": "dd004481eba4641018c6374d7ee1d0b4ab6eb9ac14f33a4a0ba2500ddaa587d6",
+      "bytes": 1159,
+      "reloadHashes": [],
+      "afterSHA256": "dd004481eba4641018c6374d7ee1d0b4ab6eb9ac14f33a4a0ba2500ddaa587d6"
+    },
+    {
+      "path": "src/lib/ai/baseUrl.ts",
+      "sha256": "ae51424b8ebac68bf252d235e284694a5793bcb387a3f2deeb58ca71faaa9c7c",
+      "bytes": 193,
+      "reloadHashes": [],
+      "afterSHA256": "ae51424b8ebac68bf252d235e284694a5793bcb387a3f2deeb58ca71faaa9c7c"
+    },
+    {
+      "path": "src/lib/agent/audioProjectContext.ts",
+      "sha256": "2c45c2f47b041a35b620bbabe9d177cc926afa8e4079c81069367ee64770a6f2",
+      "bytes": 5681,
+      "reloadHashes": [],
+      "afterSHA256": "2c45c2f47b041a35b620bbabe9d177cc926afa8e4079c81069367ee64770a6f2"
+    },
+    {
+      "path": "src/lib/ai/requestBoundary.ts",
+      "sha256": "c72677ed1736c47f45b64db9145a40405bfc38b2de73ef6af5cde455f968b155",
+      "bytes": 1522,
+      "reloadHashes": [],
+      "afterSHA256": "c72677ed1736c47f45b64db9145a40405bfc38b2de73ef6af5cde455f968b155"
+    },
+    {
+      "path": "src/lib/ai/boundedResponse.ts",
+      "sha256": "92cc47f78623f8c1c8e7d864a9f4af655c5b498077f8b0e93de25eefc9be8384",
+      "bytes": 3895,
+      "reloadHashes": [],
+      "afterSHA256": "92cc47f78623f8c1c8e7d864a9f4af655c5b498077f8b0e93de25eefc9be8384"
+    },
+    {
+      "path": "src/lib/ai/safeError.ts",
+      "sha256": "aaca8cbeafa33d6d2d7f12668f858827de788b1b3737bf9a909cdb255dca5d12",
+      "bytes": 307,
+      "reloadHashes": [],
+      "afterSHA256": "aaca8cbeafa33d6d2d7f12668f858827de788b1b3737bf9a909cdb255dca5d12"
+    },
+    {
+      "path": "src/lib/references/parse.ts",
+      "sha256": "e2f02198fd57623e5707685d8848b38522c0667933565b812b465019e5f7d122",
+      "bytes": 5175,
+      "reloadHashes": [],
+      "afterSHA256": "e2f02198fd57623e5707685d8848b38522c0667933565b812b465019e5f7d122"
+    },
+    {
+      "path": "src/lib/ai/referenceWire.ts",
+      "sha256": "12e661d548816a5e99285ccef20aeb0bb7353f7f289d61a4ac763ff941bd74a8",
+      "bytes": 5260,
+      "reloadHashes": [],
+      "afterSHA256": "12e661d548816a5e99285ccef20aeb0bb7353f7f289d61a4ac763ff941bd74a8"
+    },
+    {
+      "path": "src/lib/references/import.ts",
+      "sha256": "6a185d2df6cc053a6b175e92d8359e8d47c5fda7a8e974efe1e5c39e96b6bca6",
+      "bytes": 9975,
+      "reloadHashes": [],
+      "afterSHA256": "6a185d2df6cc053a6b175e92d8359e8d47c5fda7a8e974efe1e5c39e96b6bca6"
+    },
+    {
+      "path": "src/lib/resource/limits.ts",
+      "sha256": "aaed95b303a65539344a27c6fbee1670171248995a4e2da3fe4dc9cc4307bb17",
+      "bytes": 366,
+      "reloadHashes": [],
+      "afterSHA256": "aaed95b303a65539344a27c6fbee1670171248995a4e2da3fe4dc9cc4307bb17"
+    },
+    {
+      "path": "src/lib/ai/openaiCompatible.ts",
+      "sha256": "69751e7aa170d782c4a477386356df8892925f037f7a04a3f05a45ba3a6eb41b",
+      "bytes": 8839,
+      "reloadHashes": [],
+      "afterSHA256": "69751e7aa170d782c4a477386356df8892925f037f7a04a3f05a45ba3a6eb41b"
+    },
+    {
+      "path": "src/lib/ai/boundedSse.ts",
+      "sha256": "8626015eebd251a1956992f6274d679f8e3cd6af556e2e4acb9acf72fe925894",
+      "bytes": 4080,
+      "reloadHashes": [],
+      "afterSHA256": "8626015eebd251a1956992f6274d679f8e3cd6af556e2e4acb9acf72fe925894"
+    },
+    {
+      "path": "src/domain/imageDiscovery.ts",
+      "sha256": "24a4876f824cbc3b9bf610edde3233f37dda9d4f0d11a4b829cae34d8ec2f93d",
+      "bytes": 2486,
+      "reloadHashes": [],
+      "afterSHA256": "24a4876f824cbc3b9bf610edde3233f37dda9d4f0d11a4b829cae34d8ec2f93d"
+    },
+    {
+      "path": "src/db/taskGenerationEvidence.ts",
+      "sha256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+      "bytes": 7576,
+      "reloadHashes": [],
+      "afterSHA256": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312"
+    },
+    {
+      "path": "src/lib/audio/mime.ts",
+      "sha256": "dbe81e382e37dbdcecd85dc560bb09c48eed212e67607f0941e5d8015db07076",
+      "bytes": 2383,
+      "reloadHashes": [],
+      "afterSHA256": "dbe81e382e37dbdcecd85dc560bb09c48eed212e67607f0941e5d8015db07076"
+    },
+    {
+      "path": "src/lib/agent/wrapupEvidence.ts",
+      "sha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "bytes": 15221,
+      "reloadHashes": [],
+      "afterSHA256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17"
+    },
+    {
+      "path": "src/lib/agent/wrapupSchema.ts",
+      "sha256": "10bd920ba9f62dc23664d1aa30f2847b8976d42971804fb91cc8f8856e3a3600",
+      "bytes": 3109,
+      "reloadHashes": [],
+      "afterSHA256": "10bd920ba9f62dc23664d1aa30f2847b8976d42971804fb91cc8f8856e3a3600"
+    },
+    {
+      "path": "src/lib/audioGeneration/taskIds.ts",
+      "sha256": "9c6a060ef497e2b41ed783ce5ce628770623c3afc1b7f8f62173373cc66f6a9f",
+      "bytes": 1459,
+      "reloadHashes": [],
+      "afterSHA256": "9c6a060ef497e2b41ed783ce5ce628770623c3afc1b7f8f62173373cc66f6a9f"
+    },
+    {
+      "path": "src/lib/ai/apimart.ts",
+      "sha256": "9014f812047bf76c204e29eb3f68ef8a315668755f0afd4506d44a41d4edec4d",
+      "bytes": 17738,
+      "reloadHashes": [],
+      "afterSHA256": "9014f812047bf76c204e29eb3f68ef8a315668755f0afd4506d44a41d4edec4d"
+    },
+    {
+      "path": "src/lib/ai/aihubmix.ts",
+      "sha256": "34f41a40bfded7bf1a9d75e4154732fcf2bce6963b1c50440bceef0e894e0932",
+      "bytes": 21964,
+      "reloadHashes": [],
+      "afterSHA256": "34f41a40bfded7bf1a9d75e4154732fcf2bce6963b1c50440bceef0e894e0932"
+    },
+    {
+      "path": "src/lib/agent/generationPreparation.ts",
+      "sha256": "9f04785d944d98852726da709d630f1c712b2f08e32b353c2e40564362b3e0f0",
+      "bytes": 5517,
+      "reloadHashes": [],
+      "afterSHA256": "9f04785d944d98852726da709d630f1c712b2f08e32b353c2e40564362b3e0f0"
+    },
+    {
+      "path": "src/db/agentGenerationTarget.ts",
+      "sha256": "7fe43005a118308586ba832d00c459a90a772f525b901e6d4cdfd4d13fdebd18",
+      "bytes": 2176,
+      "reloadHashes": [],
+      "afterSHA256": "7fe43005a118308586ba832d00c459a90a772f525b901e6d4cdfd4d13fdebd18"
+    },
+    {
+      "path": "src/lib/audioGeneration/outputEvidence.ts",
+      "sha256": "6fb2b9efb447d7e5b2bae46ce799ada94317cedb6f05969594a98176fe066fc7",
+      "bytes": 5963,
+      "reloadHashes": [],
+      "afterSHA256": "6fb2b9efb447d7e5b2bae46ce799ada94317cedb6f05969594a98176fe066fc7"
+    },
+    {
+      "path": "src/lib/audioGeneration/presentation.ts",
+      "sha256": "1278c8bba039db210db6da091a81280d72b2f3350790cfd6f307cb925fd17404",
+      "bytes": 3059,
+      "reloadHashes": [],
+      "afterSHA256": "1278c8bba039db210db6da091a81280d72b2f3350790cfd6f307cb925fd17404"
+    },
+    {
+      "path": "src/lib/audio/engine.ts",
+      "sha256": "d7729b85c481dbd05ed4850862c64e5bf8c6ad9297064e142fe0fdaa05679e28",
+      "bytes": 7592,
+      "reloadHashes": [],
+      "afterSHA256": "d7729b85c481dbd05ed4850862c64e5bf8c6ad9297064e142fe0fdaa05679e28"
+    },
+    {
+      "path": "vendor/lobehub/manifest.json",
+      "sha256": "508dd3889ed977994b221f4201154e69d534db149bf1d51c4b6462179361cd03",
+      "bytes": 20519,
+      "reloadHashes": [],
+      "afterSHA256": "508dd3889ed977994b221f4201154e69d534db149bf1d51c4b6462179361cd03"
+    },
+    {
+      "path": "src/lib/audioGeneration/observations.ts",
+      "sha256": "3a4eaa6f6cf3c0186ff5d129bdaa07acf59df509b19523301d7237d502963cbe",
+      "bytes": 2538,
+      "reloadHashes": [],
+      "afterSHA256": "3a4eaa6f6cf3c0186ff5d129bdaa07acf59df509b19523301d7237d502963cbe"
+    },
+    {
+      "path": "src/lib/ai/modelBank/lookup.generated.json",
+      "sha256": "32fada89336efd78ff6b29e047a77a96d3ac183c1f903273e77b7838418fd4e0",
+      "bytes": 193331,
+      "reloadHashes": [],
+      "afterSHA256": "32fada89336efd78ff6b29e047a77a96d3ac183c1f903273e77b7838418fd4e0"
+    },
+    {
+      "path": "src/db/audioGeneration.ts",
+      "sha256": "4a0dfc90400e7bb133e44ffa7062dcf1b1da919ac6b06511fb77bfe48727535b",
+      "bytes": 7060,
+      "reloadHashes": [],
+      "afterSHA256": "4a0dfc90400e7bb133e44ffa7062dcf1b1da919ac6b06511fb77bfe48727535b"
+    },
+    {
+      "path": "src/lib/agent/generationMedia.ts",
+      "sha256": "82f6aced544ad2c8aafe62dc0b33973859d8b7fa63851b7ff9ce7cba39a71709",
+      "bytes": 2318,
+      "reloadHashes": [],
+      "afterSHA256": "82f6aced544ad2c8aafe62dc0b33973859d8b7fa63851b7ff9ce7cba39a71709"
+    },
+    {
+      "path": "src/lib/audio/wav.ts",
+      "sha256": "950b62f1566e14c3ed65dddc7e5b9a3cd7da3cd8386312b2ab30d5481e32feaf",
+      "bytes": 4003,
+      "reloadHashes": [],
+      "afterSHA256": "950b62f1566e14c3ed65dddc7e5b9a3cd7da3cd8386312b2ab30d5481e32feaf"
+    },
+    {
+      "path": "src/lib/audio/schedule.ts",
+      "sha256": "d67341b2a2a44ca550a36d024c7b5e17500a1f571eeb95dea22b5913a6c3b0d7",
+      "bytes": 6325,
+      "reloadHashes": [],
+      "afterSHA256": "d67341b2a2a44ca550a36d024c7b5e17500a1f571eeb95dea22b5913a6c3b0d7"
+    },
+    {
+      "path": "src/lib/ai/modelBank/models.generated.json",
+      "sha256": "3e40587fb97060af77928bee358b1a880e2b2fc25efccde511d48fa7f8c0e10e",
+      "bytes": 1778334,
+      "reloadHashes": [],
+      "afterSHA256": "3e40587fb97060af77928bee358b1a880e2b2fc25efccde511d48fa7f8c0e10e"
+    }
+  ],
+  "actualNativeSourceClosureCount": 155,
+  "sourceFreezeLimit": "20 owned files unchanged across final checks. 155 actually served repository modules unchanged during final native run. This is not a freeze or stability claim for all src or other writer scope.",
+  "implementation": {
+    "batch": "deleteMediaIfOrphans",
+    "currentSnapshot": "one per explicit operation after mutations; global",
+    "historySnapshot": "four indexed queries per distinct existing candidate record.projectId; record-owner keyed sets",
+    "bulkCandidateRead": true,
+    "individualAwaitedDeletes": true,
+    "ambientTransactionCache": false,
+    "scalarCompatibility": true,
+    "backupCollectorByteUnchanged": true,
+    "releaseOrdering": [
+      "remove use",
+      "other-use conflict validation",
+      "clear all intended flags",
+      "one batch snapshot and deletes",
+      "bulk survivor check",
+      "final release event"
+    ],
+    "retentionTables": [
+      "projects",
+      "characters",
+      "scenes",
+      "props",
+      "styles",
+      "shots",
+      "projectReferences",
+      "materialUses",
+      "media",
+      "audioTakes",
+      "musicWorks",
+      "audioExports",
+      "audioGenerationJobs",
+      "audioSpeakers",
+      "productionProposals",
+      "agentGenerationJobs",
+      "agentGenerationBatches",
+      "agentGenerationBatchItems"
+    ],
+    "productionTables": [
+      "audioChapters",
+      "audioSpeakers",
+      "audioSegments",
+      "audioTakes",
+      "audioTracks",
+      "audioClips",
+      "audioExports",
+      "musicDrafts",
+      "musicWorks",
+      "audioGenerationJobs",
+      "projects",
+      "episodes",
+      "characters",
+      "scenes",
+      "props",
+      "styles",
+      "shots",
+      "media",
+      "materialUses",
+      "productionProposals",
+      "agentGenerationJobs",
+      "agentGenerationBatches",
+      "agentGenerationBatchItems",
+      "projectReferences",
+      "referenceChunks"
+    ]
+  },
+  "validation": {
+    "finalCommands": [
+      {
+        "phase": "type-final",
+        "command": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+          "exec",
+          "tsc",
+          "-p",
+          "tests/fixtures/e04-media/tsconfig.json",
+          "--pretty",
+          "false"
+        ],
+        "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+        "startedAt": "2026-10-09T04:42:50.366669+00:00",
+        "before": {
+          "src/db/media.ts": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+          "src/db/assets.ts": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e",
+          "src/db/shots.ts": "a2fa075f0284959659c369b3657cb615d2d10581dbdbef9b1b76479bb2f1a926",
+          "src/db/episodes.ts": "294a068ed80118b5b8b8ab1009e9a8cd0624ddfd91030de783de49f861f65a11",
+          "src/db/assetReuse.ts": "d1af1aa4d59bd1ae8f1f04d1d1431903d603d917b4ac26162b0b328a107e0a73",
+          "src/db/cascadeCommands.ts": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6",
+          "tests/e04MediaRetention.test.ts": "38b7f464dd69071fb5332ee1817792461b06f1e60a4a2f1aa0ce4503f81977fd",
+          "scripts/e04-media-browser-regression.mjs": "eb989d51cd562122a0011bc3c66fec0a9c106bde7d6aa7b84818b1536b6f56f3",
+          "tests/fixtures/e04-media/commands.ts": "0fee491f26b9da39ff0dae820d4d5d4d2572c5ad560f84fe34edd172889e7715",
+          "tests/fixtures/e04-media/index.html": "acb1260fe1fd3ba6901809c80e1268ee2fb311a26d7766d291c32a22d1e66e4a",
+          "tests/fixtures/e04-media/main.ts": "aa5c397d3a62f5a30c596c90d9bf95ed7eb762fdda463782e44dc7471c0f995f",
+          "tests/fixtures/e04-media/seeds.ts": "85d97de3b4e839146da0faf235cea001bf83fbefd8f04980c9525b49ea2beab5",
+          "tests/fixtures/e04-media/receipt.ts": "5e5704fcd2a73d0e0fadba0b3283a787cd887cde275c1fed2796f1fe122abd74",
+          "tests/fixtures/e04-media/retention.ts": "a8ec4448b7c405c5a241daf50765cb1a37afa0e8f1166b546e057e087575a1ed",
+          "tests/fixtures/e04-media/tsconfig.json": "cab0c780aca49996eba9fddf27d2d4c2c457cd4bad73938021a288b68e1dec81",
+          "tests/fixtures/e04-media/instrumentation.ts": "cf66948f0e54354eb2050639c0c59b32b2108d56069a00652dee6f7f2912ce04",
+          "tests/fixtures/sourceSnapshots/e04-media/provenance.json": "a7645493a2baa83f3369709b8b178d6020cfab32ec10f279cb3230c2b9749400",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/productionShared.ts": "c0b1ea3860b829ebf56e10d0e727aca19d82e35e097aecf1801b0de21ffbed44",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/database.ts": "5c28901f9b5073b388aa01c115df43d442480b1ada029f99569569e1b1ef915b",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/media.ts": "0b2105050422434e9f9955f94ee7d3bc165310e62c7fe418eec23944a8efd675"
+        },
+        "environment": {},
+        "scopeLimit": "Owned product/tests/runner inputs frozen; lint runs the current application root. Native runner separately captures the actual served dependency closure. No all-src stability claim.",
+        "exitCode": 0,
+        "after": {
+          "src/db/media.ts": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+          "src/db/assets.ts": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e",
+          "src/db/shots.ts": "a2fa075f0284959659c369b3657cb615d2d10581dbdbef9b1b76479bb2f1a926",
+          "src/db/episodes.ts": "294a068ed80118b5b8b8ab1009e9a8cd0624ddfd91030de783de49f861f65a11",
+          "src/db/assetReuse.ts": "d1af1aa4d59bd1ae8f1f04d1d1431903d603d917b4ac26162b0b328a107e0a73",
+          "src/db/cascadeCommands.ts": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6",
+          "tests/e04MediaRetention.test.ts": "38b7f464dd69071fb5332ee1817792461b06f1e60a4a2f1aa0ce4503f81977fd",
+          "scripts/e04-media-browser-regression.mjs": "eb989d51cd562122a0011bc3c66fec0a9c106bde7d6aa7b84818b1536b6f56f3",
+          "tests/fixtures/e04-media/commands.ts": "0fee491f26b9da39ff0dae820d4d5d4d2572c5ad560f84fe34edd172889e7715",
+          "tests/fixtures/e04-media/index.html": "acb1260fe1fd3ba6901809c80e1268ee2fb311a26d7766d291c32a22d1e66e4a",
+          "tests/fixtures/e04-media/main.ts": "aa5c397d3a62f5a30c596c90d9bf95ed7eb762fdda463782e44dc7471c0f995f",
+          "tests/fixtures/e04-media/seeds.ts": "85d97de3b4e839146da0faf235cea001bf83fbefd8f04980c9525b49ea2beab5",
+          "tests/fixtures/e04-media/receipt.ts": "5e5704fcd2a73d0e0fadba0b3283a787cd887cde275c1fed2796f1fe122abd74",
+          "tests/fixtures/e04-media/retention.ts": "a8ec4448b7c405c5a241daf50765cb1a37afa0e8f1166b546e057e087575a1ed",
+          "tests/fixtures/e04-media/tsconfig.json": "cab0c780aca49996eba9fddf27d2d4c2c457cd4bad73938021a288b68e1dec81",
+          "tests/fixtures/e04-media/instrumentation.ts": "cf66948f0e54354eb2050639c0c59b32b2108d56069a00652dee6f7f2912ce04",
+          "tests/fixtures/sourceSnapshots/e04-media/provenance.json": "a7645493a2baa83f3369709b8b178d6020cfab32ec10f279cb3230c2b9749400",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/productionShared.ts": "c0b1ea3860b829ebf56e10d0e727aca19d82e35e097aecf1801b0de21ffbed44",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/database.ts": "5c28901f9b5073b388aa01c115df43d442480b1ada029f99569569e1b1ef915b",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/media.ts": "0b2105050422434e9f9955f94ee7d3bc165310e62c7fe418eec23944a8efd675"
+        },
+        "finishedAt": "2026-10-09T04:42:52.540631+00:00",
+        "ownDrift": []
+      },
+      {
+        "phase": "focused-final",
+        "command": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+          "test",
+          "tests/e04MediaRetention.test.ts",
+          "tests/draftMedia.test.ts",
+          "tests/repoReliability.test.ts",
+          "tests/mediaPatchBoundary.test.ts",
+          "tests/materialIntegration.test.ts",
+          "tests/d02CascadeTransactions.test.ts",
+          "tests/shotDeleteUndo.test.ts",
+          "tests/productionProposals.test.ts",
+          "tests/agentGenerationBatch.test.ts",
+          "tests/agentBusiness.test.ts",
+          "tests/audioFoundation.test.ts",
+          "tests/mimoRuntime.test.ts",
+          "tests/repo.test.ts",
+          "tests/assetFoundation.test.ts",
+          "--maxWorkers=4"
+        ],
+        "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+        "startedAt": "2026-10-09T04:42:59.355938+00:00",
+        "before": {
+          "src/db/media.ts": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+          "src/db/assets.ts": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e",
+          "src/db/shots.ts": "a2fa075f0284959659c369b3657cb615d2d10581dbdbef9b1b76479bb2f1a926",
+          "src/db/episodes.ts": "294a068ed80118b5b8b8ab1009e9a8cd0624ddfd91030de783de49f861f65a11",
+          "src/db/assetReuse.ts": "d1af1aa4d59bd1ae8f1f04d1d1431903d603d917b4ac26162b0b328a107e0a73",
+          "src/db/cascadeCommands.ts": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6",
+          "tests/e04MediaRetention.test.ts": "38b7f464dd69071fb5332ee1817792461b06f1e60a4a2f1aa0ce4503f81977fd",
+          "scripts/e04-media-browser-regression.mjs": "eb989d51cd562122a0011bc3c66fec0a9c106bde7d6aa7b84818b1536b6f56f3",
+          "tests/fixtures/e04-media/commands.ts": "0fee491f26b9da39ff0dae820d4d5d4d2572c5ad560f84fe34edd172889e7715",
+          "tests/fixtures/e04-media/index.html": "acb1260fe1fd3ba6901809c80e1268ee2fb311a26d7766d291c32a22d1e66e4a",
+          "tests/fixtures/e04-media/main.ts": "aa5c397d3a62f5a30c596c90d9bf95ed7eb762fdda463782e44dc7471c0f995f",
+          "tests/fixtures/e04-media/seeds.ts": "85d97de3b4e839146da0faf235cea001bf83fbefd8f04980c9525b49ea2beab5",
+          "tests/fixtures/e04-media/receipt.ts": "5e5704fcd2a73d0e0fadba0b3283a787cd887cde275c1fed2796f1fe122abd74",
+          "tests/fixtures/e04-media/retention.ts": "a8ec4448b7c405c5a241daf50765cb1a37afa0e8f1166b546e057e087575a1ed",
+          "tests/fixtures/e04-media/tsconfig.json": "cab0c780aca49996eba9fddf27d2d4c2c457cd4bad73938021a288b68e1dec81",
+          "tests/fixtures/e04-media/instrumentation.ts": "cf66948f0e54354eb2050639c0c59b32b2108d56069a00652dee6f7f2912ce04",
+          "tests/fixtures/sourceSnapshots/e04-media/provenance.json": "a7645493a2baa83f3369709b8b178d6020cfab32ec10f279cb3230c2b9749400",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/productionShared.ts": "c0b1ea3860b829ebf56e10d0e727aca19d82e35e097aecf1801b0de21ffbed44",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/database.ts": "5c28901f9b5073b388aa01c115df43d442480b1ada029f99569569e1b1ef915b",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/media.ts": "0b2105050422434e9f9955f94ee7d3bc165310e62c7fe418eec23944a8efd675"
+        },
+        "environment": {},
+        "scopeLimit": "Owned product/tests/runner inputs frozen; lint runs the current application root. Native runner separately captures the actual served dependency closure. No all-src stability claim.",
+        "exitCode": 0,
+        "after": {
+          "src/db/media.ts": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+          "src/db/assets.ts": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e",
+          "src/db/shots.ts": "a2fa075f0284959659c369b3657cb615d2d10581dbdbef9b1b76479bb2f1a926",
+          "src/db/episodes.ts": "294a068ed80118b5b8b8ab1009e9a8cd0624ddfd91030de783de49f861f65a11",
+          "src/db/assetReuse.ts": "d1af1aa4d59bd1ae8f1f04d1d1431903d603d917b4ac26162b0b328a107e0a73",
+          "src/db/cascadeCommands.ts": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6",
+          "tests/e04MediaRetention.test.ts": "38b7f464dd69071fb5332ee1817792461b06f1e60a4a2f1aa0ce4503f81977fd",
+          "scripts/e04-media-browser-regression.mjs": "eb989d51cd562122a0011bc3c66fec0a9c106bde7d6aa7b84818b1536b6f56f3",
+          "tests/fixtures/e04-media/commands.ts": "0fee491f26b9da39ff0dae820d4d5d4d2572c5ad560f84fe34edd172889e7715",
+          "tests/fixtures/e04-media/index.html": "acb1260fe1fd3ba6901809c80e1268ee2fb311a26d7766d291c32a22d1e66e4a",
+          "tests/fixtures/e04-media/main.ts": "aa5c397d3a62f5a30c596c90d9bf95ed7eb762fdda463782e44dc7471c0f995f",
+          "tests/fixtures/e04-media/seeds.ts": "85d97de3b4e839146da0faf235cea001bf83fbefd8f04980c9525b49ea2beab5",
+          "tests/fixtures/e04-media/receipt.ts": "5e5704fcd2a73d0e0fadba0b3283a787cd887cde275c1fed2796f1fe122abd74",
+          "tests/fixtures/e04-media/retention.ts": "a8ec4448b7c405c5a241daf50765cb1a37afa0e8f1166b546e057e087575a1ed",
+          "tests/fixtures/e04-media/tsconfig.json": "cab0c780aca49996eba9fddf27d2d4c2c457cd4bad73938021a288b68e1dec81",
+          "tests/fixtures/e04-media/instrumentation.ts": "cf66948f0e54354eb2050639c0c59b32b2108d56069a00652dee6f7f2912ce04",
+          "tests/fixtures/sourceSnapshots/e04-media/provenance.json": "a7645493a2baa83f3369709b8b178d6020cfab32ec10f279cb3230c2b9749400",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/productionShared.ts": "c0b1ea3860b829ebf56e10d0e727aca19d82e35e097aecf1801b0de21ffbed44",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/database.ts": "5c28901f9b5073b388aa01c115df43d442480b1ada029f99569569e1b1ef915b",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/media.ts": "0b2105050422434e9f9955f94ee7d3bc165310e62c7fe418eec23944a8efd675"
+        },
+        "finishedAt": "2026-10-09T04:43:01.987607+00:00",
+        "ownDrift": []
+      },
+      {
+        "phase": "lint-final",
+        "command": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+          "lint"
+        ],
+        "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+        "startedAt": "2026-10-09T04:43:05.175870+00:00",
+        "before": {
+          "src/db/media.ts": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+          "src/db/assets.ts": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e",
+          "src/db/shots.ts": "a2fa075f0284959659c369b3657cb615d2d10581dbdbef9b1b76479bb2f1a926",
+          "src/db/episodes.ts": "294a068ed80118b5b8b8ab1009e9a8cd0624ddfd91030de783de49f861f65a11",
+          "src/db/assetReuse.ts": "d1af1aa4d59bd1ae8f1f04d1d1431903d603d917b4ac26162b0b328a107e0a73",
+          "src/db/cascadeCommands.ts": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6",
+          "tests/e04MediaRetention.test.ts": "38b7f464dd69071fb5332ee1817792461b06f1e60a4a2f1aa0ce4503f81977fd",
+          "scripts/e04-media-browser-regression.mjs": "eb989d51cd562122a0011bc3c66fec0a9c106bde7d6aa7b84818b1536b6f56f3",
+          "tests/fixtures/e04-media/commands.ts": "0fee491f26b9da39ff0dae820d4d5d4d2572c5ad560f84fe34edd172889e7715",
+          "tests/fixtures/e04-media/index.html": "acb1260fe1fd3ba6901809c80e1268ee2fb311a26d7766d291c32a22d1e66e4a",
+          "tests/fixtures/e04-media/main.ts": "aa5c397d3a62f5a30c596c90d9bf95ed7eb762fdda463782e44dc7471c0f995f",
+          "tests/fixtures/e04-media/seeds.ts": "85d97de3b4e839146da0faf235cea001bf83fbefd8f04980c9525b49ea2beab5",
+          "tests/fixtures/e04-media/receipt.ts": "5e5704fcd2a73d0e0fadba0b3283a787cd887cde275c1fed2796f1fe122abd74",
+          "tests/fixtures/e04-media/retention.ts": "a8ec4448b7c405c5a241daf50765cb1a37afa0e8f1166b546e057e087575a1ed",
+          "tests/fixtures/e04-media/tsconfig.json": "cab0c780aca49996eba9fddf27d2d4c2c457cd4bad73938021a288b68e1dec81",
+          "tests/fixtures/e04-media/instrumentation.ts": "cf66948f0e54354eb2050639c0c59b32b2108d56069a00652dee6f7f2912ce04",
+          "tests/fixtures/sourceSnapshots/e04-media/provenance.json": "a7645493a2baa83f3369709b8b178d6020cfab32ec10f279cb3230c2b9749400",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/productionShared.ts": "c0b1ea3860b829ebf56e10d0e727aca19d82e35e097aecf1801b0de21ffbed44",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/database.ts": "5c28901f9b5073b388aa01c115df43d442480b1ada029f99569569e1b1ef915b",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/media.ts": "0b2105050422434e9f9955f94ee7d3bc165310e62c7fe418eec23944a8efd675"
+        },
+        "environment": {},
+        "scopeLimit": "Owned product/tests/runner inputs frozen; lint runs the current application root. Native runner separately captures the actual served dependency closure. No all-src stability claim.",
+        "exitCode": 0,
+        "after": {
+          "src/db/media.ts": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+          "src/db/assets.ts": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e",
+          "src/db/shots.ts": "a2fa075f0284959659c369b3657cb615d2d10581dbdbef9b1b76479bb2f1a926",
+          "src/db/episodes.ts": "294a068ed80118b5b8b8ab1009e9a8cd0624ddfd91030de783de49f861f65a11",
+          "src/db/assetReuse.ts": "d1af1aa4d59bd1ae8f1f04d1d1431903d603d917b4ac26162b0b328a107e0a73",
+          "src/db/cascadeCommands.ts": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6",
+          "tests/e04MediaRetention.test.ts": "38b7f464dd69071fb5332ee1817792461b06f1e60a4a2f1aa0ce4503f81977fd",
+          "scripts/e04-media-browser-regression.mjs": "eb989d51cd562122a0011bc3c66fec0a9c106bde7d6aa7b84818b1536b6f56f3",
+          "tests/fixtures/e04-media/commands.ts": "0fee491f26b9da39ff0dae820d4d5d4d2572c5ad560f84fe34edd172889e7715",
+          "tests/fixtures/e04-media/index.html": "acb1260fe1fd3ba6901809c80e1268ee2fb311a26d7766d291c32a22d1e66e4a",
+          "tests/fixtures/e04-media/main.ts": "aa5c397d3a62f5a30c596c90d9bf95ed7eb762fdda463782e44dc7471c0f995f",
+          "tests/fixtures/e04-media/seeds.ts": "85d97de3b4e839146da0faf235cea001bf83fbefd8f04980c9525b49ea2beab5",
+          "tests/fixtures/e04-media/receipt.ts": "5e5704fcd2a73d0e0fadba0b3283a787cd887cde275c1fed2796f1fe122abd74",
+          "tests/fixtures/e04-media/retention.ts": "a8ec4448b7c405c5a241daf50765cb1a37afa0e8f1166b546e057e087575a1ed",
+          "tests/fixtures/e04-media/tsconfig.json": "cab0c780aca49996eba9fddf27d2d4c2c457cd4bad73938021a288b68e1dec81",
+          "tests/fixtures/e04-media/instrumentation.ts": "cf66948f0e54354eb2050639c0c59b32b2108d56069a00652dee6f7f2912ce04",
+          "tests/fixtures/sourceSnapshots/e04-media/provenance.json": "a7645493a2baa83f3369709b8b178d6020cfab32ec10f279cb3230c2b9749400",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/productionShared.ts": "c0b1ea3860b829ebf56e10d0e727aca19d82e35e097aecf1801b0de21ffbed44",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/database.ts": "5c28901f9b5073b388aa01c115df43d442480b1ada029f99569569e1b1ef915b",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/media.ts": "0b2105050422434e9f9955f94ee7d3bc165310e62c7fe418eec23944a8efd675"
+        },
+        "finishedAt": "2026-10-09T04:43:11.355819+00:00",
+        "ownDrift": []
+      },
+      {
+        "phase": "native-final",
+        "command": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+          "scripts/e04-media-browser-regression.mjs"
+        ],
+        "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+        "startedAt": "2026-10-09T04:43:12.742970+00:00",
+        "before": {
+          "src/db/media.ts": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+          "src/db/assets.ts": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e",
+          "src/db/shots.ts": "a2fa075f0284959659c369b3657cb615d2d10581dbdbef9b1b76479bb2f1a926",
+          "src/db/episodes.ts": "294a068ed80118b5b8b8ab1009e9a8cd0624ddfd91030de783de49f861f65a11",
+          "src/db/assetReuse.ts": "d1af1aa4d59bd1ae8f1f04d1d1431903d603d917b4ac26162b0b328a107e0a73",
+          "src/db/cascadeCommands.ts": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6",
+          "tests/e04MediaRetention.test.ts": "38b7f464dd69071fb5332ee1817792461b06f1e60a4a2f1aa0ce4503f81977fd",
+          "scripts/e04-media-browser-regression.mjs": "eb989d51cd562122a0011bc3c66fec0a9c106bde7d6aa7b84818b1536b6f56f3",
+          "tests/fixtures/e04-media/commands.ts": "0fee491f26b9da39ff0dae820d4d5d4d2572c5ad560f84fe34edd172889e7715",
+          "tests/fixtures/e04-media/index.html": "acb1260fe1fd3ba6901809c80e1268ee2fb311a26d7766d291c32a22d1e66e4a",
+          "tests/fixtures/e04-media/main.ts": "aa5c397d3a62f5a30c596c90d9bf95ed7eb762fdda463782e44dc7471c0f995f",
+          "tests/fixtures/e04-media/seeds.ts": "85d97de3b4e839146da0faf235cea001bf83fbefd8f04980c9525b49ea2beab5",
+          "tests/fixtures/e04-media/receipt.ts": "5e5704fcd2a73d0e0fadba0b3283a787cd887cde275c1fed2796f1fe122abd74",
+          "tests/fixtures/e04-media/retention.ts": "a8ec4448b7c405c5a241daf50765cb1a37afa0e8f1166b546e057e087575a1ed",
+          "tests/fixtures/e04-media/tsconfig.json": "cab0c780aca49996eba9fddf27d2d4c2c457cd4bad73938021a288b68e1dec81",
+          "tests/fixtures/e04-media/instrumentation.ts": "cf66948f0e54354eb2050639c0c59b32b2108d56069a00652dee6f7f2912ce04",
+          "tests/fixtures/sourceSnapshots/e04-media/provenance.json": "a7645493a2baa83f3369709b8b178d6020cfab32ec10f279cb3230c2b9749400",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/productionShared.ts": "c0b1ea3860b829ebf56e10d0e727aca19d82e35e097aecf1801b0de21ffbed44",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/database.ts": "5c28901f9b5073b388aa01c115df43d442480b1ada029f99569569e1b1ef915b",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/media.ts": "0b2105050422434e9f9955f94ee7d3bc165310e62c7fe418eec23944a8efd675"
+        },
+        "environment": {
+          "E04_MEDIA_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+          "E04_MEDIA_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell",
+          "E04_MEDIA_OUTPUT": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/research/e04-media/native-final"
+        },
+        "scopeLimit": "Owned product/tests/runner inputs frozen; lint runs the current application root. Native runner separately captures the actual served dependency closure. No all-src stability claim.",
+        "exitCode": 0,
+        "after": {
+          "src/db/media.ts": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+          "src/db/assets.ts": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e",
+          "src/db/shots.ts": "a2fa075f0284959659c369b3657cb615d2d10581dbdbef9b1b76479bb2f1a926",
+          "src/db/episodes.ts": "294a068ed80118b5b8b8ab1009e9a8cd0624ddfd91030de783de49f861f65a11",
+          "src/db/assetReuse.ts": "d1af1aa4d59bd1ae8f1f04d1d1431903d603d917b4ac26162b0b328a107e0a73",
+          "src/db/cascadeCommands.ts": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6",
+          "tests/e04MediaRetention.test.ts": "38b7f464dd69071fb5332ee1817792461b06f1e60a4a2f1aa0ce4503f81977fd",
+          "scripts/e04-media-browser-regression.mjs": "eb989d51cd562122a0011bc3c66fec0a9c106bde7d6aa7b84818b1536b6f56f3",
+          "tests/fixtures/e04-media/commands.ts": "0fee491f26b9da39ff0dae820d4d5d4d2572c5ad560f84fe34edd172889e7715",
+          "tests/fixtures/e04-media/index.html": "acb1260fe1fd3ba6901809c80e1268ee2fb311a26d7766d291c32a22d1e66e4a",
+          "tests/fixtures/e04-media/main.ts": "aa5c397d3a62f5a30c596c90d9bf95ed7eb762fdda463782e44dc7471c0f995f",
+          "tests/fixtures/e04-media/seeds.ts": "85d97de3b4e839146da0faf235cea001bf83fbefd8f04980c9525b49ea2beab5",
+          "tests/fixtures/e04-media/receipt.ts": "5e5704fcd2a73d0e0fadba0b3283a787cd887cde275c1fed2796f1fe122abd74",
+          "tests/fixtures/e04-media/retention.ts": "a8ec4448b7c405c5a241daf50765cb1a37afa0e8f1166b546e057e087575a1ed",
+          "tests/fixtures/e04-media/tsconfig.json": "cab0c780aca49996eba9fddf27d2d4c2c457cd4bad73938021a288b68e1dec81",
+          "tests/fixtures/e04-media/instrumentation.ts": "cf66948f0e54354eb2050639c0c59b32b2108d56069a00652dee6f7f2912ce04",
+          "tests/fixtures/sourceSnapshots/e04-media/provenance.json": "a7645493a2baa83f3369709b8b178d6020cfab32ec10f279cb3230c2b9749400",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/productionShared.ts": "c0b1ea3860b829ebf56e10d0e727aca19d82e35e097aecf1801b0de21ffbed44",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/database.ts": "5c28901f9b5073b388aa01c115df43d442480b1ada029f99569569e1b1ef915b",
+          "tests/fixtures/sourceSnapshots/e04-media/src/db/media.ts": "0b2105050422434e9f9955f94ee7d3bc165310e62c7fe418eec23944a8efd675"
+        },
+        "finishedAt": "2026-10-09T04:43:17.574440+00:00",
+        "ownDrift": []
+      }
+    ],
+    "focusedFiles": 14,
+    "focusedTestsPassed": 380,
+    "newE04TestsPassed": 150,
+    "nativeReport": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/native-final/report.json",
+    "nativeReportSHA256": "f04d3adc5a0e856874632f3b6ce9d46429d34b2fbe0f16b5a4119eab0cda2af1",
+    "nativeStatus": "passed",
+    "nativeCounts": [
+      {
+        "size": 1,
+        "actualOwners": 1,
+        "original": true,
+        "passes": 36,
+        "rows": 2
+      },
+      {
+        "size": 1,
+        "actualOwners": 1,
+        "original": false,
+        "passes": 18,
+        "rows": 1
+      },
+      {
+        "size": 30,
+        "actualOwners": 3,
+        "original": true,
+        "passes": 1080,
+        "rows": 1800
+      },
+      {
+        "size": 30,
+        "actualOwners": 3,
+        "original": false,
+        "passes": 26,
+        "rows": 30
+      }
+    ],
+    "nativeCaseCounts": {
+      "isolated": 42,
+      "freshness": 41,
+      "counts": 4,
+      "rollbacks": 16,
+      "callerCounts": 30,
+      "retainedReleases": 12
+    },
+    "nativeCallerScopes": {
+      "deleteShots": 25,
+      "deleteEpisodeShots": 25,
+      "deleteEpisode": 25,
+      "deleteCharacter": 25,
+      "deleteScene": 25,
+      "deleteProp": 25,
+      "deleteStyle": 25,
+      "deleteChatThread": 35,
+      "setCharacterSlot": 25,
+      "setSceneSlot": 25,
+      "setPropSlot": 25,
+      "setStyleSlot": 25,
+      "setShotSlot": 25,
+      "releaseMaterialUse": 26,
+      "patchProjectOutput": 25,
+      "removeProjectReference": 25
+    },
+    "nativeReceipt": {
+      "name": "media_delete_orphan",
+      "mediaCount": 1,
+      "deleted": true,
+      "receiptCreatedBeforeFailure": false,
+      "rollback": true,
+      "retry": true,
+      "replay": true
+    },
+    "nativeShotReceipt": {
+      "name": "shot_delete",
+      "mediaCount": 3,
+      "deleted": true,
+      "receiptCreatedBeforeFailure": true,
+      "rollback": true,
+      "retry": true,
+      "replay": true
+    },
+    "nativeDuplicateRelease": {
+      "copies": 3,
+      "duplicateAndMissing": true,
+      "oneHistorySnapshot": true
+    },
+    "nativeScheduling": {
+      "events": [
+        "first-real-delete",
+        "competing-start",
+        "cleanup-resolved"
+      ],
+      "candidates": 24,
+      "sameNativeTransaction": true,
+      "overlappingWriterSawWholeCommit": true
+    },
+    "externalRequests": 0,
+    "pageErrors": [],
+    "documentRequests": 1,
+    "whitespace": {
+      "trackedDiffCheckExitCode": 0,
+      "all20OwnedFilesTrailingWhitespace": []
+    },
+    "permanentMutableTaskArchiveReads": []
+  },
+  "versions": {
+    "node": "v24.11.0",
+    "pnpmPath": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "observedPnpmVersion": "10.15.0",
+    "chromium": "151.0.7922.34",
+    "dexie": "4.4.6",
+    "vite": "7.3.6",
+    "typescript": "5.9.3",
+    "vitest": "5.0.1"
+  },
+  "dependencyInputs": [
+    {
+      "path": "package.json",
+      "sha256": "894cca99189d6e0535ed623d3e4d702868adcc3d4afef27a141b7e7da176033b",
+      "bytes": 2166
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "c989c9f9af4da94f0483606f9a4f0d4756136fb01e30640757bd7c0248ed31b4",
+      "bytes": 282817
+    },
+    {
+      "path": "node_modules/dexie/dist/dexie.mjs",
+      "sha256": "8711109b9a6770e3e6b0d09ba764f059a871039bae924364922e3dcaf8e8279e",
+      "bytes": 261666
+    },
+    {
+      "path": "vitest.config.ts",
+      "sha256": "43cadebafe94fb30ee57f97fa171989fbcecb8dfe41bffdaec31aea104808cd4",
+      "bytes": 339
+    },
+    {
+      "path": "tests/setup.ts",
+      "sha256": "1dfa6241d5bd0f2d3c9f2653dc83bb764849f5e36afe00804f32e4a74897cfbc",
+      "bytes": 227
+    },
+    {
+      "path": "tsconfig.app.json",
+      "sha256": "c40f7db8652b3433532289c87edd6898d4de984614f8a99dcf7bfbd8856e3bb3",
+      "bytes": 692
+    },
+    {
+      "path": "node_modules/dexie/package.json",
+      "sha256": "6d9350c3137c1aa2c35de3fa4406e6be6ee2daa49525dc97579ecbfff8d005bf",
+      "bytes": 5458
+    },
+    {
+      "path": "node_modules/vite/package.json",
+      "sha256": "e5ed0f85215f871fe22a48987dcd77fcfbe14064a53c0c9f7f48186a6b7e2cf0",
+      "bytes": 5158
+    },
+    {
+      "path": "node_modules/typescript/package.json",
+      "sha256": "822ef7ca6452205657b6288b066481ecf508bfbf43455d715cf7d3ec457561e6",
+      "bytes": 3620
+    },
+    {
+      "path": "node_modules/vitest/package.json",
+      "sha256": "bb27a3b3f172321701a7b1f1d90a59e5c9596673176f553a91c1e93b9667abfa",
+      "bytes": 5445
+    }
+  ],
+  "immutableLegacyD02Inputs": [
+    {
+      "path": ".trellis/tasks/archive/2026-10/10-08-src-remediation-d/reviews/D02-native-regression.mjs",
+      "sha256": "2cca4523dfc75d99d4d09b9a822a5101cd2e40ec3ec69f0bae8f8e1d85fdc140",
+      "bytes": 2205
+    },
+    {
+      "path": "tests/fixtures/d02/harness.ts",
+      "sha256": "11c8e579ba22470cfa6cc3cc78a0fc1e2ce1e4065fba7d4f68dd0788752b181b",
+      "bytes": 11037
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/focused-attempt-01.log",
+      "sha256": "43d0376cd5978b91cf1b4fe99954742aeea97d8737023bd4787b28c72f52c546",
+      "bytes": 2046
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/focused-attempt-02.log",
+      "sha256": "568df804c9eaeca4d3414adf79b244dddb05a823d6bc20e07e4e71d33dfd4d0f",
+      "bytes": 730
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/focused-final.json",
+      "sha256": "0825e2cc4ea533aedaeca1c229ac63994b09afae9b616519bccac46f410fbca9",
+      "bytes": 5574
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/focused-final.log",
+      "sha256": "4e34e15e19ec2df5932c49d67365dd55e1cef2825187244443974f7f33078865",
+      "bytes": 730
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/lint-attempt-01.log",
+      "sha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+      "bytes": 94
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/lint-final.json",
+      "sha256": "c54951ccc921970af74a359e6fcbfab31e5373dfdd5d7520ff2c0d0b0fbf247d",
+      "bytes": 5029
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/lint-final.log",
+      "sha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+      "bytes": 94
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/native-attempt-01/report.json",
+      "sha256": "814f6388832e823d8c5f879fad9ee41bb02e017f69e0fcac822f6c7f185ed68d",
+      "bytes": 49963
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/native-attempt-01.log",
+      "sha256": "9dc3fa1b92b7c3683fb18f2cbb74eb85cbeff3b78de8028676b3a70525067333",
+      "bytes": 1606
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/native-attempt-02/report.json",
+      "sha256": "a09a030823c534f4817ee9a6f9227588e7b8dc71e57054a1c2d26c8b1e6846bb",
+      "bytes": 2355773
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/native-attempt-02.log",
+      "sha256": "a51c2f564c412e557a13dcc699a9724471af1e8ee7e1a5cb6b1c7929145e8856",
+      "bytes": 338
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/native-final/report.json",
+      "sha256": "f04d3adc5a0e856874632f3b6ce9d46429d34b2fbe0f16b5a4119eab0cda2af1",
+      "bytes": 2355893
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/native-final.json",
+      "sha256": "0177a430339bea7a25addeb6052fd0ea13f9d134bf7e53bf12be17cf2fabfffb",
+      "bytes": 5529
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/native-final.log",
+      "sha256": "39e5ed874de7088cec3df8432ea260d742b70d62db3a99fce01a753e304f10c9",
+      "bytes": 333
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/produce.py",
+      "sha256": "5cbc6d07021e14c335c608ed46468d12b549b856f7c8ac8ba75cab12f99d446b",
+      "bytes": 10563
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/receipt-diagnostic-01.log",
+      "sha256": "de46ba62b38902e5424341c3d6172c6cf6658b1da576a075de924921aba7a776",
+      "bytes": 1646
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/receipt-diagnostic-02.log",
+      "sha256": "c34998968a6b2b659d1bba3cea35d503edc8d003d776441068a91a9954bcdec5",
+      "bytes": 2829
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/receipt-diagnostic-03.log",
+      "sha256": "92e030da43681dfd14a49242fb7a80fc186b3d162d44cf74f0fad27ca2c0d655",
+      "bytes": 379
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/receipt-diagnostic-04.log",
+      "sha256": "4a68730a132ba71ce8b80b598a208b21d6a0dc681fb3b8238e3ba170ab41f072",
+      "bytes": 380
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/test-attempt-01.log",
+      "sha256": "58a4020215f50119eecc88f84e41862bff2ce17eeea414814fc5b6ba09540ada",
+      "bytes": 14523
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/test-attempt-02.log",
+      "sha256": "ea67c68e605652a45832de78bd65d1571c8def6534dc7d4092c9cd9282382742",
+      "bytes": 14832
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/test-attempt-03.log",
+      "sha256": "ec8e1b1ffb91e4e00ba028bfb46d031e81672ce4cba477187ea00f471e6546ec",
+      "bytes": 338
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/test-attempt-04.log",
+      "sha256": "5dd50dc2d6241495f0e31a24149678c829bbc501bf0f7c12ec64cb968272c2b0",
+      "bytes": 1484
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/test-attempt-05.log",
+      "sha256": "e1607ebc8f3601197b14f5e8c9bd213a04251152276ec6619f981931f25bfdf7",
+      "bytes": 4195
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/type-attempt-01.log",
+      "sha256": "6fe3e981d512bd83726045ae340b38a02f5465e32d5a307745838caf458a0ded",
+      "bytes": 16755
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/type-attempt-02.log",
+      "sha256": "42454de1f1082613b0297e698104936446e44851bbc6c5bfc2cafd53a69632b5",
+      "bytes": 3244
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/type-attempt-03.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/type-attempt-04.log",
+      "sha256": "2dcf2eef0c364b1ef0f57ab2e0421bde3f603441334629e5d7fab38376fca3c5",
+      "bytes": 229
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/type-attempt-05.log",
+      "sha256": "449eee164f3998e9ef0f334f36552903ca9e7a80d430a32b99a210155e31280c",
+      "bytes": 1616
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/type-attempt-06.log",
+      "sha256": "449eee164f3998e9ef0f334f36552903ca9e7a80d430a32b99a210155e31280c",
+      "bytes": 1616
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/type-attempt-07.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/type-attempt-08.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/type-final.json",
+      "sha256": "7ed2b3e06513e2babe6d7aea823aa056796ef74058e913a0d22629b5cb1c21d4",
+      "bytes": 5125
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/type-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e04-media/validate.py",
+      "sha256": "2b42e19413fd591e2482c8a49746faea630c9dd452428c424f061fa4f527e17c",
+      "bytes": 3505
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E04-media-implementation.md",
+      "sha256": "a008267cfa7d5d27adefd77ca975160d055ce693b058d2c7fd0808acf38d2a83",
+      "bytes": 9663
+    }
+  ],
+  "failureHistory": [
+    "Initial scan assertions counted primary-key mutation cursors; fixed by actual DBCoreRangeType.Any classification",
+    "Fixture PromiseExtended/literal/result-array typing failures retained; final fixture typecheck passes",
+    "Native attempt01 expected orphan media business receipt incorrectly; actual tool only has durable deletedId result",
+    "Receipt diagnostics revealed observer native async wrappers lost Dexie context. Original promise .then chains restore context, with final native root identity and complete rollback proof",
+    "Native attempt02 runtime passed before final fixture-only type annotation and duplicate-release test; native-final is final exact-input proof"
+  ],
+  "limits": [
+    "No all-src/source-wide stability or independent PASS claim; coordinator owns current-root full/static/value-AST/integration review",
+    "No inferred latency from scan counts, fake IndexedDB or callback ordering",
+    "No provider requests, product UI or codec/playback proof",
+    "Original comparator copies only media algorithm bytes; listed untouched domain/database/scope dependencies intentionally shared",
+    "Draft session per-scalar cleanup/failure ownership unchanged; no claimed all-upload/save atomicity",
+    "Early shell wrappers retained raw logs but did not capture independent underlying command exit codes; final validator captures exact codes",
+    "First failed native attempt retained closure/error but lacked partial result publication; final runner now retains accumulated partial arrays if a later assertion fails"
+  ],
+  "specSuggestions": [
+    "Document fresh per-operation global-current plus record-owner histories, scalar/backup compatibility",
+    "Preserve full retention read/production write closure and nested native root",
+    "Specify release all-flags-before-snapshot and final-event rollback",
+    "Require actual later mutation/Blob/undo/tool ledger/receipt proof and isolated per-owner counts",
+    "Native observation middleware must preserve Dexie Promise chains and root identity; report work separately from latency",
+    "Freeze actual served and owned inputs independently of parallel writer source; permanent snapshots never read mutable task/archive paths"
+  ],
+  "selfHash": "Excluded to avoid circular hash; producer --check prints the finalized JSON SHA256"
+}

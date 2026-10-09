@@ -1,0 +1,11 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "E06 actual root loading/compatibility/ownership/measurement constraints"}
+{"file": ".trellis/tasks/10-09-src-remediation-e/research/E06-component-context.md", "reason": "E06 actual root loading/compatibility/ownership/measurement constraints"}
+{"file": ".trellis/spec/frontend/chat-performance.md", "reason": "E06 actual root loading/compatibility/ownership/measurement constraints"}
+{"file": ".trellis/spec/frontend/hook-guidelines.md", "reason": "Actual hook/effect lifecycle and query identity contracts; refresh bytes after acceptedE04 specsync"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "E06 actual root loading/compatibility/ownership/measurement constraints"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "E06 actual root loading/compatibility/ownership/measurement constraints"}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "E06 actual root loading/compatibility/ownership/measurement constraints"}
+{"file": ".trellis/tasks/10-09-src-remediation-e/research/E06-execution-boundaries.md", "reason": "E06 actual root loading/compatibility/ownership/measurement constraints"}
+{"file": ".trellis/tasks/10-09-src-remediation-e/research/E06-measurement-preparation.json", "reason": "E06 actual root loading/compatibility/ownership/measurement constraints"}
+{"file": ".trellis/tasks/10-09-src-remediation-e/research/E06-installed-library-contracts.json", "reason": "E06 actual root loading/compatibility/ownership/measurement constraints"}
+{"file": ".trellis/tasks/10-09-src-remediation-e/research/E06-root-scenario-bootstrap-preparation.json", "reason": "Actualrouter/nativeDexie/selectedmodelhomebootstrapsemantics; nofalsefixturefirstpaintclaim"}

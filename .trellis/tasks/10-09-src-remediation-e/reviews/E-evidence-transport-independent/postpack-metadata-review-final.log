@@ -1,0 +1,34 @@
+{
+  "status": "FAIL",
+  "failed": [
+    {
+      "check": "Onecapturedhelperdriftexactlydeclaredpreservedbefore",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "check": "Helperboundedwhitelistonlygitignoreaddition",
+      "passed": false,
+      "detail": {
+        "diff": [
+          "--- \n",
+          "+++ \n",
+          "@@ -16,6 +16,6 @@\n",
+          "  for p in folder.iterdir():",
+          "-  if p.is_file() and p.suffix in ['.md','.json','.jsonl','.py','.mjs','.cjs'] and p.stat().st_size<=4_000_000:normal.add(str(p.relative_to(root)))",
+          "+  if p.is_file() and (p.suffix in ['.md','.json','.jsonl','.py','.mjs','.cjs'] or p.name=='.gitignore') and p.stat().st_size<=4_000_000:normal.add(str(p.relative_to(root)))",
+          " lateReview=task/'reviews/E-evidence-transport-independent'",
+          " if lateReview.exists():",
+          "- normal.update(str(p.relative_to(root)) for p in lateReview.rglob('*') if p.is_file() and p.suffix in ['.md','.json','.py','.log'] and p.stat().st_size<=4_000_000)",
+          "+ normal.update(str(p.relative_to(root)) for p in lateReview.rglob('*') if p.is_file() and p.suffix in ['.md','.json','.py','.log'])",
+          " pack=task/'evidence-pack';assert (pack/'manifest.json').exists() and (pack/'blobs.json').exists()"
+        ]
+      }
+    }
+  ],
+  "rules": 116,
+  "ignoredActual": 40842,
+  "runtimeExcluded": 0,
+  "unrepresentedProof": 0,
+  "normalPaths": 331
+}

@@ -1,0 +1,40 @@
+{
+  "purpose": "Entry-only baseline measurement; no post-E gate or debt acceptance claim",
+  "baselineRevision": "1ecaf5ceec92e022c2b2b8d662e2a92e8eee36c7",
+  "files": 418,
+  "errors": 240,
+  "warnings": 530,
+  "rules": {
+    "complexity": 125,
+    "sonarjs/cognitive-complexity": 88,
+    "react-hooks/exhaustive-deps": 15,
+    "no-nested-ternary": 299,
+    "@typescript-eslint/no-unsafe-assignment": 15,
+    "@typescript-eslint/no-unsafe-member-access": 59,
+    "@typescript-eslint/no-unsafe-argument": 9,
+    "@typescript-eslint/no-unused-expressions": 2,
+    "react-hooks/rules-of-hooks": 7,
+    "sonarjs/no-duplicated-branches": 1,
+    "prefer-const": 2,
+    "@typescript-eslint/no-unnecessary-type-assertion": 35,
+    "@typescript-eslint/switch-exhaustiveness-check": 2,
+    "@typescript-eslint/no-misused-promises": 1,
+    "@typescript-eslint/prefer-promise-reject-errors": 3,
+    "@typescript-eslint/no-unsafe-return": 4,
+    "@typescript-eslint/no-base-to-string": 76,
+    "max-depth": 2,
+    "@typescript-eslint/require-await": 2,
+    "@typescript-eslint/restrict-template-expressions": 4,
+    "no-control-regex": 2,
+    "@typescript-eslint/no-unsafe-call": 1,
+    "@typescript-eslint/only-throw-error": 14,
+    "@typescript-eslint/no-redundant-type-constituents": 2
+  },
+  "versions": {
+    "eslint": "9.39.5",
+    "typescript-eslint": "8.71.1",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-sonarjs": "3.0.7",
+    "typescript": "5.9.2"
+  }
+}

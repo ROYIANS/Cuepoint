@@ -1,0 +1,13 @@
+{
+  "purpose": "Prepared only; current E03 active manifests unchanged",
+  "includeAuto": [
+    "prd.md",
+    "design.md",
+    "implement.md"
+  ],
+  "implementBytes": 115754,
+  "note": "Recompute upon activation and when review inputs evolve; matrices and writer reports are mandatory manual reads.",
+  "implementMaximumFileBytes": 18612,
+  "checkBytes": 120429,
+  "checkMaximumFileBytes": 18612
+}

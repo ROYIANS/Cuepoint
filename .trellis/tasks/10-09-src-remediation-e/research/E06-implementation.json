@@ -1,0 +1,360 @@
+{
+  "unit": "E06",
+  "finding": "AU09",
+  "status": "COMPLETED implementation; independent acceptance pending coordinator",
+  "baseline": "Actual accepted postE05 working tree, not HEAD; initial real-root build/network preserved before edits. Final controlled before/current root assemblies contain the same final scripts/tests discovery inputs, vendor manifest, public assets and original/current source; same measured producers.",
+  "changedFiles": [
+    {
+      "path": "scripts/e06-build.mjs",
+      "before": null,
+      "reviewEntry": "80285e9a83aa5edf7a47e9fcea32e6f14418e964bc19de34f2be350144cd60a2",
+      "after": "80285e9a83aa5edf7a47e9fcea32e6f14418e964bc19de34f2be350144cd60a2",
+      "bytes": 4550,
+      "status": "reviewed",
+      "note": "Observer only: actual root plugins/public, output graph and physical module inputs on load/end, emitted body/gzip fingerprints, preserve generated route effective/opening/restored; creates fresh evidence directory.",
+      "findings": []
+    },
+    {
+      "path": "scripts/e06-compare.mjs",
+      "before": null,
+      "reviewEntry": "ce75a3c4f1b305b4c6b2853854b32da1c036732879369e2ac763987623330a43",
+      "after": "ce75a3c4f1b305b4c6b2853854b32da1c036732879369e2ac763987623330a43",
+      "bytes": 4797,
+      "status": "reviewed",
+      "note": "Served-body asset hash/byte checks, route token equivalence, identical measured producer/seed, unique/shared/exclusive preserved; rendered module lengths not misrepresented as minified allocations.",
+      "findings": []
+    },
+    {
+      "path": "scripts/e06-icon-data.d.mts",
+      "before": null,
+      "reviewEntry": "d27e8b2247cec2c11a4b35f529d9d1012e185d6712739a4cbb56350a6d808e49",
+      "after": "d27e8b2247cec2c11a4b35f529d9d1012e185d6712739a4cbb56350a6d808e49",
+      "bytes": 356,
+      "status": "reviewed",
+      "note": "Standalone producer data types; no runtime behavior.",
+      "findings": []
+    },
+    {
+      "path": "scripts/e06-icon-data.mjs",
+      "before": null,
+      "reviewEntry": "972ade191611a3f8d5404386eef59d8e312d0b9fc3f8d14df6305d6904b76267",
+      "after": "972ade191611a3f8d5404386eef59d8e312d0b9fc3f8d14df6305d6904b76267",
+      "bytes": 5372,
+      "status": "reviewed",
+      "note": "Deterministic TS AST parsing; exact supported literals/import shape/order. Combine metadata excluded only because both publisher ModelIcon/ProviderIcon render switches do not read mapping Combine or combineMultiple. Version and renderer hashes reviewed and required.",
+      "findings": []
+    },
+    {
+      "path": "scripts/e06-icons-browser.mjs",
+      "before": null,
+      "reviewEntry": "e1ef458e07a2d4de5510f02524669a868d1687ea1354a2de26ed7a10b2b4cc8a",
+      "after": "e1ef458e07a2d4de5510f02524669a868d1687ea1354a2de26ed7a10b2b4cc8a",
+      "bytes": 4899,
+      "status": "reviewed",
+      "note": "Explicit allbrand optimizer entries/fresh cache/one document, live publisher232entry parity and188 DOM/geometry comparisons, ID normalization only; page errors fail.",
+      "findings": []
+    },
+    {
+      "path": "scripts/e06-root-browser.mjs",
+      "before": null,
+      "reviewEntry": "566228aff5ec4673467f87947e7c92678b6df20a262c81159940c0f55ee0717b",
+      "after": "566228aff5ec4673467f87947e7c92678b6df20a262c81159940c0f55ee0717b",
+      "bytes": 8351,
+      "status": "reviewed",
+      "note": "Four actual app scenarios, native schema bootstrap excluded from measured cold fresh contexts, deterministic IDB rows before app loading, actual picker selected home, disabled CDP cache, external fonts blocked, body/timing separation.",
+      "findings": []
+    },
+    {
+      "path": "scripts/e06-root-parity.mjs",
+      "before": null,
+      "reviewEntry": "bd2469433683fbac127069176bf0dd522a564b7ce8529cf32c55b5208d819d90",
+      "after": "bd2469433683fbac127069176bf0dd522a564b7ce8529cf32c55b5208d819d90",
+      "bytes": 11648,
+      "status": "reviewed",
+      "note": "Actual built router/nativeDB via exact publisher Dexie fixture-only ESM; no product bridge. Held real catalog/transcript requests; clipboard/fences/math/diagram/reasoning/live tokens/manual and pinned native scroll.",
+      "findings": []
+    },
+    {
+      "path": "src/components/agent/DemandModelIcons.tsx",
+      "before": null,
+      "reviewEntry": "df675d63434d7de125357ec2df7f69d16fe75f8dfe2b1f2011a928434b1e6103",
+      "after": "df675d63434d7de125357ec2df7f69d16fe75f8dfe2b1f2011a928434b1e6103",
+      "bytes": 4473,
+      "status": "reviewed",
+      "note": "Manual full review: complete ordered regex/exact matching, memo matching, original default size/type, prop merge order, compound variant precedence, exact lobehub mono exception/forceMono and publisher unknown default entries. One lazy component per brand cached across renders; nearest unchanged Suspense reserves size.",
+      "findings": []
+    },
+    {
+      "path": "src/components/agent/ModelIconCatalog.ts",
+      "before": "5faa7fac73c6afffaac855badbf6d461b0834e0c7582c88cfe2ffaeb9da29202",
+      "reviewEntry": "8424a466bdbf729e3d9f76ce5fab8f1dc7cf1bce6caea2876527802ce7674edb",
+      "after": "8424a466bdbf729e3d9f76ce5fab8f1dc7cf1bce6caea2876527802ce7674edb",
+      "bytes": 137,
+      "status": "reviewed",
+      "note": "Named exports into data/demand owner; no vendor barrel or eager brand graph.",
+      "findings": []
+    },
+    {
+      "path": "src/components/agent/ModelIconMapping.generated.ts",
+      "before": null,
+      "reviewEntry": "ee164ff7c6f39e5f419630ef052e6c704658777e644ecb90454ad36dcaa5e9eb",
+      "after": "ee164ff7c6f39e5f419630ef052e6c704658777e644ecb90454ad36dcaa5e9eb",
+      "bytes": 30506,
+      "status": "generated-verified",
+      "note": "Generated verified: full AST extraction101/131 mappings,232 live ordered keyword/props/icon identity assertions;180 dynamic brand entries; no manual opaque catalog maintenance. Version and renderer hash checks fail upgrades.",
+      "findings": []
+    },
+    {
+      "path": "src/components/agent/ModelIcons.tsx",
+      "before": "cda6197713ec6872748388b8ac41a6fc475948b8757c501601d7dd8a67707e0d",
+      "reviewEntry": "f352e98fea02b3080c62358bbd5445301018cd9e5708ff8e9d1f256e8c22dece",
+      "after": "f352e98fea02b3080c62358bbd5445301018cd9e5708ff8e9d1f256e8c22dece",
+      "bytes": 1080,
+      "status": "reviewed",
+      "note": "Only loading comment changed; public prop types/Suspense fallback and decorative requested dimensions retained.",
+      "findings": []
+    },
+    {
+      "path": "tests/e06-icon-entries.test.ts",
+      "before": null,
+      "reviewEntry": "cdb6f542aa6a08c6a7ee205c4e5477efb554f2ba74cd5f1d2e4a9e3bcaab41ae",
+      "after": "cdb6f542aa6a08c6a7ee205c4e5477efb554f2ba74cd5f1d2e4a9e3bcaab41ae",
+      "bytes": 1756,
+      "status": "reviewed",
+      "note": "Meaningful complete data/order/properties staleness comparison and representative regex precedence/exact-provider negatives; browser UI identity checked natively.",
+      "findings": []
+    },
+    {
+      "path": "tests/fixtures/e06/icons.tsx",
+      "before": null,
+      "reviewEntry": "65cc128997494291494b36e62e1e3123b301cc3f5c9df6e61e572666f2ae9081",
+      "after": "65cc128997494291494b36e62e1e3123b301cc3f5c9df6e61e572666f2ae9081",
+      "bytes": 3972,
+      "status": "reviewed",
+      "note": "Publisher/current rendered side by side, full mapping actual icon identity, supported types/mixed case/unknowns/size/color/name/style/forceMono/default variants.",
+      "findings": []
+    },
+    {
+      "path": "tests/fixtures/e06/index.html",
+      "before": null,
+      "reviewEntry": "d5d15ae30e705e301772850c9e3f52101b9587cb58729171057288d209dddf2c",
+      "after": "d5d15ae30e705e301772850c9e3f52101b9587cb58729171057288d209dddf2c",
+      "bytes": 178,
+      "status": "reviewed",
+      "note": "Single isolated native entry, no mutable task dependency.",
+      "findings": []
+    },
+    {
+      "path": "tests/fixtures/e06/seeds.json",
+      "before": null,
+      "reviewEntry": "bd7763abb2d1260c7fcf237622d02f299354264fc3c82cf17217d336c8e34134",
+      "after": "bd7763abb2d1260c7fcf237622d02f299354264fc3c82cf17217d336c8e34134",
+      "bytes": 967,
+      "status": "reviewed",
+      "note": "Deterministic offline connector/models/plain/code/rich/reasoning seeds; no paid transport.",
+      "findings": []
+    },
+    {
+      "path": "tests/fixtures/e06/tsconfig.json",
+      "before": null,
+      "reviewEntry": "4859ed082c9bf157752fa48299e6ba0c46ef4bc55c6b9df3317ec77c3d57bff4",
+      "after": "4859ed082c9bf157752fa48299e6ba0c46ef4bc55c6b9df3317ec77c3d57bff4",
+      "bytes": 176,
+      "status": "reviewed",
+      "note": "Strict inherited application typing for isolated native fixture.",
+      "findings": []
+    }
+  ],
+  "rootFreeze": "research/e06/root-freeze.json",
+  "rootInputCount": 789,
+  "comparison": "research/e06/comparison-01/comparison.json",
+  "metrics": [
+    {
+      "scenario": "empty",
+      "beforeJS": 2953445,
+      "afterJS": 2953409,
+      "deltaJS": -36,
+      "beforeCSS": 154102,
+      "afterCSS": 154102,
+      "deltaCSS": 0
+    },
+    {
+      "scenario": "selected",
+      "beforeJS": 7117852,
+      "afterJS": 4221303,
+      "deltaJS": -2896549,
+      "beforeCSS": 154102,
+      "afterCSS": 154102,
+      "deltaCSS": 0
+    },
+    {
+      "scenario": "plain",
+      "beforeJS": 7836680,
+      "afterJS": 7836470,
+      "deltaJS": -210,
+      "beforeCSS": 170421,
+      "afterCSS": 170421,
+      "deltaCSS": 0
+    },
+    {
+      "scenario": "code",
+      "beforeJS": 8633843,
+      "afterJS": 8633633,
+      "deltaJS": -210,
+      "beforeCSS": 170421,
+      "afterCSS": 170421,
+      "deltaCSS": 0
+    }
+  ],
+  "selectedJSReductionBytes": 2896549,
+  "productMechanism": "Complete data-only publisher matching and per-brand compound lazy entries; no brand narrowing and no vendor transforms/node_modules patches. Original fallback components remain used.",
+  "interpretationAU09": {
+    "resolved": "Concrete measured catalog demand loading reduction for actual selected-home picker; complete icon behavior retained.",
+    "retained": "Rich MessageList stays lazy at empty home but actual plain history retains large publisher renderer/highlighter graph. No rich-byte or latency improvement claim. Source/type contracts offer component overrides but statically import default CodeBlock/useHighlight; replacing pre component does not remove eager module evaluation. Further change would require broader renderer or publisher-supported loader redesign outside this bounded compatibility correction."
+  },
+  "nativeIconProof": {
+    "report": "research/e06/icons-browser-final3/result.json",
+    "renderCases": 188,
+    "fullMappingEntries": 232,
+    "brands": 180,
+    "documents": 1,
+    "errors": 0
+  },
+  "nativeRootProof": {
+    "before": "research/e06/final-before-parity-02/result.json",
+    "after": "research/e06/final-after-parity-02/result.json",
+    "casesEach": 9,
+    "errors": 0,
+    "coverage": [
+      "actual delayed icon fallback/reveal",
+      "actual delayed transcript fallback/composer owner",
+      "exact plain copy",
+      "exact JavaScript code copy and unknown fence",
+      "links/table/math/rendered diagram/sanitization",
+      "completed reasoning disclosure",
+      "manual scroll during assistant streaming",
+      "pinned stream/ResizeObserver following",
+      "pending\u2192reasoning\u2192answer"
+    ]
+  },
+  "validation": {
+    "types": "research/e06/types-final.log",
+    "fixtureTypes": "research/e06/fixture-types-final.log",
+    "focused": "research/e06/focused-final.log",
+    "tests": 5,
+    "buildBefore": "research/e06/final-before-build-02/result.json",
+    "buildAfter": "research/e06/final-after-build-01/result.json",
+    "fullSuite": "Not rerun; coordinator frozen whole gate follows."
+  },
+  "generatedRoute": {
+    "effectiveProof": {
+      "before": "f1572df02731d204a1ef38e4b744a39aa5b2c9dc7a3d85d1d6d3d3b6b6b09d65",
+      "effective": "0df423ad2603ed30010d0c28c127b7b7d5a59c3bb0a1c24ddc39f55933cd4efd",
+      "tokensEquivalent": true,
+      "restored": true
+    },
+    "currentProof": {
+      "before": "0df423ad2603ed30010d0c28c127b7b7d5a59c3bb0a1c24ddc39f55933cd4efd",
+      "effective": "0df423ad2603ed30010d0c28c127b7b7d5a59c3bb0a1c24ddc39f55933cd4efd",
+      "tokensEquivalent": true,
+      "restored": true
+    },
+    "previewWrites": "research/e06/route-preview-produced.ts",
+    "finalExactOpeningRestoration": "research/e06/route-final-restoration.json",
+    "note": "Both build and preview load actual TanStack plugin which can regenerate route formatting. Initial/root generated hash restored exactly after all preview sessions. Built effective route bytes differ but token-equivalent. Frozen current assembly opening already used effective formatted bytes; report does not call that byte-identical with baseline opening."
+  },
+  "cssQualification": "Initial actual-root before-browser-02 CSS166925/183244; evolving actual-root fixtures changed later attempted totals. Final isolated source roots restrict Tailwind auto-discovery to their assembled sources/scripts/tests/configs and exclude task research/journals; publisher plugin constructs Scanner root **/* and registers discovered files. Final before/current identical CSS154102/170421. No CSS product savings, exact attribution of each historical candidate not reconstructed. Controlled final baseline is distinct from historical raw attempt.",
+  "unchangedRichAndOwnerPaths": [
+    {
+      "path": "src/components/agent/MessageList.tsx",
+      "before": "6b13c7b8dd9c2ca12d5bcd83dcc61098c1ef8ec703a4cd68dd43533e9eda44a8",
+      "after": "6b13c7b8dd9c2ca12d5bcd83dcc61098c1ef8ec703a4cd68dd43533e9eda44a8"
+    },
+    {
+      "path": "src/components/agent/AgentRunDetails.tsx",
+      "before": "5202a654cf3aef7610fe2db4fd897368011545e35d5cdef5e6b2085dfbe4b95c",
+      "after": "5202a654cf3aef7610fe2db4fd897368011545e35d5cdef5e6b2085dfbe4b95c"
+    },
+    {
+      "path": "src/components/agent/ContextUsagePanel.tsx",
+      "before": "b0ae7970eb7145c49d3e35a5437953c8e1738af4052e16c779e2da819405cceb",
+      "after": "b0ae7970eb7145c49d3e35a5437953c8e1738af4052e16c779e2da819405cceb"
+    },
+    {
+      "path": "src/components/agent/ChatWorkspace.tsx",
+      "before": "db06ad95e7115f1b4e050a687c7aecb1ebb9c09e73889610e2aa1f248e65af5e",
+      "after": "db06ad95e7115f1b4e050a687c7aecb1ebb9c09e73889610e2aa1f248e65af5e"
+    },
+    {
+      "path": "src/components/agent/LobeChatTheme.tsx",
+      "before": "dc6409a1d661f150a051b830e1928e6e2abbf801a280be0059cb67a59d1ad7a0",
+      "after": "dc6409a1d661f150a051b830e1928e6e2abbf801a280be0059cb67a59d1ad7a0"
+    },
+    {
+      "path": "src/components/agent/ModelSelectTrigger.tsx",
+      "before": "e10af5b2531277d114a6685abd5fe1ff8647008daa6545cbc997b93bf5da581c",
+      "after": "e10af5b2531277d114a6685abd5fe1ff8647008daa6545cbc997b93bf5da581c"
+    }
+  ],
+  "failures": [
+    {
+      "attempt": "before-build-01",
+      "qualification": "Generated route format change triggered explicit input-freeze failure; effective assets retained, final producer distinguishes route semantics and restoration."
+    },
+    {
+      "attempt": "before-browser-01",
+      "qualification": "Selected picker assertion used wrong accessible button name; actual chip display GPT-4o differs from raw id. Fixed locator; retained failed output."
+    },
+    {
+      "attempt": "focused-01",
+      "qualification": "Direct Node execution of UI barrel reaches publisher emoji JSON without import attributes. Replaced with data-only AST test; browser runtime checks real publisher."
+    },
+    {
+      "attempt": "icons-browser-01",
+      "qualification": "Read stale hidden previous SVG while nested Suspense brand was pending. Final readiness checks exclude pending placeholder/hidden retained child."
+    },
+    {
+      "attempt": "icons-browser-02",
+      "qualification": "SVG-presence assumption invalid for supported non-SVG Dalle brand. Final checks compare full rendered DOM and dimensions, not SVG requirement."
+    },
+    {
+      "attempt": "icons-browser-final",
+      "qualification": "Catalog identity predicate failed in dynamically discovered dependency setup; final explicit allbrand optimizer entries preserve one main document and pass. Exact causal identity mismatch was not retained in this attempt; do not assert a proven reload cause."
+    },
+    {
+      "attempt": "before-parity-01",
+      "qualification": "Publisher CopyButton title is tooltip, not native button title. Final actual copy SVG button target; exact clipboard asserted."
+    },
+    {
+      "attempt": "before-parity-02",
+      "qualification": "Raw native IDB edits do not notify Dexie liveQuery; final fixture uses exact installed Dexie ESM native writes/BroadcastChannel."
+    },
+    {
+      "attempt": "before-parity-04",
+      "qualification": "Immediate synthetic scroll then write failed pinned assertion; preserved baseline failure, no source fix claim."
+    },
+    {
+      "attempt": "final-before-parity-01",
+      "qualification": "Same pinned timing issue in original baseline. Final native scroll event settles before assistant streaming write; original/current nine checks pass."
+    },
+    {
+      "attempt": "frozen-assembly-attempt-01",
+      "qualification": "Mis-scoped cwd during copy preparation; final-before-build-01 retained and excluded from final controlled comparison."
+    }
+  ],
+  "rejectedAttempt": {
+    "build": "research/e06/after-build-01",
+    "browser": "research/e06/after-browser-01",
+    "reason": "Separate model/provider publisher entries save only7264B selectedJS and do not materially change plain/code; replaced. Deleted trial ProviderIconCatalog has no final file."
+  },
+  "contractSources": "research/e06/contract-primary-sources.json",
+  "sourceFreeze": "research/e06/source-freeze.json",
+  "evidenceInventory": "research/e06/evidence-inventory.json",
+  "limitations": [
+    "Body byte totals are unique per scenario, not sum across scenarios; shared/exclusive union preserved.",
+    "One sample each; no latency/device/paid-provider/CI claim.",
+    "Generated brand entries use installed publisher physical es subpaths;5.18.0 has no exports map. Version/renderer hash/generation/native checks required at upgrade; no longterm subpath guarantee inferred.",
+    "Main root full quality/static/value-edge/final integration and independent acceptance remain coordinator work.",
+    "No ledger/spec/task status/lock/package/CI/E07/commit changes."
+  ]
+}

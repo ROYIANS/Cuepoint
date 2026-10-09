@@ -1,0 +1,764 @@
+{
+  "date": "2026-10-09",
+  "producer": "trellis-implement",
+  "findings": [
+    "AU-02",
+    "PU-10"
+  ],
+  "status": "implementation-and-owned-verification-complete; independent integration check pending",
+  "baselineRevision": "1ecaf5ceec92e022c2b2b8d662e2a92e8eee36c7",
+  "entrySnapshot": ".trellis/tasks/10-09-src-remediation-e/research/E01-entry.json",
+  "frozenInputs": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/frozen-inputs.json",
+  "ownedImplementationFiles": [
+    {
+      "path": "src/lib/useManualDraftGuard.tsx",
+      "beforeSha256": "a5a93b4da49c5aa67b900d2e57ea531500943309173b5556cacad03450c12722",
+      "afterSha256": "5a03a40952c23b909e772f50b2b58e8488069ed6df5c4eca62bae9033923bde8",
+      "status": "modified"
+    },
+    {
+      "path": "src/components/agent/TaskRecords.tsx",
+      "beforeSha256": "d0af44a69eebe5027270cf7ee5be839c52770dc7594eb2a43c70105abc2b4a11",
+      "afterSha256": "d9c6166b7a55d20edc96e0995a5faadfc3a599df155cbaeeefe8297acd67c5d1",
+      "status": "modified"
+    },
+    {
+      "path": "src/components/agent/TaskWrapup.tsx",
+      "beforeSha256": "e3dfd7266c829e9201fe40de48a04edfdf5db05a2e43de31cc09a4af28d77403",
+      "afterSha256": "c5e9f1355b0d8007b1c4893f0a6efa93cc66a09744c781451ef06a5b95a42dfd",
+      "status": "modified"
+    },
+    {
+      "path": "src/components/agent/TaskInspector.tsx",
+      "beforeSha256": "89486dc294d14aa31aba1ff6f5639e6e233d8f25afc75dfa9f67e3f4f0147649",
+      "afterSha256": "9e35b5c1fce11029e0ff4b6550141b2f06588cfd9f1fa40364f6ed2c50cd4068",
+      "status": "modified"
+    },
+    {
+      "path": "src/components/agent/AgentChatPage.tsx",
+      "beforeSha256": "f7ff686baf6314bc1baf0f64463a8e5a0601a56baeffcb76a618b864d54c27b1",
+      "afterSha256": "ea05a790625b4db05cb6f09436039b71b2d627bdece8cbd3346401769e5be806",
+      "status": "modified"
+    },
+    {
+      "path": "src/components/audio/VoiceLibrary.tsx",
+      "beforeSha256": "aad7de9f26264e34831c025de307a0251fb473f57737a0b8714d24017ae7414e",
+      "afterSha256": "74763a35d6fb7093afa5047fb094354ea7de9083b0a675d45f8afac0b48ce71a",
+      "status": "modified"
+    },
+    {
+      "path": "tests/b02MemoryPromotion.test.ts",
+      "beforeSha256": "620dc5afe0b000915f23c1c43215dc00d485973bbd2869ab4ccea489d7f34cce",
+      "afterSha256": "7bed868e95e387e58f17779ab15200a6f412f78a47dfc189ac01a4c6696968e2",
+      "status": "modified"
+    },
+    {
+      "path": "tests/e01ManualDraftDeparture.test.ts",
+      "beforeSha256": null,
+      "afterSha256": "b44cc1567a4901908d041fab401e64927bc1f9b5db6e8e88f44331c82b36c5f7",
+      "status": "new"
+    },
+    {
+      "path": "tests/fixtures/e01-drafts/index.html",
+      "beforeSha256": null,
+      "afterSha256": "14177fc1bd95ba9ead5f640c4843a79f1bdf54ee1809eef1123647a64e7d00c1",
+      "status": "new"
+    },
+    {
+      "path": "tests/fixtures/e01-drafts/harness.tsx",
+      "beforeSha256": null,
+      "afterSha256": "95420c7a8ffe43226d7f6edf331f94b97f62445fb6a1f4c47d7af71b7a083be3",
+      "status": "new"
+    },
+    {
+      "path": "scripts/e01-drafts-browser-regression.mjs",
+      "beforeSha256": null,
+      "afterSha256": "cd378d61f56a4625a991e5ca528a699cb101e50f022c8b346c1914a6426b1987",
+      "status": "new"
+    }
+  ],
+  "commands": [
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm lint",
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/typecheck-final.log",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm test tests/e01ManualDraftDeparture.test.ts tests/b02MemoryPromotion.test.ts tests/manualDraftBaseline.test.ts tests/manualDraftWiring.test.ts tests/agentTaskWrapup.test.ts tests/agentTaskOrchestration.test.ts tests/mimoSpeech.test.ts tests/mimoRuntime.test.ts tests/audioFoundation.test.ts --maxWorkers=4",
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/focused-final.log",
+      "exitCode": 0,
+      "filesPassed": 9,
+      "testsPassed": 119
+    },
+    {
+      "command": "E01_PLAYWRIGHT_PATH=/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs E01_CHROMIUM_PATH=/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell E01_OBSERVATIONS=.trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-observations.json /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node scripts/e01-drafts-browser-regression.mjs",
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-15.log",
+      "exitCode": 0,
+      "casesPassed": 19
+    },
+    {
+      "command": "B01_PLAYWRIGHT_PATH=/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs B01_CHROMIUM_PATH=/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node scripts/b01-browser-regression.mjs",
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/b01-compatibility-01.log",
+      "exitCode": 0,
+      "casesPassed": 19
+    },
+    {
+      "command": "git diff --check -- src/lib/useManualDraftGuard.tsx src/components/agent/TaskRecords.tsx src/components/agent/TaskWrapup.tsx src/components/agent/TaskInspector.tsx src/components/agent/AgentChatPage.tsx src/components/audio/VoiceLibrary.tsx tests/b02MemoryPromotion.test.ts",
+      "exitCode": 0
+    }
+  ],
+  "nativeObservations": {
+    "observations": [
+      {
+        "name": "record unchanged new/existing forms leave clean; edit then revert is clean",
+        "outcome": "pass"
+      },
+      {
+        "name": "record source-only edits dirty the actual form and revert cleanly",
+        "outcome": "pass"
+      },
+      {
+        "name": "record Escape/close/backdrop continue preserves exact input, caret and scroll",
+        "outcome": "pass"
+      },
+      {
+        "name": "record local task replacement/SPA/back cancel retains owner; discard replaces deliberately",
+        "outcome": "pass"
+      },
+      {
+        "name": "record failed save and pending departure/duplicate actions retain frozen input and retry",
+        "outcome": "pass"
+      },
+      {
+        "name": "wrapup opening baseline clean; exact dirty text survives cancel and owner board",
+        "outcome": "pass"
+      },
+      {
+        "name": "wrapup pending Escape/route, failure retry, sources and deliberate discard",
+        "outcome": "pass"
+      },
+      {
+        "name": "voice unchanged baseline clean; name/mode/instruction/sample revert and dismissal",
+        "outcome": "pass"
+      },
+      {
+        "name": "voice project switch/external close/SPA/back/forward cancellation freezes owner",
+        "outcome": "pass"
+      },
+      {
+        "name": "voice pending/failed save preserves text; retry writes captured revision/project",
+        "outcome": "pass"
+      },
+      {
+        "name": "native forward blocked then discard; discarded voice never saved",
+        "outcome": "pass"
+      },
+      {
+        "name": "voice reference import pending/failed retry uses owned bytes and dirty reference retention",
+        "outcome": "pass"
+      },
+      {
+        "name": "voice actual durable audition pending/failed retry and preview media survive discard",
+        "outcome": "pass"
+      },
+      {
+        "name": "actual AgentChatPage thread selection and task board route retain record draft",
+        "outcome": "pass"
+      },
+      {
+        "name": "retired pending record completion cannot publish into a newer mounted editor",
+        "outcome": "pass"
+      },
+      {
+        "name": "retired voice save completes only for captured owner and preserves new record input",
+        "outcome": "pass"
+      },
+      {
+        "name": "retired wrapup save completes without replacing a newer voice editor",
+        "outcome": "pass"
+      },
+      {
+        "name": "shared guard continues number/range/date/color input focus without unsupported caret APIs",
+        "outcome": "pass"
+      },
+      {
+        "name": "actual AgentChatPage current-thread deletion waits for deliberate draft discard",
+        "outcome": "pass"
+      }
+    ],
+    "errors": [],
+    "documents": [
+      "http://127.0.0.1:5197/tests/fixtures/e01-drafts/"
+    ]
+  },
+  "failedEvidence": [
+    {
+      "attemptLog": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-02.log",
+      "originalArtifacts": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/e01-drafts-browser-failure-3qrWMv",
+      "preservedArtifacts": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-02-failure"
+    },
+    {
+      "attemptLog": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-03.log",
+      "originalArtifacts": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/e01-drafts-browser-failure-HOo80t",
+      "preservedArtifacts": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-03-failure"
+    },
+    {
+      "attemptLog": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-04.log",
+      "originalArtifacts": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/e01-drafts-browser-failure-PfMAVr",
+      "preservedArtifacts": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-04-failure"
+    },
+    {
+      "attemptLog": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-05.log",
+      "originalArtifacts": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/e01-drafts-browser-failure-Qz8Ypj",
+      "preservedArtifacts": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-05-failure"
+    },
+    {
+      "attemptLog": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-06.log",
+      "originalArtifacts": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/e01-drafts-browser-failure-5wf8Kw",
+      "preservedArtifacts": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-06-failure"
+    },
+    {
+      "attemptLog": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-07.log",
+      "originalArtifacts": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/e01-drafts-browser-failure-DFjY1E",
+      "preservedArtifacts": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-07-failure"
+    },
+    {
+      "attemptLog": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-08.log",
+      "originalArtifacts": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/e01-drafts-browser-failure-9N3a8G",
+      "preservedArtifacts": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-08-failure"
+    },
+    {
+      "attemptLog": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-09.log",
+      "originalArtifacts": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/e01-drafts-browser-failure-2CEIj4",
+      "preservedArtifacts": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-09-failure"
+    },
+    {
+      "attemptLog": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-10.log",
+      "originalArtifacts": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/e01-drafts-browser-failure-LEEDr3",
+      "preservedArtifacts": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-10-failure"
+    },
+    {
+      "attemptLog": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-11.log",
+      "originalArtifacts": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/e01-drafts-browser-failure-d3dpTH",
+      "preservedArtifacts": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-11-failure"
+    },
+    {
+      "attemptLog": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-12.log",
+      "originalArtifacts": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/e01-drafts-browser-failure-jVrJaX",
+      "preservedArtifacts": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-12-failure"
+    },
+    {
+      "attemptLog": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-13.log",
+      "originalArtifacts": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/e01-drafts-browser-failure-yrTltc",
+      "preservedArtifacts": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-13-failure"
+    }
+  ],
+  "limitations": [
+    "Offline fixture intercepts only persistence delays/rejections and MiMo transport; it executes production Radix, TanStack browser history, validation, durable generation and native IndexedDB. No paid provider call or provider compatibility claim.",
+    "The actual chat sidebar is inert under the inspector modal. Tests dispatch DOM clicks on its rendered production callbacks to exercise owner selection/new-topic/deletion integration; this is not an accessibility or ordinary pointer-reachability claim.",
+    "Generic non-text focus and text caret/inspector scroll are observed in Chromium. WebKit/mobile/real OS unload prompts are not claimed.",
+    "Existing memory promotion candidate epochs are unchanged; their 14 B02 session cases run in the focused suite. Parent departure remains conservative while a promotion candidate is open, matching preexisting candidate ownership.",
+    "Main coordinator owns current static/AST/value graph comparison, full suite, independent E01 acceptance, specs and ledger; none is claimed by this report."
+  ],
+  "otherWritersPreserved": [
+    "src/components/studio/ProjectGalleryPage.tsx",
+    "src/components/studio/AssetLibraryPages.tsx",
+    "src/components/workspace/EpisodeListPage.tsx"
+  ],
+  "stagedCommittedPushed": false,
+  "ownedEvidenceFiles": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/after/scripts/e01-drafts-browser-regression.mjs",
+      "beforeSha256": null,
+      "afterSha256": "cd378d61f56a4625a991e5ca528a699cb101e50f022c8b346c1914a6426b1987",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/after/src/components/agent/AgentChatPage.tsx",
+      "beforeSha256": null,
+      "afterSha256": "ea05a790625b4db05cb6f09436039b71b2d627bdece8cbd3346401769e5be806",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/after/src/components/agent/TaskInspector.tsx",
+      "beforeSha256": null,
+      "afterSha256": "9e35b5c1fce11029e0ff4b6550141b2f06588cfd9f1fa40364f6ed2c50cd4068",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/after/src/components/agent/TaskRecords.tsx",
+      "beforeSha256": null,
+      "afterSha256": "d9c6166b7a55d20edc96e0995a5faadfc3a599df155cbaeeefe8297acd67c5d1",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/after/src/components/agent/TaskWrapup.tsx",
+      "beforeSha256": null,
+      "afterSha256": "c5e9f1355b0d8007b1c4893f0a6efa93cc66a09744c781451ef06a5b95a42dfd",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/after/src/components/audio/VoiceLibrary.tsx",
+      "beforeSha256": null,
+      "afterSha256": "74763a35d6fb7093afa5047fb094354ea7de9083b0a675d45f8afac0b48ce71a",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/after/src/lib/useManualDraftGuard.tsx",
+      "beforeSha256": null,
+      "afterSha256": "5a03a40952c23b909e772f50b2b58e8488069ed6df5c4eca62bae9033923bde8",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/after/tests/b02MemoryPromotion.test.ts",
+      "beforeSha256": null,
+      "afterSha256": "7bed868e95e387e58f17779ab15200a6f412f78a47dfc189ac01a4c6696968e2",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/after/tests/e01ManualDraftDeparture.test.ts",
+      "beforeSha256": null,
+      "afterSha256": "b44cc1567a4901908d041fab401e64927bc1f9b5db6e8e88f44331c82b36c5f7",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/after/tests/fixtures/e01-drafts/harness.tsx",
+      "beforeSha256": null,
+      "afterSha256": "95420c7a8ffe43226d7f6edf331f94b97f62445fb6a1f4c47d7af71b7a083be3",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/after/tests/fixtures/e01-drafts/index.html",
+      "beforeSha256": null,
+      "afterSha256": "14177fc1bd95ba9ead5f640c4843a79f1bdf54ee1809eef1123647a64e7d00c1",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/b01-compatibility-01.log",
+      "beforeSha256": null,
+      "afterSha256": "6e925bbf69767662182f69894c6ca8de65f05e11467b05bb47f2ed84489ee401",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/before/src/components/agent/AgentChatPage.tsx",
+      "beforeSha256": null,
+      "afterSha256": "f7ff686baf6314bc1baf0f64463a8e5a0601a56baeffcb76a618b864d54c27b1",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/before/src/components/agent/TaskInspector.tsx",
+      "beforeSha256": null,
+      "afterSha256": "89486dc294d14aa31aba1ff6f5639e6e233d8f25afc75dfa9f67e3f4f0147649",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/before/src/components/agent/TaskRecords.tsx",
+      "beforeSha256": null,
+      "afterSha256": "d0af44a69eebe5027270cf7ee5be839c52770dc7594eb2a43c70105abc2b4a11",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/before/src/components/agent/TaskWrapup.tsx",
+      "beforeSha256": null,
+      "afterSha256": "e3dfd7266c829e9201fe40de48a04edfdf5db05a2e43de31cc09a4af28d77403",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/before/src/components/audio/VoiceLibrary.tsx",
+      "beforeSha256": null,
+      "afterSha256": "aad7de9f26264e34831c025de307a0251fb473f57737a0b8714d24017ae7414e",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/before/src/lib/useManualDraftGuard.tsx",
+      "beforeSha256": null,
+      "afterSha256": "a5a93b4da49c5aa67b900d2e57ea531500943309173b5556cacad03450c12722",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/before/tests/b02MemoryPromotion.test.ts",
+      "beforeSha256": null,
+      "afterSha256": "620dc5afe0b000915f23c1c43215dc00d485973bbd2869ab4ccea489d7f34cce",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/focused-02.log",
+      "beforeSha256": null,
+      "afterSha256": "193cbcbf46b256c821dd729ddb7ed1260947e4ae75f66b7f7b4a46fdc8aa803b",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/focused-03.log",
+      "beforeSha256": null,
+      "afterSha256": "2658b8bbfaff8eb1e28af818c5c9020336ce0537218620b3aa27911c356566dc",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/focused-04.log",
+      "beforeSha256": null,
+      "afterSha256": "c266970f21aaf2808117a84b67b105581c1bb8cab225da0237d64a9589fe73ec",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/focused-final.log",
+      "beforeSha256": null,
+      "afterSha256": "74ed30c89a409427a8225d8accbfdc1813431ba9beb5e788d4aab7abd9d1b5c4",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/focused-initial.log",
+      "beforeSha256": null,
+      "afterSha256": "d7b51d04d79037dff77c651b3c63822a1e27aa573f28f7395b99a16ca52d80d0",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/frozen-inputs.json",
+      "beforeSha256": null,
+      "afterSha256": "edb4c19c56916ce526be9f824b731318ec4fa90f4e280251a54a589c6fb67e0d",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-observations.json",
+      "beforeSha256": null,
+      "afterSha256": "8b024ba9e2106cbeeeb8c131f2fb5a5b1b746834f5da16c57d31977b3f056874",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-01.log",
+      "beforeSha256": null,
+      "afterSha256": "d01dac800a4a002f905dc127cc02e0b5000110964036ef57346143b8e60fc040",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-02-failure/failure.html.gz",
+      "beforeSha256": null,
+      "afterSha256": "62e90aae703fff5bdcc7eccc8bbd5ff32c06eadc5da80981385c8f431077fc05",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-02-failure/failure.png",
+      "beforeSha256": null,
+      "afterSha256": "6d3a22d873d8b7758b3ebc507bad762b815c023f32c7ab7f410b707848e86a49",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-02-failure/observations.json",
+      "beforeSha256": null,
+      "afterSha256": "a8d146a960246eca3b6915d11eb564847fc57c3b764a870a913fc1bc8262fab2",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-02.log",
+      "beforeSha256": null,
+      "afterSha256": "71bba92d9e071b78ff1e1ee21bd5115269ec77af301cf99eb17ab300eacb351d",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-03-failure/failure.html.gz",
+      "beforeSha256": null,
+      "afterSha256": "a8d641a9b13bd7db09132a97ccd8c88672dcf30148738b5b98e9fd1c9b4ae27d",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-03-failure/failure.png",
+      "beforeSha256": null,
+      "afterSha256": "acb46735f99e95f56ba953268f7e02720e0cf818c633d2d499e43f576862313e",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-03-failure/observations.json",
+      "beforeSha256": null,
+      "afterSha256": "a8d146a960246eca3b6915d11eb564847fc57c3b764a870a913fc1bc8262fab2",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-03.log",
+      "beforeSha256": null,
+      "afterSha256": "0e772b3615697f60311a7980da8897ca2c929d806705f61980575a934978ee45",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-04-failure/failure.html.gz",
+      "beforeSha256": null,
+      "afterSha256": "a95911a887ec88e67ef67f770d197bed83f47a3164ab6ff652196a9c5eb1071b",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-04-failure/failure.png",
+      "beforeSha256": null,
+      "afterSha256": "5f2d6327a98de2006429fad0945e10490ec15438bdaeed6790ada76c94735bab",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-04-failure/observations.json",
+      "beforeSha256": null,
+      "afterSha256": "a402492111c8bea755a94a8f9b9a0269f35053c521cfba67ddebaaa136f9bc1b",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-04.log",
+      "beforeSha256": null,
+      "afterSha256": "8c39b91d08e6053a0ea217a8bb1d515f993304b86623d9e390b2db0dcec6bcd0",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-05-failure/failure.html.gz",
+      "beforeSha256": null,
+      "afterSha256": "602ecba182c7105d8f74dacd0a856e26fd5deb03677a9f24744939b2bcfef19f",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-05-failure/failure.png",
+      "beforeSha256": null,
+      "afterSha256": "f517cd277a53615b90b3c5b26525c525febc999bf0ab5ac20265243003786425",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-05-failure/observations.json",
+      "beforeSha256": null,
+      "afterSha256": "a402492111c8bea755a94a8f9b9a0269f35053c521cfba67ddebaaa136f9bc1b",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-05.log",
+      "beforeSha256": null,
+      "afterSha256": "c25036c524d47c9b52396fb941d2903705309ba044616ed66378ab9a4991d9da",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-06-failure/failure.html.gz",
+      "beforeSha256": null,
+      "afterSha256": "8f2d0f1981d4ab7c3ddb9cd1ffc73a83503fe632e48a168b4ff79cfec4ed35f9",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-06-failure/failure.png",
+      "beforeSha256": null,
+      "afterSha256": "d97cc6828efe53375efaf31b2c97cf0bc5a07b34b45107ea297ccfcf25a5ecf8",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-06-failure/observations.json",
+      "beforeSha256": null,
+      "afterSha256": "f0f000c5a165327d84d90772ad51650d72077cfd80cf0c039f06fa7c4d777b21",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-06.log",
+      "beforeSha256": null,
+      "afterSha256": "cad1edb453e861ba2f13df94e4bd3a8f37377e97d6e520ba6ccdac9524bce27a",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-07-failure/failure.html.gz",
+      "beforeSha256": null,
+      "afterSha256": "d7a6c5d6f490da3272a5d2bf645e056f035e038a03b5928a7e8f842c30e7f07b",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-07-failure/failure.png",
+      "beforeSha256": null,
+      "afterSha256": "c6995a4d80c0c12230e16ccea65aed35ba9d622d034fdb0154406a728c1906fb",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-07-failure/observations.json",
+      "beforeSha256": null,
+      "afterSha256": "25834d7014860bde63b457b06bcf2091fc9424c10d483a9d68e6f539669b5e18",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-07.log",
+      "beforeSha256": null,
+      "afterSha256": "4fa245caf1918c47255f47123610a042bd1cf64501afd8de137f6ee1478cba79",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-08-failure/failure.html.gz",
+      "beforeSha256": null,
+      "afterSha256": "29bd9ace8eb2606e6ffeb815e53a0a39ac782aa0eb6dd0cd3ecc5b98da4481fb",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-08-failure/failure.png",
+      "beforeSha256": null,
+      "afterSha256": "7b71adfe6430f47ea548c1b9ecd295c850464c0efa82d8c5b983065177011544",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-08-failure/observations.json",
+      "beforeSha256": null,
+      "afterSha256": "8b5e325fe7265154c64b71b10ff3dc68134086bfc025d5b26f8f5c9128fcdcbb",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-08.log",
+      "beforeSha256": null,
+      "afterSha256": "489d6be2912d2bab6d1132845d41f44bb77be623d7c7be72367f3425a95c2919",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-09-failure/failure.html.gz",
+      "beforeSha256": null,
+      "afterSha256": "a2b6004456cb5a8c5c1e2e47118fb34bdfa45ba6f0c6ac5496cd200f06a2d969",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-09-failure/failure.png",
+      "beforeSha256": null,
+      "afterSha256": "93b92499fbbe971aec5a7edc1214601baee7cbf0a49238a4d8b695f7592cd289",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-09-failure/observations.json",
+      "beforeSha256": null,
+      "afterSha256": "2cbec52cc79ad0652c54ab4874d9443834a21e934ffef47db52fa79dc050581b",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-09.log",
+      "beforeSha256": null,
+      "afterSha256": "d857297784f3abe0a3bf7acec881d73128cdcacd09e2cf983d429988e2c11500",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-10-failure/failure.html.gz",
+      "beforeSha256": null,
+      "afterSha256": "9cf72cdb56e6c54692017a65d16349644f755a958f593790a120202115335b08",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-10-failure/failure.png",
+      "beforeSha256": null,
+      "afterSha256": "02d95226913e839703e3b1b9d022f4ca4d50bfb91d4c3c3c948b8c9885eb1fae",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-10-failure/observations.json",
+      "beforeSha256": null,
+      "afterSha256": "9085f7578b74314732a587abe9c49e0c2015783590eaeefca009f890cadea02f",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-10.log",
+      "beforeSha256": null,
+      "afterSha256": "fe2548248b3cfd4ffc0cdd7505fa1c6655706e22245ffe716d1aa40e186a139d",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-11-failure/failure.html.gz",
+      "beforeSha256": null,
+      "afterSha256": "db5790fd53ad7f2a80168e5775fff8423041ecbf4459c8f15963ecf421204a3d",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-11-failure/failure.png",
+      "beforeSha256": null,
+      "afterSha256": "84f0dafe5f8d2c9c1202de8ca0fb58e9c068365cb6fb7a6a47eb8772df429954",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-11-failure/observations.json",
+      "beforeSha256": null,
+      "afterSha256": "7b9cb2e60b6826b66849f0e4b64879b34138c2b1487f3d579cb2a6b206d996f4",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-11.log",
+      "beforeSha256": null,
+      "afterSha256": "9fb8fd7fd7d3d8eb1cdc9f1514cd4fd5af309f71e8bd8845632c0fd970727922",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-12-failure/failure.html.gz",
+      "beforeSha256": null,
+      "afterSha256": "013b1e923e14e5596e32b2ed54538c90450ba9558ce9df6e24d1f6c2569ffe81",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-12-failure/failure.png",
+      "beforeSha256": null,
+      "afterSha256": "48af19f94578259a9bfde49b8325d24a0cad115b36cc61475fd0c0acf5a1929c",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-12-failure/observations.json",
+      "beforeSha256": null,
+      "afterSha256": "bef7aaff87f64221c5f5b5c6c4920929456f860368bc152c5dfe48ff894ca66c",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-12.log",
+      "beforeSha256": null,
+      "afterSha256": "7b70b0d02853ee5388bb476e420724e95fe1a2dfbab8872c603b983b3827398c",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-13-failure/failure.html.gz",
+      "beforeSha256": null,
+      "afterSha256": "c623f7f8c2b03941efb2d1bd0d783b61d5e3e8e71f0b60cffd103bf5084e9d19",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-13-failure/failure.png",
+      "beforeSha256": null,
+      "afterSha256": "73fecbc5779e4856685584db28c1b35129286f82f96454c90f52b27321619454",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-13-failure/observations.json",
+      "beforeSha256": null,
+      "afterSha256": "bef7aaff87f64221c5f5b5c6c4920929456f860368bc152c5dfe48ff894ca66c",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-13.log",
+      "beforeSha256": null,
+      "afterSha256": "2d2992d4a05adeb45d53ae510049035bab35aae14886897de152c920e2c8450b",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-14.log",
+      "beforeSha256": null,
+      "afterSha256": "6381c4bd5b8365e180348de5e6a1ef59f2eb1a3f1791f90b8db555cd709c7655",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/native-run-15.log",
+      "beforeSha256": null,
+      "afterSha256": "a5c1ce2fe4c0ef18668e3c6b6d4fcaacc53398ec121ce3fe4484def8170a5122",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/typecheck-02.log",
+      "beforeSha256": null,
+      "afterSha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/typecheck-current.log",
+      "beforeSha256": null,
+      "afterSha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/typecheck-final.log",
+      "beforeSha256": null,
+      "afterSha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/typecheck-initial-failed.log",
+      "beforeSha256": null,
+      "afterSha256": "bde2d1a68cc6c26e95711c99562ac6df38e73b1eaf9222059234eadfc865d95d",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts/typecheck-initial-repaired.log",
+      "beforeSha256": null,
+      "afterSha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+      "status": "new"
+    }
+  ]
+}

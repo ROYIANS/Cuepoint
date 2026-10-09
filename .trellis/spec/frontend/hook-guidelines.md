@@ -127,3 +127,98 @@ Wrong: reset busy on close, then let any old promise update shared form state. C
 Chat preview has one live subscription at ContextUsageTrigger and a complete input-identity gate. Its panel, ring and memory preview consume the same snapshot. Policy/memory management queries retain their own scope envelopes and current availability; old results/callbacks cannot publish in another thread. See [the D04 coherent-preview contract](./agent-context.md#d04-coherent-preview-snapshot-contract-2026-10-08).
 
 Shot/beat text retention follows `state-management.md` D08. `useTextDraftRetention` keeps readable pending rows; synchronous status refs protect the input event and actual pending-ID state participates in memo invalidation. Existing debouncedDraft owns timers, baselines, retry and persistence. Avoid dummy revision dependencies or a second draft store.
+
+## E04 SS09 precise library query scope and held-result identity (2026-10-09)
+
+### 1. Scope
+
+Apply scoped fallback reads to ProjectGalleryPage and typed current-kind asset reads to AssetLibraryPages. Keep existing project/IP/link metadata queries, MediaThumb reads, authored search/sort/loading behavior and accepted E01 navigation/mutation/error ownership.
+
+### 2. Signatures / Owners
+
+The gallery owns the visible fallback project-ID set; readProjectCoverIds returns Map<projectId, mediaId>. Deduplicate IDs and return empty without DB reads when none remain. Execute one readonly db.shots transaction with N exact projectId.equals cursors. Each keyed asset kind queries its matching typed studio table and invokes its actual cover function. Query results carry the current owner/kind key before use.
+
+### 3. Contracts
+
+Explicit coverMediaId wins through existing nullish semantics. Only visible projects needing fallback enter the owner set. Read complete rows, reduce first eligible firstFrame by strict order comparison so equal-order primary-key traversal stays stable across episodes, and return a narrow Map. A missing selected media record preserves existing render fallback rather than choosing a different later shot. Reject retained results under a changed filter/IP/search/archive/sort owner key. Preserve actual authored asset search fields and stable sort; wrapper IDs/provenance/cover fields do not become search data. Keep E01 locks/errors/captured targets untouched.
+
+### 4. Validation / Error Matrix
+
+Explicit-cover-only set -> zero fallback reads. Unselected-owner shot write -> no fallback callback/read/reducer work. Other-kind table write -> no current-kind asset query rerun. These claims exclude broad gallery project/IP metadata queries and MediaThumb behavior. Relevant fallback mutation/cleared explicit cover -> refresh. Equal-order/multi-episode/no firstFrame/missing media -> existing selection semantics. Held old owner/kind result -> cannot populate the new scope. Query errors/loading retain established UI semantics; do not claim new error handling absent source.
+
+### 5. Good / Base / Bad Cases
+
+Good: N precise owner cursors share one readonly snapshot. Base: complete DB records are transient inputs to a narrow Map, with no persisted cover cache. Bad: call Map JSON bytes physical column projection, query all four asset tables for a fixed kind, or minimize requests using anyOf without verifying installed Dexie observability.
+
+### 6. Tests Required
+
+Use actual original/current pages and native IndexedDB for explicit/fallback/ties/multi-episode/missing media, search/sort/IP/archive and held filter/kind identity; retain full writer all-four-kind matrix plus independent critical subset. Insert a shot for an excluded owner whose projectId index key lies between selected owner keys. Preserve the anyOf counterexample:47 complete cursor rows versus45 matched reducer visits and an irrelevant rerun. Final exact ranges must show zero fallback read/reducer work for the same insertion within the bounded post-commit wait. Distinguish3 requests/3 transactions before from3 requests/1 transaction after. Verify current E01 writes against final helper/source and unchanged producer.
+
+### 7. Wrong vs Correct
+
+Wrong: say final cleanup uses one query, call the gap a shot-primary-key gap, or infer disk/latency savings from projection/callback counters. Correct: label one readonly transaction with N cursor requests, distinguish complete returned rows, cached warm behavior, reducer work and Blob-excluding JSON bytes, and preserve finite negative-wait and device limits. Typed-static deltas remain independent from formal quality-debt acceptance.
+
+
+## E05 decorative animation lifecycle contract
+
+Independent E05 review accepted on 2026-10-09.
+
+### 1. Scope / Trigger
+
+Apply to decorative ClickSpark scheduling during idle, clicks, overlap, live drawing-option changes, visibility or reduced-motion changes, resize, StrictMode replay and unmount. Keep the existing component; no animation registry.
+
+### 2. Signatures / Owners
+
+Keep existing ClickSpark props and JSX. Refs own live sparks/current start callback. The draw effect owns one nullable RAF ID plus visibilitychange and motion-query change listeners; the resize effect owns its native ResizeObserver and debounce timeout. Final resize cleanup retires burst refs; drawing-option cleanup cancels/clears while preserving live original timestamps.
+
+### 3. Contracts / Invariants
+
+Enabled live bursts hold at most one pending component frame. Idle/expired/disabled/unmounted states maintain no loop. Disabled transitions cancel, reset timestamps and clear; enable alone never replays old bursts, next click restarts. Update drawing props from original live timestamps under current duration/options. Preserve eight default radial strokes, local click geometry, line width/color, easing, child bubbling, aria-hidden and pointer-events none. StrictMode restores one owned lifecycle.
+
+### 4. Validation / Error Matrix
+
+Idle: zero executed callbacks/pending IDs. Click: native draw, expiration clear, then zero work. Active hide/reduce: exact owned cancellation/reset, disabled clicks add no bursts. Reversal: no stale replay, next click draws. Props: same timestamp/current equations and shortening-duration expiry. Native resize: expected backing dimensions/local coordinates; active pending-resize unmount: zero pending RAF/timer/listeners/observers, zero later draw/timeout callbacks. Canvas/context unavailable: no draw scheduling.
+
+### 5. Good / Base / Bad Cases
+
+Good: cancel/reset when unavailable and preserve timestamps through drawing-option cleanup. Base: ease-out t*(2-t); distance=eased*radius*scale; length=size*(1-eased); eight evenly spaced angles and width=2. Bad: unconditional empty RAF chain, retaining disabled bursts for replay, clearing active timestamps on every color/easing change, or treating an original before PASS as proof of the new availability behavior.
+
+### 6. Required Tests
+
+Execute the actual component in an isolated native browser; count executed component callbacks and pending/cancel IDs, excluding Playwright polling. Forward real clock/scheduling. Verify actual drawing/clear alpha and exact equations, real child click/bubbling, overlap, actual emulateMedia change/reversal, labeled visibility seam, prop updates/expiry, actual ResizeObserver and StrictMode/unmount. Read pending/event/after in one browser task or live event. Keep minimal permanent original snapshot/provenance, fixture browser types, fresh cache/explicit optimizer entry, one main document, zero page errors, producer/source-map/loaded-body hashes and failures.
+
+### 7. Wrong vs Correct / Attribution and Limits
+
+Wrong: request-only/fake-clock native performance claims; lifecycle freeze equals document.hidden; cross-RPC pending ID matching; whole-history max treated as current ownership; 2502 edges described as all value edges. Correct: finite executed-callback evidence and contemporaneous cancellation; explicit handler seam vs OS throttle; original/current contracts distinct. Current AST attribution is 420 TS files, 2502 total edges, zero parse errors and zero static value cycles. Writer root closure is 759 files (src/tests/scripts), current full gate is 766 inputs including seven configs. Typed additions remain separate from QG01 debt acceptance; full-app/device/CI/battery/latency claims require their own evidence.
+
+## E07 effect ownership and deferred reconciliation
+
+Independent E07 integration accepted on 2026-10-09.
+
+### 1. Scope / Trigger
+
+Use actual effect dependencies and stable callback ownership for live references, async imports, active run predicates, audio cursor/player effects and deferred external draft reconciliation.
+
+### 2. Signatures / Owners
+
+Keep existing components/hooks. Exact runtime type predicates express narrowed active business state; refs retain current owned readers and callbacks. `useDebouncedDraft` owns external JSON-version tracking and its guarded reconciliation attempt.
+
+### 3. Contracts / Invariants
+
+Track an external version only after controller rebase succeeds. A value arriving while persistence is in flight must be retried after completion even if its primitive value or memoized object identity does not change. Guarded every-render reconciliation preserves equality/version guards and does not loop. Hook suggested dependencies must be assessed against lifecycle semantics before adopting them.
+
+### 4. Validation / Error Matrix
+
+Updated external values during pending save reconcile after successful completion and subsequent renders. Failures retain exact local draft and original error identity. Task/session replacement retires async ownership, and effects clean up listeners, observers and audio/player resources.
+
+### 5. Good / Base / Bad Cases
+
+Good: capture full call context for dependent async work and cancel retired operations. Base: stable primitive/memo value rebase succeeds after persistence completes. Bad: adding only initialValue/controller dependencies and permanently missing a deferred failed rebase attempt.
+
+### 6. Required Tests
+
+Actual ReactDOM/TextDraftField/Dexie primitive and memoized regression must reproduce the dependency-only failure and pass the guard implementation. Deterministic hook-host tests have explicit scheduler limitations; retain native scene evidence for actual relevant ownership.
+
+### 7. Wrong vs Correct
+
+Wrong: automatic Hook autofix or fake hook rendering as proof of all React scheduling. Correct: individual reviewed effect contract, one exact documented Hook allowance and current native source/body/DB proof. No StrictMode/concurrent or OS behavior claim beyond executed cases.

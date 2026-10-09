@@ -1,0 +1,31 @@
+{
+  "purpose": "Coordinator exact measurement/subscription attribution for independent E04 review; not additional nativeacceptance",
+  "inputs": {
+    "tests/fixtures/e04-media/instrumentation.ts": "cf66948f0e54354eb2050639c0c59b32b2108d56069a00652dee6f7f2912ce04",
+    "tests/fixtures/e04-media/retention.ts": "a8ec4448b7c405c5a241daf50765cb1a37afa0e8f1166b546e057e087575a1ed",
+    ".trellis/tasks/10-09-src-remediation-e/research/E04-media-implementation.json": "6a16ff6654077bd56533163ee5171f3be67256a68c3d55899115bac964e2861f",
+    "node_modules/dexie/dist/dexie.mjs": "8711109b9a6770e3e6b0d09ba764f059a871039bae924364922e3dcaf8e8279e"
+  },
+  "mediaWorkDenominator": {
+    "uniqueExistingCandidates": 30,
+    "candidateOwners": 3,
+    "originalScalarInvocations": 60,
+    "allCandidatesLibraryRetained": true,
+    "currentArguments": "Same60 duplicate IDs plus undefined and one missing ID; dedup31 lookupkeys/30records",
+    "retentionRequestPasses": [
+      1080,
+      26
+    ],
+    "sumReturnedRowsAndCursorSteps": [
+      1800,
+      30
+    ],
+    "interpretation": "DBCore logical query/cursor request counts and result/cursor rows; excludescandidate primarykeyget/getMany and writes. These are not exclusively IDBCursor visits or diskIO/latency measurements. Writer table wording media cursor rows should be read with this qualification."
+  },
+  "gallerySubscriptionRefinement": {
+    "before": "Promise.all per-ID equals cursors createsN independent default read transactions",
+    "initialCoordinatorSuggestion": "singleanyOf query",
+    "evidenceCorrection": "InstalledDexie anyOf2769 makesboundingrange and observability5249–5287 tracksrange; inserted filtered-outowner key betweenselectedkeys may invalidatelivequery. DirectanyOf proposal is withdrawn until demonstratedsafe; do not trade precise subscription forquerycount alone.",
+    "requestedFinal": "Keep per-ID equals ranges withinone explicitshots readonlytransaction; measure Ncursorrequests vs1transaction distinctly, include excludedowner gap insertion nativecase. Current refinement is still ongoing, no proofclaim."
+  }
+}

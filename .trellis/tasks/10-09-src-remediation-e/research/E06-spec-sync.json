@@ -1,0 +1,39 @@
+{
+  "unit": "E06",
+  "acceptedSnapshot": ".trellis/tasks/10-09-src-remediation-e/reviews/E06-check-snapshot.json",
+  "acceptedSnapshotSHA256": "2ff2d72efa3a42f42b33ca5ca128fb3918e050f9289ee36dcf1f076a739487da",
+  "sourceAfter": {
+    "scripts/e06-build.mjs": "80285e9a83aa5edf7a47e9fcea32e6f14418e964bc19de34f2be350144cd60a2",
+    "scripts/e06-compare.mjs": "ce75a3c4f1b305b4c6b2853854b32da1c036732879369e2ac763987623330a43",
+    "scripts/e06-icon-data.d.mts": "d27e8b2247cec2c11a4b35f529d9d1012e185d6712739a4cbb56350a6d808e49",
+    "scripts/e06-icon-data.mjs": "972ade191611a3f8d5404386eef59d8e312d0b9fc3f8d14df6305d6904b76267",
+    "scripts/e06-icons-browser.mjs": "68a883ec296c257ddbe08f4ce64e3f964b3874acd6277dc2dcaa6a6ebeec80dd",
+    "scripts/e06-root-browser.mjs": "566228aff5ec4673467f87947e7c92678b6df20a262c81159940c0f55ee0717b",
+    "scripts/e06-root-parity.mjs": "bd2469433683fbac127069176bf0dd522a564b7ce8529cf32c55b5208d819d90",
+    "src/components/agent/DemandModelIcons.tsx": "fc7498e139ef0743b89990e5a3c2af79db95f41aae71cfa46fe3a410e3e36738",
+    "src/components/agent/ModelIconCatalog.ts": "8424a466bdbf729e3d9f76ce5fab8f1dc7cf1bce6caea2876527802ce7674edb",
+    "src/components/agent/ModelIconMapping.generated.ts": "ee164ff7c6f39e5f419630ef052e6c704658777e644ecb90454ad36dcaa5e9eb",
+    "src/components/agent/ModelIcons.tsx": "f352e98fea02b3080c62358bbd5445301018cd9e5708ff8e9d1f256e8c22dece",
+    "tests/e06-icon-entries.test.ts": "cdb6f542aa6a08c6a7ee205c4e5477efb554f2ba74cd5f1d2e4a9e3bcaab41ae",
+    "tests/fixtures/e06/icons.tsx": "65cc128997494291494b36e62e1e3123b301cc3f5c9df6e61e572666f2ae9081",
+    "tests/fixtures/e06/index.html": "d5d15ae30e705e301772850c9e3f52101b9587cb58729171057288d209dddf2c",
+    "tests/fixtures/e06/seeds.json": "bd7763abb2d1260c7fcf237622d02f299354264fc3c82cf17217d336c8e34134",
+    "tests/fixtures/e06/tsconfig.json": "4859ed082c9bf157752fa48299e6ba0c46ef4bc55c6b9df3317ec77c3d57bff4"
+  },
+  "documents": [
+    {
+      "path": ".trellis/spec/frontend/chat-performance.md",
+      "beforeSHA256": "86e1f9c6d378352b77a8a4cfd40eabbe77666fefed6f15426f179fa33e870fea",
+      "afterSHA256": "4b850bc06a525527a57dc4193eae270ae1b9773cbdd29aa86458feb1172a616b",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e06-spec-sync-before/.trellis/spec/frontend/chat-performance.md",
+      "source": "ActualcompletedreviewersevensectionEnglishsuggestions"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/implement.md",
+      "beforeSHA256": "8b5adb94e603cd7ca231a825a81bded1b49541d60e4f3fe53985797caf7e7cac",
+      "afterSHA256": "5cda16b8ca17ab48fcf2017c41b7bfd99decc1dd636ce4333e75fbb79957f1d6",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e06-spec-sync-before/.trellis/tasks/10-09-src-remediation-e/implement.md"
+    }
+  ],
+  "retainedLimitation": "Fullrichrenderer/highlighterloading remains explicitly measured; boundediconcorrection only, nol atencyclaim"
+}

@@ -1,0 +1,183 @@
+{
+  "date": "2026-10-09",
+  "producer": "trellis-implement",
+  "unit": "E01 AU02/PU10 static correction",
+  "trigger": [
+    "reviews/E01-static-summary.json",
+    "reviews/E01-analysis-checkpoint.json"
+  ],
+  "change": "Both owner components destructure the existing useCallback-stable requestDeparture returned by useManualDraftDeparture. Effects invoke and depend on that binding; TaskInspector registration and child callback also use it. The unstable returned departure object remains only for its confirmation JSX. No suppression/full-object effect dependency or other source changes.",
+  "ownedSourceFiles": [
+    {
+      "path": "src/components/agent/TaskInspector.tsx",
+      "beforeSha256": "9e35b5c1fce11029e0ff4b6550141b2f06588cfd9f1fa40364f6ed2c50cd4068",
+      "afterSha256": "df65fc0f2e554bef8a7824a62bb6e2576232203787524df2989db2f0ab760c53"
+    },
+    {
+      "path": "src/components/audio/VoiceLibrary.tsx",
+      "beforeSha256": "74763a35d6fb7093afa5047fb094354ea7de9083b0a675d45f8afac0b48ce71a",
+      "afterSha256": "26f9c8b7cc7a4aba3731d76fa987330726fbd4604397d75a8fe39ea8e361ca4e"
+    }
+  ],
+  "commands": [
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm lint",
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts-static-fix/typecheck.log",
+      "exitCode": 0
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm test tests/e01ManualDraftDeparture.test.ts tests/b02MemoryPromotion.test.ts tests/manualDraftBaseline.test.ts tests/manualDraftWiring.test.ts tests/agentTaskWrapup.test.ts tests/agentTaskOrchestration.test.ts tests/mimoSpeech.test.ts tests/mimoRuntime.test.ts tests/audioFoundation.test.ts --maxWorkers=4",
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts-static-fix/focused.log",
+      "exitCode": 0,
+      "filesPassed": 9,
+      "testsPassed": 119
+    },
+    {
+      "command": "E01_PLAYWRIGHT_PATH=/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs E01_CHROMIUM_PATH=/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell E01_OBSERVATIONS=.trellis/tasks/10-09-src-remediation-e/research/e01-drafts-static-fix/native-observations.json /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node scripts/e01-drafts-browser-regression.mjs",
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts-static-fix/native.log",
+      "exitCode": 0,
+      "nativeCasesPassed": 19
+    },
+    {
+      "command": "git diff --check -- src/components/agent/TaskInspector.tsx src/components/audio/VoiceLibrary.tsx",
+      "exitCode": 0
+    }
+  ],
+  "nativeObservations": {
+    "observations": [
+      {
+        "name": "record unchanged new/existing forms leave clean; edit then revert is clean",
+        "outcome": "pass"
+      },
+      {
+        "name": "record source-only edits dirty the actual form and revert cleanly",
+        "outcome": "pass"
+      },
+      {
+        "name": "record Escape/close/backdrop continue preserves exact input, caret and scroll",
+        "outcome": "pass"
+      },
+      {
+        "name": "record local task replacement/SPA/back cancel retains owner; discard replaces deliberately",
+        "outcome": "pass"
+      },
+      {
+        "name": "record failed save and pending departure/duplicate actions retain frozen input and retry",
+        "outcome": "pass"
+      },
+      {
+        "name": "wrapup opening baseline clean; exact dirty text survives cancel and owner board",
+        "outcome": "pass"
+      },
+      {
+        "name": "wrapup pending Escape/route, failure retry, sources and deliberate discard",
+        "outcome": "pass"
+      },
+      {
+        "name": "voice unchanged baseline clean; name/mode/instruction/sample revert and dismissal",
+        "outcome": "pass"
+      },
+      {
+        "name": "voice project switch/external close/SPA/back/forward cancellation freezes owner",
+        "outcome": "pass"
+      },
+      {
+        "name": "voice pending/failed save preserves text; retry writes captured revision/project",
+        "outcome": "pass"
+      },
+      {
+        "name": "native forward blocked then discard; discarded voice never saved",
+        "outcome": "pass"
+      },
+      {
+        "name": "voice reference import pending/failed retry uses owned bytes and dirty reference retention",
+        "outcome": "pass"
+      },
+      {
+        "name": "voice actual durable audition pending/failed retry and preview media survive discard",
+        "outcome": "pass"
+      },
+      {
+        "name": "actual AgentChatPage thread selection and task board route retain record draft",
+        "outcome": "pass"
+      },
+      {
+        "name": "retired pending record completion cannot publish into a newer mounted editor",
+        "outcome": "pass"
+      },
+      {
+        "name": "retired voice save completes only for captured owner and preserves new record input",
+        "outcome": "pass"
+      },
+      {
+        "name": "retired wrapup save completes without replacing a newer voice editor",
+        "outcome": "pass"
+      },
+      {
+        "name": "shared guard continues number/range/date/color input focus without unsupported caret APIs",
+        "outcome": "pass"
+      },
+      {
+        "name": "actual AgentChatPage current-thread deletion waits for deliberate draft discard",
+        "outcome": "pass"
+      }
+    ],
+    "errors": [],
+    "documents": [
+      "http://127.0.0.1:5197/tests/fixtures/e01-drafts/"
+    ]
+  },
+  "originalEvidencePreserved": {
+    "manifest": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts-static-fix/preserved-evidence-before.json",
+    "files": 84,
+    "verifiedByteIdentical": true
+  },
+  "originalReports": [
+    ".trellis/tasks/10-09-src-remediation-e/research/E01-drafts-implementation.md",
+    ".trellis/tasks/10-09-src-remediation-e/research/E01-drafts-implementation.json"
+  ],
+  "limitation": "Main coordinator reruns complete same-version static/AST comparison and owns independent E01 acceptance. No complete static PASS is claimed by this bounded correction.",
+  "stagedCommittedPushed": false,
+  "evidenceFiles": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts-static-fix/after/src/components/agent/TaskInspector.tsx",
+      "sha256": "df65fc0f2e554bef8a7824a62bb6e2576232203787524df2989db2f0ab760c53"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts-static-fix/after/src/components/audio/VoiceLibrary.tsx",
+      "sha256": "26f9c8b7cc7a4aba3731d76fa987330726fbd4604397d75a8fe39ea8e361ca4e"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts-static-fix/before/src/components/agent/TaskInspector.tsx",
+      "sha256": "9e35b5c1fce11029e0ff4b6550141b2f06588cfd9f1fa40364f6ed2c50cd4068"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts-static-fix/before/src/components/audio/VoiceLibrary.tsx",
+      "sha256": "74763a35d6fb7093afa5047fb094354ea7de9083b0a675d45f8afac0b48ce71a"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts-static-fix/focused.log",
+      "sha256": "a72fcd517ee3d927247e9fd0ebd72f7dc5fcc2221cd540c27bcf5bc8c64560dc"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts-static-fix/native-observations.json",
+      "sha256": "8b024ba9e2106cbeeeb8c131f2fb5a5b1b746834f5da16c57d31977b3f056874"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts-static-fix/native.log",
+      "sha256": "a5c1ce2fe4c0ef18668e3c6b6d4fcaacc53398ec121ce3fe4484def8170a5122"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts-static-fix/preserved-evidence-before.json",
+      "sha256": "297295355f7fcef2e5dab241a212333f9e3c9e82052eb81b974850a6a608fa06"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts-static-fix/source-snapshot.json",
+      "sha256": "88f53526b80146602fa692987acb772a6ef9bbccd0783519bd7b62e63a007666"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-drafts-static-fix/typecheck.log",
+      "sha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa"
+    }
+  ]
+}

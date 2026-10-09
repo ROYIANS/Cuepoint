@@ -1,0 +1,64 @@
+{
+  "purpose": "Read-only E04 preparation freshness before activation; not implementation/native/acceptance",
+  "observedAt": "2026-10-09T04:12:52.974813+00:00",
+  "boundedOwnerInputs": [
+    {
+      "report": "research/E04-library-subscription-preparation.json",
+      "file": "src/components/studio/ProjectGalleryPage.tsx",
+      "expectedSHA256": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+      "actualSHA256": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+      "matches": true
+    },
+    {
+      "report": "research/E04-library-subscription-preparation.json",
+      "file": "src/components/studio/AssetLibraryPages.tsx",
+      "expectedSHA256": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+      "actualSHA256": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+      "matches": true
+    },
+    {
+      "report": "research/E04-library-subscription-preparation.json",
+      "file": "src/components/studio/CoverCard.tsx",
+      "expectedSHA256": "1cd7b4b4335ad69a6db11f6288e6af04dbe3ea07706860761d798d787cb5fb9f",
+      "actualSHA256": "1cd7b4b4335ad69a6db11f6288e6af04dbe3ea07706860761d798d787cb5fb9f",
+      "matches": true
+    },
+    {
+      "report": "research/E04-library-subscription-preparation.json",
+      "file": "src/components/studio/Still.tsx",
+      "expectedSHA256": "0ead47eddd405054ecfd6d01532b069abcf5e10293c3415b9a61c8d4d538beae",
+      "actualSHA256": "0ead47eddd405054ecfd6d01532b069abcf5e10293c3415b9a61c8d4d538beae",
+      "matches": true
+    },
+    {
+      "report": "research/E04-library-subscription-preparation.json",
+      "file": "src/db/database.ts",
+      "expectedSHA256": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+      "actualSHA256": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+      "matches": true
+    },
+    {
+      "report": "research/E04-library-subscription-preparation.json",
+      "file": ".trellis/tasks/09-30-src-quality-architecture-audit/research/shell-shared.md",
+      "expectedSHA256": "0feb4856e9a021b13805d0441702f9bd1e1b0cf95ac40d083a21925213c1574e",
+      "actualSHA256": "0feb4856e9a021b13805d0441702f9bd1e1b0cf95ac40d083a21925213c1574e",
+      "matches": true
+    },
+    {
+      "report": "research/E04-manual-memory-read-closure.json",
+      "file": "src/db/projectMemories.ts",
+      "expectedSHA256": "2385dcc806bd3a6e888e27dd281b704f75abb4acc77fb5a29859ae7409aea1b9",
+      "actualSHA256": "2385dcc806bd3a6e888e27dd281b704f75abb4acc77fb5a29859ae7409aea1b9",
+      "matches": true
+    }
+  ],
+  "retentionInputCount": 65,
+  "retentionDrift": [
+    {
+      "file": ".trellis/tasks/10-09-src-remediation-e/check.jsonl",
+      "expectedSHA256": "57acd57ff62b17b0cb0fb3eb75c55fffc2cc5d65c2f10ef3cdee39b97bac0220",
+      "actualSHA256": "a2b6fa9a9de7f5782ebd9092bcbb7414cb76e934a0788cafdc248db017302b3e"
+    }
+  ],
+  "interpretation": "Current single retention drift is E03 check context evolution; no retention product source drift. Refresh full inventory after accepted E03 spec and E04 active manifests, preserving originals before regeneration."
+}

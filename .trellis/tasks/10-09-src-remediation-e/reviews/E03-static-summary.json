@@ -1,0 +1,99 @@
+{
+  "unit": "E03",
+  "baselineRevision": "1ecaf5ceec92e022c2b2b8d662e2a92e8eee36c7",
+  "policy": "Baseline/current separate complete-source TypeScript programs, same restored versions/rules; Temporary delta analysis: complete baseline/current typed programs, per-file rule/severity/message counts with line relocation normalization; no semantic debt acceptance or formal QG01 identity guarantee; manual full-file review required; raw per-file diagnostics preserved",
+  "versions": {
+    "eslint": "9.39.5",
+    "typescript-eslint": "8.71.1",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-sonarjs": "3.0.7",
+    "typescript": "5.9.2"
+  },
+  "files": 10,
+  "hashes": {
+    "src/components/agent/AgentChatPage.tsx": {
+      "before": "f7ff686baf6314bc1baf0f64463a8e5a0601a56baeffcb76a618b864d54c27b1",
+      "after": "234344a50bb5a9bfce0258bf3b6d32b76be4cf965675b6b0eb8a77b8479f11cc"
+    },
+    "src/components/agent/TaskInspector.tsx": {
+      "before": "89486dc294d14aa31aba1ff6f5639e6e233d8f25afc75dfa9f67e3f4f0147649",
+      "after": "062ea09bbebf438a32eaa78f2d6609e05aa3d40ca064016261d31fd086e88b29"
+    },
+    "src/components/agent/TaskRecords.tsx": {
+      "before": "d0af44a69eebe5027270cf7ee5be839c52770dc7594eb2a43c70105abc2b4a11",
+      "after": "225208420fe596a4c7c6b8f01c298cedec1225ffc45ba3e76ca3d5342d99eea2"
+    },
+    "src/components/agent/TaskWrapup.tsx": {
+      "before": "e3dfd7266c829e9201fe40de48a04edfdf5db05a2e43de31cc09a4af28d77403",
+      "after": "85d9f9442619f8c161d3645f49dda4a43aeb495f13810ce9d41b66cfa24fe99b"
+    },
+    "src/components/agent/TopicSidebar.tsx": {
+      "before": "03eb777c98984d75300c9dcfd1533739e3c7308d561d6d72a6bf20be55bc2dc9",
+      "after": "121d77f9f9b0b094caef74b52c2574837250e9d92366d33a6056eb6204c3f0b7"
+    },
+    "src/components/audio/VoiceLibrary.tsx": {
+      "before": "aad7de9f26264e34831c025de307a0251fb473f57737a0b8714d24017ae7414e",
+      "after": "6c9d39032f747d691a00649419ab843110b9553b628b32aec9ed36c07bb93f7c"
+    },
+    "src/components/studio/AssetLibraryPages.tsx": {
+      "before": "77c817e0e78e888f2716179cf6f8cc018a7b10d8f19bfdbf3d27d3b6f2b38760",
+      "after": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e"
+    },
+    "src/components/studio/ProjectGalleryPage.tsx": {
+      "before": "f3fd110028e6219c298e7ee8bda70f840906effaeb8b1986921784b2120c0c94",
+      "after": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b"
+    },
+    "src/components/workspace/EpisodeListPage.tsx": {
+      "before": "d3e993d6e3a53235670259bcdb684109e7be37445a4d9cf9ce649e4c9e6a04cd",
+      "after": "601fe123c44ca98ff66e4ab00c22fc825b55f3101ef181ab1681ccf1ac3dde51"
+    },
+    "src/lib/useManualDraftGuard.tsx": {
+      "before": "a5a93b4da49c5aa67b900d2e57ea531500943309173b5556cacad03450c12722",
+      "after": "1d735e1811ac25aaa110acc2956ea78184da79a242cfd6d6461221f2785b5f05"
+    }
+  },
+  "baselineErrors": 3,
+  "baselineWarnings": 35,
+  "currentErrors": 2,
+  "currentWarnings": 34,
+  "addedNoncomplexity": [],
+  "addedComplexity": [
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'AgentChatInner' has a complexity of 101. Maximum allowed is 20.",
+      "line": 57,
+      "column": 1,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 57,
+      "endColumn": 24
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 58 to the 20 allowed.",
+      "line": 57,
+      "column": 10,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 57,
+      "endColumn": 24
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/ProjectGalleryPage.tsx",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'ProjectGalleryPage' has a complexity of 31. Maximum allowed is 20.",
+      "line": 57,
+      "column": 8,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 57,
+      "endColumn": 35
+    }
+  ],
+  "newFileDiagnostics": []
+}

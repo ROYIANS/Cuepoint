@@ -1,0 +1,13 @@
+{
+  "purpose": "Final returned refined SS09 writer integrity, not independentE04acceptance",
+  "reportHashes": {
+    ".trellis/tasks/10-09-src-remediation-e/research/E04-library-implementation.json": "9932beba58533289433ec1097b3c332c22a6b8f8a36ce18d31b5d0c52ea86bc5",
+    ".trellis/tasks/10-09-src-remediation-e/research/E04-library-implementation.md": "0e5bbe0118cb8ff927a8cca6cfd3aa6315d3503c080c2cce4a20d292174ecdb8"
+  },
+  "receiptSHA256": "c11a6caeb4627a093ca1159cb5311e8a20cb4985a169223fa8bb624b61782cc0",
+  "roots": 15,
+  "artifacts": 571,
+  "hashMismatches": [],
+  "refinement": "Exact equalsNrequests inone native readonlytransaction; ID-gap counterexample toanyOf preserved and finalnegative subscriptionproof;8focused16native/E01write20currentPASS",
+  "integrationRemaining": "Whole current full/static/valueAST, allnativeclosures/currentgatealignment and independent combinedscopecheck"
+}

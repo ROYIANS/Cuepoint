@@ -1,0 +1,88 @@
+{
+  "purpose": "Trackedgitdiffcheck plus explicit16currentnew/changedtext whitespace, not independentreviewacceptance",
+  "gitDiffCheck": "PASS",
+  "scope": [
+    {
+      "path": "scripts/e06-build.mjs",
+      "trailingWhitespaceLines": [],
+      "finalNewline": true
+    },
+    {
+      "path": "scripts/e06-compare.mjs",
+      "trailingWhitespaceLines": [],
+      "finalNewline": true
+    },
+    {
+      "path": "scripts/e06-icon-data.d.mts",
+      "trailingWhitespaceLines": [],
+      "finalNewline": true
+    },
+    {
+      "path": "scripts/e06-icon-data.mjs",
+      "trailingWhitespaceLines": [],
+      "finalNewline": true
+    },
+    {
+      "path": "scripts/e06-icons-browser.mjs",
+      "trailingWhitespaceLines": [
+        23
+      ],
+      "finalNewline": true
+    },
+    {
+      "path": "scripts/e06-root-browser.mjs",
+      "trailingWhitespaceLines": [],
+      "finalNewline": true
+    },
+    {
+      "path": "scripts/e06-root-parity.mjs",
+      "trailingWhitespaceLines": [],
+      "finalNewline": true
+    },
+    {
+      "path": "src/components/agent/DemandModelIcons.tsx",
+      "trailingWhitespaceLines": [],
+      "finalNewline": true
+    },
+    {
+      "path": "src/components/agent/ModelIconCatalog.ts",
+      "trailingWhitespaceLines": [],
+      "finalNewline": true
+    },
+    {
+      "path": "src/components/agent/ModelIconMapping.generated.ts",
+      "trailingWhitespaceLines": [],
+      "finalNewline": true
+    },
+    {
+      "path": "src/components/agent/ModelIcons.tsx",
+      "trailingWhitespaceLines": [],
+      "finalNewline": true
+    },
+    {
+      "path": "tests/e06-icon-entries.test.ts",
+      "trailingWhitespaceLines": [],
+      "finalNewline": true
+    },
+    {
+      "path": "tests/fixtures/e06/icons.tsx",
+      "trailingWhitespaceLines": [],
+      "finalNewline": true
+    },
+    {
+      "path": "tests/fixtures/e06/index.html",
+      "trailingWhitespaceLines": [],
+      "finalNewline": true
+    },
+    {
+      "path": "tests/fixtures/e06/seeds.json",
+      "trailingWhitespaceLines": [],
+      "finalNewline": true
+    },
+    {
+      "path": "tests/fixtures/e06/tsconfig.json",
+      "trailingWhitespaceLines": [],
+      "finalNewline": true
+    }
+  ]
+}

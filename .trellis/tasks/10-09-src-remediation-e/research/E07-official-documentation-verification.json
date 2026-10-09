@@ -1,0 +1,20 @@
+{
+  "purpose": "Supplementary actual documentation verification; original registry preparation unchanged. No installation/versionselection/compatibility proof.",
+  "registryPreparationSHA256": "cbe392010e098067ef722508ae800cd4ec7659970e3e188c51ad2e067c6190a2",
+  "documentEvidenceSHA256": "1660b8f64fe3a69f8453247b744f5079102459eda7ca3d8bcf8184e63729df48",
+  "verifiedClaims": [
+    "Official saved support table explicitly9.0.0\u20139.39.5 EOL2026-08-06 and10.x current",
+    "Official migration page explicit20.19+/22.13+/24+ support plusbreaking configuration/rule/context changes",
+    "Official TS-ESLint support page^8.57||^9||^10,TS>=4.8.4<6.1.0 matches actual exact publisher registry peers"
+  ],
+  "unverifiedDocs": [
+    {
+      "name": "sonar-publisher-readme",
+      "error": "The operation was aborted due to timeout"
+    }
+  ],
+  "limits": [
+    "Sonar publisher README fetch timed out; do not claim its current content was read. Actual registry version/peers/repository metadata verified separately, installed pinned plugin README and real rule execution still required at E07.",
+    "Earlier web tool search had no readable output in this session; primary source HTML is now independently saved with exact hashes/excerpts."
+  ]
+}

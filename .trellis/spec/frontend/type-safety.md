@@ -117,3 +117,35 @@ Zod schemas live in `src/lib/projectPackage.ts` (`manifestSchema`, passthrough r
 ## Typed tool and memory wire compatibility
 
 Agent tool definitions retain schema output arguments through function-property callbacks using `defineTool` and `NoInfer`, then erase arguments once at the central heterogeneous registry. Dispatch parses unknown inputs with the selected definition before invoking its callbacks. `Spec<T>` relates parsed output to unknown input/defaults; construction assertions and the registry erasure have separate proof obligations. Actual project compiler positives/16 negatives and original/current parser/schema comparison supplement runtime validation. See [D05](./agent-tools.md#d05-schema-linked-tool-protocol-2026-10-08).
+
+## E07 external and legacy input contracts
+
+Independent E07 integration accepted on 2026-10-09.
+
+### 1. Scope / Trigger
+
+External package/JSON/provider results and legacy IndexedDB normalization are unknown until their existing field-specific contracts narrow them.
+
+### 2. Signatures / Owners
+
+`domain/legacyScalar.ts` owns only explicit historical primitive coercion. Package codec/slot/domain/database migration owners define required/optional/text/ID/foreign-key policies. Local object records, OGL uniform maps and union predicates stay next to their consumers; no global factory or duplicated schema framework.
+
+### 3. Contracts / Invariants
+
+Accept documented string/number/boolean/null/undefined primitives only at the designated legacy fields. Preserve historical defaults, trimming and identifier collision/reference checks. Reject structured arrays/objects and unsupported modern identity values before coercion; extension bags remain structured where documented. Keep discriminated union callbacks typed, capture narrowed values before asynchronous callbacks, and preserve original thrown/cancellation values where contracts require identity.
+
+### 4. Validation / Error Matrix
+
+Legacy primitive conversions retain exact historical outputs. Invalid modern IDs/FKs, duplicate/coercion collisions and structured forbidden inputs reject with their existing actionable boundary errors. Typed-only edits preserve emitted bodies; actual runtime changes need behavior evidence. Do not widen types to any, cast raw values to entity records, or stringify an unchecked provider terminal status.
+
+### 5. Good / Base / Bad Cases
+
+Good: exact unknown-array guards and typed per-key dictionaries preserve existing bounds and ordering. Base: null-prototype model lookup retains own-key behavior; responses terminal status first narrows to string. Bad: treating an assertion as validation or broadening legacy conversion to arbitrary objects and future package profiles.
+
+### 6. Required Tests
+
+Meaningful legacy primitive/modern ID/FK/collision/migration package tests, unknown boundary/tool behavior and original/current emitted-body proof apply to their actual owners. Keep immutable prior fixtures and their exact current API adapters; narrow adapter scope rather than rewriting historical modules.
+
+### 7. Wrong vs Correct
+
+Wrong: metric count reduction as behavior proof, mass ESLint fixes without before-byte/body checks or removed meaningful compatibility tests. Correct: exact per-file independent review and current consumer/type/native regression evidence, separating mechanical assertions/exports from behavior-changing boundary validation.

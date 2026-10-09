@@ -1,0 +1,8 @@
+{
+  "purpose": "Final returned PD07 writer scope/evidence integrity; not independent E04acceptance",
+  "reportSHA256": "6a16ff6654077bd56533163ee5171f3be67256a68c3d55899115bac964e2861f",
+  "ownedRoots": 20,
+  "evidenceFiles": 36,
+  "hashMismatches": [],
+  "integrationRemaining": "Current combined full/static/valuegraph/native loaded-source alignment and independent all-E04 review"
+}

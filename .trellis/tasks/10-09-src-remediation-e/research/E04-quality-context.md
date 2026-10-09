@@ -1,0 +1,171 @@
+# E04 exact quality context — preparation only
+
+Canonical quality command/pattern/test/accessibility/review and durable native evidence contracts. Unrelated deployment/examples/references remain in the full canonical file.
+
+## Exact canonical lines 1–86
+
+# Quality Guidelines
+
+> Code quality standards for frontend development.
+
+---
+
+## Overview
+
+Quality gate is TypeScript build + Vitest. There is no ESLint config; `pnpm lint` runs `tsc -b`. Tests cover pure lib helpers and business command owners in `src/db/` with `fake-indexeddb`, not React component RTL.
+
+---
+
+## Commands
+
+| Command | What it does |
+| --- | --- |
+| `pnpm lint` | `tsc -b --pretty false` (typecheck) |
+| `pnpm test` | `vitest run` |
+| `pnpm build` | `vite build` |
+| `pnpm dev` | Vite dev server |
+
+Vitest setup: `vitest.config.ts` aliases `@` → `src`; `tests/setup.ts` resets Dexie via `fake-indexeddb` each test.
+
+---
+
+## Required Patterns
+
+- Durable mutations only through business command owners in `src/db/` (see the D02 map in state-management), `src/db/productionProposals.ts` and the `src/db/agent*.ts` repositories (`add*` / `patch*` / `delete*` / `set*Slot` / reorder helpers).
+- Live reads with `useLiveQuery`; detail `get` queries use `?? null` (see hook-guidelines).
+- Shot picture / generation data through `parseShotPictureSlots` / `parseGenerationSlot` so legacy fields stay readable.
+- Filter, reorder, undo, draft, delivery, and shortcut-gating logic live in `src/lib/` and are shared — UI calls helpers, does not reimplement:
+  - `shotFilters`, `reorderIds`, `undo`, `debouncedDraft`, `episodeDelivery`, `formFieldFocus`, `shotKeyboard`
+- Studio asset create stays on studio routes with `STUDIO_LIBRARY_ID`; `touchProject` no-ops for the studio owner.
+- Episode-scoped shot queries and delivery exports filter by both `projectId` and `episodeId`.
+- Keyboard shortcuts call `isFormFieldTarget` before handling (`ShotEditorPage`).
+
+---
+
+## Forbidden Patterns
+
+| Forbidden | Why / do this instead |
+| --- | --- |
+| Studio create → project picker or `/p/$projectId/...` | Navigate to `/characters\|scenes\|props\|styles/$id` |
+| `useEffect` + one-shot `db.*.get` for live detail pages | `useLiveQuery` + `?? null` |
+| Global Redux/Zustand/etc. for Dexie tables | `useLiveQuery` + repo mutations |
+| Duplicating reorder/filter logic in the page | `reorderBeats` / `reorderShots` / shared filter helpers |
+| Enabling export before live queries finish | Disable CSV/print until loaded (delivery-export) |
+| Component RTL / Playwright as the default new test | Prefer `tests/*.test.ts` on lib + repo |
+| Adding ESLint-only “fixes” without satisfying `tsc` | `pnpm lint` is the lint gate |
+| `window.prompt` / `alert` / `confirm` | In-app `Dialog` (input) / `AlertDialog` (destructive) from `src/components/ui/` |
+| `scrollIntoView({ behavior: "smooth" })` on Agent messages | `snapChatToBottom` on `.agent-message-list` (see chat-performance) |
+
+---
+
+## Testing Requirements
+
+- Place tests under `tests/` as `*.test.ts`.
+- Repo / IndexedDB behavior: use the shared setup that deletes and reopens `db` (`tests/setup.ts`, see `tests/repo.test.ts`).
+- Pure helpers: unit-test without mounting React (`tests/undo.test.ts`, `debouncedDraft.test.ts`, `shotFilters.test.ts`, `formFieldFocus.test.ts`, `reorderIds.test.ts`, `episodeDelivery.test.ts`, `projectPackage.test.ts`).
+- Cover invariants called out in other specs when touching those areas: studio `touchProject`, snapshot copy reject-on-duplicate, episode-scoped reorder ownership, delivery CSV quoting, form-field shortcut gating, agent chat `snapChatToBottom` / `CHAT_AT_BOTTOM_PX`.
+- Do not require new component snapshot/RTL tests unless the change is untestable at the lib/repo layer.
+
+---
+
+## Accessibility and UX quality
+
+- Keep focus-visible rings on interactive primitives (`src/components/ui/*`).
+- Mark decorative motion/graphics `aria-hidden` (`ClickSpark`).
+- Prefer Chinese user-facing strings consistent with existing pages (加载中…, 找不到…).
+- Honor `prefers-reduced-motion` for decorative animation (`ClickSpark`, `src/styles.css`).
+
+---
+
+## Code Review Checklist
+
+- [ ] `pnpm lint` and `pnpm test` pass for the change set
+- [ ] Mutations go through their concrete business command owner; no ad-hoc `db.table.put` in components unless matching existing rare patterns
+- [ ] Detail liveQuery uses `get(id) ?? null`; missing id shows 找不到, not infinite 加载中
+- [ ] Studio vs project ownership and `back` discriminants are correct
+- [ ] Shot/episode scoping preserved (filters, reorder, delete, delivery)
+- [ ] Shared helpers reused for filter/reorder/draft/undo/shortcuts
+- [ ] Types imported with `import type` where needed; domain types not duplicated
+- [ ] New durable behavior has or updates a `tests/` case when logic is in lib/repo
+
+---
+
+
+## Exact canonical lines 124–198
+
+## Audit evidence contract (2026-09-30)
+
+A full-source audit must maintain a fixed file manifest and an explicit review ledger.
+Tool success, passing tests and long-file inspection alone do not establish full coverage.
+
+- Manifest records `baseRevision`, every scoped path and its content `sha256`; detect source changes before finalizing findings.
+- Per-file coverage uses `{ path, status, note, findings }`. Status is `reviewed`, `generated-verified`, or `blocked`; a blocked or missing file prevents a claim of complete coverage.
+- Review ordinary code in full. For generated data/code, state the generator/source and exact verification performed; do not claim manual line review of generated JSON.
+- Confirmed findings need location, triggering input/call sequence, mechanism, impact, recommendation and behavior validation. Label untested runtime/browser concerns as risk; structural debt alone does not prove a current failure.
+- Separate type-only edges from value imports when reporting cycles. A cycle reporter may filter its first edge yet include type edges later in the path; validate the complete value cycle.
+- Knip export/file candidates require entry-point, ambient declaration, CSS import and test-only usage checks. In this project `src/lib/references/mammoth.d.ts` contributes the declaration for the browser import and must not be removed solely because no runtime import points at it.
+- React rule matches for ordinary business functions named `useX` require inspecting whether they actually call React Hooks; naming matches alone are not runtime Hook evidence.
+- Clone/complexity counts are locating signals. Compare business contracts before consolidating retries, validators or CRUD; do not reduce complexity by removing safety checks or adding forwarding abstractions.
+- Preserve raw commands, versions, exit status and diagnostics. JSON reporters can exit zero while their summary contains violations; inspect both.
+- An audit report is not a product fix. State whether tools/rules were merely run, permanently configured, or connected to CI; recommendations do not imply adoption.
+
+The 2026-09-30 source audit and proposed architecture/tool gates are recorded in
+`.trellis/tasks/09-30-src-quality-architecture-audit/`. The existing project quality
+commands above remain the installed gates until a subsequent implementation changes them.
+
+## Durable original-source comparison fixtures (2026-10-08)
+
+## 1. Scope / Trigger
+Use this rule when a permanent regression compares current behavior with immutable original code captured during a task. Archiving task records must not remove test inputs or make tests write into archived directories.
+
+## 2. Signatures / Owners
+Permanent tests consume the minimal required original module closure under `tests/fixtures/sourceSnapshots/{d05,d06,d07}`. Preserve snapshot bytes and relative import hierarchy, with original-path/hash provenance. Task research/reviews remain immutable evidence, not runtime test dependencies.
+
+## 3. Contracts / Invariants
+Copy needed modules; do not move or edit historical evidence. Resolve relative imports within each snapshot closure. Existing alias imports and intentionally shared untouched dependencies retain their original comparator semantics. Tests remain read-only with respect to task reports. Remove a redundant report write only while keeping its behavioral assertions. Original-versus-current comparison must still execute real parsers/adapters, not canned expected outputs.
+
+## 4. Validation / Error Matrix
+| Condition | Required behavior |
+| --- | --- |
+| Active task folder unavailable after archive | Permanent regression still resolves and executes |
+| Missing transitive snapshot import | Fail fixture completeness proof/test |
+| Snapshot byte differs from recorded original | Fail provenance proof |
+| Test writes task report | Remove side effect, retain asserted behavior |
+
+## 5. Good / Base / Bad Cases
+Base: stable test fixture imports with original bytes. Good: archive-unavailable execution verifies all affected comparisons. Bad: a permanent test imports an active dated task folder, rewrites accepted evidence, or relies on an assertion-free report generator.
+
+## 6. Tests Required
+Run affected original/current behavioral comparisons and demonstrate execution/resolution with the active task directory unavailable in an isolated environment. Verify the minimal relative import closure and original byte hashes; retain any failed attempt and state finite limits.
+
+## 7. Migration / Limits
+This correction preserves comparison semantics and evidence while making test inputs durable. It does not claim snapshot source satisfies current production rules, replace current production owners, or close E/QG01 debt. Archived native research scripts are historical evidence unless separately adopted as stable regression entry points.
+
+## B01 native harness isolation and failure authority (2026-10-08)
+
+### 1. Scope / Trigger
+Maintain when changing the standalone B01 browser runner or its local Vite setup, particularly repeated runs across different fixture configurations.
+
+### 2. Signatures / Owners
+`scripts/b01-browser-regression.mjs` creates a fresh temporary `cacheDir`, explicitly scans the actual B01 fixture HTML via `optimizeDeps.entries`, and removes its cache after closing Vite. Main-frame document requests are counted; only initial fixture loading is allowed during the SPA regression sequence.
+
+### 3. Contracts / Invariants
+Keep every existing business assertion and timeout. Unexpected full-document reload is a failure, not authority to reinitialize fixtures, retry interactions, ignore missing bridge objects or increase waits. Cache separation is test isolation, not a product fix or proof of the original failure cause. Keep prior failures and configuration/runtime inputs.
+
+### 4. Validation / Error Matrix
+| Condition | Required result |
+| --- | --- |
+| Initial fixture document | One allowed main-frame document request |
+| SPA route/history and dialogs | All existing assertions; no extra document request |
+| Extra document navigation/reload | Explicit test failure |
+| Consecutive cold runner instances | Separate temporary caches, same semantic assertions |
+
+### 5. Good / Base / Bad Cases
+Base: all19 scenarios pass from a fresh isolated cache. Good: an unexpected reload fails instead of silently recreating controls. Bad: calling a warm rerun proof that an unobserved root cause was fixed.
+
+### 6. Tests Required
+Preserve exact before/after assertion/timeout comparison and actual consecutive cold runs. Final current-source batch must include this runner. Retain failed logs and distinguish observed behavior from causal inference.
+
+### 7. Migration / Limits
+This scoped correction does not establish why earlier blank-page/bridge failures occurred; observational isolated and forced-cold shared controls both passed. It does not modify product behavior, install dependencies, migrate every other historical native program or close formal E/QG01 work. Local Chromium fixtures do not prove full-product or live-provider behavior.
+

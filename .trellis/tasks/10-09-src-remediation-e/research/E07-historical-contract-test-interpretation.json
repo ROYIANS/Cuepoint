@@ -1,0 +1,29 @@
+{
+  "purpose": "Read-only E07 historical contract/test interpretation supplement; no retirement/retention decision accepted, no code/dependency changes",
+  "inputs": {
+    "src/lib/productionContext.ts": "f6b612e67a7fb9ebc0f3c15919db377dc6bf28a832093ed93648748a0c81c8b3",
+    "src/lib/generationIntent.ts": "9d5e5e59271d8797c0d3dd99b64f8ddf3c83418a0f53225b67b006b57cac2c5a",
+    "tests/productionContext.test.ts": "95c6965ff3c744f4754ccfb712af1a9917545faa689caef90aeba587a4e84e82",
+    "tests/generationIntent.test.ts": "c03c09224608d0a3f02b56cb320d3de4a6b4a1ad6fa047a568f36e5f20b337b4",
+    ".trellis/spec/frontend/production-contracts.md": "833ce735ef4182983e790e00f08aedafd5029cf845fbe3f47c450f8a5fc45986",
+    ".trellis/tasks/archive/2026-10/10-08-src-remediation-d/research/D03-spec-draft.md": "7f284fa839bbd2e1313e5ccbae539960f771c60471feac8e4f77b22881fe5e19"
+  },
+  "observations": [
+    {
+      "topic": "Canonical contract currently explicit",
+      "evidence": "production-contracts.md explicitly documents buildProductionContext and generationIntent lifecycle/proposal preparation. D03 notes bodies/APIs unchanged and onlytwo current value testconsumers; notclaimed production owners; E07 cleanup separate."
+    },
+    {
+      "topic": "productionContext.test is not wholly disposable legacyfile",
+      "evidence": "First describe containsthree current productionRevision/validateProductionTarget behavioral tests: SHA-256 known Unicode/multiblock vectors, canonical keyorder/nestedchange/contentnonexposure, targetkind/ownership/allslotfamilies. Scoped contextdescribe containsfour localreadpreflight ownership/foreignlinks/styleinheritance/deletedroot tests. Deleting whole testfile would drop active shared revision/targetcontract coverage."
+    },
+    {
+      "topic": "generationIntent tests exercise real boundary semantics",
+      "evidence": "Eight tests cover image-vs-video verifiedprofiles/noautowrite/authoredtiming, secret/unsupportedparameter denial, explicitroles/type/mode, foreign/missing/emptymedia, stale/mismatched/deletedtargets, terminaltransition/partialcompletion denial and ownedcurrentresultpreflight. They are not merely snapshots of source or trivial helper mirrors."
+    },
+    {
+      "topic": "Decision must reconcile code, product and supported compatibility",
+      "evidence": "Production-only absence remains a fact, not reason to deletecurrent documented read/preflightAPI and meaningfultests automatically. Fresh fulltest/native/barrel/dynamic graph must be interpreted. Retain intentionallysupported contract with exact reason or explicitly retire requirement and preserve active shared tests; do not manufacture paidruntime consumers to turn reachability green. Original D03 records unchanged."
+    }
+  ]
+}

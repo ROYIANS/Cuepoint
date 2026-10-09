@@ -1,0 +1,579 @@
+{
+  "status": "COMPLETED",
+  "date": "2026-10-09",
+  "role": "independent trellis-check sidecar; no recursion",
+  "scope": "Frozen slice C 12 UI/Hooks owners + new tests/e07HookContracts.test.ts; named main supplemental controls/debouncedDraft/seven business predicates/current DB adoption assessment",
+  "sliceCDecision": "NO_NEW_BLOCKING_DEFECT_FOUND_WITHIN_FROZEN13",
+  "supplementalDecision": "CHANGES_REQUIRED_H-SUP-01",
+  "wholeE07Acceptance": false,
+  "findings": [
+    {
+      "id": "H-SUP-01",
+      "severity": "P2",
+      "file": "src/lib/debouncedDraft.ts",
+      "line": 271,
+      "status": "REPRODUCED",
+      "title": "Dependency-only rebase drops deferred external reconciliation after successful save",
+      "sourceSha256": "13b31cb3c090df4a3c5ad46a1a8b6897c58c109bf8d7df4e3da0b1ee78e1eebd",
+      "evidence": "draft-rebase-comparison.json",
+      "trigger": "Actual TextDraftField primitive initialValue changes via Dexie live query while persist is in flight, then persist resolves without another initialValue change. Even explicit unrelated rerender does not retry rebase.",
+      "observed": "Current input Local edit / 已保存, actual DB External newest. Prior every-render guard input External newest / 已保存.",
+      "requestedFix": "Preserve guarded every-render reconciliation or explicitly retry failed rebase after save completion; retain JSON version/equality guards and pending baseline semantics. Add actual React regression with stable primitive/memoized external values.",
+      "scope": "Main-owned supplemental change; no assigned slice-C product blocker found so far."
+    }
+  ],
+  "sourceCoverage": [
+    {
+      "file": "src/components/agent/AgentChatPage.tsx",
+      "status": "reviewed",
+      "E07EntrySha256": "234344a50bb5a9bfce0258bf3b6d32b76be4cf965675b6b0eb8a77b8479f11cc",
+      "writerReviewEntrySha256": "b93fac4d36768b0739075ed63310599bdd80ededb60eb02b83602be845ed6f02",
+      "checkEntrySha256": "b93fac4d36768b0739075ed63310599bdd80ededb60eb02b83602be845ed6f02",
+      "checkFinalSha256": "b93fac4d36768b0739075ed63310599bdd80ededb60eb02b83602be845ed6f02",
+      "entryMatches": true,
+      "unchangedDuringCheck": true,
+      "reason": "Empty thread/connector arrays now have stable memo identities. Discovery captures precisely id/definitionId/baseUrl/apiKey; current discoverConnectorChatModels and sameChatModelConnector read that domain. Cancellation and abort belong to the same scalar connection identity. Task departure registration, selection revision, execution token and synchronous delete/send guards retain their existing owners. Writer native chat proves metadata 1→1 and credential 1→2 reads; independent E01 proves guarded topic/board transitions.",
+      "findingIds": []
+    },
+    {
+      "file": "src/components/agent/AgentRunDetails.tsx",
+      "status": "reviewed",
+      "E07EntrySha256": "5202a654cf3aef7610fe2db4fd897368011545e35d5cdef5e6b2085dfbe4b95c",
+      "writerReviewEntrySha256": "d428f9d2cf2de9ca4bf7f3901605ff8b33ca420d05cd2e311a70790a8223e020",
+      "checkEntrySha256": "d428f9d2cf2de9ca4bf7f3901605ff8b33ca420d05cd2e311a70790a8223e020",
+      "checkFinalSha256": "d428f9d2cf2de9ca4bf7f3901605ff8b33ca420d05cd2e311a70790a8223e020",
+      "entryMatches": true,
+      "unchangedDuringCheck": true,
+      "reason": "Memo reads only call.status and call.result after inlining the predicate. Failed-only structured validation retains stable identity. Legacy lazy validation still captures the full call in an effect whose dependencies include call and structuredValidation; cancellation rejects retired resolution. No approval/run state semantics changed.",
+      "findingIds": []
+    },
+    {
+      "file": "src/components/agent/ReferenceAttachments.tsx",
+      "status": "reviewed",
+      "E07EntrySha256": "617efc1d4fb59c1bc85ef95bf0ae3f0b483765c1795e313c6d2faa79b5134e10",
+      "writerReviewEntrySha256": "73eb869da08ebc02d8f780de9fe31f6471e5a2de708072f8a09d1a24e7f86c7a",
+      "checkEntrySha256": "73eb869da08ebc02d8f780de9fe31f6471e5a2de708072f8a09d1a24e7f86c7a",
+      "checkFinalSha256": "73eb869da08ebc02d8f780de9fe31f6471e5a2de708072f8a09d1a24e7f86c7a",
+      "entryMatches": true,
+      "unchangedDuringCheck": true,
+      "reason": "Both URL effects capture actual Blob values. Image kind is folded into imageBlob; kind removal/departure cleans up the old URL. Render still requires the current envelope and Blob equality, and project-image reads retain owner/MIME checks. Metadata does not churn a URL. ReferenceIcon retains both local JSX consumers; narrowing its export changes no render. Full unused acceptance remains main-owned.",
+      "findingIds": []
+    },
+    {
+      "file": "src/components/agent/TaskWrapup.tsx",
+      "status": "reviewed",
+      "E07EntrySha256": "85d9f9442619f8c161d3645f49dda4a43aeb495f13810ce9d41b66cfa24fe99b",
+      "writerReviewEntrySha256": "99e3de127ab987a833e372678c3558e20b3d0b69adb40001a1c7e1375b73575e",
+      "checkEntrySha256": "99e3de127ab987a833e372678c3558e20b3d0b69adb40001a1c7e1375b73575e",
+      "checkFinalSha256": "99e3de127ab987a833e372678c3558e20b3d0b69adb40001a1c7e1375b73575e",
+      "entryMatches": true,
+      "unchangedDuringCheck": true,
+      "reason": "hasDraft/hasCandidate are equivalent booleans to the previous dependency expressions, not whole changing content objects. Editing presence retains the same cleanup/setup transitions. Frozen draftRef baseline, synchronous lock/pending notification, lifetime owner/epoch checks, source revisions and promotion phase/epoch remain intact. Independent native rejected-save and retired-wrapup cases plus memory promotion tests pass.",
+      "findingIds": []
+    },
+    {
+      "file": "src/components/agent/useChatSelection.ts",
+      "status": "reviewed",
+      "E07EntrySha256": "4cb97e08af1420c24d8a9b558fa6620e79871805ed1a4da41e9ada66af8fd676",
+      "writerReviewEntrySha256": "40c0592b8de6c6e59c6f679c678d8853def469f643e65fb379b4b28003153adf",
+      "checkEntrySha256": "40c0592b8de6c6e59c6f679c678d8853def469f643e65fb379b4b28003153adf",
+      "checkFinalSha256": "40c0592b8de6c6e59c6f679c678d8853def469f643e65fb379b4b28003153adf",
+      "entryMatches": true,
+      "unchangedDuringCheck": true,
+      "reason": "Reconciliation reads captured thread id/connector/model scalars with loaded and connectorList. Unrelated thread title changes cannot reset a pending local choice; changing actual thread/model/connector still reconciles. Full activeThread dependencies remain on writer callbacks; selectionRevision and selectionRef still prevent stale sends. The deferred-write test covers the stated metadata boundary, not arbitrary connector-list changes.",
+      "findingIds": []
+    },
+    {
+      "file": "src/components/agent/useReferenceDraft.ts",
+      "status": "reviewed",
+      "E07EntrySha256": "c2649c23d53889a4d6bdacbaa533858001746cba4400ab4b8e1baf60ad3cf48f",
+      "writerReviewEntrySha256": "ff87223b74e607da20fbcb3832a88b5dc8bf8c711d29cecbe9cfe6c9cadb135c",
+      "checkEntrySha256": "ff87223b74e607da20fbcb3832a88b5dc8bf8c711d29cecbe9cfe6c9cadb135c",
+      "checkFinalSha256": "ff87223b74e607da20fbcb3832a88b5dc8bf8c711d29cecbe9cfe6c9cadb135c",
+      "entryMatches": true,
+      "unchangedDuringCheck": true,
+      "reason": "Cleanup captures the stable Map container, then enumerates its current values on unmount. It therefore aborts controllers inserted after mount. Scope changes do not abort other retained compose scopes. Async updates retain the invocation scope and mounted guard; synchronous currentDrafts/textRevision handling is unchanged. New actual-hook controlled import test proves abort-after-mount and no late publication.",
+      "findingIds": []
+    },
+    {
+      "file": "src/components/audio/AudioTimeline.tsx",
+      "status": "reviewed",
+      "E07EntrySha256": "8ca4c41ba7e4d56bee5c03a6c9223a4d59f9c793f4a95496bbe6ffb4f34eebb5",
+      "writerReviewEntrySha256": "ec5ba4fda12adf8a42bd4798ff3f0bae9fcbfe19f206c0946183c3e49b590bba",
+      "checkEntrySha256": "ec5ba4fda12adf8a42bd4798ff3f0bae9fcbfe19f206c0946183c3e49b590bba",
+      "checkFinalSha256": "ec5ba4fda12adf8a42bd4798ff3f0bae9fcbfe19f206c0946183c3e49b590bba",
+      "entryMatches": true,
+      "unchangedDuringCheck": true,
+      "reason": "Stable updatePosition uses the latest onPosition ref and position state setter. Cleanup increments the captured playEpoch ref container at cleanup time: intentionally invalidates the latest pending playback, rather than capturing an old number or DOM element. startPlayback checks mounted/player/epoch after buffer loading. Previous-playing polling still records final stopped time. Seek effect consumes request.id before geometry/width reruns, so equivalent objects, ResizeObserver and zoom cannot replay or pause later playback. New IDs apply once. Const drag copy preserves property mutation.",
+      "findingIds": []
+    },
+    {
+      "file": "src/components/audio/AudioSources.tsx",
+      "status": "reviewed",
+      "E07EntrySha256": "4613bd5dcb2c218656d6000b2db25c4586de762fadec5c5bee67b0d4519a3580",
+      "writerReviewEntrySha256": "4bd751d7e136dacfceefc9c57b62b54721f26b500f513ce46993c0e213a0f532",
+      "checkEntrySha256": "4bd751d7e136dacfceefc9c57b62b54721f26b500f513ce46993c0e213a0f532",
+      "checkFinalSha256": "4bd751d7e136dacfceefc9c57b62b54721f26b500f513ce46993c0e213a0f532",
+      "entryMatches": true,
+      "unchangedDuringCheck": true,
+      "reason": "Both import and call use the current adoptMaterialInProject export with unchanged (material.id, projectId) arguments. Audio material filtering guarantees an audio file; returned targetId is read from current db.media before decode/addAudioTake. Existing busy/error wrapper remains. No new universal duplicate-lock or retired-local-state guarantee is attributed to this rename.",
+      "findingIds": []
+    },
+    {
+      "file": "src/components/studio/ConnectorsPage.tsx",
+      "status": "reviewed",
+      "E07EntrySha256": "ca5a6ce7b3debcfefbee743cefa27370efb4650346d717c3725b1329ef87ece7",
+      "writerReviewEntrySha256": "27d1b85031a3f7a7c80f14390fba63c16f01a5fba8225c13d588c0aa5c44f59d",
+      "checkEntrySha256": "27d1b85031a3f7a7c80f14390fba63c16f01a5fba8225c13d588c0aa5c44f59d",
+      "checkFinalSha256": "27d1b85031a3f7a7c80f14390fba63c16f01a5fba8225c13d588c0aa5c44f59d",
+      "entryMatches": true,
+      "unchangedDuringCheck": true,
+      "reason": "Undefined connector live-query state stays stable; empty fallback is inside byDefinition memo. Loaded arrays produce the same definition map. Probe/test/save/disconnect still use frozen editor sessions and operation identity/currentOperation checks. This patch does not reset or publish a new editor.",
+      "findingIds": []
+    },
+    {
+      "file": "src/components/studio/ProjectGalleryPage.tsx",
+      "status": "reviewed",
+      "E07EntrySha256": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1",
+      "writerReviewEntrySha256": "4a33de135b4edd3b4e5d2caab67fcd6e31cd8665fc461e1d9d72358a23bc1329",
+      "checkEntrySha256": "4a33de135b4edd3b4e5d2caab67fcd6e31cd8665fc461e1d9d72358a23bc1329",
+      "checkFinalSha256": "4a33de135b4edd3b4e5d2caab67fcd6e31cd8665fc461e1d9d72358a23bc1329",
+      "entryMatches": true,
+      "unchangedDuringCheck": true,
+      "reason": "Undefined ipLinks remains stable. Optional find is applied in filter, subtitle and binding opening; it equals the old empty-array behavior. projects/query/sort/IP/archive/kind dependencies remain complete. Cover owner selection and named mutation locks/errors are unchanged. Writer native E04 captures matching gallery before/after and loaded closure; independent e04 unit tests pass.",
+      "findingIds": []
+    },
+    {
+      "file": "src/components/studio/materials/MaterialDetailPanel.tsx",
+      "status": "reviewed",
+      "E07EntrySha256": "c6926fd5e164ae278731b738c494669ec46169c94c1076b9284419ef844dd514",
+      "writerReviewEntrySha256": "4756ea00e80904c1669d1408575545ad82c58d24836b84d68eebefd9d6f7cf67",
+      "checkEntrySha256": "4756ea00e80904c1669d1408575545ad82c58d24836b84d68eebefd9d6f7cf67",
+      "checkFinalSha256": "4756ea00e80904c1669d1408575545ad82c58d24836b84d68eebefd9d6f7cf67",
+      "entryMatches": true,
+      "unchangedDuringCheck": true,
+      "reason": "Current export rename only. action retains synchronous pendingRef and caught errors; requested-id guard/keyed material editor stays in the same local draft session. Operation arguments remain material.id/projectId. Current DB transaction handles scope/archive/version/idempotent reuse/copy/retention; current materialLibrary tests pass. No additional DB policy is introduced by this caller repair.",
+      "findingIds": []
+    },
+    {
+      "file": "src/components/shots/ShotRow.tsx",
+      "status": "reviewed",
+      "E07EntrySha256": "d9091a5004b9a3951e19ffadc46b63f5d366820371fb21598b5b3c827a15a87b",
+      "writerReviewEntrySha256": "b33d4c918e1573cc2ec4766eadb6ebebe5ee3698f91822a0d64fa63335942d45",
+      "checkEntrySha256": "b33d4c918e1573cc2ec4766eadb6ebebe5ee3698f91822a0d64fa63335942d45",
+      "checkFinalSha256": "b33d4c918e1573cc2ec4766eadb6ebebe5ee3698f91822a0d64fa63335942d45",
+      "entryMatches": true,
+      "unchangedDuringCheck": true,
+      "reason": "Enumerates cameraAngle/cameraGear/category/emotion/focalLength/sceneCloseup/sound before the same catalog/default label fallback. Exact ShotColumnId/SHOT_COLUMNS and TEXT_SHOT_FIELDS exclude structured Shot payloads; base content/notes and relation/number placeholders are unchanged. Unknown runtime ID still returns the same empty/catalog fallback. Seven delivery extras are separately covered by the actual CSV test.",
+      "findingIds": []
+    },
+    {
+      "file": "tests/e07HookContracts.test.ts",
+      "status": "reviewed",
+      "E07EntrySha256": null,
+      "writerReviewEntrySha256": "ed37421149cdcdaddda7104b40bca69778a465e32f8c251e86cbd844a3e91c5b",
+      "checkEntrySha256": "ed37421149cdcdaddda7104b40bca69778a465e32f8c251e86cbd844a3e91c5b",
+      "checkFinalSha256": "ed37421149cdcdaddda7104b40bca69778a465e32f8c251e86cbd844a3e91c5b",
+      "entryMatches": true,
+      "unchangedDuringCheck": true,
+      "reason": "Eight meaningful cases execute actual AudioTimeline/useReferenceDraft/useChatSelection owners under an explicitly deterministic hook host. Setters/memos/ref containers persist, changed effects run cleanup, unmounted setters count late writes. Audio buffers/player, reference import and chat writer are controlled boundaries. The host does not auto-render state writes or emulate ReactDOM/StrictMode/concurrent scheduling; native audio and the independent permanent E01 fixture supply bounded complementary evidence.",
+      "findingIds": []
+    }
+  ],
+  "supplementalSources": [
+    {
+      "file": "src/components/audioMusic/controls.tsx",
+      "sha256": "83067881909b6ee4d39417d0bee762f5abf16cde676448bb06234c35fe6f880a",
+      "currentSha256": "83067881909b6ee4d39417d0bee762f5abf16cde676448bb06234c35fe6f880a",
+      "unchanged": true
+    },
+    {
+      "file": "src/lib/debouncedDraft.ts",
+      "sha256": "13b31cb3c090df4a3c5ad46a1a8b6897c58c109bf8d7df4e3da0b1ee78e1eebd",
+      "currentSha256": "13b31cb3c090df4a3c5ad46a1a8b6897c58c109bf8d7df4e3da0b1ee78e1eebd",
+      "unchanged": true
+    },
+    {
+      "file": "src/lib/agent/businessTools.ts",
+      "sha256": "3ca128988ef66f4f5b052e37cfbad6b56a10da1c5c62271fb23703f467668524",
+      "currentSha256": "3ca128988ef66f4f5b052e37cfbad6b56a10da1c5c62271fb23703f467668524",
+      "unchanged": true
+    },
+    {
+      "file": "src/lib/agent/businessStore.ts",
+      "sha256": "e1a9016d6acd52dba5b601d0e099bb52dc27e4cec0ec0a954bd138c12e770feb",
+      "currentSha256": "e1a9016d6acd52dba5b601d0e099bb52dc27e4cec0ec0a954bd138c12e770feb",
+      "unchanged": true
+    },
+    {
+      "file": "src/lib/agent/businessSchemas.ts",
+      "sha256": "253e43d2bd9c8018851566402155cdfc63ad254550e2e9b4e7fb39afc200912c",
+      "currentSha256": "253e43d2bd9c8018851566402155cdfc63ad254550e2e9b4e7fb39afc200912c",
+      "unchanged": true
+    },
+    {
+      "file": "src/db/materials.ts",
+      "sha256": "f30c5e3b5a2eea008679ffe10df6350f17cb56d57c8931cc41fdeaddd8115809",
+      "currentSha256": "f30c5e3b5a2eea008679ffe10df6350f17cb56d57c8931cc41fdeaddd8115809",
+      "unchanged": true
+    }
+  ],
+  "sevenBusinessTypePredicates": [
+    {
+      "name": "catalogSlot",
+      "file": "src/lib/agent/businessTools.ts",
+      "input": "readonly catalog of typed id strings; value:string",
+      "contract": "Exact some(slot.id === value); typed slot union is inferred from the owned catalog. Not an unknown-payload parser."
+    },
+    {
+      "name": "isCharacterSlot",
+      "file": "src/lib/agent/businessTools.ts",
+      "input": "value:string",
+      "contract": "front/side/back/expression/costume from CHARACTER_SLOTS. Public typecheck fixture tests string narrowing before setCharacterSlot."
+    },
+    {
+      "name": "isSceneSlot",
+      "file": "src/lib/agent/businessTools.ts",
+      "input": "value:string",
+      "contract": "wide/medium/detail from SCENE_SLOTS."
+    },
+    {
+      "name": "isPropSlot",
+      "file": "src/lib/agent/businessTools.ts",
+      "input": "value:string",
+      "contract": "hero/detail/worn from PROP_SLOTS."
+    },
+    {
+      "name": "isStyleSlot",
+      "file": "src/lib/agent/businessTools.ts",
+      "input": "value:string",
+      "contract": "look/light/lens from STYLE_SLOTS."
+    },
+    {
+      "name": "isShotSlot",
+      "file": "src/lib/agent/businessTools.ts",
+      "input": "value:string",
+      "contract": "Exact firstFrame/lastFrame/clip equality; no other Shot key admitted."
+    },
+    {
+      "name": "isSetting",
+      "file": "src/db/materials.ts",
+      "input": "MaterialKind | 'media'",
+      "contract": "Exact character/scene/prop/style membership narrows to SettingMaterialKind. The file/image/video/audio/document/media variants remain outside setting adoption/refresh."
+    }
+  ],
+  "additionalBooleanGuard": {
+    "file": "src/lib/agent/businessStore.ts",
+    "name": "isReadableBusinessFieldPath",
+    "contract": "Owned visible first segment, at most three nonempty path segments; extra/prototype/__proto__/constructor rejected. Reads project typed projection, not arbitrary recursive property access."
+  },
+  "shotTextExtras": [
+    "cameraAngle",
+    "cameraGear",
+    "category",
+    "emotion",
+    "focalLength",
+    "sceneCloseup",
+    "sound"
+  ],
+  "writerEvidenceIntegrity": {
+    "entries": 1579,
+    "mismatches": []
+  },
+  "reviewedWriterNativeEvidence": [
+    {
+      "file": ".trellis/tasks/10-09-src-remediation-e/research/e07-hooks-implementation/e01-native-02.json",
+      "sha256": "8b024ba9e2106cbeeeb8c131f2fb5a5b1b746834f5da16c57d31977b3f056874",
+      "count": 19,
+      "scenarios": [
+        {
+          "name": "record unchanged new/existing forms leave clean; edit then revert is clean",
+          "outcome": "pass"
+        },
+        {
+          "name": "record source-only edits dirty the actual form and revert cleanly",
+          "outcome": "pass"
+        },
+        {
+          "name": "record Escape/close/backdrop continue preserves exact input, caret and scroll",
+          "outcome": "pass"
+        },
+        {
+          "name": "record local task replacement/SPA/back cancel retains owner; discard replaces deliberately",
+          "outcome": "pass"
+        },
+        {
+          "name": "record failed save and pending departure/duplicate actions retain frozen input and retry",
+          "outcome": "pass"
+        },
+        {
+          "name": "wrapup opening baseline clean; exact dirty text survives cancel and owner board",
+          "outcome": "pass"
+        },
+        {
+          "name": "wrapup pending Escape/route, failure retry, sources and deliberate discard",
+          "outcome": "pass"
+        },
+        {
+          "name": "voice unchanged baseline clean; name/mode/instruction/sample revert and dismissal",
+          "outcome": "pass"
+        },
+        {
+          "name": "voice project switch/external close/SPA/back/forward cancellation freezes owner",
+          "outcome": "pass"
+        },
+        {
+          "name": "voice pending/failed save preserves text; retry writes captured revision/project",
+          "outcome": "pass"
+        },
+        {
+          "name": "native forward blocked then discard; discarded voice never saved",
+          "outcome": "pass"
+        },
+        {
+          "name": "voice reference import pending/failed retry uses owned bytes and dirty reference retention",
+          "outcome": "pass"
+        },
+        {
+          "name": "voice actual durable audition pending/failed retry and preview media survive discard",
+          "outcome": "pass"
+        },
+        {
+          "name": "actual AgentChatPage thread selection and task board route retain record draft",
+          "outcome": "pass"
+        },
+        {
+          "name": "retired pending record completion cannot publish into a newer mounted editor",
+          "outcome": "pass"
+        },
+        {
+          "name": "retired voice save completes only for captured owner and preserves new record input",
+          "outcome": "pass"
+        },
+        {
+          "name": "retired wrapup save completes without replacing a newer voice editor",
+          "outcome": "pass"
+        },
+        {
+          "name": "shared guard continues number/range/date/color input focus without unsupported caret APIs",
+          "outcome": "pass"
+        },
+        {
+          "name": "actual AgentChatPage current-thread deletion waits for deliberate draft discard",
+          "outcome": "pass"
+        }
+      ],
+      "pageErrors": []
+    },
+    {
+      "file": ".trellis/tasks/10-09-src-remediation-e/research/e07-hooks-implementation/e04-native-02/report.json",
+      "sha256": "6e8b69dc4df0ec91b52540773454776ac7b8a7e1797aedeec00cbe529b92d273",
+      "count": 16,
+      "scenarios": [
+        {
+          "name": "gallery before/current native reads, projection bytes and independent derivation counters",
+          "status": "PASS"
+        },
+        {
+          "name": "original independent owner reads use N native readonly transactions; final exact ranges share one",
+          "status": "PASS"
+        },
+        {
+          "name": "an unselected owner insertion inside selected ID gaps does not rerun the cover subscription",
+          "status": "PASS"
+        },
+        {
+          "name": "filtered-out, archived and explicit-owner shot writes avoid fallback subscription work",
+          "status": "PASS"
+        },
+        {
+          "name": "explicit-cover-only search performs no shot read, while project metadata and explicit cover refresh",
+          "status": "PASS"
+        },
+        {
+          "name": "clearing an explicit project cover starts its fallback query; restoring it drops that shot scope",
+          "status": "PASS"
+        },
+        {
+          "name": "relevant first-frame writes and removal refresh fallback without changing missing-media semantics",
+          "status": "PASS"
+        },
+        {
+          "name": "held intersecting fallback query cannot expose prior scope covers; newer filter wins after old release",
+          "status": "PASS"
+        },
+        {
+          "name": "gallery IP/archive/search/sort transitions retain the visible-owner contract",
+          "status": "PASS"
+        },
+        {
+          "name": "character: actual before/current typed covers; only current table reads; unrelated writes do not rerun",
+          "status": "PASS"
+        },
+        {
+          "name": "scene: actual before/current typed covers; only current table reads; unrelated writes do not rerun",
+          "status": "PASS"
+        },
+        {
+          "name": "prop: actual before/current typed covers; only current table reads; unrelated writes do not rerun",
+          "status": "PASS"
+        },
+        {
+          "name": "style: actual before/current typed covers; only current table reads; unrelated writes do not rerun",
+          "status": "PASS"
+        },
+        {
+          "name": "held character result cannot populate the keyed scene owner",
+          "status": "PASS"
+        },
+        {
+          "name": "current-kind deletion removes its row; empty search remains a settled missing result",
+          "status": "PASS"
+        },
+        {
+          "name": "native selected media pixels and narrow page remain renderable",
+          "status": "PASS"
+        }
+      ],
+      "pageErrors": []
+    },
+    {
+      "file": ".trellis/tasks/10-09-src-remediation-e/research/e07-hooks-implementation/native-audio-06/result.json",
+      "sha256": "0b5d3602b510f9801e36d7a385c295c8fd768513cce4768f2844a12619dcbe4e",
+      "count": 5,
+      "scenarios": [
+        {
+          "name": "StrictMode/native-player seek idempotency across ResizeObserver, zoom and equivalent request; new ID seeks once",
+          "status": "PASS"
+        },
+        {
+          "name": "delayed actual PCM load cannot play after audition",
+          "status": "PASS"
+        },
+        {
+          "name": "delayed actual PCM load cannot play after composition",
+          "status": "PASS"
+        },
+        {
+          "name": "delayed actual PCM load cannot play after project",
+          "status": "PASS"
+        },
+        {
+          "name": "delayed actual PCM load cannot play after unmount",
+          "status": "PASS"
+        }
+      ],
+      "pageErrors": []
+    },
+    {
+      "file": ".trellis/tasks/10-09-src-remediation-e/research/e07-hooks-implementation/native-critical-05/result.json",
+      "sha256": "704dc173708fcf8c995347c1aac635c7d0707ab89e7cace77f182b30cb7cc3e6",
+      "count": 3,
+      "scenarios": [
+        {
+          "name": "actual current AgentChatPage rich table/link/math/code/unknown-fence and manual streaming scroll",
+          "status": "PASS"
+        },
+        {
+          "name": "actual current AgentChatPage pinned streaming resize follows bottom",
+          "status": "PASS"
+        },
+        {
+          "name": "connector metadata does not restart discovery; changed credentials trigger one fresh request",
+          "status": "PASS",
+          "modelReads": 2
+        }
+      ],
+      "pageErrors": []
+    }
+  ],
+  "independentCommands": [
+    {
+      "kind": "focused assigned contracts",
+      "output": "E07-hooks-sidecar/focused-tests.log",
+      "exit": 0,
+      "files": 6,
+      "tests": 69
+    },
+    {
+      "kind": "supplemental guards/columns/draft",
+      "output": "E07-hooks-sidecar/supplemental-tests.log",
+      "exit": 0,
+      "files": 5,
+      "tests": 77
+    },
+    {
+      "kind": "current DB adoption",
+      "output": "E07-hooks-sidecar/material-adoption-tests.log",
+      "exit": 0,
+      "files": 1,
+      "tests": 21
+    },
+    {
+      "kind": "scoped eslint12",
+      "output": "E07-hooks-sidecar/eslint.json",
+      "command": "E07-hooks-sidecar/eslint-command.json",
+      "exit": 0,
+      "errors": 0,
+      "warnings": 49
+    },
+    {
+      "kind": "permanent E01 critical native subset",
+      "producer": "E07-hooks-sidecar/e01-critical.mjs",
+      "output": "E07-hooks-sidecar/e01-critical/report.json",
+      "sourceIdentity": "E07-hooks-sidecar/e01-critical/source-identity.json",
+      "exit": 0,
+      "scenarios": 4,
+      "pageErrors": 0
+    },
+    {
+      "kind": "actual React/Dexie rebase current vs exact one-line prior effect transform",
+      "producer": "E07-hooks-sidecar/native-draft-rebase.mjs",
+      "output": "E07-hooks-sidecar/draft-rebase-comparison.json",
+      "exit": 0,
+      "result": "REPRODUCED_REGRESSION",
+      "variants": 2
+    }
+  ],
+  "independentFocusedTotal": {
+    "files": 12,
+    "tests": 167
+  },
+  "mainControlsAssessment": {
+    "file": "src/components/audioMusic/controls.tsx",
+    "sourceSha256": "83067881909b6ee4d39417d0bee762f5abf16cde676448bb06234c35fe6f880a",
+    "result": "cleanup DOM node capture valid",
+    "reason": "SourcePlayer always mounts one audio element. Snapshot element owns unmount pause even when React clears audio.current before effect cleanup; document play handler must use latest audio.current while mounted. This differs intentionally from AudioTimeline epoch container whose latest current number must be incremented."
+  },
+  "materialCurrentDBAssessment": {
+    "file": "src/db/materials.ts",
+    "sourceSha256": "f30c5e3b5a2eea008679ffe10df6350f17cb56d57c8931cc41fdeaddd8115809",
+    "writerSha256": "8d4499bec39fa9bb82b1b4dbac77916a4bebe08e0fcf9978f6dcded4c5d3cf9e",
+    "difference": "one removed trailing blank line",
+    "callers": [
+      "src/components/audio/AudioSources.tsx",
+      "src/components/studio/materials/MaterialDetailPanel.tsx"
+    ],
+    "contract": "adoptMaterialInProject(id,projectId) transaction checks active material/scope/live unarchived target/version; current revision existing use reuses live same-project target; otherwise copies file/setting/media and records use atomically. Both caller args/current named export match.21 current material library tests pass."
+  },
+  "limits": [
+    "Completed side check only. No whole E07/QG01/E acceptance, Node22/locked-install/CI/full-suite/model/build/architecture/unused gate claim.",
+    "Only assigned13 plus six explicitly captured supplemental source files are checked for end-to-end equality. Other workers/main can evolve shared roots. Writer producer-input comparison shows current package/eslint/vitest/AudioWorkspacePage changes and DB material trailing-newline-only drift.",
+    "Writer evidence integrity covers 1579 stored entries, not proof that every test assertion is sufficient. Original 43 native cases were reviewed, not independently rerun in full. Four critical E01 cases were rerun with exact source capture from the permanent offline IndexedDB fixture.",
+    "Writer E01 original 19-case JSON has no contemporaneous loaded-source/own before-after identity block. Final producer metadata cannot alone supply that block. Writer native audio/chat and E04 do record exact loaded source and before/after identities. Fresh side E01 records 268 original src module bodies and equal assigned13 before/after hashes.",
+    "New eight-hook deterministic host deliberately does not reproduce native scheduling. Actual React TextDraftField/Dexie rebase comparison is independent and exposes the supplemental regression despite passing controller/unit tests.",
+    "Original native audio has finite 50/150/200ms negative waits; decorative font/KaTeX CSS is blocked in chat. Neither device/latency/font parity nor all race interleavings are established.",
+    "Audio result shows the immediate new seek notification 12 followed by a stopped-player poll near 8.33. Original E07-entry timer and seek path have the same ordering; this is inherited, not a newly attributed C repair defect. The immediate-new-ID assertion does not establish stable post-poll seek position. No product fix was made for this out-of-slice observation.",
+    "49 existing lint warnings are a review signal; this check accepts no debt/broad suppressions. Current scoped lint uses current shared config, with post-run input observation rather than a global config freeze.",
+    "Business seven predicate contracts are typed catalog/MaterialKind predicates; unknown tool input is checked by the strict text/kind schema and prepare/execute ownership rules before them. isReadableBusinessFieldPath is additionally reviewed as a boolean read-path boundary, not counted as an eighth type predicate."
+  ],
+  "changesMade": "Only authorized reviews/E07-hooks-sidecar/** and final md/json report. No product/test/config/task/spec/status/git/install changes.",
+  "nativeReadinessSupplement": {
+    "status": "COMPLETED_READ_ONLY",
+    "file": "E07-hooks-sidecar/native-readiness-review.json",
+    "mainFailureInputsVerified": 994,
+    "mainFailureStage": "initial goto load before business assertions",
+    "cause": "undetermined",
+    "permanentRunnerChanged": false
+  }
+}

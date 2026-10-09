@@ -1,0 +1,10 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Canonical scope"}
+{"file": ".trellis/spec/frontend/directory-structure.md", "reason": "Architecture responsibility boundaries"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Actual typed contracts"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Review quality and current validation"}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "Existing implementation reuse"}
+{"file": ".trellis/tasks/10-09-src-remediation-e/research/E07-execution-boundaries.md", "reason": "Approved scope and immutable before evidence"}
+{"file": ".trellis/tasks/10-09-src-remediation-e/research/E07-independent-check-contract.md", "reason": "Formal verification authority"}
+{"file": ".trellis/tasks/10-09-src-remediation-e/research/E07-final-review-dispatch.md", "reason": "Final integration exact protocol"}
+{"file": ".trellis/tasks/10-09-src-remediation-e/research/E07-gate-integration-policy.md", "reason": "Current13debt/7unused/88actualCLI policies"}
+{"file": ".trellis/tasks/10-09-src-remediation-e/research/E-final-review-input-contract.md", "reason": "WholeE source ownership/final mapping protocol"}

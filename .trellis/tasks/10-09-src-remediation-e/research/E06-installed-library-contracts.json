@@ -1,0 +1,98 @@
+{
+  "purpose": "Read-only installed primary-source contract preparation, not E06 implementation/build/network/optimization proof",
+  "versions": {
+    "@lobehub/icons": "5.18.0",
+    "@lobehub/ui": "5.47.1"
+  },
+  "inputs": {
+    "node_modules/@lobehub/icons/package.json": {
+      "sha256": "50ca51d55812fb3f670709574d5fecda817b485f2ebf5614dedf30dcb9214132",
+      "bytes": 987
+    },
+    "node_modules/@lobehub/icons/es/features/ModelIcon/index.js": {
+      "sha256": "beffc10c97ec46204f22c69e7374eb99731844421158874f249a9fea27a1c8df",
+      "bytes": 8170
+    },
+    "node_modules/@lobehub/icons/es/features/ModelIcon/index.d.ts": {
+      "sha256": "f9a7af014c1eada6438e51f833c27fc3b38dd2c33d7c43e8eee9aeb9191189bc",
+      "bytes": 373
+    },
+    "node_modules/@lobehub/icons/es/features/ProviderIcon/index.js": {
+      "sha256": "499e61bac2d564604c19e2a3b2bdd492bd2cd446ad1de79d787a42856470e8ce",
+      "bytes": 8489
+    },
+    "node_modules/@lobehub/icons/es/features/ProviderIcon/index.d.ts": {
+      "sha256": "2e226221bcf29d034dcdfcd2008775f92e444accfeebe9491cf1459635c09c3b",
+      "bytes": 484
+    },
+    "node_modules/@lobehub/icons/es/features/modelConfig.js": {
+      "sha256": "1ef09bb6b5e741b0dcccd186573ca15c486fdc244c75a47afd706c0499913e48",
+      "bytes": 9873
+    },
+    "node_modules/@lobehub/icons/es/features/providerConfig.js": {
+      "sha256": "f57cb5a52af694250b615cb7b20cd6b96d084c22162f5db985d4dc835a032145",
+      "bytes": 22189
+    },
+    "node_modules/@lobehub/icons/es/features/providerEnum.js": {
+      "sha256": "6ea23d171f8b07c4ecd41c27c0293aee9c3d15fb7f34535a14140d0782df1166",
+      "bytes": 6373
+    },
+    "node_modules/@lobehub/icons/es/features/ModelIcon/DefaultIcon.js": {
+      "sha256": "3e2357250c3535f89282ed72774025bfdc74283c354618e740e66582112c8b83",
+      "bytes": 3097
+    },
+    "node_modules/@lobehub/icons/es/features/ProviderIcon/DefaultIcon.js": {
+      "sha256": "54d0cc8ccb3a4bcfbac6b3f524620dcb5b90014db2e2cfa3e343a27572cbb41f",
+      "bytes": 3112
+    },
+    "node_modules/@lobehub/icons/es/Anthropic/index.js": {
+      "sha256": "6f9a226de7faf6a33cb18bee15c063404b545510d39ec32c70b19a0a564bdabc",
+      "bytes": 304
+    },
+    "node_modules/@lobehub/icons/es/Anthropic/index.d.ts": {
+      "sha256": "c8798200cd27bd1ff468c183ee1dc14f2cd85a6606692859cea0856959a2b11a",
+      "bytes": 320
+    },
+    "node_modules/@lobehub/ui/package.json": {
+      "sha256": "fc2c546da125285902bfa674edbda2706fe2091fa749566cb1a171d732824a21",
+      "bytes": 7146
+    },
+    "node_modules/@lobehub/ui/es/hooks/useHighlight.mjs": {
+      "sha256": "95500ebd986a84e1443e321d5cf6ed5ec77dbd52f42bf861f9e5ab0b7dbd7969",
+      "bytes": 4359
+    },
+    "node_modules/@lobehub/ui/es/hooks/useMarkdown/useMarkdownComponents.mjs": {
+      "sha256": "837a68b506f9bea28d2d7c81049fc01c032be60e7c01b56927049cbb3de25fe5",
+      "bytes": 3755
+    },
+    "node_modules/@lobehub/ui/es/Markdown/index.mjs": {
+      "sha256": "b3f433f1db0d61364a8c03239b33377d8e97bda16792c6764de59c18192e0c06",
+      "bytes": 126
+    }
+  },
+  "iconContracts": {
+    "modelMatching": "First modelMappings entry whose case-insensitive regex keyword matches lowercased model; order is observable. Preserve mapping props then caller rest precedence.",
+    "providerMatching": "First providerMappings case-insensitive exact keyword equality; mapping props then caller rest precedence. Provider mono LobeHub exact original enum special case when !forceMono.",
+    "renderTypes": [
+      "avatar",
+      "mono",
+      "color",
+      "combine",
+      "combine-color"
+    ],
+    "fallback": "Actual ModelIcon DefaultIcon uses LobeUI Icon/Brain and antd description color; ProviderIcon DefaultIcon uses LobeUI ProviderIcon symbol. Existing shapes and prop/color/size forwarding differ by type. Known brand Color/Combine/Brand/Text fallbacks are ordered. Do not replace all unknown and known brands with a single approximate glyph.",
+    "packageSurface": "Icons5.18.0 has no exports map, publishes es/ with per-brand entries/types. Physical subpath availability is observed, not a documented long-term public guarantee or final implementation choice. Any optimized source must pin/test mapping fidelity and actual build/type availability."
+  },
+  "richRendererContracts": {
+    "observed": "Installed LobeUI useHighlight declares shikiModulePromise=loadShikiModule() at module evaluation; loadShikiModule imports shiki in browser. CodeBlock is statically imported by useMarkdownComponents. Existing dynamic import does not by itself establish fenced-only demand loading.",
+    "limits": "Only module/source observation. Actual emitted module/network edges and scenario byte impact must be measured with fresh four actual production scenarios after E05 acceptance. No vendor patch/renderer replacement chosen."
+  },
+  "noChanges": [
+    "product",
+    "dependencies",
+    "config",
+    "gate",
+    "activeE04context",
+    "E06status"
+  ]
+}

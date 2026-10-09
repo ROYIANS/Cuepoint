@@ -1,0 +1,22 @@
+{
+  "purpose": "Explicit accepted E03 context evolution with exact formerbytes; no product drift",
+  "acceptedSnapshotSHA256": "fa8b19c79ffb10ff569125016cffe7ece0051439e989f6a0cbc21c18f2787447",
+  "attributedContextEvolution": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/check.jsonl",
+      "beforeSHA256": "a2b6fa9a9de7f5782ebd9092bcbb7414cb76e934a0788cafdc248db017302b3e",
+      "afterSHA256": "473ab007a8fa6f4dc21abd8bc8c919034e1dd8601128b1488c965f03afe9a6b4",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e04-activation-before/.trellis/tasks/10-09-src-remediation-e/check.jsonl",
+      "reason": "Accepted E03→E04 role context activation"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/implement.md",
+      "beforeSHA256": "2553dc176179bc737ea7a758b9d4b7a94d0310c57d6cbdaf99a7da9fac2da433",
+      "afterSHA256": "1be4c6fd7e08dad1a190b63e978dd15bd82519c2b3ad065ffa4abd108e57da47",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e03-spec-sync-before/.trellis/tasks/10-09-src-remediation-e/implement.md",
+      "reason": "Ordered E03 closure only after final returned independent PASS"
+    }
+  ],
+  "unexpectedEvidenceDrift": [],
+  "evidenceCount": 1879
+}

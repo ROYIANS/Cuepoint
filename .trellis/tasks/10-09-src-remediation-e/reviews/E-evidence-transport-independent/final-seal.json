@@ -1,0 +1,93 @@
+{
+  "status": "COMPLETED",
+  "verdict": "PASS",
+  "closed": true,
+  "completedAt": "2026-10-09T10:42:09.671080+00:00",
+  "assignedWorkRemaining": [],
+  "purpose": "Final actual evidence transport completedreport+ownedproof seal; original pack/source reports unchanged, latefiles normalreadablecommit",
+  "excludes": [
+    "seal self hash"
+  ],
+  "manifest": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/evidence-pack/manifest.json",
+    "sha256": "443c82ed6fe35e39d128b6e8b370050626035d5e46e6853304ed6d8f87ee0793"
+  },
+  "blobIndex": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/evidence-pack/blobs.json",
+    "sha256": "da10dc26c20050217372fe22fd463e4852b190d47cf271fbf74cc9016271b9bb"
+  },
+  "files": {
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/accepted-seal-coverage.json": {
+      "sha256": "c7f4f94b2214d418bb19298f8f0abf7eda4c7815494091644c7dc6f03e2e8b26",
+      "bytes": 5563879
+    },
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/check-postpack-metadata-before-bounded-traversal.py": {
+      "sha256": "1315754f394da03e81513b5fba5494421590820408517e96b7dbf814dd9ffd99",
+      "bytes": 7880
+    },
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/check-postpack-metadata.py": {
+      "sha256": "9a6cf0fe9121cf665f859b9f7291d45e7965f630dab7fb505c0704ec4cb67319",
+      "bytes": 7894
+    },
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/final-qualification.py": {
+      "sha256": "f14ff08a770e186495e89644ab4d9a90b17523c9fd0566e5fec3fa1b24d7913c",
+      "bytes": 7507
+    },
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/final-qualified-transport-verification.json": {
+      "sha256": "9cfbf0947352724b7c4a80561f7b1bd52114db6de888de8743337d32386208bf",
+      "bytes": 21249
+    },
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/full-original-restored-readback.json": {
+      "sha256": "60fdb344ebb2c1a53f444de5cca04b86cc2680190c11fd8d3984d63c1d9730a0",
+      "bytes": 13189
+    },
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/full-readback-current.log": {
+      "sha256": "8bded11b7dff8fd7cbcaac3875c71b516426ad240718d28e064a775f5a2f6e12",
+      "bytes": 3309
+    },
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/full-readback.log": {
+      "sha256": "9465ee35ede1f9f079b0e88f5f0dab57245a65c0082f137b2b83e7d9a4480801",
+      "bytes": 92
+    },
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/independent-full-gzip-verify-receipt.json": {
+      "sha256": "d7eaf03b4bfc225ad1bb5a699425cb0ee777c750b34c3a286a288eb095439872",
+      "bytes": 388
+    },
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/independent-full-gzip-verify.log": {
+      "sha256": "d7eaf03b4bfc225ad1bb5a699425cb0ee777c750b34c3a286a288eb095439872",
+      "bytes": 388
+    },
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/postpack-metadata-evolution-review.json": {
+      "sha256": "7bce8dd30b10ad4ed9bc902a90e945f6a8760da5ba686b4e034e420ed4d60209",
+      "bytes": 29601
+    },
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/postpack-metadata-review-final.log": {
+      "sha256": "95e37f12b76a04752627e5bfd59a7e2d521a68da38cb72e705915f179d06b7c0",
+      "bytes": 1445
+    },
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/postpack-metadata-review-initial-comparison-failure.json": {
+      "sha256": "ecf8809b294393f6df7a9a065e08ca45a8de0a37af7266388aca33f821ef1159",
+      "bytes": 28530
+    },
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/postpack-metadata-review.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/verify-transport-readback-before-external-path-fix.py": {
+      "sha256": "103a4fd49f611510cfaf0a721f9353b1b701275ce52c4e263cdcc4cbf3bdc86e",
+      "bytes": 12488
+    },
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/verify-transport-readback.py": {
+      "sha256": "5eff7420501604d99a904581d6dc8a8510477bf22d0d1bfe8224d99d681ceadb",
+      "bytes": 12635
+    },
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-check.md": {
+      "sha256": "9e43cd4942a262db4e7dd1298a92c206eda6c5e8f0bd8bc9df1233567c2ccc8b",
+      "bytes": 5366
+    },
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-check.json": {
+      "sha256": "95d44c50d0bc2696fdf9932c55f1ade6f0924d99ad61a5b2a4712cdaa1df75ca",
+      "bytes": 11524
+    }
+  }
+}

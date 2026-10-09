@@ -1,0 +1,552 @@
+{
+  "unit": "E02",
+  "findings": [
+    "AU04",
+    "AU05"
+  ],
+  "completedAt": "2026-10-09T02:58:28.374777+00:00",
+  "implementationResult": "Implementation and owned validation complete; findings are not closed; main owns cumulative static/AST and independent acceptance.",
+  "sourceFrozen": true,
+  "sourceFreeze": ".trellis/tasks/10-09-src-remediation-e/research/e02/source-freeze.json",
+  "sourceFreezeSHA256": "0a4b42ca9451ad18080205a9e9edbb6111f192fedd40a05a5e0c84f08ea3f573",
+  "freezeRevision": 3,
+  "changedFiles": [
+    {
+      "path": "src/components/agent/TopicSidebar.tsx",
+      "beforeSHA256": "03eb777c98984d75300c9dcfd1533739e3c7308d561d6d72a6bf20be55bc2dc9",
+      "finalSHA256": "121d77f9f9b0b094caef74b52c2574837250e9d92366d33a6056eb6204c3f0b7"
+    },
+    {
+      "path": "src/components/agent/agentChat.css",
+      "beforeSHA256": "b1e1bd7da07ea2efe595cef9b5c6a8291563abf93dedae4bd90cc2877348fb1e",
+      "finalSHA256": "e8d456f0a635f79ad163705d8b0504247b95618526fcff97eb0ab371b7b117eb"
+    },
+    {
+      "path": "scripts/e02-browser-regression.mjs",
+      "beforeSHA256": null,
+      "finalSHA256": "215aa6f27c5122322af029da3665ad958d8ff74b2629e37751604f9614b10260"
+    },
+    {
+      "path": "tests/fixtures/e02/harness.tsx",
+      "beforeSHA256": null,
+      "finalSHA256": "d5f37323e1ba40a524fe266209ed31c958c9e898466d2bc970971e45f859d869"
+    },
+    {
+      "path": "tests/fixtures/e02/index.html",
+      "beforeSHA256": null,
+      "finalSHA256": "e6ca6c03e82fa7b0a5d854c4fc9c3b727dfc3441cc34a3822a66055d0771c73c"
+    },
+    {
+      "path": "tests/fixtures/e02/tsconfig.json",
+      "beforeSHA256": null,
+      "finalSHA256": "cbf2e9e64c5fca6bc1e940e98515e943c495a4128a03630d977c5636f404b04a"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e02/TopicSidebar.tsx",
+      "beforeSHA256": null,
+      "finalSHA256": "03eb777c98984d75300c9dcfd1533739e3c7308d561d6d72a6bf20be55bc2dc9"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e02/agentChat.css",
+      "beforeSHA256": null,
+      "finalSHA256": "b1e1bd7da07ea2efe595cef9b5c6a8291563abf93dedae4bd90cc2877348fb1e"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e02/provenance.json",
+      "beforeSHA256": null,
+      "finalSHA256": "e46e095db1ead5e14fc9b5687589d04a211ac08298e4bd5ac412fd497f7491c7"
+    },
+    {
+      "path": "scripts/e01-drafts-browser-regression.mjs",
+      "beforeSHA256": "4511dc6bb5340f9a366bec6ec5ac90dcb14e38502d0232f9917f65862d26b3b7",
+      "finalSHA256": "2f2ac3abe91a3fba6f626662046d5cb5cbd0f6bc03f8147ed1f3e01fc00d8d5d",
+      "crossUnitReason": "Explicitly authorized E01 native runner locator adaptation: click actual row selection button instead of newly noninteractive wrapper; all assertions and timeouts unchanged."
+    }
+  ],
+  "baseline": {
+    "source": ".trellis/tasks/10-09-src-remediation-e/research/E02-entry.json",
+    "sha256": "b22f3ac7b7325a902c3dd295edb0ca61c112d7fd6ff6e5f16589128fb85d85e7",
+    "description": "Actual working tree after accepted E01, not Git-only 1ecaf5c baseline. Original bytes for two product modules checked against E02-before and entry hashes."
+  },
+  "changes": [
+    "TopicRow uses noninteractive container with sibling native select/rename/delete buttons. No bubbling parent activation handler. Inactive actions remain mounted and show on hover, active, or focus-within; native Tab and focus ring are preserved.",
+    "Moved the existing max-width:767px block after the base message/content/dock declarations. Desktop tokens, 52+16 header clearance, turn-rail specificity and expanded overrides are unchanged.",
+    "Added actual AgentChatPage/ChatWorkspace/TopicSidebar native fixture using production theme, TanStack router, Ant Design menus, Radix dialogs and real IndexedDB. Only original two-module comparison and labelled CSS env substitution are transformed by Vite.",
+    "Human explicitly authorized a one-line E01 runner row selector adaptation. Added .locator(\".agent-topic-row-title\") at line 283, preserving every assertion and timeout. The other row selector at 348 already targets native child delete button and remains unchanged."
+  ],
+  "crossUnitAdaptation": {
+    "path": "scripts/e01-drafts-browser-regression.mjs",
+    "beforeSHA256": "4511dc6bb5340f9a366bec6ec5ac90dcb14e38502d0232f9917f65862d26b3b7",
+    "afterSHA256": "2f2ac3abe91a3fba6f626662046d5cb5cbd0f6bc03f8147ed1f3e01fc00d8d5d",
+    "onlyChange": "Append .locator(\".agent-topic-row-title\") before existing evaluate at line 283",
+    "assertionsAndTimeouts": "byte-identical after reversing sole locator edit",
+    "rowTargetsInspected": [
+      {
+        "line": 283,
+        "adapted": true
+      },
+      {
+        "line": 348,
+        "adapted": false,
+        "reason": "Already targets delete child with role=button; native delete button retains explicit role."
+      }
+    ],
+    "diff": "--- E02-entry accepted E01 runner\n+++ E02 adapted E01 runner\n@@ -280,7 +280,7 @@\n         await navigate(`/agent/${ids.thread}`);\n         await page.locator(\".agent-task-summary-label\").click();\n         await page.getByRole(\"button\", {name: \"工作记录\", exact: true}).click(); await page.getByRole(\"button\", {name: \"新记录\"}).click(); await fillRecord();\n-        await page.locator(\".agent-topic-row\").filter({hasText: \"Task B\"}).evaluate(element => element.click());\n+        await page.locator(\".agent-topic-row\").filter({hasText: \"Task B\"}).locator(\".agent-topic-row-title\").evaluate(element => element.click());\n         await continueEditing();\n         assert.equal(await location(), `/agent/${ids.thread}`);\n         assert.equal(await records().getByLabel(\"标题\", {exact: true}).inputValue(), \"Exact record draft\");\n"
+  },
+  "versions": {
+    "node": "v24.11.0",
+    "vite": "7.3.6",
+    "playwright": "1.62.1",
+    "chromium": "151.0.7922.34",
+    "typescript": "5.9.3",
+    "pnpmAtExplicitUserPath": "10.15.0",
+    "vitest": "5.0.1"
+  },
+  "commands": [
+    {
+      "command": "E02_PLAYWRIGHT_PATH=/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs E02_CHROMIUM_PATH=/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell E02_BASELINE=1 E02_OUTPUT=.trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2 /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node scripts/e02-browser-regression.mjs > .trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2.log 2>&1",
+      "exitCode": 0,
+      "cases": 11,
+      "observations": ".trellis/tasks/10-09-src-remediation-e/research/e02/native-before-freeze-2/observations.json"
+    },
+    {
+      "command": "E02_PLAYWRIGHT_PATH=/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs E02_CHROMIUM_PATH=/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell E02_OUTPUT=.trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2 /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node scripts/e02-browser-regression.mjs > .trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2.log 2>&1",
+      "exitCode": 0,
+      "cases": 17,
+      "observations": ".trellis/tasks/10-09-src-remediation-e/research/e02/native-after-freeze-2/observations.json"
+    },
+    {
+      "command": "E02_PLAYWRIGHT_PATH=/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs E02_CHROMIUM_PATH=/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell E02_SAFE_AREA_SURROGATE=1 E02_OUTPUT=.trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2 /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node scripts/e02-browser-regression.mjs > .trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2.log 2>&1",
+      "exitCode": 0,
+      "cases": 9,
+      "observations": ".trellis/tasks/10-09-src-remediation-e/research/e02/native-safe-area-surrogate-freeze-2/observations.json"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm lint > .trellis/tasks/10-09-src-remediation-e/research/e02/typecheck-freeze-2.log 2>&1",
+      "exitCode": 0
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node node_modules/typescript/bin/tsc -p tests/fixtures/e02/tsconfig.json --pretty false > .trellis/tasks/10-09-src-remediation-e/research/e02/fixture-typecheck-freeze-2.log 2>&1",
+      "exitCode": 0
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm test tests/filterThreadsByTitle.test.ts tests/timeGroups.test.ts tests/chatScroll.test.ts --maxWorkers=4 > .trellis/tasks/10-09-src-remediation-e/research/e02/focused-freeze-2.log 2>&1",
+      "exitCode": 0,
+      "files": 3,
+      "tests": 8
+    },
+    {
+      "command": "E01_PLAYWRIGHT_PATH=/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs E01_CHROMIUM_PATH=/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell E01_OBSERVATIONS=.trellis/tasks/10-09-src-remediation-e/research/e02/e01-drafts-adapted-final-observations.json /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node scripts/e01-drafts-browser-regression.mjs > .trellis/tasks/10-09-src-remediation-e/research/e02/e01-drafts-adapted-final.log 2>&1",
+      "exitCode": 0,
+      "cases": 19
+    }
+  ],
+  "computedStyles": [
+    {
+      "mode": "before",
+      "width": 390,
+      "nativeEnvBottom": "0px",
+      "messageInlinePadding": [
+        "16px",
+        "16px"
+      ],
+      "contentMaxWidth": "800px",
+      "contentMarginInline": [
+        "0px",
+        "0px"
+      ],
+      "dockInlinePadding": [
+        "16px",
+        "16px"
+      ],
+      "dockBottomPadding": "16px",
+      "headerLeftPadding": "44px",
+      "messageTopPadding": "68px",
+      "composerSafe": "242px"
+    },
+    {
+      "mode": "before",
+      "width": 767,
+      "nativeEnvBottom": "0px",
+      "messageInlinePadding": [
+        "16px",
+        "16px"
+      ],
+      "contentMaxWidth": "800px",
+      "contentMarginInline": [
+        "0px",
+        "0px"
+      ],
+      "dockInlinePadding": [
+        "16px",
+        "16px"
+      ],
+      "dockBottomPadding": "16px",
+      "headerLeftPadding": "44px",
+      "messageTopPadding": "68px",
+      "composerSafe": "202px"
+    },
+    {
+      "mode": "before",
+      "width": 768,
+      "nativeEnvBottom": "0px",
+      "messageInlinePadding": [
+        "16px",
+        "16px"
+      ],
+      "contentMaxWidth": "800px",
+      "contentMarginInline": [
+        "0px",
+        "0px"
+      ],
+      "dockInlinePadding": [
+        "16px",
+        "16px"
+      ],
+      "dockBottomPadding": "16px",
+      "headerLeftPadding": "16px",
+      "messageTopPadding": "68px",
+      "composerSafe": "202px"
+    },
+    {
+      "mode": "before",
+      "width": 1440,
+      "nativeEnvBottom": "0px",
+      "messageInlinePadding": [
+        "16px",
+        "16px"
+      ],
+      "contentMaxWidth": "800px",
+      "contentMarginInline": [
+        "174px",
+        "174px"
+      ],
+      "dockInlinePadding": [
+        "16px",
+        "16px"
+      ],
+      "dockBottomPadding": "16px",
+      "headerLeftPadding": "16px",
+      "messageTopPadding": "68px",
+      "composerSafe": "202px"
+    },
+    {
+      "mode": "after",
+      "width": 390,
+      "nativeEnvBottom": "0px",
+      "messageInlinePadding": [
+        "8px",
+        "8px"
+      ],
+      "contentMaxWidth": "none",
+      "contentMarginInline": [
+        "0px",
+        "0px"
+      ],
+      "dockInlinePadding": [
+        "8px",
+        "8px"
+      ],
+      "dockBottomPadding": "12px",
+      "headerLeftPadding": "44px",
+      "messageTopPadding": "68px",
+      "composerSafe": "238px"
+    },
+    {
+      "mode": "after",
+      "width": 767,
+      "nativeEnvBottom": "0px",
+      "messageInlinePadding": [
+        "8px",
+        "8px"
+      ],
+      "contentMaxWidth": "none",
+      "contentMarginInline": [
+        "0px",
+        "0px"
+      ],
+      "dockInlinePadding": [
+        "8px",
+        "8px"
+      ],
+      "dockBottomPadding": "12px",
+      "headerLeftPadding": "44px",
+      "messageTopPadding": "68px",
+      "composerSafe": "198px"
+    },
+    {
+      "mode": "after",
+      "width": 768,
+      "nativeEnvBottom": "0px",
+      "messageInlinePadding": [
+        "16px",
+        "16px"
+      ],
+      "contentMaxWidth": "800px",
+      "contentMarginInline": [
+        "0px",
+        "0px"
+      ],
+      "dockInlinePadding": [
+        "16px",
+        "16px"
+      ],
+      "dockBottomPadding": "16px",
+      "headerLeftPadding": "16px",
+      "messageTopPadding": "68px",
+      "composerSafe": "202px"
+    },
+    {
+      "mode": "after",
+      "width": 1440,
+      "nativeEnvBottom": "0px",
+      "messageInlinePadding": [
+        "16px",
+        "16px"
+      ],
+      "contentMaxWidth": "800px",
+      "contentMarginInline": [
+        "174px",
+        "174px"
+      ],
+      "dockInlinePadding": [
+        "16px",
+        "16px"
+      ],
+      "dockBottomPadding": "16px",
+      "headerLeftPadding": "16px",
+      "messageTopPadding": "68px",
+      "composerSafe": "202px"
+    },
+    {
+      "mode": "after-safe-area-surrogate",
+      "width": 390,
+      "nativeEnvBottom": "0px",
+      "messageInlinePadding": [
+        "8px",
+        "8px"
+      ],
+      "contentMaxWidth": "none",
+      "contentMarginInline": [
+        "0px",
+        "0px"
+      ],
+      "dockInlinePadding": [
+        "8px",
+        "8px"
+      ],
+      "dockBottomPadding": "32px",
+      "headerLeftPadding": "44px",
+      "messageTopPadding": "68px",
+      "composerSafe": "258px"
+    },
+    {
+      "mode": "after-safe-area-surrogate",
+      "width": 767,
+      "nativeEnvBottom": "0px",
+      "messageInlinePadding": [
+        "8px",
+        "8px"
+      ],
+      "contentMaxWidth": "none",
+      "contentMarginInline": [
+        "0px",
+        "0px"
+      ],
+      "dockInlinePadding": [
+        "8px",
+        "8px"
+      ],
+      "dockBottomPadding": "32px",
+      "headerLeftPadding": "44px",
+      "messageTopPadding": "68px",
+      "composerSafe": "218px"
+    },
+    {
+      "mode": "after-safe-area-surrogate",
+      "width": 768,
+      "nativeEnvBottom": "0px",
+      "messageInlinePadding": [
+        "16px",
+        "16px"
+      ],
+      "contentMaxWidth": "800px",
+      "contentMarginInline": [
+        "0px",
+        "0px"
+      ],
+      "dockInlinePadding": [
+        "16px",
+        "16px"
+      ],
+      "dockBottomPadding": "16px",
+      "headerLeftPadding": "16px",
+      "messageTopPadding": "68px",
+      "composerSafe": "202px"
+    },
+    {
+      "mode": "after-safe-area-surrogate",
+      "width": 1440,
+      "nativeEnvBottom": "0px",
+      "messageInlinePadding": [
+        "16px",
+        "16px"
+      ],
+      "contentMaxWidth": "800px",
+      "contentMarginInline": [
+        "174px",
+        "174px"
+      ],
+      "dockInlinePadding": [
+        "16px",
+        "16px"
+      ],
+      "dockBottomPadding": "16px",
+      "headerLeftPadding": "16px",
+      "messageTopPadding": "68px",
+      "composerSafe": "202px"
+    }
+  ],
+  "nativeEvidence": {
+    "before": "11 cases: inactive nonhovered keyboard row has no child controls; hovered child Enter selects B without rename; original narrow cascade resolves 16px gutters, 800px max and 16px dock bottom. Original snapshot bytes and alias dependency reuse are checked.",
+    "after": "17 cases: inactive nonhovered row reached by real Tab exposes child actions; Enter and Space rename B/delete C without selecting either; exact IndexedDB target mutations verified; row own keys and pointer select B; pointer actions and actual header context menu target correctly. 390/767/768/1440 styles, visible terminal message after actual wheel, expanded column and specific 24px rail gutter pass.",
+    "surrogate": "9 cases on unchanged E02 product source: browser-native env remains 0px. Test-only Vite substitution env(safe-area-inset-bottom, 0px) -> var(--e02-test-safe-area-bottom, 0px), root value 32px, evaluates actual max() and final cascade. Narrow bottom is 32px; desktop remains 16px and expanded remains 0px.",
+    "e01": "Adapted runner passes all original 19 native cases including guarded thread selection and selected-thread deletion. One main document and no page errors.",
+    "documentIsolation": "Every final native runner has only its initial explicit main-frame HTML document. Vite scans exact fixture HTML and uses a newly created isolated cache, removed on exit.",
+    "focus": [
+      {
+        "key": "Enter",
+        "rowFocus": {
+          "tag": "BUTTON",
+          "shadow": "rgba(255, 255, 255, 0.55) 0px 0px 0px 3px",
+          "hovered": false
+        },
+        "actionFocus": {
+          "tag": "BUTTON",
+          "shadow": "rgba(255, 255, 255, 0.55) 0px 0px 0px 3px"
+        }
+      },
+      {
+        "key": "Space",
+        "rowFocus": {
+          "tag": "BUTTON",
+          "shadow": "rgba(255, 255, 255, 0.55) 0px 0px 0px 3px",
+          "hovered": false
+        },
+        "actionFocus": {
+          "tag": "BUTTON",
+          "shadow": "rgba(255, 255, 255, 0.55) 0px 0px 0px 3px"
+        }
+      }
+    ],
+    "scroll": [
+      {
+        "width": 390,
+        "bounds": {
+          "x": 55,
+          "y": 571.546875,
+          "width": 318,
+          "height": 22.390625
+        },
+        "dockTop": 678,
+        "scrollTop": 4845,
+        "scrollHeight": 5745,
+        "clientHeight": 900
+      },
+      {
+        "width": 767,
+        "bounds": {
+          "x": 73,
+          "y": 611.5,
+          "width": 673,
+          "height": 22.390625
+        },
+        "dockTop": 718,
+        "scrollTop": 2111,
+        "scrollHeight": 3011,
+        "clientHeight": 900
+      },
+      {
+        "width": 768,
+        "bounds": {
+          "x": 341,
+          "y": 607.796875,
+          "width": 398,
+          "height": 22.390625
+        },
+        "dockTop": 714,
+        "scrollTop": 3794,
+        "scrollHeight": 4694,
+        "clientHeight": 900
+      },
+      {
+        "width": 1440,
+        "bounds": {
+          "x": 515,
+          "y": 607.15625,
+          "width": 722,
+          "height": 22.390625
+        },
+        "dockTop": 714,
+        "scrollTop": 1981,
+        "scrollHeight": 2881,
+        "clientHeight": 900
+      }
+    ]
+  },
+  "preservedEvidence": {
+    "acceptedE01Check": ".trellis/tasks/10-09-src-remediation-e/reviews/E01-check-snapshot.json",
+    "acceptedE01CheckSHA256": "a2f51cae8c423295f9e0cde2fb6863104afd0e0c8847a0752f3f1cdd3e14eed0",
+    "safeAreaCapabilityProbe": ".trellis/tasks/10-09-src-remediation-e/research/E02-native-safe-area-capability.json",
+    "safeAreaCapabilityProbeSHA256": "87331d12a84a35849cb11266c6c17e92bdeffc73a9fc2dc15dcdc566cc21da04",
+    "failedUnadaptedE01Log": ".trellis/tasks/10-09-src-remediation-e/research/e02/e01-drafts-final.log",
+    "failedUnadaptedE01Artifacts": ".trellis/tasks/10-09-src-remediation-e/research/e02/e01-unchanged-runner-failure"
+  },
+  "failureAnalysis": {
+    "e01UnadaptedRunner": "The previous .agent-topic-row wrapper became noninteractive. Programmatic wrapper.click() at line 283 no longer invokes selection, so continueEditing at line 284 times out waiting for an unrequested draft guard. No product callback ran; this is a stale row target. Fixed only after explicit ownership expansion by pointing at the actual native selection button. All 19 cases then pass without assertion/timeout changes.",
+    "capability": "Existing Chromium151 capability probe reports Emulation.setSafeAreaInsets method missing. Original failure remains untouched; no claim of real iOS bottom inset.",
+    "scrollEvidenceStrengthening": "Freeze 1 used the FINAL MESSAGE heading, which can scroll outside the viewport in a long message. Freeze 2 adds a terminal paragraph and strengthens the assertion to require its bounds below header and above dock. Earlier observations retained. Product bytes did not change; freeze 3 adds only the authorized E01 runner edit."
+  },
+  "sourceIntegrity": {
+    "frozenFilesVerified": 10,
+    "nonOwnedEntryDrift": [],
+    "acceptedE01ReportVerifiedUnchanged": true,
+    "e02ValidatedSubset": "Nine E02 files at freeze 2 are byte-identical to final freeze 3. E01 adaptation alone is additional and its full19-case run executes after freeze3. No source edits after freeze3."
+  },
+  "limits": [
+    "Native proof uses installed headless Chromium151 on macOS, not real iOS/device/OS safe-area emulation.",
+    "32px inset is explicitly a CSS custom-property test surrogate; actual native env-bottom=0 is measured separately.",
+    "No live paid provider requests, package/CI/spec/ledger/status changes, commit, push or E03+ work.",
+    "No full repository test/build rerun claimed. Main coordinator supplied cumulative static/AST results with no new E02 diagnostics; independent check and acceptance remain main-owned."
+  ],
+  "artifactManifest": ".trellis/tasks/10-09-src-remediation-e/research/e02/artifact-manifest.json",
+  "coordinatorAnalysis": {
+    "performedBy": "Main coordinator, not rerun by E02 implement role",
+    "summaryPath": ".trellis/tasks/10-09-src-remediation-e/reviews/E02-static-summary.json",
+    "summarySHA256": "9a45dbc607f6d64dd6bf7c5409a43a35a9eae5c59a11b3ceb95d8087fee84ddf",
+    "attributionPath": ".trellis/tasks/10-09-src-remediation-e/reviews/E02-static-attribution.json",
+    "attributionSHA256": "b26c9ebc573a9ec1cedc58c38b93756e8aad36ab97a816b59965c73d105e7d42",
+    "cumulativeFiles": 10,
+    "baselineErrors": 3,
+    "baselineWarnings": 35,
+    "currentErrors": 2,
+    "currentWarnings": 34,
+    "addedNoncomplexity": [],
+    "newComplexitySinceE01": [],
+    "inheritedE01Metrics": 3,
+    "currentInputHashMismatches": [],
+    "versions": {
+      "eslint": "9.39.5",
+      "typescript-eslint": "8.71.1",
+      "eslint-plugin-react-hooks": "7.1.1",
+      "eslint-plugin-sonarjs": "3.0.7",
+      "typescript": "5.9.2"
+    },
+    "astCoordinatorReported": {
+      "nodes": 419,
+      "edges": 2498,
+      "parseErrors": 0,
+      "valueEdgeSCCs": 0
+    }
+  }
+}

@@ -1,0 +1,824 @@
+{
+  "status": "COMPLETED",
+  "scope": "E07 direct sourcefix slice B only; main/C external caller integration and whole E07 acceptance remain outside slice",
+  "completedAt": "2026-10-09T08:21:56.804268+00:00",
+  "basis": "Actual accepted post-E06 E07 entry/before bytes; all 16 local before hashes equal coordinator entry, not HEAD",
+  "precedingE06AcceptedSnapshotSHA256": "2ff2d72efa3a42f42b33ca5ca128fb3918e050f9289ee36dcf1f076a739487da",
+  "source": [
+    {
+      "path": "src/components/agent/CreatedEntityLinks.tsx",
+      "beforeSHA256": "ee8c7d8b1022dca6dcd577c9a84d6bb4de2b4de1b0c9e50c0497bb779ff060c5",
+      "canonicalE07EntrySHA256": "ee8c7d8b1022dca6dcd577c9a84d6bb4de2b4de1b0c9e50c0497bb779ff060c5",
+      "afterSHA256": "f8ff42aeac75c0d987cba2b3b943a38abee850cb5903135e457968e4918425e9",
+      "beforeBytes": 4424,
+      "afterBytes": 4435,
+      "changed": true,
+      "assignedErrorCount": 11,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/components/agent/CreatedEntityLinks.tsx"
+    },
+    {
+      "path": "src/components/agent/Grainient.tsx",
+      "beforeSHA256": "db22cb90bd5e220b7c8cda460ff3c76d5a7a3e3348106bc2c56d5a3b64355f09",
+      "canonicalE07EntrySHA256": "db22cb90bd5e220b7c8cda460ff3c76d5a7a3e3348106bc2c56d5a3b64355f09",
+      "afterSHA256": "b337145aa205a8839122cd3fe117f0288f0cf3923ecd1e9403e6019d94572510",
+      "beforeBytes": 12296,
+      "afterBytes": 12696,
+      "changed": true,
+      "assignedErrorCount": 29,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/components/agent/Grainient.tsx"
+    },
+    {
+      "path": "src/db/agentFinishingCheck.ts",
+      "beforeSHA256": "6410fb3478e6675eefb0a1d215bccb5e9d1271ba18b5bf89f6c1a4c0df903c59",
+      "canonicalE07EntrySHA256": "6410fb3478e6675eefb0a1d215bccb5e9d1271ba18b5bf89f6c1a4c0df903c59",
+      "afterSHA256": "c3c5a0750c0b09e9fd0730820a7d4eeb5b3012a5c79eb9935959782079671200",
+      "beforeBytes": 6010,
+      "afterBytes": 6827,
+      "changed": true,
+      "assignedErrorCount": 4,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/db/agentFinishingCheck.ts"
+    },
+    {
+      "path": "src/db/agentProjectCreation.ts",
+      "beforeSHA256": "43a3bb9a90089c1a4ffa4f0cf9cc0a52769a781e99ac84b6ef8a582ff6462951",
+      "canonicalE07EntrySHA256": "43a3bb9a90089c1a4ffa4f0cf9cc0a52769a781e99ac84b6ef8a582ff6462951",
+      "afterSHA256": "8329f9046ddd2005898ee9c23ba2b976d9f2b6e75d2790b569892116ce56d327",
+      "beforeBytes": 5711,
+      "afterBytes": 5856,
+      "changed": true,
+      "assignedErrorCount": 1,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/db/agentProjectCreation.ts"
+    },
+    {
+      "path": "src/db/agentTools.ts",
+      "beforeSHA256": "51fc482601a428161a348d750c5b478c036275fb07ac548ef9ea339497022299",
+      "canonicalE07EntrySHA256": "51fc482601a428161a348d750c5b478c036275fb07ac548ef9ea339497022299",
+      "afterSHA256": "7179104875ba00d6baec5ccc87888e92d12b3eb2f55c4c1fc347163114c84d2d",
+      "beforeBytes": 25180,
+      "afterBytes": 25221,
+      "changed": true,
+      "assignedErrorCount": 2,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/db/agentTools.ts"
+    },
+    {
+      "path": "src/db/materials.ts",
+      "beforeSHA256": "5a4fcef0b2421c79fa3c2a84b95c622fe19d91605f375276062406613919511c",
+      "canonicalE07EntrySHA256": "5a4fcef0b2421c79fa3c2a84b95c622fe19d91605f375276062406613919511c",
+      "afterSHA256": "f30c5e3b5a2eea008679ffe10df6350f17cb56d57c8931cc41fdeaddd8115809",
+      "beforeBytes": 19544,
+      "afterBytes": 19395,
+      "changed": true,
+      "assignedErrorCount": 1,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/db/materials.ts"
+    },
+    {
+      "path": "src/lib/agent/businessStore.ts",
+      "beforeSHA256": "53571ee862b15d05e4782048c5f393b7afe50132f1f3983cccb375ab10d99bcc",
+      "canonicalE07EntrySHA256": "53571ee862b15d05e4782048c5f393b7afe50132f1f3983cccb375ab10d99bcc",
+      "afterSHA256": "e1a9016d6acd52dba5b601d0e099bb52dc27e4cec0ec0a954bd138c12e770feb",
+      "beforeBytes": 20227,
+      "afterBytes": 20929,
+      "changed": true,
+      "assignedErrorCount": 5,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/agent/businessStore.ts"
+    },
+    {
+      "path": "src/lib/agent/businessTools.ts",
+      "beforeSHA256": "0aad3a5e1d3792952da4980ed003aa863e3ecb9e87bdc30cab4bef6d18e63274",
+      "canonicalE07EntrySHA256": "0aad3a5e1d3792952da4980ed003aa863e3ecb9e87bdc30cab4bef6d18e63274",
+      "afterSHA256": "3ca128988ef66f4f5b052e37cfbad6b56a10da1c5c62271fb23703f467668524",
+      "beforeBytes": 50988,
+      "afterBytes": 51447,
+      "changed": true,
+      "assignedErrorCount": 14,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/agent/businessTools.ts"
+    },
+    {
+      "path": "src/lib/agent/businessWriteReceipt.ts",
+      "beforeSHA256": "626537317a0c0a239c66b4c1b756251faead3eb400690a69274ce63cbf693096",
+      "canonicalE07EntrySHA256": "626537317a0c0a239c66b4c1b756251faead3eb400690a69274ce63cbf693096",
+      "afterSHA256": "ee101a7b40fc4a70167b78bc08bde86eaf9fd529921c5115c716f9a4a1f6b44c",
+      "beforeBytes": 7062,
+      "afterBytes": 7214,
+      "changed": true,
+      "assignedErrorCount": 2,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/agent/businessWriteReceipt.ts"
+    },
+    {
+      "path": "src/lib/agent/imageDiscovery.ts",
+      "beforeSHA256": "fc8571b38c847e6ed4e0504bd04d3f5140a6772a202d94fc7b4261292f95bc58",
+      "canonicalE07EntrySHA256": "fc8571b38c847e6ed4e0504bd04d3f5140a6772a202d94fc7b4261292f95bc58",
+      "afterSHA256": "02539c6a40860723992d5a424c3d0b4b93905b6c8e0f9fb4965d7968b64eedc1",
+      "beforeBytes": 18633,
+      "afterBytes": 18638,
+      "changed": true,
+      "assignedErrorCount": 1,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/agent/imageDiscovery.ts"
+    },
+    {
+      "path": "src/lib/agent/materialTools.ts",
+      "beforeSHA256": "4256632f8525af7d51f1ce11d06cc1576612e74cb1d9c2de8c05fd160a0e4db7",
+      "canonicalE07EntrySHA256": "4256632f8525af7d51f1ce11d06cc1576612e74cb1d9c2de8c05fd160a0e4db7",
+      "afterSHA256": "bc06b0a4affc684e26426bef59c185ccf27297dc80afa3790c88c4b6d84572f8",
+      "beforeBytes": 28337,
+      "afterBytes": 28344,
+      "changed": true,
+      "assignedErrorCount": 5,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/agent/materialTools.ts"
+    },
+    {
+      "path": "src/lib/agent/referenceEvidence.ts",
+      "beforeSHA256": "e8950b149b044d303b979762fcc6f7bb71bcc6e4d7b43ea02b4eb48f0c013208",
+      "canonicalE07EntrySHA256": "e8950b149b044d303b979762fcc6f7bb71bcc6e4d7b43ea02b4eb48f0c013208",
+      "afterSHA256": "344c6287557fcf339d7637f0f34aa139c9c56b2c0ede3c47cba1bc26255394f0",
+      "beforeBytes": 9238,
+      "afterBytes": 9553,
+      "changed": true,
+      "assignedErrorCount": 8,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/agent/referenceEvidence.ts"
+    },
+    {
+      "path": "src/lib/agent/tools.ts",
+      "beforeSHA256": "fd78896242970d3f1d69a3caae0976d0dfcb94e5b1e66c5984e656f0e0b83760",
+      "canonicalE07EntrySHA256": "fd78896242970d3f1d69a3caae0976d0dfcb94e5b1e66c5984e656f0e0b83760",
+      "afterSHA256": "eae313d30c74774f39184b54bfe10813f22e1233dbc37352b0e357230e489435",
+      "beforeBytes": 7932,
+      "afterBytes": 7976,
+      "changed": true,
+      "assignedErrorCount": 1,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/agent/tools.ts"
+    },
+    {
+      "path": "src/lib/agent/wrapupEvidence.ts",
+      "beforeSHA256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "canonicalE07EntrySHA256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "afterSHA256": "1ab1187b7e64b1610614c59c4e76d6bcbfd9de899270c3e2ce2116db07cd8f03",
+      "beforeBytes": 15221,
+      "afterBytes": 15256,
+      "changed": true,
+      "assignedErrorCount": 3,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/agent/wrapupEvidence.ts"
+    },
+    {
+      "path": "src/lib/audioProjectPackage.ts",
+      "beforeSHA256": "93886389c152de00353d0ca082816c4678f31f55ee554a65b8e243bd74224e63",
+      "canonicalE07EntrySHA256": "93886389c152de00353d0ca082816c4678f31f55ee554a65b8e243bd74224e63",
+      "afterSHA256": "c368a4365a7543293ed7d39945310e0ce37c90b5549a146350d50a70c5a5b608",
+      "beforeBytes": 3928,
+      "afterBytes": 3981,
+      "changed": true,
+      "assignedErrorCount": 2,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/audioProjectPackage.ts"
+    },
+    {
+      "path": "src/lib/episodeDelivery.ts",
+      "beforeSHA256": "c30e1b84647ec5f8801bb62cd5d3a84c9678bea3361ca00b787d144a6a2e6b8b",
+      "canonicalE07EntrySHA256": "c30e1b84647ec5f8801bb62cd5d3a84c9678bea3361ca00b787d144a6a2e6b8b",
+      "afterSHA256": "4e099cfcb13efbb4b82b94888ef12c1901bf227f52d7619f0b71299869b50f01",
+      "beforeBytes": 6439,
+      "afterBytes": 6702,
+      "changed": true,
+      "assignedErrorCount": 2,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/episodeDelivery.ts"
+    }
+  ],
+  "newTests": [
+    {
+      "path": "tests/e07TypedBoundaries.test.ts",
+      "sha256": "422416015f89458e3ef478827d84a9c00e7edb2a2b6fd8afbe07f6eb85b2344f",
+      "bytes": 8270,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/tests/e07TypedBoundaries.test.ts"
+    },
+    {
+      "path": "tests/e07TypedBoundariesAudio.test.ts",
+      "sha256": "8b935f1621a0564295aa3ddc324fd6366bbb7ad3d70dec16ff097307f4991bf2",
+      "bytes": 4725,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/tests/e07TypedBoundariesAudio.test.ts"
+    },
+    {
+      "path": "tests/e07TypedBoundariesDelivery.test.ts",
+      "sha256": "6872df9b57892233f86c54f79cef1d718a4c1771f34c511c4433a1511d805273",
+      "bytes": 2179,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/tests/e07TypedBoundariesDelivery.test.ts"
+    },
+    {
+      "path": "tests/e07TypedBoundariesFinishing.test.ts",
+      "sha256": "d65c1f2ede5be59aa191020fd5ec3db3355176bff38132bc381a45122d664cdf",
+      "bytes": 3387,
+      "snapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/tests/e07TypedBoundariesFinishing.test.ts"
+    }
+  ],
+  "verification": {
+    "assignedErrorsBefore": 91,
+    "assignedErrorsAfter": 0,
+    "reviewWarningsBefore": 58,
+    "reviewWarningsAfter": 58,
+    "projectTypecheck": "PASS in scoped-final; no owned type errors",
+    "newTestStrictTypecheck": "PASS; includes real Vite ambient compiler closure",
+    "rootRelevantTests": {
+      "files": 21,
+      "passed": 338,
+      "failed": 0,
+      "evidence": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/scoped-final-tests.log"
+    },
+    "finalNewTests": {
+      "files": 4,
+      "passed": 45,
+      "failed": 0,
+      "evidence": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/completion-tests.log"
+    },
+    "pendingCallerRenameMirror": {
+      "files": 3,
+      "passed": 39,
+      "failed": 0,
+      "rootOriginalExistingTestsNotModifiedByWorker": true,
+      "evidence": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/pending-caller-rename-final-verification.json"
+    },
+    "finalWhitespace": "PASS",
+    "grainientContract": "Exact shader bytes/initial uniforms tokens and installed OGL reference retention verified; no native claim",
+    "failuresRetained": true,
+    "ownedInputsStableAtCompletion": true
+  },
+  "unusedDecisions": [
+    {
+      "path": "src/lib/agent/businessTools.ts",
+      "name": "isSceneSlot",
+      "decision": "localize",
+      "reason": "Internal slot_update guard remains at the same callsite; no full/test/native/canonical external consumer."
+    },
+    {
+      "path": "src/lib/agent/businessTools.ts",
+      "name": "isPropSlot",
+      "decision": "localize",
+      "reason": "Internal slot_update guard and exact PropImageSlot predicate preserved."
+    },
+    {
+      "path": "src/lib/agent/businessTools.ts",
+      "name": "isStyleSlot",
+      "decision": "localize",
+      "reason": "Internal slot_update guard and exact StyleImageSlot predicate preserved."
+    },
+    {
+      "path": "src/lib/agent/businessTools.ts",
+      "name": "isShotSlot",
+      "decision": "localize",
+      "reason": "Internal firstFrame/lastFrame/clip guard remains exact; unsupported-owned-kind D05 rollback tests remain."
+    },
+    {
+      "path": "src/lib/agent/businessStore.ts",
+      "name": "metadata",
+      "decision": "localize",
+      "reason": "Used internally by typed owned media readers and RowByKind ReturnType; returned shape/public command behavior unchanged."
+    },
+    {
+      "path": "src/lib/agent/businessStore.ts",
+      "name": "AssetKind",
+      "decision": "localize",
+      "reason": "Only used internally to select four owned asset slot catalogs; no external import."
+    },
+    {
+      "path": "src/db/materials.ts",
+      "name": "listMaterialUsage",
+      "decision": "delete",
+      "reason": "Verified dead query wrapper; UI and runtime use their scoped live reads directly. No dynamic/config/native/test consumers or canonical supported API found."
+    },
+    {
+      "path": "src/lib/agent/materialTools.ts",
+      "name": "MATERIAL_TOOL_NAMES",
+      "decision": "remove-reexport",
+      "reason": "Canonical owner remains materialToolNames.ts; skills and tests import that owner. No use of the redundant materialTools re-export."
+    },
+    {
+      "path": "src/lib/audioProjectPackage.ts",
+      "name": "parseAudioPackage",
+      "decision": "retain-supported-compatibility",
+      "reason": "D03 explicitly retained this original root compatibility export. Production project codec correctly uses pure audio codec directly. New meaningful regression invokes the root API to validate/remap/insert sanitized history without paid network and to reject foreign media atomically."
+    },
+    {
+      "path": "src/lib/audioProjectPackage.ts",
+      "name": "remapAudioPackage",
+      "decision": "retain-supported-compatibility",
+      "reason": "Same D03 compatibility decision; no fabricated production consumer. New root API regression asserts fresh entity IDs, imported connector, dormant/manual source and rollback."
+    },
+    {
+      "path": "src/lib/episodeDelivery.ts",
+      "name": "EpisodeDeliveryColumn",
+      "decision": "localize-type",
+      "reason": "Only internal declaration used transitively by exported EpisodeDelivery.columns; shape unchanged and existing consumers infer through EpisodeDelivery."
+    },
+    {
+      "path": "src/lib/episodeDelivery.ts",
+      "name": "EpisodeDeliveryRow",
+      "decision": "localize-type",
+      "reason": "Only internal declaration used transitively by exported EpisodeDelivery.rows; shape unchanged and authored CSV regression retained."
+    }
+  ],
+  "integration": {
+    "dbExport": "adoptMaterialInProject",
+    "internalHelpers": [
+      "readMaterialUseState",
+      "materialUseResult"
+    ],
+    "notesPath": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/integration-notes.md",
+    "historicalSnapshots": "preserved unchanged",
+    "remainingCallerIntegrations": "main/C owns existing test and native harness imports; root failing observation and exact passing adaptation are distinct"
+  },
+  "limits": [
+    "No global freeze/whole E07 acceptance, final Knip/gate/debt/CI/Node22 claim",
+    "No full suite/build/model/native/installation/commit/push/spec/status/ledger work",
+    "Final report excludes its own hash to avoid recursive hash; main can record it independently",
+    "58 review warnings are original and not accepted/ignored debt by this slice"
+  ],
+  "evidence": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/components/agent/CreatedEntityLinks.tsx",
+      "sha256": "f8ff42aeac75c0d987cba2b3b943a38abee850cb5903135e457968e4918425e9",
+      "bytes": 4435
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/components/agent/Grainient.tsx",
+      "sha256": "b337145aa205a8839122cd3fe117f0288f0cf3923ecd1e9403e6019d94572510",
+      "bytes": 12696
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/db/agentFinishingCheck.ts",
+      "sha256": "c3c5a0750c0b09e9fd0730820a7d4eeb5b3012a5c79eb9935959782079671200",
+      "bytes": 6827
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/db/agentProjectCreation.ts",
+      "sha256": "8329f9046ddd2005898ee9c23ba2b976d9f2b6e75d2790b569892116ce56d327",
+      "bytes": 5856
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/db/agentTools.ts",
+      "sha256": "7179104875ba00d6baec5ccc87888e92d12b3eb2f55c4c1fc347163114c84d2d",
+      "bytes": 25221
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/db/materials.ts",
+      "sha256": "f30c5e3b5a2eea008679ffe10df6350f17cb56d57c8931cc41fdeaddd8115809",
+      "bytes": 19395
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/agent/businessStore.ts",
+      "sha256": "e1a9016d6acd52dba5b601d0e099bb52dc27e4cec0ec0a954bd138c12e770feb",
+      "bytes": 20929
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/agent/businessTools.ts",
+      "sha256": "3ca128988ef66f4f5b052e37cfbad6b56a10da1c5c62271fb23703f467668524",
+      "bytes": 51447
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/agent/businessWriteReceipt.ts",
+      "sha256": "ee101a7b40fc4a70167b78bc08bde86eaf9fd529921c5115c716f9a4a1f6b44c",
+      "bytes": 7214
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/agent/imageDiscovery.ts",
+      "sha256": "02539c6a40860723992d5a424c3d0b4b93905b6c8e0f9fb4965d7968b64eedc1",
+      "bytes": 18638
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/agent/materialTools.ts",
+      "sha256": "bc06b0a4affc684e26426bef59c185ccf27297dc80afa3790c88c4b6d84572f8",
+      "bytes": 28344
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/agent/referenceEvidence.ts",
+      "sha256": "344c6287557fcf339d7637f0f34aa139c9c56b2c0ede3c47cba1bc26255394f0",
+      "bytes": 9553
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/agent/tools.ts",
+      "sha256": "eae313d30c74774f39184b54bfe10813f22e1233dbc37352b0e357230e489435",
+      "bytes": 7976
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/agent/wrapupEvidence.ts",
+      "sha256": "1ab1187b7e64b1610614c59c4e76d6bcbfd9de899270c3e2ce2116db07cd8f03",
+      "bytes": 15256
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/audioProjectPackage.ts",
+      "sha256": "c368a4365a7543293ed7d39945310e0ce37c90b5549a146350d50a70c5a5b608",
+      "bytes": 3981
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/src/lib/episodeDelivery.ts",
+      "sha256": "4e099cfcb13efbb4b82b94888ef12c1901bf227f52d7619f0b71299869b50f01",
+      "bytes": 6702
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/tests/e07TypedBoundaries.test.ts",
+      "sha256": "422416015f89458e3ef478827d84a9c00e7edb2a2b6fd8afbe07f6eb85b2344f",
+      "bytes": 8270
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/tests/e07TypedBoundariesAudio.test.ts",
+      "sha256": "8b935f1621a0564295aa3ddc324fd6366bbb7ad3d70dec16ff097307f4991bf2",
+      "bytes": 4725
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/tests/e07TypedBoundariesDelivery.test.ts",
+      "sha256": "6872df9b57892233f86c54f79cef1d718a4c1771f34c511c4433a1511d805273",
+      "bytes": 2179
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/after/tests/e07TypedBoundariesFinishing.test.ts",
+      "sha256": "d65c1f2ede5be59aa191020fd5ec3db3355176bff38132bc381a45122d664cdf",
+      "bytes": 3387
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/before/src/components/agent/CreatedEntityLinks.tsx",
+      "sha256": "ee8c7d8b1022dca6dcd577c9a84d6bb4de2b4de1b0c9e50c0497bb779ff060c5",
+      "bytes": 4424
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/before/src/components/agent/Grainient.tsx",
+      "sha256": "db22cb90bd5e220b7c8cda460ff3c76d5a7a3e3348106bc2c56d5a3b64355f09",
+      "bytes": 12296
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/before/src/db/agentFinishingCheck.ts",
+      "sha256": "6410fb3478e6675eefb0a1d215bccb5e9d1271ba18b5bf89f6c1a4c0df903c59",
+      "bytes": 6010
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/before/src/db/agentProjectCreation.ts",
+      "sha256": "43a3bb9a90089c1a4ffa4f0cf9cc0a52769a781e99ac84b6ef8a582ff6462951",
+      "bytes": 5711
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/before/src/db/agentTools.ts",
+      "sha256": "51fc482601a428161a348d750c5b478c036275fb07ac548ef9ea339497022299",
+      "bytes": 25180
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/before/src/db/materials.ts",
+      "sha256": "5a4fcef0b2421c79fa3c2a84b95c622fe19d91605f375276062406613919511c",
+      "bytes": 19544
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/before/src/lib/agent/businessStore.ts",
+      "sha256": "53571ee862b15d05e4782048c5f393b7afe50132f1f3983cccb375ab10d99bcc",
+      "bytes": 20227
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/before/src/lib/agent/businessTools.ts",
+      "sha256": "0aad3a5e1d3792952da4980ed003aa863e3ecb9e87bdc30cab4bef6d18e63274",
+      "bytes": 50988
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/before/src/lib/agent/businessWriteReceipt.ts",
+      "sha256": "626537317a0c0a239c66b4c1b756251faead3eb400690a69274ce63cbf693096",
+      "bytes": 7062
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/before/src/lib/agent/imageDiscovery.ts",
+      "sha256": "fc8571b38c847e6ed4e0504bd04d3f5140a6772a202d94fc7b4261292f95bc58",
+      "bytes": 18633
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/before/src/lib/agent/materialTools.ts",
+      "sha256": "4256632f8525af7d51f1ce11d06cc1576612e74cb1d9c2de8c05fd160a0e4db7",
+      "bytes": 28337
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/before/src/lib/agent/referenceEvidence.ts",
+      "sha256": "e8950b149b044d303b979762fcc6f7bb71bcc6e4d7b43ea02b4eb48f0c013208",
+      "bytes": 9238
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/before/src/lib/agent/tools.ts",
+      "sha256": "fd78896242970d3f1d69a3caae0976d0dfcb94e5b1e66c5984e656f0e0b83760",
+      "bytes": 7932
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/before/src/lib/agent/wrapupEvidence.ts",
+      "sha256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "bytes": 15221
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/before/src/lib/audioProjectPackage.ts",
+      "sha256": "93886389c152de00353d0ca082816c4678f31f55ee554a65b8e243bd74224e63",
+      "bytes": 3928
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/before/src/lib/episodeDelivery.ts",
+      "sha256": "c30e1b84647ec5f8801bb62cd5d3a84c9678bea3361ca00b787d144a6a2e6b8b",
+      "bytes": 6439
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/caller-adaptation-token-proof.first-failed.json",
+      "sha256": "f98b502807a5ab303acef897a079caaf0dc4d4e113c652854c93928b7a824f4d",
+      "bytes": 26658
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/caller-adaptation-token-proof.first-failed.log",
+      "sha256": "6ffbac2c51c440d698dec8469b326ce1463f791772f75079d59bba7f381659eb",
+      "bytes": 884
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/caller-adaptation-token-proof.json",
+      "sha256": "183d8d9d245f6139a0ae21d89e76e71b50e3957c492d91b80106302bec09bc35",
+      "bytes": 6110
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/caller-adaptation-token-proof.log",
+      "sha256": "ccb57fccfd19cb16ff4cde8ecf3b300d0d2cb2969ccf81575c35a381bc9693dd",
+      "bytes": 126
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/caller-rename-adaptations/agentMaterialTools.test.ts.patch",
+      "sha256": "7e70cca56eaa31fd5a3f30fb8c3fb63499c3928d057c8a9139c2ce5b9ec1e461",
+      "bytes": 2942
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/caller-rename-adaptations/materialIntegration.test.ts.patch",
+      "sha256": "080a8a944e7254120e3812cd41e63eb81d168136473747832cc06eb74991a878",
+      "bytes": 2433
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/caller-rename-adaptations/materialLibrary.test.ts.patch",
+      "sha256": "fa48f12bc40d5e87ef10f6a8e06e8669de7ab6398f036cdc782e37817e043083",
+      "bytes": 10402
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/caller-rename-adaptations/tests/agentMaterialTools.test.ts",
+      "sha256": "9c1d0c1fa3d4afa22f1af5e2700b42c5f4c9cdd1e83720b1267266685a2fd512",
+      "bytes": 16036
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/caller-rename-adaptations/tests/materialIntegration.test.ts",
+      "sha256": "90fccd5f90ce6f5d0dde49f7ea2dd0bd2c32e1327da9e210b2f41bf34d0879ca",
+      "bytes": 5559
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/caller-rename-adaptations/tests/materialLibrary.test.ts",
+      "sha256": "c0720dc7a7c2e0f1b384b726db5f7640ca202b3ae52d3910c380e93a1b624a49",
+      "bytes": 17573
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/compare-owned-contracts.mjs",
+      "sha256": "b2dee47421df83fec0879b62343f1aeb67d0aab06cc434be9b34be5f173adec1",
+      "bytes": 3168
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/completion-focused-commands.json",
+      "sha256": "ece500ab99a268532126285e1289741c936e803add434515d007c95ecf597caf",
+      "bytes": 3226
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/completion-focused-inputs.json",
+      "sha256": "85df6e26d5024e847d875fb923938e04762a7fe9384d76aec74b7fdf28f1e373",
+      "bytes": 2109
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/completion-lint.json",
+      "sha256": "2c648c3f6b295f9dde016a6888d93e9ac0d077e601f3f84b4f5f08ec860e4452",
+      "bytes": 241822
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/completion-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/completion-tests.log",
+      "sha256": "9940d010ee7bdb36cc8455eab74eac23668d54178988831f8c11fa3e4d4abf6b",
+      "bytes": 460
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/completion-whitespace.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/entry-comparison.json",
+      "sha256": "4f83040823122a0820dc297880941d45d0f28881c129afa5c2c1f2ef12ad3bfe",
+      "bytes": 6233
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/entry.json",
+      "sha256": "ddf9bdc99cde8ad5c6464d8aeea881487dbe7b7b591fb8d9e002855ffa675025",
+      "bytes": 41433
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/grainient-contract-comparison.json",
+      "sha256": "84f81d172f411da99d2bfc5f22733c9dda68694fbad11c69a84f500a194a9c70",
+      "bytes": 1340
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/grainient-contract-comparison.log",
+      "sha256": "a5a545f88eca0f564d1f734f62acf048fcbda22e58b78cb07c3c729347aaa533",
+      "bytes": 1206
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/integration-notes.md",
+      "sha256": "4709153a15cf431bf113c87e5b8337a209a0cf1cce625e58858be3981b745965",
+      "bytes": 1075
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/lint-comparison.json",
+      "sha256": "1277959eb9587d130055e974fd636d38685b1f65b0e8196e12fea3dd45806372",
+      "bytes": 72502
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/lint-first.json",
+      "sha256": "952fda32d62edf7e5e4a18c1e84c633695e28007ea0c66e72e062f931b6a63db",
+      "bytes": 242582
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/lint-refactor.json",
+      "sha256": "98a1c6e2a1df5f0a98603cc49c8e138346c90637784204016b8472d8fb2ba7b5",
+      "bytes": 62314
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/new-tests-typecheck-first-failed.log",
+      "sha256": "2af5e74b1bd4c128eef3ec61635b2f5074112e7a6dc706bec544c722b6ebb464",
+      "bytes": 1075
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/new-tests-typecheck.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/owned-source.patch",
+      "sha256": "6e24132d471d3909b0db92cb64d107ab66a3029022bd25390a822a336ea768a7",
+      "bytes": 34669
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/pending-caller-rename-final-tests.log",
+      "sha256": "37cad918983d87d2354e5e0b3cbd4428a5c775cbcd66bee5ac1f02634c07f4af",
+      "bytes": 611
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/pending-caller-rename-final-verification.json",
+      "sha256": "c8e0262eb86479bbdab0fd65b5eb23c5527a634b1c38d0591d1b6bd9220a96e3",
+      "bytes": 135211
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/pending-caller-rename-tests.log",
+      "sha256": "f026e3c771f72c16143d436f6a7a36854228d2ce1c2afe2913eb957df24bee82",
+      "bytes": 612
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/pending-caller-rename-verification.json",
+      "sha256": "62eeaa2833bcf8a928e4157e4659991e2f1a6cf52cc4fe3161c97bc69f30b73a",
+      "bytes": 50101
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/required-context-manifest.json",
+      "sha256": "e8552e1b2a155ef12159a7a1214d4ac887752a01c7f36f517bbc212e34bef8a6",
+      "bytes": 4508
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/run-scoped-checks.py",
+      "sha256": "ae735010a8e491bd6de00b3270cf39f3b81eec6ef82248c5d333d815b2378cd5",
+      "bytes": 3640
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/run-scoped-checks.scoped-01-executed.py",
+      "sha256": "3b7b73a108e7b59cb030e7fb06b2242156c9735b527c4a7aeb52ae3c7edb5fbc",
+      "bytes": 3495
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/scoped-01-commands.json",
+      "sha256": "2a6d908a1895fb9d7a25b7e60ae226b4db09540f363f24d72b20a741aa48cbef",
+      "bytes": 3848
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/scoped-01-inputs-after.json",
+      "sha256": "317809f2315043d0c216050513c5a7fd68856c8ebbd1f4cddc76841f89f897a0",
+      "bytes": 86646
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/scoped-01-inputs-before.json",
+      "sha256": "317809f2315043d0c216050513c5a7fd68856c8ebbd1f4cddc76841f89f897a0",
+      "bytes": 86646
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/scoped-01-lint.json",
+      "sha256": "b7f83e333fcb4c10238ed8c3fff00db6f7f86e3e0d3801880e9c39d8e69e167a",
+      "bytes": 241823
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/scoped-01-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/scoped-01-tests.log",
+      "sha256": "be81c47701ee41cddb079439b52cbf9b466a4dd31453c2e3926f7cd884d5496d",
+      "bytes": 16043
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/scoped-01-typecheck.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/scoped-final-commands.json",
+      "sha256": "d9a508cc8435e0ce23bde28e679bedee23b551d0b2bda03e03fdee3b47b42b5a",
+      "bytes": 3730
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/scoped-final-inputs-after.json",
+      "sha256": "e6d10b6ac3dab801c0ef4868f8fe13ce9a739df5bd87ddd64d1b13783da5285d",
+      "bytes": 86639
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/scoped-final-inputs-before.json",
+      "sha256": "e6d10b6ac3dab801c0ef4868f8fe13ce9a739df5bd87ddd64d1b13783da5285d",
+      "bytes": 86639
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/scoped-final-lint.json",
+      "sha256": "6830b7582842158fdffeb950cde2095b3b120068aae41e21a2025b1afb0bc872",
+      "bytes": 241824
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/scoped-final-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/scoped-final-tests.log",
+      "sha256": "b14e4dc1ccd66207c5c0d47c36dc6744f9c2476121a38ebd4057cf1ddd9f3a51",
+      "bytes": 1009
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/scoped-final-typecheck.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/supplemental-commands.json",
+      "sha256": "af4bca01d4ddfc310d37faae17d40a93a167a60339eb778b4fc1486885bb899a",
+      "bytes": 608
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/tests-audio-second.log",
+      "sha256": "4e0bf45ff2f48cfdaadeffff141107f858aa147566ef6c43a06e30631b0af0ed",
+      "bytes": 352
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/tests-focused-02.log",
+      "sha256": "966a201d7fb808ad6c7611d096a52652b6383415a341d54b4c4ba967269c3de7",
+      "bytes": 380
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/tests-new-first.log",
+      "sha256": "dcb5b83aa57870cec3d15b3809e204cf53321d2ea4a812341cba064c3e22e929",
+      "bytes": 2504
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/tsconfig.new-tests.first-failed.json",
+      "sha256": "071e7a5843b23c66a78fd2734fb2391fe9493b819877e931b1ea70651234b182",
+      "bytes": 699
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/tsconfig.new-tests.json",
+      "sha256": "0a54c3c9f73a712e26b5b6ab05271a8f467c5245d080de0e2eafddb486964734",
+      "bytes": 770
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/typecheck-first.log",
+      "sha256": "458f06a07609a24f84a3aba6183f7b7a31c82386b7d8d7be3a38c2b6d8878a7c",
+      "bytes": 357
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/unused-export-decisions.json",
+      "sha256": "10e71eaaaeb28345fa2a3532f0eabbb4a432548d041f1a28a2daf1b6185958a2",
+      "bytes": 3840
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/verify-caller-adaptation-tokens.first-failed.mjs",
+      "sha256": "7ef4002a0bb39fb241c2d804665cb0b0c0c5c0beaa8fd393e931adb783cf2a4d",
+      "bytes": 1709
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/verify-caller-adaptation-tokens.mjs",
+      "sha256": "552ee3a4ce9221d7985f24411021dc412a39d421fb16957c4a23293ac5fc6acb",
+      "bytes": 1841
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/verify-pending-caller-rename.first-executed.py",
+      "sha256": "51bd6743500e116810d2453ea8fc33146539b60c3c1200f7f7f56f4d35080b3a",
+      "bytes": 2823
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-typed-boundaries-implementation/verify-pending-caller-rename.py",
+      "sha256": "06a9e3525ee7b2f8757fb568b31f1defb7f5aa9f9f9b468819d8331377941f2c",
+      "bytes": 3383
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E07-typed-boundaries-implementation.md",
+      "sha256": "6f0cd5a6718309ef60c5b92c5c4f15dd2fecabf4e875ad7e1678f4216436d107",
+      "bytes": 11982
+    }
+  ]
+}

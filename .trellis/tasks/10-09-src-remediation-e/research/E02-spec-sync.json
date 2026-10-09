@@ -1,0 +1,41 @@
+{
+  "unit": "E02",
+  "date": "2026-10-09",
+  "acceptedSnapshot": ".trellis/tasks/10-09-src-remediation-e/reviews/E02-check-snapshot.json",
+  "acceptedSnapshotSHA256": "1e535bf225fbdb14f267d49cf2f8c8e3132e4341e31ec570813164f6557f63f0",
+  "acceptedEvidenceVerifiedBeforeSync": 226,
+  "documents": [
+    {
+      "path": ".trellis/spec/frontend/component-guidelines.md",
+      "beforeSHA256": "7458d0ac44119d8581470f13ae9d28d1cbf1bde17468b9f0167897cf8a30ef2e",
+      "afterSHA256": "91a004c2bf8d91fb297bda0dcae8eb4c368680ecc5c770bf898f627a14b4179e",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e02-spec-sync-before/.trellis/spec/frontend/component-guidelines.md"
+    },
+    {
+      "path": ".trellis/spec/frontend/chat-performance.md",
+      "beforeSHA256": "72b8db703467f0dc23c763a720c3fbb208654f608e9a905b6b4377367ba85a91",
+      "afterSHA256": "86e1f9c6d378352b77a8a4cfd40eabbe77666fefed6f15426f179fa33e870fea",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e02-spec-sync-before/.trellis/spec/frontend/chat-performance.md"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/implement.md",
+      "beforeSHA256": "16aa23e394c2058a3685fa839d22f64f2da92200c5202add0bfd94e69493959d",
+      "afterSHA256": "2553dc176179bc737ea7a758b9d4b7a94d0310c57d6cbdaf99a7da9fac2da433",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e02-spec-sync-before/.trellis/tasks/10-09-src-remediation-e/implement.md",
+      "reason": "Ordered checklist closure after independent PASS"
+    }
+  ],
+  "sourceAfter": {
+    "scripts/e01-drafts-browser-regression.mjs": "2f2ac3abe91a3fba6f626662046d5cb5cbd0f6bc03f8147ed1f3e01fc00d8d5d",
+    "scripts/e02-browser-regression.mjs": "215aa6f27c5122322af029da3665ad958d8ff74b2629e37751604f9614b10260",
+    "src/components/agent/TopicSidebar.tsx": "121d77f9f9b0b094caef74b52c2574837250e9d92366d33a6056eb6204c3f0b7",
+    "src/components/agent/agentChat.css": "e8d456f0a635f79ad163705d8b0504247b95618526fcff97eb0ab371b7b117eb",
+    "tests/fixtures/e02/harness.tsx": "d5f37323e1ba40a524fe266209ed31c958c9e898466d2bc970971e45f859d869",
+    "tests/fixtures/e02/index.html": "e6ca6c03e82fa7b0a5d854c4fc9c3b727dfc3441cc34a3822a66055d0771c73c",
+    "tests/fixtures/e02/tsconfig.json": "cbf2e9e64c5fca6bc1e940e98515e943c495a4128a03630d977c5636f404b04a",
+    "tests/fixtures/sourceSnapshots/e02/TopicSidebar.tsx": "03eb777c98984d75300c9dcfd1533739e3c7308d561d6d72a6bf20be55bc2dc9",
+    "tests/fixtures/sourceSnapshots/e02/agentChat.css": "b1e1bd7da07ea2efe595cef9b5c6a8291563abf93dedae4bd90cc2877348fb1e",
+    "tests/fixtures/sourceSnapshots/e02/provenance.json": "e46e095db1ead5e14fc9b5687589d04a211ac08298e4bd5ac412fd497f7491c7"
+  },
+  "explanation": "Canonical spec/checklist evolution is explicitly attributed here; original accepted reports remain byte-identical and exact former doc bytes are preserved. No product edits."
+}

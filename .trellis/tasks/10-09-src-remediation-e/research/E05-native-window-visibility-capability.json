@@ -1,0 +1,58 @@
+{
+  "purpose": "Read-only actual window visibility capability; not click-spark acceptance",
+  "browser": "151.0.7922.34",
+  "executablePath": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium-1234/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+  "headless": false,
+  "observations": [
+    {
+      "step": "initial",
+      "state": {
+        "hidden": false,
+        "state": "visible",
+        "events": []
+      }
+    },
+    {
+      "step": "second tab foreground",
+      "state": {
+        "hidden": false,
+        "state": "visible",
+        "events": []
+      }
+    },
+    {
+      "step": "window initial",
+      "windowInfo": {
+        "windowId": 720264176,
+        "bounds": {
+          "left": 22,
+          "top": 52,
+          "width": 1282,
+          "height": 800,
+          "windowState": "normal"
+        }
+      }
+    },
+    {
+      "step": "minimized hidden wait",
+      "error": "page.waitForFunction: Timeout 2000ms exceeded."
+    },
+    {
+      "step": "window minimized",
+      "state": {
+        "hidden": false,
+        "state": "visible",
+        "events": []
+      }
+    },
+    {
+      "step": "window restored",
+      "state": {
+        "hidden": false,
+        "state": "visible",
+        "events": []
+      }
+    }
+  ],
+  "earlierProbeFailure": "e05-native-headful-visibility-capability.mjs timed out waiting for document.hidden after second page foreground; waitForFunction option passed in wrong argument slot, so actual timeout was default30000ms. Original script preserved. This producer uses correct third-argument timeout and records failure rather than inferring hidden."
+}

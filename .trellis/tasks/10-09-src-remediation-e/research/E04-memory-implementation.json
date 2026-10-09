@@ -1,0 +1,987 @@
+{
+  "unit": "E04",
+  "finding": "PD06",
+  "role": "trellis-implement memory writer",
+  "outcome": "implementation-and-ownscope-verification-ready-for-integrated-independent-review",
+  "acceptanceOwner": "coordinator and independent integrated E04 checker",
+  "freezeScope": "PD06 ownscope only. Shared loaded dependencies are bounded native observations; complete current integrated validation belongs to coordinator.",
+  "changedFiles": [
+    "src/db/projectMemories.ts",
+    "tests/e04MemoryTransactions.test.ts",
+    "tests/fixtures/e04-memory/index.html",
+    "tests/fixtures/e04-memory/main.ts",
+    "tests/fixtures/e04-memory/tsconfig.json",
+    "scripts/e04-memory-browser-regression.mjs",
+    "tests/fixtures/sourceSnapshots/e04-memory/projectMemories.ts",
+    "tests/fixtures/sourceSnapshots/e04-memory/provenance.json"
+  ],
+  "before": {
+    "src/db/projectMemories.ts": "2385dcc806bd3a6e888e27dd281b704f75abb4acc77fb5a29859ae7409aea1b9"
+  },
+  "after": {
+    "src/db/projectMemories.ts": "33ea5784a01f3b30583416e01f09c83ce25cf071de2547c40713d6b3b9419cb3",
+    "tests/e04MemoryTransactions.test.ts": "e1d18464a41769f666689f111a00aba27802f235a14c3002156ca9443d06e696",
+    "tests/fixtures/e04-memory/index.html": "fd69b38e3d376a2d71c076d5c3b4fdfbff212d2fad85cfc67b2bacc360b5e730",
+    "tests/fixtures/e04-memory/main.ts": "5f3d2b2979f47095177f92747b77890792c76c460b8a07a671deab29dee02ec9",
+    "tests/fixtures/e04-memory/tsconfig.json": "929bc82e395bff1a027c56cd89dd77436a4039031943d9d765730bf6da549fd7",
+    "scripts/e04-memory-browser-regression.mjs": "68acc39230ff9a81187670d857ee39fce5b1e75503c47decb4610bb158d19db8",
+    "tests/fixtures/sourceSnapshots/e04-memory/projectMemories.ts": "2385dcc806bd3a6e888e27dd281b704f75abb4acc77fb5a29859ae7409aea1b9",
+    "tests/fixtures/sourceSnapshots/e04-memory/provenance.json": "d3761d3b1fcdafa34f16632bda7c0daac9284ea2bfb77532b93fe72a0663843f"
+  },
+  "newFilesAtEntry": [
+    "tests/e04MemoryTransactions.test.ts",
+    "tests/fixtures/e04-memory/index.html",
+    "tests/fixtures/e04-memory/main.ts",
+    "tests/fixtures/e04-memory/tsconfig.json",
+    "scripts/e04-memory-browser-regression.mjs",
+    "tests/fixtures/sourceSnapshots/e04-memory/projectMemories.ts",
+    "tests/fixtures/sourceSnapshots/e04-memory/provenance.json"
+  ],
+  "entrySHA256": "d7226d85662d5060d27e17f96142b1edc3709459ec9a8b630462d9c4638c7772",
+  "manualTables": [
+    "projects",
+    "projectMemories",
+    "projectMemoryVersions"
+  ],
+  "completeManualClosure": {
+    "createProjectMemory": {
+      "reads": [
+        "projects.get via project/owned",
+        "projectMemories owner-index query via duplicateOrConflicts",
+        "optional projectMemories.get via owned"
+      ],
+      "writes": [
+        "optional replaced current/history and new current/history via persist"
+      ]
+    },
+    "updateProjectMemory": {
+      "reads": [
+        "projects.get + projectMemories.get via owned",
+        "projectMemories owner-index query via duplicateOrConflicts"
+      ],
+      "writes": [
+        "projectMemories.put + projectMemoryVersions.add via persist"
+      ]
+    },
+    "setProjectMemoryStatus": {
+      "reads": [
+        "projects.get + projectMemories.get via owned",
+        "activation projectMemories owner-index query"
+      ],
+      "writes": [
+        "changed current/status/history via persist; no-op preserves revision"
+      ]
+    },
+    "replaceProjectMemory": {
+      "reads": [
+        "both project/current ownership reads via owned",
+        "both revision guards",
+        "projectMemories owner-index conflict query"
+      ],
+      "writes": [
+        "old current/history followed by destination current/history via persist"
+      ]
+    },
+    "deleteProjectMemory": {
+      "reads": [
+        "project/current ownership via owned",
+        "revision guard",
+        "memory-indexed versions with projectId predicate"
+      ],
+      "writes": [
+        "projectMemories.delete",
+        "projectMemoryVersions Collection.delete"
+      ]
+    }
+  },
+  "perFileCoverage": {
+    "src/db/projectMemories.ts": {
+      "status": "reviewed",
+      "note": "Assigned PD06 product/test/fixture/runner/snapshot; original source snapshot preserved and provenance verified."
+    },
+    "tests/e04MemoryTransactions.test.ts": {
+      "status": "reviewed",
+      "note": "Assigned PD06 product/test/fixture/runner/snapshot; original source snapshot preserved and provenance verified."
+    },
+    "tests/fixtures/e04-memory/index.html": {
+      "status": "reviewed",
+      "note": "Assigned PD06 product/test/fixture/runner/snapshot; original source snapshot preserved and provenance verified."
+    },
+    "tests/fixtures/e04-memory/main.ts": {
+      "status": "reviewed",
+      "note": "Assigned PD06 product/test/fixture/runner/snapshot; original source snapshot preserved and provenance verified."
+    },
+    "tests/fixtures/e04-memory/tsconfig.json": {
+      "status": "reviewed",
+      "note": "Assigned PD06 product/test/fixture/runner/snapshot; original source snapshot preserved and provenance verified."
+    },
+    "scripts/e04-memory-browser-regression.mjs": {
+      "status": "reviewed",
+      "note": "Assigned PD06 product/test/fixture/runner/snapshot; original source snapshot preserved and provenance verified."
+    },
+    "tests/fixtures/sourceSnapshots/e04-memory/projectMemories.ts": {
+      "status": "reviewed",
+      "note": "Assigned PD06 product/test/fixture/runner/snapshot; original source snapshot preserved and provenance verified."
+    },
+    "tests/fixtures/sourceSnapshots/e04-memory/provenance.json": {
+      "status": "reviewed",
+      "note": "Assigned PD06 product/test/fixture/runner/snapshot; original source snapshot preserved and provenance verified."
+    }
+  },
+  "productIntegrity": {
+    "scope": "Own PD06 module only, declaration comparison; no repository-wide static/architecture claim",
+    "typescript": "5.9.3",
+    "entireModuleOnlyDeclaredListAndFiveArguments": true,
+    "before": {
+      "path": "tests/fixtures/sourceSnapshots/e04-memory/projectMemories.ts",
+      "sha256": "2385dcc806bd3a6e888e27dd281b704f75abb4acc77fb5a29859ae7409aea1b9"
+    },
+    "after": {
+      "path": "src/db/projectMemories.ts",
+      "sha256": "33ea5784a01f3b30583416e01f09c83ce25cf071de2547c40713d6b3b9419cb3"
+    },
+    "manualTransactionArgumentOnly": [
+      {
+        "name": "createProjectMemory",
+        "beforeSHA256": "12ed16e162021093714129ebb9ed46e4198070ad429c61fcfadd9b1f9eadac8d",
+        "afterSHA256": "b1f4d0d49f0c409adf0109632aa3bdf67c602cf512c925766332e26be0dcb58a",
+        "normalizedAfterSHA256": "12ed16e162021093714129ebb9ed46e4198070ad429c61fcfadd9b1f9eadac8d"
+      },
+      {
+        "name": "updateProjectMemory",
+        "beforeSHA256": "dc1a3b1e97312ae93d10e4bcdf79964d03c674687bb63d596108b3f43ce482b2",
+        "afterSHA256": "09517b76013a9653cf392bdef8db849b076173d3f1591f5fd12de400de03a1cb",
+        "normalizedAfterSHA256": "dc1a3b1e97312ae93d10e4bcdf79964d03c674687bb63d596108b3f43ce482b2"
+      },
+      {
+        "name": "setProjectMemoryStatus",
+        "beforeSHA256": "f01fd3860eb39fd3a0ede218f12d3c1b4caae1e87a15178728c132ecfc9d805d",
+        "afterSHA256": "d8ea017cdcd5bfe52fa434587ae2e99729ca475fdbfb1bf4d550f0080e48b0bf",
+        "normalizedAfterSHA256": "f01fd3860eb39fd3a0ede218f12d3c1b4caae1e87a15178728c132ecfc9d805d"
+      },
+      {
+        "name": "replaceProjectMemory",
+        "beforeSHA256": "fa5be00b40ccea4ae96c9ceba2618e064998f35943235cfeed5cce9ac33b0d13",
+        "afterSHA256": "084fa08d1a23fb1c7bad0840b8cb3c6f1dc0500fef7ef619edf0e9745313a0e0",
+        "normalizedAfterSHA256": "fa5be00b40ccea4ae96c9ceba2618e064998f35943235cfeed5cce9ac33b0d13"
+      },
+      {
+        "name": "deleteProjectMemory",
+        "beforeSHA256": "fa36fcedb1a0c44ecbdcb11cdc9861066bf6f86b9e3a9e36641eb3c9ec1a8dab",
+        "afterSHA256": "91117cfb31c9e43b4b008fe69b435cd45e71b6878e946e50475417bb7c624761",
+        "normalizedAfterSHA256": "fa36fcedb1a0c44ecbdcb11cdc9861066bf6f86b9e3a9e36641eb3c9ec1a8dab"
+      }
+    ],
+    "unchangedHelperAndExportDeclarations": [
+      {
+        "name": "project",
+        "sha256": "c093e4990af8c360414ca6443921885967baab4b18b1c9e38651f23bb2bc8d30"
+      },
+      {
+        "name": "owned",
+        "sha256": "1aebb0c53d92a8c7683ea996d74e0ec92a220ad553ed6175f9c91aa05d264885"
+      },
+      {
+        "name": "revision",
+        "sha256": "ff95ae01b8f8b38ee4d09eaaccfb49e2c2cd7a22dc212f3d57263856e5698e81"
+      },
+      {
+        "name": "persist",
+        "sha256": "771ac3668239b6493258c8f94b1c2bd97f721ac435c29939cf937bf9d9fc6fce"
+      },
+      {
+        "name": "sourceIdentity",
+        "sha256": "9a8da612a2356c2a62b5ab16d36a1b51269b77caa814773f4b09dbab69a7c7fb"
+      },
+      {
+        "name": "sameContent",
+        "sha256": "623fb44e1e11a4a77256b251e4f94c0f3ff29d79a9305671bf09f3f762cc98e0"
+      },
+      {
+        "name": "duplicateOrConflicts",
+        "sha256": "45f3c1de6ac8ee8f7909d7d49ef15c29a1dbaceed91d366a71713b94cfb09e79"
+      },
+      {
+        "name": "sourceSummary",
+        "sha256": "8a3a8196e4b407293eb740c78375fef2b616a9f4c40622b0a6714599aade9ee7"
+      },
+      {
+        "name": "listProjectMemories",
+        "sha256": "5865b9d20b0caa0d93baf72958a812b0e8f9017216958d353270695b2b495a6b"
+      },
+      {
+        "name": "getProjectMemory",
+        "sha256": "f62271e2bc147753ea5803f8175d678c85c729fc0b70ff1057f797254dc5750e"
+      },
+      {
+        "name": "listProjectMemoryVersions",
+        "sha256": "de29f11b33f6570f93b5bf67788e599e80691c26f22dcbd9a026268a4a0fd305"
+      },
+      {
+        "name": "getMemorySourceState",
+        "sha256": "6658dcc01e19a5412e7374082a80f1ec7e1a97473c42c3bd052de3f8fb6aa5a8"
+      },
+      {
+        "name": "listMemoryCandidates",
+        "sha256": "fa0b2e4f8d5d3e01568a2c2cfb3add57c439fe4736138e61a0356adc90b0e7af"
+      },
+      {
+        "name": "create",
+        "sha256": "4f7f6f3eb969203b8a517cf1c04a8ca289779d1d2b3fdd32177daa51df6e3d8c"
+      },
+      {
+        "name": "promoteProjectMemory",
+        "sha256": "9d4bdafe014acb7c1d8da5bb75a933b56e341355efc456ea3ff4cd8d6cc911d3"
+      }
+    ],
+    "addedDeclaration": {
+      "name": "MANUAL_MEMORY_TABLES",
+      "tables": [
+        "projects",
+        "projectMemories",
+        "projectMemoryVersions"
+      ]
+    },
+    "limits": "Byte comparison of declarations complements behavioral/native proof; coordinator owns whole-source static and value-edge analysis."
+  },
+  "retainedBroadOwners": {
+    "promoteProjectMemory": "sourceSummary validates task/thread/current-or-historical summary and invokes existing all-table getTaskWrapupState child transaction; three-store parent would omit protected evidence and cannot contain the child.",
+    "getTaskWrapupState/wrapup": "collectWrapupSnapshot uses run/message/call/record/job/batch/item evidence plus dynamic business entity/reference/media/audio ownership/output checks; readiness/completion and summary/version state must be coherent.",
+    "executeAtomicTool": "Generic callback may mutate different business domains; run/project/call validation and completed result receipt share its transaction. No complete narrower callback closure supplied.",
+    "agentRuns.beginAgentRun": "Task/thread/project/run/message/wrapup/config/context/memory/reference preparation and initial messages/run/task/thread writes are one owner; configuration child may write agents. Not separately narrowed.",
+    "memoryReadHelpers": "Retained as assignment is five manual writes; no claim that simple read helpers intrinsically need every store."
+  },
+  "commands": [
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm test tests/e04MemoryTransactions.test.ts tests/projectMemories.test.ts --maxWorkers=4",
+      "exitCode": 0,
+      "counter": {
+        "files": 2,
+        "tests": 39,
+        "newTests": 30,
+        "existingTests": 9
+      },
+      "log": "focused-final.log"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec tsc -p tests/fixtures/e04-memory/tsconfig.json --pretty false",
+      "exitCode": 0,
+      "log": "fixture-type-final.log"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm lint",
+      "exitCode": 0,
+      "log": "application-lint.log",
+      "limit": "One observed application compiler run during parallel work; no integrated source freeze."
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node scripts/e04-memory-browser-regression.mjs",
+      "mode": "before",
+      "env": {
+        "E04_MEMORY_BASELINE": "1",
+        "E04_MEMORY_OUTPUT": ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-before-attempt-3"
+      },
+      "exitCode": 0,
+      "scenarios": 4,
+      "log": "native-before-attempt-3.log"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node scripts/e04-memory-browser-regression.mjs",
+      "mode": "after",
+      "env": {
+        "E04_MEMORY_OUTPUT": ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-after-attempt-1"
+      },
+      "exitCode": 0,
+      "scenarios": 4,
+      "log": "native-after-attempt-1.log"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node .trellis/tasks/10-09-src-remediation-e/research/e04-memory/produce-integrity.mjs",
+      "exitCode": 0,
+      "log": "source-integrity.log"
+    },
+    {
+      "command": "git diff --check -- src/db/projectMemories.ts",
+      "exitCode": 0
+    }
+  ],
+  "commandEnvironment": {
+    "PATHPrefix": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin",
+    "machinePnpmVersion": "10.15.0",
+    "E04_MEMORY_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+    "E04_MEMORY_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+  },
+  "nativeVersions": {
+    "node": "v24.11.0",
+    "vite": "7.3.6",
+    "dexie": "4.4.6",
+    "chromium": "151.0.7922.34"
+  },
+  "nativeEffectiveLoadedSourceClosures": {
+    "native-before-attempt-3": {
+      "src/db/projects.ts": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+      "src/db/projectMemories.ts": "2385dcc806bd3a6e888e27dd281b704f75abb4acc77fb5a29859ae7409aea1b9",
+      "src/db/database.ts": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+      "src/db/audioShared.ts": "2dc8545765e9916ac3c8bc07341b56ff87c9a1f78ace95f1535d96c020a801b3",
+      "src/db/productionRecords.ts": "c4be1a9cbedebbbd11a3a4435fd06f97a7270b05376f50c0e3efe515d51d73e7",
+      "src/db/productionShared.ts": "afd0e5b49aeb0f00c9f58f69f028e01f21062a2f6ba71741b056aec720797fc3",
+      "src/db/media.ts": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+      "src/domain/types.ts": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+      "src/lib/ids.ts": "39924822d8b29e298a8d00615d0027b581ba2eb6a32cf210262a253c58ebfa5d",
+      "src/lib/draftConflict.ts": "2e94acd524fa20eeb3053f8631852a9d5275d8a2c6698718577dd9bc1a3e5e66",
+      "src/domain/audio.ts": "3d4cef74e3bae43f8e5c439ff8704c028e1ff97da4e47f0e0ed579df78a25e94",
+      "src/domain/slot.ts": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+      "src/domain/music.ts": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+      "src/domain/output.ts": "387df36dc4b5a8808477d11620546ce45010c5fe3289d7556ba5cd7bdb02f492",
+      "src/db/agentTaskWrapups.ts": "f9dfc0b4866ef55feb69df1eabbfcdc73dfc0153be146b045b4c65be517e5440",
+      "src/lib/memory/schema.ts": "ccddefc631d808e0ec77a07b6be57cafee746fcf8cfbb09969a3ff0e1b754946",
+      "src/db/taskAudioGenerationEvidence.ts": "2508c7b72621699fcf5806fd385271876380b163fc95d68d942893d2438a9b6a",
+      "src/lib/agent/taskState.ts": "e83ffaaf911424d8e7e831e55500e91a5e68b0818ff8b76d6502abebe7f01053",
+      "src/lib/agent/wrapupEvidence.ts": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "src/lib/agent/wrapupSchema.ts": "10bd920ba9f62dc23664d1aa30f2847b8976d42971804fb91cc8f8856e3a3600",
+      "src/domain/generationCapabilities.ts": "4398fc99a4003bda5ea903c54be5673bbc0dd748710d6a58ad9661ca545decef",
+      "src/lib/audioGeneration/outputEvidence.ts": "6fb2b9efb447d7e5b2bae46ce799ada94317cedb6f05969594a98176fe066fc7",
+      "src/lib/audioGeneration/presentation.ts": "1278c8bba039db210db6da091a81280d72b2f3350790cfd6f307cb925fd17404",
+      "src/lib/agent/referenceEvidence.ts": "e8950b149b044d303b979762fcc6f7bb71bcc6e4d7b43ea02b4eb48f0c013208",
+      "src/lib/productionRevision.ts": "0cb3b87c2abafef9e3695de699c603fd2a8420e229693879e7d7417e88e9f8cc",
+      "src/lib/agent/businessStore.ts": "53571ee862b15d05e4782048c5f393b7afe50132f1f3983cccb375ab10d99bcc",
+      "src/db/taskGenerationEvidence.ts": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+      "src/db/agentTaskRecords.ts": "818022669a64f4fe8cf55c0e285582a62d196ab953fd357b47f027f65320533d",
+      "src/lib/agent/referenceToolNames.ts": "577cdbe4f5d689f91e86bb17900844131131a1872aae9b95f6ea9c27d8fadbd1",
+      "src/domain/imageDiscovery.ts": "24a4876f824cbc3b9bf610edde3233f37dda9d4f0d11a4b829cae34d8ec2f93d",
+      "src/db/audio.ts": "371d2c2d66fe07e41075d864a26ee980a9b64c46cce333084a50848be4550dfd",
+      "src/db/agentTaskGuards.ts": "8df6820136145e10a82aef4c1db89d7c763150858fa96661b92b35a259cd6e7c",
+      "src/domain/agentTaskRecords.ts": "489f31d62156ce24b5c16be7b11364ddee4200d6af48cbc46b42596dfc7f44ed",
+      "src/lib/audioGeneration/reference.ts": "036ab41d4d0972e98d4acb8fc9d25286246473579d5d2cce6a9667ad38d39097",
+      "src/lib/audioGeneration/input.ts": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+      "src/lib/ai/mimoSpeech.ts": "3793fedd4a513c73e8b2a84ba30261affb216af43034425b24de8b4542870ae3",
+      "src/lib/ai/apimartAudio.ts": "b3b05fbbb2c5ae0ba7b3500216a7050f4f066a791fa053d68d7fcda7326d8e9d",
+      "src/lib/ai/boundedResponse.ts": "92cc47f78623f8c1c8e7d864a9f4af655c5b498077f8b0e93de25eefc9be8384",
+      "src/lib/ai/requestBoundary.ts": "c72677ed1736c47f45b64db9145a40405bfc38b2de73ef6af5cde455f968b155",
+      "src/lib/ai/modelMetadata.ts": "9ea70a6c9172cbab757550440888fbda56a5ec6f89aa95111405accd3db175aa",
+      "src/lib/resource/limits.ts": "aaed95b303a65539344a27c6fbee1670171248995a4e2da3fe4dc9cc4307bb17",
+      "src/lib/ai/baseUrl.ts": "ae51424b8ebac68bf252d235e284694a5793bcb387a3f2deeb58ca71faaa9c7c",
+      "src/lib/audioGeneration/taskIds.ts": "9c6a060ef497e2b41ed783ce5ce628770623c3afc1b7f8f62173373cc66f6a9f",
+      "src/lib/ai/safeError.ts": "aaca8cbeafa33d6d2d7f12668f858827de788b1b3737bf9a909cdb255dca5d12",
+      "src/lib/audio/mime.ts": "dbe81e382e37dbdcecd85dc560bb09c48eed212e67607f0941e5d8015db07076",
+      "src/lib/ai/modelBank/index.ts": "64e721fc672271586ca09965397ef3f3dab09d36b10976dc94a3b68d4e2ec3df"
+    },
+    "native-after-attempt-1": {
+      "src/db/projects.ts": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+      "src/db/database.ts": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+      "src/db/projectMemories.ts": "33ea5784a01f3b30583416e01f09c83ce25cf071de2547c40713d6b3b9419cb3",
+      "src/db/productionShared.ts": "afd0e5b49aeb0f00c9f58f69f028e01f21062a2f6ba71741b056aec720797fc3",
+      "src/db/audioShared.ts": "2dc8545765e9916ac3c8bc07341b56ff87c9a1f78ace95f1535d96c020a801b3",
+      "src/db/productionRecords.ts": "c4be1a9cbedebbbd11a3a4435fd06f97a7270b05376f50c0e3efe515d51d73e7",
+      "src/db/media.ts": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+      "src/domain/types.ts": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+      "src/lib/ids.ts": "39924822d8b29e298a8d00615d0027b581ba2eb6a32cf210262a253c58ebfa5d",
+      "src/domain/output.ts": "387df36dc4b5a8808477d11620546ce45010c5fe3289d7556ba5cd7bdb02f492",
+      "src/lib/draftConflict.ts": "2e94acd524fa20eeb3053f8631852a9d5275d8a2c6698718577dd9bc1a3e5e66",
+      "src/domain/slot.ts": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+      "src/domain/music.ts": "e4aa833ff90eb581b77f30f88a48784ec57b3d9d7adb2a933b65db0fc65c47da",
+      "src/domain/audio.ts": "3d4cef74e3bae43f8e5c439ff8704c028e1ff97da4e47f0e0ed579df78a25e94",
+      "src/db/agentTaskWrapups.ts": "f9dfc0b4866ef55feb69df1eabbfcdc73dfc0153be146b045b4c65be517e5440",
+      "src/lib/memory/schema.ts": "ccddefc631d808e0ec77a07b6be57cafee746fcf8cfbb09969a3ff0e1b754946",
+      "src/db/taskAudioGenerationEvidence.ts": "2508c7b72621699fcf5806fd385271876380b163fc95d68d942893d2438a9b6a",
+      "src/domain/generationCapabilities.ts": "4398fc99a4003bda5ea903c54be5673bbc0dd748710d6a58ad9661ca545decef",
+      "src/lib/agent/taskState.ts": "e83ffaaf911424d8e7e831e55500e91a5e68b0818ff8b76d6502abebe7f01053",
+      "src/lib/agent/wrapupSchema.ts": "10bd920ba9f62dc23664d1aa30f2847b8976d42971804fb91cc8f8856e3a3600",
+      "src/lib/agent/wrapupEvidence.ts": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "src/lib/audioGeneration/presentation.ts": "1278c8bba039db210db6da091a81280d72b2f3350790cfd6f307cb925fd17404",
+      "src/lib/audioGeneration/outputEvidence.ts": "6fb2b9efb447d7e5b2bae46ce799ada94317cedb6f05969594a98176fe066fc7",
+      "src/lib/agent/referenceEvidence.ts": "e8950b149b044d303b979762fcc6f7bb71bcc6e4d7b43ea02b4eb48f0c013208",
+      "src/db/agentTaskRecords.ts": "818022669a64f4fe8cf55c0e285582a62d196ab953fd357b47f027f65320533d",
+      "src/lib/agent/businessStore.ts": "53571ee862b15d05e4782048c5f393b7afe50132f1f3983cccb375ab10d99bcc",
+      "src/lib/productionRevision.ts": "0cb3b87c2abafef9e3695de699c603fd2a8420e229693879e7d7417e88e9f8cc",
+      "src/db/taskGenerationEvidence.ts": "11757352ec5d534a2920007949f9d2e6dfa6a403bf9a67f932436a3f95dac312",
+      "src/domain/imageDiscovery.ts": "24a4876f824cbc3b9bf610edde3233f37dda9d4f0d11a4b829cae34d8ec2f93d",
+      "src/lib/agent/referenceToolNames.ts": "577cdbe4f5d689f91e86bb17900844131131a1872aae9b95f6ea9c27d8fadbd1",
+      "src/db/audio.ts": "371d2c2d66fe07e41075d864a26ee980a9b64c46cce333084a50848be4550dfd",
+      "src/db/agentTaskGuards.ts": "8df6820136145e10a82aef4c1db89d7c763150858fa96661b92b35a259cd6e7c",
+      "src/domain/agentTaskRecords.ts": "489f31d62156ce24b5c16be7b11364ddee4200d6af48cbc46b42596dfc7f44ed",
+      "src/lib/audioGeneration/reference.ts": "036ab41d4d0972e98d4acb8fc9d25286246473579d5d2cce6a9667ad38d39097",
+      "src/lib/audioGeneration/input.ts": "bfe29b5ed9f81ec76987fdf417fd68f85bb3224cdbfe6423e83300792c50af62",
+      "src/lib/ai/mimoSpeech.ts": "3793fedd4a513c73e8b2a84ba30261affb216af43034425b24de8b4542870ae3",
+      "src/lib/ai/apimartAudio.ts": "b3b05fbbb2c5ae0ba7b3500216a7050f4f066a791fa053d68d7fcda7326d8e9d",
+      "src/lib/ai/boundedResponse.ts": "92cc47f78623f8c1c8e7d864a9f4af655c5b498077f8b0e93de25eefc9be8384",
+      "src/lib/ai/safeError.ts": "aaca8cbeafa33d6d2d7f12668f858827de788b1b3737bf9a909cdb255dca5d12",
+      "src/lib/resource/limits.ts": "aaed95b303a65539344a27c6fbee1670171248995a4e2da3fe4dc9cc4307bb17",
+      "src/lib/ai/baseUrl.ts": "ae51424b8ebac68bf252d235e284694a5793bcb387a3f2deeb58ca71faaa9c7c",
+      "src/lib/ai/modelMetadata.ts": "9ea70a6c9172cbab757550440888fbda56a5ec6f89aa95111405accd3db175aa",
+      "src/lib/audioGeneration/taskIds.ts": "9c6a060ef497e2b41ed783ce5ce628770623c3afc1b7f8f62173373cc66f6a9f",
+      "src/lib/audio/mime.ts": "dbe81e382e37dbdcecd85dc560bb09c48eed212e67607f0941e5d8015db07076",
+      "src/lib/ai/requestBoundary.ts": "c72677ed1736c47f45b64db9145a40405bfc38b2de73ef6af5cde455f968b155",
+      "src/lib/ai/modelBank/index.ts": "64e721fc672271586ca09965397ef3f3dab09d36b10976dc94a3b68d4e2ec3df"
+    }
+  },
+  "nativeObservations": {
+    "native-before-attempt-3": {
+      "observationsPath": ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-before-attempt-3/observations.json",
+      "scenarios": 4,
+      "loadedSourcePaths": 46,
+      "dependencyChanges": [],
+      "documents": 1,
+      "errors": [],
+      "transactionObservations": {
+        "observations": [
+          {
+            "command": "createProjectMemory",
+            "storeNames": [
+              "agentGenerationBatchItems",
+              "agentGenerationBatches",
+              "agentGenerationJobs",
+              "agentRuns",
+              "agentTaskRecordVersions",
+              "agentTaskRecords",
+              "agentTaskWrapupVersions",
+              "agentTaskWrapups",
+              "agentTasks",
+              "agentToolCalls",
+              "agents",
+              "audioChapters",
+              "audioClips",
+              "audioExports",
+              "audioGenerationJobs",
+              "audioSegments",
+              "audioSpeakers",
+              "audioTakes",
+              "audioTracks",
+              "characters",
+              "chatMessages",
+              "chatThreads",
+              "connectorAliases",
+              "connectors",
+              "contextCompactions",
+              "episodes",
+              "ipProfiles",
+              "libraryMaterials",
+              "materialEvents",
+              "materialUses",
+              "materialVersions",
+              "media",
+              "musicDrafts",
+              "musicWorks",
+              "productionProposals",
+              "projectIpLinks",
+              "projectMemories",
+              "projectMemoryVersions",
+              "projectReferences",
+              "projects",
+              "props",
+              "referenceChunks",
+              "scenes",
+              "searchConnections",
+              "shots",
+              "styles"
+            ],
+            "mode": "readwrite"
+          },
+          {
+            "command": "updateProjectMemory",
+            "storeNames": [
+              "agentGenerationBatchItems",
+              "agentGenerationBatches",
+              "agentGenerationJobs",
+              "agentRuns",
+              "agentTaskRecordVersions",
+              "agentTaskRecords",
+              "agentTaskWrapupVersions",
+              "agentTaskWrapups",
+              "agentTasks",
+              "agentToolCalls",
+              "agents",
+              "audioChapters",
+              "audioClips",
+              "audioExports",
+              "audioGenerationJobs",
+              "audioSegments",
+              "audioSpeakers",
+              "audioTakes",
+              "audioTracks",
+              "characters",
+              "chatMessages",
+              "chatThreads",
+              "connectorAliases",
+              "connectors",
+              "contextCompactions",
+              "episodes",
+              "ipProfiles",
+              "libraryMaterials",
+              "materialEvents",
+              "materialUses",
+              "materialVersions",
+              "media",
+              "musicDrafts",
+              "musicWorks",
+              "productionProposals",
+              "projectIpLinks",
+              "projectMemories",
+              "projectMemoryVersions",
+              "projectReferences",
+              "projects",
+              "props",
+              "referenceChunks",
+              "scenes",
+              "searchConnections",
+              "shots",
+              "styles"
+            ],
+            "mode": "readwrite"
+          },
+          {
+            "command": "setProjectMemoryStatus",
+            "storeNames": [
+              "agentGenerationBatchItems",
+              "agentGenerationBatches",
+              "agentGenerationJobs",
+              "agentRuns",
+              "agentTaskRecordVersions",
+              "agentTaskRecords",
+              "agentTaskWrapupVersions",
+              "agentTaskWrapups",
+              "agentTasks",
+              "agentToolCalls",
+              "agents",
+              "audioChapters",
+              "audioClips",
+              "audioExports",
+              "audioGenerationJobs",
+              "audioSegments",
+              "audioSpeakers",
+              "audioTakes",
+              "audioTracks",
+              "characters",
+              "chatMessages",
+              "chatThreads",
+              "connectorAliases",
+              "connectors",
+              "contextCompactions",
+              "episodes",
+              "ipProfiles",
+              "libraryMaterials",
+              "materialEvents",
+              "materialUses",
+              "materialVersions",
+              "media",
+              "musicDrafts",
+              "musicWorks",
+              "productionProposals",
+              "projectIpLinks",
+              "projectMemories",
+              "projectMemoryVersions",
+              "projectReferences",
+              "projects",
+              "props",
+              "referenceChunks",
+              "scenes",
+              "searchConnections",
+              "shots",
+              "styles"
+            ],
+            "mode": "readwrite"
+          },
+          {
+            "command": "replaceProjectMemory",
+            "storeNames": [
+              "agentGenerationBatchItems",
+              "agentGenerationBatches",
+              "agentGenerationJobs",
+              "agentRuns",
+              "agentTaskRecordVersions",
+              "agentTaskRecords",
+              "agentTaskWrapupVersions",
+              "agentTaskWrapups",
+              "agentTasks",
+              "agentToolCalls",
+              "agents",
+              "audioChapters",
+              "audioClips",
+              "audioExports",
+              "audioGenerationJobs",
+              "audioSegments",
+              "audioSpeakers",
+              "audioTakes",
+              "audioTracks",
+              "characters",
+              "chatMessages",
+              "chatThreads",
+              "connectorAliases",
+              "connectors",
+              "contextCompactions",
+              "episodes",
+              "ipProfiles",
+              "libraryMaterials",
+              "materialEvents",
+              "materialUses",
+              "materialVersions",
+              "media",
+              "musicDrafts",
+              "musicWorks",
+              "productionProposals",
+              "projectIpLinks",
+              "projectMemories",
+              "projectMemoryVersions",
+              "projectReferences",
+              "projects",
+              "props",
+              "referenceChunks",
+              "scenes",
+              "searchConnections",
+              "shots",
+              "styles"
+            ],
+            "mode": "readwrite"
+          },
+          {
+            "command": "replaceProjectMemory",
+            "storeNames": [
+              "agentGenerationBatchItems",
+              "agentGenerationBatches",
+              "agentGenerationJobs",
+              "agentRuns",
+              "agentTaskRecordVersions",
+              "agentTaskRecords",
+              "agentTaskWrapupVersions",
+              "agentTaskWrapups",
+              "agentTasks",
+              "agentToolCalls",
+              "agents",
+              "audioChapters",
+              "audioClips",
+              "audioExports",
+              "audioGenerationJobs",
+              "audioSegments",
+              "audioSpeakers",
+              "audioTakes",
+              "audioTracks",
+              "characters",
+              "chatMessages",
+              "chatThreads",
+              "connectorAliases",
+              "connectors",
+              "contextCompactions",
+              "episodes",
+              "ipProfiles",
+              "libraryMaterials",
+              "materialEvents",
+              "materialUses",
+              "materialVersions",
+              "media",
+              "musicDrafts",
+              "musicWorks",
+              "productionProposals",
+              "projectIpLinks",
+              "projectMemories",
+              "projectMemoryVersions",
+              "projectReferences",
+              "projects",
+              "props",
+              "referenceChunks",
+              "scenes",
+              "searchConnections",
+              "shots",
+              "styles"
+            ],
+            "mode": "readwrite"
+          },
+          {
+            "command": "deleteProjectMemory",
+            "storeNames": [
+              "agentGenerationBatchItems",
+              "agentGenerationBatches",
+              "agentGenerationJobs",
+              "agentRuns",
+              "agentTaskRecordVersions",
+              "agentTaskRecords",
+              "agentTaskWrapupVersions",
+              "agentTaskWrapups",
+              "agentTasks",
+              "agentToolCalls",
+              "agents",
+              "audioChapters",
+              "audioClips",
+              "audioExports",
+              "audioGenerationJobs",
+              "audioSegments",
+              "audioSpeakers",
+              "audioTakes",
+              "audioTracks",
+              "characters",
+              "chatMessages",
+              "chatThreads",
+              "connectorAliases",
+              "connectors",
+              "contextCompactions",
+              "episodes",
+              "ipProfiles",
+              "libraryMaterials",
+              "materialEvents",
+              "materialUses",
+              "materialVersions",
+              "media",
+              "musicDrafts",
+              "musicWorks",
+              "productionProposals",
+              "projectIpLinks",
+              "projectMemories",
+              "projectMemoryVersions",
+              "projectReferences",
+              "projects",
+              "props",
+              "referenceChunks",
+              "scenes",
+              "searchConnections",
+              "shots",
+              "styles"
+            ],
+            "mode": "readwrite"
+          }
+        ],
+        "totalStores": 46,
+        "finalVersions": 6
+      },
+      "rollbackCounters": {
+        "actualHistoryInsertions": 1,
+        "laterFailures": 2,
+        "historyFailure": "native fault after history insertion",
+        "replacementFailures": [
+          "native later replacement fault",
+          "native later replacement fault"
+        ],
+        "retryRevision": 2
+      },
+      "scheduling": {
+        "probe": {
+          "completed": 5
+        },
+        "held": {
+          "events": [
+            "first-history-inserted",
+            "second-command-submitted"
+          ],
+          "held": true,
+          "released": false,
+          "unrelatedCompleted": false,
+          "secondHistoryWrites": 0
+        },
+        "final": {
+          "events": [
+            "first-history-inserted",
+            "second-command-submitted",
+            "release-requested",
+            "first-resumed",
+            "second-cas-rejected",
+            "unrelated-media-written"
+          ],
+          "held": true,
+          "released": true,
+          "unrelatedCompleted": true,
+          "secondHistoryWrites": 0,
+          "completed": {
+            "firstRevision": 2,
+            "secondError": "Error: \u8bb0\u5fc6\u5df2\u66f4\u65b0\uff0c\u8bf7\u4fdd\u7559\u5f53\u524d\u7f16\u8f91\u5e76\u91cd\u65b0\u6838\u5bf9",
+            "finalRevision": 2,
+            "historyRevisions": [
+              1,
+              2
+            ]
+          }
+        }
+      }
+    },
+    "native-after-attempt-1": {
+      "observationsPath": ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-after-attempt-1/observations.json",
+      "scenarios": 4,
+      "loadedSourcePaths": 46,
+      "dependencyChanges": [],
+      "documents": 1,
+      "errors": [],
+      "transactionObservations": {
+        "observations": [
+          {
+            "command": "createProjectMemory",
+            "storeNames": [
+              "projectMemories",
+              "projectMemoryVersions",
+              "projects"
+            ],
+            "mode": "readwrite"
+          },
+          {
+            "command": "updateProjectMemory",
+            "storeNames": [
+              "projectMemories",
+              "projectMemoryVersions",
+              "projects"
+            ],
+            "mode": "readwrite"
+          },
+          {
+            "command": "setProjectMemoryStatus",
+            "storeNames": [
+              "projectMemories",
+              "projectMemoryVersions",
+              "projects"
+            ],
+            "mode": "readwrite"
+          },
+          {
+            "command": "replaceProjectMemory",
+            "storeNames": [
+              "projectMemories",
+              "projectMemoryVersions",
+              "projects"
+            ],
+            "mode": "readwrite"
+          },
+          {
+            "command": "replaceProjectMemory",
+            "storeNames": [
+              "projectMemories",
+              "projectMemoryVersions",
+              "projects"
+            ],
+            "mode": "readwrite"
+          },
+          {
+            "command": "deleteProjectMemory",
+            "storeNames": [
+              "projectMemories",
+              "projectMemoryVersions",
+              "projects"
+            ],
+            "mode": "readwrite"
+          }
+        ],
+        "totalStores": 46,
+        "finalVersions": 6
+      },
+      "rollbackCounters": {
+        "actualHistoryInsertions": 1,
+        "laterFailures": 2,
+        "historyFailure": "native fault after history insertion",
+        "replacementFailures": [
+          "native later replacement fault",
+          "native later replacement fault"
+        ],
+        "retryRevision": 2
+      },
+      "scheduling": {
+        "probe": {
+          "completed": 5
+        },
+        "held": {
+          "events": [
+            "first-history-inserted",
+            "second-command-submitted",
+            "unrelated-media-written"
+          ],
+          "held": true,
+          "released": false,
+          "unrelatedCompleted": true,
+          "secondHistoryWrites": 0
+        },
+        "final": {
+          "events": [
+            "first-history-inserted",
+            "second-command-submitted",
+            "unrelated-media-written",
+            "release-requested",
+            "first-resumed",
+            "second-cas-rejected"
+          ],
+          "held": true,
+          "released": true,
+          "unrelatedCompleted": true,
+          "secondHistoryWrites": 0,
+          "completed": {
+            "firstRevision": 2,
+            "secondError": "Error: \u8bb0\u5fc6\u5df2\u66f4\u65b0\uff0c\u8bf7\u4fdd\u7559\u5f53\u524d\u7f16\u8f91\u5e76\u91cd\u65b0\u6838\u5bf9",
+            "finalRevision": 2,
+            "historyRevisions": [
+              1,
+              2
+            ]
+          }
+        }
+      }
+    }
+  },
+  "failedAttempts": [
+    {
+      "name": "fixture-type-attempt-1",
+      "exitCode": 2,
+      "reason": "Six PromiseExtended signature errors from fault callbacks returning native promises.",
+      "preservation": "Log plus exact tests/main/config and hashes under fixture-type-attempt-1/.",
+      "correction": "Dexie.Promise.resolve().then(...) callbacks; attempt-2 and final pass."
+    },
+    {
+      "name": "native-before-attempt-1",
+      "exitCode": 1,
+      "reason": "Scheduling competitor joined held transaction context, invalidating independence.",
+      "preservation": "Observations/log/screenshot and exact producer copies/hashes.",
+      "correction": "Independent competitor and unrelated transaction via Dexie.ignoreTransaction."
+    },
+    {
+      "name": "native-before-attempt-2",
+      "exitCode": 1,
+      "reason": "Completion page.evaluate surfaced DexieError2; no more specific error was serialized.",
+      "preservation": "Observations/log/screenshot and exact producer copies/hashes.",
+      "correction": "Completion verifier outside held Dexie context; completion errors serialized. Final before-3/after-1 pass."
+    }
+  ],
+  "limits": [
+    "Ownscope bytes frozen; other E04 writer changes are neither owned nor accepted here.",
+    "46 actually loaded source paths had no per-run drift; this is not an all-src freeze or a guarantee after either run. Coordinator must validate final current integrated closure.",
+    "Fake-indexeddb proves store scope/contracts/rollback, not native scheduling or latency.",
+    "Native before blocked-unrelated observation is finite at a checkpoint after five real transactions in a separate database; no timed speed claim.",
+    "IndexedDB readwrite stores serialize across owners; no per-project lock/parallelism claim.",
+    "Native fixture executes actual public commands with controlled persistence seams; no full-app UI/device/provider claim.",
+    "Application lint passed once during parallel work; whole/current static/AST/full integration remains with coordinator.",
+    "Before memory source uses exact original snapshot while all other dependencies are explicitly shared current sources.",
+    "No broad owner narrowed without complete closure; other simple read scopes intentionally out of this assignment."
+  ],
+  "englishSpecSuggestions": [
+    "The five simple manual memory commands declare projects, projectMemories and projectMemoryVersions together. All project/current ownership, normalized duplicate/conflict checks, expected revisions and immutable history writes stay inside that transaction; replacement includes both current rows and histories.",
+    "Do not reuse the manual memory store list for promotion, wrapup evidence, agent-run initialization or generic atomic-tool callbacks. Their dynamic evidence/receipt closures require separate complete analysis. Narrow manual commands remain compatible with broader outer atomic transactions.",
+    "Verify actual native IDBTransaction.objectStoreNames and failures after real writes. Independent unrelated-store completion and a serialized stale-CAS competitor establish scheduling; fake-indexeddb or store counts alone do not establish speed or per-project parallelism."
+  ],
+  "evidenceHashes": {
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/application-lint.log": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/entry.json": "fd621b38921b684c0478cc105321cc1632ca86a143ddb3616cbf91577c1c10a2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/finalize-report.py": "36c31c044d2bd60557522cb799ed1f2e0ba9f5fde6ca603aeb4aad4e03951165",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/fixture-type-attempt-1/inputs.json": "9d90e2789214a563d45eb57c2921b0945805a1854e7578930c25c10434d51950",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/fixture-type-attempt-1/tests/e04MemoryTransactions.test.ts": "23b6e7b83b0c6baf5ac895aaeaf1484cc642eadab917fc6612cbd0a53f194a93",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/fixture-type-attempt-1/tests/fixtures/e04-memory/main.ts": "a7eab1c8a1247e814676462f9134515e82cb834769ab883940aca9c3f1d52875",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/fixture-type-attempt-1/tests/fixtures/e04-memory/tsconfig.json": "929bc82e395bff1a027c56cd89dd77436a4039031943d9d765730bf6da549fd7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/fixture-type-attempt-1.log": "11181fd874f830ad61c30235138abf871fbb9add4445a58348ebf9677c6dd1b6",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/fixture-type-attempt-2.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/fixture-type-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/focused-attempt-1.log": "8ad0c48bc727668bceb605ad162e1578a96864b1897c42692de106bcafc8dae2",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/focused-final.log": "082403091dde83d7de1f5597b48bd0214c2e8558e704fd8ea4e1d9f5d8a1d6e7",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/machine-pnpm-version.log": "9870c4dadae90a6a834e61f250fb36fd9dfe1f8353a9ea3a7a75a4176aca3b3e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-after-attempt-1/observations.json": "fb1be4bc443031348e4df8d90f94527438d4943d56de4ae041282615159173ec",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-after-attempt-1.log": "6908827d996ac8e7613af1d014312f069a6647be05eed25b73bda8760b593a9b",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-before-attempt-1/failure.png": "bbb1136e985248492373f2dc7bba7be0c42aaeb4747afea53d3a706b0e6959ac",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-before-attempt-1/observations.json": "9158732873bee20489d9f99cae2088b5eeed5a88aa4db3df58577ffc5051b848",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-before-attempt-1/producer/hashes.json": "0047f8c43815ea4f8276d9e36d3fc4554e6024828da9a453aa049e24763fc254",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-before-attempt-1/producer/scripts/e04-memory-browser-regression.mjs": "7abb1d9746d6863dd8ad47a59eb3ef66ff38042812bf717ac44bba66f43d4788",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-before-attempt-1/producer/src/db/projectMemories.ts": "33ea5784a01f3b30583416e01f09c83ce25cf071de2547c40713d6b3b9419cb3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-before-attempt-1/producer/tests/fixtures/e04-memory/main.ts": "cedfbd5e5a5127b73914574b5ea4c80c66715c4e4fb0dd8dcb853aa3691567c4",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-before-attempt-1.log": "d3911da708f98954e0a6947ea01967fb9c383a7dd0e682b053250c00ac1d756f",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-before-attempt-2/failure.png": "bbb1136e985248492373f2dc7bba7be0c42aaeb4747afea53d3a706b0e6959ac",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-before-attempt-2/observations.json": "da113365a72de6fb737ce2460c4276345bae61e10abed98251ab3c9a802d3c90",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-before-attempt-2/producer/hashes.json": "e7713b7ee1a8afd6c7e9c07a129c017f317dc42404a0b5d1f8a92c26cbcbaaff",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-before-attempt-2/producer/scripts/e04-memory-browser-regression.mjs": "2f3cecb061527963f17ae2329d116ff507edbae614f4f6396a264c37b0841a36",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-before-attempt-2/producer/tests/fixtures/e04-memory/main.ts": "d48e60ed0f7cd45b33924b7e7a16b3326000580063e97d9804cf53eab6b223f0",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-before-attempt-2.log": "222ab798e0c96044aa8c63f25ef1ad83c7fb888df7ca419dc2358f54498d5710",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-before-attempt-3/observations.json": "181bbadc575d7c58bad35c71c072432b01220cb70d77bf00e540ca8324af35bd",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/native-before-attempt-3.log": "d6f9ef945dcdf16e5becb63ebeb4d46da6aa126b637dc0622c39b99dff1b922e",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/ownscope-freeze.json": "15f313e45ea9e24637858d601d1876f73b0fc53b33d374ffaf27fd8251c2a298",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/produce-integrity.mjs": "746b0d732e649431597bfd23bb4705789c5c64a057962606eba1a36ed78593dc",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/source-integrity.json": "19f3f59da67ff1c2b223fe57c6e9a636e7977001cb5ea08562f1d844fff31160",
+    ".trellis/tasks/10-09-src-remediation-e/research/e04-memory/source-integrity.log": "a47f3bcfe08d0395bac5d4eeb8462c83ca0c3a344bdeb799222aa811865398a1"
+  },
+  "markdownReportSHA256": "7553b0738c1de07f98a81f8bc2c408cdaaa6b95cda4073d3703b048166855b3f"
+}

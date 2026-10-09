@@ -1,0 +1,53 @@
+# E07 slice C UI/Hooks implementation
+
+Status: completed assigned implementation and self-review, ready for main integration and independent check. The E07 unit and QG01 acceptance remain coordinator-owned. No product/config/package/spec/ledger/commit changes outside the assigned scope.
+
+## Exact scope and lineage
+
+`e07-hooks-implementation/entry.json` and `entry/src/**` are actual E07-entry bytes, captured before this slice edited any assigned file. They include the accepted E01/E04/E06 work already present; Git HEAD is not used as this slice's before. `review-entry.json` freezes all 12 assigned files plus the new permanent test after product implementation. `after.json`, the report's changedFiles/fileCoverage and `owned.patch` compare those exact entry bytes to the final bytes. Both successful native runs assert the review-entry hashes before starting and record equal before/after hashes; the gallery runner's own and loaded closure also remained unchanged. Other workers' wider repository changes were not frozen or reverted.
+
+## File coverage and lifecycle decisions
+
+| File | Concrete correction and preserved semantics | Evidence |
+| --- | --- | --- |
+| AgentChatPage.tsx | Memoize empty thread/connector fallback arrays. Discovery effect reads a freshly reconstructed connector containing only id/definition/baseUrl/apiKey and depends on those scalar values. Metadata refresh cannot abort/refetch discovery. Existing cancellation/AbortController, task departure, execution tokens and manual closure remain. No credential serialization/cache key. | Scoped lint; E01 19 native cases; native-critical-05 rich/manual/pinned scrolling and exact 1→1→2 model request count. |
+| AgentRunDetails.tsx | Inline structured-validation predicate into useMemo so it reads precisely call.status/result, retaining stable validation identity and lazy legacy diagnostic cancellation. Removed the single-use wrapper. | Scoped lint, application TypeScript. |
+| ReferenceAttachments.tsx | Effects capture the actual image Blob (and image kind predicate) or media Blob, so metadata changes do not churn object URLs. Existing envelope/ownership/blob equality and URL cleanup remain. ReferenceIcon has only two local JSX consumers in the canonical src/tests/scripts tree and a fresh full/test Knip unused-export finding; narrow to local function, unchanged render body. | Scoped lint/TypeScript; reference-icon-references.txt and full/test Knip input fingerprint. |
+| TaskWrapup.tsx | Name boolean hasDraft/hasCandidate dependencies instead of complex dependency expressions. The effect reports the same editing presence; content mutation does not republish/remount its owner. Existing synchronous pending/lock, frozen draftRef, promotion lifetime/epoch, route delegation, source/CAS and controller semantics untouched. | b02MemoryPromotion + e01ManualDraftDeparture; E01 native wrapup pending/failure/owner/retired completion cases. |
+| useChatSelection.ts | Read thread id/connector/model scalars outside the reconciliation effect; retain original loaded and connectorList dependencies. Unrelated title/revision refresh must not reset local in-flight model selection. | New explicit deferred-write regression; scoped lint. |
+| useReferenceDraft.ts | Mount effect captures the Map container, not its contents. Imports added later to the same Map are aborted on cleanup; scope changes do not abort unrelated drafts. | New actual-hook import-after-mount/scope-switch/unmount regression. |
+| AudioTimeline.tsx | Stable updatePosition callback reads latest notification ref. Capture cancellationEpoch ref container in player mount effect; cleanup increments its current value to invalidate outstanding buffer promises, rather than copying a stale number. Merge playing/previous-playing polling branches while still recording final stop. Include real seek/geometry/width dependencies with request.id consumption guard, so resize/zoom/equivalent objects cannot replay seek or stop later playback. Const drag copy preserves property edits. | Eight new hook lifecycle cases and five successful native-audio-06 cases with actual PCM/player/StrictMode/ResizeObserver. |
+| AudioSources.tsx | Import/call actual worker-B adoptMaterialInProject export; same operation arguments and pending/error wrapper. | Scoped lint/TypeScript; unchanged E01 native audio-source/draft behavior. |
+| ConnectorsPage.tsx | Keep undefined live-query state stable and perform empty fallback inside byDefinition memo. No effect/session/probe/write changes. | Scoped lint/TypeScript. |
+| ProjectGalleryPage.tsx | Keep undefined ipLinks stable and use optional find at all three consumers. No owner-ID key, querier, envelope, sort/search or mutation changes. | e04LibraryQueries; native gallery 16 cases including held identity/filtered owner silence/IP transitions. |
+| MaterialDetailPanel.tsx | Import/call actual worker-B adoptMaterialInProject export; pending/error/session/departure and existing operation arguments untouched. | Scoped lint/TypeScript. |
+| ShotRow.tsx | Enumerate all seven remaining valid text-column cases before existing catalog-label fallback. Default retains unknown-runtime empty/catalog fallback. No casts/assertNever or changed text rendering. | Typed switch lint and application TypeScript. |
+
+## Checks and producer inputs
+
+All package-manager commands use `/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm` with Node24 machine PATH. Verified actual machine pnpm10.15.0; no install. Actual installed ESLint10.12.0, typed8.71.1, Hooks7.1.1, Sonar4.2.2. The initial assigned 19 errors were 14 exhaustive-dependency diagnostics, two false Hook calls, one duplicated branch, one prefer-const and one exhaustive-switch failure. Final same assigned file coverage: zero errors, 49 existing warnings. No Hook rule disable, broad ignore or debt allowance added. The current warning set is still a review signal and is not accepted debt by this slice.
+
+- `pnpm exec eslint <the 12 assigned paths> -f json -o <research>/eslint-final.json`: exit0; 0 errors/49 warnings. Raw initial/final results retained.
+- `pnpm test tests/b02MemoryPromotion.test.ts tests/e01ManualDraftDeparture.test.ts tests/e04LibraryQueries.test.ts tests/audioEngineTimeline.test.ts tests/audioTimelineShortcuts.test.ts tests/referenceDraft.test.ts --maxWorkers=4`: exit0; five discovered files/61 tests. The nonexistent referenceDraft filter discovered no file; reference draft lifecycle is covered by the new permanent test.
+- `pnpm test tests/e07HookContracts.test.ts --maxWorkers=1`: exit0; 8 tests, actual components/hooks under a deterministic host with stable setters/memos. This is explicitly not ReactDOM scheduling proof.
+- `pnpm exec tsc -p tsconfig.app.json --pretty false`: exit0. Shared imports included; source outside own scope was moving and this does not claim a global freeze.
+- `pnpm exec tsc -p <research>/tsconfig.json --pretty false`: exit0, new permanent test plus both native research harnesses using actual Vite ambient declarations.
+- E01 research runner derived from permanent scripts/e01-drafts-browser-regression.mjs: exit0/19 cases/zero page errors.
+- E04 research runner derived from permanent scripts/e04-library-browser-regression.mjs: exit0/16 cases/zero page errors; own and loaded source before/after equal.
+- native-audio-06.mjs: exit0/5 cases/zero page errors, actual PCM decoding/player/audio context. Controlled only asynchronous load timing. StrictMode replay, one seek per ID across actual ResizeObserver/zoom/equivalent object; newer ID; audition/composition/project/unmount cancel pending play.
+- native-critical-05.mjs: exit0/3 cases/zero page errors. Actual themed AgentChatPage and native IndexedDB: table/link/math/code/unknown fence, manual scroll during streaming, pinned streaming/resize follow, metadata no discovery repeat and credentials exactly one repeat. Local static model response only.
+
+Each native producer uses the provided absolute Playwright/Chromium paths, new isolated Vite cache, and no paid requests. Research runners/harnesses may live in the active output directory; permanent tests/producers do not import mutable task archives. `producer-inputs.json` fingerprints context/source/tool/config/producers; native reports retain loaded original source bodies and hashes. Main must re-run integration on its final common inputs.
+
+## Failures preserved and resolved
+
+1. New hook test attempt01: fake timers plus real DB update stalled the explicit await. Corrected test now mocks that boundary with a controlled deferred promise; no timeout increase. hook-tests-01/02 retained.
+2. Type-test attempt01 omitted Vite ambient types, causing CSS/?url/import.meta.glob diagnostics. Added actual src/vite-env.d.ts and canonical ambient declaration; final test/harness typing succeeds. Original output retained.
+3. E01/E04 original native runs timed out at initial cold load with ten-second UI limit. Research copies await installed Vite scanner/dependency-processing promises with holdUntilCrawlEnd false; permanent scripts/UI timeout unchanged. Fresh runs pass, with preflight timing recorded.
+4. Combined native critical attempts01/02: audio's five cases passed; second fixture cold graph timed out, then chat fixture rendered a caught router error because it lacked production LobeChatTheme. Research chat harness now wraps the actual provider.
+5. Native chat attempt03 completed all three behavior cases but final transport assertion rejected four expected decorative font/KaTeX CSS requests. All were blocked. The corrected assertion allows only those exact observed decorative URLs and rejects other external traffic; it does not allow provider calls. No page errors.
+6. Native chat attempt04 initial cold graph timed out; failure captures exact pending source/dependency requests. Final05 explicitly transforms the fixture entry and awaits installed Vite public waitForRequestsIdle before starting unchanged UI assertions. Final PASS. Native audio final06 is separate and fully PASS.
+
+## Remaining risks and handoff
+
+49 inherited complexity/cognitive/nested-ternary warnings are unchanged in count, not baseline acceptance. The two false-Hook caller fixes depend on worker B's published database rename. No Node22/clean install/CI/full-suite/build/model gate evidence is claimed here. Native negative observations are finite 50/150/200ms waits in installed Chromium, not universal browser/device/latency proof. Optional native font/KaTeX CSS was blocked, so rendered behavior is covered rather than publisher visual-font parity. Broader E06 native parity, final shared source gate/config/unused decisions and independent E07 review remain main-owned.

@@ -1,0 +1,918 @@
+{
+  "status": "FAIL",
+  "capturedAt": "2026-10-09T10:36:48.739592+00:00",
+  "checks": [
+    {
+      "check": "Onecapturedhelperdriftexactlydeclaredpreservedbefore",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "check": "Helperboundedwhitelistonlygitignoreaddition",
+      "passed": false,
+      "detail": {
+        "diff": [
+          "--- \n",
+          "+++ \n",
+          "@@ -16,6 +16,6 @@\n",
+          "  for p in folder.iterdir():",
+          "-  if p.is_file() and p.suffix in ['.md','.json','.jsonl','.py','.mjs','.cjs'] and p.stat().st_size<=4_000_000:normal.add(str(p.relative_to(root)))",
+          "+  if p.is_file() and (p.suffix in ['.md','.json','.jsonl','.py','.mjs','.cjs'] or p.name=='.gitignore') and p.stat().st_size<=4_000_000:normal.add(str(p.relative_to(root)))",
+          " lateReview=task/'reviews/E-evidence-transport-independent'",
+          " if lateReview.exists():",
+          "- normal.update(str(p.relative_to(root)) for p in lateReview.rglob('*') if p.is_file() and p.suffix in ['.md','.json','.py','.log'] and p.stat().st_size<=4_000_000)",
+          "+ normal.update(str(p.relative_to(root)) for p in lateReview.rglob('*') if p.is_file() and p.suffix in ['.md','.json','.py','.log'])",
+          " pack=task/'evidence-pack';assert (pack/'manifest.json').exists() and (pack/'blobs.json').exists()"
+        ]
+      }
+    },
+    {
+      "check": "116literalanchoredtaskrulesnoarbitraryglobs",
+      "passed": true,
+      "detail": {
+        "unrecognized": [],
+        "rules": [
+          "research/E-evidence-transport-synthetic/",
+          "research/E-final-phase-status-before/",
+          "research/E01-before/",
+          "research/E02-before/",
+          "research/E02-fixture-typecheck-attempt-1.log",
+          "research/E02-native-after-attempt-1.log",
+          "research/E02-native-before-attempt-1.log",
+          "research/E02-typecheck-attempt-1.log",
+          "research/E03-before/",
+          "research/E04-before/",
+          "research/E05-before/",
+          "research/E06-before/",
+          "research/E07-before/",
+          "research/E07-coordinator-tool-before/",
+          "research/E07-final-context-evolution/",
+          "research/E07-provisional-review-scope.log",
+          "research/E07-spec-sync/",
+          "research/e01-drafts-static-fix/",
+          "research/e01-drafts/",
+          "research/e01-writes/",
+          "research/e02-spec-sync-before/",
+          "research/e02/",
+          "research/e03-inventory/",
+          "research/e03-spec-sync-before/",
+          "research/e03/",
+          "research/e04-activation-before/",
+          "research/e04-inventory-original/",
+          "research/e04-library/",
+          "research/e04-media/",
+          "research/e04-memory/",
+          "research/e04-retention-inventory/",
+          "research/e04-spec-sync-before/",
+          "research/e05-activation-before/",
+          "research/e05-spec-sync-before/",
+          "research/e05/",
+          "research/e06-activation-before/",
+          "research/e06-review-context-before/",
+          "research/e06-spec-sync-before/",
+          "research/e06/",
+          "research/e07-activation-before/",
+          "research/e07-coercion-contracts/",
+          "research/e07-coercion-implementation/",
+          "research/e07-complete-selected-baseline/",
+          "research/e07-current-tools/",
+          "research/e07-draft-rebase-fix/",
+          "research/e07-gate-blocker-fix/",
+          "research/e07-gate-implementation/",
+          "research/e07-gate-named-callback-fix/",
+          "research/e07-gate-owner-context-fix/",
+          "research/e07-hooks-implementation/",
+          "research/e07-internal-export-narrowing/",
+          "research/e07-local-assertion-fix-02/",
+          "research/e07-local-assertion-fix/",
+          "research/e07-material-callsite-rename/",
+          "research/e07-native-generated-route-attribution/",
+          "research/e07-native-readiness-fix/",
+          "research/e07-native-runtime-portability/",
+          "research/e07-official-source-evidence/",
+          "research/e07-original-snapshot-compatibility/",
+          "research/e07-response-status-guard/",
+          "research/e07-retired-dependency-before/",
+          "research/e07-retirement-final-supplement/",
+          "research/e07-rule-primary-preparation/",
+          "research/e07-typed-boundaries-implementation/",
+          "research/e07-unused-ui-retirement/",
+          "reviews/E-final-independent/",
+          "reviews/E01-ast-checkpoint.log",
+          "reviews/E01-ast-final.log",
+          "reviews/E01-corrections-gates/",
+          "reviews/E01-current-accepted-candidate/",
+          "reviews/E01-static-checkpoint.log",
+          "reviews/E01-static-final.log",
+          "reviews/E01-tests-final.log",
+          "reviews/E02-current-frozen-gates/",
+          "reviews/E02-final-acceptance/",
+          "reviews/E03-current-frozen-candidate/",
+          "reviews/E03-final-acceptance/",
+          "reviews/E04-current-frozen-candidate/",
+          "reviews/E04-final-acceptance/",
+          "reviews/E04-in-progress-static/",
+          "reviews/E04-library-before-single-query/",
+          "reviews/E05-current-frozen-candidate/",
+          "reviews/E05-final-acceptance/",
+          "reviews/E05-in-progress-static/",
+          "reviews/E06-before-type-narrowing/",
+          "reviews/E06-current-frozen-candidate/",
+          "reviews/E06-final-acceptance/",
+          "reviews/E06-post-type-current-frozen-candidate/",
+          "reviews/E06-post-type-static/",
+          "reviews/E07-coercion-sidecar/",
+          "reviews/E07-coordinator-sidecar/",
+          "reviews/E07-current-native-01/",
+          "reviews/E07-current-native-02/",
+          "reviews/E07-current-native-03/",
+          "reviews/E07-current-native-04/",
+          "reviews/E07-current-native-05/",
+          "reviews/E07-current-native-06/",
+          "reviews/E07-final-independent/",
+          "reviews/E07-gate-named-callback-final/",
+          "reviews/E07-gate-owner-context-final/",
+          "reviews/E07-gate-sidecar-followup/",
+          "reviews/E07-gate-sidecar/",
+          "reviews/E07-hooks-sidecar-followup/",
+          "reviews/E07-hooks-sidecar/",
+          "reviews/E07-node22-clean-01/",
+          "reviews/E07-node22-clean-02/",
+          "reviews/E07-node22-clean-03/",
+          "reviews/E07-typed-sidecar/",
+          "reviews/e01-final/",
+          "reviews/e01-ss06-static-fix/",
+          "reviews/e01-ss06/",
+          "reviews/e02-independent/",
+          "reviews/e03-independent/",
+          "reviews/e04-independent/",
+          "reviews/e05-independent/",
+          "reviews/e06-independent/"
+        ]
+      }
+    },
+    {
+      "check": "244productnormaldocstoolspacklatefilesnotignoredbynewrules",
+      "passed": true,
+      "detail": {
+        "productCount": 244,
+        "normalPathsChecked": 331,
+        "ignoredProduct": [],
+        "ignoredNormal": []
+      }
+    },
+    {
+      "check": "Eachliteralruleprotectsactualcapturedproofpaths",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Allignoredactualproofregularfilesrepresentedexceptexplicitinstalledcaches",
+      "passed": true,
+      "detail": {
+        "ignoredActualFiles": 40842,
+        "uncapturedProofPaths": [],
+        "explicitRuntimeExclusions": 0
+      }
+    },
+    {
+      "check": "Newlatefilesexplicitmetadataorreviewnormalnonrecursive",
+      "passed": true,
+      "detail": {
+        "unexpected": [],
+        "lateFiles": [
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/.gitignore",
+            "sha256": "a209a4ab8e547468393ffcb9bad0385b78eb273eb0378b6b571545e6e38c0b99",
+            "normalReadableNotInFrozenPack": true,
+            "explicitClass": "metadata evolution",
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/research/E-packed-plan-producer-before.py",
+            "sha256": "3b0f7d8f5295d15ef6ef5517f479fa9ecba14b70dab5a81dc2e8e7be88fdff93",
+            "normalReadableNotInFrozenPack": true,
+            "explicitClass": "metadata evolution",
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/research/E-evidence-git-preservation-evolution.json",
+            "sha256": "d5b72e8f39416a6af7717cc4b180dfd899395d61c42ce865b84228840e9df34b",
+            "normalReadableNotInFrozenPack": true,
+            "explicitClass": "metadata evolution",
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/tools/protect-packed-evidence.py",
+            "sha256": "6cd205cb8d159dc665d5d2c81826de431c6e73e70dc830772b2e656c92ba1e76",
+            "normalReadableNotInFrozenPack": true,
+            "explicitClass": "metadata evolution",
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/full-readback.log",
+            "sha256": "9465ee35ede1f9f079b0e88f5f0dab57245a65c0082f137b2b83e7d9a4480801",
+            "normalReadableNotInFrozenPack": true,
+            "explicitClass": "independent transport review",
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/independent-full-gzip-verify.log",
+            "sha256": "d7eaf03b4bfc225ad1bb5a699425cb0ee777c750b34c3a286a288eb095439872",
+            "normalReadableNotInFrozenPack": true,
+            "explicitClass": "independent transport review",
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/verify-transport-readback.py",
+            "sha256": "5eff7420501604d99a904581d6dc8a8510477bf22d0d1bfe8224d99d681ceadb",
+            "normalReadableNotInFrozenPack": true,
+            "explicitClass": "independent transport review",
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/independent-full-gzip-verify-receipt.json",
+            "sha256": "d7eaf03b4bfc225ad1bb5a699425cb0ee777c750b34c3a286a288eb095439872",
+            "normalReadableNotInFrozenPack": true,
+            "explicitClass": "independent transport review",
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/full-readback-current.log",
+            "sha256": "9465ee35ede1f9f079b0e88f5f0dab57245a65c0082f137b2b83e7d9a4480801",
+            "normalReadableNotInFrozenPack": true,
+            "explicitClass": "independent transport review",
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/verify-transport-readback-before-external-path-fix.py",
+            "sha256": "103a4fd49f611510cfaf0a721f9353b1b701275ce52c4e263cdcc4cbf3bdc86e",
+            "normalReadableNotInFrozenPack": true,
+            "explicitClass": "independent transport review",
+            "allowed": true
+          }
+        ]
+      }
+    },
+    {
+      "check": "Evolutionproducercurrenthashmatchesreceipt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Nootherrawreadbackfailures",
+      "passed": true,
+      "detail": {
+        "unexpected": []
+      }
+    }
+  ],
+  "failedChecks": [
+    {
+      "check": "Onecapturedhelperdriftexactlydeclaredpreservedbefore",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "check": "Helperboundedwhitelistonlygitignoreaddition",
+      "passed": false,
+      "detail": {
+        "diff": [
+          "--- \n",
+          "+++ \n",
+          "@@ -16,6 +16,6 @@\n",
+          "  for p in folder.iterdir():",
+          "-  if p.is_file() and p.suffix in ['.md','.json','.jsonl','.py','.mjs','.cjs'] and p.stat().st_size<=4_000_000:normal.add(str(p.relative_to(root)))",
+          "+  if p.is_file() and (p.suffix in ['.md','.json','.jsonl','.py','.mjs','.cjs'] or p.name=='.gitignore') and p.stat().st_size<=4_000_000:normal.add(str(p.relative_to(root)))",
+          " lateReview=task/'reviews/E-evidence-transport-independent'",
+          " if lateReview.exists():",
+          "- normal.update(str(p.relative_to(root)) for p in lateReview.rglob('*') if p.is_file() and p.suffix in ['.md','.json','.py','.log'] and p.stat().st_size<=4_000_000)",
+          "+ normal.update(str(p.relative_to(root)) for p in lateReview.rglob('*') if p.is_file() and p.suffix in ['.md','.json','.py','.log'])",
+          " pack=task/'evidence-pack';assert (pack/'manifest.json').exists() and (pack/'blobs.json').exists()"
+        ]
+      }
+    }
+  ],
+  "rawReadbackPreserved": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/full-original-restored-readback.json",
+    "sha256": "60fdb344ebb2c1a53f444de5cca04b86cc2680190c11fd8d3984d63c1d9730a0"
+  },
+  "metadataEvolution": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/research/E-evidence-git-preservation-evolution.json",
+    "sha256": "d5b72e8f39416a6af7717cc4b180dfd899395d61c42ce865b84228840e9df34b"
+  },
+  "currentHelper": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/tools/build-e-commit-plan.py",
+    "sha256": "7890404a66f438d61731754580c9b0a7fe60c529d46b292089fbfc674098a2c4"
+  },
+  "exactPackedOldHelper": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/research/E-packed-plan-producer-before.py",
+    "sha256": "3b0f7d8f5295d15ef6ef5517f479fa9ecba14b70dab5a81dc2e8e7be88fdff93"
+  },
+  "restoredOldHelper": {
+    "path": "/private/tmp/aifenjing-e-evidence-restored-final-20261009/.trellis/tasks/10-09-src-remediation-e/tools/build-e-commit-plan.py",
+    "sha256": "3b0f7d8f5295d15ef6ef5517f479fa9ecba14b70dab5a81dc2e8e7be88fdff93"
+  },
+  "newTaskGitignore": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/.gitignore",
+    "sha256": "a209a4ab8e547468393ffcb9bad0385b78eb273eb0378b6b571545e6e38c0b99"
+  },
+  "newProducer": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/tools/protect-packed-evidence.py",
+    "sha256": "6cd205cb8d159dc665d5d2c81826de431c6e73e70dc830772b2e656c92ba1e76"
+  },
+  "literalIgnoreCoverage": [
+    {
+      "literalRule": "research/E-evidence-transport-synthetic/",
+      "capturedPaths": 1,
+      "capturedBytes": 4698
+    },
+    {
+      "literalRule": "research/E-final-phase-status-before/",
+      "capturedPaths": 2,
+      "capturedBytes": 6381
+    },
+    {
+      "literalRule": "research/E01-before/",
+      "capturedPaths": 697,
+      "capturedBytes": 7476990
+    },
+    {
+      "literalRule": "research/E02-before/",
+      "capturedPaths": 704,
+      "capturedBytes": 7579053
+    },
+    {
+      "literalRule": "research/E02-fixture-typecheck-attempt-1.log",
+      "capturedPaths": 1,
+      "capturedBytes": 0
+    },
+    {
+      "literalRule": "research/E02-native-after-attempt-1.log",
+      "capturedPaths": 1,
+      "capturedBytes": 1272
+    },
+    {
+      "literalRule": "research/E02-native-before-attempt-1.log",
+      "capturedPaths": 1,
+      "capturedBytes": 812
+    },
+    {
+      "literalRule": "research/E02-typecheck-attempt-1.log",
+      "capturedPaths": 1,
+      "capturedBytes": 94
+    },
+    {
+      "literalRule": "research/E03-before/",
+      "capturedPaths": 2,
+      "capturedBytes": 28413
+    },
+    {
+      "literalRule": "research/E04-before/",
+      "capturedPaths": 11,
+      "capturedBytes": 141673
+    },
+    {
+      "literalRule": "research/E05-before/",
+      "capturedPaths": 1,
+      "capturedBytes": 5171
+    },
+    {
+      "literalRule": "research/E06-before/",
+      "capturedPaths": 458,
+      "capturedBytes": 5956186
+    },
+    {
+      "literalRule": "research/E07-before/",
+      "capturedPaths": 991,
+      "capturedBytes": 10689982
+    },
+    {
+      "literalRule": "research/E07-coordinator-tool-before/",
+      "capturedPaths": 2,
+      "capturedBytes": 7122
+    },
+    {
+      "literalRule": "research/E07-final-context-evolution/",
+      "capturedPaths": 2,
+      "capturedBytes": 5126
+    },
+    {
+      "literalRule": "research/E07-provisional-review-scope.log",
+      "capturedPaths": 1,
+      "capturedBytes": 5386
+    },
+    {
+      "literalRule": "research/E07-spec-sync/",
+      "capturedPaths": 11,
+      "capturedBytes": 339366
+    },
+    {
+      "literalRule": "research/e01-drafts-static-fix/",
+      "capturedPaths": 10,
+      "capturedBytes": 108136
+    },
+    {
+      "literalRule": "research/e01-drafts/",
+      "capturedPaths": 82,
+      "capturedBytes": 1998571
+    },
+    {
+      "literalRule": "research/e01-writes/",
+      "capturedPaths": 11,
+      "capturedBytes": 148212
+    },
+    {
+      "literalRule": "research/e02-spec-sync-before/",
+      "capturedPaths": 3,
+      "capturedBytes": 39526
+    },
+    {
+      "literalRule": "research/e02/",
+      "capturedPaths": 95,
+      "capturedBytes": 5550069
+    },
+    {
+      "literalRule": "research/e03-inventory/",
+      "capturedPaths": 1,
+      "capturedBytes": 25331
+    },
+    {
+      "literalRule": "research/e03-spec-sync-before/",
+      "capturedPaths": 2,
+      "capturedBytes": 48209
+    },
+    {
+      "literalRule": "research/e03/",
+      "capturedPaths": 946,
+      "capturedBytes": 98914757
+    },
+    {
+      "literalRule": "research/e04-activation-before/",
+      "capturedPaths": 2,
+      "capturedBytes": 3604
+    },
+    {
+      "literalRule": "research/e04-inventory-original/",
+      "capturedPaths": 2,
+      "capturedBytes": 83761
+    },
+    {
+      "literalRule": "research/e04-library/",
+      "capturedPaths": 573,
+      "capturedBytes": 5579121
+    },
+    {
+      "literalRule": "research/e04-media/",
+      "capturedPaths": 35,
+      "capturedBytes": 4866991
+    },
+    {
+      "literalRule": "research/e04-memory/",
+      "capturedPaths": 35,
+      "capturedBytes": 220963
+    },
+    {
+      "literalRule": "research/e04-retention-inventory/",
+      "capturedPaths": 1,
+      "capturedBytes": 42857
+    },
+    {
+      "literalRule": "research/e04-spec-sync-before/",
+      "capturedPaths": 4,
+      "capturedBytes": 87816
+    },
+    {
+      "literalRule": "research/e05-activation-before/",
+      "capturedPaths": 2,
+      "capturedBytes": 5331
+    },
+    {
+      "literalRule": "research/e05-spec-sync-before/",
+      "capturedPaths": 2,
+      "capturedBytes": 17861
+    },
+    {
+      "literalRule": "research/e05/",
+      "capturedPaths": 299,
+      "capturedBytes": 19845786
+    },
+    {
+      "literalRule": "research/e06-activation-before/",
+      "capturedPaths": 2,
+      "capturedBytes": 3140
+    },
+    {
+      "literalRule": "research/e06-review-context-before/",
+      "capturedPaths": 1,
+      "capturedBytes": 1940
+    },
+    {
+      "literalRule": "research/e06-spec-sync-before/",
+      "capturedPaths": 2,
+      "capturedBytes": 14510
+    },
+    {
+      "literalRule": "research/e06/",
+      "capturedPaths": 13604,
+      "capturedBytes": 1333444722
+    },
+    {
+      "literalRule": "research/e07-activation-before/",
+      "capturedPaths": 2,
+      "capturedBytes": 4118
+    },
+    {
+      "literalRule": "research/e07-coercion-contracts/",
+      "capturedPaths": 60,
+      "capturedBytes": 1050649
+    },
+    {
+      "literalRule": "research/e07-coercion-implementation/",
+      "capturedPaths": 109,
+      "capturedBytes": 11998897
+    },
+    {
+      "literalRule": "research/e07-complete-selected-baseline/",
+      "capturedPaths": 995,
+      "capturedBytes": 13342364
+    },
+    {
+      "literalRule": "research/e07-current-tools/",
+      "capturedPaths": 29,
+      "capturedBytes": 22329205
+    },
+    {
+      "literalRule": "research/e07-draft-rebase-fix/",
+      "capturedPaths": 4,
+      "capturedBytes": 37739
+    },
+    {
+      "literalRule": "research/e07-gate-blocker-fix/",
+      "capturedPaths": 215,
+      "capturedBytes": 5694058
+    },
+    {
+      "literalRule": "research/e07-gate-implementation/",
+      "capturedPaths": 768,
+      "capturedBytes": 21120456
+    },
+    {
+      "literalRule": "research/e07-gate-named-callback-fix/",
+      "capturedPaths": 270,
+      "capturedBytes": 7914633
+    },
+    {
+      "literalRule": "research/e07-gate-owner-context-fix/",
+      "capturedPaths": 302,
+      "capturedBytes": 8502116
+    },
+    {
+      "literalRule": "research/e07-hooks-implementation/",
+      "capturedPaths": 1580,
+      "capturedBytes": 13809766
+    },
+    {
+      "literalRule": "research/e07-internal-export-narrowing/",
+      "capturedPaths": 34,
+      "capturedBytes": 233670
+    },
+    {
+      "literalRule": "research/e07-local-assertion-fix-02/",
+      "capturedPaths": 4,
+      "capturedBytes": 52832
+    },
+    {
+      "literalRule": "research/e07-local-assertion-fix/",
+      "capturedPaths": 11,
+      "capturedBytes": 102450
+    },
+    {
+      "literalRule": "research/e07-material-callsite-rename/",
+      "capturedPaths": 6,
+      "capturedBytes": 67463
+    },
+    {
+      "literalRule": "research/e07-native-generated-route-attribution/",
+      "capturedPaths": 4,
+      "capturedBytes": 155756
+    },
+    {
+      "literalRule": "research/e07-native-readiness-fix/",
+      "capturedPaths": 5,
+      "capturedBytes": 82452
+    },
+    {
+      "literalRule": "research/e07-native-runtime-portability/",
+      "capturedPaths": 7,
+      "capturedBytes": 43369
+    },
+    {
+      "literalRule": "research/e07-official-source-evidence/",
+      "capturedPaths": 3,
+      "capturedBytes": 206242
+    },
+    {
+      "literalRule": "research/e07-original-snapshot-compatibility/",
+      "capturedPaths": 1,
+      "capturedBytes": 339
+    },
+    {
+      "literalRule": "research/e07-response-status-guard/",
+      "capturedPaths": 2,
+      "capturedBytes": 15592
+    },
+    {
+      "literalRule": "research/e07-retired-dependency-before/",
+      "capturedPaths": 9,
+      "capturedBytes": 14879
+    },
+    {
+      "literalRule": "research/e07-retirement-final-supplement/",
+      "capturedPaths": 13,
+      "capturedBytes": 97654
+    },
+    {
+      "literalRule": "research/e07-rule-primary-preparation/",
+      "capturedPaths": 11,
+      "capturedBytes": 351031
+    },
+    {
+      "literalRule": "research/e07-typed-boundaries-implementation/",
+      "capturedPaths": 97,
+      "capturedBytes": 2380429
+    },
+    {
+      "literalRule": "research/e07-unused-ui-retirement/",
+      "capturedPaths": 7,
+      "capturedBytes": 32430
+    },
+    {
+      "literalRule": "reviews/E-final-independent/",
+      "capturedPaths": 183,
+      "capturedBytes": 25924919
+    },
+    {
+      "literalRule": "reviews/E01-ast-checkpoint.log",
+      "capturedPaths": 1,
+      "capturedBytes": 258
+    },
+    {
+      "literalRule": "reviews/E01-ast-final.log",
+      "capturedPaths": 1,
+      "capturedBytes": 258
+    },
+    {
+      "literalRule": "reviews/E01-corrections-gates/",
+      "capturedPaths": 11,
+      "capturedBytes": 847080
+    },
+    {
+      "literalRule": "reviews/E01-current-accepted-candidate/",
+      "capturedPaths": 15,
+      "capturedBytes": 852260
+    },
+    {
+      "literalRule": "reviews/E01-static-checkpoint.log",
+      "capturedPaths": 1,
+      "capturedBytes": 3270
+    },
+    {
+      "literalRule": "reviews/E01-static-final.log",
+      "capturedPaths": 1,
+      "capturedBytes": 788
+    },
+    {
+      "literalRule": "reviews/E01-tests-final.log",
+      "capturedPaths": 1,
+      "capturedBytes": 525
+    },
+    {
+      "literalRule": "reviews/E02-current-frozen-gates/",
+      "capturedPaths": 6,
+      "capturedBytes": 157622
+    },
+    {
+      "literalRule": "reviews/E02-final-acceptance/",
+      "capturedPaths": 9,
+      "capturedBytes": 203642
+    },
+    {
+      "literalRule": "reviews/E03-current-frozen-candidate/",
+      "capturedPaths": 6,
+      "capturedBytes": 159213
+    },
+    {
+      "literalRule": "reviews/E03-final-acceptance/",
+      "capturedPaths": 3,
+      "capturedBytes": 529086
+    },
+    {
+      "literalRule": "reviews/E04-current-frozen-candidate/",
+      "capturedPaths": 6,
+      "capturedBytes": 167631
+    },
+    {
+      "literalRule": "reviews/E04-final-acceptance/",
+      "capturedPaths": 4,
+      "capturedBytes": 812884
+    },
+    {
+      "literalRule": "reviews/E04-in-progress-static/",
+      "capturedPaths": 7,
+      "capturedBytes": 154611
+    },
+    {
+      "literalRule": "reviews/E04-library-before-single-query/",
+      "capturedPaths": 5,
+      "capturedBytes": 133561
+    },
+    {
+      "literalRule": "reviews/E05-current-frozen-candidate/",
+      "capturedPaths": 6,
+      "capturedBytes": 169182
+    },
+    {
+      "literalRule": "reviews/E05-final-acceptance/",
+      "capturedPaths": 4,
+      "capturedBytes": 164694
+    },
+    {
+      "literalRule": "reviews/E05-in-progress-static/",
+      "capturedPaths": 7,
+      "capturedBytes": 155702
+    },
+    {
+      "literalRule": "reviews/E06-before-type-narrowing/",
+      "capturedPaths": 6,
+      "capturedBytes": 778621
+    },
+    {
+      "literalRule": "reviews/E06-current-frozen-candidate/",
+      "capturedPaths": 715,
+      "capturedBytes": 27072458
+    },
+    {
+      "literalRule": "reviews/E06-final-acceptance/",
+      "capturedPaths": 4,
+      "capturedBytes": 900001
+    },
+    {
+      "literalRule": "reviews/E06-post-type-current-frozen-candidate/",
+      "capturedPaths": 715,
+      "capturedBytes": 27079439
+    },
+    {
+      "literalRule": "reviews/E06-post-type-static/",
+      "capturedPaths": 3,
+      "capturedBytes": 63272
+    },
+    {
+      "literalRule": "reviews/E07-coercion-sidecar/",
+      "capturedPaths": 35,
+      "capturedBytes": 1719258
+    },
+    {
+      "literalRule": "reviews/E07-coordinator-sidecar/",
+      "capturedPaths": 628,
+      "capturedBytes": 7332380
+    },
+    {
+      "literalRule": "reviews/E07-current-native-01/",
+      "capturedPaths": 5,
+      "capturedBytes": 225799
+    },
+    {
+      "literalRule": "reviews/E07-current-native-02/",
+      "capturedPaths": 7,
+      "capturedBytes": 230811
+    },
+    {
+      "literalRule": "reviews/E07-current-native-03/",
+      "capturedPaths": 8,
+      "capturedBytes": 239412
+    },
+    {
+      "literalRule": "reviews/E07-current-native-04/",
+      "capturedPaths": 21,
+      "capturedBytes": 808902
+    },
+    {
+      "literalRule": "reviews/E07-current-native-05/",
+      "capturedPaths": 1200,
+      "capturedBytes": 123792237
+    },
+    {
+      "literalRule": "reviews/E07-current-native-06/",
+      "capturedPaths": 2038,
+      "capturedBytes": 206648159
+    },
+    {
+      "literalRule": "reviews/E07-final-independent/",
+      "capturedPaths": 501,
+      "capturedBytes": 8732704
+    },
+    {
+      "literalRule": "reviews/E07-gate-named-callback-final/",
+      "capturedPaths": 54,
+      "capturedBytes": 225858
+    },
+    {
+      "literalRule": "reviews/E07-gate-owner-context-final/",
+      "capturedPaths": 110,
+      "capturedBytes": 422499
+    },
+    {
+      "literalRule": "reviews/E07-gate-sidecar-followup/",
+      "capturedPaths": 116,
+      "capturedBytes": 395121
+    },
+    {
+      "literalRule": "reviews/E07-gate-sidecar/",
+      "capturedPaths": 324,
+      "capturedBytes": 5510266
+    },
+    {
+      "literalRule": "reviews/E07-hooks-sidecar-followup/",
+      "capturedPaths": 265,
+      "capturedBytes": 1563396
+    },
+    {
+      "literalRule": "reviews/E07-hooks-sidecar/",
+      "capturedPaths": 360,
+      "capturedBytes": 5133613
+    },
+    {
+      "literalRule": "reviews/E07-node22-clean-01/",
+      "capturedPaths": 1943,
+      "capturedBytes": 43971996
+    },
+    {
+      "literalRule": "reviews/E07-node22-clean-02/",
+      "capturedPaths": 2083,
+      "capturedBytes": 45887368
+    },
+    {
+      "literalRule": "reviews/E07-node22-clean-03/",
+      "capturedPaths": 2109,
+      "capturedBytes": 46808375
+    },
+    {
+      "literalRule": "reviews/E07-typed-sidecar/",
+      "capturedPaths": 35,
+      "capturedBytes": 530986
+    },
+    {
+      "literalRule": "reviews/e01-final/",
+      "capturedPaths": 104,
+      "capturedBytes": 8536634
+    },
+    {
+      "literalRule": "reviews/e01-ss06-static-fix/",
+      "capturedPaths": 32,
+      "capturedBytes": 699632
+    },
+    {
+      "literalRule": "reviews/e01-ss06/",
+      "capturedPaths": 17,
+      "capturedBytes": 384925
+    },
+    {
+      "literalRule": "reviews/e02-independent/",
+      "capturedPaths": 68,
+      "capturedBytes": 4983620
+    },
+    {
+      "literalRule": "reviews/e03-independent/",
+      "capturedPaths": 140,
+      "capturedBytes": 9328594
+    },
+    {
+      "literalRule": "reviews/e04-independent/",
+      "capturedPaths": 124,
+      "capturedBytes": 3887328
+    },
+    {
+      "literalRule": "reviews/e05-independent/",
+      "capturedPaths": 80,
+      "capturedBytes": 4450283
+    },
+    {
+      "literalRule": "reviews/e06-independent/",
+      "capturedPaths": 3566,
+      "capturedBytes": 307019668
+    }
+  ],
+  "currentOriginalsQualification": {
+    "capturedPaths": 41163,
+    "exactCurrentOriginals": 41162,
+    "explainedChangedTaskHelpers": 1,
+    "unexplained": 0,
+    "restoredAll41163Exact": true
+  },
+  "limits": [
+    "Rules are validated as anchored literals in this task-local .gitignore; no Git staging/index operation executed. Parent repository ignore policies are outside this metadata delta.",
+    "Ignored installed/Python cache bytes are explicit non-proof runtime exclusions; every remaining ignored regular rawproofpath is manifest-represented.",
+    "Late metadata/helperoldcopy/currenthelper/transportreview remain normalreadablecommitpaths, no recursive pack update."
+  ]
+}

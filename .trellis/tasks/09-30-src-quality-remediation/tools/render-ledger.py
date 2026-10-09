@@ -9,7 +9,7 @@ for unit in ledger['units']:
     review = unit.get('review')
     review_cell = f"[{unit['id']}复核](../{(Path(review) if Path(review).is_absolute() else repo / review).resolve().relative_to(root.parent)})" if review else '—'
     lines.append(f"| {unit['id']} | {unit['title']} | {', '.join(unit['findings'])} | {labels.get(unit['status'], unit['status'])} | {review_cell} |")
-lines.extend(['', f"下一未完成单元：{ledger['currentUnit']}。", '', '## 用户示例与附加整理', '', '这些事项不加入51项已审查发现计数，仍按关联单元执行并保留证据。', ''])
+lines.extend(['', (f"下一未完成单元：{ledger['currentUnit']}。" if ledger['currentUnit'] else "全部32个单元已验证完成。"), '', '## 用户示例与附加整理', '', '这些事项不加入51项已审查发现计数，仍按关联单元执行并保留证据。', ''])
 for work in ledger.get('ancillaryWork', []):
     lines.append(f"- {work['id']} / {work['unit']}：{work['file']} — {work['scope']}（{labels.get(work['status'], work['status'])}）")
 lines.append('')

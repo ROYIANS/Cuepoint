@@ -1,0 +1,34 @@
+{
+  "unit": "E03",
+  "date": "2026-10-09",
+  "acceptedSnapshot": ".trellis/tasks/10-09-src-remediation-e/reviews/E03-check-snapshot.json",
+  "acceptedSnapshotSHA256": "fa8b19c79ffb10ff569125016cffe7ece0051439e989f6a0cbc21c18f2787447",
+  "sourceAfter": {
+    "scripts/e03-browser-regression.mjs": "7c76689dd2714c327c061f536c9a3865cb65d32a953a2f4b99006ec95de0f937",
+    "src/components/audio/story-workspace.css": "cd81cd3e25b56b06ef0db930fafd64a9254375a2ed54d9161624f85c79682dd5",
+    "src/components/audioMusic/workspace.css": "8f7488ef9aa6dfec644c490481908f89ec401681f6a1bc3b9aa26cc2d5567a19",
+    "tests/fixtures/e03/harness.tsx": "d8bf4eb98e01d5077ca0063973b95cb266df4f7e3868aa0dd25e685cd489464f",
+    "tests/fixtures/e03/index.html": "5bd015342e95e1d4b44b89726f85b9efb03be5af13e593be11c9a02618703caf",
+    "tests/fixtures/e03/tsconfig.json": "6ee34f5879e3e8c88cb22a9184bc73080cfb0c5bc791b614f5a4880413daafa9",
+    "tests/fixtures/sourceSnapshots/e03/provenance.json": "eeb3c0728c94d5bf669deab9b71513affacdf22b4781a85c3fcd78ec21d60e64",
+    "tests/fixtures/sourceSnapshots/e03/story-workspace.css": "2144425bbc19a08d3826ecb4c9243e6de6452ec8951feaaaf585041991dcc90a",
+    "tests/fixtures/sourceSnapshots/e03/workspace.css": "ea0d1dddecc60a1f47f494c4e0e46b04a536fde3666beb02c4b2a79ddac7878c"
+  },
+  "documents": [
+    {
+      "path": ".trellis/spec/frontend/audio-music.md",
+      "beforeSHA256": "43d32887a065d675fff855bc466550b63fbc971a1dd0be98ac92a4418fa21c1f",
+      "afterSHA256": "84c25cff00c0f0dd8eae4420e422ed20c2f729b6495c953801a81fdec568135f",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e03-spec-sync-before/.trellis/spec/frontend/audio-music.md",
+      "reason": "Independent E03 PASS conservative CSS ownership/removal and concrete native evidence limits"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/implement.md",
+      "beforeSHA256": "2553dc176179bc737ea7a758b9d4b7a94d0310c57d6cbdaf99a7da9fac2da433",
+      "afterSHA256": "1be4c6fd7e08dad1a190b63e978dd15bd82519c2b3ad065ffa4abd108e57da47",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e03-spec-sync-before/.trellis/tasks/10-09-src-remediation-e/implement.md",
+      "reason": "Ordered E03 closure only after final returned independent PASS"
+    }
+  ],
+  "explanation": "Canonical/context evolution after completed review; old accepted reports and evidence remain byte-identical, former documents preserved. No product edit."
+}

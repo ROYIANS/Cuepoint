@@ -1,0 +1,23 @@
+{
+  "baselineRevision": "1ecaf5ceec92e022c2b2b8d662e2a92e8eee36c7",
+  "baselineRoot": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/baseline-e-1ecaf5c",
+  "cache": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools",
+  "versions": {
+    "eslint": "9.39.5",
+    "typescript-eslint": "8.71.1",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-sonarjs": "3.0.7",
+    "typescript": "5.9.2"
+  },
+  "configSHA256": "71fec4e76e3e26f5e21e6412d7847a5c7e0b8e828af4fba41237351faa24ccce",
+  "baselineConfigSHA256": "5e8b1edb3879488670c424dd7181ad298d6161b7c54e37d54373009c4cc35e31",
+  "policy": "Two complete typed programs, same rule/tool versions, per-file diagnostic multiset; source graph distinguishes all-type named re-exports. Temporary analysis only; QG01 still pending E07.",
+  "producerOrigins": [
+    "archived D scan-unit-v2.mjs",
+    "archived D current-source-ast.cjs"
+  ],
+  "limitations": [
+    "Temporary message-count delta is not QG01 stable semantic debt identity; unchanged message/count can hide replacement and full-file manual review remains required.",
+    "Project TypeScript is5.9.3, isolated parser stack TypeScript5.9.2; before/current use same isolated versions and production typecheck uses actual project."
+  ]
+}

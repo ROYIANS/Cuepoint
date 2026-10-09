@@ -1,0 +1,16 @@
+{
+  "purpose": "A real late independent seal-coverage report exceeds initial4MBreadablemetadata cap and must remain directlyincluded, not omitted. Only the explicitly named late transport review directory gets no size cap. No source/quality/native/seal mutation.",
+  "priorEvolution": "research/E-evidence-git-preservation-evolution.json",
+  "capturedProducerPath": ".trellis/tasks/10-09-src-remediation-e/tools/build-e-commit-plan.py",
+  "intermediateSHA256": "c91ee10cdd796c119eed8e68e85f0802daeb963c8999a6a72c6746f4b91298df",
+  "intermediateBeforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/E-intermediate-plan-producer-before.py",
+  "currentSHA256": "7890404a66f438d61731754580c9b0a7fe60c529d46b292089fbfc674098a2c4",
+  "change": "Remove4MBcap only for actuallate transport review artifacts; proofaccepted-seal-coverage.json5,563,879bytes now proposed explicitly. Rootnormalmetadata cap otherwise unchanged.",
+  "actualLateRequiredProof": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/accepted-seal-coverage.json",
+    "bytes": 5563879,
+    "sha256": "c7f4f94b2214d418bb19298f8f0abf7eda4c7815494091644c7dc6f03e2e8b26"
+  },
+  "exactPackedOldProducerCopy": "research/E-packed-plan-producer-before.py",
+  "originalPackedProducerUnchanged": true
+}

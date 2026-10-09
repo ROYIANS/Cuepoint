@@ -1,0 +1,35 @@
+{
+  "purpose": "Native DOM selection API compatibility probe; not production departure proof",
+  "rows": [
+    {
+      "type": "text",
+      "selectionStart": 0,
+      "selectionEnd": 0,
+      "error": null
+    },
+    {
+      "type": "number",
+      "selectionStart": null,
+      "selectionEnd": null,
+      "error": "InvalidStateError"
+    },
+    {
+      "type": "range",
+      "selectionStart": null,
+      "selectionEnd": null,
+      "error": "InvalidStateError"
+    },
+    {
+      "type": "date",
+      "selectionStart": null,
+      "selectionEnd": null,
+      "error": "InvalidStateError"
+    },
+    {
+      "type": "color",
+      "selectionStart": null,
+      "selectionEnd": null,
+      "error": "InvalidStateError"
+    }
+  ]
+}

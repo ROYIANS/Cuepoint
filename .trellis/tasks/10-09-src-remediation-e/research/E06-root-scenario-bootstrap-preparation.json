@@ -1,0 +1,22 @@
+{
+  "purpose": "Read-only future actual built scenario bootstrap ownership; E06 pending, noappbuild/browsermetrics/sourceedit",
+  "inputs": {
+    "src/routes/_studio.agent.tsx": "8e7c47d5adb4fef73183d92d06355cceebebbab8f98b68ecefeaf5fcbfd42647",
+    "src/routes/_studio.agent.index.tsx": "1b814befca5d2be4307498b80de20168378f136c05ce59ba908023d60e659b3f",
+    "src/routes/_studio.agent.$threadId.tsx": "cf8cc09ae8194e7481f9cccf2bc3ec9ccaf2022177f91d14aa44a26a87838669",
+    "src/components/agent/AgentChatPage.tsx": "234344a50bb5a9bfce0258bf3b6d32b76be4cf965675b6b0eb8a77b8479f11cc",
+    "src/components/agent/useChatSelection.ts": "4cb97e08af1420c24d8a9b558fa6620e79871805ed1a4da41e9ada66af8fd676",
+    "src/db/database.ts": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+    "src/domain/types.ts": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+    "src/lib/ai/connectors.ts": "0a23e77bebc48391e968706aabde6020e5d3fb8cb6e1effd384c8a4af3ecd6dd"
+  },
+  "facts": [
+    "RootDexiedatabase nameaifenjing; actualagentlayout wrapsAgentChatPage inLobeChatTheme; /agenthome and /agent/$threadId childroutes onlymatchURL, sharedlayout ownsUI.",
+    "Empty/no-connectorshome is a distinct Empty/connectorsetupstate, not model-lesscomposer. To measure model-lesscomposer seed a supportedofflinecompatible connector and discover-model transport boundary; sessionModelinitialempty.",
+    "Selectedmodelhome uses actualModelSelectTrigger/selectionhandler, no existinglocalStorageselectedmodelpreference; UIselection (oractualsupportedthreadmodel ifhistoryscenario) needed. Do notmislabel anemptythreadhistoryroute as selected-modelhome withoutcaption.",
+    "Forhistory native seed chatThreads/chatMessages typed rows under exactactualdatabase; existingmodel/threadowner suppliesactual icons/messages. Modelsendpoint fixture returns deterministicoffline response and must not requestpaidtransport.",
+    "RootbuiltappnativeIndexedDBbootstrap can create/seed afteractualappschema initializes, thenfreshcoldcontextdatasetroute; avoidaddingunnecessaryproductionwindowbridge. Makecoldassetcache semantics explicit ifseedingfirstloadsapp.",
+    "Primary directnativeIDB seedingbeforebuiltapprequiresactual schemaindexes/version; preferbootstrapseedcopy beforefreshmeasurementcontext and recorddatabase snapshottransfer/setupdistinctfrommeasuredcoldscenario."
+  ],
+  "limits": "No chosenfinalbootstrapproducer, productionbuild, assetbytes ortiming currentlymeasured. Allsourcehashes refreshafteracceptedE05 beforeE06."
+}

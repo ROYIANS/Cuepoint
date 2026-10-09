@@ -3,7 +3,7 @@
   "startRevision": "bbc8200e67ab828cf45201f5fa9208ac92e02e04",
   "auditTask": ".trellis/tasks/09-30-src-quality-architecture-audit",
   "approvedSequence": "A→B→C→D→E",
-  "currentUnit": "E01",
+  "currentUnit": null,
   "units": [
     {
       "id": "A01",
@@ -2150,10 +2150,34 @@
         "PU-10",
         "SS-06"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        "scripts/e01-drafts-browser-regression.mjs",
+        "scripts/e01-writes-browser-regression.mjs",
+        "src/components/agent/AgentChatPage.tsx",
+        "src/components/agent/TaskInspector.tsx",
+        "src/components/agent/TaskRecords.tsx",
+        "src/components/agent/TaskWrapup.tsx",
+        "src/components/audio/VoiceLibrary.tsx",
+        "src/components/studio/AssetLibraryPages.tsx",
+        "src/components/studio/ProjectGalleryPage.tsx",
+        "src/components/workspace/EpisodeListPage.tsx",
+        "src/lib/useManualDraftGuard.tsx",
+        "tests/b02MemoryPromotion.test.ts",
+        "tests/e01ManualDraftDeparture.test.ts",
+        "tests/fixtures/e01-drafts/harness.tsx",
+        "tests/fixtures/e01-drafts/index.html",
+        "tests/fixtures/e01-writes/harness.tsx",
+        "tests/fixtures/e01-writes/index.html"
+      ],
+      "checks": [
+        "Independent integrated PASS, exact17paths/140evidence SHA match",
+        "Current frozen711inputs unchanged; typecheck/full160files2556tests PASS",
+        "Native drafts19 / writes20 / B01compat19 PASS; independent7critical+held-delete-newtopic; SS06independent20+11",
+        "Typed static9TS3errors34warnings→2errors33warnings;0newnoncomplexity; AgentChat100→101/57→58 and gallery27→31 responsibility-reviewed metrics, not formalQG debt",
+        "AST419TS2498edges0parse0staticValueCycles"
+      ],
+      "review": ".trellis/tasks/10-09-src-remediation-e/reviews/E01-check.md"
     },
     {
       "id": "E02",
@@ -2163,10 +2187,27 @@
         "AU-04",
         "AU-05"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        "scripts/e01-drafts-browser-regression.mjs",
+        "scripts/e02-browser-regression.mjs",
+        "src/components/agent/TopicSidebar.tsx",
+        "src/components/agent/agentChat.css",
+        "tests/fixtures/e02/harness.tsx",
+        "tests/fixtures/e02/index.html",
+        "tests/fixtures/e02/tsconfig.json",
+        "tests/fixtures/sourceSnapshots/e02/TopicSidebar.tsx",
+        "tests/fixtures/sourceSnapshots/e02/agentChat.css",
+        "tests/fixtures/sourceSnapshots/e02/provenance.json"
+      ],
+      "checks": [
+        "Independent PASS10paths/226evidence SHA verified;0blockers/no product self-fix",
+        "Frozen718inputs unchanged; application type/full160files2556tests PASS",
+        "Independent native original11/current17/safe-area CSSsurrogate9/E01adapt19 + mobile/focus/theme supplement7 PASS",
+        "Cumulative same-version typed10TS3errors35warnings→2errors34warnings;0newnoncomplexity/0E02metricincrease; inherited3E01metrics explicit",
+        "AST419TS2498edges0parse0valuecycles; safe-area nativeenv0/32pxsurrogate limitations recorded"
+      ],
+      "review": ".trellis/tasks/10-09-src-remediation-e/reviews/E02-check.md"
     },
     {
       "id": "E03",
@@ -2175,10 +2216,26 @@
       "findings": [
         "PU-09"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        "scripts/e03-browser-regression.mjs",
+        "src/components/audio/story-workspace.css",
+        "src/components/audioMusic/workspace.css",
+        "tests/fixtures/e03/harness.tsx",
+        "tests/fixtures/e03/index.html",
+        "tests/fixtures/e03/tsconfig.json",
+        "tests/fixtures/sourceSnapshots/e03/provenance.json",
+        "tests/fixtures/sourceSnapshots/e03/story-workspace.css",
+        "tests/fixtures/sourceSnapshots/e03/workspace.css"
+      ],
+      "checks": [
+        "Independent final PASS9rootpaths/945writer evidence; complete1879evidence map plus139independent/18tools allhashverified",
+        "276rules/296branches fully reviewed;115wholeblocks+2mixedbranches removed,161retaineddeclarations/order/at-rulecontexts equivalent",
+        "114writer+26independent native original/current pairs exactPNG/decodedpixel0;588–589computedproperties+geometry/stateequivalent",
+        "Application/fixture typePASS; frozen725inputs unchanged/full160files2556testsPASS; cumulative typed0newE03diagnostics/metrics",
+        "Independent AST419TS2498edges0parse0staticValueCycles; documented software-raster/narrow-pointer/historical-provenance limits"
+      ],
+      "review": ".trellis/tasks/10-09-src-remediation-e/reviews/E03-check.md"
     },
     {
       "id": "E04",
@@ -2189,10 +2246,61 @@
         "PD-07",
         "SS-09"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        "scripts/e04-library-browser-regression.mjs",
+        "scripts/e04-media-browser-regression.mjs",
+        "scripts/e04-memory-browser-regression.mjs",
+        "src/components/studio/AssetLibraryPages.tsx",
+        "src/components/studio/ProjectGalleryPage.tsx",
+        "src/db/assetReuse.ts",
+        "src/db/assets.ts",
+        "src/db/cascadeCommands.ts",
+        "src/db/episodes.ts",
+        "src/db/media.ts",
+        "src/db/projectMemories.ts",
+        "src/db/shots.ts",
+        "src/lib/studioLibraryQueries.ts",
+        "tests/e04LibraryQueries.test.ts",
+        "tests/e04MediaRetention.test.ts",
+        "tests/e04MemoryTransactions.test.ts",
+        "tests/fixtures/e04-library/harness.tsx",
+        "tests/fixtures/e04-library/index.html",
+        "tests/fixtures/e04-library/tsconfig.json",
+        "tests/fixtures/e04-media/commands.ts",
+        "tests/fixtures/e04-media/index.html",
+        "tests/fixtures/e04-media/instrumentation.ts",
+        "tests/fixtures/e04-media/main.ts",
+        "tests/fixtures/e04-media/receipt.ts",
+        "tests/fixtures/e04-media/retention.ts",
+        "tests/fixtures/e04-media/seeds.ts",
+        "tests/fixtures/e04-media/tsconfig.json",
+        "tests/fixtures/e04-memory/index.html",
+        "tests/fixtures/e04-memory/main.ts",
+        "tests/fixtures/e04-memory/tsconfig.json",
+        "tests/fixtures/sourceSnapshots/e04-library/independent-transactions/provenance.json",
+        "tests/fixtures/sourceSnapshots/e04-library/independent-transactions/studioLibraryQueries.ts",
+        "tests/fixtures/sourceSnapshots/e04-library/provenance.json",
+        "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx",
+        "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage.tsx",
+        "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectIpPicker.tsx",
+        "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/projectKinds.tsx",
+        "tests/fixtures/sourceSnapshots/e04-media/provenance.json",
+        "tests/fixtures/sourceSnapshots/e04-media/src/db/database.ts",
+        "tests/fixtures/sourceSnapshots/e04-media/src/db/media.ts",
+        "tests/fixtures/sourceSnapshots/e04-media/src/db/productionShared.ts",
+        "tests/fixtures/sourceSnapshots/e04-memory/projectMemories.ts",
+        "tests/fixtures/sourceSnapshots/e04-memory/provenance.json"
+      ],
+      "checks": [
+        "Final independentPASS43/43roots/792evidence/reportmaps verified;0blockers/0source-self-fixes",
+        "Current759inputs unchanged;applicationtype/full163files2744testsPASS;E01current450inputs/write20PASS",
+        "Memory5manual commands46→3stores,39focused/native4before4after;protectedbroadclosures retained,independent4currentPASS",
+        "Media14focusedfiles380tests/new150;freshindependentcriticalretention/freshness/late-delete/receiptrollback/source-owner/countproofPASS;1080→26logicalrequests with30unique3owners60scalarcalls,notlatency",
+        "Library8focused16native+independent7;one readonlytxNexactequalsrequests;anyOfowner-indexgap47cursorrows/45reducervisits counterexample preserved;finalirrelevantsubscription0",
+        "Static18TS4errors44warnings→3errors41warnings0newnoncomplexity;Gallery31→32necessaryquery-keyguard metric reviewed,notformalQGdebt;independentAST420TS2502edges0parse0valuecycles"
+      ],
+      "review": ".trellis/tasks/10-09-src-remediation-e/reviews/E04-check.md"
     },
     {
       "id": "E05",
@@ -2201,10 +2309,23 @@
       "findings": [
         "SS-11"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        "scripts/e05-browser-regression.mjs",
+        "src/components/ui/click-spark.tsx",
+        "tests/fixtures/e05/harness.tsx",
+        "tests/fixtures/e05/index.html",
+        "tests/fixtures/e05/instrumentation.ts",
+        "tests/fixtures/e05/tsconfig.json",
+        "tests/fixtures/sourceSnapshots/e05/click-spark.tsx",
+        "tests/fixtures/sourceSnapshots/e05/provenance.json"
+      ],
+      "checks": [
+        "Independent8/8rootfilesPASS;414evidence+81reviewer+766gatehashesmatch",
+        "Actualnativeoriginal9/current9PASS;idle27/21→0/0;controlledvisibilityhandler/notOSthrottle",
+        "ApplicationtypePASS;163files2744testsPASS;0newE05typeddiagnostics/metrics;420TS2502totaledges0staticvaluecycles"
+      ],
+      "review": ".trellis/tasks/10-09-src-remediation-e/reviews/E05-check.md"
     },
     {
       "id": "E06",
@@ -2213,10 +2334,32 @@
       "findings": [
         "AU-09"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        "scripts/e06-build.mjs",
+        "scripts/e06-compare.mjs",
+        "scripts/e06-icon-data.d.mts",
+        "scripts/e06-icon-data.mjs",
+        "scripts/e06-icons-browser.mjs",
+        "scripts/e06-root-browser.mjs",
+        "scripts/e06-root-parity.mjs",
+        "src/components/agent/DemandModelIcons.tsx",
+        "src/components/agent/ModelIconCatalog.ts",
+        "src/components/agent/ModelIconMapping.generated.ts",
+        "src/components/agent/ModelIcons.tsx",
+        "tests/e06-icon-entries.test.ts",
+        "tests/fixtures/e06/icons.tsx",
+        "tests/fixtures/e06/index.html",
+        "tests/fixtures/e06/seeds.json",
+        "tests/fixtures/e06/tsconfig.json"
+      ],
+      "checks": [
+        "Independent16/16pathsPASS;789currentinputs4814originalwriter2365reviewersealhashesmatch",
+        "Fresh232mappingidentities29criticalicons4actualcoldroots9nativeparityPASS; selectedJS-2896549bodybytes",
+        "Currenttype/full164files2746/model/buildPASS; typefix703+704assetsidentical; whitespaceASTequiv",
+        "23TSsameversiondelta0newE06noncomplexity/metric;422TS2690TOTALedges0cycles;retainedrichcostqualified"
+      ],
+      "review": ".trellis/tasks/10-09-src-remediation-e/reviews/E06-check.md"
     },
     {
       "id": "E07",
@@ -2226,10 +2369,172 @@
         "PD-08",
         "SS-10"
       ],
-      "status": "pending",
-      "changedFiles": [],
-      "checks": [],
-      "review": null
+      "status": "verified",
+      "changedFiles": [
+        ".github/workflows/ghcr.yml",
+        "eslint.config.mjs",
+        "knip.json",
+        "package.json",
+        "pnpm-lock.yaml",
+        "quality/debt.json",
+        "quality/unused-contracts.json",
+        "scripts/b01-browser-regression.mjs",
+        "scripts/e01-drafts-browser-regression.mjs",
+        "scripts/e01-writes-browser-regression.mjs",
+        "scripts/e06-icons-browser.mjs",
+        "scripts/e06-root-browser.mjs",
+        "scripts/e06-root-parity.mjs",
+        "scripts/e07-draft-rebase-browser.mjs",
+        "scripts/native-fixture-ready.mjs",
+        "scripts/quality-check.mjs",
+        "scripts/quality/README.md",
+        "scripts/quality/architecture.mjs",
+        "scripts/quality/debt.schema.json",
+        "scripts/quality/identity.mjs",
+        "scripts/quality/lint.mjs",
+        "scripts/quality/self-test.mjs",
+        "scripts/quality/shared.mjs",
+        "scripts/quality/unused-contracts.schema.json",
+        "scripts/quality/unused.mjs",
+        "src/components/agent/AgentChatPage.tsx",
+        "src/components/agent/AgentRunDetails.tsx",
+        "src/components/agent/CreatedEntityLinks.tsx",
+        "src/components/agent/Grainient.tsx",
+        "src/components/agent/ReferenceAttachments.tsx",
+        "src/components/agent/TaskWrapup.tsx",
+        "src/components/agent/agentTheme.ts",
+        "src/components/agent/chatExecutionFlows.ts",
+        "src/components/agent/useChatSelection.ts",
+        "src/components/agent/useReferenceDraft.ts",
+        "src/components/audio/AudioSources.tsx",
+        "src/components/audio/AudioTimeline.tsx",
+        "src/components/audio/AudioWorkspacePage.tsx",
+        "src/components/memory/MemoryEditor.tsx",
+        "src/components/shots/ShotRow.tsx",
+        "src/components/slots/GenerationSlotCard.tsx",
+        "src/components/story/StoryPage.tsx",
+        "src/components/studio/ConnectorsPage.tsx",
+        "src/components/studio/ProjectGalleryPage.tsx",
+        "src/components/studio/materials/MaterialDetailPanel.tsx",
+        "src/components/studio/materials/MaterialDocumentPreview.tsx",
+        "src/components/ui/alert-dialog.tsx",
+        "src/components/ui/badge.tsx",
+        "src/components/ui/card.tsx",
+        "src/components/ui/dialog.tsx",
+        "src/components/ui/dropdown-menu.tsx",
+        "src/components/ui/popover.tsx",
+        "src/components/ui/select.tsx",
+        "src/components/ui/separator.tsx",
+        "src/components/ui/sheet.tsx",
+        "src/components/ui/skeleton.tsx",
+        "src/components/workspace/EpisodeListPage.tsx",
+        "src/db/agentFinishingCheck.ts",
+        "src/db/agentProjectCreation.ts",
+        "src/db/agentSettings.ts",
+        "src/db/agentTools.ts",
+        "src/db/audio.ts",
+        "src/db/audioGeneration.ts",
+        "src/db/chat.ts",
+        "src/db/connectors.ts",
+        "src/db/database.ts",
+        "src/db/episodes.ts",
+        "src/db/materials.ts",
+        "src/db/music.ts",
+        "src/db/projects.ts",
+        "src/domain/agent.ts",
+        "src/domain/agentGeneration.ts",
+        "src/domain/agentGenerationBatch.ts",
+        "src/domain/agentTaskWrapup.ts",
+        "src/domain/audioGeneration.ts",
+        "src/domain/generationCapabilities.ts",
+        "src/domain/generationPreferences.ts",
+        "src/domain/imageDiscovery.ts",
+        "src/domain/legacyScalar.ts",
+        "src/domain/output.ts",
+        "src/domain/projectMemory.ts",
+        "src/domain/references.ts",
+        "src/domain/search.ts",
+        "src/domain/slot.ts",
+        "src/domain/types.ts",
+        "src/lib/agent/businessSchemas.ts",
+        "src/lib/agent/businessStore.ts",
+        "src/lib/agent/businessTools.ts",
+        "src/lib/agent/businessWriteReceipt.ts",
+        "src/lib/agent/contextPlanner.ts",
+        "src/lib/agent/generationBatchRuntime.ts",
+        "src/lib/agent/generationRuntime.ts",
+        "src/lib/agent/generationSelection.ts",
+        "src/lib/agent/imageDiscovery.ts",
+        "src/lib/agent/materialImageInput.ts",
+        "src/lib/agent/materialTools.ts",
+        "src/lib/agent/musicGenerationReviewSnapshot.ts",
+        "src/lib/agent/referenceContext.ts",
+        "src/lib/agent/referenceEvidence.ts",
+        "src/lib/agent/runChat.ts",
+        "src/lib/agent/runOwnership.ts",
+        "src/lib/agent/runWriteOutcomes.ts",
+        "src/lib/agent/toolErrors.ts",
+        "src/lib/agent/tools.ts",
+        "src/lib/agent/wrapupEvidence.ts",
+        "src/lib/agent/wrapupSchema.ts",
+        "src/lib/ai/aihubmix.ts",
+        "src/lib/ai/chatStream.ts",
+        "src/lib/ai/mimoSpeech.ts",
+        "src/lib/ai/modelBank/index.ts",
+        "src/lib/ai/modelMetadata.ts",
+        "src/lib/ai/requestBoundary.ts",
+        "src/lib/ai/responsesStream.ts",
+        "src/lib/assetLibrary.ts",
+        "src/lib/audio/recorder.ts",
+        "src/lib/audio/schedule.ts",
+        "src/lib/audioGeneration/input.ts",
+        "src/lib/audioGeneration/outputEvidence.ts",
+        "src/lib/audioGeneration/reference.ts",
+        "src/lib/audioProjectPackage.ts",
+        "src/lib/brand.ts",
+        "src/lib/debouncedDraft.ts",
+        "src/lib/episodeDelivery.ts",
+        "src/lib/generationIntent.ts",
+        "src/lib/memory/retrieval.ts",
+        "src/lib/memory/schema.ts",
+        "src/lib/packages/projectPackageCodec.ts",
+        "src/lib/productionContext.ts",
+        "src/lib/productionHandoff.ts",
+        "src/lib/productionRevision.ts",
+        "src/lib/references/pdf.ts",
+        "src/lib/reorderIds.ts",
+        "src/lib/shotFilters.ts",
+        "tests/agentMaterialTools.test.ts",
+        "tests/e07CoercionContracts.test.ts",
+        "tests/e07DraftRebase.test.ts",
+        "tests/e07ErrorContracts.test.ts",
+        "tests/e07HookContracts.test.ts",
+        "tests/e07TypedBoundaries.test.ts",
+        "tests/e07TypedBoundariesAudio.test.ts",
+        "tests/e07TypedBoundariesDelivery.test.ts",
+        "tests/e07TypedBoundariesFinishing.test.ts",
+        "tests/fixtures/d02/harness.ts",
+        "tests/fixtures/e04-media/commands.ts",
+        "tests/fixtures/e07-draft-rebase/README.md",
+        "tests/fixtures/e07-draft-rebase/debouncedDraft-before.ts",
+        "tests/fixtures/e07-draft-rebase/harness.tsx",
+        "tests/fixtures/e07-draft-rebase/index.html",
+        "tests/fixtures/e07-draft-rebase/provenance.json",
+        "tests/fixtures/e07-draft-rebase/tsconfig.json",
+        "tests/fixtures/e07/original-materials-adapter.ts",
+        "tests/fixtures/e07/tsconfig.json",
+        "tests/materialIntegration.test.ts",
+        "tests/materialLibrary.test.ts",
+        "vitest.config.ts"
+      ],
+      "checks": [
+        "Independent final155paths108src/1022inputsstable; actualCOMPLETEDPASS snapshot c74f4590",
+        "Rootformalquality13revieweddiagnostics512warnings/7unusedcontracts0unallowed;419graph1644static6dynamic0cycles0forbidden",
+        "ActualNode22freshlockedinstall/all9commands/88CLIselftests172files3028tests1023root+mirror0drift/lockunchanged",
+        "Current17nativecommandadoptions+permanentprimitive/memo realReact/Dexie rebase; preservedrawfailures/generatedroute3995tokenequivalenceexactrestore",
+        "Complete selectedbaseline245errors→13concretecontractnodes, no automateddebt/blanketignore; manualall155filecoverage"
+      ],
+      "review": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-check.md"
     }
   ],
   "findings": [
@@ -2473,10 +2778,14 @@
         "src/db/agentRuns.ts:68",
         "src/db/agentTaskWrapups.ts:104"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "E04",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Five traced manual memory commands now declare projects/projectMemories/projectMemoryVersions in one protected transaction. Actual native stores/CAS/history/rollback/unrelated-store scheduling verified; promotion/wrapup/genericatomic/agent-run broad evidence closures explicitly retained with independentreview rationale.",
+      "evidence": [
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E04-check.md",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E04-check-snapshot.json",
+        ".trellis/tasks/10-09-src-remediation-e/research/E04-spec-sync.json"
+      ]
     },
     {
       "id": "PD-07",
@@ -2488,10 +2797,14 @@
       "locations": [
         "src/db/repo.ts:617"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "E04",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Deduplicated per-operation candidate batches share one fresh current-global retention snapshot and fourhistoryqueries per distinct candidate MediaRecordowner after all relevantmutations. Complete18retentionsources/25transactionstores, rollback/undo/receipt/release/scalar/backup/draft compatibility verified; logicalworkcounts separatelyqualified.",
+      "evidence": [
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E04-check.md",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E04-check-snapshot.json",
+        ".trellis/tasks/10-09-src-remediation-e/research/E04-spec-sync.json"
+      ]
     },
     {
       "id": "PD-08",
@@ -2506,10 +2819,14 @@
         "src/components/agent/AgentChatPage.tsx:59",
         "src/domain/agentGenerationBatch.ts:2"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "E07",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Typed boundary/legacy primitive validation, narrowed business predicates/callback captures and exact emitted-body assertion fixes are independently reviewed; all actual232 selected-rule errors remediated relative to complete245 baseline except13 individually justified contract nodes. Formal quality enforces root typed/Hooks/Sonar, value graph/unused and88 actualCLI fail/repair cases. 512 metrics remain visible manual review signals, not baseline debt.",
+      "evidence": [
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E07-check.md",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E07-check-snapshot.json",
+        ".trellis/tasks/10-09-src-remediation-e/research/E07-spec-sync.json"
+      ]
     },
     {
       "id": "AU-01",
@@ -2548,10 +2865,15 @@
         "src/components/ui/sheet.tsx:69",
         "src/routes/_studio.agent.tsx:15"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "E01",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Opening-baseline record/wrapup and inspector goal/plan draft retention, synchronous owner/route/local arbitration, nested promotion route delegation, captured revisions and stale completion protection; real native departure/CAS/overlap/delete bugs reproduced and corrected.",
+      "evidence": [
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E01-check.md",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E01-check-snapshot.json",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E01-current-accepted-candidate/summary.json",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E01-current-accepted-candidate/E01-static-summary.json"
+      ]
     },
     {
       "id": "AU-03",
@@ -2583,10 +2905,17 @@
       "locations": [
         "src/components/agent/TopicSidebar.tsx:308"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "E02",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Native sibling row selection/rename/delete buttons with inactive keyboard reachability, focus-within visibility, correct child targets and preserved route/menu semantics.",
+      "evidence": [
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E02-check.md",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E02-check-snapshot.json",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E02-current-frozen-gates/summary.json",
+        ".trellis/tasks/10-09-src-remediation-e/research/E02-spec-sync.json",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E02-final-acceptance/acceptance.json",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E02-final-acceptance/serial-root-chain.json"
+      ]
     },
     {
       "id": "AU-05",
@@ -2600,10 +2929,17 @@
         "src/components/agent/ChatWorkspace.tsx:140",
         "src/components/agent/agentTheme.ts:45"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "E02",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Winning narrow breakpoint after relevant bases; actual computed8px gutters/no max cap/12px nativezero-inset bottom, preserved desktop16px/800px, expanded/rail/scroll clearance and labelled32px CSS surrogate.",
+      "evidence": [
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E02-check.md",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E02-check-snapshot.json",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E02-current-frozen-gates/summary.json",
+        ".trellis/tasks/10-09-src-remediation-e/research/E02-spec-sync.json",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E02-final-acceptance/acceptance.json",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E02-final-acceptance/serial-root-chain.json"
+      ]
     },
     {
       "id": "AU-06",
@@ -2693,10 +3029,14 @@
         "src/components/agent/AgentRunDetails.tsx:10",
         "src/components/agent/ContextUsagePanel.tsx:34"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "E06",
-      "resolution": null,
-      "evidence": []
+      "resolution": "完整data-only映射与按命中品牌加载真实publishercompound图标；实际picker减少2,896,549JSbody字节。完整富消息渲染器保留，plain/code高亮加载边界明确测量和记录；未声称延迟或全部rich体积改善。",
+      "evidence": [
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E06-check.md",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E06-check-snapshot.json",
+        ".trellis/tasks/10-09-src-remediation-e/research/E06-spec-sync.json"
+      ]
     },
     {
       "id": "AU-10",
@@ -2915,10 +3255,14 @@
         "src/components/audioMusic/workspace.css:314",
         "src/components/audio/story-workspace.css:71"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "E03",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Complete current consumer/dynamic/portal inventory proves obsolete CSS; remove115whole rules and2unusedmixedbranches, retain161declarations/order/context exactly; actual native114+26pairs equivalent with explicit finite browser/history limits.",
+      "evidence": [
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E03-check.md",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E03-check-snapshot.json",
+        ".trellis/tasks/10-09-src-remediation-e/research/E03-spec-sync.json"
+      ]
     },
     {
       "id": "PU-10",
@@ -2931,10 +3275,15 @@
         "src/components/audio/VoiceLibrary.tsx:38",
         "src/db/materials.ts:348"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "E01",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Frozen voice configuration baseline/project/revision, synchronous reference/audition/save protection, retained failed input/retry and existing durable preview media; actual native project/route/history and offline reference/audition proof.",
+      "evidence": [
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E01-check.md",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E01-check-snapshot.json",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E01-current-accepted-candidate/summary.json",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E01-current-accepted-candidate/E01-static-summary.json"
+      ]
     },
     {
       "id": "PM-01",
@@ -3218,10 +3567,15 @@
         "src/components/studio/AssetLibraryPages.tsx:187",
         "src/components/workspace/EpisodeListPage.tsx:126"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "E01",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Captured-owner synchronous mutation locks and error exits across gallery/library/episode writes; failure retains input/selection/modal and success-onlyclose, actual native transaction rollback/undo and stale completion proof; existing IP catch preserved.",
+      "evidence": [
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E01-check.md",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E01-check-snapshot.json",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E01-current-accepted-candidate/summary.json",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E01-current-accepted-candidate/E01-static-summary.json"
+      ]
     },
     {
       "id": "SS-07",
@@ -3281,10 +3635,14 @@
         "src/components/studio/ProjectGalleryPage.tsx:49",
         "src/components/studio/AssetLibraryPages.tsx:110"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "E04",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Gallery precise visiblefallback owner ranges share one readonlyshots transaction and narrow coverMap with stableoriginalselection/held-key protection. Each keyed assetkind uses its typedtable/cover/search contract. Original/current and IDgapcounterexample/finalnegative subscription/E01write20 prove finite scopework withoutlatencyclaims.",
+      "evidence": [
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E04-check.md",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E04-check-snapshot.json",
+        ".trellis/tasks/10-09-src-remediation-e/research/E04-spec-sync.json"
+      ]
     },
     {
       "id": "SS-10",
@@ -3302,10 +3660,14 @@
         "src/lib/references/docx.ts:2",
         "src/db/materials.ts:348"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "E07",
-      "resolution": null,
-      "evidence": []
+      "resolution": "Retired zero-consumer primitives/dependency/dead wrappers/internal exports under exact reachability/body proof; renamed imperative material adoption command and actual five callers; preserved CSS/native/declaration/documented audio/meaningful compatibility APIs through seven hash-bound contracts. No broad unused ignores or deleted meaningful tests.",
+      "evidence": [
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E07-check.md",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E07-check-snapshot.json",
+        ".trellis/tasks/10-09-src-remediation-e/research/E07-spec-sync.json"
+      ]
     },
     {
       "id": "SS-11",
@@ -3317,10 +3679,14 @@
       "locations": [
         "src/components/ui/click-spark.tsx:83"
       ],
-      "status": "pending",
+      "status": "fixed",
       "unit": "E05",
-      "resolution": null,
-      "evidence": []
+      "resolution": "ClickSpark owns one demand RAF; idle/expired/hidden/reduced-motion cleanup, no stale replay, live props preserve burst timestamps; native9+9 and fullsuite verified.",
+      "evidence": [
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E05-check.md",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E05-check-snapshot.json",
+        ".trellis/tasks/10-09-src-remediation-e/research/E05-spec-sync.json"
+      ]
     }
   ],
   "ancillaryWork": [
@@ -3342,9 +3708,14 @@
       "origin": "父PRD正式门禁要求；用户授权工具辅助及全部源码质量整改",
       "unit": "E07",
       "file": "package.json / .github/workflows/ghcr.yml / quality tooling",
-      "status": "pending",
-      "scope": "可复现类型/ESLint-SonarJS/依赖架构/引用门禁；已核验基线逐项记录，不批量ignore；不改发布行为。",
-      "evidence": []
+      "status": "verified",
+      "scope": "Pinned portable TypeScript/ESLint-SonarJS/Hook/value-graph/full+productionKnip gates +88 actualCLI selftests; thirteen concrete reviewed error nodes/seven precise unused contracts, CI quality steps preserve publication. Actual localNode22 freshlockedinstall verified; no LinuxCI execution claim.",
+      "evidence": [
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E07-check.md",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E07-check-snapshot.json",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E07-node22-clean-03/summary.json",
+        ".trellis/tasks/10-09-src-remediation-e/research/e07-current-tools/formal-quality-integration-05.json"
+      ]
     }
   ]
 }

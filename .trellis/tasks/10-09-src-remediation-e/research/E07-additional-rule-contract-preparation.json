@@ -1,0 +1,34 @@
+{
+  "purpose": "Read-only precise rule/contract candidates for E07, no rule changes/debt entries/sourcefixes/acceptance",
+  "inputs": {
+    "src/lib/agent/musicGenerationReviewSnapshot.ts": "dd004481eba4641018c6374d7ee1d0b4ab6eb9ac14f33a4a0ba2500ddaa587d6",
+    "src/lib/productionHandoff.ts": "43fc33336c80bce37ebb0cf4084567c563d09b35627c8b73fba076c7778ab2b5",
+    "src/lib/debouncedDraft.ts": "c797901e5318743ca0f87b819067c18f7c3a384516efd87db832aa9f94355f09",
+    "src/lib/agent/runChat.ts": "66717870c4f48a00f94ed374118af1508e5f2895321f0fe08040aacbedc79471",
+    "src/lib/ai/modelBank/index.ts": "64e721fc672271586ca09965397ef3f3dab09d36b10976dc94a3b68d4e2ec3df",
+    "node_modules/.pnpm/@tanstack+router-core@1.171.32/node_modules/@tanstack/router-core/src/redirect.ts": "38b353da614e0aca6bb3d21463aaa5c23265cdea7930a20e05d84d56d5af98bd"
+  },
+  "officialSourceReceipts": "research/e07-rule-primary-preparation/receipts.json",
+  "observations": [
+    {
+      "topic": "Intentional control-character regex",
+      "evidence": "music review identity explicitly rejects U+0000–U+001F; handoff safeComponent explicitly sanitizes these plus DEL/path separators. no-control-regex flags intentional authored boundary behavior. Avoid weakening validation to silence lint; either explicit narrow semantic annotation or equivalent independently verified character predicate. Preserve actual existing rejection/safe filenames tests."
+    },
+    {
+      "topic": "Router non-Error framework control flow",
+      "evidence": "Actual installed router-core Redirect type extends Response with options, redirectFn returns it; public React router reexports. Current primary only-throw-error supports allow TypeOrValueSpecifier package/name. E07 may test exact imported Redirect package origin exemption versus unrelated synthetic non-Error throws, not disable whole routes or permissive allnames."
+    },
+    {
+      "topic": "Stored unknown error propagation",
+      "evidence": "runChat failure and debouncedDraft lastError carry original unknown exceptions. Truthy/undefined narrowing affects rule type; failure identity/error observation/retry contract must remain. Inspect actual unknown/object narrowing and test rejection propagation rather than wrapping all errors into new Error or blindly changing default unknown behavior."
+    },
+    {
+      "topic": "Knip entry ownership",
+      "evidence": "Primary docs warn adding too many entries suppresses unused exports by default; full and production runs are complementary. Mark actual runtime routes/bootstrap as production, native tests/runners as full/test entry separately, no blanket src entry. Config/dynamic/generated/ambient/imported CSS/runtime query/legacytest contract decisions explicit."
+    },
+    {
+      "topic": "Compiler metadata closure",
+      "evidence": "Refer E07-historical-baseline-import-closure-qualification.json; vendor audit exclusion does not imply compiler/build metadata exclusion."
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "purpose": "Read-only closure preparation, not an implementation or acceptance. Refresh source hash at E04.",
+  "source": "src/db/projectMemories.ts",
+  "sha256": "2385dcc806bd3a6e888e27dd281b704f75abb4acc77fb5a29859ae7409aea1b9",
+  "simpleManualWrites": {
+    "createProjectMemory": [
+      "parseMemoryInput pure before transaction",
+      "create -> project projects.get",
+      "duplicateOrConflicts -> projectMemories project index",
+      "optional owned replacement -> projects.get + projectMemories.get",
+      "revision pure",
+      "persist replacement/current -> projectMemories.put + projectMemoryVersions.add"
+    ],
+    "updateProjectMemory": [
+      "owned -> projects + projectMemories",
+      "duplicateOrConflicts -> projectMemories",
+      "persist -> projectMemories + projectMemoryVersions"
+    ],
+    "setProjectMemoryStatus": [
+      "owned -> projects + projectMemories",
+      "active conflict -> projectMemories project index",
+      "persist -> projectMemories + projectMemoryVersions"
+    ],
+    "replaceProjectMemory": [
+      "owned old/new -> projects + projectMemories",
+      "duplicateOrConflicts -> projectMemories",
+      "persist old/new -> projectMemories + projectMemoryVersions"
+    ],
+    "deleteProjectMemory": [
+      "owned -> projects + projectMemories",
+      "projectMemories.delete",
+      "projectMemoryVersions memoryId index plus projectId predicate delete"
+    ]
+  },
+  "candidateCompleteTables": [
+    "projects",
+    "projectMemories",
+    "projectMemoryVersions"
+  ],
+  "protectedTransactions": [
+    "promoteProjectMemory -> sourceSummary -> agentTasks/chatThreads/agentTaskWrapups/agentTaskWrapupVersions/getTaskWrapupState broad evidence closure; do not narrow from this three-table set",
+    "generic executeAtomicTool/agentRuns/wrapup transaction evidence closures must be independently traced, no inferred narrow scope"
+  ],
+  "proofRequired": [
+    "all five manual mutations actual transaction storeNames equal declared three-table complete closure",
+    "failed history write/replacement second persist rolls back rows and history",
+    "CAS/conflict/foreign-owner rejection preserves data",
+    "real native IndexedDB independent unrelated-store scheduling and same-owner serialized competing CAS",
+    "nested promotion/generic broad atomic transactions remain valid"
+  ]
+}

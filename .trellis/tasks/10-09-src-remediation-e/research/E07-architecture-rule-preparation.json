@@ -1,0 +1,45 @@
+{
+  "purpose": "Read-only architecture-rule candidates before E07; not formal gate/rule acceptance; refresh final source and validate conventions plus synthetic fixtures at E07",
+  "astInput": ".trellis/tasks/10-09-src-remediation-e/research/E02-current-ast-results.json",
+  "counts": {
+    "domain-no-persistence-or-ui": 0,
+    "db-no-ui": 0,
+    "provider-transport-db-edges-for-review": 2
+  },
+  "edges": {
+    "domain-no-persistence-or-ui": [],
+    "db-no-ui": [],
+    "provider-transport-db-edges-for-review": [
+      {
+        "from": "src/lib/ai/referenceWire.ts",
+        "to": "src/db/database.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 3
+      },
+      {
+        "from": "src/lib/ai/tavily.ts",
+        "to": "src/db/database.ts",
+        "internal": true,
+        "typeOnly": false,
+        "kind": "static-import",
+        "line": 3
+      }
+    ]
+  },
+  "limits": [
+    "Direct scoped UI live queries and existing repository command imports are explicitly permitted by the remediation contract, not a blanket UI-to-db violation.",
+    "Shared UI hooks in src/lib such as useManualDraftGuard deliberately import UI primitives; do not forbid every lib-to-components edge without ownership interpretation.",
+    "AI transport-to-db static data facades, if present, require concrete semantic analysis, not path-only debt or arbitrary broad ignore.",
+    "Exclude all type-only imports/reexports but include actual value and unresolved/dynamic cases explicitly in formal gate."
+  ],
+  "concreteInterpretation": {
+    "referenceWire": "Read current agentRuns/chatThreads execution ownership and local media bytes, revalidate before/after async blob encoding. This is an existing owner-aware dispatch integration module, not a pure transport leaf; a folder-wide lib/ai\u2192db ban would classify it incorrectly. Do not remove these security/ownership reads.",
+    "tavily": "Reads db.searchConnections.get(\"tavily\") at current lines81/155 for configured key/fallback. Existing provider configuration integration is not a UI import or cycle. No new violation is established by this folder edge; no config/credential behavior changes authorized by preparation."
+  },
+  "inspectedFiles": {
+    "src/lib/ai/referenceWire.ts": "12e661d548816a5e99285ccef20aeb0bb7353f7f289d61a4ac763ff941bd74a8",
+    "src/lib/ai/tavily.ts": "507a256a626d6503e7743c0850ffa0c9f159bd8d5e5a58a700d3c37f5e102479"
+  }
+}

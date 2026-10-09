@@ -458,3 +458,56 @@ See [the seven-section bounded inbound reading contract](ai-connectors.md#c06-bo
 ## Workspace orchestration owners
 
 The D03 [feature responsibility contract](./component-guidelines.md#d03-feature-responsibility-contract-2026-10-08) defines asymmetric audio selection, the shared playback/waveform/export buffer owner, `exportAudioMix` and `switchMusicVariant`. Export scope uses `NonNullable<AudioExport["scope"]>`; decode/render stays outside writes and repository fingerprint validation precedes UI download. Page-owned player epochs, pointer/history lifetimes, synchronous music action/submission locks and best-effort variant-link storage remain distinct from these commands. D03 does not change the music capability/provider policy or text-draft protocol.
+
+## E01 voice form draft ownership (2026-10-09)
+
+### 1. Scope / Trigger
+VoiceLibrary/SpeakerEditor manual preset/design/clone configuration, reference import, audition/save and project/dialog replacement.
+
+### 2. Signatures / Owners
+VoiceLibrary retains the displayed project/editor before a requested replacement. SpeakerEditor publishes synchronous `ManualDraftState`; the shared departure API and local arbiter live in useManualDraftGuard and component-guidelines.
+
+### 3. Contracts
+Freeze speaker ID/project/revision and initial name/voice/mode/instruction/reference/sample fields. Real changes dirty the form; reverting returns clean. Local close/choice/project replacement and route history resolve current owner departure first. Reference import, audition and save publish pending synchronously and cannot dismiss/discard. Retired completion is mounted-gated. Rejected speaker CAS retains input/original revision for retry. Audition still uses durable prepare/submit/result/media code with explicit generation intent; preview/reference media remains project-owned after local discard. No media deletion is attached to draft cleanup.
+
+### 4. Validation / Error Matrix
+| Trigger | Outcome |
+| --- | --- |
+| Unchanged opening or reverted fields | Clean departure |
+| Dirty Escape/close/project switch/SPA/POP | Continue keeps exact configuration and owner |
+| Pending import/audition/save | Keep editor and reject duplicate/dismissal |
+| Reference/save failure | Keep input with actionable error and retry |
+| Old completion after owner replacement | Original validated persistence only; no new-owner state/navigation |
+| Preview discarded with local form | Retain actual owned media; do not replay paid generation |
+
+### 5. Good / Base / Bad Cases
+Good: failed voice save -> same input/revision retry; audition preview remains after discard. Base: unchanged preset can close. Bad: treating busy=false as proof that no unsaved voice settings exist, or saving edited settings to a newly selected speaker.
+
+### 6. Tests Required
+E01 native fixture runs actual reference validation/decode/storage and durable audition with offline HTTP interception, plus project replacement, delayed/rejected save, back/forward, clean/revert and stale completion. Existing MiMo/audioFoundation and B02 regressions remain meaningful. Offline transport does not prove a real paid provider or full mobile playback.
+
+### 7. Wrong vs Correct
+Wrong: close clears editing whenever !busy. Correct: query synchronous dirty/pending, explicitly resolve dirty departure and retire only the authorized owner. Preserve existing captured-revision CAS, provider/profile/defaults and media-retention contracts.
+
+## E03 audio/music stylesheet ownership and cleanup (2026-10-09)
+
+### 1. Scope / Trigger
+Read before changing shared audioMusic/workspace.css, audio/story-workspace.css, current timeline/music layout classes or retiring old workbench CSS.
+
+### 2. Signatures / Owners
+AudioWorkspacePage owns current `as-*` script/inspector/sheet chrome, AudioTimeline owns `at-*` styles in timeline.css, MusicWorkspacePage owns `mw-*` layout and keeps `aw-root`. Shared `audioMusic/shared.tsx` imports workspace.css and shared controls/players/source/voice interfaces still produce live `aw-*`. Generic UI components forward className and portal content outside the page root; stylesheet import position is not a DOM ownership boundary.
+
+### 3. Contracts
+Retire only selectors whose current source/import/caller/string/dynamic/forwarding closure proves them obsolete. CSS class text absence is evidence, not execution of arbitrary JavaScript. Responsive/state/descendant rules and portaled controls are conservatively retained when any live interpretation remains. For mixed selector lists remove only a proven unused branch and preserve live branch declarations/order/ancestor media context. Surviving declarations retain exact semantics; avoid reformatting/restructuring live CSS as part of dead-rule cleanup. Current `.aw-muted` and `.as-script-input` mixed branches remain; `.as-paragraph-gutter > span` and `.as-role-popover .aw-select` are retained structural caveats until separately proven unused. Empty media containers/whitespace may be removed only as an attributable result of deleted rules.
+
+### 4. Validation / Error Matrix
+Missing class with no dynamic/forwarded/current producer → candidate until code and browser evidence complete. Shared control or portal → keep its global selector even when parent layout changed. Mixed rule → live branch and all declaration bytes/context unchanged. Narrow/desktop breakpoint → actual workspaces/menus/sheets/players retain geometry/appearance. Browser cold outline repaint noise → same-source control and identical warmup, never unexplained tolerance or masking. Any actual computed/layout/text/color difference → block equivalence until explained/corrected.
+
+### 5. Good / Base / Bad Cases
+Good: a complete rule inventory maps each removed branch to absent producers and pairs actual current UI at relevant breakpoints with preserved original CSS. Base: keep an uncertain old descendant/state rule rather than declare it dead from independent class tokens. Bad: erase all `aw-*` because the main audio page now uses `as-*`, delete portaled popup styles, or call reduced line count proof of correctness.
+
+### 6. Tests Required
+Maintain native actual AudioWorkspacePage/MusicWorkspacePage fixture and immutable test-owned original stylesheet snapshots/provenance. Desktop/narrow script/timeline/voice/source/export controls, responsive inspectors, music compose/works/details, selects/popovers and players must retain computed style/state/geometry and visual appearance. Ordinary Vite-delivered stylesheet bytes and same-page raw original/current swaps must be verified equivalent before using that seam. Representative local Chromium captures compare all enumerated computed properties (588–589 per element), geometry and exact decoded PNG pixels in114 writer pairs plus26 independent pairs. Current local raster requires controlled same-original warmup for selected timeline outline; preserve failed noise/control reports and exact final pixel comparison without tolerance/masks. The original390px long-title toolbar pointer obstruction remains; chapter portal keyboard activation does not prove that blocked pointer case. Historical E02 lineage prose inconsistency, reconstructed report and early missing producer snapshots remain explicit in the accepted review. Local generated media/disabled animation/reduced-motion are finite test conditions, not physical-device/media-permission/paid-provider proof. Tests/runners must never read mutable task/archive files; source/evidence hashes and single-document/cache isolation make results reviewable.
+
+### 7. Wrong vs Correct
+Wrong: infer obsolete CSS from folder redesign or screenshot absence, or relax an arbitrary global pixel threshold. Correct: inspect every rule and consumer, preserve mixed/portal/dynamic contracts, use controlled same-source browser comparison and document practical limits.

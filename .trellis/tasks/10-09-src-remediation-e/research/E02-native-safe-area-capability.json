@@ -1,0 +1,21 @@
+{
+  "purpose": "Runtime safe-area capability probe for future E02 native computed-style validation; no E02 product implementation or claimed app layout proof",
+  "browser": "151.0.7922.34",
+  "results": [
+    {
+      "requestedBottom": 0,
+      "error": "cdpSession.send: Protocol error (Emulation.setSafeAreaInsets): 'Emulation.setSafeAreaInsets' wasn't found",
+      "computedBottom": "12px"
+    },
+    {
+      "requestedBottom": 32,
+      "error": "cdpSession.send: Protocol error (Emulation.setSafeAreaInsets): 'Emulation.setSafeAreaInsets' wasn't found",
+      "computedBottom": "12px"
+    },
+    {
+      "requestedBottom": 0,
+      "error": "cdpSession.send: Protocol error (Emulation.setSafeAreaInsets): 'Emulation.setSafeAreaInsets' wasn't found",
+      "computedBottom": "12px"
+    }
+  ]
+}

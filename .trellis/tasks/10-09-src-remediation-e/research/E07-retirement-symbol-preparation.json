@@ -1,0 +1,137 @@
+{
+  "purpose": "Read-only late E07 symbol candidates, not graph/unused/retirement acceptance; current E04audit underway",
+  "searchedFiles": 649,
+  "symbolRefs": {
+    "GenerationIntent": [
+      {
+        "file": "src/lib/generationIntent.ts",
+        "sha256": "9d5e5e59271d8797c0d3dd99b64f8ddf3c83418a0f53225b67b006b57cac2c5a",
+        "lines": [
+          4,
+          55,
+          111,
+          123,
+          130,
+          156,
+          186,
+          195,
+          199,
+          206
+        ]
+      },
+      {
+        "file": "src/domain/production.ts",
+        "sha256": "6fd03f25e2c8395805156d5ec25dad77e999bf6275665acc19c43386ccfbd874",
+        "lines": [
+          58
+        ]
+      }
+    ],
+    "ProductionContext": [
+      {
+        "file": "src/lib/generationIntent.ts",
+        "sha256": "9d5e5e59271d8797c0d3dd99b64f8ddf3c83418a0f53225b67b006b57cac2c5a",
+        "lines": [
+          18,
+          154
+        ]
+      },
+      {
+        "file": "src/lib/productionContext.ts",
+        "sha256": "f6b612e67a7fb9ebc0f3c15919db377dc6bf28a832093ed93648748a0c81c8b3",
+        "lines": [
+          240
+        ]
+      }
+    ],
+    "ProductionMediaMetadata": [
+      {
+        "file": "src/lib/productionContext.ts",
+        "sha256": "f6b612e67a7fb9ebc0f3c15919db377dc6bf28a832093ed93648748a0c81c8b3",
+        "lines": [
+          20,
+          134
+        ]
+      }
+    ],
+    "listProjects": [
+      {
+        "file": "src/db/projects.ts",
+        "sha256": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+        "lines": [
+          26
+        ]
+      }
+    ],
+    "listChatThreads": [
+      {
+        "file": "src/db/chat.ts",
+        "sha256": "de30d5a29de339e06f48eeb9c94945c9bad8579c4a5bdd07ce78ecfc34d10287",
+        "lines": [
+          14
+        ]
+      }
+    ],
+    "getChatThread": [
+      {
+        "file": "src/db/chat.ts",
+        "sha256": "de30d5a29de339e06f48eeb9c94945c9bad8579c4a5bdd07ce78ecfc34d10287",
+        "lines": [
+          18
+        ]
+      }
+    ],
+    "listChatMessages": [
+      {
+        "file": "src/db/chat.ts",
+        "sha256": "de30d5a29de339e06f48eeb9c94945c9bad8579c4a5bdd07ce78ecfc34d10287",
+        "lines": [
+          76
+        ]
+      }
+    ],
+    "updateChatMessage": [
+      {
+        "file": "src/db/chat.ts",
+        "sha256": "de30d5a29de339e06f48eeb9c94945c9bad8579c4a5bdd07ce78ecfc34d10287",
+        "lines": [
+          104
+        ]
+      }
+    ],
+    "listMaterialUsage": [
+      {
+        "file": "src/db/materials.ts",
+        "sha256": "5a4fcef0b2421c79fa3c2a84b95c622fe19d91605f375276062406613919511c",
+        "lines": [
+          389
+        ]
+      }
+    ],
+    "shotBeatFilterId": [
+      {
+        "file": "src/lib/shotFilters.ts",
+        "sha256": "94d64aa312c47b28cc4b2df5e65ca85c74f63e4e410ff1de3e6140b04114c69f",
+        "lines": [
+          4,
+          19
+        ]
+      }
+    ],
+    "LOGO_FAVICON_SRC": [
+      {
+        "file": "src/lib/brand.ts",
+        "sha256": "d404089bdf1c77062b5b91b890af2cb767592a05436fb539464a156e98e004e0",
+        "lines": [
+          8
+        ]
+      }
+    ]
+  },
+  "limits": "Literal word search misses aliased/namespace/star/dynamic/config API use; final production/fullKnip/AST/manual closure mandatory. Current full local results include real meaningful legacy contract tests; no retirement chosen.",
+  "notes": [
+    "Standalone Separator/Skeleton are distinct from live DropdownMenuSeparator/SelectSeparator; never delete those live wrappers from substring matching.",
+    "Original db/repo.ts PD08 wrappers now live in db/projects.ts/db/chat.ts afterD; current filenames rather than obsolete oldlines determine ownership.",
+    "GenerationIntent domain type ownership must be traced alongside legacyrootlibs; do not orphan publictypes or discard meaningful compatibility tests automatically."
+  ]
+}

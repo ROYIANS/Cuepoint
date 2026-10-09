@@ -1,0 +1,14 @@
+# E01 planning evidence (2026-10-09)
+
+Read-only planning inspection; no behavior repair or native outcome is claimed.
+
+- `src/components/agent/TaskRecords.tsx:57`: editing input is local. `:112` save catches rejection and retains draft, but `:179` Dialog dismissal clears it when not saving; no dirty callback to inspector. Relevant difference: preserve existing successful revision-aware save behavior.
+- `src/components/agent/TaskWrapup.tsx:228`: `onEditingChange(!!draft || !!candidate)` reports editor existence; `:233` reports pending; `:238` beforeunload only guards draft. No route/local-selection guard covers all owner unmounts. Memory promotion epoch/session already exists and must remain intact.
+- `src/components/agent/TaskInspector.tsx:66`: task key remounts content. `:142` Sheet close checks goal/plan editor, review editing/pending; records are not in that owner state. Hidden records/wrapup tabs preserve mounting only while the inspector itself remains mounted.
+- `src/components/agent/AgentChatPage.tsx:62`: inspector opens/closes in local state and active-thread changes can close it. `openThread` selection and task replacement must be protected before the transition; pathname-only guards cannot suffice.
+- `src/components/audio/VoiceLibrary.tsx:35`: local editing draft, close clears it if not busy; SpeakerEditor reports busy but not real dirty. Baseline includes existing speaker input and local trial/reference fields; successful preview is retained project media and must not be deleted as draft cleanup.
+- `src/lib/useManualDraftGuard.tsx:10`: reusable route/beforeunload guard supports continue-editing and explicit discard; it intentionally exempts same-path search changes. Need a compatible owner-local selection/dismissal contract, not duplicated route blockers on every child.
+- `src/components/studio/ProjectGalleryPage.tsx:373`: rename dispatches a write and dismisses immediately. IP binding already catches errors. `src/components/studio/AssetLibraryPages.tsx` and `src/components/workspace/EpisodeListPage.tsx` require action-by-action refresh of pending/errors rather than treating all writes as uncaught.
+- `tests/manualDraftBaseline.test.ts`, `tests/manualDraftWiring.test.ts`, `tests/agentTaskWrapup.test.ts` provide related behavior/contracts. Native baseline `scripts/b01-browser-regression.mjs` uses real components/router with controlled persistence rejection/delay and isolated cache; reuse this harness pattern without altering already accepted assertions.
+
+Proposed UX matches the existing guard: continue-editing keeps exact draft and location, explicit discard authorizes departure, save remains explicit, pending cannot dismiss. Final summary approval covers this choice. Test Escape/backdrop/close, local task/thread change, SPA and back/forward, pending immediate interactions, failed save/retry and stale completion with real Radix/TanStack/IndexedDB.

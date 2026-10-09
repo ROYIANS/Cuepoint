@@ -1,0 +1,676 @@
+{
+  "status": "reviewed integration decisions; independent acceptance pending",
+  "diagnostics": [
+    {
+      "file": "src/lib/agent/contextCompaction.ts",
+      "rule": "preserve-caught-error",
+      "severity": 2,
+      "message": "There is no `cause` attached to the symptom error being thrown.",
+      "line": 155,
+      "column": 13,
+      "endLine": 155,
+      "endColumn": 40,
+      "identityVersion": "ts-ast-tokens-v1",
+      "semanticOwner": "FunctionDeclaration:prepareRunContext",
+      "nodeKind": "ThrowStatement",
+      "nodeTokens": [
+        [
+          "ThrowKeyword",
+          "throw"
+        ],
+        [
+          "NewKeyword",
+          "new"
+        ],
+        [
+          "Identifier",
+          "Error"
+        ],
+        [
+          "OpenParenToken",
+          "("
+        ],
+        [
+          "Identifier",
+          "errorText"
+        ],
+        [
+          "CloseParenToken",
+          ")"
+        ],
+        [
+          "SemicolonToken",
+          ";"
+        ]
+      ],
+      "signature": "eca60758b2fb6684a37ecb59ff03c681990772fc0c4190c0e84f6212ce070c78",
+      "owner": "Agent context",
+      "reason": "Throw only the already credential-redacted bounded compaction message. Attaching the original provider/parse exception would preserve unredacted transport/request state.",
+      "sourceSha256": "ffae01a408c3de7b5125f149ceb9c3005a41a276e1fe614f9f581497dc84441e"
+    },
+    {
+      "file": "src/lib/agent/generationBatchRuntime.ts",
+      "rule": "@typescript-eslint/only-throw-error",
+      "severity": 2,
+      "message": "Expected an error object to be thrown.",
+      "line": 78,
+      "column": 54,
+      "endLine": 78,
+      "endColumn": 67,
+      "identityVersion": "ts-ast-tokens-v1",
+      "semanticOwner": "FunctionDeclaration:startGenerationBatch/Callback:[[\"Identifier\",\"withThreadRunLock\"]]/VariableDeclaration:settleWorkers",
+      "nodeKind": "PropertyAccessExpression",
+      "nodeTokens": [
+        [
+          "Identifier",
+          "failed"
+        ],
+        [
+          "DotToken",
+          "."
+        ],
+        [
+          "Identifier",
+          "reason"
+        ]
+      ],
+      "signature": "79cb4be654951628e25b99492dfe3ddb193b32e082ca5aa3691ec21349251059",
+      "owner": "Agent batch runtime",
+      "reason": "Propagate the actual rejected worker settlement reason after all workers settle; retain failure identity and existing conservative dispatch stop rather than manufacture a new error.",
+      "sourceSha256": "0fb5c3c6c9e56df015afd8eb1439d4ebb82a38680c237425e2d886222198c63f"
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "rule": "@typescript-eslint/only-throw-error",
+      "severity": 2,
+      "message": "Expected an error object to be thrown.",
+      "line": 78,
+      "column": 32,
+      "endLine": 78,
+      "endColumn": 39,
+      "identityVersion": "ts-ast-tokens-v1",
+      "semanticOwner": "FunctionDeclaration:createRunWriter/MethodDeclaration:flush",
+      "nodeKind": "Identifier",
+      "nodeTokens": [
+        [
+          "Identifier",
+          "failure"
+        ]
+      ],
+      "signature": "d1ce5111b3570792122c8387e64d6026dc781f228dc71641201c832cb54a0a84",
+      "owner": "Agent execution",
+      "reason": "Checkpoint flush rethrows the exact stored persistence rejection. E07 error contract verifies identity, one stop notification and zero later checkpoint writes.",
+      "sourceSha256": "aca3bbfd359048ba390c08cfc31ecc58ea0ced6db2a85b8d9519edc2cf438b82"
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "rule": "preserve-caught-error",
+      "severity": 2,
+      "message": "There is no `cause` attached to the symptom error being thrown.",
+      "line": 199,
+      "column": 28,
+      "endLine": 199,
+      "endColumn": 51,
+      "identityVersion": "ts-ast-tokens-v1",
+      "semanticOwner": "FunctionDeclaration:executePendingTools",
+      "nodeKind": "ThrowStatement",
+      "nodeTokens": [
+        [
+          "ThrowKeyword",
+          "throw"
+        ],
+        [
+          "NewKeyword",
+          "new"
+        ],
+        [
+          "Identifier",
+          "Error"
+        ],
+        [
+          "OpenParenToken",
+          "("
+        ],
+        [
+          "Identifier",
+          "error"
+        ],
+        [
+          "CloseParenToken",
+          ")"
+        ],
+        [
+          "SemicolonToken",
+          ";"
+        ]
+      ],
+      "signature": "52cf8b9eb289eda059dec951ded6738a9e49d1cef6bede9f4dc7dabcc8fd4ecf",
+      "owner": "Agent execution",
+      "reason": "Ambiguous external side effects expose the fixed safe uncertainty diagnostic. Raw cause may contain credentials, provider payloads or implementation details and cannot imply rollback.",
+      "sourceSha256": "aca3bbfd359048ba390c08cfc31ecc58ea0ced6db2a85b8d9519edc2cf438b82"
+    },
+    {
+      "file": "src/lib/agent/runChat.ts",
+      "rule": "preserve-caught-error",
+      "severity": 2,
+      "message": "There is no `cause` attached to the symptom error being thrown.",
+      "line": 323,
+      "column": 25,
+      "endLine": 323,
+      "endColumn": 67,
+      "identityVersion": "ts-ast-tokens-v1",
+      "semanticOwner": "FunctionDeclaration:executeChatRun",
+      "nodeKind": "ThrowStatement",
+      "nodeTokens": [
+        [
+          "ThrowKeyword",
+          "throw"
+        ],
+        [
+          "NewKeyword",
+          "new"
+        ],
+        [
+          "Identifier",
+          "Error"
+        ],
+        [
+          "OpenParenToken",
+          "("
+        ],
+        [
+          "StringLiteral",
+          "执行或本地保存失败，最后一段内容可能尚未保存"
+        ],
+        [
+          "CloseParenToken",
+          ")"
+        ],
+        [
+          "SemicolonToken",
+          ";"
+        ]
+      ],
+      "signature": "3167f1e552af07d65efe66aecb19cf0192819f20b93a3b7253ed5e8dfc36ce8c",
+      "owner": "Agent execution",
+      "reason": "Failure during local checkpoint persistence exposes a fixed safe diagnostic after conservative run/call settlement. Do not leak the captured provider exception through cause.",
+      "sourceSha256": "aca3bbfd359048ba390c08cfc31ecc58ea0ced6db2a85b8d9519edc2cf438b82"
+    },
+    {
+      "file": "src/lib/agent/taskWrapup.ts",
+      "rule": "preserve-caught-error",
+      "severity": 2,
+      "message": "There is no `cause` attached to the symptom error being thrown.",
+      "line": 71,
+      "column": 13,
+      "endLine": 71,
+      "endColumn": 38,
+      "identityVersion": "ts-ast-tokens-v1",
+      "semanticOwner": "FunctionDeclaration:prepareTaskWrapup/Callback:[[\"Identifier\",\"withThreadRunLock\"]]",
+      "nodeKind": "ThrowStatement",
+      "nodeTokens": [
+        [
+          "ThrowKeyword",
+          "throw"
+        ],
+        [
+          "NewKeyword",
+          "new"
+        ],
+        [
+          "Identifier",
+          "Error"
+        ],
+        [
+          "OpenParenToken",
+          "("
+        ],
+        [
+          "Identifier",
+          "message"
+        ],
+        [
+          "CloseParenToken",
+          ")"
+        ],
+        [
+          "SemicolonToken",
+          ";"
+        ]
+      ],
+      "signature": "aa5f474dc88442da9d14606ea8aecde5a9bdcbed97d05065a7b42aed541a8f75",
+      "owner": "Agent task wrapup",
+      "reason": "Publish only the bounded credential-redacted failure/cancellation message and retain the original summary. Raw provider/parsing cause is intentionally excluded from user-visible exceptions.",
+      "sourceSha256": "62ce816c960a3ea7ce9f516ffceb8e44fd680922ffcab323e9825c9ff64ba42c"
+    },
+    {
+      "file": "src/lib/ai/openaiCompatible.ts",
+      "rule": "preserve-caught-error",
+      "severity": 2,
+      "message": "There is no `cause` attached to the symptom error being thrown.",
+      "line": 113,
+      "column": 9,
+      "endLine": 113,
+      "endColumn": 91,
+      "identityVersion": "ts-ast-tokens-v1",
+      "semanticOwner": "FunctionDeclaration:readProtocolBody",
+      "nodeKind": "ThrowStatement",
+      "nodeTokens": [
+        [
+          "ThrowKeyword",
+          "throw"
+        ],
+        [
+          "NewKeyword",
+          "new"
+        ],
+        [
+          "Identifier",
+          "Error"
+        ],
+        [
+          "OpenParenToken",
+          "("
+        ],
+        [
+          "TemplateHead",
+          "`服务响应解析失败：${"
+        ],
+        [
+          "Identifier",
+          "error"
+        ],
+        [
+          "InstanceOfKeyword",
+          "instanceof"
+        ],
+        [
+          "Identifier",
+          "Error"
+        ],
+        [
+          "QuestionToken",
+          "?"
+        ],
+        [
+          "Identifier",
+          "error"
+        ],
+        [
+          "DotToken",
+          "."
+        ],
+        [
+          "Identifier",
+          "message"
+        ],
+        [
+          "ColonToken",
+          ":"
+        ],
+        [
+          "StringLiteral",
+          "无效 JSON"
+        ],
+        [
+          "LastTemplateToken",
+          "}`"
+        ],
+        [
+          "CloseParenToken",
+          ")"
+        ],
+        [
+          "SemicolonToken",
+          ";"
+        ]
+      ],
+      "signature": "7878df6b4d40a9fcc1006530dc11722e3b35aedbb0d1a40e0581a28efc9ca5de",
+      "owner": "AI transport",
+      "reason": "Normalize malformed protocol-body errors into message-only diagnostics which the enclosing credential-aware API redacts; native abort is rethrown unchanged. Raw response/transport cause is not retained.",
+      "sourceSha256": "69751e7aa170d782c4a477386356df8892925f037f7a04a3f05a45ba3a6eb41b"
+    },
+    {
+      "file": "src/lib/debouncedDraft.ts",
+      "rule": "@typescript-eslint/only-throw-error",
+      "severity": 2,
+      "message": "Expected an error object to be thrown.",
+      "line": 30,
+      "column": 47,
+      "endLine": 30,
+      "endColumn": 61,
+      "identityVersion": "ts-ast-tokens-v1",
+      "semanticOwner": "FunctionDeclaration:flushPendingDrafts",
+      "nodeKind": "PropertyAccessExpression",
+      "nodeTokens": [
+        [
+          "Identifier",
+          "failure"
+        ],
+        [
+          "DotToken",
+          "."
+        ],
+        [
+          "Identifier",
+          "reason"
+        ]
+      ],
+      "signature": "60d997dd8ff8cebb5e24ba403044f90be46c47ca6a964cc654f4bec717ede0ea",
+      "owner": "Draft persistence",
+      "reason": "The scoped barrier waits for every field then propagates the actual rejected reason; original failure identity and scope ownership remain observable to navigation/backup callers.",
+      "sourceSha256": "13b31cb3c090df4a3c5ad46a1a8b6897c58c109bf8d7df4e3da0b1ee78e1eebd"
+    },
+    {
+      "file": "src/lib/debouncedDraft.ts",
+      "rule": "@typescript-eslint/prefer-promise-reject-errors",
+      "severity": 2,
+      "message": "Expected the Promise rejection reason to be an Error.",
+      "line": 139,
+      "column": 21,
+      "endLine": 139,
+      "endColumn": 42,
+      "identityVersion": "ts-ast-tokens-v1",
+      "semanticOwner": "ClassDeclaration:DebouncedDraftController/MethodDeclaration:flush",
+      "nodeKind": "CallExpression",
+      "nodeTokens": [
+        [
+          "Identifier",
+          "Promise"
+        ],
+        [
+          "DotToken",
+          "."
+        ],
+        [
+          "Identifier",
+          "reject"
+        ],
+        [
+          "OpenParenToken",
+          "("
+        ],
+        [
+          "Identifier",
+          "error"
+        ],
+        [
+          "CloseParenToken",
+          ")"
+        ]
+      ],
+      "signature": "989e2b2dac8dd6078c2b900f32d1446aeed7c6ff8c52d06ee2f979dbed72f540",
+      "owner": "Draft persistence",
+      "reason": "Convert a synchronous persist throw into the same rejected promise consumed by the unified draft status/retry path; retain the exact object, verified by E07 synchronous-failure/retry test.",
+      "sourceSha256": "13b31cb3c090df4a3c5ad46a1a8b6897c58c109bf8d7df4e3da0b1ee78e1eebd"
+    },
+    {
+      "file": "src/lib/debouncedDraft.ts",
+      "rule": "@typescript-eslint/only-throw-error",
+      "severity": 2,
+      "message": "Expected an error object to be thrown.",
+      "line": 181,
+      "column": 23,
+      "endLine": 181,
+      "endColumn": 37,
+      "identityVersion": "ts-ast-tokens-v1",
+      "semanticOwner": "ClassDeclaration:DebouncedDraftController/MethodDeclaration:flushOrThrow",
+      "nodeKind": "PropertyAccessExpression",
+      "nodeTokens": [
+        [
+          "ThisKeyword",
+          "this"
+        ],
+        [
+          "DotToken",
+          "."
+        ],
+        [
+          "Identifier",
+          "lastError"
+        ]
+      ],
+      "signature": "990b972aabf3edf1ed750b8f41405e28043f8b6dceaed49c322bf6eef72bebeb",
+      "owner": "Draft persistence",
+      "reason": "Backup flush rethrows the exact remembered persistence failure while retaining the unsaved value. E07 tests verify object identity and successful same-value retry.",
+      "sourceSha256": "13b31cb3c090df4a3c5ad46a1a8b6897c58c109bf8d7df4e3da0b1ee78e1eebd"
+    },
+    {
+      "file": "src/lib/references/import.ts",
+      "rule": "@typescript-eslint/prefer-promise-reject-errors",
+      "severity": 2,
+      "message": "Expected the Promise rejection reason to be an Error.",
+      "line": 25,
+      "column": 24,
+      "endLine": 25,
+      "endColumn": 37,
+      "identityVersion": "ts-ast-tokens-v1",
+      "semanticOwner": "FunctionDeclaration:parseDocxInWorker/Anonymous:[[\"OpenParenToken\",\"(\"],[\"Identifier\",\"resolve\"],[\"CommaToken\",\",\"],[\"Identifier\",\"reject\"],[\"CloseParenToken\",\")\"],[\"EqualsGreaterThanToken\",\"=>\"],[\"FirstPunctuation\",\"{\"],[\"ConstKeyword\",\"const\"],[\"Identifier\",\"finish\"],[\"FirstAssignment\",\"=\"],[\"OpenParenToken\",\"(\"],[\"Identifier\",\"error\"],[\"QuestionToken\",\"?\"],[\"ColonToken\",\":\"],[\"UnknownKeyword\",\"unknown\"],[\"CommaToken\",\",\"],[\"Identifier\",\"result\"],[\"QuestionToken\",\"?\"],[\"ColonToken\",\":\"],[\"Identifier\",\"ParsedReference\"],[\"CloseParenToken\",\")\"],[\"EqualsGreaterThanToken\",\"=>\"],[\"FirstPunctuation\",\"{\"],[\"Identifier\",\"clearTimeout\"],[\"OpenParenToken\",\"(\"],[\"Identifier\",\"timer\"],[\"CloseParenToken\",\")\"],[\"SemicolonToken\",\";\"],[\"Identifier\",\"signal\"],[\"QuestionDotToken\",\"?.\"],[\"Identifier\",\"removeEventListener\"],[\"OpenParenToken\",\"(\"],[\"StringLiteral\",\"abort\"],[\"CommaToken\",\",\"],[\"Identifier\",\"abort\"],[\"CloseParenToken\",\")\"],[\"SemicolonToken\",\";\"],[\"Identifier\",\"worker\"],[\"DotToken\",\".\"],[\"Identifier\",\"terminate\"],[\"OpenParenToken\",\"(\"],[\"CloseParenToken\",\")\"],[\"SemicolonToken\",\";\"],[\"IfKeyword\",\"if\"],[\"OpenParenToken\",\"(\"],[\"Identifier\",\"error\"],[\"CloseParenToken\",\")\"],[\"Identifier\",\"reject\"],[\"OpenParenToken\",\"(\"],[\"Identifier\",\"error\"],[\"CloseParenToken\",\")\"],[\"SemicolonToken\",\";\"],[\"ElseKeyword\",\"else\"],[\"Identifier\",\"resolve\"],[\"OpenParenToken\",\"(\"],[\"Identifier\",\"result\"],[\"ExclamationToken\",\"!\"],[\"CloseParenToken\",\")\"],[\"SemicolonToken\",\";\"],[\"CloseBraceToken\",\"}\"],[\"SemicolonToken\",\";\"],[\"ConstKeyword\",\"const\"],[\"Identifier\",\"abort\"],[\"FirstAssignment\",\"=\"],[\"OpenParenToken\",\"(\"],[\"CloseParenToken\",\")\"],[\"EqualsGreaterThanToken\",\"=>\"],[\"Identifier\",\"finish\"],[\"OpenParenToken\",\"(\"],[\"Identifier\",\"signal\"],[\"QuestionDotToken\",\"?.\"],[\"Identifier\",\"reason\"],[\"QuestionQuestionToken\",\"??\"],[\"NewKeyword\",\"new\"],[\"Identifier\",\"Error\"],[\"OpenParenToken\",\"(\"],[\"StringLiteral\",\"解析已取消\"],[\"CloseParenToken\",\")\"],[\"CloseParenToken\",\")\"],[\"SemicolonToken\",\";\"],[\"ConstKeyword\",\"const\"],[\"Identifier\",\"timer\"],[\"FirstAssignment\",\"=\"],[\"Identifier\",\"setTimeout\"],[\"OpenParenToken\",\"(\"],[\"OpenParenToken\",\"(\"],[\"CloseParenToken\",\")\"],[\"EqualsGreaterThanToken\",\"=>\"],[\"Identifier\",\"finish\"],[\"OpenParenToken\",\"(\"],[\"NewKeyword\",\"new\"],[\"Identifier\",\"Error\"],[\"OpenParenToken\",\"(\"],[\"StringLiteral\",\"DOCX 解析超时，请拆分文档后重试\"],[\"CloseParenToken\",\")\"],[\"CloseParenToken\",\")\"],[\"CommaToken\",\",\"],[\"Identifier\",\"LIMITS\"],[\"DotToken\",\".\"],[\"Identifier\",\"workerTimeoutMs\"],[\"CloseParenToken\",\")\"],[\"SemicolonToken\",\";\"],[\"Identifier\",\"worker\"],[\"DotToken\",\".\"],[\"Identifier\",\"onmessage\"],[\"FirstAssignment\",\"=\"],[\"OpenParenToken\",\"(\"],[\"Identifier\",\"event\"],[\"ColonToken\",\":\"],[\"Identifier\",\"MessageEvent\"],[\"FirstBinaryOperator\",\"<\"],[\"FirstPunctuation\",\"{\"],[\"Identifier\",\"result\"],[\"QuestionToken\",\"?\"],[\"ColonToken\",\":\"],[\"Identifier\",\"ParsedReference\"],[\"SemicolonToken\",\";\"],[\"Identifier\",\"error\"],[\"QuestionToken\",\"?\"],[\"ColonToken\",\":\"],[\"StringKeyword\",\"string\"],[\"CloseBraceToken\",\"}\"],[\"GreaterThanToken\",\">\"],[\"CloseParenToken\",\")\"],[\"EqualsGreaterThanToken\",\"=>\"],[\"Identifier\",\"finish\"],[\"OpenParenToken\",\"(\"],[\"Identifier\",\"event\"],[\"DotToken\",\".\"],[\"Identifier\",\"data\"],[\"DotToken\",\".\"],[\"Identifier\",\"error\"],[\"QuestionToken\",\"?\"],[\"NewKeyword\",\"new\"],[\"Identifier\",\"Error\"],[\"OpenParenToken\",\"(\"],[\"Identifier\",\"event\"],[\"DotToken\",\".\"],[\"Identifier\",\"data\"],[\"DotToken\",\".\"],[\"Identifier\",\"error\"],[\"CloseParenToken\",\")\"],[\"ColonToken\",\":\"],[\"Identifier\",\"undefined\"],[\"CommaToken\",\",\"],[\"Identifier\",\"event\"],[\"DotToken\",\".\"],[\"Identifier\",\"data\"],[\"DotToken\",\".\"],[\"Identifier\",\"result\"],[\"CloseParenToken\",\")\"],[\"SemicolonToken\",\";\"],[\"Identifier\",\"worker\"],[\"DotToken\",\".\"],[\"Identifier\",\"onerror\"],[\"FirstAssignment\",\"=\"],[\"OpenParenToken\",\"(\"],[\"CloseParenToken\",\")\"],[\"EqualsGreaterThanToken\",\"=>\"],[\"Identifier\",\"finish\"],[\"OpenParenToken\",\"(\"],[\"NewKeyword\",\"new\"],[\"Identifier\",\"Error\"],[\"OpenParenToken\",\"(\"],[\"StringLiteral\",\"DOCX 解析失败，请检查文件后重试\"],[\"CloseParenToken\",\")\"],[\"CloseParenToken\",\")\"],[\"SemicolonToken\",\";\"],[\"Identifier\",\"signal\"],[\"QuestionDotToken\",\"?.\"],[\"Identifier\",\"addEventListener\"],[\"OpenParenToken\",\"(\"],[\"StringLiteral\",\"abort\"],[\"CommaToken\",\",\"],[\"Identifier\",\"abort\"],[\"CommaToken\",\",\"],[\"FirstPunctuation\",\"{\"],[\"Identifier\",\"once\"],[\"ColonToken\",\":\"],[\"TrueKeyword\",\"true\"],[\"CloseBraceToken\",\"}\"],[\"CloseParenToken\",\")\"],[\"SemicolonToken\",\";\"],[\"IfKeyword\",\"if\"],[\"OpenParenToken\",\"(\"],[\"Identifier\",\"signal\"],[\"QuestionDotToken\",\"?.\"],[\"Identifier\",\"aborted\"],[\"CloseParenToken\",\")\"],[\"Identifier\",\"abort\"],[\"OpenParenToken\",\"(\"],[\"CloseParenToken\",\")\"],[\"SemicolonToken\",\";\"],[\"ElseKeyword\",\"else\"],[\"Identifier\",\"worker\"],[\"DotToken\",\".\"],[\"Identifier\",\"postMessage\"],[\"OpenParenToken\",\"(\"],[\"Identifier\",\"buffer\"],[\"CommaToken\",\",\"],[\"OpenBracketToken\",\"[\"],[\"Identifier\",\"buffer\"],[\"CloseBracketToken\",\"]\"],[\"CloseParenToken\",\")\"],[\"SemicolonToken\",\";\"],[\"CloseBraceToken\",\"}\"]]/VariableDeclaration:finish",
+      "nodeKind": "CallExpression",
+      "nodeTokens": [
+        [
+          "Identifier",
+          "reject"
+        ],
+        [
+          "OpenParenToken",
+          "("
+        ],
+        [
+          "Identifier",
+          "error"
+        ],
+        [
+          "CloseParenToken",
+          ")"
+        ]
+      ],
+      "signature": "24d25591b5673e483d7969d9cfbed71822fc9a4f487d4f400fa057c5d0d7f3e5",
+      "owner": "Reference import",
+      "reason": "DOCX worker shutdown propagates AbortSignal.reason exactly after removing listeners, cancelling timeout and terminating its owned worker; E07 test verifies in-flight object-reason identity and termination.",
+      "sourceSha256": "6a185d2df6cc053a6b175e92d8359e8d47c5fda7a8e974efe1e5c39e96b6bca6"
+    },
+    {
+      "file": "src/lib/references/pdf.ts",
+      "rule": "@typescript-eslint/only-throw-error",
+      "severity": 2,
+      "message": "Expected an error object to be thrown.",
+      "line": 80,
+      "column": 36,
+      "endLine": 80,
+      "endColumn": 49,
+      "identityVersion": "ts-ast-tokens-v1",
+      "semanticOwner": "FunctionDeclaration:parsePdfReference",
+      "nodeKind": "PropertyAccessExpression",
+      "nodeTokens": [
+        [
+          "Identifier",
+          "signal"
+        ],
+        [
+          "DotToken",
+          "."
+        ],
+        [
+          "Identifier",
+          "reason"
+        ]
+      ],
+      "signature": "c295f64f3b97cd5bdd9c47e8d6172528a495aedbc0f02588d54b95b839f81cda",
+      "owner": "Reference import",
+      "reason": "PDF abort forwards AbortSignal.reason instead of wrapping cancellation into a parse failure. Native abort reasons are intentionally allowed at this exact signal-owned node.",
+      "sourceSha256": "98adf3bef1a463d054759887a7ced95067ed66772b2c4a41af2db752212cf0da"
+    }
+  ],
+  "unusedContracts": [
+    {
+      "issue": "files",
+      "file": "scripts/e06-icon-data.d.mts",
+      "symbol": "",
+      "count": 1,
+      "reason": "TypeScript companion declaration for the actual .mjs generator imported by the permanent icon entry regression. Not a runtime entry or unused implementation.",
+      "owner": "Icon catalog",
+      "evidence": [
+        {
+          "file": "scripts/e06-icon-data.d.mts",
+          "sha256": "d27e8b2247cec2c11a4b35f529d9d1012e185d6712739a4cbb56350a6d808e49"
+        },
+        {
+          "file": "scripts/e06-icon-data.mjs",
+          "sha256": "972ade191611a3f8d5404386eef59d8e312d0b9fc3f8d14df6305d6904b76267"
+        },
+        {
+          "file": "tests/e06-icon-entries.test.ts",
+          "sha256": "cdb6f542aa6a08c6a7ee205c4e5477efb554f2ba74cd5f1d2e4a9e3bcaab41ae"
+        }
+      ]
+    },
+    {
+      "issue": "dependencies",
+      "file": "package.json",
+      "symbol": "tw-animate-css",
+      "count": 1,
+      "reason": "The actual application stylesheet imports this package via CSS @import. TS/JS Knip import reachability does not own stylesheet dependency discovery.",
+      "owner": "Frontend styling",
+      "evidence": [
+        {
+          "file": "src/styles.css",
+          "sha256": "a8deb89bc36b4d9d3a88ce063c4b5bd81be793d8fc3e4571f2c0b1da91aa7d64"
+        },
+        {
+          "file": "vite.config.ts",
+          "sha256": "c6def92021debbfe5eb29f89bc106d0df2fdc21061716624251cbe8ba4b1a5f4"
+        }
+      ]
+    },
+    {
+      "issue": "devDependencies",
+      "file": "package.json",
+      "symbol": "tailwindcss",
+      "count": 1,
+      "reason": "The actual application stylesheet imports this package via CSS @import. TS/JS Knip import reachability does not own stylesheet dependency discovery.",
+      "owner": "Frontend styling",
+      "evidence": [
+        {
+          "file": "src/styles.css",
+          "sha256": "a8deb89bc36b4d9d3a88ce063c4b5bd81be793d8fc3e4571f2c0b1da91aa7d64"
+        },
+        {
+          "file": "vite.config.ts",
+          "sha256": "c6def92021debbfe5eb29f89bc106d0df2fdc21061716624251cbe8ba4b1a5f4"
+        }
+      ]
+    },
+    {
+      "issue": "unlisted",
+      "file": "scripts/e02-browser-regression.mjs",
+      "symbol": "playwright",
+      "count": 1,
+      "reason": "Optional native regression runtime is explicitly injected with the runner environment module path, or resolved as ordinary external Playwright. It is not a shipped application dependency; no machine cache path is embedded.",
+      "owner": "Native regression",
+      "evidence": [
+        {
+          "file": "scripts/e02-browser-regression.mjs",
+          "sha256": "215aa6f27c5122322af029da3665ad958d8ff74b2629e37751604f9614b10260"
+        }
+      ]
+    },
+    {
+      "issue": "unlisted",
+      "file": "scripts/e06-icons-browser.mjs",
+      "symbol": "playwright",
+      "count": 1,
+      "reason": "Optional native regression runtime is explicitly injected with the runner environment module path, or resolved as ordinary external Playwright. It is not a shipped application dependency; no machine cache path is embedded.",
+      "owner": "Native regression",
+      "evidence": [
+        {
+          "file": "scripts/e06-icons-browser.mjs",
+          "sha256": "27854aa190c437a838d9ee6d5de802331178adaf9c207534a43baf58c6a48d1f"
+        }
+      ]
+    },
+    {
+      "issue": "unlisted",
+      "file": "scripts/e06-root-browser.mjs",
+      "symbol": "playwright",
+      "count": 1,
+      "reason": "Optional native regression runtime is explicitly injected with the runner environment module path, or resolved as ordinary external Playwright. It is not a shipped application dependency; no machine cache path is embedded.",
+      "owner": "Native regression",
+      "evidence": [
+        {
+          "file": "scripts/e06-root-browser.mjs",
+          "sha256": "d24b14839404142a7915f7e6a854f6e439f5e48911221ccccba0b767ec004fcd"
+        }
+      ]
+    },
+    {
+      "issue": "unlisted",
+      "file": "scripts/e06-root-parity.mjs",
+      "symbol": "playwright",
+      "count": 1,
+      "reason": "Optional native regression runtime is explicitly injected with the runner environment module path, or resolved as ordinary external Playwright. It is not a shipped application dependency; no machine cache path is embedded.",
+      "owner": "Native regression",
+      "evidence": [
+        {
+          "file": "scripts/e06-root-parity.mjs",
+          "sha256": "77a646c469a2c07c5874ecc3a338ab77e976ec5fd4f30dc4de36f00b42bc7446"
+        }
+      ]
+    },
+    {
+      "issue": "unresolved",
+      "file": "scripts/e06-root-parity.mjs",
+      "symbol": "/e06-fixture-dexie.mjs",
+      "count": 1,
+      "reason": "The page imports this local virtual URL; the same runner intercepts this exact route and serves actual installed Dexie module bytes. No physical root module is expected.",
+      "owner": "Native regression",
+      "evidence": [
+        {
+          "file": "scripts/e06-root-parity.mjs",
+          "sha256": "77a646c469a2c07c5874ecc3a338ab77e976ec5fd4f30dc4de36f00b42bc7446"
+        },
+        {
+          "file": "tests/fixtures/e06/seeds.json",
+          "sha256": "bd7763abb2d1260c7fcf237622d02f299354264fc3c82cf17217d336c8e34134"
+        }
+      ]
+    },
+    {
+      "issue": "exports",
+      "file": "src/db/audio.ts",
+      "symbol": "deleteAudioTrack",
+      "count": 1,
+      "reason": "Retain the explicitly documented audio repository deletion command for X=Chapter/Speaker/Segment/Track/Clip in the canonical audio API. Current UI exposes no caller; this is an intentional retained command contract with owner/CAS/atomic cleanup, not a claimed live UI feature.",
+      "owner": "Audio repositories",
+      "evidence": [
+        {
+          "file": "src/db/audio.ts",
+          "sha256": "2593aa6402414d316835cc0e03a64f28a04a4dc9399e5e43d37038e20badd116"
+        },
+        {
+          "file": ".trellis/spec/frontend/audio-music.md",
+          "sha256": "84c25cff00c0f0dd8eae4420e422ed20c2f729b6495c953801a81fdec568135f"
+        }
+      ]
+    },
+    {
+      "issue": "exports",
+      "file": "src/db/audio.ts",
+      "symbol": "deleteAudioSpeaker",
+      "count": 1,
+      "reason": "Retain the explicitly documented audio repository deletion command for X=Chapter/Speaker/Segment/Track/Clip in the canonical audio API. Current UI exposes no caller; this is an intentional retained command contract with owner/CAS/atomic cleanup, not a claimed live UI feature.",
+      "owner": "Audio repositories",
+      "evidence": [
+        {
+          "file": "src/db/audio.ts",
+          "sha256": "2593aa6402414d316835cc0e03a64f28a04a4dc9399e5e43d37038e20badd116"
+        },
+        {
+          "file": ".trellis/spec/frontend/audio-music.md",
+          "sha256": "84c25cff00c0f0dd8eae4420e422ed20c2f729b6495c953801a81fdec568135f"
+        }
+      ]
+    }
+  ],
+  "limits": "Not automatic baseline creation; exactly twelve named semantic errors and ten actual unused-analysis contracts, warnings remain outside debt. Existing canonical audio spec intentional retention; future spec/source edits require re-review and evidence hash refresh."
+}

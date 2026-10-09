@@ -1,0 +1,8 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "E05 scoped component, native work evidence and lifecycle contracts"}
+{"file": ".trellis/tasks/10-09-src-remediation-e/research/E05-component-context.md", "reason": "E05 scoped component, native work evidence and lifecycle contracts"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "E05 scoped component, native work evidence and lifecycle contracts"}
+{"file": ".trellis/spec/frontend/hook-guidelines.md", "reason": "Actual hook/effect lifecycle and query identity contracts; refresh bytes after acceptedE04 specsync"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "E05 scoped component, native work evidence and lifecycle contracts"}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "E05 scoped component, native work evidence and lifecycle contracts"}
+{"file": ".trellis/tasks/10-09-src-remediation-e/research/E05-execution-boundaries.md", "reason": "E05 scoped component, native work evidence and lifecycle contracts"}
+{"file": ".trellis/tasks/09-30-src-quality-remediation/research/E-next-unit-contracts.md", "reason": "E05 scoped component, native work evidence and lifecycle contracts"}

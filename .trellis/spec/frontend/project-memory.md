@@ -124,3 +124,33 @@ MemoryEditor freezes the mount input baseline, owner, memory/source identity, ex
 Behavioral regressions in `tests/b02MemoryPromotion.test.ts` execute actual TaskWrapup/ReviewDocument/MemoryPromotion/MemoryEditor callbacks with controlled candidate reads and real Dexie repository promotion/CAS. Verify rapid current/history callbacks cause one read, mutation/refresh cannot alter the frozen source, failed-read retry, stale completion/callbacks after unmount/close/reopen, equivalent reordered references, coherent saved body/ref/excerpt, and explicit revision reconciliation. The deterministic hook host proves these callback/storage mechanisms, not ReactDOM or native browser scheduling. Preserve route/unload/dirty/pending behavior and source ownership validation; do not use a candidate key to silently discard an open editor.
 
 Successful saves retire the mounted editor session synchronously before calling onSaved, including captured callbacks before a close rerender. Async completion/error/pending publication requires the initiating mounted epoch. An already initiated repository write still belongs to its original validated owner; unmount suppresses UI publication, and a still-mounted target change receives an explicit original-target completion message. Neither case permits old callbacks to submit again. Tests include controlled initial effect cleanup/setup replay but do not claim ReactDOM StrictMode.
+
+## E04 PD06 manual project-memory transaction ownership (2026-10-09)
+
+### 1. Scope
+
+Apply the three-store rule to createProjectMemory, updateProjectMemory, setProjectMemoryStatus, replaceProjectMemory and deleteProjectMemory. Keep read APIs, wrapup promotion, generic executeAtomicTool and beginAgentRun under their established owner scopes.
+
+### 2. Signatures / Owners
+
+Manual APIs own one readwrite transaction over projects, projectMemories and projectMemoryVersions. Owner validation and optimistic revisions belong to repository functions. The UI preserves its draft/error state; it does not duplicate DB ownership checks.
+
+### 3. Contracts
+
+Trace every awaited helper, not just lexical db calls. Require project ownership, owned memory reads, normalized duplicate/conflict checks and current/history writes inside the same transaction. Preserve current+version insertion/deletion and replacement ordering. Pure parsing/normalization does not need a DB store. Keep the existing duplicate early return separately from status no-op/CAS semantics; a duplicate case does not establish universal CAS validation or reactivate disabled memory.
+
+### 4. Validation / Error Matrix
+
+Missing project/foreign memory -> existing rejection and no mutation. Stale revision -> CAS rejection with unchanged current/history. Same normalized topic with different content -> conflict until explicit replacement. Exact disabled duplicate -> same disabled ID, no reactivation. Fault after real version insertion or later replacement write -> current and all history roll back. Status no-op -> existing revision/status contract remains.
+
+### 5. Good / Base / Bad Cases
+
+Good: the complete manual closure justifies three stores and actual native storeNames match. Base: retain a broad promotion/wrapup/tool scope until its own closure is reviewed, including dynamic business evidence/config initialization. Bad: narrow promotion because it calls persistMemoryChange, or infer all operations can share the manual table list.
+
+### 6. Tests Required
+
+Exercise all five APIs, all helper closures, owner/CAS/conflicts/disabled duplicate and history cleanup. Inject failures after actual history and later replacement writes. Hold a history write with Dexie.waitFor; submit competitors outside the root transaction. Observe same-store serialization and unrelated media progress separately. Compare original46-store and final3-store roots on identical synthetic state; preserve raw loaded-source hashes and assertion producers.
+
+### 7. Wrong vs Correct
+
+Wrong: treat store count as a per-project lock or latency benchmark, or remove broad owners without transitive proof. Correct: bound the specific manual roots by complete data access, retain atomic current/history behavior and report the observed native scheduling checkpoint with its device/fixture limits.

@@ -1,0 +1,27 @@
+{
+  "purpose": "Explicit post-acceptance canonical spec/checklist evolution attribution; original E02 review/report unchanged",
+  "acceptedSnapshotSHA256": "1e535bf225fbdb14f267d49cf2f8c8e3132e4341e31ec570813164f6557f63f0",
+  "acceptedReportSHA256": "2d4873a49057231db5154b0a792d2d9f83884873db94f8ab7b63eaa7f5e6456f",
+  "attributedDocDrift": [
+    {
+      "path": ".trellis/spec/frontend/chat-performance.md",
+      "acceptedSHA256": "72b8db703467f0dc23c763a720c3fbb208654f608e9a905b6b4377367ba85a91",
+      "currentSHA256": "86e1f9c6d378352b77a8a4cfd40eabbe77666fefed6f15426f179fa33e870fea",
+      "acceptedBytesPreservedAt": ".trellis/tasks/10-09-src-remediation-e/research/e02-spec-sync-before/.trellis/spec/frontend/chat-performance.md"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/implement.md",
+      "acceptedSHA256": "16aa23e394c2058a3685fa839d22f64f2da92200c5202add0bfd94e69493959d",
+      "currentSHA256": "2553dc176179bc737ea7a758b9d4b7a94d0310c57d6cbdaf99a7da9fac2da433",
+      "acceptedBytesPreservedAt": ".trellis/tasks/10-09-src-remediation-e/research/e02-spec-sync-before/.trellis/tasks/10-09-src-remediation-e/implement.md"
+    },
+    {
+      "path": ".trellis/spec/frontend/component-guidelines.md",
+      "acceptedSHA256": "7458d0ac44119d8581470f13ae9d28d1cbf1bde17468b9f0167897cf8a30ef2e",
+      "currentSHA256": "91a004c2bf8d91fb297bda0dcae8eb4c368680ecc5c770bf898f627a14b4179e",
+      "acceptedBytesPreservedAt": ".trellis/tasks/10-09-src-remediation-e/research/e02-spec-sync-before/.trellis/spec/frontend/component-guidelines.md"
+    }
+  ],
+  "unexpectedEvidenceDrift": [],
+  "productAfterHashMismatches": []
+}

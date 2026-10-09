@@ -1,0 +1,78 @@
+readback 10000 / 41163
+readback 20000 / 41163
+readback 30000 / 41163
+readback 40000 / 41163
+{
+  "status": "FAIL",
+  "checks": 18,
+  "failed": [
+    {
+      "check": "Full41163actualoriginalpathhashbytes",
+      "passed": false,
+      "detail": {
+        "mismatches": [
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/tools/build-e-commit-plan.py",
+            "expectedSHA256": "3b0f7d8f5295d15ef6ef5517f479fa9ecba14b70dab5a81dc2e8e7be88fdff93",
+            "actualSHA256": "c91ee10cdd796c119eed8e68e85f0802daeb963c8999a6a72c6746f4b91298df",
+            "expectedBytes": 5883,
+            "actualBytes": 5909
+          }
+        ],
+        "bytes": 2554126109
+      }
+    },
+    {
+      "check": "Latefilesonlyownedtransportreviewnormalfiles",
+      "passed": false,
+      "detail": {
+        "lateFiles": [
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/.gitignore",
+            "sha256": "a209a4ab8e547468393ffcb9bad0385b78eb273eb0378b6b571545e6e38c0b99"
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/research/E-packed-plan-producer-before.py",
+            "sha256": "3b0f7d8f5295d15ef6ef5517f479fa9ecba14b70dab5a81dc2e8e7be88fdff93"
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/research/E-evidence-git-preservation-evolution.json",
+            "sha256": "d5b72e8f39416a6af7717cc4b180dfd899395d61c42ce865b84228840e9df34b"
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/tools/protect-packed-evidence.py",
+            "sha256": "6cd205cb8d159dc665d5d2c81826de431c6e73e70dc830772b2e656c92ba1e76"
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/full-readback.log",
+            "sha256": "9465ee35ede1f9f079b0e88f5f0dab57245a65c0082f137b2b83e7d9a4480801"
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/independent-full-gzip-verify.log",
+            "sha256": "d7eaf03b4bfc225ad1bb5a699425cb0ee777c750b34c3a286a288eb095439872"
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/verify-transport-readback.py",
+            "sha256": "5eff7420501604d99a904581d6dc8a8510477bf22d0d1bfe8224d99d681ceadb"
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/independent-full-gzip-verify-receipt.json",
+            "sha256": "d7eaf03b4bfc225ad1bb5a699425cb0ee777c750b34c3a286a288eb095439872"
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/full-readback-current.log",
+            "sha256": "9465ee35ede1f9f079b0e88f5f0dab57245a65c0082f137b2b83e7d9a4480801"
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/verify-transport-readback-before-external-path-fix.py",
+            "sha256": "103a4fd49f611510cfaf0a721f9353b1b701275ce52c4e263cdcc4cbf3bdc86e"
+          }
+        ]
+      }
+    }
+  ],
+  "originalPaths": 41163,
+  "restorePaths": 41163,
+  "acceptedReferences": 15442,
+  "lateFiles": 10
+}

@@ -1,0 +1,19 @@
+{
+  "unit": "E05",
+  "documents": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/implement.jsonl",
+      "beforeSHA256": "6af693b662503dc45443df9084478bc912fad94017ab56540528183525c9b43e",
+      "afterSHA256": "f8871a10a1f410a6c5549d087edbceddad5a78bfa5c48eca11c285ba2b0759ef",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e05-activation-before/.trellis/tasks/10-09-src-remediation-e/implement.jsonl",
+      "reason": "AcceptedE04\u2192E05 rolecontext activation"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/check.jsonl",
+      "beforeSHA256": "468b1704325740b39092d956848c3f2a826c908702d7d7b0e65c547b0750b504",
+      "afterSHA256": "d63f8ed764b6fa766f2d50d000bea22f453ff012e76f3445db0caad4f7fa7780",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e05-activation-before/.trellis/tasks/10-09-src-remediation-e/check.jsonl",
+      "reason": "AcceptedE04\u2192E05 rolecontext activation"
+    }
+  ]
+}

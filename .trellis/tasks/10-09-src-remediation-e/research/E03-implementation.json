@@ -1,0 +1,1400 @@
+{
+  "unit": "E03",
+  "finding": "PU09",
+  "status": "implementation complete; frozen for main static/AST/scope gate and independent checker; no ledger/spec closure",
+  "baseline": "Actual accepted post-E02 uncommitted WIP, not Git HEAD",
+  "baselineEntrySha256": "34cee7d2c7f1c26d150b2f453d5567a5a684dd6281a46779770a461908e902c3",
+  "originalInventorySha256": "0b536810467ef355d12020b0c608262bd88def342b7a86656cd86dcc8b941fa8",
+  "review": {
+    "rules": 276,
+    "branches": 296,
+    "verifiedInputs": 442,
+    "absentClasses": 47,
+    "wholeRulesRemoved": 115,
+    "mixedBranchesRemoved": 2,
+    "allBranchesRemoved": 128,
+    "retainedRules": 161,
+    "retainedBranches": 168,
+    "bodyBytesAndContextOrderEquivalent": true,
+    "mixedLivePreserved": [
+      ".aw-muted",
+      ".as-script-input"
+    ],
+    "structuralCaveatsPreserved": [
+      ".as-paragraph-gutter > span",
+      ".as-role-popover .aw-select"
+    ],
+    "report": "e03/complete-selector-review.json",
+    "currentEquivalence": "e03/actual-retained-equivalence-and-scope-final.json",
+    "initialEquivalence": "e03/actual-retained-equivalence-and-scope.json",
+    "whitespaceCorrection": "Delete only whole-rule line slots/indent and newly exposed EOF blanks; no retained declaration formatting"
+  },
+  "files": [
+    {
+      "path": "src/components/audioMusic/workspace.css",
+      "beforeSha256": "ea0d1dddecc60a1f47f494c4e0e46b04a536fde3666beb02c4b2a79ddac7878c",
+      "afterSha256": "8f7488ef9aa6dfec644c490481908f89ec401681f6a1bc3b9aa26cc2d5567a19",
+      "bytes": 6016,
+      "kind": "modified"
+    },
+    {
+      "path": "src/components/audio/story-workspace.css",
+      "beforeSha256": "2144425bbc19a08d3826ecb4c9243e6de6452ec8951feaaaf585041991dcc90a",
+      "afterSha256": "cd81cd3e25b56b06ef0db930fafd64a9254375a2ed54d9161624f85c79682dd5",
+      "bytes": 10054,
+      "kind": "modified"
+    },
+    {
+      "path": "scripts/e03-browser-regression.mjs",
+      "beforeSha256": null,
+      "afterSha256": "7c76689dd2714c327c061f536c9a3865cb65d32a953a2f4b99006ec95de0f937",
+      "bytes": 25573,
+      "kind": "new"
+    },
+    {
+      "path": "tests/fixtures/e03/index.html",
+      "beforeSha256": null,
+      "afterSha256": "5bd015342e95e1d4b44b89726f85b9efb03be5af13e593be11c9a02618703caf",
+      "bytes": 322,
+      "kind": "new"
+    },
+    {
+      "path": "tests/fixtures/e03/harness.tsx",
+      "beforeSha256": null,
+      "afterSha256": "d8bf4eb98e01d5077ca0063973b95cb266df4f7e3868aa0dd25e685cd489464f",
+      "bytes": 6521,
+      "kind": "new"
+    },
+    {
+      "path": "tests/fixtures/e03/tsconfig.json",
+      "beforeSha256": null,
+      "afterSha256": "6ee34f5879e3e8c88cb22a9184bc73080cfb0c5bc791b614f5a4880413daafa9",
+      "bytes": 154,
+      "kind": "new"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e03/workspace.css",
+      "beforeSha256": null,
+      "afterSha256": "ea0d1dddecc60a1f47f494c4e0e46b04a536fde3666beb02c4b2a79ddac7878c",
+      "bytes": 15458,
+      "kind": "new"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e03/story-workspace.css",
+      "beforeSha256": null,
+      "afterSha256": "2144425bbc19a08d3826ecb4c9243e6de6452ec8951feaaaf585041991dcc90a",
+      "bytes": 12955,
+      "kind": "new"
+    },
+    {
+      "path": "tests/fixtures/sourceSnapshots/e03/provenance.json",
+      "beforeSha256": null,
+      "afterSha256": "eeb3c0728c94d5bf669deab9b71513affacdf22b4781a85c3fcd78ec21d60e64",
+      "bytes": 781,
+      "kind": "new"
+    }
+  ],
+  "cssFiles": [
+    {
+      "file": "src/components/audioMusic/workspace.css",
+      "beforeSha256": "ea0d1dddecc60a1f47f494c4e0e46b04a536fde3666beb02c4b2a79ddac7878c",
+      "afterSha256": "8f7488ef9aa6dfec644c490481908f89ec401681f6a1bc3b9aa26cc2d5567a19",
+      "beforeBytes": 15458,
+      "afterBytes": 6016,
+      "removedRules": 87,
+      "retainedRules": 62,
+      "removedBranches": 96,
+      "emptyContainersRemoved": [],
+      "edits": [
+        {
+          "start": 15353,
+          "end": 15452,
+          "replacement": "",
+          "id": "W149",
+          "originalSelectorStart": 15353,
+          "originalBlockEnd": 15451
+        },
+        {
+          "start": 15280,
+          "end": 15352,
+          "replacement": "",
+          "id": "W148",
+          "originalSelectorStart": 15280,
+          "originalBlockEnd": 15351
+        },
+        {
+          "start": 15125,
+          "end": 15279,
+          "replacement": "",
+          "id": "W147",
+          "originalSelectorStart": 15125,
+          "originalBlockEnd": 15278
+        },
+        {
+          "start": 15085,
+          "end": 15124,
+          "replacement": "",
+          "id": "W146",
+          "originalSelectorStart": 15085,
+          "originalBlockEnd": 15123
+        },
+        {
+          "start": 15044,
+          "end": 15084,
+          "replacement": "",
+          "id": "W145",
+          "originalSelectorStart": 15044,
+          "originalBlockEnd": 15083
+        },
+        {
+          "start": 14721,
+          "end": 15043,
+          "replacement": "",
+          "id": "W144",
+          "originalSelectorStart": 14721,
+          "originalBlockEnd": 15042
+        },
+        {
+          "start": 14548,
+          "end": 14720,
+          "replacement": "",
+          "id": "W143",
+          "originalSelectorStart": 14548,
+          "originalBlockEnd": 14719
+        },
+        {
+          "start": 13564,
+          "end": 13678,
+          "replacement": "",
+          "id": "W132",
+          "originalSelectorStart": 13564,
+          "originalBlockEnd": 13677
+        },
+        {
+          "start": 13401,
+          "end": 13563,
+          "replacement": "",
+          "id": "W131",
+          "originalSelectorStart": 13401,
+          "originalBlockEnd": 13562
+        },
+        {
+          "start": 13352,
+          "end": 13400,
+          "replacement": "",
+          "id": "W130",
+          "originalSelectorStart": 13352,
+          "originalBlockEnd": 13399
+        },
+        {
+          "start": 13306,
+          "end": 13351,
+          "replacement": "",
+          "id": "W129",
+          "originalSelectorStart": 13306,
+          "originalBlockEnd": 13350
+        },
+        {
+          "start": 13256,
+          "end": 13305,
+          "replacement": "",
+          "id": "W128",
+          "originalSelectorStart": 13256,
+          "originalBlockEnd": 13304
+        },
+        {
+          "start": 13043,
+          "end": 13087,
+          "replacement": "",
+          "id": "W124",
+          "originalSelectorStart": 13043,
+          "originalBlockEnd": 13086
+        },
+        {
+          "start": 13006,
+          "end": 13042,
+          "replacement": "",
+          "id": "W123",
+          "originalSelectorStart": 13006,
+          "originalBlockEnd": 13041
+        },
+        {
+          "start": 12482,
+          "end": 12604,
+          "replacement": "",
+          "id": "W116",
+          "originalSelectorStart": 12482,
+          "originalBlockEnd": 12603
+        },
+        {
+          "start": 12386,
+          "end": 12481,
+          "replacement": "",
+          "id": "W115",
+          "originalSelectorStart": 12386,
+          "originalBlockEnd": 12480
+        },
+        {
+          "start": 12252,
+          "end": 12385,
+          "replacement": "",
+          "id": "W114",
+          "originalSelectorStart": 12252,
+          "originalBlockEnd": 12384
+        },
+        {
+          "start": 12084,
+          "end": 12251,
+          "replacement": "",
+          "id": "W113",
+          "originalSelectorStart": 12084,
+          "originalBlockEnd": 12250
+        },
+        {
+          "start": 11965,
+          "end": 12083,
+          "replacement": "",
+          "id": "W112",
+          "originalSelectorStart": 11965,
+          "originalBlockEnd": 12082
+        },
+        {
+          "start": 11888,
+          "end": 11964,
+          "replacement": "",
+          "id": "W111",
+          "originalSelectorStart": 11888,
+          "originalBlockEnd": 11963
+        },
+        {
+          "start": 11817,
+          "end": 11887,
+          "replacement": "",
+          "id": "W110",
+          "originalSelectorStart": 11817,
+          "originalBlockEnd": 11886
+        },
+        {
+          "start": 11504,
+          "end": 11554,
+          "replacement": "",
+          "id": "W107",
+          "originalSelectorStart": 11508,
+          "originalBlockEnd": 11553
+        },
+        {
+          "start": 11454,
+          "end": 11503,
+          "replacement": "",
+          "id": "W106",
+          "originalSelectorStart": 11458,
+          "originalBlockEnd": 11502
+        },
+        {
+          "start": 11404,
+          "end": 11453,
+          "replacement": "",
+          "id": "W105",
+          "originalSelectorStart": 11408,
+          "originalBlockEnd": 11452
+        },
+        {
+          "start": 11335,
+          "end": 11403,
+          "replacement": "",
+          "id": "W104",
+          "originalSelectorStart": 11339,
+          "originalBlockEnd": 11402
+        },
+        {
+          "start": 11265,
+          "end": 11334,
+          "replacement": "",
+          "id": "W103",
+          "originalSelectorStart": 11269,
+          "originalBlockEnd": 11333
+        },
+        {
+          "start": 10955,
+          "end": 11030,
+          "replacement": "",
+          "id": "W100",
+          "originalSelectorStart": 10959,
+          "originalBlockEnd": 11029
+        },
+        {
+          "start": 10832,
+          "end": 10954,
+          "replacement": "",
+          "id": "W099",
+          "originalSelectorStart": 10836,
+          "originalBlockEnd": 10953
+        },
+        {
+          "start": 10692,
+          "end": 10831,
+          "replacement": "",
+          "id": "W098",
+          "originalSelectorStart": 10696,
+          "originalBlockEnd": 10830
+        },
+        {
+          "start": 10620,
+          "end": 10691,
+          "replacement": "",
+          "id": "W097",
+          "originalSelectorStart": 10624,
+          "originalBlockEnd": 10690
+        },
+        {
+          "start": 10550,
+          "end": 10619,
+          "replacement": "",
+          "id": "W096",
+          "originalSelectorStart": 10554,
+          "originalBlockEnd": 10618
+        },
+        {
+          "start": 10432,
+          "end": 10549,
+          "replacement": "",
+          "id": "W095",
+          "originalSelectorStart": 10436,
+          "originalBlockEnd": 10548
+        },
+        {
+          "start": 10306,
+          "end": 10431,
+          "replacement": "",
+          "id": "W094",
+          "originalSelectorStart": 10310,
+          "originalBlockEnd": 10430
+        },
+        {
+          "start": 10260,
+          "end": 10305,
+          "replacement": "",
+          "id": "W093",
+          "originalSelectorStart": 10264,
+          "originalBlockEnd": 10304
+        },
+        {
+          "start": 10035,
+          "end": 10081,
+          "replacement": "",
+          "id": "W090",
+          "originalSelectorStart": 10039,
+          "originalBlockEnd": 10080
+        },
+        {
+          "start": 9892,
+          "end": 10034,
+          "replacement": "",
+          "id": "W089",
+          "originalSelectorStart": 9896,
+          "originalBlockEnd": 10033
+        },
+        {
+          "start": 9809,
+          "end": 9891,
+          "replacement": "",
+          "id": "W088",
+          "originalSelectorStart": 9813,
+          "originalBlockEnd": 9890
+        },
+        {
+          "start": 9726,
+          "end": 9808,
+          "replacement": "",
+          "id": "W087",
+          "originalSelectorStart": 9730,
+          "originalBlockEnd": 9807
+        },
+        {
+          "start": 9029,
+          "end": 9145,
+          "replacement": "",
+          "id": "W078",
+          "originalSelectorStart": 9029,
+          "originalBlockEnd": 9144
+        },
+        {
+          "start": 8869,
+          "end": 8907,
+          "replacement": "",
+          "id": "W076",
+          "originalSelectorStart": 8869,
+          "originalBlockEnd": 8906
+        },
+        {
+          "start": 8751,
+          "end": 8868,
+          "replacement": "",
+          "id": "W075",
+          "originalSelectorStart": 8751,
+          "originalBlockEnd": 8867
+        },
+        {
+          "start": 8677,
+          "end": 8750,
+          "replacement": "",
+          "id": "W074",
+          "originalSelectorStart": 8677,
+          "originalBlockEnd": 8749
+        },
+        {
+          "start": 8557,
+          "end": 8676,
+          "replacement": "",
+          "id": "W073",
+          "originalSelectorStart": 8557,
+          "originalBlockEnd": 8675
+        },
+        {
+          "start": 8387,
+          "end": 8556,
+          "replacement": "",
+          "id": "W072",
+          "originalSelectorStart": 8387,
+          "originalBlockEnd": 8555
+        },
+        {
+          "start": 8323,
+          "end": 8386,
+          "replacement": "",
+          "id": "W071",
+          "originalSelectorStart": 8323,
+          "originalBlockEnd": 8385
+        },
+        {
+          "start": 8254,
+          "end": 8322,
+          "replacement": "",
+          "id": "W070",
+          "originalSelectorStart": 8254,
+          "originalBlockEnd": 8321
+        },
+        {
+          "start": 8027,
+          "end": 8253,
+          "replacement": "",
+          "id": "W069",
+          "originalSelectorStart": 8027,
+          "originalBlockEnd": 8252
+        },
+        {
+          "start": 7950,
+          "end": 8026,
+          "replacement": "",
+          "id": "W068",
+          "originalSelectorStart": 7950,
+          "originalBlockEnd": 8025
+        },
+        {
+          "start": 7567,
+          "end": 7653,
+          "replacement": "",
+          "id": "W064",
+          "originalSelectorStart": 7567,
+          "originalBlockEnd": 7652
+        },
+        {
+          "start": 7406,
+          "end": 7566,
+          "replacement": "",
+          "id": "W063",
+          "originalSelectorStart": 7406,
+          "originalBlockEnd": 7565
+        },
+        {
+          "start": 7349,
+          "end": 7405,
+          "replacement": "",
+          "id": "W062",
+          "originalSelectorStart": 7349,
+          "originalBlockEnd": 7404
+        },
+        {
+          "start": 7215,
+          "end": 7348,
+          "replacement": "",
+          "id": "W061",
+          "originalSelectorStart": 7215,
+          "originalBlockEnd": 7347
+        },
+        {
+          "start": 7126,
+          "end": 7214,
+          "replacement": "",
+          "id": "W060",
+          "originalSelectorStart": 7126,
+          "originalBlockEnd": 7213
+        },
+        {
+          "start": 6929,
+          "end": 7125,
+          "replacement": "",
+          "id": "W059",
+          "originalSelectorStart": 6929,
+          "originalBlockEnd": 7124
+        },
+        {
+          "start": 6829,
+          "end": 6928,
+          "replacement": "",
+          "id": "W058",
+          "originalSelectorStart": 6829,
+          "originalBlockEnd": 6927
+        },
+        {
+          "start": 6702,
+          "end": 6828,
+          "replacement": "",
+          "id": "W057",
+          "originalSelectorStart": 6702,
+          "originalBlockEnd": 6827
+        },
+        {
+          "start": 6577,
+          "end": 6701,
+          "replacement": "",
+          "id": "W056",
+          "originalSelectorStart": 6577,
+          "originalBlockEnd": 6700
+        },
+        {
+          "start": 6269,
+          "end": 6576,
+          "replacement": "",
+          "id": "W055",
+          "originalSelectorStart": 6269,
+          "originalBlockEnd": 6575
+        },
+        {
+          "start": 6086,
+          "end": 6268,
+          "replacement": "",
+          "id": "W054",
+          "originalSelectorStart": 6086,
+          "originalBlockEnd": 6267
+        },
+        {
+          "start": 6015,
+          "end": 6085,
+          "replacement": "",
+          "id": "W053",
+          "originalSelectorStart": 6015,
+          "originalBlockEnd": 6084
+        },
+        {
+          "start": 5782,
+          "end": 6014,
+          "replacement": "",
+          "id": "W052",
+          "originalSelectorStart": 5782,
+          "originalBlockEnd": 6013
+        },
+        {
+          "start": 5678,
+          "end": 5781,
+          "replacement": "",
+          "id": "W051",
+          "originalSelectorStart": 5678,
+          "originalBlockEnd": 5780
+        },
+        {
+          "start": 5398,
+          "end": 5598,
+          "replacement": "",
+          "id": "W049",
+          "originalSelectorStart": 5398,
+          "originalBlockEnd": 5597
+        },
+        {
+          "start": 5235,
+          "end": 5397,
+          "replacement": "",
+          "id": "W048",
+          "originalSelectorStart": 5235,
+          "originalBlockEnd": 5396
+        },
+        {
+          "start": 3990,
+          "end": 4077,
+          "replacement": "",
+          "id": "W037",
+          "originalSelectorStart": 3990,
+          "originalBlockEnd": 4076
+        },
+        {
+          "start": 3897,
+          "end": 3989,
+          "replacement": "",
+          "id": "W036",
+          "originalSelectorStart": 3897,
+          "originalBlockEnd": 3988
+        },
+        {
+          "start": 3672,
+          "end": 3896,
+          "replacement": "",
+          "id": "W035",
+          "originalSelectorStart": 3672,
+          "originalBlockEnd": 3895
+        },
+        {
+          "start": 3582,
+          "end": 3671,
+          "replacement": "",
+          "id": "W034",
+          "originalSelectorStart": 3582,
+          "originalBlockEnd": 3670
+        },
+        {
+          "start": 3241,
+          "end": 3324,
+          "replacement": "",
+          "id": "W030",
+          "originalSelectorStart": 3241,
+          "originalBlockEnd": 3323
+        },
+        {
+          "start": 3142,
+          "end": 3240,
+          "replacement": "",
+          "id": "W029",
+          "originalSelectorStart": 3142,
+          "originalBlockEnd": 3239
+        },
+        {
+          "start": 3056,
+          "end": 3141,
+          "replacement": "",
+          "id": "W028",
+          "originalSelectorStart": 3056,
+          "originalBlockEnd": 3140
+        },
+        {
+          "start": 2951,
+          "end": 3055,
+          "replacement": "",
+          "id": "W027",
+          "originalSelectorStart": 2951,
+          "originalBlockEnd": 3054
+        },
+        {
+          "start": 2869,
+          "end": 2950,
+          "replacement": "",
+          "id": "W026",
+          "originalSelectorStart": 2869,
+          "originalBlockEnd": 2949
+        },
+        {
+          "start": 1844,
+          "end": 1932,
+          "replacement": "",
+          "id": "W017",
+          "originalSelectorStart": 1844,
+          "originalBlockEnd": 1931
+        },
+        {
+          "start": 1756,
+          "end": 1843,
+          "replacement": "",
+          "id": "W016",
+          "originalSelectorStart": 1756,
+          "originalBlockEnd": 1842
+        },
+        {
+          "start": 1658,
+          "end": 1755,
+          "replacement": "",
+          "id": "W015",
+          "originalSelectorStart": 1658,
+          "originalBlockEnd": 1754
+        },
+        {
+          "start": 1461,
+          "end": 1657,
+          "replacement": "",
+          "id": "W014",
+          "originalSelectorStart": 1461,
+          "originalBlockEnd": 1656
+        },
+        {
+          "start": 1397,
+          "end": 1460,
+          "replacement": "",
+          "id": "W013",
+          "originalSelectorStart": 1397,
+          "originalBlockEnd": 1459
+        },
+        {
+          "start": 1225,
+          "end": 1396,
+          "replacement": "",
+          "id": "W012",
+          "originalSelectorStart": 1225,
+          "originalBlockEnd": 1395
+        },
+        {
+          "start": 1185,
+          "end": 1224,
+          "replacement": "",
+          "id": "W011",
+          "originalSelectorStart": 1185,
+          "originalBlockEnd": 1223
+        },
+        {
+          "start": 1124,
+          "end": 1184,
+          "replacement": "",
+          "id": "W010",
+          "originalSelectorStart": 1124,
+          "originalBlockEnd": 1183
+        },
+        {
+          "start": 1067,
+          "end": 1123,
+          "replacement": "",
+          "id": "W009",
+          "originalSelectorStart": 1067,
+          "originalBlockEnd": 1122
+        },
+        {
+          "start": 969,
+          "end": 1066,
+          "replacement": "",
+          "id": "W008",
+          "originalSelectorStart": 969,
+          "originalBlockEnd": 1065
+        },
+        {
+          "start": 821,
+          "end": 968,
+          "replacement": "",
+          "id": "W007",
+          "originalSelectorStart": 821,
+          "originalBlockEnd": 967
+        },
+        {
+          "start": 645,
+          "end": 672,
+          "replacement": ".aw-muted",
+          "id": "W005"
+        },
+        {
+          "start": 530,
+          "end": 644,
+          "replacement": "",
+          "id": "W004",
+          "originalSelectorStart": 530,
+          "originalBlockEnd": 643
+        },
+        {
+          "start": 441,
+          "end": 529,
+          "replacement": "",
+          "id": "W003",
+          "originalSelectorStart": 441,
+          "originalBlockEnd": 528
+        },
+        {
+          "start": 241,
+          "end": 440,
+          "replacement": "",
+          "id": "W002",
+          "originalSelectorStart": 241,
+          "originalBlockEnd": 439
+        }
+      ],
+      "retainedDeclarationsByteEquivalent": true,
+      "retainedOrderEquivalent": true
+    },
+    {
+      "file": "src/components/audio/story-workspace.css",
+      "beforeSha256": "2144425bbc19a08d3826ecb4c9243e6de6452ec8951feaaaf585041991dcc90a",
+      "afterSha256": "cd81cd3e25b56b06ef0db930fafd64a9254375a2ed54d9161624f85c79682dd5",
+      "beforeBytes": 12955,
+      "afterBytes": 10054,
+      "removedRules": 28,
+      "retainedRules": 99,
+      "removedBranches": 32,
+      "emptyContainersRemoved": [],
+      "edits": [
+        {
+          "start": 10989,
+          "end": 11072,
+          "replacement": "",
+          "id": "S108",
+          "originalSelectorStart": 10989,
+          "originalBlockEnd": 11071
+        },
+        {
+          "start": 10356,
+          "end": 10427,
+          "replacement": "",
+          "id": "S099",
+          "originalSelectorStart": 10360,
+          "originalBlockEnd": 10426
+        },
+        {
+          "start": 10265,
+          "end": 10355,
+          "replacement": "",
+          "id": "S098",
+          "originalSelectorStart": 10269,
+          "originalBlockEnd": 10354
+        },
+        {
+          "start": 10207,
+          "end": 10264,
+          "replacement": "",
+          "id": "S097",
+          "originalSelectorStart": 10211,
+          "originalBlockEnd": 10263
+        },
+        {
+          "start": 10154,
+          "end": 10206,
+          "replacement": "",
+          "id": "S096",
+          "originalSelectorStart": 10158,
+          "originalBlockEnd": 10205
+        },
+        {
+          "start": 10057,
+          "end": 10093,
+          "replacement": ".as-script-input",
+          "id": "S095"
+        },
+        {
+          "start": 9832,
+          "end": 9894,
+          "replacement": "",
+          "id": "S092",
+          "originalSelectorStart": 9836,
+          "originalBlockEnd": 9893
+        },
+        {
+          "start": 9771,
+          "end": 9831,
+          "replacement": "",
+          "id": "S091",
+          "originalSelectorStart": 9775,
+          "originalBlockEnd": 9830
+        },
+        {
+          "start": 9711,
+          "end": 9770,
+          "replacement": "",
+          "id": "S090",
+          "originalSelectorStart": 9715,
+          "originalBlockEnd": 9769
+        },
+        {
+          "start": 9620,
+          "end": 9710,
+          "replacement": "",
+          "id": "S089",
+          "originalSelectorStart": 9624,
+          "originalBlockEnd": 9709
+        },
+        {
+          "start": 5467,
+          "end": 5578,
+          "replacement": "",
+          "id": "S047",
+          "originalSelectorStart": 5467,
+          "originalBlockEnd": 5577
+        },
+        {
+          "start": 4462,
+          "end": 4577,
+          "replacement": "",
+          "id": "S037",
+          "originalSelectorStart": 4462,
+          "originalBlockEnd": 4576
+        },
+        {
+          "start": 4347,
+          "end": 4461,
+          "replacement": "",
+          "id": "S036",
+          "originalSelectorStart": 4347,
+          "originalBlockEnd": 4460
+        },
+        {
+          "start": 4183,
+          "end": 4346,
+          "replacement": "",
+          "id": "S035",
+          "originalSelectorStart": 4183,
+          "originalBlockEnd": 4345
+        },
+        {
+          "start": 3938,
+          "end": 4036,
+          "replacement": "",
+          "id": "S033",
+          "originalSelectorStart": 3938,
+          "originalBlockEnd": 4035
+        },
+        {
+          "start": 3620,
+          "end": 3937,
+          "replacement": "",
+          "id": "S032",
+          "originalSelectorStart": 3620,
+          "originalBlockEnd": 3936
+        },
+        {
+          "start": 3456,
+          "end": 3619,
+          "replacement": "",
+          "id": "S031",
+          "originalSelectorStart": 3456,
+          "originalBlockEnd": 3618
+        },
+        {
+          "start": 3373,
+          "end": 3455,
+          "replacement": "",
+          "id": "S030",
+          "originalSelectorStart": 3373,
+          "originalBlockEnd": 3454
+        },
+        {
+          "start": 3273,
+          "end": 3372,
+          "replacement": "",
+          "id": "S029",
+          "originalSelectorStart": 3273,
+          "originalBlockEnd": 3371
+        },
+        {
+          "start": 3137,
+          "end": 3272,
+          "replacement": "",
+          "id": "S028",
+          "originalSelectorStart": 3137,
+          "originalBlockEnd": 3271
+        },
+        {
+          "start": 3032,
+          "end": 3136,
+          "replacement": "",
+          "id": "S027",
+          "originalSelectorStart": 3032,
+          "originalBlockEnd": 3135
+        },
+        {
+          "start": 1850,
+          "end": 1957,
+          "replacement": "",
+          "id": "S018",
+          "originalSelectorStart": 1850,
+          "originalBlockEnd": 1956
+        },
+        {
+          "start": 1753,
+          "end": 1849,
+          "replacement": "",
+          "id": "S017",
+          "originalSelectorStart": 1753,
+          "originalBlockEnd": 1848
+        },
+        {
+          "start": 1704,
+          "end": 1752,
+          "replacement": "",
+          "id": "S016",
+          "originalSelectorStart": 1704,
+          "originalBlockEnd": 1751
+        },
+        {
+          "start": 1584,
+          "end": 1703,
+          "replacement": "",
+          "id": "S015",
+          "originalSelectorStart": 1584,
+          "originalBlockEnd": 1702
+        },
+        {
+          "start": 1480,
+          "end": 1583,
+          "replacement": "",
+          "id": "S014",
+          "originalSelectorStart": 1480,
+          "originalBlockEnd": 1582
+        },
+        {
+          "start": 1409,
+          "end": 1479,
+          "replacement": "",
+          "id": "S013",
+          "originalSelectorStart": 1409,
+          "originalBlockEnd": 1478
+        },
+        {
+          "start": 1269,
+          "end": 1408,
+          "replacement": "",
+          "id": "S012",
+          "originalSelectorStart": 1269,
+          "originalBlockEnd": 1407
+        },
+        {
+          "start": 1194,
+          "end": 1268,
+          "replacement": "",
+          "id": "S011",
+          "originalSelectorStart": 1194,
+          "originalBlockEnd": 1267
+        }
+      ],
+      "retainedDeclarationsByteEquivalent": true,
+      "retainedOrderEquivalent": true
+    }
+  ],
+  "native": {
+    "report": "e03/final-paired-corrected/observations.json",
+    "reportSha256": "fa92adc7f7ebb33d6c9682d059fe0ddec70bb6b0d8c3cca22acee998b0eb3f90",
+    "pairs": 114,
+    "totalDifferentPixels": 0,
+    "exactPngHashPairs": 114,
+    "fullComputedStatePairs": 114,
+    "propertiesPerElement": 588,
+    "pseudoElementsDomSvgAttributesTextValueFocusHover": true,
+    "audioWidths": [
+      1440,
+      1099,
+      800,
+      799,
+      390
+    ],
+    "musicWidths": [
+      1440,
+      1280,
+      1279,
+      1000,
+      800,
+      760,
+      390
+    ],
+    "height": 900,
+    "sameOriginalControls": [
+      {
+        "scenario": "audio-1440-select-portal",
+        "coldPngSha256": "4e8713b0729a3752b882613b6be1338bf476159202949d893db4d858838cbf92",
+        "repeatedPngSha256": "51a62f0096c08599faec1876e9b3b0549bf0e99224d654b10f59455bb09dfa6e",
+        "fullStateEquivalent": true,
+        "width": 1440,
+        "height": 900,
+        "differentPixels": 17,
+        "maxChannelDelta": 2
+      },
+      {
+        "scenario": "audio-1099-voice-inspector",
+        "coldPngSha256": "eaca0d6208729264efd940c71c92516017594d2ef986ac782bdea309ce994269",
+        "repeatedPngSha256": "65308e8177e6632780af1a79fa2c21f263d4a34633be0dd559feb2cc7c2ea1c6",
+        "fullStateEquivalent": true,
+        "width": 1099,
+        "height": 900,
+        "differentPixels": 1,
+        "maxChannelDelta": 1
+      },
+      {
+        "scenario": "audio-800-voice-inspector",
+        "coldPngSha256": "af2bb7fb3b507195ca9d63b303c38c8a845f6c7490746aa043f62e81b94c9c71",
+        "repeatedPngSha256": "eda275dea065e3b839eaba31aafd6f7694e6af118f315bcb6201652ebb065fab",
+        "fullStateEquivalent": true,
+        "width": 800,
+        "height": 900,
+        "differentPixels": 1,
+        "maxChannelDelta": 1
+      },
+      {
+        "scenario": "audio-799-timeline",
+        "coldPngSha256": "60be00f88a8d9b812939bcc74ec731c4fa00ff977050ea369109d1911984a460",
+        "repeatedPngSha256": "b7d32aa01c9734a41c89e837fb803d543e902338acb82525bb17bbf9392eeda4",
+        "fullStateEquivalent": true,
+        "width": 799,
+        "height": 900,
+        "differentPixels": 14,
+        "maxChannelDelta": 2
+      },
+      {
+        "scenario": "audio-390-timeline",
+        "coldPngSha256": "c33571189d82298057b8e60e4ca208fb0a335b46ea460ed8da58f9c299d95191",
+        "repeatedPngSha256": "9deefe99910cc463b16ec53cdc1ab39a815ff2186faf9bdc97eeab8d51c7109a",
+        "fullStateEquivalent": true,
+        "width": 390,
+        "height": 900,
+        "differentPixels": 14,
+        "maxChannelDelta": 2
+      }
+    ],
+    "sameOriginalControlTotalPixels": 47,
+    "pageErrors": [],
+    "externalRequests": [],
+    "mainDocuments": [
+      "http://127.0.0.1:5203/tests/fixtures/e03/"
+    ],
+    "sourceChangesDuringRun": [],
+    "nativeSeedCounts": {
+      "projects": 2,
+      "takes": 4,
+      "clips": 1,
+      "works": 2,
+      "jobs": 2
+    },
+    "viteRawCssByteEquivalent": true,
+    "visualInspections": [
+      "before-attempt-04/audio-1440-script.png",
+      "before-attempt-04/audio-390-script.png",
+      "final-paired-corrected/audio-1440-voice-inspector.png",
+      "final-paired-corrected/audio-1099-voice-inspector.png",
+      "final-paired-corrected/audio-799-voice-editor.png",
+      "final-paired-corrected/audio-390-recorder-idle.png",
+      "final-paired-corrected/audio-390-timeline.png",
+      "before-attempt-04/music-1440-compose.png",
+      "final-paired-corrected/music-1440-details.png",
+      "final-paired-corrected/music-390-details.png"
+    ],
+    "rasterControl": "e03/raster-control-summary.json"
+  },
+  "versions": {
+    "node": "v24.11.0",
+    "chromium": "151.0.7922.34",
+    "machinePnpm": "10.15.0",
+    "machinePnpmPath": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "vite": "7.3.6",
+    "postcss": "8.5.28",
+    "typescript": "5.9.3",
+    "playwright": "1.62.1"
+  },
+  "commands": [
+    {
+      "command": "PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm lint",
+      "exitCode": 0,
+      "log": "e03/application-typecheck-final.log"
+    },
+    {
+      "command": "PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec tsc --project tests/fixtures/e03/tsconfig.json --noEmit",
+      "exitCode": 0,
+      "log": "e03/fixture-typecheck-final.log"
+    },
+    {
+      "command": "PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm test tests/audioFoundation.test.ts tests/musicDraftVariants.test.ts tests/audioTimelineShortcuts.test.ts --maxWorkers=4",
+      "exitCode": 0,
+      "tests": 46,
+      "files": 3,
+      "log": "e03/focused-tests-final.log"
+    },
+    {
+      "command": "PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH node .trellis/tasks/10-09-src-remediation-e/research/e03/verify-retained.mjs",
+      "exitCode": 0,
+      "log": "e03/retained-equivalence-final.log"
+    },
+    {
+      "command": "git diff --check -- src/components/audioMusic/workspace.css src/components/audio/story-workspace.css",
+      "exitCode": 0,
+      "log": "e03/scoped-diff-check-final.log"
+    },
+    {
+      "command": "PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH node .trellis/tasks/10-09-src-remediation-e/research/e03/verify-vite-styles.mjs",
+      "exitCode": 0,
+      "result": "e03/vite-style-byte-equivalence.json"
+    },
+    {
+      "command": "E03_PAIRED=1 E03_SOFTWARE_RASTER=1 E03_OUTPUT=.trellis/tasks/10-09-src-remediation-e/research/e03/final-paired-corrected E03_PLAYWRIGHT_PATH=/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs E03_CHROMIUM_PATH=/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH node scripts/e03-browser-regression.mjs",
+      "exitCode": 0,
+      "result": "e03/final-paired-corrected/observations.json"
+    }
+  ],
+  "attempts": [
+    {
+      "path": "e03/after-attempt-01/observations.json",
+      "sha256": "8802345c0f2682ff78a1d4d9ce89f11e0b060ea5f12cd2ad8b20891eabcc3b5a",
+      "mode": "after",
+      "captures": 39,
+      "failure": {
+        "message": "audio-800-timeline decoded pixel equivalence\n\n8 !== 0\n",
+        "stack": "AssertionError [ERR_ASSERTION]: audio-800-timeline decoded pixel equivalence\n\n8 !== 0\n\n    at capture (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/e03-browser-regression.mjs:91:20)\n    at async file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/e03-browser-regression.mjs:120:94"
+      },
+      "pageErrors": [],
+      "producerSnapshot": true,
+      "authoritative": false
+    },
+    {
+      "path": "e03/after-diagnostic-02/observations.json",
+      "sha256": "2e42bb947a7fd83cdfbc97fcfbf356740e7a77faef0a59d12cc0ee515f4677f0",
+      "mode": "after",
+      "captures": 39,
+      "failure": {
+        "message": "audio-800-timeline decoded pixel equivalence\n\n8 !== 0\n",
+        "stack": "AssertionError [ERR_ASSERTION]: audio-800-timeline decoded pixel equivalence\n\n8 !== 0\n\n    at capture (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/e03-browser-regression.mjs:96:20)\n    at async file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/e03-browser-regression.mjs:125:94"
+      },
+      "pageErrors": [],
+      "producerSnapshot": true,
+      "authoritative": false
+    },
+    {
+      "path": "e03/before-attempt-01/observations.json",
+      "sha256": "2a8cdde16efebd464198e1d39bcbeaa6e50a10b9ae17c970a4fbe31c5b1a5789",
+      "mode": "before",
+      "captures": 0,
+      "failure": {
+        "message": "page.waitForFunction: Timeout 12000ms exceeded.",
+        "stack": "page.waitForFunction: Timeout 12000ms exceeded.\n    at /Users/xiaomengdao/WebstormProjects/aifenjing/scripts/e03-browser-regression.mjs:42:38"
+      },
+      "pageErrors": [
+        "DexieError2"
+      ],
+      "producerSnapshot": false,
+      "authoritative": false
+    },
+    {
+      "path": "e03/before-attempt-02/observations.json",
+      "sha256": "293bb282d19140d48bf5d0a8035ed661f93bb962726895e6c7cca8115ea16d03",
+      "mode": "before",
+      "captures": 12,
+      "failure": {
+        "message": "locator.click: Timeout 12000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '剪辑', exact: true })\u001b[22m\n",
+        "stack": "locator.click: Timeout 12000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '剪辑', exact: true })\u001b[22m\n\n    at /Users/xiaomengdao/WebstormProjects/aifenjing/scripts/e03-browser-regression.mjs:107:67"
+      },
+      "pageErrors": [],
+      "producerSnapshot": false,
+      "authoritative": false
+    },
+    {
+      "path": "e03/before-attempt-03/observations.json",
+      "sha256": "5a9cbfd9de35926288217e81cad9a9a00224e72a4a301cdfd06760f5d73e63fa",
+      "mode": "before",
+      "captures": 53,
+      "failure": {
+        "message": "locator.click: Timeout 12000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '第一章 · 海边来信', exact: true })\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" data-state=\"closed\" aria-expanded=\"false\" aria-haspopup=\"dialog\" data-slot=\"popover-trigger\" class=\"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-dest…>…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <button data-slot=\"button\" class=\"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground …>…</button> from <div class=\"as-toolbar-actions\">…</div> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <button data-slot=\"button\" class=\"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground …>…</button> from <div class=\"as-toolbar-actions\">…</div> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    23 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - <button data-slot=\"button\" class=\"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground …>…</button> from <div class=\"as-toolbar-actions\">…</div> subtree intercepts pointer events\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+        "stack": "locator.click: Timeout 12000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '第一章 · 海边来信', exact: true })\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" data-state=\"closed\" aria-expanded=\"false\" aria-haspopup=\"dialog\" data-slot=\"popover-trigger\" class=\"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-dest…>…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <button data-slot=\"button\" class=\"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground …>…</button> from <div class=\"as-toolbar-actions\">…</div> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <button data-slot=\"button\" class=\"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground …>…</button> from <div class=\"as-toolbar-actions\">…</div> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    23 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - <button data-slot=\"button\" class=\"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground …>…</button> from <div class=\"as-toolbar-actions\">…</div> subtree intercepts pointer events\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at /Users/xiaomengdao/WebstormProjects/aifenjing/scripts/e03-browser-regression.mjs:92:75"
+      },
+      "pageErrors": [],
+      "producerSnapshot": false,
+      "authoritative": false
+    },
+    {
+      "path": "e03/before-attempt-04/observations.json",
+      "sha256": "e07d2e52fae2720d8a2287d9d9a3b913356f2852d77f34041547676ad45ed191",
+      "mode": "before",
+      "captures": 114,
+      "failure": null,
+      "pageErrors": [],
+      "producerSnapshot": true,
+      "authoritative": false
+    },
+    {
+      "path": "e03/before-attempt-05/observations.json",
+      "sha256": "873c865c1547082bdaade11b1fbbeaecb59c55e6a10b07d550bac8b97ee5703d",
+      "mode": "before",
+      "captures": 114,
+      "failure": null,
+      "pageErrors": [],
+      "producerSnapshot": true,
+      "authoritative": false
+    },
+    {
+      "path": "e03/counterfactual-800-software/observations.json",
+      "sha256": "d4966dbace4acba49be1a34116ac02715f77b6eca41a3d13ad9fc75f9558ac8c",
+      "mode": "diagnostic-800",
+      "captures": 13,
+      "failure": null,
+      "pageErrors": [],
+      "producerSnapshot": true,
+      "authoritative": false
+    },
+    {
+      "path": "e03/final-paired/observations.json",
+      "sha256": "506849a577c7785ec9f7a629b8b12d56f8401ebb9745ea88b5b0c62eb3267cc6",
+      "mode": "paired",
+      "captures": 5,
+      "failure": {
+        "message": "audio-1440-select-portal same-page exact decoded pixel equivalence\n\n17 !== 0\n",
+        "stack": "AssertionError [ERR_ASSERTION]: audio-1440-select-portal same-page exact decoded pixel equivalence\n\n17 !== 0\n\n    at capture (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/e03-browser-regression.mjs:106:20)\n    at async file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/e03-browser-regression.mjs:138:130"
+      },
+      "pageErrors": [],
+      "producerSnapshot": true,
+      "authoritative": false
+    },
+    {
+      "path": "e03/final-paired-corrected/observations.json",
+      "sha256": "fa92adc7f7ebb33d6c9682d059fe0ddec70bb6b0d8c3cca22acee998b0eb3f90",
+      "mode": "paired",
+      "captures": 114,
+      "failure": null,
+      "pageErrors": [],
+      "producerSnapshot": true,
+      "authoritative": true
+    },
+    {
+      "path": "e03/original-software-independent-01/observations.json",
+      "sha256": "c26e2248b1ce3c5619f7ef5a003fc3e5ea8b5063561bb3cdaab89c0e2507016a",
+      "mode": "diagnostic-800",
+      "captures": 13,
+      "failure": null,
+      "pageErrors": [],
+      "producerSnapshot": true,
+      "authoritative": false
+    },
+    {
+      "path": "e03/original-software-independent-02/observations.json",
+      "sha256": "76c290284eb7c14439518ea7a96504689948ebc200e198055aa738e853d656ff",
+      "mode": "diagnostic-800",
+      "captures": 13,
+      "failure": null,
+      "pageErrors": [],
+      "producerSnapshot": true,
+      "authoritative": false
+    },
+    {
+      "path": "e03/portal-same-css-control/observations.json",
+      "sha256": "e65d66efe85fc110f3d7146078e7c8407f3e1aad491f03c2b0d906362d4726df",
+      "mode": "diagnostic-portal",
+      "captures": 5,
+      "failure": null,
+      "pageErrors": [],
+      "producerSnapshot": true,
+      "authoritative": false
+    },
+    {
+      "path": "e03/startup-duplicate-intent-reproduction/observations.json",
+      "sha256": "eb88ad3eb541c96108210ce18d131739f155c848d353b4ab5886f8ba2dbebb2b",
+      "mode": "before",
+      "captures": 0,
+      "failure": {
+        "message": "{\"phase\":\"audioGenerationJobs.put: global unique intentId\",\"name\":\"ConstraintError\",\"message\":\"Unable to add key to index 'intentId': at least one key does not satisfy the uniqueness requirements.\\n ConstraintError: Unable to add key to index 'intentId': at least one key does not satisfy the uniqueness requirements.\"}\n+ actual - expected\n\n+ undefined\n- 'ready'\n",
+        "stack": "AssertionError [ERR_ASSERTION]: {\"phase\":\"audioGenerationJobs.put: global unique intentId\",\"name\":\"ConstraintError\",\"message\":\"Unable to add key to index 'intentId': at least one key does not satisfy the uniqueness requirements.\\n ConstraintError: Unable to add key to index 'intentId': at least one key does not satisfy the uniqueness requirements.\"}\n+ actual - expected\n\n+ undefined\n- 'ready'\n\n    at file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/e03-browser-regression.mjs:44:12"
+      },
+      "pageErrors": [
+        "Error: E03 seed failed: {\"phase\":\"audioGenerationJobs.put: global unique intentId\",\"name\":\"ConstraintError\",\"message\":\"Unable to add key to index 'intentId': at least one key does not satisfy the uniqueness requirements.\\n ConstraintError: Unable to add key to index 'intentId': at least one key does not satisfy the uniqueness requirements.\"} Error: E03 seed failed: {\"phase\":\"audioGenerationJobs.put: global unique intentId\",\"name\":\"ConstraintError\",\"message\":\"Unable to add key to index 'intentId': at least one key does not satisfy the uniqueness requirements.\\n ConstraintError: Unable to add key to index 'intentId': at least one key does not satisfy the uniqueness requirements.\"}\n    at http://127.0.0.1:5203/tests/fixtures/e03/harness.tsx:66:9\n    at async http://127.0.0.1:5203/tests/fixtures/e03/harness.tsx:14:26"
+      ],
+      "producerSnapshot": false,
+      "authoritative": false
+    }
+  ],
+  "limits": [
+    "Only Chromium 151 headless with --disable-gpu --force-device-scale-factor=1 and deviceScaleFactor 1; software raster/SwiftShader behavior is not proof for physical GPUs, Safari, iOS or device safe areas.",
+    "Actual installed font stack; reduced motion, animation/transition and caret nondeterminism controlled identically. Native local PCM WAV is paused/reset before captures.",
+    "Actual AudioWorkspacePage/MusicWorkspacePage and native Dexie; idle recorder only, no recording permission, paid provider request, new generated voice preview or active capture. Dormant jobs/history affordance is seeded; this is representative UI coverage, not every live-job state. Active music compose captures use Suno; Flow draft is seeded and present in the draft portal, not a separately expanded visual matrix.",
+    "At 390px the original long chapter title overlaps toolbar actions. Native keyboard Enter opens that portal; identical original/current pointer geometry is preserved, no product layout fix.",
+    "Before-attempt-04/05 and initial after-attempt-01/after-diagnostic-02/final-paired results are historical initial CSS-attempt evidence. Their cross-process 8-pixel and same-page cold 17-pixel failures are not acceptance passes. Final acceptance evidence uses whitespace-corrected current CSS and per-scenario same-original reparse control with exact original/current zero pixels.",
+    "Startup attempts 01–03 predate automatic producer-snapshot capture. Original failure reports/screenshots are preserved; no claim of contemporaneous full producer freeze for those early startup attempts. The unique-intent reproduction records actual ConstraintError name/message and thrown seed-await wrapper stack. Dexie did not supply its own original stack.",
+    "The initial retained-equivalence output path was reused during whitespace verification. Initial attempt hashes/map were restored from preserved attempt CSS and removal map, with explicit reconstruction provenance in e03/equivalence-report-provenance.json; corrected final proof is a separate final supplement. No old browser observations/screenshots or immutable CSS snapshots were overwritten."
+  ],
+  "freeze": "e03/final-freeze.json",
+  "unchangedExistingRootInputs": 709,
+  "changedExistingRootPaths": [
+    "src/components/audio/story-workspace.css",
+    "src/components/audioMusic/workspace.css"
+  ],
+  "handoff": "Main static/AST/full source gate and independent fresh desktop/narrow checks remain required. Implementer edited only owned CSS, new E03 fixture/runner/snapshots and research. No components, E01/E02, canonical inventory/parts/producers, specs/status/ledger/packages/CI, installs, commits or E04 changes."
+}

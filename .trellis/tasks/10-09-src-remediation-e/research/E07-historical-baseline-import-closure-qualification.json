@@ -1,0 +1,121 @@
+{
+  "purpose": "Historical E-entry typed baseline import closure qualification; not editing accepted reports/producers/cache, not runtime sourcefix or QG acceptance",
+  "observedCurrentManifest": {
+    "path": "vendor/lobehub/manifest.json",
+    "sha256": "508dd3889ed977994b221f4201154e69d534db149bf1d51c4b6462179361cd03"
+  },
+  "observedHistoricalBaselineManifest": {
+    "path": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/baseline-e-1ecaf5c/vendor/lobehub/manifest.json",
+    "exists": false
+  },
+  "sourceOwner": "src/lib/ai/modelBank/index.ts",
+  "entryDiagnostics": [
+    {
+      "ruleId": "@typescript-eslint/no-unsafe-assignment",
+      "severity": 2,
+      "message": "Unsafe assignment of an error typed value.",
+      "line": 4,
+      "column": 14,
+      "nodeType": "VariableDeclarator",
+      "messageId": "anyAssignment",
+      "endLine": 4,
+      "endColumn": 53
+    },
+    {
+      "ruleId": "@typescript-eslint/no-unsafe-member-access",
+      "severity": 2,
+      "message": "Unsafe member access .revision on a type that cannot be resolved.",
+      "line": 4,
+      "column": 45,
+      "nodeType": "Identifier",
+      "messageId": "errorMemberExpression",
+      "endLine": 4,
+      "endColumn": 53
+    },
+    {
+      "ruleId": "@typescript-eslint/no-unsafe-assignment",
+      "severity": 2,
+      "message": "Unsafe assignment of an error typed value.",
+      "line": 5,
+      "column": 14,
+      "nodeType": "VariableDeclarator",
+      "messageId": "anyAssignment",
+      "endLine": 5,
+      "endColumn": 54
+    },
+    {
+      "ruleId": "@typescript-eslint/no-unsafe-member-access",
+      "severity": 2,
+      "message": "Unsafe member access .copiedAt on a type that cannot be resolved.",
+      "line": 5,
+      "column": 46,
+      "nodeType": "Identifier",
+      "messageId": "errorMemberExpression",
+      "endLine": 5,
+      "endColumn": 54
+    },
+    {
+      "ruleId": "@typescript-eslint/no-unsafe-member-access",
+      "severity": 2,
+      "message": "Unsafe member access .repository on a type that cannot be resolved.",
+      "line": 45,
+      "column": 32,
+      "nodeType": "Identifier",
+      "messageId": "errorMemberExpression",
+      "endLine": 45,
+      "endColumn": 42
+    },
+    {
+      "ruleId": "@typescript-eslint/no-unsafe-member-access",
+      "severity": 2,
+      "message": "Unsafe member access .revision on a type that cannot be resolved.",
+      "line": 45,
+      "column": 60,
+      "nodeType": "Identifier",
+      "messageId": "errorMemberExpression",
+      "endLine": 45,
+      "endColumn": 68
+    },
+    {
+      "ruleId": "@typescript-eslint/no-unnecessary-type-assertion",
+      "severity": 2,
+      "message": "This assertion is unnecessary since the receiver accepts the original type of the expression.",
+      "line": 58,
+      "column": 12,
+      "nodeType": "TSAsExpression",
+      "messageId": "contextuallyUnnecessary",
+      "endLine": 58,
+      "endColumn": 44,
+      "fix": {
+        "range": [
+          3106,
+          3126
+        ],
+        "text": ""
+      }
+    },
+    {
+      "ruleId": "@typescript-eslint/no-unsafe-member-access",
+      "severity": 2,
+      "message": "Unsafe member access .repository on a type that cannot be resolved.",
+      "line": 81,
+      "column": 32,
+      "nodeType": "Identifier",
+      "messageId": "errorMemberExpression",
+      "endLine": 81,
+      "endColumn": 42
+    },
+    {
+      "ruleId": "@typescript-eslint/no-unsafe-member-access",
+      "severity": 2,
+      "message": "Unsafe member access .revision on a type that cannot be resolved.",
+      "line": 81,
+      "column": 60,
+      "nodeType": "Identifier",
+      "messageId": "errorMemberExpression",
+      "endLine": 81,
+      "endColumn": 68
+    }
+  ],
+  "interpretation": "Historical baseline mirrors full src but omits imported vendor/lobehub/manifest.json. Six no-unsafe-member-access/unresolved-type diagnostics at modelBank index must not be credited as source repairs. Full authoredsrc is not full transitive type/build metadata closure. Original E-entry and accepted per-unit reports unchanged; E01–E05 current type/fullsuite native proof remains unchanged. Current per-unit deltas did not modify modelBank index. Formal E07 fresh old/current completeprogram comparison must include actual imported metadata and pinned baseline dependency resolution, with explicit before/current hash input closure. Vendor is excluded from manualsourceaudit, not compiler/build requirements."
+}

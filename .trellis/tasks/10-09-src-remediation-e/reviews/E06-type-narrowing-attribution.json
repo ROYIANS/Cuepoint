@@ -1,0 +1,14 @@
+{
+  "purpose": "Coordinator bounded E06 typed exhaustiveness correction afterwriterfreeze; original writer reports/evidence unchanged",
+  "path": "src/components/agent/DemandModelIcons.tsx",
+  "beforeSHA256": "df675d63434d7de125357ec2df7f69d16fe75f8dfe2b1f2011a928434b1e6103",
+  "afterSHA256": "fc7498e139ef0743b89990e5a3c2af79db95f41aae71cfa46fe3a410e3e36738",
+  "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/reviews/E06-before-type-narrowing/DemandModelIcons.tsx",
+  "change": "Internal RenderProps renderType is NonNullable because both exported destructuring defaults assign avatar and runtime availability guard rejects invalid values before brand dispatch. No runtime expression changed.",
+  "requires": [
+    "Currenttype/static withsameversions",
+    "Actual generated JS parity/meaningful native reviewercurrentfingerprints",
+    "Updated reviewer snapshot/sourceinput hashes"
+  ],
+  "originalGate": "reviews/E06-current-frozen-candidate original164files2746tests/4gatesPASS is pre-correction evidence"
+}

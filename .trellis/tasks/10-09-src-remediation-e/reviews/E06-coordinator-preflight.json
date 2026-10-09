@@ -1,0 +1,19 @@
+{
+  "unit": "E06",
+  "writerClosure789Mismatches": [
+    "src/components/agent/DemandModelIcons.tsx"
+  ],
+  "intentionalDriftAttribution": "reviews/E06-type-narrowing-attribution.json",
+  "actualCurrent789GateMismatches": [],
+  "writerReportsPreserved": {
+    ".trellis/tasks/10-09-src-remediation-e/research/E06-implementation.md": "bd8256b9ee737e8130c9848a8d16b79255eefa7e901c0f7787827f8c2dedef56",
+    ".trellis/tasks/10-09-src-remediation-e/research/E06-implementation.json": "c2e56bd4d6bc9445fd2dc97b8f431120c79202b29ae38eb94c429ddbe70a059b"
+  },
+  "writerEvidenceHashesCount": 4814,
+  "finalCurrentReviewInput": ".trellis/tasks/10-09-src-remediation-e/reviews/E06-review-input.json",
+  "scopeCount": 16,
+  "buildParity": ".trellis/tasks/10-09-src-remediation-e/reviews/E06-type-fix-build-parity.json",
+  "temporaryStatic": "reviews/E06-post-type-static/E06-static-summary.json",
+  "currentAST": "research/E06-post-type-current-ast-results.json",
+  "preflightSchemaCorrection": "root-freeze stores sha256/bytes objects; initially compared object to string. Final normalized field used; no source or originalreport change."
+}

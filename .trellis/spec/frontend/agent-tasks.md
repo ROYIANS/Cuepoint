@@ -133,3 +133,32 @@ Every task requires projectId and inherits the chat binding. Task-mode first sen
 requires a selected project but still leaves task creation to AI after clarification.
 Project deletion preserves task history as read-only. See
 [Project Context](./agent-project-context.md) for binding, tools and request contracts.
+
+## E01 task editor and chat departure boundary (2026-10-09)
+
+### 1. Scope / Trigger
+TaskRecords, TaskInspector goal/plan and AgentChatPage transitions that could unmount or replace manual work. Shared departure API is specified in component-guidelines.
+
+### 2. Signatures / Owners
+TaskRecords accepts optional `onDraftStateChange(ManualDraftState)` and `requestDeparture: ManualDraftDeparture`. TaskInspector aggregates own/records/wrapup state, retains previous task/thread/project before key replacement and registers its departure callback with AgentChatPage via `onDepartureReady`.
+
+### 3. Contracts
+Record opening freezes task/thread/project, record input and expectedRevision; all fields including source IDs/Todo relation participate in baseline equality. Failures retain the frozen revision/input for retry. Inspector goal/criteria/plan share the owner arbiter; duplicate plan titles preserve distinct IDs through consume-once matching. Chat consults departure before thread selection, board, new-topic persistence and current-thread deletion. Delete lock begins only after explicit departure authorization, keeps its modal pending, refuses duplicate/dismiss/new-topic actions and targets its captured thread. After delete settles, mounted/current-thread checks gate navigation; another thread is never redirected by the older completion. Old editor completion cannot publish into newer mounted content.
+
+### 4. Validation / Error Matrix
+| Trigger | Outcome |
+| --- | --- |
+| Real record CAS conflict | Keep draft and original expectedRevision on repeated retries |
+| Owner switch cancelled | Keep old task/thread/project input and visible scope |
+| Goal/plan pending or failed save | Block dismissal; retain values and actionable error |
+| Held current-thread deletion | One command; modal retained; new-topic/duplicate actions blocked |
+| Thread changes before old delete completes | Delete its original DB owner; do not navigate the newer thread |
+
+### 5. Good / Base / Bad Cases
+Good: actual record conflict -> unchanged expectedRevision retry -> readable draft remains. Base: clean inspector can close. Bad: aborting/creating/deleting before dirty departure is approved, or navigating after await using a captured old activeThreadId.
+
+### 6. Tests Required
+E01 native runner covers actual AgentChatPage callbacks, task owner replacement, record fields/CAS/retry and delayed completion. Independent native supplements cover goal/plan, current-thread deletion and held-delete new-topic attempts; full repository/CAS/orchestration tests remain required. Sidebar DOM-dispatched callbacks under modal inertness prove callback integration, not ordinary pointer accessibility behind the modal.
+
+### 7. Wrong vs Correct
+Wrong: `await deleteThread(captured); if (capturedActive === captured) navigate(home)`. Correct: acquire the captured-target lock synchronously and re-read mounted/currentThread before UI completion. Preserve original repo ownership, transactional history and paid execution semantics.

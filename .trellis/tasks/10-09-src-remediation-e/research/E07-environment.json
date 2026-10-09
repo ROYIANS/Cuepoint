@@ -1,0 +1,966 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-10-09T09:33:08.844555+08:00",
+  "role": "trellis-research",
+  "task": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e",
+  "scope": "Read-only bounded preparation for E07/QG01; only E07-environment.md/json written. No install, download, broad scan, product/config/CI/spec/status/ledger mutation.",
+  "repository": {
+    "packageManager": "pnpm@10.15.0",
+    "scripts": {
+      "model-bank:compare": "node scripts/model-bank-snapshot.mjs verify",
+      "model-bank:verify": "node scripts/model-bank-snapshot.mjs verify",
+      "model-bank:sync": "node scripts/model-bank-snapshot.mjs sync",
+      "dev": "vite",
+      "build": "vite build",
+      "test": "vitest run",
+      "preview": "vite preview",
+      "lint": "tsc -b --pretty false"
+    },
+    "rootLock": {
+      "lockfileVersion": "'9.0'",
+      "importer": {
+        "dependencies": {
+          "@dnd-kit/core": {
+            "specifier": "^6.3.1",
+            "version": "6.3.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "@dnd-kit/sortable": {
+            "specifier": "^10.0.0",
+            "version": "10.0.0(@dnd-kit/core@6.3.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0)"
+          },
+          "@dnd-kit/utilities": {
+            "specifier": "^3.2.2",
+            "version": "3.2.2(react@19.3.0)"
+          },
+          "@lobehub/fluent-emoji": {
+            "specifier": "^4.1.1",
+            "version": "4.1.1(@types/react@19.3.0)(antd@6.6.4(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "@lobehub/icons": {
+            "specifier": "^5.18.0",
+            "version": "5.18.0(@lobehub/ui@5.47.1)(@types/react@19.3.0)(antd@6.6.4(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "@lobehub/ui": {
+            "specifier": "^5.47.1",
+            "version": "5.47.1(@lobehub/fluent-emoji@4.1.1(@types/react@19.3.0)(antd@6.6.4(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(@lobehub/icons@5.18.0)(@shikijs/themes@4.4.3)(@types/mdast@4.0.4)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(antd@6.6.4(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(micromark-util-types@2.0.2)(micromark@4.0.2)(motion@12.43.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "@radix-ui/react-alert-dialog": {
+            "specifier": "^1.1.23",
+            "version": "1.1.23(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "@radix-ui/react-checkbox": {
+            "specifier": "^1.3.11",
+            "version": "1.3.11(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "@radix-ui/react-dialog": {
+            "specifier": "^1.1.23",
+            "version": "1.1.23(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "@radix-ui/react-dropdown-menu": {
+            "specifier": "^2.1.24",
+            "version": "2.1.24(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "@radix-ui/react-label": {
+            "specifier": "^2.1.15",
+            "version": "2.1.15(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "@radix-ui/react-popover": {
+            "specifier": "^1.1.23",
+            "version": "1.1.23(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "@radix-ui/react-select": {
+            "specifier": "^2.3.7",
+            "version": "2.3.7(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "@radix-ui/react-separator": {
+            "specifier": "^1.1.15",
+            "version": "1.1.15(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "@radix-ui/react-slider": {
+            "specifier": "^1.4.7",
+            "version": "1.4.7(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "@radix-ui/react-slot": {
+            "specifier": "^1.3.3",
+            "version": "1.3.3(@types/react@19.3.0)(react@19.3.0)"
+          },
+          "@radix-ui/react-tabs": {
+            "specifier": "^1.1.21",
+            "version": "1.1.21(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "@radix-ui/react-tooltip": {
+            "specifier": "^1.2.16",
+            "version": "1.2.16(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "@tanstack/react-router": {
+            "specifier": "^1.131.50",
+            "version": "1.170.38(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "antd": {
+            "specifier": "^6.6.4",
+            "version": "6.6.4(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "boring-avatars": {
+            "specifier": "^2.0.4",
+            "version": "2.0.4(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "class-variance-authority": {
+            "specifier": "^0.7.1",
+            "version": "0.7.1"
+          },
+          "clsx": {
+            "specifier": "^2.1.1",
+            "version": "2.1.1"
+          },
+          "dexie": {
+            "specifier": "^4.2.0",
+            "version": "4.4.6"
+          },
+          "dexie-react-hooks": {
+            "specifier": "^4.2.0",
+            "version": "4.4.0(dexie@4.4.6)(react@19.3.0)"
+          },
+          "jszip": {
+            "specifier": "^3.10.1",
+            "version": "3.10.2"
+          },
+          "lucide-react": {
+            "specifier": "^0.544.0",
+            "version": "0.544.0(react@19.3.0)"
+          },
+          "mammoth": {
+            "specifier": "1.12.0",
+            "version": "1.12.0"
+          },
+          "motion": {
+            "specifier": "^12.43.0",
+            "version": "12.43.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "ogl": {
+            "specifier": "^1.0.11",
+            "version": "1.0.11"
+          },
+          "pdfjs-dist": {
+            "specifier": "5.4.530",
+            "version": "5.4.530"
+          },
+          "react": {
+            "specifier": "^19.1.1",
+            "version": "19.3.0"
+          },
+          "react-dom": {
+            "specifier": "^19.1.1",
+            "version": "19.3.0(react@19.3.0)"
+          },
+          "sonner": {
+            "specifier": "^2.0.8",
+            "version": "2.0.8(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)"
+          },
+          "tailwind-merge": {
+            "specifier": "^3.7.0",
+            "version": "3.7.0"
+          },
+          "tw-animate-css": {
+            "specifier": "^1.4.0",
+            "version": "1.4.0"
+          },
+          "zod": {
+            "specifier": "^3.25.76",
+            "version": "3.25.76"
+          }
+        },
+        "devDependencies": {
+          "@tailwindcss/vite": {
+            "specifier": "^4.1.13",
+            "version": "4.3.3(vite@7.3.6(@types/node@22.20.3)(jiti@2.7.0)(lightningcss@1.32.0))"
+          },
+          "@tanstack/router-plugin": {
+            "specifier": "^1.131.50",
+            "version": "1.168.40(@tanstack/react-router@1.170.38(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(esbuild@0.28.2)(rollup@4.63.3)(vite@7.3.6(@types/node@22.20.3)(jiti@2.7.0)(lightningcss@1.32.0))"
+          },
+          "@types/node": {
+            "specifier": "^22.20.3",
+            "version": "22.20.3"
+          },
+          "@types/react": {
+            "specifier": "^19.1.13",
+            "version": "19.3.0"
+          },
+          "@types/react-dom": {
+            "specifier": "^19.1.9",
+            "version": "19.3.0(@types/react@19.3.0)"
+          },
+          "@vitejs/plugin-react": {
+            "specifier": "^5.0.2",
+            "version": "5.2.0(vite@7.3.6(@types/node@22.20.3)(jiti@2.7.0)(lightningcss@1.32.0))"
+          },
+          "fake-indexeddb": {
+            "specifier": "^6.2.5",
+            "version": "6.2.5"
+          },
+          "tailwindcss": {
+            "specifier": "^4.1.13",
+            "version": "4.3.3"
+          },
+          "typescript": {
+            "specifier": "^5.9.2",
+            "version": "5.9.3"
+          },
+          "vite": {
+            "specifier": "^7.1.5",
+            "version": "7.3.6(@types/node@22.20.3)(jiti@2.7.0)(lightningcss@1.32.0)"
+          },
+          "vitest": {
+            "specifier": "^5.0.1",
+            "version": "5.0.1(@types/node@22.20.3)(vite@7.3.6(@types/node@22.20.3)(jiti@2.7.0)(lightningcss@1.32.0))"
+          }
+        }
+      }
+    },
+    "packageLockSpecifierMismatches": [],
+    "installedModulesMetadata": {
+      "layoutVersion": "5",
+      "nodeLinker": "isolated",
+      "packageManager": "pnpm@10.15.0",
+      "storeDir": "/Users/xiaomengdao/Library/pnpm/store/v10",
+      "virtualStoreDir": ".pnpm"
+    },
+    "ci": {
+      "workflow": ".github/workflows/ghcr.yml",
+      "nodeVersion": 22,
+      "lockedInstall": "pnpm install --frozen-lockfile",
+      "typecheck": "pnpm lint",
+      "existingQualityCommands": [
+        "pnpm lint",
+        "pnpm test",
+        "pnpm model-bank:verify",
+        "pnpm build"
+      ],
+      "publicationJob": "docker",
+      "publicationNeeds": "quality",
+      "publicationExcludedFor": "pull_request",
+      "localCiExecutionClaim": false
+    },
+    "dockerBuildRuntime": "node:22-bookworm-slim"
+  },
+  "runtimes": {
+    "node22": "/Users/xiaomengdao/.nvm/versions/node/v22.21.1/bin/node",
+    "node24": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+    "node22Version": "22.21.1",
+    "node24Version": "24.11.0",
+    "systemNvmInstalled": [
+      "v22.21.1",
+      "v24.11.0"
+    ],
+    "pnpmAllowedLauncher": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "pnpmLauncherRealPath": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/lib/node_modules/pnpm/bin/pnpm.cjs",
+    "pnpmLauncherPackageVersion": "10.20.0",
+    "pnpmEffectiveProjectVersion": "10.15.0",
+    "pnpmEffectiveWithNode22Path": "10.15.0",
+    "pnpmManagedSelectedPackagePath": "/Users/xiaomengdao/Library/pnpm/.tools/pnpm/10.15.0/node_modules/pnpm/package.json",
+    "pnpmManagedSelectedPackageVersion": "10.15.0",
+    "pnpmCachedVersionDirectories": [
+      "10.12.4",
+      "10.13.1",
+      "10.15.0",
+      "10.15.1",
+      "10.33.0",
+      "11.18.0",
+      "11.20.0",
+      "11.22.0",
+      "9.12.0",
+      "9.15.0"
+    ],
+    "note": "User path is honored. Its package is 10.20.0 and project --version returns 10.15.0; old instruction wording 9.12.0 is not current executable evidence. Launchers use /usr/bin/env node. Only explicit allowed launcher executed for pnpm version probes."
+  },
+  "executedVersionProbes": [
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v22.21.1/bin/node",
+        "--version"
+      ],
+      "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+      "exitCode": 0,
+      "stdout": "v22.21.1",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "--version"
+      ],
+      "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+      "exitCode": 0,
+      "stdout": "v24.11.0",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "--version"
+      ],
+      "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+      "exitCode": 0,
+      "stdout": "10.15.0",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "--version"
+      ],
+      "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+      "exitCode": 0,
+      "stdout": "10.15.0",
+      "stderr": "",
+      "pathPrefix": "/Users/xiaomengdao/.nvm/versions/node/v22.21.1/bin"
+    },
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v22.21.1/bin/node",
+        "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/eslint/bin/eslint.js",
+        "--version"
+      ],
+      "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+      "exitCode": 0,
+      "stdout": "v9.39.5",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v22.21.1/bin/node",
+        "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/typescript/bin/tsc",
+        "--version"
+      ],
+      "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+      "exitCode": 0,
+      "stdout": "Version 5.9.3",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v22.21.1/bin/node",
+        "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/vite/bin/vite.js",
+        "--version"
+      ],
+      "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+      "exitCode": 0,
+      "stdout": "vite/7.3.6 darwin-arm64 node-v22.21.1",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v22.21.1/bin/node",
+        "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/vitest/vitest.mjs",
+        "--version"
+      ],
+      "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+      "exitCode": 0,
+      "stdout": "vitest/5.0.1 darwin-arm64 node-v22.21.1",
+      "stderr": ""
+    }
+  ],
+  "node22ModuleAndConfigProbe": {
+    "node": "v22.21.1",
+    "execPath": "/Users/xiaomengdao/.nvm/versions/node/v22.21.1/bin/node",
+    "platform": "darwin",
+    "arch": "arm64",
+    "roots": {
+      "/Users/xiaomengdao/WebstormProjects/aifenjing": {
+        "eslint": {
+          "available": false,
+          "errorCode": "MODULE_NOT_FOUND"
+        },
+        "@eslint/js": {
+          "available": false,
+          "errorCode": "MODULE_NOT_FOUND"
+        },
+        "typescript-eslint": {
+          "available": false,
+          "errorCode": "MODULE_NOT_FOUND"
+        },
+        "eslint-plugin-react-hooks": {
+          "available": false,
+          "errorCode": "MODULE_NOT_FOUND"
+        },
+        "eslint-plugin-sonarjs": {
+          "available": false,
+          "errorCode": "MODULE_NOT_FOUND"
+        },
+        "typescript": {
+          "version": "5.9.3",
+          "engines": {
+            "node": ">=14.17"
+          },
+          "peerDependencies": null,
+          "packageJson": "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/typescript@5.9.3/node_modules/typescript/package.json",
+          "resolved": "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/typescript@5.9.3/node_modules/typescript/lib/typescript.js"
+        },
+        "knip": {
+          "available": false,
+          "errorCode": "MODULE_NOT_FOUND"
+        },
+        "dependency-cruiser": {
+          "available": false,
+          "errorCode": "MODULE_NOT_FOUND"
+        },
+        "jscpd": {
+          "available": false,
+          "errorCode": "MODULE_NOT_FOUND"
+        },
+        "vite": {
+          "version": "7.3.6",
+          "engines": {
+            "node": "^20.19.0 || >=22.12.0"
+          },
+          "peerDependencies": {
+            "@types/node": "^20.19.0 || >=22.12.0",
+            "jiti": ">=1.21.0",
+            "less": "^4.0.0",
+            "lightningcss": "^1.21.0",
+            "sass": "^1.70.0",
+            "sass-embedded": "^1.70.0",
+            "stylus": ">=0.54.8",
+            "sugarss": "^5.0.0",
+            "terser": "^5.16.0",
+            "tsx": "^4.8.1",
+            "yaml": "^2.4.2"
+          },
+          "packageJson": "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/vite@7.3.6_@types+node@22.20.3_jiti@2.7.0_lightningcss@1.32.0/node_modules/vite/package.json",
+          "resolved": "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/vite@7.3.6_@types+node@22.20.3_jiti@2.7.0_lightningcss@1.32.0/node_modules/vite/dist/node/index.js"
+        },
+        "vitest": {
+          "version": "5.0.1",
+          "engines": {
+            "node": "^22.12.0 || ^24.0.0 || >=26.0.0"
+          },
+          "peerDependencies": {
+            "@edge-runtime/vm": "*",
+            "@opentelemetry/api": "^1.9.0",
+            "@types/node": "^22.0.0 || >=24.0.0",
+            "@vitest/browser-playwright": "5.0.1",
+            "@vitest/browser-preview": "5.0.1",
+            "@vitest/browser-webdriverio": "^5.0.0-beta.5 || >=5.0.0",
+            "@vitest/coverage-istanbul": "5.0.1",
+            "@vitest/coverage-v8": "5.0.1",
+            "@vitest/ui": "5.0.1",
+            "happy-dom": "*",
+            "jsdom": "*",
+            "vite": "^6.4.0 || ^7.0.0 || ^8.0.0"
+          },
+          "packageJson": "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.3_vite@7.3.6_@types+node@22.20.3_jiti@2.7.0_lightningcss@1.32.0_/node_modules/vitest/package.json",
+          "resolved": "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.3_vite@7.3.6_@types+node@22.20.3_jiti@2.7.0_lightningcss@1.32.0_/node_modules/vitest/index.cjs"
+        }
+      },
+      "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools": {
+        "eslint": {
+          "version": "9.39.5",
+          "engines": {
+            "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
+          },
+          "peerDependencies": {
+            "jiti": "*"
+          },
+          "packageJson": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/.pnpm/eslint@9.39.5/node_modules/eslint/package.json",
+          "resolved": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/.pnpm/eslint@9.39.5/node_modules/eslint/lib/api.js"
+        },
+        "@eslint/js": {
+          "version": "9.39.5",
+          "engines": {
+            "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
+          },
+          "peerDependencies": null,
+          "packageJson": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/.pnpm/@eslint+js@9.39.5/node_modules/@eslint/js/package.json",
+          "resolved": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/.pnpm/@eslint+js@9.39.5/node_modules/@eslint/js/src/index.js"
+        },
+        "typescript-eslint": {
+          "version": "8.71.1",
+          "engines": {
+            "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
+          },
+          "peerDependencies": {
+            "eslint": "^8.57.0 || ^9.0.0 || ^10.0.0",
+            "typescript": ">=4.8.4 <6.1.0"
+          },
+          "packageJson": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/.pnpm/typescript-eslint@8.71.1_eslint@9.39.5_typescript@5.9.2/node_modules/typescript-eslint/package.json",
+          "resolved": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/.pnpm/typescript-eslint@8.71.1_eslint@9.39.5_typescript@5.9.2/node_modules/typescript-eslint/dist/index.js"
+        },
+        "eslint-plugin-react-hooks": {
+          "version": "7.1.1",
+          "engines": {
+            "node": ">=18"
+          },
+          "peerDependencies": {
+            "eslint": "^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0 || ^10.0.0"
+          },
+          "packageJson": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/.pnpm/eslint-plugin-react-hooks@7.1.1_eslint@9.39.5/node_modules/eslint-plugin-react-hooks/package.json",
+          "resolved": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/.pnpm/eslint-plugin-react-hooks@7.1.1_eslint@9.39.5/node_modules/eslint-plugin-react-hooks/index.js"
+        },
+        "eslint-plugin-sonarjs": {
+          "version": "3.0.7",
+          "engines": null,
+          "peerDependencies": {
+            "eslint": "^8.0.0 || ^9.0.0"
+          },
+          "packageJson": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/.pnpm/eslint-plugin-sonarjs@3.0.7_eslint@9.39.5/node_modules/eslint-plugin-sonarjs/package.json",
+          "resolved": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/.pnpm/eslint-plugin-sonarjs@3.0.7_eslint@9.39.5/node_modules/eslint-plugin-sonarjs/cjs/plugin.js"
+        },
+        "typescript": {
+          "version": "5.9.2",
+          "engines": {
+            "node": ">=14.17"
+          },
+          "peerDependencies": null,
+          "packageJson": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/.pnpm/typescript@5.9.2/node_modules/typescript/package.json",
+          "resolved": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/.pnpm/typescript@5.9.2/node_modules/typescript/lib/typescript.js"
+        },
+        "knip": {
+          "available": false,
+          "errorCode": "MODULE_NOT_FOUND"
+        },
+        "dependency-cruiser": {
+          "available": false,
+          "errorCode": "MODULE_NOT_FOUND"
+        },
+        "jscpd": {
+          "available": false,
+          "errorCode": "MODULE_NOT_FOUND"
+        },
+        "vite": {
+          "available": false,
+          "errorCode": "MODULE_NOT_FOUND"
+        },
+        "vitest": {
+          "available": false,
+          "errorCode": "MODULE_NOT_FOUND"
+        }
+      }
+    },
+    "transitive": {
+      "@typescript-eslint/parser": {
+        "version": "8.71.1",
+        "packageJson": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/.pnpm/@typescript-eslint+parser@8.71.1_eslint@9.39.5_typescript@5.9.2/node_modules/@typescript-eslint/parser/package.json"
+      },
+      "@typescript-eslint/eslint-plugin": {
+        "version": "8.71.1",
+        "packageJson": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/node_modules/.pnpm/@typescript-eslint+eslint-plugin@8.71.1_@typescript-eslint+parser@8.71.1_eslint@9.39.5__eb8309c8020dd6d8ee64e359d83284e7/node_modules/@typescript-eslint/eslint-plugin/package.json"
+      }
+    },
+    "configuration": {
+      "loaded": true,
+      "ruleCount": 124,
+      "project": [
+        "./tsconfig.app.json"
+      ],
+      "tsconfigRootDir": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+      "typedRules": {
+        "@typescript-eslint/no-floating-promises": [
+          2
+        ],
+        "@typescript-eslint/no-misused-promises": [
+          2
+        ],
+        "@typescript-eslint/no-unsafe-assignment": [
+          2
+        ],
+        "@typescript-eslint/switch-exhaustiveness-check": [
+          2
+        ]
+      },
+      "sonarRules": {
+        "sonarjs/cognitive-complexity": [
+          1,
+          20
+        ],
+        "sonarjs/no-identical-functions": [
+          1,
+          3
+        ],
+        "sonarjs/no-duplicated-branches": [
+          1
+        ]
+      },
+      "generatedIgnored": true,
+      "vendorSampleIgnored": true,
+      "note": "Configuration calculation only; no source lint scan or typed program execution."
+    }
+  },
+  "restoredCache": {
+    "root": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools",
+    "manifest": {
+      "name": "cuepoint-source-quality-tools",
+      "private": true,
+      "type": "module",
+      "packageManager": "pnpm@10.15.0",
+      "dependencies": {
+        "@eslint/js": "^9.0.0",
+        "eslint": "^9.0.0",
+        "eslint-plugin-react-hooks": "^7.0.0",
+        "eslint-plugin-sonarjs": "^3.0.0",
+        "typescript": "5.9.2",
+        "typescript-eslint": "^8.0.0"
+      }
+    },
+    "lock": {
+      "lockfileVersion": "'9.0'",
+      "importer": {
+        "dependencies": {
+          "@eslint/js": {
+            "specifier": "^9.0.0",
+            "version": "9.39.5"
+          },
+          "eslint": {
+            "specifier": "^9.0.0",
+            "version": "9.39.5"
+          },
+          "eslint-plugin-react-hooks": {
+            "specifier": "^7.0.0",
+            "version": "7.1.1(eslint@9.39.5)"
+          },
+          "eslint-plugin-sonarjs": {
+            "specifier": "^3.0.0",
+            "version": "3.0.7(eslint@9.39.5)"
+          },
+          "typescript": {
+            "specifier": "5.9.2",
+            "version": "5.9.2"
+          },
+          "typescript-eslint": {
+            "specifier": "^8.0.0",
+            "version": "8.71.1(eslint@9.39.5)(typescript@5.9.2)"
+          }
+        }
+      }
+    },
+    "notPortableReasons": [
+      "Absolute tsconfigRootDir in cache ESLint config",
+      "External cache is not repository-resolvable",
+      "Manifest ranges are not exact pins",
+      "Cache TypeScript 5.9.2 differs from repository installed/locked 5.9.3"
+    ],
+    "historicalVersions": {
+      "eslint": "9.39.5",
+      "@eslint/js": "9.39.5",
+      "typescript-eslint": "8.71.0",
+      "typescript": "5.9.2",
+      "eslint-plugin-react-hooks": "7.1.1",
+      "eslint-plugin-sonarjs": "3.0.7",
+      "knip": "5.88.1",
+      "dependency-cruiser": "17.4.3",
+      "jscpd": "4.3.0"
+    },
+    "historicalRuntimePath": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-source-audit-n21f357d",
+    "historicalRuntimeExists": false,
+    "missingAtCheckedRoots": [
+      "knip",
+      "dependency-cruiser",
+      "jscpd"
+    ],
+    "historicalLockEngineEvidence": {
+      "knip@5.88.1": ">=18.18.0",
+      "dependency-cruiser@17.4.3": "^20.12||^22||>=24"
+    },
+    "eslintLockWarning": "Archived audit lock records ESLint 9.39.5 deprecated/no longer supported; an availability finding, not proof of current support status."
+  },
+  "existingEvidence": {
+    "entryTypedScan": {
+      "purpose": "Entry-only baseline measurement; no post-E gate or debt acceptance claim",
+      "baselineRevision": "1ecaf5ceec92e022c2b2b8d662e2a92e8eee36c7",
+      "files": 418,
+      "errors": 240,
+      "warnings": 530,
+      "rules": {
+        "complexity": 125,
+        "sonarjs/cognitive-complexity": 88,
+        "react-hooks/exhaustive-deps": 15,
+        "no-nested-ternary": 299,
+        "@typescript-eslint/no-unsafe-assignment": 15,
+        "@typescript-eslint/no-unsafe-member-access": 59,
+        "@typescript-eslint/no-unsafe-argument": 9,
+        "@typescript-eslint/no-unused-expressions": 2,
+        "react-hooks/rules-of-hooks": 7,
+        "sonarjs/no-duplicated-branches": 1,
+        "prefer-const": 2,
+        "@typescript-eslint/no-unnecessary-type-assertion": 35,
+        "@typescript-eslint/switch-exhaustiveness-check": 2,
+        "@typescript-eslint/no-misused-promises": 1,
+        "@typescript-eslint/prefer-promise-reject-errors": 3,
+        "@typescript-eslint/no-unsafe-return": 4,
+        "@typescript-eslint/no-base-to-string": 76,
+        "max-depth": 2,
+        "@typescript-eslint/require-await": 2,
+        "@typescript-eslint/restrict-template-expressions": 4,
+        "no-control-regex": 2,
+        "@typescript-eslint/no-unsafe-call": 1,
+        "@typescript-eslint/only-throw-error": 14,
+        "@typescript-eslint/no-redundant-type-constituents": 2
+      },
+      "versions": {
+        "eslint": "9.39.5",
+        "typescript-eslint": "8.71.1",
+        "eslint-plugin-react-hooks": "7.1.1",
+        "eslint-plugin-sonarjs": "3.0.7",
+        "typescript": "5.9.2"
+      }
+    },
+    "entryRawPath": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/research/E-entry-static-results.json",
+    "entryAcceptance": false,
+    "interpretation": "418 nongenerated TS files; 240 errors/530 warnings on complete immutable 1ecaf5c source using restored identical versions. Main-session measurement only, not rerun. D delta-only 0 new cannot establish clean lint. Review final rules and individual debt/fixes; no blanket baseline.",
+    "entryAstSummary": {
+      "files": 419,
+      "edges": 2492,
+      "parseErrors": 0,
+      "staticValueCycles": [],
+      "totals": {
+        "anyKeywords": 46,
+        "typeAssertions": 437,
+        "nonNullAssertions": 198,
+        "nestedTernaries": 442,
+        "emptyCatches": 16,
+        "dynamicImports": 8
+      }
+    },
+    "astConclusionLimit": "No static value SCC at entry under existing producer; not a validated boundary gate, self-loop proof, or final post-E graph."
+  },
+  "minimalIntegrationCandidates": [
+    {
+      "purpose": "Typed ESLint/SonarJS preserving measured rule parity",
+      "exactAvailablePins": {
+        "eslint": "9.39.5",
+        "@eslint/js": "9.39.5",
+        "typescript-eslint": "8.71.1",
+        "eslint-plugin-sonarjs": "3.0.7",
+        "eslint-plugin-react-hooks": "7.1.1"
+      },
+      "typescriptDecision": "Reuse repository pinned resolution 5.9.3 or deliberately retain audit 5.9.2; whichever is selected, run the same final versions/config against baseline and final complete typed programs. Never call existing differing versions identical.",
+      "workLater": "Repository-owned flat config, relative root, exact pins + committed lock, single quality command. Resolve old unused-rule ownership explicitly; do not copy temporary switches/metric severities without review."
+    },
+    {
+      "purpose": "Value-only architecture",
+      "candidateA": "Pin dependency-cruiser 17.4.3 from archived audit lock; not installed at checked roots. Node22 range is compatible by metadata only; actual execution remains pending.",
+      "candidateB": "Use already installed repository TypeScript 5.9.3 for a small portable value graph without another graph dependency, after fixing/verifying producer limitations.",
+      "existingConfig": "dependency-cruiser-values.json uses tsPreCompilationDeps:false; true + filtering only the first edge was historically insufficient. JSON reporter exit 0 previously coexisted with summary.error=6.",
+      "producerLimitations": [
+        "Task/cache/ledger absolute or mutable inputs; cannot ship unchanged",
+        "Hard-coded @/ and relative TS/index/json resolver; no TypeScript resolver/unresolved-edge failure",
+        "Only imports/reexports/literal dynamic imports handled; computed imports not resolved",
+        "Tarjan output excludes single-node self-loops",
+        "Reports/writes artifacts and does not fail on cycles or enforce layer boundaries"
+      ]
+    },
+    {
+      "purpose": "Production/full-entry unused checks",
+      "candidate": "Knip 5.88.1 archived exact version; unavailable at repository/restored cache and old runtime gone.",
+      "existingConfigs": [
+        "Audit knip.json with source/routes/vite/vitest/test roots and @ alias",
+        "Audit knip-production.json production ! suffix with --production; initial full config production run was invalid"
+      ],
+      "gapsToResolve": [
+        "Include actual test setup and native runner/HTML/TS harness/config/package-script roots, not just unit test glob",
+        "Manually verify dynamic imports, generated routes, ambient declarations, CSS/plugin dependency uses",
+        "Keep production-only/test-only distinction and reviewed retain/retire reasons; no unreviewed automatic deletion"
+      ]
+    }
+  ],
+  "requiredProof": {
+    "node22LockedInstall": [
+      "In a separate disposable checkout/copy of final frozen source, without existing node_modules, prepend machine Node22 directory to PATH; record node version/execPath and explicit allowed pnpm --version before running anything",
+      "Later run explicit allowed pnpm install --frozen-lockfile; optional first --offline attempt only proves cache sufficiency if successful. Store existence is not dependency completeness. Never relax frozen lock on failure. This sidecar does not execute install.",
+      "Record pre/post package/lock hashes, exit/output, selected pnpm10.15.0 and resolved tool/TypeScript versions; run quality + self-tests + typecheck/test/model/build under the same Node22 PATH",
+      "Local commands only; do not dispatch push/workflow_dispatch, docker publication job, or infer a GitHub run. Workflow YAML wiring and actual local Node22 evidence are separate claims"
+    ],
+    "syntheticFailures": [
+      "Passing fixture -> new typed violation fails -> repair passes; parser/config failure and unknown tool failure must be nonzero",
+      "Synthetic SonarJS violation fails by reviewed warning/error policy; default ESLint warning exit0 alone is insufficient",
+      "New value cycle and forbidden owner boundary fail; type-only/all-type named reexport cycle passes; mixed value+type, side effect, alias, literal dynamic and self-loop semantics tested; JSON diagnostics cannot be ignored",
+      "Production-only unused vs legitimate full/test consumer distinguishes retention; a genuinely unused synthetic export/dependency fails and repair passes; computed/config/CSS/generator roots are explicitly accounted for",
+      "Baseline unknown/new signature and increased count fail; same-file identical-message replacement cannot hide distinct new violation; relocation retains identity; stale/deleted/reduced entries fail until explicitly shrunk; repaired baseline diff then passes"
+    ],
+    "debtSchema": [
+      "rule",
+      "file",
+      "stable semantic signature",
+      "count",
+      "reason",
+      "owner"
+    ],
+    "debtReview": "Review each diagnostic against final rule policy and source; fixes or individual narrow accepted entries only. The 240/530 measured counts are not debt authorization. Exclude generated/vendor explicitly; no broad file/rule ignores. Metric clone signals remain review inputs unless a proven enforceable rule is defined.",
+    "evidenceFreeze": [
+      "Exact source list/hashes and baseline revision",
+      "Config/producer/tool/lock hashes and versions",
+      "Before/fail/repair outputs and exit codes",
+      "Before/after baseline diff showing count/removal",
+      "CI quality step wired without publication/permission modification"
+    ]
+  },
+  "blockersAndUnknowns": [
+    {
+      "id": "unused-runtime",
+      "status": "Genuine execution gap at checked locations",
+      "evidence": "Knip 5.88.1 only historical snapshot; root/cache resolution MODULE_NOT_FOUND and historical runtime missing. No new unused check executed."
+    },
+    {
+      "id": "graph-runtime",
+      "status": "Genuine execution gap if choosing dependency-cruiser",
+      "evidence": "17.4.3 exists as audit config/lock metadata, not executable at checked roots. Existing TS alternative is available but is report-only and requires proof/hardening."
+    },
+    {
+      "id": "final-debt",
+      "status": "Pending individual review/fixes after E01-E06",
+      "evidence": "Immutable entry scan 240 errors/530 warnings; no accepted QG01 debt file or perfect lint claim established by this sidecar."
+    },
+    {
+      "id": "locked-install",
+      "status": "Unproven",
+      "evidence": "pnpm store v10 and managed10.15.0 present, package/importer specs match and existing modules metadata says pnpm10.15.0. None proves clean locked installation, native postinstall completeness, or final new-tool cache availability."
+    },
+    {
+      "id": "node22-quality",
+      "status": "Startup/config proof only",
+      "evidence": "Actual Node22.21.1 version/config and tsc/vite/vitest version checks pass. Final gate/test/build and clean installation on Node22 were not run."
+    },
+    {
+      "id": "runtime-variant",
+      "status": "Explicit selection needed",
+      "evidence": "Cache TS5.9.2 vs rootTS5.9.3, restored typescript-eslint8.71.1 vs original8.71.0. Exact final comparison must state versions."
+    },
+    {
+      "id": "eslint-support",
+      "status": "Local archived deprecation evidence; current support status not researched",
+      "evidence": "audit analysis-pnpm-lock.yaml records deprecated eslint9.39.5; availability/runtime smoke does not settle maintenance choice."
+    },
+    {
+      "id": "ci-host",
+      "status": "Unproven Linux/GitHub execution",
+      "evidence": "Machine is darwin-arm64; local checks do not establish ubuntu-latest job outcome. Node22 YAML is major-only, Docker node22 tag mutable."
+    }
+  ],
+  "inputSnapshots": [
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/package.json",
+      "sha256": "894cca99189d6e0535ed623d3e4d702868adcc3d4afef27a141b7e7da176033b",
+      "bytes": 2166
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/pnpm-lock.yaml",
+      "sha256": "c989c9f9af4da94f0483606f9a4f0d4756136fb01e30640757bd7c0248ed31b4",
+      "bytes": 282817
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/.github/workflows/ghcr.yml",
+      "sha256": "9ceb9734ede425ee6e3eb92f86118e6b385a7d6735c3ed52cb43231ae2f29eae",
+      "bytes": 2218
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/Dockerfile",
+      "sha256": "23e3c5a088e7a672079f40c6bb72563494e8ea720cbd16fbd2dfbfba3b3a50ac",
+      "bytes": 428
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/tsconfig.app.json",
+      "sha256": "c40f7db8652b3433532289c87edd6898d4de984614f8a99dcf7bfbd8856e3bb3",
+      "bytes": 692
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/tsconfig.node.json",
+      "sha256": "5b591cda2c5ab658172b976aad5b86ee0a93ef922c286b13ef59d0c8e2268c1b",
+      "bytes": 578
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/vite.config.ts",
+      "sha256": "c6def92021debbfe5eb29f89bc106d0df2fdc21061716624251cbe8ba4b1a5f4",
+      "bytes": 501
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/vitest.config.ts",
+      "sha256": "43cadebafe94fb30ee57f97fa171989fbcecb8dfe41bffdaec31aea104808cd4",
+      "bytes": 339
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.modules.yaml",
+      "sha256": "6bd99f298d208b61f634c85b0b80fa27d061fd596586d96563d405e8b137bd1e",
+      "bytes": 43469
+    },
+    {
+      "path": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/package.json",
+      "sha256": "661075932589d31aedd47fb75727033dcfbacd29d1c08b7d1053df14b251550a",
+      "bytes": 341
+    },
+    {
+      "path": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/pnpm-lock.yaml",
+      "sha256": "797ef4c409f40d89d1e58688f87c7e62d303354c4a1fc375938f6cf9d6a63adc",
+      "bytes": 47091
+    },
+    {
+      "path": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/eslint.config.mjs",
+      "sha256": "71fec4e76e3e26f5e21e6412d7847a5c7e0b8e828af4fba41237351faa24ccce",
+      "bytes": 1078
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-quality-architecture-audit/research/tools/tool-versions.json",
+      "sha256": "962620a78ca7e50d7ba7726c23d29a3cabfc52abed737001062d5910d0bf7564",
+      "bytes": 259
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-quality-architecture-audit/research/tools/analysis-pnpm-lock.yaml",
+      "sha256": "4d86f672367fd70e2fbd51492b2cb991f703e0d657690229a7ee6de307e284c0",
+      "bytes": 90367
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-quality-architecture-audit/research/tools/knip.json",
+      "sha256": "e6888a6f2a0f9c7b706ad753de22059c73d5c655c79e7345dafe774b93034b1c",
+      "bytes": 411
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-quality-architecture-audit/research/tools/knip-production.json",
+      "sha256": "e0528d88029705f376ee63f74e2840387fa7d677a0ddb52d5bfd8a9baacbc1c7",
+      "bytes": 263
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-quality-architecture-audit/research/tools/dependency-cruiser-values.json",
+      "sha256": "b88f41d1e03a124c359a9b5f901e9319020fba3fa3bb5d8a9ad8e6de320257ae",
+      "bytes": 463
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/tools/current-source-ast.cjs",
+      "sha256": "f35c4f692630e602ef1c3c9c15e89bb7c202f4710c73ac22549db7ad3e96d8a5",
+      "bytes": 6441
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/tools/scan-unit.mjs",
+      "sha256": "0817721e1e469dcde33c0eb8498bf39b645159b56796ed766b8c57ecac0d827b",
+      "bytes": 4656
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/research/E-entry-static-summary.json",
+      "sha256": "de4202154570d7ecb152466199cdeada0c67558038532da385e5519e144d53f0",
+      "bytes": 1468
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/research/E-entry-static-results.json",
+      "sha256": "963ab94b4e011814172547c5262ff6dc08decc94a5599516136d1566b8e7dc27",
+      "bytes": 416125
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/research/E-entry-ast-summary.json",
+      "sha256": "a0ac30a78ea79ec0ba2663a3a22240cb50f6b3dc9ad3da9ea49fa8353ce4142d",
+      "bytes": 258
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/research/static-runtime.json",
+      "sha256": "0bfcc1a1ee593395d3e68d235f2d841e69355f35a6e0e523f6de4dc3fd7e8819",
+      "bytes": 906
+    },
+    {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/09-30-src-quality-remediation/research/E07-quality-gate-contract.md",
+      "sha256": "586deeda008bb2759926b955b8498e2b06be30143518ce3dbcfe3e87964c516f",
+      "bytes": 2664
+    }
+  ],
+  "outOfScope": [
+    "No product/source/package/lock/CI/spec/status/ledger changes",
+    "No installs/downloads/publication",
+    "No broad scans or deletion",
+    "No recursive dispatch/other task creation"
+  ]
+}

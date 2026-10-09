@@ -1,0 +1,43 @@
+[
+  {
+    "slice": "coercion",
+    "report": ".trellis/tasks/10-09-src-remediation-e/research/E07-coercion-implementation.json",
+    "reportSHA256": "a4021d14a4ba4faa26f0d517aa24edf208cea329b610a7692601023f745d17aa",
+    "checked": 116,
+    "mismatches": []
+  },
+  {
+    "slice": "typed-boundaries",
+    "report": ".trellis/tasks/10-09-src-remediation-e/research/E07-typed-boundaries-implementation.json",
+    "reportSHA256": "2a8cc9469331bc103e9b142bb38da6d8e00799f9a8437650da06f4e9a6440bc6",
+    "checked": 114,
+    "mismatches": []
+  },
+  {
+    "slice": "hooks",
+    "report": ".trellis/tasks/10-09-src-remediation-e/research/E07-hooks-implementation.json",
+    "reportSHA256": "65d83be226bfb122eb4b6f9616cb0378d80e3a7d83862298e14ee804702f4e72",
+    "checked": 1592,
+    "mismatches": []
+  },
+  {
+    "slice": "gate",
+    "report": ".trellis/tasks/10-09-src-remediation-e/research/E07-gate-implementation.json",
+    "reportSHA256": "7af3376b552dd5bdeee6a62588627bdc2ba6480427586283874579e2792fb4e3",
+    "checked": 10,
+    "mismatches": [
+      {
+        "path": "scripts/quality-check.mjs",
+        "kind": "original-producer",
+        "expected": "7b114c41f6424d77542d1e787f4a9869fd5a41d52ff0101e85286c8987330bbb",
+        "actual": "dfff1ce20c7b190d55e073e5eee2351a6a7319bb7835e2983b9f8bc0b5bbf296"
+      },
+      {
+        "path": "scripts/quality/self-test.mjs",
+        "kind": "original-producer",
+        "expected": "0711cb2297288506a69de546582d1099311e7082be2a21cd8cd44d449518ca4b",
+        "actual": "a10e398d99a4213c05cf99983bf1a55054d4c52f9d2e87b7976736ded61e4760"
+      }
+    ]
+  }
+]

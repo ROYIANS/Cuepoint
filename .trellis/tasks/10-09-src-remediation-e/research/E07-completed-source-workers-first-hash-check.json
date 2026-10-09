@@ -1,0 +1,14 @@
+[
+  {
+    "slice": "coercion",
+    "reportSha": "a4021d14a4ba4faa26f0d517aa24edf208cea329b610a7692601023f745d17aa",
+    "files": 6,
+    "mismatches": []
+  },
+  {
+    "slice": "typed-boundaries",
+    "reportSha": "2a8cc9469331bc103e9b142bb38da6d8e00799f9a8437650da06f4e9a6440bc6",
+    "files": 16,
+    "mismatches": []
+  }
+]

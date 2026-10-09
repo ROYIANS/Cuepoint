@@ -1,0 +1,24 @@
+{
+  "purpose": "Post-pack documentation transport metadata only. Task-local literal proof-path ignores prevent future archive auto-stage from duplicating >2GB while pack preserves originalbytes. No product/source/check/seal changes.",
+  "newTaskGitignore": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/.gitignore",
+    "sha256": "a209a4ab8e547468393ffcb9bad0385b78eb273eb0378b6b571545e6e38c0b99",
+    "literalRules": 116,
+    "productFilesIgnored": false,
+    "normalDocsToolsPackLateTransportReviewIgnored": false
+  },
+  "capturedProducerEvolution": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/tools/build-e-commit-plan.py",
+    "packedBeforeSHA256": "3b0f7d8f5295d15ef6ef5517f479fa9ecba14b70dab5a81dc2e8e7be88fdff93",
+    "packedBeforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/E-packed-plan-producer-before.py",
+    "packedBeforeCopySHA256": "3b0f7d8f5295d15ef6ef5517f479fa9ecba14b70dab5a81dc2e8e7be88fdff93",
+    "currentSHA256": "c91ee10cdd796c119eed8e68e85f0802daeb963c8999a6a72c6746f4b91298df",
+    "change": "Only include task-local .gitignore among readable staged metadata; product244 unchanged. Current helper and exactbeforecopy are readable normal files, oldbytes also restored frompack."
+  },
+  "newProducer": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/tools/protect-packed-evidence.py",
+    "sha256": "6cd205cb8d159dc665d5d2c81826de431c6e73e70dc830772b2e656c92ba1e76"
+  },
+  "originalsDeleted": false,
+  "historicalReportsRewritten": false
+}

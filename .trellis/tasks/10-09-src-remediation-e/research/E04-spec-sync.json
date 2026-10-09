@@ -1,0 +1,102 @@
+{
+  "unit": "E04",
+  "date": "2026-10-09",
+  "acceptedSnapshot": ".trellis/tasks/10-09-src-remediation-e/reviews/E04-check-snapshot.json",
+  "acceptedSnapshotSHA256": "8a9333f12bdf1825736b7b0c2000b25d36921a269d04da0c3e1a98f29ee78ece",
+  "sourceAfter": {
+    "scripts/e04-library-browser-regression.mjs": "72bde650c1ddc62cc5e2ae0d16776e2e448a099b330d90ef914df2fb9fa94b91",
+    "scripts/e04-media-browser-regression.mjs": "eb989d51cd562122a0011bc3c66fec0a9c106bde7d6aa7b84818b1536b6f56f3",
+    "scripts/e04-memory-browser-regression.mjs": "68acc39230ff9a81187670d857ee39fce5b1e75503c47decb4610bb158d19db8",
+    "src/components/studio/AssetLibraryPages.tsx": "b462661b8fa3f9ec313de40bbe0bc89195f19f571686517e8063925d438176d2",
+    "src/components/studio/ProjectGalleryPage.tsx": "4aebdd00fa9843de207c34a7fdd9fa2c037bb7ed76b803894bf0966f0a8df3f1",
+    "src/db/assetReuse.ts": "d1af1aa4d59bd1ae8f1f04d1d1431903d603d917b4ac26162b0b328a107e0a73",
+    "src/db/assets.ts": "ad5f4b2872937354b36f471a71d5ea8f019884877f05493d20728b4620f9224e",
+    "src/db/cascadeCommands.ts": "522043d73f127e62d4f054d00fbaf058afbaa6cadfbafbbbab1f5a8eb80c72b6",
+    "src/db/episodes.ts": "294a068ed80118b5b8b8ab1009e9a8cd0624ddfd91030de783de49f861f65a11",
+    "src/db/media.ts": "73599476e7643b540f852249832b8c62d82d51b293dae45c2805f178aca43a8e",
+    "src/db/projectMemories.ts": "33ea5784a01f3b30583416e01f09c83ce25cf071de2547c40713d6b3b9419cb3",
+    "src/db/shots.ts": "a2fa075f0284959659c369b3657cb615d2d10581dbdbef9b1b76479bb2f1a926",
+    "src/lib/studioLibraryQueries.ts": "88ee8de4fa4f8d82d2420da7ae9f08c37cdf7b3a81ddc2ab3b591c4d11eb25f1",
+    "tests/e04LibraryQueries.test.ts": "0a6dc2f8368145534c9a17543e3501aa2723a2bc0796e79edc8be5f8578f2b2a",
+    "tests/e04MediaRetention.test.ts": "38b7f464dd69071fb5332ee1817792461b06f1e60a4a2f1aa0ce4503f81977fd",
+    "tests/e04MemoryTransactions.test.ts": "e1d18464a41769f666689f111a00aba27802f235a14c3002156ca9443d06e696",
+    "tests/fixtures/e04-library/harness.tsx": "a746f3758e71cc63cd5b32661a8212081ccbf0e5790b9f81afb15baa396e83e8",
+    "tests/fixtures/e04-library/index.html": "48929fc2827a3d214135814491ffad1df7f9ea4c758f3b13ad773fef1ba7cf77",
+    "tests/fixtures/e04-library/tsconfig.json": "0d0e4ec9004fc3eb593326706c04e81486d5e79113ce96b431fa0838eae05e58",
+    "tests/fixtures/e04-media/commands.ts": "0fee491f26b9da39ff0dae820d4d5d4d2572c5ad560f84fe34edd172889e7715",
+    "tests/fixtures/e04-media/index.html": "acb1260fe1fd3ba6901809c80e1268ee2fb311a26d7766d291c32a22d1e66e4a",
+    "tests/fixtures/e04-media/instrumentation.ts": "cf66948f0e54354eb2050639c0c59b32b2108d56069a00652dee6f7f2912ce04",
+    "tests/fixtures/e04-media/main.ts": "aa5c397d3a62f5a30c596c90d9bf95ed7eb762fdda463782e44dc7471c0f995f",
+    "tests/fixtures/e04-media/receipt.ts": "5e5704fcd2a73d0e0fadba0b3283a787cd887cde275c1fed2796f1fe122abd74",
+    "tests/fixtures/e04-media/retention.ts": "a8ec4448b7c405c5a241daf50765cb1a37afa0e8f1166b546e057e087575a1ed",
+    "tests/fixtures/e04-media/seeds.ts": "85d97de3b4e839146da0faf235cea001bf83fbefd8f04980c9525b49ea2beab5",
+    "tests/fixtures/e04-media/tsconfig.json": "cab0c780aca49996eba9fddf27d2d4c2c457cd4bad73938021a288b68e1dec81",
+    "tests/fixtures/e04-memory/index.html": "fd69b38e3d376a2d71c076d5c3b4fdfbff212d2fad85cfc67b2bacc360b5e730",
+    "tests/fixtures/e04-memory/main.ts": "5f3d2b2979f47095177f92747b77890792c76c460b8a07a671deab29dee02ec9",
+    "tests/fixtures/e04-memory/tsconfig.json": "929bc82e395bff1a027c56cd89dd77436a4039031943d9d765730bf6da549fd7",
+    "tests/fixtures/sourceSnapshots/e04-library/independent-transactions/provenance.json": "55265f0021b0ea6e816163b71dc2bbceb8903936b9ea4b6015cf484f4581d9be",
+    "tests/fixtures/sourceSnapshots/e04-library/independent-transactions/studioLibraryQueries.ts": "5cb355c2f0ee97297ea3f894f4a0c1e0265f8b493533fcab51155a9a7c2a4f50",
+    "tests/fixtures/sourceSnapshots/e04-library/provenance.json": "fe35050e7cef297a4f263254df42c3d11c3b39cedad102317f5eaeb7960a87b9",
+    "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+    "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage.tsx": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+    "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectIpPicker.tsx": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+    "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/projectKinds.tsx": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db",
+    "tests/fixtures/sourceSnapshots/e04-media/provenance.json": "a7645493a2baa83f3369709b8b178d6020cfab32ec10f279cb3230c2b9749400",
+    "tests/fixtures/sourceSnapshots/e04-media/src/db/database.ts": "5c28901f9b5073b388aa01c115df43d442480b1ada029f99569569e1b1ef915b",
+    "tests/fixtures/sourceSnapshots/e04-media/src/db/media.ts": "0b2105050422434e9f9955f94ee7d3bc165310e62c7fe418eec23944a8efd675",
+    "tests/fixtures/sourceSnapshots/e04-media/src/db/productionShared.ts": "c0b1ea3860b829ebf56e10d0e727aca19d82e35e097aecf1801b0de21ffbed44",
+    "tests/fixtures/sourceSnapshots/e04-memory/projectMemories.ts": "2385dcc806bd3a6e888e27dd281b704f75abb4acc77fb5a29859ae7409aea1b9",
+    "tests/fixtures/sourceSnapshots/e04-memory/provenance.json": "d3761d3b1fcdafa34f16632bda7c0daac9284ea2bfb77532b93fe72a0663843f"
+  },
+  "documents": [
+    {
+      "path": ".trellis/spec/frontend/project-memory.md",
+      "beforeSHA256": "9517682b6d7b3db8b5a63f3eb3983be662b4332fc88e11e4ede97671a387f623",
+      "afterSHA256": "19eb6dc0abcebd7d0637c548feb67bc44632328d8113da63c76d6c3a8037bc5f",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e04-spec-sync-before/.trellis/spec/frontend/project-memory.md",
+      "reason": "Final returned independent E04 English seven-section contract with exact semantic/scope corrections"
+    },
+    {
+      "path": ".trellis/spec/frontend/state-management.md",
+      "beforeSHA256": "0fa7387041731978f6ffedb1bbdaf5187eaaffa8c55c96f74c179edc98e119af",
+      "afterSHA256": "042dd9215864684a9827300385a921549a3214f2369b31704d8b519da96e77bb",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e04-spec-sync-before/.trellis/spec/frontend/state-management.md",
+      "reason": "Final returned independent E04 English seven-section contract with exact semantic/scope corrections"
+    },
+    {
+      "path": ".trellis/spec/frontend/hook-guidelines.md",
+      "beforeSHA256": "cd6f1c96c5b75fa811b46ac311e3ed6a1418fad74c47be5a8dfef429d9945252",
+      "afterSHA256": "45dcda05a795c6bc59c50a048569b74162e9ad514653406fbd0750097cd5fe1c",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e04-spec-sync-before/.trellis/spec/frontend/hook-guidelines.md",
+      "reason": "Final returned independent E04 English seven-section contract with exact semantic/scope corrections"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/implement.md",
+      "beforeSHA256": "1be4c6fd7e08dad1a190b63e978dd15bd82519c2b3ad065ffa4abd108e57da47",
+      "afterSHA256": "9951a393d67d1c7a380714516674293548d4869ec34881a75ac85b104fa9466d",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e04-spec-sync-before/.trellis/tasks/10-09-src-remediation-e/implement.md",
+      "reason": "Ordered E04 closure after completedfinalPASS"
+    }
+  ],
+  "draftCorrections": [
+    {
+      "severity": "wording correction",
+      "section": "SS09 Tests Required",
+      "issue": "Draft says a shot whose ID lies between selected IDs. Actual gap concerns the excluded owner projectId index key between selected owner keys. Shot primary key is not the gap axis.",
+      "requiredWording": "Insert a shot for an excluded owner whose projectId index key lies between selected owner projectId keys."
+    },
+    {
+      "severity": "scope qualification",
+      "section": "SS09 Validation / Error Matrix",
+      "issue": "Different owner/kind no-rerun applies to cover fallback/current-kind asset subscriptions. Gallery project/IP metadata and MediaThumb subscriptions remain broader.",
+      "requiredWording": "Limit irrelevant-write silence to the fallback shot subscription/current-kind asset query, and list the excluded broad metadata/media queries."
+    },
+    {
+      "severity": "semantic qualification",
+      "section": "PD06 Validation / Error Matrix",
+      "issue": "Do not unify duplicate early return with status no-op/CAS validation. Disabled duplicate remains disabled under its established early-return behavior.",
+      "requiredWording": "Keep duplicate-return and no-op/CAS contracts separately described; do not infer that every duplicate path validates replacement CAS."
+    }
+  ],
+  "explanation": "Canonicalcontracts use actual reviewed sections; former documents savedexactly, originalacceptedreports preserved, no productmutation."
+}

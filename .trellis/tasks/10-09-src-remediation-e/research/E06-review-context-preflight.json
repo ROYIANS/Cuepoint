@@ -1,0 +1,72 @@
+{
+  "purpose": "E06 reviewer prepared context inventory before finalwritercompletion; not E06sourcefreeze/review acceptance",
+  "files": [
+    {
+      "path": ".trellis/spec/frontend/index.md",
+      "sha256": "5eae5786b9496dfd9c9199c56d3e0adf7793bebd49b32ab6141c144bd1d33284",
+      "bytes": 5581
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E06-component-context.md",
+      "sha256": "0eda98c92996ab81a65f89f0336f902b612ac86637b36fe8f7279f787869a7bf",
+      "bytes": 13038
+    },
+    {
+      "path": ".trellis/spec/frontend/chat-performance.md",
+      "sha256": "86e1f9c6d378352b77a8a4cfd40eabbe77666fefed6f15426f179fa33e870fea",
+      "bytes": 9911
+    },
+    {
+      "path": ".trellis/spec/frontend/hook-guidelines.md",
+      "sha256": "92c25d1fa502bed3c1d4601502adda361c8e6a5491c24be2bf243a12cc45e2b6",
+      "bytes": 17011
+    },
+    {
+      "path": ".trellis/spec/frontend/type-safety.md",
+      "sha256": "e238aa9e9af53b671bd79e850b352ccca544af2179e9ad9c18ee3014503f0746",
+      "bytes": 5097
+    },
+    {
+      "path": ".trellis/spec/frontend/quality-guidelines.md",
+      "sha256": "b6056b07c309dfcd76c9552f68848601efe0979280a21f328be216c1025f9cf6",
+      "bytes": 14078
+    },
+    {
+      "path": ".trellis/spec/guides/code-reuse-thinking-guide.md",
+      "sha256": "28f13937d7768e899ba18f42936debc80af7021ef2af43a8c0152653cad5dd43",
+      "bytes": 7717
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E06-execution-boundaries.md",
+      "sha256": "26acebe402b1568a5e8d131828b964e4b54b4fe9e5a5fbb9ed889ef5d95e0fa0",
+      "bytes": 4755
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E06-measurement-preparation.json",
+      "sha256": "c831419a702dc270c668318e72bec53f49794515fd1664995149543ed7a41796",
+      "bytes": 3733
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E06-installed-library-contracts.json",
+      "sha256": "975a0fd85ef5daa3d7e2dec51ebb3f7e8fe99acb934eafb53030c7dd3c0285de",
+      "bytes": 4932
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E06-independent-check-contract.md",
+      "sha256": "5204d18b4ee657a6d241814f9c9270204dd67d47915a83402aef70c1c7e8d2a6",
+      "bytes": 2775
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E06-root-scenario-bootstrap-preparation.json",
+      "sha256": "46b4847b1e6525cffe6d0311aefe662135b44a0187295a3278c336485be79461",
+      "bytes": 2544
+    }
+  ],
+  "contextBytes": 91172,
+  "requiresLaterAdditions": [
+    "FinalwriterE06implementationMD/JSON",
+    "Exactreviewinputrootlist/beforeafter/freeze",
+    "Rootcurrentgate/staticAST/currentinputs",
+    "Finalmeasurement/provenance+original/historicalfailureattribution"
+  ]
+}

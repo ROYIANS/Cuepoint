@@ -1,0 +1,225 @@
+{
+  "status": "COMPLETED",
+  "verdict": "PASS",
+  "closed": true,
+  "completedAt": "2026-10-09T10:42:09.671080+00:00",
+  "role": "Independent actual lossless evidence transport verification",
+  "blockers": [],
+  "assignedWorkRemaining": [],
+  "remainingAssignedWorkCount": 0,
+  "manifest": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/evidence-pack/manifest.json",
+    "sha256": "443c82ed6fe35e39d128b6e8b370050626035d5e46e6853304ed6d8f87ee0793"
+  },
+  "blobIndex": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/evidence-pack/blobs.json",
+    "sha256": "da10dc26c20050217372fe22fd463e4852b190d47cf271fbf74cc9016271b9bb"
+  },
+  "representation": {
+    "paths": 41163,
+    "originalBytes": 2554126083,
+    "uniqueBlobs": 10117,
+    "uniqueBytes": 1324594336,
+    "compressedBytes": 232240383,
+    "maximumCompressedBlobBytes": 7096637
+  },
+  "actualVerification": {
+    "independentFullCompressedAndUncompressedHashByteChecks": 10117,
+    "status": "PASS",
+    "receipt": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/independent-full-gzip-verify-receipt.json",
+      "sha256": "d7eaf03b4bfc225ad1bb5a699425cb0ee777c750b34c3a286a288eb095439872"
+    },
+    "mainVerifyReceipt": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/evidence-pack/verify-receipt.json",
+      "sha256": "d7eaf03b4bfc225ad1bb5a699425cb0ee777c750b34c3a286a288eb095439872"
+    },
+    "mainRestoreReceipt": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/evidence-pack/restore-receipt.json",
+      "sha256": "7fecd87ad2bd4da1d63671b10aed812606073846ddf20f8b492084c8e94fa27d"
+    },
+    "actualRestoredReadbackPaths": 41163,
+    "restoredRoot": "/private/tmp/aifenjing-e-evidence-restored-final-20261009",
+    "restoredMismatches": [],
+    "missingExtraRestoredPaths": []
+  },
+  "currentOriginals": {
+    "manifestPaths": 41163,
+    "unchangedOriginalPaths": 41162,
+    "explainedEvolvedTaskHelperPaths": 1,
+    "currentHelperBytes": 5877,
+    "originalPackedHelperBytes": 5883,
+    "unexplainedLossOrDrift": 0
+  },
+  "explainedMetadataChain": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/tools/build-e-commit-plan.py",
+    "packedSHA256": "3b0f7d8f5295d15ef6ef5517f479fa9ecba14b70dab5a81dc2e8e7be88fdff93",
+    "intermediateSHA256": "c91ee10cdd796c119eed8e68e85f0802daeb963c8999a6a72c6746f4b91298df",
+    "currentSHA256": "7890404a66f438d61731754580c9b0a7fe60c529d46b292089fbfc674098a2c4",
+    "firstReceipt": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E-evidence-git-preservation-evolution.json",
+      "sha256": "d5b72e8f39416a6af7717cc4b180dfd899395d61c42ce865b84228840e9df34b"
+    },
+    "secondReceipt": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E-evidence-git-preservation-evolution-02.json",
+      "sha256": "73129715240b9e93ed6ca89e13d9908373cc18bbf64ce6a945794b7d920f76c1"
+    },
+    "exactPackedBeforeCopy": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E-packed-plan-producer-before.py",
+      "sha256": "3b0f7d8f5295d15ef6ef5517f479fa9ecba14b70dab5a81dc2e8e7be88fdff93"
+    },
+    "exactIntermediateCopy": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E-intermediate-plan-producer-before.py",
+      "sha256": "c91ee10cdd796c119eed8e68e85f0802daeb963c8999a6a72c6746f4b91298df"
+    },
+    "boundedChanges": [
+      "Include task-local.gitignore in readable normal metadata",
+      "Remove sizecap solely for explicit late reviews/E-evidence-transport-independent artifacts, root normal cap unchanged"
+    ],
+    "lateProofBytes": 5563879,
+    "lateProofSHA256": "c7f4f94b2214d418bb19298f8f0abf7eda4c7815494091644c7dc6f03e2e8b26",
+    "qualifiedReceipt": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/final-qualified-transport-verification.json",
+      "sha256": "9cfbf0947352724b7c4a80561f7b1bd52114db6de888de8743337d32386208bf"
+    }
+  },
+  "acceptedCoverage": {
+    "references": 15442,
+    "representationCounts": {
+      "exact-original-path-in-pack": 13615,
+      "normal readable current source/spec/config outside task pack; historical mutable evolution separately reconciled": 1821,
+      "explicit accepted subsequent mutable evolution, old exactbytes preserved in pack": 6
+    },
+    "missingOrMismatched": [],
+    "expandedE06Rows": 9544,
+    "E07ArtifactSealFiles": 499,
+    "wholeESourceSealFiles": 184,
+    "formerMissingPathsNowPresent": 21,
+    "publisherSourceFiles": 12,
+    "acceptedBuildViteManifests": 9
+  },
+  "ignorePolicy": {
+    "literalRules": 116,
+    "productPathsUnaffected": 244,
+    "normalPathsChecked": 331,
+    "ignoredRawFilesManifestRepresented": 40842
+  },
+  "explicitPreservedEvidenceRoots": [
+    ".trellis/tasks/10-09-src-remediation-e/research/e06/contract-primary-sources/node_modules"
+  ],
+  "excludedInstalledRoots": [
+    ".trellis/tasks/10-09-src-remediation-e/research/e06/frozen-baseline-workspace/node_modules",
+    ".trellis/tasks/10-09-src-remediation-e/research/e06/frozen-current-workspace/node_modules",
+    ".trellis/tasks/10-09-src-remediation-e/research/e07-complete-selected-baseline/project/node_modules",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E07-gate-named-callback-final/fixture/node_modules",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E07-gate-owner-context-final/fixture/node_modules",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E07-gate-sidecar-followup/branch-proof/fixture/node_modules",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E07-gate-sidecar-followup/fixture/node_modules",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E07-gate-sidecar/fixture/node_modules",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E07-gate-sidecar/original-producer/node_modules",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E07-node22-clean-01/clean-project/node_modules",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E07-node22-clean-02/clean-project/node_modules",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/E07-node22-clean-03/clean-project/node_modules",
+    ".trellis/tasks/10-09-src-remediation-e/reviews/e06-independent/current-type-assembly/node_modules"
+  ],
+  "actualSymlinks": 0,
+  "packRecursiveUpdates": false,
+  "finiteProducerContracts": {
+    "report": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E-evidence-transport-synthetic/report.json",
+      "sha256": "21dc0029f9cd498f8c42780da6a9d4115f6796bb10e787c960470817ee3edeb8"
+    },
+    "cases": 7,
+    "status": "PASS",
+    "producer": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/tools/evidence-pack.py",
+      "sha256": "feb5b1d466fdf3cc6403d7416d627a51a19e0da1021dc191c1a5ba7fdddf9b80"
+    },
+    "testProducer": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/tools/test-evidence-transport.py",
+      "sha256": "57e06a3c8c031b68c852ca7a57a54a1410f2bde223d8518d5ae57188171b79c6"
+    },
+    "adoptedBySourceAndRecordedCaseReviewNotRerun": true
+  },
+  "sourceAcceptancePreserved": {
+    "report": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-final-check.json",
+      "sha256": "727110ce4c7309ae248fa18da6aa3e327bcbc1312aa3a2fea03fa044e37c077f"
+    },
+    "seal": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-final-independent/final-seal.json",
+      "sha256": "ab926cdf20ec15544e49432f5c1f81cdadcb21a4989a76a395f43741798f8229"
+    },
+    "applicationInputs": 1022,
+    "actualDriftAtReadback": 0,
+    "phaseMetadataReceipt": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E-final-main-source-acceptance.json",
+      "sha256": "68c8cebfded6bbd804ac714441b73754b1eba5143cf7d10ae1e29b0521a91f6a"
+    }
+  },
+  "preservedInitialFailures": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/full-original-restored-readback.json",
+      "sha256": "60fdb344ebb2c1a53f444de5cca04b86cc2680190c11fd8d3984d63c1d9730a0"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/postpack-metadata-evolution-review.json",
+      "sha256": "7bce8dd30b10ad4ed9bc902a90e945f6a8760da5ba686b4e034e420ed4d60209"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/postpack-metadata-review-initial-comparison-failure.json",
+      "sha256": "ecf8809b294393f6df7a9a065e08ca45a8de0a37af7266388aca33f821ef1159"
+    }
+  ],
+  "evidence": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/independent-full-gzip-verify-receipt.json",
+      "sha256": "d7eaf03b4bfc225ad1bb5a699425cb0ee777c750b34c3a286a288eb095439872"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/accepted-seal-coverage.json",
+      "sha256": "c7f4f94b2214d418bb19298f8f0abf7eda4c7815494091644c7dc6f03e2e8b26"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/full-original-restored-readback.json",
+      "sha256": "60fdb344ebb2c1a53f444de5cca04b86cc2680190c11fd8d3984d63c1d9730a0"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/postpack-metadata-evolution-review.json",
+      "sha256": "7bce8dd30b10ad4ed9bc902a90e945f6a8760da5ba686b4e034e420ed4d60209"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/final-qualified-transport-verification.json",
+      "sha256": "9cfbf0947352724b7c4a80561f7b1bd52114db6de888de8743337d32386208bf"
+    }
+  ],
+  "lateFilePolicy": {
+    "contract": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E-evidence-transport-contract.md",
+      "sha256": "1b2a9f32ad70deff434b1a04b723209823c6c3e4c9f3ac1187c9bb1568f250cf"
+    },
+    "noRecursivePackUpdate": true,
+    "thisReportReceiptSealAndExplicitMetadataStayReadableNormalCommitFiles": true,
+    "finalCommitPlanStillRequiresHumanApproval": true
+  },
+  "limits": [
+    "Actual regular-file byte/path transport, not permissions/ownership/timestamps or installedruntime reproduction.",
+    "Outside-task source/spec/config/historicalruntime references remain normal readables/provenance outside pack; every accepted storedtaskproof/reference checked at exactpackedbytes or explicitoldcopy.",
+    "The unused verify+restore-root option combination can write; accepted actualverify does not use restore-root, acceptedrestore uses explicitnewroot; no arbitrary-option/security/concurrentfilesystem claim.",
+    "No repeated fullsuite/native/install/sourcework or Git mutations; no staging/commit/push/archive authorization.",
+    "Original raw readback FAIL and metadata first-stateFAIL preserved, actual onehelper evolution qualified separately rather than claiming currentrawzero-drift."
+  ],
+  "writeScope": [
+    "reviews/E-evidence-transport-independent/**",
+    "reviews/E-evidence-transport-check.md",
+    "reviews/E-evidence-transport-check.json"
+  ],
+  "productSpecLedgerTaskWrites": [],
+  "gitMutations": [],
+  "report": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-check.md",
+    "sha256": "9e43cd4942a262db4e7dd1298a92c206eda6c5e8f0bd8bc9df1233567c2ccc8b"
+  },
+  "artifactSeal": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/final-seal.json",
+  "artifactSealPolicy": "Contains completed report pair and owned transport artifacts, excludes only sealself hash."
+}

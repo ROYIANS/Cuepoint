@@ -1,0 +1,19 @@
+{
+  "acceptedSnapshotSHA256": "120c79cb2df775166438ba8e7269fc67c6a9ccec8f2eacd7a9905fdd955ebfd3",
+  "actualEvidenceDrift": [
+    ".trellis/spec/frontend/hook-guidelines.md",
+    ".trellis/tasks/10-09-src-remediation-e/check.jsonl",
+    ".trellis/tasks/10-09-src-remediation-e/implement.md"
+  ],
+  "intentionalDocuments": [
+    ".trellis/spec/frontend/hook-guidelines.md",
+    ".trellis/tasks/10-09-src-remediation-e/implement.md",
+    ".trellis/tasks/10-09-src-remediation-e/implement.jsonl",
+    ".trellis/tasks/10-09-src-remediation-e/check.jsonl"
+  ],
+  "attribution": [
+    "research/E05-spec-sync.json",
+    "research/E06-context-activation.json"
+  ],
+  "note": "Document evolution is explicit; original accepted report/snapshot/evidence retained."
+}

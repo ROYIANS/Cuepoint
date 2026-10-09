@@ -1,0 +1,490 @@
+{
+  "schemaVersion": 1,
+  "completionStatus": "COMPLETED",
+  "sidecarVerdict": "PASS_FOR_SLICE_A",
+  "wholeE07StatusClaim": false,
+  "generatedAt": "2026-10-09T08:41:34.139823+00:00",
+  "activeTask": ".trellis/tasks/10-09-src-remediation-e",
+  "role": "direct-dispatched trellis-check; no recursive agents",
+  "writeScope": [
+    "reviews/E07-coercion-sidecar/**",
+    "reviews/E07-coercion-sidecar-check.md",
+    "reviews/E07-coercion-sidecar-check.json"
+  ],
+  "sourceModifiedByReviewer": false,
+  "blockingFindings": [],
+  "confirmedRegressions": [],
+  "sources": [
+    {
+      "path": "src/lib/packages/projectPackageCodec.ts",
+      "change": "modified",
+      "beforeSha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+      "reviewEntrySha256": "a0b273442d7a8eb3e204e2ab0b6eca42e42d01494cbfb4781c08e1013489167c",
+      "afterSha256": "a0b273442d7a8eb3e204e2ab0b6eca42e42d01494cbfb4781c08e1013489167c",
+      "afterSnapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-coercion-implementation/after/src/lib/packages/projectPackageCodec.ts",
+      "E07entrySha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+      "currentSha256": "a0b273442d7a8eb3e204e2ab0b6eca42e42d01494cbfb4781c08e1013489167c",
+      "frozenAfterActualSha256": "a0b273442d7a8eb3e204e2ab0b6eca42e42d01494cbfb4781c08e1013489167c",
+      "status": "reviewed",
+      "currentMatchesCompletedSlice": true,
+      "beforeActualSha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+      "E07BeforeActualSha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+      "E07EntryRecordedSha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da",
+      "beforeMatches991Freeze": true,
+      "diff": "--- E07-before/src/lib/packages/projectPackageCodec.ts\n+++ current/src/lib/packages/projectPackageCodec.ts\n@@ -1,3 +1,4 @@\n+import {isLegacyScalar, type LegacyScalar} from \"@/domain/legacyScalar\";\n import {\n     type Character,\n     type CharacterImageSlot,\n@@ -42,13 +43,59 @@\n export function asRecord(value: unknown, label: string): Record<string, unknown> {\n     const parsed = recordSchema.safeParse(value);\n     if (!parsed.success) throw new PackageError(`${label} \u4e0d\u662f\u6709\u6548\u5bf9\u8c61`);\n-    return parsed.data as Record<string, unknown>;\n+    return parsed.data;\n }\n \n export function asArray(value: unknown, label: string): Record<string, unknown>[] {\n     if (value == null) return [];\n     if (!Array.isArray(value)) throw new PackageError(`${label} \u5fc5\u987b\u662f\u6570\u7ec4`);\n     return value.map((item, index) => asRecord(item, `${label}[${index}]`));\n+}\n+\n+/** Narrow only named historical fields; extension bags and future profiles stay structured. */\n+function assertLegacyFields<K extends string>(\n+    raw: Record<string, unknown>, keys: readonly K[], path: string,\n+): asserts raw is Record<string, unknown> & Record<K, LegacyScalar> {\n+    for (const key of keys) {\n+        if (!isLegacyScalar(raw[key])) throw new PackageError(`${path}.${key} \u5fc5\u987b\u662f\u6587\u672c\u3001\u6570\u5b57\u6216\u5e03\u5c14\u503c`);\n+        // Empty row IDs cannot be remapped; missing/null identities still synthesize.\n+        if (key === \"id\" && raw[key] === \"\") throw new PackageError(`${path}.id \u4e0d\u80fd\u4e3a\u7a7a`);\n+    }\n+}\n+\n+function validateLegacyIds(value: unknown, path: string): asserts value is LegacyScalar[] | null | undefined {\n+    if (value == null) return;\n+    if (!Array.isArray(value)) throw new PackageError(`${path} \u5fc5\u987b\u662f ID \u6570\u7ec4`);\n+    value.forEach((id: unknown, index) => {\n+        if (!isLegacyScalar(id)) throw new PackageError(`${path}[${index}] \u5fc5\u987b\u662f\u6807\u91cf ID`);\n+    });\n+}\n+\n+function validatePackageStory(value: unknown, path: string): void {\n+    if (value == null) return;\n+    const story = asRecord(value, path);\n+    assertLegacyFields(story, [\"logline\", \"script\"], path);\n+    asArray(story.beats, `${path}.beats`).forEach((beat, index) => {\n+        const beatPath = `${path}.beats[${index}]`;\n+        assertLegacyFields(beat, [\"id\", \"title\", \"content\", \"timeOfDay\", \"sceneId\"], beatPath);\n+        validateLegacyIds(beat.characterIds, `${beatPath}.characterIds`);\n+        if (beat.scriptRange != null) {\n+            const range = asRecord(beat.scriptRange, `${beatPath}.scriptRange`);\n+            assertLegacyFields(range, [\"start\", \"end\", \"excerpt\"], `${beatPath}.scriptRange`);\n+        }\n+    });\n+}\n+\n+function validatePackageSlot(value: unknown, path: string): void {\n+    if (value == null) return;\n+    const slot = asRecord(value, path);\n+    assertLegacyFields(slot, [\"prompt\"], path);\n+    validateLegacyIds(slot.referenceImageIds, `${path}.referenceImageIds`);\n+    validateLegacyIds(slot.referenceVideoIds, `${path}.referenceVideoIds`);\n+    if (slot.result != null) {\n+        const result = asRecord(slot.result, `${path}.result`);\n+        assertLegacyFields(result, [\"mediaId\", \"kind\"], `${path}.result`);\n+    }\n }\n \n function pickExtra(\n@@ -114,6 +161,12 @@\n     raw: Record<string, unknown>,\n     fallbackName: string,\n ): Project {\n+    assertLegacyFields(raw, [\"id\", \"name\", \"createdAt\", \"updatedAt\", \"coverMediaId\"], \"project.json\");\n+    validatePackageStory(raw.story, \"project.json.story\");\n+    if (raw.setting != null) {\n+        const setting = asRecord(raw.setting, \"project.json.setting\");\n+        assertLegacyFields(setting, [\"worldview\", \"background\", \"rules\"], \"project.json.setting\");\n+    }\n     const visible = (\n         raw.columnSettings as { visible?: ShotColumnId[] } | undefined\n     )?.visible;\n@@ -141,7 +194,7 @@\n         columnSettings: {\n             visible:\n                 Array.isArray(visible) && visible.length > 0\n-                    ? (visible as ShotColumnId[])\n+                    ? visible\n                     : [...DEFAULT_VISIBLE_COLUMNS],\n         },\n         shotSettings: normalizeShotSettings(raw.shotSettings),\n@@ -173,19 +226,19 @@\n function parseNamedSlots<K extends string>(\n     rawSlots: unknown,\n     legacyImages: unknown,\n+    path: string,\n ): Partial<Record<K, GenerationSlot>> {\n     const slots: Partial<Record<K, GenerationSlot>> = {};\n-    if (rawSlots && typeof rawSlots === \"object\") {\n-        for (const [key, value] of Object.entries(\n-            rawSlots as Record<string, unknown>,\n-        )) {\n+    if (rawSlots != null) {\n+        for (const [key, value] of Object.entries(asRecord(rawSlots, `${path}.slots`))) {\n+            validatePackageSlot(value, `${path}.slots.${key}`);\n             slots[key as K] = parseGenerationSlot(value);\n         }\n     }\n-    if (legacyImages && typeof legacyImages === \"object\") {\n-        for (const [key, value] of Object.entries(\n-            legacyImages as Record<string, unknown>,\n-        )) {\n+    if (legacyImages != null) {\n+        const images = asRecord(legacyImages, `${path}.images`);\n+        for (const [key, value] of Object.entries(images)) {\n+            if (!isLegacyScalar(value)) throw new PackageError(`${path}.images.${key} \u5fc5\u987b\u662f\u6807\u91cf\u5a92\u4f53 ID`);\n             if (!slots[key as K])\n                 slots[key as K] = parseGenerationSlot(undefined, value);\n         }\n@@ -196,7 +249,9 @@\n function parseCharacter(\n     raw: Record<string, unknown>,\n     projectId: Id,\n+    path: string,\n ): Character {\n+    assertLegacyFields(raw, [\"id\", \"name\", \"bio\", \"appearance\", \"notes\", \"createdAt\", \"updatedAt\"], path);\n     const at = nowIso();\n     return {\n         id: String(raw.id ?? createId(\"chr\")),\n@@ -208,7 +263,7 @@\n         bio: String(raw.bio ?? \"\"),\n         appearance: String(raw.appearance ?? \"\"),\n         notes: String(raw.notes ?? \"\"),\n-        slots: parseNamedSlots<CharacterImageSlot>(raw.slots, raw.images),\n+        slots: parseNamedSlots<CharacterImageSlot>(raw.slots, raw.images, path),\n         createdAt: String(raw.createdAt ?? at),\n         updatedAt: String(raw.updatedAt ?? at),\n         extra: pickExtra(raw, CHARACTER_KEYS),\n@@ -232,7 +287,8 @@\n     \"extra\",\n ];\n \n-function parseScene(raw: Record<string, unknown>, projectId: Id): Scene {\n+function parseScene(raw: Record<string, unknown>, projectId: Id, path: string): Scene {\n+    assertLegacyFields(raw, [\"id\", \"name\", \"location\", \"timeOfDay\", \"atmosphere\", \"notes\", \"createdAt\", \"updatedAt\"], path);\n     const at = nowIso();\n     return {\n         id: String(raw.id ?? createId(\"scn\")),\n@@ -244,7 +300,7 @@\n         timeOfDay: String(raw.timeOfDay ?? \"\"),\n         atmosphere: String(raw.atmosphere ?? \"\"),\n         notes: String(raw.notes ?? \"\"),\n-        slots: parseNamedSlots<SceneImageSlot>(raw.slots, raw.images),\n+        slots: parseNamedSlots<SceneImageSlot>(raw.slots, raw.images, path),\n         createdAt: String(raw.createdAt ?? at),\n         updatedAt: String(raw.updatedAt ?? at),\n         extra: pickExtra(raw, SCENE_KEYS),\n@@ -268,7 +324,8 @@\n     \"extra\",\n ];\n \n-function parseProp(raw: Record<string, unknown>, projectId: Id): Prop {\n+function parseProp(raw: Record<string, unknown>, projectId: Id, path: string): Prop {\n+    assertLegacyFields(raw, [\"id\", \"name\", \"kind\", \"notes\", \"createdAt\", \"updatedAt\"], path);\n     const at = nowIso();\n     return {\n         id: String(raw.id ?? createId(\"prp\")),\n@@ -281,7 +338,7 @@\n         name: String(raw.name ?? \"\u672a\u547d\u540d\u9053\u5177\"),\n         kind: String(raw.kind ?? \"\"),\n         notes: String(raw.notes ?? \"\"),\n-        slots: parseNamedSlots<PropImageSlot>(raw.slots, undefined),\n+        slots: parseNamedSlots<PropImageSlot>(raw.slots, undefined, path),\n         createdAt: String(raw.createdAt ?? at),\n         updatedAt: String(raw.updatedAt ?? at),\n         extra: pickExtra(raw, PROP_KEYS),\n@@ -304,7 +361,8 @@\n     \"extra\",\n ];\n \n-function parseStyle(raw: Record<string, unknown>, projectId: Id): VisualStyle {\n+function parseStyle(raw: Record<string, unknown>, projectId: Id, path: string): VisualStyle {\n+    assertLegacyFields(raw, [\"id\", \"name\", \"notes\", \"createdAt\", \"updatedAt\"], path);\n     const at = nowIso();\n     return {\n         id: String(raw.id ?? createId(\"sty\")),\n@@ -316,7 +374,7 @@\n         negativePrompt: optionalText(raw, \"negativePrompt\"),\n         name: String(raw.name ?? \"\u672a\u547d\u540d\u98ce\u683c\"),\n         notes: String(raw.notes ?? \"\"),\n-        slots: parseNamedSlots<StyleImageSlot>(raw.slots, undefined),\n+        slots: parseNamedSlots<StyleImageSlot>(raw.slots, undefined, path),\n         createdAt: String(raw.createdAt ?? at),\n         updatedAt: String(raw.updatedAt ?? at),\n         extra: pickExtra(raw, STYLE_KEYS),\n@@ -372,17 +430,19 @@\n     assertUniqueOriginalIds(episodes, \"\u5206\u96c6\");\n     assertUniqueOriginalIds(shots, \"\u5206\u955c\");\n     const beatsByEpisode = new Map<string, Set<string>>();\n-    for (const episode of episodes) {\n+    for (const [index, episode] of episodes.entries()) {\n+        assertLegacyFields(episode, [\"id\"], `episodes.json[${index}]`);\n         const beats = originalBeatIds(episode);\n         const id = originalId(episode);\n         if (id) beatsByEpisode.set(id, beats);\n     }\n-    for (const shot of shots) {\n+    for (const [index, shot] of shots.entries()) {\n+        assertLegacyFields(shot, [\"id\"], `shots.json[${index}]`);\n         const beats = typeof shot.episodeId === \"string\" ? beatsByEpisode.get(shot.episodeId) : undefined;\n-        if (!beats) throw new PackageError(\"\u5206\u955c\u5fc5\u987b\u5f15\u7528\u5305\u5185\u6709\u6548\u7684\u539f\u59cb\u5206\u96c6 ID\");\n+        if (!beats) throw new PackageError(`shots.json[${index}].episodeId\uff1a\u5206\u955c\u5fc5\u987b\u5f15\u7528\u5305\u5185\u6709\u6548\u7684\u539f\u59cb\u5206\u96c6 ID`);\n         if (!shot.beatId) continue;\n         if (typeof shot.beatId !== \"string\" || !beats.has(shot.beatId)) {\n-            throw new PackageError(\"\u5206\u955c\u573a\u6b21\u5fc5\u987b\u5c5e\u4e8e\u5b83\u5f15\u7528\u7684\u5206\u96c6\");\n+            throw new PackageError(`shots.json[${index}].beatId\uff1a\u5206\u955c\u573a\u6b21\u5fc5\u987b\u5c5e\u4e8e\u5b83\u5f15\u7528\u7684\u5206\u96c6`);\n         }\n     }\n }\n@@ -392,6 +452,9 @@\n     projectId: Id,\n     index: number,\n ): Episode {\n+    const path = `episodes.json[${index}]`;\n+    assertLegacyFields(raw, [\"id\", \"title\", \"createdAt\", \"updatedAt\"], path);\n+    validatePackageStory(raw.story, `${path}.story`);\n     const at = nowIso();\n     const story = normalizeEpisodeStory(raw.story);\n     // Synthesized beat identities must not merge with explicit ones during remapping.\n@@ -464,11 +527,15 @@\n     episodeId: Id,\n     index: number,\n ): Shot {\n+    const path = `shots.json[${index}]`;\n+    assertLegacyFields(raw, [\"id\", \"shotNumber\", \"category\", \"content\", \"notes\", \"sceneCloseup\", \"sound\", \"emotion\", \"cameraAngle\", \"cameraGear\", \"focalLength\", \"sceneId\", \"beatId\", \"frameMediaId\", \"referenceMediaId\"], path);\n+    validateLegacyIds(raw.characterIds, `${path}.characterIds`);\n+    for (const field of [\"firstFrame\", \"lastFrame\", \"clip\", \"frame\", \"reference\"]) validatePackageSlot(raw[field], `${path}.${field}`);\n     const slots = parseShotPictureSlots(raw);\n     return {\n         id: String(raw.id ?? createId(\"sht\")),\n         projectId,\n-        episodeId: String(raw.episodeId ?? episodeId),\n+        episodeId,\n         order: Number(raw.order ?? index + 1) || index + 1,\n         shotNumber: String(raw.shotNumber ?? index + 1),\n         status: normalizeShotStatus(raw.status),\n@@ -752,8 +819,8 @@\n         else delete project.coverMediaId;\n     }\n \n-    const characters = charactersRaw.map((raw) => {\n-        const character = parseCharacter(raw, projectId);\n+    const characters = charactersRaw.map((raw, index) => {\n+        const character = parseCharacter(raw, projectId, `characters.json[${index}]`);\n         const newId = remapId(characterMap, character.id, \"chr\")!;\n         character.id = newId;\n         character.projectId = projectId;\n@@ -766,8 +833,8 @@\n         return character;\n     });\n \n-    const scenes = scenesRaw.map((raw) => {\n-        const scene = parseScene(raw, projectId);\n+    const scenes = scenesRaw.map((raw, index) => {\n+        const scene = parseScene(raw, projectId, `scenes.json[${index}]`);\n         scene.id = remapId(sceneMap, scene.id, \"scn\")!;\n         scene.projectId = projectId;\n         const images: Scene[\"slots\"] = {};\n@@ -779,36 +846,39 @@\n         return scene;\n     });\n \n-    const props = propsRaw.map((raw) => {\n-        const prop = parseProp(raw, projectId);\n+    const props = propsRaw.map((raw, index) => {\n+        const prop = parseProp(raw, projectId, `props.json[${index}]`);\n         prop.id = remapId(propMap, prop.id, \"prp\")!;\n         prop.slots = Object.fromEntries(\n             Object.entries(prop.slots).map(([slot, value]) => [\n                 slot,\n                 value ? remapSlot(value, mapMedia) : value,\n             ]),\n-        ) as Prop[\"slots\"];\n+        );\n         return prop;\n     });\n \n-    const styles = stylesRaw.map((raw) => {\n-        const style = parseStyle(raw, projectId);\n+    const styles = stylesRaw.map((raw, index) => {\n+        const style = parseStyle(raw, projectId, `styles.json[${index}]`);\n         style.id = remapId(styleMap, style.id, \"sty\")!;\n         style.slots = Object.fromEntries(\n             Object.entries(style.slots).map(([slot, value]) => [\n                 slot,\n                 value ? remapSlot(value, mapMedia) : value,\n             ]),\n-        ) as VisualStyle[\"slots\"];\n+        );\n         return style;\n     });\n \n     if (project.defaultStyleId !== undefined)\n         project.defaultStyleId = styleMap.get(project.defaultStyleId);\n \n-    const parsedEpisodes = getProjectKind(project) !== \"video\" ? [] : hasEpisodes\n-        ? episodesRaw.map((raw, index) => parseEpisode(raw, projectId, index))\n-        : [synthesizeFirstEpisode(project, projectRaw)];\n+    let parsedEpisodes: Episode[] = [];\n+    if (getProjectKind(project) === \"video\") {\n+        parsedEpisodes = hasEpisodes\n+            ? episodesRaw.map((raw, index) => parseEpisode(raw, projectId, index))\n+            : [synthesizeFirstEpisode(project, projectRaw)];\n+    }\n \n     const episodes = parsedEpisodes.map((episode) => {\n         const filters = getEpisodeShotFilters(episode, project);\n@@ -848,7 +918,9 @@\n     const fallbackEpisodeId = episodes[0]?.id ?? createId(\"ep\");\n \n     const shots = shotsRaw.map((raw, index) => {\n-        const shot = parseShot(raw, projectId, fallbackEpisodeId, index);\n+        // Modern owners were checked before any repair; legacy scopes are deliberately ignored.\n+        const oldEpisodeId = hasEpisodes && typeof raw.episodeId === \"string\" ? raw.episodeId : fallbackEpisodeId;\n+        const shot = parseShot(raw, projectId, oldEpisodeId, index);\n         remapShotStoryScope(shot, hasEpisodes, fallbackEpisodeId, episodeMap, beatMaps);\n         shot.id = remapId(shotMap, shot.id, \"sht\")!;\n         shot.projectId = projectId;\n",
+      "reviewNote": "Full current source and original diff reviewed. Enumerated field guards dominate all original coercions. Modern original FK/collision checks precede synthesis/remap; legacy scopes synthesize. Extra/profile/media/style and whole-import prewrite validation preserved.",
+      "finalCurrentSha256": "a0b273442d7a8eb3e204e2ab0b6eca42e42d01494cbfb4781c08e1013489167c"
+    },
+    {
+      "path": "src/domain/types.ts",
+      "change": "modified",
+      "beforeSha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+      "reviewEntrySha256": "2fd6270b0a2a97ed725148046ef67d2875fee04d7107ef22d8f212cdd9cce78f",
+      "afterSha256": "2fd6270b0a2a97ed725148046ef67d2875fee04d7107ef22d8f212cdd9cce78f",
+      "afterSnapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-coercion-implementation/after/src/domain/types.ts",
+      "E07entrySha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+      "currentSha256": "2fd6270b0a2a97ed725148046ef67d2875fee04d7107ef22d8f212cdd9cce78f",
+      "frozenAfterActualSha256": "2fd6270b0a2a97ed725148046ef67d2875fee04d7107ef22d8f212cdd9cce78f",
+      "status": "reviewed",
+      "currentMatchesCompletedSlice": true,
+      "beforeActualSha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+      "E07BeforeActualSha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+      "E07EntryRecordedSha256": "ec78e60ae3ddcb9c06299954a5c07c59adae535d1dd400821e5ec0aaf37f7204",
+      "beforeMatches991Freeze": true,
+      "diff": "--- E07-before/src/domain/types.ts\n+++ current/src/domain/types.ts\n@@ -1,3 +1,4 @@\n+import {isLegacyScalar, recoverLegacyIds, recoverLegacyText} from \"./legacyScalar\";\n import type {ReferenceAttachment} from \"./references\";\n import type {AgentSelectedReferences} from \"./referenceInput\";\n import type {ContextPolicy} from \"./context\";\n@@ -56,7 +57,7 @@\n \n export type ShotWorkspaceView = \"design\" | \"media\";\n \n-export function normalizeShotWorkspaceView(raw: unknown): ShotWorkspaceView {\n+function normalizeShotWorkspaceView(raw: unknown): ShotWorkspaceView {\n     return raw === \"media\" ? \"media\" : \"design\";\n }\n \n@@ -109,8 +110,7 @@\n             .filter((value, index, list) => list.indexOf(value) === index)\n         : [];\n     const beatIds = Array.isArray(record.beatIds)\n-        ? record.beatIds\n-            .map((value) => String(value))\n+        ? recoverLegacyIds(record.beatIds)\n             .filter((value, index, list) => list.indexOf(value) === index)\n         : [];\n     const gaps = Array.isArray(record.gaps)\n@@ -139,7 +139,7 @@\n     filters: ShotFilters;\n }\n \n-export interface ColumnSettings {\n+interface ColumnSettings {\n     visible: ShotColumnId[];\n }\n \n@@ -421,7 +421,7 @@\n     const story = emptySeriesStory();\n     if (!raw || typeof raw !== \"object\") return story;\n     const record = raw as Record<string, unknown>;\n-    story.logline = String(record.logline ?? \"\");\n+    story.logline = recoverLegacyText(record.logline);\n     return story;\n }\n \n@@ -429,24 +429,23 @@\n     return {logline: \"\", script: \"\", beats: []};\n }\n \n-export function normalizeStoryBeat(raw: unknown, index: number): StoryBeat {\n+function normalizeStoryBeat(raw: unknown, index: number): StoryBeat {\n     const beat =\n         raw && typeof raw === \"object\" ? (raw as Record<string, unknown>) : {};\n     const normalized: StoryBeat = {\n-        id: String(beat.id ?? `beat_${index}`),\n-        title: String(beat.title ?? \"\"),\n-        content: String(beat.content ?? \"\"),\n-        characterIds: Array.isArray(beat.characterIds)\n-            ? beat.characterIds.map((id) => String(id))\n-            : [],\n-        sceneId: beat.sceneId ? String(beat.sceneId) : undefined,\n-        timeOfDay: String(beat.timeOfDay ?? \"\"),\n+        id: recoverLegacyText(beat.id, `beat_${index}`),\n+        title: recoverLegacyText(beat.title),\n+        content: recoverLegacyText(beat.content),\n+        characterIds: recoverLegacyIds(beat.characterIds),\n+        sceneId: beat.sceneId && isLegacyScalar(beat.sceneId) ? String(beat.sceneId) : undefined,\n+        timeOfDay: recoverLegacyText(beat.timeOfDay),\n     };\n     if (beat.scriptRange && typeof beat.scriptRange === \"object\") {\n         const range = beat.scriptRange as Record<string, unknown>;\n-        const start = Number(range.start);\n-        const end = Number(range.end);\n-        const excerpt = String(range.excerpt ?? \"\");\n+        const start = isLegacyScalar(range.start) ? Number(range.start) : NaN;\n+        const end = isLegacyScalar(range.end) ? Number(range.end) : NaN;\n+        // Associations require authored string evidence, never a manufactured excerpt.\n+        const excerpt = typeof range.excerpt === \"string\" ? range.excerpt : \"\";\n         if (\n             Number.isInteger(start) &&\n             Number.isInteger(end) &&\n@@ -464,21 +463,27 @@\n     const story = emptyEpisodeStory();\n     if (!raw || typeof raw !== \"object\") return story;\n     const record = raw as Record<string, unknown>;\n-    story.logline = String(record.logline ?? \"\");\n-    story.script = String(record.script ?? \"\");\n-    story.beats = Array.isArray(record.beats)\n-        ? record.beats.map((beat, index) => {\n-            const normalized = normalizeStoryBeat(beat, index);\n-            if (\n-                normalized.scriptRange &&\n-                story.script.slice(normalized.scriptRange.start, normalized.scriptRange.end) !==\n-                normalized.scriptRange.excerpt\n-            ) {\n-                delete normalized.scriptRange;\n-            }\n-            return normalized;\n-        })\n-        : [];\n+    story.logline = recoverLegacyText(record.logline);\n+    story.script = recoverLegacyText(record.script);\n+    const beats: unknown[] = Array.isArray(record.beats) ? record.beats : [];\n+    const reservedIds = new Set(beats.map((beat, index) => normalizeStoryBeat(beat, index).id));\n+    story.beats = beats.map((beat, index) => {\n+        const normalized = normalizeStoryBeat(beat, index);\n+        const rawId = beat && typeof beat === \"object\" ? (beat as Record<string, unknown>).id : undefined;\n+        if (!isLegacyScalar(rawId)) {\n+            let suffix = 0;\n+            while (reservedIds.has(normalized.id)) normalized.id = `beat_${index}_recovered_${++suffix}`;\n+            reservedIds.add(normalized.id);\n+        }\n+        if (\n+            normalized.scriptRange &&\n+            story.script.slice(normalized.scriptRange.start, normalized.scriptRange.end) !==\n+            normalized.scriptRange.excerpt\n+        ) {\n+            delete normalized.scriptRange;\n+        }\n+        return normalized;\n+    });\n     return story;\n }\n \n@@ -496,9 +501,9 @@\n     const setting = emptySetting();\n     if (!raw || typeof raw !== \"object\") return setting;\n     const record = raw as Record<string, unknown>;\n-    setting.worldview = String(record.worldview ?? \"\");\n-    setting.background = String(record.background ?? \"\");\n-    setting.rules = String(record.rules ?? \"\");\n+    setting.worldview = recoverLegacyText(record.worldview);\n+    setting.background = recoverLegacyText(record.background);\n+    setting.rules = recoverLegacyText(record.rules);\n     return setting;\n }\n \n",
+      "reviewNote": "Full current source and original diff reviewed. Scalar prose/member recovery is explicit and read-only. Compound beat IDs reserve canonical/generated/recovered names. Script ranges require scalar offsets, original string excerpt, integer UTF-16 length and exact script slice. Export narrowing leaves internal callers intact.",
+      "finalCurrentSha256": "2fd6270b0a2a97ed725148046ef67d2875fee04d7107ef22d8f212cdd9cce78f"
+    },
+    {
+      "path": "src/domain/slot.ts",
+      "change": "modified",
+      "beforeSha256": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+      "reviewEntrySha256": "92f23cbcd33bf46b330e6473378f14bcf1ee8aeb50414abeaf7a4b0171f68c91",
+      "afterSha256": "92f23cbcd33bf46b330e6473378f14bcf1ee8aeb50414abeaf7a4b0171f68c91",
+      "afterSnapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-coercion-implementation/after/src/domain/slot.ts",
+      "E07entrySha256": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+      "currentSha256": "92f23cbcd33bf46b330e6473378f14bcf1ee8aeb50414abeaf7a4b0171f68c91",
+      "frozenAfterActualSha256": "92f23cbcd33bf46b330e6473378f14bcf1ee8aeb50414abeaf7a4b0171f68c91",
+      "status": "reviewed",
+      "currentMatchesCompletedSlice": true,
+      "beforeActualSha256": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+      "E07BeforeActualSha256": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+      "E07EntryRecordedSha256": "13dc3767e2114e1793c01a09beeaa6d4d708e06e87b3458bce83cb3bbdc14cd5",
+      "beforeMatches991Freeze": true,
+      "diff": "--- E07-before/src/domain/slot.ts\n+++ current/src/domain/slot.ts\n@@ -1,3 +1,4 @@\n+import {isLegacyScalar, recoverLegacyIds, recoverLegacyText} from \"./legacyScalar\";\n import type {GenerationSlot, Id, MediaKind, ShotPictureField} from \"./types\";\n \n export function emptySlot(): GenerationSlot {\n@@ -23,26 +24,23 @@\n     legacyMediaId?: unknown,\n ): GenerationSlot {\n     const slot = emptySlot();\n-    if (raw && typeof raw === \"object\") {\n+    if (raw && typeof raw === \"object\" && !Array.isArray(raw)) {\n         const record = raw as Record<string, unknown>;\n-        slot.prompt = String(record.prompt ?? \"\");\n-        slot.referenceImageIds = Array.isArray(record.referenceImageIds)\n-            ? record.referenceImageIds.map(String)\n-            : [];\n-        slot.referenceVideoIds = Array.isArray(record.referenceVideoIds)\n-            ? record.referenceVideoIds.map(String)\n-            : [];\n+        slot.prompt = recoverLegacyText(record.prompt);\n+        slot.referenceImageIds = recoverLegacyIds(record.referenceImageIds);\n+        slot.referenceVideoIds = recoverLegacyIds(record.referenceVideoIds);\n         const result = record.result as\n             | { mediaId?: unknown; kind?: unknown }\n             | undefined;\n-        if (result?.mediaId) {\n+        if (result?.mediaId && isLegacyScalar(result.mediaId)) {\n             slot.result = {\n                 mediaId: String(result.mediaId),\n                 kind: result.kind === \"video\" ? \"video\" : \"image\",\n             };\n         }\n     }\n-    if (!slot.result && legacyMediaId) {\n+    // Invalid local result IDs cannot claim media; a valid legacy result may recover them.\n+    if (!slot.result && legacyMediaId && isLegacyScalar(legacyMediaId)) {\n         slot.result = {mediaId: String(legacyMediaId), kind: \"image\"};\n     }\n     return slot;\n@@ -110,7 +108,7 @@\n     return [...new Set(ids)];\n }\n \n-export function mergeLegacyReferenceIntoFirstFrame(\n+function mergeLegacyReferenceIntoFirstFrame(\n     firstFrame: GenerationSlot,\n     legacyReference: GenerationSlot,\n ): GenerationSlot {\n",
+      "reviewNote": "Full current source and original diff reviewed. Current result precedence, exact media kind, scalar truthiness, legacy fallback, reference roles/dedupe preserved. Compound local prompt/reference/media recovery has named guards. Package slot validation occurs separately.",
+      "finalCurrentSha256": "92f23cbcd33bf46b330e6473378f14bcf1ee8aeb50414abeaf7a4b0171f68c91"
+    },
+    {
+      "path": "src/db/database.ts",
+      "change": "modified",
+      "beforeSha256": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+      "reviewEntrySha256": "22bcb0693e9b7dc7d559e3a9439566566d9afc125ac7f9c4d32102534f41f37f",
+      "afterSha256": "22bcb0693e9b7dc7d559e3a9439566566d9afc125ac7f9c4d32102534f41f37f",
+      "afterSnapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-coercion-implementation/after/src/db/database.ts",
+      "E07entrySha256": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+      "currentSha256": "22bcb0693e9b7dc7d559e3a9439566566d9afc125ac7f9c4d32102534f41f37f",
+      "frozenAfterActualSha256": "22bcb0693e9b7dc7d559e3a9439566566d9afc125ac7f9c4d32102534f41f37f",
+      "status": "reviewed",
+      "currentMatchesCompletedSlice": true,
+      "beforeActualSha256": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+      "E07BeforeActualSha256": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+      "E07EntryRecordedSha256": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+      "beforeMatches991Freeze": true,
+      "diff": "--- E07-before/src/db/database.ts\n+++ current/src/db/database.ts\n@@ -1,3 +1,4 @@\n+import {recoverLegacyText} from \"@/domain/legacyScalar\";\n import type {\n     AudioChapter,\n     AudioClip,\n@@ -50,7 +51,7 @@\n import {parseShotPictureSlots} from \"@/domain/slot\";\n import {createId, nowIso} from \"@/lib/ids\";\n \n-export class AifenjingDB extends Dexie {\n+class AifenjingDB extends Dexie {\n     audioChapters!: Table<AudioChapter, string>;\n     audioSpeakers!: Table<AudioSpeaker, string>;\n     audioSegments!: Table<AudioSegment, string>;\n@@ -132,12 +133,15 @@\n                 media: \"id, projectId\",\n             })\n             .upgrade(async (tx) => {\n-                const projects = await tx.table(\"projects\").toArray();\n-                const episodesTable = tx.table(\"episodes\");\n-                const shotsTable = tx.table(\"shots\");\n+                const projectsTable = tx.table<Record<string, unknown>>(\"projects\");\n+                const projects = await projectsTable.toArray();\n+                const episodesTable = tx.table<Episode>(\"episodes\");\n+                const shotsTable = tx.table<Record<string, unknown>>(\"shots\");\n                 const at = nowIso();\n \n                 for (const project of projects) {\n+                    // Owner identity must remain exact; abort the upgrade instead of rekeying it.\n+                    if (typeof project.id !== \"string\" || !project.id) throw new Error(\"\u65e7\u9879\u76ee ID \u65e0\u6548\uff0c\u65e0\u6cd5\u8fc1\u79fb\");\n                     const existing = await episodesTable.where(\"projectId\").equals(project.id).count();\n                     if (existing > 0) continue;\n \n@@ -153,10 +157,10 @@\n                         order: 0,\n                         title: \"\",\n                         story: episodeStory,\n-                        createdAt: String(project.createdAt ?? at),\n+                        createdAt: recoverLegacyText(project.createdAt, at),\n                         updatedAt: at,\n                     });\n-                    await tx.table(\"projects\").put({\n+                    await projectsTable.put({\n                         ...project,\n                         story: normalizeSeriesStory(rawStory),\n                         columnSettings: {visible: [...DEFAULT_VISIBLE_COLUMNS]},\n@@ -164,7 +168,7 @@\n \n                     const shots = await shotsTable.where(\"projectId\").equals(project.id).toArray();\n                     for (const shot of shots) {\n-                        const record = {...(shot as Record<string, unknown>)};\n+                        const record = {...shot};\n                         const slots = parseShotPictureSlots(record);\n                         delete record.frame;\n                         delete record.reference;\n@@ -172,7 +176,8 @@\n                         delete record.referenceMediaId;\n                         await shotsTable.put({\n                             ...record,\n-                            episodeId: String(record.episodeId ?? episodeId),\n+                            // No episode existed for this owner: every old scope is orphaned.\n+                            episodeId,\n                             ...slots,\n                         });\n                     }\n",
+      "reviewNote": "Full current source and original diff reviewed. Historical rows typed unknown; original nonempty string owner checked before every project lookup/write. No-episodes upgrade attaches all old owned shots to generated episode. Original upgrade transaction rolls back earlier migrated owners on later invalid ID. No schema version change.",
+      "finalCurrentSha256": "22bcb0693e9b7dc7d559e3a9439566566d9afc125ac7f9c4d32102534f41f37f"
+    },
+    {
+      "path": "src/domain/legacyScalar.ts",
+      "change": "added",
+      "beforeSha256": null,
+      "reviewEntrySha256": "bfe4effb141c407fa2e4618da3c4fedd623a1cf812798cd6fb9eb45dae2c7a8a",
+      "afterSha256": "bfe4effb141c407fa2e4618da3c4fedd623a1cf812798cd6fb9eb45dae2c7a8a",
+      "afterSnapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-coercion-implementation/after/src/domain/legacyScalar.ts",
+      "E07entrySha256": null,
+      "currentSha256": "bfe4effb141c407fa2e4618da3c4fedd623a1cf812798cd6fb9eb45dae2c7a8a",
+      "frozenAfterActualSha256": "bfe4effb141c407fa2e4618da3c4fedd623a1cf812798cd6fb9eb45dae2c7a8a",
+      "status": "reviewed",
+      "currentMatchesCompletedSlice": true,
+      "reviewNote": "Full new file reviewed. Predicate accepts string/number/boolean/nullish only. String calls follow that predicate or filter; compounds never cross it. Local text default and array-member null spelling remain distinct. Domain imports no persistence/UI.",
+      "finalCurrentSha256": "bfe4effb141c407fa2e4618da3c4fedd623a1cf812798cd6fb9eb45dae2c7a8a"
+    },
+    {
+      "path": "tests/e07CoercionContracts.test.ts",
+      "change": "added",
+      "beforeSha256": null,
+      "reviewEntrySha256": "5a691cc4fd08e112119836b1dfe9f88f3cc30b0ab82ec225fa10687b52edaa7b",
+      "afterSha256": "5a691cc4fd08e112119836b1dfe9f88f3cc30b0ab82ec225fa10687b52edaa7b",
+      "afterSnapshot": ".trellis/tasks/10-09-src-remediation-e/research/e07-coercion-implementation/after/tests/e07CoercionContracts.test.ts",
+      "E07entrySha256": null,
+      "currentSha256": "5a691cc4fd08e112119836b1dfe9f88f3cc30b0ab82ec225fa10687b52edaa7b",
+      "frozenAfterActualSha256": "5a691cc4fd08e112119836b1dfe9f88f3cc30b0ab82ec225fa10687b52edaa7b",
+      "status": "reviewed",
+      "currentMatchesCompletedSlice": true,
+      "reviewNote": "Full 374-line file reviewed. 220 generated cases assert real ZIP persistence/roundtrips, all-table equality on rejection, fresh independent identity domains, scalar defaults, malformed recovery, actual v1/v2 Dexie upgrade and normalized-vs-raw CAS. Imports production owners; no task evidence runtime imports.",
+      "finalCurrentSha256": "5a691cc4fd08e112119836b1dfe9f88f3cc30b0ab82ec225fa10687b52edaa7b"
+    }
+  ],
+  "reports": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E07-coercion-implementation.md",
+      "sha256": "cb1ca7f56ebb81d764264d73c5d1512c841a9d481d1b15817831040295590608",
+      "bytes": 7890
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E07-coercion-implementation.json",
+      "sha256": "a4021d14a4ba4faa26f0d517aa24edf208cea329b610a7692601023f745d17aa",
+      "bytes": 73037
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E07-coercion-contracts.md",
+      "sha256": "cefc49c3fb2c986148e769f667b689702a48b4db37da6c359705d077390cf747",
+      "bytes": 32208
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E07-coercion-contracts.json",
+      "sha256": "1880ddc4dcdf30c67a8564b1782bfada7d7d6e7c000720091bbfa23239a31c28",
+      "bytes": 163359
+    }
+  ],
+  "context": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/context-manifest.json",
+    "sha256": "a353b225eb9283f7b57c112273b62b0c107ce4bc3bba1c20d14e9540c447e375",
+    "bytes": 4762
+  },
+  "baseline": {
+    "originalFiles": 991,
+    "matchesFrozenImplementer991Manifest": true,
+    "entryInventoryCount": 773,
+    "entryInventoryIsMatchingSubset": true,
+    "additionalClosureFiles": 218,
+    "originalEvidenceUnchanged": true,
+    "independentPositiveCases": 38,
+    "historical173Failures": "Adopted immutable baseline regression evidence; not 173 independent product bugs, because error-path assertions contribute failures."
+  },
+  "diagnostics": {
+    "reviewedErrorSites": 80,
+    "noBaseToStringSites": 66,
+    "independentCurrentErrors": 0,
+    "independentCurrentWarnings": [
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'parseShot' has a complexity of 21. Maximum allowed is 20.",
+        "line": 524,
+        "column": 1,
+        "messageId": "complex",
+        "endLine": 524,
+        "endColumn": 19
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "ruleId": "complexity",
+        "severity": 1,
+        "message": "Function 'parseMemoryPackage' has a complexity of 26. Maximum allowed is 20.",
+        "line": 608,
+        "column": 1,
+        "messageId": "complex",
+        "endLine": 608,
+        "endColumn": 28
+      },
+      {
+        "path": "src/lib/packages/projectPackageCodec.ts",
+        "ruleId": "sonarjs/cognitive-complexity",
+        "severity": 1,
+        "message": "Refactor this function to reduce its Cognitive Complexity from 21 to the 20 allowed.",
+        "line": 608,
+        "column": 10,
+        "messageId": "refactorFunction",
+        "endLine": 608,
+        "endColumn": 28
+      }
+    ],
+    "newDebtAllowances": 0,
+    "matrix": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/diagnostic-review.json",
+      "sha256": "f8ea8547f8fe509aaf7fde0b60acfac5f81346e9fc1746d43ee53ad27b32acdd",
+      "bytes": 147897
+    }
+  },
+  "contractDecisions": [
+    {
+      "contract": "Actual guarded conversion",
+      "decision": "All 80 fresh errors matched to raw frozen diagnostics and current expressions/guards. Codec uses field-list assertions with scalar predicate; local helper executes String only after finite scalar guard/filter. No unguarded String(unknown) wrapper or new debt allowance.",
+      "anchors": [
+        "src/lib/packages/projectPackageCodec.ts:56",
+        "src/domain/legacyScalar.ts:4"
+      ],
+      "evidence": "diagnostic-review.json"
+    },
+    {
+      "contract": "Modern identity vs legacy graph",
+      "decision": "Original nonempty string episode/beat FKs and primitive collision checks run before normalization. Primitive IDs can remain unreferenced without becoming modern FK targets. Missing/null IDs synthesize; explicit empty/compound known IDs reject. Missing/empty episode arrays ignore old episodeId and synthesize one scope; false/0 optional beat/scene remain absent.",
+      "anchors": [
+        "src/lib/packages/projectPackageCodec.ts:396",
+        "src/lib/packages/projectPackageCodec.ts:429",
+        "src/lib/packages/projectPackageCodec.ts:917"
+      ],
+      "evidence": "focused.log; counterexamples.log"
+    },
+    {
+      "contract": "Typed original-owner migration",
+      "decision": "Unknown historical records, unchanged original nonempty string owner, atomic invalid-owner rejection and generated owner attachment inside no-episodes branch. No version addition. Rollback proved after earlier valid project migrations.",
+      "anchors": [
+        "src/db/database.ts:136",
+        "src/db/database.ts:144",
+        "src/db/database.ts:180"
+      ],
+      "evidence": "focused.log; counterexamples.log"
+    },
+    {
+      "contract": "Scalar/null/whitespace compatibility",
+      "decision": "Exact authored strings/empty/whitespace and number/boolean spelling retain per-field nullish fallback. Member null -> literal null differs from prose null -> empty/default. Cover trims only the existence probe and remaps the untrimmed key. 38 selected source characterizations independently pass on actual frozen original and within current 374.",
+      "anchors": [
+        "src/domain/legacyScalar.ts:9",
+        "src/domain/legacyScalar.ts:14",
+        "src/lib/packages/projectPackageCodec.ts:174"
+      ],
+      "evidence": "old-compat.json; focused.json; counterexamples.log"
+    },
+    {
+      "contract": "Compound recovery and script evidence",
+      "decision": "Known compound package fields reject with location before persistence; local reads recover prose/default and drop compound references. Canonical scalar current media stays authoritative; unusable current may recover scalar legacy. Recovered compound beat IDs avoid canonical/nullish/recovered collisions. Malformed excerpt/offset/stale script drops association without dropping beat/content.",
+      "anchors": [
+        "src/domain/slot.ts:24",
+        "src/domain/types.ts:432",
+        "src/domain/types.ts:448",
+        "src/domain/types.ts:469"
+      ],
+      "evidence": "focused.log; counterexamples.log"
+    },
+    {
+      "contract": "Raw source revision and CAS",
+      "decision": "Episode/beat writer normalized baselines still merge unrelated changes and reject competing same-field changes. Raw targetRevision stays distinct from rendered recovery. World-setting owner compares raw baseline, so malformed worldview displayed empty cannot overwrite raw object; conflict is retained and tested. This bounded review does not authorize writer changes.",
+      "anchors": [
+        "tests/e07CoercionContracts.test.ts:309",
+        "src/domain/types.ts:500"
+      ],
+      "evidence": "focused.log; counterexamples.log"
+    },
+    {
+      "contract": "Unknown extension/future profile/media/style",
+      "decision": "Structured extras/provenance/future generation defaults remain preserved; independent restores allocate distinct media IDs and retain exact media bytes plus current/reference/video roles. Undefined style inherits; explicit null or missing explicit style stays null. Export narrowing retains actual aggregate/singleton APIs and internal bodies.",
+      "anchors": [
+        "src/lib/packages/projectPackageCodec.ts:100",
+        "src/lib/packages/projectPackageCodec.ts:837",
+        "src/lib/packages/projectPackageCodec.ts:937"
+      ],
+      "evidence": "focused.log; counterexamples.log; export-consumers.log"
+    }
+  ],
+  "tests": {
+    "durableNewCases": 220,
+    "independentlyRerunFocusedCases": 374,
+    "focusedFiles": 11,
+    "independentSidecarCases": 4,
+    "frozenOriginalPositiveCases": 38,
+    "caseCountsAreNotIndependentBugCounts": true
+  },
+  "checks": [
+    {
+      "label": "focused",
+      "receipt": {
+        "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/focused.json",
+        "sha256": "ae3f0a9bca3d40e5a19611615e4d1c7b10ddd91d6fd32e8f914a0c75cd47144b",
+        "bytes": 230601
+      },
+      "output": {
+        "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/focused.log",
+        "sha256": "f07939544c415f7da6a3579f365245b69c99a645de394e9e1722e00d0bf2c0bc",
+        "bytes": 655
+      },
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "test",
+        "tests/e07CoercionContracts.test.ts",
+        "tests/projectPackage.test.ts",
+        "tests/projectPackageRelations.test.ts",
+        "tests/assetFoundation.test.ts",
+        "tests/audioFoundation.test.ts",
+        "tests/output.test.ts",
+        "tests/d06Capabilities.test.ts",
+        "tests/auditDataIntegrity.test.ts",
+        "tests/d08TextDraftRepository.test.ts",
+        "tests/imageDiscovery.test.ts",
+        "tests/projectMemoryPackage.test.ts",
+        "--maxWorkers=4"
+      ],
+      "exitCode": 0,
+      "inputDrift": [],
+      "producerSha256": "37154f00d6256618970a7b80b8cebc7cdbacad851f24dc8d618fa0257f18b333"
+    },
+    {
+      "label": "eslint",
+      "receipt": {
+        "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/eslint.json",
+        "sha256": "405cbdc35beddc47b3a13720f45ef643efdf55facdb45914133d472f18ef13cc",
+        "bytes": 230356
+      },
+      "output": {
+        "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/eslint.log",
+        "sha256": "4b78074aa213fb93e06d67adc0e416d47cd8751f86f4abd8354320fadc3e1e3f",
+        "bytes": 38117
+      },
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "exec",
+        "eslint",
+        "src/lib/packages/projectPackageCodec.ts",
+        "src/domain/types.ts",
+        "src/domain/slot.ts",
+        "src/db/database.ts",
+        "src/domain/legacyScalar.ts",
+        "--format",
+        "json"
+      ],
+      "exitCode": 0,
+      "inputDrift": [],
+      "producerSha256": "37154f00d6256618970a7b80b8cebc7cdbacad851f24dc8d618fa0257f18b333"
+    },
+    {
+      "label": "counterexamples",
+      "receipt": {
+        "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/counterexamples.json",
+        "sha256": "d1f16cac898b8a12180478a3ceab79942c413acaa0d28f01a798cbcfe03e39ac",
+        "bytes": 231045
+      },
+      "output": {
+        "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/counterexamples.log",
+        "sha256": "fc0badfc436f8172fa866d99df144a5fea33c1c61b4b835cc35dec8944ef9551",
+        "bytes": 217
+      },
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "--config",
+        "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/vitest.sidecar.config.mts",
+        "--maxWorkers=1"
+      ],
+      "exitCode": 0,
+      "inputDrift": [],
+      "producerSha256": "37154f00d6256618970a7b80b8cebc7cdbacad851f24dc8d618fa0257f18b333"
+    },
+    {
+      "label": "typecheck",
+      "receipt": {
+        "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/typecheck.json",
+        "sha256": "fa39ecb34f2897fac67d1e3740d43ef87ff03f95cea4395742fb42bfd0e8494e",
+        "bytes": 231793
+      },
+      "output": {
+        "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/typecheck.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "exec",
+        "tsc",
+        "--project",
+        "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/tsconfig.sidecar.json",
+        "--pretty",
+        "false"
+      ],
+      "exitCode": 0,
+      "inputDrift": [],
+      "producerSha256": "116ea98bc1d68215b33744790d92cfbf78fc0f6830bbf58e299031f950ce4f36"
+    },
+    {
+      "label": "old-compat",
+      "receipt": {
+        "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/old-compat.json",
+        "sha256": "5a9c6912fed19ed8c54d57c62309ebb3d1bd9b91b91fb38c045666459f496048",
+        "bytes": 342047
+      },
+      "output": {
+        "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/old-compat.log",
+        "sha256": "e773f048b98258b657feee03f17dc975f6e9e32651bb485c5d6d0064cb626a82",
+        "bytes": 732
+      },
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "test",
+        "tests/e07CoercionContracts.test.ts",
+        "--maxWorkers=1",
+        "--testNamePattern",
+        "legacy scalar ZIP compatibility|remaps unique primitive IDs|keeps unreferenced modern primitive/nullish identities|keeps falsey beat absence|ignores legacy episode scope"
+      ],
+      "exitCode": 0,
+      "inputDrift": [],
+      "producerSha256": "83301f1fb43673c5c90de47701b0b253a70f9f22beee4af469d8cdb2c3d79979"
+    }
+  ],
+  "researchIntegrity": {
+    "artifactsVerified": 171,
+    "mismatches": [],
+    "receipt": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/research-integrity.json",
+      "sha256": "55a58b4de6343af3d8f2a626178d19e878796cf827d3c78c46a7667e0716cefe",
+      "bytes": 61387
+    }
+  },
+  "tools": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/tool-versions.json",
+    "sha256": "07d5e0d013787e0b4f96be0ccf097c9ce2f09c6b9976299a2b3e5f90e672e83f",
+    "bytes": 3036
+  },
+  "producerFiles": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/build-review.py",
+      "sha256": "a3a1e6848d08398e2189a009024e92ef52ee18bd8cd68c4077cc2c804a74b073",
+      "bytes": 13248
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/finalize-sidecar.py",
+      "sha256": "36995cb4b27f64006951b686ea3c15d92c717d4e4bb603c934a1c93183251940",
+      "bytes": 17145
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/run-old-compat.py",
+      "sha256": "83301f1fb43673c5c90de47701b0b253a70f9f22beee4af469d8cdb2c3d79979",
+      "bytes": 2459
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/run-review.py",
+      "sha256": "116ea98bc1d68215b33744790d92cfbf78fc0f6830bbf58e299031f950ce4f36",
+      "bytes": 2862
+    }
+  ],
+  "sourceConsumerEvidence": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/export-consumers.log",
+    "sha256": "c5da9c8ff0f01c22accfd5300168afe9c7fbe29da487d5cea78f50d42e87eb8a",
+    "bytes": 864
+  },
+  "failuresRetained": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/build-review-attempt-1.log",
+      "kind": "sidecar evidence-builder matcher error only",
+      "corrected": true,
+      "sourceModified": false
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-coercion-sidecar/build-review-attempt-2.log",
+      "kind": "sidecar evidence-builder matcher error only",
+      "corrected": true,
+      "sourceModified": false
+    }
+  ],
+  "limits": [
+    "COMPLETED / PASS_FOR_SLICE_A only. No whole E07/QG01 acceptance, task/status/spec/ledger/commit/CI execution claim.",
+    "Actual test runtime Node24.11.0, explicitly authorized machine pnpm10.15.0; no install. Original-source mirror shares current installed dependencies; it is not a clean locked install or Node22 proof.",
+    "IndexedDB upgrade and CAS use fake-indexeddb, not native browser IndexedDB. No full suite, native, build or model commands run.",
+    "Three codec complexity signals remain: parseShot complexity21; parseMemoryPackage complexity26 and cognitive21. Their branch responsibility was reviewed; this sidecar writes no debt allowance and does not settle whole-gate policy.",
+    "Raw world-setting malformed-prose save conflicts by existing writer policy. Normalized display recovery does not repair raw storage or grant CAS eligibility.",
+    "Unused evidence adopts frozen scoped full/test Knip and actual current symbol search; no independent whole production/full unused gate rerun or formal gate self-test execution."
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "purpose": "Accepted root-source serial attribution only; not artifact/spec integrity, native behavior, final batch acceptance or QG01 proof",
+  "acceptedThrough": "E07",
+  "comparisonTarget": "actual working tree",
+  "units": [
+    {
+      "unit": "E01",
+      "snapshotSHA256": "a2f51cae8c423295f9e0cde2fb6863104afd0e0c8847a0752f3f1cdd3e14eed0",
+      "changedFileCount": 17,
+      "serialBeforeMismatches": [],
+      "explicitExpandedBeforeClosure": []
+    },
+    {
+      "unit": "E02",
+      "snapshotSHA256": "1e535bf225fbdb14f267d49cf2f8c8e3132e4341e31ec570813164f6557f63f0",
+      "changedFileCount": 10,
+      "serialBeforeMismatches": [],
+      "explicitExpandedBeforeClosure": []
+    },
+    {
+      "unit": "E03",
+      "snapshotSHA256": "fa8b19c79ffb10ff569125016cffe7ece0051439e989f6a0cbc21c18f2787447",
+      "changedFileCount": 9,
+      "serialBeforeMismatches": [],
+      "explicitExpandedBeforeClosure": []
+    },
+    {
+      "unit": "E04",
+      "snapshotSHA256": "8a9333f12bdf1825736b7b0c2000b25d36921a269d04da0c3e1a98f29ee78ece",
+      "changedFileCount": 43,
+      "serialBeforeMismatches": [],
+      "explicitExpandedBeforeClosure": []
+    },
+    {
+      "unit": "E05",
+      "snapshotSHA256": "120c79cb2df775166438ba8e7269fc67c6a9ccec8f2eacd7a9905fdd955ebfd3",
+      "changedFileCount": 8,
+      "serialBeforeMismatches": [],
+      "explicitExpandedBeforeClosure": []
+    },
+    {
+      "unit": "E06",
+      "snapshotSHA256": "2ff2d72efa3a42f42b33ca5ca128fb3918e050f9289ee36dcf1f076a739487da",
+      "changedFileCount": 16,
+      "serialBeforeMismatches": [],
+      "explicitExpandedBeforeClosure": []
+    },
+    {
+      "unit": "E07",
+      "snapshotSHA256": "c74f45907aa0f47dbd05cc7612cf483ebee1c4031f88033c202d1b78161a2ec1",
+      "changedFileCount": 155,
+      "serialBeforeMismatches": [],
+      "explicitExpandedBeforeClosure": [
+        {
+          "path": ".github/workflows/ghcr.yml",
+          "sha256": "9ceb9734ede425ee6e3eb92f86118e6b385a7d6735c3ed52cb43231ae2f29eae",
+          "preservedBeforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/E07-before/.github/workflows/ghcr.yml"
+        },
+        {
+          "path": "package.json",
+          "sha256": "894cca99189d6e0535ed623d3e4d702868adcc3d4afef27a141b7e7da176033b",
+          "preservedBeforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/E07-before/package.json"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "c989c9f9af4da94f0483606f9a4f0d4756136fb01e30640757bd7c0248ed31b4",
+          "preservedBeforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/E07-before/pnpm-lock.yaml"
+        },
+        {
+          "path": "vitest.config.ts",
+          "sha256": "43cadebafe94fb30ee57f97fa171989fbcecb8dfe41bffdaec31aea104808cd4",
+          "preservedBeforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/E07-before/vitest.config.ts"
+        }
+      ]
+    }
+  ],
+  "expectedCurrentInputs": 808,
+  "currentInputs": 808,
+  "errors": []
+}

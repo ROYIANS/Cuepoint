@@ -138,3 +138,59 @@ The full vendor icon catalog is a separate lazy module behind `ModelIcons`; keep
 ## Execution and turn navigation
 
 See [Agent Activity UI](./agent-activity-ui.md). Timers live in a small label component, never the list. Manual disclosure, required-action navigation and turn jumps pause automatic following. The rail derives active position inside its own component; it must not put per-scroll state into MessageList or remount message bodies. Keep batch review surfaces mounted while process content is hidden.
+
+## E02 responsive conversation cascade (2026-10-09)
+
+### 1. Scope / Trigger
+Read before changing agentChat.css message/composer gutters, 767/768 breakpoint, safe area, expanded composer or turn rail.
+
+### 2. Signatures / Owners
+ChatWorkspace retains desktop inline variables `--agent-chat-safe-x`/`--agent-content-max` and measured `--agent-chat-composer-safe`. agentChat.css owns winning narrow overrides; MessageList scroll and TurnNavigation retain existing specialized rules.
+
+### 3. Contracts
+At width ≤767px, final computed message/dock horizontal padding is8px, `.agent-content` max-width none and horizontal margins0, dock bottom padding `max(12px, env(safe-area-inset-bottom, 0px))`. At768px and desktop preserve16px gutters/800px content maximum and16px dock bottom padding. Narrow rules must win against later same-specificity shorthand/base rules. Preserve header hamburger clearance44px, last-line composer/scroll clearance, the more-specific turn rail24px gutter, and expanded composer full-column padding0/max-width none.
+
+### 4. Validation / Error Matrix
+390/767 native zero-inset →8px/12px/no800px cap.768/desktop →16px/16px/800px cap. Narrow nonzero-inset surrogate32 →32px with actual max/cascade evaluated. Expanded mode → full column, underlying message surface inert. Long history → last paragraph above dock and no document horizontal overflow. Turn rail → dedicated24px gutter preserved.
+
+### 5. Good / Base / Bad Cases
+Good: winning responsive rules after the relevant base declarations, with specialized expanded/rail selectors preserved. Base: desktop variables remain unchanged. Bad: inspect an early media block without checking later shorthand/max-width declarations, or strengthen specificity globally and break expanded mode.
+
+### 6. Tests Required
+Actual ChatWorkspace computed styles/geometry at390/767/768/1440, final message scrolling, expanded composer, turn rail and screenshots. Baseline source counterfactual reproduces overwritten narrow styles. This installed Chromium exposes native safe-area bottom0 and does not support CDP setSafeAreaInsets; label32px env-to-custom-property testing as a CSS surrogate, never real iOS/device evidence.
+
+### 7. Wrong vs Correct
+Wrong: assume an early media query wins because viewport matches. Correct: assert final computed properties after the whole cascade, including shorthand, inline variables and specialized selectors.
+
+
+## E06 demand icon loading and measured root contracts
+
+Independent review accepted on 2026-10-09.
+
+### Scope / Trigger
+
+Apply when changing agent model/provider icons, rich-transcript loading or measuring actual root loading. Empty welcome/composer and current lazy transcript/run owners remain unchanged.
+
+### Signatures / Owners
+
+ModelIcons retains publisher props and dimensioned decorative Suspense. DemandModelIcons owns matching and dispatch; generated mapping data owns ordered keywords/props and literal brand loaders; e06-icon-data owns deterministic publisher AST extraction and upgrade checks.
+
+### Contracts / Invariants
+
+Preserve complete first-match regex/exact-provider order, mapped→caller precedence, size12/avatar defaults, original distinct fallback components, compound variant precedence and exact lobehub/forceMono behavior. Cache one lazy component per current brand. Use actual publisher compounds and avoid vendor patching or renderer clones.
+
+### Validation / Error Matrix
+
+Verify defaults/unknowns/mixed case/overlap/all types/caller size-shape-style-color-title, non-SVG brands, delayed decorative dimensions and retained composer/run ownership. Rich cases preserve clipboard, unknown fences, links/table/math/diagram/reasoning and manual/pinned stream following.
+
+### Good / Base / Bad Cases
+
+Good: complete data-only matching plus matched brand modules, verified on actual root. Base: rich library/highlighter cost remains explicitly measured. Bad: infer load from a dynamic declaration, narrow matching to popular brands, add overlapping scenario totals, or infer latency from bytes.
+
+### Tests Required
+
+Generator --check/data-order tests, application/fixture typing, full publisher identity and native render parity, four cold actual-root body/graph/union measurements, and bounded fresh native critical cases. Freeze producer/source/physical module/asset/body inputs; preserve failures and route/scanner qualifications.
+
+### Migration / Limits
+
+Publisher upgrades require version/renderer/AST-generation/subpath review and native parity. Decoded body/gzip/wire/timing scopes differ; initial scanner conditions and effective generated route bytes must be explicit. The 2,896,549-byte picker reduction does not prove rich-history or latency optimization. Temporary typed diagnostics are not formal debt acceptance.

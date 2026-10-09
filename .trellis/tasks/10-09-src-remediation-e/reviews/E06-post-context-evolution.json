@@ -1,0 +1,19 @@
+{
+  "purpose": "ActualE06historicalhashmapafterE07activation/toolinstall; notclaimzerohistoricalcurrentinputdrift",
+  "changes": [
+    {
+      "scope": "evidence",
+      "intentionalMutablePathDrift": []
+    },
+    {
+      "scope": "seal",
+      "intentionalMutablePathDrift": []
+    }
+  ],
+  "attribution": [
+    "research/E06-spec-sync.json",
+    "research/E07-context-activation.json",
+    "research/E07-entry.json"
+  ],
+  "note": "Source/type/whitespace finalaccepted roots unchanged. Package/lock intentionallyupdatedatE07; original E06 allreports/body/sourcecopies remainimmutable. Historicaldeclaredrawcurrentinput hashes are historical at nextunit."
+}

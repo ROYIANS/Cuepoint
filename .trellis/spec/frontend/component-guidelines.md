@@ -208,3 +208,56 @@ Use the real command/controllers and actual module mock identities. Cover reposi
 Every moved owner has an actual caller. `productionContext.ts` and `generationIntent.ts` receive comment-only historical boundary markers. Their bodies/public APIs are unchanged, and their only current value consumers are the two corresponding test files; the latter also type-imports `ProductionContext`. They are not claimed as active production owners. Active paid/resumable execution remains in the existing agent runtimes; E07 separately owns dead-export/reference cleanup. The audio persistence root also retains pre-existing parse/remap compatibility exports without inventing consumers; the project codec calls the pure audio codec directly. No D04 context snapshot, D05 schema/serializer, D06 capability, D07 transport or D08 text-draft contract is advanced by D03. Existing page/import/keyboard complexity remains explicitly measured; improved inherited metrics are not a claim of a clean formal static gate. Browser fixtures use controlled local transport, with zero external/provider requests, and do not establish full live-provider E2E coverage.
 
 Shot and beat scalar text uses `TextDraftField` through `ShotTextField`/`BeatTextField`; see `state-management.md` D08. Key the captured persistence callback by project/entity/field, retain immediate local text and visible retry/latest state, and preserve existing duration/relationship/slot/reorder owners. Pending missing/virtualized rows retain readability and existing route/backup barriers.
+
+## E01 manual editor departure ownership (2026-10-09)
+
+### 1. Scope / Trigger
+Manual dialogs/sheets whose draft must survive Escape, dismissal, owner replacement and route history changes; pending mutations must retain their owning UI. Source contracts live in `src/lib/useManualDraftGuard.tsx`.
+
+### 2. Signatures
+`ManualDraftState = {dirty: boolean; pending: boolean; routeDirty?: boolean; routePending?: boolean}`. `ManualDraftDeparture = (leave: () => void, discard?: () => void | Promise<void>) => void`. `useManualDraftDeparture(dirty, pending, onDiscard, {readState?, route?})` returns stable `requestDeparture` and JSX `confirmation`. `useManualDraftGuard(dirty, pending, onDiscard)` retains its route-only JSX API.
+
+### 3. Contracts
+Freeze the editor opening identity, revision and input baseline. Publish current dirty/pending through synchronous refs before close/duplicate actions, not only passive effects. Clean/reverted input can leave; dirty input requires explicit continue/discard; pending cannot discard. Local child actions reuse the owner's arbiter and may supply scoped discard, preserving unrelated pending editors. The first local request freezes its discard/leave callbacks; a later POP is reset before the original local departure completes. Same-path search retains the owner; an actual same-path owner replacement still needs local interception. Optional route flags delegate a nested editor's existing route blocker without relinquishing local parent ownership. Effects use the stable destructured `requestDeparture`, not an unstable returned object. Restore connected focus/scroll; call caret APIs only for numeric non-null selection bounds supported by the original input/textarea.
+
+### 4. Validation / Error Matrix
+| Trigger | Outcome |
+| --- | --- |
+| Clean opening or edit then revert | Leave without dirty prompt |
+| Dirty Escape/close/backdrop/SPA/POP | Continue retains exact draft and current owner; explicit discard may leave |
+| Pending save/upload/audition | Keep owner mounted; reject discard and duplicate submission |
+| Local confirmation followed by route attempt | Resolve one initiating request, reset overlapping router request |
+| Old async owner completion | Preserve original authorized persistence, suppress newer-owner UI/navigation publication |
+| Number/range/date/color/checkbox focus | No unsupported selection API call |
+
+### 5. Good / Base / Bad Cases
+Good: local close -> browser Back -> continue -> original draft remains; explicit discard resolves the original close. Base: an unchanged form closes immediately. Bad: clearing editing before departure resolves, treating every open form as dirty, or invoking setSelectionRange with null positions.
+
+### 6. Tests Required
+`tests/e01ManualDraftDeparture.test.ts` executes synchronous refs, stale callbacks, failure/retry and overlapping requests. `scripts/e01-drafts-browser-regression.mjs` executes actual Radix/TanStack/IndexedDB forms; preserve B01 compatibility when changing the shared guard. E01 independent supplements cover nested promotion and real goal/plan/CAS/delete ownership. Full E01 accepted input hashes and limits are in the E task's independent review.
+
+### 7. Wrong vs Correct
+Wrong: `void write(); close()` or a Dialog callback that unconditionally clears local editing. Correct: guard the frozen owner, await its command, retain rejected input, and close only its successful initiating session. Wrong: add the entire changing departure object to an effect. Correct: invoke/depend on its stable requestDeparture binding. Controlled Chromium evidence does not prove WebKit, OS unload UI or paid providers.
+
+## E02 topic keyboard action ownership (2026-10-09)
+
+### 1. Scope / Trigger
+Read before changing TopicSidebar row selection, rename/delete actions, focus visibility or menu targeting.
+
+### 2. Signatures / Owners
+`TopicRow` owns a noninteractive `.agent-topic-row` container and sibling native `button type="button"` controls: `.agent-topic-row-title` selects, `.agent-topic-row-action` renames/deletes. Existing TopicSidebar/AgentChatPage callbacks retain mutation/navigation/departure ownership.
+
+### 3. Contracts
+Row actions must be in the Tab order even when the row is inactive and unhovered. CSS reveals them on hover, active or `:focus-within`; every keyboard-focused control has a visible ring. Child Enter/Space activates only that native button and intended thread; it must not invoke row selection. The selection button retains native Enter/Space and pointer behavior. Actions are siblings, never interactive descendants of a row button. Preserve accessible names and pointer/context-menu target semantics. Explicit role attributes may support existing DOM-based test targeting; they do not replace native semantics.
+
+### 4. Validation / Error Matrix
+Inactive + unhovered + Tab → title focus reveals actions; next Tab reaches rename/delete. Child Enter/Space → correct target dialog, current selected thread and route unchanged. Title Enter/Space/pointer → intended selected thread without action dialog. Hover/active/context menu → existing visibility and intended owner. Failed/pending mutation → existing E01 owner guards remain responsible.
+
+### 5. Good / Base / Bad Cases
+Good: native sibling selection and action buttons, focus-within visibility. Base: inactive row initially hides action paint while retaining keyboard reachability. Bad: parent role-button handles bubbled keydown, child only stops click, or action DOM exists only on hover/active.
+
+### 6. Tests Required
+Real browser Tab from an external anchor into an unhovered inactive row, both activation keys for title/rename/delete, actual controlled dialogs/native persistence and selected-route assertions, hover/pointer/context menu, focus ring and E01 draft guard integration. Update old test targets to actual interactive buttons when semantics change, preserving assertions and timeouts. A programmatic callback behind an inert modal is limited callback integration evidence, not a physical pointer claim.
+
+### 7. Wrong vs Correct
+Wrong: put onSelect on a parent button-like row containing ActionIcon descendants and handle every bubbling key. Correct: make selection/actions independent native buttons and reveal actions from CSS focus ownership.

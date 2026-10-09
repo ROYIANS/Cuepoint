@@ -1,0 +1,142 @@
+{
+  "purpose": "Read-only E07 literal reference preparation while E04 implements disjoint owners; not Knip/reachability/unused or retirement acceptance",
+  "searchedFileCount": 669,
+  "exclusions": "vendor, test-owned sourceSnapshots, binary/generated data; actual final complete production/full unused graph and dynamic/barrel/namespace/config closure remain mandatory",
+  "rows": [
+    {
+      "owner": "src/lib/productionContext.ts",
+      "sha256": "f6b612e67a7fb9ebc0f3c15919db377dc6bf28a832093ed93648748a0c81c8b3",
+      "literal": "productionContext",
+      "matches": [
+        {
+          "path": "src/lib/generationIntent.ts",
+          "sha256": "9d5e5e59271d8797c0d3dd99b64f8ddf3c83418a0f53225b67b006b57cac2c5a",
+          "lines": [
+            {
+              "line": 18,
+              "text": "import type {ProductionContext} from \"@/lib/productionContext\";"
+            }
+          ]
+        },
+        {
+          "path": "tests/generationIntent.test.ts",
+          "sha256": "c03c09224608d0a3f02b56cb320d3de4a6b4a1ad6fa047a568f36e5f20b337b4",
+          "lines": [
+            {
+              "line": 7,
+              "text": "import { buildProductionContext } from \"@/lib/productionContext\";"
+            }
+          ]
+        },
+        {
+          "path": "tests/productionContext.test.ts",
+          "sha256": "95c6965ff3c744f4754ccfb712af1a9917545faa689caef90aeba587a4e84e82",
+          "lines": [
+            {
+              "line": 9,
+              "text": "import { buildProductionContext } from \"@/lib/productionContext\";"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "owner": "src/lib/generationIntent.ts",
+      "sha256": "9d5e5e59271d8797c0d3dd99b64f8ddf3c83418a0f53225b67b006b57cac2c5a",
+      "literal": "generationIntent",
+      "matches": [
+        {
+          "path": "src/lib/generationIntent.ts",
+          "sha256": "9d5e5e59271d8797c0d3dd99b64f8ddf3c83418a0f53225b67b006b57cac2c5a",
+          "lines": [
+            {
+              "line": 206,
+              "text": "export async function generationIntentToProposalInput(raw: GenerationIntent): Promise<{"
+            }
+          ]
+        },
+        {
+          "path": "tests/generationIntent.test.ts",
+          "sha256": "c03c09224608d0a3f02b56cb320d3de4a6b4a1ad6fa047a568f36e5f20b337b4",
+          "lines": [
+            {
+              "line": 8,
+              "text": "import { generationIntentToProposalInput, prepareGenerationIntent, transitionGenerationIntent, validateGenerationIntent } from \"@/lib/generationIntent\";"
+            },
+            {
+              "line": 94,
+              "text": "await expect(generationIntentToProposalInput(failed)).rejects.toThrow(\"完整成功\");"
+            },
+            {
+              "line": 97,
+              "text": "const input = await generationIntentToProposalInput(succeeded);"
+            },
+            {
+              "line": 101,
+              "text": "await expect(generationIntentToProposalInput(succeeded)).rejects.toThrow(\"已修改\");"
+            },
+            {
+              "line": 109,
+              "text": "await expect(generationIntentToProposalInput(done)).rejects.toThrow(\"素材\");"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "owner": "src/components/ui/separator.tsx",
+      "sha256": "5b4f751e250ab5089612d8b6fb161b05f9bca78774172bbea5991e589940c3b6",
+      "literal": "ui/separator",
+      "matches": []
+    },
+    {
+      "owner": "src/components/ui/skeleton.tsx",
+      "sha256": "85e4623260b5dcfb2fe972f9bb5ae1d49f6db56b0dc134682386e42e6ed4b9e5",
+      "literal": "ui/skeleton",
+      "matches": []
+    },
+    {
+      "owner": "src/lib/brand.ts",
+      "sha256": "d404089bdf1c77062b5b91b890af2cb767592a05436fb539464a156e98e004e0",
+      "literal": "LOGO_FAVICON_SRC",
+      "matches": [
+        {
+          "path": "src/lib/brand.ts",
+          "sha256": "d404089bdf1c77062b5b91b890af2cb767592a05436fb539464a156e98e004e0",
+          "lines": [
+            {
+              "line": 8,
+              "text": "export const LOGO_FAVICON_SRC = \"/brand/logo-256.png?v=20260922\";"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "owner": "src/lib/shotFilters.ts",
+      "sha256": "94d64aa312c47b28cc4b2df5e65ca85c74f63e4e410ff1de3e6140b04114c69f",
+      "literal": "shotBeatFilterId",
+      "matches": [
+        {
+          "path": "src/lib/shotFilters.ts",
+          "sha256": "94d64aa312c47b28cc4b2df5e65ca85c74f63e4e410ff1de3e6140b04114c69f",
+          "lines": [
+            {
+              "line": 4,
+              "text": "export function shotBeatFilterId(shot: Pick<Shot, \"beatId\">): string {"
+            },
+            {
+              "line": 19,
+              "text": "!filters.beatIds.includes(shotBeatFilterId(shot))"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    "Current literal refs productionContext/generationIntent are their definitions, mutualtypeedge and2meaningful test suites; no current runtime direct consumer found by this bounded literal search. This does not decide public/legacy contract retirement.",
+    "Separator/Skeleton literal import candidates require final aliases/barrel/namespace/config review before deletion.",
+    "Do not delete or retarget meaningful legacy tests just to make unused output green; retirement must explain whole contract and retained compatibility."
+  ]
+}

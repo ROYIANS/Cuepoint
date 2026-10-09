@@ -1,0 +1,21 @@
+{
+  "unit": "E06",
+  "documents": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/implement.jsonl",
+      "beforeSHA256": "f8871a10a1f410a6c5549d087edbceddad5a78bfa5c48eca11c285ba2b0759ef",
+      "afterSHA256": "00c26af13fd52be3916509a641671cfa7da33ab8921fd1ee633b045ea1b09d2a",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e06-activation-before/.trellis/tasks/10-09-src-remediation-e/implement.jsonl",
+      "rows": 11,
+      "contextBytes": 88397
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/check.jsonl",
+      "beforeSHA256": "bf27c5ff8f81e7904fb6f4c77245eb5c9e4cac0ebd95d43005e93f7f01caf0c4",
+      "afterSHA256": "8eec9eca006a41a80879f4deb08b58f579eeca2035615ca01fc1a5b4c1e31983",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e06-activation-before/.trellis/tasks/10-09-src-remediation-e/check.jsonl",
+      "rows": 12,
+      "contextBytes": 90362
+    }
+  ]
+}

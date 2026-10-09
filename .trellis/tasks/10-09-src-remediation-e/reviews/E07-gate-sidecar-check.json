@@ -1,0 +1,249 @@
+{
+  "status": "COMPLETED_SIDECAR_BLOCKING_FINDINGS",
+  "finalE07Acceptance": false,
+  "completedAt": "2026-10-09T08:39:58.586690+00:00",
+  "scope": {
+    "review": [
+      "scripts/quality-check.mjs",
+      "scripts/quality/**",
+      "current ESLint policy and bounded gate integration contracts"
+    ],
+    "authorizedProductWrites": [
+      "scripts/quality-check.mjs",
+      "scripts/quality/self-test.mjs"
+    ],
+    "reviewOutputs": [
+      "reviews/E07-gate-sidecar/**",
+      "reviews/E07-gate-sidecar-check.md",
+      "reviews/E07-gate-sidecar-check.json"
+    ],
+    "noOtherProductWrites": true
+  },
+  "findings": [
+    {
+      "id": "E07-GATE-SIDECAR-01",
+      "severity": "P2",
+      "status": "CONFIRMED_BLOCKING_SEMANTIC_IDENTITY_CONTRACT",
+      "file": "scripts/quality/identity.mjs",
+      "line": 23,
+      "mechanism": "ownerName anchors an anonymous direct call callback using only the callee semantic tokens. Sibling callbacks to the same callee inherit one semanticOwner, so a reviewed throw can move into a different callback at unchanged count/signature.",
+      "before": {
+        "semanticOwner": "FunctionDeclaration:flow/Callback:[[\"Identifier\",\"invoke\"]]",
+        "signature": "3c6b4ff23d849618154dee67c253e8eb865cfde7e3b8dcdb2f6d9caf5405c123",
+        "nodeTokens": [
+          [
+            "Identifier",
+            "value"
+          ]
+        ]
+      },
+      "after": {
+        "semanticOwner": "FunctionDeclaration:flow/Callback:[[\"Identifier\",\"invoke\"]]",
+        "signature": "3c6b4ff23d849618154dee67c253e8eb865cfde7e3b8dcdb2f6d9caf5405c123",
+        "nodeTokens": [
+          [
+            "Identifier",
+            "value"
+          ]
+        ],
+        "actualCLIExit": 0,
+        "expectedCLIExit": 1
+      },
+      "evidence": [
+        "reviews/E07-gate-sidecar/10-anonymous-first-unallowed",
+        "reviews/E07-gate-sidecar/11-anonymous-first-reviewed",
+        "reviews/E07-gate-sidecar/12-anonymous-sibling-transfer-should-fail"
+      ],
+      "recommendation": "Add a stable enclosing call/argument ownership identity that distinguishes different sibling semantic calls; reject ambiguous indistinguishable sibling callbacks as unanchorable rather than using line/ordinal. Independently fail moved callback debt and preserve formatting/relocation. No product edit authorized/performed."
+    },
+    {
+      "id": "E07-GATE-SIDECAR-02",
+      "severity": "P2",
+      "status": "CONFIRMED_BLOCKING_KNIP_EXIT_AUTHORITY",
+      "file": "scripts/quality/unused.mjs",
+      "line": 44,
+      "mechanism": "Knip exit 1 is accepted as reportable findings unconditionally; a configured treatConfigHintsAsErrors policy emits issues:[] and exits1, but wrapper sees no normalized findings and passes.",
+      "actualCLIExit": 0,
+      "expectedCLIExit": 1,
+      "productionToolExit": 0,
+      "fullToolExit": 1,
+      "rawFull": {
+        "issues": []
+      },
+      "stderrFull": "",
+      "recommendation": "Preserve nonzero Knip authority whenever normalized findings cannot account for the exit; distinguish actual findings whose exact reviewed contracts justify a pass from tool/config-hint failure. Add actual Knip treatConfigHintsAsErrors counterexample and retain raw stdout/stderr/exit."
+    },
+    {
+      "id": "E07-GATE-SIDECAR-03",
+      "status": "FIXED_IN_AUTHORIZED_SCOPE",
+      "severity": "P2",
+      "file": "scripts/quality-check.mjs",
+      "mechanism": "Unused contract external evidence was hash-checked during validation but absent from before/after inventory, so post-validation changes were not detected.",
+      "proof": {
+        "originalActualExit": 0,
+        "originalExpectedExit": 1,
+        "afterActualExit": 1,
+        "afterFailure": "inputs-changed-during-run",
+        "repairedExit": 0
+      },
+      "evidence": [
+        "33-original-producer-external-read-race-should-fail",
+        "31-external-change-after-validation-rejected",
+        "32-external-closure-race-repair-pass"
+      ]
+    }
+  ],
+  "producerEvolution": {
+    "capturedAt": "2026-10-09T08:38:09.123201+00:00",
+    "original": {
+      "scripts/quality-check.mjs": "7b114c41f6424d77542d1e787f4a9869fd5a41d52ff0101e85286c8987330bbb",
+      "scripts/quality/README.md": "4dde4ee472a770d30e8096e987c6fda6cfcc666d10fc8a2a80a075583dd7e2b6",
+      "scripts/quality/architecture.mjs": "714b7112caf557a004d27f15c8f4e779431dfea120427fa093fbc6eee925b3f3",
+      "scripts/quality/debt.schema.json": "0ddf6f0cb7819e89e88a3e2090483d22618055749fff0c45a8c90859d3f91abd",
+      "scripts/quality/identity.mjs": "3143cfd59f8ab94cdea49665de5fd3cd2654331e62471ed35bea88c586ac4ec9",
+      "scripts/quality/lint.mjs": "dec63514f032bb164a90bf5b3288c4a345653ec2b0431307a4de6cb518e5d62f",
+      "scripts/quality/self-test.mjs": "0711cb2297288506a69de546582d1099311e7082be2a21cd8cd44d449518ca4b",
+      "scripts/quality/shared.mjs": "0278f4c24b95e90c68d47f7fdb4646a888978f7e954d167d732bc94e8c95cbc2",
+      "scripts/quality/unused-contracts.schema.json": "07f0fe11c2bc74fd7f0ed1a5ec54c80248075adf7dbff66f06bef7db6a8502ef",
+      "scripts/quality/unused.mjs": "a6c1f28aec18f3dc4e17b13aa6e7b7e82a4ad8202edaa5eb3277ae86fcdce195"
+    },
+    "after": {
+      "scripts/quality-check.mjs": "dfff1ce20c7b190d55e073e5eee2351a6a7319bb7835e2983b9f8bc0b5bbf296",
+      "scripts/quality/README.md": "4dde4ee472a770d30e8096e987c6fda6cfcc666d10fc8a2a80a075583dd7e2b6",
+      "scripts/quality/architecture.mjs": "714b7112caf557a004d27f15c8f4e779431dfea120427fa093fbc6eee925b3f3",
+      "scripts/quality/debt.schema.json": "0ddf6f0cb7819e89e88a3e2090483d22618055749fff0c45a8c90859d3f91abd",
+      "scripts/quality/identity.mjs": "3143cfd59f8ab94cdea49665de5fd3cd2654331e62471ed35bea88c586ac4ec9",
+      "scripts/quality/lint.mjs": "dec63514f032bb164a90bf5b3288c4a345653ec2b0431307a4de6cb518e5d62f",
+      "scripts/quality/self-test.mjs": "a10e398d99a4213c05cf99983bf1a55054d4c52f9d2e87b7976736ded61e4760",
+      "scripts/quality/shared.mjs": "0278f4c24b95e90c68d47f7fdb4646a888978f7e954d167d732bc94e8c95cbc2",
+      "scripts/quality/unused-contracts.schema.json": "07f0fe11c2bc74fd7f0ed1a5ec54c80248075adf7dbff66f06bef7db6a8502ef",
+      "scripts/quality/unused.mjs": "a6c1f28aec18f3dc4e17b13aa6e7b7e82a4ad8202edaa5eb3277ae86fcdce195"
+    },
+    "changes": {
+      "scripts/quality-check.mjs": {
+        "before": "7b114c41f6424d77542d1e787f4a9869fd5a41d52ff0101e85286c8987330bbb",
+        "after": "dfff1ce20c7b190d55e073e5eee2351a6a7319bb7835e2983b9f8bc0b5bbf296"
+      },
+      "scripts/quality/self-test.mjs": {
+        "before": "0711cb2297288506a69de546582d1099311e7082be2a21cd8cd44d449518ca4b",
+        "after": "a10e398d99a4213c05cf99983bf1a55054d4c52f9d2e87b7976736ded61e4760"
+      }
+    },
+    "unchanged": [
+      "scripts/quality/README.md",
+      "scripts/quality/architecture.mjs",
+      "scripts/quality/debt.schema.json",
+      "scripts/quality/identity.mjs",
+      "scripts/quality/lint.mjs",
+      "scripts/quality/shared.mjs",
+      "scripts/quality/unused-contracts.schema.json",
+      "scripts/quality/unused.mjs"
+    ],
+    "scopeAuthorization": "Main directly authorized scripts/quality-check.mjs exact referenced evidence inventory and scripts/quality/self-test.mjs related temporary cases/strict throws tests; no other product paths changed by sidecar."
+  },
+  "original56Evidence": {
+    "caseCount": 56,
+    "allExitExpected": true,
+    "allInputProducerHashesVerified": true,
+    "all10OriginalProducerHashesMatchedOnEntry": true
+  },
+  "persistentAfterSelfTest": {
+    "status": "PASS",
+    "cases": 62,
+    "allExpectedExitsAndInputProducerHashes": true,
+    "producerUnchangedThroughout": true,
+    "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node scripts/quality/self-test.mjs --output .trellis/tasks/10-09-src-remediation-e/reviews/E07-gate-sidecar/self-test-after-inventory"
+  },
+  "additionalCounterexamples": {
+    "cases": 33,
+    "casesManifest": "reviews/E07-gate-sidecar/counterexamples-summary.json",
+    "confirmedResidualBlockers": [
+      "anonymous-sibling-transfer-should-fail",
+      "actual-knip-config-hint-error-should-fail"
+    ],
+    "fixedOriginalCounterexample": "original-producer-external-read-race-should-fail",
+    "correctedFixtureLimitation": "The bare catch/rethrow fixture emitted no only-throw-error but failed no-useless-catch. Observable handling case22 passes. Prior failed fixture retained."
+  },
+  "strictThrowPolicy": {
+    "allowThrowingAny": false,
+    "allowThrowingUnknown": false,
+    "allowRethrowing": true,
+    "exactFrameworkExemption": "Redirect from @tanstack/router-core",
+    "primaryInstalledRuleDefault": "only-throw-error defaults any/unknown/rethrow to true; current explicit root policy overrides any/unknown, so prior permissive evidence cannot prove strict unknown coverage.",
+    "verifiedCases": [
+      "raw-unknown-rejected",
+      "raw-any-rejected",
+      "new-any-rejected",
+      "caught-rethrow-observable-handler-pass",
+      "promise-caught-rethrow-allowed",
+      "unrelated-catch-rejected",
+      "exact-framework-redirect-allowed",
+      "unrelated-namesake-redirect-rejected",
+      "strict-unknown-narrow-debt-pass",
+      "strict-unknown-other-owner-rejected"
+    ]
+  },
+  "debtAndUnusedObservation": {
+    "currentReviewedDebtCount": 12,
+    "currentReviewedUnusedCount": 7,
+    "currentUnusedEvidenceAllMatch": true,
+    "currentDebtIdentityProducerUnchanged": true,
+    "externalEvidenceFiles": [
+      ".trellis/spec/frontend/audio-music.md"
+    ],
+    "concurrentMainShrinkObservation": "Main integration report02 rejected three obsolete E06 Playwright allowances; current unused contracts are7 after removing them. This is observed main work, not a root gate rerun or sidecar edit."
+  },
+  "coverage": {
+    "currentSourceTotal": 444,
+    "currentTSAndTSX": 421,
+    "declarations": [
+      "src/vite-env.d.ts",
+      "src/lib/references/mammoth.d.ts"
+    ],
+    "rootRuleExclusion": "Only src/routeTree.gen.ts omitted from src TS/TSX lint; generated ModelIconMapping.generated.ts is included. Vendor/node_modules/dist/.trellis exclusions are outside authored src lint glob.",
+    "originalActualCheckedFiles": 420,
+    "originalArchitectureOwnedFiles": 419,
+    "sourceScope": "All original completed producer files read in full. Current two authorized edits reviewed in full. Source workers and final whole E07 source acceptance remain main responsibility."
+  },
+  "reviewedInputHashes": {
+    ".trellis/spec/frontend/index.md": "5eae5786b9496dfd9c9199c56d3e0adf7793bebd49b32ab6141c144bd1d33284",
+    ".trellis/spec/frontend/directory-structure.md": "b3590f8b6b2d81762da7f713a6d62de59cdcad64b21c69f330848146b4ed7bbd",
+    ".trellis/spec/frontend/type-safety.md": "e238aa9e9af53b671bd79e850b352ccca544af2179e9ad9c18ee3014503f0746",
+    ".trellis/spec/frontend/quality-guidelines.md": "b6056b07c309dfcd76c9552f68848601efe0979280a21f328be216c1025f9cf6",
+    ".trellis/spec/guides/code-reuse-thinking-guide.md": "28f13937d7768e899ba18f42936debc80af7021ef2af43a8c0152653cad5dd43",
+    ".trellis/tasks/10-09-src-remediation-e/research/E07-execution-boundaries.md": "6c99cb5762b3ea2519cd807c16899bcd9438d2934d8931c4682a154d3cd83958",
+    ".trellis/tasks/09-30-src-quality-remediation/research/E07-quality-gate-contract.md": "586deeda008bb2759926b955b8498e2b06be30143518ce3dbcfe3e87964c516f",
+    ".trellis/tasks/10-09-src-remediation-e/research/E07-official-tooling-preparation.json": "cbe392010e098067ef722508ae800cd4ec7659970e3e188c51ad2e067c6190a2",
+    ".trellis/tasks/10-09-src-remediation-e/research/E07-official-documentation-verification.json": "1db875f2228ee20ab357a5567be70a27761add05b3cbb8676ebcd4c0a34b1b10",
+    ".trellis/tasks/10-09-src-remediation-e/research/E07-historical-baseline-import-closure-qualification.json": "b8b1abf422f0f3a3454d75b04f529eb4364ba6a175391c9110ad7868050a2bf5",
+    ".trellis/tasks/10-09-src-remediation-e/research/E07-rule-interpretation-preparation.json": "a17c5021fe462315019f151694cf3a820dd68326439c5cafdf0e9e24115b10f5",
+    ".trellis/tasks/10-09-src-remediation-e/research/E07-additional-rule-contract-preparation.json": "3a8a4a59a3784a58f0b570cb2fec0eaf2847b72596f4ce8d1c1796e7714d8a7c",
+    ".trellis/tasks/10-09-src-remediation-e/research/E07-architecture-rule-preparation.json": "cf8b983b955eec90e4ea3bd04097f20080d88a5766a058bfc514f9a84d413d72",
+    ".trellis/tasks/10-09-src-remediation-e/research/E07-retirement-symbol-preparation.json": "d9a0db1cb9a615773a75a7418bb8be074ab9735675ed3228e1bc3e274560edd0",
+    ".trellis/tasks/10-09-src-remediation-e/research/E07-diagnostic-identity-proof-contract.md": "556234994766e2dd0372f3a6d3e36dfd25300bfad297dd1c775b0ab6fb96e88e",
+    ".trellis/tasks/10-09-src-remediation-e/research/E07-historical-contract-test-interpretation.json": "90519be7197d46d6a9cc3d0ccdd1e36cce9ae1268dbe0932fdc1a8aa20350753",
+    ".trellis/tasks/10-09-src-remediation-e/research/E07-coercion-contracts.md": "cefc49c3fb2c986148e769f667b689702a48b4db37da6c359705d077390cf747",
+    ".trellis/tasks/10-09-src-remediation-e/research/E07-independent-check-contract.md": "f5284c521588871b5e02fe27ff09141017429b08202d31613d87be7043a57a62",
+    ".trellis/tasks/10-09-src-remediation-e/research/E07-publisher-pin-supplement.json": "e6f5cdc3b895420560810723278b9764b2814c5e26a3c2421057ba759274556c",
+    ".trellis/tasks/10-09-src-remediation-e/prd.md": "6d5494ea626cc7cb2bfb21f26cf4580890a069221a4f033dee5b4f1a2f44d148",
+    ".trellis/tasks/10-09-src-remediation-e/design.md": "654d8ef35d49e8e5afb69ba50bd43faf640bd558bf4a8b0c50080f6f0ea351b0",
+    ".trellis/tasks/10-09-src-remediation-e/implement.md": "5cda16b8ca17ab48fcf2017c41b7bfd99decc1dd636ce4333e75fbb79957f1d6",
+    "eslint.config.mjs": "d2851b0e467e5aa8957e974d0c7d227575212fad12cca8fa51f111415363807d",
+    "knip.json": "1bddf90de56af6dee7191fc6f52e44f7384590ef3a7f2a3dd0c471c274a615b1",
+    "quality/debt.json": "ed3d398761995b5668e5bfcd45fa6afacc46b75f6863a319e0524dad2e81c43f",
+    "quality/unused-contracts.json": "f3e428f4ffd261b9caf1dfba0558f31a6122f21287a39ef568af9c5c812a90b1",
+    "tsconfig.app.json": "c40f7db8652b3433532289c87edd6898d4de984614f8a99dcf7bfbd8856e3bb3",
+    ".trellis/spec/frontend/audio-music.md": "84c25cff00c0f0dd8eae4420e422ed20c2f729b6495c953801a81fdec568135f",
+    ".trellis/tasks/10-09-src-remediation-e/research/E07-gate-implementation.md": "b17138b43547b338ad928edd1045d21ff332850483c0e20faedad3443931ea6c",
+    ".trellis/tasks/10-09-src-remediation-e/research/E07-gate-implementation.json": "7af3376b552dd5bdeee6a62588627bdc2ba6480427586283874579e2792fb4e3",
+    ".trellis/tasks/10-09-src-remediation-e/research/e07-gate-implementation/self-test-08/summary.json": "147d940984393c80856c547b7a0fef40015b93edf663b553cb8df78ccae0b8d7"
+  },
+  "failuresAndLimits": [
+    "Original setup runner used six parents instead of five, resulting in ERR_MODULE_NOT_FOUND; corrected only owned runner, retained setup-failure-01.json.",
+    "Ancestor send_message_to_thread delivery is unavailable for a native ancestor; early findings were instead recorded in owned report/artifacts and commentary.",
+    "No package install, full application suite, model verification, build, browser, CI, task/spec/status/ledger/git action performed.",
+    "Node v24.11.0 bounded execution; no Node22 clean-install claim.",
+    "Current main source/config/debt integration is concurrent. Root current-source final acceptance is outside this sidecar.",
+    "Persistent62-case green proof does not cover/fix the two new confirmed producer blockers; their retained actual CLI counterexamples remain required follow-up."
+  ]
+}

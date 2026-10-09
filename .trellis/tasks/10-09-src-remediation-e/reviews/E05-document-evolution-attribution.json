@@ -1,0 +1,35 @@
+{
+  "unit": "E05",
+  "snapshotSHA256": "120c79cb2df775166438ba8e7269fc67c6a9ccec8f2eacd7a9905fdd955ebfd3",
+  "intentionalDocumentEvolution": [
+    {
+      "path": ".trellis/spec/frontend/hook-guidelines.md",
+      "acceptedBeforeSHA256": "45dcda05a795c6bc59c50a048569b74162e9ad514653406fbd0750097cd5fe1c",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e05-spec-sync-before/.trellis/spec/frontend/hook-guidelines.md",
+      "beforeCopySHA256": "45dcda05a795c6bc59c50a048569b74162e9ad514653406fbd0750097cd5fe1c",
+      "currentSHA256": "92c25d1fa502bed3c1d4601502adda361c8e6a5491c24be2bf243a12cc45e2b6",
+      "acceptedBeforeCopyMatches": true,
+      "reason": "AcceptedE05canonical/checklist/next-unitcontext sync"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/check.jsonl",
+      "acceptedBeforeSHA256": "bf27c5ff8f81e7904fb6f4c77245eb5c9e4cac0ebd95d43005e93f7f01caf0c4",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e06-activation-before/.trellis/tasks/10-09-src-remediation-e/check.jsonl",
+      "beforeCopySHA256": "bf27c5ff8f81e7904fb6f4c77245eb5c9e4cac0ebd95d43005e93f7f01caf0c4",
+      "currentSHA256": "8eec9eca006a41a80879f4deb08b58f579eeca2035615ca01fc1a5b4c1e31983",
+      "acceptedBeforeCopyMatches": true,
+      "reason": "AcceptedE05canonical/checklist/next-unitcontext sync"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/implement.md",
+      "acceptedBeforeSHA256": "9951a393d67d1c7a380714516674293548d4869ec34881a75ac85b104fa9466d",
+      "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e05-spec-sync-before/.trellis/tasks/10-09-src-remediation-e/implement.md",
+      "beforeCopySHA256": "9951a393d67d1c7a380714516674293548d4869ec34881a75ac85b104fa9466d",
+      "currentSHA256": "8b5adb94e603cd7ca231a825a81bded1b49541d60e4f3fe53985797caf7e7cac",
+      "acceptedBeforeCopyMatches": true,
+      "reason": "AcceptedE05canonical/checklist/next-unitcontext sync"
+    }
+  ],
+  "sourceAndOriginalReportsDrift": [],
+  "note": "Exact accepted metadata preserved before purposeful post-acceptance updates; no claim of zero document drift."
+}

@@ -1,0 +1,61 @@
+[
+  {
+    "name": "d01-native",
+    "archivedRunnerPath": ".trellis/tasks/archive/2026-10/10-08-src-remediation-d/reviews/D01-native-regression.mjs",
+    "referencesNeedingReview": [],
+    "policy": "Do not mutate accepted archived runner. If needed create E-owned derivative and verify exact changed paths against source runner before running future integration."
+  },
+  {
+    "name": "d02-cascades-native",
+    "archivedRunnerPath": ".trellis/tasks/archive/2026-10/10-08-src-remediation-d/reviews/D02-native-regression.mjs",
+    "referencesNeedingReview": [],
+    "policy": "Do not mutate accepted archived runner. If needed create E-owned derivative and verify exact changed paths against source runner before running future integration."
+  },
+  {
+    "name": "d02-d01-rollback-native",
+    "archivedRunnerPath": ".trellis/tasks/archive/2026-10/10-08-src-remediation-d/reviews/D02-native-d01-rollback.mjs",
+    "referencesNeedingReview": [],
+    "policy": "Do not mutate accepted archived runner. If needed create E-owned derivative and verify exact changed paths against source runner before running future integration."
+  },
+  {
+    "name": "d03-native",
+    "archivedRunnerPath": ".trellis/tasks/archive/2026-10/10-08-src-remediation-d/reviews/D03-native-regression.mjs",
+    "referencesNeedingReview": [],
+    "policy": "Do not mutate accepted archived runner. If needed create E-owned derivative and verify exact changed paths against source runner before running future integration."
+  },
+  {
+    "name": "d04-native",
+    "archivedRunnerPath": ".trellis/tasks/archive/2026-10/10-08-src-remediation-d/research/D04-native.mjs",
+    "referencesNeedingReview": [],
+    "policy": "Do not mutate accepted archived runner. If needed create E-owned derivative and verify exact changed paths against source runner before running future integration."
+  },
+  {
+    "name": "d05-native",
+    "archivedRunnerPath": ".trellis/tasks/archive/2026-10/10-08-src-remediation-d/reviews/D05-native.mjs",
+    "referencesNeedingReview": [],
+    "policy": "Do not mutate accepted archived runner. If needed create E-owned derivative and verify exact changed paths against source runner before running future integration."
+  },
+  {
+    "name": "d06-native",
+    "archivedRunnerPath": ".trellis/tasks/archive/2026-10/10-08-src-remediation-d/reviews/D06-native.mjs",
+    "referencesNeedingReview": [
+      "source = readFileSync(resolve(\".trellis/tasks/10-08-src-remediation-d/tools/d06/before\", relative), \"utf8\");",
+      "await writeFile(process.env.D06_NATIVE_REPORT_PATH ?? (process.env.D06_BASELINE_UI === \"1\" ? \".trellis/tasks/10-08-src-remediation-d/reviews/D06-native-original.json\" : \".trellis/tasks/10-08-src-remediation-d/reviews/D06-native.json\"), JSON.stringify(report, null, 2) + \"\\n\"); console.log(JSON.stringify(report));"
+    ],
+    "policy": "Do not mutate accepted archived runner. If needed create E-owned derivative and verify exact changed paths against source runner before running future integration."
+  },
+  {
+    "name": "d06-compiler-negatives",
+    "archivedRunnerPath": ".trellis/tasks/archive/2026-10/10-08-src-remediation-d/reviews/D06-compiler-negatives.mjs",
+    "referencesNeedingReview": [
+      "fs.writeFileSync(process.env.D06_COMPILER_REPORT_PATH ?? '.trellis/tasks/10-08-src-remediation-d/reviews/D06-compiler-negatives.json', JSON.stringify(report, null, 2) + '\\n');"
+    ],
+    "policy": "Do not mutate accepted archived runner. If needed create E-owned derivative and verify exact changed paths against source runner before running future integration."
+  },
+  {
+    "name": "d08-native",
+    "archivedRunnerPath": "scripts/d08-browser-regression.mjs",
+    "referencesNeedingReview": [],
+    "policy": "Do not mutate accepted archived runner. If needed create E-owned derivative and verify exact changed paths against source runner before running future integration."
+  }
+]

@@ -1,0 +1,41 @@
+{
+  "unit": "E03",
+  "baselineRevision": "1ecaf5ceec92e022c2b2b8d662e2a92e8eee36c7",
+  "purpose": "Review input inventory only; not independent acceptance",
+  "changedFiles": [
+    "scripts/e03-browser-regression.mjs",
+    "src/components/audio/story-workspace.css",
+    "src/components/audioMusic/workspace.css",
+    "tests/fixtures/e03/harness.tsx",
+    "tests/fixtures/e03/index.html",
+    "tests/fixtures/e03/tsconfig.json",
+    "tests/fixtures/sourceSnapshots/e03/provenance.json",
+    "tests/fixtures/sourceSnapshots/e03/story-workspace.css",
+    "tests/fixtures/sourceSnapshots/e03/workspace.css"
+  ],
+  "before": {
+    "scripts/e03-browser-regression.mjs": null,
+    "src/components/audio/story-workspace.css": "2144425bbc19a08d3826ecb4c9243e6de6452ec8951feaaaf585041991dcc90a",
+    "src/components/audioMusic/workspace.css": "ea0d1dddecc60a1f47f494c4e0e46b04a536fde3666beb02c4b2a79ddac7878c",
+    "tests/fixtures/e03/harness.tsx": null,
+    "tests/fixtures/e03/index.html": null,
+    "tests/fixtures/e03/tsconfig.json": null,
+    "tests/fixtures/sourceSnapshots/e03/provenance.json": null,
+    "tests/fixtures/sourceSnapshots/e03/story-workspace.css": null,
+    "tests/fixtures/sourceSnapshots/e03/workspace.css": null
+  },
+  "after": {
+    "scripts/e03-browser-regression.mjs": "7c76689dd2714c327c061f536c9a3865cb65d32a953a2f4b99006ec95de0f937",
+    "src/components/audio/story-workspace.css": "cd81cd3e25b56b06ef0db930fafd64a9254375a2ed54d9161624f85c79682dd5",
+    "src/components/audioMusic/workspace.css": "8f7488ef9aa6dfec644c490481908f89ec401681f6a1bc3b9aa26cc2d5567a19",
+    "tests/fixtures/e03/harness.tsx": "d8bf4eb98e01d5077ca0063973b95cb266df4f7e3868aa0dd25e685cd489464f",
+    "tests/fixtures/e03/index.html": "5bd015342e95e1d4b44b89726f85b9efb03be5af13e593be11c9a02618703caf",
+    "tests/fixtures/e03/tsconfig.json": "6ee34f5879e3e8c88cb22a9184bc73080cfb0c5bc791b614f5a4880413daafa9",
+    "tests/fixtures/sourceSnapshots/e03/provenance.json": "eeb3c0728c94d5bf669deab9b71513affacdf22b4781a85c3fcd78ec21d60e64",
+    "tests/fixtures/sourceSnapshots/e03/story-workspace.css": "2144425bbc19a08d3826ecb4c9243e6de6452ec8951feaaaf585041991dcc90a",
+    "tests/fixtures/sourceSnapshots/e03/workspace.css": "ea0d1dddecc60a1f47f494c4e0e46b04a536fde3666beb02c4b2a79ddac7878c"
+  },
+  "entrySnapshot": ".trellis/tasks/10-09-src-remediation-e/research/E03-entry.json",
+  "sourceFileCount": 442,
+  "testRunnerFileCount": 276
+}

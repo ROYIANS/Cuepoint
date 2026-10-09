@@ -1,0 +1,13 @@
+{
+  "purpose": "Preserve actualfirstNode22cleaninstall command success but refuse finalcurrentPASS after intentionalindependentrebasecorrection. No rawsummaryedited.",
+  "rawSummary": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-node22-clean-01/summary.json",
+  "rawSummarySHA256": "538b7dd44daff7b596d20c3bbe181efa0d2a2271c581cfa87f96a9e072fd8756",
+  "all9commandsPassed": true,
+  "actualRuntime": "v22.21.1",
+  "lockUnchanged": true,
+  "mirrorInputsUnchanged": true,
+  "changedRootInputs": [
+    "src/lib/debouncedDraft.ts"
+  ],
+  "reason": "Reviewer H-SUP-01 actualrebasebehaviorregression discoveredwhileisolatedcopyran; currentrootcorrected. Originalcleanmirror has priorbytes and3026testsPASS, cannotrepresentfinalroot. Newpermanentfixture/scripts and13thpreciseHookallowance requirefreshcurrentNode22gatesafterfreeze."
+}

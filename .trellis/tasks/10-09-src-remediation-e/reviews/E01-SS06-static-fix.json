@@ -1,0 +1,429 @@
+{
+  "date": "2026-10-09",
+  "status": "SS06_STATIC_FIX_PASS",
+  "integratedE01Acceptance": false,
+  "scope": "E01 SS06 mechanical static fixes and associated real-native error observation",
+  "corrections": [
+    {
+      "path": "src/components/studio/ProjectGalleryPage.tsx",
+      "unit": "E01/SS06",
+      "beforeSha256": "945f07573b7535eee1326c0ff08e50627ccf2152e32069540c14311add186034",
+      "afterSha256": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+      "reason": "Mechanical local labels; no nested conditional; unchanged text/priority/business handlers"
+    },
+    {
+      "path": "src/components/workspace/EpisodeListPage.tsx",
+      "unit": "E01/SS06",
+      "beforeSha256": "a881f4c4f1f2e375a03135ae2df50379358d2b1404e184b3b3afc0a22d907ed9",
+      "afterSha256": "601fe123c44ca98ff66e4ab00c22fc825b55f3101ef181ab1681ccf1ac3dde51",
+      "reason": "Mechanical local labels; no nested conditional; unchanged text/priority/business handlers"
+    },
+    {
+      "path": "scripts/e01-writes-browser-regression.mjs",
+      "unit": "E01/SS06",
+      "beforeSha256": "5133e571fa553b7b5c09e5499d253d68a56f5295addaf67f70dc35c9be30b0d2",
+      "afterSha256": "14f937c95d7bdc64f5c4806a220c73275f5879b385bad972c7f2a39de8af3bcf",
+      "reason": "Native new error toast observation without stale identical toast ambiguity"
+    }
+  ],
+  "preservedEvidence": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E01-entry.json",
+      "sha256": "1959c8e74f91cada6099a3542e7817f3ee6a2c2a25b9ad87cb95b44bf67c280c"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E01-writes-implementation.json",
+      "sha256": "a10e9c84cfe4a47e49bd22adb95629d4269f28b6e3fabc4a0a610c953446220d"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E01-writes-implementation.md",
+      "sha256": "007112db3e879c417629beba8219a85e38574e29d1d68a1e4d4b093bba6b00dd"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/focused-tests.log",
+      "sha256": "e59df6e1ea7bb4f53842577ad8ffac28a57628a651aa55f028a89374aef2cb05"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-1-failure/calls.json",
+      "sha256": "84cd24f11870a544d00b298f12ddb3e4d5df82680ca7c7348fa9f0387afd16b8"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-1-failure/failure.html",
+      "sha256": "59fc6f6ab3148ac5fa6e67c4bb93a8231879d857e612b0f891a3c174f4855244"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-1-failure/failure.png",
+      "sha256": "68eeb4198b3d9a0058311da2bb06b4766d85bd75ef3938d6e3fc34f59a3b92cd"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-1.log",
+      "sha256": "8a1de6ee83469e20ef0602f9f3fd958ec19edd68ce7eb856468cdd45a7b37764"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-2.log",
+      "sha256": "a2991cda64bb8f8104ba91ffd194c2044fe32529095ef4d5ae71379c4386cea6"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-3.log",
+      "sha256": "918623407e70ef9ee37ac568c0991bfcbdcb3d76137505e48e70dd3529238d8a"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-final.log",
+      "sha256": "b6244d64bd2aa47ff7c757c46542a4ba53047632a54a814b668c8a072db828b1"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/typecheck-final.log",
+      "sha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/typecheck.log",
+      "sha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/verification-inputs.json",
+      "sha256": "3358e70b330eb786bc075bd9d8cc1b1777c58fbcc223e54be86cf95e43476700"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E01-SS06-check.json",
+      "sha256": "365d3726696aafde690cca8c0cf57c609251ab7f1ccc8a7d19c72d28dc49e42b"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E01-SS06-check.md",
+      "sha256": "b9caeabc2c38054835488a504493ae8ad09a2a833ce571f88c02924ac0a08472"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/focused-tests.log",
+      "sha256": "923c1a70f37769c28f5694eea486131da5ef7201abba4128c6824c19fcfc6772"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-original20.log",
+      "sha256": "2a8f53fd11f187bdf04e36b227274742d20c57fe63be0ecdcd082bfc13a247f3"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt1-failure/calls.json",
+      "sha256": "56704038bd86988203f25fa1b4419c10dd0ef8ed82add8b1ba3808021b0c4582"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt1-failure/failure.html",
+      "sha256": "7737bd6f948ff51567a939532c04ea286491598bfaa0b7250c907a8ee91b4b5a"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt1-failure/failure.png",
+      "sha256": "9507c5e6481fc81a0da6c4cdc3b9d49c328264bec9bbf3af43e23356c1995eb5"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt1.log",
+      "sha256": "731130ecbf20cc2961fd6fd92a192949ce2b7c869f905c3825bbf592020c4d07"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt1.mjs",
+      "sha256": "f493e4b82188949b0decaccaaca6b218616d1fb18d426de644a16e40421563f7"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt2-failure/calls.json",
+      "sha256": "b218306a27fa9a2fc84bb087657598842af10df9d676a648ae9c8f18ad30859e"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt2-failure/failure.html",
+      "sha256": "3e869e646889a6b48ccaa9fddc02d7e05c57adf23871708db23f1adfa7c952f7"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt2-failure/failure.png",
+      "sha256": "b8ca76a4347790b0024901e25b1e9a140a61382eb23bc24c7a299175aeebefd4"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt2.log",
+      "sha256": "9b6a0c6b098d41256bbffd28a268d20a7f61d819bcb0e304fd8ede778f1c2155"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt2.mjs",
+      "sha256": "c7c7ebf95e02295314b01bb4d6b03965fec0c7d77182b4a6e2f10bb8d3a3d6e1"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt3.log",
+      "sha256": "2e19e45f822ec0ab3a5816c1eb55c24ade958074273213d9e753deb93028b83f"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-results.json",
+      "sha256": "b893fda0d6eb18df6bb0f28fb3b7eeecba682ed7a45173dff3924d5a948c5947"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement.mjs",
+      "sha256": "9375cd42c209940e88c99425ac704dd3f2f0bcc3214f7e348ce0b4d9c86cc7d8"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/review-entry.json",
+      "sha256": "40b39c5b7b5226dfed8a858e8072e532141cd5c1bb86d1f2332528cb5a3c7954"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/typecheck.log",
+      "sha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa"
+    }
+  ],
+  "preservedByteIdentical": true,
+  "complexity": {
+    "baseline": 27,
+    "fixEntry": 31,
+    "final": 31,
+    "cognitiveChanged": false,
+    "deltaResponsibility": [
+      "rename inline error render",
+      "rename pending caption",
+      "delete inline error render",
+      "delete pending caption"
+    ],
+    "formalDebtAcceptance": false
+  },
+  "static": {
+    "scope": "SS06 only, two modified files; canonical unchanged rules; current complete-source TypeScript parser project",
+    "hashes": {
+      "src/components/studio/ProjectGalleryPage.tsx": {
+        "before": "945f07573b7535eee1326c0ff08e50627ccf2152e32069540c14311add186034",
+        "after": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b"
+      },
+      "src/components/workspace/EpisodeListPage.tsx": {
+        "before": "a881f4c4f1f2e375a03135ae2df50379358d2b1404e184b3b3afc0a22d907ed9",
+        "after": "601fe123c44ca98ff66e4ab00c22fc825b55f3101ef181ab1681ccf1ac3dde51"
+      }
+    },
+    "versions": {
+      "eslint": "9.39.5",
+      "typescript-eslint": "8.71.1",
+      "eslint-plugin-react-hooks": "7.1.1",
+      "eslint-plugin-sonarjs": "3.0.7",
+      "typescript": "5.9.2"
+    },
+    "configPath": "/Users/xiaomengdao/.cache/cuepoint-source-quality-tools/eslint.config.mjs",
+    "configSha256": "71fec4e76e3e26f5e21e6412d7847a5c7e0b8e828af4fba41237351faa24ccce",
+    "added": [],
+    "removed": [
+      {
+        "file": "src/components/studio/ProjectGalleryPage.tsx",
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 275,
+        "column": 48,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 275,
+        "endColumn": 122
+      },
+      {
+        "file": "src/components/studio/ProjectGalleryPage.tsx",
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 413,
+        "column": 30,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 413,
+        "endColumn": 92
+      },
+      {
+        "file": "src/components/workspace/EpisodeListPage.tsx",
+        "ruleId": "no-nested-ternary",
+        "severity": 1,
+        "message": "Do not nest ternary expressions.",
+        "line": 149,
+        "column": 94,
+        "nodeType": "ConditionalExpression",
+        "messageId": "noNestedTernary",
+        "endLine": 149,
+        "endColumn": 161
+      }
+    ],
+    "addedNoncomplexity": []
+  },
+  "commands": [
+    {
+      "command": "node scoped-static.mjs (explicit machine Node; full command in log provenance)",
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/scoped-static-final.log",
+      "removedNestedWarnings": 3,
+      "addedDiagnostics": 0
+    },
+    {
+      "command": "E01_PLAYWRIGHT_PATH/E01_CHROMIUM_PATH + explicit Node scripts/e01-writes-browser-regression.mjs",
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/native-final-attempt3.log",
+      "cases": 20,
+      "pageErrors": 0
+    },
+    {
+      "command": "explicit machine pnpm lint",
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/typecheck-final.log"
+    },
+    {
+      "command": "explicit machine pnpm focused SS06 suite as prior review",
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/focused.log",
+      "files": 9,
+      "tests": 120
+    }
+  ],
+  "failedAttempts": [
+    {
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/native-final.log",
+      "exitCode": 1,
+      "reason": "identical old/new toast strict-selector ambiguity",
+      "artifacts": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/native-final-attempt1-failure"
+    },
+    {
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/scoped-static-attempt1.log",
+      "exitCode": 1,
+      "reason": "review helper parser API error after static assertions had passed"
+    },
+    {
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/scoped-static-attempt3.log",
+      "exitCode": 1,
+      "reason": "review helper removal-count assertion needed three after actual extra nested expression repair"
+    },
+    {
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/native-final-attempt2.log",
+      "exitCode": 1,
+      "casesBeforeFailure": 18,
+      "reason": "Vite evidence HTML write triggers page reload and optimizer dependency reload; controlled bridge disappears; no pass attribution",
+      "corrected": "Explicit hmr:false, ignored task/scripts/other fixture watches; main-document assertion; no existing assertions or timeouts weakened"
+    }
+  ],
+  "evidenceHashes": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/after/scripts/e01-writes-browser-regression.mjs",
+      "sha256": "14f937c95d7bdc64f5c4806a220c73275f5879b385bad972c7f2a39de8af3bcf"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/after/src/components/studio/ProjectGalleryPage.tsx",
+      "sha256": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/after/src/components/workspace/EpisodeListPage.tsx",
+      "sha256": "601fe123c44ca98ff66e4ab00c22fc825b55f3101ef181ab1681ccf1ac3dde51"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/before/scripts/e01-writes-browser-regression.mjs",
+      "sha256": "5133e571fa553b7b5c09e5499d253d68a56f5295addaf67f70dc35c9be30b0d2"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/before/src/components/studio/ProjectGalleryPage.tsx",
+      "sha256": "945f07573b7535eee1326c0ff08e50627ccf2152e32069540c14311add186034"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/before/src/components/workspace/EpisodeListPage.tsx",
+      "sha256": "a881f4c4f1f2e375a03135ae2df50379358d2b1404e184b3b3afc0a22d907ed9"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/correction.diff",
+      "sha256": "050aecb30ab0244e754ec8c9603f5b427fceea24c69e6b5aafeb676083ae1e63"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/entry.json",
+      "sha256": "442a900f035a1cb2a380e44f4b6b8bfb9f8a6fda4c555c9b960e605ab7eaff29"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/focused.log",
+      "sha256": "0fb3499a009e89de140ab3c496635626303a16a91aa6323272d588af56d6cdf7"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/gallery-complexity.json",
+      "sha256": "cdbc3e03aa0df32b7bb7c9eda7ead47a97219cf40444caf8cfe946ade50bf53f"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/main-input-E01-analysis-checkpoint.json",
+      "sha256": "9e1a77ae0814bc597e40427ec3fc71f4ad80d3134f7ffd428724550a9b3d1e4c"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/main-input-E01-static-results.json",
+      "sha256": "27ca141d9c78a898c6403de32f7b0087141acc39aeea2cc6ccd8780514fe7c8b"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/main-input-E01-static-summary.json",
+      "sha256": "5df1d415dbcdb753d6cf80c09b89d779b63755ecd0805d46b616d6e3fba7624b"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/native-final-attempt1-failure/calls.json",
+      "sha256": "2b20c42b0ecaa21471e115310969e4b7177c7efc448476cd33d7156bf58e952a"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/native-final-attempt1-failure/failure.html",
+      "sha256": "f05be83070373c113f88cbca1547608ef6f1d6bb9e075e3189a6a68e38175798"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/native-final-attempt1-failure/failure.png",
+      "sha256": "0916044dca3e9b6e6f8ea5b2a8d5083d7377efe7c0e34217f5b3f6fd269088d6"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/native-final-attempt2.log",
+      "sha256": "9c45630ec61031561c7d1d80bff0008f76277db23e6918276e46112267d1ef4e"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/native-final-attempt3.log",
+      "sha256": "93a5bd7f747a0dca3b71fe7e6908c163ff3d542f0c50233ab52256c87e8cf33e"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/native-final.log",
+      "sha256": "369106d01207d399e98cdc04232e2a9983644c36085539eb258ee0e3d540f481"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/native.log",
+      "sha256": "8ad71a222977a5dd62d91c5095e473b95f0038b966e83a197b82495d299d84f1"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/runner-before-isolation.mjs",
+      "sha256": "eb4ac2f08545a197e04fb69605a2f49400374e72da2df8edeceed59194220c9f"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/scoped-static-attempt1.log",
+      "sha256": "76b65d1827ba4e3f52d4f800a5dc40dc22634163282ba7d7c344426d35c3124b"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/scoped-static-attempt1.mjs",
+      "sha256": "25f880744ac1de15d423c2806bf2985a703d252cceeb969737530c500ec78305"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/scoped-static-attempt3.log",
+      "sha256": "efc79609667355f2ce610c1921652fe970154f8a2b0d1c50f400e04c8778054d"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/scoped-static-attempt3.mjs",
+      "sha256": "47aa45182cf1cec79abdb03888f3049a1105af0242aa1a022aa7d399aeb5f1ac"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/scoped-static-final.log",
+      "sha256": "6df82ba1d2fbe3b574564a9f8043e24acf43cc5ff27b2afb0b24f700fa99273b"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/scoped-static-results.json",
+      "sha256": "5f0b87dcec17cafb3dbcb89f7637d1127b7d2c1ba139843735921fd2900c9e83"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/scoped-static-summary.json",
+      "sha256": "062c6864e1aaf01d41e4083f703355c5b3010623a86659a969a577259e0e544b"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/scoped-static.log",
+      "sha256": "0c74c84ef647c8dbf2a6ba1ac5b9a5f3dfd2dd9275cb63e183649eabc1e0d3d5"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/scoped-static.mjs",
+      "sha256": "5c8ad8162daeacdc3f83690c5cf3c79ad5147e0514ce1b32cbb32111873312f3"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/typecheck-final.log",
+      "sha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06-static-fix/typecheck.log",
+      "sha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E01-SS06-static-fix.md",
+      "sha256": "e5b922e00d86209fa6eae7d6b660ebda17eb8909aae93fb169a609875064a3e8"
+    }
+  ],
+  "originalEvidenceUnchanged": true,
+  "taskStatusLedgerSpecsEdited": false,
+  "commits": false
+}

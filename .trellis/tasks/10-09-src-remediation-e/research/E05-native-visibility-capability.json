@@ -1,0 +1,30 @@
+{
+  "purpose": "Read-only capability probe; not click-spark implementation/test acceptance",
+  "browser": "151.0.7922.34",
+  "observations": [
+    {
+      "step": "initial",
+      "state": {
+        "hidden": false,
+        "state": "visible"
+      }
+    },
+    {
+      "step": "second page foreground",
+      "state": {
+        "hidden": false,
+        "state": "visible"
+      }
+    },
+    {
+      "step": "frozen then active",
+      "state": {
+        "hidden": false,
+        "state": "visible",
+        "events": []
+      }
+    }
+  ],
+  "pageVisibilityOverride": "cdpSession.send: Protocol error (Emulation.setPageVisibilityOverride): 'Emulation.setPageVisibilityOverride' wasn't found",
+  "limitations": "Frozen page lifecycle and tab foreground are not inferred equivalent to document.hidden; see actual observations."
+}

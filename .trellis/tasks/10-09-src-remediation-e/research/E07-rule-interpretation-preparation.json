@@ -1,0 +1,74 @@
+{
+  "purpose": "Read-only inspection before E07; no acceptance, no debt entries, no source fixes. Refresh full final source and inspect every surviving diagnostic at E07.",
+  "inputs": [
+    {
+      "path": "src/lib/agent/materialTools.ts",
+      "sha256": "4256632f8525af7d51f1ce11d06cc1576612e74cb1d9c2de8c05fd160a0e4db7"
+    },
+    {
+      "path": "src/db/materials.ts",
+      "sha256": "5a4fcef0b2421c79fa3c2a84b95c622fe19d91605f375276062406613919511c"
+    },
+    {
+      "path": "src/lib/debouncedDraft.ts",
+      "sha256": "c797901e5318743ca0f87b819067c18f7c3a384516efd87db832aa9f94355f09"
+    },
+    {
+      "path": "src/lib/agent/referenceEvidence.ts",
+      "sha256": "e8950b149b044d303b979762fcc6f7bb71bcc6e4d7b43ea02b4eb48f0c013208"
+    },
+    {
+      "path": "src/lib/packages/projectPackageCodec.ts",
+      "sha256": "132f14d352120fa732b4ae9b4148e4f5fdde4fd000116be43ded3c21e17402da"
+    },
+    {
+      "path": "src/components/agent/Grainient.tsx",
+      "sha256": "db22cb90bd5e220b7c8cda460ff3c76d5a7a3e3348106bc2c56d5a3b64355f09"
+    }
+  ],
+  "observations": [
+    {
+      "topic": "hooks-name candidates",
+      "files": [
+        "src/lib/agent/materialTools.ts",
+        "src/db/materials.ts"
+      ],
+      "evidence": "materialTools uses business helpers useResult/useState and imports DB useMaterialInProject, not proof of React Hooks usage. Inspect definitions and rename business operations consistently if still surviving; do not disable real Hooks rules."
+    },
+    {
+      "topic": "router thrown control flow",
+      "files": [
+        "src/routes"
+      ],
+      "evidence": "Current route files throw TanStack redirect objects. Such diagnostics require framework-contract interpretation; do not replace with generic Error or silently ignore whole route files."
+    },
+    {
+      "topic": "guarded effect",
+      "files": [
+        "src/lib/debouncedDraft.ts"
+      ],
+      "evidence": "Every-render rebase effect checks external JSON version, controller.rebase result, and draft equality before setDraftState. Rule wording alone does not establish infinite loop. Preserve actual same-render/equal-value contract if changing dependency array."
+    },
+    {
+      "topic": "JSON unknown boundary",
+      "files": [
+        "src/lib/agent/referenceEvidence.ts"
+      ],
+      "evidence": "toolReferenceAttachments currently assigns JSON.parse to inferred any before property accesses, whereas referenceToolSummary uses parsed: unknown and object narrowing. Concrete guarded parsing candidate, requires malformed-envelope regression if corrected."
+    },
+    {
+      "topic": "legacy package coercion",
+      "files": [
+        "src/lib/packages/projectPackageCodec.ts"
+      ],
+      "evidence": "parseProject and sibling codecs coerce Record<string, unknown> fields with String, producing no-base-to-string diagnostics. Determine accepted package compatibility and malformed inputs from current tests/schema before change; no blanket acceptance of 50 diagnostics."
+    },
+    {
+      "topic": "third-party uniforms",
+      "files": [
+        "src/components/agent/Grainient.tsx"
+      ],
+      "evidence": "Program uniforms are accessed on OGL data structure. Inspect installed typings and create a bounded owned typed uniform map if justified; authored shader/component lives in src, not vendor exclusion."
+    }
+  ]
+}

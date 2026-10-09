@@ -31,19 +31,19 @@
 | D06 | 生成表单共用能力模型 | AU-07 | 验证完成 | [D06复核](../archive/2026-10/10-08-src-remediation-d/reviews/D06-check.md) |
 | D07 | provider共用基础请求边界 | PM-07 | 验证完成 | [D07复核](../archive/2026-10/10-08-src-remediation-d/reviews/D07-check.md) |
 | D08 | 镜头和场次文字草稿协议 | PU-06 | 验证完成 | [D08复核](../archive/2026-10/10-08-src-remediation-d/reviews/D08-check.md) |
-| E01 | 编辑草稿离开保护与写入错误出口 | AU-02, PU-10, SS-06 | 待处理 | — |
-| E02 | 键盘动作及移动端布局 | AU-04, AU-05 | 待处理 | — |
-| E03 | 清理旧音频CSS | PU-09 | 待处理 | — |
-| E04 | 事务范围与批量引用扫描 | PD-06, PD-07, SS-09 | 待处理 | — |
-| E05 | 装饰动画按需调度 | SS-11 | 待处理 | — |
-| E06 | 富消息和图标加载优化 | AU-09 | 待处理 | — |
-| E07 | 收窄未用出口和控件 | PD-08, SS-10 | 待处理 | — |
+| E01 | 编辑草稿离开保护与写入错误出口 | AU-02, PU-10, SS-06 | 验证完成 | [E01复核](../10-09-src-remediation-e/reviews/E01-check.md) |
+| E02 | 键盘动作及移动端布局 | AU-04, AU-05 | 验证完成 | [E02复核](../10-09-src-remediation-e/reviews/E02-check.md) |
+| E03 | 清理旧音频CSS | PU-09 | 验证完成 | [E03复核](../10-09-src-remediation-e/reviews/E03-check.md) |
+| E04 | 事务范围与批量引用扫描 | PD-06, PD-07, SS-09 | 验证完成 | [E04复核](../10-09-src-remediation-e/reviews/E04-check.md) |
+| E05 | 装饰动画按需调度 | SS-11 | 验证完成 | [E05复核](../10-09-src-remediation-e/reviews/E05-check.md) |
+| E06 | 富消息和图标加载优化 | AU-09 | 验证完成 | [E06复核](../10-09-src-remediation-e/reviews/E06-check.md) |
+| E07 | 收窄未用出口和控件 | PD-08, SS-10 | 验证完成 | [E07复核](../10-09-src-remediation-e/reviews/E07-check.md) |
 
-下一未完成单元：E01。
+全部32个单元已验证完成。
 
 ## 用户示例与附加整理
 
 这些事项不加入51项已审查发现计数，仍按关联单元执行并保留证据。
 
 - EX-01 / D05：src/lib/memory/retrieval.ts — 提前返回空entries；source保留白名单并用明确穷尽分支。保持信封/字段/顺序/预算兼容，不新增策略类。（验证完成）
-- QG-01 / E07：package.json / .github/workflows/ghcr.yml / quality tooling — 可复现类型/ESLint-SonarJS/依赖架构/引用门禁；已核验基线逐项记录，不批量ignore；不改发布行为。（待处理）
+- QG-01 / E07：package.json / .github/workflows/ghcr.yml / quality tooling — Pinned portable TypeScript/ESLint-SonarJS/Hook/value-graph/full+productionKnip gates +88 actualCLI selftests; thirteen concrete reviewed error nodes/seven precise unused contracts, CI quality steps preserve publication. Actual localNode22 freshlockedinstall verified; no LinuxCI execution claim.（验证完成）

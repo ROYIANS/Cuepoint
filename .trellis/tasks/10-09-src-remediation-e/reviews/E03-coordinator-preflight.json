@@ -1,0 +1,13 @@
+{
+  "purpose": "Frozen returned implementation/pre-gate integrity; not independent acceptance",
+  "freezeSHA256": "f33aaedc3d125962186c44aad8c5407b4d1b848f08482c2700349abddc8e7054",
+  "rootPaths": 9,
+  "evidenceCount": 945,
+  "reportCount": 2,
+  "hashMismatches": [],
+  "currentGateInputs": 725,
+  "currentGateHashMismatches": [],
+  "gate": ".trellis/tasks/10-09-src-remediation-e/reviews/E03-current-frozen-candidate/summary.json",
+  "gateStatus": "PASS",
+  "sourceTSAnalysis": "E03-static-attribution.json all10TS hash/diagnostic identical to E02; AST0parse0valuecycles"
+}

@@ -1,0 +1,70 @@
+{
+  "purpose": "Direct primary publisher documentation saved verbatim for verification of E07 preparation; not implementation/version-selection/compatibility proof",
+  "capturedAt": "2026-10-09T03:43:25.015Z",
+  "results": [
+    {
+      "name": "eslint-support",
+      "url": "https://eslint.org/version-support/",
+      "savedPath": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/research/e07-official-source-evidence/eslint-support.txt",
+      "sha256": "99eb43663ab2dcc368b36f980b73bbee0528c578ddccd43a9a96ff2ba4853450",
+      "bytes": 46444,
+      "excerpts": [
+        {
+          "needle": "9.",
+          "text": "73-E0074, U+E0077, U+E007F; src: url('https://cdn.jsdelivr.net/npm/country-flag-emoji-polyfill@0.1/dist/TwemojiCountryFlags.woff2') format('woff2'); } Skip to main content ESLint v9.x reached end-of-life on 2026-08-06 and is no longer maintained. Upgrade or consider long-term support options Donate Team Blog Docs Store Playground Code Explorer Team Blog Docs Store Playground Code Explorer Version Support The ESLint team provides ongoing support for the current version and six months of limited support for"
+        },
+        {
+          "needle": "10.",
+          "text": "lls out of maintenance mode it receives no further updates from the ESLint team. Current Release Lines Release Line Status First Release Last Release EOL Start Commercial Support v10.x Current 2026-02-06 TBD TBD Tidelift v9.0.0-v9.39.5 EOL 2024-04-05 2026-07-10 2026-08-06 HeroDevs v8.0.0-v8.57.1 EOL 2021-10-09 2024-09-16 2024-10-05 HeroDevs v7.0.0-v7.32.0 EOL 2020-05-08 2021-07-30 2022-04-09 HeroDevs v6.0.0-v6.8.0 EOL 2019-06-21 2019-12-20 2020-11-08 HeroDevs v5.0.0-v5.16.0 EOL 2018-06-22 2019-03-29 2019-"
+        },
+        {
+          "needle": "2026",
+          "text": " src: url('https://cdn.jsdelivr.net/npm/country-flag-emoji-polyfill@0.1/dist/TwemojiCountryFlags.woff2') format('woff2'); } Skip to main content ESLint v9.x reached end-of-life on 2026-08-06 and is no longer maintained. Upgrade or consider long-term support options Donate Team Blog Docs Store Playground Code Explorer Team Blog Docs Store Playground Code Explorer Version Support The ESLint team provides ongoing support for the current version and six months of limited support for the previous version. --> "
+        },
+        {
+          "needle": "EOL",
+          "text": "ById(\"eslint-sponsor\").after(s); document.getElementById(\"eslint-sponsor\").remove(); } Major ESLint release lines move through a status of Current, to Maintenance, to End of Life (EOL). A release line is considered Current when prerelease work begins. At that point, the previous release line moves to Maintenance status and stays there until six months after the general availability of the Current release line. After that, the release line moves to EOL. Release Statuses ESLint major release lines are desig"
+        }
+      ]
+    },
+    {
+      "name": "eslint-migration",
+      "url": "https://eslint.org/docs/latest/use/migrate-to-10.0.0",
+      "savedPath": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/research/e07-official-source-evidence/eslint-migration.txt",
+      "sha256": "d9eb66fa75904d1fb09d005c76b2d2ad6b6ffda944b0351e5d5bc9d85cfb9c07",
+      "bytes": 129638,
+      "excerpts": [
+        {
+          "needle": "22.13",
+          "text": " officially dropping support for these versions of Node.js starting with ESLint v10.0.0. ESLint now supports the following versions of Node.js: Node.js v20.19.0 and above Node.js v22.13.0 and above Node.js v24 and above To address: Make sure you upgrade to at least Node.js v20.19.0 when using ESLint v10.0.0. One important thing to double check is the Node.js version supported by your editor when using ESLint via editor integrations. If you are unable to upgrade, we recommend continuing to use ESLint v9 un"
+        },
+        {
+          "needle": "20.19",
+          "text": "ghly by the number of users each change is expected to affect, where the first items are expected to affect the most users. Table of Contents Breaking changes for users Node.js < v20.19, v21, v23 are no longer supported eslint:recommended has been updated New configuration file lookup algorithm Old config format no longer supported JSX references are now tracked eslint-env comments are reported as errors Jiti < v2.2.0 are no longer supported POSIX character classes in glob patterns stylish formatter now u"
+        }
+      ]
+    },
+    {
+      "name": "typescript-eslint-versions",
+      "url": "https://typescript-eslint.io/users/dependency-versions/",
+      "savedPath": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/research/e07-official-source-evidence/typescript-eslint-versions.txt",
+      "sha256": "745608225846a4a3f7567597949ef971234646137001a7a0062883fd77cd02a2",
+      "bytes": 30160,
+      "excerpts": [
+        {
+          "needle": "^10",
+          "text": "ST Specification typescript-eslint utils Contributing Maintenance On this page Dependency Versions ESLint ​ The version range of ESLint currently supported is ^8.57.0 || ^9.0.0 || ^10.0.0 . We generally support at least the latest two major versions of ESLint; though sometimes we may restrict this if the APIs change too much between major releases. Node ​ The version range of NodeJS currently supported is ^18.18.0 || ^20.9.0 || >=21.1.0 . We make an effort to support Active LTS and Maintenance LTS release"
+        },
+        {
+          "needle": "6.1",
+          "text": "to Node's release document . Support for specific Current status releases are considered periodically. TypeScript ​ The version range of TypeScript currently supported is >=4.8.4 <6.1.0 . We mirror DefinitelyTyped's version support window - meaning we only support versions of TypeScript less than 2 years old. You may find that our tooling works on older TypeScript versions however we provide no guarantees and we will not accept issues against unsupported versions . We will always endeavor to support the l"
+        }
+      ]
+    },
+    {
+      "name": "sonar-publisher-readme",
+      "url": "https://raw.githubusercontent.com/SonarSource/SonarJS/master/packages/analysis/src/jsts/rules/README.md",
+      "error": "The operation was aborted due to timeout"
+    }
+  ]
+}

@@ -1,0 +1,471 @@
+{
+  "status": "PASS",
+  "capturedAt": "2026-10-09T10:38:37.810074+00:00",
+  "checks": [
+    {
+      "check": "Actualpacked-old-intermediate-currenthelperhashchain",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Firststeponlygitignorewhitelistaddition",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Secondsteponlyexplicitlatereviewsizecapremoved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Actual5563879byteacceptedcoverageincludedbynewexplicitwhitelist",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Fullrawrestoreandacceptedreferencechecksremainpass",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Exactlyoneoriginalhelpermismatchreportedandoldbytesretained",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "All116literalrawignoreandnormal244protectionchecksremainpass",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Alllatefilesexplicitmetadataorownedreviewnohiddenproofloss",
+      "passed": true,
+      "detail": {
+        "unknown": [],
+        "lateFiles": [
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/.gitignore",
+            "sha256": "a209a4ab8e547468393ffcb9bad0385b78eb273eb0378b6b571545e6e38c0b99",
+            "bytes": 3954,
+            "class": "explicit helper/Git metadata evolution",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/research/E-packed-plan-producer-before.py",
+            "sha256": "3b0f7d8f5295d15ef6ef5517f479fa9ecba14b70dab5a81dc2e8e7be88fdff93",
+            "bytes": 5883,
+            "class": "explicit helper/Git metadata evolution",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/research/E-evidence-git-preservation-evolution-02.json",
+            "sha256": "73129715240b9e93ed6ca89e13d9908373cc18bbf64ce6a945794b7d920f76c1",
+            "bytes": 1309,
+            "class": "explicit helper/Git metadata evolution",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/research/E-intermediate-plan-producer-before.py",
+            "sha256": "c91ee10cdd796c119eed8e68e85f0802daeb963c8999a6a72c6746f4b91298df",
+            "bytes": 5909,
+            "class": "explicit helper/Git metadata evolution",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/research/E-evidence-git-preservation-evolution.json",
+            "sha256": "d5b72e8f39416a6af7717cc4b180dfd899395d61c42ce865b84228840e9df34b",
+            "bytes": 1500,
+            "class": "explicit helper/Git metadata evolution",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/tools/protect-packed-evidence.py",
+            "sha256": "6cd205cb8d159dc665d5d2c81826de431c6e73e70dc830772b2e656c92ba1e76",
+            "bytes": 1969,
+            "class": "explicit helper/Git metadata evolution",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/full-readback.log",
+            "sha256": "9465ee35ede1f9f079b0e88f5f0dab57245a65c0082f137b2b83e7d9a4480801",
+            "bytes": 92,
+            "class": "independent transport late file",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/independent-full-gzip-verify.log",
+            "sha256": "d7eaf03b4bfc225ad1bb5a699425cb0ee777c750b34c3a286a288eb095439872",
+            "bytes": 388,
+            "class": "independent transport late file",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/postpack-metadata-review.log",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "bytes": 0,
+            "class": "independent transport late file",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/check-postpack-metadata-before-bounded-traversal.py",
+            "sha256": "1315754f394da03e81513b5fba5494421590820408517e96b7dbf814dd9ffd99",
+            "bytes": 7880,
+            "class": "independent transport late file",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/accepted-seal-coverage.json",
+            "sha256": "c7f4f94b2214d418bb19298f8f0abf7eda4c7815494091644c7dc6f03e2e8b26",
+            "bytes": 5563879,
+            "class": "independent transport late file",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/verify-transport-readback.py",
+            "sha256": "5eff7420501604d99a904581d6dc8a8510477bf22d0d1bfe8224d99d681ceadb",
+            "bytes": 12635,
+            "class": "independent transport late file",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/independent-full-gzip-verify-receipt.json",
+            "sha256": "d7eaf03b4bfc225ad1bb5a699425cb0ee777c750b34c3a286a288eb095439872",
+            "bytes": 388,
+            "class": "independent transport late file",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/full-readback-current.log",
+            "sha256": "8bded11b7dff8fd7cbcaac3875c71b516426ad240718d28e064a775f5a2f6e12",
+            "bytes": 3309,
+            "class": "independent transport late file",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/final-qualification.py",
+            "sha256": "f14ff08a770e186495e89644ab4d9a90b17523c9fd0566e5fec3fa1b24d7913c",
+            "bytes": 7507,
+            "class": "independent transport late file",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/check-postpack-metadata.py",
+            "sha256": "9a6cf0fe9121cf665f859b9f7291d45e7965f630dab7fb505c0704ec4cb67319",
+            "bytes": 7894,
+            "class": "independent transport late file",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/postpack-metadata-evolution-review.json",
+            "sha256": "7bce8dd30b10ad4ed9bc902a90e945f6a8760da5ba686b4e034e420ed4d60209",
+            "bytes": 29601,
+            "class": "independent transport late file",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/full-original-restored-readback.json",
+            "sha256": "60fdb344ebb2c1a53f444de5cca04b86cc2680190c11fd8d3984d63c1d9730a0",
+            "bytes": 13189,
+            "class": "independent transport late file",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/verify-transport-readback-before-external-path-fix.py",
+            "sha256": "103a4fd49f611510cfaf0a721f9353b1b701275ce52c4e263cdcc4cbf3bdc86e",
+            "bytes": 12488,
+            "class": "independent transport late file",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/postpack-metadata-review-final.log",
+            "sha256": "95e37f12b76a04752627e5bfd59a7e2d521a68da38cb72e705915f179d06b7c0",
+            "bytes": 1445,
+            "class": "independent transport late file",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          },
+          {
+            "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/postpack-metadata-review-initial-comparison-failure.json",
+            "sha256": "ecf8809b294393f6df7a9a065e08ca45a8de0a37af7266388aca33f821ef1159",
+            "bytes": 28530,
+            "class": "independent transport late file",
+            "normalReadableNotInFrozenPack": true,
+            "allowed": true
+          }
+        ]
+      }
+    },
+    {
+      "check": "Independentactualfull10117gzipverifyPASS",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Source727110ceandab926cdfcompletionsealunchanged",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "failedChecks": [],
+  "rawReadbackFAILPreserved": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/full-original-restored-readback.json",
+    "sha256": "60fdb344ebb2c1a53f444de5cca04b86cc2680190c11fd8d3984d63c1d9730a0"
+  },
+  "firstMetadataFAILPreserved": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/postpack-metadata-evolution-review.json",
+    "sha256": "7bce8dd30b10ad4ed9bc902a90e945f6a8760da5ba686b4e034e420ed4d60209"
+  },
+  "helperEvolution": {
+    "originalPacked": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E-packed-plan-producer-before.py",
+      "sha256": "3b0f7d8f5295d15ef6ef5517f479fa9ecba14b70dab5a81dc2e8e7be88fdff93"
+    },
+    "intermediate": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E-intermediate-plan-producer-before.py",
+      "sha256": "c91ee10cdd796c119eed8e68e85f0802daeb963c8999a6a72c6746f4b91298df"
+    },
+    "current": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/tools/build-e-commit-plan.py",
+      "sha256": "7890404a66f438d61731754580c9b0a7fe60c529d46b292089fbfc674098a2c4"
+    },
+    "firstReceipt": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E-evidence-git-preservation-evolution.json",
+      "sha256": "d5b72e8f39416a6af7717cc4b180dfd899395d61c42ce865b84228840e9df34b"
+    },
+    "secondReceipt": {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E-evidence-git-preservation-evolution-02.json",
+      "sha256": "73129715240b9e93ed6ca89e13d9908373cc18bbf64ce6a945794b7d920f76c1"
+    },
+    "firstDiff": [
+      "--- \n",
+      "+++ \n",
+      "@@ -16,3 +16,3 @@\n",
+      "  for p in folder.iterdir():",
+      "-  if p.is_file() and p.suffix in ['.md','.json','.jsonl','.py','.mjs','.cjs'] and p.stat().st_size<=4_000_000:normal.add(str(p.relative_to(root)))",
+      "+  if p.is_file() and (p.suffix in ['.md','.json','.jsonl','.py','.mjs','.cjs'] or p.name=='.gitignore') and p.stat().st_size<=4_000_000:normal.add(str(p.relative_to(root)))",
+      " lateReview=task/'reviews/E-evidence-transport-independent'"
+    ],
+    "secondDiff": [
+      "--- \n",
+      "+++ \n",
+      "@@ -19,3 +19,3 @@\n",
+      " if lateReview.exists():",
+      "- normal.update(str(p.relative_to(root)) for p in lateReview.rglob('*') if p.is_file() and p.suffix in ['.md','.json','.py','.log'] and p.stat().st_size<=4_000_000)",
+      "+ normal.update(str(p.relative_to(root)) for p in lateReview.rglob('*') if p.is_file() and p.suffix in ['.md','.json','.py','.log'])",
+      " pack=task/'evidence-pack';assert (pack/'manifest.json').exists() and (pack/'blobs.json').exists()"
+    ]
+  },
+  "currentOriginals": {
+    "manifestPaths": 41163,
+    "unchangedOriginalPaths": 41162,
+    "explainedEvolvedTaskHelperPaths": 1,
+    "currentHelperBytes": 5877,
+    "originalPackedHelperBytes": 5883,
+    "unexplainedLossOrDrift": 0
+  },
+  "restored": {
+    "actualPaths": 41163,
+    "everyManifestHashByteMatch": true
+  },
+  "acceptedSealReferences": 15442,
+  "gitignore": {
+    "literalRules": 116,
+    "productPathsUnaffected": 244,
+    "normalPathsChecked": 331,
+    "ignoredRawFilesManifestRepresented": 40842
+  },
+  "lateFiles": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/.gitignore",
+      "sha256": "a209a4ab8e547468393ffcb9bad0385b78eb273eb0378b6b571545e6e38c0b99",
+      "bytes": 3954,
+      "class": "explicit helper/Git metadata evolution",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E-packed-plan-producer-before.py",
+      "sha256": "3b0f7d8f5295d15ef6ef5517f479fa9ecba14b70dab5a81dc2e8e7be88fdff93",
+      "bytes": 5883,
+      "class": "explicit helper/Git metadata evolution",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E-evidence-git-preservation-evolution-02.json",
+      "sha256": "73129715240b9e93ed6ca89e13d9908373cc18bbf64ce6a945794b7d920f76c1",
+      "bytes": 1309,
+      "class": "explicit helper/Git metadata evolution",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E-intermediate-plan-producer-before.py",
+      "sha256": "c91ee10cdd796c119eed8e68e85f0802daeb963c8999a6a72c6746f4b91298df",
+      "bytes": 5909,
+      "class": "explicit helper/Git metadata evolution",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E-evidence-git-preservation-evolution.json",
+      "sha256": "d5b72e8f39416a6af7717cc4b180dfd899395d61c42ce865b84228840e9df34b",
+      "bytes": 1500,
+      "class": "explicit helper/Git metadata evolution",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/tools/protect-packed-evidence.py",
+      "sha256": "6cd205cb8d159dc665d5d2c81826de431c6e73e70dc830772b2e656c92ba1e76",
+      "bytes": 1969,
+      "class": "explicit helper/Git metadata evolution",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/full-readback.log",
+      "sha256": "9465ee35ede1f9f079b0e88f5f0dab57245a65c0082f137b2b83e7d9a4480801",
+      "bytes": 92,
+      "class": "independent transport late file",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/independent-full-gzip-verify.log",
+      "sha256": "d7eaf03b4bfc225ad1bb5a699425cb0ee777c750b34c3a286a288eb095439872",
+      "bytes": 388,
+      "class": "independent transport late file",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/postpack-metadata-review.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "class": "independent transport late file",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/check-postpack-metadata-before-bounded-traversal.py",
+      "sha256": "1315754f394da03e81513b5fba5494421590820408517e96b7dbf814dd9ffd99",
+      "bytes": 7880,
+      "class": "independent transport late file",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/accepted-seal-coverage.json",
+      "sha256": "c7f4f94b2214d418bb19298f8f0abf7eda4c7815494091644c7dc6f03e2e8b26",
+      "bytes": 5563879,
+      "class": "independent transport late file",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/verify-transport-readback.py",
+      "sha256": "5eff7420501604d99a904581d6dc8a8510477bf22d0d1bfe8224d99d681ceadb",
+      "bytes": 12635,
+      "class": "independent transport late file",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/independent-full-gzip-verify-receipt.json",
+      "sha256": "d7eaf03b4bfc225ad1bb5a699425cb0ee777c750b34c3a286a288eb095439872",
+      "bytes": 388,
+      "class": "independent transport late file",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/full-readback-current.log",
+      "sha256": "8bded11b7dff8fd7cbcaac3875c71b516426ad240718d28e064a775f5a2f6e12",
+      "bytes": 3309,
+      "class": "independent transport late file",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/final-qualification.py",
+      "sha256": "f14ff08a770e186495e89644ab4d9a90b17523c9fd0566e5fec3fa1b24d7913c",
+      "bytes": 7507,
+      "class": "independent transport late file",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/check-postpack-metadata.py",
+      "sha256": "9a6cf0fe9121cf665f859b9f7291d45e7965f630dab7fb505c0704ec4cb67319",
+      "bytes": 7894,
+      "class": "independent transport late file",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/postpack-metadata-evolution-review.json",
+      "sha256": "7bce8dd30b10ad4ed9bc902a90e945f6a8760da5ba686b4e034e420ed4d60209",
+      "bytes": 29601,
+      "class": "independent transport late file",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/full-original-restored-readback.json",
+      "sha256": "60fdb344ebb2c1a53f444de5cca04b86cc2680190c11fd8d3984d63c1d9730a0",
+      "bytes": 13189,
+      "class": "independent transport late file",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/verify-transport-readback-before-external-path-fix.py",
+      "sha256": "103a4fd49f611510cfaf0a721f9353b1b701275ce52c4e263cdcc4cbf3bdc86e",
+      "bytes": 12488,
+      "class": "independent transport late file",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/postpack-metadata-review-final.log",
+      "sha256": "95e37f12b76a04752627e5bfd59a7e2d521a68da38cb72e705915f179d06b7c0",
+      "bytes": 1445,
+      "class": "independent transport late file",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-evidence-transport-independent/postpack-metadata-review-initial-comparison-failure.json",
+      "sha256": "ecf8809b294393f6df7a9a065e08ca45a8de0a37af7266388aca33f821ef1159",
+      "bytes": 28530,
+      "class": "independent transport late file",
+      "normalReadableNotInFrozenPack": true,
+      "allowed": true
+    }
+  ],
+  "limits": [
+    "Previous raw readback failures are not rewritten as zero drift; this separate receipt closes two metadata-dependent assertions using explicit actual byte chain.",
+    "No repeated full gzip/native/unit/install/build/sourcework; existingactualfullproof retained and one current helper plus late metadata independently checked.",
+    "Normalreadablelatefiles and currenthelper are outside frozen pack by contract; old helper bytes fully restore from pack and explicit beforecopies."
+  ]
+}

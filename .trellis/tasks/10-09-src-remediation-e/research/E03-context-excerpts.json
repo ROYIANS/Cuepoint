@@ -1,0 +1,55 @@
+{
+  "purpose": "Injection-size-safe complete inventory parts plus scoped canonical CSS context, not source change or acceptance",
+  "audioSource": ".trellis/spec/frontend/audio-music.md",
+  "audioSourceSHA256": "43d32887a065d675fff855bc466550b63fbc971a1dd0be98ac92a4418fa21c1f",
+  "audioRanges": [
+    [
+      1,
+      100
+    ],
+    [
+      294,
+      325
+    ],
+    [
+      453,
+      490
+    ]
+  ],
+  "audioExcerpt": ".trellis/tasks/10-09-src-remediation-e/research/E03-audio-music-context.md",
+  "inventorySource": ".trellis/tasks/10-09-src-remediation-e/research/E03-selector-inventory.md",
+  "inventorySourceSHA256": "bebde62494239267c29828aac4c57b3cc382862a7d471216065cb4501f8534fa",
+  "inventoryParts": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E03-selector-inventory-part-1.md",
+      "lines": [
+        1,
+        191
+      ],
+      "sha256": "6ef1f706eecae8593b34beaec94ece162e202a423e4acdc0da0bcbecbb83bc0e"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E03-selector-inventory-part-2.md",
+      "lines": [
+        192,
+        338
+      ],
+      "sha256": "55a2d42eaf88f4af951141a51400de10d7431ab00b5e676d1f6cd11970941e5c"
+    }
+  ],
+  "componentSource": ".trellis/spec/frontend/component-guidelines.md",
+  "componentSourceSHA256": "91a004c2bf8d91fb297bda0dcae8eb4c368680ecc5c770bf898f627a14b4179e",
+  "componentExcerpt": ".trellis/tasks/10-09-src-remediation-e/research/E03-component-context.md",
+  "componentRanges": [
+    [
+      1,
+      144
+    ],
+    [
+      212,
+      241
+    ]
+  ],
+  "inventoryInjectedSummary": ".trellis/tasks/10-09-src-remediation-e/research/E03-selector-context.md",
+  "mandatoryManualRead": "All276JSON rule records plus relevant source/JSX before deletion; original and complete parts preserved. PRD/design/implement omitted from manifest only because hook appends them separately and fallback explicitly reads them."
+}

@@ -1,0 +1,11 @@
+{
+  "purpose": "Coordinator acceptance of completed read-only futurecontractresearch; not E07implementation/gate/debt/sourceacceptance",
+  "artifactsVerified": 61,
+  "mismatches": [],
+  "reports": {
+    ".trellis/tasks/10-09-src-remediation-e/research/E07-coercion-contracts.md": "cefc49c3fb2c986148e769f667b689702a48b4db37da6c359705d077390cf747",
+    ".trellis/tasks/10-09-src-remediation-e/research/E07-coercion-contracts.json": "1880ddc4dcdf30c67a8564b1782bfada7d7d6e7c000720091bbfa23239a31c28"
+  },
+  "reviewerContextMutation": "Ownread-manifest exactold/newcheck.jsonl preserved bysidecar; main E06reviewcontextrefresh attribution applies",
+  "scope": "50codec3slot12domain11other76historicaldiagnostics interpreted,33testreferences8futuregroups; noexecutionclaim"
+}

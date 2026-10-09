@@ -1,0 +1,53 @@
+{
+  "purpose": "Cumulative E-entry static attribution; E03 changes only CSS plus native fixture/runner, same10TS source inputs and rawdiagnostics as accepted E02. Not formal QG01 debt acceptance.",
+  "comparisonUnit": "E02",
+  "typescriptInputHashesIdentical": true,
+  "cumulativeBefore": [
+    3,
+    35
+  ],
+  "cumulativeAfter": [
+    2,
+    34
+  ],
+  "addedNoncomplexity": [],
+  "newMetricSinceE02": [],
+  "inheritedE01Metrics": [
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'AgentChatInner' has a complexity of 101. Maximum allowed is 20.",
+      "line": 57,
+      "column": 1,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 57,
+      "endColumn": 24
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx",
+      "ruleId": "sonarjs/cognitive-complexity",
+      "severity": 1,
+      "message": "Refactor this function to reduce its Cognitive Complexity from 58 to the 20 allowed.",
+      "line": 57,
+      "column": 10,
+      "nodeType": null,
+      "messageId": "refactorFunction",
+      "endLine": 57,
+      "endColumn": 24
+    },
+    {
+      "file": "/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/ProjectGalleryPage.tsx",
+      "ruleId": "complexity",
+      "severity": 1,
+      "message": "Function 'ProjectGalleryPage' has a complexity of 31. Maximum allowed is 20.",
+      "line": 57,
+      "column": 8,
+      "nodeType": "FunctionDeclaration",
+      "messageId": "complex",
+      "endLine": 57,
+      "endColumn": 35
+    }
+  ]
+}

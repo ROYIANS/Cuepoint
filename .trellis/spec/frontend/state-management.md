@@ -915,3 +915,33 @@ Use actual text component/controller/repository entry points. Cover deferred/rej
 ## 7. Migration / Limits
 
 Use current D02 persistence owners and accepted D03 row/command boundaries. No replacement timer store, form library, whole-object autosave, global guard duplication, reorder/CAS rewrite or main-episode editor redesign. A finite local browser fixture does not promise crash-proof persistence or all IME/browser combinations. Existing dirty/manual draft contracts and paid execution barriers remain. Whole-D integration/full-scope independent review and E/QG01 work remain separate acceptance.
+
+## E04 PD07 fresh media retention and batch transaction ownership (2026-10-09)
+
+### 1. Scope
+
+Apply batching to media orphan cleanup and each changed production caller. Preserve collectMediaIds(projectId?) for global current retention and owner-scoped backup projection, plus scalar deleteMediaIfOrphan and injected DraftMediaSession compatibility. Keep PRODUCTION_TABLES at25.
+
+### 2. Signatures / Owners
+
+deleteMediaIfOrphans accepts readonly (Id | undefined)[] and owns or joins a production readwrite root. Deduplicate truthy candidates, bulkGet media rows once, derive each actual MediaRecord.projectId, snapshot global current references once and indexed history sets once per actual owner. The scalar API delegates one ID. Caller mutation, retention snapshot, deletes and durable receipt/event remain under the original transaction owner.
+
+### 3. Contracts
+
+Retain all18 source tables:14 current tables plus productionProposals, agentGenerationJobs, agentGenerationBatches and agentGenerationBatchItems. Current references are global, including archived/library/audio/reference/material-use cases. Historical references use the candidate record owner, including cancelled/deleted-target evidence; foreign-owner-only history retains original exclusion semantics. Do not persist/cache reference sets across calls. Await individual deletes to retain fault hooks. Release a material use only after other uses allow it, clear every copied libraryRetained flag before one snapshot, reject survivors, then emit the event. Roll back use/flags/real Blob deletes on any later failure.
+
+### 4. Validation / Error Matrix
+
+Undefined/missing/duplicate candidates -> safe skip/dedup. A reference added between independent calls -> fresh retention. Same-owner history after target deletion/cancellation -> retained. Foreign-owner-only history -> original parity. Later actual media deletion failure -> all prior current/history/Blob changes restored. Retained copied media or final event fault -> full release rollback. Real shot_delete receipt followed by ledger fault -> receipt and deletion roll back together; successful retry/replay stays idempotent. Orphan-only tools do not gain a business receipt.
+
+### 5. Good / Base / Bad Cases
+
+Good: mutate all relevant current rows first, snapshot once inside the existing production root, use per-candidate-owner history sets and sequential deletes. Base: DraftMediaSession continues per-ID scalar cleanup, retaining failed IDs for retry and releasing kept ownership only after persist succeeds. Bad: clear one flag, snapshot, then clear another; reuse an ambient retention cache; derive history ownership from the deleting caller; claim all uploads plus save are atomic.
+
+### 6. Tests Required
+
+Keep the full18-table retention and complete caller matrix, protected scalar cover/reference/backup paths and actual receipt/undo closure. Native proof must include fresh references, mixed owners, late actual deletes, flags/other uses/events and overlapping-writer commit visibility. Work fixture:30 unique existing library-retained candidates,3 owners,60 original duplicate scalar calls; final receives same duplicates plus undefined/missing,31 lookup keys. Report1080->26 DBCore retention requests and1800->30 returned-row/cursor-step sum separately from candidate reads/writes; formula14 +4*actualOwners applies to this retention scan shape.
+
+### 7. Wrong vs Correct
+
+Wrong: label these logical request/row totals exclusive physical disk IO, IDBCursor-only visits or latency savings. Correct: state the exact denominator, observers, excluded candidate reads/writes, mixed-owner/current-history semantics and finite isolated Chromium evidence limits. Preserve actual mutation fault producers, their failure history and raw source hashes.

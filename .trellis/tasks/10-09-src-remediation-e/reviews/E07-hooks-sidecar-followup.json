@@ -1,0 +1,568 @@
+{
+  "status": "COMPLETED",
+  "date": "2026-10-09",
+  "scope": "Authorized NEXT permanent actual React/Dexie regression and bounded independent follow-up",
+  "finding": "H-SUP-01",
+  "findingDecision": "RESOLVED_ON_EXACT_REVIEWED_CURRENT_HASH",
+  "currentHookSha256": "9bb9227893fb76c038c9d391592586213f75d8531f7465eba46e775ac6739f3a",
+  "originalHookSha256": "13b31cb3c090df4a3c5ad46a1a8b6897c58c109bf8d7df4e3da0b1ee78e1eebd",
+  "mainFixDelta": "Only comment+guarded every-render effect restored; externalVersion updates only after rebase success",
+  "newFileCoverage": [
+    {
+      "file": "tests/e07DraftRebase.test.ts",
+      "sha256": "226ab865babdecf9909b5c34f1b781fe8c4521823dc6157e2ea739132a3032f3",
+      "bytes": 5029,
+      "status": "reviewed",
+      "reason": "Existing root include discovers .test.ts. Immutable snapshot integrity always runs; explicit native runtime enables actual browser red/green. Red requires only exact expected rebase contract failures, not setup failure. Green requires same positive assertions. No mocked React hooks or optional DOM runtime."
+    },
+    {
+      "file": "scripts/e07-draft-rebase-browser.mjs",
+      "sha256": "83e3875db72e8355db8ace4ee3a8d4ea08d3e315ad0f7ff7d283a9e6b0661804",
+      "bytes": 12472,
+      "status": "reviewed",
+      "reason": "Two fresh isolated Vite/Chromium/IndexedDB shapes per variant. Waits for actual source static readiness, preserves browser10s/default load/main-document contracts. Writes real DB name, holds completion, external DB newest, releases then checks settled and three unrelated parent renders. Captures raw vs delivered source and end rehash; regression snapshot substitution only current module body."
+    },
+    {
+      "file": "tests/fixtures/e07-draft-rebase/README.md",
+      "sha256": "6cc51035897d3842fb2bd83a23c9f63f6c437ef5fef3356f9158fc72e3887a84",
+      "bytes": 3022,
+      "status": "reviewed",
+      "reason": "Documents injected existing runtime/authorized pnpm, explicit default skip, expected red exit1/current exit0, retained evidence and finite browser limits."
+    },
+    {
+      "file": "tests/fixtures/e07-draft-rebase/debouncedDraft-before.ts",
+      "sha256": "13b31cb3c090df4a3c5ad46a1a8b6897c58c109bf8d7df4e3da0b1ee78e1eebd",
+      "bytes": 11855,
+      "status": "reviewed",
+      "reason": "Exact main pre-fix source copied without edits; immutable counterexample containing [initialValue,controller] effect. Permanent fixture independent of active/archive paths."
+    },
+    {
+      "file": "tests/fixtures/e07-draft-rebase/harness.tsx",
+      "sha256": "7c385f3f4235934c5195a27b91278ca3dff5c5ea5cd7dec5f7ece01e928e712d",
+      "bytes": 3071,
+      "status": "reviewed",
+      "reason": "Actual ReactDOM and current TextDraftField primitive input; stable useMemo({name}) object with actual hook/status. Native current create/rename/project reads. Post-durable-write completion gate only. Host instrumented identity/render counts do not replace production hook behavior."
+    },
+    {
+      "file": "tests/fixtures/e07-draft-rebase/index.html",
+      "sha256": "e032048fd5b28299ec26cf73a98947a0819450d2b7bb63ac357741c39f9c4caf",
+      "bytes": 227,
+      "status": "reviewed",
+      "reason": "One actual module entry, native browser DOM root; no alternate app or document reload."
+    },
+    {
+      "file": "tests/fixtures/e07-draft-rebase/provenance.json",
+      "sha256": "be19471c354e077a5552efad4416d5c14b5398fbd98164eb9845f72e70297bb4",
+      "bytes": 555,
+      "status": "reviewed",
+      "reason": "Records exact originalSHA256/sourcePath/snapshotPath and shared import boundary. No active task runtime import."
+    },
+    {
+      "file": "tests/fixtures/e07-draft-rebase/tsconfig.json",
+      "sha256": "6247ff689855f3b33fad7429870a50e07a93477604550d7c03a85175f7eb0aaa",
+      "bytes": 261,
+      "status": "reviewed",
+      "reason": "Portable extends actual app tsconfig, disables incremental/build-info, includes actual native harness/new root test/Vite ambient. Uses existing node/Vitest types; immutable old counterexample is data, not current source target. Permanent targeted tsc exits0."
+    }
+  ],
+  "currentReviewedSources": [
+    {
+      "file": "src/components/agent/AgentChatPage.tsx",
+      "priorReviewedSha256": "b93fac4d36768b0739075ed63310599bdd80ededb60eb02b83602be845ed6f02",
+      "currentFinalSha256": "b93fac4d36768b0739075ed63310599bdd80ededb60eb02b83602be845ed6f02",
+      "unchanged": true
+    },
+    {
+      "file": "src/components/agent/AgentRunDetails.tsx",
+      "priorReviewedSha256": "d428f9d2cf2de9ca4bf7f3901605ff8b33ca420d05cd2e311a70790a8223e020",
+      "currentFinalSha256": "d428f9d2cf2de9ca4bf7f3901605ff8b33ca420d05cd2e311a70790a8223e020",
+      "unchanged": true
+    },
+    {
+      "file": "src/components/agent/ReferenceAttachments.tsx",
+      "priorReviewedSha256": "73eb869da08ebc02d8f780de9fe31f6471e5a2de708072f8a09d1a24e7f86c7a",
+      "currentFinalSha256": "73eb869da08ebc02d8f780de9fe31f6471e5a2de708072f8a09d1a24e7f86c7a",
+      "unchanged": true
+    },
+    {
+      "file": "src/components/agent/TaskWrapup.tsx",
+      "priorReviewedSha256": "99e3de127ab987a833e372678c3558e20b3d0b69adb40001a1c7e1375b73575e",
+      "currentFinalSha256": "99e3de127ab987a833e372678c3558e20b3d0b69adb40001a1c7e1375b73575e",
+      "unchanged": true
+    },
+    {
+      "file": "src/components/agent/useChatSelection.ts",
+      "priorReviewedSha256": "40c0592b8de6c6e59c6f679c678d8853def469f643e65fb379b4b28003153adf",
+      "currentFinalSha256": "40c0592b8de6c6e59c6f679c678d8853def469f643e65fb379b4b28003153adf",
+      "unchanged": true
+    },
+    {
+      "file": "src/components/agent/useReferenceDraft.ts",
+      "priorReviewedSha256": "ff87223b74e607da20fbcb3832a88b5dc8bf8c711d29cecbe9cfe6c9cadb135c",
+      "currentFinalSha256": "ff87223b74e607da20fbcb3832a88b5dc8bf8c711d29cecbe9cfe6c9cadb135c",
+      "unchanged": true
+    },
+    {
+      "file": "src/components/audio/AudioTimeline.tsx",
+      "priorReviewedSha256": "ec5ba4fda12adf8a42bd4798ff3f0bae9fcbfe19f206c0946183c3e49b590bba",
+      "currentFinalSha256": "ec5ba4fda12adf8a42bd4798ff3f0bae9fcbfe19f206c0946183c3e49b590bba",
+      "unchanged": true
+    },
+    {
+      "file": "src/components/audio/AudioSources.tsx",
+      "priorReviewedSha256": "4bd751d7e136dacfceefc9c57b62b54721f26b500f513ce46993c0e213a0f532",
+      "currentFinalSha256": "4bd751d7e136dacfceefc9c57b62b54721f26b500f513ce46993c0e213a0f532",
+      "unchanged": true
+    },
+    {
+      "file": "src/components/studio/ConnectorsPage.tsx",
+      "priorReviewedSha256": "27d1b85031a3f7a7c80f14390fba63c16f01a5fba8225c13d588c0aa5c44f59d",
+      "currentFinalSha256": "27d1b85031a3f7a7c80f14390fba63c16f01a5fba8225c13d588c0aa5c44f59d",
+      "unchanged": true
+    },
+    {
+      "file": "src/components/studio/ProjectGalleryPage.tsx",
+      "priorReviewedSha256": "4a33de135b4edd3b4e5d2caab67fcd6e31cd8665fc461e1d9d72358a23bc1329",
+      "currentFinalSha256": "4a33de135b4edd3b4e5d2caab67fcd6e31cd8665fc461e1d9d72358a23bc1329",
+      "unchanged": true
+    },
+    {
+      "file": "src/components/studio/materials/MaterialDetailPanel.tsx",
+      "priorReviewedSha256": "4756ea00e80904c1669d1408575545ad82c58d24836b84d68eebefd9d6f7cf67",
+      "currentFinalSha256": "4756ea00e80904c1669d1408575545ad82c58d24836b84d68eebefd9d6f7cf67",
+      "unchanged": true
+    },
+    {
+      "file": "src/components/shots/ShotRow.tsx",
+      "priorReviewedSha256": "b33d4c918e1573cc2ec4766eadb6ebebe5ee3698f91822a0d64fa63335942d45",
+      "currentFinalSha256": "b33d4c918e1573cc2ec4766eadb6ebebe5ee3698f91822a0d64fa63335942d45",
+      "unchanged": true
+    },
+    {
+      "file": "tests/e07HookContracts.test.ts",
+      "priorReviewedSha256": "ed37421149cdcdaddda7104b40bca69778a465e32f8c251e86cbd844a3e91c5b",
+      "currentFinalSha256": "ed37421149cdcdaddda7104b40bca69778a465e32f8c251e86cbd844a3e91c5b",
+      "unchanged": true
+    },
+    {
+      "file": "src/lib/debouncedDraft.ts",
+      "priorReviewedSha256": "13b31cb3c090df4a3c5ad46a1a8b6897c58c109bf8d7df4e3da0b1ee78e1eebd",
+      "currentFinalSha256": "9bb9227893fb76c038c9d391592586213f75d8531f7465eba46e775ac6739f3a",
+      "changeOwner": "main",
+      "decision": "REVIEWED_FIX_ACCEPTED",
+      "reason": "Adds explanatory two-line comment and removes dependency list. Existing external JSON version/equality guards remain; version assigned only after successful rebase. A rejected pending rebase is eligible on actual saved/render update. Primitive and stable memo object both current-green/prior-red."
+    }
+  ],
+  "originalReports": [
+    {
+      "file": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-hooks-sidecar-check.md",
+      "sha256": "c9a6137a54f94276b02a1db5596c9d30e75d71ce90423ca6c8ffabe870bb3b13",
+      "originalPreserved": true
+    },
+    {
+      "file": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-hooks-sidecar-check.json",
+      "sha256": "d8b93de002b80852952d9265f2df5823b00603b3a7d84e8b66e24304fcf8fc78",
+      "originalPreserved": true
+    }
+  ],
+  "nativeEvidence": [
+    {
+      "variant": "regression",
+      "file": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-hooks-sidecar-followup/native-03/regression/report.json",
+      "sha256": "3f83d55539017a4d76a00cf227a063a9895ca71a8f7f3a2aae943367dba8dc7b",
+      "status": "FAIL",
+      "expectedExit": 1,
+      "unchanged": true,
+      "cases": [
+        {
+          "shape": "primitive",
+          "variant": "regression",
+          "status": "FAIL",
+          "observation": {
+            "shape": "primitive",
+            "variant": "regression",
+            "pending": {
+              "draft": "Local edit",
+              "status": "保存中…"
+            },
+            "settled": {
+              "draft": "Local edit",
+              "db": "External newest",
+              "status": "已保存"
+            },
+            "afterUnrelated": {
+              "draft": "Local edit",
+              "db": "External newest",
+              "status": "已保存"
+            },
+            "host": {
+              "writes": 1,
+              "writerFinished": true,
+              "initialKind": "string",
+              "memoIdentityChanges": 0,
+              "memoRendersWithSameIdentity": 0,
+              "renders": 0,
+              "parentRenders": 7,
+              "shape": "primitive"
+            }
+          },
+          "contractErrors": [
+            {
+              "name": "settled-latest-external",
+              "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    db: 'External newest',\n+   draft: 'Local edit',\n-   draft: 'External newest',\n    status: '已保存'\n  }\n"
+            },
+            {
+              "name": "unrelated-render-keeps-latest-external",
+              "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    db: 'External newest',\n+   draft: 'Local edit',\n-   draft: 'External newest',\n    status: '已保存'\n  }\n"
+            }
+          ],
+          "errors": [],
+          "external": [],
+          "documents": [
+            "http://127.0.0.1:5173/tests/fixtures/e07-draft-rebase/index.html?shape=primitive"
+          ],
+          "preflight": [
+            {
+              "name": "server-listen",
+              "milliseconds": 9
+            },
+            {
+              "name": "initial-dependency-processing",
+              "milliseconds": 81
+            },
+            {
+              "name": "actual-fixture-transform",
+              "milliseconds": 6
+            },
+            {
+              "name": "static-request-idle",
+              "milliseconds": 0
+            },
+            {
+              "name": "post-transform-dependency-processing",
+              "milliseconds": 0
+            }
+          ]
+        },
+        {
+          "shape": "memo",
+          "variant": "regression",
+          "status": "FAIL",
+          "observation": {
+            "shape": "memo",
+            "variant": "regression",
+            "pending": {
+              "draft": "Local edit",
+              "status": "保存中…"
+            },
+            "settled": {
+              "draft": "Local edit",
+              "db": "External newest",
+              "status": "已保存"
+            },
+            "afterUnrelated": {
+              "draft": "Local edit",
+              "db": "External newest",
+              "status": "已保存"
+            },
+            "host": {
+              "writes": 1,
+              "writerFinished": true,
+              "initialKind": "object",
+              "memoIdentityChanges": 2,
+              "memoRendersWithSameIdentity": 6,
+              "renders": 9,
+              "parentRenders": 7,
+              "shape": "memo"
+            }
+          },
+          "contractErrors": [
+            {
+              "name": "settled-latest-external",
+              "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    db: 'External newest',\n+   draft: 'Local edit',\n-   draft: 'External newest',\n    status: '已保存'\n  }\n"
+            },
+            {
+              "name": "unrelated-render-keeps-latest-external",
+              "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    db: 'External newest',\n+   draft: 'Local edit',\n-   draft: 'External newest',\n    status: '已保存'\n  }\n"
+            }
+          ],
+          "errors": [],
+          "external": [],
+          "documents": [
+            "http://127.0.0.1:5173/tests/fixtures/e07-draft-rebase/index.html?shape=memo"
+          ],
+          "preflight": [
+            {
+              "name": "server-listen",
+              "milliseconds": 4
+            },
+            {
+              "name": "initial-dependency-processing",
+              "milliseconds": 68
+            },
+            {
+              "name": "actual-fixture-transform",
+              "milliseconds": 2
+            },
+            {
+              "name": "static-request-idle",
+              "milliseconds": 0
+            },
+            {
+              "name": "post-transform-dependency-processing",
+              "milliseconds": 0
+            }
+          ]
+        }
+      ],
+      "snapshots": [
+        {
+          "shape": "primitive",
+          "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-hooks-sidecar-followup/native-03/regression/primitive/source-identity.json",
+          "sha256": "6b4c805896efe93f731b068815c990d502200239c6000eb3083023289faabed1",
+          "loadedCount": 22,
+          "loadedUnchanged": true,
+          "loadedHookSha256": "9bb9227893fb76c038c9d391592586213f75d8531f7465eba46e775ac6739f3a",
+          "deliveredHookSha256": "13b31cb3c090df4a3c5ad46a1a8b6897c58c109bf8d7df4e3da0b1ee78e1eebd"
+        },
+        {
+          "shape": "memo",
+          "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-hooks-sidecar-followup/native-03/regression/memo/source-identity.json",
+          "sha256": "3ffd030055f4c730b769c5cf667e0d44f0718f587029b22cc60e6d7853bd9d3f",
+          "loadedCount": 22,
+          "loadedUnchanged": true,
+          "loadedHookSha256": "9bb9227893fb76c038c9d391592586213f75d8531f7465eba46e775ac6739f3a",
+          "deliveredHookSha256": "13b31cb3c090df4a3c5ad46a1a8b6897c58c109bf8d7df4e3da0b1ee78e1eebd"
+        }
+      ]
+    },
+    {
+      "variant": "current",
+      "file": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-hooks-sidecar-followup/native-03/current/report.json",
+      "sha256": "21232d6f6052f3c59b9aafe7b9d1ae0ead96cbb8bba692591d2bbdd840e07305",
+      "status": "PASS",
+      "expectedExit": 0,
+      "unchanged": true,
+      "cases": [
+        {
+          "shape": "primitive",
+          "variant": "current",
+          "status": "PASS",
+          "observation": {
+            "shape": "primitive",
+            "variant": "current",
+            "pending": {
+              "draft": "Local edit",
+              "status": "保存中…"
+            },
+            "settled": {
+              "draft": "External newest",
+              "db": "External newest",
+              "status": "已保存"
+            },
+            "afterUnrelated": {
+              "draft": "External newest",
+              "db": "External newest",
+              "status": "已保存"
+            },
+            "host": {
+              "writes": 1,
+              "writerFinished": true,
+              "initialKind": "string",
+              "memoIdentityChanges": 0,
+              "memoRendersWithSameIdentity": 0,
+              "renders": 0,
+              "parentRenders": 7,
+              "shape": "primitive"
+            }
+          },
+          "contractErrors": [],
+          "errors": [],
+          "external": [],
+          "documents": [
+            "http://127.0.0.1:5173/tests/fixtures/e07-draft-rebase/index.html?shape=primitive"
+          ],
+          "preflight": [
+            {
+              "name": "server-listen",
+              "milliseconds": 9
+            },
+            {
+              "name": "initial-dependency-processing",
+              "milliseconds": 82
+            },
+            {
+              "name": "actual-fixture-transform",
+              "milliseconds": 5
+            },
+            {
+              "name": "static-request-idle",
+              "milliseconds": 0
+            },
+            {
+              "name": "post-transform-dependency-processing",
+              "milliseconds": 0
+            }
+          ]
+        },
+        {
+          "shape": "memo",
+          "variant": "current",
+          "status": "PASS",
+          "observation": {
+            "shape": "memo",
+            "variant": "current",
+            "pending": {
+              "draft": "Local edit",
+              "status": "保存中…"
+            },
+            "settled": {
+              "draft": "External newest",
+              "db": "External newest",
+              "status": "已保存"
+            },
+            "afterUnrelated": {
+              "draft": "External newest",
+              "db": "External newest",
+              "status": "已保存"
+            },
+            "host": {
+              "writes": 1,
+              "writerFinished": true,
+              "initialKind": "object",
+              "memoIdentityChanges": 2,
+              "memoRendersWithSameIdentity": 7,
+              "renders": 10,
+              "parentRenders": 7,
+              "shape": "memo"
+            }
+          },
+          "contractErrors": [],
+          "errors": [],
+          "external": [],
+          "documents": [
+            "http://127.0.0.1:5173/tests/fixtures/e07-draft-rebase/index.html?shape=memo"
+          ],
+          "preflight": [
+            {
+              "name": "server-listen",
+              "milliseconds": 4
+            },
+            {
+              "name": "initial-dependency-processing",
+              "milliseconds": 65
+            },
+            {
+              "name": "actual-fixture-transform",
+              "milliseconds": 3
+            },
+            {
+              "name": "static-request-idle",
+              "milliseconds": 0
+            },
+            {
+              "name": "post-transform-dependency-processing",
+              "milliseconds": 0
+            }
+          ]
+        }
+      ],
+      "snapshots": [
+        {
+          "shape": "primitive",
+          "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-hooks-sidecar-followup/native-03/current/primitive/source-identity.json",
+          "sha256": "91863d99a16180f1b26a14419d6944dbf268e270abd12cc1793122caa79035ad",
+          "loadedCount": 22,
+          "loadedUnchanged": true,
+          "loadedHookSha256": "9bb9227893fb76c038c9d391592586213f75d8531f7465eba46e775ac6739f3a",
+          "deliveredHookSha256": "9bb9227893fb76c038c9d391592586213f75d8531f7465eba46e775ac6739f3a"
+        },
+        {
+          "shape": "memo",
+          "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-hooks-sidecar-followup/native-03/current/memo/source-identity.json",
+          "sha256": "aa6e08378462ec42992cff38d16a461dbf015592b3b5ae32b493d8f6026eaeb1",
+          "loadedCount": 22,
+          "loadedUnchanged": true,
+          "loadedHookSha256": "9bb9227893fb76c038c9d391592586213f75d8531f7465eba46e775ac6739f3a",
+          "deliveredHookSha256": "9bb9227893fb76c038c9d391592586213f75d8531f7465eba46e775ac6739f3a"
+        }
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "kind": "native-enabled focused root tests",
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-hooks-sidecar-followup/native-test-03.log",
+      "exit": 0,
+      "files": 3,
+      "passed": 20,
+      "skipped": 0
+    },
+    {
+      "kind": "default test discovery/provenance",
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-hooks-sidecar-followup/default-test.log",
+      "exit": 0,
+      "passed": 1,
+      "skipped": 1,
+      "meaning": "Explicit absent-native-runtime skip"
+    },
+    {
+      "kind": "targeted actual test/harness TypeScript",
+      "config": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-hooks-sidecar-followup/tsconfig.json",
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-hooks-sidecar-followup/typecheck-01.log",
+      "exit": 0
+    },
+    {
+      "kind": "producer node syntax",
+      "command": "explicit machine node --check scripts/e07-draft-rebase-browser.mjs",
+      "exit": 0
+    },
+    {
+      "kind": "permanent portable fixture/test TypeScript",
+      "config": "tests/fixtures/e07-draft-rebase/tsconfig.json",
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-hooks-sidecar-followup/typecheck-permanent.log",
+      "exit": 0
+    }
+  ],
+  "preservedFailures": [
+    {
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-hooks-sidecar-followup/native-test-01.log",
+      "report": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-hooks-sidecar-followup/native-01/regression/report.json",
+      "cause": "Fixture locator getByRole(status) also matched implicit output status elements. Scoped locator to [data-editor]; assertions/timeouts unchanged."
+    }
+  ],
+  "intermediateEvidence": {
+    "native02": "Passed2 tests after locator fix; final03 adds all-loaded-source rehash and affected20tests."
+  },
+  "commands": {
+    "nativeFocused": "E07_PLAYWRIGHT_PATH=<existing absolute Playwright index.mjs> E07_CHROMIUM_PATH=<existing absolute Chromium executable> E07_DRAFT_REBASE_TEST_OUTPUT_DIR=<absolute review output> /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm test tests/e07DraftRebase.test.ts tests/debouncedDraft.test.ts tests/d08TextDraftComponents.test.ts --maxWorkers=1",
+    "directCurrent": "E07_PLAYWRIGHT_PATH=<existing absolute Playwright index.mjs> E07_CHROMIUM_PATH=<existing absolute Chromium executable> E07_DRAFT_REBASE_OUTPUT_DIR=<absolute output> node scripts/e07-draft-rebase-browser.mjs current",
+    "directCounterexample": "Same environment, node scripts/e07-draft-rebase-browser.mjs regression (expected exit1; same positive contracts fail)",
+    "installedRuntimeUsed": {
+      "node": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "pnpm": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+      "playwright": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+      "chromium": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+    }
+  },
+  "limits": [
+    "This follow-up accepts only the main guarded-rebase repair and the new permanent regression scope. No whole E07/QG01/E completion, task status/spec/git/CI/Node22/full-suite/build/model claim.",
+    "Native root case is explicitly skipped without both existing runtime env vars. Always-run snapshot integrity protects original evidence but is not ReactDOM behavior proof. Final native-enabled run executes both tests without skipping.",
+    "Original comparator shares actual current React/TextDraftField/DB dependencies; only the hook body is original. It proves the dependency-only boundary on that shared closure, not a historical whole-app reproduction.",
+    "Native observations use two animation frames and three explicit parent renders, real browser event scheduling, original10s timeout. They do not prove every concurrency/device/latency or all failed-save cases.",
+    "Scan/transform/static-idle preflight records distinct stages, fresh cache and one main document. It does not attribute the earlier E01/writes cold timeout to concurrent baseline or guarantee runtime dynamic/CSS/font readiness.",
+    "No dependency installation or config edits. Main clean Node22 mirror must explicitly update the one changed product source plus new tests/fixture/producer and run affected checks with a new delta/hash receipt; this sidecar did not execute that mirror or require reinstall."
+  ],
+  "writeScope": "Only new tests/e07DraftRebase.test.ts, tests/fixtures/e07-draft-rebase/**, scripts/e07-draft-rebase-browser.mjs, reviews/E07-hooks-sidecar-followup/** plus followup.md/json. Original completed report and product/sharedconfig unchanged by this worker.",
+  "finalCompletionFreeze": "E07-hooks-sidecar-followup/final-completion-freeze.json",
+  "finalStatus": "COMPLETED_POSTFIX_REVIEW_FROZEN",
+  "frozen13DriftCount": 0,
+  "actualFinalCompletion": {
+    "status": "COMPLETED",
+    "assignedWorkRemaining": [],
+    "receipt": "E07-hooks-sidecar-followup/final-acceptance-handoff.json",
+    "sourceDrift": 0,
+    "ownedFiles": 8,
+    "mainNode22ActualNativeEvidenceReviewed": true
+  }
+}

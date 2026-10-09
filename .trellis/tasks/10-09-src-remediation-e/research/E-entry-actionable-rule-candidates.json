@@ -1,0 +1,405 @@
+{
+  "purpose": "Baseline review candidates only; severity/rule output does not establish bug or accepted debt",
+  "candidates": [
+    {
+      "file": "src/components/agent/AgentChatPage.tsx",
+      "ruleId": "react-hooks/exhaustive-deps",
+      "severity": 1,
+      "message": "The 'threadList' logical expression could make the dependencies of useMemo Hook (at line 132) change on every render. To fix this, wrap the initialization of 'threadList' in its own useMemo() Hook.",
+      "line": 88,
+      "column": 11,
+      "nodeType": "VariableDeclarator",
+      "endLine": 88,
+      "endColumn": 37
+    },
+    {
+      "file": "src/components/agent/AgentChatPage.tsx",
+      "ruleId": "react-hooks/exhaustive-deps",
+      "severity": 1,
+      "message": "React Hook useEffect has a missing dependency: 'selectedConnector'. Either include it or remove the dependency array.",
+      "line": 205,
+      "column": 8,
+      "nodeType": "ArrayExpression",
+      "endLine": 205,
+      "endColumn": 119,
+      "suggestions": [
+        {
+          "desc": "Update the dependencies array to be: [selectedConnector.id, selectedConnector.definitionId, selectedConnector.baseUrl, selectedConnector.apiKey, selectedConnector]",
+          "fix": {
+            "range": [
+              9708,
+              9819
+            ],
+            "text": "[selectedConnector.id, selectedConnector.definitionId, selectedConnector.baseUrl, selectedConnector.apiKey, selectedConnector]"
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/AgentRunDetails.tsx",
+      "ruleId": "react-hooks/exhaustive-deps",
+      "severity": 1,
+      "message": "React Hook useMemo has a missing dependency: 'call'. Either include it or remove the dependency array.",
+      "line": 93,
+      "column": 73,
+      "nodeType": "ArrayExpression",
+      "endLine": 93,
+      "endColumn": 99,
+      "suggestions": [
+        {
+          "desc": "Update the dependencies array to be: [call]",
+          "fix": {
+            "range": [
+              5251,
+              5277
+            ],
+            "text": "[call]"
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/ReferenceAttachments.tsx",
+      "ruleId": "react-hooks/exhaustive-deps",
+      "severity": 1,
+      "message": "React Hook useEffect has a missing dependency: 'source'. Either include it or remove the dependency array.",
+      "line": 46,
+      "column": 8,
+      "nodeType": "ArrayExpression",
+      "endLine": 46,
+      "endColumn": 52,
+      "suggestions": [
+        {
+          "desc": "Update the dependencies array to be: [source, source.media.blob, source.reference.kind]",
+          "fix": {
+            "range": [
+              2001,
+              2045
+            ],
+            "text": "[source, source.media.blob, source.reference.kind]"
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/ReferenceAttachments.tsx",
+      "ruleId": "react-hooks/exhaustive-deps",
+      "severity": 1,
+      "message": "React Hook useEffect has a missing dependency: 'media'. Either include it or remove the dependency array.",
+      "line": 177,
+      "column": 8,
+      "nodeType": "ArrayExpression",
+      "endLine": 177,
+      "endColumn": 21,
+      "suggestions": [
+        {
+          "desc": "Update the dependencies array to be: [media, media.blob]",
+          "fix": {
+            "range": [
+              10473,
+              10486
+            ],
+            "text": "[media, media.blob]"
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/TaskWrapup.tsx",
+      "ruleId": "react-hooks/exhaustive-deps",
+      "severity": 1,
+      "message": "React Hook useEffect has missing dependencies: 'candidate' and 'draft'. Either include them or remove the dependency array.",
+      "line": 231,
+      "column": 8,
+      "nodeType": "ArrayExpression",
+      "endLine": 231,
+      "endColumn": 47,
+      "suggestions": [
+        {
+          "desc": "Update the dependencies array to be: [candidate, draft, onEditingChange]",
+          "fix": {
+            "range": [
+              12062,
+              12101
+            ],
+            "text": "[candidate, draft, onEditingChange]"
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/TaskWrapup.tsx",
+      "ruleId": "react-hooks/exhaustive-deps",
+      "severity": 1,
+      "message": "React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked.",
+      "line": 231,
+      "column": 9,
+      "nodeType": "UnaryExpression",
+      "endLine": 231,
+      "endColumn": 16
+    },
+    {
+      "file": "src/components/agent/TaskWrapup.tsx",
+      "ruleId": "react-hooks/exhaustive-deps",
+      "severity": 1,
+      "message": "React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked.",
+      "line": 231,
+      "column": 18,
+      "nodeType": "UnaryExpression",
+      "endLine": 231,
+      "endColumn": 29
+    },
+    {
+      "file": "src/components/agent/useChatSelection.ts",
+      "ruleId": "react-hooks/exhaustive-deps",
+      "severity": 1,
+      "message": "React Hook useEffect has a missing dependency: 'activeThread'. Either include it or remove the dependency array.",
+      "line": 39,
+      "column": 8,
+      "nodeType": "ArrayExpression",
+      "endLine": 39,
+      "endColumn": 97,
+      "suggestions": [
+        {
+          "desc": "Update the dependencies array to be: [loaded, activeThread.id, activeThread.connectorId, activeThread.model, connectorList, activeThread]",
+          "fix": {
+            "range": [
+              2500,
+              2589
+            ],
+            "text": "[loaded, activeThread.id, activeThread.connectorId, activeThread.model, connectorList, activeThread]"
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/components/agent/useReferenceDraft.ts",
+      "ruleId": "react-hooks/exhaustive-deps",
+      "severity": 1,
+      "message": "The ref value 'controllers.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'controllers.current' to a variable inside the effect, and use that variable in the cleanup function.",
+      "line": 35,
+      "column": 50,
+      "nodeType": "Identifier",
+      "endLine": 35,
+      "endColumn": 57
+    },
+    {
+      "file": "src/components/audio/AudioSources.tsx",
+      "ruleId": "react-hooks/rules-of-hooks",
+      "severity": 2,
+      "message": "React Hook \"useMaterialInProject\" cannot be called inside a callback. React Hooks must be called in a React function component or a custom React Hook function.",
+      "line": 242,
+      "column": 43,
+      "nodeType": "Identifier",
+      "endLine": 242,
+      "endColumn": 63
+    },
+    {
+      "file": "src/components/audio/AudioTimeline.tsx",
+      "ruleId": "react-hooks/exhaustive-deps",
+      "severity": 1,
+      "message": "The ref value 'playEpoch.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'playEpoch.current' to a variable inside the effect, and use that variable in the cleanup function.",
+      "line": 149,
+      "column": 23,
+      "nodeType": "Identifier",
+      "endLine": 149,
+      "endColumn": 30
+    },
+    {
+      "file": "src/components/audio/AudioTimeline.tsx",
+      "ruleId": "react-hooks/exhaustive-deps",
+      "severity": 1,
+      "message": "React Hook useEffect has missing dependencies: 'geometry.pixelsPerSecond', 'seekRequest', and 'viewportWidth'. Either include them or remove the dependency array.",
+      "line": 186,
+      "column": 8,
+      "nodeType": "ArrayExpression",
+      "endLine": 186,
+      "endColumn": 25,
+      "suggestions": [
+        {
+          "desc": "Update the dependencies array to be: [geometry.pixelsPerSecond, seekRequest, seekRequest.id, viewportWidth]",
+          "fix": {
+            "range": [
+              7445,
+              7462
+            ],
+            "text": "[geometry.pixelsPerSecond, seekRequest, seekRequest.id, viewportWidth]"
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/components/shots/ShotRow.tsx",
+      "ruleId": "@typescript-eslint/switch-exhaustiveness-check",
+      "severity": 2,
+      "message": "Switch is not exhaustive. Cases not matched: \"cameraAngle\" | \"cameraGear\" | \"category\" | \"emotion\" | \"focalLength\" | \"sceneCloseup\" | \"sound\"",
+      "line": 24,
+      "column": 13,
+      "nodeType": "Identifier",
+      "messageId": "switchIsNotExhaustive",
+      "endLine": 24,
+      "endColumn": 15,
+      "suggestions": [
+        {
+          "messageId": "addMissingCases",
+          "fix": {
+            "range": [
+              1804,
+              1804
+            ],
+            "text": "case \"cameraAngle\": { throw new Error('Not implemented yet: \"cameraAngle\" case') }\n        case \"cameraGear\": { throw new Error('Not implemented yet: \"cameraGear\" case') }\n        case \"category\": { throw new Error('Not implemented yet: \"category\" case') }\n        case \"emotion\": { throw new Error('Not implemented yet: \"emotion\" case') }\n        case \"focalLength\": { throw new Error('Not implemented yet: \"focalLength\" case') }\n        case \"sceneCloseup\": { throw new Error('Not implemented yet: \"sceneCloseup\" case') }\n        case \"sound\": { throw new Error('Not implemented yet: \"sound\" case') }\n        "
+          },
+          "desc": "Add branches for missing cases."
+        }
+      ]
+    },
+    {
+      "file": "src/components/studio/ConnectorsPage.tsx",
+      "ruleId": "react-hooks/exhaustive-deps",
+      "severity": 1,
+      "message": "The 'connectors' logical expression could make the dependencies of useMemo Hook (at line 44) change on every render. Move it inside the useMemo callback. Alternatively, wrap the initialization of 'connectors' in its own useMemo() Hook.",
+      "line": 37,
+      "column": 11,
+      "nodeType": "VariableDeclarator",
+      "endLine": 37,
+      "endColumn": 77
+    },
+    {
+      "file": "src/components/studio/ProjectGalleryPage.tsx",
+      "ruleId": "react-hooks/exhaustive-deps",
+      "severity": 1,
+      "message": "The 'ipLinks' logical expression could make the dependencies of useMemo Hook (at line 90) change on every render. To fix this, wrap the initialization of 'ipLinks' in its own useMemo() Hook.",
+      "line": 62,
+      "column": 11,
+      "nodeType": "VariableDeclarator",
+      "endLine": 62,
+      "endColumn": 78
+    },
+    {
+      "file": "src/components/studio/ProjectGalleryPage.tsx",
+      "ruleId": "@typescript-eslint/no-misused-promises",
+      "severity": 2,
+      "message": "Promise-returning function provided to attribute where a void return was expected.",
+      "line": 342,
+      "column": 64,
+      "nodeType": "JSXExpressionContainer",
+      "messageId": "voidReturnAttribute",
+      "endLine": 354,
+      "endColumn": 27
+    },
+    {
+      "file": "src/components/studio/materials/MaterialDetailPanel.tsx",
+      "ruleId": "react-hooks/rules-of-hooks",
+      "severity": 2,
+      "message": "React Hook \"useMaterialInProject\" cannot be called inside a callback. React Hooks must be called in a React function component or a custom React Hook function.",
+      "line": 245,
+      "column": 54,
+      "nodeType": "Identifier",
+      "endLine": 245,
+      "endColumn": 74
+    },
+    {
+      "file": "src/components/ui/click-spark.tsx",
+      "ruleId": "@typescript-eslint/switch-exhaustiveness-check",
+      "severity": 2,
+      "message": "Switch is not exhaustive. Cases not matched: \"ease-out\"",
+      "line": 74,
+      "column": 21,
+      "nodeType": "Identifier",
+      "messageId": "switchIsNotExhaustive",
+      "endLine": 74,
+      "endColumn": 27,
+      "suggestions": [
+        {
+          "messageId": "addMissingCases",
+          "fix": {
+            "range": [
+              2596,
+              2596
+            ],
+            "text": "case \"ease-out\": { throw new Error('Not implemented yet: \"ease-out\" case') }\n                "
+          },
+          "desc": "Add branches for missing cases."
+        }
+      ]
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "ruleId": "react-hooks/rules-of-hooks",
+      "severity": 2,
+      "message": "React Hook \"useResult\" is called in function \"execute\" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word \"use\".",
+      "line": 427,
+      "column": 20,
+      "nodeType": "Identifier",
+      "endLine": 427,
+      "endColumn": 29
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "ruleId": "react-hooks/rules-of-hooks",
+      "severity": 2,
+      "message": "React Hook \"useMaterialInProject\" is called in function \"execute\" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word \"use\".",
+      "line": 427,
+      "column": 36,
+      "nodeType": "Identifier",
+      "endLine": 427,
+      "endColumn": 56
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "ruleId": "react-hooks/rules-of-hooks",
+      "severity": 2,
+      "message": "React Hook \"useState\" is called in function \"scope\" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word \"use\".",
+      "line": 436,
+      "column": 19,
+      "nodeType": "Identifier",
+      "endLine": 436,
+      "endColumn": 27
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "ruleId": "react-hooks/rules-of-hooks",
+      "severity": 2,
+      "message": "React Hook \"useState\" is called in function \"prepare\" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word \"use\".",
+      "line": 443,
+      "column": 33,
+      "nodeType": "Identifier",
+      "endLine": 443,
+      "endColumn": 41
+    },
+    {
+      "file": "src/lib/agent/materialTools.ts",
+      "ruleId": "react-hooks/rules-of-hooks",
+      "severity": 2,
+      "message": "React Hook \"useResult\" is called in function \"execute\" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word \"use\".",
+      "line": 452,
+      "column": 20,
+      "nodeType": "Identifier",
+      "endLine": 452,
+      "endColumn": 29
+    },
+    {
+      "file": "src/lib/debouncedDraft.ts",
+      "ruleId": "react-hooks/exhaustive-deps",
+      "severity": 1,
+      "message": "React Hook useEffect contains a call to 'setDraftState'. Without a list of dependencies, this can lead to an infinite chain of updates. To fix this, pass [initialValue, controller] as a second argument to the useEffect Hook.",
+      "line": 261,
+      "column": 5,
+      "nodeType": "Identifier",
+      "endLine": 261,
+      "endColumn": 14,
+      "suggestions": [
+        {
+          "desc": "Add dependencies array: [initialValue, controller]",
+          "fix": {
+            "range": [
+              9865,
+              9865
+            ],
+            "text": ", [initialValue, controller]"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "purpose": "Final wholeE current gates/source/doc/chain packet. Source unchanged since accepted E07; latercanonical/ledgerwrites do not invalidate application tests and are explicitlybeforebytepreserved.",
+  "sourceAcceptance": "E07actualCOMPLETEDPASS",
+  "commands": "Node22clean03 actualtype/quality/88selftests/full172files3028/model/build/lockedinstallPASS; independentrootquality+typePASS;17nativecommandadoptions+actualprimitive/memoPASS",
+  "expectedLimits": "LocalmacOSNode22 notLinuxCI; metrics512visiblewarnings;13errornodes7unusedprecisecontracts; rawfailedattempts/genroutequalificationskept.",
+  "files": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-node22-clean-03/summary.json",
+      "sha256": "e8204e5b5d47bf73292a9a6dfa4376218930c24d883e49e05d374f8c0dbd146b"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-current-tools/formal-quality-integration-05.json",
+      "sha256": "d05eb4a7cf3dbf58316059415caed80b6d39c1c754f0e73688fcd2638a6ecb4b"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-final-independent/root-commands.json",
+      "sha256": "e0060bafaf8854982b8dded354e47377dff4c9b9c0ab470ee5c76429d49635c6"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-final-independent/cli-receipts.json",
+      "sha256": "d78bf0bff71f4f1b67ba3bdfa52d4215af5236bd49c83c9f57827e42af1b870b"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-final-independent/node22-receipt.json",
+      "sha256": "0f36a3c298c62c36c306255e4f543cb9e057e769ff10852f4d0926c5f85a49e1"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-final-independent/native-receipt.json",
+      "sha256": "87b9064a283d968ef8a345e30ea92c0e245a0965ce9e908263c4724acf9b9cd9"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E07-current-native-command-adoption.json",
+      "sha256": "9af9c58e0df0804f97565e0eceef4e55b7d4468adea3aebc658cc8d2700a4fe5"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e07-native-generated-route-attribution/receipt.json",
+      "sha256": "1091aa1c87e2524670045b925c474b42e72251d5c8e07663835d68ac6668bfe0"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-check-snapshot.json",
+      "sha256": "c74f45907aa0f47dbd05cc7612cf483ebee1c4031f88033c202d1b78161a2ec1"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E-final-source-lineage.json",
+      "sha256": "fb243dacd399c46d47af7018964dffe59768998bf8349bf0922686f53b8c8bf0"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E-final-main-accepted-chain.json",
+      "sha256": "eac5f7dad6896e56a3fbcf1b9a127dd8bb23c7ef0d439858bbea693cc7572543"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E07-spec-sync.json",
+      "sha256": "908ff2622587073b0e1dc492593df670538e18fd8ce40ea61a6b65266bb1708f"
+    }
+  ]
+}

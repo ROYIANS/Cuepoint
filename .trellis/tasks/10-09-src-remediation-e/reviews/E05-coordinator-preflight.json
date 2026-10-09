@@ -1,0 +1,12 @@
+{
+  "purpose": "Final completed E05writer handoff/currentgate integrity,notindependentacceptance",
+  "handoffSHA256": "f3155a80f95b5e2c51bf617354f55b3a6136023a0c6850b944f4f9bcb5d37eda",
+  "hashCount": 300,
+  "rootPaths": 8,
+  "currentGateInputs": 766,
+  "gateStatus": "PASS",
+  "hashMismatches": [],
+  "static": "19TS0newE05noncomplexity/metrics adoptedonlyafter447inputrehash",
+  "AST": "420TS2502edges0parse0staticvaluecycles",
+  "native": "9before+9after actualRAF/geometry;controlledhidden seam limits"
+}

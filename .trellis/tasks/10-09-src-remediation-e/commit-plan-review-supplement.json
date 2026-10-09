@@ -1,0 +1,38 @@
+{
+  "status": "READY_FOR_ONE_HUMAN_CONFIRMATION_NOT_APPROVED",
+  "actualIndependentPlanCompletionReceived": true,
+  "unchangedBasePlan": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/commit-plan.json",
+    "sha256": "f1d6a353a72db67746eeef654af44e4ac2ff0775d051928f1acdb88a0ee8962e",
+    "markdownSHA256": "91d0f18e3d9e7460e23bd3c3bd85c436cc8d4d229006fc8b838a3b0d304fd4ac"
+  },
+  "independentPlanReportSHA256": "bc579a76f7b7ac64115bc87c38390259e7ca18c92343bdce8cd6e68cccd9eeef",
+  "group": 3,
+  "appendOnlyPaths": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-commit-plan-check.md",
+      "sha256": "e23b5c8b17f49159cff0c76514d5464ceace4b5f65e07f79a385547bc8216d8d",
+      "selfHashPolicy": "Exactindependentcompletionreporthash"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E-commit-plan-check.json",
+      "sha256": "bc579a76f7b7ac64115bc87c38390259e7ca18c92343bdce8cd6e68cccd9eeef",
+      "selfHashPolicy": "Exactindependentcompletionreporthash"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/commit-plan-review-supplement.json",
+      "sha256": null,
+      "selfHashPolicy": "Thisnew supplement excluded from itsownhash; exactfile will be hashed beforestaging alongside unchanged plan."
+    }
+  ],
+  "finalCounts": {
+    "group1": 227,
+    "group2": 17,
+    "group3": 10490,
+    "total": 10734,
+    "packFiles": 10121,
+    "readableMetadata": 369
+  },
+  "purpose": "Three final late readable evidence files explicitlyreviewed bychecker are appended togroup3 withoutmodifying acceptedbaseplan, manifest, pack or historicalreports. No recursivelyrebuiltpack.",
+  "noStagingCommitPushArchive": true
+}

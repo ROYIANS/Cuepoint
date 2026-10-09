@@ -1,0 +1,180 @@
+{
+  "date": "2026-10-09",
+  "producer": "trellis-implement",
+  "finding": "SS-06",
+  "baselineRevision": "1ecaf5ceec92e022c2b2b8d662e2a92e8eee36c7",
+  "entrySnapshot": ".trellis/tasks/10-09-src-remediation-e/research/E01-entry.json",
+  "ownedImplementationFiles": [
+    {
+      "path": "src/components/studio/ProjectGalleryPage.tsx",
+      "beforeSha256": "f3fd110028e6219c298e7ee8bda70f840906effaeb8b1986921784b2120c0c94",
+      "afterSha256": "945f07573b7535eee1326c0ff08e50627ccf2152e32069540c14311add186034",
+      "status": "modified"
+    },
+    {
+      "path": "src/components/studio/AssetLibraryPages.tsx",
+      "beforeSha256": "77c817e0e78e888f2716179cf6f8cc018a7b10d8f19bfdbf3d27d3b6f2b38760",
+      "afterSha256": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+      "status": "modified"
+    },
+    {
+      "path": "src/components/workspace/EpisodeListPage.tsx",
+      "beforeSha256": "d3e993d6e3a53235670259bcdb684109e7be37445a4d9cf9ce649e4c9e6a04cd",
+      "afterSha256": "a881f4c4f1f2e375a03135ae2df50379358d2b1404e184b3b3afc0a22d907ed9",
+      "status": "modified"
+    },
+    {
+      "path": "scripts/e01-writes-browser-regression.mjs",
+      "beforeSha256": null,
+      "afterSha256": "5133e571fa553b7b5c09e5499d253d68a56f5295addaf67f70dc35c9be30b0d2",
+      "status": "new"
+    },
+    {
+      "path": "tests/fixtures/e01-writes/index.html",
+      "beforeSha256": null,
+      "afterSha256": "8f21ced89184fb7027c8ebba4f11caf602417aeface656a1df5340b6b050ab07",
+      "status": "new"
+    },
+    {
+      "path": "tests/fixtures/e01-writes/harness.tsx",
+      "beforeSha256": null,
+      "afterSha256": "b108edcd45ee791860828c4b833912451b888057f8a4633ce514ccaae0c9b397",
+      "status": "new"
+    }
+  ],
+  "ownedEvidenceFiles": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/focused-tests.log",
+      "beforeSha256": null,
+      "afterSha256": "e59df6e1ea7bb4f53842577ad8ffac28a57628a651aa55f028a89374aef2cb05",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-1-failure/calls.json",
+      "beforeSha256": null,
+      "afterSha256": "84cd24f11870a544d00b298f12ddb3e4d5df82680ca7c7348fa9f0387afd16b8",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-1-failure/failure.html",
+      "beforeSha256": null,
+      "afterSha256": "59fc6f6ab3148ac5fa6e67c4bb93a8231879d857e612b0f891a3c174f4855244",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-1-failure/failure.png",
+      "beforeSha256": null,
+      "afterSha256": "68eeb4198b3d9a0058311da2bb06b4766d85bd75ef3938d6e3fc34f59a3b92cd",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-1.log",
+      "beforeSha256": null,
+      "afterSha256": "8a1de6ee83469e20ef0602f9f3fd958ec19edd68ce7eb856468cdd45a7b37764",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-2.log",
+      "beforeSha256": null,
+      "afterSha256": "a2991cda64bb8f8104ba91ffd194c2044fe32529095ef4d5ae71379c4386cea6",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-3.log",
+      "beforeSha256": null,
+      "afterSha256": "918623407e70ef9ee37ac568c0991bfcbdcb3d76137505e48e70dd3529238d8a",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-final.log",
+      "beforeSha256": null,
+      "afterSha256": "b6244d64bd2aa47ff7c757c46542a4ba53047632a54a814b668c8a072db828b1",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/typecheck-final.log",
+      "beforeSha256": null,
+      "afterSha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/typecheck.log",
+      "beforeSha256": null,
+      "afterSha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/verification-inputs.json",
+      "beforeSha256": null,
+      "afterSha256": "3358e70b330eb786bc075bd9d8cc1b1777c58fbcc223e54be86cf95e43476700",
+      "status": "new"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E01-writes-implementation.md",
+      "beforeSha256": null,
+      "afterSha256": "007112db3e879c417629beba8219a85e38574e29d1d68a1e4d4b093bba6b00dd",
+      "status": "new"
+    }
+  ],
+  "manifestPath": ".trellis/tasks/10-09-src-remediation-e/research/E01-writes-implementation.json",
+  "manifestSelfHash": "excluded to avoid self-reference",
+  "commands": [
+    {
+      "command": "PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm lint",
+      "result": "pass",
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/typecheck-final.log"
+    },
+    {
+      "command": "PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm test tests/repo.test.ts tests/repoReliability.test.ts tests/assetFoundation.test.ts tests/assetLibrary.test.ts tests/undo.test.ts tests/debouncedDraft.test.ts tests/parentProjectWrites.test.ts tests/materialLibrary.test.ts tests/agentIpTools.test.ts --maxWorkers=4",
+      "result": "pass",
+      "testFiles": 9,
+      "tests": 120,
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/focused-tests.log"
+    },
+    {
+      "command": "E01_PLAYWRIGHT_PATH=/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs E01_CHROMIUM_PATH=/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node scripts/e01-writes-browser-regression.mjs",
+      "result": "pass",
+      "tests": 20,
+      "pageErrors": 0,
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-final.log"
+    },
+    {
+      "command": "git diff --check -- src/components/studio/ProjectGalleryPage.tsx src/components/studio/AssetLibraryPages.tsx src/components/workspace/EpisodeListPage.tsx",
+      "result": "pass"
+    }
+  ],
+  "nativeAttempts": [
+    {
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-1.log",
+      "status": "failed",
+      "passedBeforeFailure": 5,
+      "reason": "CreateTile accessible name includes hint; exact name selector omitted it",
+      "preservedFailureDirectory": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-1-failure"
+    },
+    {
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-2.log",
+      "status": "passed",
+      "tests": 16
+    },
+    {
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-3.log",
+      "status": "passed",
+      "tests": 20
+    },
+    {
+      "log": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-final.log",
+      "status": "passed",
+      "tests": 20,
+      "pageErrors": 0
+    }
+  ],
+  "verificationInputsUnchanged": true,
+  "limitations": [
+    "No full suite/build or cumulative static/architecture producer; coordinator/independent checker follows.",
+    "Native rejections are exported repository entry failures; mid-transaction rollback coverage is existing focused suite.",
+    "Fixture uses destination stubs; actual write-owning production pages/router/primitives/IndexedDB are real.",
+    "Shared parallel-owner modifications are not attributed here."
+  ],
+  "taskAdvanced": false,
+  "commitsOrPushes": false
+}

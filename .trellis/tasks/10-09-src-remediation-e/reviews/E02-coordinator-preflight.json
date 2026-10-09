@@ -1,0 +1,12 @@
+{
+  "unit": "E02",
+  "purpose": "Coordinator preflight, not independent acceptance",
+  "frozenArtifactCount": 100,
+  "artifactHashMismatches": [],
+  "priorE01ProductUnexpectedDrift": [],
+  "priorE01AllowedDelta": [
+    "scripts/e01-drafts-browser-regression.mjs"
+  ],
+  "crossUnitReport": ".trellis/tasks/10-09-src-remediation-e/research/E02-implementation.json",
+  "reviewInput": ".trellis/tasks/10-09-src-remediation-e/reviews/E02-review-input.json"
+}

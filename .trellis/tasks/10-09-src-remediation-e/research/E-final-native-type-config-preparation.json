@@ -1,0 +1,116 @@
+{
+  "purpose": "Read-only final native fixture typecoverageinventory, no compilerexecution/newtestclaim",
+  "configs": [
+    {
+      "path": "tests/fixtures/e02/tsconfig.json",
+      "sha256": "cbf2e9e64c5fca6bc1e940e98515e943c495a4128a03630d977c5636f404b04a",
+      "compilerOptions": {
+        "composite": false,
+        "incremental": false
+      },
+      "include": [
+        "harness.tsx",
+        "../../../src/vite-env.d.ts"
+      ],
+      "extends": "../../../tsconfig.app.json",
+      "sourceOfAuthority": "Actualownednativefixturetypeconfig; roottscdoesnotnecessarilycover browserfixture ambient/types"
+    },
+    {
+      "path": "tests/fixtures/e03/tsconfig.json",
+      "sha256": "6ee34f5879e3e8c88cb22a9184bc73080cfb0c5bc791b614f5a4880413daafa9",
+      "compilerOptions": {
+        "composite": false,
+        "incremental": false
+      },
+      "include": [
+        "harness.tsx",
+        "../../../src/vite-env.d.ts"
+      ],
+      "extends": "../../../tsconfig.app.json",
+      "sourceOfAuthority": "Actualownednativefixturetypeconfig; roottscdoesnotnecessarilycover browserfixture ambient/types"
+    },
+    {
+      "path": "tests/fixtures/e04-library/tsconfig.json",
+      "sha256": "0d0e4ec9004fc3eb593326706c04e81486d5e79113ce96b431fa0838eae05e58",
+      "compilerOptions": {
+        "incremental": false,
+        "tsBuildInfoFile": null
+      },
+      "include": [
+        "harness.tsx",
+        "../../e04LibraryQueries.test.ts",
+        "../../../src/vite-env.d.ts"
+      ],
+      "extends": "../../../tsconfig.app.json",
+      "sourceOfAuthority": "Actualownednativefixturetypeconfig; roottscdoesnotnecessarilycover browserfixture ambient/types"
+    },
+    {
+      "path": "tests/fixtures/e04-media/tsconfig.json",
+      "sha256": "cab0c780aca49996eba9fddf27d2d4c2c457cd4bad73938021a288b68e1dec81",
+      "compilerOptions": {
+        "tsBuildInfoFile": "../../../node_modules/.tmp/e04-media.tsbuildinfo",
+        "types": [
+          "vite/client"
+        ]
+      },
+      "include": [
+        "./*.ts",
+        "../sourceSnapshots/e04-media/src/**/*.ts",
+        "../../e04MediaRetention.test.ts",
+        "../../../src/lib/references/mammoth.d.ts"
+      ],
+      "extends": "../../../tsconfig.app.json",
+      "sourceOfAuthority": "Actualownednativefixturetypeconfig; roottscdoesnotnecessarilycover browserfixture ambient/types"
+    },
+    {
+      "path": "tests/fixtures/e04-memory/tsconfig.json",
+      "sha256": "929bc82e395bff1a027c56cd89dd77436a4039031943d9d765730bf6da549fd7",
+      "compilerOptions": {
+        "incremental": false,
+        "tsBuildInfoFile": null
+      },
+      "include": [
+        "./main.ts",
+        "../../e04MemoryTransactions.test.ts"
+      ],
+      "extends": "../../../tsconfig.app.json",
+      "sourceOfAuthority": "Actualownednativefixturetypeconfig; roottscdoesnotnecessarilycover browserfixture ambient/types"
+    },
+    {
+      "path": "tests/fixtures/e05/tsconfig.json",
+      "sha256": "004dcda67dd4247446ff42d7d24c62f74c00de321b9edd013a45e4f94952b2cb",
+      "compilerOptions": {
+        "composite": false,
+        "incremental": false,
+        "types": [
+          "vite/client"
+        ]
+      },
+      "include": [
+        "harness.tsx",
+        "instrumentation.ts",
+        "../../../src/vite-env.d.ts"
+      ],
+      "extends": "../../../tsconfig.app.json",
+      "sourceOfAuthority": "Actualownednativefixturetypeconfig; roottscdoesnotnecessarilycover browserfixture ambient/types"
+    },
+    {
+      "path": "tests/fixtures/e06/tsconfig.json",
+      "sha256": "4859ed082c9bf157752fa48299e6ba0c46ef4bc55c6b9df3317ec77c3d57bff4",
+      "compilerOptions": {
+        "composite": false,
+        "incremental": false,
+        "types": [
+          "vite/client"
+        ]
+      },
+      "include": [
+        "icons.tsx",
+        "../../../src/vite-env.d.ts"
+      ],
+      "extends": "../../../tsconfig.app.json",
+      "sourceOfAuthority": "Actualownednativefixturetypeconfig; roottscdoesnotnecessarilycover browserfixture ambient/types"
+    }
+  ],
+  "note": "Final relevant nativefixture configs and sharedtypecontract compile under actual frozen chosen TS/tool versions; avoid assuming rootapp typecheck covers all browserfixtures. FullVitest executable coverage differs from tsc fixture ambient coverage."
+}

@@ -1,0 +1,21 @@
+{
+  "unit": "E07",
+  "status": "ACCEPTED_COMPLETED_INDEPENDENT_PASS",
+  "actualCompletionReceived": true,
+  "snapshotSHA256": "c74f45907aa0f47dbd05cc7612cf483ebee1c4031f88033c202d1b78161a2ec1",
+  "snapshot": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-check-snapshot.json",
+  "reportSHA256": "cec87156512dfd6348e1d0065712abb7d5d73cdffdd2a84f3282ab4759ad347c",
+  "completionSealSHA256": "f6565badf1d24e1c3e6c408691f4cf943094eb9b85e6e9b8d34e1caf6b8c954f",
+  "sourceInputsChecked": 1022,
+  "sourceDrift": [],
+  "ledgerCounts": {
+    "findingsFixed": 51,
+    "unitsVerified": 32,
+    "QG01": "verified",
+    "EX01": "verified"
+  },
+  "canonicalSync": ".trellis/tasks/10-09-src-remediation-e/research/E07-spec-sync.json",
+  "canonicalSyncSHA256": "908ff2622587073b0e1dc492593df670538e18fd8ce40ea61a6b65266bb1708f",
+  "wholeEIndependentFinal": "pending",
+  "noEStagingCommitPushArchive": true
+}

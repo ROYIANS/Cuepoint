@@ -237,3 +237,32 @@ Actual record-write, source inventory, wrap-up schema/publication and freshness 
 
 ## 7. Wrong vs Correct
 Wrong: overwrite every call mentioning jobId with the job's current downloaded outcome. Correct: independently validate original successful tool provenance and current owned output, keeping generation evidence separate.
+
+## E01 wrapup and nested promotion departure (2026-10-09)
+
+### 1. Scope / Trigger
+Manual wrapup content/sources and nested memory promotion inside TaskInspector; close/route/owner replacement must not lose edits or create overlapping confirmations.
+
+### 2. Signatures
+TaskWrapup accepts optional `onDraftStateChange(ManualDraftState)` and shared `requestDeparture`. Inspector consumes routeDirty/routePending separately from local dirty/pending where a nested MemoryEditor already owns routing.
+
+### 3. Contracts
+Freeze wrapup family/revision/content, task/thread/project and opening baseline; sources participate in real dirty equality. Synchronous lock/draft refs and mounted epoch protect immediate actions and old completions. Promotion keeps its B02 epoch/key/frozen source. Publish preparation from the synchronous promotion phase before awaiting candidates. Parent local state conservatively owns an open candidate; route flags delegate the candidate to MemoryEditor's existing blocker while retaining actual wrapup dirty/pending. An explicit local discard resets only its initiating editor and does not remount an unrelated pending operation. No source/fingerprint/CAS or confirmation evidence rule is relaxed.
+
+### 4. Validation / Error Matrix
+| Trigger | Outcome |
+| --- | --- |
+| Rejected manual save | Preserve content/sources/frozen revision and retryable error |
+| Candidate preparation starts | Parent sees pending immediately |
+| Dirty candidate route cancel/discard | Exactly one candidate route confirmation; cancel retains source/body, discard creates no memory |
+| Local close plus browser POP | Resolve one initiating local request; no stuck parent prompt |
+| Retired wrapup/candidate completion | No publication into a later editor/session |
+
+### 5. Good / Base / Bad Cases
+Good: edit a candidate -> route -> continue -> frozen title/body/source remain. Base: unchanged manual wrapup leaves cleanly. Bad: using candidate object identity as a remount instruction or allowing parent and candidate route guards to each require another discard.
+
+### 6. Tests Required
+Keep `tests/b02MemoryPromotion.test.ts` source/epoch/CAS assertions; its host only adds necessary guard callback mocks. E01 browser runner and independent supplements exercise actual manual wrapup, nested MemoryEditor, native persistence and overlapping departure. Fake hook-host proof is distinct from browser scheduling proof.
+
+### 7. Wrong vs Correct
+Wrong: effect-only pending publication after candidate read begins, or parent treating a nested candidate as an extra route-blocking owner. Correct: synchronous promotion phase publication plus explicit local/route ownership delegation. Existing conservative candidate ownership is retained; no automatic saving or source reconciliation is added.

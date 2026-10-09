@@ -1,0 +1,169 @@
+{
+  "purpose": "Read-only index of E01\u2013E05 canonical receipt evolution before finalE integration; not a final immutablehashacceptance or replacement for original receipts",
+  "receipts": [
+    {
+      "unit": "E01",
+      "sourceReceipt": ".trellis/tasks/10-09-src-remediation-e/research/E01-spec-sync.json",
+      "receiptSHA256": "e3eed55f381940f61c8c8f05008e74d453a366365fb75d71d1aa2670bdf32242",
+      "documents": [
+        {
+          "path": ".trellis/spec/frontend/component-guidelines.md",
+          "recordedAfter": "7458d0ac44119d8581470f13ae9d28d1cbf1bde17468b9f0167897cf8a30ef2e",
+          "currentSHA256": "91a004c2bf8d91fb297bda0dcae8eb4c368680ecc5c770bf898f627a14b4179e",
+          "hasLaterEvolution": true,
+          "schema": "E01specsaftermap; no beforeCopy field in originalreceipt. Later E02/E03 exactbeforecopies or originalcompleteE01evidence govern historicalbeforebytes; do not reconstructproof."
+        },
+        {
+          "path": ".trellis/spec/frontend/agent-tasks.md",
+          "recordedAfter": "9632d4a24b81e063411b7ce1af82faf40a443625a38fbd171cd1525f4623a7f7",
+          "currentSHA256": "9632d4a24b81e063411b7ce1af82faf40a443625a38fbd171cd1525f4623a7f7",
+          "hasLaterEvolution": false,
+          "schema": "E01specsaftermap; no beforeCopy field in originalreceipt. Later E02/E03 exactbeforecopies or originalcompleteE01evidence govern historicalbeforebytes; do not reconstructproof."
+        },
+        {
+          "path": ".trellis/spec/frontend/agent-task-wrapup.md",
+          "recordedAfter": "25ebcbc55f7261b731863454f6ff2d5e30b53683628c8c32e32b7908cabf1c62",
+          "currentSHA256": "25ebcbc55f7261b731863454f6ff2d5e30b53683628c8c32e32b7908cabf1c62",
+          "hasLaterEvolution": false,
+          "schema": "E01specsaftermap; no beforeCopy field in originalreceipt. Later E02/E03 exactbeforecopies or originalcompleteE01evidence govern historicalbeforebytes; do not reconstructproof."
+        },
+        {
+          "path": ".trellis/spec/frontend/audio-music.md",
+          "recordedAfter": "43d32887a065d675fff855bc466550b63fbc971a1dd0be98ac92a4418fa21c1f",
+          "currentSHA256": "84c25cff00c0f0dd8eae4420e422ed20c2f729b6495c953801a81fdec568135f",
+          "hasLaterEvolution": true,
+          "schema": "E01specsaftermap; no beforeCopy field in originalreceipt. Later E02/E03 exactbeforecopies or originalcompleteE01evidence govern historicalbeforebytes; do not reconstructproof."
+        }
+      ]
+    },
+    {
+      "unit": "E02",
+      "sourceReceipt": ".trellis/tasks/10-09-src-remediation-e/research/E02-spec-sync.json",
+      "receiptSHA256": "7d6c69005acc29bb6732f7f086dbef1873a3f9fcbc8df401358b0bd52e551e29",
+      "documents": [
+        {
+          "path": ".trellis/spec/frontend/component-guidelines.md",
+          "recordedBefore": "7458d0ac44119d8581470f13ae9d28d1cbf1bde17468b9f0167897cf8a30ef2e",
+          "recordedAfter": "91a004c2bf8d91fb297bda0dcae8eb4c368680ecc5c770bf898f627a14b4179e",
+          "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e02-spec-sync-before/.trellis/spec/frontend/component-guidelines.md",
+          "actualCopySHA256": "7458d0ac44119d8581470f13ae9d28d1cbf1bde17468b9f0167897cf8a30ef2e",
+          "copyMatches": true,
+          "currentSHA256": "91a004c2bf8d91fb297bda0dcae8eb4c368680ecc5c770bf898f627a14b4179e",
+          "hasLaterEvolution": false
+        },
+        {
+          "path": ".trellis/spec/frontend/chat-performance.md",
+          "recordedBefore": "72b8db703467f0dc23c763a720c3fbb208654f608e9a905b6b4377367ba85a91",
+          "recordedAfter": "86e1f9c6d378352b77a8a4cfd40eabbe77666fefed6f15426f179fa33e870fea",
+          "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e02-spec-sync-before/.trellis/spec/frontend/chat-performance.md",
+          "actualCopySHA256": "72b8db703467f0dc23c763a720c3fbb208654f608e9a905b6b4377367ba85a91",
+          "copyMatches": true,
+          "currentSHA256": "86e1f9c6d378352b77a8a4cfd40eabbe77666fefed6f15426f179fa33e870fea",
+          "hasLaterEvolution": false
+        },
+        {
+          "path": ".trellis/tasks/10-09-src-remediation-e/implement.md",
+          "recordedBefore": "16aa23e394c2058a3685fa839d22f64f2da92200c5202add0bfd94e69493959d",
+          "recordedAfter": "2553dc176179bc737ea7a758b9d4b7a94d0310c57d6cbdaf99a7da9fac2da433",
+          "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e02-spec-sync-before/.trellis/tasks/10-09-src-remediation-e/implement.md",
+          "actualCopySHA256": "16aa23e394c2058a3685fa839d22f64f2da92200c5202add0bfd94e69493959d",
+          "copyMatches": true,
+          "currentSHA256": "8b5adb94e603cd7ca231a825a81bded1b49541d60e4f3fe53985797caf7e7cac",
+          "hasLaterEvolution": true
+        }
+      ]
+    },
+    {
+      "unit": "E03",
+      "sourceReceipt": ".trellis/tasks/10-09-src-remediation-e/research/E03-spec-sync.json",
+      "receiptSHA256": "93ffdea4bea259403497d67eb829279d2bef182a3960fc8379b39507dc566ba5",
+      "documents": [
+        {
+          "path": ".trellis/spec/frontend/audio-music.md",
+          "recordedBefore": "43d32887a065d675fff855bc466550b63fbc971a1dd0be98ac92a4418fa21c1f",
+          "recordedAfter": "84c25cff00c0f0dd8eae4420e422ed20c2f729b6495c953801a81fdec568135f",
+          "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e03-spec-sync-before/.trellis/spec/frontend/audio-music.md",
+          "actualCopySHA256": "43d32887a065d675fff855bc466550b63fbc971a1dd0be98ac92a4418fa21c1f",
+          "copyMatches": true,
+          "currentSHA256": "84c25cff00c0f0dd8eae4420e422ed20c2f729b6495c953801a81fdec568135f",
+          "hasLaterEvolution": false
+        },
+        {
+          "path": ".trellis/tasks/10-09-src-remediation-e/implement.md",
+          "recordedBefore": "2553dc176179bc737ea7a758b9d4b7a94d0310c57d6cbdaf99a7da9fac2da433",
+          "recordedAfter": "1be4c6fd7e08dad1a190b63e978dd15bd82519c2b3ad065ffa4abd108e57da47",
+          "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e03-spec-sync-before/.trellis/tasks/10-09-src-remediation-e/implement.md",
+          "actualCopySHA256": "2553dc176179bc737ea7a758b9d4b7a94d0310c57d6cbdaf99a7da9fac2da433",
+          "copyMatches": true,
+          "currentSHA256": "8b5adb94e603cd7ca231a825a81bded1b49541d60e4f3fe53985797caf7e7cac",
+          "hasLaterEvolution": true
+        }
+      ]
+    },
+    {
+      "unit": "E04",
+      "sourceReceipt": ".trellis/tasks/10-09-src-remediation-e/research/E04-spec-sync.json",
+      "receiptSHA256": "e64f945cfefaea17873121854a72d33dd8d01906ef58d32ad37d2cb686fd011e",
+      "documents": [
+        {
+          "path": ".trellis/spec/frontend/project-memory.md",
+          "recordedBefore": "9517682b6d7b3db8b5a63f3eb3983be662b4332fc88e11e4ede97671a387f623",
+          "recordedAfter": "19eb6dc0abcebd7d0637c548feb67bc44632328d8113da63c76d6c3a8037bc5f",
+          "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e04-spec-sync-before/.trellis/spec/frontend/project-memory.md",
+          "actualCopySHA256": "9517682b6d7b3db8b5a63f3eb3983be662b4332fc88e11e4ede97671a387f623",
+          "copyMatches": true,
+          "currentSHA256": "19eb6dc0abcebd7d0637c548feb67bc44632328d8113da63c76d6c3a8037bc5f",
+          "hasLaterEvolution": false
+        },
+        {
+          "path": ".trellis/spec/frontend/state-management.md",
+          "recordedBefore": "0fa7387041731978f6ffedb1bbdaf5187eaaffa8c55c96f74c179edc98e119af",
+          "recordedAfter": "042dd9215864684a9827300385a921549a3214f2369b31704d8b519da96e77bb",
+          "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e04-spec-sync-before/.trellis/spec/frontend/state-management.md",
+          "actualCopySHA256": "0fa7387041731978f6ffedb1bbdaf5187eaaffa8c55c96f74c179edc98e119af",
+          "copyMatches": true,
+          "currentSHA256": "042dd9215864684a9827300385a921549a3214f2369b31704d8b519da96e77bb",
+          "hasLaterEvolution": false
+        },
+        {
+          "path": ".trellis/spec/frontend/hook-guidelines.md",
+          "recordedBefore": "cd6f1c96c5b75fa811b46ac311e3ed6a1418fad74c47be5a8dfef429d9945252",
+          "recordedAfter": "45dcda05a795c6bc59c50a048569b74162e9ad514653406fbd0750097cd5fe1c",
+          "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e04-spec-sync-before/.trellis/spec/frontend/hook-guidelines.md",
+          "actualCopySHA256": "cd6f1c96c5b75fa811b46ac311e3ed6a1418fad74c47be5a8dfef429d9945252",
+          "copyMatches": true,
+          "currentSHA256": "92c25d1fa502bed3c1d4601502adda361c8e6a5491c24be2bf243a12cc45e2b6",
+          "hasLaterEvolution": true
+        },
+        {
+          "path": ".trellis/tasks/10-09-src-remediation-e/implement.md",
+          "recordedBefore": "1be4c6fd7e08dad1a190b63e978dd15bd82519c2b3ad065ffa4abd108e57da47",
+          "recordedAfter": "9951a393d67d1c7a380714516674293548d4869ec34881a75ac85b104fa9466d",
+          "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e04-spec-sync-before/.trellis/tasks/10-09-src-remediation-e/implement.md",
+          "actualCopySHA256": "1be4c6fd7e08dad1a190b63e978dd15bd82519c2b3ad065ffa4abd108e57da47",
+          "copyMatches": true,
+          "currentSHA256": "8b5adb94e603cd7ca231a825a81bded1b49541d60e4f3fe53985797caf7e7cac",
+          "hasLaterEvolution": true
+        }
+      ]
+    },
+    {
+      "unit": "E05",
+      "sourceReceipt": ".trellis/tasks/10-09-src-remediation-e/research/E05-spec-sync.json",
+      "receiptSHA256": "cd26e8f5d40fafe2a7c3d58bb0e722f6edb2056cc572687f9ecebbe7576ea8e7",
+      "documents": [
+        {
+          "path": ".trellis/spec/frontend/hook-guidelines.md",
+          "recordedBefore": "45dcda05a795c6bc59c50a048569b74162e9ad514653406fbd0750097cd5fe1c",
+          "recordedAfter": "92c25d1fa502bed3c1d4601502adda361c8e6a5491c24be2bf243a12cc45e2b6",
+          "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e05-spec-sync-before/.trellis/spec/frontend/hook-guidelines.md",
+          "actualCopySHA256": "45dcda05a795c6bc59c50a048569b74162e9ad514653406fbd0750097cd5fe1c",
+          "copyMatches": true,
+          "currentSHA256": "92c25d1fa502bed3c1d4601502adda361c8e6a5491c24be2bf243a12cc45e2b6",
+          "hasLaterEvolution": false
+        }
+      ]
+    }
+  ],
+  "note": "Each originalschema and explicit laterunit attribution govern. Current canonicalbytes legitimately evolve; historicalafterSHA not falsely assertedcurrent. No raw acceptedreport modified. E01 legacy specs aftermap is interpreted separately and does not assert beforecopy preservation from absent fields."
+}

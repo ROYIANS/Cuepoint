@@ -1,0 +1,38 @@
+{
+  "unit": "E05",
+  "baselineRevision": "1ecaf5ceec92e022c2b2b8d662e2a92e8eee36c7",
+  "purpose": "Review input inventory only; not independent acceptance",
+  "changedFiles": [
+    "scripts/e05-browser-regression.mjs",
+    "src/components/ui/click-spark.tsx",
+    "tests/fixtures/e05/harness.tsx",
+    "tests/fixtures/e05/index.html",
+    "tests/fixtures/e05/instrumentation.ts",
+    "tests/fixtures/e05/tsconfig.json",
+    "tests/fixtures/sourceSnapshots/e05/click-spark.tsx",
+    "tests/fixtures/sourceSnapshots/e05/provenance.json"
+  ],
+  "before": {
+    "scripts/e05-browser-regression.mjs": null,
+    "src/components/ui/click-spark.tsx": "cb7e68c6c9d5bb4c7844a63611bed04a31077e3b0c70e822a37a851490377c7e",
+    "tests/fixtures/e05/harness.tsx": null,
+    "tests/fixtures/e05/index.html": null,
+    "tests/fixtures/e05/instrumentation.ts": null,
+    "tests/fixtures/e05/tsconfig.json": null,
+    "tests/fixtures/sourceSnapshots/e05/click-spark.tsx": null,
+    "tests/fixtures/sourceSnapshots/e05/provenance.json": null
+  },
+  "after": {
+    "scripts/e05-browser-regression.mjs": "3e94c337aad74df84ccae0082b139f30c6da526572f9b959db26bb62005fc5c0",
+    "src/components/ui/click-spark.tsx": "4c665d129a13dd0148f63a8508cc49935b3347a051a12b705a5ab4f01a7e4f33",
+    "tests/fixtures/e05/harness.tsx": "9618a51e6b611b069bbfd9365ddc99ba72fd5094dde9efd2a7e0c96a75f22fb3",
+    "tests/fixtures/e05/index.html": "42b22203c74ed6ab13d58b42e34592376d51ed895ca6714a1c0e2d5d8e762484",
+    "tests/fixtures/e05/instrumentation.ts": "150c177226906a2268d11f8f0744acd6bda2ab17f8e3efe57fd4cc972540683e",
+    "tests/fixtures/e05/tsconfig.json": "004dcda67dd4247446ff42d7d24c62f74c00de321b9edd013a45e4f94952b2cb",
+    "tests/fixtures/sourceSnapshots/e05/click-spark.tsx": "cb7e68c6c9d5bb4c7844a63611bed04a31077e3b0c70e822a37a851490377c7e",
+    "tests/fixtures/sourceSnapshots/e05/provenance.json": "12f59629e907bcc754482d0b68ba5efe707f7d957da1ec04b1dfe332c1db6a6d"
+  },
+  "entrySnapshot": ".trellis/tasks/10-09-src-remediation-e/research/E05-entry.json",
+  "sourceFileCount": 443,
+  "testRunnerFileCount": 316
+}

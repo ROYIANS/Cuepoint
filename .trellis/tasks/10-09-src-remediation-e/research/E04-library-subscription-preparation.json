@@ -1,0 +1,30 @@
+{
+  "purpose": "Read-only SS09 subscription/derivation preparation, not E04 implementation or acceptance",
+  "inputs": {
+    "src/components/studio/ProjectGalleryPage.tsx": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+    "src/components/studio/AssetLibraryPages.tsx": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+    "src/components/studio/CoverCard.tsx": "1cd7b4b4335ad69a6db11f6288e6af04dbe3ea07706860761d798d787cb5fb9f",
+    "src/components/studio/Still.tsx": "0ead47eddd405054ecfd6d01532b069abcf5e10293c3415b9a61c8d4d538beae",
+    "src/db/database.ts": "9341c96f7adb202f51334250e45188e9964e363b831b0d89eca38018ad1c3982",
+    ".trellis/tasks/09-30-src-quality-architecture-audit/research/shell-shared.md": "0feb4856e9a021b13805d0441702f9bd1e1b0cf95ac40d083a21925213c1574e"
+  },
+  "currentGallery": {
+    "queries": "projects.toArray/shots.toArray/ipProfiles.toArray/projectIpLinks.toArray",
+    "perCard": "coverMediaId ?? shots.filter(projectId).sort(order).find(firstFrame.result.mediaId)",
+    "tieSemantics": "toArray primary-key iteration order then stable sort order; equal-order tie preserves source iteration order. Multiple episodes retain existing project-wide order behavior, do not invent episode priority. First eligible media result only, not necessarily first shot.",
+    "scope": "Explicit cover project needs no shot fallback; visible filtering uses kind, archived, IP links/search/sort. Scope future cover query to useful current project set and projectId index or bounded projection, preserve fallback/identity while live query in flight.",
+    "limits": "IndexedDB row reads are not true server-side column projection; a Map output narrows retained/derived data but may still scan source records. Measure rows/queries and object projection separately, no false physical projection or latency claim."
+  },
+  "currentStudioLibrary": {
+    "queries": "Always four asset tables where projectId=studio, despite fixed keyed kind component",
+    "perCard": "coverOf(id) finds matching typed row again",
+    "target": "One typed current-kind subscription with its actual cover function; retain missing/loading/search/sort/owner semantics and E01 mutation locks/error/owner guards. Avoid broad union as casts just to unify incompatible fields."
+  },
+  "verification": [
+    "Native reading hooks/counts each kind only: other-kind writes do not run current asset subscription; same-kind relevant update reruns and covers/search update",
+    "Gallery explicit-cover-only and filtered-out project changes; large row count and output size/work metrics measured independently",
+    "Equal order ties, multiple episodes, early shot missing result, missing media, explicit cover preserved",
+    "Held new query after filter change never applies old result under new identity",
+    "Reuse existing actual E01writefixture/run20 as cross-unit current behavior regression; report any intentional runneradaptation explicitly"
+  ]
+}

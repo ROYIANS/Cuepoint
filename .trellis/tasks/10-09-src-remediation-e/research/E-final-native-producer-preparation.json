@@ -1,0 +1,212 @@
+{
+  "purpose": "Read-only inherited permanent native producer/environment inventory; no execution or finalcurrent acceptance",
+  "rows": [
+    {
+      "path": "scripts/b01-browser-regression.mjs",
+      "sha256": "72f6a6143b5f55043c41bfe6b915a2e566196c5d4d99c16d3216c306f66fc5a6",
+      "environmentKeys": [
+        "B01_CHROMIUM_PATH",
+        "B01_PLAYWRIGHT_PATH"
+      ],
+      "baselineKeys": [],
+      "outputKeys": [],
+      "permanentEntry": "Actual native producer; final relevance/inputclosure/currentfingerprints must be reviewed, not historical counts adopted"
+    },
+    {
+      "path": "scripts/b07-browser-regression.mjs",
+      "sha256": "26f7f051891d1a9ea239ec15c32a7e6ebea8fb3cd29633a51909bb82a46f3c3e",
+      "environmentKeys": [
+        "B07_BASELINE_ROOT",
+        "B07_CHROMIUM_PATH",
+        "B07_PLAYWRIGHT_PATH"
+      ],
+      "baselineKeys": [
+        "B07_BASELINE_ROOT"
+      ],
+      "outputKeys": [],
+      "permanentEntry": "Actual native producer; final relevance/inputclosure/currentfingerprints must be reviewed, not historical counts adopted"
+    },
+    {
+      "path": "scripts/c01-browser-regression.mjs",
+      "sha256": "8d591a764ebb9c283df646d44bbee57efbc9eb4eb2fc45ba43eff50e84bff6d6",
+      "environmentKeys": [
+        "C01_BASELINE_ROOT",
+        "C01_CHROMIUM_PATH",
+        "C01_PLAYWRIGHT_PATH"
+      ],
+      "baselineKeys": [
+        "C01_BASELINE_ROOT"
+      ],
+      "outputKeys": [],
+      "permanentEntry": "Actual native producer; final relevance/inputclosure/currentfingerprints must be reviewed, not historical counts adopted"
+    },
+    {
+      "path": "scripts/c02-browser-regression.mjs",
+      "sha256": "4a11ac2dd4a34e2e22fbd459c9c7d7095c2768a668473ea8723ea2358c95de84",
+      "environmentKeys": [
+        "C02_BASELINE_ROOT",
+        "C02_CHROMIUM_PATH",
+        "C02_PLAYWRIGHT_PATH"
+      ],
+      "baselineKeys": [
+        "C02_BASELINE_ROOT"
+      ],
+      "outputKeys": [],
+      "permanentEntry": "Actual native producer; final relevance/inputclosure/currentfingerprints must be reviewed, not historical counts adopted"
+    },
+    {
+      "path": "scripts/d08-browser-regression.mjs",
+      "sha256": "7414292fb72e33d4b5a38ad0d7e385f0da6ca141d9d9cdb1582fac37df4a47f6",
+      "environmentKeys": [
+        "D08_BASELINE_ROOT",
+        "D08_CHROMIUM_PATH",
+        "D08_PLAYWRIGHT_PATH",
+        "D08_REPORT_PATH",
+        "REPORT_PATH"
+      ],
+      "baselineKeys": [
+        "D08_BASELINE_ROOT"
+      ],
+      "outputKeys": [
+        "D08_REPORT_PATH",
+        "REPORT_PATH"
+      ],
+      "permanentEntry": "Actual native producer; final relevance/inputclosure/currentfingerprints must be reviewed, not historical counts adopted"
+    },
+    {
+      "path": "scripts/e01-drafts-browser-regression.mjs",
+      "sha256": "2f2ac3abe91a3fba6f626662046d5cb5cbd0f6bc03f8147ed1f3e01fc00d8d5d",
+      "environmentKeys": [
+        "E01_CHROMIUM_PATH",
+        "E01_OBSERVATIONS",
+        "E01_PLAYWRIGHT_PATH"
+      ],
+      "baselineKeys": [],
+      "outputKeys": [
+        "E01_OBSERVATIONS"
+      ],
+      "permanentEntry": "Actual native producer; final relevance/inputclosure/currentfingerprints must be reviewed, not historical counts adopted"
+    },
+    {
+      "path": "scripts/e01-writes-browser-regression.mjs",
+      "sha256": "14f937c95d7bdc64f5c4806a220c73275f5879b385bad972c7f2a39de8af3bcf",
+      "environmentKeys": [
+        "E01_CHROMIUM_PATH",
+        "E01_PLAYWRIGHT_PATH"
+      ],
+      "baselineKeys": [],
+      "outputKeys": [],
+      "permanentEntry": "Actual native producer; final relevance/inputclosure/currentfingerprints must be reviewed, not historical counts adopted"
+    },
+    {
+      "path": "scripts/e02-browser-regression.mjs",
+      "sha256": "215aa6f27c5122322af029da3665ad958d8ff74b2629e37751604f9614b10260",
+      "environmentKeys": [
+        "E02_BASELINE",
+        "E02_CHROMIUM_PATH",
+        "E02_OUTPUT",
+        "E02_PLAYWRIGHT_PATH",
+        "E02_SAFE_AREA_SURROGATE"
+      ],
+      "baselineKeys": [
+        "E02_BASELINE"
+      ],
+      "outputKeys": [
+        "E02_OUTPUT"
+      ],
+      "permanentEntry": "Actual native producer; final relevance/inputclosure/currentfingerprints must be reviewed, not historical counts adopted"
+    },
+    {
+      "path": "scripts/e03-browser-regression.mjs",
+      "sha256": "7c76689dd2714c327c061f536c9a3865cb65d32a953a2f4b99006ec95de0f937",
+      "environmentKeys": [
+        "E03_BASELINE",
+        "E03_CHROMIUM_PATH",
+        "E03_COMPARE",
+        "E03_DIAGNOSTIC_800",
+        "E03_DIAGNOSTIC_PORTAL",
+        "E03_OUTPUT",
+        "E03_PAIRED",
+        "E03_PLAYWRIGHT_PATH",
+        "E03_REPEAT_CAPTURE",
+        "E03_REPRO_DUPLICATE_INTENT",
+        "E03_SOFTWARE_RASTER"
+      ],
+      "baselineKeys": [
+        "E03_BASELINE"
+      ],
+      "outputKeys": [
+        "E03_OUTPUT"
+      ],
+      "permanentEntry": "Actual native producer; final relevance/inputclosure/currentfingerprints must be reviewed, not historical counts adopted"
+    },
+    {
+      "path": "scripts/e04-library-browser-regression.mjs",
+      "sha256": "72bde650c1ddc62cc5e2ae0d16776e2e448a099b330d90ef914df2fb9fa94b91",
+      "environmentKeys": [
+        "E04_CHROMIUM_PATH",
+        "E04_LIBRARY_OUTPUT_DIR",
+        "E04_PLAYWRIGHT_PATH"
+      ],
+      "baselineKeys": [],
+      "outputKeys": [
+        "E04_LIBRARY_OUTPUT_DIR"
+      ],
+      "permanentEntry": "Actual native producer; final relevance/inputclosure/currentfingerprints must be reviewed, not historical counts adopted"
+    },
+    {
+      "path": "scripts/e04-media-browser-regression.mjs",
+      "sha256": "eb989d51cd562122a0011bc3c66fec0a9c106bde7d6aa7b84818b1536b6f56f3",
+      "environmentKeys": [
+        "E04_MEDIA_CHROMIUM_PATH",
+        "E04_MEDIA_OUTPUT",
+        "E04_MEDIA_PLAYWRIGHT_PATH"
+      ],
+      "baselineKeys": [],
+      "outputKeys": [
+        "E04_MEDIA_OUTPUT"
+      ],
+      "permanentEntry": "Actual native producer; final relevance/inputclosure/currentfingerprints must be reviewed, not historical counts adopted"
+    },
+    {
+      "path": "scripts/e04-memory-browser-regression.mjs",
+      "sha256": "68acc39230ff9a81187670d857ee39fce5b1e75503c47decb4610bb158d19db8",
+      "environmentKeys": [
+        "E04_MEMORY_BASELINE",
+        "E04_MEMORY_CHROMIUM_PATH",
+        "E04_MEMORY_OUTPUT",
+        "E04_MEMORY_PLAYWRIGHT_PATH"
+      ],
+      "baselineKeys": [
+        "E04_MEMORY_BASELINE"
+      ],
+      "outputKeys": [
+        "E04_MEMORY_OUTPUT"
+      ],
+      "permanentEntry": "Actual native producer; final relevance/inputclosure/currentfingerprints must be reviewed, not historical counts adopted"
+    },
+    {
+      "path": "scripts/e05-browser-regression.mjs",
+      "sha256": "3e94c337aad74df84ccae0082b139f30c6da526572f9b959db26bb62005fc5c0",
+      "environmentKeys": [
+        "E05_BASELINE",
+        "E05_CHROMIUM_PATH",
+        "E05_OUTPUT",
+        "E05_PLAYWRIGHT_PATH"
+      ],
+      "baselineKeys": [
+        "E05_BASELINE"
+      ],
+      "outputKeys": [
+        "E05_OUTPUT"
+      ],
+      "permanentEntry": "Actual native producer; final relevance/inputclosure/currentfingerprints must be reviewed, not historical counts adopted"
+    }
+  ],
+  "limits": [
+    "Do not allow baseline mode on current integration runs.",
+    "Do not overwrite archive/historical evidence; use new labeled output paths or captured stdout.",
+    "Final selected E06 producer names/command inputs must be added after implementationfreeze.",
+    "Current frozen all-root input hashing and actual loaded-module fingerprints are distinct; environmentinventory alone proves neither."
+  ]
+}

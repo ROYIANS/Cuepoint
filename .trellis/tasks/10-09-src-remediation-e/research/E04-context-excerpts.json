@@ -1,0 +1,62 @@
+{
+  "purpose": "Active E04 context; complete retention matrix manually required",
+  "source": ".trellis/spec/frontend/state-management.md",
+  "sha256": "0fa7387041731978f6ffedb1bbdaf5187eaaffa8c55c96f74c179edc98e119af",
+  "ranges": [
+    [
+      1,
+      123
+    ],
+    [
+      592,
+      638
+    ],
+    [
+      727,
+      766
+    ],
+    [
+      813,
+      865
+    ]
+  ],
+  "excerpt": ".trellis/tasks/10-09-src-remediation-e/research/E04-state-management-context.md",
+  "excerptSHA256": "8f8cd1ff5f40fb3291522d2ebbad473b32e7051e322ccc3df3646485a877ff5a",
+  "retention": {
+    "source": ".trellis/tasks/10-09-src-remediation-e/research/E04-media-retention-inventory.md",
+    "sha256": "17ab7e05bfc418bd22d2ca7dac059200344cae12c179a55db28601b28b852cc2",
+    "ranges": [
+      [
+        1,
+        35
+      ],
+      [
+        96,
+        116
+      ]
+    ],
+    "excerpt": ".trellis/tasks/10-09-src-remediation-e/research/E04-retention-context.md",
+    "excerptSHA256": "a5ae9072519c26ec3e161258d0ca5dfc660224e1e8d866542e3dc1c04e92c15f",
+    "mandatoryManualReads": [
+      "research/E04-media-retention-inventory.md:36-95",
+      "research/E04-media-retention-inventory.json"
+    ],
+    "purpose": "Budget curation only; full matrix remains mandatory before implementation/review."
+  },
+  "quality": {
+    "source": ".trellis/spec/frontend/quality-guidelines.md",
+    "sha256": "b6056b07c309dfcd76c9552f68848601efe0979280a21f328be216c1025f9cf6",
+    "ranges": [
+      [
+        1,
+        86
+      ],
+      [
+        124,
+        198
+      ]
+    ],
+    "excerpt": ".trellis/tasks/10-09-src-remediation-e/research/E04-quality-context.md",
+    "excerptSHA256": "eaf5d85f2cc2beb12de9f055db5fbb75b8fe44a63806867c773ad5d3c2822a4f"
+  }
+}

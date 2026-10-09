@@ -1,0 +1,589 @@
+{
+  "date": "2026-10-09",
+  "reviewedAt": "2026-10-09T09:50:28.834713+08:00",
+  "reviewRole": "trellis-check",
+  "scope": "bounded SS06 sidecar; independent of active AU02/PU10 writer",
+  "result": "SS06_ONLY_PASS",
+  "integratedE01Accepted": false,
+  "blockers": [],
+  "productCorrections": [],
+  "ownedImplementationFiles": [
+    {
+      "path": "src/components/studio/ProjectGalleryPage.tsx",
+      "beforeSha256": "f3fd110028e6219c298e7ee8bda70f840906effaeb8b1986921784b2120c0c94",
+      "afterSha256": "945f07573b7535eee1326c0ff08e50627ccf2152e32069540c14311add186034",
+      "status": "modified",
+      "reviewEntrySha256": "945f07573b7535eee1326c0ff08e50627ccf2152e32069540c14311add186034",
+      "producerMatch": true,
+      "snapshotSha256": "f3fd110028e6219c298e7ee8bda70f840906effaeb8b1986921784b2120c0c94",
+      "gitBaselineSha256": "f3fd110028e6219c298e7ee8bda70f840906effaeb8b1986921784b2120c0c94",
+      "entryManifestBeforeSha256": "f3fd110028e6219c298e7ee8bda70f840906effaeb8b1986921784b2120c0c94",
+      "finalSha256": "945f07573b7535eee1326c0ff08e50627ccf2152e32069540c14311add186034",
+      "reviewerModified": false
+    },
+    {
+      "path": "src/components/studio/AssetLibraryPages.tsx",
+      "beforeSha256": "77c817e0e78e888f2716179cf6f8cc018a7b10d8f19bfdbf3d27d3b6f2b38760",
+      "afterSha256": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+      "status": "modified",
+      "reviewEntrySha256": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+      "producerMatch": true,
+      "snapshotSha256": "77c817e0e78e888f2716179cf6f8cc018a7b10d8f19bfdbf3d27d3b6f2b38760",
+      "gitBaselineSha256": "77c817e0e78e888f2716179cf6f8cc018a7b10d8f19bfdbf3d27d3b6f2b38760",
+      "entryManifestBeforeSha256": "77c817e0e78e888f2716179cf6f8cc018a7b10d8f19bfdbf3d27d3b6f2b38760",
+      "finalSha256": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+      "reviewerModified": false
+    },
+    {
+      "path": "src/components/workspace/EpisodeListPage.tsx",
+      "beforeSha256": "d3e993d6e3a53235670259bcdb684109e7be37445a4d9cf9ce649e4c9e6a04cd",
+      "afterSha256": "a881f4c4f1f2e375a03135ae2df50379358d2b1404e184b3b3afc0a22d907ed9",
+      "status": "modified",
+      "reviewEntrySha256": "a881f4c4f1f2e375a03135ae2df50379358d2b1404e184b3b3afc0a22d907ed9",
+      "producerMatch": true,
+      "snapshotSha256": "d3e993d6e3a53235670259bcdb684109e7be37445a4d9cf9ce649e4c9e6a04cd",
+      "gitBaselineSha256": "d3e993d6e3a53235670259bcdb684109e7be37445a4d9cf9ce649e4c9e6a04cd",
+      "entryManifestBeforeSha256": "d3e993d6e3a53235670259bcdb684109e7be37445a4d9cf9ce649e4c9e6a04cd",
+      "finalSha256": "a881f4c4f1f2e375a03135ae2df50379358d2b1404e184b3b3afc0a22d907ed9",
+      "reviewerModified": false
+    },
+    {
+      "path": "scripts/e01-writes-browser-regression.mjs",
+      "beforeSha256": null,
+      "afterSha256": "5133e571fa553b7b5c09e5499d253d68a56f5295addaf67f70dc35c9be30b0d2",
+      "status": "new",
+      "reviewEntrySha256": "5133e571fa553b7b5c09e5499d253d68a56f5295addaf67f70dc35c9be30b0d2",
+      "producerMatch": true,
+      "snapshotSha256": null,
+      "gitBaselineSha256": null,
+      "entryManifestBeforeSha256": null,
+      "finalSha256": "5133e571fa553b7b5c09e5499d253d68a56f5295addaf67f70dc35c9be30b0d2",
+      "reviewerModified": false
+    },
+    {
+      "path": "tests/fixtures/e01-writes/index.html",
+      "beforeSha256": null,
+      "afterSha256": "8f21ced89184fb7027c8ebba4f11caf602417aeface656a1df5340b6b050ab07",
+      "status": "new",
+      "reviewEntrySha256": "8f21ced89184fb7027c8ebba4f11caf602417aeface656a1df5340b6b050ab07",
+      "producerMatch": true,
+      "snapshotSha256": null,
+      "gitBaselineSha256": null,
+      "entryManifestBeforeSha256": null,
+      "finalSha256": "8f21ced89184fb7027c8ebba4f11caf602417aeface656a1df5340b6b050ab07",
+      "reviewerModified": false
+    },
+    {
+      "path": "tests/fixtures/e01-writes/harness.tsx",
+      "beforeSha256": null,
+      "afterSha256": "b108edcd45ee791860828c4b833912451b888057f8a4633ce514ccaae0c9b397",
+      "status": "new",
+      "reviewEntrySha256": "b108edcd45ee791860828c4b833912451b888057f8a4633ce514ccaae0c9b397",
+      "producerMatch": true,
+      "snapshotSha256": null,
+      "gitBaselineSha256": null,
+      "entryManifestBeforeSha256": null,
+      "finalSha256": "b108edcd45ee791860828c4b833912451b888057f8a4633ce514ccaae0c9b397",
+      "reviewerModified": false
+    }
+  ],
+  "perFileCoverage": [
+    {
+      "path": "src/components/studio/ProjectGalleryPage.tsx",
+      "coverage": [
+        "Full body and actual /projects route reviewed",
+        "Create video/audio/music: synchronous lock, captured arguments, pending close/cancel/Escape/backdrop, retained failed fields, success navigation only while mounted",
+        "Rename/delete: frozen target/value, ref lock before await, Radix Action default prevented, pending cancellation rejected, inline caught failure, retry and success-only clear",
+        "Existing IP binding catch verified against before snapshot; new ref lock/captured target and pending selection retention verified",
+        "Archive/restore: captured project and boolean; page lock, toast and original-command retry verified",
+        "Backup flush → export → download → catch block byte-for-byte unchanged; focused debounce barrier tests passed",
+        "Old gallery create success and rename rejection cannot overwrite newer form/navigation/error"
+      ]
+    },
+    {
+      "path": "src/components/studio/AssetLibraryPages.tsx",
+      "coverage": [
+        "Full body; four actual studio routes, kinds, keys and STUDIO_LIBRARY_ID reviewed",
+        "All four add/delete repository command owners and correct destination routes retained",
+        "Synchronous create/delete mutual exclusion; frozen delete object, pending dismiss guards and preventDefault verified",
+        "All four create rows persisted in real native IndexedDB with projectId studio; each deletion retains unrelated new row",
+        "All four immediate duplicate/failure/retry/dismiss cases executed by original runner",
+        "Old library create success and delete rejection suppress navigation/state/error in new owner"
+      ]
+    },
+    {
+      "path": "src/components/workspace/EpisodeListPage.tsx",
+      "coverage": [
+        "Full body and actual ProjectHomePage series/film/audio/music dispatch reviewed",
+        "Keyed project owner initializes queries and editing scope; null-vs-loading query preserved",
+        "Shared synchronous add/reorder/delete lock and captured project/order/delete id",
+        "Rejected reorder retains DB order; successful reorder and actual UndoProvider restore original full order",
+        "Delete keeps target/modal on rejection; success deletes native shot cascade; actual undo restores original episode identity/content/order and shot IDs",
+        "SeriesLoglineEditor complete body byte-for-byte unchanged; original debounce scope and updateSeriesLogline CAS retained",
+        "Old owner delete success preserves new modal; reorder success suppresses new-owner undo; add failure suppresses new-owner toast"
+      ]
+    },
+    {
+      "path": "scripts/e01-writes-browser-regression.mjs",
+      "coverage": [
+        "Full runner and pre-transform inspected, including all 20 assertions and failure artifacts",
+        "Explicit exported repository declaration checks; pre-wrapper calls real original command on successful writes/retries; deliberate rejection is before original command",
+        "No production component transforms or copied persistence implementations",
+        "Actual Radix/TanStack/React/Dexie execution observed with fresh Vite cache and fixture optimize entry; cleanup in finally",
+        "Native call arguments, immediate duplicate counts, pending dismissal, retained failures, success DB/navigation, undo and stale owners asserted",
+        "Review supplement waits for original command settlement plus two animation frames so stale-handler assertions cross UI continuation"
+      ]
+    },
+    {
+      "path": "tests/fixtures/e01-writes/harness.tsx",
+      "coverage": [
+        "Full fixture inspected: imports actual 3 production owners/all4 libraries, real browser history, Radix via production primitives, Sonner, UndoProvider, native Dexie",
+        "Gates/failed-command registry/call records run only at named repository wrappers; successful calls execute production transaction owner",
+        "Real project/library/episode/shot/IP seed commands; same-path project parameter owner switching executes actual keyed EpisodeList",
+        "Destination renderers intentionally stubbed; no claim of full product shell or target detail page execution"
+      ]
+    },
+    {
+      "path": "tests/fixtures/e01-writes/index.html",
+      "coverage": [
+        "Entire one-line document inspected; actual fixture module entry is explicit; no mock production behavior"
+      ]
+    }
+  ],
+  "readOnlyCallerAndBoundaryFiles": [
+    {
+      "path": "src/routes/_studio.projects.tsx",
+      "finalSha256": "265d239aa895164c1a8ec4b8589a88c343a083bd3a86b5b289e0ee703b1c525c",
+      "beforeSha256": "265d239aa895164c1a8ec4b8589a88c343a083bd3a86b5b289e0ee703b1c525c",
+      "unchangedFromTaskEntry": true
+    },
+    {
+      "path": "src/routes/_studio.characters.index.tsx",
+      "finalSha256": "f1a4e8625bb18673680d10d5158f29cd81646b1c9e1041ce2af827bea76d4dbb",
+      "beforeSha256": "f1a4e8625bb18673680d10d5158f29cd81646b1c9e1041ce2af827bea76d4dbb",
+      "unchangedFromTaskEntry": true
+    },
+    {
+      "path": "src/routes/_studio.scenes.index.tsx",
+      "finalSha256": "57ababcefeb291f4541ffb942fa00f4b629e7ea565dccadf1a38a6a0c79eacb6",
+      "beforeSha256": "57ababcefeb291f4541ffb942fa00f4b629e7ea565dccadf1a38a6a0c79eacb6",
+      "unchangedFromTaskEntry": true
+    },
+    {
+      "path": "src/routes/_studio.props.index.tsx",
+      "finalSha256": "00a27afcd1d0ae74b377784a872a2a7823abae34d10cc66217dfbe0e8a6759b5",
+      "beforeSha256": "00a27afcd1d0ae74b377784a872a2a7823abae34d10cc66217dfbe0e8a6759b5",
+      "unchangedFromTaskEntry": true
+    },
+    {
+      "path": "src/routes/_studio.styles.index.tsx",
+      "finalSha256": "16af7608f3c6ee5fd34329ead002b244a590cccc6bc3ca5b7d04335256d3cec8",
+      "beforeSha256": "16af7608f3c6ee5fd34329ead002b244a590cccc6bc3ca5b7d04335256d3cec8",
+      "unchangedFromTaskEntry": true
+    },
+    {
+      "path": "src/components/workspace/ProjectHomePage.tsx",
+      "finalSha256": "4571910239f78294664afc3c5b9ba349b9dc3635c89fda5821b18045de13bc11",
+      "beforeSha256": "4571910239f78294664afc3c5b9ba349b9dc3635c89fda5821b18045de13bc11",
+      "unchangedFromTaskEntry": true
+    },
+    {
+      "path": "src/components/studio/CoverCard.tsx",
+      "finalSha256": "1cd7b4b4335ad69a6db11f6288e6af04dbe3ea07706860761d798d787cb5fb9f",
+      "beforeSha256": "1cd7b4b4335ad69a6db11f6288e6af04dbe3ea07706860761d798d787cb5fb9f",
+      "unchangedFromTaskEntry": true
+    },
+    {
+      "path": "src/components/studio/ProjectIpPicker.tsx",
+      "finalSha256": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+      "beforeSha256": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5",
+      "unchangedFromTaskEntry": true
+    },
+    {
+      "path": "src/components/ui/dialog.tsx",
+      "finalSha256": "3bae376fea3814100be48ac35dddf4498117cbf5d8265080fc8e89c014fd4e6c",
+      "beforeSha256": "3bae376fea3814100be48ac35dddf4498117cbf5d8265080fc8e89c014fd4e6c",
+      "unchangedFromTaskEntry": true
+    },
+    {
+      "path": "src/components/ui/alert-dialog.tsx",
+      "finalSha256": "86bc809de1275d1b0d4c8dc653037d4177294ca0bb5390105a81409cc0260ad4",
+      "beforeSha256": "86bc809de1275d1b0d4c8dc653037d4177294ca0bb5390105a81409cc0260ad4",
+      "unchangedFromTaskEntry": true
+    },
+    {
+      "path": "src/db/projects.ts",
+      "finalSha256": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+      "beforeSha256": "ea2d0cc2e7846368239f38e8802bf63e9c9fe33581ced34bb590614d700b85e7",
+      "unchangedFromTaskEntry": true
+    },
+    {
+      "path": "src/db/cascadeCommands.ts",
+      "finalSha256": "01363e5054728ccd17aeeadfab92c123dc6411e12ec2ba63530900d0e45e9526",
+      "beforeSha256": "01363e5054728ccd17aeeadfab92c123dc6411e12ec2ba63530900d0e45e9526",
+      "unchangedFromTaskEntry": true
+    },
+    {
+      "path": "src/db/assets.ts",
+      "finalSha256": "32362eff2c660aaa4f020e093591be90f541e9741468e3e7d2e606164490068d",
+      "beforeSha256": "32362eff2c660aaa4f020e093591be90f541e9741468e3e7d2e606164490068d",
+      "unchangedFromTaskEntry": true
+    },
+    {
+      "path": "src/db/episodes.ts",
+      "finalSha256": "832812e48f1508d22cbe2bae35752315b3e99209c28bd37f7d3d76cef93b6ea3",
+      "beforeSha256": "832812e48f1508d22cbe2bae35752315b3e99209c28bd37f7d3d76cef93b6ea3",
+      "unchangedFromTaskEntry": true
+    },
+    {
+      "path": "src/db/ipProfiles.ts",
+      "finalSha256": "4a48495cca91e75f1214be09fe60719c60a47ae1cde4b32ef0c7db66e8eda3be",
+      "beforeSha256": "4a48495cca91e75f1214be09fe60719c60a47ae1cde4b32ef0c7db66e8eda3be",
+      "unchangedFromTaskEntry": true
+    },
+    {
+      "path": "src/lib/undo.tsx",
+      "finalSha256": "41c4cf704b0b2a879fb71ff335a4f7715ea212f82ec94c0a47ec8599aa1580f5",
+      "beforeSha256": "41c4cf704b0b2a879fb71ff335a4f7715ea212f82ec94c0a47ec8599aa1580f5",
+      "unchangedFromTaskEntry": true
+    },
+    {
+      "path": "src/lib/debouncedDraft.ts",
+      "finalSha256": "c797901e5318743ca0f87b819067c18f7c3a384516efd87db832aa9f94355f09",
+      "beforeSha256": "c797901e5318743ca0f87b819067c18f7c3a384516efd87db832aa9f94355f09",
+      "unchangedFromTaskEntry": true
+    }
+  ],
+  "producerManifestHashes": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E01-entry.json",
+      "sha256": "1959c8e74f91cada6099a3542e7817f3ee6a2c2a25b9ad87cb95b44bf67c280c"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E01-writes-implementation.md",
+      "sha256": "007112db3e879c417629beba8219a85e38574e29d1d68a1e4d4b093bba6b00dd"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E01-writes-implementation.json",
+      "sha256": "a10e9c84cfe4a47e49bd22adb95629d4269f28b6e3fabc4a0a610c953446220d"
+    }
+  ],
+  "producerEvidence": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/focused-tests.log",
+      "beforeSha256": null,
+      "afterSha256": "e59df6e1ea7bb4f53842577ad8ffac28a57628a651aa55f028a89374aef2cb05",
+      "status": "new",
+      "reviewEntrySha256": "e59df6e1ea7bb4f53842577ad8ffac28a57628a651aa55f028a89374aef2cb05",
+      "producerMatch": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-1-failure/calls.json",
+      "beforeSha256": null,
+      "afterSha256": "84cd24f11870a544d00b298f12ddb3e4d5df82680ca7c7348fa9f0387afd16b8",
+      "status": "new",
+      "reviewEntrySha256": "84cd24f11870a544d00b298f12ddb3e4d5df82680ca7c7348fa9f0387afd16b8",
+      "producerMatch": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-1-failure/failure.html",
+      "beforeSha256": null,
+      "afterSha256": "59fc6f6ab3148ac5fa6e67c4bb93a8231879d857e612b0f891a3c174f4855244",
+      "status": "new",
+      "reviewEntrySha256": "59fc6f6ab3148ac5fa6e67c4bb93a8231879d857e612b0f891a3c174f4855244",
+      "producerMatch": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-1-failure/failure.png",
+      "beforeSha256": null,
+      "afterSha256": "68eeb4198b3d9a0058311da2bb06b4766d85bd75ef3938d6e3fc34f59a3b92cd",
+      "status": "new",
+      "reviewEntrySha256": "68eeb4198b3d9a0058311da2bb06b4766d85bd75ef3938d6e3fc34f59a3b92cd",
+      "producerMatch": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-1.log",
+      "beforeSha256": null,
+      "afterSha256": "8a1de6ee83469e20ef0602f9f3fd958ec19edd68ce7eb856468cdd45a7b37764",
+      "status": "new",
+      "reviewEntrySha256": "8a1de6ee83469e20ef0602f9f3fd958ec19edd68ce7eb856468cdd45a7b37764",
+      "producerMatch": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-2.log",
+      "beforeSha256": null,
+      "afterSha256": "a2991cda64bb8f8104ba91ffd194c2044fe32529095ef4d5ae71379c4386cea6",
+      "status": "new",
+      "reviewEntrySha256": "a2991cda64bb8f8104ba91ffd194c2044fe32529095ef4d5ae71379c4386cea6",
+      "producerMatch": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-attempt-3.log",
+      "beforeSha256": null,
+      "afterSha256": "918623407e70ef9ee37ac568c0991bfcbdcb3d76137505e48e70dd3529238d8a",
+      "status": "new",
+      "reviewEntrySha256": "918623407e70ef9ee37ac568c0991bfcbdcb3d76137505e48e70dd3529238d8a",
+      "producerMatch": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/native-final.log",
+      "beforeSha256": null,
+      "afterSha256": "b6244d64bd2aa47ff7c757c46542a4ba53047632a54a814b668c8a072db828b1",
+      "status": "new",
+      "reviewEntrySha256": "b6244d64bd2aa47ff7c757c46542a4ba53047632a54a814b668c8a072db828b1",
+      "producerMatch": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/typecheck-final.log",
+      "beforeSha256": null,
+      "afterSha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+      "status": "new",
+      "reviewEntrySha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+      "producerMatch": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/typecheck.log",
+      "beforeSha256": null,
+      "afterSha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+      "status": "new",
+      "reviewEntrySha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+      "producerMatch": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/e01-writes/verification-inputs.json",
+      "beforeSha256": null,
+      "afterSha256": "3358e70b330eb786bc075bd9d8cc1b1777c58fbcc223e54be86cf95e43476700",
+      "status": "new",
+      "reviewEntrySha256": "3358e70b330eb786bc075bd9d8cc1b1777c58fbcc223e54be86cf95e43476700",
+      "producerMatch": true
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/research/E01-writes-implementation.md",
+      "beforeSha256": null,
+      "afterSha256": "007112db3e879c417629beba8219a85e38574e29d1d68a1e4d4b093bba6b00dd",
+      "status": "new",
+      "reviewEntrySha256": "007112db3e879c417629beba8219a85e38574e29d1d68a1e4d4b093bba6b00dd",
+      "producerMatch": true
+    }
+  ],
+  "allProducerEvidenceUnchanged": true,
+  "allSixImplementationInputsUnchanged": true,
+  "environment": {
+    "nodeExecutable": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+    "nodeVersion": "v24.11.0",
+    "pnpmExecutable": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "pnpmVersion": "10.15.0",
+    "playwrightModule": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+    "playwrightVersion": "1.62.1",
+    "chromiumExecutable": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell",
+    "reactVersion": "19.3.0",
+    "dexieVersion": "4.4.6",
+    "viteVersion": "7.3.6",
+    "dependenciesInstalled": false,
+    "paidRequests": false
+  },
+  "commands": [
+    {
+      "command": "E01_PLAYWRIGHT_PATH=/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs E01_CHROMIUM_PATH=/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node scripts/e01-writes-browser-regression.mjs",
+      "exitCode": 0,
+      "result": "pass",
+      "cases": 20,
+      "pageErrors": 0,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-original20.log"
+    },
+    {
+      "command": "PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm test tests/repo.test.ts tests/repoReliability.test.ts tests/assetFoundation.test.ts tests/assetLibrary.test.ts tests/undo.test.ts tests/debouncedDraft.test.ts tests/parentProjectWrites.test.ts tests/materialLibrary.test.ts tests/agentIpTools.test.ts --maxWorkers=4",
+      "exitCode": 0,
+      "result": "pass",
+      "testFiles": 9,
+      "tests": 120,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/focused-tests.log"
+    },
+    {
+      "command": "PATH=/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin:$PATH /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm lint",
+      "exitCode": 0,
+      "result": "pass",
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/typecheck.log"
+    },
+    {
+      "command": "E01_PLAYWRIGHT_PATH=/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs E01_CHROMIUM_PATH=/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node .trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement.mjs",
+      "exitCode": 1,
+      "result": "fixture_selector_failure",
+      "casesBeforeFailure": 3,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt1.log",
+      "executedScriptSnapshot": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt1.mjs",
+      "failureArtifacts": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt1-failure",
+      "reason": "Two default-name character rows after successful creation make exact menu title ambiguous; runtime test seed now receives unique name, preserving target-ID/DB assertions."
+    },
+    {
+      "command": "E01_PLAYWRIGHT_PATH=/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs E01_CHROMIUM_PATH=/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node .trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement.mjs",
+      "exitCode": 1,
+      "result": "fixture_selector_failure",
+      "casesBeforeFailure": 3,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt2.log",
+      "executedScriptSnapshot": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt2.mjs",
+      "failureArtifacts": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt2-failure",
+      "reason": "Real Radix alertdialog hides background create button from role accessibility query; includeHidden:true locates the deliberately direct-activated background business guard. Timeout stays 10000ms and all assertions retained."
+    },
+    {
+      "command": "E01_PLAYWRIGHT_PATH=/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs E01_CHROMIUM_PATH=/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node .trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement.mjs",
+      "exitCode": 0,
+      "result": "pass",
+      "cases": 11,
+      "pageErrors": 0,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt3.log"
+    },
+    {
+      "command": "git diff --check -- src/components/studio/ProjectGalleryPage.tsx src/components/studio/AssetLibraryPages.tsx src/components/workspace/EpisodeListPage.tsx",
+      "exitCode": 0,
+      "result": "pass"
+    }
+  ],
+  "supplementResults": {
+    "passed": 11,
+    "results": [
+      {
+        "name": "real rename transaction hook rejection retains frozen args/input and retry commits",
+        "result": "pass",
+        "pageErrors": []
+      },
+      {
+        "name": "video create full name/mode/aspect/IP args frozen; real transaction rollback preserves form and retry",
+        "result": "pass",
+        "pageErrors": []
+      },
+      {
+        "name": "archive restoration duplicate lock, rejection and original command retry retain project",
+        "result": "pass",
+        "pageErrors": []
+      },
+      {
+        "name": "character actual studio creation row and bidirectional create/delete exclusion",
+        "result": "pass",
+        "pageErrors": []
+      },
+      {
+        "name": "scene actual studio creation row and bidirectional create/delete exclusion",
+        "result": "pass",
+        "pageErrors": []
+      },
+      {
+        "name": "prop actual studio creation row and bidirectional create/delete exclusion",
+        "result": "pass",
+        "pageErrors": []
+      },
+      {
+        "name": "style actual studio creation row and bidirectional create/delete exclusion",
+        "result": "pass",
+        "pageErrors": []
+      },
+      {
+        "name": "old gallery rename rejection cannot publish error or change new frozen owner form",
+        "result": "pass",
+        "pageErrors": []
+      },
+      {
+        "name": "old library delete rejection cannot publish error or close new kind selection",
+        "result": "pass",
+        "pageErrors": []
+      },
+      {
+        "name": "old episode reorder success cannot publish undo in new owner, old add failure cannot toast there",
+        "result": "pass",
+        "pageErrors": []
+      },
+      {
+        "name": "project delete late real transaction failure rolls cascade back, retains selection, retry deletes",
+        "result": "pass",
+        "pageErrors": []
+      }
+    ]
+  },
+  "reviewArtifactHashes": [
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/focused-tests.log",
+      "sha256": "923c1a70f37769c28f5694eea486131da5ef7201abba4128c6824c19fcfc6772"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-original20.log",
+      "sha256": "2a8f53fd11f187bdf04e36b227274742d20c57fe63be0ecdcd082bfc13a247f3"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt1-failure/calls.json",
+      "sha256": "56704038bd86988203f25fa1b4419c10dd0ef8ed82add8b1ba3808021b0c4582"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt1-failure/failure.html",
+      "sha256": "7737bd6f948ff51567a939532c04ea286491598bfaa0b7250c907a8ee91b4b5a"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt1-failure/failure.png",
+      "sha256": "9507c5e6481fc81a0da6c4cdc3b9d49c328264bec9bbf3af43e23356c1995eb5"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt1.log",
+      "sha256": "731130ecbf20cc2961fd6fd92a192949ce2b7c869f905c3825bbf592020c4d07"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt1.mjs",
+      "sha256": "f493e4b82188949b0decaccaaca6b218616d1fb18d426de644a16e40421563f7"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt2-failure/calls.json",
+      "sha256": "b218306a27fa9a2fc84bb087657598842af10df9d676a648ae9c8f18ad30859e"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt2-failure/failure.html",
+      "sha256": "3e869e646889a6b48ccaa9fddc02d7e05c57adf23871708db23f1adfa7c952f7"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt2-failure/failure.png",
+      "sha256": "b8ca76a4347790b0024901e25b1e9a140a61382eb23bc24c7a299175aeebefd4"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt2.log",
+      "sha256": "9b6a0c6b098d41256bbffd28a268d20a7f61d819bcb0e304fd8ede778f1c2155"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt2.mjs",
+      "sha256": "c7c7ebf95e02295314b01bb4d6b03965fec0c7d77182b4a6e2f10bb8d3a3d6e1"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-attempt3.log",
+      "sha256": "2e19e45f822ec0ab3a5816c1eb55c24ade958074273213d9e753deb93028b83f"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement-results.json",
+      "sha256": "b893fda0d6eb18df6bb0f28fb3b7eeecba682ed7a45173dff3924d5a948c5947"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/native-supplement.mjs",
+      "sha256": "9375cd42c209940e88c99425ac704dd3f2f0bcc3214f7e348ce0b4d9c86cc7d8"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/review-entry.json",
+      "sha256": "40b39c5b7b5226dfed8a858e8072e532141cd5c1bb86d1f2332528cb5a3c7954"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/e01-ss06/typecheck.log",
+      "sha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa"
+    },
+    {
+      "path": ".trellis/tasks/10-09-src-remediation-e/reviews/E01-SS06-check.md",
+      "sha256": "b9caeabc2c38054835488a504493ae8ad09a2a833ce571f88c02924ac0a08472"
+    }
+  ],
+  "manifestSelfHash": "excluded; no self-reference",
+  "limitations": [
+    "Headless native real write-owning pages/shared primitives/router/IndexedDB; destination pages stubbed",
+    "No full suite/build/global static/architecture while draft writer active",
+    "SS06 frozen; parallel AU02/PU10 drafts are not accepted here",
+    "Historical independent supplement is review evidence, not a new adopted permanent test gate"
+  ],
+  "taskStatusEdited": false,
+  "parentLedgerEdited": false,
+  "specsEdited": false,
+  "unownedFilesEdited": false,
+  "agentsSpawned": false,
+  "commitsOrPushes": false
+}

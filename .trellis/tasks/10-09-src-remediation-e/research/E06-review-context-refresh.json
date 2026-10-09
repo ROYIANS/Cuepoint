@@ -1,0 +1,9 @@
+{
+  "path": ".trellis/tasks/10-09-src-remediation-e/check.jsonl",
+  "beforeSHA256": "8eec9eca006a41a80879f4deb08b58f579eeca2035615ca01fc1a5b4c1e31983",
+  "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/e06-review-context-before/check.jsonl",
+  "afterSHA256": "b6bdd476ee0f40f55cdcc3f4f89476b8ca58d21800de836e8f8e7f162476796f",
+  "rows": 14,
+  "bytes": 103390,
+  "purpose": "IndependentE06 rolecontext refresh afterwritercompleted; rawJSON evidence manuallyread in dispatch"
+}

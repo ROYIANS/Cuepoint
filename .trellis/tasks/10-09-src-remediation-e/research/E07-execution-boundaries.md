@@ -1,0 +1,31 @@
+# E07 execution boundaries — preparation only
+
+Activate only after whole E06 independent PASS and spec/ledger synchronization. PD08/SS10 plus ancillary QG01; QG01 is not a52nd finding. Refresh all current source and exact production/full unused references after E04–E06 before deciding removal. The literal preparation report is not a reachability proof. Root private application, config/dynamic/barrel/namespace/CSS/type-only/ambient/test/native entry semantics must be reviewed.
+
+## Current supported tooling and reproducibility
+
+Use official-tooling-preparation, official-documentation-evidence/verification and environment reports as historical primary-source observations; recheck before selecting final pins. The historical isolated ESLint9/Sonar3 audit remains unchanged. Official observed ESLint9EOL was2026-08-06; supported10 plus compatible typed/hooks/Sonar versions are candidates, not automatically installed/verified. Publisher registry metadata is not runtime compatibility proof; the attempted Sonar README fetch timed out. Use the explicit machine pnpm path and real Node22.21.1; perform minimal pinned devdependency/lock changes only at this unit. Never use Codex runtime pnpm or change publication/permissions/triggers. ESLint SonarJS is not a SonarQube service. Preserve complete historical baseline dependency resolution if any old runtime dependency is removed; unresolved historical types cannot count as repaired diagnostics.
+
+## Source quality and debt interpretation
+
+Fresh typed lint over all intended authored src, explicit generated/vendor exclusions, current real package TypeScript and chosen tools. Inspect each surviving diagnostic: counts locate code, not all are runtime bugs. Business helpers named useState/useResult/useMaterialInProject need business names rather than disabling Hooks. TanStack redirect throwing remains framework control flow. Unknown JSON boundaries need guarded shapes. Historical package coercion requires actual import compatibility analysis rather than mass stricter rejection or blind dozens-entry acceptance. Authored Grainient/OGL uniforms are not vendor-excluded. Guarded effects must preserve their actual rebase/draft semantics.
+
+Do not baseline all warnings automatically, blanket-disable rules or ignore dozens of files. Remaining justified debt is narrow rule+file+stable semantic signature+count+reason+owner; explicit source/contract review precedes acceptance. Formatting/line relocation may preserve identity, new semantic violations do not inherit allowance. Additions/increases/stale or repaired entries fail until baseline shrinks. No aggregate-only message/count matching. Metric/clone signals have manual responsibility rationale; broad cosmetic rewrites to obtain low counts are not proof. Meaningful source repairs preserve owner/CAS/retention/pending/markdown/loading contracts and require appropriate current regressions.
+
+## Architecture and unused references
+
+Use current values-only static import/re-export cycles and explicit layer rules verified against real owners. All-type named re-exports and mixed type/value clauses need correct classification. Keep literal dynamic edges separately visible; distinguish dynamic loading from eager initialization cycle claims. Domain→DB/UI and DB→UI value boundaries are current enforceable candidates; don't invent blanket lib/AI/UI bans that outlaw legitimate current scoped queries or ownership/media checks. Pure shared UI hooks intentionally live in lib. Gate catches a concrete new forbidden edge and repair, not just existing zero counts.
+
+Run complete production and full/test entry unused analysis. Retire original PD08 list/query/update wrappers and SS10 primitives/exports/dependency only after current full closure proves no legitimate consumer. Existing emptyCharacter/constructors, CSS tw-animate-css import, mammoth browser ambient declaration, actual retention/public scalar helpers and supported primitive API require contract interpretation. Legacy productionContext/generationIntent are currently test-only source candidates: decide the whole requirement and compatibility contract explicitly. Do not delete or retarget meaningful tests merely to turn a tool green, or reconnect dead paid runtime by convenience.
+
+## Required acceptance evidence
+
+One portable documented local quality command plus CI quality-job step, minimal pinned tooling, meaningful synthetic lint/Sonar failure then repair, type-only permitted edge, static value cycle/boundary failure then repair, new/changed/added debt failure and repaired/stale debt shrink, fresh unused interpretation. Run actual isolated Node22 clean locked install and final commands, not just startup. Preserve install input/lock/package/source/producers/command/output hashes and all failures. Local macOS Node22 is not GitHub Linux CI execution. Application fulltests/modelverification/build and relevant current native cross-unit contracts must match final freeze, including generated route regeneration attribution. Full changed-scope independent review accepts every product/tool/config/CI path and debt rationale. No commits until final E integration and concrete human approval.
+
+## Historical compiler closure qualification
+
+Read E07-historical-baseline-import-closure-qualification.json: the historical mirror omitted imported vendor/lobehub/manifest.json, causing six unresolved-type modelBank diagnostics. Never credit these as fixes. Preserve original cache/reports, build a separate complete baseline dependency/metadata closure for formal comparison; current type/full behavior proof is distinct.
+
+## Prepared isolated Node22 verification
+
+Coordinator tools/run-node22-clean-gates.py is syntax-checked preparation only and refuses execution before E07 activation. It copies actual authored roots, vendor model metadata/data, configs/package/lock and future quality files into a fresh directory without node_modules, invokes the explicit machine pnpm with real Node22 PATH, and runs locked install/type/quality/selftests/fulltests/model/build. Refresh exact final command names/input closure before running. It rejects root or mirror source/lock changes and requires pnpm-exec actualv22.21.1. Local macOS evidence is not GitHub Linux execution. No clean installation has happened at preparation time.

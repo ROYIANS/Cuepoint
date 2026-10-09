@@ -1,0 +1,584 @@
+{
+  "status": "COMPLETED",
+  "result": "PASS",
+  "scope": "Independent Slice B sidecar: 16 sources + 4 new tests, all 91 assigned errors, current renamed callers/original D05 adapter and bounded audio/Grainient compatibility. Not whole E07/QG01 acceptance.",
+  "completedAt": "2026-10-09T08:45:31.342058+00:00",
+  "findings": [],
+  "blockingFindings": [],
+  "productEdits": [],
+  "writeScope": [
+    "reviews/E07-typed-sidecar/**",
+    "reviews/E07-typed-sidecar-check.md",
+    "reviews/E07-typed-sidecar-check.json"
+  ],
+  "implementationReport": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/research/E07-typed-boundaries-implementation.json",
+    "sha256": "2a8cc9469331bc103e9b142bb38da6d8e00799f9a8437650da06f4e9a6440bc6",
+    "markdownSHA256": "6f0cd5a6718309ef60c5b92c5c4f15dd2fecabf4e875ad7e1678f4216436d107",
+    "evidenceFilesVerified": 98
+  },
+  "contextManifest": {
+    "path": ".trellis/tasks/10-09-src-remediation-e/check.jsonl",
+    "sha256": "a776bdd4a33005e6446f260f6298e3aade37f23f2933da83a02d756ef34a9e34",
+    "entriesRead": 19,
+    "prdSHA256": "6d5494ea626cc7cb2bfb21f26cf4580890a069221a4f033dee5b4f1a2f44d148",
+    "designSHA256": "654d8ef35d49e8e5afb69ba50bd43faf640bd558bf4a8b0c50080f6f0ea351b0",
+    "implementSHA256": "5cda16b8ca17ab48fcf2017c41b7bfd99decc1dd636ce4333e75fbb79957f1d6"
+  },
+  "totals": {
+    "sourceFiles": 16,
+    "newTests": 4,
+    "assignedErrors": 91,
+    "currentErrors": 0,
+    "reviewWarnings": 58,
+    "warningRuleMessageMultisetsUnchanged": true,
+    "boundedPrimaryTestFiles": 23,
+    "boundedPrimaryTests": 373,
+    "boundedSupplementalTestFiles": 2,
+    "boundedSupplementalTests": 6,
+    "newTestsCases": 45,
+    "d05FrozenModulesVerified": 44
+  },
+  "coverage": [
+    {
+      "path": "src/components/agent/CreatedEntityLinks.tsx",
+      "status": "reviewed",
+      "coverage": "All assigned error sites, every source patch hunk, and relevant ownership/transaction/callback/type-consumer context; bounded Slice B review.",
+      "beforeSHA256": "ee8c7d8b1022dca6dcd577c9a84d6bb4de2b4de1b0c9e50c0497bb779ff060c5",
+      "reviewEntrySHA256": "f8ff42aeac75c0d987cba2b3b943a38abee850cb5903135e457968e4918425e9",
+      "reviewFinalSHA256": "f8ff42aeac75c0d987cba2b3b943a38abee850cb5903135e457968e4918425e9",
+      "snapshotSHA256": "f8ff42aeac75c0d987cba2b3b943a38abee850cb5903135e457968e4918425e9",
+      "assignedErrors": 11,
+      "currentErrors": 0,
+      "reviewWarnings": 1,
+      "warningRuleMessageMultiplicityUnchanged": true,
+      "note": "Unknown-array element typing preserves existing object/target/string guards, first-20 bound, local href validation, preview exclusion, deduplication and continuation checks. No assertion or runtime change.",
+      "findings": []
+    },
+    {
+      "path": "src/components/agent/Grainient.tsx",
+      "status": "reviewed",
+      "coverage": "All assigned error sites, every source patch hunk, and relevant ownership/transaction/callback/type-consumer context; bounded Slice B review.",
+      "beforeSHA256": "db22cb90bd5e220b7c8cda460ff3c76d5a7a3e3348106bc2c56d5a3b64355f09",
+      "reviewEntrySHA256": "b337145aa205a8839122cd3fe117f0288f0cf3923ecd1e9403e6019d94572510",
+      "reviewFinalSHA256": "b337145aa205a8839122cd3fe117f0288f0cf3923ecd1e9403e6019d94572510",
+      "snapshotSHA256": "b337145aa205a8839122cd3fe117f0288f0cf3923ecd1e9403e6019d94572510",
+      "assignedErrors": 29,
+      "currentErrors": 0,
+      "reviewWarnings": 1,
+      "warningRuleMessageMultiplicityUnchanged": true,
+      "note": "Owned 24-key uniform dictionary with number/Float32Array fields is passed directly into installed OGL Program and reused for resize, time and prop writes. Independent shader/initializer token proof and actual original/current callback trace pass. Visibility if/else preserves branch behavior; cleanup removes observers, RAF, program, geometry, context and canvas.",
+      "findings": []
+    },
+    {
+      "path": "src/db/agentFinishingCheck.ts",
+      "status": "reviewed",
+      "coverage": "All assigned error sites, every source patch hunk, and relevant ownership/transaction/callback/type-consumer context; bounded Slice B review.",
+      "beforeSHA256": "6410fb3478e6675eefb0a1d215bccb5e9d1271ba18b5bf89f6c1a4c0df903c59",
+      "reviewEntrySHA256": "c3c5a0750c0b09e9fd0730820a7d4eeb5b3012a5c79eb9935959782079671200",
+      "reviewFinalSHA256": "c3c5a0750c0b09e9fd0730820a7d4eeb5b3012a5c79eb9935959782079671200",
+      "snapshotSHA256": "c3c5a0750c0b09e9fd0730820a7d4eeb5b3012a5c79eb9935959782079671200",
+      "assignedErrors": 4,
+      "currentErrors": 0,
+      "reviewWarnings": 2,
+      "warningRuleMessageMultiplicityUnchanged": true,
+      "note": "Unknown plan members narrow id/title/status before validateTaskPlan. Unknown envelope narrows nonarray object before reading plan/steps. Guarded Record<string, unknown> view claims no field types. Raw-versus-validated revision equality still rejects extra fields and normalization drift; invalid inputs retain checkpoint/run/call and allow valid retry.",
+      "findings": []
+    },
+    {
+      "path": "src/db/agentProjectCreation.ts",
+      "status": "reviewed",
+      "coverage": "All assigned error sites, every source patch hunk, and relevant ownership/transaction/callback/type-consumer context; bounded Slice B review.",
+      "beforeSHA256": "43a3bb9a90089c1a4ffa4f0cf9cc0a52769a781e99ac84b6ef8a582ff6462951",
+      "reviewEntrySHA256": "8329f9046ddd2005898ee9c23ba2b976d9f2b6e75d2790b569892116ce56d327",
+      "reviewFinalSHA256": "8329f9046ddd2005898ee9c23ba2b976d9f2b6e75d2790b569892116ce56d327",
+      "snapshotSHA256": "8329f9046ddd2005898ee9c23ba2b976d9f2b6e75d2790b569892116ce56d327",
+      "assignedErrors": 1,
+      "currentErrors": 0,
+      "reviewWarnings": 2,
+      "warningRuleMessageMultiplicityUnchanged": true,
+      "note": "Completed result JSON becomes unknown before nonarray object/referenceInput inspection; same-envelope reference ownership still blocks automatic binding. Creation, generation, latest-run and continuation guards remain unchanged.",
+      "findings": []
+    },
+    {
+      "path": "src/db/agentTools.ts",
+      "status": "reviewed",
+      "coverage": "All assigned error sites, every source patch hunk, and relevant ownership/transaction/callback/type-consumer context; bounded Slice B review.",
+      "beforeSHA256": "51fc482601a428161a348d750c5b478c036275fb07ac548ef9ea339497022299",
+      "reviewEntrySHA256": "7179104875ba00d6baec5ccc87888e92d12b3eb2f55c4c1fc347163114c84d2d",
+      "reviewFinalSHA256": "7179104875ba00d6baec5ccc87888e92d12b3eb2f55c4c1fc347163114c84d2d",
+      "snapshotSHA256": "7179104875ba00d6baec5ccc87888e92d12b3eb2f55c4c1fc347163114c84d2d",
+      "assignedErrors": 2,
+      "currentErrors": 0,
+      "reviewWarnings": 3,
+      "warningRuleMessageMultiplicityUnchanged": true,
+      "note": "Removes redundant tool-name assertion; immutable completed-result replay is returned as unknown without asserting a desired result schema. This function returns unknown by contract. Atomic local work/result ledger transaction, ownership, run checks and rollback remain. Existing appendToolResults reference-envelope assertion is inherited, not newly hardened by this slice.",
+      "findings": []
+    },
+    {
+      "path": "src/db/materials.ts",
+      "status": "reviewed",
+      "coverage": "All assigned error sites, every source patch hunk, and relevant ownership/transaction/callback/type-consumer context; bounded Slice B review.",
+      "beforeSHA256": "5a4fcef0b2421c79fa3c2a84b95c622fe19d91605f375276062406613919511c",
+      "reviewEntrySHA256": "f30c5e3b5a2eea008679ffe10df6350f17cb56d57c8931cc41fdeaddd8115809",
+      "reviewFinalSHA256": "f30c5e3b5a2eea008679ffe10df6350f17cb56d57c8931cc41fdeaddd8115809",
+      "snapshotSHA256": "f30c5e3b5a2eea008679ffe10df6350f17cb56d57c8931cc41fdeaddd8115809",
+      "assignedErrors": 1,
+      "currentErrors": 0,
+      "reviewWarnings": 6,
+      "warningRuleMessageMultiplicityUnchanged": true,
+      "note": "Business operation renamed adoptMaterialInProject, redundant slot assertion removed, unused listMaterialUsage wrapper retired. Adoption body/transaction/owner/IP/archive/revision/idempotence/independent media copy are unchanged. Five caller token proofs and original D05 adapter preserve assertions.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/agent/businessStore.ts",
+      "status": "reviewed",
+      "coverage": "All assigned error sites, every source patch hunk, and relevant ownership/transaction/callback/type-consumer context; bounded Slice B review.",
+      "beforeSHA256": "53571ee862b15d05e4782048c5f393b7afe50132f1f3983cccb375ab10d99bcc",
+      "reviewEntrySHA256": "e1a9016d6acd52dba5b601d0e099bb52dc27e4cec0ec0a954bd138c12e770feb",
+      "reviewFinalSHA256": "e1a9016d6acd52dba5b601d0e099bb52dc27e4cec0ec0a954bd138c12e770feb",
+      "snapshotSHA256": "e1a9016d6acd52dba5b601d0e099bb52dc27e4cec0ec0a954bd138c12e770feb",
+      "assignedErrors": 5,
+      "currentErrors": 0,
+      "reviewWarnings": 1,
+      "warningRuleMessageMultiplicityUnchanged": true,
+      "note": "Restricted scalar display selector preserves string/number/boolean, empty-string and nullish candidate priority, and explicit malformed-compound fallthrough. Caps remain 200/300/120 and raw owner/id/row revision/approval snapshots remain separate. metadata and AssetKind localize only; redundant path assertion removed.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/agent/businessTools.ts",
+      "status": "reviewed",
+      "coverage": "All assigned error sites, every source patch hunk, and relevant ownership/transaction/callback/type-consumer context; bounded Slice B review.",
+      "beforeSHA256": "0aad3a5e1d3792952da4980ed003aa863e3ecb9e87bdc30cab4bef6d18e63274",
+      "reviewEntrySHA256": "3ca128988ef66f4f5b052e37cfbad6b56a10da1c5c62271fb23703f467668524",
+      "reviewFinalSHA256": "3ca128988ef66f4f5b052e37cfbad6b56a10da1c5c62271fb23703f467668524",
+      "snapshotSHA256": "3ca128988ef66f4f5b052e37cfbad6b56a10da1c5c62271fb23703f467668524",
+      "assignedErrors": 14,
+      "currentErrors": 0,
+      "reviewWarnings": 7,
+      "warningRuleMessageMultiplicityUnchanged": true,
+      "note": "Preview, copy, reorder and delete labels use the owned scalar selector; actual IDs/full source state and revision remain unchanged. Project replay extracts only an actual string result ID before owner/binding checks. Promise.resolve and synchronous throwing callback retain awaited semantics. Supported/unsupported Tool kind/slot discriminants and schema-linked callbacks remain intact; four guards merely localize.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/agent/businessWriteReceipt.ts",
+      "status": "reviewed",
+      "coverage": "All assigned error sites, every source patch hunk, and relevant ownership/transaction/callback/type-consumer context; bounded Slice B review.",
+      "beforeSHA256": "626537317a0c0a239c66b4c1b756251faead3eb400690a69274ce63cbf693096",
+      "reviewEntrySHA256": "ee101a7b40fc4a70167b78bc08bde86eaf9fd529921c5115c716f9a4a1f6b44c",
+      "reviewFinalSHA256": "ee101a7b40fc4a70167b78bc08bde86eaf9fd529921c5115c716f9a4a1f6b44c",
+      "snapshotSHA256": "ee101a7b40fc4a70167b78bc08bde86eaf9fd529921c5115c716f9a4a1f6b44c",
+      "assignedErrors": 2,
+      "currentErrors": 0,
+      "reviewWarnings": 1,
+      "warningRuleMessageMultiplicityUnchanged": true,
+      "note": "Label recovery is presentation-only with 160 cap and exact raw revision. Batch targets narrow unknown arrays then validate objects/IDs; empty/malformed targets throw inside existing atomic transaction rather than create a receipt. Sound seed revisions and exact saved replay remain.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/agent/imageDiscovery.ts",
+      "status": "reviewed",
+      "coverage": "All assigned error sites, every source patch hunk, and relevant ownership/transaction/callback/type-consumer context; bounded Slice B review.",
+      "beforeSHA256": "fc8571b38c847e6ed4e0504bd04d3f5140a6772a202d94fc7b4261292f95bc58",
+      "reviewEntrySHA256": "02539c6a40860723992d5a424c3d0b4b93905b6c8e0f9fb4965d7968b64eedc1",
+      "reviewFinalSHA256": "02539c6a40860723992d5a424c3d0b4b93905b6c8e0f9fb4965d7968b64eedc1",
+      "snapshotSHA256": "02539c6a40860723992d5a424c3d0b4b93905b6c8e0f9fb4965d7968b64eedc1",
+      "assignedErrors": 1,
+      "currentErrors": 0,
+      "reviewWarnings": 13,
+      "warningRuleMessageMultiplicityUnchanged": true,
+      "note": "Actual label callers supply Project/Reference/Entity string or optional string, so signature is string|undefined and slice is direct. Exact source identity, current/reference/candidate association, raw revision, same-ID bytes and final post-encoding rechecks remain. No claim of accepting arbitrary corrupted nonstring labels.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/agent/materialTools.ts",
+      "status": "reviewed",
+      "coverage": "All assigned error sites, every source patch hunk, and relevant ownership/transaction/callback/type-consumer context; bounded Slice B review.",
+      "beforeSHA256": "4256632f8525af7d51f1ce11d06cc1576612e74cb1d9c2de8c05fd160a0e4db7",
+      "reviewEntrySHA256": "bc06b0a4affc684e26426bef59c185ccf27297dc80afa3790c88c4b6d84572f8",
+      "reviewFinalSHA256": "bc06b0a4affc684e26426bef59c185ccf27297dc80afa3790c88c4b6d84572f8",
+      "snapshotSHA256": "bc06b0a4affc684e26426bef59c185ccf27297dc80afa3790c88c4b6d84572f8",
+      "assignedErrors": 5,
+      "currentErrors": 0,
+      "reviewWarnings": 7,
+      "warningRuleMessageMultiplicityUnchanged": true,
+      "note": "Business helper names readMaterialUseState/materialUseResult and DB adoptMaterialInProject remove Hooks-name false positives without Hooks suppression. Scope/preparation/revision/archive/IP/atomic use logic and results remain. Redundant names re-export removed; canonical materialToolNames owner remains.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/agent/referenceEvidence.ts",
+      "status": "reviewed",
+      "coverage": "All assigned error sites, every source patch hunk, and relevant ownership/transaction/callback/type-consumer context; bounded Slice B review.",
+      "beforeSHA256": "e8950b149b044d303b979762fcc6f7bb71bcc6e4d7b43ea02b4eb48f0c013208",
+      "reviewEntrySHA256": "344c6287557fcf339d7637f0f34aa139c9c56b2c0ede3c47cba1bc26255394f0",
+      "reviewFinalSHA256": "344c6287557fcf339d7637f0f34aa139c9c56b2c0ede3c47cba1bc26255394f0",
+      "snapshotSHA256": "344c6287557fcf339d7637f0f34aa139c9c56b2c0ede3c47cba1bc26255394f0",
+      "assignedErrors": 8,
+      "currentErrors": 0,
+      "reviewWarnings": 0,
+      "warningRuleMessageMultiplicityUnchanged": true,
+      "note": "Unknown nonarray outer envelope and referenceInput narrow before references; attachment IDs must be bounded strings and revisions actual positive safe integers. Guarded unknown record view does not assert attachment types before member checks. Malformed/foreign/prose envelopes cannot manufacture attachment grants.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/agent/tools.ts",
+      "status": "reviewed",
+      "coverage": "All assigned error sites, every source patch hunk, and relevant ownership/transaction/callback/type-consumer context; bounded Slice B review.",
+      "beforeSHA256": "fd78896242970d3f1d69a3caae0976d0dfcb94e5b1e66c5984e656f0e0b83760",
+      "reviewEntrySHA256": "eae313d30c74774f39184b54bfe10813f22e1233dbc37352b0e357230e489435",
+      "reviewFinalSHA256": "eae313d30c74774f39184b54bfe10813f22e1233dbc37352b0e357230e489435",
+      "snapshotSHA256": "eae313d30c74774f39184b54bfe10813f22e1233dbc37352b0e357230e489435",
+      "assignedErrors": 1,
+      "currentErrors": 0,
+      "reviewWarnings": 0,
+      "warningRuleMessageMultiplicityUnchanged": true,
+      "note": "Persisted plan result is unknown on return, preserving heterogeneous Tool definition/dispatch contracts, strict selected parser, central original D05 registry erasure and stored atomic ledger semantics. No new assertion or discriminant change.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/agent/wrapupEvidence.ts",
+      "status": "reviewed",
+      "coverage": "All assigned error sites, every source patch hunk, and relevant ownership/transaction/callback/type-consumer context; bounded Slice B review.",
+      "beforeSHA256": "aa548058fcac6bfdb4d153b893ebbc2cf9d406d7881e4136a7d93da0b2828e17",
+      "reviewEntrySHA256": "1ab1187b7e64b1610614c59c4e76d6bcbfd9de899270c3e2ce2116db07cd8f03",
+      "reviewFinalSHA256": "1ab1187b7e64b1610614c59c4e76d6bcbfd9de899270c3e2ce2116db07cd8f03",
+      "snapshotSHA256": "1ab1187b7e64b1610614c59c4e76d6bcbfd9de899270c3e2ce2116db07cd8f03",
+      "assignedErrors": 3,
+      "currentErrors": 0,
+      "reviewWarnings": 12,
+      "warningRuleMessageMultiplicityUnchanged": true,
+      "note": "Parsed result stays unknown until nonarray object check and unknown-record view; redundant narrowed projectId assertion removed. Source fingerprints, ownership, historical evidence and bounded facts remain; helper does not assert individual field schemas.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/audioProjectPackage.ts",
+      "status": "reviewed",
+      "coverage": "All assigned error sites, every source patch hunk, and relevant ownership/transaction/callback/type-consumer context; bounded Slice B review.",
+      "beforeSHA256": "93886389c152de00353d0ca082816c4678f31f55ee554a65b8e243bd74224e63",
+      "reviewEntrySHA256": "c368a4365a7543293ed7d39945310e0ce37c90b5549a146350d50a70c5a5b608",
+      "reviewFinalSHA256": "c368a4365a7543293ed7d39945310e0ce37c90b5549a146350d50a70c5a5b608",
+      "snapshotSHA256": "c368a4365a7543293ed7d39945310e0ce37c90b5549a146350d50a70c5a5b608",
+      "assignedErrors": 2,
+      "currentErrors": 0,
+      "reviewWarnings": 2,
+      "warningRuleMessageMultiplicityUnchanged": true,
+      "note": "Heterogeneous tuples carry unknown values into Record<string,unknown>, then existing explicit schema validates original row IDs/owners/discriminants/provenance/settings/task evidence. No job interface assertion. Snapshot sanitizes source/claim without changing stored job. Existing codec remaps IDs/media/provenance/fingerprints, insert validates associations atomically, history remains manual/dormant. Original root parse/remap compatibility exports retained per D03 and exercised meaningfully.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/episodeDelivery.ts",
+      "status": "reviewed",
+      "coverage": "All assigned error sites, every source patch hunk, and relevant ownership/transaction/callback/type-consumer context; bounded Slice B review.",
+      "beforeSHA256": "c30e1b84647ec5f8801bb62cd5d3a84c9678bea3361ca00b787d144a6a2e6b8b",
+      "reviewEntrySHA256": "4e099cfcb13efbb4b82b94888ef12c1901bf227f52d7619f0b71299869b50f01",
+      "reviewFinalSHA256": "4e099cfcb13efbb4b82b94888ef12c1901bf227f52d7619f0b71299869b50f01",
+      "snapshotSHA256": "4e099cfcb13efbb4b82b94888ef12c1901bf227f52d7619f0b71299869b50f01",
+      "assignedErrors": 2,
+      "currentErrors": 0,
+      "reviewWarnings": 0,
+      "warningRuleMessageMultiplicityUnchanged": true,
+      "note": "Explicit seven-field selector excludes structured Shot fields and preserves catalog order and canonical authored strings. Scalar CSV domain preserves numeric order/duration and nullish empty, BOM/CRLF/quote/comma/newline semantics. Base fields and episode/project filtering unchanged. Row/column types localize; exported EpisodeDelivery retains structural API. Nonstring corrupt Shot text values are outside its canonical typed contract.",
+      "findings": []
+    },
+    {
+      "path": "tests/e07TypedBoundaries.test.ts",
+      "status": "reviewed",
+      "coverage": "Entire new test file and assertions",
+      "reviewEntrySHA256": "422416015f89458e3ef478827d84a9c00e7edb2a2b6fd8afbe07f6eb85b2344f",
+      "reviewFinalSHA256": "422416015f89458e3ef478827d84a9c00e7edb2a2b6fd8afbe07f6eb85b2344f",
+      "snapshotSHA256": "422416015f89458e3ef478827d84a9c00e7edb2a2b6fd8afbe07f6eb85b2344f",
+      "note": "17 cases: actual structured-link bounds/deduplication, malformed/foreign reference envelopes, true integer revision, reviewed corrupt-display write with raw revision/receipt/replay, real batch-write rollback and scalar label/caps.",
+      "findings": []
+    },
+    {
+      "path": "tests/e07TypedBoundariesAudio.test.ts",
+      "status": "reviewed",
+      "coverage": "Entire new test file and assertions",
+      "reviewEntrySHA256": "8b935f1621a0564295aa3ddc324fd6366bbb7ad3d70dec16ff097307f4991bf2",
+      "reviewFinalSHA256": "8b935f1621a0564295aa3ddc324fd6366bbb7ad3d70dec16ff097307f4991bf2",
+      "snapshotSHA256": "8b935f1621a0564295aa3ddc324fd6366bbb7ad3d70dec16ff097307f4991bf2",
+      "note": "5 cases: real root parse/remap/insert APIs, stored-source/claim nonmutation, new IDs/manual/dormant/imported connector, no fetch, malformed persisted job shape rejection and foreign-media transactional rollback.",
+      "findings": []
+    },
+    {
+      "path": "tests/e07TypedBoundariesDelivery.test.ts",
+      "status": "reviewed",
+      "coverage": "Entire new test file and assertions",
+      "reviewEntrySHA256": "6872df9b57892233f86c54f79cef1d718a4c1771f34c511c4433a1511d805273",
+      "reviewFinalSHA256": "6872df9b57892233f86c54f79cef1d718a4c1771f34c511c4433a1511d805273",
+      "snapshotSHA256": "6872df9b57892233f86c54f79cef1d718a4c1771f34c511c4433a1511d805273",
+      "note": "10 cases: exact seven authored extras, base content/notes/duration/BOM and quote/newline/CRLF behavior plus actual numeric/nullish CSV cell domain.",
+      "findings": []
+    },
+    {
+      "path": "tests/e07TypedBoundariesFinishing.test.ts",
+      "status": "reviewed",
+      "coverage": "Entire new test file and assertions",
+      "reviewEntrySHA256": "d65c1f2ede5be59aa191020fd5ec3db3355176bff38132bc381a45122d664cdf",
+      "reviewFinalSHA256": "d65c1f2ede5be59aa191020fd5ec3db3355176bff38132bc381a45122d664cdf",
+      "snapshotSHA256": "d65c1f2ede5be59aa191020fd5ec3db3355176bff38132bc381a45122d664cdf",
+      "note": "13 cases: malformed saved result/argument members and unknown fields, no checkpoint consumption or run/call mutation, valid retry and corrupted stored plan refusal.",
+      "findings": []
+    }
+  ],
+  "resolvedErrorMatrix": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-typed-sidecar/resolved-errors.json",
+  "commands": {
+    "scoped-lint": {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "exec",
+        "eslint",
+        "src/components/agent/CreatedEntityLinks.tsx",
+        "src/components/agent/Grainient.tsx",
+        "src/db/agentFinishingCheck.ts",
+        "src/db/agentProjectCreation.ts",
+        "src/db/agentTools.ts",
+        "src/db/materials.ts",
+        "src/lib/agent/businessStore.ts",
+        "src/lib/agent/businessTools.ts",
+        "src/lib/agent/businessWriteReceipt.ts",
+        "src/lib/agent/imageDiscovery.ts",
+        "src/lib/agent/materialTools.ts",
+        "src/lib/agent/referenceEvidence.ts",
+        "src/lib/agent/tools.ts",
+        "src/lib/agent/wrapupEvidence.ts",
+        "src/lib/audioProjectPackage.ts",
+        "src/lib/episodeDelivery.ts",
+        "--format",
+        "json",
+        "--output-file",
+        "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/reviews/E07-typed-sidecar/scoped-lint.json"
+      ],
+      "startedAt": "2026-10-09T08:32:13.987535+00:00",
+      "finishedAt": "2026-10-09T08:32:20.467917+00:00",
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-typed-sidecar/scoped-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "focused-tests": {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "test",
+        "tests/e07TypedBoundaries.test.ts",
+        "tests/e07TypedBoundariesAudio.test.ts",
+        "tests/e07TypedBoundariesDelivery.test.ts",
+        "tests/e07TypedBoundariesFinishing.test.ts",
+        "tests/referenceEvidence.test.ts",
+        "tests/agentFinishingCheck.test.ts",
+        "tests/agentFinishingCheckPrompt.test.ts",
+        "tests/agentBusiness.test.ts",
+        "tests/agentProjectCreation.test.ts",
+        "tests/agentTaskWrapup.test.ts",
+        "tests/episodeDelivery.test.ts",
+        "tests/imageDiscovery.test.ts",
+        "tests/agentTools.test.ts",
+        "tests/agentToolsReview.test.ts",
+        "tests/audioFoundation.test.ts",
+        "tests/audioFingerprint.test.ts",
+        "tests/audioGenerationRecoveryAudit.test.ts",
+        "tests/d05BusinessBranches.test.ts",
+        "tests/d05SchemaEquivalence.test.ts",
+        "tests/d05ToolMetadata.test.ts",
+        "tests/agentMaterialTools.test.ts",
+        "tests/materialLibrary.test.ts",
+        "tests/materialIntegration.test.ts",
+        "--maxWorkers=4"
+      ],
+      "startedAt": "2026-10-09T08:32:13.987692+00:00",
+      "finishedAt": "2026-10-09T08:32:19.961466+00:00",
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-typed-sidecar/focused-tests.log",
+      "sha256": "aafc52ed9f047500b163cbe709c5cbbc301e38bff35e617e316cf9fbe1b80b1b"
+    },
+    "supplemental-tests": {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "exec",
+        "vitest",
+        "run",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E07-typed-sidecar/grainient-runtime.test.ts",
+        "tests/d05ToolCatalog.test.ts",
+        "--config",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E07-typed-sidecar/vitest.sidecar.config.ts",
+        "--maxWorkers=2"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-09T08:39:27.521852+00:00",
+      "finishedAt": "2026-10-09T08:39:30.984498+00:00",
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-typed-sidecar/supplemental-tests.log",
+      "logSHA256": "5fd3d6e8007bb6197ede94271d3f55ecf6e1b5895efc4f5289b54c88695d874a"
+    },
+    "new-tests-strict-typecheck": {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "exec",
+        "tsc",
+        "--project",
+        "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/reviews/E07-typed-sidecar/tsconfig.new-tests.json",
+        "--pretty",
+        "false"
+      ],
+      "startedAt": "2026-10-09T08:40:40.974108+00:00",
+      "finishedAt": "2026-10-09T08:40:48.503988+00:00",
+      "exitCode": 0,
+      "log": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-09-src-remediation-e/reviews/E07-typed-sidecar/new-tests-typecheck.log",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "static-proof": {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        ".trellis/tasks/10-09-src-remediation-e/reviews/E07-typed-sidecar/static-proof.mjs"
+      ],
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-typed-sidecar/static-proof.log",
+      "logSHA256": "b8d68752d0ce5f28b9db9089d03c7ec36c8c52558c2a130353d3268000b1edff"
+    }
+  },
+  "runtime": {
+    "node": {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "--version"
+      ],
+      "exitCode": 0,
+      "stdout": "v24.11.0\n",
+      "stderr": ""
+    },
+    "pnpm": {
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "--version"
+      ],
+      "exitCode": 0,
+      "stdout": "10.15.0\n",
+      "stderr": ""
+    }
+  },
+  "callerProof": [
+    {
+      "path": "tests/materialLibrary.test.ts",
+      "beforeSHA256": "c016539631a5b83c2975eef36de5b82b1d15cb468b7beb079b3bc74f954edce9",
+      "currentSHA256": "c0720dc7a7c2e0f1b384b726db5f7640ca202b3ae52d3910c380e93a1b624a49",
+      "identifierRenameOnly": true,
+      "allAssertionsAndOtherTokensUnchanged": true
+    },
+    {
+      "path": "tests/materialIntegration.test.ts",
+      "beforeSHA256": "27fe3d83ee4c8748a347d41758304bbab243895c3aeb33359b3fcbab2073aec0",
+      "currentSHA256": "90fccd5f90ce6f5d0dde49f7ea2dd0bd2c32e1327da9e210b2f41bf34d0879ca",
+      "identifierRenameOnly": true,
+      "allAssertionsAndOtherTokensUnchanged": true
+    },
+    {
+      "path": "tests/agentMaterialTools.test.ts",
+      "beforeSHA256": "604e42a3dbfd3ca937aba5d976ce51fc8409712c449441ee57fb02b52e24a643",
+      "currentSHA256": "9c1d0c1fa3d4afa22f1af5e2700b42c5f4c9cdd1e83720b1267266685a2fd512",
+      "identifierRenameOnly": true,
+      "allAssertionsAndOtherTokensUnchanged": true
+    },
+    {
+      "path": "tests/fixtures/e04-media/commands.ts",
+      "beforeSHA256": "0fee491f26b9da39ff0dae820d4d5d4d2572c5ad560f84fe34edd172889e7715",
+      "currentSHA256": "759e33b4430b63469e121eb125379be7efdb9829229fd4c19ca7b9c248020052",
+      "identifierRenameOnly": true,
+      "allAssertionsAndOtherTokensUnchanged": true
+    },
+    {
+      "path": "tests/fixtures/d02/harness.ts",
+      "beforeSHA256": "11c8e579ba22470cfa6cc3cc78a0fc1e2ce1e4065fba7d4f68dd0788752b181b",
+      "currentSHA256": "e739f247e5fc33d942eb292e629d5d37e6ee157c6515819da7b01deb3c94dac9",
+      "identifierRenameOnly": true,
+      "allAssertionsAndOtherTokensUnchanged": true
+    }
+  ],
+  "grainient": {
+    "path": "src/components/agent/Grainient.tsx",
+    "beforeSHA256": "db22cb90bd5e220b7c8cda460ff3c76d5a7a3e3348106bc2c56d5a3b64355f09",
+    "currentSHA256": "b337145aa205a8839122cd3fe117f0288f0cf3923ecd1e9403e6019d94572510",
+    "shaders": [
+      {
+        "name": "vertex",
+        "beforeSHA256": "427d4b9827b17bd6a699b4f7a6c48b9b072549ae625face5f159414c404f2f95",
+        "currentSHA256": "427d4b9827b17bd6a699b4f7a6c48b9b072549ae625face5f159414c404f2f95",
+        "identical": true
+      },
+      {
+        "name": "fragment",
+        "beforeSHA256": "678e7c36bc33061ab006402cafe7917359929d646146fec6fc728f8706139316",
+        "currentSHA256": "678e7c36bc33061ab006402cafe7917359929d646146fec6fc728f8706139316",
+        "identical": true
+      }
+    ],
+    "uniformInitializerTokensIdentical": true,
+    "oglProgramSHA256": "f29c2901d2abd7be08402c710b09d1cf4677e802a4b3ce448594c3b3b48d2d72",
+    "oglConstructorRetainsUniformReference": true
+  },
+  "originalD05Adapter": {
+    "config": "vitest.config.ts",
+    "configSHA256": "14dbdd1dc3abf846cc37967799e3d83648bb1b2526d6862e337546b18f01a22a",
+    "adapter": "tests/fixtures/e07/original-materials-adapter.ts",
+    "adapterSHA256": "aa7f5f7b1cfa4bcd391f695821c34d19381d78018bc22470ed1bb08577216cd5",
+    "scope": "Only original D05 materialTools importer; exact alias export uses original renamed DB operation. All 44 comparator source modules byte-identical."
+  },
+  "audioCompatibility": {
+    "decision": "retain parseAudioPackage/remapAudioPackage root exports",
+    "canonicalD03Path": ".trellis/tasks/archive/2026-10/10-08-src-remediation-d/research/D03-spec-draft.md",
+    "canonicalD03SHA256": "7f284fa839bbd2e1313e5ccbae539960f771c60471feac8e4f77b22881fe5e19",
+    "proof": "Five new audio cases include two actual root parse/remap/insert cases; existing real ZIP/ownership/fingerprint/task-observation/dormant-claim/retention/CAS suites execute production boundaries. Root API regressions are meaningful consumers, not fabricated paid runtime."
+  },
+  "retainedFailures": [
+    {
+      "kind": "review AST producer",
+      "details": "First token walker passed an AST subtree as sourceFile; retained failed producer/stack; fixed getSourceFile and reran successfully."
+    },
+    {
+      "kind": "review supplemental harness",
+      "details": "mergeConfig concatenated include arrays and unintentionally expanded to 172 suites; 171 passed/3026 tests passed and Grainient suite failed missing frozen relative CSS dependency. This run is discarded as acceptance evidence; no whole-suite PASS claim."
+    },
+    {
+      "kind": "review supplemental harness",
+      "details": "Bounded second run failed 2 Grainient cases because frozen path outside app tsconfig used classic JSX. Exact CSS resolver and automatic JSX compiler mode corrected in owned sidecar config; final two-file run 6/6 PASS."
+    }
+  ],
+  "limits": [
+    "No whole E07/QG01, global gate/debt/Knip/Node22/CI/model/build/native acceptance. No install/build/model/native/shared config/task/spec/status/git/product edits performed; one accidental broad test execution is expressly documented as a harness failure.",
+    "The historical 91-error baseline is the frozen implementation comparison, independently aligned with actual E07 entry and before-copy hashes; the historical lint was not rerun in a new mirror.",
+    "Coverage is all Slice B changed sites and surrounding contracts plus all four new test files; this is not a fresh whole-body audit of untouched code in every large owner.",
+    "58 surviving warnings are unchanged per-file rule/message multiplicity. They are review signals only here and no debt allowance is accepted.",
+    "Grainient runtime proof uses actual component callbacks and installed OGL Program with instrumented React hooks/WebGL/browser surfaces in Node. It proves object/callback lifecycle equivalence, not React DOM mounting, real GPU pixels, native visibility scheduling or visual fidelity.",
+    "The handwritten supplemental fixtures are local sidecar evidence, not permanent tests or global quality configuration.",
+    "Compiler/test execution is local machine Node24.11.0 with explicit machine pnpm10.15.0. Locked clean Node22 and GitHub Linux CI remain main/gate work.",
+    "Unchanged historical JSON casts and malformed noncanonical persisted labels outside repaired sites are not claimed as hardened. Canonical delivery/image labels are string data; raw object/array stringification is not a compatibility promise."
+  ],
+  "finalInputs": ".trellis/tasks/10-09-src-remediation-e/reviews/E07-typed-sidecar/review-final-inputs.json",
+  "additionalContextHashes": [
+    {
+      "path": "tsconfig.app.json",
+      "sha256": "c40f7db8652b3433532289c87edd6898d4de984614f8a99dcf7bfbd8856e3bb3"
+    },
+    {
+      "path": "src/vite-env.d.ts",
+      "sha256": "7604b7df57ca7b48138c04eb11d62669d30f11122585994227565281f9069edc"
+    },
+    {
+      "path": "tests/setup.ts",
+      "sha256": "1dfa6241d5bd0f2d3c9f2653dc83bb764849f5e36afe00804f32e4a74897cfbc"
+    },
+    {
+      "path": "src/lib/packages/audioPackageCodec.ts",
+      "sha256": "e9efd6af64d536bb6319be184d9d550e5f6e316f9e3954927472db0348e2e1ac"
+    },
+    {
+      "path": "src/lib/audio/fingerprint.ts",
+      "sha256": "2e75f9a80cc117c5f9a2b0aa0528f9f28be1e5d00cc3826376e1fedcabb4ef59"
+    },
+    {
+      "path": "src/components/agent/homeGrainient.css",
+      "sha256": "34bb123e8214df10fa81278f443b4984dbe8026a4860dc92e50ad83572f80520"
+    },
+    {
+      "path": "src/lib/agent/toolDefinition.ts",
+      "sha256": "02c4be1c59dee37c6ef109b6e64f10f515de290e1516e70e9e413f6c60be858a"
+    }
+  ]
+}

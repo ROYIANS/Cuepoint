@@ -1,0 +1,12 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "E04 scoped current ownership/transaction/retention/library/evidence contract; read mandatory full matrix manually where specified"}
+{"file": ".trellis/spec/frontend/project-memory.md", "reason": "E04 scoped current ownership/transaction/retention/library/evidence contract; read mandatory full matrix manually where specified"}
+{"file": ".trellis/spec/frontend/ip-material-library.md", "reason": "E04 scoped current ownership/transaction/retention/library/evidence contract; read mandatory full matrix manually where specified"}
+{"file": ".trellis/spec/frontend/production-contracts.md", "reason": "E04 scoped current ownership/transaction/retention/library/evidence contract; read mandatory full matrix manually where specified"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "E04 scoped current ownership/transaction/retention/library/evidence contract; read mandatory full matrix manually where specified"}
+{"file": ".trellis/tasks/10-09-src-remediation-e/research/E04-quality-context.md", "reason": "E04 scoped current ownership/transaction/retention/library/evidence contract; read mandatory full matrix manually where specified"}
+{"file": ".trellis/tasks/10-09-src-remediation-e/research/E04-state-management-context.md", "reason": "E04 scoped current ownership/transaction/retention/library/evidence contract; read mandatory full matrix manually where specified"}
+{"file": ".trellis/tasks/10-09-src-remediation-e/research/E04-retention-context.md", "reason": "E04 scoped current ownership/transaction/retention/library/evidence contract; read mandatory full matrix manually where specified"}
+{"file": ".trellis/tasks/10-09-src-remediation-e/research/E04-execution-boundaries.md", "reason": "E04 scoped current ownership/transaction/retention/library/evidence contract; read mandatory full matrix manually where specified"}
+{"file": ".trellis/tasks/10-09-src-remediation-e/research/E04-library-subscription-preparation.json", "reason": "E04 scoped current ownership/transaction/retention/library/evidence contract; read mandatory full matrix manually where specified"}
+{"file": ".trellis/tasks/10-09-src-remediation-e/research/E04-manual-memory-read-closure.json", "reason": "E04 scoped current ownership/transaction/retention/library/evidence contract; read mandatory full matrix manually where specified"}
+{"file": ".trellis/tasks/10-09-src-remediation-e/research/E04-independent-check-contract.md", "reason": "Independent combined PD06/PD07/SS09 acceptance, final signatures and limits"}

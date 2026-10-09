@@ -1,0 +1,7 @@
+{
+  "path": ".trellis/tasks/10-09-src-remediation-e/tools/verify-accepted-unit-chain.py",
+  "beforeSHA256": "eda8e40b3a74c56468f23b29c512d98564e82d27feb2b9131cb47c46baf47fd1",
+  "afterSHA256": "ee1364257ab955d09bf0fad13af572b0372d34123ef1d97cc4888869da3abaf6",
+  "beforeCopy": ".trellis/tasks/10-09-src-remediation-e/research/E07-coordinator-tool-before/verify-accepted-unit-chain.py",
+  "reason": "E06actualfinalschema statusCOMPLETED+verdictPASS+closedtrue; priorverifierrequiredonlystatusPASS. No acceptedreportrewritten; serialbefore/afterhashesalready0mismatch."
+}

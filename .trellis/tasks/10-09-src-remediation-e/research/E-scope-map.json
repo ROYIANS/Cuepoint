@@ -1,0 +1,326 @@
+{
+  "date": "2026-10-09",
+  "baseRevision": "1ecaf5ceec92e022c2b2b8d662e2a92e8eee36c7",
+  "units": [
+    {
+      "id": "E01",
+      "batch": "E",
+      "title": "编辑草稿离开保护与写入错误出口",
+      "findings": [
+        "AU-02",
+        "PU-10",
+        "SS-06"
+      ],
+      "status": "pending",
+      "changedFiles": [],
+      "checks": [],
+      "review": null
+    },
+    {
+      "id": "E02",
+      "batch": "E",
+      "title": "键盘动作及移动端布局",
+      "findings": [
+        "AU-04",
+        "AU-05"
+      ],
+      "status": "pending",
+      "changedFiles": [],
+      "checks": [],
+      "review": null
+    },
+    {
+      "id": "E03",
+      "batch": "E",
+      "title": "清理旧音频CSS",
+      "findings": [
+        "PU-09"
+      ],
+      "status": "pending",
+      "changedFiles": [],
+      "checks": [],
+      "review": null
+    },
+    {
+      "id": "E04",
+      "batch": "E",
+      "title": "事务范围与批量引用扫描",
+      "findings": [
+        "PD-06",
+        "PD-07",
+        "SS-09"
+      ],
+      "status": "pending",
+      "changedFiles": [],
+      "checks": [],
+      "review": null
+    },
+    {
+      "id": "E05",
+      "batch": "E",
+      "title": "装饰动画按需调度",
+      "findings": [
+        "SS-11"
+      ],
+      "status": "pending",
+      "changedFiles": [],
+      "checks": [],
+      "review": null
+    },
+    {
+      "id": "E06",
+      "batch": "E",
+      "title": "富消息和图标加载优化",
+      "findings": [
+        "AU-09"
+      ],
+      "status": "pending",
+      "changedFiles": [],
+      "checks": [],
+      "review": null
+    },
+    {
+      "id": "E07",
+      "batch": "E",
+      "title": "收窄未用出口和控件",
+      "findings": [
+        "PD-08",
+        "SS-10"
+      ],
+      "status": "pending",
+      "changedFiles": [],
+      "checks": [],
+      "review": null
+    }
+  ],
+  "findings": [
+    {
+      "id": "PD-06",
+      "priority": "P2",
+      "classification": "structural-debt",
+      "title": "全表写事务扩大耦合与锁竞争",
+      "group": "persistence-domain",
+      "report": "research/persistence-domain.md",
+      "locations": [
+        "src/db/projectMemories.ts:340",
+        "src/db/agentRuns.ts:68",
+        "src/db/agentTaskWrapups.ts:104"
+      ],
+      "status": "pending",
+      "unit": "E04",
+      "resolution": null,
+      "evidence": []
+    },
+    {
+      "id": "PD-07",
+      "priority": "P2",
+      "classification": "structural-debt",
+      "title": "媒体逐条回收重复全库扫描",
+      "group": "persistence-domain",
+      "report": "research/persistence-domain.md",
+      "locations": [
+        "src/db/repo.ts:617"
+      ],
+      "status": "pending",
+      "unit": "E04",
+      "resolution": null,
+      "evidence": []
+    },
+    {
+      "id": "PD-08",
+      "priority": "P3",
+      "classification": "structural-debt",
+      "title": "无调用的导出收窄（可选）",
+      "group": "persistence-domain",
+      "report": "research/persistence-domain.md",
+      "locations": [
+        "src/db/repo.ts:208",
+        "src/db/materials.ts:389",
+        "src/components/agent/AgentChatPage.tsx:59",
+        "src/domain/agentGenerationBatch.ts:2"
+      ],
+      "status": "pending",
+      "unit": "E07",
+      "resolution": null,
+      "evidence": []
+    },
+    {
+      "id": "AU-02",
+      "priority": "P2",
+      "classification": "confirmed-bug",
+      "title": "工作记录/总结草稿的离开保护不完整",
+      "group": "agent-ui",
+      "report": "research/agent-ui.md",
+      "locations": [
+        "src/components/agent/TaskRecords.tsx:57",
+        "src/components/agent/TaskWrapup.tsx:146",
+        "src/components/agent/TaskInspector.tsx:142",
+        "src/components/agent/AgentChatPage.tsx:728",
+        "src/components/ui/sheet.tsx:69",
+        "src/routes/_studio.agent.tsx:15"
+      ],
+      "status": "pending",
+      "unit": "E01",
+      "resolution": null,
+      "evidence": []
+    },
+    {
+      "id": "AU-04",
+      "priority": "P2",
+      "classification": "confirmed-bug",
+      "title": "主题行截获子动作的键盘事件",
+      "group": "agent-ui",
+      "report": "research/agent-ui.md",
+      "locations": [
+        "src/components/agent/TopicSidebar.tsx:308"
+      ],
+      "status": "pending",
+      "unit": "E02",
+      "resolution": null,
+      "evidence": []
+    },
+    {
+      "id": "AU-05",
+      "priority": "P3",
+      "classification": "confirmed-bug",
+      "title": "窄屏 CSS 被后置基础规则覆盖",
+      "group": "agent-ui",
+      "report": "research/agent-ui.md",
+      "locations": [
+        "src/components/agent/agentChat.css:503",
+        "src/components/agent/ChatWorkspace.tsx:140",
+        "src/components/agent/agentTheme.ts:45"
+      ],
+      "status": "pending",
+      "unit": "E02",
+      "resolution": null,
+      "evidence": []
+    },
+    {
+      "id": "AU-09",
+      "priority": "P2",
+      "classification": "risk",
+      "title": "lazy边界仍承载大目录和富消息依赖",
+      "group": "agent-ui",
+      "report": "research/agent-ui.md",
+      "locations": [
+        "src/components/agent/ChatWorkspace.tsx:23",
+        "src/components/agent/ModelIcons.tsx:6",
+        "src/components/agent/ModelIconCatalog.ts:3",
+        "src/components/agent/ModelSelectTrigger.tsx:243",
+        "src/components/agent/MessageList.tsx:13",
+        "src/components/agent/AgentRunDetails.tsx:10",
+        "src/components/agent/ContextUsagePanel.tsx:34"
+      ],
+      "status": "pending",
+      "unit": "E06",
+      "resolution": null,
+      "evidence": []
+    },
+    {
+      "id": "PU-09",
+      "priority": "P3",
+      "classification": "structural-debt",
+      "title": "CSS 保留已退出当前渲染树的旧工作台规则",
+      "group": "production-ui",
+      "report": "research/production-ui.md",
+      "locations": [
+        "src/components/audioMusic/workspace.css:314",
+        "src/components/audio/story-workspace.css:71"
+      ],
+      "status": "pending",
+      "unit": "E03",
+      "resolution": null,
+      "evidence": []
+    },
+    {
+      "id": "PU-10",
+      "priority": "P3",
+      "classification": "risk",
+      "title": "音色未保存配置缺少 dirty 退出语义",
+      "group": "production-ui",
+      "report": "research/production-ui.md",
+      "locations": [
+        "src/components/audio/VoiceLibrary.tsx:38",
+        "src/db/materials.ts:348"
+      ],
+      "status": "pending",
+      "unit": "E01",
+      "resolution": null,
+      "evidence": []
+    },
+    {
+      "id": "SS-06",
+      "priority": "P2",
+      "classification": "confirmed-bug",
+      "title": "部分业务写入没有错误出口",
+      "group": "shell-shared",
+      "report": "research/shell-shared.md",
+      "locations": [
+        "src/components/studio/ProjectGalleryPage.tsx:373",
+        "src/components/studio/AssetLibraryPages.tsx:187",
+        "src/components/workspace/EpisodeListPage.tsx:126"
+      ],
+      "status": "pending",
+      "unit": "E01",
+      "resolution": null,
+      "evidence": []
+    },
+    {
+      "id": "SS-09",
+      "priority": "P2",
+      "classification": "structural-debt",
+      "title": "library 订阅及派生范围可收窄",
+      "group": "shell-shared",
+      "report": "research/shell-shared.md",
+      "locations": [
+        "src/components/studio/ProjectGalleryPage.tsx:49",
+        "src/components/studio/AssetLibraryPages.tsx:110"
+      ],
+      "status": "pending",
+      "unit": "E04",
+      "resolution": null,
+      "evidence": []
+    },
+    {
+      "id": "SS-10",
+      "priority": "P3",
+      "classification": "structural-debt",
+      "title": "低影响清理项与误报",
+      "group": "shell-shared",
+      "report": "research/shell-shared.md",
+      "locations": [
+        "src/components/ui/separator.tsx:6",
+        "src/components/ui/skeleton.tsx:3",
+        "src/lib/brand.ts:8",
+        "src/lib/shotFilters.ts:4",
+        "src/styles.css:2",
+        "src/lib/references/docx.ts:2",
+        "src/db/materials.ts:348"
+      ],
+      "status": "pending",
+      "unit": "E07",
+      "resolution": null,
+      "evidence": []
+    },
+    {
+      "id": "SS-11",
+      "priority": "P3",
+      "classification": "structural-debt",
+      "title": "装饰 canvas 可按需调度",
+      "group": "shell-shared",
+      "report": "research/shell-shared.md",
+      "locations": [
+        "src/components/ui/click-spark.tsx:83"
+      ],
+      "status": "pending",
+      "unit": "E05",
+      "resolution": null,
+      "evidence": []
+    }
+  ],
+  "ancillary": [
+    "QG01"
+  ],
+  "historicalAnchorsNeedRefresh": true
+}

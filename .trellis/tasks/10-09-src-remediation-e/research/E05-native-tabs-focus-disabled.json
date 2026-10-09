@@ -1,0 +1,48 @@
+{
+  "purpose": "Read-only native tab visibility capability with both pages automation focus override disabled before switching; not E05 implementation/acceptance",
+  "browser": "151.0.7922.34",
+  "executablePath": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium-1234/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+  "headless": false,
+  "observations": [
+    {
+      "step": "A foreground both focus emulation off",
+      "first": {
+        "hidden": false,
+        "state": "visible",
+        "events": []
+      },
+      "second": {
+        "hidden": false,
+        "state": "visible"
+      }
+    },
+    {
+      "step": "A hidden wait",
+      "error": "page.waitForFunction: Timeout 2000ms exceeded."
+    },
+    {
+      "step": "B foreground both focus emulation off",
+      "first": {
+        "hidden": false,
+        "state": "visible",
+        "events": []
+      },
+      "second": {
+        "hidden": false,
+        "state": "visible"
+      }
+    },
+    {
+      "step": "A foreground again",
+      "first": {
+        "hidden": false,
+        "state": "visible",
+        "events": []
+      },
+      "second": {
+        "hidden": false,
+        "state": "visible"
+      }
+    }
+  ]
+}

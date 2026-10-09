@@ -196,3 +196,35 @@ Preserve exact before/after assertion/timeout comparison and actual consecutive 
 
 ### 7. Migration / Limits
 This scoped correction does not establish why earlier blank-page/bridge failures occurred; observational isolated and forced-cold shared controls both passed. It does not modify product behavior, install dependencies, migrate every other historical native program or close formal E/QG01 work. Local Chromium fixtures do not prove full-product or live-provider behavior.
+
+## E07 formal source quality contract
+
+Independent E07 integration accepted on 2026-10-09.
+
+### 1. Scope / Trigger
+
+All authored src changes and necessary regression runners/configuration use the root type check, formal quality CLI, meaningful tests and build/model gates. Imported vendor stays outside manual review but remains compiler/build input. Generated route is excluded from typed lint; generated icon data is included. SonarJS supplies local ESLint rules; no SonarQube service is required.
+
+### 2. Signatures / Owners
+
+`quality` runs `scripts/quality-check.mjs`; `quality:self-test` runs its actual CLI synthetic contracts. Root `eslint.config.mjs`, `knip.json`, pinned package/lock, exact `quality/debt.json` and `quality/unused-contracts.json` own policy. CI runs both commands before tests while retaining Node22, existing triggers, image publication and permissions. Local commands use the authorized explicit machine pnpm executable.
+
+### 3. Contracts / Invariants
+
+Typed recommended, Hook rules/dependencies, exhaustive switches and duplicated branches/conditions block new errors. Only individually reviewed error nodes with exact rule/file/parser tokens/semantic owner/count/reason may pass; producer hash and TypeScript version changes require review. Strict unknown/any throws fail; recognized caught rethrows and package-origin TanStack Redirect retain their contracts. Static value cycles and Domain→DB/UI or DB→UI value edges fail. Dynamic literal edges obey boundaries but do not create static cycles. Full-scope owned unused findings require precise retained API/import/declaration/runtime evidence. Any remaining nonzero Knip tool/config exit fails. Repair leaves stale debt/contracts until explicitly shrunk. Inline lint directives do not authorize exceptions.
+
+### 4. Validation / Error Matrix
+
+Mutation/owner transfer, changed multiplicity, duplicated JSON keys, stale removal, producer/evidence changes and unsupported tool outputs fail. Formatting/line relocation, exact parser tokens, type-only edges, supported retained APIs and caught error identity pass. Anonymous and named expression callback ownership binds actual call/new kind, optional call, argument role, other arguments, callback flavor/self-binding and control-flow owner. Indistinguishable callback/control boundaries cannot receive debt. Complexities, depth and nested ternary are visible review warnings; they cannot be baselined as debt.
+
+### 5. Good / Base / Bad Cases
+
+Good: narrow unknown values at actual boundaries and remove unused internal exports without changing bodies. Base: thirteen reviewed diagnostics preserve five sanitized wrappers, seven original failure/cancellation transports and one guarded every-render draft reconciliation. Seven unused contracts retain two stylesheet imports, one TypeScript companion declaration, two explicit native runtime/virtual imports and two documented audio deletion APIs without current UI callers. Bad: blanket ignores, automatic import of all baseline errors, every-src-as-entry reachability, arbitrary test deletion or assertions that hide unsafe inputs.
+
+### 6. Required Tests
+
+Actual production CLI must reject sibling callback and branch debt transfers, support formatting/recursion, detect stale/decreased debt and exact evidence changes, and preserve Knip exit authority. Accepted E07 runs 88 such cases. Run actual strict app types, full tests, model verification, build and Node22 fresh locked installation. Native draft test requires explicitly injected browser/runtime and proves stable primitive and memoized external values after in-flight persistence. Default CI skip is explicit; an opt-in acceptance run must prove execution. Current E07 exact local verification: 172 files/3028 tests, 419 owned graph files/1644 static value edges/6 literal dynamic edges, zero cycles/forbidden/unallowed findings, 512 visible review warnings. These are dated proof counts, not fixed acceptance thresholds.
+
+### 7. Wrong vs Correct / Attribution and Limits
+
+Wrong: zero warnings claim, counted unresolved historical metadata imports as repairs, normalized an unexplained tool exit into success, or treated source counts as user-visible performance. Correct: complete historical imported vendor/dependency closure, individual before/current rule interpretation, exact independent coverage, explicit generated-route token equivalence/restoration and real source hashes. Local macOS Node22 proof is not Linux GitHub execution; offline/generated-media native tests do not establish paid providers, mobile/device/OS scheduling, battery or latency behavior.

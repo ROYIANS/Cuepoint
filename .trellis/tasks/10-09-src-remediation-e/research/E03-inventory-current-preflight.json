@@ -1,0 +1,18 @@
+{
+  "purpose": "Read-only current E03 inventory input comparison before E03 activation; not native visual acceptance",
+  "inventorySha256": "0b536810467ef355d12020b0c608262bd88def342b7a86656cd86dcc8b941fa8",
+  "sourceManifestMismatches": [],
+  "consumerClosureMismatches": [],
+  "stylesheets": [
+    {
+      "file": "src/components/audioMusic/workspace.css",
+      "recordedSha256": "ea0d1dddecc60a1f47f494c4e0e46b04a536fde3666beb02c4b2a79ddac7878c",
+      "currentSha256": "ea0d1dddecc60a1f47f494c4e0e46b04a536fde3666beb02c4b2a79ddac7878c"
+    },
+    {
+      "file": "src/components/audio/story-workspace.css",
+      "recordedSha256": "2144425bbc19a08d3826ecb4c9243e6de6452ec8951feaaaf585041991dcc90a",
+      "currentSha256": "2144425bbc19a08d3826ecb4c9243e6de6452ec8951feaaaf585041991dcc90a"
+    }
+  ]
+}

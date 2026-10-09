@@ -1,0 +1,20 @@
+import ts from 'typescript';
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+const out='.trellis/tasks/10-09-src-remediation-e/research/e07-retirement-final-supplement';
+await mkdir(out,{recursive:true});const rows=[];const sha=s=>createHash('sha256').update(s).digest('hex');
+async function edit(file,fn,reason){const source=await readFile(file,'utf8');const after=fn(source);if(source===after)throw Error('No edit '+file);const dest=path.join(out,file);await mkdir(path.dirname(dest),{recursive:true});try{await writeFile(dest,source,{flag:'wx'});}catch(e){if(e.code!=='EEXIST')throw e;}await writeFile(file,after);rows.push({file,before:sha(source),after:sha(after),beforeCopy:dest,reason});await writeFile(out+'/receipt.json',JSON.stringify(rows,null,2)+'\n');}
+async function remove(file,names,reason){await edit(file,s=>{const ast=ts.createSourceFile(file,s,ts.ScriptTarget.Latest,true,file.endsWith('.tsx')?ts.ScriptKind.TSX:ts.ScriptKind.TS);const ranges=ast.statements.filter(n=>(ts.isFunctionDeclaration(n)&&names.includes(n.name?.text))||(ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>ts.isIdentifier(d.name)&&names.includes(d.name.text)))).map(n=>[n.getStart(ast),n.end]);if(ranges.length!==names.length)throw Error('Missing declarations '+file);let a=s;for(const[start,end]of ranges.reverse())a=a.slice(0,start)+a.slice(end);return a;},reason);}
+await remove('src/components/agent/agentTheme.ts',['SIDEBAR_BG','SURFACE','ACCENT','BORDER','BORDER_SUBTLE','TEXT_SECONDARY','MUTED','SPACE','RADIUS','CONTROL'],'Full/production Knip and src/tests/scripts refs: zero consumers; actual Theme tokens retained.');
+await remove('src/lib/agent/generationBatchRuntime.ts',['isGenerationBatchRunning'],'Zero actual consumers; worker lock/pending guards retained.');
+await remove('src/db/audio.ts',['editAudioClips'],'Zero authored/test/native consumers; actual replaceAudioClips CAS and patch commands retained.');
+await remove('src/db/music.ts',['deleteMusicDraft'],'Zero authored/test/native consumers; actual lifecycle/work delete APIs retained.');
+for(const[file,names]of [['src/components/ui/dialog.tsx',['DialogOverlay','DialogPortal']],['src/components/ui/alert-dialog.tsx',['AlertDialogOverlay','AlertDialogPortal']],['src/components/ui/select.tsx',['SelectScrollDownButton','SelectScrollUpButton']],['src/components/ui/badge.tsx',['badgeVariants']]])await edit(file,s=>{const i=s.lastIndexOf('export {');if(i<0)throw Error('Missing exportblock');let tail=s.slice(i);for(const name of names){const re=new RegExp('\\b'+name+'\\s*,?\\s*');if(!re.test(tail))throw Error('Missing export '+name);tail=tail.replace(re,'');}return s.slice(0,i)+tail;},'Actual internal UI consumers retained; narrow unused external exports.');
+await remove('src/components/ui/select.tsx',['SelectSeparator'],'Exact Select adapter has zero callers; earlier generic retain-both statement superseded by exact consumer analysis. DropdownMenuSeparator is live.');
+await edit('src/components/ui/select.tsx',s=>s.replace(/\s*SelectSeparator,\n/,'\n'),'Remove retired zero-consumer adapter export.');
+await edit('src/db/connectors.ts',s=>s.replace('export async function getConnectorByDefinition','async function getConnectorByDefinition'),'Only internal addConnector consumer; body retained.');
+await edit('src/lib/agent/runChat.ts',s=>s.replace('export const MAX_MODEL_STEPS','const MAX_MODEL_STEPS'),'Local model-step constant only; shared domain constant API retained.');
+await edit('src/domain/output.ts',s=>s.replace(', apimartImageSizes,',','),'Unused re-export has zero external consumers; actual internal capability function retained.');
+await edit('src/domain/generationCapabilities.ts',s=>s.replace('export function apimartImageSizes','function apimartImageSizes').replace('export type GenerationInputRole','type GenerationInputRole'),'Internal bodies and actual uses retained; zero external consumers after redundant re-export retirement.');
+console.log(rows.map(r=>r.file));

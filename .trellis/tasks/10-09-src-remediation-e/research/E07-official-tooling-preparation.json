@@ -1,0 +1,113 @@
+{
+  "purpose": "Read-only official publisher registry metadata, not installation, final version decision, gate implementation or compatibility proof",
+  "capturedAt": "2026-10-09T03:21:59.555Z",
+  "node": "v24.11.0",
+  "packages": [
+    {
+      "name": "eslint",
+      "endpoint": "https://registry.npmjs.org/eslint/latest",
+      "version": "10.12.0",
+      "engines": {
+        "node": "^20.19.0 || ^22.13.0 || >=24"
+      },
+      "peerDependencies": {
+        "jiti": "*"
+      },
+      "deprecated": null,
+      "repository": {
+        "url": "git+https://github.com/eslint/eslint.git",
+        "type": "git"
+      },
+      "integrity": "sha512-npHjrHb2o4ehH3mE+YuxABR+0gyb0aVWCIolgJDArwCiHEIsonBm3ZKjel5b0U5+a+MbEvIyRCGCzD3eKKK2NA=="
+    },
+    {
+      "name": "typescript-eslint",
+      "endpoint": "https://registry.npmjs.org/typescript-eslint/latest",
+      "version": "8.71.1",
+      "engines": {
+        "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
+      },
+      "peerDependencies": {
+        "eslint": "^8.57.0 || ^9.0.0 || ^10.0.0",
+        "typescript": ">=4.8.4 <6.1.0"
+      },
+      "deprecated": null,
+      "repository": {
+        "url": "https://github.com/typescript-eslint/typescript-eslint.git",
+        "type": "git",
+        "directory": "packages/typescript-eslint"
+      },
+      "integrity": "sha512-oiNVPC3/NbV1FpaHU07l8O6ynqG9v4PAiW2WvTrAmZdR0f2HI/gE668ElMLCK7Xbsu5k2fK5C4fXNiq05j7/nQ=="
+    },
+    {
+      "name": "eslint-plugin-react-hooks",
+      "endpoint": "https://registry.npmjs.org/eslint-plugin-react-hooks/latest",
+      "version": "7.1.1",
+      "engines": {
+        "node": ">=18"
+      },
+      "peerDependencies": {
+        "eslint": "^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0 || ^10.0.0"
+      },
+      "deprecated": null,
+      "repository": {
+        "url": "git+https://github.com/facebook/react.git",
+        "type": "git",
+        "directory": "packages/eslint-plugin-react-hooks"
+      },
+      "integrity": "sha512-f2I7Gw6JbvCexzIInuSbZpfdQ44D7iqdWX01FKLvrPgqxoE7oMj8clOfto8U6vYiz4yd5oKu39rRSVOe1zRu0g=="
+    },
+    {
+      "name": "eslint-plugin-sonarjs",
+      "endpoint": "https://registry.npmjs.org/eslint-plugin-sonarjs/latest",
+      "version": "4.2.2",
+      "peerDependencies": {
+        "eslint": "^8.0.0 || ^9.0.0 || ^10.0.0"
+      },
+      "deprecated": null,
+      "repository": {
+        "url": "git+https://github.com/SonarSource/SonarJS.git",
+        "type": "git"
+      },
+      "integrity": "sha512-usNF9GfP89ibwhfxpZaCMW40sC7UEOusDgDCk7lyqAhh4AYdbBaAgLVL5Y/QS0jSed8eJ2ACGH6zzE8ezd/yZQ=="
+    },
+    {
+      "name": "knip",
+      "endpoint": "https://registry.npmjs.org/knip/latest",
+      "version": "6.40.0",
+      "engines": {
+        "node": "^20.19.0 || >=22.12.0"
+      },
+      "deprecated": null,
+      "repository": {
+        "url": "git+https://github.com/webpro-nl/knip.git",
+        "type": "git",
+        "directory": "packages/knip"
+      },
+      "integrity": "sha512-5Lp/ANJu3AkW5f+J+2QG14z7xKZGi/ybb5MU1EWjeGdt6MpuIaLpLFiyBi0ZKryTiuTHiJqo/WKJRaWYimvavw=="
+    }
+  ],
+  "officialDocumentation": [
+    {
+      "url": "https://eslint.org/version-support/",
+      "observed": "ESLint9.0.0–9.39.5 EOL2026-08-06;10.x current. Keep historical9same-version audit unchanged; do not choose new formal9gate merely because cached."
+    },
+    {
+      "url": "https://eslint.org/docs/latest/use/migrate-to-10.0.0",
+      "observed": "10 Node20.19+/22.13+/24+; config lookup/core recommended/context/nodeType changes require actual compatibility scan and synthetic test, local22.21.1 satisfies Node floor."
+    },
+    {
+      "url": "https://typescript-eslint.io/users/dependency-versions/",
+      "observed": "Current supported ESLint^8.57||^9||^10, TS>=4.8.4<6.1.0; verify exact pinned manifest at E07."
+    },
+    {
+      "url": "https://github.com/SonarSource/SonarJS/blob/master/packages/analysis/src/jsts/rules/README.md",
+      "observed": "Current SonarJS publisher repository; older eslint-plugin-sonarjs archive only covers<=1.x. SonarJS plugin is not SonarQube server."
+    }
+  ],
+  "limits": [
+    "Registry dist-tag is a candidate snapshot, not automatic upgrade instruction; E07 final minimal pinned set and clean locked Node22 runtime plus actual rule/API execution required.",
+    "Exact package peers can contradict general documentation; resolve/test rather than --force/blanket override.",
+    "No root package/lock/config/CI/source changes or installation performed."
+  ]
+}

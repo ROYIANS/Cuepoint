@@ -1,0 +1,13 @@
+{
+  "purpose": "Read-onlyE06preparedcontext;E05independentreviewactive",
+  "source": ".trellis/spec/frontend/component-guidelines.md",
+  "sha256": "91a004c2bf8d91fb297bda0dcae8eb4c368680ecc5c770bf898f627a14b4179e",
+  "ranges": [
+    [
+      1,
+      144
+    ]
+  ],
+  "excerpt": ".trellis/tasks/10-09-src-remediation-e/research/E06-component-context.md",
+  "excerptSHA256": "0eda98c92996ab81a65f89f0336f902b612ac86637b36fe8f7279f787869a7bf"
+}

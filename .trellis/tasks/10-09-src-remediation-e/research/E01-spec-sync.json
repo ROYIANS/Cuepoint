@@ -1,0 +1,34 @@
+{
+  "unit": "E01",
+  "acceptedSnapshot": ".trellis/tasks/10-09-src-remediation-e/reviews/E01-check-snapshot.json",
+  "acceptedSnapshotSHA256": "a2f51cae8c423295f9e0cde2fb6863104afd0e0c8847a0752f3f1cdd3e14eed0",
+  "specs": {
+    ".trellis/spec/frontend/component-guidelines.md": "7458d0ac44119d8581470f13ae9d28d1cbf1bde17468b9f0167897cf8a30ef2e",
+    ".trellis/spec/frontend/agent-tasks.md": "9632d4a24b81e063411b7ce1af82faf40a443625a38fbd171cd1525f4623a7f7",
+    ".trellis/spec/frontend/agent-task-wrapup.md": "25ebcbc55f7261b731863454f6ff2d5e30b53683628c8c32e32b7908cabf1c62",
+    ".trellis/spec/frontend/audio-music.md": "43d32887a065d675fff855bc466550b63fbc971a1dd0be98ac92a4418fa21c1f"
+  },
+  "productAfter": {
+    "scripts/e01-drafts-browser-regression.mjs": "4511dc6bb5340f9a366bec6ec5ac90dcb14e38502d0232f9917f65862d26b3b7",
+    "scripts/e01-writes-browser-regression.mjs": "14f937c95d7bdc64f5c4806a220c73275f5879b385bad972c7f2a39de8af3bcf",
+    "src/components/agent/AgentChatPage.tsx": "234344a50bb5a9bfce0258bf3b6d32b76be4cf965675b6b0eb8a77b8479f11cc",
+    "src/components/agent/TaskInspector.tsx": "062ea09bbebf438a32eaa78f2d6609e05aa3d40ca064016261d31fd086e88b29",
+    "src/components/agent/TaskRecords.tsx": "225208420fe596a4c7c6b8f01c298cedec1225ffc45ba3e76ca3d5342d99eea2",
+    "src/components/agent/TaskWrapup.tsx": "85d9f9442619f8c161d3645f49dda4a43aeb495f13810ce9d41b66cfa24fe99b",
+    "src/components/audio/VoiceLibrary.tsx": "6c9d39032f747d691a00649419ab843110b9553b628b32aec9ed36c07bb93f7c",
+    "src/components/studio/AssetLibraryPages.tsx": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e",
+    "src/components/studio/ProjectGalleryPage.tsx": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b",
+    "src/components/workspace/EpisodeListPage.tsx": "601fe123c44ca98ff66e4ab00c22fc825b55f3101ef181ab1681ccf1ac3dde51",
+    "src/lib/useManualDraftGuard.tsx": "1d735e1811ac25aaa110acc2956ea78184da79a242cfd6d6461221f2785b5f05",
+    "tests/b02MemoryPromotion.test.ts": "7bed868e95e387e58f17779ab15200a6f412f78a47dfc189ac01a4c6696968e2",
+    "tests/e01ManualDraftDeparture.test.ts": "33c8ef714ed275da79dfc639ea12cf2cc93a6d3c2da120b9a578df5109a5e335",
+    "tests/fixtures/e01-drafts/harness.tsx": "95420c7a8ffe43226d7f6edf331f94b97f62445fb6a1f4c47d7af71b7a083be3",
+    "tests/fixtures/e01-drafts/index.html": "14177fc1bd95ba9ead5f640c4843a79f1bdf54ee1809eef1123647a64e7d00c1",
+    "tests/fixtures/e01-writes/harness.tsx": "b108edcd45ee791860828c4b833912451b888057f8a4633ce514ccaae0c9b397",
+    "tests/fixtures/e01-writes/index.html": "8f21ced89184fb7027c8ebba4f11caf602417aeface656a1df5340b6b050ab07"
+  },
+  "findingCount": 51,
+  "fixed": 41,
+  "pending": 10,
+  "next": "E02"
+}

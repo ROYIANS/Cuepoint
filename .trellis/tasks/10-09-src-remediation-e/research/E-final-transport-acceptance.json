@@ -1,0 +1,15 @@
+{
+  "status": "ACTUAL_COMPLETED_INDEPENDENT_TRANSPORT_PASS_ADOPTED",
+  "actualAgentCompletionReceived": true,
+  "reportSHA256": "95d44c50d0bc2696fdf9932c55f1ade6f0924d99ad61a5b2a4712cdaa1df75ca",
+  "sealSHA256": "e8df30d272eb588f2f74e79dcb14bc0893d44dc4c2adf289e49b3d7e63ee1251",
+  "sealedFiles": 18,
+  "manifestSHA256": "443c82ed6fe35e39d128b6e8b370050626035d5e46e6853304ed6d8f87ee0793",
+  "blobsIndexSHA256": "da10dc26c20050217372fe22fd463e4852b190d47cf271fbf74cc9016271b9bb",
+  "restoredPaths": 41163,
+  "blobs": 10117,
+  "rawBytes": 2554126083,
+  "compressedBytes": 232240383,
+  "originalCurrentQualification": "41162exact +1taskhelpercapturedold/intermediate/current explicitboundedmetadataevolution. Allactualrestorepaths exactoriginalmanifest; no product or acceptedsource/sealchange.",
+  "noStagingCommitPushArchive": true
+}
