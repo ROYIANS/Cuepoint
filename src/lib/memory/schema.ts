@@ -1,7 +1,7 @@
 import {z} from "zod";
 
 const text = (max: number) => z.string().trim().min(1).max(max);
-export const memoryCategorySchema = z.enum([
+const memoryCategorySchema = z.enum([
     "convention",
     "preference",
     "decision",
@@ -36,7 +36,7 @@ const evidence = z
         truncated: z.boolean(),
     })
     .strict();
-export const memorySourceSchema = z.discriminatedUnion("kind", [
+const memorySourceSchema = z.discriminatedUnion("kind", [
     z.object({kind: z.literal("manual")}).strict(),
     memorySourceRefSchema
         .extend({

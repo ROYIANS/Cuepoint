@@ -110,7 +110,8 @@ const definitions = [
         highRisk: () => false,
         async execute(args, {runId, callId, signal}) {
             signal.throwIfAborted();
-            return JSON.parse(await updateRunPlanAndComplete(runId, callId, args.steps, args.reason));
+            const result: unknown = JSON.parse(await updateRunPlanAndComplete(runId, callId, args.steps, args.reason));
+            return result;
         }
     }),
     ...IP_TOOLS,

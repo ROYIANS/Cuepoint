@@ -1,3 +1,4 @@
+import {recoverLegacyText} from "@/domain/legacyScalar";
 import type {
     AudioChapter,
     AudioClip,
@@ -50,7 +51,7 @@ import {
 import {parseShotPictureSlots} from "@/domain/slot";
 import {createId, nowIso} from "@/lib/ids";
 
-export class AifenjingDB extends Dexie {
+class AifenjingDB extends Dexie {
     audioChapters!: Table<AudioChapter, string>;
     audioSpeakers!: Table<AudioSpeaker, string>;
     audioSegments!: Table<AudioSegment, string>;
@@ -132,12 +133,15 @@ export class AifenjingDB extends Dexie {
                 media: "id, projectId",
             })
             .upgrade(async (tx) => {
-                const projects = await tx.table("projects").toArray();
-                const episodesTable = tx.table("episodes");
-                const shotsTable = tx.table("shots");
+                const projectsTable = tx.table<Record<string, unknown>>("projects");
+                const projects = await projectsTable.toArray();
+                const episodesTable = tx.table<Episode>("episodes");
+                const shotsTable = tx.table<Record<string, unknown>>("shots");
                 const at = nowIso();
 
                 for (const project of projects) {
+                    // Owner identity must remain exact; abort the upgrade instead of rekeying it.
+                    if (typeof project.id !== "string" || !project.id) throw new Error("旧项目 ID 无效，无法迁移");
                     const existing = await episodesTable.where("projectId").equals(project.id).count();
                     if (existing > 0) continue;
 
@@ -153,10 +157,10 @@ export class AifenjingDB extends Dexie {
                         order: 0,
                         title: "",
                         story: episodeStory,
-                        createdAt: String(project.createdAt ?? at),
+                        createdAt: recoverLegacyText(project.createdAt, at),
                         updatedAt: at,
                     });
-                    await tx.table("projects").put({
+                    await projectsTable.put({
                         ...project,
                         story: normalizeSeriesStory(rawStory),
                         columnSettings: {visible: [...DEFAULT_VISIBLE_COLUMNS]},
@@ -164,7 +168,7 @@ export class AifenjingDB extends Dexie {
 
                     const shots = await shotsTable.where("projectId").equals(project.id).toArray();
                     for (const shot of shots) {
-                        const record = {...(shot as Record<string, unknown>)};
+                        const record = {...shot};
                         const slots = parseShotPictureSlots(record);
                         delete record.frame;
                         delete record.reference;
@@ -172,7 +176,8 @@ export class AifenjingDB extends Dexie {
                         delete record.referenceMediaId;
                         await shotsTable.put({
                             ...record,
-                            episodeId: String(record.episodeId ?? episodeId),
+                            // No episode existed for this owner: every old scope is orphaned.
+                            episodeId,
                             ...slots,
                         });
                     }

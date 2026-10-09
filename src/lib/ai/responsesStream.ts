@@ -244,7 +244,7 @@ export async function streamResponses(input: StreamChatInput & {
             if (name && name !== value.type) throw new Error("Responses 流事件类型不一致");
             if (value.type === "error") throw new Error(typeof value.message === "string" ? value.message : "Responses 返回错误");
             if (["response.completed", "response.failed", "response.incomplete"].includes(value.type)) {
-                if (!record(value.response) || value.type !== `response.${value.response.status}`) throw new Error("Responses 结束事件状态不一致");
+                if (!record(value.response) || typeof value.response.status !== "string" || value.type !== `response.${value.response.status}`) throw new Error("Responses 结束事件状态不一致");
                 terminal = finish(value.response, "stream");
                 return;
             }

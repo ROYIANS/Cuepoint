@@ -7,13 +7,15 @@ import type {WrapupEvidence} from "@/domain/agentTaskWrapup";
 /** Only interpret the code-owned reference envelope, never IDs found in prose. */
 export function toolReferenceAttachments(result: string | undefined, projectId: string): ReferenceAttachment[] {
     try {
-        const value = JSON.parse(result ?? "null");
-        const input = value?.referenceInput;
-        if (input?.projectId !== projectId || !Array.isArray(input.references)) return [];
-        return input.references.filter((item: unknown): item is ReferenceAttachment => {
+        const value: unknown = JSON.parse(result ?? "null");
+        if (!value || typeof value !== "object" || Array.isArray(value) || !("referenceInput" in value)) return [];
+        const input = value.referenceInput;
+        if (!input || typeof input !== "object" || Array.isArray(input) || !("projectId" in input) || input.projectId !== projectId || !("references" in input) || !Array.isArray(input.references)) return [];
+        const references: unknown[] = input.references;
+        return references.filter((item: unknown): item is ReferenceAttachment => {
             if (!item || typeof item !== "object") return false;
             const ref = item as Record<string, unknown>;
-            return typeof ref.referenceId === "string" && ref.referenceId.length > 0 && ref.referenceId.length <= 120 && Number.isSafeInteger(ref.revision) && Number(ref.revision) > 0;
+            return !Array.isArray(item) && typeof ref.referenceId === "string" && ref.referenceId.length > 0 && ref.referenceId.length <= 120 && Number.isSafeInteger(ref.revision) && Number(ref.revision) > 0;
         });
     } catch {
         return [];

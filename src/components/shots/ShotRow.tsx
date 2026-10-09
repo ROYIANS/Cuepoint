@@ -32,6 +32,13 @@ function columnPlaceholder(id: ShotColumnId): string {
             return "未选择场景";
         case "characters":
             return "未选择角色";
+        case "cameraAngle":
+        case "cameraGear":
+        case "category":
+        case "emotion":
+        case "focalLength":
+        case "sceneCloseup":
+        case "sound":
         default:
             return SHOT_COLUMNS.find((column) => column.id === id)?.label ?? "";
     }

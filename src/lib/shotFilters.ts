@@ -1,7 +1,7 @@
 import {type ShotMediaIndex, validShotMediaId} from "@/lib/shotMedia";
 import {normalizeShotStatus, type Shot, SHOT_UNASSIGNED_BEAT, type ShotFilters,} from "@/domain/types";
 
-export function shotBeatFilterId(shot: Pick<Shot, "beatId">): string {
+function shotBeatFilterId(shot: Pick<Shot, "beatId">): string {
     return shot.beatId ?? SHOT_UNASSIGNED_BEAT;
 }
 

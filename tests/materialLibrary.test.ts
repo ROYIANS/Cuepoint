@@ -6,7 +6,7 @@ import {deleteProject} from "@/db/cascadeCommands";
 import { STUDIO_LIBRARY_ID } from '@/domain/types';
 import { emptySlot } from '@/domain/slot';
 import { createIpProfile, bindProjectIp, setIpArchived, updateIpProfile } from '@/db/ipProfiles';
-import { createFileMaterial, promoteMaterial, promoteLegacyMaterial, addFileMaterialVersion, updateMaterialMetadata, useMaterialInProject, updateMaterialUse, refreshSettingMaterial, setMaterialArchived, deleteMaterial } from '@/db/materials';
+import { createFileMaterial, promoteMaterial, promoteLegacyMaterial, addFileMaterialVersion, updateMaterialMetadata, adoptMaterialInProject, updateMaterialUse, refreshSettingMaterial, setMaterialArchived, deleteMaterial } from '@/db/materials';
 const png = (body = 'image') => new File([body], 'image.png', { type: 'image/png' });
 const globalScope = { kind: 'global' } as const;
 
@@ -64,13 +64,13 @@ describe('material snapshots and references', () => {
     await deleteProject(source.id);
     expect(await db.media.get('original')).toBeUndefined();
     const target = await createProject('Target');
-    const use = await useMaterialInProject(material.id, target.id);
+    const use = await adoptMaterialInProject(material.id, target.id);
     expect(await (await db.media.get(use.targetId))!.blob.text()).toBe('original');
   });
   it('pins adopted media, is idempotent and updates through a new target without rewriting old content', async () => {
     const project = await createProject('Target');
     const material = await createFileMaterial(png('v1'), globalScope);
-    const [use, same] = await Promise.all([useMaterialInProject(material.id, project.id), useMaterialInProject(material.id, project.id)]);
+    const [use, same] = await Promise.all([adoptMaterialInProject(material.id, project.id), adoptMaterialInProject(material.id, project.id)]);
     expect(same.id).toBe(use.id);
     await addFileMaterialVersion(material.id, png('v2'), 1);
     expect(await (await db.media.get(use.targetId))!.blob.text()).toBe('v1');
@@ -81,7 +81,7 @@ describe('material snapshots and references', () => {
     expect(await db.materialUses.get(use.id)).toMatchObject({ supersededBy: next.id });
     await expect(updateMaterialUse(use.id)).rejects.toThrow('已有更新');
     await setMaterialArchived(material.id, true);
-    await expect(useMaterialInProject(material.id, project.id)).rejects.toThrow('归档');
+    await expect(adoptMaterialInProject(material.id, project.id)).rejects.toThrow('归档');
     await expect(deleteMaterial(material.id)).rejects.toThrow('使用');
   });
   it('requires archive and protects derivation provenance until the derived item is removed', async () => {
@@ -104,7 +104,7 @@ describe('material snapshots and references', () => {
     await db.characters.update(character.id, { slots: { front: { ...emptySlot(), result: { mediaId: 'face', kind: 'image' } } } });
     const material = await promoteLegacyMaterial('character', character.id, globalScope);
     const project = await createProject('Target');
-    const use = await useMaterialInProject(material.id, project.id);
+    const use = await adoptMaterialInProject(material.id, project.id);
     const cloned = (await db.characters.get(use.targetId))!;
     expect(cloned.projectId).toBe(project.id);
     expect(cloned.slots.front?.result?.mediaId).not.toBe('face');
@@ -119,7 +119,7 @@ describe('material snapshots and references', () => {
     // Already captured revision remains usable after deletion of original entity and bytes.
     await db.media.delete('face');
     const another = await createProject('Another');
-    const anotherUse = await useMaterialInProject(material.id, another.id);
+    const anotherUse = await adoptMaterialInProject(material.id, another.id);
     expect((await db.characters.get(anotherUse.targetId))?.name).toBe('饭团新版');
   });
   it('rejects foreign or wrong-kind media in source settings before creating snapshots', async () => {
@@ -134,7 +134,7 @@ describe('material snapshots and references', () => {
     const material = await createFileMaterial(png(), globalScope);
     const project = await createProject('Target');
     const failure = vi.spyOn(db.materialUses, 'add').mockRejectedValueOnce(new Error('quota'));
-    try { await expect(useMaterialInProject(material.id, project.id)).rejects.toThrow('quota'); } finally { failure.mockRestore(); }
+    try { await expect(adoptMaterialInProject(material.id, project.id)).rejects.toThrow('quota'); } finally { failure.mockRestore(); }
     expect(await db.media.count()).toBe(0);
     expect(await db.materialUses.count()).toBe(0);
     expect((await db.projects.get(project.id))?.updatedAt).toBe(project.updatedAt);
@@ -153,9 +153,9 @@ describe('material concurrent lifecycle edges', () => {
   it('recreates deleted adoption targets instead of returning a dangling use', async () => {
     const material = await createFileMaterial(png(), globalScope);
     const project = await createProject('Target');
-    const use = await useMaterialInProject(material.id, project.id);
+    const use = await adoptMaterialInProject(material.id, project.id);
     await db.media.delete(use.targetId);
-    const replacement = await useMaterialInProject(material.id, project.id);
+    const replacement = await adoptMaterialInProject(material.id, project.id);
     expect(replacement.targetId).not.toBe(use.targetId);
     expect(await db.media.get(replacement.targetId)).toBeDefined();
   });
@@ -163,20 +163,20 @@ describe('material concurrent lifecycle edges', () => {
     const material = await createFileMaterial(png(), globalScope);
     const project = await createProject('Target');
     await db.projects.update(project.id, { archivedAt: new Date().toISOString() });
-    await expect(useMaterialInProject(material.id, project.id)).rejects.toThrow('归档');
+    await expect(adoptMaterialInProject(material.id, project.id)).rejects.toThrow('归档');
     await expect(createFileMaterial(png(), { kind: 'project', id: project.id })).rejects.toThrow('归档');
     await expect(bindProjectIp(project.id, null)).rejects.toThrow('归档');
     const ip = await createIpProfile({ name: 'IP' });
     const shared = await createFileMaterial(png(), { kind: 'ip', id: ip.id });
     await setIpArchived(ip.id, true);
     const active = await createProject('Active');
-    await expect(useMaterialInProject(shared.id, active.id)).rejects.toThrow('归档');
+    await expect(adoptMaterialInProject(shared.id, active.id)).rejects.toThrow('归档');
     await expect(promoteMaterial(shared.id, globalScope)).rejects.toThrow('归档');
   });
   it('serializes competing explicit version updates and keeps both historical targets', async () => {
     const material = await createFileMaterial(png(), globalScope);
     const project = await createProject('Target');
-    const use = await useMaterialInProject(material.id, project.id);
+    const use = await adoptMaterialInProject(material.id, project.id);
     await addFileMaterialVersion(material.id, png('new'), 1);
     const results = await Promise.allSettled([updateMaterialUse(use.id), updateMaterialUse(use.id)]);
     expect(results.filter(result => result.status === 'fulfilled')).toHaveLength(1);
@@ -188,7 +188,7 @@ describe('material concurrent lifecycle edges', () => {
     await patchCharacter(character.id, { name: 'Old' });
     const material = await promoteLegacyMaterial('character', character.id, globalScope);
     const project = await createProject('Target');
-    const use = await useMaterialInProject(material.id, project.id);
+    const use = await adoptMaterialInProject(material.id, project.id);
     await patchCharacter(character.id, { name: 'New' });
     await refreshSettingMaterial(material.id, 1);
     const replacement = await updateMaterialUse(use.id);
@@ -234,9 +234,9 @@ describe('adoption scope authorization', () => {
     const owner = await createProject('Owner');
     const other = await createProject('Other');
     const material = await createFileMaterial(png(), { kind: 'project', id: owner.id });
-    await expect(useMaterialInProject(material.id, other.id)).rejects.toThrow('所属项目');
-    const use = await useMaterialInProject(material.id, owner.id);
-    expect((await useMaterialInProject(material.id, owner.id)).id).toBe(use.id);
+    await expect(adoptMaterialInProject(material.id, other.id)).rejects.toThrow('所属项目');
+    const use = await adoptMaterialInProject(material.id, owner.id);
+    expect((await adoptMaterialInProject(material.id, owner.id)).id).toBe(use.id);
     expect(await db.materialUses.count()).toBe(1);
     expect(await db.media.where('projectId').equals(other.id).count()).toBe(0);
   });
@@ -245,13 +245,13 @@ describe('adoption scope authorization', () => {
     const otherIp = await createIpProfile({ name: 'Other IP' });
     const project = await createProject('Project');
     const material = await createFileMaterial(png(), { kind: 'ip', id: ip.id });
-    await expect(useMaterialInProject(material.id, project.id)).rejects.toThrow('同一 IP');
+    await expect(adoptMaterialInProject(material.id, project.id)).rejects.toThrow('同一 IP');
     await bindProjectIp(project.id, otherIp.id);
-    await expect(useMaterialInProject(material.id, project.id)).rejects.toThrow('同一 IP');
+    await expect(adoptMaterialInProject(material.id, project.id)).rejects.toThrow('同一 IP');
     await bindProjectIp(project.id, ip.id);
-    const use = await useMaterialInProject(material.id, project.id);
+    const use = await adoptMaterialInProject(material.id, project.id);
     await bindProjectIp(project.id, null);
-    await expect(useMaterialInProject(material.id, project.id)).rejects.toThrow('同一 IP');
+    await expect(adoptMaterialInProject(material.id, project.id)).rejects.toThrow('同一 IP');
     await expect(updateMaterialUse(use.id)).rejects.toThrow('同一 IP');
     await addFileMaterialVersion(material.id, png('new'), 1);
     await expect(updateMaterialUse(use.id)).rejects.toThrow('同一 IP');
@@ -263,10 +263,10 @@ describe('adoption scope authorization', () => {
   it('rejects same-revision update when its target was deleted instead of returning dangling records', async () => {
     const project = await createProject('Project');
     const material = await createFileMaterial(png(), globalScope);
-    const use = await useMaterialInProject(material.id, project.id);
+    const use = await adoptMaterialInProject(material.id, project.id);
     await db.media.delete(use.targetId);
     await expect(updateMaterialUse(use.id)).rejects.toThrow('重新加入');
-    const replacement = await useMaterialInProject(material.id, project.id);
+    const replacement = await adoptMaterialInProject(material.id, project.id);
     expect(await db.media.get(replacement.targetId)).toBeDefined();
   });
 });

@@ -152,7 +152,7 @@ export interface AgentActivityStep {
     reasoningDurationMs?: number;
 }
 
-export interface AgentToolGroupSnapshot {
+interface AgentToolGroupSnapshot {
     id: string;
     name: string;
     description: string;

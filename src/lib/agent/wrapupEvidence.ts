@@ -17,8 +17,8 @@ const kinds = ["project", "episode", "beat", "shot", "character", "scene", "prop
 
 function json(value: unknown): Record<string, unknown> {
     try {
-        const parsed = typeof value === "string" ? JSON.parse(value) : value;
-        return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+        const parsed: unknown = typeof value === "string" ? JSON.parse(value) : value;
+        return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed as Record<string, unknown> : {};
     } catch {
         return {};
     }
@@ -231,7 +231,7 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
     if (task.projectId) {
         const attachments = [
             ...messages.flatMap(message => message.attachments ?? []),
-            ...calls.filter(call => call.status === "completed").flatMap(call => toolReferenceAttachments(call.result, task.projectId!)),
+            ...calls.filter(call => call.status === "completed").flatMap(call => toolReferenceAttachments(call.result, task.projectId)),
         ];
         for (const source of await collectReferenceEvidence(task.projectId, attachments)) add(source.evidence, source.fingerprint);
     }

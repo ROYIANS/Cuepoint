@@ -28,15 +28,18 @@ export function useChatSelection({loaded, activeThread, activeThreadId, connecto
     const [composerProjectId, setComposerProjectId] = useState<Id>();
     const [interactionSelection, setInteractionSelection] = useState<{ threadId?: Id; mode: AgentInteractionMode }>();
     const selectionRevisionRef = useRef(0);
+    const threadId = activeThread?.id;
+    const threadConnectorId = activeThread?.connectorId;
+    const threadModel = activeThread?.model;
     useEffect(() => {
         if (!loaded) return;
-        if (activeThread) {
-            setSessionConnectorId(activeThread.connectorId ?? connectorList[0]?.id);
-            setSessionModel(activeThread.model?.trim() ?? "");
+        if (threadId !== undefined) {
+            setSessionConnectorId(threadConnectorId ?? connectorList[0]?.id);
+            setSessionModel(threadModel?.trim() ?? "");
             return;
         }
         setSessionConnectorId((prev) => prev ?? connectorList[0]?.id);
-    }, [loaded, activeThread?.id, activeThread?.connectorId, activeThread?.model, connectorList]);
+    }, [loaded, threadId, threadConnectorId, threadModel, connectorList]);
 
     const selectedConnector = useMemo(() => {
         if (sessionConnectorId) {

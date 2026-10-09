@@ -33,5 +33,5 @@ export function reorderGroupInFullOrder(
     if (!nextGroup) return null;
     const groupSet = new Set(groupIds);
     let index = 0;
-    return fullOrderedIds.map((id) => (groupSet.has(id) ? nextGroup[index++]! : id));
+    return fullOrderedIds.map((id) => (groupSet.has(id) ? nextGroup[index++] : id));
 }

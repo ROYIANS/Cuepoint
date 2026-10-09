@@ -34,10 +34,10 @@ type EditorSession = EditorState & {baseUrl: string; apiKey: string};
 type EditorOperation = {session: EditorSession; kind: "probe" | "test" | "save" | "disconnect"};
 
 export function ConnectorsPage() {
-    const connectors = useLiveQuery(() => db.connectors.toArray(), []) ?? [];
+    const connectors = useLiveQuery(() => db.connectors.toArray(), []);
     const byDefinition = useMemo(() => {
         const map = new Map<ConnectorDefinitionId, ConnectorConfig>();
-        for (const connector of connectors) {
+        for (const connector of connectors ?? []) {
             map.set(connector.definitionId, connector);
         }
         return map;

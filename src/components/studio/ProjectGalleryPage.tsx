@@ -3,7 +3,7 @@ import {Checkbox} from "@/components/ui/checkbox";
 import {flushPendingDrafts} from "@/lib/debouncedDraft";
 import {useNavigate} from "@tanstack/react-router";
 import {useLiveQuery} from "dexie-react-hooks";
-import {useMemo, useRef, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {toast} from "sonner";
 import {CoverCard, LibraryGrid} from "@/components/studio/CoverCard";
 import {LibraryHeader} from "@/components/studio/LibraryHeader";
@@ -37,35 +37,34 @@ import {
     ASPECT_PRESET_IDS,
     ASPECT_PRESETS,
     type AspectPresetId,
-    type Id,
     type ProjectMode,
-    type Shot,
 } from "@/domain/types";
 import {bindProjectIp} from "@/db/ipProfiles";
 import {ProjectIpPicker} from "./ProjectIpPicker";
 import {Plus} from "lucide-react";
 import {PROJECT_KINDS, type ProjectKindId, ProjectKindPlaceholder} from "./projectKinds";
 import {cn} from "@/lib/utils";
-
-function coverOfProject(shots: Shot[], projectId: Id): Id | undefined {
-    return shots
-        .filter((shot) => shot.projectId === projectId)
-        .sort((left, right) => left.order - right.order)
-        .find((shot) => shot.firstFrame.result?.mediaId)?.firstFrame.result?.mediaId;
-}
+import {readProjectCoverIds} from "@/lib/studioLibraryQueries";
 
 export function ProjectGalleryPage() {
     const navigate = useNavigate();
+    const activeRef = useRef(true);
+    useEffect(() => {
+        activeRef.current = true;
+        return () => {activeRef.current = false;};
+    }, []);
     const projects = useLiveQuery(() => db.projects.toArray(), []);
-    const shots = useLiveQuery(() => db.shots.toArray(), []) ?? [];
     const profiles = useLiveQuery(() => db.ipProfiles.toArray(), []) ?? [];
-    const ipLinks = useLiveQuery(() => db.projectIpLinks.toArray(), []) ?? [];
+    const ipLinks = useLiveQuery(() => db.projectIpLinks.toArray(), []);
     const [ipFilter, setIpFilter] = useState("all");
     const [showArchived, setShowArchived] = useState(false);
     const [createIpId, setCreateIpId] = useState<string | null>(null);
     const [binding, setBinding] = useState<{ projectId: string; name: string; ipId: string | null }>();
     const [bindingBusy, setBindingBusy] = useState(false);
     const [bindingError, setBindingError] = useState("");
+    const bindingRef = useRef(false);
+    const archiveRef = useRef<string | undefined>(undefined)
+    const [archivingId, setArchivingId] = useState<string>();
     const [query, setQuery] = useState("");
     const [sort, setSort] = useState<LibrarySort>("updated");
     const [kindFilter, setKindFilter] = useState<ProjectKindId | "all">("all");
@@ -73,6 +72,8 @@ export function ProjectGalleryPage() {
     const [submitting, setSubmitting] = useState(false);
     const creatingRef = useRef(false);
     const selectedKind = PROJECT_KINDS.find((kind) => kind.id === createKind)!;
+    let createLabel = selectedKind.available ? "创建项目" : "即将推出";
+    if (submitting) createLabel = "创建中…";
     const filteredKind = PROJECT_KINDS.find((kind) => kind.id === kindFilter);
     const [creating, setCreating] = useState(false);
     const [name, setName] = useState("未命名项目");
@@ -81,15 +82,30 @@ export function ProjectGalleryPage() {
     const [renameId, setRenameId] = useState<string>();
     const [renameValue, setRenameValue] = useState("");
     const [deleteId, setDeleteId] = useState<string>();
+    const renameRef = useRef(false);
+    const deleteRef = useRef(false);
+    const [renaming, setRenaming] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const [renameError, setRenameError] = useState("");
+    const [deleteError, setDeleteError] = useState("");
 
     const visible = useMemo(
         () => filterAndSortLibrary((projects ?? []).filter((project) => {
-            const ipId = ipLinks.find((link) => link.projectId === project.id)?.ipId;
+            const ipId = ipLinks?.find((link) => link.projectId === project.id)?.ipId;
             return (kindFilter === "all" || (project.kind ?? "video") === kindFilter) && Boolean(project.archivedAt) === showArchived && (ipFilter === "all" || (ipFilter === "independent" ? !ipId : ipId === ipFilter));
         }), query, sort),
         [projects, query, sort, ipLinks, ipFilter, showArchived, kindFilter],
     );
 
+    // Stable set identity: sorting/searching may reorder cards without changing this query.
+    const coverProjectIds = visible.filter(project => project.coverMediaId == null).map(project => project.id).sort();
+    const coverQueryKey = JSON.stringify(coverProjectIds);
+    const coverView = useLiveQuery(async () => ({
+        key: coverQueryKey,
+        covers: await readProjectCoverIds(coverProjectIds),
+    }), [coverQueryKey]);
+    // useLiveQuery retains its prior result while a new scope is loading.
+    const covers = coverView?.key === coverQueryKey ? coverView.covers : undefined;
 
     async function handleCreate() {
         if (!selectedKind.available || !name.trim() || creatingRef.current) return;
@@ -99,16 +115,83 @@ export function ProjectGalleryPage() {
             const project = createKind === "audio" || createKind === "music"
                 ? await createAudioMusicProject(name.trim(), createKind, createIpId)
                 : await createProject(name.trim(), mode, aspectPreset, createIpId);
+            if (!activeRef.current) return;
             setCreating(false);
             setName("未命名项目");
             setMode("film");
             setAspectPreset("16:9");
             await navigate({to: "/p/$projectId", params: {projectId: project.id}});
         } catch (err) {
-            toast.error(err instanceof Error ? err.message : "创建失败");
+            if (activeRef.current) toast.error(err instanceof Error && err.message ? err.message : "创建失败，请重试");
         } finally {
             creatingRef.current = false;
-            setSubmitting(false);
+            if (activeRef.current) setSubmitting(false);
+        }
+    }
+
+    async function handleRename() {
+        if (!renameId || renameRef.current) return;
+        const id = renameId;
+        const value = renameValue;
+        renameRef.current = true;
+        setRenaming(true);
+        setRenameError("");
+        try {
+            await renameProject(id, value);
+            if (activeRef.current) setRenameId((current) => current === id ? undefined : current);
+        } catch (error) {
+            if (activeRef.current) setRenameError(error instanceof Error && error.message ? error.message : "保存失败，请重试");
+        } finally {
+            renameRef.current = false;
+            if (activeRef.current) setRenaming(false);
+        }
+    }
+
+    async function handleDelete() {
+        if (!deleteId || deleteRef.current) return;
+        const id = deleteId;
+        deleteRef.current = true;
+        setDeleting(true);
+        setDeleteError("");
+        try {
+            await deleteProject(id);
+            if (activeRef.current) setDeleteId((current) => current === id ? undefined : current);
+        } catch (error) {
+            if (activeRef.current) setDeleteError(error instanceof Error && error.message ? error.message : "删除失败，请重试");
+        } finally {
+            deleteRef.current = false;
+            if (activeRef.current) setDeleting(false);
+        }
+    }
+
+    async function handleBinding() {
+        if (!binding || bindingRef.current) return;
+        const target = binding;
+        bindingRef.current = true;
+        setBindingBusy(true);
+        setBindingError("");
+        try {
+            await bindProjectIp(target.projectId, target.ipId);
+            if (activeRef.current) setBinding((current) => current === target ? undefined : current);
+        } catch (error) {
+            if (activeRef.current) setBindingError(error instanceof Error && error.message ? error.message : "保存失败，请重试");
+        } finally {
+            bindingRef.current = false;
+            if (activeRef.current) setBindingBusy(false);
+        }
+    }
+
+    async function handleArchive(id: string, archived: boolean) {
+        if (archiveRef.current) return;
+        archiveRef.current = id;
+        setArchivingId(id);
+        try {
+            await setProjectArchived(id, archived);
+        } catch (error) {
+            if (activeRef.current) toast.error(error instanceof Error && error.message ? error.message : "操作失败，请重试");
+        } finally {
+            archiveRef.current = undefined;
+            if (activeRef.current) setArchivingId(undefined);
         }
     }
 
@@ -163,13 +246,15 @@ export function ProjectGalleryPage() {
                                 }}>新建项目</Button>}
                         </div>}
                     <LibraryGrid>
-                        {visible.map((project) => (
-                            <CoverCard
+                        {visible.map((project) => {
+                            let archiveLabel = project.archivedAt ? "恢复项目" : "归档项目";
+                            if (archivingId === project.id) archiveLabel = "处理中…";
+                            return <CoverCard
                                 key={project.id}
                                 frame="poster"
                                 title={project.name}
-                                subtitle={`${PROJECT_KINDS.find((kind) => kind.id === (project.kind ?? "video"))?.label ?? "未知类型"} · ${profiles.find((ip) => ip.id === ipLinks.find((link) => link.projectId === project.id)?.ipId)?.name ?? "独立项目"} · ${project.archivedAt ? "已归档" : formatUpdatedAt(project.updatedAt)}`}
-                                mediaId={project.coverMediaId ?? coverOfProject(shots, project.id)}
+                                subtitle={`${PROJECT_KINDS.find((kind) => kind.id === (project.kind ?? "video"))?.label ?? "未知类型"} · ${profiles.find((ip) => ip.id === ipLinks?.find((link) => link.projectId === project.id)?.ipId)?.name ?? "独立项目"} · ${project.archivedAt ? "已归档" : formatUpdatedAt(project.updatedAt)}`}
+                                mediaId={project.coverMediaId ?? covers?.get(project.id)}
                                 onOpen={() =>
                                     void navigate({to: "/p/$projectId", params: {projectId: project.id}})
                                 }
@@ -181,23 +266,26 @@ export function ProjectGalleryPage() {
                                     {
                                         label: "所属 IP",
                                         onSelect: () => {
+                                            if (bindingRef.current) return;
                                             setBindingError("");
                                             setBinding({
                                                 projectId: project.id,
                                                 name: project.name,
-                                                ipId: ipLinks.find((link) => link.projectId === project.id)?.ipId ?? null
+                                                ipId: ipLinks?.find((link) => link.projectId === project.id)?.ipId ?? null
                                             });
                                         },
                                     },
                                     {
-                                        label: project.archivedAt ? "恢复项目" : "归档项目",
+                                        label: archiveLabel,
                                         onSelect: () => {
-                                            void setProjectArchived(project.id, !project.archivedAt).catch((error: unknown) => toast.error(error instanceof Error ? error.message : "操作失败"));
+                                            void handleArchive(project.id, !project.archivedAt);
                                         },
                                     },
                                     {
                                         label: "重命名",
                                         onSelect: () => {
+                                            if (renameRef.current) return;
+                                            setRenameError("");
                                             setRenameId(project.id);
                                             setRenameValue(project.name);
                                         },
@@ -216,11 +304,15 @@ export function ProjectGalleryPage() {
                                     {
                                         label: "删除",
                                         tone: "danger",
-                                        onSelect: () => setDeleteId(project.id),
+                                        onSelect: () => {
+                                            if (deleteRef.current) return;
+                                            setDeleteError("");
+                                            setDeleteId(project.id);
+                                        },
                                     },
                                 ]}
-                            />
-                        ))}
+                            />;
+                        })}
                     </LibraryGrid>
                 </>}
             </div>
@@ -317,19 +409,19 @@ export function ProjectGalleryPage() {
                             IP，也可以独立创作。</p>
                     </>}
                     <DialogFooter>
-                        <Button disabled={submitting} variant="outline" onClick={() => setCreating(false)}>
+                        <Button disabled={submitting} variant="outline" onClick={() => {if (!creatingRef.current) setCreating(false);}}>
                             {selectedKind.available ? "取消" : "关闭"}
                         </Button>
                         <Button disabled={!selectedKind.available || !name.trim() || submitting} variant="brand"
                                 onClick={() => void handleCreate()}>
-                            {submitting ? "创建中…" : selectedKind.available ? "创建项目" : "即将推出"}
+                            {createLabel}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
 
             <Dialog open={Boolean(binding)} onOpenChange={(open) => {
-                if (!open && !bindingBusy) setBinding(undefined);
+                if (!open && !bindingRef.current) setBinding(undefined);
             }}>
                 <DialogContent><DialogHeader><DialogTitle>项目所属 IP</DialogTitle><DialogDescription>{binding?.name} ·
                     关联仅整理项目归属，不会改写已有内容。</DialogDescription></DialogHeader>
@@ -338,50 +430,42 @@ export function ProjectGalleryPage() {
                                      disabled={bindingBusy}/>
                     {bindingError && <p role="alert" className="text-destructive text-sm">{bindingError}</p>}
                     <DialogFooter><Button variant="outline" disabled={bindingBusy}
-                                          onClick={() => setBinding(undefined)}>取消</Button>
-                        <Button disabled={bindingBusy} onClick={async () => {
-                            if (!binding || bindingBusy) return;
-                            setBindingBusy(true);
-                            setBindingError("");
-                            try {
-                                await bindProjectIp(binding.projectId, binding.ipId);
-                                setBinding(undefined);
-                            } catch (error) {
-                                setBindingError(error instanceof Error ? error.message : "保存失败");
-                            } finally {
-                                setBindingBusy(false);
-                            }
-                        }}>{bindingBusy ? "保存中…" : "保存"}</Button></DialogFooter>
+                                          onClick={() => {if (!bindingRef.current) setBinding(undefined);}}>取消</Button>
+                        <Button disabled={bindingBusy} onClick={() => void handleBinding()}>{bindingBusy ? "保存中…" : "保存"}</Button></DialogFooter>
                 </DialogContent>
             </Dialog>
 
-            <Dialog open={Boolean(renameId)} onOpenChange={(open) => !open && setRenameId(undefined)}>
+            <Dialog open={Boolean(renameId)} onOpenChange={(open) => {
+                if (!open && !renameRef.current) setRenameId(undefined);
+            }}>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>重命名项目</DialogTitle>
                     </DialogHeader>
                     <Input
                         autoFocus
+                        disabled={renaming}
                         value={renameValue}
                         onChange={(event) => setRenameValue(event.target.value)}
                     />
+                    {renameError && <p role="alert" className="text-destructive text-sm">{renameError}</p>}
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setRenameId(undefined)}>
+                        <Button disabled={renaming} variant="outline" onClick={() => {if (!renameRef.current) setRenameId(undefined);}}>
                             取消
                         </Button>
                         <Button
-                            onClick={() => {
-                                if (renameId) void renameProject(renameId, renameValue);
-                                setRenameId(undefined);
-                            }}
+                            disabled={renaming}
+                            onClick={() => void handleRename()}
                         >
-                            保存
+                            {renaming ? "保存中…" : "保存"}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
 
-            <AlertDialog open={Boolean(deleteId)} onOpenChange={(open) => !open && setDeleteId(undefined)}>
+            <AlertDialog open={Boolean(deleteId)} onOpenChange={(open) => {
+                if (!open && !deleteRef.current) setDeleteId(undefined);
+            }}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>删除项目</AlertDialogTitle>
@@ -389,16 +473,18 @@ export function ProjectGalleryPage() {
                             删除后无法恢复（除非你已经备份过项目）。
                         </AlertDialogDescription>
                     </AlertDialogHeader>
+                    {deleteError && <p role="alert" className="text-destructive text-sm">{deleteError}</p>}
                     <AlertDialogFooter>
-                        <AlertDialogCancel>取消</AlertDialogCancel>
+                        <AlertDialogCancel disabled={deleting}>取消</AlertDialogCancel>
                         <AlertDialogAction
                             className="bg-destructive hover:bg-destructive/90"
-                            onClick={() => {
-                                if (deleteId) void deleteProject(deleteId);
-                                setDeleteId(undefined);
+                            disabled={deleting}
+                            onClick={(event) => {
+                                event.preventDefault();
+                                void handleDelete();
                             }}
                         >
-                            删除
+                            {deleting ? "删除中…" : "删除"}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

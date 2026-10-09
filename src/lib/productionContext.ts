@@ -17,7 +17,7 @@ import {targetRevision} from "@/lib/productionRevision";
 import {flushPendingDrafts} from "@/lib/debouncedDraft";
 
 /** Local metadata only; consumers must explicitly resolve bytes in a later step. */
-export interface ProductionMediaMetadata {
+interface ProductionMediaMetadata {
     id: Id;
     mimeType: string;
     filename: string;

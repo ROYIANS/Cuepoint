@@ -1,7 +1,7 @@
 import {loadAudioBuffer, loadBuffers} from "@/lib/audio/buffers";
 import {exportAudioMix} from "@/lib/audio/exportMix";
 import {SelectOption, WorkspaceSelect, WorkspaceSlider} from "@/components/audioMusic/controls";
-import {type PointerEvent, useEffect, useMemo, useRef, useState} from "react";
+import {type PointerEvent, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {
     ChevronDown,
     ChevronUp,
@@ -113,6 +113,8 @@ export function AudioTimeline({
     const dragRef = useRef<DragState | undefined>(undefined);
     const scrubRef = useRef<{ resume: boolean } | undefined>(undefined);
     const playEpoch = useRef(0);
+    const playingRef = useRef(false);
+    const lastSeekRequestId = useRef<string | undefined>(undefined);
     const tracks = snapshot.tracks.filter((row) => row.chapterId === chapterId).sort((a, b) => a.order - b.order);
     const clips = snapshot.clips.filter((row) => row.chapterId === chapterId);
     const selected = clips.find((row) => row.id === selectedId);
@@ -122,19 +124,20 @@ export function AudioTimeline({
     const canSplit = (clip: AudioClip) => position > clip.startSec && position < clip.startSec + clip.trimEndSec - clip.trimStartSec && position - clip.startSec >= clip.fadeInSec && position - clip.startSec <= clip.trimEndSec - clip.trimStartSec - clip.fadeOutSec;
     const splitAvailable = Boolean(selected && canSplit(selected));
 
-    function updatePosition(seconds: number) {
+    const updatePosition = useCallback((seconds: number) => {
         positionRef.current = seconds;
         setPosition(seconds);
         onPosition.current?.(seconds);
-    }
+    }, []);
 
     useEffect(() => {
         mounted.current = true;
         const instance = new AudioPreviewPlayer();
         player.current = instance;
+        // Capture the owning container; cleanup invalidates the latest pending play epoch.
+        const cancellationEpoch = playEpoch;
         const timer = window.setInterval(() => {
-            if (instance.playing) updatePosition(instance.currentTime);
-            else if (playingRef.current) updatePosition(instance.currentTime);
+            if (instance.playing || playingRef.current) updatePosition(instance.currentTime);
             playingRef.current = instance.playing;
             setPlaying(instance.playing);
         }, 60);
@@ -146,14 +149,13 @@ export function AudioTimeline({
         document.addEventListener("audio-workspace-audition", pause);
         return () => {
             mounted.current = false;
-            playEpoch.current++;
+            cancellationEpoch.current++;
             clearInterval(timer);
             document.removeEventListener("audio-workspace-audition", pause);
             void instance.dispose();
             player.current = null;
         };
-    }, [projectId]);
-    const playingRef = useRef(false);
+    }, [projectId, updatePosition]);
     useEffect(() => {
         playEpoch.current++;
         player.current?.pause();
@@ -164,7 +166,7 @@ export function AudioTimeline({
         dragRef.current = undefined;
         setDrag(undefined);
         setZoom(1);
-    }, [chapterId]);
+    }, [chapterId, updatePosition]);
     useEffect(() => {
         playEpoch.current++;
         player.current?.pause();
@@ -177,13 +179,15 @@ export function AudioTimeline({
         return () => observer.disconnect();
     }, []);
     useEffect(() => {
-        if (!seekRequest) return;
+        // Geometry updates must not replay a consumed seek or interrupt later playback.
+        if (!seekRequest || lastSeekRequestId.current === seekRequest.id) return;
+        lastSeekRequestId.current = seekRequest.id;
         playEpoch.current++;
         player.current?.pause();
         setPlaying(false);
         updatePosition(Math.max(0, seekRequest.position));
         if (scroll.current) scroll.current.scrollLeft = Math.max(0, seekRequest.position * geometry.pixelsPerSecond - (viewportWidth - 112) / 3);
-    }, [seekRequest?.id]);
+    }, [seekRequest, geometry.pixelsPerSecond, viewportWidth, updatePosition]);
     useEffect(() => {
         if (!playing || !scroll.current) return;
         const x = position * geometry.pixelsPerSecond, view = scroll.current;
@@ -332,7 +336,7 @@ export function AudioTimeline({
         const delta = (event.clientX - current.initialX) / geometry.pixelsPerSecond;
         const targets = [0, positionRef.current, ...clips.filter((row) => row.id !== clip.id).flatMap((row) => [row.startSec, row.startSec + row.trimEndSec - row.trimStartSec])];
         const snap = (value: number, length = 0) => snapTimelinePosition(value, length, targets, geometry.pixelsPerSecond, snapping && !event.altKey);
-        let next = {...current};
+        const next = {...current};
         const minimum = Math.max(.02, clip.fadeInSec + clip.fadeOutSec);
         if (current.kind === "move") next.startSec = snap(clip.startSec + delta, clip.trimEndSec - clip.trimStartSec);
         else if (current.kind === "start") {

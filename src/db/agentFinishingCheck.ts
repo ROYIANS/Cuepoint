@@ -10,12 +10,27 @@ import {nowIso} from "@/lib/ids";
 function parsePlan(raw: unknown): AgentPlanItem[] | undefined {
     try {
         if (!Array.isArray(raw)) return;
-        const parsed = validateTaskPlan(raw);
+        const items: unknown[] = raw;
+        const plan: AgentPlanItem[] = [];
+        for (const item of items) {
+            if (!item || typeof item !== "object" || Array.isArray(item) ||
+                !("id" in item) || typeof item.id !== "string" || !("title" in item) || typeof item.title !== "string" ||
+                !("status" in item) || (item.status !== "pending" && item.status !== "in_progress" && item.status !== "completed")) return;
+            plan.push({id: item.id, title: item.title, status: item.status});
+        }
+        const parsed = validateTaskPlan(plan);
         if (targetRevision(raw) !== targetRevision(parsed)) return;
         return parsed;
     } catch {
         return;
     }
+}
+
+function planFromEnvelope(raw: string, field: "plan" | "steps"): AgentPlanItem[] | undefined {
+    const value: unknown = JSON.parse(raw);
+    if (!value || typeof value !== "object" || Array.isArray(value)) return;
+    const envelope = value as Record<string, unknown>;
+    return parsePlan(envelope[field]);
 }
 
 /** Saves a single local finishing checkpoint at a successful no-tool boundary.
@@ -49,9 +64,8 @@ export async function saveAgentFinishingCheck(
         if (!saved?.atomic || saved.effect !== "bookkeeping" || !saved.result || saved.result.length > 65536 ||
             !toolNamesForCall(run, saved.step).includes("update_run_plan")) return false;
         try {
-            const result = JSON.parse(saved.result);
-            const written = parsePlan(result.plan);
-            const requested = parsePlan(JSON.parse(saved.arguments).steps);
+            const written = planFromEnvelope(saved.result, "plan");
+            const requested = planFromEnvelope(saved.arguments, "steps");
             if (!written || !requested || targetRevision(written) !== targetRevision(plan) || targetRevision(requested) !== targetRevision(plan)) return false;
         } catch {
             return false;

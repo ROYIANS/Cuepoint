@@ -40,9 +40,7 @@ export async function batchUserAction<T>(threadId: string, action: () => Promise
     return withThreadRunLock(threadId, action, locks);
 }
 
-export function isGenerationBatchRunning(threadId: string) {
-    return workers.has(threadId);
-}
+
 
 export async function startGenerationBatch(id: string, threadId: string, options: GenerationRuntimeOptions & {
     locks?: ThreadLockManager;
@@ -108,12 +106,13 @@ export async function startGenerationBatch(id: string, threadId: string, options
                     try {
                         job = await claimBatchItem(id, threadId, item.id);
                         if (!job) continue;
+                        const claimedJob = job;
                         const config = await resolveConnector(job.connectorId);
                         if (!config?.apiKey.trim() || config.definitionId !== job.provider || config.baseUrl !== job.baseUrl) throw new Error('供应商配置已变化，尚未付费提交');
                         transportEntered = true;
                         await submitClaimedGeneration(job, config, context, options, async () => {
                             if (dispatchPaused) throw new Error('本地队列已暂停，尚未付费提交');
-                            await assertBatchDispatch(job!);
+                            await assertBatchDispatch(claimedJob);
                         });
                     } catch (error) {
                         try {

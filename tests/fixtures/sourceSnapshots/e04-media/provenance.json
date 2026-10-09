@@ -1,0 +1,17 @@
+{
+  "source": "Actual accepted post-E03/pre-E04 entry; immutable original bytes",
+  "files": [
+    {
+      "sourcePath": "src/db/media.ts",
+      "snapshotPath": "tests/fixtures/sourceSnapshots/e04-media/src/db/media.ts",
+      "sha256": "0b2105050422434e9f9955f94ee7d3bc165310e62c7fe418eec23944a8efd675"
+    }
+  ],
+  "sharedDependencies": [
+    "@/domain/types",
+    "@/domain/slot",
+    "@/db/database",
+    "@/db/productionShared"
+  ],
+  "limits": "Shared alias/domain/database/scope dependencies are intentional. Only the media cleanup algorithm is compared; no task/archive runtime imports."
+}

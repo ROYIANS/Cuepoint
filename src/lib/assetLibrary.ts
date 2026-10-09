@@ -1,4 +1,4 @@
-export const WORLD_TABS = ["setting", "characters", "scenes", "props", "styles"] as const;
+const WORLD_TABS = ["setting", "characters", "scenes", "props", "styles"] as const;
 export type WorldTab = (typeof WORLD_TABS)[number];
 
 export function parseWorldTab(value: unknown): WorldTab | undefined {

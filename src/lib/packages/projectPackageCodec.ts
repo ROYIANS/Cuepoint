@@ -1,3 +1,4 @@
+import {isLegacyScalar, type LegacyScalar} from "@/domain/legacyScalar";
 import {
     type Character,
     type CharacterImageSlot,
@@ -42,13 +43,59 @@ const recordSchema = z.object({}).passthrough();
 export function asRecord(value: unknown, label: string): Record<string, unknown> {
     const parsed = recordSchema.safeParse(value);
     if (!parsed.success) throw new PackageError(`${label} 不是有效对象`);
-    return parsed.data as Record<string, unknown>;
+    return parsed.data;
 }
 
 export function asArray(value: unknown, label: string): Record<string, unknown>[] {
     if (value == null) return [];
     if (!Array.isArray(value)) throw new PackageError(`${label} 必须是数组`);
     return value.map((item, index) => asRecord(item, `${label}[${index}]`));
+}
+
+/** Narrow only named historical fields; extension bags and future profiles stay structured. */
+function assertLegacyFields<K extends string>(
+    raw: Record<string, unknown>, keys: readonly K[], path: string,
+): asserts raw is Record<string, unknown> & Record<K, LegacyScalar> {
+    for (const key of keys) {
+        if (!isLegacyScalar(raw[key])) throw new PackageError(`${path}.${key} 必须是文本、数字或布尔值`);
+        // Empty row IDs cannot be remapped; missing/null identities still synthesize.
+        if (key === "id" && raw[key] === "") throw new PackageError(`${path}.id 不能为空`);
+    }
+}
+
+function validateLegacyIds(value: unknown, path: string): asserts value is LegacyScalar[] | null | undefined {
+    if (value == null) return;
+    if (!Array.isArray(value)) throw new PackageError(`${path} 必须是 ID 数组`);
+    value.forEach((id: unknown, index) => {
+        if (!isLegacyScalar(id)) throw new PackageError(`${path}[${index}] 必须是标量 ID`);
+    });
+}
+
+function validatePackageStory(value: unknown, path: string): void {
+    if (value == null) return;
+    const story = asRecord(value, path);
+    assertLegacyFields(story, ["logline", "script"], path);
+    asArray(story.beats, `${path}.beats`).forEach((beat, index) => {
+        const beatPath = `${path}.beats[${index}]`;
+        assertLegacyFields(beat, ["id", "title", "content", "timeOfDay", "sceneId"], beatPath);
+        validateLegacyIds(beat.characterIds, `${beatPath}.characterIds`);
+        if (beat.scriptRange != null) {
+            const range = asRecord(beat.scriptRange, `${beatPath}.scriptRange`);
+            assertLegacyFields(range, ["start", "end", "excerpt"], `${beatPath}.scriptRange`);
+        }
+    });
+}
+
+function validatePackageSlot(value: unknown, path: string): void {
+    if (value == null) return;
+    const slot = asRecord(value, path);
+    assertLegacyFields(slot, ["prompt"], path);
+    validateLegacyIds(slot.referenceImageIds, `${path}.referenceImageIds`);
+    validateLegacyIds(slot.referenceVideoIds, `${path}.referenceVideoIds`);
+    if (slot.result != null) {
+        const result = asRecord(slot.result, `${path}.result`);
+        assertLegacyFields(result, ["mediaId", "kind"], `${path}.result`);
+    }
 }
 
 function pickExtra(
@@ -114,6 +161,12 @@ function parseProject(
     raw: Record<string, unknown>,
     fallbackName: string,
 ): Project {
+    assertLegacyFields(raw, ["id", "name", "createdAt", "updatedAt", "coverMediaId"], "project.json");
+    validatePackageStory(raw.story, "project.json.story");
+    if (raw.setting != null) {
+        const setting = asRecord(raw.setting, "project.json.setting");
+        assertLegacyFields(setting, ["worldview", "background", "rules"], "project.json.setting");
+    }
     const visible = (
         raw.columnSettings as { visible?: ShotColumnId[] } | undefined
     )?.visible;
@@ -141,7 +194,7 @@ function parseProject(
         columnSettings: {
             visible:
                 Array.isArray(visible) && visible.length > 0
-                    ? (visible as ShotColumnId[])
+                    ? visible
                     : [...DEFAULT_VISIBLE_COLUMNS],
         },
         shotSettings: normalizeShotSettings(raw.shotSettings),
@@ -173,19 +226,19 @@ const CHARACTER_KEYS = [
 function parseNamedSlots<K extends string>(
     rawSlots: unknown,
     legacyImages: unknown,
+    path: string,
 ): Partial<Record<K, GenerationSlot>> {
     const slots: Partial<Record<K, GenerationSlot>> = {};
-    if (rawSlots && typeof rawSlots === "object") {
-        for (const [key, value] of Object.entries(
-            rawSlots as Record<string, unknown>,
-        )) {
+    if (rawSlots != null) {
+        for (const [key, value] of Object.entries(asRecord(rawSlots, `${path}.slots`))) {
+            validatePackageSlot(value, `${path}.slots.${key}`);
             slots[key as K] = parseGenerationSlot(value);
         }
     }
-    if (legacyImages && typeof legacyImages === "object") {
-        for (const [key, value] of Object.entries(
-            legacyImages as Record<string, unknown>,
-        )) {
+    if (legacyImages != null) {
+        const images = asRecord(legacyImages, `${path}.images`);
+        for (const [key, value] of Object.entries(images)) {
+            if (!isLegacyScalar(value)) throw new PackageError(`${path}.images.${key} 必须是标量媒体 ID`);
             if (!slots[key as K])
                 slots[key as K] = parseGenerationSlot(undefined, value);
         }
@@ -196,7 +249,9 @@ function parseNamedSlots<K extends string>(
 function parseCharacter(
     raw: Record<string, unknown>,
     projectId: Id,
+    path: string,
 ): Character {
+    assertLegacyFields(raw, ["id", "name", "bio", "appearance", "notes", "createdAt", "updatedAt"], path);
     const at = nowIso();
     return {
         id: String(raw.id ?? createId("chr")),
@@ -208,7 +263,7 @@ function parseCharacter(
         bio: String(raw.bio ?? ""),
         appearance: String(raw.appearance ?? ""),
         notes: String(raw.notes ?? ""),
-        slots: parseNamedSlots<CharacterImageSlot>(raw.slots, raw.images),
+        slots: parseNamedSlots<CharacterImageSlot>(raw.slots, raw.images, path),
         createdAt: String(raw.createdAt ?? at),
         updatedAt: String(raw.updatedAt ?? at),
         extra: pickExtra(raw, CHARACTER_KEYS),
@@ -232,7 +287,8 @@ const SCENE_KEYS = [
     "extra",
 ];
 
-function parseScene(raw: Record<string, unknown>, projectId: Id): Scene {
+function parseScene(raw: Record<string, unknown>, projectId: Id, path: string): Scene {
+    assertLegacyFields(raw, ["id", "name", "location", "timeOfDay", "atmosphere", "notes", "createdAt", "updatedAt"], path);
     const at = nowIso();
     return {
         id: String(raw.id ?? createId("scn")),
@@ -244,7 +300,7 @@ function parseScene(raw: Record<string, unknown>, projectId: Id): Scene {
         timeOfDay: String(raw.timeOfDay ?? ""),
         atmosphere: String(raw.atmosphere ?? ""),
         notes: String(raw.notes ?? ""),
-        slots: parseNamedSlots<SceneImageSlot>(raw.slots, raw.images),
+        slots: parseNamedSlots<SceneImageSlot>(raw.slots, raw.images, path),
         createdAt: String(raw.createdAt ?? at),
         updatedAt: String(raw.updatedAt ?? at),
         extra: pickExtra(raw, SCENE_KEYS),
@@ -268,7 +324,8 @@ const PROP_KEYS = [
     "extra",
 ];
 
-function parseProp(raw: Record<string, unknown>, projectId: Id): Prop {
+function parseProp(raw: Record<string, unknown>, projectId: Id, path: string): Prop {
+    assertLegacyFields(raw, ["id", "name", "kind", "notes", "createdAt", "updatedAt"], path);
     const at = nowIso();
     return {
         id: String(raw.id ?? createId("prp")),
@@ -281,7 +338,7 @@ function parseProp(raw: Record<string, unknown>, projectId: Id): Prop {
         name: String(raw.name ?? "未命名道具"),
         kind: String(raw.kind ?? ""),
         notes: String(raw.notes ?? ""),
-        slots: parseNamedSlots<PropImageSlot>(raw.slots, undefined),
+        slots: parseNamedSlots<PropImageSlot>(raw.slots, undefined, path),
         createdAt: String(raw.createdAt ?? at),
         updatedAt: String(raw.updatedAt ?? at),
         extra: pickExtra(raw, PROP_KEYS),
@@ -304,7 +361,8 @@ const STYLE_KEYS = [
     "extra",
 ];
 
-function parseStyle(raw: Record<string, unknown>, projectId: Id): VisualStyle {
+function parseStyle(raw: Record<string, unknown>, projectId: Id, path: string): VisualStyle {
+    assertLegacyFields(raw, ["id", "name", "notes", "createdAt", "updatedAt"], path);
     const at = nowIso();
     return {
         id: String(raw.id ?? createId("sty")),
@@ -316,7 +374,7 @@ function parseStyle(raw: Record<string, unknown>, projectId: Id): VisualStyle {
         negativePrompt: optionalText(raw, "negativePrompt"),
         name: String(raw.name ?? "未命名风格"),
         notes: String(raw.notes ?? ""),
-        slots: parseNamedSlots<StyleImageSlot>(raw.slots, undefined),
+        slots: parseNamedSlots<StyleImageSlot>(raw.slots, undefined, path),
         createdAt: String(raw.createdAt ?? at),
         updatedAt: String(raw.updatedAt ?? at),
         extra: pickExtra(raw, STYLE_KEYS),
@@ -372,17 +430,19 @@ function validateModernShotRelations(
     assertUniqueOriginalIds(episodes, "分集");
     assertUniqueOriginalIds(shots, "分镜");
     const beatsByEpisode = new Map<string, Set<string>>();
-    for (const episode of episodes) {
+    for (const [index, episode] of episodes.entries()) {
+        assertLegacyFields(episode, ["id"], `episodes.json[${index}]`);
         const beats = originalBeatIds(episode);
         const id = originalId(episode);
         if (id) beatsByEpisode.set(id, beats);
     }
-    for (const shot of shots) {
+    for (const [index, shot] of shots.entries()) {
+        assertLegacyFields(shot, ["id"], `shots.json[${index}]`);
         const beats = typeof shot.episodeId === "string" ? beatsByEpisode.get(shot.episodeId) : undefined;
-        if (!beats) throw new PackageError("分镜必须引用包内有效的原始分集 ID");
+        if (!beats) throw new PackageError(`shots.json[${index}].episodeId：分镜必须引用包内有效的原始分集 ID`);
         if (!shot.beatId) continue;
         if (typeof shot.beatId !== "string" || !beats.has(shot.beatId)) {
-            throw new PackageError("分镜场次必须属于它引用的分集");
+            throw new PackageError(`shots.json[${index}].beatId：分镜场次必须属于它引用的分集`);
         }
     }
 }
@@ -392,6 +452,9 @@ function parseEpisode(
     projectId: Id,
     index: number,
 ): Episode {
+    const path = `episodes.json[${index}]`;
+    assertLegacyFields(raw, ["id", "title", "createdAt", "updatedAt"], path);
+    validatePackageStory(raw.story, `${path}.story`);
     const at = nowIso();
     const story = normalizeEpisodeStory(raw.story);
     // Synthesized beat identities must not merge with explicit ones during remapping.
@@ -464,11 +527,15 @@ function parseShot(
     episodeId: Id,
     index: number,
 ): Shot {
+    const path = `shots.json[${index}]`;
+    assertLegacyFields(raw, ["id", "shotNumber", "category", "content", "notes", "sceneCloseup", "sound", "emotion", "cameraAngle", "cameraGear", "focalLength", "sceneId", "beatId", "frameMediaId", "referenceMediaId"], path);
+    validateLegacyIds(raw.characterIds, `${path}.characterIds`);
+    for (const field of ["firstFrame", "lastFrame", "clip", "frame", "reference"]) validatePackageSlot(raw[field], `${path}.${field}`);
     const slots = parseShotPictureSlots(raw);
     return {
         id: String(raw.id ?? createId("sht")),
         projectId,
-        episodeId: String(raw.episodeId ?? episodeId),
+        episodeId,
         order: Number(raw.order ?? index + 1) || index + 1,
         shotNumber: String(raw.shotNumber ?? index + 1),
         status: normalizeShotStatus(raw.status),
@@ -752,8 +819,8 @@ export function remapProjectPackageRows(parsed: ReturnType<typeof parseProjectPa
         else delete project.coverMediaId;
     }
 
-    const characters = charactersRaw.map((raw) => {
-        const character = parseCharacter(raw, projectId);
+    const characters = charactersRaw.map((raw, index) => {
+        const character = parseCharacter(raw, projectId, `characters.json[${index}]`);
         const newId = remapId(characterMap, character.id, "chr")!;
         character.id = newId;
         character.projectId = projectId;
@@ -766,8 +833,8 @@ export function remapProjectPackageRows(parsed: ReturnType<typeof parseProjectPa
         return character;
     });
 
-    const scenes = scenesRaw.map((raw) => {
-        const scene = parseScene(raw, projectId);
+    const scenes = scenesRaw.map((raw, index) => {
+        const scene = parseScene(raw, projectId, `scenes.json[${index}]`);
         scene.id = remapId(sceneMap, scene.id, "scn")!;
         scene.projectId = projectId;
         const images: Scene["slots"] = {};
@@ -779,36 +846,39 @@ export function remapProjectPackageRows(parsed: ReturnType<typeof parseProjectPa
         return scene;
     });
 
-    const props = propsRaw.map((raw) => {
-        const prop = parseProp(raw, projectId);
+    const props = propsRaw.map((raw, index) => {
+        const prop = parseProp(raw, projectId, `props.json[${index}]`);
         prop.id = remapId(propMap, prop.id, "prp")!;
         prop.slots = Object.fromEntries(
             Object.entries(prop.slots).map(([slot, value]) => [
                 slot,
                 value ? remapSlot(value, mapMedia) : value,
             ]),
-        ) as Prop["slots"];
+        );
         return prop;
     });
 
-    const styles = stylesRaw.map((raw) => {
-        const style = parseStyle(raw, projectId);
+    const styles = stylesRaw.map((raw, index) => {
+        const style = parseStyle(raw, projectId, `styles.json[${index}]`);
         style.id = remapId(styleMap, style.id, "sty")!;
         style.slots = Object.fromEntries(
             Object.entries(style.slots).map(([slot, value]) => [
                 slot,
                 value ? remapSlot(value, mapMedia) : value,
             ]),
-        ) as VisualStyle["slots"];
+        );
         return style;
     });
 
     if (project.defaultStyleId !== undefined)
         project.defaultStyleId = styleMap.get(project.defaultStyleId);
 
-    const parsedEpisodes = getProjectKind(project) !== "video" ? [] : hasEpisodes
-        ? episodesRaw.map((raw, index) => parseEpisode(raw, projectId, index))
-        : [synthesizeFirstEpisode(project, projectRaw)];
+    let parsedEpisodes: Episode[] = [];
+    if (getProjectKind(project) === "video") {
+        parsedEpisodes = hasEpisodes
+            ? episodesRaw.map((raw, index) => parseEpisode(raw, projectId, index))
+            : [synthesizeFirstEpisode(project, projectRaw)];
+    }
 
     const episodes = parsedEpisodes.map((episode) => {
         const filters = getEpisodeShotFilters(episode, project);
@@ -848,7 +918,9 @@ export function remapProjectPackageRows(parsed: ReturnType<typeof parseProjectPa
     const fallbackEpisodeId = episodes[0]?.id ?? createId("ep");
 
     const shots = shotsRaw.map((raw, index) => {
-        const shot = parseShot(raw, projectId, fallbackEpisodeId, index);
+        // Modern owners were checked before any repair; legacy scopes are deliberately ignored.
+        const oldEpisodeId = hasEpisodes && typeof raw.episodeId === "string" ? raw.episodeId : fallbackEpisodeId;
+        const shot = parseShot(raw, projectId, oldEpisodeId, index);
         remapShotStoryScope(shot, hasEpisodes, fallbackEpisodeId, episodeMap, beatMaps);
         shot.id = remapId(shotMap, shot.id, "sht")!;
         shot.projectId = projectId;

@@ -12,7 +12,7 @@ import {
     setMaterialArchived,
     updateMaterialMetadata,
     updateMaterialUse,
-    useMaterialInProject
+    adoptMaterialInProject
 } from "@/db/materials";
 import type {LibraryMaterial} from "@/domain/materials";
 import {Button} from "@/components/ui/button";
@@ -242,7 +242,7 @@ function MaterialEditor({material, requestedId, unavailable, onEditingChange, on
                                                                            label: project.name
                                                                        }))}/><Button
                     disabled={operationsDisabled || material.archived || !targetProjects?.some((project) => project.id === projectId)}
-                    onClick={() => void action(() => useMaterialInProject(material.id, projectId), "已加入项目，版本固定。")}>用于项目</Button>
+                    onClick={() => void action(() => adoptMaterialInProject(material.id, projectId), "已加入项目，版本固定。")}>用于项目</Button>
                 </div>
                 {data?.uses.length === 0 && <p className="material-muted">尚未用于项目。</p>}
                 <ul className="material-use-list">{data?.uses.map((use) => <li key={use.id}>

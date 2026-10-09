@@ -6,7 +6,7 @@ import {
     setMaterialArchived,
     updateMaterialMetadata,
     updateMaterialUse,
-    useMaterialInProject
+    adoptMaterialInProject
 } from '@/db/materials';
 import {releaseMaterialUse} from "@/db/assetReuse";
 import type {
@@ -25,7 +25,6 @@ import {assertActiveMaterialScope, assertMaterialAccess, readMaterialText} from 
 import {frozenProjectScope} from './projectScope';
 import {queueMaterialImage} from './materialImageInput';
 
-export {MATERIAL_TOOL_NAMES} from './materialToolNames';
 
 const kind = choice(['image', 'video', 'audio', 'document', 'character', 'scene', 'prop', 'style']);
 const settingKind = choice(['media', 'character', 'scene', 'prop', 'style']);
@@ -201,12 +200,12 @@ async function projectUseState(useId: string, context: AgentToolContext) {
     return {use, project, target: targetState};
 }
 
-async function useState(useId: string, context: AgentToolContext) {
+async function readMaterialUseState(useId: string, context: AgentToolContext) {
     const state = await projectUseState(useId, context);
     return {...state, material: await currentMaterial(state.use.materialId, context)};
 }
 
-function useResult(use: MaterialUse) {
+function materialUseResult(use: MaterialUse) {
     return {use, note: '项目固定采用此版本的独立副本；不会自动替换镜头、封面或设定中的引用。'};
 }
 
@@ -424,7 +423,7 @@ export const MATERIAL_TOOLS = [
             };
         },
         async execute(args) {
-            return useResult(await useMaterialInProject(args.materialId, args.projectId));
+            return materialUseResult(await adoptMaterialInProject(args.materialId, args.projectId));
         },
     }),
     libraryWriteTool({
@@ -433,14 +432,14 @@ export const MATERIAL_TOOLS = [
         description: '给 useId 所属项目加入库中当前 revision 的新副本。旧副本和镜头引用保留；有本地修改的设定不能覆盖。此工具不替换原镜头或封面引用。',
         spec: object({useId: id, revision}),
         scope: async (args, context) => {
-            await useState(args.useId, context);
+            await readMaterialUseState(args.useId, context);
         },
         owners: async args => {
             const use = await db.materialUses.get(args.useId);
             return use ? [use.projectId] : [];
         },
         async prepare(args, context) {
-            const state = await useState(args.useId, context);
+            const state = await readMaterialUseState(args.useId, context);
             await activeMaterial(state.material.id, args.revision, context);
             return {
                 state,
@@ -449,7 +448,7 @@ export const MATERIAL_TOOLS = [
             };
         },
         async execute(args) {
-            return useResult(await updateMaterialUse(args.useId));
+            return materialUseResult(await updateMaterialUse(args.useId));
         },
     }),
     libraryWriteTool({

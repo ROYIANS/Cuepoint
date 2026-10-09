@@ -41,6 +41,7 @@ export function ClickSpark({
 }) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const sparksRef = useRef<Spark[]>([]);
+    const startAnimationRef = useRef<(() => void) | null>(null);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -66,6 +67,7 @@ export function ClickSpark({
         return () => {
             observer.disconnect();
             window.clearTimeout(resizeTimeout);
+            sparksRef.current = [];
         };
     }, []);
 
@@ -78,6 +80,7 @@ export function ClickSpark({
                     return t * t;
                 case "ease-in-out":
                     return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+                case "ease-out":
                 default:
                     return t * (2 - t);
             }
@@ -91,8 +94,21 @@ export function ClickSpark({
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        let animationId = 0;
+        const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+        let animationId: number | null = null;
+        const enabled = () => !document.hidden && !motionQuery.matches;
+        const reset = () => {
+            if (animationId !== null) window.cancelAnimationFrame(animationId);
+            animationId = null;
+            sparksRef.current = [];
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        };
         const draw = () => {
+            animationId = null;
+            if (!enabled()) {
+                reset();
+                return;
+            }
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             sparksRef.current = sparksRef.current.filter((spark) => {
@@ -116,15 +132,37 @@ export function ClickSpark({
                 return true;
             });
 
-            animationId = window.requestAnimationFrame(draw);
+            if (sparksRef.current.length > 0) animationId = window.requestAnimationFrame(draw);
         };
-
-        animationId = window.requestAnimationFrame(draw);
-        return () => window.cancelAnimationFrame(animationId);
+        const start = () => {
+            if (!enabled()) {
+                reset();
+                return;
+            }
+            sparksRef.current = sparksRef.current.filter((spark) => performance.now() - spark.startTime < duration);
+            if (animationId === null && sparksRef.current.length > 0) {
+                animationId = window.requestAnimationFrame(draw);
+            }
+        };
+        const handleAvailabilityChange = () => {
+            if (!enabled()) reset();
+        };
+        startAnimationRef.current = start;
+        document.addEventListener("visibilitychange", handleAvailabilityChange);
+        motionQuery.addEventListener("change", handleAvailabilityChange);
+        start();
+        return () => {
+            if (animationId !== null) window.cancelAnimationFrame(animationId);
+            startAnimationRef.current = null;
+            document.removeEventListener("visibilitychange", handleAvailabilityChange);
+            motionQuery.removeEventListener("change", handleAvailabilityChange);
+            // Option changes restart drawing from the original burst timestamps.
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        };
     }, [sparkColor, sparkSize, sparkRadius, duration, easeFunc, extraScale]);
 
     const handleClick = (event: MouseEvent<HTMLDivElement>) => {
-        if (prefersReducedMotion()) return;
+        if (document.hidden || prefersReducedMotion()) return;
         const canvas = canvasRef.current;
         if (!canvas) return;
         const rect = canvas.getBoundingClientRect();
@@ -139,6 +177,7 @@ export function ClickSpark({
                 startTime: now,
             })),
         );
+        startAnimationRef.current?.();
     };
 
     return (

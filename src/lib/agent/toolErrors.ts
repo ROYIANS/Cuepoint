@@ -99,7 +99,7 @@ export function readToolValidationFailure(result?: string): ToolValidationFailur
             if (!isRecord(issue) || typeof issue.path !== "string" || issue.path.length > 600 || typeof issue.constraint !== "string" || issue.constraint.length > 300 || issue.received !== undefined && !(typeof issue.received === "number" && Number.isFinite(issue.received)) && !(typeof issue.received === "string" && issue.received.length < 80)) return;
             issues.push({
                 path: issue.path,
-                constraint: issue.constraint, ...(issue.received === undefined ? {} : {received: issue.received as number | string})
+                constraint: issue.constraint, ...(issue.received === undefined ? {} : {received: issue.received})
             });
         }
         return {code: "INVALID_TOOL_ARGUMENTS", executed: false, error: value.error, issues, recovery: value.recovery};

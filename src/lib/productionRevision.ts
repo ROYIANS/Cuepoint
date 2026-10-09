@@ -32,13 +32,13 @@ export function targetRevision(value: unknown): string {
     for (let block = 0; block < bytes.length; block += 64) {
         for (let i = 0; i < 16; i++) words[i] = view.getUint32(block + i * 4);
         for (let i = 16; i < 64; i++) {
-            const x = words[i - 15]!;
-            const y = words[i - 2]!;
-            words[i] = words[i - 16]! + (rotate(x, 7) ^ rotate(x, 18) ^ (x >>> 3)) + words[i - 7]! + (rotate(y, 17) ^ rotate(y, 19) ^ (y >>> 10));
+            const x = words[i - 15];
+            const y = words[i - 2];
+            words[i] = words[i - 16] + (rotate(x, 7) ^ rotate(x, 18) ^ (x >>> 3)) + words[i - 7] + (rotate(y, 17) ^ rotate(y, 19) ^ (y >>> 10));
         }
         let [a, b, c, d, e, f, g, h] = hash as [number, number, number, number, number, number, number, number];
         for (let i = 0; i < 64; i++) {
-            const t1 = (h + (rotate(e, 6) ^ rotate(e, 11) ^ rotate(e, 25)) + ((e & f) ^ (~e & g)) + K[i]! + words[i]!) | 0;
+            const t1 = (h + (rotate(e, 6) ^ rotate(e, 11) ^ rotate(e, 25)) + ((e & f) ^ (~e & g)) + K[i] + words[i]) | 0;
             const t2 = ((rotate(a, 2) ^ rotate(a, 13) ^ rotate(a, 22)) + ((a & b) ^ (a & c) ^ (b & c))) | 0;
             h = g;
             g = f;
@@ -49,7 +49,7 @@ export function targetRevision(value: unknown): string {
             b = a;
             a = (t1 + t2) | 0;
         }
-        for (const [i, word] of [a, b, c, d, e, f, g, h].entries()) hash[i] = (hash[i]! + word) >>> 0;
+        for (const [i, word] of [a, b, c, d, e, f, g, h].entries()) hash[i] = (hash[i] + word) >>> 0;
     }
     return `sha256-v1:${hash.map((word) => word.toString(16).padStart(8, "0")).join("")}`;
 }

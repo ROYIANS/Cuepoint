@@ -21,7 +21,7 @@ export function isApimartImageExt(model: string): boolean {
     return model === "gpt-image-2.5-ext";
 }
 
-export function apimartImageSizes(model: string): readonly string[] {
+function apimartImageSizes(model: string): readonly string[] {
     return isApimartImageExt(model) ? IMAGE_EXT_RATIOS : IMAGE_RATIOS;
 }
 
@@ -110,7 +110,7 @@ export const GENERATION_CAPABILITIES = [
 
 
 export type GenerationCapability = typeof GENERATION_CAPABILITIES[number];
-export type GenerationInputRole = "first-frame" | "last-frame" | "reference-image" | "reference-video";
+type GenerationInputRole = "first-frame" | "last-frame" | "reference-image" | "reference-video";
 export interface CapabilityParameters {
     size?: string;
     resolution?: string;

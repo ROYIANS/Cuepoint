@@ -54,7 +54,7 @@ export class GenerationPendingError extends ToolPendingError {
     }
 }
 
-export function generationTargetHref(target: ProductionTarget): string {
+function generationTargetHref(target: ProductionTarget): string {
     const id = encodeURIComponent(target.entityId);
     if (target.kind === "shot") return `/p/${encodeURIComponent(target.projectId)}/e/${encodeURIComponent(target.episodeId)}/shots?shot=${id}`;
     const plural = target.kind === "character" ? "characters" : target.kind === "scene" ? "scenes" : target.kind === "prop" ? "props" : "styles";

@@ -6,7 +6,8 @@ import {
 } from "@/db/agentTaskRecords";
 import {ReferenceSourceLink} from "./ReferenceAttachments";
 import {toolReferenceAttachments} from "@/lib/agent/referenceEvidence";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
+import {useManualDraftDeparture, type ManualDraftState, type ManualDraftDeparture} from "@/lib/useManualDraftGuard";
 import {useLiveQuery} from "dexie-react-hooks";
 import {BookOpen, ChevronDown, History, Pencil, Plus, Search} from "lucide-react";
 import {toast} from "sonner";
@@ -42,9 +43,9 @@ const dateLabel = (value: string) => new Date(value).toLocaleString("zh-CN", {
 });
 const emptyRecord = (): TaskRecordInput => ({kind: "research", claim: "proposal", title: "", body: "", sources: []});
 
-type Props = { task: AgentTask; messages: ChatMessage[]; editable: boolean };
+type Props = { task: AgentTask; messages: ChatMessage[]; editable: boolean; onDraftStateChange?: (state: ManualDraftState) => void; requestDeparture?: ManualDraftDeparture };
 
-export function TaskRecords({task, messages, editable}: Props) {
+export function TaskRecords({task, messages, editable, onDraftStateChange, requestDeparture}: Props) {
     const records = useLiveQuery(() => listTaskRecords(task.id), [task.id]);
     const calls = useLiveQuery(async () => {
         const runs = await db.agentRuns.where("taskId").equals(task.id).toArray();
@@ -54,7 +55,11 @@ export function TaskRecords({task, messages, editable}: Props) {
     const generationEvidence = useLiveQuery(() => listTaskGenerationSources(task), [task.id, task.threadId, task.projectId]);
     const [filter, setFilter] = useState<TaskRecordInput["kind"] | "all">("all");
     const [query, setQuery] = useState("");
-    const [editing, setEditing] = useState<{ record?: AgentTaskRecord; input: TaskRecordInput }>();
+    type Session = { record?: AgentTaskRecord; input: TaskRecordInput; baseline: string; taskId: string; threadId: string; projectId: string };
+    const [editing, setEditing] = useState<Session>();
+    const session = useRef<Session | undefined>(undefined);
+    const mounted = useRef(false);
+    useEffect(() => {mounted.current = true; return () => {mounted.current = false; session.current = undefined;};}, []);
     const [historyId, setHistoryId] = useState<string>();
     const [pending, setPending] = useState(false);
     const [error, setError] = useState("");
@@ -82,46 +87,67 @@ export function TaskRecords({task, messages, editable}: Props) {
     ];
     const visible = [...(records ?? [])].reverse().filter((record) => (filter === "all" || record.kind === filter) && `${record.title} ${record.body}`.toLowerCase().includes(query.trim().toLowerCase()));
 
+    function draftState(): ManualDraftState {
+        return {dirty: !!session.current && JSON.stringify(session.current.input) !== session.current.baseline, pending: saving.current};
+    }
+    function publish(next?: Session) {
+        session.current = next;
+        setEditing(next);
+        onDraftStateChange?.(draftState());
+    }
+    const departure = useManualDraftDeparture(draftState().dirty, pending, () => {}, {
+        readState: draftState, route: !onDraftStateChange,
+    });
+
+    function requestLocalDeparture(leave: () => void) {
+        if (requestDeparture) requestDeparture(leave, () => {});
+        else departure.requestDeparture(leave);
+    }
+
     function edit(record?: AgentTaskRecord) {
-        setError("");
-        setEditing({
-            record,
-            input: record ? {
-                kind: record.kind,
-                claim: record.claim,
-                title: record.title,
-                body: record.body,
-                sources: [...record.sources],
-                todoId: record.todoId
-            } : emptyRecord()
+        requestLocalDeparture(() => {
+            setError("");
+            const input: TaskRecordInput = record ? {
+                kind: record.kind, claim: record.claim, title: record.title, body: record.body,
+                sources: structuredClone(record.sources), todoId: record.todoId,
+            } : emptyRecord();
+            publish({record: record && structuredClone(record), input, baseline: JSON.stringify(input),
+                taskId: task.id, threadId: task.threadId, projectId: task.projectId});
         });
     }
 
     function change(patch: Partial<TaskRecordInput>) {
-        setEditing((current) => current ? {...current, input: {...current.input, ...patch}} : current);
+        if (saving.current || !session.current) return;
+        publish({...session.current, input: {...session.current.input, ...patch}});
     }
 
     async function save() {
-        if (!editing || saving.current || !editable) return;
+        const owner = session.current;
+        if (!owner || saving.current || !editable) return;
         saving.current = true;
         setPending(true);
+        onDraftStateChange?.(draftState());
         setError("");
+        const active = () => mounted.current && session.current === owner;
         try {
-            await saveTaskRecord(task.id, editing.input, editing.record ? {
-                id: editing.record.id,
-                expectedRevision: editing.record.revision
+            await saveTaskRecord(owner.taskId, structuredClone(owner.input), owner.record ? {
+                id: owner.record.id, expectedRevision: owner.record.revision,
             } : {});
-            setEditing(undefined);
+            if (!active()) return;
+            publish(undefined);
             toast.success("工作记录已保存");
         } catch (failure) {
-            setError(failure instanceof Error ? failure.message : "保存失败，请重试");
+            if (active()) setError(failure instanceof Error ? failure.message : "保存失败，请重试");
         } finally {
-            saving.current = false;
-            setPending(false);
+            if (mounted.current && (!session.current || session.current === owner)) {
+                saving.current = false;
+                setPending(false);
+                onDraftStateChange?.(draftState());
+            }
         }
     }
 
-    return <div className="agent-task-records">
+    return <div className="agent-task-records">{departure.confirmation}
         <div className="agent-task-section-heading">
             <div><h3>工作记录 <span>{records?.length ?? 0}</span></h3><p
                 className="agent-task-muted">保留依据与决策，让下一次执行接得上。</p></div>
@@ -179,7 +205,7 @@ export function TaskRecords({task, messages, editable}: Props) {
                 </div>
             </details>)}
         <Dialog open={!!editing} onOpenChange={(open) => {
-            if (!open && !saving.current) setEditing(undefined);
+            if (!open) requestLocalDeparture(() => publish(undefined));
         }}><DialogContent className="agent-task-dialog agent-task-record-editor"
                           showCloseButton={!pending}><DialogHeader><DialogTitle>{editing?.record ? "编辑工作记录" : "新建工作记录"}</DialogTitle><DialogDescription>保存后保留历史版本。编辑记录仅影响本文；目标与清单请在概览中调整。</DialogDescription></DialogHeader>{editing &&
             <form onSubmit={(event) => {
@@ -224,7 +250,7 @@ export function TaskRecords({task, messages, editable}: Props) {
                 {error && <p className="agent-task-record-error"
                              role="alert">{error}。草稿仍在，可以复制内容后重新打开最新版本。</p>}
                 <DialogFooter><Button type="button" variant="ghost" disabled={pending}
-                                      onClick={() => setEditing(undefined)}>取消</Button><Button type="submit"
+                                      onClick={() => requestLocalDeparture(() => publish(undefined))}>取消</Button><Button type="submit"
                                                                                                  disabled={pending || !editable || !editing.input.title.trim() || !editing.input.body.trim()}>{pending ? "保存中…" : "保存记录"}</Button></DialogFooter>
             </form>}</DialogContent></Dialog>
         <Dialog open={!!historyId} onOpenChange={(open) => {

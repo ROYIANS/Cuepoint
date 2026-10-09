@@ -23,7 +23,7 @@ import {
     PRODUCTION_TABLES
 } from "./productionShared";
 import {emptyCharacter, emptyScene, emptyProp, emptyStyle} from "./productionRecords";
-import {assertSlotMedia, recycleSlotMedia, deleteMediaIfOrphan} from "./media";
+import {assertSlotMedia, recycleSlotMedia, deleteMediaIfOrphans} from "./media";
 
 export async function addCharacter(projectId: Id): Promise<Character> {
     return db.transaction("rw", db.projects, db.characters, async () => {
@@ -98,7 +98,7 @@ export async function deleteCharacter(id: Id): Promise<void> {
             }
         }
         await touchProject(character.projectId);
-        for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
+        await deleteMediaIfOrphans(mediaIds);
     });
 }
 
@@ -169,7 +169,7 @@ export async function deleteScene(id: Id): Promise<void> {
             }
         }
         await touchProject(scene.projectId);
-        for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
+        await deleteMediaIfOrphans(mediaIds);
     });
 }
 
@@ -227,7 +227,7 @@ export async function deleteProp(id: Id): Promise<void> {
             if (shot.propIds?.includes(id)) shot.propIds = shot.propIds.filter((value) => value !== id);
         });
         await touchProject(prop.projectId);
-        for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
+        await deleteMediaIfOrphans(mediaIds);
     });
 }
 
@@ -287,6 +287,6 @@ export async function deleteStyle(id: Id): Promise<void> {
             if (shot.styleId === id) shot.styleId = null;
         });
         await touchProject(style.projectId);
-        for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
+        await deleteMediaIfOrphans(mediaIds);
     });
 }

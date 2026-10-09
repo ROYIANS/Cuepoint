@@ -15,6 +15,7 @@ const runtime = vi.hoisted(() => ({active: undefined as Host | undefined}));
 vi.mock("react", async original => {
     const react = await original<typeof import("react")>();
     return {...react,
+        useCallback: (callback: unknown) => callback,
         useState: (initial: unknown) => {
             const host = runtime.active!; const index = host.cursor++;
             if (!(index in host.cells)) host.cells[index] = typeof initial === "function" ? initial() : initial;

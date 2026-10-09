@@ -30,9 +30,10 @@ export function useReferenceDraft(scope: string, projectId?: string) {
     const mounted = useRef(true);
     useEffect(() => {
         mounted.current = true;
+        const ownedControllers = controllers.current;
         return () => {
             mounted.current = false;
-            for (const controller of controllers.current.values()) controller.abort();
+            for (const controller of ownedControllers.values()) controller.abort();
         };
     }, []);
     const draft = drafts[scope] ?? EMPTY;

@@ -80,7 +80,7 @@ export function createRunWriter(persist: (sequence: number, output: AgentRunOutp
     };
 }
 
-export const MAX_MODEL_STEPS = MODEL_STEPS_PER_SEGMENT;
+const MAX_MODEL_STEPS = MODEL_STEPS_PER_SEGMENT;
 
 /** Only user review may supply an execution override; wire arguments remain untouched. */
 function effectiveToolInput(call: AgentToolCall) {

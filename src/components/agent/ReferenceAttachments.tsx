@@ -17,7 +17,7 @@ export const REFERENCE_STATUS_LABELS: Record<ProjectReference["status"], string>
     unavailable: "已移除"
 };
 
-export function ReferenceIcon({kind}: { kind?: string }) {
+function ReferenceIcon({kind}: { kind?: string }) {
     return kind === "image" ? <ImageIcon size={16} aria-hidden/> : <FileText size={16} aria-hidden/>;
 }
 
@@ -38,12 +38,13 @@ function SourcePreview({projectId, attachment, chunkIndex}: {
     const result = loaded?.key === key ? loaded : undefined;
     const source = result?.data;
     const [image, setImage] = useState<{ blob: Blob; url: string }>();
+    const imageBlob = source?.reference.kind === "image" ? source.media.blob : undefined;
     useEffect(() => {
-        if (!source || source.reference.kind !== "image") return;
-        const url = URL.createObjectURL(source.media.blob);
-        setImage({blob: source.media.blob, url});
+        if (!imageBlob) return;
+        const url = URL.createObjectURL(imageBlob);
+        setImage({blob: imageBlob, url});
         return () => URL.revokeObjectURL(url);
-    }, [source?.media.blob, source?.reference.kind]);
+    }, [imageBlob]);
     const [visible, setVisible] = useState(Math.max(20, (chunkIndex ?? 0) + 1));
     const targetRef = useRef<HTMLElement>(null);
     useEffect(() => {
@@ -169,12 +170,13 @@ function ProjectImageSource({image}: { image: AgentImageReference }) {
     }, [key, open]);
     const media = loaded?.key === key ? loaded.media : undefined;
     const [preview, setPreview] = useState<{ blob: Blob; url: string }>();
+    const mediaBlob = media?.blob;
     useEffect(() => {
-        if (!media) return;
-        const url = URL.createObjectURL(media.blob);
-        setPreview({blob: media.blob, url});
+        if (!mediaBlob) return;
+        const url = URL.createObjectURL(mediaBlob);
+        setPreview({blob: mediaBlob, url});
         return () => URL.revokeObjectURL(url);
-    }, [media?.blob]);
+    }, [mediaBlob]);
     return <>
         <button className="reference-source-link" type="button" onClick={() => setOpen(true)}><ImageIcon
             size={14}/><span>{image.filename} · 本轮图片输入</span></button>

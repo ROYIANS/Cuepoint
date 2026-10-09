@@ -15,6 +15,10 @@ import type {
 import {memorySourceRefSchema, normalizeMemoryText, parseMemoryInput,} from "@/lib/memory/schema";
 import {createId, nowIso} from "@/lib/ids";
 
+// Complete read/write closure for the five manual commands, including ownership,
+// normalized duplicate/conflict checks, CAS and immutable history writes.
+const MANUAL_MEMORY_TABLES = [db.projects, db.projectMemories, db.projectMemoryVersions];
+
 export class MemoryConflictError extends Error {
     constructor(public readonly existingIds: string[]) {
         super("同主题已有不同内容，请查看后明确替换，或修改主题");
@@ -337,7 +341,7 @@ export async function createProjectMemory(
     options?: MemorySaveOptions,
 ) {
     const input = parseMemoryInput(raw);
-    return db.transaction("rw", db.tables, () =>
+    return db.transaction("rw", MANUAL_MEMORY_TABLES, () =>
         create(projectId, input, {kind: "manual"}, options),
     );
 }
@@ -362,7 +366,7 @@ export async function updateProjectMemory(
     expectedRevision: number,
 ): Promise<ProjectMemory> {
     const input = parseMemoryInput(raw);
-    return db.transaction("rw", db.tables, async () => {
+    return db.transaction("rw", MANUAL_MEMORY_TABLES, async () => {
         const row = await owned(projectId, id);
         revision(row, expectedRevision);
         if (row.status === "superseded")
@@ -396,7 +400,7 @@ export async function setProjectMemoryStatus(
     status: "active" | "disabled",
     expectedRevision: number,
 ): Promise<ProjectMemory> {
-    return db.transaction("rw", db.tables, async () => {
+    return db.transaction("rw", MANUAL_MEMORY_TABLES, async () => {
         if (status !== "active" && status !== "disabled")
             throw new Error("记忆状态无效");
         const row = await owned(projectId, id);
@@ -434,7 +438,7 @@ export async function replaceProjectMemory(
     newId: string,
     expected: { oldRevision: number; newRevision: number },
 ): Promise<ProjectMemory> {
-    return db.transaction("rw", db.tables, async () => {
+    return db.transaction("rw", MANUAL_MEMORY_TABLES, async () => {
         if (oldId === newId) throw new Error("不能替换自身");
         const old = await owned(projectId, oldId),
             next = await owned(projectId, newId);
@@ -479,7 +483,7 @@ export async function deleteProjectMemory(
     id: string,
     expectedRevision: number,
 ): Promise<void> {
-    await db.transaction("rw", db.tables, async () => {
+    await db.transaction("rw", MANUAL_MEMORY_TABLES, async () => {
         const row = await owned(projectId, id);
         revision(row, expectedRevision);
         await db.projectMemories.delete(id);

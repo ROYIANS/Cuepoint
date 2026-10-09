@@ -24,7 +24,7 @@ export type AudioGenerationStatus =
     | "saved"
     | "failed"
     | "target-conflict";
-export type AudioTaskVerifiedStatus = "pending" | "processing" | "completed" | "failed";
+type AudioTaskVerifiedStatus = "pending" | "processing" | "completed" | "failed";
 
 export interface AudioTaskObservation {
     taskId: string;

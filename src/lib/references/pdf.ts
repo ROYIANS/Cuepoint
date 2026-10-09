@@ -78,8 +78,8 @@ export async function parsePdfReference(buffer: ArrayBuffer, signal?: AbortSigna
         return parsed;
     } catch (error) {
         if (signal?.aborted) throw signal.reason;
-        if (error instanceof Error && error.name === "PasswordException") throw new Error("PDF 有密码保护，请解锁后重新上传");
-        if (error instanceof Error && error.name === "InvalidPDFException") throw new Error("PDF 已损坏或结构不受支持，请重新导出为文字型 PDF 后上传");
+        if (error instanceof Error && error.name === "PasswordException") throw new Error("PDF 有密码保护，请解锁后重新上传", {cause: error});
+        if (error instanceof Error && error.name === "InvalidPDFException") throw new Error("PDF 已损坏或结构不受支持，请重新导出为文字型 PDF 后上传", {cause: error});
         throw error;
     } finally {
         clearTimeout(timer);

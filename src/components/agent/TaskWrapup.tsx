@@ -3,7 +3,8 @@ import {MemoryEditor} from "@/components/memory/MemoryEditor";
 import type {MemoryCandidate, MemorySourceRef, ProjectMemory} from "@/domain/projectMemory";
 import {listMemoryCandidates} from "@/db/projectMemories";
 import {MemoryPromotion} from "@/components/memory/MemoryPromotion";
-import {useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
+import {useManualDraftDeparture, type ManualDraftState, type ManualDraftDeparture} from "@/lib/useManualDraftGuard";
 import {useLiveQuery} from "dexie-react-hooks";
 import {Link} from "@tanstack/react-router";
 import {
@@ -42,7 +43,9 @@ type Props = {
     modelSelection?: WrapupModelSelection;
     busy: boolean;
     onEditingChange: (value: boolean) => void;
-    onPendingChange: (value: boolean) => void
+    onPendingChange: (value: boolean) => void;
+    onDraftStateChange?: (state: ManualDraftState) => void;
+    requestDeparture?: ManualDraftDeparture
 };
 type Section = "results" | "decisions" | "lessons" | "unresolved";
 const SECTIONS: Array<{ key: Section; label: string; hint: string }> = [
@@ -124,7 +127,7 @@ function ReviewDocument({record, evidence, promotionPending, promotionDisabled, 
     </div>;
 }
 
-export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendingChange}: Props) {
+export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendingChange, onDraftStateChange, requestDeparture}: Props) {
     const [readAttempt, setReadAttempt] = useState(0);
     const [lastRead, setLastRead] = useState<{ taskId: string; data: TaskWrapupState }>();
     const read = useLiveQuery(async () => {
@@ -150,8 +153,19 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
         revision: number;
         content: WrapupContent;
         sources: WrapupEvidence[];
-        record: AgentTaskWrapup
+        record: AgentTaskWrapup;
+        baseline: string;
+        owner: {taskId: string; threadId: string; projectId: string}
     }>();
+    const draftRef = useRef(draft);
+    const lifetime = useRef({mounted: false, epoch: 0});
+    const taskOwner = useRef(task);
+    taskOwner.current = task;
+    useEffect(() => {
+        const session = lifetime.current;
+        session.mounted = true;
+        return () => {session.mounted = false; session.epoch++;};
+    }, []);
     const [candidate, setCandidate] = useState<{ epoch: number; projectId: string; value: MemoryCandidate }>();
     const [candidatePending, setCandidatePending] = useState(false);
     const promotion = useRef<{mounted: boolean; epoch: number; phase: "idle" | "preparing" | "editing"}>({
@@ -178,6 +192,7 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
         // The ref locks immediately, including callbacks from a render before disabled updates.
         const epoch = ++session.epoch;
         session.phase = "preparing";
+        onDraftStateChange?.(draftState());
         const frozenSource = structuredClone(source);
         setCandidatePending(true);
         const active = () => session.mounted && session.epoch === epoch && session.phase === "preparing" &&
@@ -198,6 +213,7 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
             if (session.mounted && session.epoch === epoch) {
                 if (session.phase === "preparing") session.phase = "idle";
                 setCandidatePending(false);
+                onDraftStateChange?.(draftState());
             }
         }
     }
@@ -222,48 +238,76 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
     const preparing = latest?.status === "preparing";
     const editable = !!currentRead?.data && !busy && !pending && !preparing && task.lifecycle === "open";
     const canGenerate = !!modelSelection?.connector.apiKey.trim() && !!modelSelection.model.trim();
+    const draftState = useCallback((): ManualDraftState => {
+        const dirty = !!draftRef.current && JSON.stringify(draftRef.current.content) !== draftRef.current.baseline;
+        const pending = lock.current || !!preparing || promotion.current.phase === "preparing";
+        // MemoryEditor owns its existing route blocker; local inspector departure still owns the candidate.
+        return {dirty: dirty || promotion.current.phase === "editing", pending: pending || memoryPending || candidatePending,
+            routeDirty: dirty, routePending: pending};
+    }, [preparing, memoryPending, candidatePending]);
     useEffect(() => {
         void recoverTaskWrapups(task.threadId).catch((failure: unknown) => setError(failure instanceof Error ? failure.message : "无法读取整理状态"));
     }, [task.threadId]);
+    const hasDraft = !!draft;
+    const hasCandidate = !!candidate;
     useEffect(() => {
-        onEditingChange(!!draft || !!candidate);
+        onEditingChange(hasDraft || hasCandidate);
         return () => onEditingChange(false);
-    }, [!!draft, !!candidate, onEditingChange]);
+    }, [hasDraft, hasCandidate, onEditingChange]);
     useEffect(() => {
         onPendingChange(pending || preparing || memoryPending || candidatePending);
+        onDraftStateChange?.(draftState());
         return () => onPendingChange(false);
-    }, [pending, preparing, memoryPending, candidatePending, onPendingChange]);
+    }, [pending, preparing, memoryPending, candidatePending, onPendingChange, onDraftStateChange, draftState]);
     useEffect(() => () => controller.current?.abort(), []);
-    useEffect(() => {
-        if (!draft) return;
-        const protect = (event: BeforeUnloadEvent) => {
-            event.preventDefault();
-            event.returnValue = "";
-        };
-        window.addEventListener("beforeunload", protect);
-        return () => window.removeEventListener("beforeunload", protect);
-    }, [draft]);
+    function publishDraft(next: typeof draft) {
+        draftRef.current = next;
+        setDraft(next);
+        onDraftStateChange?.(draftState());
+    }
+    const departure = useManualDraftDeparture(draftState().dirty, draftState().pending, () => {}, {
+        readState: draftState, route: !onDraftStateChange,
+    });
+
+    function requestLocalDeparture(leave: () => void) {
+        if (requestDeparture) requestDeparture(leave, () => {});
+        else departure.requestDeparture(leave);
+    }
 
     async function act(action: () => Promise<unknown>, success?: string) {
         if (lock.current || !currentRead?.data) return;
         lock.current = true;
+        const session = lifetime.current;
+        const epoch = ++session.epoch;
+        const owner = {taskId: task.id, threadId: task.threadId, projectId: task.projectId};
+        const active = () => session.mounted && session.epoch === epoch && taskOwner.current.id === owner.taskId &&
+            taskOwner.current.threadId === owner.threadId && taskOwner.current.projectId === owner.projectId;
         setPending(true);
+        onPendingChange(true);
+        onDraftStateChange?.(draftState());
         setError("");
         try {
             await action();
-            if (success) toast.success(success);
+            if (active() && success) toast.success(success);
         } catch (failure) {
-            setError(failure instanceof Error ? failure.message : "操作失败，请重试");
+            if (active()) setError(failure instanceof Error ? failure.message : "操作失败，请重试");
         } finally {
-            lock.current = false;
-            setPending(false);
+            if (active()) {
+                lock.current = false;
+                setPending(false);
+                onPendingChange(false);
+                onDraftStateChange?.(draftState());
+            }
         }
     }
 
     async function manual() {
         await act(async () => {
             const record = await createManualWrapup(task.id);
-            setDraft({
+            if (!lifetime.current.mounted || taskOwner.current.id !== record.taskId) return;
+            publishDraft({
+                baseline: JSON.stringify(record.content),
+                owner: {taskId: task.id, threadId: task.threadId, projectId: task.projectId},
                 id: record.id,
                 revision: record.revision,
                 content: structuredClone(record.content),
@@ -289,7 +333,9 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
     function edit() {
         if (latest) {
             setError("");
-            setDraft({
+            publishDraft({
+                baseline: JSON.stringify(latest.content),
+                owner: {taskId: task.id, threadId: task.threadId, projectId: task.projectId},
                 id: latest.id,
                 revision: latest.revision,
                 content: structuredClone(latest.content),
@@ -300,7 +346,7 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
     }
 
     function change(content: WrapupContent) {
-        setDraft((current) => current ? {...current, content} : current);
+        if (!lock.current && draftRef.current) publishDraft({...draftRef.current, content});
     }
 
     function currentSources(sources: WrapupEvidence[]) {
@@ -315,7 +361,7 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
     }
 
     const evidence = draft ? currentSources(draft.sources) : latest ? currentSources(latest.snapshot.evidence) : [];
-    return <div className="task-review" aria-label="任务验收总结">
+    return <div className="task-review" aria-label="任务验收总结">{departure.confirmation}
         <div className="task-review-heading">
             <div><span className="task-review-eyebrow">REVIEW & REFLECTION</span><h3>让这次工作，有一个清晰的收尾。</h3>
                 <p>检查交付，留下决策与经验，再确认完成。</p></div>
@@ -359,8 +405,10 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
                 {draft ? <form className="task-review-editor" onSubmit={(event) => {
                     event.preventDefault();
                     void act(async () => {
-                        await saveWrapup(task.id, draft.id, draft.content, draft.revision);
-                        setDraft(undefined);
+                        const owner = draftRef.current;
+                        if (!owner) return;
+                        await saveWrapup(owner.owner.taskId, owner.id, structuredClone(owner.content), owner.revision);
+                        if (lifetime.current.mounted && draftRef.current === owner) publishDraft(undefined);
                     }, "总结草稿已保存");
                 }}>
                     <label className="agent-task-field">总结<Textarea autoFocus value={draft.content.overview} rows={4}
@@ -436,10 +484,10 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
                                      } : item)
                                  })}/></div>)}</section>)}
                     <div className="task-review-editor-actions"><Button type="button" variant="ghost" disabled={pending}
-                                                                        onClick={() => {
-                                                                            setDraft(undefined);
+                                                                        onClick={() => requestLocalDeparture(() => {
+                                                                            publishDraft(undefined);
                                                                             setError("");
-                                                                        }}>取消编辑</Button><Button type="submit"
+                                                                        })}>取消编辑</Button><Button type="submit"
                                                                                                     disabled={!editable || !draft.content.overview.trim()}>{pending ? "保存中…" : "保存草稿"}</Button>
                     </div>
                 </form> : <>

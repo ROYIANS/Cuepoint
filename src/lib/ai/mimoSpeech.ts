@@ -60,7 +60,7 @@ async function readMimoResponse(response: Response, limit: number, key: string, 
     return {ok: true, data};
 }
 
-async function request(credentials: MimoCredentials, path: "/models" | "/chat/completions", body: unknown | undefined, options: MimoRequestOptions): Promise<{
+async function request(credentials: MimoCredentials, path: "/models" | "/chat/completions", body: unknown, options: MimoRequestOptions): Promise<{
     ok: true;
     data: unknown
 } | MimoFailure> {
@@ -160,7 +160,7 @@ export async function generateMimoSpeech(credentials: MimoCredentials, input: {
     }, options);
     if (!result.ok) return result;
     const body = result.data;
-    const choice = record(body) && Array.isArray(body.choices) ? body.choices[0] : undefined;
+    const choice: unknown = record(body) && Array.isArray(body.choices) ? body.choices[0] : undefined;
     if (!record(choice) || choice.finish_reason !== "stop" || !record(choice.message) || !record(choice.message.audio)) return protocol();
     const message = choice.message, encoded = choice.message.audio.data;
     if (typeof encoded !== "string" || !encoded || encoded.length % 4 !== 0 || !/^[A-Za-z0-9+/]*={0,2}$/.test(encoded)) return protocol();

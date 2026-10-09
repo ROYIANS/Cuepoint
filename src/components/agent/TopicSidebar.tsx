@@ -302,30 +302,19 @@ function TopicRow({
     onRename: () => void;
     onDelete: () => void;
 }) {
-    const [hovered, setHovered] = useState(false);
-
     return (
-        <div
-            className={active ? "agent-topic-row is-active" : "agent-topic-row"}
-            role="button"
-            tabIndex={0}
-            onClick={onSelect}
-            onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    onSelect();
-                }
-            }}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-        >
-            <span className="agent-topic-row-title">{thread.title}</span>
-            {hovered || active ? (
-                <span className="agent-topic-row-actions" onClick={(event) => event.stopPropagation()}>
-          <ActionIcon icon={Pencil} size="small" title="重命名" onClick={onRename}/>
-          <ActionIcon icon={Trash2} size="small" title="删除" onClick={onDelete}/>
-        </span>
-            ) : null}
+        <div className={active ? "agent-topic-row is-active" : "agent-topic-row"}>
+            <button type="button" className="agent-topic-row-title" onClick={onSelect} aria-current={active ? "true" : undefined}>
+                {thread.title}
+            </button>
+            <span className="agent-topic-row-actions">
+                <button type="button" role="button" className="agent-topic-row-action" title="重命名" aria-label="重命名" onClick={onRename}>
+                    <Pencil size={16} aria-hidden/>
+                </button>
+                <button type="button" role="button" className="agent-topic-row-action" title="删除" aria-label="删除" onClick={onDelete}>
+                    <Trash2 size={16} aria-hidden/>
+                </button>
+            </span>
         </div>
     );
 }

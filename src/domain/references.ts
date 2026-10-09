@@ -5,9 +5,9 @@ export interface ReferenceAttachment {
 }
 
 export type ReferenceKind = "image" | "text" | "pdf" | "docx";
-export type ReferenceStatus = "parsing" | "ready" | "partial" | "failed" | "unavailable";
+type ReferenceStatus = "parsing" | "ready" | "partial" | "failed" | "unavailable";
 
-export interface ReferenceCoverage {
+interface ReferenceCoverage {
     totalUnits: number;
     processedUnits: number;
     emptyUnits: number[];

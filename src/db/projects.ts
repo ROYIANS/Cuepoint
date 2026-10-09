@@ -23,10 +23,7 @@ import {emptyProject, emptyEpisode} from "./productionRecords";
 import {touch, PRODUCTION_TABLES, assertVideoProject} from "./productionShared";
 import {assertSlotMedia, deleteMediaIfOrphan} from "./media";
 
-export async function listProjects(): Promise<Project[]> {
-    const rows = await db.projects.toArray();
-    return rows.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
-}
+
 
 export async function createProject(
     name: string,

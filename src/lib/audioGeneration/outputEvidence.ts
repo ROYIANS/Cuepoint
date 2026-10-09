@@ -6,7 +6,7 @@ import type {AudioGenerationJob} from "@/domain/audioGeneration";
 import {getProjectKind} from "@/domain/types";
 import {targetRevision} from "@/lib/productionRevision";
 
-export interface AudioOutputEvidenceItem {
+interface AudioOutputEvidenceItem {
     key: string;
     title: string;
     takeId?: string;

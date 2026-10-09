@@ -1,6 +1,8 @@
 import {useNavigate} from "@tanstack/react-router";
 import {useLiveQuery} from "dexie-react-hooks";
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
+import type {Table} from "dexie";
+import {toast} from "sonner";
 import {CoverCard, CreateTile, LibraryGrid} from "@/components/studio/CoverCard";
 import {LibraryHeader} from "@/components/studio/LibraryHeader";
 import {
@@ -49,6 +51,28 @@ function styleCover(style: VisualStyle) {
 
 type LibraryKind = "character" | "scene" | "prop" | "style";
 
+type LibraryAsset = Pick<Character, "id" | "name" | "projectId" | "createdAt" | "updatedAt">;
+type LibraryRow = LibraryAsset & {source: object; mediaId?: string};
+
+async function readLibraryRows<T extends LibraryAsset>(table: Table<T, string>, cover: (asset: T) => string | undefined): Promise<LibraryRow[]> {
+    const assets = await table.where("projectId").equals(STUDIO_LIBRARY_ID).toArray();
+    return assets.map(asset => ({
+        id: asset.id, name: asset.name, projectId: asset.projectId,
+        createdAt: asset.createdAt, updatedAt: asset.updatedAt,
+        // Keep authored search fields on their original object; cover IDs are not searchable.
+        source: asset, mediaId: cover(asset),
+    }));
+}
+
+function readStudioLibrary(kind: LibraryKind): Promise<LibraryRow[]> {
+    switch (kind) {
+        case "character": return readLibraryRows(db.characters, characterCover);
+        case "scene": return readLibraryRows(db.scenes, sceneCover);
+        case "prop": return readLibraryRows(db.props, propCover);
+        case "style": return readLibraryRows(db.styles, styleCover);
+    }
+}
+
 const COPY: Record<
     LibraryKind,
     { title: string; hint: string; create: string; empty: string }
@@ -80,60 +104,94 @@ const COPY: Record<
 };
 
 export function CharacterLibraryPage() {
-    return <StudioLibrary kind="character"/>;
+    return <StudioLibrary key="character" kind="character"/>;
 }
 
 export function SceneLibraryPage() {
-    return <StudioLibrary kind="scene"/>;
+    return <StudioLibrary key="scene" kind="scene"/>;
 }
 
 export function PropLibraryPage() {
-    return <StudioLibrary kind="prop"/>;
+    return <StudioLibrary key="prop" kind="prop"/>;
 }
 
 export function StyleLibraryPage() {
-    return <StudioLibrary kind="style"/>;
+    return <StudioLibrary key="style" kind="style"/>;
 }
 
 function StudioLibrary({kind}: { kind: LibraryKind }) {
     const navigate = useNavigate();
+    const activeRef = useRef(true);
+    useEffect(() => {
+        activeRef.current = true;
+        return () => {activeRef.current = false;};
+    }, []);
+    const creatingRef = useRef(false);
+    const deletingRef = useRef(false);
+    const [creating, setCreating] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const [deleteError, setDeleteError] = useState("");
     const copy = COPY[kind];
-    const characters = useLiveQuery(() => db.characters.where("projectId").equals(STUDIO_LIBRARY_ID).toArray(), []) ?? [];
-    const scenes = useLiveQuery(() => db.scenes.where("projectId").equals(STUDIO_LIBRARY_ID).toArray(), []) ?? [];
-    const props = useLiveQuery(() => db.props.where("projectId").equals(STUDIO_LIBRARY_ID).toArray(), []) ?? [];
-    const styles = useLiveQuery(() => db.styles.where("projectId").equals(STUDIO_LIBRARY_ID).toArray(), []) ?? [];
+    const view = useLiveQuery(async () => ({kind, rows: await readStudioLibrary(kind)}), [kind]);
     const [query, setQuery] = useState("");
     const [sort, setSort] = useState<LibrarySort>("updated");
     const [pendingDelete, setPendingDelete] = useState<{ id: string; name: string }>();
 
-    const raw: { id: string; name: string; projectId: string; createdAt: string; updatedAt: string }[] =
-        kind === "character"
-            ? characters
-            : kind === "scene"
-                ? scenes
-                : kind === "prop"
-                    ? props
-                    : styles;
-    const items = filterAndSortLibrary(raw.filter((item) => matchesAssetSearch(item, query)), "", sort);
+    const raw = view?.kind === kind ? view.rows : [];
+    const items = filterAndSortLibrary(raw.filter((item) => matchesAssetSearch(item.source, query)), "", sort);
 
     async function handleCreate() {
-        if (kind === "character") {
-            const character = await addCharacter(STUDIO_LIBRARY_ID);
-            await navigate({to: "/characters/$characterId", params: {characterId: character.id}});
-            return;
+        if (creatingRef.current || deletingRef.current) return;
+        creatingRef.current = true;
+        setCreating(true);
+        try {
+            if (kind === "character") {
+                const character = await addCharacter(STUDIO_LIBRARY_ID);
+                if (!activeRef.current) return;
+                await navigate({to: "/characters/$characterId", params: {characterId: character.id}});
+                return;
+            }
+            if (kind === "scene") {
+                const scene = await addScene(STUDIO_LIBRARY_ID);
+                if (!activeRef.current) return;
+                await navigate({to: "/scenes/$sceneId", params: {sceneId: scene.id}});
+                return;
+            }
+            if (kind === "prop") {
+                const prop = await addProp(STUDIO_LIBRARY_ID);
+                if (!activeRef.current) return;
+                await navigate({to: "/props/$propId", params: {propId: prop.id}});
+                return;
+            }
+            const style = await addStyle(STUDIO_LIBRARY_ID);
+            if (!activeRef.current) return;
+            await navigate({to: "/styles/$styleId", params: {styleId: style.id}});
+        } catch (error) {
+            if (activeRef.current) toast.error(error instanceof Error && error.message ? error.message : "创建失败，请重试");
+        } finally {
+            creatingRef.current = false;
+            if (activeRef.current) setCreating(false);
         }
-        if (kind === "scene") {
-            const scene = await addScene(STUDIO_LIBRARY_ID);
-            await navigate({to: "/scenes/$sceneId", params: {sceneId: scene.id}});
-            return;
+    }
+
+    async function handleDelete() {
+        if (!pendingDelete || deletingRef.current || creatingRef.current) return;
+        const target = pendingDelete;
+        deletingRef.current = true;
+        setDeleting(true);
+        setDeleteError("");
+        try {
+            if (kind === "character") await deleteCharacter(target.id);
+            else if (kind === "scene") await deleteScene(target.id);
+            else if (kind === "prop") await deleteProp(target.id);
+            else await deleteStyle(target.id);
+            if (activeRef.current) setPendingDelete((current) => current === target ? undefined : current);
+        } catch (error) {
+            if (activeRef.current) setDeleteError(error instanceof Error && error.message ? error.message : "删除失败，请重试");
+        } finally {
+            deletingRef.current = false;
+            if (activeRef.current) setDeleting(false);
         }
-        if (kind === "prop") {
-            const prop = await addProp(STUDIO_LIBRARY_ID);
-            await navigate({to: "/props/$propId", params: {propId: prop.id}});
-            return;
-        }
-        const style = await addStyle(STUDIO_LIBRARY_ID);
-        await navigate({to: "/styles/$styleId", params: {styleId: style.id}});
     }
 
     function openItem(id: string) {
@@ -152,42 +210,29 @@ function StudioLibrary({kind}: { kind: LibraryKind }) {
         void navigate({to: "/styles/$styleId", params: {styleId: id}});
     }
 
-    function coverOf(id: string) {
-        if (kind === "character") {
-            const item = characters.find((character) => character.id === id);
-            return item ? characterCover(item) : undefined;
-        }
-        if (kind === "scene") {
-            const item = scenes.find((scene) => scene.id === id);
-            return item ? sceneCover(item) : undefined;
-        }
-        if (kind === "prop") {
-            const item = props.find((prop) => prop.id === id);
-            return item ? propCover(item) : undefined;
-        }
-        const item = styles.find((style) => style.id === id);
-        return item ? styleCover(item) : undefined;
-    }
-
     return (
         <div className="px-4 py-8 sm:px-10">
             <LibraryHeader title={copy.title} query={query} onQuery={setQuery} sort={sort} onSort={setSort}/>
             <p className="text-muted-foreground mt-3 max-w-xl text-[13px] leading-6">{copy.hint}</p>
             <div className="mt-8">
                 <LibraryGrid>
-                    <CreateTile label={copy.create} hint="留在工作室" onClick={() => void handleCreate()}/>
+                    <CreateTile label={creating ? "创建中…" : copy.create} hint="留在工作室" onClick={() => void handleCreate()}/>
                     {items.map((item) => (
                         <CoverCard
                             key={item.id}
                             title={item.name}
                             subtitle={`工作室 · ${formatUpdatedAt(item.updatedAt)}`}
-                            mediaId={coverOf(item.id)}
+                            mediaId={item.mediaId}
                             onOpen={() => openItem(item.id)}
                             actions={[
                                 {
                                     label: "删除",
                                     tone: "danger",
-                                    onSelect: () => setPendingDelete({id: item.id, name: item.name}),
+                                    onSelect: () => {
+                                        if (deletingRef.current || creatingRef.current) return;
+                                        setDeleteError("");
+                                        setPendingDelete({id: item.id, name: item.name});
+                                    },
                                 },
                             ]}
                         />
@@ -199,26 +244,27 @@ function StudioLibrary({kind}: { kind: LibraryKind }) {
 
             <AlertDialog
                 open={Boolean(pendingDelete)}
-                onOpenChange={(open) => !open && setPendingDelete(undefined)}
+                onOpenChange={(open) => {
+                    if (!open && !deletingRef.current) setPendingDelete(undefined);
+                }}
             >
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>{copy.empty}</AlertDialogTitle>
                         <AlertDialogDescription>确定删除「{pendingDelete?.name}」？</AlertDialogDescription>
                     </AlertDialogHeader>
+                    {deleteError && <p role="alert" className="text-destructive text-sm">{deleteError}</p>}
                     <AlertDialogFooter>
-                        <AlertDialogCancel>取消</AlertDialogCancel>
+                        <AlertDialogCancel disabled={deleting}>取消</AlertDialogCancel>
                         <AlertDialogAction
                             className="bg-destructive hover:bg-destructive/90"
-                            onClick={() => {
-                                if (!pendingDelete) return;
-                                if (kind === "character") void deleteCharacter(pendingDelete.id);
-                                else if (kind === "scene") void deleteScene(pendingDelete.id);
-                                else if (kind === "prop") void deleteProp(pendingDelete.id);
-                                else void deleteStyle(pendingDelete.id);
+                            disabled={deleting}
+                            onClick={(event) => {
+                                event.preventDefault();
+                                void handleDelete();
                             }}
                         >
-                            删除
+                            {deleting ? "删除中…" : "删除"}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

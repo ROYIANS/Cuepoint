@@ -206,7 +206,7 @@ function decodeCompletion(data: unknown, stream: boolean): {
     }
     if (!Array.isArray(data.choices)) throw new Error("模型响应缺少 choices");
     if (stream && data.choices.length === 0 && record(data.usage)) return {delta: {}};
-    const choice = data.choices[0];
+    const choice: unknown = data.choices[0];
     if (!record(choice)) throw new Error("模型响应缺少有效的回复");
     const source = stream ? (choice.delta ?? choice.message) : choice.message;
     if (!record(source)) throw new Error("模型回复格式无效");

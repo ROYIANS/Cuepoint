@@ -54,7 +54,7 @@ export function parseModelMetadata(value: unknown): ChatModelMetadata | undefine
 
 /** Duplicate provider rows can describe routes with different limits: use the smallest. */
 export function collectModelMetadata(entries: readonly (readonly [string, ChatModelMetadata])[]): Record<string, ChatModelMetadata> {
-    const result: Record<string, ChatModelMetadata> = Object.create(null);
+    const result = Object.create(null) as Record<string, ChatModelMetadata>;
     for (const [id, metadata] of entries) {
         const previous = result[id];
         const contextWindow = previous?.contextWindow && metadata.contextWindow ? Math.min(previous.contextWindow, metadata.contextWindow) : previous?.contextWindow ?? metadata.contextWindow;

@@ -1,3 +1,4 @@
+import {isLegacyScalar, recoverLegacyIds, recoverLegacyText} from "./legacyScalar";
 import type {ReferenceAttachment} from "./references";
 import type {AgentSelectedReferences} from "./referenceInput";
 import type {ContextPolicy} from "./context";
@@ -56,7 +57,7 @@ export type ShotColumnId =
 
 export type ShotWorkspaceView = "design" | "media";
 
-export function normalizeShotWorkspaceView(raw: unknown): ShotWorkspaceView {
+function normalizeShotWorkspaceView(raw: unknown): ShotWorkspaceView {
     return raw === "media" ? "media" : "design";
 }
 
@@ -109,8 +110,7 @@ export function normalizeShotFilters(raw: unknown): ShotFilters {
             .filter((value, index, list) => list.indexOf(value) === index)
         : [];
     const beatIds = Array.isArray(record.beatIds)
-        ? record.beatIds
-            .map((value) => String(value))
+        ? recoverLegacyIds(record.beatIds)
             .filter((value, index, list) => list.indexOf(value) === index)
         : [];
     const gaps = Array.isArray(record.gaps)
@@ -139,7 +139,7 @@ export interface ShotSettings {
     filters: ShotFilters;
 }
 
-export interface ColumnSettings {
+interface ColumnSettings {
     visible: ShotColumnId[];
 }
 
@@ -421,7 +421,7 @@ export function normalizeSeriesStory(raw: unknown): ProjectStory {
     const story = emptySeriesStory();
     if (!raw || typeof raw !== "object") return story;
     const record = raw as Record<string, unknown>;
-    story.logline = String(record.logline ?? "");
+    story.logline = recoverLegacyText(record.logline);
     return story;
 }
 
@@ -429,24 +429,23 @@ export function emptyEpisodeStory(): EpisodeStory {
     return {logline: "", script: "", beats: []};
 }
 
-export function normalizeStoryBeat(raw: unknown, index: number): StoryBeat {
+function normalizeStoryBeat(raw: unknown, index: number): StoryBeat {
     const beat =
         raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
     const normalized: StoryBeat = {
-        id: String(beat.id ?? `beat_${index}`),
-        title: String(beat.title ?? ""),
-        content: String(beat.content ?? ""),
-        characterIds: Array.isArray(beat.characterIds)
-            ? beat.characterIds.map((id) => String(id))
-            : [],
-        sceneId: beat.sceneId ? String(beat.sceneId) : undefined,
-        timeOfDay: String(beat.timeOfDay ?? ""),
+        id: recoverLegacyText(beat.id, `beat_${index}`),
+        title: recoverLegacyText(beat.title),
+        content: recoverLegacyText(beat.content),
+        characterIds: recoverLegacyIds(beat.characterIds),
+        sceneId: beat.sceneId && isLegacyScalar(beat.sceneId) ? String(beat.sceneId) : undefined,
+        timeOfDay: recoverLegacyText(beat.timeOfDay),
     };
     if (beat.scriptRange && typeof beat.scriptRange === "object") {
         const range = beat.scriptRange as Record<string, unknown>;
-        const start = Number(range.start);
-        const end = Number(range.end);
-        const excerpt = String(range.excerpt ?? "");
+        const start = isLegacyScalar(range.start) ? Number(range.start) : NaN;
+        const end = isLegacyScalar(range.end) ? Number(range.end) : NaN;
+        // Associations require authored string evidence, never a manufactured excerpt.
+        const excerpt = typeof range.excerpt === "string" ? range.excerpt : "";
         if (
             Number.isInteger(start) &&
             Number.isInteger(end) &&
@@ -464,21 +463,27 @@ export function normalizeEpisodeStory(raw: unknown): EpisodeStory {
     const story = emptyEpisodeStory();
     if (!raw || typeof raw !== "object") return story;
     const record = raw as Record<string, unknown>;
-    story.logline = String(record.logline ?? "");
-    story.script = String(record.script ?? "");
-    story.beats = Array.isArray(record.beats)
-        ? record.beats.map((beat, index) => {
-            const normalized = normalizeStoryBeat(beat, index);
-            if (
-                normalized.scriptRange &&
-                story.script.slice(normalized.scriptRange.start, normalized.scriptRange.end) !==
-                normalized.scriptRange.excerpt
-            ) {
-                delete normalized.scriptRange;
-            }
-            return normalized;
-        })
-        : [];
+    story.logline = recoverLegacyText(record.logline);
+    story.script = recoverLegacyText(record.script);
+    const beats: unknown[] = Array.isArray(record.beats) ? record.beats : [];
+    const reservedIds = new Set(beats.map((beat, index) => normalizeStoryBeat(beat, index).id));
+    story.beats = beats.map((beat, index) => {
+        const normalized = normalizeStoryBeat(beat, index);
+        const rawId = beat && typeof beat === "object" ? (beat as Record<string, unknown>).id : undefined;
+        if (!isLegacyScalar(rawId)) {
+            let suffix = 0;
+            while (reservedIds.has(normalized.id)) normalized.id = `beat_${index}_recovered_${++suffix}`;
+            reservedIds.add(normalized.id);
+        }
+        if (
+            normalized.scriptRange &&
+            story.script.slice(normalized.scriptRange.start, normalized.scriptRange.end) !==
+            normalized.scriptRange.excerpt
+        ) {
+            delete normalized.scriptRange;
+        }
+        return normalized;
+    });
     return story;
 }
 
@@ -496,9 +501,9 @@ export function normalizeSetting(raw: unknown): WorldSetting {
     const setting = emptySetting();
     if (!raw || typeof raw !== "object") return setting;
     const record = raw as Record<string, unknown>;
-    setting.worldview = String(record.worldview ?? "");
-    setting.background = String(record.background ?? "");
-    setting.rules = String(record.rules ?? "");
+    setting.worldview = recoverLegacyText(record.worldview);
+    setting.background = recoverLegacyText(record.background);
+    setting.rules = recoverLegacyText(record.rules);
     return setting;
 }
 

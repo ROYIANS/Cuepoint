@@ -204,7 +204,7 @@ function StoryEditor({
         if (target < 0 || target >= beats.length) return;
         const previous = beats.map((beat) => beat.id);
         const next = [...previous];
-        [next[index], next[target]] = [next[target]!, next[index]!];
+        [next[index], next[target]] = [next[target], next[index]];
         await reorderBeats(episode.id, next);
         registerUndo({
             label: "已调整场次顺序",

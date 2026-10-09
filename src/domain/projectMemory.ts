@@ -1,6 +1,6 @@
 export type MemoryCategory =
     "convention" | "preference" | "decision" | "lesson";
-export type MemoryStatus =
+type MemoryStatus =
     "active" | "disabled" | "superseded" | "pending_review";
 
 export interface MemoryInput {
@@ -23,7 +23,7 @@ export interface MemorySourceRef {
     itemText: string;
 }
 
-export interface MemoryEvidence {
+interface MemoryEvidence {
     id: string;
     label: string;
     body: string;

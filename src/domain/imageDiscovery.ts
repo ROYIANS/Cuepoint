@@ -1,5 +1,5 @@
 export type ImageEntityKind = 'shot' | 'character' | 'scene' | 'prop' | 'style';
-export type ImageSourceKind = 'current' | 'reference' | 'candidate';
+type ImageSourceKind = 'current' | 'reference' | 'candidate';
 export type ImageSourceLocator =
     | {
     kind: 'slot';

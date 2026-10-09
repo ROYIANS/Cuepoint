@@ -6,7 +6,7 @@ import {interruptThreadRuns} from "@/db/agentRuns";
 export interface ThreadLockManager {
     request<T>(name: string, options: {
         ifAvailable: true
-    }, callback: (lock: unknown | null) => Promise<T>): Promise<T>;
+    }, callback: (lock: unknown) => Promise<T>): Promise<T>;
 }
 
 function browserLocks(): ThreadLockManager {

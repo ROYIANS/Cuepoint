@@ -4,7 +4,7 @@ import {useLiveQuery} from "dexie-react-hooks";
 import {Check, ChevronDown, Library, Mic, Plus, Square, Upload, X} from "lucide-react";
 import {db} from "@/db/database";
 import {addAudioTake} from "@/db/audio";
-import {useMaterialInProject} from "@/db/materials";
+import {adoptMaterialInProject} from "@/db/materials";
 import type {AudioTake} from "@/domain/audio";
 import {audioBufferMetadata, decodeAudioBlob} from "@/lib/audio/engine";
 import {listMicrophones, MicrophoneRecorder} from "@/lib/audio/recorder";
@@ -239,7 +239,7 @@ function AudioLibrary({projectId, segmentId, onSaved}: {
                     setBusy(material.id);
                     setError("");
                     void (async () => {
-                        const use = await useMaterialInProject(material.id, projectId);
+                        const use = await adoptMaterialInProject(material.id, projectId);
                         const media = await db.media.get(use.targetId);
                         if (!media)
                             throw new Error("素材文件已不存在");

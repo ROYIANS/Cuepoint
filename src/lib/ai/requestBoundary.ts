@@ -19,7 +19,7 @@ export async function requestOnce(url: string, init: RequestWire, options: Reque
     });
 }
 
-export type JsonReadPolicy =
+type JsonReadPolicy =
     | {kind: "native-json"}
     | {kind: "bounded-json"; maxBytes: number; fatalUtf8: boolean};
 export type HttpJsonReadPolicy = {success: JsonReadPolicy; failure: JsonReadPolicy};

@@ -1,3 +1,2 @@
-// Named exports keep Rollup from retaining the entire package namespace at the
-// dynamic boundary; ModelIcon/ProviderIcon still use the library's own mappings.
-export {ModelIcon, ProviderIcon} from "@lobehub/icons";
+// Data-only complete matching plus demand-loaded publisher brand compounds.
+export {ModelIcon, ProviderIcon} from "./DemandModelIcons";

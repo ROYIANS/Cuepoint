@@ -11,7 +11,7 @@ import {
 } from "@/domain/types";
 import {slotMediaIds} from "@/domain/slot";
 import {PRODUCTION_TABLES, touch} from "./productionShared";
-import {deleteMediaIfOrphan, assertSlotMedia} from "./media";
+import {deleteMediaIfOrphans, assertSlotMedia} from "./media";
 
 /** Release only unused project copies. Failure rolls back both the binding and media. */
 export async function releaseMaterialUse(useId: string): Promise<void> {
@@ -24,15 +24,15 @@ export async function releaseMaterialUse(useId: string): Promise<void> {
         }
         await db.materialUses.delete(useId);
         const otherUses = await db.materialUses.toArray();
-        for (const mediaId of use.mediaIds) {
-            if (otherUses.some((other) => other.mediaIds.includes(mediaId))) {
-                throw new Error("此副本仍有其他素材使用记录，暂时不能移除");
-            }
-            await db.media.update(mediaId, {libraryRetained: false});
-            await deleteMediaIfOrphan(mediaId);
-            if (await db.media.get(mediaId)) {
-                throw new Error("此副本仍被项目封面、创作设定、镜头或任务历史使用，暂时不能移除");
-            }
+        const mediaIds = [...new Set(use.mediaIds)];
+        const otherMediaIds = new Set(otherUses.flatMap((other) => other.mediaIds));
+        if (mediaIds.some((mediaId) => otherMediaIds.has(mediaId))) {
+            throw new Error("此副本仍有其他素材使用记录，暂时不能移除");
+        }
+        for (const mediaId of mediaIds) await db.media.update(mediaId, {libraryRetained: false});
+        await deleteMediaIfOrphans(mediaIds);
+        if ((await db.media.bulkGet(mediaIds)).some((record) => record !== undefined)) {
+            throw new Error("此副本仍被项目封面、创作设定、镜头或任务历史使用，暂时不能移除");
         }
         await db.materialEvents.add({
             id: createId("mev"), materialId: use.materialId,

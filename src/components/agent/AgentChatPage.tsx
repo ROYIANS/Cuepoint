@@ -7,6 +7,7 @@ import {pauseThreadGeneration} from "@/lib/agent/generationBatchRuntime";
 import {useReferenceDraft} from "./useReferenceDraft";
 import {TaskBoard} from "./TaskBoard";
 import {TaskInspector} from "./TaskInspector";
+import type {ManualDraftDeparture} from "@/lib/useManualDraftGuard";
 import {AgentActivityNavigationProvider} from "./AgentActivityNavigation";
 import {AgentComposerAttention} from "./AgentComposerAttention";
 import {createAgentTaskForThread, setAgentTaskLifecycle} from "@/db/agentTasks";
@@ -17,7 +18,7 @@ import type {RunAction} from "./AgentRunDetails";
 import {Link, useNavigate} from "@tanstack/react-router";
 import {useLiveQuery} from "dexie-react-hooks";
 import {Button, Empty, Flexbox} from "@lobehub/ui";
-import {useCallback, useEffect, useMemo, useState,} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState,} from "react";
 import {toast} from "sonner";
 import {ChatWorkspace} from "@/components/agent/ChatWorkspace";
 import type {ComposerProps} from "@/components/agent/composerTypes";
@@ -60,10 +61,13 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     const boardRuns = useLiveQuery(() => view === "tasks" ? db.agentRuns.toArray() : Promise.resolve([] as AgentRun[]), [view]);
     const activeTask = tasks?.find((task) => task.threadId === threadId);
     const [taskInspectorOpen, setTaskInspectorOpen] = useState(false);
-    const openBoard = () => {
-        setTaskInspectorOpen(false);
-        void navigate({to: "/agent/tasks"});
-    };
+    const taskDeparture = useRef<ManualDraftDeparture | undefined>(undefined);
+    const registerTaskDeparture = useCallback((request: ManualDraftDeparture | undefined) => {taskDeparture.current = request;}, []);
+    const leaveTask = useCallback((leave: () => void) => {
+        if (taskDeparture.current) taskDeparture.current(leave);
+        else leave();
+    }, []);
+    const openBoard = () => leaveTask(() => {void navigate({to: "/agent/tasks"});});
     const connectors = useLiveQuery(() => db.connectors.toArray(), []);
     const projects = useLiveQuery(() => db.projects.orderBy("updatedAt").reverse().filter((project) => project.id !== STUDIO_LIBRARY_ID).toArray(), []);
     const activeThreadId = threadId;
@@ -72,6 +76,12 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     const [renameTarget, setRenameTarget] = useState<ChatThread>();
     const [renameValue, setRenameValue] = useState("");
     const [deleteTarget, setDeleteTarget] = useState<ChatThread>();
+    const deleteLock = useRef<string | undefined>(undefined);
+    const [deleting, setDeleting] = useState(false);
+    const currentThread = useRef(threadId);
+    currentThread.current = threadId;
+    const mounted = useRef(true);
+    useEffect(() => {mounted.current = true; return () => {mounted.current = false;};}, []);
     const {sending, abortRef, executionThreadRef, sendLockRef, acquire: acquireExecution, release: releaseExecution} = useChatExecutionSession(activeThreadId);
 
     useEffect(() => {
@@ -85,15 +95,18 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     }, [activeThreadId]);
 
     const loaded = threads !== undefined && connectors !== undefined && projects !== undefined;
-    const threadList = threads ?? [];
-    const connectorList = connectors ?? [];
+    const threadList = useMemo(() => threads ?? [], [threads]);
+    const connectorList = useMemo(() => connectors ?? [], [connectors]);
 
     const openThread = useCallback(
         (id: Id) => {
-            if (executionThreadRef.current !== id) abortRef.current?.abort();
-            void navigate({to: "/agent/$threadId", params: {threadId: id}});
+            if (id === activeThreadId) return;
+            leaveTask(() => {
+                if (executionThreadRef.current !== id) abortRef.current?.abort();
+                void navigate({to: "/agent/$threadId", params: {threadId: id}});
+            });
         },
-        [abortRef, executionThreadRef, navigate],
+        [abortRef, executionThreadRef, navigate, leaveTask, activeThreadId],
     );
 
     const routedThread = useLiveQuery(
@@ -176,22 +189,28 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     const showHome = !activeThreadId && view !== "tasks";
     const probingModels = Boolean(selectedConnector && (!catalogMatches || modelCatalog?.status === "loading"));
 
+    // Discovery follows connection identity, independent of unrelated connector metadata updates.
+    const discoveryId = selectedConnector?.id;
+    const discoveryDefinitionId = selectedConnector?.definitionId;
+    const discoveryBaseUrl = selectedConnector?.baseUrl;
+    const discoveryApiKey = selectedConnector?.apiKey;
     useEffect(() => {
-        if (!selectedConnector) return;
+        if (discoveryDefinitionId === undefined || discoveryBaseUrl === undefined || discoveryApiKey === undefined) return;
+        const connector = {id: discoveryId, definitionId: discoveryDefinitionId, baseUrl: discoveryBaseUrl, apiKey: discoveryApiKey};
         let cancelled = false;
         const controller = new AbortController();
         setModelCatalog((previous) => ({
-            connector: selectedConnector,
+            connector,
             status: "loading",
             models: [],
-            incompatibleModels: sameChatModelConnector(selectedConnector, previous?.connector)
+            incompatibleModels: sameChatModelConnector(connector, previous?.connector)
                 ? previous?.incompatibleModels ?? [] : [],
         }));
-        void discoverConnectorChatModels(selectedConnector, {signal: controller.signal})
+        void discoverConnectorChatModels(connector, {signal: controller.signal})
             .then((result) => {
                 if (cancelled) return;
                 setModelCatalog((previous) => ({
-                    connector: selectedConnector,
+                    connector,
                     status: result.ok ? "ready" : "error",
                     models: result.ok ? result.models : [],
                     metadata: result.ok ? result.metadata : undefined,
@@ -202,12 +221,11 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
             cancelled = true;
             controller.abort();
         };
-    }, [selectedConnector?.id, selectedConnector?.definitionId, selectedConnector?.baseUrl, selectedConnector?.apiKey]);
+    }, [discoveryId, discoveryDefinitionId, discoveryBaseUrl, discoveryApiKey]);
 
-    const handleNewTopic = useCallback(() => {
-        if (abortRef.current) {
-            abortRef.current.abort();
-        }
+    const handleNewTopic = useCallback(() => leaveTask(() => {
+        if (deleteLock.current) return;
+        abortRef.current?.abort();
         void (async () => {
             const thread = await createChatThread({
                 connectorId: selectedConnector?.id,
@@ -217,7 +235,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
             });
             openThread(thread.id);
         })().catch((error: unknown) => toast.error(error instanceof Error ? error.message : "创建对话失败"));
-    }, [abortRef, openThread, selectedConnector?.id, modelValue, projectId, taskMode]);
+    }), [abortRef, openThread, selectedConnector?.id, modelValue, projectId, taskMode, leaveTask]);
 
     const handleRenameThread = useCallback((thread: ChatThread) => {
         setRenameTarget(thread);
@@ -233,20 +251,39 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     }, [renameTarget, renameValue]);
 
     const handleDeleteThread = useCallback((thread: ChatThread) => {
+        if (deleteLock.current) return;
         setDeleteTarget(thread);
     }, []);
 
-    const commitDelete = useCallback(async () => {
-        if (!deleteTarget) return;
-        if (abortRef.current && executionThreadRef.current === deleteTarget.id) {
-            abortRef.current.abort();
-        }
-        await deleteChatThread(deleteTarget.id);
-        if (activeThreadId === deleteTarget.id) {
-            void navigate({to: "/agent", replace: true});
-        }
-        setDeleteTarget(undefined);
-    }, [abortRef, activeThreadId, deleteTarget, executionThreadRef, navigate]);
+    const commitDelete = useCallback(() => {
+        const target = deleteTarget;
+        if (!target || deleteLock.current) return;
+        const remove = () => {
+            if (deleteLock.current || !mounted.current) return;
+            deleteLock.current = target.id;
+            setDeleteTarget(target);
+            setTaskInspectorOpen(false);
+            setDeleting(true);
+            void (async () => {
+                try {
+                    if (abortRef.current && executionThreadRef.current === target.id) abortRef.current.abort();
+                    await deleteChatThread(target.id);
+                    if (!mounted.current) return;
+                    if (currentThread.current === target.id) void navigate({to: "/agent", replace: true});
+                    setDeleteTarget(current => current?.id === target.id ? undefined : current);
+                } catch (error) {
+                    if (mounted.current) toast.error(error instanceof Error ? error.message : "删除对话失败，请重试");
+                } finally {
+                    deleteLock.current = undefined;
+                    if (mounted.current) setDeleting(false);
+                }
+            })();
+        };
+        if (currentThread.current === target.id) {
+            setDeleteTarget(undefined);
+            leaveTask(remove);
+        } else remove();
+    }, [abortRef, deleteTarget, executionThreadRef, navigate, leaveTask]);
 
     const handleStop = useCallback(() => {
         abortRef.current?.abort();
@@ -530,7 +567,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                                } : undefined} task={activeTask}
                                runs={(runs ?? []).filter((run) => run.threadId === activeThreadId)}
                                messages={(messages ?? []).filter((message) => message.threadId === activeThreadId)}
-                               open={taskInspectorOpen} onOpenChange={setTaskInspectorOpen} onOpenBoard={openBoard}/>}
+                               open={taskInspectorOpen} onOpenChange={setTaskInspectorOpen} onOpenBoard={openBoard} onDepartureReady={registerTaskDeparture}/>}
 
             <Dialog
                 open={Boolean(renameTarget)}
@@ -562,7 +599,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
 
             <AlertDialog
                 open={Boolean(deleteTarget)}
-                onOpenChange={(open) => !open && setDeleteTarget(undefined)}
+                onOpenChange={(open) => {if (!open && !deleteLock.current) setDeleteTarget(undefined);}}
             >
                 <AlertDialogContent>
                     <AlertDialogHeader>
@@ -572,12 +609,13 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>取消</AlertDialogCancel>
+                        <AlertDialogCancel disabled={deleting}>取消</AlertDialogCancel>
                         <AlertDialogAction
                             className="bg-destructive hover:bg-destructive/90"
-                            onClick={() => void commitDelete()}
+                            disabled={deleting}
+                            onClick={(event) => {event.preventDefault(); commitDelete();}}
                         >
-                            删除
+                            {deleting ? "删除中…" : "删除"}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

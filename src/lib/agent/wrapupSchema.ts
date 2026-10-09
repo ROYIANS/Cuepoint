@@ -3,7 +3,7 @@ import type {WrapupContent, WrapupSnapshot} from "@/domain/agentTaskWrapup";
 
 const refs = z.array(z.string().min(1).max(240)).max(12);
 const item = z.object({text: z.string().trim().min(1).max(2400), sourceIds: refs}).strict();
-export const wrapupContentSchema = z.object({
+const wrapupContentSchema = z.object({
     overview: z.string().trim().max(4000),
     results: z.array(item).max(30),
     acceptance: z.array(z.object({

@@ -23,7 +23,7 @@ import {
     assertCompleteOrder
 } from "./productionShared";
 import {emptyEpisode} from "./productionRecords";
-import {deleteMediaIfOrphan} from "./media";
+import {deleteMediaIfOrphans} from "./media";
 
 export async function listEpisodes(projectId: Id): Promise<Episode[]> {
     const rows = await db.episodes.where("projectId").equals(projectId).toArray();
@@ -124,7 +124,7 @@ export async function deleteEpisode(id: Id): Promise<DeletedEpisodeSnapshot | un
         const remaining = await listEpisodes(episode.projectId);
         await Promise.all(remaining.map((item, order) => db.episodes.update(item.id, {order})));
         await touchProject(episode.projectId);
-        for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
+        await deleteMediaIfOrphans(mediaIds);
         return {episode, shots, media};
     });
 }
@@ -290,7 +290,7 @@ export async function duplicateBeat(
         const story = normalizeEpisodeStory(episode.story);
         const sourceIndex = story.beats.findIndex((beat) => beat.id === beatId);
         if (sourceIndex < 0) throw new Error("场次不存在");
-        const source = story.beats[sourceIndex]!;
+        const source = story.beats[sourceIndex];
         const beat: StoryBeat = structuredClone({
             ...source,
             id: createId("beat"),

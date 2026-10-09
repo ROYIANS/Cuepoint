@@ -1,0 +1,7 @@
+{
+  "sourcePath": "src/lib/debouncedDraft.ts",
+  "snapshotPath": "tests/fixtures/e07-draft-rebase/debouncedDraft-before.ts",
+  "sha256": "13b31cb3c090df4a3c5ad46a1a8b6897c58c109bf8d7df4e3da0b1ee78e1eebd",
+  "capturedOn": "2026-10-09",
+  "meaning": "Exact main pre-fix bytes with dependency-only rebase effect; permanent counterexample. Browser regression replaces only the current debouncedDraft module body with these original bytes. All imports and actual current TextDraftField/React/Dexie writers remain shared. No task/archive runtime dependency."
+}

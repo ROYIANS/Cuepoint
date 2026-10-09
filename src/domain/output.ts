@@ -8,7 +8,7 @@ import {
 export {
     IMAGE_RATIOS, IMAGE_EXT_RATIOS, VIDEO_RATIOS, IMAGE_RESOLUTIONS,
     IMAGE_QUALITIES, IMAGE_EXT_VERSIONS, VIDEO_RESOLUTIONS, APIMART_IMAGE_MODELS,
-    isApimartImageModel, isApimartImage25, isApimartImageExt, apimartImageSizes,
+    isApimartImageModel, isApimartImage25, isApimartImageExt,
     type ApimartImageModel,
 } from "./generationCapabilities";
 

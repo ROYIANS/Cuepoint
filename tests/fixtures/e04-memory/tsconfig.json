@@ -1,0 +1,5 @@
+{
+  "extends": "../../../tsconfig.app.json",
+  "compilerOptions": {"incremental": false, "tsBuildInfoFile": null},
+  "include": ["./main.ts", "../../e04MemoryTransactions.test.ts"]
+}

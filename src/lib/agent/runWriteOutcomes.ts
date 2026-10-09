@@ -27,7 +27,7 @@ function permitsEntry(name: string, entry: WriteReceiptEntry): boolean {
     return name === "music_update_work" && entry.kind === "music_work" && entry.operation === "updated";
 }
 
-export interface RunWriteOutcome extends WriteReceiptEntry {
+interface RunWriteOutcome extends WriteReceiptEntry {
     callId: string
 }
 

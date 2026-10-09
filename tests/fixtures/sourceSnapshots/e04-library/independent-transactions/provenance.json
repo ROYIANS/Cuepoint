@@ -1,0 +1,7 @@
+{
+  "meaning": "Earlier E04 SS09 implementation with one implicit readonly transaction per distinct fallback owner; immutable comparator for actual native transaction/request counts. Shared alias imports use the same current database instance.",
+  "source": "src/lib/studioLibraryQueries.ts",
+  "snapshot": "tests/fixtures/sourceSnapshots/e04-library/independent-transactions/studioLibraryQueries.ts",
+  "sha256": "5cb355c2f0ee97297ea3f894f4a0c1e0265f8b493533fcab51155a9a7c2a4f50",
+  "preservedCapture": ".trellis/tasks/10-09-src-remediation-e/research/e04-library/native-final/sources/src/lib/studioLibraryQueries.ts"
+}

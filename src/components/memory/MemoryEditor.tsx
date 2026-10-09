@@ -29,7 +29,7 @@ import {readMemory} from "./readMemory";
 import {CATEGORY_LABELS} from "./memoryLabels";
 import "./memory.css";
 
-export const EMPTY_MEMORY: MemoryInput = {
+const EMPTY_MEMORY: MemoryInput = {
     category: "convention",
     title: "",
     topicKey: "",

@@ -22,7 +22,7 @@ export function referenceSelectionCharacterBudget(capacity?: number): number {
     return capacity ? Math.min(12000, Math.floor(capacity * 0.1)) : 12000;
 }
 
-export function parseReferenceAttachments(value: unknown): ReferenceAttachment[] {
+function parseReferenceAttachments(value: unknown): ReferenceAttachment[] {
     return z.array(referenceAttachmentSchema).max(10).refine((rows) => new Set(rows.map((row) => row.referenceId)).size === rows.length, "不能重复附加资料").parse(value);
 }
 

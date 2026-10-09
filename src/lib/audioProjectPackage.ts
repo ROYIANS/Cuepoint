@@ -19,8 +19,8 @@ export {parseAudioPackage, remapAudioPackage} from "./packages/audioPackageCodec
 export type {AudioPackage} from "./packages/audioPackageCodec";
 
 export async function snapshotAudioPackage(projectId: string): Promise<AudioPackage> {
-    const entries = await Promise.all(AUDIO_TABLES.map(async (table) => [table.name, await table.where("projectId").equals(projectId).toArray()]));
-    const raw = Object.fromEntries(entries);
+    const entries = await Promise.all(AUDIO_TABLES.map(async (table): Promise<[string, unknown]> => [table.name, await table.where("projectId").equals(projectId).toArray()]));
+    const raw: Record<string, unknown> = Object.fromEntries(entries);
     raw.audioGenerationJobs = (await db.audioGenerationJobs.where("projectId").equals(projectId).toArray()).map((job) => ({
         ...job,
         source: {kind: "manual"},

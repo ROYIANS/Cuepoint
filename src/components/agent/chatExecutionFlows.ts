@@ -63,7 +63,7 @@ export async function executeNewChatMessage({submitted, content, attachments, re
                 try {
                     await navigate({to: "/agent/$threadId", params: {threadId: targetThread.id}});
                 } catch (error) {
-                    if (!transfer.restore()) throw new Error(`打开话题失败，发送草稿保留在「${targetThread.title}」中，请打开后重试`);
+                    if (!transfer.restore()) throw new Error(`打开话题失败，发送草稿保留在「${targetThread.title}」中，请打开后重试`, {cause: error});
                     throw error;
                 }
             }

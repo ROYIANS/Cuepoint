@@ -29,12 +29,14 @@ const BASE_COLUMNS = new Set<ShotColumnId>([
     "notes",
 ]);
 
-export interface EpisodeDeliveryColumn {
+const DELIVERY_TEXT_FIELDS = ["category", "sound", "emotion", "cameraAngle", "cameraGear", "focalLength", "sceneCloseup"] as const;
+
+interface EpisodeDeliveryColumn {
     id: string;
     label: string;
 }
 
-export interface EpisodeDeliveryRow {
+interface EpisodeDeliveryRow {
     shot: Shot;
     order: number;
     shotNumber: string;
@@ -82,14 +84,17 @@ export function deriveEpisodeDelivery(input: {
         (column) =>
             normalizeVisibleColumns(project.columnSettings.visible).includes(column.id) &&
             !BASE_COLUMNS.has(column.id),
-    ).map(({id, label}) => ({id, label}));
+    ).flatMap((column) => {
+        const id = DELIVERY_TEXT_FIELDS.find((field) => field === column.id);
+        return id === undefined ? [] : [{id, label: column.label}];
+    });
 
     const rows = [...input.shots]
         .filter((shot) => shot.projectId === project.id && shot.episodeId === episode.id)
         .sort((left, right) => left.order - right.order)
         .map((shot, index): EpisodeDeliveryRow => {
             const values = Object.fromEntries(
-                columns.map((column) => [column.id, String(shot[column.id as keyof Shot] ?? "")]),
+                columns.map((column) => [column.id, shot[column.id] ?? ""]),
             );
             const missing: EpisodeDeliveryRow["missing"] = [];
             if (!shot.content.trim()) missing.push("content");
@@ -132,7 +137,7 @@ export function deriveEpisodeDelivery(input: {
     };
 }
 
-export function escapeCsvCell(value: unknown): string {
+export function escapeCsvCell(value: string | number | null | undefined): string {
     const text = String(value ?? "");
     return /[",\r\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
 }

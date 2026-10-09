@@ -6,7 +6,7 @@ import type {ProductionTarget} from './production';
 export const BATCH_REQUEST_LIMIT = 20;
 export const BATCH_TARGET_LIMIT = 4;
 export const BATCH_CONCURRENCY = 2;
-export type GenerationBatchStatus = 'draft' | 'ready' | 'running' | 'paused' | 'settled' | 'cancelled';
+type GenerationBatchStatus = 'draft' | 'ready' | 'running' | 'paused' | 'settled' | 'cancelled';
 export type GenerationSnapshot = Pick<AgentGenerationJob, 'connectorId' | 'provider' | 'baseUrl' | 'model' | 'kind' | 'target' | 'baseRevision' | 'sourceRevisions' | 'parameters' | 'inputs' | 'fingerprint'>;
 
 export interface GenerationBatch {

@@ -5,7 +5,7 @@ import type {MimoSpeechSettings} from "@/domain/audio";
 import {mimoSpeechSettingsSchema} from "./input";
 import {validateMimoReference} from "@/lib/ai/mimoSpeech";
 
-export {MIMO_REFERENCE_ENCODED_LIMIT, validateMimoReference as validateMimoReferenceBlob} from "@/lib/ai/mimoSpeech";
+export {validateMimoReference as validateMimoReferenceBlob} from "@/lib/ai/mimoSpeech";
 
 /** Shared by preparation, repository validation and Agent review; never returns base64. */
 export async function validateSpeechReference(projectId: string, input: { mimo?: MimoSpeechSettings }) {

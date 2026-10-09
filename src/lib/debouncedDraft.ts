@@ -257,6 +257,8 @@ export function useDebouncedDraft<T>({
 
     // Live-query values may be new objects on every render. Compare the flat draft
     // before notifying React to avoid both stale text and an effect/render loop.
+    // Retry deferred rebase after save completion, even when the external value
+    // has stable identity. The version is recorded only after rebase succeeds.
     const externalVersion = useRef<string | undefined>(undefined);
     useEffect(() => {
         const version = JSON.stringify(initialValue);
@@ -278,7 +280,7 @@ export function useDebouncedDraft<T>({
             setError(nextError);
         });
         if (scope && draftKey) {
-            const retained = retainedDrafts.get(scope) ?? new Map();
+            const retained = retainedDrafts.get(scope) ?? new Map<string, unknown>();
             retained.set(draftKey, controller);
             retainedDrafts.set(scope, retained);
         }

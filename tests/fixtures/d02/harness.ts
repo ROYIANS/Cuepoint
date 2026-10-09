@@ -6,7 +6,7 @@ import {releaseMaterialUse} from "@/db/assetReuse";
 import {addShot, setShotSlot} from "@/db/shots";
 import {putMedia} from "@/db/media";
 import {createIpProfile} from "@/db/ipProfiles";
-import {createFileMaterial, promoteMaterial, useMaterialInProject} from "@/db/materials";
+import {createFileMaterial, promoteMaterial, adoptMaterialInProject} from "@/db/materials";
 import {beginAgentRun} from "@/db/agentRuns";
 import {upsertConnector} from "@/db/connectors";
 import type {AgentGenerationJob} from "@/domain/agentGeneration";
@@ -41,7 +41,7 @@ export async function runProjectCascadeBoundary() {
     const project = await createAudioMusicProject("D02 audio cascade", "audio", ip.id);
     const local = await createFileMaterial(new File(["independent library bytes"], "source.wav", {type: "audio/wav"}), {kind: "project", id: project.id});
     const shared = await promoteMaterial(local.id, {kind: "ip", id: ip.id});
-    const use = await useMaterialInProject(shared.id, project.id);
+    const use = await adoptMaterialInProject(shared.id, project.id);
     const before = await snapshot();
     let lateFault = false, deletedChildren = false;
     const originalDelete = db.projects.delete;
@@ -79,7 +79,7 @@ export async function runThreadCascadeBoundary() {
     check(episode, "missing episode");
     const shot = await addShot(project.id, episode.id);
     const material = await createFileMaterial(new File(["material source"], "retained.png", {type: "image/png"}), {kind: "global"});
-    const use = await useMaterialInProject(material.id, project.id);
+    const use = await adoptMaterialInProject(material.id, project.id);
     const selected = `${project.id}-selected`, orphan = `${project.id}-orphan`;
     for (const id of [selected, orphan]) await putMedia({id, projectId: project.id, filename: `${id}.png`, mimeType: "image/png", blob: new Blob([id], {type: "image/png"}), createdAt: project.createdAt});
     await setShotSlot(shot.id, "firstFrame", {prompt: "selected", referenceImageIds: [], referenceVideoIds: [], result: {mediaId: selected, kind: "image"}});
@@ -124,7 +124,7 @@ export async function runThreadCascadeBoundary() {
 export async function runMaterialReleaseBoundary() {
     const project = await createProject("D02 release rollback");
     const material = await createFileMaterial(new File(["source bytes"], "source.png", {type: "image/png"}), {kind: "global"});
-    const use = await useMaterialInProject(material.id, project.id);
+    const use = await adoptMaterialInProject(material.id, project.id);
     const before = await snapshot();
     let lateFault = false, deletedCopy = false;
     const originalAdd = db.materialEvents.add;

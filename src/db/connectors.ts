@@ -7,7 +7,7 @@ export async function listConnectors(): Promise<ConnectorConfig[]> {
     return db.connectors.orderBy("updatedAt").reverse().toArray();
 }
 
-export async function getConnectorByDefinition(
+async function getConnectorByDefinition(
     definitionId: ConnectorDefinitionId,
 ): Promise<ConnectorConfig | undefined> {
     return db.connectors.where("definitionId").equals(definitionId).first();

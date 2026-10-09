@@ -56,7 +56,7 @@ export function validateGenerationPreference(kind: MediaKind, raw: unknown, conn
     if (kind !== "image" && kind !== "video") throw new Error("生成偏好类型无效");
     const preference = preferenceSchema.parse(raw);
     if (preference.parameters.aspectRatio === "adaptive") throw new Error("跟随输入图片的比例仅适用于本次生成，请不要存为全局默认");
-    return validateSelection(kind, preference, connectors) as GenerationPreference;
+    return validateSelection(kind, preference, connectors);
 }
 
 /** Invalid persisted choices stay in storage for explicit repair, never silently replaced. */
@@ -147,13 +147,13 @@ export function recommendGenerationSelection(input: {
             candidateConnectorIds: candidates.map((connector) => connector.id),
             issues: [candidates.length > 1 ? "项目有多个可用的 APIMart 连接，请明确选择本次使用的连接" : "项目默认使用 APIMart，但当前没有已配置的 APIMart 连接"]
         };
-        return valid("project", {...draft, connectorId: candidates[0]!.id});
+        return valid("project", {...draft, connectorId: candidates[0].id});
     }
     if (input.preferenceIssues?.[kind]?.length) return {
         source: "global",
         status: "needs-selection",
         candidateConnectorIds: [],
-        issues: [...input.preferenceIssues[kind]!]
+        issues: [...input.preferenceIssues[kind]]
     };
     if (input.preferences?.[kind] !== undefined) {
         try {

@@ -1,0 +1,9 @@
+{
+  "extends": "../../../tsconfig.app.json",
+  "compilerOptions": {
+    "incremental": false,
+    "tsBuildInfoFile": null,
+    "types": ["node", "vitest/globals"]
+  },
+  "include": ["harness.tsx", "../../e07DraftRebase.test.ts", "../../../src/vite-env.d.ts"]
+}

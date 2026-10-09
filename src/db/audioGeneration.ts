@@ -15,7 +15,7 @@ import {validateSpeechReference} from "@/lib/audioGeneration/reference";
 import {nowIso} from "@/lib/ids";
 import {validateAudioTaskObservations} from "@/lib/audioGeneration/observations";
 
-export async function validateAudioGenerationJob(row: AudioGenerationJob) {
+async function validateAudioGenerationJob(row: AudioGenerationJob) {
     validateAudioTaskObservations(row.taskObservations, row.taskIds);
     await assertAudioProject(row.projectId, row.input.kind === "speech" ? "audio" : "music");
     if (!row.intentId || !row.connector.id || !["apimart", "mimo"].includes(row.connector.provider)) throw new Error("生成任务标识无效");

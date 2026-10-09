@@ -47,7 +47,7 @@ export function MaterialDocumentPreview({blob, mime}: { blob: Blob; mime: string
 function readDocx(buffer: ArrayBuffer, signal: AbortSignal): Promise<ParsedReference> {
     const worker = new Worker(new URL("../../../lib/references/docx.worker.ts", import.meta.url), {type: "module"});
     return new Promise((resolve, reject) => {
-        const finish = (error?: unknown, result?: ParsedReference) => {
+        const finish = (error?: Error, result?: ParsedReference) => {
             clearTimeout(timer);
             signal.removeEventListener("abort", abort);
             worker.terminate();

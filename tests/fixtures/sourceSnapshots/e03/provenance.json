@@ -1,0 +1,19 @@
+{
+  "unit": "E03",
+  "meaning": "Immutable actual accepted post-E02 working-tree CSS before E03; not Git HEAD. Baseline substitutes only these two CSS inputs.",
+  "entrySHA256": "34cee7d2c7f1c26d150b2f453d5567a5a684dd6281a46779770a461908e902c3",
+  "files": [
+    {
+      "sourcePath": "src/components/audioMusic/workspace.css",
+      "snapshotPath": "tests/fixtures/sourceSnapshots/e03/workspace.css",
+      "sha256": "ea0d1dddecc60a1f47f494c4e0e46b04a536fde3666beb02c4b2a79ddac7878c",
+      "bytes": 15458
+    },
+    {
+      "sourcePath": "src/components/audio/story-workspace.css",
+      "snapshotPath": "tests/fixtures/sourceSnapshots/e03/story-workspace.css",
+      "sha256": "2144425bbc19a08d3826ecb4c9243e6de6452ec8951feaaaf585041991dcc90a",
+      "bytes": 12955
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "meaning": "Accepted post-E03 working-tree owners at E04 entry; shared alias imports resolve current untouched dependencies. Relative dependency closure included. Captured before SS09 edits.",
+  "files": [
+    {
+      "source": "src/components/studio/ProjectGalleryPage.tsx",
+      "snapshot": "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage.tsx",
+      "sha256": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b"
+    },
+    {
+      "source": "src/components/studio/AssetLibraryPages.tsx",
+      "snapshot": "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx",
+      "sha256": "0ae22d6ef1f7cfb1945c095d148dfb8995ea34d26873ee7984d6ccb6437c565e"
+    },
+    {
+      "source": "src/components/studio/ProjectIpPicker.tsx",
+      "snapshot": "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectIpPicker.tsx",
+      "sha256": "1b2c3e78cc53df3a2e243cefe02064aad95da2b8a8ef84adc8134c37a81638a5"
+    },
+    {
+      "source": "src/components/studio/projectKinds.tsx",
+      "snapshot": "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/projectKinds.tsx",
+      "sha256": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db"
+    }
+  ]
+}

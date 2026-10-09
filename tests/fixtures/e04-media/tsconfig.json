@@ -1,0 +1,1 @@
+{"extends":"../../../tsconfig.app.json","compilerOptions":{"tsBuildInfoFile":"../../../node_modules/.tmp/e04-media.tsbuildinfo","types":["vite/client"]},"include":["./*.ts","../sourceSnapshots/e04-media/src/**/*.ts","../../e04MediaRetention.test.ts","../../../src/lib/references/mammoth.d.ts"]}

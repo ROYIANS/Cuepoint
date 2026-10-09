@@ -1,0 +1,17 @@
+{
+  "purpose": "Minimal original production modules for native before/after comparison; alias imports reuse unchanged production dependencies. No task-folder runtime imports.",
+  "files": [
+    {
+      "originalPath": "src/components/agent/TopicSidebar.tsx",
+      "snapshotPath": "tests/fixtures/sourceSnapshots/e02/TopicSidebar.tsx",
+      "sha256": "03eb777c98984d75300c9dcfd1533739e3c7308d561d6d72a6bf20be55bc2dc9",
+      "baseline": "Actual working tree after accepted E01, E02-entry.json 2026-10-09"
+    },
+    {
+      "originalPath": "src/components/agent/agentChat.css",
+      "snapshotPath": "tests/fixtures/sourceSnapshots/e02/agentChat.css",
+      "sha256": "b1e1bd7da07ea2efe595cef9b5c6a8291563abf93dedae4bd90cc2877348fb1e",
+      "baseline": "Actual working tree after accepted E01, E02-entry.json 2026-10-09"
+    }
+  ]
+}

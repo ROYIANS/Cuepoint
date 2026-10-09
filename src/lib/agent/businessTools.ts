@@ -74,6 +74,7 @@ import {captureBusinessDeletion, withBusinessWriteReceipt} from "./businessWrite
 import {
   assetMediaDependencies,
   bounded,
+  businessRowText,
   BUSINESS_LABELS,
   type BusinessKind,
   type BusinessRow,
@@ -293,7 +294,7 @@ async function referenceDetails(patch: object, ownerId: string, episodeId?: stri
             const row = await getRow(kind, String(id), ownerId, episodeId);
             if (field === "coverMediaId" && (!String(row.mimeType).startsWith("image/") || !row.size)) throw new Error("封面必须是当前项目的可用图片");
             references.push(row);
-            labels.push(`${String(row.name ?? row.title ?? row.filename ?? row.id)}（${row.id}）`);
+            labels.push(`${businessRowText(row, ["name", "title", "filename"], row.id)}（${row.id}）`);
         }
         fields[field] = Array.isArray(value) ? labels : labels[0];
     }
@@ -461,8 +462,14 @@ const projectCreate = {
     }),
 };
 const projectUpdate = s.object({id: s.id, patch: s.nonempty(s.object(s.projectFields))});
+function createdProjectResultId(raw: string | undefined): string | undefined {
+    const result: unknown = raw ? JSON.parse(raw) : undefined;
+    if (!result || typeof result !== "object" || Array.isArray(result) || !("id" in result) || typeof result.id !== "string") return;
+    return result.id;
+}
+
 const projectTools = [
-    writeTool("project_create", "创建项目", "创建视频、音频或音乐项目。kind 缺省为 video；mode/aspectPreset 仅用于视频。返回真实 ID。仅未绑定普通智能对话可创建；默认绑定新项目并继续创作，continueInProject=false 则仅创建、不绑定。", projectCreate, () => [], async (args) => ({
+    writeTool("project_create", "创建项目", "创建视频、音频或音乐项目。kind 缺省为 video；mode/aspectPreset 仅用于视频。返回真实 ID。仅未绑定普通智能对话可创建；默认绑定新项目并继续创作，continueInProject=false 则仅创建、不绑定。", projectCreate, () => [], (args) => Promise.resolve({
         state: {creationContract: 2, continueInProject: args.continueInProject !== false}, changes: [
             ...changes({...args, kind: args.kind ?? "video"}),
             args.kind === "audio" ? "初始化第一章和人声轨" : args.kind === "music" ? "初始化音乐创作草稿" : "初始化首个分集",
@@ -498,14 +505,14 @@ const projectTools = [
                         const call = await db.agentToolCalls.get(context.callId);
                         if (call?.status !== "completed") return undefined;
                         if (call.name !== "project_create" || targetRevision(projectCreate.schema.parse(JSON.parse(call.arguments))) !== targetRevision(args)) throw new Error("创建项目的重放参数与原调用不匹配");
-                        const result = call.result ? JSON.parse(call.result) : undefined;
+                        const resultId = createdProjectResultId(call.result);
                         const run = await db.agentRuns.get(context.runId);
                         const continued = args.continueInProject !== false;
-                        if (!result?.id || !await db.projects.get(result.id) || (context.projectId !== undefined && context.projectId !== result.id) ||
-                            (continued && (run?.createdProjectBinding?.callId !== call.id || run.createdProjectBinding.projectId !== result.id || run.projectId !== result.id)) ||
+                        if (!resultId || !await db.projects.get(resultId) || (context.projectId !== undefined && context.projectId !== resultId) ||
+                            (continued && (run?.createdProjectBinding?.callId !== call.id || run.createdProjectBinding.projectId !== resultId || run.projectId !== resultId)) ||
                             (!continued && run?.projectId)) throw new Error("已创建项目不存在或来源不匹配，不能重放");
                         return {
-                            value: await executeAtomicTool(context, async () => {
+                            value: await executeAtomicTool(context, () => {
                                 throw new Error("创建项目重放状态已变化");
                             })
                         };
@@ -766,7 +773,7 @@ const reuseTools = [
         return {
             state: {source, media: await assetMediaDependencies(source), ownerId: args.ownerId},
             target: navigation(args.kind, source),
-            changes: [`复制「${source.name}」至项目「${(await db.projects.get(args.ownerId))!.name}」，含独立素材副本。`]
+            changes: [`复制「${businessRowText(source, ["name"], source.id)}」至项目「${(await db.projects.get(args.ownerId))!.name}」，含独立素材副本。`]
         };
     }, async (args) => {
         const row = await assetApi[args.kind].copy(args.ownerId, args.sourceId);
@@ -809,7 +816,10 @@ const reuseTools = [
         const order = new Map(rows.map((row) => [row.id, row]));
         return {
             state: {rows, ...(args.kind === "beat" ? {shots: await listRows("shot", args.ownerId, args.episodeId)} : {})},
-            changes: args.orderedIds.map((id, index) => `${index + 1}. ${String(order.get(id)?.title ?? order.get(id)?.shotNumber ?? id)}`)
+            changes: args.orderedIds.map((id, index) => {
+                const row = order.get(id);
+                return `${index + 1}. ${row ? businessRowText(row, ["title", "shotNumber"], id) : id}`;
+            })
         };
     }, async (args) => {
         if (args.kind === "episode") await reorderEpisodes(args.ownerId, args.orderedIds);
@@ -823,10 +833,10 @@ function catalogSlot<Slot extends string>(catalog: readonly {id: Slot}[], value:
     return catalog.some(slot => slot.id === value);
 }
 export function isCharacterSlot(value: string): value is CharacterImageSlot {return catalogSlot(CHARACTER_SLOTS, value);}
-export function isSceneSlot(value: string): value is SceneImageSlot {return catalogSlot(SCENE_SLOTS, value);}
-export function isPropSlot(value: string): value is PropImageSlot {return catalogSlot(PROP_SLOTS, value);}
-export function isStyleSlot(value: string): value is StyleImageSlot {return catalogSlot(STYLE_SLOTS, value);}
-export function isShotSlot(value: string): value is ShotPictureField {return value === "firstFrame" || value === "lastFrame" || value === "clip";}
+function isSceneSlot(value: string): value is SceneImageSlot {return catalogSlot(SCENE_SLOTS, value);}
+function isPropSlot(value: string): value is PropImageSlot {return catalogSlot(PROP_SLOTS, value);}
+function isStyleSlot(value: string): value is StyleImageSlot {return catalogSlot(STYLE_SLOTS, value);}
+function isShotSlot(value: string): value is ShotPictureField {return value === "firstFrame" || value === "lastFrame" || value === "clip";}
 
 const slotSpec = s.object({
     kind: s.choice(["character", "scene", "prop", "style", "shot"]), ...s.target,
@@ -898,7 +908,7 @@ const mediaTools = [
         return {
             state: await ownerSnapshot(args.ownerId),
             target: navigation("media", row),
-            changes: [`删除文件「${row.filename}」（${row.size} 字节）；如参考资料、生成任务或历史提案保留该文件则拒绝删除。`]
+            changes: [`删除文件「${businessRowText(row, ["filename"], row.id)}」（${typeof row.size === "number" ? row.size : 0} 字节）；如参考资料、生成任务或历史提案保留该文件则拒绝删除。`]
         };
     }, async (args) => {
         await deleteMediaIfOrphan(args.id);

@@ -6,7 +6,7 @@ import {deleteProject, setProjectArchived} from "@/db/cascadeCommands";
 import {collectMediaIds, deleteMediaIfOrphan} from "@/db/media";
 import {releaseMaterialUse} from "@/db/assetReuse";
 import { createIpProfile, bindProjectIp, setIpArchived } from '@/db/ipProfiles';
-import { createFileMaterial, useMaterialInProject, promoteMaterial } from '@/db/materials';
+import { createFileMaterial, adoptMaterialInProject, promoteMaterial } from '@/db/materials';
 import { exportProjectZip, importProjectZip } from '@/lib/projectPackage';
 
 const file = () => new File(['retained fixture audio'], 'intro.mp3', { type: 'audio/mpeg' });
@@ -31,7 +31,7 @@ describe('IP and material integration with legacy projects', () => {
   it('releases an unused copy but rolls back when a project still uses it', async () => {
     const project = await createProject('references');
     const material = await createFileMaterial(new File(['image'], 'test.png', { type: 'image/png' }), { kind: 'global' });
-    const use = await useMaterialInProject(material.id, project.id);
+    const use = await adoptMaterialInProject(material.id, project.id);
     await patchProjectOutput(project.id, { coverMediaId: use.targetId });
     await expect(releaseMaterialUse(use.id)).rejects.toThrow('仍被');
     expect(await db.materialUses.get(use.id)).toBeDefined();
@@ -56,7 +56,7 @@ describe('IP and material integration with legacy projects', () => {
   it('retains adopted loose media through orphan cleanup and two ZIP round trips', async () => {
     const project = await createProject('podcast assets');
     const material = await createFileMaterial(file(), { kind: 'global' });
-    const use = await useMaterialInProject(material.id, project.id);
+    const use = await adoptMaterialInProject(material.id, project.id);
     expect(await collectMediaIds(project.id)).toContain(use.targetId);
     await deleteMediaIfOrphan(use.targetId);
     expect(await db.media.get(use.targetId)).toBeDefined();
@@ -77,7 +77,7 @@ describe('IP and material integration with legacy projects', () => {
     await bindProjectIp(project.id, ip.id);
     const local = await createFileMaterial(file(), { kind: 'project', id: project.id });
     const shared = await promoteMaterial(local.id, { kind: 'ip', id: ip.id });
-    await useMaterialInProject(shared.id, project.id);
+    await adoptMaterialInProject(shared.id, project.id);
     await setProjectArchived(project.id, true);
     expect((await db.libraryMaterials.get(local.id))?.archived).toBe(true);
     expect((await db.libraryMaterials.get(shared.id))?.archived).toBe(false);

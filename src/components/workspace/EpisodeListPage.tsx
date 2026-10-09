@@ -1,6 +1,6 @@
 import {useNavigate} from "@tanstack/react-router";
 import {useLiveQuery} from "dexie-react-hooks";
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {toast} from "sonner";
 import {CoverCard, CreateTile, LibraryGrid} from "@/components/studio/CoverCard";
 import {
@@ -32,7 +32,19 @@ function coverOfEpisode(shots: Shot[], episodeId: string): string | undefined {
 }
 
 export function EpisodeListPage({projectId}: { projectId: string }) {
+    return <EpisodeList key={projectId} projectId={projectId}/>;
+}
+
+function EpisodeList({projectId}: {projectId: string}) {
     const navigate = useNavigate();
+    const activeRef = useRef(true);
+    useEffect(() => {
+        activeRef.current = true;
+        return () => {activeRef.current = false;};
+    }, []);
+    const writingRef = useRef(false);
+    const [pending, setPending] = useState<"add" | "move" | "delete">();
+    const [deleteError, setDeleteError] = useState("");
     const project = useLiveQuery(
         async () => (await db.projects.get(projectId)) ?? null,
         [projectId],
@@ -55,27 +67,67 @@ export function EpisodeListPage({projectId}: { projectId: string }) {
     }
 
     const canDelete = episodes.length > 1;
+    let pendingLabel = "删除中…";
+    if (pending === "add") pendingLabel = "创建中…";
+    else if (pending === "move") pendingLabel = "调整顺序中…";
 
     async function moveEpisode(index: number, offset: -1 | 1) {
+        if (writingRef.current) return;
         const target = index + offset;
         if (target < 0 || target >= episodes.length) return;
         const previous = episodes.map((episode) => episode.id);
         const next = [...previous];
-        [next[index], next[target]] = [next[target]!, next[index]!];
-        await reorderEpisodes(projectId, next);
-        registerUndo({
-            label: "已调整分集顺序",
-            restore: () => reorderEpisodes(projectId, previous),
-        });
+        [next[index], next[target]] = [next[target], next[index]];
+        writingRef.current = true;
+        setPending("move");
+        try {
+            await reorderEpisodes(projectId, next);
+            if (activeRef.current) registerUndo({
+                label: "已调整分集顺序",
+                restore: () => reorderEpisodes(projectId, previous),
+            });
+        } catch (error) {
+            if (activeRef.current) toast.error(error instanceof Error && error.message ? error.message : "调整顺序失败，请重试");
+        } finally {
+            writingRef.current = false;
+            if (activeRef.current) setPending(undefined);
+        }
     }
 
-    async function removeEpisode(id: string) {
-        const snapshot = await deleteEpisode(id);
-        if (snapshot) {
-            registerUndo({
-                label: "已删除分集",
-                restore: () => restoreEpisode(snapshot),
-            });
+    async function createEpisode() {
+        if (writingRef.current) return;
+        writingRef.current = true;
+        setPending("add");
+        try {
+            await addEpisode(projectId);
+        } catch (error) {
+            if (activeRef.current) toast.error(error instanceof Error && error.message ? error.message : "创建失败，请重试");
+        } finally {
+            writingRef.current = false;
+            if (activeRef.current) setPending(undefined);
+        }
+    }
+
+    async function removeEpisode() {
+        if (!deleteId || writingRef.current) return;
+        const id = deleteId;
+        writingRef.current = true;
+        setPending("delete");
+        setDeleteError("");
+        try {
+            const snapshot = await deleteEpisode(id);
+            if (activeRef.current) {
+                if (snapshot) registerUndo({
+                    label: "已删除分集",
+                    restore: () => restoreEpisode(snapshot),
+                });
+                setDeleteId((current) => current === id ? undefined : current);
+            }
+        } catch (error) {
+            if (activeRef.current) setDeleteError(error instanceof Error && error.message ? error.message : "删除失败，请重试");
+        } finally {
+            writingRef.current = false;
+            if (activeRef.current) setPending(undefined);
         }
     }
 
@@ -97,16 +149,13 @@ export function EpisodeListPage({projectId}: { projectId: string }) {
                     initialValue={normalizeSeriesStory(project.story).logline}
                 />
 
+                {pending && <p role="status" className="text-muted-foreground mt-4 text-sm">{pendingLabel}</p>}
                 <div className="mt-8">
                     <LibraryGrid>
                         <CreateTile
                             label={`新建第 ${episodes.length + 1} 集`}
                             hint="接着往下写"
-                            onClick={() => {
-                                void addEpisode(projectId).catch((err) =>
-                                    toast.error(err instanceof Error ? err.message : "创建失败"),
-                                );
-                            }}
+                            onClick={() => void createEpisode()}
                         />
                         {episodes.map((episode, index) => (
                             <CoverCard
@@ -131,7 +180,11 @@ export function EpisodeListPage({projectId}: { projectId: string }) {
                                         ? [{
                                             label: "删除",
                                             tone: "danger" as const,
-                                            onSelect: () => setDeleteId(episode.id),
+                                            onSelect: () => {
+                                                if (writingRef.current) return;
+                                                setDeleteError("");
+                                                setDeleteId(episode.id);
+                                            },
                                         }]
                                         : []),
                                 ]}
@@ -141,7 +194,9 @@ export function EpisodeListPage({projectId}: { projectId: string }) {
                 </div>
             </div>
 
-            <AlertDialog open={Boolean(deleteId)} onOpenChange={(open) => !open && setDeleteId(undefined)}>
+            <AlertDialog open={Boolean(deleteId)} onOpenChange={(open) => {
+                if (!open && !writingRef.current) setDeleteId(undefined);
+            }}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>删除这一集</AlertDialogTitle>
@@ -149,19 +204,18 @@ export function EpisodeListPage({projectId}: { projectId: string }) {
                             这一集的故事和镜头会一起删掉。不能删掉最后一集。
                         </AlertDialogDescription>
                     </AlertDialogHeader>
+                    {deleteError && <p role="alert" className="text-destructive text-sm">{deleteError}</p>}
                     <AlertDialogFooter>
-                        <AlertDialogCancel>取消</AlertDialogCancel>
+                        <AlertDialogCancel disabled={pending === "delete"}>取消</AlertDialogCancel>
                         <AlertDialogAction
                             className="bg-destructive hover:bg-destructive/90"
-                            onClick={() => {
-                                if (!deleteId) return;
-                                void removeEpisode(deleteId).catch((err) =>
-                                    toast.error(err instanceof Error ? err.message : "删除失败"),
-                                );
-                                setDeleteId(undefined);
+                            disabled={pending === "delete"}
+                            onClick={(event) => {
+                                event.preventDefault();
+                                void removeEpisode();
                             }}
                         >
-                            删除
+                            {pending === "delete" ? "删除中…" : "删除"}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

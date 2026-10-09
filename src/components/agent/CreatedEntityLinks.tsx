@@ -70,7 +70,7 @@ export function CreatedEntityLinks({call, includePreview = false, allowProjectCo
         return null;
     }
     if (!result || typeof result !== "object") return null;
-    const items = "items" in result && Array.isArray(result.items) ? result.items : [result];
+    const items: unknown[] = "items" in result && Array.isArray(result.items) ? result.items : [result];
     const links = new Map<string, string>();
     for (const item of items.slice(0, 20)) {
         if (!item || typeof item !== "object" || !("target" in item)) continue;

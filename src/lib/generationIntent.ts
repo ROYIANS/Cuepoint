@@ -145,7 +145,7 @@ async function preflight(intent: GenerationIntent, checkResult = false) {
         if (checkResult && intent.result) requested.push(intent.result);
         const media = await db.media.bulkGet(requested.map((item) => item.mediaId));
         for (const [index, item] of media.entries()) {
-            if (!item || item.projectId !== target.projectId || !item.blob?.size || !item.mimeType.startsWith(`${requested[index]!.kind}/`)) throw new Error("生成素材不存在、归属或类型不匹配");
+            if (!item || item.projectId !== target.projectId || !item.blob?.size || !item.mimeType.startsWith(`${requested[index].kind}/`)) throw new Error("生成素材不存在、归属或类型不匹配");
         }
     });
 }

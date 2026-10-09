@@ -11,13 +11,9 @@ import {nowIso, createId} from "@/lib/ids";
 import {normalizeContextPolicy} from "@/lib/agent/contextPolicy";
 import {getGeneralAgentConfig} from "./agentSettings";
 
-export async function listChatThreads(): Promise<ChatThread[]> {
-    return db.chatThreads.orderBy("updatedAt").reverse().toArray();
-}
 
-export async function getChatThread(id: Id): Promise<ChatThread | undefined> {
-    return db.chatThreads.get(id);
-}
+
+
 
 export async function createChatThread(options?: {
     projectId?: Id;
@@ -73,9 +69,7 @@ export async function updateChatThread(
     });
 }
 
-export async function listChatMessages(threadId: Id): Promise<ChatMessage[]> {
-    return db.chatMessages.where("threadId").equals(threadId).sortBy("createdAt");
-}
+
 
 export async function appendChatMessage(input: {
     threadId: Id;
@@ -101,16 +95,7 @@ export async function appendChatMessage(input: {
     return message;
 }
 
-export async function updateChatMessage(
-    id: Id,
-    patch: Partial<Pick<ChatMessage, "content" | "status" | "reasoning" | "reasoningDurationMs">>,
-): Promise<void> {
-    await db.transaction("rw", db.chatMessages, async () => {
-        const existing = await db.chatMessages.get(id);
-        if (!existing || existing.runId) return;
-        await db.chatMessages.update(id, patch);
-    });
-}
+
 
 /** Bind once before any conversation execution; changing projects starts a new thread. */
 export async function bindChatThreadProject(threadId: string, projectId: string, expectedProjectId?: string): Promise<void> {

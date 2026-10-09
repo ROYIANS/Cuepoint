@@ -40,7 +40,7 @@ function reportCleanupFailure(session: DraftMediaSession) {
     });
 }
 
-export function GenerationSlotTile({
+function GenerationSlotTile({
                                        slot,
                                        variant,
                                        label,

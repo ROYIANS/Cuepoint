@@ -205,18 +205,7 @@ export async function getAudioProjectSnapshot(projectId: string): Promise<AudioP
 }
 
 /** Atomic edit batch for drag/split/undo. A stale row aborts the entire command. */
-export async function editAudioClips(projectId: string, edits: Array<{
-    id: string;
-    revision: number;
-    patch: AudioPatch<AudioClip>
-}>): Promise<AudioClip[]> {
-    if (new Set(edits.map((edit) => edit.id)).size !== edits.length) throw new Error("片段 ID 重复");
-    return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => {
-        const rows: AudioClip[] = [];
-        for (const edit of edits) rows.push(await patchAudioClip(projectId, edit.id, edit.revision, edit.patch));
-        return rows;
-    });
-}
+
 
 /** Replace one chapter's clip document with a CAS guard; undo never copies Blobs. */
 export async function replaceAudioClips(projectId: string, chapterId: string, expected: AudioClip[], next: AudioClip[]): Promise<AudioClip[]> {

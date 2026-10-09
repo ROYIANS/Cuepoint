@@ -138,7 +138,7 @@ export const assetFields = {
         negativePrompt: optional(text())
     },
 };
-export const imageDefaults = object({
+const imageDefaults = object({
     provider: choice(["apimart"]),
     model: choice(APIMART_IMAGE_MODELS),
     profileVersion: choice([OUTPUT_PROFILE_VERSION]),
@@ -147,7 +147,7 @@ export const imageDefaults = object({
     quality: optional(choice(IMAGE_QUALITIES)),
     version: optional(choice(IMAGE_EXT_VERSIONS)),
 });
-export const videoDefaults = object({
+const videoDefaults = object({
     provider: choice(["apimart"]),
     model: choice(["MiniMax-H3"]),
     profileVersion: choice([OUTPUT_PROFILE_VERSION]),

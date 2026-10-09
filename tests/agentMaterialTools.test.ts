@@ -5,7 +5,7 @@ import {addCharacter} from "@/db/assets";
 import {createChatThread} from "@/db/chat";
 import {createProject} from "@/db/projects";
 import { createIpProfile, bindProjectIp, setIpArchived } from '@/db/ipProfiles';
-import { createFileMaterial, promoteLegacyMaterial, updateMaterialMetadata, useMaterialInProject, setMaterialArchived } from '@/db/materials';
+import { createFileMaterial, promoteLegacyMaterial, updateMaterialMetadata, adoptMaterialInProject, setMaterialArchived } from '@/db/materials';
 import { beginAgentRun } from '@/db/agentRuns';
 import { MATERIAL_TOOLS as MATERIAL_TOOLS_DEFINITIONS } from '@/lib/agent/materialTools';
 import { MATERIAL_TOOL_NAMES } from '@/lib/agent/materialToolNames';
@@ -161,7 +161,7 @@ describe('Agent material writes preserve immutable approval and project copies',
   it('release removes idle copies but actual project references remain protected', async () => {
     const project = await createProject('A'), run = await runFor(project.id);
     const material = await createFileMaterial(file(), { kind: 'global' });
-    const use = await useMaterialInProject(material.id, project.id);
+    const use = await adoptMaterialInProject(material.id, project.id);
     await db.projects.update(project.id, { coverMediaId: use.targetId });
     await expect(invoke(run, 'material_release', { useId: use.id })).rejects.toThrow('仍被');
     expect(await db.materialUses.get(use.id)).toBeTruthy();
@@ -177,8 +177,8 @@ describe('Agent material writes preserve immutable approval and project copies',
     await bindProjectIp(project.id, ip.id);
     await bindProjectIp(foreign.id, ip.id);
     const material = await createFileMaterial(file('old IP guide', 'project-copy.txt'), { kind: 'ip', id: ip.id });
-    const ownUse = await useMaterialInProject(material.id, project.id);
-    const foreignUse = await useMaterialInProject(material.id, foreign.id);
+    const ownUse = await adoptMaterialInProject(material.id, project.id);
+    const foreignUse = await adoptMaterialInProject(material.id, foreign.id);
     await bindProjectIp(project.id, null);
     await updateMaterialMetadata(material.id, { name: 'Private updated source name' }, 1);
     const run = await runFor(project.id);
@@ -199,8 +199,8 @@ describe('Agent material writes preserve immutable approval and project copies',
   it('flushes pending project edits before release and does not flush another project before rejecting it', async () => {
     const project = await createProject('A'), foreign = await createProject('B');
     const material = await createFileMaterial(file(), { kind: 'global' });
-    const use = await useMaterialInProject(material.id, project.id);
-    const foreignUse = await useMaterialInProject(material.id, foreign.id);
+    const use = await adoptMaterialInProject(material.id, project.id);
+    const foreignUse = await adoptMaterialInProject(material.id, foreign.id);
     const run = await runFor(project.id);
     const saveCover = vi.fn(async () => { await db.projects.update(project.id, { coverMediaId: use.targetId }); });
     const foreignSave = vi.fn(async () => {});

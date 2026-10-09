@@ -1,0 +1,9 @@
+{
+ "connector":{"id":"e06-offline","definitionId":"openai-compatible","protocol":"openai-compatible","label":"E06 offline","baseUrl":"https://e06.invalid/v1","apiKey":"offline-fixture-only","updatedAt":"2026-10-09T00:00:00.000Z"},
+ "models":{"data":[{"id":"gpt-4o","object":"model"},{"id":"claude-sonnet-4","object":"model"},{"id":"deepseek-chat","object":"model"}]},
+ "plain":"E06 plain history paragraph.\n\nSecond paragraph for copy parity.",
+ "code":"E06 fenced history.\n\n```javascript\nconst answer = 42;\nconsole.log(answer);\n```\n\n```e06-unknown-language\n<safe> & unknown fence\n```",
+ "rich":"# E06 rich parity\n\n**Bold** and *italic* with [link](https://example.com/e06).\n\n| One | Two |\n| --- | --- |\n| A | B |\n\nInline $x^2$ and display:\n\n$$\nx^2 + y^2 = z^2\n$$\n\n```mermaid\ngraph TD\n A[Start] --> B[Done]\n```\n\n<script>window.e06Unsafe=true</script>",
+ "reasoning":"E06 reasoning remains readable.",
+ "time":"2026-10-09T00:00:00.000Z"
+}

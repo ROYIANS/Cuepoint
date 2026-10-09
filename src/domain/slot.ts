@@ -1,3 +1,4 @@
+import {isLegacyScalar, recoverLegacyIds, recoverLegacyText} from "./legacyScalar";
 import type {GenerationSlot, Id, MediaKind, ShotPictureField} from "./types";
 
 export function emptySlot(): GenerationSlot {
@@ -23,26 +24,23 @@ export function parseGenerationSlot(
     legacyMediaId?: unknown,
 ): GenerationSlot {
     const slot = emptySlot();
-    if (raw && typeof raw === "object") {
+    if (raw && typeof raw === "object" && !Array.isArray(raw)) {
         const record = raw as Record<string, unknown>;
-        slot.prompt = String(record.prompt ?? "");
-        slot.referenceImageIds = Array.isArray(record.referenceImageIds)
-            ? record.referenceImageIds.map(String)
-            : [];
-        slot.referenceVideoIds = Array.isArray(record.referenceVideoIds)
-            ? record.referenceVideoIds.map(String)
-            : [];
+        slot.prompt = recoverLegacyText(record.prompt);
+        slot.referenceImageIds = recoverLegacyIds(record.referenceImageIds);
+        slot.referenceVideoIds = recoverLegacyIds(record.referenceVideoIds);
         const result = record.result as
             | { mediaId?: unknown; kind?: unknown }
             | undefined;
-        if (result?.mediaId) {
+        if (result?.mediaId && isLegacyScalar(result.mediaId)) {
             slot.result = {
                 mediaId: String(result.mediaId),
                 kind: result.kind === "video" ? "video" : "image",
             };
         }
     }
-    if (!slot.result && legacyMediaId) {
+    // Invalid local result IDs cannot claim media; a valid legacy result may recover them.
+    if (!slot.result && legacyMediaId && isLegacyScalar(legacyMediaId)) {
         slot.result = {mediaId: String(legacyMediaId), kind: "image"};
     }
     return slot;
@@ -110,7 +108,7 @@ function uniqueIds(ids: Id[]): Id[] {
     return [...new Set(ids)];
 }
 
-export function mergeLegacyReferenceIntoFirstFrame(
+function mergeLegacyReferenceIntoFirstFrame(
     firstFrame: GenerationSlot,
     legacyReference: GenerationSlot,
 ): GenerationSlot {

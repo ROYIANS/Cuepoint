@@ -1,0 +1,8 @@
+{
+  "sourcePath": "src/db/projectMemories.ts",
+  "snapshotPath": "tests/fixtures/sourceSnapshots/e04-memory/projectMemories.ts",
+  "sha256": "2385dcc806bd3a6e888e27dd281b704f75abb4acc77fb5a29859ae7409aea1b9",
+  "entrySHA256": "d7226d85662d5060d27e17f96142b1edc3709459ec9a8b630462d9c4638c7772",
+  "baselineRevision": "1ecaf5ceec92e022c2b2b8d662e2a92e8eee36c7",
+  "meaning": "Exact accepted E03 entry bytes; browser runner replaces the original module at its current path, preserving all imports. All dependencies are explicitly shared current sources. Snapshot is never a production owner."
+}

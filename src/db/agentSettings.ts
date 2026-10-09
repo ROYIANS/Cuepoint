@@ -14,7 +14,7 @@ export async function getGeneralAgentConfig(): Promise<AgentConfig> {
             // A saved version prevents later reads from undoing the user's switch choices.
             if ((existing.skillDefaultsVersion ?? 0) < SKILL_DEFAULTS_VERSION) {
                 const version = existing.skillDefaultsVersion ?? 0;
-                let enabledSkillIds = existing.enabledSkillIds?.length === 0 ? []
+                const enabledSkillIds = existing.enabledSkillIds?.length === 0 ? []
                     : version < 1 ? [...DEFAULT_SKILL_IDS] : [...(existing.enabledSkillIds ?? DEFAULT_SKILL_IDS)];
                 if (enabledSkillIds.length) {
                     if (version < 2) enabledSkillIds.push("ip-management", "material-library");

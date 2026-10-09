@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import {prepareNativeFixture} from "./native-fixture-ready.mjs";
 import {writeFile, mkdtemp, rm} from "node:fs/promises";
 import {tmpdir} from "node:os";
 import {join} from "node:path";
@@ -47,11 +48,12 @@ const transport = {
     },
 };
 const cacheDirectory = await mkdtemp(join(tmpdir(), "b01-vite-cache-"));
-const server = await createServer({cacheDir: cacheDirectory, optimizeDeps: {entries: [fileURLToPath(new URL("../tests/fixtures/b01/index.html", import.meta.url))]}, configFile: false, plugins: [transport, react(), tailwindcss()], resolve: {alias: {"@": fileURLToPath(new URL("../src", import.meta.url))}}, server: {host: "127.0.0.1", port: 0}});
+const server = await createServer({cacheDir: cacheDirectory, optimizeDeps: {holdUntilCrawlEnd: false, include: ["@radix-ui/react-tooltip", "@lobehub/ui", "motion/react-m", "@lobehub/ui/chat", "antd", "ogl"], entries: [fileURLToPath(new URL("../tests/fixtures/b01/index.html", import.meta.url))]}, configFile: false, plugins: [transport, react(), tailwindcss()], resolve: {alias: {"@": fileURLToPath(new URL("../src", import.meta.url))}}, server: {host: "127.0.0.1", port: 0, hmr: false, watch: {ignored: ["**/.trellis/**", "**/scripts/**"]}}});
 let browser;
 let passed = 0;
 try {
     await server.listen();
+    await prepareNativeFixture(server, "/tests/fixtures/b01/harness.tsx");
     const url = server.resolvedUrls.local[0] + "tests/fixtures/b01/";
     browser = await chromium.launch({headless: true, ...(process.env.B01_CHROMIUM_PATH ? {executablePath: process.env.B01_CHROMIUM_PATH} : {})});
     const page = await browser.newPage();

@@ -13,7 +13,7 @@ export type AgentGenerationStatus =
     | "conflict"
     | "failed";
 
-export interface AgentGenerationInput extends GenerationMediaInput {
+interface AgentGenerationInput extends GenerationMediaInput {
     revision: string
 }
 

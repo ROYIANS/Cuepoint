@@ -48,9 +48,7 @@ export async function recycleSlotMedia(
     next: GenerationSlot | undefined,
 ): Promise<void> {
     const kept = new Set(slotMediaIds(next));
-    for (const mediaId of slotMediaIds(previous)) {
-        if (!kept.has(mediaId)) await deleteMediaIfOrphan(mediaId);
-    }
+    await deleteMediaIfOrphans(slotMediaIds(previous).filter((mediaId) => !kept.has(mediaId)));
 }
 
 export async function putMedia(record: MediaRecord): Promise<Id> {
@@ -63,25 +61,54 @@ export async function putMedia(record: MediaRecord): Promise<Id> {
     });
 }
 
-export async function deleteMediaIfOrphan(mediaId: Id | undefined): Promise<void> {
+/** Fresh history snapshot for one candidate owner, including cancelled/undone outcomes. */
+async function collectHistoryMediaIds(projectId: Id): Promise<Set<Id>> {
+    const [proposals, jobs, batches, items] = await Promise.all([
+        db.productionProposals.where("projectId").equals(projectId).toArray(),
+        db.agentGenerationJobs.where("projectId").equals(projectId).toArray(),
+        db.agentGenerationBatches.where("projectId").equals(projectId).toArray(),
+        db.agentGenerationBatchItems.where("projectId").equals(projectId).toArray(),
+    ]);
+    const ids = new Set<Id>();
+    for (const proposal of proposals) {
+        if (proposal.before.result) ids.add(proposal.before.result.mediaId);
+        if (proposal.change.kind === "slot-result") ids.add(proposal.change.result.mediaId);
+    }
+    for (const job of jobs) {
+        if (job.result) ids.add(job.result.mediaId);
+        for (const input of job.inputs) ids.add(input.mediaId);
+    }
+    for (const batch of batches) for (const application of batch.applications) {
+        if (application.before) ids.add(application.before.mediaId);
+        ids.add(application.result.mediaId);
+    }
+    for (const item of items) for (const input of item.draft.inputs) ids.add(input.mediaId);
+    return ids;
+}
+
+/** Call after all owner/history/flag changes; never reuse this snapshot across operations. */
+export async function deleteMediaIfOrphans(mediaIds: readonly (Id | undefined)[]): Promise<void> {
+    const candidates = [...new Set(mediaIds.filter((id): id is Id => !!id))];
+    if (!candidates.length) return;
     await db.transaction("rw", PRODUCTION_TABLES, async () => {
-        if (!mediaId) return;
-        const record = await db.media.get(mediaId);
-        if (!record) return;
+        const records = (await db.media.bulkGet(candidates)).filter((record): record is MediaRecord => record !== undefined);
+        if (!records.length) return;
         const used = await collectMediaIds();
-        // Local proposal history retains both results so guarded undo remains possible.
-        const proposals = await db.productionProposals.where("projectId").equals(record.projectId).toArray();
-        const retained = proposals.some((proposal) => proposal.before.result?.mediaId === mediaId ||
-            (proposal.change.kind === "slot-result" && proposal.change.result.mediaId === mediaId));
-        const jobs = await db.agentGenerationJobs.where("projectId").equals(record.projectId).toArray();
-        const jobRetained = jobs.some((job) => job.result?.mediaId === mediaId || job.inputs.some((input) => input.mediaId === mediaId));
-        const batches = await db.agentGenerationBatches.where("projectId").equals(record.projectId).toArray();
-        const items = await db.agentGenerationBatchItems.where("projectId").equals(record.projectId).toArray();
-        const batchRetained = items.some(item => item.draft.inputs.some(input => input.mediaId === mediaId)) || batches.some(batch => batch.applications.some(a => a.before?.mediaId === mediaId || a.result.mediaId === mediaId));
-        if (!used.has(mediaId) && !retained && !jobRetained && !batchRetained) {
-            await db.media.delete(mediaId);
+        // History belongs to each candidate record's owner; current references remain global.
+        const histories = new Map<Id, Set<Id>>();
+        for (const projectId of new Set(records.map((record) => record.projectId))) {
+            histories.set(projectId, await collectHistoryMediaIds(projectId));
+        }
+        for (const record of records) {
+            if (!used.has(record.id) && !histories.get(record.projectId)?.has(record.id)) {
+                await db.media.delete(record.id);
+            }
         }
     });
+}
+
+export async function deleteMediaIfOrphan(mediaId: Id | undefined): Promise<void> {
+    await deleteMediaIfOrphans([mediaId]);
 }
 
 export async function assertSlotMedia(projectId: Id, slot: GenerationSlot, allowVideoResult = false): Promise<void> {

@@ -24,7 +24,7 @@ import {
     assertCompleteOrder
 } from "./productionShared";
 import {emptyShot} from "./productionRecords";
-import {assertSlotMedia, recycleSlotMedia, deleteMediaIfOrphan} from "./media";
+import {assertSlotMedia, recycleSlotMedia, deleteMediaIfOrphans} from "./media";
 
 async function nextShotNumber(episodeId: Id): Promise<string> {
     const shots = await db.shots.where("episodeId").equals(episodeId).toArray();
@@ -404,7 +404,7 @@ export async function deleteShots(ids: Id[]): Promise<void> {
             await reindexShots(episodeId);
             await touchProject(projectId);
         }
-        for (const mediaId of mediaIds) await deleteMediaIfOrphan(mediaId);
+        await deleteMediaIfOrphans(mediaIds);
     });
 }
 

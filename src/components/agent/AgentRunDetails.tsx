@@ -53,11 +53,6 @@ function RunElapsed({run}: { run: AgentRun }) {
     return <span title="本轮经过时间，包含等待确认的时间">用时 {formatRunElapsed(getRunElapsedMs(run, now))}</span>;
 }
 
-function validationFailure(call: AgentToolCall): ToolValidationFailure | undefined {
-    if (call.status !== "failed") return undefined;
-    return readToolValidationFailure(call.result);
-}
-
 function ValidationFailureNotice({failure, legacy}: { failure: ToolValidationFailure; legacy?: boolean }) {
     return <div className="agent-tool-validation-error" role="alert">
         <strong>参数校验失败，操作未执行</strong>
@@ -90,7 +85,7 @@ function ToolCallRow({run, call, busy, readOnly, unknown, executing, onAction}: 
     const activeMusicReview = musicReview && !readOnly && call.status === "awaiting_approval" && recoverable && !unknown && !executing;
     const preview = call.generationOverride?.preview ?? call.preview;
     const [legacyValidation, setLegacyValidation] = useState<ToolValidationFailure | undefined>();
-    const structuredValidation = useMemo(() => validationFailure(call), [call.status, call.result]);
+    const structuredValidation = useMemo(() => call.status === "failed" ? readToolValidationFailure(call.result) : undefined, [call.status, call.result]);
     useEffect(() => {
         let cancelled = false;
         if (!structuredValidation && call.status === "failed" && call.error?.includes("参数无效")) {

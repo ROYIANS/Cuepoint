@@ -1,8 +1,8 @@
 import {type ComponentProps, lazy, Suspense} from "react";
 import type {ModelIcon as LobeModelIcon, ProviderIcon as LobeProviderIcon} from "@lobehub/icons";
 
-// Dynamic model/provider matching includes the full vendor icon catalog. Load it
-// only for an actual model chip or an opened provider picker, never the empty home.
+// Complete matching metadata loads on demand; only matched publisher brands
+// load SVG components. Empty home needs neither catalog nor brand artwork.
 const LazyModelIcon = lazy(() => import("./ModelIconCatalog").then((module) => ({default: module.ModelIcon})));
 const LazyProviderIcon = lazy(() => import("./ModelIconCatalog").then((module) => ({default: module.ProviderIcon})));
 

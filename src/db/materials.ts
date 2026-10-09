@@ -331,7 +331,7 @@ async function adopt(material: LibraryMaterial, projectId: string): Promise<Mate
             projectId,
             createdAt: at,
             updatedAt: at,
-            slots: Object.fromEntries(Object.entries(payload.entity.slots).filter(([, slot]) => slot).map(([key, slot]) => [key, remapSlot(slot!, id => id ? map.get(id) : undefined)])),
+            slots: Object.fromEntries(Object.entries(payload.entity.slots).filter(([, slot]) => slot).map(([key, slot]) => [key, remapSlot(slot, id => id ? map.get(id) : undefined)])),
             extra: {...payload.entity.extra, sourceMaterialId: material.id, sourceMaterialRevision: material.revision}
         };
         await settingTable(payload.kind).add(entity);
@@ -345,7 +345,7 @@ async function adopt(material: LibraryMaterial, projectId: string): Promise<Mate
     return use;
 }
 
-export async function useMaterialInProject(id: string, projectId: string): Promise<MaterialUse> {
+export async function adoptMaterialInProject(id: string, projectId: string): Promise<MaterialUse> {
     return db.transaction('rw', tables(), async () => {
         const material = await activeMaterial(id);
         await assertProjectScope(material, projectId);
@@ -384,8 +384,4 @@ export async function updateMaterialUse(useId: string): Promise<MaterialUse> {
         await event(material.id, 'update-use', `${use.revision} → ${next.revision}`);
         return next;
     });
-}
-
-export async function listMaterialUsage(id: string): Promise<MaterialUse[]> {
-    return db.materialUses.where('materialId').equals(id).toArray();
 }

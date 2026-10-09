@@ -219,7 +219,7 @@ export async function listAIHubMixModels(credentials: AIHubMixCredentials, optio
         models.push({
             ...(parseModelMetadata(row) ? {metadata: parseModelMetadata(row)} : {}),
             id: row.model_id.trim(),
-            types: [...new Set((types ?? []).map((type) => Object.hasOwn(TYPE_ALIASES, type) ? TYPE_ALIASES[type]! : type))],
+            types: [...new Set((types ?? []).map((type) => Object.hasOwn(TYPE_ALIASES, type) ? TYPE_ALIASES[type] : type))],
             endpoints: endpoints ?? [],
             inputModalities: input ?? [],
             outputModalities: output ?? [],
@@ -263,7 +263,7 @@ export async function getAIHubMixModelSchema(credentials: AIHubMixCredentials, m
     const candidates = result.data.endpoints.filter((row) => row.path === path && row.method === "POST");
     if (!candidates.length) return {ok: true, path, status: "missing"};
     if (candidates.length !== 1) return {ok: true, path, status: "invalid"};
-    const candidate = candidates[0]!;
+    const candidate = candidates[0];
     const schema = record(candidate.request) ? candidate.request.schema : undefined;
     return validSchema(schema) ? {ok: true, path, status: "available", schema} : {ok: true, path, status: "invalid"};
 }
@@ -304,7 +304,7 @@ function parseTask(data: Record<string, unknown>, kind: AIHubMixMediaKind, key: 
             id: data.id,
             kind,
             model: data.model,
-            status: Object.hasOwn(statuses, providerStatus) ? statuses[providerStatus]! : "unknown",
+            status: Object.hasOwn(statuses, providerStatus) ? statuses[providerStatus] : "unknown",
             providerStatus,
             outputs,
             createdAt: timestamp(data.created_at),

@@ -15,7 +15,7 @@ import {targetRevision} from "@/lib/productionRevision";
 import {parseGenerationSlot, slotMediaIds} from "@/domain/slot";
 
 export type BusinessKind = "project" | "episode" | "beat" | "shot" | "character" | "scene" | "prop" | "style" | "media";
-export type AssetKind = "character" | "scene" | "prop" | "style";
+type AssetKind = "character" | "scene" | "prop" | "style";
 export type BusinessRow = Record<string, unknown> & { id: string };
 type RowByKind = {
     project: Project; episode: Episode; shot: Shot;
@@ -48,7 +48,7 @@ const tables = {
 } as const;
 export const readTables = () => [...PRODUCTION_TABLES];
 
-export function metadata(record: MediaRecord) {
+function metadata(record: MediaRecord) {
     return {
         id: record.id,
         projectId: record.projectId,
@@ -194,17 +194,32 @@ export function projection(kind: BusinessKind, row: BusinessRow): Record<string,
     return result;
 }
 
+type BusinessTextField = "name" | "title" | "filename" | "shotNumber" | "content" | "bio" | "notes";
+
+/** Presentation only: malformed compound fields fall through to the next owned scalar.
+ * Empty strings and legacy primitive values retain their display semantics; raw rows
+ * still supply revisions, approval snapshots and relation checks.
+ */
+export function businessRowText(row: BusinessRow, fields: readonly BusinessTextField[], fallback: string): string {
+    for (const field of fields) {
+        const value = row[field];
+        if (typeof value === "string") return value;
+        if (typeof value === "number" || typeof value === "boolean") return String(value);
+    }
+    return fallback;
+}
+
 export function summarize(kind: BusinessKind, row: BusinessRow) {
     return {
         id: row.id, kind, ownerId: kind === "project" ? row.id : row.projectId, episodeId: row.episodeId,
-        label: String(row.name ?? row.title ?? row.filename ?? row.shotNumber ?? row.id).slice(0, 200),
-        excerpt: String(row.content ?? row.bio ?? row.notes ?? "").slice(0, 300), order: row.order
+        label: businessRowText(row, ["name", "title", "filename", "shotNumber"], row.id).slice(0, 200),
+        excerpt: businessRowText(row, ["content", "bio", "notes"], "").slice(0, 300), order: row.order
     };
 }
 
 export function navigation(kind: BusinessKind, row: BusinessRow): { label: string; href: string } {
     const enc = encodeURIComponent;
-    const label = `${BUSINESS_LABELS[kind]} · ${String(row.name ?? row.title ?? row.filename ?? row.shotNumber ?? row.id).slice(0, 120)}`;
+    const label = `${BUSINESS_LABELS[kind]} · ${businessRowText(row, ["name", "title", "filename", "shotNumber"], row.id).slice(0, 120)}`;
     if (kind === "project") return {label, href: `/p/${enc(row.id)}`};
     const projectId = String(row.projectId);
     if (kind === "media") return {
@@ -256,7 +271,7 @@ export function bounded(value: unknown): { data: unknown; truncated: boolean } {
 
 export function isReadableBusinessFieldPath(kind: BusinessKind, field: string): boolean {
     const path = field.split(".");
-    return visibleFields[kind].includes(path[0]!) && path.length <= 3 && path.every((part) => part.length > 0 && !["extra", "__proto__", "constructor", "prototype"].includes(part));
+    return visibleFields[kind].includes(path[0]) && path.length <= 3 && path.every((part) => part.length > 0 && !["extra", "__proto__", "constructor", "prototype"].includes(part));
 }
 
 function fieldAt(kind: BusinessKind, row: BusinessRow, field: string): unknown {
@@ -327,7 +342,7 @@ export async function mediaUsage(ownerId: string, mediaId: string): Promise<Arra
                 if (slotMediaIds(parseGenerationSlot(value)).includes(mediaId)) usages.push({
                     kind,
                     id: row.id,
-                    label: String(row.name ?? row.shotNumber ?? row.id),
+                    label: businessRowText(row, ["name", "shotNumber"], row.id),
                     slot
                 });
             }

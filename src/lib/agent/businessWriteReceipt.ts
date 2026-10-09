@@ -1,5 +1,5 @@
 import {db} from "@/db/database";
-import {bounded, type BusinessRow, getRow, projection, targetRevision} from "./businessStore";
+import {bounded, businessRowText, type BusinessRow, getRow, projection, targetRevision} from "./businessStore";
 import {createWriteReceipt, type WriteReceiptEntry} from "./writeReceipt";
 
 const kinds = ["project", "episode", "beat", "shot", "character", "scene", "prop", "style"] as const;
@@ -33,7 +33,7 @@ function entry(kind: WriteReceiptEntry["kind"], operation: Operation, row: Busin
     } else revision = targetRevision(row);
     return {
         kind, operation, id: row.id, ownerId: kind === "project" ? row.id : id(row.projectId),
-        revision, label: String(row.name ?? row.title ?? row.shotNumber ?? row.id).slice(0, 160)
+        revision, label: businessRowText(row, ["name", "title", "shotNumber"], row.id).slice(0, 160)
     };
 }
 
@@ -101,12 +101,14 @@ export async function withBusinessWriteReceipt(name: string, raw: unknown, value
         if (!deleted || result.deletedId !== deleted.id) throw new Error("删除结果与目标不一致");
         return {...result, writeReceipt: createWriteReceipt([entry(tool.kind, "deleted", deleted)])};
     }
-    const targets = name === "shot_create" ? (result.items as unknown[]).map(object) : [result];
+    const items: unknown[] = Array.isArray(result.items) ? result.items : [];
+    const targets = name === "shot_create" ? items.map(object) : [result];
+    if (!targets.length) throw new Error("业务写入结果缺少目标");
     const rows = await Promise.all(targets.map((target) => getRow(tool.kind, id(target.id),
         tool.kind === "project" ? id(target.id) : id(args.ownerId), typeof args.episodeId === "string" ? args.episodeId : undefined)));
     const entries = rows.map((row) => entry(tool.kind, tool.operation, row));
     if (name === "project_create") {
-        const ownerId = rows[0]!.id;
+        const ownerId = rows[0].id;
         if (result.firstEpisodeId) entries.push(entry("episode", "created", await getRow("episode", id(result.firstEpisodeId), ownerId)));
         for (const [key, kind, table] of [
             ["firstChapterId", "audio_chapter", db.audioChapters], ["firstTrackId", "audio_track", db.audioTracks], ["firstDraftId", "music_draft", db.musicDrafts],

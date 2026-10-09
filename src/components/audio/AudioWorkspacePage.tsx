@@ -101,7 +101,7 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
     const segment = snapshot.segments.find((row) => row.id === segmentId && row.chapterId === chapter.id);
 
     function applySelection(intent: AudioSelectionIntent) {
-        const result = deriveAudioSelection(snapshot!, {chapterId: chapter.id, segmentId, takeId, clipId}, intent);
+        const result = deriveAudioSelection(snapshot, {chapterId: chapter.id, segmentId, takeId, clipId}, intent);
         if (result.patch.chapterId !== undefined) setChapterId(result.patch.chapterId);
         if (result.patch.segmentId !== undefined) setSegmentId(result.patch.segmentId);
         if (result.patch.takeId !== undefined) setTakeId(result.patch.takeId);

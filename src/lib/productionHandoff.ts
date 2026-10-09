@@ -26,8 +26,8 @@ const SLOT_LABELS: Record<ShotPictureField, string> = {firstFrame: "首帧", las
 
 /** One path component only; user-authored IDs and names never become directories. */
 function safeComponent(value: string, fallback: string): string {
-    const safe = value.normalize("NFKC")
-        .replace(/[\u0000-\u001f\u007f\\/:*?"<>|]/g, "-")
+    const safe = Array.from(value.normalize("NFKC"), character => character.charCodeAt(0) < 32 ? "-" : character).join("")
+        .replace(/[\u007f\\/:*?"<>|]/g, "-")
         .replace(/\s+/g, " ").replace(/^\.+|[. ]+$/g, "").trim();
     let bounded = "";
     for (const character of safe) {

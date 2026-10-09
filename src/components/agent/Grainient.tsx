@@ -111,7 +111,13 @@ void main(){
 
 // Keep renderer/program alive across re-renders so Effect 2 can update
 // uniforms without ever rebuilding the WebGL context.
-type GrainientContext = { renderer: Renderer; program: Program; mesh: Mesh };
+type GrainientUniforms = Record<
+    "iTime" | "uTimeSpeed" | "uColorBalance" | "uWarpStrength" | "uWarpFrequency" | "uWarpSpeed" |
+    "uWarpAmplitude" | "uBlendAngle" | "uBlendSoftness" | "uRotationAmount" | "uNoiseScale" |
+    "uGrainAmount" | "uGrainScale" | "uGrainAnimated" | "uContrast" | "uGamma" | "uSaturation" | "uZoom" | "uLightMode",
+    {value: number}
+> & Record<"iResolution" | "uCenterOffset" | "uColor1" | "uColor2" | "uColor3", {value: Float32Array}>;
+type GrainientContext = { renderer: Renderer; uniforms: GrainientUniforms; mesh: Mesh };
 const ctxMap = new WeakMap<HTMLDivElement, GrainientContext>();
 
 type GrainientProps = {
@@ -193,46 +199,43 @@ const Grainient = ({
         container.appendChild(canvas);
 
         const geometry = new Triangle(gl);
-        const program = new Program(gl, {
-            vertex,
-            fragment,
-            uniforms: {
-                iTime: {value: 0},
-                iResolution: {value: new Float32Array([1, 1])},
-                uTimeSpeed: {value: 0.25},
-                uColorBalance: {value: 0.0},
-                uWarpStrength: {value: 1.0},
-                uWarpFrequency: {value: 5.0},
-                uWarpSpeed: {value: 2.0},
-                uWarpAmplitude: {value: 50.0},
-                uBlendAngle: {value: 0.0},
-                uBlendSoftness: {value: 0.05},
-                uRotationAmount: {value: 500.0},
-                uNoiseScale: {value: 2.0},
-                uGrainAmount: {value: 0.1},
-                uGrainScale: {value: 2.0},
-                uGrainAnimated: {value: 0.0},
-                uContrast: {value: 1.5},
-                uGamma: {value: 1.0},
-                uSaturation: {value: 1.0},
-                uCenterOffset: {value: new Float32Array([0, 0])},
-                uZoom: {value: 0.9},
-                uColor1: {value: new Float32Array([1, 1, 1])},
-                uColor2: {value: new Float32Array([1, 1, 1])},
-                uColor3: {value: new Float32Array([1, 1, 1])},
-                uLightMode: {value: 0.0}
-            }
-        });
+        const uniforms: GrainientUniforms = {
+            iTime: {value: 0},
+            iResolution: {value: new Float32Array([1, 1])},
+            uTimeSpeed: {value: 0.25},
+            uColorBalance: {value: 0.0},
+            uWarpStrength: {value: 1.0},
+            uWarpFrequency: {value: 5.0},
+            uWarpSpeed: {value: 2.0},
+            uWarpAmplitude: {value: 50.0},
+            uBlendAngle: {value: 0.0},
+            uBlendSoftness: {value: 0.05},
+            uRotationAmount: {value: 500.0},
+            uNoiseScale: {value: 2.0},
+            uGrainAmount: {value: 0.1},
+            uGrainScale: {value: 2.0},
+            uGrainAnimated: {value: 0.0},
+            uContrast: {value: 1.5},
+            uGamma: {value: 1.0},
+            uSaturation: {value: 1.0},
+            uCenterOffset: {value: new Float32Array([0, 0])},
+            uZoom: {value: 0.9},
+            uColor1: {value: new Float32Array([1, 1, 1])},
+            uColor2: {value: new Float32Array([1, 1, 1])},
+            uColor3: {value: new Float32Array([1, 1, 1])},
+            uLightMode: {value: 0.0}
+        };
+        const program = new Program(gl, {vertex, fragment, uniforms});
 
         const mesh = new Mesh(gl, {geometry, program});
-        ctxMap.set(container, {renderer, program, mesh});
+        ctxMap.set(container, {renderer, uniforms, mesh});
 
         const setSize = () => {
             const rect = container.getBoundingClientRect();
             const w = Math.max(1, Math.floor(rect.width));
             const h = Math.max(1, Math.floor(rect.height));
             renderer.setSize(w, h);
-            const res = program.uniforms.iResolution.value;
+            const res = uniforms.iResolution.value;
             res[0] = gl.drawingBufferWidth;
             res[1] = gl.drawingBufferHeight;
             renderer.render({scene: mesh});
@@ -249,7 +252,7 @@ const Grainient = ({
         const t0 = performance.now();
 
         const loop = (t: number) => {
-            program.uniforms.iTime.value = (t - t0) * 0.001;
+            uniforms.iTime.value = (t - t0) * 0.001;
             renderer.render({scene: mesh});
             raf = requestAnimationFrame(loop);
         };
@@ -273,7 +276,8 @@ const Grainient = ({
         const io = new IntersectionObserver(
             ([entry]) => {
                 isVisible = entry?.isIntersecting ?? false;
-                isVisible ? tryStart() : tryStop();
+                if (isVisible) tryStart();
+                else tryStop();
             },
             {threshold: 0}
         );
@@ -281,7 +285,8 @@ const Grainient = ({
 
         const onVisibility = () => {
             isPageVisible = !document.hidden;
-            isPageVisible ? tryStart() : tryStop();
+            if (isPageVisible) tryStart();
+            else tryStop();
         };
         document.addEventListener('visibilitychange', onVisibility);
 
@@ -307,8 +312,8 @@ const Grainient = ({
         if (!container) return;
         const ctx = ctxMap.get(container);
         if (!ctx) return;
-        const {renderer, program, mesh} = ctx;
-        const u = program.uniforms;
+        const {renderer, uniforms, mesh} = ctx;
+        const u = uniforms;
 
         u.uTimeSpeed.value = timeSpeed;
         u.uColorBalance.value = colorBalance;

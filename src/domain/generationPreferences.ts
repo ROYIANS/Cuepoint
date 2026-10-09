@@ -1,7 +1,7 @@
 import type {MediaKind} from "./types";
 
 /** Only reusable selection parameters: no prompt, target, references or credentials. */
-export interface GenerationSelectionParameters {
+interface GenerationSelectionParameters {
     size?: string;
     resolution?: string;
     duration?: number;
@@ -11,7 +11,7 @@ export interface GenerationSelectionParameters {
     version?: "flare" | "sunburst";
 }
 
-export type GenerationPreferenceParameters = Omit<GenerationSelectionParameters, "mode">;
+type GenerationPreferenceParameters = Omit<GenerationSelectionParameters, "mode">;
 
 export interface GenerationSelection {
     connectorId: string;

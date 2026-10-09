@@ -235,7 +235,7 @@ export async function appendToolResults(runId: string): Promise<void> {
             });
         }
         for (const call of calls) {
-            if (call.status !== "completed" || ![...REFERENCE_TOOL_NAMES, "material_read_image", "material_read_text"].includes(call.name as typeof REFERENCE_TOOL_NAMES[number])) continue;
+            if (call.status !== "completed" || ![...REFERENCE_TOOL_NAMES, "material_read_image", "material_read_text"].includes(call.name)) continue;
             const referenceInput = (JSON.parse(call.result!) as {
                 referenceInput?: AgentReferenceInput
             }).referenceInput;
@@ -351,7 +351,10 @@ export async function executeAtomicTool(
             await requireProject(run);
             const call = await db.agentToolCalls.get(context.callId);
             if (run.status !== "running" || run.threadId !== context.threadId || !call || call.runId !== run.id || call.threadId !== run.threadId) throw new Error("操作归属或执行状态不匹配");
-            if (call.status === "completed" && call.result) return JSON.parse(call.result);
+            if (call.status === "completed" && call.result) {
+                const result: unknown = JSON.parse(call.result);
+                return result;
+            }
             if (call.status !== "running") throw new Error("工具尚未开始执行");
             const value = await execute();
             context.signal.throwIfAborted();

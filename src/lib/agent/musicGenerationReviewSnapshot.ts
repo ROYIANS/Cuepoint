@@ -3,7 +3,7 @@ import type {MusicGenerationReviewSnapshot} from "@/domain/agent";
 import {musicSettingsSchema, musicWireInput} from "@/lib/audioGeneration/input";
 
 export const MUSIC_REVIEW_MAX_BYTES = 128 * 1024;
-const identity = z.string().min(1).max(512).refine(value => !/[\u0000-\u001f]/.test(value));
+const identity = z.string().min(1).max(512).refine(value => !Array.from(value).some(character => character.charCodeAt(0) < 32));
 const schema = z.object({
     version: z.literal(1), projectId: identity, projectName: z.string().min(1).max(1000),
     draftId: identity, draftRevision: z.number().int().min(1).max(1e9),

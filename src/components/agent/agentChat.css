@@ -365,7 +365,8 @@
 .agent-chat-root .agent-sidebar-nav:focus-visible,
 .agent-chat-root .agent-sidebar-section:focus-visible,
 .agent-chat-root .agent-sidebar-group:focus-visible,
-.agent-chat-root .agent-topic-row:focus-visible {
+.agent-chat-root .agent-topic-row-title:focus-visible,
+.agent-chat-root .agent-topic-row-action:focus-visible {
     outline: none;
     box-shadow: 0 0 0 3px rgb(255 255 255 / 55%);
 }
@@ -412,10 +413,7 @@
     display: flex;
     align-items: center;
     height: 36px;
-    padding: 0 10px;
-    overflow: hidden;
     border-radius: 8px;
-    cursor: pointer;
 }
 
 .agent-chat-root .agent-topic-row:hover,
@@ -426,8 +424,15 @@
 .agent-chat-root .agent-topic-row-title {
     flex: 1;
     min-width: 0;
+    height: 100%;
+    padding: 0 10px;
     overflow: hidden;
+    border: none;
+    border-radius: inherit;
+    background: transparent;
     color: rgb(255 255 255 / 78%);
+    text-align: start;
+    cursor: pointer;
     font-size: 14px;
     font-weight: 400;
     line-height: 1.4;
@@ -441,9 +446,47 @@
 }
 
 .agent-chat-root .agent-topic-row-actions {
+    position: absolute;
+    right: 10px;
     display: inline-flex;
-    flex: none;
     align-items: center;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.agent-chat-root .agent-topic-row:hover .agent-topic-row-actions,
+.agent-chat-root .agent-topic-row.is-active .agent-topic-row-actions,
+.agent-chat-root .agent-topic-row:focus-within .agent-topic-row-actions {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.agent-chat-root .agent-topic-row:hover .agent-topic-row-title,
+.agent-chat-root .agent-topic-row.is-active .agent-topic-row-title,
+.agent-chat-root .agent-topic-row:focus-within .agent-topic-row-title {
+    padding-right: 58px;
+}
+
+.agent-chat-root .agent-topic-row-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--ant-color-text-tertiary, #6f6f6f);
+    cursor: pointer;
+}
+
+.agent-chat-root .agent-topic-row-action:hover {
+    background: var(--ant-color-fill-tertiary, rgba(255, 255, 255, 0.06));
+    color: var(--ant-color-text-secondary, #aaa);
+}
+
+.agent-chat-root .agent-topic-row-action:active {
+    color: var(--ant-color-text, #fff);
 }
 
 .agent-chat-root .agent-topic-search {
@@ -498,33 +541,6 @@
 
 .agent-chat-root .agent-topic-sheet {
     color: #fff;
-}
-
-@media (max-width: 767px) {
-    /* Room for StudioShell hamburger over ChatHeader. */
-    .agent-chat-root .agent-chat-header {
-        padding-inline-start: 44px !important;
-    }
-
-    .agent-chat-root .agent-conversation {
-        max-width: 100%;
-        overflow-x: hidden;
-    }
-
-    /* Edge-hugging content on phones — drop the desktop 800px column + 16px gutters. */
-    .agent-chat-root .agent-message-list {
-        padding-inline: 8px;
-    }
-
-    .agent-chat-root .agent-content {
-        max-width: none;
-        margin-inline: 0;
-    }
-
-    .agent-chat-root .agent-composer-dock {
-        padding-inline: 8px;
-        padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
-    }
 }
 
 .agent-chat-root .agent-chat-column {
@@ -627,6 +643,33 @@
 
 .agent-chat-root .agent-composer-dock.is-expanded::before {
     display: none;
+}
+
+@media (max-width: 767px) {
+    /* Room for StudioShell hamburger over ChatHeader. */
+    .agent-chat-root .agent-chat-header {
+        padding-inline-start: 44px !important;
+    }
+
+    .agent-chat-root .agent-conversation {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    /* Edge-hugging content on phones — drop the desktop 800px column + 16px gutters. */
+    .agent-chat-root .agent-message-list {
+        padding-inline: 8px;
+    }
+
+    .agent-chat-root .agent-content {
+        max-width: none;
+        margin-inline: 0;
+    }
+
+    .agent-chat-root .agent-composer-dock {
+        padding-inline: 8px;
+        padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+    }
 }
 
 /* Empty-streaming thinking: 3×3 square cells (~70% of prior 4×4 size). */

@@ -1,4 +1,4 @@
-export interface WrapupItem {
+interface WrapupItem {
     text: string;
     sourceIds: string[]
 }

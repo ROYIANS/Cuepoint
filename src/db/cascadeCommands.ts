@@ -3,7 +3,7 @@ import {db} from "./database";
 import {nowIso, createId} from "@/lib/ids";
 import {AUDIO_TABLES} from "./audioShared";
 import {PRODUCTION_TABLES} from "./productionShared";
-import {deleteMediaIfOrphan} from "./media";
+import {deleteMediaIfOrphans} from "./media";
 
 /** Archiving hides a project and its owned library snapshots without altering shared sources. */
 export async function setProjectArchived(id: Id, archived: boolean): Promise<void> {
@@ -106,6 +106,6 @@ export async function deleteChatThread(id: Id): Promise<void> {
         await db.agentRuns.where("threadId").equals(id).delete();
         await db.chatMessages.where("threadId").equals(id).delete();
         await db.chatThreads.delete(id);
-        for (const mediaId of jobMedia) await deleteMediaIfOrphan(mediaId);
+        await deleteMediaIfOrphans([...jobMedia]);
     });
 }

@@ -39,7 +39,7 @@ const catalogs = {
 };
 const normalized = (value: string) => value.trim().toLocaleLowerCase();
 const matches = (value: string, query: string) => normalized(value).includes(normalized(query));
-const label = (value: unknown) => String(value ?? '').slice(0, 120);
+const label = (value: string | undefined) => (value ?? '').slice(0, 120);
 
 interface Entity {
     id: string;

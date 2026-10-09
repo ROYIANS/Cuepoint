@@ -22,7 +22,7 @@ export interface RecorderDependencies {
     now: () => number;
 }
 
-export const RECORDING_MIME_TYPES = ["audio/webm;codecs=opus", "audio/ogg;codecs=opus", "audio/mp4", "audio/webm"] as const;
+const RECORDING_MIME_TYPES = ["audio/webm;codecs=opus", "audio/ogg;codecs=opus", "audio/mp4", "audio/webm"] as const;
 
 /** Enumeration never requests permission; labels may be blank until Start is clicked. */
 export async function listMicrophones(): Promise<MediaDeviceInfo[]> {
@@ -115,10 +115,10 @@ export class MicrophoneRecorder {
             const mimeType = RECORDING_MIME_TYPES.find((mime) => deps.isTypeSupported(mime));
             const recorder = deps.createRecorder(stream, mimeType ? {mimeType} : {});
             this.recorder = recorder;
-            this.analyser = this.context!.createAnalyser();
+            this.analyser = this.context.createAnalyser();
             this.analyser.fftSize = 1024;
             this.meterData = new Float32Array(this.analyser.fftSize);
-            this.analysisSource = this.context!.createMediaStreamSource(stream);
+            this.analysisSource = this.context.createMediaStreamSource(stream);
             this.analysisSource.connect(this.analyser); // Intentionally no speaker monitoring.
             for (const track of stream.getAudioTracks()) {
                 const listener = () => {

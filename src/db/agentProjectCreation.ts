@@ -31,7 +31,8 @@ export async function assertAgentProjectCreation(context: AgentToolContext, cont
         if (calls.some(row => {
             if (row.id === context.callId || row.status !== "completed" || !row.result) return false;
             try {
-                return JSON.parse(row.result)?.referenceInput !== undefined;
+                const result: unknown = JSON.parse(row.result);
+                return !!result && typeof result === "object" && !Array.isArray(result) && "referenceInput" in result && result.referenceInput !== undefined;
             } catch {
                 return false;
             }

@@ -8,7 +8,7 @@ import {assertReferenceSignature} from '@/lib/references/parse';
 import {parseReferenceFile} from '@/lib/references/import';
 import {assertImageQueueCapacity} from './imageQueue';
 
-export async function materialBlobDigest(blob: Blob): Promise<string> {
+async function materialBlobDigest(blob: Blob): Promise<string> {
     return [...new Uint8Array(await crypto.subtle.digest('SHA-256', await blob.arrayBuffer()))].map(byte => byte.toString(16).padStart(2, '0')).join('');
 }
 

@@ -1,10 +1,10 @@
 import type {AudioChapter, AudioClip, AudioTake, AudioTrack} from "@/domain/audio";
 
 /** Seconds are always measured against the original source, never mutated audio. */
-export type ScheduleChapter = Pick<AudioChapter, "id" | "order">;
-export type ScheduleTrack = Pick<AudioTrack, "id" | "chapterId" | "gain" | "muted" | "solo">;
-export type ScheduleTake = Pick<AudioTake, "id" | "mediaId" | "durationSec" | "sampleRate" | "channels">;
-export type ScheduleClip = Pick<AudioClip, "id" | "chapterId" | "trackId" | "takeId" | "startSec" | "trimStartSec" | "trimEndSec" | "gain" | "fadeInSec" | "fadeOutSec">;
+type ScheduleChapter = Pick<AudioChapter, "id" | "order">;
+type ScheduleTrack = Pick<AudioTrack, "id" | "chapterId" | "gain" | "muted" | "solo">;
+type ScheduleTake = Pick<AudioTake, "id" | "mediaId" | "durationSec" | "sampleRate" | "channels">;
+type ScheduleClip = Pick<AudioClip, "id" | "chapterId" | "trackId" | "takeId" | "startSec" | "trimStartSec" | "trimEndSec" | "gain" | "fadeInSec" | "fadeOutSec">;
 
 export interface AudioScheduleInput {
     chapters: readonly ScheduleChapter[];
@@ -38,7 +38,7 @@ function nonnegative(value: number, label: string) {
     if (!Number.isFinite(value) || value < 0) throw new Error(`${label}必须是有效的非负数`);
 }
 
-export function clipEnvelope(clip: Pick<ScheduleClip, "trimStartSec" | "trimEndSec" | "fadeInSec" | "fadeOutSec" | "gain">, trackGain = 1): EnvelopePoint[] {
+function clipEnvelope(clip: Pick<ScheduleClip, "trimStartSec" | "trimEndSec" | "fadeInSec" | "fadeOutSec" | "gain">, trackGain = 1): EnvelopePoint[] {
     const duration = clip.trimEndSec - clip.trimStartSec;
     const fadeIn = clip.fadeInSec;
     const fadeOut = clip.fadeOutSec;

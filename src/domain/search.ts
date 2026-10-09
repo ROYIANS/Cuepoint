@@ -44,7 +44,7 @@ export interface WebFailure {
     retrievedAt: string
 }
 
-export interface WebSearchResult {
+interface WebSearchResult {
     ok: true;
     kind: 'search';
     query: string;
@@ -54,7 +54,7 @@ export interface WebSearchResult {
     omittedSources: number
 }
 
-export interface WebReadResult {
+interface WebReadResult {
     ok: true;
     kind: 'read';
     requestedUrl: string;

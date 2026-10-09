@@ -1,7 +1,6 @@
 import lookup from "./lookup.generated.json";
 import manifest from "../../../../vendor/lobehub/manifest.json";
 
-export const MODEL_BANK_REVISION = manifest.revision;
 export const MODEL_BANK_COPIED_AT = manifest.copiedAt;
 
 type LimitRecord = { id: string; contextWindowTokens?: number; maxOutput?: number };
@@ -46,16 +45,16 @@ export function getModelBankEntry(model: string, providerId?: string): ModelBank
     };
 }
 
-export type ModelBankValue = string | number | boolean | null | ModelBankValue[] | {
+type ModelBankValue = string | number | boolean | null | ModelBankValue[] | {
     [key: string]: ModelBankValue | undefined
 };
-export type ModelBankModel = { id: string; [key: string]: ModelBankValue | undefined };
+type ModelBankModel = { id: string; [key: string]: ModelBankValue | undefined };
 export type ModelBankDataset = Record<string, ModelBankModel[]>;
 
 /** All raw fields, all provider records; lazy so the composer loads only the limit index. */
 export async function loadModelBank(): Promise<ModelBankDataset> {
     const data = await import("./models.generated.json");
-    return data.default as ModelBankDataset;
+    return data.default;
 }
 
 /** Derive capabilities from the verified full snapshot, never from model name heuristics. */

@@ -38,7 +38,7 @@ export function validateMusicSettings(settings: MusicSettings) {
     validateStoredMusicSettings(settings, false);
 }
 
-export async function validateMusicDraft(row: MusicDraft) {
+async function validateMusicDraft(row: MusicDraft) {
     await assertAudioProject(row.projectId, "music");
     validateMusicSettings(row.settings);
 }
@@ -57,7 +57,7 @@ async function validateStoredMusicWork(row: MusicWork, allowLegacyFraction: bool
     if (typeof row.title !== "string" || typeof row.notes !== "string" || typeof row.lyrics !== "string" || typeof row.favorite !== "boolean") throw new Error("音乐作品信息无效");
 }
 
-export async function validateMusicWork(row: MusicWork) {
+async function validateMusicWork(row: MusicWork) {
     await validateStoredMusicWork(row, false);
 }
 
@@ -95,14 +95,7 @@ export async function addMusicWork(projectId: string, input: AudioInput<MusicWor
 
 export const patchMusicWork = (projectId: string, id: string, revision: number, patch: Partial<Pick<MusicWork, "title" | "notes" | "favorite">>) => patchAudioRow(db.musicWorks, projectId, id, revision, patch, ["title", "notes", "favorite"], validateLegacyMusicWork);
 
-export async function deleteMusicDraft(projectId: string, id: string, revision: number) {
-    return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => {
-        await assertAudioProject(projectId, "music");
-        assertAudioRevision(await ownedAudioRow(db.musicDrafts, projectId, id), revision);
-        await db.musicDrafts.delete(id);
-        await touchAudioProject(projectId);
-    });
-}
+
 
 export async function deleteMusicWork(projectId: string, id: string, revision: number) {
     return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => {

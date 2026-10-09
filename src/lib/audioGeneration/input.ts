@@ -52,7 +52,7 @@ export const musicSettingsSchema = z.discriminatedUnion("engine", [
         durationSec: z.number().int("音乐时长必须为整数秒").min(MUSIC_DURATION_LIMITS.suno.min).max(MUSIC_DURATION_LIMITS.suno.max).optional()
     }).strict(),
 ]);
-export const audioGenerationInputSchema = z.discriminatedUnion("kind", [
+const audioGenerationInputSchema = z.discriminatedUnion("kind", [
     z.object({
         kind: z.literal("speech"),
         text: z.string().max(8192),
