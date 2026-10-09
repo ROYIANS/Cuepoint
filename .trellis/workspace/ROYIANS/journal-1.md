@@ -1140,3 +1140,48 @@ C01–C06八项发现及51最终文件独立复核PASS，144文件2402测试、3
 ### Next Steps
 
 - 暂停，等待用户恢复；E01尚未开始，E13/QG01待处理，不继续开发或推送。
+
+
+## Session 45: 源码整改E提交及A到E总任务归档
+<!-- trellis-session: v=2 fp=4282f93bb3174e75 -->
+
+**Date**: 2026-10-09
+**Task**: 源码整改E提交及A到E总任务归档
+**Branch**: `main`
+
+### Summary
+
+完成E三笔批准的本地提交；A到E全部51项发现与32单元已验收，E和总任务归档，台账与完整证据包归档后核验通过，未推送。
+
+### Main Changes
+
+## 完成情况
+
+源码整改 A→E 已按顺序完成：51 项发现全部 fixed、32 个单元全部 verified，EX-01 / QG-01 verified。当前 444 个 authored src 文件都有审查沿革。E 三笔本地工作提交已经按批准的精确范围执行；没有推送。
+
+## 验证与范围
+
+最终独立验收完成。Node22 干净锁定安装及全部九项门禁通过，88 个质量 CLI 自检、172 个测试文件 / 3028 个测试通过；类型、模型与构建验证通过。正式门禁保留 13 个明确审查过的诊断、512 个可见度量告警与 7 个精确 unused 契约；不声明所有度量告警归零。本机验证不代表实际 Linux CI、付费 provider 或全部设备 E2E。
+
+## 归档
+
+E 与总整改任务已由 task.py archive 归档到 `.trellis/tasks/archive/2026-10/`。原只读审查与其他任务保持状态；A/B 保留在原目录，仅按归档脚本规则解除活跃 parent 链接。当前任务指针已清空。台账同步 E 实际证据路径，两个任务内台账工具适配归档目录；原始台账与工具另存 `closure/pre-archive/`。
+
+归档后实际核验 51 项 / 32 单元，零缺失；35 个当前 Markdown 链接均有效，13 份关键验收报告和索引哈希不变。完整证据包实际重新核验 PASS：10117 个唯一压缩 blob 对应 41163 条原始文件记录；manifest / blob index SHA256 保持原样，原始证据不删除。先前独立实际 restore 证据保留，本次只重新 verify。路径映射与核验结果见 E 的 `closure/archive-record.json` 和总任务的 `closure/post-archive-verification.json`。
+
+## 后续
+
+本次源码审查整改工作已收尾。等待用户安排后续工作。
+
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `578bbbef4cc1660bca34f5d7eb4dff304924f589` | fix: 完成源码整改E的交互保护、性能与类型修复 |
+| `202c662126b5e128e0e3da7d44a00471e18f9915` | chore: 引入源码质量门禁并接入CI |
+| `a66c40908eeb34227686592c79d2d2dee3081d48` | docs: 固化源码整改E规范、台账与验证证据 |
+
+### Status
+
+[OK] **Completed**
