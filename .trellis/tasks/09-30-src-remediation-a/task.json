@@ -19,7 +19,7 @@
   "pr_url": null,
   "subtasks": [],
   "children": [],
-  "parent": "09-30-src-quality-remediation",
+  "parent": null,
   "relatedFiles": [],
   "notes": "A01–A04共7项实现、独立检查与final fullscope PASS；129files/1660tests/lint/model/build通过。用户ok确认两笔工作提交；未推送/归档，父整改继续B01。",
   "meta": {}

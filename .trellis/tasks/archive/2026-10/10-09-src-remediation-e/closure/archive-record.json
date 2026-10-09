@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-09",
+  "scope": "Approved Trellis finish-work bookkeeping only; no product changes or push.",
+  "workCommits": [
+    "578bbbef4cc1660bca34f5d7eb4dff304924f589",
+    "202c662126b5e128e0e3da7d44a00471e18f9915",
+    "a66c40908eeb34227686592c79d2d2dee3081d48"
+  ],
+  "archiveMapping": {
+    ".trellis/tasks/10-09-src-remediation-e": ".trellis/tasks/archive/2026-10/10-09-src-remediation-e",
+    ".trellis/tasks/09-30-src-quality-remediation": ".trellis/tasks/archive/2026-10/09-30-src-quality-remediation"
+  },
+  "protectedPreArchiveSHA256": {
+    "reviews/E07-check-snapshot.json": "c74f45907aa0f47dbd05cc7612cf483ebee1c4031f88033c202d1b78161a2ec1",
+    "reviews/E07-check.md": "cec87156512dfd6348e1d0065712abb7d5d73cdffdd2a84f3282ab4759ad347c",
+    "reviews/E-final-check.json": "727110ce4c7309ae248fa18da6aa3e327bcbc1312aa3a2fea03fa044e37c077f",
+    "reviews/E-final-check.md": "f8d8e091a6d897df9a44a26ac7f4fbb38364a909336599a4f5365612bbde08c3",
+    "reviews/E-final-independent/final-seal.json": "ab926cdf20ec15544e49432f5c1f81cdadcb21a4989a76a395f43741798f8229",
+    "reviews/E-evidence-transport-check.json": "95d44c50d0bc2696fdf9932c55f1ade6f0924d99ad61a5b2a4712cdaa1df75ca",
+    "reviews/E-evidence-transport-independent/final-seal.json": "e8df30d272eb588f2f74e79dcb14bc0893d44dc4c2adf289e49b3d7e63ee1251",
+    "reviews/E-commit-plan-check.json": "bc579a76f7b7ac64115bc87c38390259e7ca18c92343bdce8cd6e68cccd9eeef",
+    "reviews/E-commit-plan-check.md": "e23b5c8b17f49159cff0c76514d5464ceace4b5f65e07f79a385547bc8216d8d",
+    "commit-plan.json": "f1d6a353a72db67746eeef654af44e4ac2ff0775d051928f1acdb88a0ee8962e",
+    "commit-plan.md": "91d0f18e3d9e7460e23bd3c3bd85c436cc8d4d229006fc8b838a3b0d304fd4ac",
+    "evidence-pack/manifest.json": "443c82ed6fe35e39d128b6e8b370050626035d5e46e6853304ed6d8f87ee0793",
+    "evidence-pack/blobs.json": "da10dc26c20050217372fe22fd463e4852b190d47cf271fbf74cc9016271b9bb"
+  },
+  "hashOrigins": {
+    "reviews/E07-check-snapshot.json": "approved work commit a66c40908eeb34227686592c79d2d2dee3081d48",
+    "reviews/E07-check.md": "approved work commit a66c40908eeb34227686592c79d2d2dee3081d48",
+    "reviews/E-final-check.json": "approved work commit a66c40908eeb34227686592c79d2d2dee3081d48",
+    "reviews/E-final-check.md": "approved work commit a66c40908eeb34227686592c79d2d2dee3081d48",
+    "reviews/E-final-independent/final-seal.json": "sealed evidence pack ab926cdf20ec15544e49432f5c1f81cdadcb21a4989a76a395f43741798f8229",
+    "reviews/E-evidence-transport-check.json": "approved work commit a66c40908eeb34227686592c79d2d2dee3081d48",
+    "reviews/E-evidence-transport-independent/final-seal.json": "approved work commit a66c40908eeb34227686592c79d2d2dee3081d48",
+    "reviews/E-commit-plan-check.json": "approved work commit a66c40908eeb34227686592c79d2d2dee3081d48",
+    "reviews/E-commit-plan-check.md": "approved work commit a66c40908eeb34227686592c79d2d2dee3081d48",
+    "commit-plan.json": "approved work commit a66c40908eeb34227686592c79d2d2dee3081d48",
+    "commit-plan.md": "approved work commit a66c40908eeb34227686592c79d2d2dee3081d48",
+    "evidence-pack/manifest.json": "approved work commit a66c40908eeb34227686592c79d2d2dee3081d48",
+    "evidence-pack/blobs.json": "approved work commit a66c40908eeb34227686592c79d2d2dee3081d48"
+  },
+  "parentLedgerPreArchiveSHA256": "914f195532454218dfe56fe9d9eba34795f7d4db3f33953d764558b0dc3ed8ac",
+  "acceptance": {
+    "findingsFixed": 51,
+    "unitsVerified": 32,
+    "currentAuthoredSrcFiles": 444,
+    "testFiles": 172,
+    "testsPassed": 3028,
+    "qualityCLISelftestsPassed": 88,
+    "reviewedDiagnostics": 13,
+    "visibleMetricWarnings": 512,
+    "preciseUnusedContracts": 7
+  },
+  "snapshotPolicy": "Accepted reports, seals, pack manifest and blobs retain original logical paths and bytes. Restore writes the recorded historical paths into a new destination. Map historical task prefixes to archiveMapping for current local lookup. Operational parent ledger and its rendering/verification helpers are archive-aware bookkeeping."
+}

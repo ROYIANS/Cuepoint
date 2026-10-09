@@ -19,7 +19,7 @@
   "pr_url": null,
   "subtasks": [],
   "children": [],
-  "parent": "09-30-src-quality-remediation",
+  "parent": null,
   "relatedFiles": [
     ".trellis/tasks/09-30-src-quality-remediation/remediation-ledger.json"
   ],
