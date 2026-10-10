@@ -4,7 +4,7 @@ import {db} from "@/db/database";
 import {putMedia} from "@/db/media";
 import {kindFromMime} from "@/domain/slot";
 import type {Id, MediaKind, MediaRecord} from "@/domain/types";
-import {createId} from "./ids";
+import {BROWSER_WORKSPACE_ID, copyIntoManagedWorkspace, type ManagedCopy} from "@/lib/workspace";
 
 export const IMAGE_ACCEPT = "image/png,image/jpeg,image/webp,image/gif";
 export const VIDEO_ACCEPT = "video/mp4,video/webm,video/quicktime";
@@ -41,23 +41,25 @@ export function useMedia(mediaId: Id | undefined): MediaView | undefined {
     return view && view.id === mediaId && view.record === record ? view.media : undefined;
 }
 
-export async function uploadMediaFile(projectId: Id, file: File): Promise<{
+export async function uploadMediaFile(projectId: Id, file: File, signal?: AbortSignal): Promise<{
     id: Id;
     kind: MediaKind;
 }> {
     if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
         throw new Error("请选择图片或视频文件");
     }
-    const id = createId("med");
     const kind = kindFromMime(file.type);
-    await putMedia({
-        id,
-        projectId,
-        mimeType: file.type || (kind === "video" ? "video/mp4" : "image/jpeg"),
-        filename: file.name,
-        blob: file,
+    const staged = await copyIntoManagedWorkspace(file, {
+        workspaceId: BROWSER_WORKSPACE_ID,
+        projectId, filename: file.name, mimeType: file.type,
+    }, signal);
+    return staged.commit(async (copy: ManagedCopy) => {
+        await putMedia({
+            id: copy.mediaId, projectId,
+            mimeType: copy.mimeType, filename: copy.sourceName, blob: copy.blob,
+        });
+        return {id: copy.mediaId, kind};
     });
-    return {id, kind};
 }
 
 export function pickMediaFile(accept: string): Promise<File | null> {
