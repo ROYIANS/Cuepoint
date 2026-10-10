@@ -1,0 +1,15 @@
+{
+  "policy": "Actual microphone bytes and backups containing them remain only on this machine outside Git. Never uploaded as clone reference or sent to suppliers.",
+  "moved": [
+    {
+      "from": ".trellis/tasks/09-22-audio-batch-experience/acceptance/recording-3sec-local.zip",
+      "local": "/Users/xiaomengdao/.codex/local-artifacts/aifenjing/2026-10-10/09-22-audio-batch-experience--recording-3sec-local.zip",
+      "sha256": "3125d34b3f9f4b9e259ad63ce4904411deea9dac2b96d4eed80a18d9b9bf80bd"
+    },
+    {
+      "from": ".trellis/tasks/09-22-agent-result-evidence/validation/2026-10-10-live-model-write.zip",
+      "local": "/Users/xiaomengdao/.codex/local-artifacts/aifenjing/2026-10-10/09-22-agent-result-evidence--2026-10-10-live-model-write.zip",
+      "sha256": "5fdd71bb5d40d26e18e5a9aa421eba8d6a27d521e480748cb12d0d2019e6312d"
+    }
+  ]
+}

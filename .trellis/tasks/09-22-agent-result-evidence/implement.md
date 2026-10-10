@@ -1,5 +1,20 @@
 # Delivery plan
 
+## Current completed delivery — 2026-10-10
+
+Status: implemented, independently checked and accepted within the approved bounded evidence scope. Per-output sound sources, current provenance/fingerprints, film script range impact and the separate once-only read-only final check are delivered. See [final acceptance](validation/2026-10-10-final-acceptance.md) for current full gates and controlled native/live evidence, including actual invalid review spans/refs retained as unverified rather than certified or retried.
+
+The plans below are historical executed stages. Future/pending wording is retained to preserve their original boundaries, not to claim the completed increments are still awaiting development. Semantic synchronization, heterogeneous film batches, structured vocalist routing and universal model/acoustic verification are outside this child. Main manages task state, commit and archive; this document sync does not perform them.
+
+## Historical closeout increment plan — 2026-10-10 (completed)
+
+1. Implement stable per-output sound sources, inventory/picker/tool compatibility and evidence fingerprints per `research/2026-10-10-closeout-increments.md`.
+2. Run targeted repository/source/wrap-up/bounded inventory regressions and TypeScript.
+3. Independent review and integrated quality/full-test/build gates, then spec and acceptance update.
+4. Complete film script-range impact reporting and separately reviewed final-prose handling before the child and parent are closed.
+
+## Historical first-delivery execution plan (completed)
+
 1. Define shared bounded receipt types/parser and tool/entity/operation compatibility; inspect existing result/projection and evidence helpers.
 2. Implement business direct-write receipts plus bounded normalized record returns and transaction tests. Independently add supported audio/music receipts through an opt-in library write hook.
 3. Project owned saved receipts into compact process-adjacent UI, retaining original call navigation and no receipt=no evidence semantics.
@@ -9,13 +24,13 @@
 
 Ownership: root owns shared receipt contracts, audio/music adapter hook, pure UI projection/component/tests and task docs. Implement sub-agent owns businessTools.ts plus its helper/tests only. Independent review follows implementation.
 
-## Second delivery execution
+## Historical second-delivery execution plan (completed)
 1. Add typed, validated provider-task observations and correct refresh aggregation while preserving locks, download recovery, ownership and no-POST replay.
 2. Add shared truthful UI/Agent status projection, source and checked-time metadata; audit ZIP and polling compatibility.
 3. Test pending/processing/unknown/query failures, last verified observation, partial sibling results, completed-with-download-failure, recovery and legacy records.
 4. Review, run full tests/typecheck/build, document missing live/browser evidence, and commit this delivery separately (user authorized batched commits).
 
-## Third delivery execution
+## Historical third-delivery execution plan (completed, then extended to individual output sources)
 1. Implement read-only bounded current audio output inspection and expose it in sound generation tool results.
 2. Extend task generation source ownership/validation/listing and wrap-up fingerprints/completion checks to sound jobs; connect existing records source picker.
 3. Verify missing/deleted/foreign/empty media, raw responses, valid speech selection/timeline, partial completion, stale summaries, bounded coverage and no network effects.

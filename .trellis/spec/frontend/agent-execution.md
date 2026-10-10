@@ -57,38 +57,67 @@ Correct: push snapshots into the serialized writer, await `flush()`, then atomic
 Wrong: `setTimeout` decides a background tab died and starts its request again.
 Correct: probe the thread's Web Lock; if unavailable leave it alone; if available mark unfinished local execution interrupted without network traffic.
 
-## Unfinished-plan finishing checkpoint
+## Bounded terminal finishing check (2026-10-10)
 
-### Scope and signatures
-At a successful tool-free reply boundary, `saveAgentFinishingCheck(runId, expectedStep, output, responseOutput?, signal?): Promise<boolean>` may retain that reply as a process step and continue the normal loop once. `AgentRun.finishingCheck?: { step: number; createdAt: string }` is a code-owned durable one-use marker, not a verified-completion flag. `buildFinishingCheckPrompt(run, calls)` projects bounded owned historical evidence.
+### 1. Scope / Trigger
+A successful tool-free terminal answer from a smart run may receive one execution check, including when no plan was written. The user approved this extra request and the separate read-only claim review. Conversation, Stop, genuine input/approval boundaries and segment budgets remain authoritative.
 
-### Contract
-Require a running smart run with enabled tools, a valid current unfinished plan and a matching owned completed atomic `update_run_plan` result from this run. An inherited task plan alone is insufficient. All ledger calls must be completed, and another model request must fit within the current segment. Persist marker, public candidate activity, assistant continuation and fixed system checkpoint in one transaction. Keep original requests/base context unchanged. Responses retains its validated output envelope including opaque reasoning; public activity never includes encrypted content. Existing request metrics, context budget, permission gates, Stop and explicit resume apply normally.
+### 2. Signatures
+`saveAgentFinishingCheck(runId, expectedStep, output, responseOutput?, signal?): Promise<boolean>` persists `AgentRun.finishingCheck: {step, createdAt, reason: "unfinished_plan" | "terminal_reply"}`. `buildFinishingCheckPrompt(run, calls)` projects owned historical evidence. `reviewFinalReply` is a separate zero-tool request; see [write evidence](./agent-write-evidence.md).
 
-Reuse `describeRunWrites`; up to 20 receipt entries include source call IDs and historical revisions, excluding labels, arbitrary result payloads and plan text. Count uncovered/omitted writes explicitly. Completed network calls do not certify saved outputs. Instructions permit advice-only, missing-input and genuine blocked replies to finish, prohibit replaying submissions and distinguish prior facts from new effects. No forced tool choice or automatic generation retry.
+### 3. Contracts
+Require running smart mode, enabled tools, exact current model step, remaining segment budget and unchanged durable thread/project/task ownership. Every existing call must be completed and belong to this thread. If an `update_run_plan` exists, validate its atomic bookkeeping call, offered tool, original arguments and saved result against the current plan; no-plan and all-complete-plan replies can still be checked. The marker is durable once per run, including explicit resume.
 
-### Validation and error matrix
-| Condition | Outcome |
+Atomically preserve the original candidate as public activity plus assistant continuation and a fixed system check. Responses retains the exact validated envelope and opaque reasoning; public activity contains no encrypted content. Requests, permissions, Stop, metrics and normal tool loop remain intact. Project facts, direct receipts and plan steps are different evidence. Receipt projection caps at 20 entries and explicitly discloses omissions and uncovered calls. Advice/planning-only requests may finish without writes. This is bounded model self-checking, not guaranteed detection of every promise or false claim.
+
+### 4. Validation & Error Matrix
+| Condition | Result |
 | --- | --- |
-| No current-run saved plan, complete plan, conversation or no enabled tools | Normal final reply |
-| Failed/rejected/unsettled/foreign call, inconsistent plan | No finishing checkpoint |
-| Checkpoint already saved, including after explicit resume | No second checkpoint |
-| Candidate at final segment step | Normal final reply; do not manufacture a budget pause |
-| Valid checkpoint and remaining step budget | Continue through ordinary model loop |
-| Abort or local save failure | No new dispatch; preserve ordinary interruption/error handling |
-| Responses output differs from candidate or includes functions | Reject checkpoint before mutation |
+| Conversation, no tools, terminal/foreign/stale run or task | No check dispatch |
+| Failed/rejected/unsettled call or malformed/inconsistent saved plan | No check dispatch |
+| Marker already exists or final segment step reached | No additional execution check |
+| No plan or completed plan, otherwise eligible | One normal-loop check allowed |
+| Stop, persistence failure or invalid Responses envelope | No dispatch or partial mutation |
 
-### Good/base/bad cases
-Good: save an execution plan, emit premature prose, receive the one-time ledger reminder, then use a real business tool in the same user turn. Base: a planning-only request can finish with an explanation after the checkpoint without any business write. Bad: force mutations merely to tick a plan, count bookkeeping as completed work, or infer generated audio from a returned network call.
+### 5. Good / Base / Bad Cases
+Good: one user action request progresses from a premature candidate through an actual business tool. Base: advice-only prose finishes after explaining that no action was requested. Bad: ticking a plan counts as completion or bypasses generation approval.
 
-### Required tests
-`agentFinishingCheckPrompt.test.ts` checks ownership, validated receipt provenance, historical/unknown distinctions, omission bounds and exclusion of arbitrary payloads. Runtime/repository tests cover both protocols, once-only persistence, candidate history, interrupted resume, inherited plans, final-step behavior and approval preservation. Existing transport no-fallback tests remain valid: this is an additional explicit model round, not an HTTP retry.
+### 6. Tests Required
+`agentFinishingCheck.test.ts` and `agentFinishingCheckPrompt.test.ts`: both protocols, no-plan/completed-plan, advice, exact opaque envelope, once-only resumed runs, stale owner, final step and no replay. Runtime fixtures must accept the real extra request and assert actual paid counts, usage and receipts; never turn the feature off to preserve old counters.
 
-### Wrong versus correct
-Wrong: every tool-free reply means the user must type “continue”, or every unfinished plan forces more writes.
-Correct: use one evidence-backed self-check only for a freshly saved unfinished plan, allow the model to explain a genuine boundary, and retain actual results independently of its prose.
+### 7. Wrong vs Correct
+Wrong: a no-call answer always requires another user “continue”, or a saved plan authorizes more writes. Correct: persist one bounded evidence-based check, retain the original candidate, and let the normal permission/input/budget rules decide the next action.
 
-This checkpoint adds at most one check request per run; any subsequent tool work consumes the existing segment budget. It is not a semantic truth filter. The candidate already streamed and remains in history. No-plan promises, false all-complete plans and unsupported free-text claims require separate acceptance and are not solved by this mechanism.
+## Contextual ownership and typed recovery (2026-10-10)
+
+### 1. Scope / Trigger
+Business and sound tools that omit project ownership, stale targets and execution failures across preparation, atomic local writes and paid submission.
+
+### 2. Signatures
+`frozenProjectScope(context)`, `resolveBusinessOwner(args, context)` and `requireBoundProjectScope(context, requestedProjectId?)` read durable run/thread scope. `ToolRecoveryError`, `toolFailureResult`, `readToolRecoveryFailure` carry `code`, `executed`, `effectCertainty`, `error`, `recovery`.
+
+### 3. Contracts
+An omitted owner/project resolves only from an exact validated durable run/thread binding. Explicit IDs are preserved and foreign targets reject; unbound business actions require an explicit owner, including `studio`. Never infer episode identity. Preserve raw model arguments and original approval envelopes; resolve a separate parsed argument copy.
+
+Typed guard codes are PROJECT_REQUIRED/SCOPE_MISMATCH/NOT_FOUND, TARGET_NOT_FOUND/SCOPE_MISMATCH, EPISODE_REQUIRED/SCOPE_MISMATCH and STALE_TOOL_PREVIEW. Certainty comes from the actual boundary, never exception wording: preflight/read = `not_started`, proven atomic local rollback = `rolled_back`, ambiguous writes = `unknown`. Unknown effects have no invented success/failure result or automatic replay. A paid POST followed by a summary-read failure cannot be wrapped as atomic rollback. Stop is not a correction invitation.
+
+### 4. Validation & Error Matrix
+| Boundary | Result |
+| --- | --- |
+| Omitted owner, valid bound run | Resolve owner; original arguments unchanged |
+| Explicit foreign owner or run/thread mismatch | Typed scope rejection before effects |
+| Deleted project or target, absent episode | Typed actionable recovery; no replacement inference |
+| Stale approved preview | Re-read/reprepare and renewed approval |
+| POST may have happened, downstream read fails | Unknown; retain job/provenance, no resubmission |
+
+### 5. Good / Base / Bad Cases
+Good: correct an omitted bound project without asking to reopen the conversation. Base: studio action explicitly identifies studio. Bad: replacing a supplied foreign owner or assuming a caught paid error means nothing happened.
+
+### 6. Tests Required
+`agentContextualOwnerRecovery.test.ts`: bound/unbound/studio/foreign/deleted scope, no guessed episode, raw arguments and approvals retained, atomic result failure, real POST checkpoint followed by read failure, reopen and repeated resume with zero extra POST. Existing D05 historical schemas remain immutable with only explicit approved compatibility deltas.
+
+### 7. Wrong vs Correct
+Wrong: `catch (...) { throw new AtomicToolRollbackError(...) }` wraps the entire paid operation. Correct: wrap only actual preflight or atomic transactions; retain uncertain paid intent and expose its existing job for read-only recovery.
 
 ## D01 Agent query, selection and preparation boundaries
 

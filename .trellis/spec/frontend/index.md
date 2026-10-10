@@ -35,7 +35,8 @@
 | [Chat Performance](./chat-performance.md) | Agent transcript scroll + memo vs LobeHub virtua | Filled |
 | [AI Connectors](./ai-connectors.md) | Provider capabilities, APIMart/AIHubMix generation contracts and discovery | Filled |
 | [Hook Guidelines](./hook-guidelines.md) | Dexie liveQuery loading vs missing | Filled |
-| [Audio / Music Workspaces](./audio-music.md) | Project kinds, v23 audio records, CAS editing, generation recovery/approval, MIME and ZIP | Filled |
+| [Audio / Music Workspaces](./audio-music.md) | Project kinds, audio records, CAS editing, generation recovery/approval, MIME and ZIP | Filled |
+| [Voice Batches / Arrangement](./audio-batch-arrangement.md) | v24 batches, exact confirmation, bounded retry, take selection and retained-clip placement | Filled |
 | [State Management](./state-management.md) | IndexedDB owner id, episodes, STUDIO_LIBRARY_ID | Filled |
 | [IP / Material Library](./ip-material-library.md) | Multi-IP profiles, owned immutable snapshots, explicit adoption and retention | Filled |
 | [Asset / Output Foundation](./asset-output-foundation.md) | Optional metadata, prop/style relationships, media reuse and APIMart output profiles | Filled |

@@ -1,0 +1,107 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/e04MediaRetention.test.ts (150 tests | 4 failed) 2416ms
+   ❯ E04 media retention batch (150)
+     × bounds native-request work for 1 distinct/duplicate retained candidates 9ms
+     × bounds native-request work for 30 distinct/duplicate retained candidates 13ms
+     × bounds deleteChatThread at 1 candidates 14ms
+     × bounds deleteChatThread at 12 candidates 19ms
+ ❯ tests/productionProposals.test.ts (9 tests | 1 failed) 240ms
+   ❯ reviewed production proposals (9)
+     × upgrades v6 without changing existing project, shot or media records 50ms
+ ❯ tests/materialIntegration.test.ts (5 tests | 1 failed) 110ms
+   ❯ IP and material integration with legacy projects (5)
+     × upgrades v21 with no IP/material tables without changing existing projects 28ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/e04MediaRetention.test.ts > E04 media retention batch > bounds native-request work for 1 distinct/duplicate retained candidates
+Error: work passes: expected 18, actual 19
+ ❯ check tests/fixtures/e04-media/seeds.ts:12:91
+     10|
+     11| export const at = "2026-10-09T00:00:00.000Z";
+     12| export function check(value: unknown, message: string): asserts value …
+       |                                                                                           ^
+     13| export const result = (mediaId: string): GenerationResult => ({kind: "…
+     14| export const slot = (ids: string[]): GenerationSlot => ({...emptySlot(…
+ ❯ workCount tests/fixtures/e04-media/retention.ts:66:5
+ ❯ tests/e04MediaRetention.test.ts:11:120
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/e04MediaRetention.test.ts > E04 media retention batch > bounds native-request work for 30 distinct/duplicate retained candidates
+Error: work passes: expected 26, actual 27
+ ❯ check tests/fixtures/e04-media/seeds.ts:12:91
+     10|
+     11| export const at = "2026-10-09T00:00:00.000Z";
+     12| export function check(value: unknown, message: string): asserts value …
+       |                                                                                           ^
+     13| export const result = (mediaId: string): GenerationResult => ({kind: "…
+     14| export const slot = (ids: string[]): GenerationSlot => ({...emptySlot(…
+ ❯ workCount tests/fixtures/e04-media/retention.ts:66:5
+ ❯ tests/e04MediaRetention.test.ts:11:120
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/e04MediaRetention.test.ts > E04 media retention batch > bounds deleteChatThread at 1 candidates
+ FAIL  tests/e04MediaRetention.test.ts > E04 media retention batch > bounds deleteChatThread at 12 candidates
+Error: deleteChatThread: expected 14 current passes, got 15
+ ❯ check tests/fixtures/e04-media/seeds.ts:12:91
+     10|
+     11| export const at = "2026-10-09T00:00:00.000Z";
+     12| export function check(value: unknown, message: string): asserts value …
+       |                                                                                           ^
+     13| export const result = (mediaId: string): GenerationResult => ({kind: "…
+     14| export const slot = (ids: string[]): GenerationSlot => ({...emptySlot(…
+ ❯ commandWork tests/fixtures/e04-media/commands.ts:123:5
+ ❯ tests/e04MediaRetention.test.ts:14:229
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/materialIntegration.test.ts > IP and material integration with legacy projects > upgrades v21 with no IP/material tables without changing existing projects
+AssertionError: expected 24 to be 23 // Object.is equality
+
+- Expected
++ Received
+
+- 23
++ 24
+
+ ❯ tests/materialIntegration.test.ts:27:22
+     25|     legacy.close();
+     26|     await db.open();
+     27|     expect(db.verno).toBe(23);
+       |                      ^
+     28|     expect(await db.projects.get(project.id)).toEqual(project);
+     29|     for (const name of added) expect(await db.table(name).count()).toB…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/productionProposals.test.ts > reviewed production proposals > upgrades v6 without changing existing project, shot or media records
+AssertionError: expected 24 to be 23 // Object.is equality
+
+- Expected
++ Received
+
+- 23
++ 24
+
+ ❯ tests/productionProposals.test.ts:42:22
+     40|     legacy.close();
+     41|     await db.open();
+     42|     expect(db.verno).toBe(23);
+       |                      ^
+     43|     expect(await db.searchConnections.count()).toBe(0);
+     44|     expect(await db.agentGenerationBatches.count()).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+
+ Test Files  3 failed | 177 passed (180)
+      Tests  6 failed | 3213 passed | 1 skipped (3220)
+   Start at  15:10:57
+   Duration  23.53s (tests 69%, import 12%, setup 10%, transform 9%)
+
+    Isolate  180 workers spawned · ~61ms startup each (spawn + environment, per file)
+             at least ~2.69s faster with isolate: false — reuses workers across files instead of one per file

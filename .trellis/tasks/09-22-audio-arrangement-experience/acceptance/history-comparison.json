@@ -1,0 +1,7 @@
+{
+  "proposalId": "aap_2d50b4b3-4c93-438c-bf80-e88a5c262b83",
+  "undoMatchesExactPreProposalClips": true,
+  "redoPreservesExistingBytes": true,
+  "redoReusesPreparedClipIds": true,
+  "note": "Before this proposal, ordinary manual deletion of earlier test additions raised retained clip revision from 2 to 4. Comparison uses the actual pre-proposal rows."
+}

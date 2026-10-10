@@ -1,0 +1,158 @@
+{
+  "live-audio-final.zip": {
+    "metadataSha256": "d823741751c3192ce5ad68e006a351b0ee59816e512f08b87779d13e89825fef",
+    "recording": [
+      {
+        "id": "atk_6d1bbdca-c2ed-4c23-901d-603979206497",
+        "source": "recording",
+        "mediaId": "med_9b3ccc38-be2f-4841-aa91-a61618ea704b",
+        "durationSec": 2.94,
+        "sampleRate": 48000,
+        "channels": 1
+      }
+    ],
+    "realVoice": [
+      {
+        "id": "atk_cada7392-8bae-4a2a-a19f-71108213b99e",
+        "source": "tts",
+        "mediaId": "med_d8f08823-8b2f-4c1f-ace1-c2b6f1575671",
+        "durationSec": 1.92,
+        "sampleRate": 48000,
+        "channels": 1,
+        "textSnapshot": "验收完成，感谢聆听。",
+        "provenance": {
+          "provider": "mimo",
+          "model": "mimo-v2.5-tts",
+          "jobId": "agj_d136ec1c-77bc-4991-b8a0-67410a94a405"
+        }
+      }
+    ],
+    "clips": [
+      {
+        "id": "acl_22def859-ca7b-49cc-a1d8-a09dfa2ae927",
+        "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+        "revision": 4,
+        "createdAt": "2026-10-10T06:37:10.089Z",
+        "updatedAt": "2026-10-10T06:49:20.524Z",
+        "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+        "trackId": "atr_35eeae11-5e52-47be-82bc-c59094e20556",
+        "takeId": "atk_79ff7b76-3bbe-4858-9cbe-db1b7d9e58bc",
+        "startSec": 0.25,
+        "trimStartSec": 0.1,
+        "trimEndSec": 1.15,
+        "gain": 0.8,
+        "fadeInSec": 0.1,
+        "fadeOutSec": 0.15
+      },
+      {
+        "id": "acl_4d2891d86e536845b6c6ba5501a8afbef157d543c92f7103ffdde7ec6dfd7046",
+        "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+        "revision": 1,
+        "createdAt": "2026-10-10T06:49:30.038Z",
+        "updatedAt": "2026-10-10T06:49:30.038Z",
+        "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+        "trackId": "atr_35eeae11-5e52-47be-82bc-c59094e20556",
+        "takeId": "atk_d7d0380c-2233-40da-964b-c8f785d1fd10",
+        "startSec": 1.2999999999999998,
+        "trimStartSec": 0,
+        "trimEndSec": 2.5,
+        "gain": 1,
+        "fadeInSec": 0,
+        "fadeOutSec": 0
+      },
+      {
+        "id": "acl_812f799bf2673ccf3d3c248fedff8355532d2359996b6075e854317e00e0d675",
+        "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+        "revision": 1,
+        "createdAt": "2026-10-10T06:49:30.038Z",
+        "updatedAt": "2026-10-10T06:49:30.038Z",
+        "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+        "trackId": "atr_35eeae11-5e52-47be-82bc-c59094e20556",
+        "takeId": "atk_f5ad01b2-dcd7-4c79-9e77-eedce9ebb3e5",
+        "startSec": 4,
+        "trimStartSec": 0,
+        "trimEndSec": 3.75,
+        "gain": 1,
+        "fadeInSec": 0,
+        "fadeOutSec": 0
+      }
+    ],
+    "noteChanges": [
+      {
+        "id": "asg_abbe9673-ea6c-44d7-97f9-ba12b4c5b92a",
+        "order": 2,
+        "notes": "10-10 真实模型验收：已执行本地备注修改"
+      }
+    ]
+  },
+  "live-music-final.zip": {
+    "metadataSha256": "e013bed9ee9277bdd0fb1746db5e776fe49adb2cc0dcfe072dcc08166b4fb716",
+    "work": {
+      "id": "mwk_51a3f399-6845-4076-8c39-2890c799d2bf",
+      "durationSec": 58.58133333333333,
+      "sampleRate": 48000,
+      "channels": 2,
+      "mediaId": "med_68a18954-0315-4a3a-a26a-cbc604db968f",
+      "title": "本地验收 · 片尾",
+      "settings": {
+        "engine": "flowmusic",
+        "soundPrompt": "轻柔的钢琴与木吉他，温暖平静的片尾纯音乐，清晰旋律，短小完整的结束。",
+        "lyrics": "",
+        "title": "本地验收 · 片尾",
+        "lengthSec": 1
+      }
+    },
+    "provenance": {
+      "provider": "apimart",
+      "model": "flowmusic",
+      "taskId": "task_01M4JAVQYD0JQH2AZDJBV26XV5",
+      "clipId": "31e0b26c-f491-40aa-82d4-ebf9ddb80ff6",
+      "audioIndex": 1,
+      "jobId": "agj_9455af22-ac26-4597-bf9e-cea2ce4310ad"
+    },
+    "job": {
+      "id": "agj_9455af22-ac26-4597-bf9e-cea2ce4310ad",
+      "source": {
+        "kind": "manual"
+      },
+      "status": "saved",
+      "taskIds": [
+        "task_01M4JAVQYD0JQH2AZDJBV26XV5"
+      ],
+      "taskObservations": [
+        {
+          "taskId": "task_01M4JAVQYD0JQH2AZDJBV26XV5",
+          "checkedAt": "2026-10-10T07:19:40.128Z",
+          "status": "completed",
+          "lastVerified": {
+            "status": "completed",
+            "observedAt": "2026-10-10T07:19:40.128Z"
+          }
+        }
+      ]
+    }
+  },
+  "live-created-project.zip": {
+    "metadataSha256": "9e132ee7cdddfa38150b571d5be7561a4a4badaf29fcc39f1e8b5a2ff5ed9c6b",
+    "segments": [
+      {
+        "id": "asg_3e365561-a219-4abf-a1f8-3214176ec5ae",
+        "order": 0,
+        "text": "创建后继续写入成功。"
+      }
+    ],
+    "counts": {
+      "audioChapters": 1,
+      "audioTracks": 1,
+      "audioTakes": 0,
+      "audioClips": 0
+    }
+  },
+  "export": {
+    "channels": 2,
+    "sampleRate": 48000,
+    "frames": 372000,
+    "durationSec": 7.75,
+    "bytes": 1488044
+  }
+}

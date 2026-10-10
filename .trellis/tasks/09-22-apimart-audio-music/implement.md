@@ -1,6 +1,6 @@
 # Implementation Plan
 
-Status: awaiting final planning approval. This parent owns coordination and integrated acceptance; activate the appropriate child only after the final review gate.
+Status (2026-10-10): implementation and scoped integrated acceptance complete. See [final acceptance](./validation/2026-10-10-final-acceptance.md). The approved sequence below is preserved as historical planning; its activation and approval checkpoints have been fulfilled. Work commits and archive are handled by the authorized root closeout.
 
 ## Sequence and ownership
 
@@ -99,3 +99,7 @@ UI contract: compact Simple/Custom switch and engine/model selection; Simple sta
 Sources: user screenshot; https://help.suno.com/en/articles/2462273 (Simple description), https://help.suno.com/en/articles/2415873 (Custom lyrics). Adopt information hierarchy, not every Suno parameter.
 
 Validation: project_create legacy/new kinds/schema/atomic replay/scope tests; music mode/persistence tests; lint/full test/build; real desktop and 390px browser validation, no paid POSTs.
+
+## 2026-10-10 integrated closeout
+
+Current live microphone, import/render/export, MiMo, Flow, AIHubMix gpt-6-luna, browser and full gate results are recorded in [final acceptance](./validation/2026-10-10-final-acceptance.md). Original planning-only and no-paid-call statements describe their historical phase; later user authorization covers the actual acceptance samples. Flow requested one second but returned 58.581 seconds; actual decode duration is preserved. APIMart TTS and Suno remain deterministic wire/recovery coverage, without a new live success claim. Personal microphone bytes remain in local artifacts outside Git.

@@ -103,3 +103,8 @@ The parent owns these source requirements and final integrated acceptance. The c
 ## Review status
 
 Product-direction questions are resolved. The defaults and deferrals above are presented together in the final planning review. Research, design and implementation plans exist. The user approved the complete final summary with “开始吧” on 2026-09-22. Implementation is authorized across all four children.
+
+
+## Current closure — 2026-10-10
+
+All AC1–AC13 are accepted within the defined release scope, with actual provider/device/model samples and their practical limits separated from fixture coverage. See [final integrated acceptance](validation/2026-10-10-final-acceptance.md). The original repository evidence and planning map above describe the 2026-09-22 starting checkpoint. They remain historical context, not unresolved development.

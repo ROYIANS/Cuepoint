@@ -12,15 +12,17 @@
   "assignee": "ROYIANS",
   "createdAt": "2026-09-22",
   "completedAt": null,
-  "branch": null,
+  "branch": "codex/complete-trellis-backlog",
   "base_branch": "main",
   "worktree_path": null,
-  "commit": "1e0b58d",
+  "commit": "b23172a7dab1ca396a460fef3be6c56a88f8fe80",
   "pr_url": null,
   "subtasks": [],
   "children": [],
   "parent": "09-22-apimart-audio-music",
   "relatedFiles": [],
-  "notes": "Implementation and automated regressions committed (cfc3cd7,f6b3e9c,1e0b58d). Retained solely for integrated release acceptance and latest UI/live-path verification; Agent behavior improvements are owned by agent-creative-experience.",
-  "meta": {}
+  "notes": "2026-10-10: agreed development and scoped acceptance complete; product work commit b23172a7. Final evidence records current full gates and actual browser/device/provider/AIHubMix gpt-6-luna samples. Historical checkpoints and explicitly deferred future scope are preserved. Root performs the authorized archive after the documentation work commit.",
+  "meta": {
+    "priorImplementationCommit": "1e0b58d"
+  }
 }

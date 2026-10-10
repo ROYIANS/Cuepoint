@@ -1,6 +1,6 @@
 # Audio/Music Agent Integration and Release: Implementation
 
-Status: planning; await latest parent final-summary approval, satisfy dependencies, then activate this child.
+Status: implementation and final integrated acceptance complete on 2026-10-10. The following ordered plan is retained as history; the source requirements are checked against [final acceptance](../09-22-apimart-audio-music/validation/2026-10-10-final-acceptance.md).
 
 ## Dependency
 
@@ -8,12 +8,12 @@ Audio and Music children complete with stable shared repository/generation contr
 
 ## Ordered checklist
 
-- [ ] Add project-kind context and compact audio/music skill groups with scope validation tests.
-- [ ] Add script/draft/clip/take/work tools over the shared repositories.
-- [ ] Extend reviewed generation UI/adapters and durable execution; test all permission modes and races.
-- [ ] Wire artifact navigation/export preparation and verify no device capture is agent-triggered.
-- [ ] Run integrated manual/Agent and audio/music material workflows in browser.
-- [ ] Run full quality gate, update specs, record evidence and report actual limitations.
+- [x] Add project-kind context and compact audio/music skill groups with scope validation tests.
+- [x] Add script/draft/clip/take/work tools over the shared repositories.
+- [x] Extend reviewed generation UI/adapters and durable execution; test all permission modes and races.
+- [x] Wire artifact navigation/export preparation and verify no device capture is agent-triggered.
+- [x] Run integrated manual/Agent and audio/music material workflows in browser.
+- [x] Run full quality gate, update specs, record evidence and report actual limitations.
 
 ## Validation
 
@@ -33,4 +33,4 @@ Affected ownership: src/lib/agent/audioTools.ts, musicTools.ts, skills.ts, tools
 
 ## Integrated delivery evidence
 
-Implementation complete and in review. See [parent validation](../09-22-apimart-audio-music/validation.md) for the full automated/browser evidence and explicit live-provider/hardware limits. Final UI retains existing shadcn defaults. No Git commit/push or archive has been performed.
+Implementation complete. Historical [parent validation](../09-22-apimart-audio-music/validation.md) remains preserved; current [final acceptance](../09-22-apimart-audio-music/validation/2026-10-10-final-acceptance.md) closes its specific live-provider/hardware/visual gaps. Final UI retains existing shadcn defaults. Root coordinates work commits and archive after verification; this record makes no deployment claim.

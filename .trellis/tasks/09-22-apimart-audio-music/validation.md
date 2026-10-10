@@ -79,3 +79,8 @@ Implementation committed as `cfc3cd7` after explicit user authorization. The val
 - The earlier browser evidence above applies to the previous checkpoint. **This follow-up has not been visually reverified in a browser or on a physical phone**: in-app browser automation could not connect, and the user's active production browser was left undisturbed. Responsive behavior has code review coverage only this round.
 - No paid APIMart request or live LLM end-to-end request was made; provider and Agent tests use deterministic fixtures. No provider wire contract, database schema or dependencies changed.
 - User explicitly authorized a checkpoint commit for this follow-up after the checks above. Browser visual recheck remains pending. No push, deployment or task archive.
+
+
+## 2026-10-10 acceptance update
+
+The specific earlier real-provider, device and latest-UI gaps are now closed by [current integrated acceptance](validation/2026-10-10-final-acceptance.md). Earlier limitations are preserved as historical checkpoint statements; current limits are recorded separately.

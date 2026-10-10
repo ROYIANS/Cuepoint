@@ -12,10 +12,10 @@
   "assignee": "ROYIANS",
   "createdAt": "2026-09-22",
   "completedAt": null,
-  "branch": null,
+  "branch": "codex/complete-trellis-backlog",
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "b23172a7dab1ca396a460fef3be6c56a88f8fe80",
   "pr_url": null,
   "subtasks": [],
   "children": [
@@ -27,6 +27,6 @@
   ],
   "parent": null,
   "relatedFiles": [],
-  "notes": "",
+  "notes": "2026-10-10: agreed development and scoped acceptance complete; product work commit b23172a7. Final evidence records current full gates and actual browser/device/provider/AIHubMix gpt-6-luna samples. Historical checkpoints and explicitly deferred future scope are preserved. Root performs the authorized archive after the documentation work commit.",
   "meta": {}
 }

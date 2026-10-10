@@ -22,13 +22,13 @@ Audio and Music children complete with stable shared repository/generation contr
 
 Covers AC10–AC13 and cross-child AC1–AC9 regression.
 
-- [ ] Context accurately reflects audio/music records without inventing video episodes or including credentials/raw blobs.
-- [ ] Wrong-project targets, stale revisions, deleted projects and connector destination changes block effects.
-- [ ] All Agent permission modes still require generation review; approved execution claims once and preserves original model call envelopes.
-- [ ] Manual and Agent generation produce the same job/source/work representation. Manual edits during review invalidate stale actions.
-- [ ] Deleting chat preserves project works; deleting project blocks late generation/application while retaining historical read-only chat behavior.
-- [ ] Loaded groups fit the 36-tool budget and tools are callable only after being offered for that request.
-- [ ] Full typecheck/tests/build/model snapshot verification pass; evidence distinguishes mocked provider checks from live results.
+- [x] Context accurately reflects audio/music records without inventing video episodes or including credentials/raw blobs.
+- [x] Wrong-project targets, stale revisions, deleted projects and connector destination changes block effects.
+- [x] All Agent permission modes still require generation review; approved execution claims once and preserves original model call envelopes.
+- [x] Manual and Agent generation produce the same job/source/work representation. Manual edits during review invalidate stale actions.
+- [x] Deleting chat preserves project works; deleting project blocks late generation/application while retaining historical read-only chat behavior.
+- [x] Loaded groups fit the 36-tool budget and tools are callable only after being offered for that request.
+- [x] Full typecheck/tests/build/model snapshot verification pass; evidence distinguishes mocked provider checks from live results.
 
 ## Out of scope
 
@@ -36,4 +36,4 @@ Do not expand the [parent exclusions](../09-22-apimart-audio-music/prd.md). Othe
 
 ## Status
 
-Planning complete for final parent review; implementation not started. Read this task's design.md and implement.md and the parent summary approval before activation.
+Implementation and integrated acceptance are complete for the authorized release. See [2026-10-10 final acceptance](../09-22-apimart-audio-music/validation/2026-10-10-final-acceptance.md) and the unified quality gate. The original planning and checkpoint records are retained below/in the linked design; they do not describe current readiness. Real provider/model/device samples and deterministic negative cases are distinguished explicitly.

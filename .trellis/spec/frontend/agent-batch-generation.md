@@ -104,3 +104,6 @@ Wrong: treat `job.status === 'applied'` or the original prepare tool response as
 ## Audit remediation contracts (2026-09-21)
 
 Unsaved batch review edits and pending saves block SPA navigation as well as browser unload. An in-app dialog offers continue, discard, and save-before-proceed. Failed revision checks retain the local draft and route. Saving a draft never starts paid generation. Both single and batch result links use `generationTargetDestination`; shot destinations include the exact shot search parameter.
+
+
+Audio voice batches use [their separate v24 contract](./audio-batch-arrangement.md), including the bounded existing clone-reference `Dexie.waitFor` check. This image/video spec retains outside-write Blob preparation.

@@ -1,0 +1,11 @@
+
+> cuepoint@0.1.0 quality /Users/xiaomengdao/WebstormProjects/aifenjing
+> node scripts/quality-check.mjs
+
+lint: 13 errors, 541 review warnings, 13 reviewed allowances; 0 failures
+warning rules: {"complexity":135,"sonarjs/cognitive-complexity":93,"no-nested-ternary":309,"max-depth":4}
+architecture: 438 files, 1757 static value edges, 6 literal dynamic edges, 0 static cycles; 0 failures; 0 computed imports/requires outside static proof
+unused: 8 full-scope candidates, 7 reviewed contracts, 86 production-only review signals; 1 failures
+{"section":"unused","kind":"unallowed","key":"[\"types\",\"src/domain/audioArrangement.ts\",\"AudioSelectionItem\"]","count":1}
+quality: FAIL (all)
+ ELIFECYCLE  Command failed with exit code 1.

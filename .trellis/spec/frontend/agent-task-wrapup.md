@@ -140,14 +140,17 @@ wrap-up freshness and task completion. Provider query observations remain specif
 [audio-music.md](./audio-music.md).
 
 ### 2. Signatures
-- `inspectAudioGenerationOutputs(job): Promise<AudioOutputEvidence>` reads current local
+- `inspectAudioGenerationOutputs(job, {resultKey?, offset?, limit?} = {}): Promise<AudioOutputEvidence>` reads current local
   output ownership, media metadata and speech selection/placement. Caller supplies a
   current job within a consistent transaction.
 - `readAudioJobSummary(projectId, jobId)` reloads job and outputs together in a read-only
   audio transaction, returning original summary fields plus `outputs` and `inspectedAt`.
-- `taskGenerationSource(task, jobId)` accepts owned sound jobs in addition to existing
-  image/video batch sources. `listTaskGenerationSources(task)` feeds task tools and the
-  existing records source picker.
+- `taskGenerationSource(task, jobId, resultKey?)` accepts owned sound jobs in addition to existing
+  image/video batch sources. `listTaskGenerationSourceInventory(task, {offset?, limit?})` feeds task tools and the
+  records source picker with explicit coverage; `listTaskGenerationSources` is the compatibility array view.
+- `TaskRecordSource` carries an optional exact sound `resultKey`; `taskRecordSourceIdentity`
+  is the tuple `[type,id,resultKey ?? null]`. `taskGenerationEvidenceId` hashes that exact key
+  for bounded catalog IDs while retaining legacy aggregate IDs.
 
 ### 3. Contracts
 `outputs.results` includes up to 100 whitelisted entries: key/title/IDs, availability,
@@ -160,18 +163,28 @@ and saved decoder metadata do not establish current playback or acoustic quality
 A sound generation source requires its original approved submission call and run to
 belong to the current task, thread and project. A later query cannot adopt a foreign or
 manual origin. Imported dormant jobs are historical project data, not task effects.
-Complete-result eligibility additionally requires all known outputs locally available
-and a saved/target-conflict lifecycle. Partial healthy outputs remain inspectable
-observations and cannot certify the aggregate generation as complete.
+Aggregate-result eligibility requires all known outputs locally available
+and a saved/target-conflict lifecycle. An exact nonempty unique sound result key (at most
+512 characters) can separately support its one currently owned available output, even
+when siblings remain unresolved. It never certifies the aggregate generation as complete.
+Media/output provenance must match provider/model/job/task/clip/audio index; generated
+speech additionally requires an actual TTS take. A later read does not acquire submission ownership.
+Agent voice batches use the shared confirmed origin and actual retry-chain proof in
+[audio-batch-arrangement.md](./audio-batch-arrangement.md).
 
 Task `result` writes and wrap-up tool sources resolve current job evidence rather than
 trusting historical saved JSON. Selection and timeline placement are distinct fields.
-Wrap-up fingerprints include current output and placement facts, so deletion, selection
-changes and clip/track edits invalidate previous review. Active/uncertain sound jobs block
+Wrap-up fingerprints include full current output rows and placement facts, so deletion,
+output metadata/provenance edits, selection changes and clip/track edits invalidate previous review.
+Every individual output identity contributes, including outputs beyond the 100-row display page.
+Source inventories report total/included/omitted/offset/nextOffset and retain aggregate plus
+individual identities; a 101st output cannot be silently omitted from freshness checks. Active/uncertain sound jobs block
 completion; an abandoned unpaid prepared intent remains observation-only and is not a
 permanent blocker once its execution has settled. Source inventories use consistent read
 transactions, and storage failures propagate instead of being treated as missing placements. AI prose and plan status remain
-separate from this structural verification; arbitrary final chat text is not classified.
+separate from this structural verification. The separately approved bounded final-reply review
+in [agent-write-evidence.md](./agent-write-evidence.md) uses exact spans and listed observations;
+it does not certify arbitrary prose, entire batch completion or acoustic quality.
 
 ### 4. Validation & Error Matrix
 | Condition | Outcome |
@@ -182,7 +195,9 @@ separate from this structural verification; arbitrary final chat text is not cla
 | Foreign media, wrong output-media/job link | Unverified |
 | Empty/non-audio blob or invalid decoder metadata | Invalid media |
 | Saved take without selection/clip | Available; neither selected nor placed |
-| Partial healthy results | Inspectable; aggregate result remains unresolved |
+| Partial healthy results | Exact eligible result may support one file; aggregate remains unresolved |
+| Blank/duplicate/missing/foreign result key or key on image/video source | Reject source |
+| More than 100 source/output entries | Page with coverage; fingerprint all eligible identities |
 | Manual/foreign/dormant/unapproved origin | Excluded from task result evidence |
 | Output or placement edited after review | Summary stale |
 
@@ -195,8 +210,9 @@ used as proof of a currently usable song.
 ### 6. Tests Required
 `audioOutputEvidence.test.ts` covers raw-vs-saved media, missing/empty/foreign outputs,
 selection/placement, deleted history, coverage and no extra network traffic.
-`audioTaskEvidence.test.ts` covers source ownership, current task reads, aggregate result
-rejection, stale summaries and completion. `audioGenerationAgent.test.ts` verifies actual
+`audioTaskEvidence.test.ts` covers source ownership, per-result identity, paginated inventory,
+aggregate result rejection, 101st-output freshness, output provenance/metadata changes, stale
+summaries and completion. `audioBatchFinalReview.test.ts` covers confirmed batch provenance and retry chains. `audioGenerationAgent.test.ts` verifies actual
 ledger results include inspected output evidence. Preserve existing task/film batch tests.
 Native browser transactions and live provider/acoustic tests are separate acceptance.
 

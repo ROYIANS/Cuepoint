@@ -1,0 +1,211 @@
+- complementary:
+  - link "小光点":
+    - /url: /about
+  - navigation "工作室导航":
+    - link "创作助手":
+      - /url: /agent
+      - text: 创作助手
+    - link "我的 IP":
+      - /url: /ips
+      - text: 我的 IP
+    - link "项目":
+      - /url: /projects
+      - text: 项目
+    - link "素材库":
+      - /url: /assets
+      - text: 素材库
+    - link "任务":
+      - /url: /agent/tasks
+      - text: 任务
+    - link "连接与模型":
+      - /url: /connectors
+      - text: 连接与模型
+    - link "关于":
+      - /url: /about
+      - text: 关于
+  - button "导入项目":
+- img "avatar"
+- generic: 小光点
+- button:
+- button "开启新话题":
+  - generic: 开启新话题
+- button "搜索":
+  - generic: 搜索
+- button "话题":
+  - generic: 话题
+- button "任务":
+  - generic: 任务
+- button "话题 3":
+  - generic: 话题 3
+- button "今天":
+  - text: 今天
+- button "请现在创建一个名为“10-10 真实模型创建续作…"
+- button "重命名":
+- button "删除":
+- button "新对话"
+- button "重命名":
+- button "删除":
+- button "请现在读取当前音频项目第一章的稿件，把第二段的备…"
+- button "重命名":
+- button "删除":
+- button:
+- generic: 请现在读取当前音频项目第一章的稿件，把第二段的备…
+- button:
+- button:
+- button:
+- time: 15:09:35
+- article:
+  - paragraph: 请现在读取当前音频项目第一章的稿件，把第二段的备注更新为“10-10 真实模型验收：已执行本地备注修改”，保存后报告实际修改和未完成事项。保持正文、声音选用和所有时间线剪辑不变，不生成音频。请直接执行，不需要再问我是否开始。
+- img "小光点"
+- text: 小光点
+- time: 15:09:35
+- region "执行过程":
+  - button "用时 1 分 24 秒 工具调用已结束" [expanded]:
+    - generic "本轮经过时间，包含等待确认的时间": 用时 1 分 24 秒
+    - generic: 工具调用已结束
+  - button "本次已保存：更新脚本段落 1 项":
+    - generic: 本次已保存：更新脚本段落 1 项
+  - generic "成果声明未核实"
+  - paragraph: 4 项工具调用已结束。调用完成不代表整个目标完成，也不代表生成结果已保存，请以具体调用结果和项目内容为准。
+  - button "执行记录"
+  - button "查看工作区概览、读取音频项目等 4 项" [expanded]:
+    - generic: 查看工作区概览、读取音频项目等
+    - generic: 4 项
+  - button "查看工作区概览 已完成":
+    - generic: 查看工作区概览
+    - generic: 已完成
+  - button "读取音频项目 已完成":
+    - generic: 读取音频项目
+    - generic: 已完成
+  - button "读取音频项目 已完成":
+    - generic: 读取音频项目
+    - generic: 已完成
+  - button "修改配音内容 已完成":
+    - generic: 修改配音内容
+    - generic: 已完成
+  - article:
+    - paragraph: 已接收这份项目事实增量。它未列出第二段的备注，因此前次已保存的备注仍保持不变；正文和声音选用也未被本次增量修改。
+  - generic "批量生成"
+- article:
+  - paragraph: 收到项目事实增量。它只更新了段落正文与声音选用信息，未包含备注字段，因此不会覆盖第二段的备注。此前工具结果确认已将备注保存为“10-10 真实模型验收：已执行本地备注修改”；本次未进行额外修改，也未生成音频。
+- generic "gpt-6-luna":
+  - generic "OpenAI":
+    - img "OpenAI"
+  - text: gpt-6-luna
+- generic "生成速度：供应商返回的输出 token ÷ 流式生成耗时（不含工具和审批等待）":
+  - text: 1011.1 tok/s
+- generic "本次执行累计 44,266 tokens；输入 42,347，输出 1,919":
+  - text: 44.3K
+- button "查看本次请求的记忆":
+  - text: 记忆 0
+- button:
+- time: 15:12:29
+- article:
+  - paragraph: 请现在读取第一章第12段“验收完成，感谢聆听。”，为这一段准备一个批量配音草稿，继承当前默认 MiMo 音色，供我核对整批请求并确认。只包含第12段，不要生成其他段，不要自动选用或加入时间线。准备好后明确说明尚未发送配音请求。
+- img "小光点"
+- text: 小光点
+- time: 15:12:29
+- region "执行过程":
+  - button "用时 1 分 17 秒 工具调用存在失败或拒绝 含 1 项失败" [expanded] [active]:
+    - generic "本轮经过时间，包含等待确认的时间": 用时 1 分 17 秒
+    - generic: 工具调用存在失败或拒绝
+    - generic: 含 1 项失败
+  - button "本次写入缺少可核验记录":
+    - generic: 本次写入缺少可核验记录
+  - generic "成果声明未核实"
+  - paragraph: 回复已结束；成功调用的记录仍保留，未完成的调用不能计为已完成工作。1 项调用失败。
+  - button "执行记录"
+  - button "读取音频项目、准备批量配音 3 项 · 含 1 项失败":
+    - generic: 读取音频项目、准备批量配音
+    - generic: 3 项 · 含 1 项失败
+  - generic "批量生成"
+  - region "批量配音进度":
+    - strong: 第12段批量配音草稿
+    - generic: 1 段 · 已保存 1 · 失败 0 · 待处理 0
+    - generic "查看各段进度与失败项"
+- article:
+  - paragraph:
+    - text: 已为第一章第12段
+    - strong: “验收完成，感谢聆听。”
+    - text: 准备好批量配音草稿。
+  - list:
+    - text: "- 草稿批次："
+    - code: audiobatch_2c99a52b-1cd1-45f2-b95a-4442300502c4
+    - listitem: "- 包含：仅第12段"
+    - text: "- 音色：默认 MiMo（"
+    - code: mimo_default
+    - text: ）
+    - listitem: "- 当前状态：草稿待核对，尚未确认"
+    - text: "- 配音请求："
+    - strong: 尚未发送
+    - listitem: "- 未选用声音，也未加入时间线；没有生成其他段落的配音。"
+- generic "gpt-6-luna":
+  - generic "OpenAI":
+    - img "OpenAI"
+  - text: gpt-6-luna
+- generic "生成速度：供应商返回的输出 token ÷ 流式生成耗时（不含工具和审批等待）":
+  - text: 1015.9 tok/s
+- generic "本次执行累计 36,092 tokens；输入 33,539，输出 2,553":
+  - text: 36.1K
+- button "查看本次请求的记忆":
+  - text: 记忆 0
+- button:
+- time: 15:16:31
+- article:
+  - paragraph: 我已在界面确认第12段批次，界面显示已保存 1。请现在读取批次和生成结果的当前本地事实，报告是否保存、是否选用、是否入轨。不要发送新的配音请求，不要修改项目，也不要声称已经试听或音质合格。
+- img "小光点"
+- text: 小光点
+- time: 15:16:31
+- region "执行过程":
+  - button "用时 41 秒 已读取，未执行修改":
+    - generic "本轮经过时间，包含等待确认的时间": 用时 41 秒
+    - generic: 已读取，未执行修改
+  - generic "成果声明未核实"
+- article:
+  - paragraph: 已读取批次及第一章本地状态；本轮未修改项目，也未发送新的配音请求。
+  - list:
+    - text: "-"
+    - strong: 已保存：是。
+    - text: 批次已确认并结算，唯一项目（第12段“验收完成，感谢聆听。”）状态为
+    - code: saved
+    - text: 。
+    - text: "-"
+    - strong: 已选用：否。
+    - text: 批次记录显示
+    - code: "selected: false"
+    - text: 。
+    - text: "-"
+    - strong: 已入轨：否。
+    - text: 批次记录显示
+    - code: "placed: false"
+    - text: ；章节目前读取到 3 个时间线剪辑。
+    - text: "-"
+    - strong: 试听：未试听。
+    - text: 因此无法判断音质。另，本次 take 列表读取未返回可列出的声音版本详情。
+- generic "gpt-6-luna":
+  - generic "OpenAI":
+    - img "OpenAI"
+  - text: gpt-6-luna
+- generic "生成速度：供应商返回的输出 token ÷ 流式生成耗时（不含工具和审批等待）":
+  - text: 1638.0 tok/s
+- generic "本次执行累计 38,364 tokens；输入 32,988，输出 5,376":
+  - text: 38.4K
+- button "查看本次请求的记忆":
+  - text: 记忆 0
+- button:
+- textbox "提问、创建内容或启动任务"
+- button "项目：10-10 存量清理验收 · 音频" [disabled]:
+  - generic: 10-10 存量清理验收 · 音频
+- button "更多选项":
+- button "展开编辑器":
+- button "模型设置：gpt-6-luna":
+  - generic: gpt-6-luna
+- button "语音输入":
+- button:
+- button "发送方式":
+- button "智能模式":
+  - generic: 智能
+- button "权限：请求批准":
+  - generic: 请求批准
+- button "上下文明细":
+- region "Notifications alt+T"

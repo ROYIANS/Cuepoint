@@ -6,3 +6,7 @@
 {"file": ".trellis/spec/frontend/audio-music.md", "reason": "Music lifecycle and query observation contracts"}
 {"file": ".trellis/spec/frontend/agent-task-wrapup.md", "reason": "Current sound output and task source eligibility"}
 {"file": ".trellis/spec/frontend/agent-tasks.md", "reason": "Task source validation and history semantics"}
+{"file": ".trellis/tasks/09-22-agent-result-evidence/research/2026-10-10-closeout-increments.md", "reason": "Current source-verified deterministic remaining increment and regression contract"}
+{"file": ".trellis/tasks/09-22-agent-result-evidence/research/2026-10-10-final-reply-review.md", "reason": "User-approved final-boundary checks, cost, Stop, evidence and once-only behavior"}
+{"file": ".trellis/tasks/09-22-agent-result-evidence/research/2026-10-10-film-script-impact.md", "reason": "Authoritative film script range invalidation and preserved-shot impact contract"}
+{"file": ".trellis/tasks/09-22-agent-result-evidence/research/2026-10-10-independent-review-handoff.md", "reason": "Independent review and intentional compatibility delta/fixture repair handoff"}

@@ -2,7 +2,7 @@
   "id": "apimart-audio-music",
   "name": "apimart-audio-music",
   "title": "APIMart 音频与音乐生成",
-  "description": "",
+  "description": "Deliver the integrated audio/music release, shared Agent tools and final actual browser/device/provider acceptance.",
   "status": "review",
   "dev_type": null,
   "scope": null,
@@ -12,10 +12,10 @@
   "assignee": "ROYIANS",
   "createdAt": "2026-09-22",
   "completedAt": null,
-  "branch": null,
+  "branch": "codex/complete-trellis-backlog",
   "base_branch": "main",
   "worktree_path": null,
-  "commit": "f6b3e9c",
+  "commit": "b23172a7dab1ca396a460fef3be6c56a88f8fe80",
   "pr_url": null,
   "subtasks": [],
   "children": [
@@ -26,6 +26,8 @@
   ],
   "parent": null,
   "relatedFiles": [],
-  "notes": "Core delivery completed; foundation/audio/music checkpoints archived. Keep this release parent and integration child for consolidated remaining acceptance; see remaining-acceptance.md.",
-  "meta": {}
+  "notes": "2026-10-10: agreed development and scoped acceptance complete; product work commit b23172a7. Final evidence records current full gates and actual browser/device/provider/AIHubMix gpt-6-luna samples. Historical checkpoints and explicitly deferred future scope are preserved. Root performs the authorized archive after the documentation work commit.",
+  "meta": {
+    "priorImplementationCommit": "f6b3e9c"
+  }
 }

@@ -1,1 +1,9 @@
-{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python3 .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file": ".trellis/spec/frontend/audio-music.md", "reason": "Batch/arrangement ownership, data lifecycle, approval and validation contract"}
+{"file": ".trellis/spec/frontend/agent-batch-generation.md", "reason": "Batch/arrangement ownership, data lifecycle, approval and validation contract"}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Batch/arrangement ownership, data lifecycle, approval and validation contract"}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Batch/arrangement ownership, data lifecycle, approval and validation contract"}
+{"file": ".trellis/spec/frontend/agent-write-evidence.md", "reason": "Batch/arrangement ownership, data lifecycle, approval and validation contract"}
+{"file": ".trellis/spec/frontend/agent-task-wrapup.md", "reason": "Batch/arrangement ownership, data lifecycle, approval and validation contract"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Batch/arrangement ownership, data lifecycle, approval and validation contract"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Batch/arrangement ownership, data lifecycle, approval and validation contract"}
+{"file": ".trellis/tasks/09-22-audio-batch-experience/research/current-gap-and-design.md", "reason": "Source-backed reuse boundaries, queue/history/CAS and required acceptance"}

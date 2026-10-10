@@ -1,5 +1,11 @@
 # Evidence-backed outcomes — first delivery
 
+## Current closeout design — 2026-10-10
+
+The next deterministic implementation is the per-output sound-source contract in [closeout increments](research/2026-10-10-closeout-increments.md). Job-level eligibility remains conservative; independent output identity and current local evidence become available. Film impact receipts and final-prose review follow separately. Historical delivery designs below retain their original scope.
+
+The user approved two bounded automatic checks on 2026-10-10. Their final boundary, cost and evidence contract is [final-reply review](research/2026-10-10-final-reply-review.md), shared with R1.
+
 ## Gap and boundary
 A completed write call currently has a sparse or inconsistent result, so the model must reread entities and the process UI cannot name confirmed changes. First deliver versioned direct-write receipts for local film/audio/music editing and a compact persisted-receipt display. This is an incremental R2 delivery; asynchronous generation/job evidence, semantic claim adjudication, source-range impact reports and binding/recovery changes remain subsequent work.
 

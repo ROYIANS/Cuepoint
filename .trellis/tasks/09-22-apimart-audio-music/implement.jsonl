@@ -1,1 +1,7 @@
-{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python3 .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file": ".trellis/spec/frontend/index.md", "reason": "Frontend package conventions and targeted specs"}
+{"file": ".trellis/spec/frontend/ai-connectors.md", "reason": "Provider requests, frozen connections and recovery boundaries"}
+{"file": ".trellis/spec/frontend/audio-batch-arrangement.md", "reason": "Current durable batch, selection, placement, history and package contracts"}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Current bounded execution checks, ownership and Stop behavior"}
+{"file": ".trellis/spec/frontend/agent-task-wrapup.md", "reason": "Current evidence, provenance and sound completion boundaries"}
+{"file": ".trellis/tasks/09-22-apimart-audio-music/research.md", "reason": "Approved original audio/music provider and local-first design research"}
+{"file": ".trellis/tasks/09-22-apimart-audio-music/design.md", "reason": "Approved integrated UI and shared persistence design"}

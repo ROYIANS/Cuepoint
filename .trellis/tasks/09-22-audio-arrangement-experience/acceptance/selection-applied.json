@@ -1,0 +1,438 @@
+{
+  "version": 1,
+  "audioChapters": [
+    {
+      "id": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+      "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+      "revision": 1,
+      "createdAt": "2026-10-10T06:27:38.907Z",
+      "updatedAt": "2026-10-10T06:27:38.907Z",
+      "title": "第一章",
+      "order": 0
+    }
+  ],
+  "audioSpeakers": [],
+  "audioSegments": [
+    {
+      "id": "asg_27fd94af-dfd4-479a-9cd1-44db8de74208",
+      "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+      "revision": 2,
+      "createdAt": "2026-10-10T06:28:22.760Z",
+      "updatedAt": "2026-10-10T06:44:25.390Z",
+      "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+      "order": 3,
+      "text": "第三段：失败的请求只重试明确失败项。",
+      "notes": "",
+      "selectedTakeId": "atk_f5ad01b2-dcd7-4c79-9e77-eedce9ebb3e5"
+    },
+    {
+      "id": "asg_42b9841b-932d-43fd-b8c0-d4c3201227c4",
+      "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+      "revision": 1,
+      "createdAt": "2026-10-10T06:28:22.784Z",
+      "updatedAt": "2026-10-10T06:28:22.784Z",
+      "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+      "order": 9,
+      "text": "第九段：刷新页面保留每项进度。",
+      "notes": ""
+    },
+    {
+      "id": "asg_73d9d66e-5473-4f64-97f2-b71bab27bbbe",
+      "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+      "revision": 1,
+      "createdAt": "2026-10-10T06:28:22.779Z",
+      "updatedAt": "2026-10-10T06:28:22.779Z",
+      "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+      "order": 8,
+      "text": "第八段：并发编辑后需要重新确认。",
+      "notes": ""
+    },
+    {
+      "id": "asg_93ffeee6-c140-499d-8e57-bb358d6747e4",
+      "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+      "revision": 1,
+      "createdAt": "2026-10-10T06:28:22.785Z",
+      "updatedAt": "2026-10-10T06:28:22.785Z",
+      "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+      "order": 11,
+      "text": "第十一段：完成验收，再归档任务。",
+      "notes": ""
+    },
+    {
+      "id": "asg_aa488a9e-c956-450c-a0b3-6bc2716f59f0",
+      "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+      "revision": 2,
+      "createdAt": "2026-10-10T06:28:22.740Z",
+      "updatedAt": "2026-10-10T06:37:05.380Z",
+      "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+      "order": 1,
+      "text": "第一段：今天，我们把旧任务逐项完成。",
+      "notes": "",
+      "selectedTakeId": "atk_79ff7b76-3bbe-4858-9cbe-db1b7d9e58bc"
+    },
+    {
+      "id": "asg_abbe9673-ea6c-44d7-97f9-ba12b4c5b92a",
+      "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+      "revision": 2,
+      "createdAt": "2026-10-10T06:28:22.757Z",
+      "updatedAt": "2026-10-10T06:44:25.389Z",
+      "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+      "order": 2,
+      "text": "第二段：已经保存的声音需要保留。",
+      "notes": "",
+      "selectedTakeId": "atk_d7d0380c-2233-40da-964b-c8f785d1fd10"
+    },
+    {
+      "id": "asg_b9449ccd-6a9e-432b-986b-f5fde98628a8",
+      "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+      "revision": 1,
+      "createdAt": "2026-10-10T06:28:22.766Z",
+      "updatedAt": "2026-10-10T06:28:22.766Z",
+      "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+      "order": 5,
+      "text": "第五段：先选用，再检查排列预览。",
+      "notes": ""
+    },
+    {
+      "id": "asg_bfaa2eed-f331-4dae-8c92-05aedb8d9eca",
+      "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+      "revision": 1,
+      "createdAt": "2026-10-10T06:28:22.761Z",
+      "updatedAt": "2026-10-10T06:28:22.761Z",
+      "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+      "order": 4,
+      "text": "第四段：等待处理的请求不能重复发送。",
+      "notes": ""
+    },
+    {
+      "id": "asg_dcf223e9-0e31-4104-89e0-2fc33b2519c6",
+      "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+      "revision": 1,
+      "createdAt": "2026-10-10T06:28:22.773Z",
+      "updatedAt": "2026-10-10T06:28:22.773Z",
+      "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+      "order": 6,
+      "text": "第六段：已有手动剪辑保持原样。",
+      "notes": ""
+    },
+    {
+      "id": "asg_e94e5c7f-3674-41a8-a2d9-157d8d2d2480",
+      "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+      "revision": 1,
+      "createdAt": "2026-10-10T06:28:22.784Z",
+      "updatedAt": "2026-10-10T06:28:22.784Z",
+      "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+      "order": 10,
+      "text": "第十段：试听和保存是不同的状态。",
+      "notes": ""
+    },
+    {
+      "id": "asg_f9a32a52-92ae-4b9c-bf66-43c8ddc1b532",
+      "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+      "revision": 1,
+      "createdAt": "2026-10-10T06:28:22.776Z",
+      "updatedAt": "2026-10-10T06:28:22.776Z",
+      "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+      "order": 7,
+      "text": "第七段：新增声音按真实时长追加。",
+      "notes": ""
+    }
+  ],
+  "audioTakes": [
+    {
+      "id": "atk_79ff7b76-3bbe-4858-9cbe-db1b7d9e58bc",
+      "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+      "revision": 1,
+      "createdAt": "2026-10-10T06:35:02.465Z",
+      "updatedAt": "2026-10-10T06:35:02.465Z",
+      "durationSec": 1.25,
+      "sampleRate": 48000,
+      "channels": 1,
+      "segmentId": "asg_aa488a9e-c956-450c-a0b3-6bc2716f59f0",
+      "mediaId": "med_bff88181-4386-4ac7-b7e6-244d78931957",
+      "name": "local-duration-1.wav",
+      "source": "upload"
+    },
+    {
+      "id": "atk_d7d0380c-2233-40da-964b-c8f785d1fd10",
+      "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+      "revision": 1,
+      "createdAt": "2026-10-10T06:35:18.267Z",
+      "updatedAt": "2026-10-10T06:35:18.267Z",
+      "durationSec": 2.5,
+      "sampleRate": 48000,
+      "channels": 1,
+      "segmentId": "asg_abbe9673-ea6c-44d7-97f9-ba12b4c5b92a",
+      "mediaId": "med_ab20d5b4-5d80-49a3-a1b2-dfd881c7f8e8",
+      "name": "local-duration-2.wav",
+      "source": "upload"
+    },
+    {
+      "id": "atk_f5ad01b2-dcd7-4c79-9e77-eedce9ebb3e5",
+      "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+      "revision": 1,
+      "createdAt": "2026-10-10T06:35:46.342Z",
+      "updatedAt": "2026-10-10T06:35:46.342Z",
+      "durationSec": 3.75,
+      "sampleRate": 48000,
+      "channels": 1,
+      "segmentId": "asg_27fd94af-dfd4-479a-9cd1-44db8de74208",
+      "mediaId": "med_ebd53772-1102-419c-a11d-f0a4cbf76517",
+      "name": "local-duration-3.wav",
+      "source": "upload"
+    }
+  ],
+  "audioTracks": [
+    {
+      "id": "atr_35eeae11-5e52-47be-82bc-c59094e20556",
+      "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+      "revision": 1,
+      "createdAt": "2026-10-10T06:27:38.908Z",
+      "updatedAt": "2026-10-10T06:27:38.908Z",
+      "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+      "role": "voice",
+      "name": "人声",
+      "order": 0,
+      "gain": 1,
+      "muted": false,
+      "solo": false
+    }
+  ],
+  "audioClips": [
+    {
+      "id": "acl_22def859-ca7b-49cc-a1d8-a09dfa2ae927",
+      "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+      "revision": 2,
+      "createdAt": "2026-10-10T06:37:10.089Z",
+      "updatedAt": "2026-10-10T06:37:25.918Z",
+      "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+      "trackId": "atr_35eeae11-5e52-47be-82bc-c59094e20556",
+      "takeId": "atk_79ff7b76-3bbe-4858-9cbe-db1b7d9e58bc",
+      "startSec": 0.25,
+      "trimStartSec": 0.1,
+      "trimEndSec": 1.15,
+      "gain": 0.8,
+      "fadeInSec": 0.1,
+      "fadeOutSec": 0.15
+    }
+  ],
+  "audioExports": [],
+  "musicDrafts": [],
+  "musicWorks": [],
+  "audioGenerationJobs": [],
+  "audioGenerationBatches": [],
+  "audioGenerationBatchItems": [],
+  "audioArrangementProposals": [
+    {
+      "id": "aap_2253fcfe-3036-465b-a433-b069eda155de",
+      "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+      "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+      "revision": 2,
+      "createdAt": "2026-10-10T06:44:13.368Z",
+      "updatedAt": "2026-10-10T06:44:25.390Z",
+      "kind": "selection",
+      "state": "applied",
+      "owner": {
+        "type": "manual"
+      },
+      "dormant": true,
+      "fingerprint": "historical",
+      "choices": [
+        {
+          "segmentId": "asg_aa488a9e-c956-450c-a0b3-6bc2716f59f0",
+          "segmentRevision": 2,
+          "takeId": "atk_79ff7b76-3bbe-4858-9cbe-db1b7d9e58bc",
+          "takeRevision": 1
+        },
+        {
+          "segmentId": "asg_abbe9673-ea6c-44d7-97f9-ba12b4c5b92a",
+          "segmentRevision": 1,
+          "takeId": "atk_d7d0380c-2233-40da-964b-c8f785d1fd10",
+          "takeRevision": 1
+        },
+        {
+          "segmentId": "asg_27fd94af-dfd4-479a-9cd1-44db8de74208",
+          "segmentRevision": 1,
+          "takeId": "atk_f5ad01b2-dcd7-4c79-9e77-eedce9ebb3e5",
+          "takeRevision": 1
+        }
+      ],
+      "selections": [
+        {
+          "segment": {
+            "id": "asg_aa488a9e-c956-450c-a0b3-6bc2716f59f0",
+            "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+            "revision": 2,
+            "createdAt": "2026-10-10T06:28:22.740Z",
+            "updatedAt": "2026-10-10T06:37:05.380Z",
+            "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+            "order": 1,
+            "text": "第一段：今天，我们把旧任务逐项完成。",
+            "notes": "",
+            "selectedTakeId": "atk_79ff7b76-3bbe-4858-9cbe-db1b7d9e58bc"
+          },
+          "take": {
+            "id": "atk_79ff7b76-3bbe-4858-9cbe-db1b7d9e58bc",
+            "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+            "revision": 1,
+            "createdAt": "2026-10-10T06:35:02.465Z",
+            "updatedAt": "2026-10-10T06:35:02.465Z",
+            "durationSec": 1.25,
+            "sampleRate": 48000,
+            "channels": 1,
+            "segmentId": "asg_aa488a9e-c956-450c-a0b3-6bc2716f59f0",
+            "mediaId": "med_bff88181-4386-4ac7-b7e6-244d78931957",
+            "name": "local-duration-1.wav",
+            "source": "upload"
+          },
+          "textMismatch": false
+        },
+        {
+          "segment": {
+            "id": "asg_abbe9673-ea6c-44d7-97f9-ba12b4c5b92a",
+            "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+            "revision": 1,
+            "createdAt": "2026-10-10T06:28:22.757Z",
+            "updatedAt": "2026-10-10T06:28:22.757Z",
+            "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+            "order": 2,
+            "text": "第二段：已经保存的声音需要保留。",
+            "notes": ""
+          },
+          "take": {
+            "id": "atk_d7d0380c-2233-40da-964b-c8f785d1fd10",
+            "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+            "revision": 1,
+            "createdAt": "2026-10-10T06:35:18.267Z",
+            "updatedAt": "2026-10-10T06:35:18.267Z",
+            "durationSec": 2.5,
+            "sampleRate": 48000,
+            "channels": 1,
+            "segmentId": "asg_abbe9673-ea6c-44d7-97f9-ba12b4c5b92a",
+            "mediaId": "med_ab20d5b4-5d80-49a3-a1b2-dfd881c7f8e8",
+            "name": "local-duration-2.wav",
+            "source": "upload"
+          },
+          "textMismatch": false
+        },
+        {
+          "segment": {
+            "id": "asg_27fd94af-dfd4-479a-9cd1-44db8de74208",
+            "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+            "revision": 1,
+            "createdAt": "2026-10-10T06:28:22.760Z",
+            "updatedAt": "2026-10-10T06:28:22.760Z",
+            "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+            "order": 3,
+            "text": "第三段：失败的请求只重试明确失败项。",
+            "notes": ""
+          },
+          "take": {
+            "id": "atk_f5ad01b2-dcd7-4c79-9e77-eedce9ebb3e5",
+            "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+            "revision": 1,
+            "createdAt": "2026-10-10T06:35:46.342Z",
+            "updatedAt": "2026-10-10T06:35:46.342Z",
+            "durationSec": 3.75,
+            "sampleRate": 48000,
+            "channels": 1,
+            "segmentId": "asg_27fd94af-dfd4-479a-9cd1-44db8de74208",
+            "mediaId": "med_ebd53772-1102-419c-a11d-f0a4cbf76517",
+            "name": "local-duration-3.wav",
+            "source": "upload"
+          },
+          "textMismatch": false
+        }
+      ],
+      "items": [],
+      "before": [
+        {
+          "id": "acl_22def859-ca7b-49cc-a1d8-a09dfa2ae927",
+          "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+          "revision": 2,
+          "createdAt": "2026-10-10T06:37:10.089Z",
+          "updatedAt": "2026-10-10T06:37:25.918Z",
+          "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+          "trackId": "atr_35eeae11-5e52-47be-82bc-c59094e20556",
+          "takeId": "atk_79ff7b76-3bbe-4858-9cbe-db1b7d9e58bc",
+          "startSec": 0.25,
+          "trimStartSec": 0.1,
+          "trimEndSec": 1.15,
+          "gain": 0.8,
+          "fadeInSec": 0.1,
+          "fadeOutSec": 0.15
+        }
+      ],
+      "receipt": {
+        "proposalId": "aap_2253fcfe-3036-465b-a433-b069eda155de",
+        "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+        "kind": "selection",
+        "selected": [
+          {
+            "id": "asg_abbe9673-ea6c-44d7-97f9-ba12b4c5b92a",
+            "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+            "revision": 2,
+            "createdAt": "2026-10-10T06:28:22.757Z",
+            "updatedAt": "2026-10-10T06:44:25.389Z",
+            "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+            "order": 2,
+            "text": "第二段：已经保存的声音需要保留。",
+            "notes": "",
+            "selectedTakeId": "atk_d7d0380c-2233-40da-964b-c8f785d1fd10"
+          },
+          {
+            "id": "asg_27fd94af-dfd4-479a-9cd1-44db8de74208",
+            "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+            "revision": 2,
+            "createdAt": "2026-10-10T06:28:22.760Z",
+            "updatedAt": "2026-10-10T06:44:25.390Z",
+            "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+            "order": 3,
+            "text": "第三段：失败的请求只重试明确失败项。",
+            "notes": "",
+            "selectedTakeId": "atk_f5ad01b2-dcd7-4c79-9e77-eedce9ebb3e5"
+          }
+        ],
+        "added": [],
+        "preserved": 0,
+        "conflicts": 0,
+        "before": [
+          {
+            "id": "acl_22def859-ca7b-49cc-a1d8-a09dfa2ae927",
+            "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+            "revision": 2,
+            "createdAt": "2026-10-10T06:37:10.089Z",
+            "updatedAt": "2026-10-10T06:37:25.918Z",
+            "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+            "trackId": "atr_35eeae11-5e52-47be-82bc-c59094e20556",
+            "takeId": "atk_79ff7b76-3bbe-4858-9cbe-db1b7d9e58bc",
+            "startSec": 0.25,
+            "trimStartSec": 0.1,
+            "trimEndSec": 1.15,
+            "gain": 0.8,
+            "fadeInSec": 0.1,
+            "fadeOutSec": 0.15
+          }
+        ],
+        "after": [
+          {
+            "id": "acl_22def859-ca7b-49cc-a1d8-a09dfa2ae927",
+            "projectId": "prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+            "revision": 2,
+            "createdAt": "2026-10-10T06:37:10.089Z",
+            "updatedAt": "2026-10-10T06:37:25.918Z",
+            "chapterId": "ach_42fd3cb6-0d84-4abe-b7f4-d033ca1b50f7",
+            "trackId": "atr_35eeae11-5e52-47be-82bc-c59094e20556",
+            "takeId": "atk_79ff7b76-3bbe-4858-9cbe-db1b7d9e58bc",
+            "startSec": 0.25,
+            "trimStartSec": 0.1,
+            "trimEndSec": 1.15,
+            "gain": 0.8,
+            "fadeInSec": 0.1,
+            "fadeOutSec": 0.15
+          }
+        ]
+      }
+    }
+  ]
+}

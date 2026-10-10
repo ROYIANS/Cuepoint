@@ -3,7 +3,7 @@
   "name": "audio-arrangement-experience",
   "title": "批量选用与时间线排列",
   "description": "Provide independent batch selection and reviewed deterministic timeline placement using actual durations and trims. Repeated action avoids duplicates, preserves manual work and reports conflicts.",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": null,
@@ -12,15 +12,21 @@
   "assignee": "ROYIANS",
   "createdAt": "2026-09-22",
   "completedAt": null,
-  "branch": null,
+  "branch": "codex/complete-trellis-backlog",
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "b23172a7dab1ca396a460fef3be6c56a88f8fe80",
   "pr_url": null,
   "subtasks": [],
   "children": [],
   "parent": "09-22-agent-creative-experience",
   "relatedFiles": [],
-  "notes": "",
-  "meta": {}
+  "notes": "2026-10-10: agreed development and scoped acceptance complete; product work commit b23172a7. Final evidence records current full gates and actual browser/device/provider/AIHubMix gpt-6-luna samples. Historical checkpoints and explicitly deferred future scope are preserved. Root performs the authorized archive after the documentation work commit.",
+  "meta": {
+    "planningApproval": {
+      "date": "2026-10-10",
+      "answer": "批准，按这套设计实现",
+      "scope": "R3/R4 latest design.md and implement.md; 1–20 segments, concurrency 2, exact batch confirmation, failed-only retry; selection and arrangement separated, actual duration, preserve manual edits, conflicts and undo; reload/import no paid automatic replay"
+    }
+  }
 }

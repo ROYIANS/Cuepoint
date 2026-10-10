@@ -8,7 +8,7 @@ local-first React/Dexie client: manual controls and Agent tools use the same rep
 Audio production must work through recording/upload without a connector or Agent.
 
 The first release supports multitrack voice/music/effects editing, PCM WAV mixing, APIMart
-TTS, Flow Music and Suno music generation. Arrangement, continuation, covers, stems, MIDI,
+TTS, Flow Music and Suno music generation. Music arrangement, continuation, covers, stems, MIDI,
 professional signal processing are not implemented contracts. MiMo voice design and cloning follow the additive contract below. Agent tools
 do not start a microphone/file picker or claim to have listened to audio. Export is currently
 a workbench action, not an Agent export tool.
@@ -150,8 +150,8 @@ durable run/thread binding and include it in every read result, including text p
 Explicit foreign IDs still reject. `requireBoundProjectScope` distinguishes a missing
 binding from a mismatched argument: the latter supplies the current bound ID for a
 corrected read and must not tell the user to reopen an already bound conversation.
-Edits and paid generation retain explicit targets, frozen previews and all ownership
-checks; never silently replace a foreign target with the current project.
+Edits and paid generation may omit projectId only through the durable contextual owner contract; explicit entity targets, frozen previews and all ownership
+checks remain; never silently replace a foreign target with the current project.
 `audio_generate_speech` and `music_generate` set `requiresConfirmation: true`, including in
 full permission mode. `audioGenerationTools.ts` binds every operation to `frozenProjectScope`,
 checks durable run/call identity and approved running status, and compares the saved preview
@@ -511,3 +511,7 @@ Maintain native actual AudioWorkspacePage/MusicWorkspacePage fixture and immutab
 
 ### 7. Wrong vs Correct
 Wrong: infer obsolete CSS from folder redesign or screenshot absence, or relax an arbitrary global pixel threshold. Correct: inspect every rule and consumer, preserve mixed/portal/dynamic contracts, use controlled same-source browser comparison and document practical limits.
+
+## Voice batches, selection and placement (2026-10-10)
+
+Dexie v24 adds `audioGenerationBatches`, `audioGenerationBatchItems` and `audioArrangementProposals`; legacy v23 audio records remain unchanged. The complete seven-section executable contract is [audio-batch-arrangement.md](./audio-batch-arrangement.md). This delivers bounded voice placement in the audio workspace; it does not add musical arrangement, MIDI, stems, covers or continuation. Generated sound, available local sound, selected version, placed clip and audition verification stay separate states. `deleteAudioTrack` and `deleteAudioSpeaker` remain intentional owner/CAS/atomic repository API contracts even where the current UI offers no caller.

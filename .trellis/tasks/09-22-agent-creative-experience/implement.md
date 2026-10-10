@@ -1,5 +1,7 @@
 # Delivery plan
 
+Current status (2026-10-10): the agreed R1–R5 and readable music review scope is implemented and accepted; see [final acceptance](./final-acceptance.md). The approved sequence and earlier checkpoints below are retained as historical planning.
+
 ## Order
 1. R1: audit actual execution evidence and pending readiness changes; specify stop behavior, run protocol/permission tests, and evaluate a real-model sample where available.
 2. R2: extend the delivered direct-write evidence to sound generation. Prioritize query-status correctness, historical/current provenance, actual output availability and sound task-record sources; then design unsupported-claim handling with streaming and false-positive tests. Coordinate readable version-bound music confirmation (R8).
@@ -21,7 +23,7 @@ Parent-child linkage does not enforce dependencies; later children must explicit
 Use `/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm` explicitly. Run focused Vitest suites, then full `test`, `lint`, production `build`, `model-bank:verify` where applicable, and `git diff --check`. Browser fixtures must use isolated projects and mocked paid providers. Record real-model evaluation separately; do not equate deterministic mocks with model obedience. No paid production test without concrete authorization.
 
 ## Tracking
-R1 and R2 are in progress with first deliveries recorded in their validation documents; R3/R4 remain planning. Refine child design and execution manifests before starting later work. Film/music-feedback additions require revised designs before implementation. R6/R7 remain parent-owned backlog and require dedicated plans; R8 readable confirmation is delivered in music-generation-review, with structured creative intent still deferred; do not conflate them with audio batches. Commit and deployment are separate user actions.
+R1/R2/R3/R4 are implemented and accepted with final evidence in their child records. Readable music review is delivered. Heterogeneous film batches (R6), automatic semantic synchronization beyond source-range impact (R7), and structured vocalist/section intent (R8) remain explicitly deferred in [deferred backlog](./deferred-backlog.md). They are preserved as future design scope without a new active task. Authorized work commits and archive follow in this root closeout; no deployment is included.
 
 ## Film integration follow-up
 Use the additional scenarios in [film-feedback.md](./film-feedback.md) in cross-project acceptance. Prioritize creation continuity/context/recovery with R1 and bounded receipts with R2 before considering a one-call film skeleton. Evaluate heterogeneous local shot batching independently of paid generation batches; explicitly choose atomic or partial semantics and test duplicate/lost-response recovery. Script-range impact reporting precedes any automatic synchronization policy.
