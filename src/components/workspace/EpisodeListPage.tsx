@@ -2,7 +2,11 @@ import {useNavigate} from "@tanstack/react-router";
 import {useLiveQuery} from "dexie-react-hooks";
 import {useEffect, useRef, useState} from "react";
 import {toast} from "sonner";
-import {CoverCard, CreateTile, LibraryGrid} from "@/components/studio/CoverCard";
+import {Plus} from "lucide-react";
+import {CoverCard, LibraryGrid} from "@/components/studio/CoverCard";
+import {PageContent, PageHeader, PageState} from "@/components/layout/PageLayout";
+import {Button} from "@/components/ui/button";
+import {Field} from "@/components/ui/field";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -14,7 +18,6 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import {Input} from "@/components/ui/input";
-import {Label} from "@/components/ui/label";
 import {DraftStatus} from "@/components/ui/draft-status";
 import {db} from "@/db/database";
 import {addEpisode, deleteEpisode, reorderEpisodes, restoreEpisode} from "@/db/episodes";
@@ -51,21 +54,22 @@ function EpisodeList({projectId}: { projectId: string }) {
         async () => (await db.projects.get(projectId)) ?? null,
         [projectId],
     );
-    const episodes =
+    const loadedEpisodes =
         useLiveQuery(
             () => db.episodes.where("projectId").equals(projectId).sortBy("order"),
             [projectId],
-        ) ?? [];
+        );
+    const episodes = loadedEpisodes ?? [];
     const shots =
         useLiveQuery(() => db.shots.where("projectId").equals(projectId).toArray(), [projectId]) ?? [];
     const [deleteId, setDeleteId] = useState<string>();
     const {registerUndo} = useUndo();
 
     if (project === undefined) {
-        return <div className="text-muted-foreground p-8 text-sm">加载集列表…</div>;
+        return <PageContent><PageState kind="loading" title="正在读取集列表…"/></PageContent>;
     }
     if (project === null) {
-        return <div className="text-muted-foreground p-8 text-sm">找不到这个项目</div>;
+        return <PageContent><PageState kind="missing" title="找不到这个项目"/></PageContent>;
     }
 
     const canDelete = episodes.length > 1;
@@ -135,15 +139,9 @@ function EpisodeList({projectId}: { projectId: string }) {
 
     return (
         <div className="app-scroll h-full overflow-auto">
-            <div className="mx-auto max-w-6xl px-8 py-8">
-                <div className="flex items-end justify-between gap-4">
-                    <div>
-                        <h1 className="text-[17px] font-semibold">集</h1>
-                        <p className="text-muted-foreground mt-1 text-xs">
-                            一部戏先分集。点进某一集再写本集故事和分镜。世界在系列层，各集共用。
-                        </p>
-                    </div>
-                </div>
+            <PageContent mode="collection">
+                <PageHeader title="集" description="按集整理故事与分镜，各集共用项目世界。"
+                            actions={<Button disabled={Boolean(pending)} onClick={() => void createEpisode()}><Plus aria-hidden/>{pending === "add" ? "创建中…" : `新建第 ${episodes.length + 1} 集`}</Button>}/>
 
                 <SeriesLoglineEditor
                     key={project.id}
@@ -152,13 +150,10 @@ function EpisodeList({projectId}: { projectId: string }) {
                 />
 
                 {pending && <p role="status" className="text-muted-foreground mt-4 text-sm">{pendingLabel}</p>}
-                <div className="mt-8">
+                <div className="mt-6">
+                    {loadedEpisodes === undefined ? <PageState kind="loading" title="正在读取集列表…"/> : !episodes.length ?
+                        <PageState title="暂无分集" description="新建第一集，开始整理故事与分镜。"/> :
                     <LibraryGrid>
-                        <CreateTile
-                            label={`新建第 ${episodes.length + 1} 集`}
-                            hint="接着往下写"
-                            onClick={() => void createEpisode()}
-                        />
                         {episodes.map((episode, index) => (
                             <CoverCard
                                 key={episode.id}
@@ -192,9 +187,9 @@ function EpisodeList({projectId}: { projectId: string }) {
                                 ]}
                             />
                         ))}
-                    </LibraryGrid>
+                    </LibraryGrid>}
                 </div>
-            </div>
+            </PageContent>
 
             <AlertDialog open={Boolean(deleteId)} onOpenChange={(open) => {
                 if (!open && !writingRef.current) setDeleteId(undefined);
@@ -241,16 +236,16 @@ function SeriesLoglineEditor({
     });
     return (
         <>
-            <div className="mt-6 flex items-end justify-between gap-4">
-                <Label>整部戏一句话</Label>
+            <div className="mt-6 mb-2 flex flex-wrap items-end justify-between gap-4">
                 <DraftStatus status={status} error={error} onRetry={() => void retry()} onUseLatest={useLatest}/>
             </div>
+            <Field label="整部戏一句话">
             <Input
-                className="mt-2"
                 value={draft}
                 placeholder="这部戏，用一句话说完（可选）"
                 onChange={(event) => setDraft(event.target.value)}
             />
+            </Field>
         </>
     );
 }

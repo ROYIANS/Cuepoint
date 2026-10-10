@@ -1,0 +1,436 @@
+[
+  {
+    "id": "C01",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "关于小光点"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C02",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "请现在创建一个名为“10-10 真实模型创建续作…"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C03",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "创作助手"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C04",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "任务"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C05",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "素材库"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C06",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "角色"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C07",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "角色设定"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C08",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "连接与模型"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C09",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "UI 验收 · 创作身份"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C10",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "IP"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C11",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "项目"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C12",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "道具"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C13",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "道具"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C14",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "场景"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C15",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "常用场景"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C16",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "风格"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C17",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "视觉风格"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C18",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "角色"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C19",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "道具"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C20",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "场景"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C21",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "风格"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C22",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "故事"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C23",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "本集故事"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C24",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "制作与交付"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C25",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "分镜"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C26",
+    "metrics": {
+      "h1": [
+        {
+          "font": "24px",
+          "text": "审查样例 · 雨夜送信"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C27",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "集"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C28",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "音频制作"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C29",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "音乐创作"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C30",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "项目记忆"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C31",
+    "metrics": {
+      "h1": [
+        {
+          "font": "20px",
+          "text": "世界"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "width": 390
+    }
+  }
+]

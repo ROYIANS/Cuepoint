@@ -5,6 +5,7 @@ import {db} from "@/db/database";
 import type {MaterialKind, MaterialScope} from "@/domain/materials";
 import {
     AlertDialog,
+    AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
     AlertDialogFooter,
@@ -106,11 +107,11 @@ export function useMaterialDraftGuard(dirty: boolean, pending: boolean) {
                                                }
                                            }}>
         <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>{pending ? "正在保存素材" : "保留未保存的修改？"}</AlertDialogTitle><AlertDialogDescription>{pending ? "等待操作完成后再离开，避免丢失操作结果。" : "离开会放弃当前表单中尚未保存的内容。"}</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter>
-            <Button variant="outline" onClick={() => {
+            <AlertDialogCancel asChild onClick={event => event.preventDefault()}><Button variant="outline" onClick={() => {
                 requested?.cancel?.();
                 setRequested(null);
                 if (blocker.status === "blocked") blocker.reset();
-            }}>继续编辑</Button>
+            }}>继续编辑</Button></AlertDialogCancel>
             {!pending && <Button variant="destructive" onClick={() => {
                 requested?.close();
                 setRequested(null);

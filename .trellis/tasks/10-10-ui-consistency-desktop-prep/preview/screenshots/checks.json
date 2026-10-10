@@ -1,0 +1,52 @@
+{
+  "prototypeOnly": true,
+  "checks": [
+    {
+      "height": 720,
+      "inspectorVisible": false,
+      "mainWidth": 960,
+      "pageWidth": 1024,
+      "shotClientWidth": 832,
+      "shotScrollWidth": 832,
+      "view": "workbench",
+      "width": 1024
+    },
+    {
+      "height": 844,
+      "pageWidth": 390,
+      "shotClientWidth": 390,
+      "shotScrollWidth": 580,
+      "view": "workbench",
+      "width": 390
+    },
+    {
+      "inspectorVisible": true,
+      "pageWidth": 390,
+      "view": "workbench-inspector",
+      "width": 390
+    },
+    {
+      "height": 844,
+      "pageWidth": 390,
+      "view": "materials",
+      "visibleCards": 6,
+      "width": 390
+    },
+    {
+      "contentHeight": 411,
+      "contentScrollHeight": 581,
+      "height": 600,
+      "pageWidth": 1280,
+      "statusbarBottom": 600,
+      "view": "materials",
+      "width": 1280
+    }
+  ],
+  "checkedInteractions": [
+    "view navigation",
+    "material search/no results",
+    "dialog Escape/focus return",
+    "narrow inspector",
+    "narrow navigation"
+  ]
+}

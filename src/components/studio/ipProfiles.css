@@ -1,80 +1,31 @@
 .ip-page {
-    width: 100%;
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 40px 40px 64px;
-}
-
-.ip-page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 24px;
-    margin-bottom: 36px;
-}
-
-.ip-eyebrow {
-    display: block;
-    font-size: 12px;
-    line-height: 20px;
-    color: var(--muted-foreground);
-    letter-spacing: .08em;
-    margin-bottom: 8px;
-}
-
-.ip-page h1 {
-    font-family: var(--font-display);
-    font-size: 30px;
-    line-height: 1.3;
-    letter-spacing: -.03em;
-    overflow-wrap: anywhere;
-}
-
-.ip-page-header p, .ip-detail-heading > p {
-    margin-top: 12px;
-    color: var(--muted-foreground);
-    font-size: 14px;
-    line-height: 1.8;
-    overflow-wrap: anywhere;
-}
-
-.ip-page-header > button {
-    flex-shrink: 0;
+    min-width: 0;
 }
 
 .ip-library-toolbar {
-    display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 20px;
-    margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
 }
 
 .ip-filter-tabs, .ip-detail-tabs {
     display: flex;
     align-items: center;
-    gap: 24px;
+    flex-wrap: wrap;
+    gap: 4px;
 }
 
 .ip-filter-tabs button, .ip-detail-tabs button {
-    display: inline-flex;
-    align-items: center;
     gap: 8px;
-    min-height: 36px;
-    font-size: 14px;
     color: var(--muted-foreground);
-    cursor: pointer;
-    white-space: nowrap;
 }
 
 .ip-filter-tabs button[aria-pressed=true], .ip-detail-tabs button[aria-pressed=true] {
     color: var(--foreground);
+    background: var(--accent);
 }
 
 .ip-filter-tabs button > span, .ip-detail-tabs button > span {
     font-size: 12px;
+    line-height: 18px;
     color: var(--muted-foreground);
     font-variant-numeric: tabular-nums;
 }
@@ -82,7 +33,7 @@
 .ip-search {
     display: flex;
     align-items: center;
-    width: 260px;
+    width: 280px;
     max-width: 100%;
     position: relative;
 }
@@ -100,7 +51,7 @@
 
 .ip-profile-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
     gap: 16px;
 }
 
@@ -108,16 +59,15 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
-    padding: 24px;
+    padding: 20px;
     border: 1px solid var(--border);
-    border-radius: 14px;
-    background: color-mix(in srgb, var(--foreground) 2%, transparent);
+    border-radius: var(--radius);
+    background: var(--card);
     transition: background-color .15s, border-color .15s;
 }
 
 .ip-profile-card:hover {
-    background: color-mix(in srgb, var(--foreground) 4%, transparent);
-    border-color: color-mix(in srgb, var(--foreground) 22%, transparent);
+    background: var(--accent);
 }
 
 .ip-profile-card-top {
@@ -125,7 +75,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     color: var(--muted-foreground);
 }
 
@@ -133,21 +83,20 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
     flex-shrink: 0;
-    border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: calc(var(--radius) - 2px);
     color: var(--foreground);
-    font-family: var(--font-display);
-    font-size: 18px;
-    background: color-mix(in srgb, var(--foreground) 3%, transparent);
+    font-size: 16px;
+    font-weight: 600;
+    background: var(--muted);
 }
 
 .ip-profile-card h2 {
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 1.5;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -156,9 +105,9 @@
 .ip-profile-positioning {
     color: var(--muted-foreground);
     font-size: 14px;
-    line-height: 1.8;
+    line-height: 22px;
     margin-top: 8px;
-    min-height: 50px;
+    min-height: 44px;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -168,20 +117,22 @@
 
 .ip-profile-topics {
     font-size: 12px;
+    line-height: 18px;
     color: var(--muted-foreground);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    margin-top: 20px;
+    margin-top: 16px;
 }
 
 .ip-profile-card footer {
     margin-top: auto;
-    padding-top: 24px;
+    padding-top: 16px;
     display: flex;
     align-items: center;
     gap: 12px;
     font-size: 12px;
+    line-height: 18px;
     color: var(--muted-foreground);
     flex-wrap: wrap;
 }
@@ -196,47 +147,12 @@
     margin-left: auto;
 }
 
-.ip-loading, .ip-error {
-    padding: 40px 0;
-    font-size: 14px;
-    color: var(--muted-foreground);
-}
-
-.ip-error {
-    color: var(--destructive);
-}
-
-.ip-empty {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    flex-direction: column;
-    padding: 72px 20px;
-}
-
-.ip-empty > svg {
-    color: var(--muted-foreground);
-    margin-bottom: 24px;
-}
-
-.ip-empty h2 {
-    font-size: 22px;
-    line-height: 1.5;
-}
-
-.ip-empty p {
-    font-size: 14px;
-    line-height: 1.8;
-    max-width: 380px;
-    color: var(--muted-foreground);
-    margin: 12px 0 24px;
-}
-
 .ip-page-footnote {
     margin-top: 24px;
     color: var(--muted-foreground);
     font-size: 12px;
-    line-height: 1.8;
+    line-height: 18px;
+    overflow-wrap: anywhere;
 }
 
 .ip-back {
@@ -245,38 +161,15 @@
     gap: 8px;
     color: var(--muted-foreground);
     font-size: 12px;
-    margin-bottom: 32px;
-}
-
-.ip-detail-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 24px;
-}
-
-.ip-detail-monogram {
-    width: 72px;
-    height: 72px;
-    font-size: 24px;
-    border-radius: 18px;
-}
-
-.ip-detail-heading {
-    min-width: 0;
-    flex: 1;
-}
-
-.ip-detail-heading > p {
-    max-width: 640px;
-    white-space: pre-wrap;
+    line-height: 18px;
+    border-radius: calc(var(--radius) - 2px);
 }
 
 .ip-detail-actions {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 4px;
-    flex-shrink: 0;
+    gap: 8px;
 }
 
 .ip-archive-note {
@@ -284,55 +177,42 @@
     align-items: flex-start;
     gap: 8px;
     padding: 12px 16px;
-    margin-top: 24px;
-    background: color-mix(in srgb, var(--foreground) 3%, transparent);
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    margin-bottom: 16px;
+    background: var(--muted);
+    border-radius: calc(var(--radius) - 2px);
     font-size: 12px;
-    line-height: 1.8;
+    line-height: 18px;
     color: var(--muted-foreground);
+    overflow-wrap: anywhere;
 }
 
 .ip-archive-note svg {
     flex-shrink: 0;
-    margin-top: 3px;
-}
-
-.ip-detail-tabs {
-    margin-top: 36px;
-    border-bottom: 1px solid var(--border);
-}
-
-.ip-detail-tabs button {
-    border-bottom: 2px solid transparent;
-    padding-bottom: 12px;
-}
-
-.ip-detail-tabs button[aria-pressed=true] {
-    border-color: var(--foreground);
+    margin-top: 2px;
 }
 
 .ip-detail-fields {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0 48px;
+    gap: 0 32px;
 }
 
 .ip-detail-fields section {
-    padding: 28px 0;
+    padding: 20px 0;
     border-bottom: 1px solid var(--border);
     min-width: 0;
 }
 
 .ip-detail-fields h2 {
-    font-size: 12px;
-    color: var(--muted-foreground);
-    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    margin-bottom: 8px;
 }
 
 .ip-detail-fields p {
     font-size: 14px;
-    line-height: 1.9;
+    line-height: 22px;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
 }
@@ -342,46 +222,42 @@
 }
 
 .ip-related-section {
-    padding-top: 32px;
+    padding-top: 8px;
 }
 
 .ip-section-heading {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     justify-content: space-between;
-    gap: 20px;
-    margin-bottom: 24px;
+    gap: 16px;
+    margin-bottom: 16px;
 }
 
 .ip-section-heading h2 {
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 600;
+    line-height: 24px;
 }
 
 .ip-section-heading p {
     font-size: 12px;
     color: var(--muted-foreground);
-    line-height: 1.8;
-    margin-top: 8px;
-}
-
-.ip-section-heading > a {
-    flex-shrink: 0;
+    line-height: 18px;
+    margin-top: 4px;
 }
 
 .ip-project-list {
     display: grid;
-    gap: 8px;
 }
 
 .ip-project-list > a {
     display: flex;
     align-items: center;
     min-width: 0;
-    padding: 20px;
+    padding: 16px 0;
     gap: 16px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
+    border-bottom: 1px solid var(--border);
 }
 
 .ip-project-list > a:hover {
@@ -401,7 +277,8 @@
 .ip-project-list strong {
     display: block;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
+    line-height: 22px;
     overflow-wrap: anywhere;
 }
 
@@ -409,30 +286,8 @@
     display: block;
     margin-top: 4px;
     font-size: 12px;
+    line-height: 18px;
     color: var(--muted-foreground);
-}
-
-.ip-inline-empty {
-    padding: 48px 24px;
-    border: 1px dashed var(--border);
-    border-radius: 12px;
-}
-
-.ip-inline-empty > svg {
-    color: var(--muted-foreground);
-    margin-bottom: 20px;
-}
-
-.ip-inline-empty h3 {
-    font-size: 16px;
-}
-
-.ip-inline-empty p {
-    color: var(--muted-foreground);
-    font-size: 14px;
-    line-height: 1.8;
-    margin-top: 8px;
-    overflow-wrap: anywhere;
 }
 
 .ip-material-entry-grid {
@@ -443,8 +298,9 @@
 
 .ip-material-entry-grid > a {
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
+    border-radius: var(--radius);
+    padding: 20px;
+    background: var(--card);
 }
 
 .ip-material-entry-grid > a:hover {
@@ -453,31 +309,34 @@
 
 .ip-material-entry-grid > a > svg {
     color: var(--muted-foreground);
-    margin-bottom: 24px;
+    margin-bottom: 16px;
 }
 
 .ip-material-entry-grid h3 {
     font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+}
+
+.ip-material-entry-grid p, .ip-material-entry-grid span {
+    color: var(--muted-foreground);
+    font-size: 12px;
+    line-height: 18px;
 }
 
 .ip-material-entry-grid p {
-    color: var(--muted-foreground);
-    font-size: 12px;
-    margin-top: 8px;
-    line-height: 1.8;
+    margin-top: 4px;
 }
 
 .ip-material-entry-grid span {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: var(--muted-foreground);
-    font-size: 12px;
-    margin-top: 24px;
+    margin-top: 16px;
 }
 
 .ip-derivatives {
-    margin-top: 48px;
+    margin-top: 32px;
 }
 
 .ip-derivatives > div:last-child {
@@ -487,46 +346,49 @@
 }
 
 .ip-derivatives article {
-    border: 1px dashed var(--border);
-    border-radius: 12px;
-    padding: 20px;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
 }
 
 .ip-derivatives article > svg {
     color: var(--muted-foreground);
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
 .ip-derivatives h3 {
     font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
 }
 
 .ip-derivatives p {
     color: var(--muted-foreground);
     font-size: 12px;
-    margin: 8px 0 16px;
-    line-height: 1.8;
+    margin: 4px 0 8px;
+    line-height: 18px;
 }
 
 .ip-derivatives article > span {
     font-size: 12px;
+    line-height: 18px;
     color: var(--muted-foreground);
 }
 
 .ip-profile-dialog {
     width: min(780px, calc(100vw - 32px));
     max-width: min(780px, calc(100vw - 32px)) !important;
-    max-height: calc(100dvh - 40px);
+    max-height: calc(100dvh - 32px);
     display: flex;
     flex-direction: column;
+    overflow: hidden;
     padding: 24px;
-    gap: 24px;
+    gap: 16px;
 }
 
 .ip-editor-form {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 16px;
     min-height: 0;
 }
 
@@ -536,8 +398,8 @@
     overscroll-behavior: contain;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px 24px;
-    padding: 2px 4px;
+    gap: 16px 24px;
+    padding: 4px;
 }
 
 .ip-editor-field {
@@ -551,6 +413,7 @@
 .ip-editor-field label {
     display: block;
     font-size: 14px;
+    line-height: 22px;
     margin-bottom: 8px;
 }
 
@@ -568,7 +431,7 @@
 .ip-editor-field p {
     margin-top: 8px;
     font-size: 12px;
-    line-height: 1.7;
+    line-height: 18px;
     color: var(--muted-foreground);
 }
 
@@ -576,14 +439,16 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 24px;
+    flex-shrink: 0;
+    gap: 16px;
     border-top: 1px solid var(--border);
     padding-top: 16px;
 }
 
 .ip-editor-footer p {
     font-size: 12px;
-    line-height: 1.7;
+    line-height: 18px;
+    overflow-wrap: anywhere;
 }
 
 .ip-editor-footer > div:first-child {
@@ -597,95 +462,18 @@
     flex-shrink: 0;
 }
 
-.ip-page a:focus-visible, .ip-page button:focus-visible {
+.ip-page a:focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 4px;
-    border-radius: 4px;
 }
 
-@media (max-width: 1100px) {
-    .ip-profile-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .ip-detail-header {
-        flex-wrap: wrap;
-    }
-
-    .ip-detail-actions {
-        margin-left: 96px;
-    }
-}
-
-@media (max-width: 640px) {
-    .ip-page {
-        padding: 24px 20px 48px;
-    }
-
-    .ip-page h1 {
-        font-size: 26px;
-    }
-
-    .ip-page-header {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 20px;
-        margin-bottom: 24px;
-    }
-
-    .ip-library-toolbar {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 12px;
-    }
-
+@media (max-width: 767px) {
     .ip-search {
         width: 100%;
     }
 
-    .ip-profile-grid, .ip-detail-fields, .ip-material-entry-grid {
+    .ip-detail-fields, .ip-material-entry-grid {
         grid-template-columns: 1fr;
-    }
-
-    .ip-profile-card {
-        padding: 20px;
-    }
-
-    .ip-empty {
-        padding: 48px 0;
-    }
-
-    .ip-detail-header {
-        gap: 16px;
-    }
-
-    .ip-detail-monogram {
-        width: 56px;
-        height: 56px;
-        font-size: 20px;
-        border-radius: 14px;
-    }
-
-    .ip-detail-actions {
-        margin-left: 0;
-        width: 100%;
-    }
-
-    .ip-detail-heading {
-        min-width: calc(100% - 72px);
-    }
-
-    .ip-detail-tabs {
-        gap: 24px;
-    }
-
-    .ip-detail-fields section {
-        padding: 24px 0;
-    }
-
-    .ip-section-heading {
-        flex-direction: column;
-        align-items: flex-start;
     }
 
     .ip-derivatives > div:last-child {
@@ -695,7 +483,7 @@
     .ip-derivatives article {
         display: grid;
         grid-template-columns: 24px 1fr auto;
-        gap: 8px 12px;
+        gap: 4px 12px;
         align-items: center;
     }
 
@@ -704,11 +492,7 @@
         margin: 0;
     }
 
-    .ip-derivatives article h3 {
-        grid-column: 2;
-    }
-
-    .ip-derivatives article p {
+    .ip-derivatives article h3, .ip-derivatives article p {
         grid-column: 2;
         margin: 0;
     }
@@ -719,9 +503,7 @@
     }
 
     .ip-profile-dialog {
-        padding: 20px;
-        max-height: calc(100dvh - 24px);
-        gap: 20px;
+        padding: 16px;
     }
 
     .ip-editor-fields {

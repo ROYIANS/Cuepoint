@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
+import {PageHeader, PageState, PageToolbar} from "@/components/layout/PageLayout";
 import {ProjectPicker} from "./ProjectPicker";
 import "./taskWorkspace.css";
 import "./composerControls.css";
@@ -81,19 +82,14 @@ export function TaskBoard({tasks, runs, projects, onOpenTask, onBack}: {
     }
 
     return <section className="agent-task-board" aria-label="任务工作区">
-        <header className="agent-task-board-heading">
-            <div><Button variant="ghost" size="sm" className="agent-task-back"
-                         onClick={onBack}><ArrowLeft/>返回助手</Button>
-                <div className="agent-task-eyebrow">创作工作区 <span>/</span> TASKS</div>
-                <h1>让每一个想法，走向完成<span>。</span></h1>
-                <p>与小光点一起拆解目标、推进步骤，留下经过确认的成果。</p>
-            </div>
-            <Button onClick={() => {
+        <PageHeader title="任务" description="管理项目目标、执行步骤与已确认的成果。"
+                    className="agent-task-board-heading" back={<Button variant="ghost" size="sm" className="agent-task-back"
+                         onClick={onBack}><ArrowLeft/>返回助手</Button>}
+                    actions={<Button onClick={() => {
                 setProjectId(filterProjectId);
                 setCreating(true);
-            }} className="agent-task-create"><Plus/>新建任务</Button>
-        </header>
-        <div className="agent-task-board-toolbar">
+            }}><Plus/>新建任务</Button>}/>
+        <PageToolbar className="agent-task-board-toolbar">
             <ProjectPicker projects={projects} projectId={filterProjectId} onChange={setFilterProjectId}
                            allLabel="全部项目"/>
             <div className="agent-task-filters" role="group" aria-label="筛选任务">
@@ -101,20 +97,20 @@ export function TaskBoard({tasks, runs, projects, onOpenTask, onBack}: {
                     value: "archived",
                     label: "已归档"
                 }] as const).map(({value, label}) =>
-                    <button key={value} type="button" aria-pressed={filter === value}
-                            onClick={() => setFilter(value)}>{label}</button>)}
+                    <Button key={value} type="button" size="sm" variant={filter === value ? "secondary" : "ghost"}
+                            aria-pressed={filter === value} onClick={() => setFilter(value)}>{label}</Button>)}
             </div>
             <span
                 className="agent-task-board-count">{ready ? `${scoped.length} 个任务 · ${completeCount} 个已完成` : "读取工作区…"}</span>
-            <label className="agent-task-search"><Search size={16} aria-hidden/><input aria-label="搜索任务"
+            <label className="agent-task-search"><Search size={16} aria-hidden/><Input aria-label="搜索任务"
                                                                                        placeholder="搜索任务与目标…"
                                                                                        value={query}
                                                                                        onChange={(event) => setQuery(event.target.value)}/></label>
-        </div>
+        </PageToolbar>
         {!ready ?
-            <div className="agent-task-loading" role="status">正在读取任务与执行进度…</div> : entries.length === 0 ?
+            <PageState kind="loading" title="正在读取任务与执行进度…"/> : entries.length === 0 ?
                 <div className="agent-task-empty"><ListTodo size={32} strokeWidth={1.25} aria-hidden/>
-                    <h2>先定一个小目标</h2><p>整理角色设定、打磨故事，或准备下一次创作。<br/>你可以先写下任务，随时再与助手一起推进。
+                    <h2>还没有任务</h2><p>写下项目目标与完成标准，再与助手一起推进。
                     </p><Button onClick={() => {
                         setProjectId(filterProjectId);
                         setCreating(true);
@@ -155,10 +151,11 @@ export function TaskBoard({tasks, runs, projects, onOpenTask, onBack}: {
         }}>
             <DialogContent className="agent-task-dialog" showCloseButton={!saving}>
                 <DialogHeader><DialogTitle>新建任务</DialogTitle><DialogDescription>写下想完成的事情，步骤可以稍后补充。</DialogDescription></DialogHeader>
-                <form onSubmit={(event) => {
+                <form className="agent-task-dialog-form" onSubmit={(event) => {
                     event.preventDefault();
                     void create();
                 }}>
+                    <div className="agent-task-dialog-body">
                     <div className="agent-task-field">所属项目<ProjectPicker projects={projects} projectId={projectId}
                                                                              required allowClear={false} locked={saving}
                                                                              onChange={setProjectId}/></div>
@@ -171,6 +168,7 @@ export function TaskBoard({tasks, runs, projects, onOpenTask, onBack}: {
                                                                                 placeholder="希望得到什么结果？有哪些需要注意的要求？"
                                                                                 rows={5} disabled={saving}
                                                                                 required/></label>
+                    </div>
                     <DialogFooter><Button type="button" variant="ghost" disabled={saving}
                                           onClick={() => setCreating(false)}>取消</Button><Button type="submit"
                                                                                                   disabled={saving || !projectId || !title.trim() || !goal.trim()}>{saving ? "创建中…" : "创建任务"}</Button></DialogFooter>

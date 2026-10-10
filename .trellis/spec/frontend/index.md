@@ -16,6 +16,7 @@
 | --- | --- | --- |
 | [Directory Structure](./directory-structure.md) | Studio layout+index+$id vs project workspace | Filled |
 | [Component Guidelines](./component-guidelines.md) | Thin routes, feature pages, ui primitives, slots | Filled |
+| [Shared Desktop UI](./desktop-ui.md) | Frame/navigation, page typography, scroll owners, overlay focus and print | Filled |
 | [Agent IP / Materials / Tool Loading](./agent-library-tools.md) | Confirmed IP/library operations, real content and per-request capability loading | Filled |
 | [Agent Tools](./agent-tools.md) | Strict tools, permission snapshots, approval ledger and continuation | Filled |
 | [Creative Skills](./agent-creative-skills.md) | Business CRUD, frozen previews, atomic writes and durable media generation | Filled |
@@ -49,6 +50,7 @@
 
 ## Pre-Development Checklist
 
+- [ ] New pages use shared AppFrame/PageLayout presentation and retain feature/runtime scroll owners; read desktop-ui.md before changing global styling
 - [ ] Studio asset create stays on `/characters|scenes|props|styles/$id` with `STUDIO_LIBRARY_ID`
 - [ ] Detail `useLiveQuery` uses `get(id) ?? null` so missing ids are not stuck on 加载中
 - [ ] `touchProject` no-ops for `isStudioLibrary`
@@ -57,6 +59,7 @@
 
 ## Quality Check
 
+- [ ] Headers, navigation breakpoints, short-window overlays, native keyboard activation, focus return and print obey desktop-ui.md; no global Agent theme leakage
 - [ ] Studio create does not open a project picker or `/p/$projectId/...`
 - [ ] `/characters/$missing` shows 找不到, not 加载中
 - [ ] Dexie v2 `props` / `styles` tables stay in `collectMediaIds` / delete cascade

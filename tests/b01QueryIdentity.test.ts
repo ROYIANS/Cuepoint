@@ -65,6 +65,7 @@ import {StoryboardPrintPage} from "@/components/produce/StoryboardPrintPage";
 import {WorkspaceChrome} from "@/components/workspace/WorkspaceChrome";
 import {ProjectSettingsPanel} from "@/components/workspace/ProjectSettingsPanel";
 import {MaterialDetailPanel} from "@/components/studio/materials/MaterialDetailPanel";
+import {PageHeader, PageState} from "@/components/layout/PageLayout";
 import {Route as HomeRoute} from "@/routes/p.$projectId.index";
 import {Route as ProjectRoute} from "@/routes/p.$projectId";
 
@@ -73,6 +74,12 @@ function nodes(tree: unknown): Node[] {
     if (Array.isArray(tree)) return tree.flatMap(nodes);
     if (!tree || typeof tree !== "object" || !("props" in tree)) return [];
     const node = tree as Node;
+    // These actual pure presentation boundaries receive visible content through
+    // named props. Keep hookful frame/feature/slot owners opaque so inspecting a
+    // title cannot consume extra mocked queries or alter the owner's hook cells.
+    if (node.type === PageHeader || node.type === PageState) {
+        return [node, ...nodes((node.type as (props: Record<string, unknown>) => unknown)(node.props))];
+    }
     return [node, ...nodes(node.props.children)];
 }
 function unwrap(tree: unknown): unknown {
@@ -90,6 +97,13 @@ function draw(run: () => unknown, results: unknown[]) {
 }
 function reset() {host.cells = []; host.effects = []; host.cursor = 0;}
 function texts(tree: Node[]) {return tree.flatMap(node => typeof node.props.children === "string" ? [node.props.children] : []);}
+function expectLoading(tree: Node[]) {
+    const states = tree.filter(node => node.type === PageState);
+    expect(states).toHaveLength(1);
+    expect(states[0].props.kind).toBe("loading");
+    expect(tree.some(node => node.type === "div" && node.props.role === "status")).toBe(true);
+    expect(texts(tree)).toContain(states[0].props.title);
+}
 function name(node: Node) {return typeof node.type === "function" ? node.type.name : node.type;}
 beforeEach(reset);
 vi.stubGlobal("window", {addEventListener: vi.fn(), removeEventListener: vi.fn()});
@@ -109,7 +123,7 @@ describe("B01 actual query consumers", () => {
         for (const value of [first, null]) {
             reset();
             const tree = draw(run, [{ownerId: a.id, id: first.id, value}]);
-            expect(texts(tree)).toContain("加载中…");
+            expectLoading(tree);
             expect(tree.some(node => node.type === EditableGenerationSlot)).toBe(false);
         }
         reset();
@@ -141,9 +155,11 @@ describe("B01 actual query consumers", () => {
             {index: 4, result: {projectId: "other", props: [], styles: []}},
         ]) {
             reset(); const results = [...valid]; results[stale.index] = stale.result as typeof results[number];
-            expect(texts(draw(run, results)).join("")).toContain("加载");
+            expectLoading(draw(run, results));
         }
-        reset(); expect(texts(draw(run, valid)).join("")).not.toContain("加载");
+        reset(); const loaded = draw(run, valid);
+        expect(loaded.some(node => node.type === PageState && node.props.kind === "loading")).toBe(false);
+        expect(loaded.some(node => node.type === "h1" && node.props.children === (page === ShotEditorPage ? "分镜" : project.name))).toBe(true);
         const missing = [...valid]; missing[1] = {...valid[1], episode: null} as typeof valid[number];
         reset(); expect(texts(draw(run, missing)).join("")).toContain("找不到");
         const foreign = [...valid]; foreign[1] = {...valid[1], episode: {...b, projectId: "foreign"}} as typeof valid[number];

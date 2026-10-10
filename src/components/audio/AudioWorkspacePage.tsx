@@ -25,6 +25,7 @@ import {
 import {AUDIO_TRANSACTION_TABLES} from "@/db/audioShared";
 import type {AudioSegment, AudioTake} from "@/domain/audio";
 import {Button} from "@/components/ui/button";
+import {PageHeader, PageState, PageToolbar} from "@/components/layout/PageLayout";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle} from "@/components/ui/sheet";
 import {DraftConflictError} from "@/lib/draftConflict";
@@ -105,11 +106,11 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
         }
     }
 
-    if (!data || data.projectId !== projectId) return <div className="p-8 text-muted-foreground">加载音频项目…</div>;
-    if (!data.project || !data.snapshot) return <div className="p-8">找不到这个音频项目</div>;
+    if (!data || data.projectId !== projectId) return <PageState kind="loading" title="加载音频项目…"/>;
+    if (!data.project || !data.snapshot) return <PageState kind="missing" title="找不到这个音频项目"/>;
     const {snapshot, project} = data;
     const chapter = snapshot.chapters.find((row) => row.id === chapterId) ?? snapshot.chapters[0];
-    if (!chapter) return <div className="p-8">项目缺少音频章节，请重新打开项目。</div>;
+    if (!chapter) return <PageState kind="error" title="项目缺少音频章节" description="请重新打开项目。"/>;
     const segment = snapshot.segments.find((row) => row.id === segmentId && row.chapterId === chapter.id);
 
     function applySelection(intent: AudioSelectionIntent) {
@@ -159,7 +160,8 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
         setSourceRequest({id: String(Date.now()), segmentId: target});
     }} action={action} busy={busy} onVoices={openVoices}/>;
     return <div className="as-workspace" data-mode={mode}>
-        <header className="as-toolbar">
+        <PageHeader dense title="音频制作" className="as-page-header"/>
+        <PageToolbar className="as-toolbar">
             <div className="as-chapter-selector"><Popover open={chapterOpen}
                                                           onOpenChange={setChapterOpen}><PopoverTrigger asChild><Button
                 variant="ghost" size="sm"><ListMusic size={15}/><span>{chapter.title}</span><ChevronDown
@@ -229,7 +231,7 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
                 setInspectorOpen(!inspectorOpen);
             }}>{inspectorOpen ? <PanelRightClose size={16}/> : <PanelRightOpen size={16}/>}<span
                 className="as-panel-button-label">声音</span></Button></div>
-        </header>
+        </PageToolbar>
         {error && <div className="as-error" role="alert"><span>{error}</span><Button variant="ghost" size="icon-sm"
                                                                                      aria-label="关闭错误提示"
                                                                                      onClick={() => setError("")}><X/></Button>

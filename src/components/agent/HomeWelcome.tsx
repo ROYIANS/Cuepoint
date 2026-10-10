@@ -1,16 +1,14 @@
-import Grainient from "@/components/agent/Grainient";
 import type {AgentTask} from "@/domain/agent";
 import {ArrowRight, ListTodo} from "lucide-react";
 import {Avatar, Text} from "@lobehub/ui";
-import {SURFACE_HOVER} from "@/components/agent/agentTheme";
 import type {ComposerProps} from "@/components/agent/composerTypes";
 import {FloatingComposer} from "@/components/agent/FloatingComposer";
 import {formatRelative} from "@/components/agent/timeGroups";
 import type {ChatThread, Id} from "@/domain/types";
-import {LOGO_SRC, PRODUCT_NAME_ZH} from "@/lib/brand";
+import {LOGO_SRC} from "@/lib/brand";
 
 /**
- * Home welcome — centered greeting + composer, recent topics below.
+ * Functional entry point with the existing composer and recent work.
  */
 export function HomeWelcome({
                                 threads,
@@ -28,43 +26,18 @@ export function HomeWelcome({
     const recent = threads.filter((thread) => !composer.projectId || thread.projectId === composer.projectId).slice(0, 8);
     const project = composer.projects.find((item) => item.id === composer.projectId);
     const projectTasks = tasks.filter((task) => (!composer.projectId || task.projectId === composer.projectId) && task.lifecycle !== "archived");
-    const hour = new Date().getHours();
-    const hello =
-        hour < 5 ? "夜深了" : hour < 11 ? "早上好" : hour < 14 ? "中午好" : hour < 18 ? "下午好" : "晚上好";
-
     return (
-        <div className="home-grainient-shell">
-            <div className="home-grainient-background" aria-hidden="true">
-                <Grainient
-                    color1="#3B5268"
-                    color2="#111827"
-                    color3="#45362F"
-                    timeSpeed={0.16}
-                    contrast={1.1}
-                    saturation={0.8}
-                    grainAmount={0.045}
-                />
-            </div>
+        <div className="agent-home-shell">
             <div className="agent-home">
                 <div className="agent-home-inner">
                     <div className="agent-home-hero">
-                        <Avatar className="home-grainient-logo" avatar={LOGO_SRC} background="transparent"
-                                shape="square" size={64}/>
-                        <Text
-                            as="h1"
-                            style={{
-                                margin: 0,
-                                fontSize: 24,
-                                fontWeight: 700,
-                                letterSpacing: "-0.02em",
-                                overflowWrap: "anywhere",
-                                maxWidth: "100%",
-                            }}
-                        >
-                            {project ? `在「${project.name}」中，开始下一次创作` : `${hello}，欢迎使用 ${PRODUCT_NAME_ZH}`}
-                        </Text>
+                        <Avatar className="agent-home-logo" avatar={LOGO_SRC} background="transparent"
+                                shape="square" size={48}/>
+                        <h1 className="agent-home-title">
+                            创作助手
+                        </h1>
                         <Text type="secondary" style={{fontSize: 14, maxWidth: 560, lineHeight: 1.57}}>
-                            {composer.chatMode === "task" ? "先选定项目，聊清目标与要求，再由助手建立任务、拆解步骤并持续推进。" : `我是 ${PRODUCT_NAME_ZH}。提问、创建内容或启动任务，选好模型后直接发送即可。`}
+                            {project ? `当前项目：${project.name}。` : "选择项目与模型，描述你的创作需求。"}{composer.chatMode === "task" ? "确认目标与要求后，助手会建立任务并推进步骤。" : "提问、编辑内容或启动任务。"}
                         </Text>
                     </div>
 
@@ -85,7 +58,7 @@ export function HomeWelcome({
                                 </button>
                             ))}
                             {!projectTasks.length && <div className="agent-home-task-empty"><ListTodo
-                                size={24}/><strong>给下一件创作留一个位置</strong>
+                                size={24}/><strong>还没有任务</strong>
                                 <p>在上方描述目标启动任务，也可以先到看板手动整理计划。</p>
                                 <button type="button" onClick={onOpenTasks}>打开任务看板 <ArrowRight size={14}/>
                                 </button>
@@ -93,7 +66,7 @@ export function HomeWelcome({
                         </div>
                     ) : recent.length > 0 ? (
                         <div style={{marginTop: 24, textAlign: "start"}}>
-                            <Text type="secondary" style={{fontSize: 12, paddingInline: 10, paddingBlock: 8}}>
+                            <Text type="secondary" style={{fontSize: 12, paddingInline: 12, paddingBlock: 8}}>
                                 最近活动 {recent.length}
                             </Text>
                             {recent.map((thread) => (
@@ -101,27 +74,9 @@ export function HomeWelcome({
                                     type="button"
                                     key={thread.id}
                                     onClick={() => onSelectThread(thread.id)}
-                                    style={{
-                                        width: "100%",
-                                        border: 0,
-                                        background: "transparent",
-                                        color: "inherit",
-                                        textAlign: "start",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: 10,
-                                        padding: "8px 10px",
-                                        borderRadius: 10,
-                                        cursor: "pointer",
-                                    }}
-                                    onMouseEnter={(event) => {
-                                        event.currentTarget.style.background = SURFACE_HOVER;
-                                    }}
-                                    onMouseLeave={(event) => {
-                                        event.currentTarget.style.background = "transparent";
-                                    }}
+                                    className="agent-home-recent-row"
                                 >
-                                    <Avatar className="home-grainient-logo" avatar={LOGO_SRC} background="transparent"
+                                    <Avatar className="agent-home-logo" avatar={LOGO_SRC} background="transparent"
                                             shape="circle" size={22}/>
                                     <div
                                         style={{

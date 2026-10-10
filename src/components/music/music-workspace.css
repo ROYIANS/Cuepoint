@@ -4,6 +4,12 @@
     overflow: hidden;
 }
 
+.mw-page-header {
+    flex-shrink: 0;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+}
+
 .mw-body {
     display: grid;
     grid-template-columns:340px minmax(0, 1fr);
@@ -22,22 +28,20 @@
     min-height: 0;
     min-width: 0;
     border-right: 1px solid var(--border);
+    background: var(--surface-panel, var(--card));
 }
 
 .mw-draft-bar {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 18px;
+    padding: 12px 16px;
     border-bottom: 1px solid var(--border);
 }
 
 .mw-draft-bar .aw-select {
     flex: 1;
     width: 0;
-    border-color: transparent;
-    box-shadow: none;
-    background: transparent;
 }
 
 .mw-creation {
@@ -51,14 +55,14 @@
     flex: 1;
     min-height: 0;
     overflow: auto;
-    padding: 18px;
+    padding: 16px;
 }
 
 .mw-mode-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    gap: 8px;
     margin-bottom: 24px;
 }
 
@@ -81,8 +85,8 @@
     display: flex;
     gap: 8px;
     align-items: center;
-    font-size: 12px;
-    margin: 0 0 22px;
+    font-size: 14px;
+    margin: 0 0 24px;
 }
 
 .mw-check span {
@@ -96,22 +100,19 @@
 
 .mw-generate {
     flex-shrink: 0;
-    padding: 14px 18px;
+    padding: 16px;
     border-top: 1px solid var(--border);
-    background: var(--background);
+    background: var(--surface-panel, var(--card));
 }
 
 .mw-generate .aw-field {
     margin-bottom: 10px;
 }
 
-.mw-generate .aw-field > span {
-    display: none;
-}
-
 .mw-generate > p {
     margin-top: 8px;
-    font-size: 11px;
+    font-size: 12px;
+    line-height: 18px;
     text-align: center;
     color: var(--muted-foreground);
 }
@@ -120,19 +121,21 @@
     overflow: auto;
     min-width: 0;
     min-height: 0;
-    padding: 24px 28px;
+    padding: 24px;
+    scrollbar-gutter: stable;
 }
 
 .mw-library-heading {
     display: flex;
     align-items: baseline;
-    gap: 10px;
-    margin-bottom: 18px;
+    gap: 8px;
+    margin-bottom: 16px;
 }
 
-.mw-library-heading h1 {
-    font-size: 18px;
+.mw-library-heading h2 {
+    font-size: 16px;
     font-weight: 600;
+    line-height: 24px;
 }
 
 .mw-library-heading > span {
@@ -142,8 +145,10 @@
 
 .mw-library-tools {
     display: flex;
+    margin: 0;
     align-items: center;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .mw-search {
@@ -223,28 +228,31 @@
 .mw-details {
     min-width: 0;
     overflow: auto;
-    padding: 16px 18px;
+    padding: 16px;
     border-left: 1px solid var(--border);
+    background: var(--surface-panel, var(--card));
+    scrollbar-gutter: stable;
 }
 
 .mw-details-heading {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 12px;
-    color: var(--muted-foreground);
-    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 16px;
 }
 
 .mw-detail-content {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 16px;
 }
 
 .mw-detail-content h3 {
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 600;
     margin-bottom: 12px;
 }
 
@@ -271,6 +279,13 @@
 
 .mw-detail-sheet .aw-select {
     width: 100%;
+}
+
+.mw-detail-sheet-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 16px 16px 24px;
 }
 
 .mw-mobile-nav {
@@ -302,7 +317,7 @@
     }
 
     .mw-library {
-        padding: 22px 18px;
+        padding: 24px 16px;
     }
 
     .mw-work-row {
@@ -323,7 +338,7 @@
 
     .mw-mobile-nav {
         display: flex;
-        padding: 8px 14px;
+        padding: 8px 16px;
         border-bottom: 1px solid var(--border);
     }
 
@@ -342,7 +357,7 @@
     }
 
     .mw-draft-bar {
-        padding: 8px 14px;
+        padding: 8px 16px;
     }
 
     .mw-compose-scroll {
@@ -358,7 +373,7 @@
     }
 
     .mw-library {
-        padding: 18px 14px;
+        padding: 16px;
     }
 
     .mw-library-heading {
@@ -416,6 +431,12 @@
 .mw-instrumental-note {
     font-size: 12px;
     color: var(--muted-foreground);
-    line-height: 1.8;
+    line-height: 18px;
     margin-bottom: 16px;
+}
+
+@media (max-width: 760px) {
+    .mw-page-header {
+        padding: 16px;
+    }
 }

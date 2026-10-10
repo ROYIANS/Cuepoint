@@ -4,6 +4,7 @@ import {cva, type VariantProps} from "class-variance-authority";
 import {XIcon} from "lucide-react";
 
 import {cn} from "@/lib/utils";
+import {createOverlayFocusReturn} from "@/lib/overlayFocusReturn";
 
 function Sheet({...props}: React.ComponentProps<typeof SheetPrimitive.Root>) {
     return <SheetPrimitive.Root data-slot="sheet" {...props} />;
@@ -31,7 +32,7 @@ function SheetOverlay({
 }
 
 const sheetVariants = cva(
-    "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex flex-col gap-4 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
+    "bg-surface-panel data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex max-h-dvh min-h-0 flex-col gap-4 overflow-y-auto shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
     {
         variants: {
             side: {
@@ -54,11 +55,14 @@ function SheetContent({
                           children,
                           side = "right",
                           showCloseButton = true,
+                          onOpenAutoFocus,
+                          onCloseAutoFocus,
                           ...props
                       }: React.ComponentProps<typeof SheetPrimitive.Content> &
     VariantProps<typeof sheetVariants> & {
     showCloseButton?: boolean;
 }) {
+    const [focusReturn] = React.useState(createOverlayFocusReturn);
     return (
         <SheetPortal>
             <SheetOverlay/>
@@ -66,6 +70,8 @@ function SheetContent({
                 data-slot="sheet-content"
                 className={cn(sheetVariants({side}), className)}
                 {...props}
+                onOpenAutoFocus={event => focusReturn.onOpenAutoFocus(event, onOpenAutoFocus)}
+                onCloseAutoFocus={event => focusReturn.onCloseAutoFocus(event, onCloseAutoFocus)}
             >
                 {children}
                 {showCloseButton ? (
@@ -86,7 +92,7 @@ function SheetHeader({className, ...props}: React.ComponentProps<"div">) {
     return (
         <div
             data-slot="sheet-header"
-            className={cn("flex flex-col gap-1.5 p-4", className)}
+            className={cn("shrink-0 flex flex-col gap-1.5 p-4 pr-10", className)}
             {...props}
         />
     );

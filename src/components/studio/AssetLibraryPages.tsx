@@ -3,8 +3,11 @@ import {useLiveQuery} from "dexie-react-hooks";
 import {useEffect, useRef, useState} from "react";
 import type {Table} from "dexie";
 import {toast} from "sonner";
-import {CoverCard, CreateTile, LibraryGrid} from "@/components/studio/CoverCard";
+import {Plus} from "lucide-react";
+import {CoverCard, LibraryGrid} from "@/components/studio/CoverCard";
 import {LibraryHeader} from "@/components/studio/LibraryHeader";
+import {PageContent, PageState} from "@/components/layout/PageLayout";
+import {Button} from "@/components/ui/button";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -147,12 +150,18 @@ function StudioLibrary({kind}: { kind: LibraryKind }) {
     const [deleting, setDeleting] = useState(false);
     const [deleteError, setDeleteError] = useState("");
     const copy = COPY[kind];
-    const view = useLiveQuery(async () => ({kind, rows: await readStudioLibrary(kind)}), [kind]);
+    const view = useLiveQuery(async () => {
+        try {
+            return {kind, rows: await readStudioLibrary(kind)};
+        } catch (cause) {
+            return {kind, error: cause instanceof Error ? cause.message : "读取失败，请刷新后重试。"};
+        }
+    }, [kind]);
     const [query, setQuery] = useState("");
     const [sort, setSort] = useState<LibrarySort>("updated");
     const [pendingDelete, setPendingDelete] = useState<{ id: string; name: string }>();
 
-    const raw = view?.kind === kind ? view.rows : [];
+    const raw = view?.kind === kind ? view.rows ?? [] : [];
     const items = filterAndSortLibrary(raw.filter((item) => matchesAssetSearch(item.source, query)), "", sort);
 
     async function handleCreate() {
@@ -226,13 +235,16 @@ function StudioLibrary({kind}: { kind: LibraryKind }) {
     }
 
     return (
-        <div className="px-4 py-8 sm:px-10">
-            <LibraryHeader title={copy.title} query={query} onQuery={setQuery} sort={sort} onSort={setSort}/>
-            <p className="text-muted-foreground mt-3 max-w-xl text-[13px] leading-6">{copy.hint}</p>
-            <div className="mt-8">
+        <PageContent mode="collection">
+            <LibraryHeader title={copy.title} description={copy.hint} query={query} onQuery={setQuery} sort={sort} onSort={setSort}
+                           extra={<Button disabled={creating || deleting} onClick={() => void handleCreate()}><Plus aria-hidden/>{creating ? "创建中…" : copy.create}</Button>}/>
+            <div>
+                {!view || view.kind !== kind ? <PageState kind="loading" title="正在读取设定…"/> : view.error ?
+                    <PageState kind="error" title="暂时无法读取设定" description={view.error}/> : !items.length ?
+                    <PageState title={query.trim() ? "没有匹配的设定" : `暂无${copy.title}`}
+                               description={query.trim() ? "试试其他关键词。" : "创建后可在工作室编辑，添加到项目时使用独立副本。"}/>
+                    :
                 <LibraryGrid>
-                    <CreateTile label={creating ? "创建中…" : copy.create} hint="留在工作室"
-                                onClick={() => void handleCreate()}/>
                     {items.map((item) => (
                         <CoverCard
                             key={item.id}
@@ -253,9 +265,7 @@ function StudioLibrary({kind}: { kind: LibraryKind }) {
                             ]}
                         />
                     ))}
-                </LibraryGrid>
-                {query.trim() && items.length === 0 ?
-                    <p className="text-muted-foreground mt-6 text-sm">没有匹配的资产，试试其他关键词。</p> : null}
+                </LibraryGrid>}
             </div>
 
             <AlertDialog
@@ -285,6 +295,6 @@ function StudioLibrary({kind}: { kind: LibraryKind }) {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-        </div>
+        </PageContent>
     );
 }

@@ -54,6 +54,7 @@ import {
 } from "@/components/ui/dialog";
 import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {WorldSettingPanel} from "@/components/assets/WorldSettingPanel";
+import {PageContent, PageHeader, PageState, PageToolbar} from "@/components/layout/PageLayout";
 
 type AssetTab = Exclude<WorldTab, "setting">;
 type WorldAsset = Character | Scene | Prop | VisualStyle;
@@ -105,31 +106,36 @@ export function AssetLibraryPage({projectId, tab, onTabChange}: {
     const navigate = useNavigate();
     const [query, setQuery] = useState("");
     const [pickerOpen, setPickerOpen] = useState(false);
-    const characters =
+    const charactersResult =
         useLiveQuery(
             () => db.characters.where("projectId").equals(projectId).reverse().sortBy("updatedAt"),
             [projectId],
-        ) ?? [];
-    const scenes =
+        );
+    const characters = charactersResult ?? [];
+    const scenesResult =
         useLiveQuery(
             () => db.scenes.where("projectId").equals(projectId).reverse().sortBy("updatedAt"),
             [projectId],
-        ) ?? [];
-    const props =
+        );
+    const scenes = scenesResult ?? [];
+    const propsResult =
         useLiveQuery(
             () => db.props.where("projectId").equals(projectId).reverse().sortBy("updatedAt"),
             [projectId],
-        ) ?? [];
-    const styles =
+        );
+    const props = propsResult ?? [];
+    const stylesResult =
         useLiveQuery(
             () => db.styles.where("projectId").equals(projectId).reverse().sortBy("updatedAt"),
             [projectId],
-        ) ?? [];
+        );
+    const styles = stylesResult ?? [];
     const [pendingDelete, setPendingDelete] = useState<
         { tab: AssetTab; id: string; name: string } | undefined
     >();
 
     const assets: Record<AssetTab, WorldAsset[]> = {characters, scenes, props, styles};
+    const loading = {characters: charactersResult === undefined, scenes: scenesResult === undefined, props: propsResult === undefined, styles: stylesResult === undefined};
     const activeAssets = tab === "setting" ? [] : assets[tab].filter((asset) => matchesAssetSearch(asset, query));
 
     async function createLocal(activeTab: AssetTab) {
@@ -161,34 +167,27 @@ export function AssetLibraryPage({projectId, tab, onTabChange}: {
     }
 
     return (
-        <div className="h-full overflow-auto">
-            <div className="mx-auto max-w-6xl px-4 py-6 sm:px-8">
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                    <div>
-                        <h1 className="text-lg font-semibold">世界</h1>
-                        <p className="text-muted-foreground mt-1 text-xs">
-                            设定是这部戏一直为真的东西。角色、场景、道具、风格是能被点名的名册。
-                        </p>
-                    </div>
-                    {tab !== "setting" ? (
-                        <div className="flex gap-2">
-                            <Button size="sm" variant="outline" onClick={() => setPickerOpen(true)}>
+        <div className="app-scroll h-full min-h-0 min-w-0 overflow-auto">
+            <PageContent mode="collection">
+                <PageHeader title="世界" description="管理项目共用的世界设定、角色、场景、道具与风格。"
+                            actions={tab !== "setting" ? (
+                        <div className="flex flex-wrap gap-2">
+                            <Button variant="outline" onClick={() => setPickerOpen(true)}>
                                 <Library/> 从工作室添加
                             </Button>
-                            <Button size="sm" variant="brand" onClick={() => void createLocal(tab)}>
+                            <Button variant="brand" onClick={() => void createLocal(tab)}>
                                 <Plus/> {TAB_COPY[tab].create}
                             </Button>
                         </div>
-                    ) : null}
-                </div>
+                    ) : undefined}/>
 
+                <PageToolbar>
                 <Tabs
                     value={tab}
                     onValueChange={(value) => {
                         setQuery("");
                         onTabChange(value as WorldTab);
                     }}
-                    className="mt-5"
                 >
                     <TabsList className="h-auto flex-wrap">
                         <TabsTrigger value="setting">设定</TabsTrigger>
@@ -199,17 +198,18 @@ export function AssetLibraryPage({projectId, tab, onTabChange}: {
                     </TabsList>
                 </Tabs>
 
-                {tab !== "setting" ? <Input className="mt-5 max-w-sm" aria-label={`搜索项目${TAB_COPY[tab].singular}`}
+                {tab !== "setting" ? <Input className="max-w-sm md:ml-auto" aria-label={`搜索项目${TAB_COPY[tab].singular}`}
                                             placeholder={`搜索${TAB_COPY[tab].singular}名称与设定…`} value={query}
                                             onChange={(event) => setQuery(event.target.value)}/> : null}
+                </PageToolbar>
                 {tab === "setting" ? (
                     <WorldSettingPanel projectId={projectId}/>
-                ) : activeAssets.length === 0 ? (
+                ) : loading[tab] ? <PageState kind="loading" title={`正在读取${TAB_COPY[tab].singular}…`}/> : activeAssets.length === 0 ? (
                     query.trim() ?
-                        <p className="text-muted-foreground py-8 text-sm">没有匹配的{TAB_COPY[tab].singular}，试试其他关键词。</p> :
+                        <PageState title={`没有匹配的${TAB_COPY[tab].singular}`} description="试试其他关键词。"/> :
                         <EmptyWorldTab singular={TAB_COPY[tab].singular}/>
                 ) : (
-                    <ul className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+                    <ul className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
                         {activeAssets.map((asset) => (
                             <AssetCard
                                 key={asset.id}
@@ -221,7 +221,7 @@ export function AssetLibraryPage({projectId, tab, onTabChange}: {
                         ))}
                     </ul>
                 )}
-            </div>
+            </PageContent>
 
             {tab !== "setting" ? (
                 <StudioAssetPicker
@@ -283,11 +283,11 @@ function AssetCard({
         <>
             <MediaPreview
                 mediaId={coverOf(asset, tab)}
-                className="h-40 w-full"
+                className="aspect-[4/3] w-full"
                 empty={TAB_COPY[tab].singular}
             />
             <div className="px-3 py-3">
-                <p className="truncate font-medium">{asset.name}</p>
+                <p className="truncate text-sm leading-[22px] font-semibold" title={asset.name}>{asset.name}</p>
                 <p className="text-muted-foreground truncate text-xs">{assetDetail(asset, tab)}</p>
             </div>
         </>
@@ -298,7 +298,7 @@ function AssetCard({
                 <Link
                     to="/p/$projectId/assets/characters/$characterId"
                     params={{projectId, characterId: asset.id}}
-                    className="bg-card block overflow-hidden rounded-2xl border"
+                    className="bg-card focus-visible:ring-ring/50 block overflow-hidden rounded-xl border focus-visible:outline-none focus-visible:ring-[3px]"
                 >
                     {card}
                 </Link>
@@ -306,7 +306,7 @@ function AssetCard({
                 <Link
                     to="/p/$projectId/assets/scenes/$sceneId"
                     params={{projectId, sceneId: asset.id}}
-                    className="bg-card block overflow-hidden rounded-2xl border"
+                    className="bg-card focus-visible:ring-ring/50 block overflow-hidden rounded-xl border focus-visible:outline-none focus-visible:ring-[3px]"
                 >
                     {card}
                 </Link>
@@ -314,7 +314,7 @@ function AssetCard({
                 <Link
                     to="/p/$projectId/assets/props/$propId"
                     params={{projectId, propId: asset.id}}
-                    className="bg-card block overflow-hidden rounded-2xl border"
+                    className="bg-card focus-visible:ring-ring/50 block overflow-hidden rounded-xl border focus-visible:outline-none focus-visible:ring-[3px]"
                 >
                     {card}
                 </Link>
@@ -322,7 +322,7 @@ function AssetCard({
                 <Link
                     to="/p/$projectId/assets/styles/$styleId"
                     params={{projectId, styleId: asset.id}}
-                    className="bg-card block overflow-hidden rounded-2xl border"
+                    className="bg-card focus-visible:ring-ring/50 block overflow-hidden rounded-xl border focus-visible:outline-none focus-visible:ring-[3px]"
                 >
                     {card}
                 </Link>
@@ -331,9 +331,9 @@ function AssetCard({
                 type="button"
                 size="icon-sm"
                 variant="secondary"
-                className="absolute top-2 right-2 flex rounded-full md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 focus-visible:opacity-100"
+                className="absolute top-2 right-2 flex"
                 onClick={onDelete}
-                aria-label={`删除${TAB_COPY[tab].singular}`}
+                aria-label={`删除${TAB_COPY[tab].singular} ${asset.name}`}
             >
                 <Trash2/>
             </Button>
@@ -357,7 +357,7 @@ function StudioAssetPicker({
     const [selected, setSelected] = useState<Set<string>>(new Set());
     const [copying, setCopying] = useState(false);
     const [query, setQuery] = useState("");
-    const studioAssets =
+    const studioAssetsResult =
         useLiveQuery(async () => {
             const table =
                 tab === "characters"
@@ -368,7 +368,8 @@ function StudioAssetPicker({
                             ? db.props
                             : db.styles;
             return table.where("projectId").equals(STUDIO_LIBRARY_ID).reverse().sortBy("updatedAt");
-        }, [tab]) ?? [];
+        }, [tab]);
+    const studioAssets = studioAssetsResult ?? [];
     const copiedSourceIds = new Set(
         copiedAssets.map(sourceAssetId).filter((id): id is string => Boolean(id)),
     );
@@ -406,15 +407,15 @@ function StudioAssetPicker({
                 onOpenChange(nextOpen);
             }}
         >
-            <DialogContent>
+            <DialogContent className="flex flex-col overflow-hidden">
                 <DialogHeader>
                     <DialogTitle>从工作室添加{TAB_COPY[tab].singular}</DialogTitle>
                     <DialogDescription>添加后成为项目快照，可以独立修改。</DialogDescription>
                 </DialogHeader>
                 <Input aria-label="搜索工作室资产" placeholder="搜索名称与设定…" value={query}
                        disabled={copying} onChange={(event) => setQuery(event.target.value)}/>
-                <div className="max-h-80 space-y-2 overflow-auto">
-                    {available.length === 0 ? (
+                <div className="min-h-0 space-y-2 overflow-auto p-1">
+                    {studioAssetsResult === undefined ? <PageState compact kind="loading" title="正在读取工作室设定…"/> : available.length === 0 ? (
                         <p className="text-muted-foreground py-8 text-center text-sm">
                             {query.trim() ? "没有匹配的" : "没有可添加的"}工作室{TAB_COPY[tab].singular}
                         </p>
@@ -422,7 +423,7 @@ function StudioAssetPicker({
                         available.map((asset) => (
                             <label
                                 key={asset.id}
-                                className="hover:bg-muted/50 flex cursor-pointer items-center gap-3 rounded-xl border p-3"
+                                className="hover:bg-muted/50 flex cursor-pointer items-center gap-3 rounded-md border p-3"
                             >
                                 <Checkbox
                                     disabled={copying}
@@ -451,7 +452,7 @@ function StudioAssetPicker({
                         ))
                     )}
                 </div>
-                <DialogFooter>
+                <DialogFooter className="shrink-0">
                     <Button variant="outline" disabled={copying} onClick={closePicker}>
                         取消
                     </Button>
@@ -469,12 +470,5 @@ function StudioAssetPicker({
 }
 
 function EmptyWorldTab({singular}: { singular: string }) {
-    return (
-        <div className="bg-card mt-6 max-w-xl rounded-2xl border border-dashed px-5 py-8">
-            <p className="text-sm font-medium">还没有{singular}</p>
-            <p className="text-muted-foreground mt-2 text-xs leading-5">
-                可以新建，或从工作室添加一份可独立修改的快照。
-            </p>
-        </div>
-    );
+    return <PageState title={`还没有${singular}`} description="可以新建，或从工作室添加一份可独立修改的快照。"/>;
 }

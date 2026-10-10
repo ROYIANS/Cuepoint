@@ -21,22 +21,22 @@
 }
 
 .task-review-eyebrow {
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: .16em;
     color: #7e988a;
 }
 
 .task-review-heading h3 {
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 1.6;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
     letter-spacing: -.025em;
     margin: 12px 0 8px;
 }
 
 .task-review-heading p, .task-review-start > p {
     font-size: 14px;
-    color: #a0a0a0;
+    color: var(--muted-foreground);
     line-height: 1.8;
 }
 
@@ -55,7 +55,7 @@
     display: block;
     font-size: 12px;
     line-height: 1.7;
-    color: #858585;
+    color: var(--muted-foreground);
     overflow-wrap: anywhere;
 }
 
@@ -64,7 +64,7 @@
     gap: 8px;
     align-items: center;
     padding: 16px 0;
-    border-top: 1px solid #ffffff12;
+    border-top: 1px solid var(--border);
 }
 
 .task-review-toolbar > span {
@@ -76,7 +76,7 @@
 .task-review-toolbar small {
     display: block;
     margin-top: 4px;
-    color: #858585;
+    color: var(--muted-foreground);
     font-size: 12px;
 }
 
@@ -109,14 +109,14 @@
 
 .task-review-coverage {
     font-size: 12px;
-    color: #858585;
+    color: var(--muted-foreground);
     line-height: 1.8;
     padding-bottom: 24px;
 }
 
 .task-review-overview {
     font-size: 16px;
-    color: #dedede;
+    color: var(--foreground);
     line-height: 1.9;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
@@ -125,17 +125,17 @@
 
 .task-review-section {
     padding: 24px 0;
-    border-top: 1px solid #ffffff0c;
+    border-top: 1px solid var(--border);
 }
 
 .task-review-section h3 {
     font-size: 14px;
-    font-weight: 550;
+    font-weight: 600;
     margin-bottom: 16px;
 }
 
 .task-review-section h3 > span {
-    color: #777;
+    color: var(--muted-foreground);
     font-size: 12px;
     font-weight: 400;
     margin-left: 12px;
@@ -183,7 +183,7 @@
 .task-review-finding > p, .task-review-entry > p {
     font-size: 14px;
     line-height: 1.9;
-    color: #bbb;
+    color: var(--muted-foreground);
     white-space: pre-wrap;
     overflow-wrap: anywhere;
 }
@@ -194,7 +194,7 @@
 
 .task-review-sources {
     font-size: 12px;
-    color: #909090;
+    color: var(--muted-foreground);
     margin-top: 8px;
 }
 
@@ -206,20 +206,20 @@
 .task-review-sources > summary > span {
     margin-left: 8px;
     font-variant-numeric: tabular-nums;
-    color: #727272;
+    color: var(--muted-foreground);
 }
 
 .task-review-source {
     padding: 12px 0 12px 12px;
     margin: 4px 0;
-    border-left: 1px solid #ffffff16;
+    border-left: 1px solid var(--border);
 }
 
 .task-review-source > div {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
-    color: #bbb;
+    color: var(--muted-foreground);
 }
 
 .task-review-source small {
@@ -237,7 +237,7 @@
 .task-review-source summary {
     cursor: pointer;
     margin-top: 8px;
-    color: #777;
+    color: var(--muted-foreground);
 }
 
 .task-review-source pre {
@@ -245,7 +245,7 @@
     overflow-wrap: anywhere;
     font-size: 12px;
     line-height: 1.8;
-    color: #999;
+    color: var(--muted-foreground);
     max-height: 200px;
     overflow-y: auto;
     margin-top: 8px;
@@ -277,7 +277,7 @@
 
 .task-review-source-options small {
     display: block;
-    color: #747474;
+    color: var(--muted-foreground);
 }
 
 .task-review-editor textarea {
@@ -285,8 +285,8 @@
     resize: vertical;
     max-height: 50dvh;
     background: #ffffff03;
-    border-color: #ffffff18;
-    color: #ddd;
+    border-color: var(--border);
+    color: var(--foreground);
     font-size: 14px;
     line-height: 1.8;
 }
@@ -324,12 +324,12 @@
     justify-content: flex-end;
     gap: 8px;
     padding: 16px 0;
-    background: #111;
-    border-top: 1px solid #ffffff12;
+    background: var(--surface-panel);
+    border-top: 1px solid var(--border);
 }
 
 .task-review-actions {
-    border-top: 1px solid #ffffff12;
+    border-top: 1px solid var(--border);
     padding-top: 24px;
     display: flex;
     flex-direction: column;
@@ -369,12 +369,12 @@
 
 .task-review-previous {
     padding: 24px 0;
-    border-top: 1px solid #ffffff14;
+    border-top: 1px solid var(--border);
 }
 
 .task-review-previous > summary {
     font-size: 12px;
-    color: #999;
+    color: var(--muted-foreground);
     cursor: pointer;
     margin-bottom: 16px;
 }
@@ -384,7 +384,7 @@
 }
 
 .task-review-history > details {
-    border-top: 1px solid #ffffff12;
+    border-top: 1px solid var(--border);
     padding: 16px 0;
 }
 
@@ -396,7 +396,7 @@
 .task-review-history small {
     display: block;
     font-size: 12px;
-    color: #858585;
+    color: var(--muted-foreground);
     margin-top: 4px;
 }
 

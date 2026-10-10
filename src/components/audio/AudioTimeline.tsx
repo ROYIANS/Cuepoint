@@ -515,7 +515,7 @@ export function AudioTimeline({
                 </div>
             </div>
             {!clips.length ? <div className="at-empty"><Music2 size={22}/>
-                <div><strong>让文字有声音</strong><p>选用配音版本，或录音、导入声音后放入时间线。</p></div>
+                <div><strong>时间线还没有片段</strong><p>选用配音版本，或录音、导入声音后放入时间线。</p></div>
                 {onOpenSources &&
                     <Button variant="outline" size="sm" onClick={onOpenSources}><Plus size={13}/>添加声音</Button>}
             </div> : <div ref={scroll} className="at-scroll">

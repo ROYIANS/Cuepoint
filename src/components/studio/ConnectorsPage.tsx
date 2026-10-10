@@ -5,7 +5,7 @@ import {useEffect, useMemo, useRef, useState} from "react";
 import {toast} from "sonner";
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
-import {Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle,} from "@/components/ui/card";
+import {PageContent, PageHeader, PageState} from "@/components/layout/PageLayout";
 import {
     Dialog,
     DialogContent,
@@ -22,7 +22,6 @@ import type {ConnectorConfig, ConnectorDefinitionId} from "@/domain/types";
 import {CONNECTOR_CATALOG, type ConnectorDefinition} from "@/lib/ai/catalog";
 import {maskApiKey} from "@/lib/ai/openaiCompatible";
 import {listConnectorModels, testConnectorConnection} from "@/lib/ai/connectors";
-import {cn} from "@/lib/utils";
 import {redactCredentials} from "@/lib/ai/safeError";
 
 type EditorState = {
@@ -34,7 +33,14 @@ type EditorSession = EditorState & { baseUrl: string; apiKey: string };
 type EditorOperation = { session: EditorSession; kind: "probe" | "test" | "save" | "disconnect" };
 
 export function ConnectorsPage() {
-    const connectors = useLiveQuery(() => db.connectors.toArray(), []);
+    const view = useLiveQuery(async () => {
+        try {
+            return {connectors: await db.connectors.toArray()};
+        } catch {
+            return {error: "读取失败，请刷新后重试。"};
+        }
+    }, []);
+    const connectors = view?.connectors;
     const byDefinition = useMemo(() => {
         const map = new Map<ConnectorDefinitionId, ConnectorConfig>();
         for (const connector of connectors ?? []) {
@@ -229,86 +235,59 @@ export function ConnectorsPage() {
     }
 
     return (
-        <div className="px-4 py-6 md:px-10 md:py-8">
-            <div className="max-w-3xl">
-                <h1 className="font-display text-[28px] leading-none tracking-tight">连接</h1>
-                <p className="text-muted-foreground mt-3 max-w-xl text-sm leading-6">
-                    密钥仅保存在本机，配置一次后工作室与后续 Agent 共用。不会写入项目备份 ZIP。
-                    具体聊天用哪个模型，在 Agent 对话里选择。
-                </p>
-
-                <div className="mt-8 flex flex-col gap-3">
+        <PageContent mode="detail">
+            <PageHeader title="连接与模型" description={<>
+                密钥仅保存在本机，配置一次后工作室与后续 Agent 共用。不会写入项目备份 ZIP。
+                具体聊天用哪个模型，在 Agent 对话里选择。
+            </>}/>
+            {!view ? <PageState kind="loading" title="正在读取连接…"/> : view.error ?
+                <PageState kind="error" title="暂时无法读取连接" description={view.error}/> :
+                <div className="mt-6 divide-y border-y">
                     {CONNECTOR_CATALOG.map((definition) => {
                         const existing = byDefinition.get(definition.id);
                         const connected = Boolean(existing);
                         return (
-                            <Card
-                                key={definition.id}
-                                className={cn(
-                                    "gap-4 py-5 shadow-none",
-                                    connected ? "border-brand/35 bg-brand/[0.04]" : "bg-card/80",
-                                )}
-                            >
-                                <CardHeader className="px-5">
-                                    <div className="flex items-start gap-4">
-                                        <div
-                                            className="bg-muted text-foreground flex size-11 shrink-0 items-center justify-center rounded-2xl text-xs font-semibold tracking-wide"
-                                            aria-hidden
-                                        >
-                                            {definition.mark}
-                                        </div>
-                                        <div className="min-w-0 flex-1">
-                                            <CardTitle className="text-base">{definition.title}</CardTitle>
-                                            <CardDescription className="mt-1.5 leading-5">
-                                                {definition.blurb}
-                                            </CardDescription>
-                                        </div>
-                                    </div>
-                                    <CardAction>
-                                        {connected ? (
-                                            <Badge
-                                                variant="outline"
-                                                className="border-brand/40 bg-brand/10 text-brand gap-1"
-                                            >
-                                                <Check className="size-3" strokeWidth={2.5}/>
-                                                已连接
-                                            </Badge>
-                                        ) : (
-                                            <Badge variant="secondary">未连接</Badge>
-                                        )}
-                                    </CardAction>
-                                </CardHeader>
-                                <CardFooter className="justify-end gap-2 px-5">
+                            <section key={definition.id} aria-labelledby={`connector-${definition.id}`}
+                                     className="flex flex-wrap items-start gap-4 py-5">
+                                <div className="bg-muted text-foreground flex size-10 shrink-0 items-center justify-center rounded-md text-xs font-semibold"
+                                     aria-hidden>
+                                    {definition.mark}
+                                </div>
+                                <div className="min-w-0 flex-1 basis-40">
+                                    <h2 id={`connector-${definition.id}`} className="text-base leading-6 font-semibold">{definition.title}</h2>
+                                    <p className="text-muted-foreground mt-1 text-sm leading-[22px]">{definition.blurb}</p>
+                                </div>
+                                <div className="flex shrink-0 flex-wrap items-center gap-3">
                                     {connected ? (
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            disabled={saving}
-                                            onClick={() => openEditor(definition, existing)}
-                                        >
+                                        <Badge variant="outline" className="gap-1">
+                                            <Check className="size-3" strokeWidth={2.5} aria-hidden/>
+                                            已连接
+                                        </Badge>
+                                    ) : (
+                                        <Badge variant="secondary">未连接</Badge>
+                                    )}
+                                    {connected ? (
+                                        <Button variant="outline" size="sm" aria-label={`编辑 ${definition.title} 连接`}
+                                                disabled={saving} onClick={() => openEditor(definition, existing)}>
                                             编辑
                                         </Button>
                                     ) : (
-                                        <Button
-                                            variant="brand"
-                                            size="sm"
-                                            disabled={saving}
-                                            onClick={() => openEditor(definition)}
-                                        >
-                                            <Plug className="size-3.5"/>
+                                        <Button variant="brand" size="sm" aria-label={`安装 ${definition.title} 连接`}
+                                                disabled={saving} onClick={() => openEditor(definition)}>
+                                            <Plug className="size-3.5" aria-hidden/>
                                             安装
                                         </Button>
                                     )}
-                                </CardFooter>
-                            </Card>
+                                </div>
+                            </section>
                         );
                     })}
-                </div>
-                <SearchConnection/>
-            </div>
+                </div>}
+            <SearchConnection/>
 
             <Dialog open={Boolean(editor)} onOpenChange={(open) => !open && closeEditor()}>
                 <DialogContent
+                    className="flex flex-col overflow-hidden"
                     showCloseButton={!saving}
                     onEscapeKeyDown={(event) => {
                         if (writeLocked()) event.preventDefault();
@@ -329,7 +308,7 @@ export function ConnectorsPage() {
                                         : `${editor?.definition.title ?? ""} · OpenAI 兼容协议。此处只配置接入点；模型在聊天里选。`}
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="grid gap-4">
+                    <div className="grid min-h-0 gap-4 overflow-y-auto p-1">
                         <Field label="Base URL">
                             <Input
                                 value={baseUrl}
@@ -365,7 +344,7 @@ export function ConnectorsPage() {
                             </div>
                         ) : null}
                     </div>
-                    <DialogFooter className="gap-2 sm:justify-between">
+                    <DialogFooter className="shrink-0 gap-2 sm:justify-between">
                         <div className="flex flex-wrap gap-2">
                             {editor?.existing ? (
                                 <Button
@@ -404,6 +383,6 @@ export function ConnectorsPage() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-        </div>
+        </PageContent>
     );
 }

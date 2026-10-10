@@ -4,7 +4,8 @@ import {db} from "@/db/database";
 import {updateWorldSetting} from "@/db/projects";
 import {emptySetting, normalizeSetting, type WorldSetting} from "@/domain/types";
 import {DraftStatus} from "@/components/ui/draft-status";
-import {Label} from "@/components/ui/label";
+import {Field} from "@/components/ui/field";
+import {PageState} from "@/components/layout/PageLayout";
 import {Textarea} from "@/components/ui/textarea";
 import {useDebouncedDraft} from "@/lib/debouncedDraft";
 
@@ -36,10 +37,10 @@ export function WorldSettingPanel({projectId}: { projectId: string }) {
     );
 
     if (project === undefined) {
-        return <p className="text-muted-foreground mt-6 text-sm">加载设定…</p>;
+        return <PageState kind="loading" title="正在读取设定…"/>;
     }
     if (project === null) {
-        return <p className="text-muted-foreground mt-6 text-sm">找不到这个项目</p>;
+        return <PageState kind="missing" title="找不到这个项目"/>;
     }
 
     return (
@@ -66,8 +67,8 @@ function WorldSettingEditor({
     });
 
     return (
-        <div className="mt-6 max-w-3xl">
-            <div className="flex items-end justify-between gap-4">
+        <div className="max-w-[880px]">
+            <div className="flex flex-wrap items-end justify-between gap-4">
                 <p className="text-muted-foreground text-xs leading-5">
                     设定是这部戏一直为真的东西，不跟某一集走。
                 </p>
@@ -76,8 +77,7 @@ function WorldSettingEditor({
             <div className="mt-5 space-y-6">
                 {FIELDS.map((field) => (
                     <div key={field.key}>
-                        <Label>{field.label}</Label>
-                        <p className="text-muted-foreground mt-1 text-[11px] leading-5">{field.hint}</p>
+                        <Field label={field.label}>
                         <Textarea
                             className="mt-2 min-h-36 resize-y bg-card/60"
                             value={draft[field.key]}
@@ -86,6 +86,8 @@ function WorldSettingEditor({
                                 setDraft((current) => ({...current, [field.key]: event.target.value}));
                             }}
                         />
+                        </Field>
+                        <p className="text-muted-foreground mt-2 text-xs leading-[18px]">{field.hint}</p>
                     </div>
                 ))}
             </div>

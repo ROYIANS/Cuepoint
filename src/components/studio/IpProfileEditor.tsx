@@ -9,6 +9,7 @@ import {Textarea} from "@/components/ui/textarea";
 import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {
     AlertDialog,
+    AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
     AlertDialogFooter,
@@ -127,7 +128,7 @@ export function IpProfileEditor({profile, onClose, onSaved}: {
             }} onEscapeKeyDown={event => {
                 if (pendingRef.current || discardOpen) event.preventDefault();
             }}>
-                <DialogHeader><DialogTitle>{profile ? "编辑 IP 档案" : "建立一个创作身份"}</DialogTitle><DialogDescription>先起个名字，其余内容可以在创作中慢慢补充。</DialogDescription></DialogHeader>
+                <DialogHeader><DialogTitle>{profile ? "编辑 IP 档案" : "新建 IP"}</DialogTitle><DialogDescription>先起个名字，其余内容可以在创作中慢慢补充。</DialogDescription></DialogHeader>
                 <form onSubmit={event => {
                     event.preventDefault();
                     void save();
@@ -157,7 +158,7 @@ export function IpProfileEditor({profile, onClose, onSaved}: {
                     </div>
                     <footer className="ip-editor-footer">
                         <div>{error ? <p role="alert" className="text-destructive">{error}</p> :
-                            <p>保存档案与项目归属；聊天暂不会自动使用这些偏好。</p>}</div>
+                            <p>关联项目的聊天会读取档案摘要；生成仍以确认的提示词与参数为准。</p>}</div>
                         <div className="ip-editor-actions"><Button type="button" variant="ghost" disabled={pending}
                                                                    onClick={close}>取消</Button><Button type="submit"
                                                                                                         disabled={pending || (Boolean(profile) && !dirty)}>{pending &&
@@ -175,10 +176,10 @@ export function IpProfileEditor({profile, onClose, onSaved}: {
             }
         }}>
             <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>{pending ? "档案正在保存" : "保留这次编辑吗？"}</AlertDialogTitle><AlertDialogDescription>{pending ? "请等待保存结束，避免遗漏刚刚填写的内容。" : "还有未保存的内容。可以返回继续编辑，或放弃本次修改。"}</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter>
-                <Button variant="outline" disabled={pending} onClick={() => {
+                <AlertDialogCancel asChild onClick={event => event.preventDefault()}><Button variant="outline" disabled={pending} onClick={() => {
                     setDiscardOpen(false);
                     blocker.reset?.();
-                }}>继续编辑</Button>
+                }}>继续编辑</Button></AlertDialogCancel>
                 <Button variant="destructive" disabled={pending} onClick={() => {
                     saved.current = true;
                     setDiscardOpen(false);

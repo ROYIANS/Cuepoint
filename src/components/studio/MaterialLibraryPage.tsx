@@ -12,6 +12,7 @@ import {MaterialDetailPanel} from "./materials/MaterialDetailPanel";
 import {MaterialImportDialog} from "./materials/MaterialImportDialog";
 import {LegacyMaterialSources} from "./materials/LegacyMaterialSources";
 import {KIND_LABELS, MaterialScopeSelect, MaterialSelect, SETTINGS_KINDS} from "./materials/MaterialControls";
+import {PageContent, PageHeader, PageState, PageToolbar} from "@/components/layout/PageLayout";
 import "./materials/materialLibrary.css";
 
 export type MaterialLibrarySearch = {
@@ -60,13 +61,11 @@ export function MaterialLibraryPage({search: routeSearch}: { search: MaterialLib
         return owner.kind === "global" ? "全局" : owner.kind === "ip" ? data?.ips.find((ip) => ip.id === owner.id)?.name ?? "IP" : data?.projects.find((project) => project.id === owner.id)?.name ?? "原项目";
     }
 
-    return <main className="material-library">
-        <header className="material-page-heading">
-            <div><p className="material-eyebrow">创作积累</p><h1>素材库</h1><p>把值得保留的素材，带进下一次创作。</p>
-            </div>
-            <Button onClick={() => setImporting(true)}><Upload size={16}/>导入素材</Button></header>
-        <Tabs value={view} onValueChange={(next) => changeView(next as "media" | "settings")}><TabsList
-            className="material-view-tabs" aria-label="素材视图"><TabsTrigger value="media"><Image size={16}
+    return <PageContent role="main" className="material-library">
+        <PageHeader title="素材库" description="管理媒体、资料和创作设定的版本。"
+            actions={<Button onClick={() => setImporting(true)}><Upload size={16} aria-hidden/>导入素材</Button>}/>
+        <Tabs className="gap-4" value={view} onValueChange={(next) => changeView(next as "media" | "settings")}><TabsList
+            className="h-auto flex-wrap" aria-label="素材视图"><TabsTrigger value="media"><Image size={16}
                                                                                                    aria-hidden/>媒体与资料</TabsTrigger><TabsTrigger
             value="settings"><Layers size={16} aria-hidden/>创作设定</TabsTrigger></TabsList><TabsContent value={view}>
             {view === "settings" && <nav className="material-setting-links" aria-label="创建与编辑创作设定">{([{
@@ -77,7 +76,7 @@ export function MaterialLibraryPage({search: routeSearch}: { search: MaterialLib
                 label: "风格"
             }] as const).map((entry) => <Link key={entry.to} to={entry.to}>{entry.label}编辑库<ArrowUpRight size={12}
                                                                                                             aria-hidden/></Link>)}</nav>}
-            <div className="material-filters">
+            <PageToolbar className="material-filters">
                 <div className="material-search"><Search size={16} aria-hidden/><Input aria-label="搜索素材"
                                                                                        placeholder="搜索名称、标签或备注"
                                                                                        value={search}
@@ -98,18 +97,17 @@ export function MaterialLibraryPage({search: routeSearch}: { search: MaterialLib
                 options={[{value: "active", label: "使用中"}, {value: "archived", label: "已归档"}, {
                     value: "all",
                     label: "全部状态"
-                }]}/></div>
+                }]}/></PageToolbar>
             <div className="material-section-heading"><h2>版本素材 <span>{matches?.length ?? "…"}</span></h2>
                 <p>{scope === "shared" ? "默认展示全局与 IP 专属素材" : "每个项目固定使用所采用的版本"}</p></div>
-            {!matches ? <p role="status" className="material-empty">正在读取素材库…</p> : matches.length ?
+            {!matches ? <PageState kind="loading" title="正在读取素材库…"/> : matches.length ?
                 <div className="material-grid">{matches.map((material) => <MaterialCard key={material.id}
                                                                                         material={material}
                                                                                         scopeLabel={scopeLabel(material)}
                                                                                         onOpen={() => setSelected(material.id)}/>)}</div> :
-                <div className="material-empty"><Layers size={28} aria-hidden/>
-                    <h3>{search || kind !== "all" || status === "archived" ? "没有匹配的素材" : "让素材成为可复用的积累"}</h3>
-                    <p>{view === "media" ? "导入文件，或从下方现有素材建立独立版本。" : "在编辑库整理设定，再从下方现有素材保存独立快照。"}</p>{view === "media" &&
-                        <Button variant="outline" onClick={() => setImporting(true)}>导入第一份素材</Button>}</div>}
+                <PageState title={search || kind !== "all" || status === "archived" ? "没有匹配的素材" : "还没有版本素材"}
+                    description={view === "media" ? "导入文件，或从下方现有素材建立独立版本。" : "在编辑库整理设定，再从下方现有素材保存独立快照。"}
+                    action={view === "media" ? <Button variant="outline" onClick={() => setImporting(true)}>导入素材</Button> : undefined}/>}
             {status !== "archived" &&
                 <LegacyMaterialSources view={view} scope={scope} search={search} kind={kind} onCreated={setSelected}/>}
         </TabsContent></Tabs><p className="material-storage-note">素材库与 IP 档案保存在当前浏览器本地。项目 ZIP
@@ -117,7 +115,7 @@ export function MaterialLibraryPage({search: routeSearch}: { search: MaterialLib
         {selected && <MaterialDetailPanel id={selected} onClose={() => setSelected(null)} onSelect={setSelected}/>}
         {importing && <MaterialImportDialog initialScope={initialScope} onClose={() => setImporting(false)}
                                             onImported={setSelected}/>}
-    </main>;
+    </PageContent>;
 }
 
 function MaterialCard({material, scopeLabel, onOpen}: {
@@ -126,13 +124,13 @@ function MaterialCard({material, scopeLabel, onOpen}: {
     onOpen: () => void
 }) {
     const version = useLiveQuery(async () => db.materialVersions.where("[materialId+revision]").equals([material.id, material.revision]).first(), [material.id, material.revision]);
-    return <Button variant="ghost" className="material-card" onClick={onOpen}><MaterialPreview
+    return <Button variant="ghost" className="material-card" onClick={onOpen} aria-label={material.name}><MaterialPreview
         payload={version?.payload}/>
         <div className="material-card-caption">
             <div className="material-card-meta">
                 <span>{KIND_LABELS[material.kind]} · {scopeLabel}</span><span>{material.archived ?
                 <Archive size={12} aria-label="已归档"/> : `v${material.revision}`}</span></div>
-            <strong>{material.name}</strong>{material.tags.length > 0 &&
+            <strong title={material.name}>{material.name}</strong>{material.tags.length > 0 &&
             <span>{material.tags.slice(0, 3).join(" · ")}</span>}</div>
     </Button>;
 }

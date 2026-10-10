@@ -4,7 +4,7 @@ import {resolveVisionCapability} from "@/lib/ai/visionCapability";
 import {useLiveQuery} from "dexie-react-hooks";
 import {formatTokenCount} from "@/lib/agent/contextUsage";
 import {ModelIcon, ProviderIcon} from "./ModelIcons";
-import {ActionIcon} from "@lobehub/ui";
+import {ActionIcon} from "@lobehub/ui/base-ui";
 import * as Popover from "@radix-ui/react-popover";
 import {ArrowUp, Check, ChevronDown, Eye, Plug, Square, Wrench} from "lucide-react";
 import {type ReactNode, useEffect, useMemo, useRef, useState} from "react";
@@ -287,6 +287,7 @@ export function SendCircleButton({
             <ActionIcon
                 icon={Square}
                 title="停止"
+                aria-label="停止"
                 onClick={onStop}
                 className="agent-composer-send"
                 style={{
@@ -304,6 +305,7 @@ export function SendCircleButton({
         <ActionIcon
             icon={ArrowUp}
             title="发送"
+            aria-label="发送"
             onClick={onSend}
             disabled={!canSend}
             className="agent-composer-send"

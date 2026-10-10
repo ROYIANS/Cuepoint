@@ -30,7 +30,8 @@ src/
 │   └── p.$projectId.*               # 一部戏：系列集列表/世界，集内故事/分镜/制作
 ├── components/
 │   ├── studio/AssetLibraryPages.tsx # studio 角色/场景/道具/风格 grids
-│   ├── studio/StudioShell.tsx       # md+ icon rail; <md hamburger + Sheet nav
+│   ├── studio/StudioShell.tsx       # guarded Studio owner + shared AppFrame
+│   ├── layout/                      # AppFrame and presentation-only PageLayout
 │   ├── agent/                       # /agent chat (LobeHub-inspired, chat-only @lobehub/ui)
 │   ├── ui/sheet.tsx                 # shadcn Sheet (studio + agent mobile drawers)
 │   ├── assets/*DetailPage.tsx       # shared detail editors
@@ -68,13 +69,13 @@ Project world owns project-scoped character, scene, prop, and style detail route
 - Studio detail: `src/routes/_studio.characters.$characterId.tsx` passes `back={{ kind: "studio" }}`
 - Project detail: `src/routes/p.$projectId.assets.characters.$characterId.tsx` passes `back={{ kind: "project", projectId }}`
 
-## IP studio navigation foundation (2026-09-21)
+## Studio navigation and project kinds (2026-10-10)
 
-- `/` still redirects to `/agent`. StudioShell groups global destinations as chat, `/ips`, projects, `/assets`, and `/agent/tasks`, with connectors/settings below. Task navigation must be exclusive from chat, including ARIA current state (TanStack Link has its own prefix-active behavior).
-- `/ips` is a coming-soon surface, not a persisted project kind. Independent projects remain supported; IP records/context binding are not implemented in this increment.
-- `/assets` groups the existing studio character/scene/prop/style libraries. Preserve their old list/detail URLs and ownership contracts. Shell provides their return-to-hub breadcrumb.
-- `projectKinds.tsx` is a presentation-only availability catalog: video/image/copy/podcast/music. Video uses existing film/series repository behavior. Unavailable kinds may be inspected, but both UI and submit handler must prevent creating a video record on their behalf. Do not treat this catalog as a database migration or infer persisted IP membership.
-- `/settings` links actual existing connections, project backup and about capabilities; do not fabricate preferences or functioning IP forms.
+- `/` redirects to `/agent`; `/settings` redirects to `/about`. Shared `layout/AppFrame.tsx` owns navigation for both Studio and project shells. Chat, IP, projects, materials and tasks remain separate destinations, with connectors and About below. `/agent/tasks` must not activate chat.
+- `/ips` and `/ips/$ipId` are implemented persisted profile surfaces. Membership/context rules belong to [IP / Material Library](./ip-material-library.md); IP is not a project kind.
+- `/assets` owns the materials hub while retaining legacy Studio character/scene/prop/style list/detail URLs. Shared editors keep `STUDIO_LIBRARY_ID` versus project ownership checks.
+- `projectKinds.tsx` is the presentation availability catalog. Film/series, audio and music dispatch through `ProjectHomePage`; unavailable options are blocked both in the UI and submit handler. Project kind migrations belong to their database contracts.
+- Frame/page/overlay presentation lives in `components/layout/` and `components/ui/`; feature data/runtime ownership remains in the original feature modules. See [Shared Desktop UI](./desktop-ui.md).
 
 ### Production database owners (D02)
 

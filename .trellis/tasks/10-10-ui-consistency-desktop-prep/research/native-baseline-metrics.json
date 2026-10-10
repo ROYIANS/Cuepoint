@@ -1,0 +1,200 @@
+[
+  {
+    "page": "Projects",
+    "url": "http://127.0.0.1:5173/projects",
+    "metrics": {
+      "heading": [
+        {
+          "font": "\"Noto Serif SC\", \"Songti SC\", STSong, serif",
+          "lineHeight": "28px",
+          "rect": {
+            "height": 28,
+            "width": 54.6015625,
+            "x": 117,
+            "y": 45
+          },
+          "size": "28px",
+          "text": "项目",
+          "weight": "400"
+        }
+      ],
+      "main": [
+        {
+          "background": "rgb(17, 17, 17)",
+          "class": "studio-content-surface relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden",
+          "overflowY": "hidden",
+          "padding": "0px",
+          "tag": "DIV",
+          "width": 1196
+        }
+      ],
+      "viewport": {
+        "height": 720,
+        "scrollWidth": 1280,
+        "width": 1280
+      }
+    }
+  },
+  {
+    "page": "MaterialLibrary",
+    "url": "http://127.0.0.1:5173/assets",
+    "metrics": {
+      "heading": [
+        {
+          "font": "\"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Segoe UI\", sans-serif",
+          "lineHeight": "45px",
+          "rect": {
+            "height": 45,
+            "width": 204,
+            "x": 117,
+            "y": 68
+          },
+          "size": "30px",
+          "text": "素材库",
+          "weight": "600"
+        }
+      ],
+      "main": [
+        {
+          "background": "rgb(17, 17, 17)",
+          "class": "studio-content-surface relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden",
+          "overflowY": "hidden",
+          "padding": "0px",
+          "tag": "DIV",
+          "width": 1196
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "class": "material-library",
+          "overflowY": "visible",
+          "padding": "36px 40px 72px",
+          "tag": "MAIN",
+          "width": 1186
+        }
+      ],
+      "viewport": {
+        "height": 720,
+        "scrollWidth": 1280,
+        "width": 1280
+      }
+    }
+  },
+  {
+    "page": "IPLibrary",
+    "url": "http://127.0.0.1:5173/ips",
+    "metrics": {
+      "headings": [
+        {
+          "font": "\"Noto Serif SC\", \"Songti SC\", STSong, serif",
+          "lineHeight": "39px",
+          "size": "30px",
+          "text": "我的 IP",
+          "weight": "400",
+          "x": 150,
+          "y": 77
+        }
+      ],
+      "viewport": {
+        "height": 720,
+        "scrollWidth": 1280,
+        "width": 1280
+      }
+    }
+  },
+  {
+    "page": "TaskWorkspace",
+    "url": "http://127.0.0.1:5173/agent/tasks",
+    "metrics": {
+      "headings": [
+        {
+          "font": "Geist, -apple-system, \"system-ui\", \"Segoe UI Variable Display\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"/* SC */\", \"HarmonyOS Sans SC\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", \"Source Han Sans SC\", \"Noto Sans CJK SC\", \"/* FALLBACK */\", ui-sans-serif, system-ui, sans-serif, \"/* EMOJI */\", \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+          "lineHeight": "41.216px",
+          "size": "29.44px",
+          "text": "让每一个想法，走向完成。",
+          "weight": "550",
+          "x": 117,
+          "y": 139.8515625
+        }
+      ],
+      "viewport": {
+        "height": 720,
+        "scrollWidth": 1280,
+        "width": 1280
+      }
+    }
+  },
+  {
+    "page": "Connectors",
+    "url": "http://127.0.0.1:5173/connectors",
+    "metrics": {
+      "headings": [
+        {
+          "font": "\"Noto Serif SC\", \"Songti SC\", STSong, serif",
+          "lineHeight": "28px",
+          "size": "28px",
+          "text": "连接",
+          "weight": "400",
+          "x": 117,
+          "y": 41
+        }
+      ],
+      "viewport": {
+        "height": 720,
+        "scrollWidth": 1280,
+        "width": 1280
+      }
+    }
+  },
+  {
+    "page": "VideoStory",
+    "url": "http://127.0.0.1:5173/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/e/ep_b9822329-b73a-47b2-9a30-a257b9b0df8e",
+    "metrics": {
+      "header": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "1px solid oklch(1 0 0 / 0.1)",
+          "height": 56,
+          "padding": "8px 16px"
+        }
+      ],
+      "headings": [
+        {
+          "font": "\"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Segoe UI\", sans-serif",
+          "lineHeight": "25.5px",
+          "size": "17px",
+          "text": "故事",
+          "weight": "600",
+          "x": 92,
+          "y": 88
+        }
+      ],
+      "viewport": {
+        "height": 720,
+        "scrollWidth": 1280,
+        "width": 1280
+      }
+    }
+  },
+  {
+    "page": "VideoWorld",
+    "url": "http://127.0.0.1:5173/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/world",
+    "metrics": {
+      "headings": [
+        {
+          "font": "\"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Segoe UI\", sans-serif",
+          "lineHeight": "28px",
+          "size": "18px",
+          "text": "世界",
+          "weight": "600",
+          "x": 88.5,
+          "y": 80
+        }
+      ],
+      "viewport": {
+        "height": 720,
+        "scrollWidth": 1280,
+        "width": 1280
+      }
+    }
+  }
+]

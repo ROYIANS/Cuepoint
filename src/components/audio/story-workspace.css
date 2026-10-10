@@ -5,10 +5,19 @@
     flex-direction: column;
     overflow: hidden;
     color: var(--foreground);
+    min-width: 0;
+    font-size: 14px;
+    line-height: 22px;
+}
+
+.as-page-header {
+    flex-shrink: 0;
+    padding: 16px 20px 12px;
 }
 
 .as-toolbar {
     min-height: 56px;
+    margin: 0;
     padding: 10px 20px;
     display: flex;
     align-items: center;
@@ -16,6 +25,7 @@
     gap: 16px;
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
+    flex-wrap: wrap;
 }
 
 .as-chapter-selector, .as-toolbar-actions, .as-view-modes {
@@ -41,7 +51,7 @@
 
 .as-project-name {
     color: var(--muted-foreground);
-    font-size: 11px;
+    font-size: 12px;
     margin-left: 12px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -153,7 +163,7 @@
 
 .as-document-footer > span {
     margin-left: auto;
-    font-size: 10px;
+    font-size: 12px;
     color: var(--muted-foreground);
 }
 
@@ -162,8 +172,10 @@
 }
 
 .as-blank-document > p {
-    font-size: 18px;
-    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    margin-bottom: 8px;
 }
 
 .as-blank-document > span {
@@ -187,8 +199,8 @@
 }
 
 .as-role-popover > h3 {
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
     margin-bottom: 12px;
 }
 
@@ -206,7 +218,7 @@
 
 .as-menu-heading {
     color: var(--muted-foreground);
-    font-size: 11px;
+    font-size: 12px;
     padding: 0 8px 10px;
 }
 
@@ -217,25 +229,27 @@
     flex-direction: column;
     border-left: 1px solid var(--border);
     min-height: 0;
+    background: var(--surface-panel, var(--card));
 }
 
 .as-inspector-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 16px 0;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
 }
 
 .as-inspector-top > span {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: var(--muted-foreground);
-    font-size: 11px;
+    font-size: 14px;
+    font-weight: 600;
 }
 
 .as-inspector-content {
-    padding: 12px 18px 28px;
+    padding: 16px 16px 24px;
     min-height: 0;
     overflow: auto;
 }
@@ -244,11 +258,11 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    margin-bottom: 22px;
+    margin-bottom: 24px;
 }
 
 .as-inspector-tabs > button {
-    font-size: 11px;
+    font-size: 12px;
     flex: 1;
     padding-inline: 8px;
 }
@@ -265,16 +279,16 @@
 }
 
 .as-inspector-heading strong {
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
     display: block;
 }
 
 .as-inspector-heading small {
-    font-size: 10px;
+    font-size: 12px;
     color: var(--muted-foreground);
     display: block;
-    margin-top: 5px;
+    margin-top: 4px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -284,19 +298,22 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 11px;
-    margin: 24px 0 10px;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 24px 0 12px;
 }
 
 .as-subheading > span {
     color: var(--muted-foreground);
+    font-size: 12px;
+    font-weight: 400;
 }
 
 .as-help {
     color: var(--muted-foreground);
-    font-size: 11px;
-    line-height: 1.75;
-    margin: 10px 0;
+    font-size: 12px;
+    line-height: 18px;
+    margin: 12px 0;
 }
 
 .as-version-list {
@@ -320,7 +337,7 @@
 }
 
 .as-version-row strong {
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 500;
     display: block;
     overflow: hidden;
@@ -330,9 +347,9 @@
 
 .as-version-row small {
     color: var(--muted-foreground);
-    font-size: 10px;
+    font-size: 12px;
     display: block;
-    margin-top: 5px;
+    margin-top: 4px;
     white-space: normal;
 }
 
@@ -345,8 +362,9 @@
 .as-detail-actions {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     margin: 14px 0;
+    flex-wrap: wrap;
 }
 
 .as-generation {
@@ -362,12 +380,12 @@
 }
 
 .as-inspector-empty > p {
-    font-size: 13px;
+    font-size: 14px;
     margin-bottom: 8px;
 }
 
 .as-inspector-empty > small {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--muted-foreground);
 }
 
@@ -410,7 +428,7 @@
 
 @media (max-width: 799px) {
     .as-toolbar {
-        padding: 8px 10px;
+        padding: 8px 16px;
         gap: 8px;
         min-height: 50px;
         flex-wrap: wrap;
@@ -513,7 +531,7 @@
 
 /* Continuous manuscript: one logical line per return, natural wrapping within a line. */
 .as-document {
-    padding: 36px 40px 60px;
+    padding: 32px 24px;
     max-width: 880px;
 }
 
@@ -561,7 +579,7 @@
     min-height: 32px;
     height: 32px;
     line-height: 30px;
-    font-size: 15px;
+    font-size: 16px;
     padding: 1px 4px;
     border: 0;
     background: transparent;
@@ -572,7 +590,8 @@
 }
 
 .as-script-input:focus-visible {
-    outline: none;
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
     box-shadow: none;
     border-color: transparent;
 }
@@ -601,11 +620,17 @@
     }
 
     .as-script-input {
-        font-size: 15px;
+        font-size: 16px;
         line-height: 30px;
     }
 
     .as-document-footer {
         margin-left: 28px;
+    }
+}
+
+@media (max-width: 799px) {
+    .as-page-header {
+        padding: 16px 16px 8px;
     }
 }

@@ -1,10 +1,10 @@
 .reference-dialog {
-    background: #171717;
-    color: #e8e8e8;
-    border-color: #343434;
+    background: var(--surface-elevated);
+    color: var(--foreground);
+    border-color: var(--border);
     width: min(720px, calc(100vw - 32px));
     max-width: min(720px, calc(100vw - 32px));
-    max-height: 85dvh;
+    max-height: calc(100dvh - 32px);
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -22,7 +22,7 @@
 }
 
 .reference-dialog button:focus-visible, .reference-source-link:focus-visible, .reference-chip button:focus-visible {
-    outline: 2px solid #aaa;
+    outline: 2px solid var(--ring);
     outline-offset: 3px;
 }
 
@@ -39,8 +39,8 @@
     flex: 1;
     min-width: 0;
     padding: 8px 0;
-    border-bottom: 1px solid #414141;
-    color: #999;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted-foreground);
 }
 
 .reference-library-toolbar input {
@@ -48,7 +48,7 @@
     width: 100%;
     outline: none;
     background: transparent;
-    color: #eee;
+    color: var(--foreground);
     font-size: 14px;
 }
 
@@ -58,7 +58,7 @@
     gap: 8px;
     padding: 8px 12px;
     border-radius: 6px;
-    background: #303030;
+    background: var(--accent);
     font-size: 14px;
 }
 
@@ -72,7 +72,7 @@
     align-items: center;
     gap: 12px;
     padding: 16px 0;
-    border-bottom: 1px solid #2e2e2e;
+    border-bottom: 1px solid var(--border);
 }
 
 .reference-library-row > div:first-child {
@@ -83,7 +83,7 @@
 .reference-library-row small {
     display: block;
     font-size: 12px;
-    color: #929292;
+    color: var(--muted-foreground);
     padding-top: 4px;
 }
 
@@ -98,16 +98,16 @@
     display: grid;
     place-items: center;
     border-radius: 6px;
-    color: #bdbdbd;
+    color: var(--muted-foreground);
 }
 
 .reference-row-actions button:hover:not(:disabled) {
-    background: #333;
+    background: var(--accent);
     color: white;
 }
 
 .reference-note, .reference-send-note {
-    color: #929292;
+    color: var(--muted-foreground);
     font-size: 12px;
     line-height: 1.6;
 }
@@ -130,7 +130,7 @@
 
 .reference-empty {
     padding: 32px 16px;
-    color: #8d8d8d;
+    color: var(--muted-foreground);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -140,7 +140,7 @@
 }
 
 .reference-empty strong {
-    color: #ddd;
+    color: var(--foreground);
     font-weight: 500;
 }
 
@@ -179,7 +179,7 @@
 
 .reference-source-meta span {
     font-size: 12px;
-    color: #999;
+    color: var(--muted-foreground);
 }
 
 .reference-preview {
@@ -201,7 +201,7 @@
 .reference-locator {
     display: block;
     font-size: 12px;
-    color: #929292;
+    color: var(--muted-foreground);
     margin-bottom: 8px;
 }
 
@@ -216,7 +216,7 @@
 .reference-preview > button {
     font-size: 14px;
     padding: 8px;
-    background: #303030;
+    background: var(--accent);
     border-radius: 6px;
 }
 
@@ -234,9 +234,9 @@
     align-items: center;
     gap: 8px;
     padding: 6px 8px;
-    background: #292929;
+    background: var(--accent);
     border-radius: 6px;
-    color: #d2d2d2;
+    color: var(--foreground);
 }
 
 .reference-chip > button:last-child {
@@ -271,7 +271,7 @@
 
 .reference-imports small {
     display: block;
-    color: #aaa;
+    color: var(--muted-foreground);
     overflow-wrap: anywhere;
 }
 
@@ -280,7 +280,7 @@
 }
 
 .reference-dragging {
-    outline: 2px dashed #999;
+    outline: 2px dashed var(--ring);
     outline-offset: 4px;
 }
 
@@ -323,18 +323,18 @@
 .reference-library-tabs {
     display: flex;
     gap: 20px;
-    border-bottom: 1px solid #303030;
+    border-bottom: 1px solid var(--border);
 }
 
 .reference-library-tabs button {
     padding: 8px 0;
-    color: #929292;
+    color: var(--muted-foreground);
     font-size: 14px;
 }
 
 .reference-library-tabs button[aria-pressed=true] {
     color: white;
-    border-bottom: 2px solid #ddd;
+    border-bottom: 2px solid var(--border);
 }
 
 .reference-image-grid {
@@ -356,7 +356,7 @@
     width: 100%;
     height: 108px;
     object-fit: contain;
-    background: #101010;
+    background: var(--surface-panel);
     border-radius: 6px;
 }
 
@@ -369,7 +369,7 @@
 }
 
 .reference-project-image small {
-    color: #999;
+    color: var(--muted-foreground);
     font-size: 12px;
 }
 
@@ -384,7 +384,7 @@
 
 .reference-message-sources summary {
     cursor: pointer;
-    color: #aaa;
+    color: var(--muted-foreground);
     padding: 8px 0;
 }
 
@@ -393,6 +393,6 @@
 }
 
 .reference-cited-chunk {
-    border-left: 2px solid #aaa;
-    padding-left: 12px;
+    background: var(--surface-panel);
+    padding: 12px;
 }

@@ -1,0 +1,261 @@
+[
+  {
+    "page": "materials",
+    "mode": "keyboard-settings",
+    "styles": [
+      {
+        "bg": "rgba(32, 32, 32, 0.792)",
+        "border": "0px",
+        "focus": false,
+        "height": 32,
+        "selected": "false",
+        "shadow": "none",
+        "text": "媒体与资料"
+      },
+      {
+        "bg": "rgba(32, 32, 32, 0.208)",
+        "border": "0px",
+        "focus": true,
+        "height": 32,
+        "selected": "true",
+        "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(1 0 0 / 0.0576321) 0px 0px 0px 0.628713px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+        "text": "创作设定"
+      }
+    ]
+  },
+  {
+    "page": "materials",
+    "mode": "narrow",
+    "geometry": {
+      "root": 390,
+      "tabs": [
+        {
+          "h": 32,
+          "text": "媒体与资料",
+          "w": 116,
+          "x": 18,
+          "y": 120
+        },
+        {
+          "h": 32,
+          "text": "创作设定",
+          "w": 102,
+          "x": 138,
+          "y": 120
+        }
+      ],
+      "width": 390
+    }
+  },
+  {
+    "page": "world",
+    "mode": "keyboard-narrow",
+    "geometry": {
+      "root": 390,
+      "tabs": [
+        {
+          "bg": "rgb(32, 32, 32)",
+          "border": "0px",
+          "focus": false,
+          "h": 32,
+          "selected": "false",
+          "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(1 0 0 / 0.0171948) 0px 0px 0px 0.18758px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+          "text": "设定",
+          "w": 52,
+          "x": 18
+        },
+        {
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "focus": true,
+          "h": 32,
+          "selected": "true",
+          "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+          "text": "角色 1",
+          "w": 62.3828125,
+          "x": 74
+        },
+        {
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "focus": false,
+          "h": 32,
+          "selected": "false",
+          "shadow": "none",
+          "text": "场景 1",
+          "w": 62.3828125,
+          "x": 140.3828125
+        },
+        {
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "focus": false,
+          "h": 32,
+          "selected": "false",
+          "shadow": "none",
+          "text": "道具 0",
+          "w": 65.0703125,
+          "x": 206.765625
+        },
+        {
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "focus": false,
+          "h": 32,
+          "selected": "false",
+          "shadow": "none",
+          "text": "风格 0",
+          "w": 65.0703125,
+          "x": 275.8359375
+        }
+      ],
+      "width": 390
+    }
+  },
+  {
+    "page": "world",
+    "mode": "desktop",
+    "geometry": {
+      "root": 1280,
+      "width": 1280
+    }
+  },
+  {
+    "page": "music",
+    "mode": "desktop",
+    "styles": [
+      {
+        "bg": "rgba(0, 0, 0, 0)",
+        "border": "0px",
+        "h": 32,
+        "selected": "false",
+        "shadow": "none",
+        "text": "简单"
+      },
+      {
+        "bg": "rgb(32, 32, 32)",
+        "border": "0px",
+        "h": 32,
+        "selected": "true",
+        "shadow": "none",
+        "text": "自定义"
+      }
+    ]
+  },
+  {
+    "page": "music",
+    "mode": "keyboard-narrow",
+    "geometry": {
+      "root": 390,
+      "tabs": [
+        {
+          "bg": "rgb(32, 32, 32)",
+          "border": "0px",
+          "h": 32,
+          "selected": "true",
+          "text": "创作",
+          "w": 52,
+          "x": 18
+        },
+        {
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "h": 32,
+          "selected": "false",
+          "text": "作品 1",
+          "w": 62.3828125,
+          "x": 74
+        },
+        {
+          "bg": "rgb(32, 32, 32)",
+          "border": "0px",
+          "h": 32,
+          "selected": "true",
+          "text": "简单",
+          "w": 48,
+          "x": 18
+        },
+        {
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "h": 32,
+          "selected": "false",
+          "text": "自定义",
+          "w": 62,
+          "x": 70
+        }
+      ],
+      "width": 390
+    }
+  },
+  {
+    "page": "music",
+    "mode": "works-keyboard-narrow",
+    "selected": "true"
+  },
+  {
+    "page": "world",
+    "mode": "keyboard-narrow-settled",
+    "geometry": {
+      "root": 390,
+      "tabs": [
+        {
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "focus": false,
+          "h": 32,
+          "selected": "false",
+          "shadow": "none",
+          "text": "设定",
+          "w": 52,
+          "x": 18
+        },
+        {
+          "bg": "rgb(32, 32, 32)",
+          "border": "0px",
+          "focus": true,
+          "h": 32,
+          "selected": "true",
+          "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(1 0 0 / 0.275) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+          "text": "角色 1",
+          "w": 62.3828125,
+          "x": 74
+        },
+        {
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "focus": false,
+          "h": 32,
+          "selected": "false",
+          "shadow": "none",
+          "text": "场景 1",
+          "w": 62.3828125,
+          "x": 140.3828125
+        },
+        {
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "focus": false,
+          "h": 32,
+          "selected": "false",
+          "shadow": "none",
+          "text": "道具 0",
+          "w": 65.0703125,
+          "x": 206.765625
+        },
+        {
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "focus": false,
+          "h": 32,
+          "selected": "false",
+          "shadow": "none",
+          "text": "风格 0",
+          "w": 65.0703125,
+          "x": 275.8359375
+        }
+      ],
+      "width": 390
+    }
+  }
+]

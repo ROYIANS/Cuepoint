@@ -40,6 +40,7 @@ import {Plus} from "lucide-react";
 import {PROJECT_KINDS, type ProjectKindId, ProjectKindPlaceholder} from "./projectKinds";
 import {cn} from "@/lib/utils";
 import {readProjectCoverIds} from "@/lib/studioLibraryQueries";
+import {PageContent, PageState, PageToolbar} from "@/components/layout/PageLayout";
 
 export function ProjectGalleryPage() {
     const navigate = useNavigate();
@@ -193,15 +194,15 @@ export function ProjectGalleryPage() {
     }
 
     return (
-        <div className="px-4 py-6 sm:px-10 sm:py-8">
+        <PageContent>
             <LibraryHeader title="项目" query={query} onQuery={setQuery} sort={sort} onSort={setSort}
-                           extra={<Button size="sm" onClick={() => {
+                           description="管理视频、音频与音乐项目。"
+                           extra={<Button onClick={() => {
                                setCreateKind(kindFilter === "all" ? "video" : kindFilter);
                                setCreating(true);
                            }}><Plus aria-hidden/>新建项目</Button>}
             />
-            <p className="text-muted-foreground mt-3 text-sm leading-6">从一个想法出发，找到适合它的创作形式。</p>
-            <div className="mt-6 flex flex-wrap gap-1 border-b pb-3" role="group" aria-label="按创作类型筛选">
+            <div className="library-kind-filters" role="group" aria-label="按创作类型筛选">
                 <button type="button" aria-pressed={kindFilter === "all"} onClick={() => setKindFilter("all")}
                         className={cn("rounded-lg px-3 py-2 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-ring", kindFilter === "all" ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50")}>全部
                 </button>
@@ -215,7 +216,7 @@ export function ProjectGalleryPage() {
                     </button>;
                 })}
             </div>
-            <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
+            <PageToolbar className="library-filter-row">
                 <label className="flex items-center gap-2">所属 IP
                     <Select value={ipFilter} onValueChange={setIpFilter}><SelectTrigger aria-label="筛选所属 IP"
                                                                                         className="max-w-52"><SelectValue/></SelectTrigger><SelectContent><SelectItem
@@ -226,22 +227,19 @@ export function ProjectGalleryPage() {
                 </label>
                 <label className="flex items-center gap-2"><Checkbox checked={showArchived}
                                                                      onCheckedChange={(checked) => setShowArchived(checked === true)}/>查看已归档项目</label>
-            </div>
-            <div className="mt-6">
+            </PageToolbar>
+            <div className="mt-4">
                 {filteredKind && !filteredKind.available ? <ProjectKindPlaceholder kind={filteredKind}/> : <>
-                    {projects === undefined &&
-                        <p className="text-muted-foreground py-12 text-center text-sm" role="status">加载项目中…</p>}
+                    {projects === undefined && <PageState kind="loading" title="加载项目中…"/>}
                     {projects !== undefined && !visible.length &&
-                        <div className="rounded-2xl border border-dashed px-6 py-16 text-center">
-                            <h2 className="text-base font-medium">{query.trim() || ipFilter !== "all" || showArchived ? "没有找到匹配的项目" : "从第一部作品开始"}</h2>
-                            <p className="text-muted-foreground mt-2 text-sm">{query.trim() ? "试试其他关键词，或清除搜索。" : "视频、音频与音乐创作已开放，选择类型开始制作。"}</p>
-                            {query.trim() ? <Button className="mt-5" variant="outline"
+                        <PageState title={query.trim() || ipFilter !== "all" || showArchived ? "没有找到匹配的项目" : "还没有项目"}
+                            description={query.trim() ? "试试其他关键词，或清除搜索。" : "选择视频、音频或音乐类型，新建项目开始制作。"}
+                            action={query.trim() ? <Button variant="outline"
                                                     onClick={() => setQuery("")}>清除搜索</Button> :
-                                <Button className="mt-5" variant="outline" onClick={() => {
+                                <Button variant="outline" onClick={() => {
                                     setCreateKind(kindFilter === "all" ? "video" : kindFilter);
                                     setCreating(true);
-                                }}>新建项目</Button>}
-                        </div>}
+                                }}>新建项目</Button>}/>}
                     <LibraryGrid>
                         {visible.map((project) => {
                             let archiveLabel = project.archivedAt ? "恢复项目" : "归档项目";
@@ -317,11 +315,12 @@ export function ProjectGalleryPage() {
             <Dialog open={creating} onOpenChange={(open) => {
                 if (!creatingRef.current) setCreating(open);
             }}>
-                <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-xl">
+                <DialogContent className="flex flex-col overflow-hidden sm:max-w-xl">
                     <DialogHeader>
                         <DialogTitle>新建项目</DialogTitle>
                         <DialogDescription>选择视频、音频或音乐项目，也可以关联已有 IP。</DialogDescription>
                     </DialogHeader>
+                    <div className="app-scroll min-h-0 flex-1 space-y-4 overflow-y-auto pr-1">
                     <fieldset disabled={submitting}>
                         <legend className="text-sm font-medium">创作类型</legend>
                         <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-5">
@@ -405,6 +404,7 @@ export function ProjectGalleryPage() {
                         <p className="text-muted-foreground text-xs leading-5">项目类型创建后固定。可选择所属
                             IP，也可以独立创作。</p>
                     </>}
+                    </div>
                     <DialogFooter>
                         <Button disabled={submitting} variant="outline" onClick={() => {
                             if (!creatingRef.current) setCreating(false);
@@ -493,6 +493,6 @@ export function ProjectGalleryPage() {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-        </div>
+        </PageContent>
     );
 }

@@ -16,6 +16,7 @@ import {
 } from "@/db/projectMemories";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
+import {PageHeader, PageState} from "@/components/layout/PageLayout";
 import {
     AlertDialog,
     AlertDialogCancel,
@@ -27,6 +28,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import {readMemory} from "./readMemory";
 import {MemoryEditor} from "./MemoryEditor";
+import {MemorySelect} from "./MemorySelect";
 import {CATEGORY_LABELS, memoryDate, sourceLabel, STATUS_LABELS,} from "./memoryLabels";
 import "./memory.css";
 
@@ -68,17 +70,11 @@ export function ProjectMemoryPage({
         result?.records.filter((item) => item.status === "active").length ?? 0;
     return (
         <main className={`memory-page${selected ? " has-selection" : ""}`}>
-            <header className="memory-page-heading">
-                <div>
-                    <span className="memory-eyebrow">项目知识</span>
-                    <h1>把经验，留给下一次创作。</h1>
-                    <p>汇集这个项目的规范、偏好与决策，每一条都经过你的确认。</p>
-                </div>
-                <Button onClick={() => setEditor("new")}>
+            <PageHeader title="项目记忆" description="管理这个项目已确认的规范、偏好与决策。"
+                        className="memory-page-heading" actions={<Button onClick={() => setEditor("new")}>
                     <Plus/>
                     添加记忆
-                </Button>
-            </header>
+                </Button>}/>
             <div className="memory-workbench">
                 <section className="memory-list-panel" aria-label="项目记忆列表">
                     <div className="memory-filters">
@@ -92,32 +88,10 @@ export function ProjectMemoryPage({
                             />
                         </div>
                         <div className="memory-filter-row">
-                            <select
-                                className="memory-select"
-                                aria-label="筛选记忆分类"
-                                value={category}
-                                onChange={(event) => setCategory(event.target.value)}
-                            >
-                                <option value="">全部分类</option>
-                                {Object.entries(CATEGORY_LABELS).map(([value, label]) => (
-                                    <option key={value} value={value}>
-                                        {label}
-                                    </option>
-                                ))}
-                            </select>
-                            <select
-                                className="memory-select"
-                                aria-label="筛选记忆状态"
-                                value={status}
-                                onChange={(event) => setStatus(event.target.value)}
-                            >
-                                <option value="">全部状态</option>
-                                {Object.entries(STATUS_LABELS).map(([value, label]) => (
-                                    <option key={value} value={value}>
-                                        {label}
-                                    </option>
-                                ))}
-                            </select>
+                            <MemorySelect label="筛选记忆分类" value={category} onValueChange={setCategory}
+                                          emptyLabel="全部分类" options={CATEGORY_LABELS}/>
+                            <MemorySelect label="筛选记忆状态" value={status} onValueChange={setStatus}
+                                          emptyLabel="全部状态" options={STATUS_LABELS}/>
                         </div>
                     </div>
                     <div className="memory-list-meta">
@@ -126,13 +100,9 @@ export function ProjectMemoryPage({
                     </div>
                     <div className="memory-list-scroll">
                         {!result ? (
-                            <p className="memory-empty" role="status">
-                                正在读取项目记忆…
-                            </p>
+                            <PageState compact kind="loading" title="正在读取项目记忆…"/>
                         ) : result.error ? (
-                            <p className="memory-error" role="alert">
-                                {result.error}
-                            </p>
+                            <PageState compact kind="error" title="读取项目记忆失败" description={result.error}/>
                         ) : records.length ? (
                             records.map((memory) => (
                                 <button
@@ -162,7 +132,7 @@ export function ProjectMemoryPage({
                             <div className="memory-empty">
                                 <BookOpen size={28} strokeWidth={1.3}/>
                                 <h2>
-                                    {result.records.length ? "没有匹配的记忆" : "让好方法留下来"}
+                                    {result.records.length ? "没有匹配的记忆" : "还没有项目记忆"}
                                 </h2>
                                 <p>
                                     {result.records.length
@@ -189,7 +159,7 @@ export function ProjectMemoryPage({
                     ) : (
                         <div className="memory-detail-placeholder">
                             <BookOpen size={36} strokeWidth={1}/>
-                            <h2>{selectedId ? "这条记忆已被删除" : "项目的创作共识"}</h2>
+                            <h2>{selectedId ? "这条记忆已被删除" : "选择一条项目记忆"}</h2>
                             <p>选择一条记忆，查看它的适用条件、原始依据与修订过程。</p>
                             <small>已启用的记忆会按当前需求引用；也可标记为项目通用。</small>
                         </div>

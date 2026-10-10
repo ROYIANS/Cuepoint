@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import {readMemory} from "./readMemory";
 import {CATEGORY_LABELS} from "./memoryLabels";
+import {MemorySelect} from "./MemorySelect";
 import "./memory.css";
 
 const EMPTY_MEMORY: MemoryInput = {
@@ -247,6 +248,7 @@ export function MemoryEditor({
                         }}
                         className="memory-editor-form"
                     >
+                        <div className="memory-editor-body">
                         <fieldset disabled={pending || saveCompleted} className="memory-editor-fields">
                             {sourceExcerpt && (
                                 <details className="memory-source-excerpt">
@@ -259,21 +261,9 @@ export function MemoryEditor({
                             )}
                             <div className="memory-form-pair">
                                 <Field label="分类">
-                                    <select
-                                        className="memory-select"
-                                        value={draft.category}
-                                        onChange={(event) =>
-                                            change({
-                                                category: event.target.value as MemoryInput["category"],
-                                            })
-                                        }
-                                    >
-                                        {Object.entries(CATEGORY_LABELS).map(([value, label]) => (
-                                            <option value={value} key={value}>
-                                                {label}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <MemorySelect label="记忆分类" value={draft.category}
+                                                  disabled={pending || saveCompleted} options={CATEGORY_LABELS}
+                                                  onValueChange={category => change({category: category as MemoryInput["category"]})}/>
                                 </Field>
                                 <Field label="标题">
                                     <Input
@@ -296,12 +286,10 @@ export function MemoryEditor({
                                     placeholder="保留明确、可复用的结论，而不是整段聊天记录。"
                                 />
                             </Field>
-                            <Field label="引用方式"><select className="memory-select"
-                                                            value={draft.inclusion ?? "relevant"}
-                                                            onChange={(event) => change({inclusion: event.target.value as MemoryInput["inclusion"]})}>
-                                <option value="relevant">按需引用</option>
-                                <option value="project">项目通用</option>
-                            </select></Field>
+                            <Field label="引用方式"><MemorySelect label="引用方式" value={draft.inclusion ?? "relevant"}
+                                                                  disabled={pending || saveCompleted}
+                                                                  options={{relevant: "按需引用", project: "项目通用"}}
+                                                                  onValueChange={inclusion => change({inclusion: inclusion as MemoryInput["inclusion"]})}/></Field>
                             <p className="memory-field-hint">{draft.inclusion === "project" ? "在本项目的对话中优先带入，仍受上下文预算限制。请确认适用于整个项目。" : "根据当前问题和任务选择，仅在相关时带入。"}</p>
                             <Field label="适用条件">
                                 <Textarea
@@ -415,6 +403,7 @@ export function MemoryEditor({
                                 ))}
                             </div>
                         )}
+                        </div>
                         <div className="memory-editor-actions">
                             <Button
                                 type="button"

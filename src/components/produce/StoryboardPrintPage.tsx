@@ -4,6 +4,7 @@ import {useLiveQuery} from "dexie-react-hooks";
 import {ArrowLeft, Printer} from "lucide-react";
 import {MediaPreview} from "@/components/media/MediaThumb";
 import {Button} from "@/components/ui/button";
+import {PageState} from "@/components/layout/PageLayout";
 import {db} from "@/db/database";
 import {episodeLabel, normalizeProjectMode} from "@/domain/types";
 import {deriveEpisodeDelivery} from "@/lib/episodeDelivery";
@@ -68,10 +69,10 @@ function StoryboardPrintPageContent({
         styles === undefined ||
         scenes === undefined
     ) {
-        return <div className="p-8 text-sm">加载故事板…</div>;
+        return <PageState kind="loading" title="正在读取故事板…"/>;
     }
     if (project === null || episode === null || episode.projectId !== projectId || episode.id !== episodeId) {
-        return <div className="p-8 text-sm">找不到当前故事板</div>;
+        return <PageState kind="missing" title="找不到当前故事板"/>;
     }
 
     const delivery = deriveEpisodeDelivery({
@@ -87,8 +88,8 @@ function StoryboardPrintPageContent({
 
     return (
         <main className="storyboard-print min-h-full bg-white px-4 py-6 sm:px-8 text-black">
-            <div className="print-toolbar mx-auto mb-6 flex max-w-6xl flex-wrap items-center justify-between gap-3">
-                <Button variant="outline" asChild>
+            <div className="print-toolbar mx-auto mb-6 flex max-w-6xl flex-wrap items-center justify-between gap-3 rounded-lg bg-background p-3 text-foreground">
+                <Button variant="outline" size="sm" asChild>
                     <Link
                         to="/p/$projectId/e/$episodeId/produce"
                         params={{projectId, episodeId}}
@@ -97,7 +98,7 @@ function StoryboardPrintPageContent({
                         返回制作
                     </Link>
                 </Button>
-                <Button onClick={() => window.print()}>
+                <Button size="sm" onClick={() => window.print()}>
                     <Printer/>
                     打印
                 </Button>
@@ -106,7 +107,7 @@ function StoryboardPrintPageContent({
             <header className="storyboard-heading mx-auto max-w-6xl border-b border-black/20 pb-4">
                 <p className="text-xs tracking-[0.18em] text-black/55">分镜故事板</p>
                 <h1 className="mt-1 text-2xl font-semibold">{project.name}</h1>
-                <div className="mt-2 flex gap-5 text-sm text-black/65">
+                <div className="mt-2 flex flex-wrap gap-5 text-sm text-black/65">
                     {normalizeProjectMode(project.mode) === "series" ? <span>{episodeLabel(episode)}</span> : null}
                     <span>{delivery.rows.length} 镜</span>
                     <span>{formatDuration(delivery.totalDurationSec)}</span>

@@ -8,6 +8,7 @@ import {STUDIO_LIBRARY_ID, STYLE_SLOTS} from "@/domain/types";
 import {EditableGenerationSlot} from "@/components/slots/GenerationSlotCard";
 import {AssetTextField} from "./AssetTextField";
 import {Button} from "@/components/ui/button";
+import {PageContent, PageHeader, PageState} from "@/components/layout/PageLayout";
 
 export function StyleDetailPage(props: Parameters<typeof StyleDetailContent>[0]) {
     const ownerId = props.back?.kind === "project" ? props.back.projectId : STUDIO_LIBRARY_ID;
@@ -36,15 +37,15 @@ function StyleDetailContent({
     const style = loaded ?? (openEditors > 0 ? lastRecord.current : loaded);
 
     if (style === undefined) {
-        return <div className="text-muted-foreground p-8 text-sm">加载中…</div>;
+        return <PageContent mode="detail"><PageState kind="loading" title="正在读取风格…"/></PageContent>;
     }
     const missing =
         style === null || style.projectId !== (back.kind === "project" ? back.projectId : STUDIO_LIBRARY_ID);
     if (missing) {
         return (
-            <div className="p-8">
-                <p>找不到这个风格</p>
-                <Button
+            <PageContent mode="detail">
+                <PageHeader title="风格"/>
+                <PageState kind="missing" title="找不到这个风格" action={<Button
                     className="mt-3"
                     onClick={() =>
                         void (back.kind === "studio"
@@ -57,21 +58,21 @@ function StyleDetailContent({
                     }
                 >
                     {back.kind === "studio" ? "返回风格库" : "返回世界"}
-                </Button>
-            </div>
+                </Button>}/>
+            </PageContent>
         );
     }
 
     return (
-        <div className="h-full overflow-auto">
+        <div className={back.kind === "project" ? "app-scroll h-full min-h-0 overflow-auto" : "min-h-full"}>
             {!loaded && <p role="alert" className="p-4">此设定已不可用，当前槽位草稿仍保留。可复制草稿或取消后离开。</p>}
-            <div className="mx-auto max-w-5xl px-4 py-6 sm:px-8">
-                {back.kind === "studio" ? (
+            <PageContent mode="detail">
+                <PageHeader title="风格" back={back.kind === "studio" ? (
                     <Link
                         to="/styles"
                         className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
                     >
-                        <ChevronLeft className="size-4"/> 视觉风格
+                        <ChevronLeft className="size-4" aria-hidden/> 视觉风格
                     </Link>
                 ) : (
                     <Link
@@ -80,12 +81,11 @@ function StyleDetailContent({
                         search={{tab: "styles"}}
                         className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
                     >
-                        <ChevronLeft className="size-4"/> 世界
+                        <ChevronLeft className="size-4" aria-hidden/> 世界
                     </Link>
-                )}
-                <h1 className="mt-3 text-lg font-semibold">风格</h1>
-                <div className="mt-6 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-                    <div className="grid grid-cols-2 gap-4">
+                )}/>
+                <div className="mt-6 grid items-start gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+                    <div className="grid grid-cols-2 items-start gap-4">
                         {STYLE_SLOTS.map((slot) => (
                             <EditableGenerationSlot
                                 unavailable={!loaded}
@@ -101,7 +101,7 @@ function StyleDetailContent({
                             />
                         ))}
                     </div>
-                    <div className="space-y-4">
+                    <div className="min-w-0 space-y-4">
                         <AssetTextField
                             key={`${style.id}:name`}
                             draftKey={`${style.id}:name`}
@@ -120,8 +120,8 @@ function StyleDetailContent({
                             multiline
                             placeholder="画风、光色、镜头气质"
                         />
-                        <details className="rounded-xl border bg-card p-4">
-                            <summary className="cursor-pointer text-sm font-medium">创作细节 · 选填</summary>
+                        <details className="border-t pt-4">
+                            <summary className="focus-visible:ring-ring/50 cursor-pointer rounded-md text-sm leading-5 font-semibold focus-visible:outline-none focus-visible:ring-[3px]">创作细节 · 选填</summary>
                             <p className="text-muted-foreground mt-2 text-xs leading-5">把色彩、光影与构图方向写清楚，作为整部作品的视觉依据。所有信息均为选填。</p>
                             <div className="mt-4 space-y-4">
                                 <AssetTextField
@@ -178,7 +178,7 @@ function StyleDetailContent({
                         </details>
                     </div>
                 </div>
-            </div>
+            </PageContent>
         </div>
     );
 }

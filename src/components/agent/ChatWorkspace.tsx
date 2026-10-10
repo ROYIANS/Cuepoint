@@ -1,7 +1,8 @@
 import type {RunAction} from "./AgentRunDetails";
 import {useAgentActivityNavigation} from "./AgentActivityNavigation";
 import type {AgentRun} from "@/domain/agent";
-import {ActionIcon, Flexbox} from "@lobehub/ui";
+import {Flexbox} from "@lobehub/ui";
+import {ActionIcon} from "@lobehub/ui/base-ui";
 import {ChatHeader, ChatHeaderTitle} from "@lobehub/ui/chat";
 import {Dropdown} from "antd";
 import {ListTodo, MoreHorizontal, PanelLeft, PanelRight, Pencil, Trash2,} from "lucide-react";
@@ -45,7 +46,7 @@ function popupRoot(): HTMLElement {
 /**
  * Chat workspace — lobehub Conversation layout:
  * collapsible TopicSidebar (md+) | ChatHeader + message stream +
- * floating composer. Below md, topics open in a left Sheet.
+ * floating composer. Below md, topics open in a right Sheet.
  */
 export function ChatWorkspace({
                                   threads,
@@ -161,7 +162,7 @@ export function ChatWorkspace({
                 <SheetContent
                     side="right"
                     showCloseButton={false}
-                    className="agent-chat-root agent-topic-sheet flex h-full w-[min(280px,85vw)] flex-col gap-0 border-[#202020] bg-[#0d0d0d] p-0 text-white sm:max-w-[280px]"
+                    className="agent-chat-root agent-topic-sheet flex h-full w-[min(280px,85vw)] flex-col gap-0 border-border bg-[var(--surface-panel)] p-0 text-foreground sm:max-w-[280px]"
                 >
                     <SheetHeader className="sr-only">
                         <SheetTitle>话题</SheetTitle>
@@ -191,7 +192,7 @@ export function ChatWorkspace({
                     className="agent-chat-header" style={expanded ? {visibility: "hidden"} : undefined}
                     left={
                         <ChatHeaderTitle
-                            title={activeThread?.title ?? "对话"}
+                            title={<h1 className="agent-conversation-title">{activeThread?.title ?? "对话"}</h1>}
                             tag={
                                 activeThread ? (
                                     <Dropdown
@@ -216,7 +217,8 @@ export function ChatWorkspace({
                                         }}
                                     >
                     <span>
-                      <ActionIcon icon={MoreHorizontal} title="更多" size="small"/>
+                      <ActionIcon icon={MoreHorizontal} title="更多" aria-label="话题更多操作"
+                                  aria-haspopup="menu" size="small"/>
                     </span>
                                     </Dropdown>
                                 ) : undefined
@@ -227,18 +229,24 @@ export function ChatWorkspace({
                         <Flexbox horizontal gap={4}>
                             {(taskTitle || (composer.projectId && !composer.blocked)) &&
                                 <ActionIcon icon={ListTodo} title={taskTitle ? "任务详情" : "创建关联任务"}
+                                            aria-label={taskTitle ? "任务详情" : "创建关联任务"}
                                             onClick={onOpenTask}/>}
                             <span className="md:hidden">
                 <ActionIcon
                     icon={PanelLeft}
                     title="话题列表"
+                    aria-label="话题列表"
+                    aria-expanded={topicsOpen}
+                    aria-haspopup="dialog"
                     onClick={() => setTopicsOpen(true)}
                 />
               </span>
                             <span className="hidden md:inline-flex">
                 <ActionIcon
                     icon={collapsed ? PanelRight : PanelLeft}
-                    title="侧栏"
+                    title={collapsed ? "展开话题侧栏" : "收起话题侧栏"}
+                    aria-label={collapsed ? "展开话题侧栏" : "收起话题侧栏"}
+                    aria-expanded={!collapsed}
                     onClick={toggleCollapsed}
                 />
               </span>

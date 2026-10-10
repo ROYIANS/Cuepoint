@@ -1,17 +1,15 @@
 /**
- * Chat-only visual tokens, aligned with LobeHub DESIGN.dark.md names
- * (colorBgLayout / colorTextSecondary / 4px spacing) but scoped to /agent.
- * Studio pages keep Tailwind/shadcn and must not import these.
+ * Agent adapters use the shared application palette. Conversation geometry
+ * remains local because transcript and composer owners depend on these values.
  */
 
 
-export const SURFACE_ELEVATED = "#1a1a1a";
-export const SURFACE_HOVER = "rgba(255,255,255,0.06)";
+export const SURFACE_ELEVATED = "var(--surface-elevated)";
 
 
-export const TEXT = "#ffffff";
+export const TEXT = "var(--foreground)";
 
-export const TEXT_TERTIARY = "#6f6f6f";
+export const TEXT_TERTIARY = "var(--muted-foreground)";
 
 
 /** 4px spacing scale from LobeHub DESIGN.md — round off-scale values here. */

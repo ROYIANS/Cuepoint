@@ -110,6 +110,7 @@ import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
+import {PageContent, PageHeader, PageState, PageToolbar} from "@/components/layout/PageLayout";
 
 export function ShotEditorPage(props: Parameters<typeof ShotEditorPageContent>[0]) {
     return <ShotEditorPageContent key={JSON.stringify([props.projectId, props.episodeId])} {...props}/>;
@@ -383,13 +384,13 @@ function ShotEditorPageContent({
     }
 
     if (project === undefined || episode === undefined || loadedShots === undefined || loadedCharacters === undefined || loadedScenes === undefined || props === undefined || styles === undefined) {
-        return <div className="text-muted-foreground p-8 text-sm">加载分镜…</div>;
+        return <PageContent><PageState kind="loading" title="正在读取分镜…"/></PageContent>;
     }
     if (project === null) {
-        return <div className="text-muted-foreground p-8 text-sm">找不到这个项目</div>;
+        return <PageContent><PageState kind="missing" title="找不到这个项目"/></PageContent>;
     }
     if (episode === null || episode.projectId !== projectId || episode.id !== episodeId) {
-        return <div className="text-muted-foreground p-8 text-sm">找不到当前故事</div>;
+        return <PageContent><PageState kind="missing" title="找不到当前故事"/></PageContent>;
     }
 
     async function toggleColumn(id: ShotColumnId, next: boolean) {
@@ -500,11 +501,9 @@ function ShotEditorPageContent({
     return (
         <>
             {relationNavigationGuard}
-            <div className="flex h-full flex-col">
+            <div className="flex h-full min-h-0 min-w-0 flex-col">
                 {unavailable && <p role="alert" className="p-4">当前项目、故事或镜头已不可用，未完成的修改仍保留。</p>}
-                <div className="flex min-h-14 shrink-0 flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-5">
-                    <div className="flex items-center gap-3">
-                        <h1 className="text-[17px] font-semibold">制作分镜</h1>
+                <PageHeader dense title="分镜" className="shrink-0 border-b px-4 py-3 sm:px-5" actions={
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button size="sm" variant="brand">
@@ -532,8 +531,8 @@ function ShotEditorPageContent({
                                     创建场
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
+                        </DropdownMenu>}/>
+                <PageToolbar className="shrink-0 px-4 py-2 sm:px-5" style={{marginBlock: 0}}>
                     <div className="flex flex-wrap items-center gap-1">
                         <Button size="sm" variant="outline" disabled={visibleShots.length === 0}
                                 onClick={() => setRelationShotId(visibleShots.find((shot) => shot.id === activeShotId)?.id ?? visibleShots[0]?.id)}>
@@ -695,8 +694,9 @@ function ShotEditorPageContent({
                             </PopoverTrigger>
                             <PopoverContent align="end" className="w-72 space-y-3">
                                 <div className="flex items-center justify-between gap-3">
-                                    <Label>默认时长（秒）</Label>
+                                    <Label htmlFor="default-shot-duration">默认时长（秒）</Label>
                                     <Input
+                                        id="default-shot-duration"
                                         type="number"
                                         min={0}
                                         className="h-8 w-20"
@@ -763,7 +763,7 @@ function ShotEditorPageContent({
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
-                </div>
+                </PageToolbar>
 
                 {selecting ? (
                     <div className="bg-muted/60 flex min-h-12 shrink-0 flex-wrap items-center gap-3 border-y px-5 py-2">
@@ -784,7 +784,7 @@ function ShotEditorPageContent({
                                 void assignSelectedStatus(normalizeShotStatus(value));
                             }}
                         >
-                            <SelectTrigger className="h-8 w-32 bg-background">
+                            <SelectTrigger aria-label="批量状态" className="h-8 w-32 bg-background">
                                 <SelectValue placeholder="批量状态"/>
                             </SelectTrigger>
                             <SelectContent>
@@ -803,7 +803,7 @@ function ShotEditorPageContent({
                                 void assignSelectedBeat(value === "none" ? undefined : value);
                             }}
                         >
-                            <SelectTrigger className="h-8 w-40 bg-background">
+                            <SelectTrigger aria-label="批量调整场次" className="h-8 w-40 bg-background">
                                 <SelectValue placeholder="批量调整场次"/>
                             </SelectTrigger>
                             <SelectContent>
@@ -823,7 +823,7 @@ function ShotEditorPageContent({
                                 void assignSelectedScene(value === "none" ? undefined : value);
                             }}
                         >
-                            <SelectTrigger className="h-8 w-40 bg-background">
+                            <SelectTrigger aria-label="批量场景" className="h-8 w-40 bg-background">
                                 <SelectValue placeholder="批量场景"/>
                             </SelectTrigger>
                             <SelectContent>
@@ -922,7 +922,7 @@ function ShotEditorPageContent({
                     <ShotScrollViewport>
                         <div
                             className={cn(
-                                "pb-16",
+                                empty || filterEmpty ? "" : "pb-16",
                                 // Media rows use 1fr columns and must fill the scrollport; design keeps min-w-max for many cols.
                                 workspaceView === "media" ? "w-full min-w-0" : "min-w-max",
                             )}
@@ -944,29 +944,6 @@ function ShotEditorPageContent({
                                     ),
                                 )}
                             </div>
-
-                            {empty ? (
-                                <div
-                                    className="text-muted-foreground flex h-52 flex-col items-center justify-center text-sm">
-                                    还没有镜头，点击「新建」添加第一条
-                                </div>
-                            ) : null}
-
-                            {filterEmpty ? (
-                                <div
-                                    className="text-muted-foreground flex h-52 flex-col items-center justify-center gap-3 text-sm">
-                                    没有符合当前筛选的镜头
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        onClick={() =>
-                                            void persistFilters({statuses: [], beatIds: [], gaps: []})
-                                        }
-                                    >
-                                        清除筛选
-                                    </Button>
-                                </div>
-                            ) : null}
 
                             <DndContext
                                 sensors={sensors}
@@ -1040,6 +1017,16 @@ function ShotEditorPageContent({
                                 />
                             ) : null}
                         </div>
+                        {empty ? <PageState className="pb-16" title="还没有镜头" description="点击「新建」添加第一条分镜。"/> : null}
+                        {filterEmpty ? (
+                            <PageState className="pb-16" title="没有符合当前筛选的镜头" action={<Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => void persistFilters({statuses: [], beatIds: [], gaps: []})}
+                            >
+                                清除筛选
+                            </Button>}/>
+                        ) : null}
                     </ShotScrollViewport>
 
                     <div className="text-muted-foreground pointer-events-none absolute bottom-3 left-4 text-xs">

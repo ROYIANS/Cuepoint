@@ -1,0 +1,625 @@
+[
+  {
+    "id": "C06",
+    "path": "/characters/chr_83d2d34d-859f-4b33-9755-899511ed65fe",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "角色",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [
+        {
+          "classes": "app-frame-content app-scroll relative overflow-auto",
+          "height": 720,
+          "scrollHeight": 752
+        }
+      ],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C14",
+    "path": "/scenes/scn_e4559095-212e-40b3-ab44-587ef2c5d96d",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "场景",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [
+        {
+          "classes": "app-frame-content app-scroll relative overflow-auto",
+          "height": 720,
+          "scrollHeight": 752
+        }
+      ],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C12",
+    "path": "/props/prp_d2371699-0bc0-410c-ae27-921640d0a549",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "道具",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [
+        {
+          "classes": "app-frame-content app-scroll relative overflow-auto",
+          "height": 720,
+          "scrollHeight": 752
+        }
+      ],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C16",
+    "path": "/styles/sty_e5b86223-9f72-48d4-967b-2dd91d2b616c",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "风格",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [
+        {
+          "classes": "app-frame-content app-scroll relative overflow-auto",
+          "height": 720,
+          "scrollHeight": 752
+        }
+      ],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C27",
+    "path": "/p/prj_167f4af3-91fe-4063-8e6d-de57d033bbb2",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "集",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C23",
+    "path": "/p/prj_167f4af3-91fe-4063-8e6d-de57d033bbb2/e/ep_394ed5e0-0f1a-485a-810c-2b899c6b35fa",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "本集故事",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [
+        {
+          "classes": "app-scroll h-full overflow-auto",
+          "height": 676,
+          "scrollHeight": 768
+        }
+      ],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C22",
+    "path": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/e/ep_b9822329-b73a-47b2-9a30-a257b9b0df8e",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "故事",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [
+        {
+          "classes": "app-scroll h-full overflow-auto",
+          "height": 676,
+          "scrollHeight": 768
+        }
+      ],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C25",
+    "path": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/e/ep_b9822329-b73a-47b2-9a30-a257b9b0df8e/shots",
+    "metrics": {
+      "headings": [
+        {
+          "size": "20px",
+          "text": "分镜",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C24",
+    "path": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/e/ep_b9822329-b73a-47b2-9a30-a257b9b0df8e/produce",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "制作与交付",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [
+        {
+          "classes": "app-scroll h-full overflow-auto",
+          "height": 676,
+          "scrollHeight": 789
+        }
+      ],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C26",
+    "path": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/e/ep_b9822329-b73a-47b2-9a30-a257b9b0df8e/storyboard",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "审查样例 · 雨夜送信",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C30",
+    "path": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/memory",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "项目记忆",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C31",
+    "path": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/world",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "世界",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [
+        {
+          "classes": "app-scroll h-full min-h-0 min-w-0 overflow-auto",
+          "height": 676,
+          "scrollHeight": 870
+        }
+      ],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C18",
+    "path": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/assets/characters/chr_672de83c-95e5-4fcc-812f-66122cafd0c4",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "角色",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C20",
+    "path": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/assets/scenes/scn_9884eb4b-9db2-4929-a3df-90f1ef60bd65",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "场景",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [
+        {
+          "classes": "app-scroll h-full min-h-0 overflow-auto",
+          "height": 676,
+          "scrollHeight": 719
+        }
+      ],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C19",
+    "path": "/p/prj_167f4af3-91fe-4063-8e6d-de57d033bbb2/assets/props/prp_a1a1d3bb-01d9-486f-90dd-f2a456b3f244",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "道具",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C21",
+    "path": "/p/prj_167f4af3-91fe-4063-8e6d-de57d033bbb2/assets/styles/sty_c2a9a5cb-5ecc-4954-b6ac-11fdfa469653",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "风格",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C09",
+    "path": "/ips/ip_37c93a9c-5478-438c-93b7-013fe5392caf",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "UI 验收 · 创作身份",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [
+        {
+          "classes": "app-frame-content app-scroll relative overflow-auto",
+          "height": 720,
+          "scrollHeight": 746
+        }
+      ],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C28",
+    "path": "/p/prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+    "metrics": {
+      "headings": [
+        {
+          "size": "20px",
+          "text": "音频制作",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [
+        {
+          "classes": "as-script-scroll",
+          "height": 322,
+          "scrollHeight": 1117
+        }
+      ],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C29",
+    "path": "/p/prj_329f24a9-8fa4-4590-a946-d9c95fdb7e95",
+    "metrics": {
+      "headings": [
+        {
+          "size": "20px",
+          "text": "音乐创作",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [
+        {
+          "classes": "mw-compose-scroll",
+          "height": 309,
+          "scrollHeight": 429
+        }
+      ],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C02",
+    "path": "/agent/cth_2cd95cf6-99aa-4576-a645-f7a5396ca28b",
+    "metrics": {
+      "headings": [],
+      "rootScrollWidth": 1280,
+      "scrollports": [
+        {
+          "classes": "agent-message-list",
+          "height": 720,
+          "scrollHeight": 1327
+        }
+      ],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C01",
+    "path": "/about",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "关于小光点",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [
+        {
+          "classes": "app-frame-content app-scroll relative overflow-auto",
+          "height": 720,
+          "scrollHeight": 973
+        }
+      ],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C03",
+    "path": "/agent",
+    "metrics": {
+      "headings": [
+        {
+          "size": "35px",
+          "text": "创作助手",
+          "weight": "700"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C04",
+    "path": "/agent/tasks",
+    "metrics": {
+      "headings": [
+        {
+          "size": "29.44px",
+          "text": "任务",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [
+        {
+          "classes": "agent-task-board",
+          "height": 720,
+          "scrollHeight": 732
+        }
+      ],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C05",
+    "path": "/assets",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "素材库",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [
+        {
+          "classes": "app-frame-content app-scroll relative overflow-auto",
+          "height": 720,
+          "scrollHeight": 749
+        }
+      ],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C07",
+    "path": "/characters",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "角色设定",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C08",
+    "path": "/connectors",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "连接与模型",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C10",
+    "path": "/ips",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "IP",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C11",
+    "path": "/projects",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "项目",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [
+        {
+          "classes": "app-frame-content app-scroll relative overflow-auto",
+          "height": 720,
+          "scrollHeight": 1005
+        }
+      ],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C13",
+    "path": "/props",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "道具",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C15",
+    "path": "/scenes",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "常用场景",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  },
+  {
+    "id": "C17",
+    "path": "/styles",
+    "metrics": {
+      "headings": [
+        {
+          "size": "24px",
+          "text": "视觉风格",
+          "weight": "600"
+        }
+      ],
+      "rootScrollWidth": 1280,
+      "scrollports": [],
+      "surface": "rgb(16, 16, 16)",
+      "width": 1280
+    }
+  }
+]

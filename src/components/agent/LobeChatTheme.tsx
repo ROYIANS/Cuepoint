@@ -3,8 +3,10 @@ import * as m from "motion/react-m";
 import type {ReactNode} from "react";
 import "@/components/agent/agentChat.css";
 
-const CHAT_SURFACE = "#0d0d0d";
-const CHAT_PRIMARY = "#eeeeee";
+// AntD derives color ramps from its seed, so use concrete colors matching the
+// application surface tokens here; scoped CSS consumes the shared variables.
+const CHAT_SURFACE = "#151515";
+const CHAT_PRIMARY = "#f5f5f5";
 
 /**
  * Scopes @lobehub/ui + antd theme to the Agent chat tree only.
@@ -21,7 +23,7 @@ export function LobeChatTheme({children}: { children: ReactNode }) {
                 height: "100%",
                 minHeight: "100%",
                 background: "transparent",
-                color: "rgba(255,255,255,0.88)",
+                color: "var(--foreground)",
                 position: "relative",
                 zIndex: 1,
             }}
@@ -39,11 +41,16 @@ export function LobeChatTheme({children}: { children: ReactNode }) {
                             colorInfo: "#60b1ff",
                             colorBgLayout: "transparent",
                             colorBgContainer: CHAT_SURFACE,
-                            colorBgElevated: "#1a1a1a",
-                            colorText: "#ffffff",
-                            colorTextSecondary: "#aaaaaa",
-                            colorBorder: "#202020",
-                            borderRadius: 8,
+                            colorBgElevated: "#202020",
+                            colorText: "#f5f5f5",
+                            colorTextSecondary: "#9e9e9e",
+                            colorBorder: "rgba(255,255,255,0.1)",
+                            fontFamily: "var(--font-sans)",
+                            fontSize: 14,
+                            lineHeight: 22 / 14,
+                            controlHeight: 36,
+                            controlHeightSM: 32,
+                            borderRadius: 10,
                             borderRadiusLG: 12,
                         },
                     }}

@@ -26,6 +26,10 @@ import {IMAGE_ACCEPT, pickMediaFile, uploadMediaFile} from "@/lib/media";
 import {downloadBlob, exportProjectZip} from "@/lib/projectPackage";
 import {cn} from "@/lib/utils";
 import {shouldRedirectAudioMusicChild} from "@/lib/audio/workspaceRoute";
+import {AppFrame} from "@/components/layout/AppFrame";
+import {PageState} from "@/components/layout/PageLayout";
+import {importStudioProject} from "@/components/studio/importStudioProject";
+import {pickZipFile} from "@/lib/library";
 
 const SERIES_STEPS = [
     {id: "episodes", label: "集", to: "/p/$projectId" as const, exact: true},
@@ -95,15 +99,13 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
         project === undefined ||
         (project && normalizeProjectMode(project.mode) === "film" && firstProjectEpisode === undefined)
     ) {
-        return <div className="text-muted-foreground p-10 text-sm">加载项目…</div>;
+        return <AppFrame><PageState kind="loading" title="加载项目…"/></AppFrame>;
     }
 
     if (project === null) {
         return (
-            <div className="flex min-h-screen flex-col items-center justify-center gap-3">
-                <p>找不到这个项目</p>
-                <Button onClick={() => void navigate({to: "/projects"})}>返回工作室</Button>
-            </div>
+            <AppFrame><PageState kind="missing" title="找不到这个项目"
+                action={<Button onClick={() => void navigate({to: "/projects"})}>返回工作室</Button>}/></AppFrame>
         );
     }
 
@@ -112,7 +114,7 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
     const unavailable = projectMissing || episodeMissing;
     const outputProtected = outputState.dirty || outputState.saving;
     const kind = project.kind ?? "video";
-    if (!["video", "audio", "music"].includes(kind)) return <div role="alert" className="p-8">不支持的项目类型</div>;
+    if (!["video", "audio", "music"].includes(kind)) return <AppFrame><PageState kind="error" title="不支持的项目类型"/></AppFrame>;
     const mode = normalizeProjectMode(project.mode);
     const projectHome = pathname === `/p/${projectId}` || pathname === `/p/${projectId}/`;
 
@@ -122,23 +124,15 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
 
     if (episodeId && currentEpisode === null && !previouslyLoadedEpisode && !outputProtected && !projectMissing) {
         return (
-            <div className="flex min-h-screen flex-col items-center justify-center gap-3">
-                <p>找不到这一集</p>
-                <Button onClick={() => void navigate({to: "/p/$projectId", params: {projectId}})}>
-                    返回项目
-                </Button>
-            </div>
+            <AppFrame><PageState kind="missing" title="找不到这一集"
+                action={<Button onClick={() => void navigate({to: "/p/$projectId", params: {projectId}})}>返回项目</Button>}/></AppFrame>
         );
     }
 
     if (!unavailable && !outputProtected && kind === "video" && mode === "film" && firstProjectEpisode === null && !previouslyLoadedEpisode && !projectHome && pathname !== `/p/${projectId}/memory`) {
         return (
-            <div className="flex min-h-screen flex-col items-center justify-center gap-3">
-                <p>这个单片项目缺少内部集</p>
-                <Button onClick={() => void navigate({to: "/p/$projectId", params: {projectId}})}>
-                    修复项目
-                </Button>
-            </div>
+            <AppFrame><PageState kind="missing" title="这个单片项目缺少内部集"
+                action={<Button onClick={() => void navigate({to: "/p/$projectId", params: {projectId}})}>修复项目</Button>}/></AppFrame>
         );
     }
 
@@ -170,15 +164,22 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
 
     return (
         <WorkspaceUnavailableContext value={unavailable}>
-            <div
-                className={cn("workspace-shell bg-background flex flex-col", kind !== "video" ? "h-dvh overflow-hidden" : "h-screen")}>
+            <AppFrame contentScroll="hidden" onImport={() => {
+                void (async () => {
+                    const file = await pickZipFile();
+                    if (!file) return;
+                    const imported = await importStudioProject(file);
+                    if (imported) await navigate({to: "/p/$projectId", params: {projectId: imported.id}});
+                })();
+            }}>
+            <div className="workspace-shell flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-background">
                 {unavailable && <div className="p-4">
                     <p role="alert">{projectMissing ? "找不到这个项目" : "找不到这一集"}。已打开的修改仍保留，可复制或关闭；当前内容不能保存。</p>
                     <Button className="mt-3" variant="outline"
                             onClick={() => void navigate({to: "/projects"})}>返回工作室</Button>
                 </div>}
                 <header hidden={unavailable} style={unavailable ? {display: "none"} : undefined}
-                        className="workspace-header grid min-h-14 shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-2 border-b px-3 py-2 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4">
+                        className="workspace-header grid min-h-11 shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-1 border-b px-3 py-1 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4">
                     <div className="col-start-1 row-start-1 flex min-w-0 items-center gap-1">
                         {backToStudio ? (
                             <Button variant="ghost" size="icon-sm" asChild>
@@ -193,10 +194,11 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                                 </Link>
                             </Button>
                         )}
-                        <span className="truncate text-[15px] font-medium">{title}</span>
+                        <span className="truncate text-sm font-medium" title={title}>{title}</span>
                     </div>
                     <nav
-                        className="text-muted-foreground col-span-2 row-start-2 flex items-center justify-center gap-6 text-[13px] sm:col-span-1 sm:col-start-2 sm:row-start-1">
+                        aria-label="项目工作区"
+                        className="text-muted-foreground col-span-2 row-start-2 flex min-w-0 flex-wrap items-center justify-center gap-1 text-xs sm:col-span-1 sm:col-start-2 sm:row-start-1">
                         {kind !== "video" ? <Link to="/p/$projectId" params={{projectId}}
                                                   className={cn("hover:text-foreground", projectHome && "text-foreground font-medium")}>{kind === "audio" ? "音频制作" : "音乐创作"}</Link> : filmEpisode ? (
                             <>
@@ -298,10 +300,10 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                               className={cn("hover:text-foreground", pathname === `/p/${projectId}/memory` && "text-foreground font-medium")}>记忆</Link>
                     </nav>
                     <div className="col-start-2 row-start-1 flex items-center justify-end gap-1 sm:col-start-3">
-                        <Button variant="ghost" size="sm" asChild><Link to="/assets" search={{project: projectId}}
+                        <Button variant="ghost" size="sm" className="px-2" asChild><Link to="/assets" search={{project: projectId}}
                                                                         aria-label="项目素材"><Library/><span
                             className="hidden sm:inline">素材</span></Link></Button>
-                        <Button variant="ghost" size="sm" onClick={() => changeSettingsOpen(true)}
+                        <Button variant="ghost" size="sm" className="px-2" onClick={() => changeSettingsOpen(true)}
                                 aria-label="项目设定">
                             <Settings2/><span className="hidden sm:inline">项目设定</span>
                         </Button>
@@ -309,6 +311,8 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                             variant="outline"
                             size="sm"
                             disabled={backingUp}
+                            aria-label={backingUp ? "正在保存并备份…" : "备份项目"}
+                            className="px-2"
                             onClick={() => {
                                 setBackingUp(true);
                                 void flushPendingDrafts(projectId)
@@ -324,19 +328,20 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                             }}
                         >
                             <Download/>
-                            {backingUp ? "正在保存并备份…" : "备份项目"}
+                            <span className="hidden lg:inline">{backingUp ? "正在保存并备份…" : "备份项目"}</span>
                         </Button>
                     </div>
                 </header>
-                <div className="min-h-0 flex-1" inert={unavailable}>
+                <div className={cn("app-scroll min-h-0 min-w-0 flex-1", kind === "video" ? "overflow-auto" : "overflow-hidden")} inert={unavailable}>
                     <Outlet/>
                 </div>
 
                 <Dialog open={settingsOpen && (!unavailable || outputProtected)} onOpenChange={changeSettingsOpen}>
-                    <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-2xl">
+                    <DialogContent className="flex flex-col overflow-hidden sm:max-w-2xl">
                         <DialogHeader>
                             <DialogTitle>项目设定</DialogTitle>
                         </DialogHeader>
+                        <div className="app-scroll min-h-0 flex-1 space-y-4 overflow-y-auto pr-1">
                         <ProjectSettingsPanel project={project} unavailable={unavailable}
                                               onOutputState={setOutputState}/>
                         <div>
@@ -364,6 +369,7 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                                 </div>
                             </div>
                         </div>
+                        </div>
                         <DialogFooter>
                             <Button variant="outline" disabled={outputState.saving}
                                     onClick={() => changeSettingsOpen(false)}>
@@ -388,6 +394,7 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                     </AlertDialogContent>
                 </AlertDialog>
             </div>
+            </AppFrame>
         </WorkspaceUnavailableContext>
     );
 }

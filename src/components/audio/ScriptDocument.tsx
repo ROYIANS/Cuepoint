@@ -10,7 +10,7 @@ import {Button} from "@/components/ui/button";
 import {Textarea} from "@/components/ui/textarea";
 import {DraftStatus} from "@/components/ui/draft-status";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
-import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {useMedia} from "@/lib/media";
 import {SourcePlayer} from "@/components/audioMusic/controls";
 import type {AudioAction} from "./AudioInspector";
@@ -53,7 +53,7 @@ export function ScriptDocument({chapter, snapshot, selectedId, busy, action, onS
     }
 
     return <div className="as-document">
-        {!segments.length ? <div className="as-blank-document"><p>从你的第一段台词开始</p>
+        {!segments.length ? <div className="as-blank-document"><p>当前章节还没有脚本</p>
             <span>写下脚本，或者导入、录制已有声音。制作方式由你决定。</span>
             <div><Button disabled={busy} onClick={() => void action(() => add())}><Plus/>写下第一段</Button><Button
                 variant="ghost" onClick={() => setPasting(true)}>粘贴完整稿件</Button></div>
@@ -77,16 +77,16 @@ export function ScriptDocument({chapter, snapshot, selectedId, busy, action, onS
             size="sm" variant="ghost" onClick={() => setPasting(true)}>粘贴稿件</Button><span>文字编辑自动保存</span>
         </footer>}
         <Dialog open={pasting}
-                onOpenChange={setPasting}><DialogContent><DialogHeader><DialogTitle>粘贴稿件</DialogTitle><DialogDescription>每个非空回车行作为一个编辑单位，追加到当前章节。已有内容会保留。</DialogDescription></DialogHeader><Textarea
+                onOpenChange={setPasting}><DialogContent className="flex max-h-[calc(100dvh-32px)] flex-col overflow-hidden"><DialogHeader className="shrink-0"><DialogTitle>粘贴稿件</DialogTitle><DialogDescription>每个非空回车行作为一个编辑单位，追加到当前章节。已有内容会保留。</DialogDescription></DialogHeader><div className="min-h-0 overflow-y-auto pr-1"><Textarea
             value={pasted} onChange={(e) => setPasted(e.target.value)} rows={12} aria-label="完整稿件"
-            placeholder="第一段台词…&#10;&#10;下一段台词…"/><Button disabled={busy || !pasted.trim()}
+            placeholder="第一段台词…&#10;&#10;下一段台词…"/></div><DialogFooter className="shrink-0"><Button disabled={busy || !pasted.trim()}
                                                                     onClick={() => void action(async () => {
                                                                         const added = await appendAudioScript(chapter.projectId, chapter.id, pasted);
                                                                         const last = added.at(-1);
                                                                         setPasted("");
                                                                         setPasting(false);
                                                                         if (last) onSelect(last);
-                                                                    })}>添加 {pasted.split(/\r?\n/).filter((part) => part.trim()).length} 行</Button></DialogContent></Dialog>
+                                                                    })}>添加 {pasted.split(/\r?\n/).filter((part) => part.trim()).length} 行</Button></DialogFooter></DialogContent></Dialog>
     </div>;
 }
 

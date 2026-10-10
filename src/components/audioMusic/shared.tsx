@@ -17,6 +17,7 @@ import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
 import {DraftStatus} from "@/components/ui/draft-status";
+import {PageState} from "@/components/layout/PageLayout";
 import {useDebouncedDraft} from "@/lib/debouncedDraft";
 import {Download, LoaderCircle, RefreshCw, Volume2} from "lucide-react";
 import "./workspace.css";
@@ -40,7 +41,7 @@ export function Empty({title, children}: {
     title: string;
     children: ReactNode;
 }) {
-    return <div className="aw-empty"><Volume2 size={28} aria-hidden/><h3>{title}</h3><p>{children}</p></div>;
+    return <PageState compact title={title} description={children} className="aw-empty"/>;
 }
 
 export function SavedText({projectId, rowId, field, value, label, multiline = false, placeholder, save}: {

@@ -13,10 +13,10 @@ const COVER_FRAME: Record<CoverFrame, string> = {
     poster: "aspect-[2/3]",
 };
 
-const CAPTION = "mt-2.5 h-[42px] px-0.5";
+const CAPTION = "mt-2 h-[42px] px-0.5";
 
 function coverShell(frame: CoverFrame) {
-    return cn(COVER_FRAME[frame], "w-full overflow-hidden rounded-2xl");
+    return cn(COVER_FRAME[frame], "w-full overflow-hidden rounded-lg");
 }
 
 export function CoverCard({
@@ -35,31 +35,31 @@ export function CoverCard({
     frame?: CoverFrame;
 }) {
     return (
-        <div className="group relative">
-            <button type="button" onClick={onOpen} aria-label={title} className="block w-full text-left">
+        <div className="group relative min-w-0">
+            <button type="button" onClick={onOpen} aria-label={title} className="block w-full rounded-lg text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring">
                 <div
                     className={cn(
                         coverShell(frame),
-                        "bg-card ring-foreground/8 ring-1 transition-[transform,box-shadow,ring-color] duration-200",
-                        "group-hover:-translate-y-0.5 group-hover:ring-brand/40 group-hover:shadow-[0_16px_36px_-22px_rgb(0_0_0_/_0.7)]",
+                        "bg-card ring-foreground/10 ring-1 transition-colors motion-reduce:transition-none",
+                        "group-hover:ring-brand/40",
                     )}
                 >
                     <Still mediaId={mediaId} title={title}/>
                 </div>
                 <div className={CAPTION}>
-                    <p className="truncate text-[13.5px] font-medium tracking-tight">{title}</p>
-                    <p className="text-muted-foreground mt-0.5 truncate text-[11px]">{subtitle}</p>
+                    <p className="truncate text-sm font-medium leading-5" title={title}>{title}</p>
+                    <p className="text-muted-foreground mt-0.5 truncate text-xs leading-[18px]" title={subtitle}>{subtitle}</p>
                 </div>
             </button>
             {actions && actions.length > 0 ? (
                 <div
-                    className="absolute top-2.5 right-2.5 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
+                    className="absolute top-2 right-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
                                 size="icon-sm"
                                 variant="secondary"
-                                className="size-7 rounded-full border-0 bg-black/55 text-white shadow-none hover:bg-black/75"
+                                className="border border-white/10 bg-black/65 text-white hover:bg-black/85"
                                 aria-label={`${title} 操作`}
                             >
                                 <Ellipsis className="size-3.5"/>
@@ -95,7 +95,7 @@ export function CreateTile({
     frame?: CoverFrame;
 }) {
     return (
-        <button type="button" onClick={onClick} className="group block w-full text-left">
+        <button type="button" onClick={onClick} className="group block w-full rounded-lg text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring">
             <div
                 className={cn(
                     coverShell(frame),
@@ -108,8 +108,8 @@ export function CreateTile({
         </span>
             </div>
             <div className={CAPTION}>
-                <p className="truncate text-[13.5px] font-medium tracking-tight">{label}</p>
-                {hint ? <p className="text-muted-foreground mt-0.5 truncate text-[11px]">{hint}</p> : null}
+                <p className="truncate text-sm font-medium leading-5">{label}</p>
+                {hint ? <p className="text-muted-foreground mt-0.5 truncate text-xs leading-[18px]">{hint}</p> : null}
             </div>
         </button>
     );
@@ -117,7 +117,7 @@ export function CreateTile({
 
 export function LibraryGrid({children}: { children: ReactNode }) {
     return (
-        <div className="studio-enter grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-x-5 gap-y-7">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-[repeat(auto-fill,minmax(180px,1fr))]">
             {children}
         </div>
     );

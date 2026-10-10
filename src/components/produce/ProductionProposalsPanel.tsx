@@ -8,7 +8,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle
 } from "@/components/ui/alert-dialog";
-import {useState} from "react";
+import {useId, useState} from "react";
 import {useLiveQuery} from "dexie-react-hooks";
 import {toast} from "sonner";
 import {Plus, Undo2} from "lucide-react";
@@ -23,6 +23,10 @@ import type {ProductionProposal} from "@/domain/production";
 import type {GenerationResult, Shot, ShotPictureField} from "@/domain/types";
 import {targetRevision} from "@/lib/productionRevision";
 import {Button} from "@/components/ui/button";
+import {Label} from "@/components/ui/label";
+import {Field} from "@/components/ui/field";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {PageState} from "@/components/layout/PageLayout";
 import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
 import {
@@ -68,21 +72,21 @@ export function ProductionProposalsPanel({projectId, episodeId, shots}: {
     }
 
     const rows = proposals?.projectId === projectId && proposals.episodeId === episodeId ? proposals.rows : undefined;
-    return <section className="mt-8 rounded-2xl border" aria-label="变更提案">
-        <div className="flex flex-wrap items-start justify-between gap-3 border-b p-5">
-            <div><h2 className="text-sm font-semibold">变更提案</h2>
+    return <section className="mt-8 border-t" aria-label="变更提案">
+        <div className="flex flex-wrap items-start justify-between gap-3 border-b py-4">
+            <div><h2 className="text-base leading-6 font-semibold">变更提案</h2>
                 <p className="text-muted-foreground mt-1 max-w-xl text-xs leading-5">先预览镜头文字或素材变更，再决定是否应用。已应用的提案可以撤销；后续手动修改会受到保护。</p>
             </div>
             <Button variant="outline" size="sm" disabled={shots.length === 0 || !!busy}
                     onClick={() => setEditing(shots[0])}><Plus/>新建提案</Button>
         </div>
         {rows === undefined ?
-            <p className="text-muted-foreground p-5 text-sm" role="status">加载提案…</p> : rows.length === 0 ?
-                <p className="text-muted-foreground p-5 text-sm">暂无提案。你可以先手动准备变更，确认后写入镜头。</p> :
+            <PageState compact kind="loading" title="正在读取提案…"/> : rows.length === 0 ?
+                <PageState compact title="暂无提案" description="你可以先手动准备变更，确认后写入镜头。"/> :
                 <ul className="divide-y">{rows.map((proposal) => {
                     const shot = shots.find((item) => item.id === proposal.target.entityId);
                     const change = proposal.change;
-                    return <li key={proposal.id} className="space-y-4 p-5">
+                    return <li key={proposal.id} className="space-y-4 py-5">
                         <div className="flex flex-wrap items-center justify-between gap-2">
                             <p className="text-sm font-medium">镜头 {shot?.shotNumber || "已删除"} · {change.kind === "shot-text" ? "文字调整" : proposal.target.kind === "shot" && proposal.target.slot ? SLOT_LABELS[proposal.target.slot] : "素材调整"}</p>
                             <span
@@ -121,7 +125,7 @@ export function ProductionProposalsPanel({projectId, episodeId, shots}: {
 
 function TextValue({label, value}: { label: string; value: string | number | undefined }) {
     return <div className="bg-muted/30 min-w-0 rounded-lg border p-3"><p
-        className="text-muted-foreground mb-1 text-[11px]">{label}</p><p
+        className="text-muted-foreground mb-1 text-xs">{label}</p><p
         className="max-h-40 overflow-auto whitespace-pre-wrap break-words text-xs leading-5">{value === "" || value === undefined ? "（空）" : value}</p>
     </div>;
 }
@@ -139,6 +143,7 @@ function ProposalEditor({initialShot, shots, onClose, onSelect}: {
     onClose: () => void;
     onSelect: (shot: Shot) => void
 }) {
+    const editorId = useId();
     const [content, setContent] = useState(initialShot.content);
     const [notes, setNotes] = useState(initialShot.notes);
     const [duration, setDuration] = useState(String(initialShot.durationSec));
@@ -199,33 +204,35 @@ function ProposalEditor({initialShot, shots, onClose, onSelect}: {
         }
     }
 
-    const selectClass = "bg-background h-9 w-full rounded-md border px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
     return <><Dialog open onOpenChange={(open) => {
         if (!open) leave(onClose);
-    }}><DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-2xl" showCloseButton={!busy}>
+    }}><DialogContent className="flex flex-col overflow-hidden sm:max-w-2xl" showCloseButton={!busy}>
         <DialogHeader><DialogTitle>准备镜头变更</DialogTitle><DialogDescription>保存后会展示变更前后对比，确认应用时才会修改镜头。</DialogDescription></DialogHeader>
+        <div className="min-h-0 space-y-4 overflow-y-auto p-1">
         <div className="grid gap-4 sm:grid-cols-2">
-            <label className="space-y-1.5 text-xs">目标镜头<select className={selectClass} value={initialShot.id}
-                                                                   disabled={busy} onChange={(event) => {
-                const shot = shots.find((item) => item.id === event.target.value);
+            <div className="grid gap-2"><Label htmlFor={`${editorId}-shot`}>目标镜头</Label><Select value={initialShot.id}
+                                          disabled={busy} onValueChange={(value) => {
+                const shot = shots.find((item) => item.id === value);
                 if (shot) leave(() => onSelect(shot));
-            }}>{shots.map((shot) => <option key={shot.id}
-                                            value={shot.id}>镜头 {shot.shotNumber || shot.order + 1}</option>)}</select></label>
-            <label className="space-y-1.5 text-xs">变更类型<select className={selectClass} value={mode} disabled={busy}
-                                                                   onChange={(event) => changeMode(event.target.value as typeof mode)}>
-                <option value="text">镜头文字</option>
-                {Object.entries(SLOT_LABELS).map(([key, label]) => <option key={key} value={key}>{label}素材</option>)}
-            </select></label>
+            }}><SelectTrigger id={`${editorId}-shot`} className="w-full"><SelectValue/></SelectTrigger>
+                <SelectContent>{shots.map((shot) => <SelectItem key={shot.id}
+                                            value={shot.id}>镜头 {shot.shotNumber || shot.order + 1}</SelectItem>)}</SelectContent></Select></div>
+            <div className="grid gap-2"><Label htmlFor={`${editorId}-mode`}>变更类型</Label><Select value={mode} disabled={busy}
+                                          onValueChange={(value) => changeMode(value as typeof mode)}>
+                <SelectTrigger id={`${editorId}-mode`} className="w-full"><SelectValue/></SelectTrigger>
+                <SelectContent><SelectItem value="text">镜头文字</SelectItem>
+                {Object.entries(SLOT_LABELS).map(([key, label]) => <SelectItem key={key} value={key}>{label}素材</SelectItem>)}
+                </SelectContent></Select></div>
         </div>
         {mode === "text" ? <div className="space-y-4">
-            <label className="block space-y-1.5 text-xs">内容<Textarea value={content} disabled={busy}
+            <Field label="内容"><Textarea value={content} disabled={busy}
                                                                        onChange={(event) => setContent(event.target.value)}
-                                                                       className="min-h-28"/></label>
-            <label className="block space-y-1.5 text-xs">备注<Textarea value={notes} disabled={busy}
-                                                                       onChange={(event) => setNotes(event.target.value)}/></label>
-            <label className="block space-y-1.5 text-xs">时长（秒）<Input type="number" min={0} step="any"
+                                                                       className="min-h-28"/></Field>
+            <Field label="备注"><Textarea value={notes} disabled={busy}
+                                                                       onChange={(event) => setNotes(event.target.value)}/></Field>
+            <Field label="时长（秒）"><Input type="number" min={0} step="any"
                                                                         value={duration} disabled={busy}
-                                                                        onChange={(event) => setDuration(event.target.value)}/></label>
+                                                                        onChange={(event) => setDuration(event.target.value)}/></Field>
         </div> : <div className="space-y-3">{result ? <ResultPreview label="已选素材" result={result}/> : null}
             {picker ?
                 <MediaPicker projectId={initialShot.projectId} kinds={mode === "clip" ? ["image", "video"] : ["image"]}
@@ -237,7 +244,8 @@ function ProposalEditor({initialShot, shots, onClose, onSelect}: {
             {mode === "clip" ?
                 <p className="text-muted-foreground text-xs">图片可作为成片占位，完整交付仍需要视频。</p> : null}</div>}
         {error ? <p role="alert" className="text-destructive text-sm">{error}</p> : null}
-        <DialogFooter><Button variant="ghost" disabled={busy} onClick={() => leave(onClose)}>返回</Button><Button
+        </div>
+        <DialogFooter className="shrink-0"><Button variant="ghost" disabled={busy} onClick={() => leave(onClose)}>返回</Button><Button
             disabled={busy} onClick={() => void save()}>{busy ? "保存中…" : "保存并预览提案"}</Button></DialogFooter>
     </DialogContent></Dialog>
         <AlertDialog open={!!discardAction} onOpenChange={(open) => {

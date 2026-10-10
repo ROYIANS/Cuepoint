@@ -13,7 +13,7 @@
     width: 100%;
     gap: 8px;
     padding-block: 8px 12px !important;
-    border-bottom: 1px solid #ffffff12;
+    border-bottom: 1px solid var(--border);
     font-size: 14px;
     font-variant-numeric: tabular-nums;
 }
@@ -21,7 +21,7 @@
 .agent-chat-root .agent-execution-summary small {
     margin-left: auto;
     font-size: 12px;
-    color: #888;
+    color: var(--muted-foreground);
 }
 
 .agent-chat-root .agent-execution-timeline {
@@ -31,7 +31,7 @@
 
 .agent-chat-root .agent-execution-explanation {
     margin-bottom: 12px;
-    color: #999;
+    color: var(--muted-foreground);
     font-size: 12px;
     line-height: 1.6;
 }
@@ -77,7 +77,7 @@
     min-width: 0;
     text-align: left;
     padding: 4px 0 !important;
-    color: #919191;
+    color: var(--muted-foreground);
     cursor: pointer;
     font-size: 12px;
 }
@@ -104,7 +104,7 @@
     font-size: 12px;
     white-space: nowrap;
     flex-shrink: 0;
-    color: #888;
+    color: var(--muted-foreground);
 }
 
 .agent-chat-root .agent-tool-call-toggle small {
@@ -113,11 +113,11 @@
 
 .agent-chat-root .agent-tool-group-toggle:hover,
 .agent-chat-root .agent-tool-call-toggle:hover {
-    color: #ccc;
+    color: var(--foreground);
 }
 
 .agent-chat-root .agent-tool-group-calls {
-    border-left: 1px solid #ffffff16;
+    border-left: 1px solid var(--border);
     padding-left: 12px !important;
     margin: 8px 0 8px 6px;
 }
@@ -128,7 +128,7 @@
 
 .agent-chat-root .agent-execution-activity button:focus-visible,
 .agent-chat-root .agent-execution-activity summary:focus-visible {
-    outline: 2px solid #999;
+    outline: 2px solid var(--ring);
     outline-offset: 3px;
     border-radius: 4px;
 }
@@ -139,7 +139,7 @@
     gap: 8px;
     min-height: 24px;
     margin-block: 12px;
-    color: #888;
+    color: var(--muted-foreground);
     font-size: 12px;
 }
 
@@ -149,7 +149,7 @@
 
 .agent-chat-root .agent-activity-plan {
     margin-block: 8px;
-    color: #888;
+    color: var(--muted-foreground);
     font-size: 12px;
 }
 
@@ -192,8 +192,7 @@
 .agent-chat-root .agent-tool-validation-error {
     margin: 8px 0 12px;
     padding: 10px 12px !important;
-    border-left: 2px solid #f59e0b;
-    color: #d7d7d7;
+    color: var(--foreground);
     background: #f59e0b0d;
     font-size: 12px;
     line-height: 1.55;
@@ -208,7 +207,7 @@
 
 .agent-chat-root .agent-tool-validation-error p {
     margin: 4px 0;
-    color: #c8c8c8;
+    color: var(--foreground);
     overflow-wrap: anywhere;
 }
 
@@ -219,18 +218,18 @@
 
 .agent-chat-root .agent-tool-validation-error code {
     color: #f0c674;
-    font-size: 11px;
+    font-size: 12px;
 }
 
 .agent-chat-root .agent-tool-validation-error span {
-    color: #aaa;
+    color: var(--muted-foreground);
 }
 
 .agent-chat-root .agent-tool-validation-error .agent-tool-validation-recovery {
-    color: #aaa;
+    color: var(--muted-foreground);
 }
 
 .agent-chat-root .agent-tool-validation-legacy {
-    color: #999 !important;
-    font-size: 11px;
+    color: var(--muted-foreground) !important;
+    font-size: 12px;
 }

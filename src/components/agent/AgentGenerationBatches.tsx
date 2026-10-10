@@ -45,6 +45,7 @@ import {batchUserAction, startGenerationBatch, stopGenerationBatch} from "@/lib/
 import {generationTargetDestination} from "@/lib/generationTargetDestination";
 import {
     AlertDialog,
+    AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
     AlertDialogFooter,
@@ -479,7 +480,7 @@ function BatchSurface({batch, parentReadError}: { batch: GenerationBatch; parent
                 </AlertDialogHeader>
                 {error && <p role="alert" className="text-destructive text-sm">{error}</p>}
                 <AlertDialogFooter>
-                    <Button variant="ghost" disabled={pending} onClick={() => blocker.reset?.()}>继续编辑</Button>
+                    <AlertDialogCancel asChild onClick={event => event.preventDefault()}><Button variant="ghost" disabled={pending} onClick={() => blocker.reset?.()}>继续编辑</Button></AlertDialogCancel>
                     <Button variant="outline" disabled={pending} onClick={() => {
                         setLocal(null);
                         blocker.proceed?.();

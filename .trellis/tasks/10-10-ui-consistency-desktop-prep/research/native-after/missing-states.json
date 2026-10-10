@@ -1,0 +1,27 @@
+[
+  {
+    "id": "C06",
+    "path": "/characters/ui-missing",
+    "title": "找不到这个角色"
+  },
+  {
+    "id": "C12",
+    "path": "/props/ui-missing",
+    "title": "找不到这个道具"
+  },
+  {
+    "id": "C14",
+    "path": "/scenes/ui-missing",
+    "title": "找不到这个场景"
+  },
+  {
+    "id": "C16",
+    "path": "/styles/ui-missing",
+    "title": "找不到这个风格"
+  },
+  {
+    "id": "C09",
+    "path": "/ips/ui-missing",
+    "title": "找不到这个 IP"
+  }
+]

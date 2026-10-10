@@ -33,7 +33,7 @@
       "evidence": [
         {
           "file": "src/styles.css",
-          "sha256": "a8deb89bc36b4d9d3a88ce063c4b5bd81be793d8fc3e4571f2c0b1da91aa7d64"
+          "sha256": "6d0efdf75e76bba7d7f7873329a50599b2f597ae3cd8546c84e28786b95f943c"
         },
         {
           "file": "vite.config.ts",
@@ -51,7 +51,7 @@
       "evidence": [
         {
           "file": "src/styles.css",
-          "sha256": "a8deb89bc36b4d9d3a88ce063c4b5bd81be793d8fc3e4571f2c0b1da91aa7d64"
+          "sha256": "6d0efdf75e76bba7d7f7873329a50599b2f597ae3cd8546c84e28786b95f943c"
         },
         {
           "file": "vite.config.ts",

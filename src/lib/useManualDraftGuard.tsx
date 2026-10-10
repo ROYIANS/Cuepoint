@@ -2,6 +2,7 @@ import {useBlocker} from "@tanstack/react-router";
 import {useCallback, useRef, useState} from "react";
 import {
     AlertDialog,
+    AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
     AlertDialogFooter,
@@ -140,12 +141,12 @@ export function useManualDraftDeparture(
             </AlertDialogHeader>
             {error && <p role="alert" className="text-destructive text-sm">{error}</p>}
             <AlertDialogFooter>
-                <Button variant="outline" disabled={discarding} onClick={() => {
+                <AlertDialogCancel asChild onClick={event => event.preventDefault()}><Button variant="outline" disabled={discarding} onClick={() => {
                     setError(undefined);
                     localRequest.current = undefined;
                     setLocalLeave(undefined);
                     if (blocker.status === "blocked") blocker.reset();
-                }}>继续编辑</Button>
+                }}>继续编辑</Button></AlertDialogCancel>
                 {!waiting && <Button variant="destructive" onClick={() => void discard()}>放弃并离开</Button>}
             </AlertDialogFooter>
         </AlertDialogContent>

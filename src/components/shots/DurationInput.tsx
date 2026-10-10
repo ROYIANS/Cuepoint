@@ -36,7 +36,7 @@ export function DurationInput({projectId, shotId, value}: { projectId: string; s
                 // blur, save failures, row unmounting and the project backup barrier.
                 if (!invalid) setRaw(null);
             }}
-            className="h-8 w-full rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent"
+            className="h-8 w-full rounded-none border-0 bg-transparent shadow-none focus-visible:ring-2 focus-visible:ring-inset dark:bg-transparent"
         />
         {status === "error" &&
             <DraftStatus status={status} error={error} onRetry={() => void retry()} onUseLatest={useLatest}/>}

@@ -12,6 +12,7 @@ import {flushPendingDrafts} from "@/lib/debouncedDraft";
 import {DraftConflictError} from "@/lib/draftConflict";
 import {downloadBlob} from "@/lib/projectPackage";
 import {Button} from "@/components/ui/button";
+import {PageHeader, PageState, PageToolbar} from "@/components/layout/PageLayout";
 import {Input} from "@/components/ui/input";
 import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle} from "@/components/ui/sheet";
@@ -88,8 +89,8 @@ function MusicWorkspace({projectId}: { projectId: string }) {
         }
     }
 
-    if (!data || data.projectId !== projectId) return <div className="p-8 text-muted-foreground">加载音乐项目…</div>;
-    if (!data.project || data.project.kind !== "music") return <div className="p-8">找不到这个音乐项目</div>;
+    if (!data || data.projectId !== projectId) return <PageState kind="loading" title="加载音乐项目…"/>;
+    if (!data.project || data.project.kind !== "music") return <PageState kind="missing" title="找不到这个音乐项目"/>;
     const draft = data.drafts.find((row) => row.id === draftId) ?? data.drafts.at(-1);
     const selected = data.works.find((row) => row.id === selectedId);
     const playing = data.works.find((row) => row.id === playingId);
@@ -126,6 +127,7 @@ function MusicWorkspace({projectId}: { projectId: string }) {
                                                   setSelectedId("");
                                               })}/>;
     return <div className="aw-root mw-root">
+        <PageHeader dense title="音乐创作" className="mw-page-header"/>
         <div className="mw-mobile-nav"><Tabs value={mobileMode} onValueChange={setMobileMode}><TabsList
             aria-label="音乐工作台"><TabsTrigger value="create">创作</TabsTrigger><TabsTrigger
             value="works">作品 {data.works.length || ""}</TabsTrigger></TabsList></Tabs></div>
@@ -158,8 +160,8 @@ function MusicWorkspace({projectId}: { projectId: string }) {
                 })}>开始创作</Button>}
             </aside>
             <main className="mw-library" aria-label="音乐作品库">
-                <div className="mw-library-heading"><h1>作品</h1><span>{data.works.length} 首</span></div>
-                <div className="mw-library-tools">
+                <div className="mw-library-heading"><h2>作品</h2><span>{data.works.length} 首</span></div>
+                <PageToolbar className="mw-library-tools">
                     <div className="mw-search"><Search size={16}/><Input aria-label="搜索作品"
                                                                          placeholder="搜索作品或歌词" value={query}
                                                                          onChange={(e) => setQuery(e.target.value)}/>
@@ -169,10 +171,10 @@ function MusicWorkspace({projectId}: { projectId: string }) {
                                                                             fill={favorites ? "currentColor" : "none"}/>收藏</Button><WorkspaceSelect
                     aria-label="作品排序" value={sort} onValueChange={setSort}><SelectOption
                     value="newest">最新</SelectOption><SelectOption value="oldest">最早</SelectOption></WorkspaceSelect>
-                </div>
+                </PageToolbar>
                 <GenerationJobs projectId={projectId} mode="activity"/>
                 {!works.length ? <Empty
-                    title={query || favorites ? "没有匹配的作品" : "你的下一首，从一个灵感开始"}>{query || favorites ? "试试其他关键词，或取消收藏筛选。" : "描述想听到的音乐，生成的每个版本都会留在这里。"}</Empty> : works.map((work, index) =>
+                    title={query || favorites ? "没有匹配的作品" : "还没有音乐作品"}>{query || favorites ? "试试其他关键词，或取消收藏筛选。" : "描述想听到的音乐，生成的每个版本都会留在这里。"}</Empty> : works.map((work, index) =>
                     <div key={work.id}>
                         {(index === 0 || new Date(work.createdAt).toDateString() !== new Date(works[index - 1].createdAt).toDateString()) &&
                             <h2 className="mw-date">{new Date(work.createdAt).toLocaleDateString("zh-CN", {
@@ -206,8 +208,8 @@ function MusicWorkspace({projectId}: { projectId: string }) {
         {!wide && <Sheet open={Boolean(selected)} onOpenChange={(open) => {
             if (!open) setSelectedId("");
         }}><SheetContent
-            className="mw-detail-sheet w-full sm:max-w-md overflow-y-auto"><SheetHeader><SheetTitle>作品详情</SheetTitle><SheetDescription>歌词、创作笔记与作品操作</SheetDescription></SheetHeader>
-            <div className="px-5 pb-6">{details}</div>
+            className="mw-detail-sheet w-full sm:max-w-md"><SheetHeader><SheetTitle>作品详情</SheetTitle><SheetDescription>歌词、创作笔记与作品操作</SheetDescription></SheetHeader>
+            <div className="mw-detail-sheet-body">{details}</div>
         </SheetContent></Sheet>}
         <AudioPlayer key={playing?.id ?? "empty"} mediaId={playing?.mediaId} title={playing?.title ?? ""}
                      autoplay={Boolean(playing)} toggleRequest={toggleRequest} onPlayingChange={setIsPlaying}

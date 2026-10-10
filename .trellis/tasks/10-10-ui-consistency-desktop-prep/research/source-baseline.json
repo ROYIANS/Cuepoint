@@ -1,0 +1,366 @@
+{
+  "baseRevision": "ecf8dd0c0421371cc54322ce6216f4d2d74cff87",
+  "scope": "UI route/component references only; hashes freeze inputs, not an assertion of full-file review",
+  "files": [
+    {
+      "path": "src/components/agent/AgentChatPage.tsx",
+      "sha256": "d47effdc9ef87bfaff58903ad82aef6448a9596e647182b6b8ea3757b7228dfb",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/agent/LobeChatTheme.tsx",
+      "sha256": "dc6409a1d661f150a051b830e1928e6e2abbf801a280be0059cb67a59d1ad7a0",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/assets/AssetLibraryPage.tsx",
+      "sha256": "a79ee23ef1be22f594d568eba39dd3c3d78510c1de466f36247ed056f58cd0a9",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/assets/CharacterDetailPage.tsx",
+      "sha256": "3f8b0e4dac1e04286262a7087a868ddbd20a0a650b01a3646a257fb0111579d4",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/assets/PropDetailPage.tsx",
+      "sha256": "6fb55be0355f58e20ffbfb7ea8232e9afb0918647b72c9603500fe1e12360e8d",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/assets/SceneDetailPage.tsx",
+      "sha256": "331f269ab9b6b1985f7762eb475c78bb0de153a0998ea3aa3f85057547f13b80",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/assets/StyleDetailPage.tsx",
+      "sha256": "f798944215991b55ae1f3f046c16e759bb2cba0b470b4908c2b82be2b8bebbc4",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/audio/AudioWorkspacePage.tsx",
+      "sha256": "2f0bef9f737fe7507b0b69eae0daef776dd4c2ae34a762269ec2cf9669b1f48b",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/memory/ProjectMemoryPage.tsx",
+      "sha256": "35d059f43f3b1f25870fafff725c337333b767e5247ba617b8f207489e43c61c",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/music/MusicWorkspacePage.tsx",
+      "sha256": "1d2a6cd28a827fd9dd4682442c04bd3d2e8f070cd124fe6c4d713c09cecb8a2d",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/produce/ProducePage.tsx",
+      "sha256": "c10b70ec23116ceb96f2ce2c3aaf6bb561f5cf71180a36f830ccfae44d1e9e9e",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/produce/StoryboardPrintPage.tsx",
+      "sha256": "0d63f4fd666d5ccd4dfa5c015cb7b65817b4ec8e1960ac98f8d81dc2b353b278",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/shots/ShotEditorPage.tsx",
+      "sha256": "08ad4ad7cc0d5f111f65846bf442bf0abdf5d2c1fd06509021b441f1ff6497bf",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/story/StoryPage.tsx",
+      "sha256": "da468800c9c078f0384935285720d7dbbe633cbadb54c5654df63b0db5d88e53",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/studio/AboutPage.tsx",
+      "sha256": "02e4cd1a383d03dcf008e635d3008cda76e84a8026fc2bfe8e009d2031f7c0d5",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/studio/AssetLibraryPages.tsx",
+      "sha256": "cc570e147d6cd51c1e0184ec1b64db1e5ad8bca413183c5dc00b27d32dba870e",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/studio/ConnectorsPage.tsx",
+      "sha256": "6a6b902a0f0283c1f32d38855ca18a1a9f932b945a887e98fea04f5a134481aa",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/studio/IpProfilesPage.tsx",
+      "sha256": "3b63bc0ddaa89e3cf6ca3b6c4088ca02f8e109d4d629ee9a0ae44d5ce796c473",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/studio/MaterialLibraryPage.tsx",
+      "sha256": "6235db1d5c833e7bb8a00a744b1bd78a06f2520da739714734ff733ae00ea866",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/studio/ProjectGalleryPage.tsx",
+      "sha256": "4392edab06d5af67096296a50f0ace1a9869b1109b74aa94df1f5933486a92f8",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/studio/StudioShell.tsx",
+      "sha256": "c6aed5a01d633b3e9fab60f1249a9d2145f02fd2290378c5e081361a93ab5bee",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/workspace/EpisodeListPage.tsx",
+      "sha256": "a426c6890637dd36a2ab746ea8e8703434ba3da35b3c4cc7b9341efccde8b7b6",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/workspace/ProjectHomePage.tsx",
+      "sha256": "fe1d8b329fccd22c43225ef6ab80625fdd62a6b4ae5c5582364d56200b705eb8",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/components/workspace/WorkspaceChrome.tsx",
+      "sha256": "7ce5a40e849dd6051a9f5693637ae5b6a77614363703b33e51cf1dec28540abf",
+      "status": "reference-in-existing-UI-research"
+    },
+    {
+      "path": "src/routes/__root.tsx",
+      "sha256": "68c1629641116fe8565299632b151b97b8edfc92ae1ee26b12ec36882be65de2",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.about.tsx",
+      "sha256": "d7739d04994bf14c60067cc1df5d32959fec1c1371bb186bfa209a673a3c2cd5",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.agent.$threadId.tsx",
+      "sha256": "cf8cc09ae8194e7481f9cccf2bc3ec9ccaf2022177f91d14aa44a26a87838669",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.agent.index.tsx",
+      "sha256": "1b814befca5d2be4307498b80de20168378f136c05ce59ba908023d60e659b3f",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.agent.tasks.tsx",
+      "sha256": "3409fa1448dac5c0ab27608d9c471e04aacf67bfa05effefae69f230df54364e",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.agent.tsx",
+      "sha256": "8e7c47d5adb4fef73183d92d06355cceebebbab8f98b68ecefeaf5fcbfd42647",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.assets.tsx",
+      "sha256": "db05b7e828f7e0b710eacffa52bf4432786108610543be165df54022c9ae7896",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.characters.$characterId.tsx",
+      "sha256": "8ac4a351108f50a43f49b0ed669809226d781b2bf53a509a179f5ef4bea76074",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.characters.index.tsx",
+      "sha256": "f1a4e8625bb18673680d10d5158f29cd81646b1c9e1041ce2af827bea76d4dbb",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.characters.tsx",
+      "sha256": "c14535dc2231fdac218c0626554e813976d0df342d7527e7578eaeb56a94d407",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.connectors.tsx",
+      "sha256": "29a776ec28dc596b2c151cb2e6dd6134d48e56b05ef75ae1a4c15f5470ac67a9",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.index.tsx",
+      "sha256": "912b815e01a82e1cbf6c1de611e3eee72ab211152198538f0245f7d35094874c",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.ips.$ipId.tsx",
+      "sha256": "6cb103d18d7f77d894885b76873bcf608f3c723980fda82adb3607811ce0372c",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.ips.index.tsx",
+      "sha256": "fb8616e3f6fc583a94925cc1425e5aca66e28bf754ba2fddc12a4b059401aa19",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.ips.tsx",
+      "sha256": "0e9ae13dcedd7176d39b4c6129462d6c62b3062beff11d1e337f346354d63db7",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.projects.tsx",
+      "sha256": "265d239aa895164c1a8ec4b8589a88c343a083bd3a86b5b289e0ee703b1c525c",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.props.$propId.tsx",
+      "sha256": "4c1d504d74c0eae63e6ff6dea99138c0e1d16d76538a48d479bdb98743b75e04",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.props.index.tsx",
+      "sha256": "00a27afcd1d0ae74b377784a872a2a7823abae34d10cc66217dfbe0e8a6759b5",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.props.tsx",
+      "sha256": "7c1d25e83f35769fff0da739d8c8090ef239d6f59c59e7c1daa5c12a63ef25ea",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.scenes.$sceneId.tsx",
+      "sha256": "28bc7e61dbdb97217224c56bf47ee91506a2874b20583f49ac67281ee375678f",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.scenes.index.tsx",
+      "sha256": "57ababcefeb291f4541ffb942fa00f4b629e7ea565dccadf1a38a6a0c79eacb6",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.scenes.tsx",
+      "sha256": "08742824d09ca8a7fb87691a58b63fa300502eea98e58f709f24726f09d66fbc",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.settings.tsx",
+      "sha256": "e083dad4d9eaf75dd0327bfd3a536719c63af4c99f43566da95d038ccfdc5de4",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.styles.$styleId.tsx",
+      "sha256": "cb1185cc99d7c7d663d55515a6c7f63e357f9d9f8ccf5ead02136d9cf1b69353",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.styles.index.tsx",
+      "sha256": "16af7608f3c6ee5fd34329ead002b244a590cccc6bc3ca5b7d04335256d3cec8",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.styles.tsx",
+      "sha256": "90592d6213c1015c6ad86291d5a19d7e6976bcd783f8ccf16429acdd64eaf49d",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/_studio.tsx",
+      "sha256": "ba052a2d1170a52f3d37835920a6b5af18fde9b035c3d44c38946355cdc5c4ab",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.assets.characters.$characterId.tsx",
+      "sha256": "141b73dcaf4cd7c63aefb7eb5727e828a6be3a7af641e4b69172ad97f51b57e3",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.assets.index.tsx",
+      "sha256": "f148b92d04a5940badf885f3f821a333b291fac06b8b71305ce4c72b015edd68",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.assets.props.$propId.tsx",
+      "sha256": "51b5eca418a8e91df50e49e2b7ba826ee43678818957e9a57eee75cf54869f0a",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.assets.scenes.$sceneId.tsx",
+      "sha256": "d3f4ce745a5736d0ab16d5ab8fd72458c4cac68ba0f2a851de1c0cec662033e8",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.assets.styles.$styleId.tsx",
+      "sha256": "01b53422e1f8a5d8bbb1e0abbf6befbf0afc73c4e981043126c39119cecb0c74",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.assets.tsx",
+      "sha256": "2a9915888cb5e9739d0fe953e9e0899ff0ba17fff72993f6fb45b3c1dc3eacea",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.e.$episodeId.index.tsx",
+      "sha256": "b877abcdbfe7ce31a5e73aac229c730264d7151fd2fff2c15bd188a4c4ff9856",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.e.$episodeId.produce.tsx",
+      "sha256": "a71f4f9d621b4ebaf4143f9561e812ab6db96f6be74f52c67712c9f6db1a1138",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.e.$episodeId.shots.tsx",
+      "sha256": "933347687a2bacb13a32cb0866fe1dba1834c474e448bdf86862ce692e0286ba",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.e.$episodeId.storyboard.tsx",
+      "sha256": "6eefeadcf8d4e54f58440da81f00e857175f2b19245b108548f6faedc8f7c8d1",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.e.$episodeId.tsx",
+      "sha256": "9a4a8cd617c9efb5f3e005be33f877ded0a12cce2bf6f805a2feb4a53a02b686",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.index.tsx",
+      "sha256": "b4145f2ffb1ed25ee5da29787801d6375f9ba69781f7664b1908d998cb62819b",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.memory.tsx",
+      "sha256": "fcf826f20b6ab781ba5f2f922412560b175d96f0d8071600226a7c32a40f68d7",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.plan.tsx",
+      "sha256": "68a106492dfbe0b50807ecdaa694d1f8e5e5cb59a1155bb93462931f4b2c2af4",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.produce.tsx",
+      "sha256": "ec26e87ff953a5e050206a13d9e337af4ff3a24a8879ceac8f9d5b04b7cbc2a7",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.report.tsx",
+      "sha256": "3c006d655ecc48684cf16be07bcd39645c4bdaf677f7f4721f522dd0f017d64b",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.shots.tsx",
+      "sha256": "1cc9675597b37b91ded81be31bd09f73fe5d716837437e25cb29eb8ec889a195",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.storyboard.tsx",
+      "sha256": "8bffb357b9622f79c211ca8ca2fe67e1efea6470d35cdbe82db8f258f28daf07",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.tsx",
+      "sha256": "900667d80ce5146e342830ede57859f9c5feed2fd50bd7abfac3e4ce1b6c658b",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/routes/p.$projectId.world.tsx",
+      "sha256": "b2d7b7c202dc85706255e4b1b02ca5200c61411bcb2630eb40f33c46b6392c00",
+      "status": "route-reviewed"
+    },
+    {
+      "path": "src/styles.css",
+      "sha256": "a8deb89bc36b4d9d3a88ce063c4b5bd81be793d8fc3e4571f2c0b1da91aa7d64",
+      "status": "reference-in-existing-UI-research"
+    }
+  ]
+}

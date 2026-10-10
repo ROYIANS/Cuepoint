@@ -1,0 +1,2963 @@
+{
+  "scope": "31 contextual check entries, not 31 distinct component implementations; all 47 route files mapped",
+  "initial_native_samples": 7,
+  "prototype_evidence_separate": "preview/README.md",
+  "required_viewports": [
+    "1440x900",
+    "1280x720",
+    "1024x640",
+    "1280x600",
+    "390x844"
+  ],
+  "state_rules": [
+    "Use actual app before/after screenshots for every contextual check.",
+    "Use safe existing/local fixture projects; no destructive edits to user content or provider calls.",
+    "Mark fixture/error state environment explicitly.",
+    "No pending/blocked item counts as passed.",
+    "Layout/redirect/dispatch are verified through targets/children, not invented standalone pages."
+  ],
+  "counts": {
+    "route_files": 47,
+    "contextual_checks": 31,
+    "initial_native_samples": 7,
+    "native_before_contexts": 31,
+    "native_after_desktop_contexts": 31,
+    "native_after_narrow_contexts": 31,
+    "representative_viewport_checks": 60,
+    "native_redirects": 8
+  },
+  "routes": [
+    {
+      "route_file": "src/routes/__root.tsx",
+      "classification": "provider-layout",
+      "coverage_ids": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18",
+        "C19",
+        "C20",
+        "C21",
+        "C22",
+        "C23",
+        "C24",
+        "C25",
+        "C26",
+        "C27",
+        "C28",
+        "C29",
+        "C30",
+        "C31"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.about.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C01"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.agent.$threadId.tsx",
+      "classification": "persistent-page-selector",
+      "coverage_ids": [
+        "C02"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.agent.index.tsx",
+      "classification": "persistent-page-selector",
+      "coverage_ids": [
+        "C03"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.agent.tasks.tsx",
+      "classification": "persistent-page-selector",
+      "coverage_ids": [
+        "C04"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.agent.tsx",
+      "classification": "persistent-page-host",
+      "coverage_ids": [
+        "C02",
+        "C03",
+        "C04"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.assets.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C05"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.characters.$characterId.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C06"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.characters.index.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C07"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.characters.tsx",
+      "classification": "outlet-layout",
+      "coverage_ids": [
+        "C06",
+        "C07"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.connectors.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C08"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.index.tsx",
+      "classification": "redirect",
+      "coverage_ids": [
+        "REDIRECT:src/routes/_studio.index.tsx"
+      ],
+      "redirect_notes": {
+        "redirect_targets": [
+          "/agent"
+        ]
+      },
+      "native_status": "native-target-verified",
+      "evidence": [
+        "research/native-after/redirects.json"
+      ]
+    },
+    {
+      "route_file": "src/routes/_studio.ips.$ipId.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C09"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.ips.index.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C10"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.ips.tsx",
+      "classification": "outlet-layout",
+      "coverage_ids": [
+        "C09",
+        "C10"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.projects.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C11"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.props.$propId.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C12"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.props.index.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C13"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.props.tsx",
+      "classification": "outlet-layout",
+      "coverage_ids": [
+        "C12",
+        "C13"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.scenes.$sceneId.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C14"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.scenes.index.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C15"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.scenes.tsx",
+      "classification": "outlet-layout",
+      "coverage_ids": [
+        "C14",
+        "C15"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.settings.tsx",
+      "classification": "redirect",
+      "coverage_ids": [
+        "REDIRECT:src/routes/_studio.settings.tsx"
+      ],
+      "redirect_notes": {
+        "redirect_targets": [
+          "/about"
+        ]
+      },
+      "native_status": "native-target-verified",
+      "evidence": [
+        "research/native-after/redirects.json"
+      ]
+    },
+    {
+      "route_file": "src/routes/_studio.styles.$styleId.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C16"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.styles.index.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C17"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.styles.tsx",
+      "classification": "outlet-layout",
+      "coverage_ids": [
+        "C16",
+        "C17"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/_studio.tsx",
+      "classification": "shell-layout",
+      "coverage_ids": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/p.$projectId.assets.characters.$characterId.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C18"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/p.$projectId.assets.index.tsx",
+      "classification": "redirect",
+      "coverage_ids": [
+        "REDIRECT:src/routes/p.$projectId.assets.index.tsx"
+      ],
+      "redirect_notes": {
+        "redirect_targets": [
+          "/p/$projectId/world"
+        ]
+      },
+      "native_status": "native-target-verified",
+      "evidence": [
+        "research/native-after/redirects.json"
+      ]
+    },
+    {
+      "route_file": "src/routes/p.$projectId.assets.props.$propId.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C19"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/p.$projectId.assets.scenes.$sceneId.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C20"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/p.$projectId.assets.styles.$styleId.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C21"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/p.$projectId.assets.tsx",
+      "classification": "outlet-layout",
+      "coverage_ids": [
+        "C18",
+        "C19",
+        "C20",
+        "C21"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/p.$projectId.e.$episodeId.index.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C22",
+        "C23"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/p.$projectId.e.$episodeId.produce.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C24"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/p.$projectId.e.$episodeId.shots.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C25"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/p.$projectId.e.$episodeId.storyboard.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C26"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/p.$projectId.e.$episodeId.tsx",
+      "classification": "outlet-layout",
+      "coverage_ids": [
+        "C22",
+        "C23",
+        "C24",
+        "C25",
+        "C26"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/p.$projectId.index.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C22",
+        "C27",
+        "C28",
+        "C29"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/p.$projectId.memory.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C30"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/p.$projectId.plan.tsx",
+      "classification": "redirect",
+      "coverage_ids": [
+        "REDIRECT:src/routes/p.$projectId.plan.tsx"
+      ],
+      "redirect_notes": {
+        "redirect_targets": [
+          "/p/$projectId",
+          "/p/$projectId/e/$episodeId/produce"
+        ],
+        "condition": "first episode of project; project home when no episode"
+      },
+      "native_status": "native-target-verified",
+      "evidence": [
+        "research/native-after/redirects.json"
+      ],
+      "branch_limit": "Native existing-first-episode branch verified; empty-project fallback retained in unchanged source and tests, not asserted as a second native redirect."
+    },
+    {
+      "route_file": "src/routes/p.$projectId.produce.tsx",
+      "classification": "redirect",
+      "coverage_ids": [
+        "REDIRECT:src/routes/p.$projectId.produce.tsx"
+      ],
+      "redirect_notes": {
+        "redirect_targets": [
+          "/p/$projectId",
+          "/p/$projectId/e/$episodeId/produce"
+        ],
+        "condition": "first episode of project; project home when no episode"
+      },
+      "native_status": "native-target-verified",
+      "evidence": [
+        "research/native-after/redirects.json"
+      ],
+      "branch_limit": "Native existing-first-episode branch verified; empty-project fallback retained in unchanged source and tests, not asserted as a second native redirect."
+    },
+    {
+      "route_file": "src/routes/p.$projectId.report.tsx",
+      "classification": "redirect",
+      "coverage_ids": [
+        "REDIRECT:src/routes/p.$projectId.report.tsx"
+      ],
+      "redirect_notes": {
+        "redirect_targets": [
+          "/p/$projectId",
+          "/p/$projectId/e/$episodeId/produce"
+        ],
+        "condition": "first episode of project; project home when no episode"
+      },
+      "native_status": "native-target-verified",
+      "evidence": [
+        "research/native-after/redirects.json"
+      ],
+      "branch_limit": "Native existing-first-episode branch verified; empty-project fallback retained in unchanged source and tests, not asserted as a second native redirect."
+    },
+    {
+      "route_file": "src/routes/p.$projectId.shots.tsx",
+      "classification": "redirect",
+      "coverage_ids": [
+        "REDIRECT:src/routes/p.$projectId.shots.tsx"
+      ],
+      "redirect_notes": {
+        "redirect_targets": [
+          "/p/$projectId",
+          "/p/$projectId/e/$episodeId/shots"
+        ],
+        "condition": "first episode of project; project home when no episode"
+      },
+      "native_status": "native-target-verified",
+      "evidence": [
+        "research/native-after/redirects.json"
+      ],
+      "branch_limit": "Native existing-first-episode branch verified; empty-project fallback retained in unchanged source and tests, not asserted as a second native redirect."
+    },
+    {
+      "route_file": "src/routes/p.$projectId.storyboard.tsx",
+      "classification": "redirect",
+      "coverage_ids": [
+        "REDIRECT:src/routes/p.$projectId.storyboard.tsx"
+      ],
+      "redirect_notes": {
+        "redirect_targets": [
+          "/p/$projectId"
+        ]
+      },
+      "native_status": "native-target-verified",
+      "evidence": [
+        "research/native-after/redirects.json"
+      ]
+    },
+    {
+      "route_file": "src/routes/p.$projectId.tsx",
+      "classification": "shell-layout",
+      "coverage_ids": [
+        "C18",
+        "C19",
+        "C20",
+        "C21",
+        "C22",
+        "C23",
+        "C24",
+        "C25",
+        "C26",
+        "C27",
+        "C28",
+        "C29",
+        "C30",
+        "C31"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    },
+    {
+      "route_file": "src/routes/p.$projectId.world.tsx",
+      "classification": "page-adapter",
+      "coverage_ids": [
+        "C31"
+      ],
+      "redirect_notes": null,
+      "native_status": "native-context-verified"
+    }
+  ],
+  "checks": [
+    {
+      "id": "C01",
+      "name": "AboutPage",
+      "variant": "default",
+      "url_pattern": "/about",
+      "route_files": [
+        "src/routes/_studio.about.tsx"
+      ],
+      "owner_file": "src/components/studio/AboutPage.tsx",
+      "family": "studio",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "brand content/support dialog",
+        "narrow layout/keyboard/focus return"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C01.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C01.png",
+          "research/native-after/C01-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/about",
+          "result": "layout-passed",
+          "notes": "Brand page and narrow layout; shared navigation/overlay controls inspected.",
+          "evidence": [
+            "research/native-after/C01.png",
+            "research/native-after/C01-390x844.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C02",
+      "name": "AgentChat",
+      "variant": "conversation",
+      "url_pattern": "/agent/$threadId",
+      "route_files": [
+        "src/routes/_studio.agent.$threadId.tsx"
+      ],
+      "owner_file": "src/components/agent/AgentChatPage.tsx",
+      "family": "agent",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "existing long/stream/stopped/approval/error messages",
+        "topic keyboard actions/context/runtime detail",
+        "composer/reading scroll/portal",
+        "generation/execution review/Stop",
+        "same-host transition"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C02.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C02.png",
+          "research/native-after/C02-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/agent/cth_2cd95cf6-99aa-4576-a645-f7a5396ca28b",
+          "result": "layout-passed",
+          "notes": "Existing long/stopped conversation and execution results; right topic Sheet Space/Escape and native button focus; task detail Enter; context popover; draft survives actual same-host home/thread/tasks links.",
+          "evidence": [
+            "research/native-after/C02.png",
+            "research/native-after/C02-390x844.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C03",
+      "name": "AgentHome",
+      "variant": "welcome",
+      "url_pattern": "/agent/",
+      "route_files": [
+        "src/routes/_studio.agent.index.tsx"
+      ],
+      "owner_file": "src/components/agent/AgentChatPage.tsx",
+      "family": "agent",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "welcome/empty",
+        "model/context controls",
+        "narrow topic/main navigation",
+        "same-host transition"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C03.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C03.png",
+          "research/native-after/C03-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/agent",
+          "result": "layout-passed",
+          "notes": "Welcome and model/context controls; shared Agent host. No provider request sent.",
+          "evidence": [
+            "research/native-after/C03.png",
+            "research/native-after/C03-390x844.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C04",
+      "name": "AgentTasks",
+      "variant": "tasks",
+      "url_pattern": "/agent/tasks",
+      "route_files": [
+        "src/routes/_studio.agent.tasks.tsx"
+      ],
+      "owner_file": "src/components/agent/AgentChatPage.tsx",
+      "family": "agent",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "populated/empty/search/filter",
+        "new task/review/detail inspector",
+        "long status/dirty-pending overlay",
+        "same-host transition"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C04.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C04.png",
+          "research/native-after/C04-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/agent/tasks",
+          "result": "layout-passed",
+          "notes": "Populated task board and detail/goal editing; unsaved completion criterion continues editing, then discards without saving; safe initial Cancel focus.",
+          "evidence": [
+            "research/native-after/C04.png",
+            "research/native-after/C04-390x844.png",
+            "research/native-after/manual-draft-initial-focus.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C05",
+      "name": "MaterialLibraryPage",
+      "variant": "default",
+      "url_pattern": "/assets",
+      "route_files": [
+        "src/routes/_studio.assets.tsx"
+      ],
+      "owner_file": "src/components/studio/MaterialLibraryPage.tsx",
+      "family": "studio",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "media/settings tabs",
+        "global/IP/project/shared scopes",
+        "populated/empty/search-empty",
+        "import dialog/detail-history sheet",
+        "dirty/pending close and version/reference actions"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C05.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C05.png",
+          "research/native-after/C05-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/assets",
+          "result": "layout-passed",
+          "notes": "Media empty; settings populated with local fixture version1; keyboard media/settings; import dialog; detail/history; dirty remark retained on Continue and discarded; all five viewports repeated after user-reported tab skin fix.",
+          "evidence": [
+            "research/native-after/C05.png",
+            "research/native-after/C05-390x844.png",
+            "research/native-after/material-tabs-fixed-1280.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C06",
+      "name": "CharacterDetailPage",
+      "variant": "studio-owned",
+      "url_pattern": "/characters/$characterId",
+      "route_files": [
+        "src/routes/_studio.characters.$characterId.tsx"
+      ],
+      "owner_file": "src/components/assets/CharacterDetailPage.tsx",
+      "family": "studio",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "correct owner/populated/loading/missing",
+        "long fields/media slots",
+        "dirty/pending close/failure retained draft"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C06.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C06.png",
+          "research/native-after/C06-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/characters/chr_83d2d34d-859f-4b33-9755-899511ed65fe",
+          "result": "layout-passed",
+          "notes": "Studio-owned role; explicit missing-ID page; existing form fields/media geometry.",
+          "evidence": [
+            "research/native-after/C06.png",
+            "research/native-after/C06-390x844.png",
+            "research/native-after/C06-missing.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C07",
+      "name": "CharacterLibraryPage",
+      "variant": "default",
+      "url_pattern": "/characters/",
+      "route_files": [
+        "src/routes/_studio.characters.index.tsx"
+      ],
+      "owner_file": "src/components/studio/AssetLibraryPages.tsx",
+      "family": "studio",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "populated/empty/search-empty",
+        "create/menu/delete confirmation"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C07.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C07.png",
+          "research/native-after/C07-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/characters",
+          "result": "layout-passed",
+          "notes": "Studio role collection and fixture create; cards/menu keyboard presentation.",
+          "evidence": [
+            "research/native-after/C07.png",
+            "research/native-after/C07-390x844.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C08",
+      "name": "ConnectorsPage",
+      "variant": "default",
+      "url_pattern": "/connectors",
+      "route_files": [
+        "src/routes/_studio.connectors.tsx"
+      ],
+      "owner_file": "src/components/studio/ConnectorsPage.tsx",
+      "family": "studio",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "connected/unconnected",
+        "safe blank config dialog",
+        "long validation/status",
+        "search checkbox",
+        "masked credentials excluded from screenshots"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C08.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C08.png",
+          "research/native-after/C08-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/connectors",
+          "result": "layout-passed",
+          "notes": "Connected/unconnected list; blank OpenAI config; Tavily checkbox Space; close without credential edits; no secrets recorded.",
+          "evidence": [
+            "research/native-after/C08.png",
+            "research/native-after/C08-390x844.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C09",
+      "name": "IpProfilePage",
+      "variant": "default",
+      "url_pattern": "/ips/$ipId",
+      "route_files": [
+        "src/routes/_studio.ips.$ipId.tsx"
+      ],
+      "owner_file": "src/components/studio/IpProfilesPage.tsx",
+      "family": "studio",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "all existing profile views",
+        "long profile/linked data",
+        "edit dirty/pending/failure",
+        "missing IP/fallback"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C09.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C09.png",
+          "research/native-after/C09-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/ips/ip_37c93a9c-5478-438c-93b7-013fe5392caf",
+          "result": "layout-passed",
+          "notes": "Existing IP fixture editor; missing IP fallback; dirty-close Continue and discard.",
+          "evidence": [
+            "research/native-after/C09.png",
+            "research/native-after/C09-390x844.png",
+            "research/native-after/ip-dirty-close-1280x600.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C10",
+      "name": "IpProfilesPage",
+      "variant": "default",
+      "url_pattern": "/ips/",
+      "route_files": [
+        "src/routes/_studio.ips.index.tsx"
+      ],
+      "owner_file": "src/components/studio/IpProfilesPage.tsx",
+      "family": "studio",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "populated/empty/search-empty/archived",
+        "new/edit/dirty-close/archive confirmation"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C10.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C10.png",
+          "research/native-after/C10-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/ips",
+          "result": "layout-passed",
+          "notes": "IP list and archive confirmation; initial safe Cancel then return to archive button; no archive performed.",
+          "evidence": [
+            "research/native-after/C10.png",
+            "research/native-after/C10-390x844.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C11",
+      "name": "ProjectGalleryPage",
+      "variant": "default",
+      "url_pattern": "/projects",
+      "route_files": [
+        "src/routes/_studio.projects.tsx"
+      ],
+      "owner_file": "src/components/studio/ProjectGalleryPage.tsx",
+      "family": "studio",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "populated/initial-empty/search-empty",
+        "video/audio/music/IP/archived filters",
+        "create/rename/IP-binding/archive-delete confirmation",
+        "unavailable kind guard"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C11.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C11.png",
+          "research/native-after/C11-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/projects",
+          "result": "layout-passed",
+          "notes": "Populated project gallery; project kinds/IP filters; create dialog short-window body scrolling/footer reachable, Escape returns to New project.",
+          "evidence": [
+            "research/native-after/C11.png",
+            "research/native-after/C11-390x844.png",
+            "research/native-after/project-create-1280x600.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C12",
+      "name": "PropDetailPage",
+      "variant": "studio-owned",
+      "url_pattern": "/props/$propId",
+      "route_files": [
+        "src/routes/_studio.props.$propId.tsx"
+      ],
+      "owner_file": "src/components/assets/PropDetailPage.tsx",
+      "family": "studio",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "correct owner/populated/loading/missing",
+        "long fields/media slots",
+        "dirty/pending close/failure retained draft"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C12.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C12.png",
+          "research/native-after/C12-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/props/prp_d2371699-0bc0-410c-ae27-921640d0a549",
+          "result": "layout-passed",
+          "notes": "Studio-owned prop and explicit missing-ID page.",
+          "evidence": [
+            "research/native-after/C12.png",
+            "research/native-after/C12-390x844.png",
+            "research/native-after/C12-missing.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C13",
+      "name": "PropLibraryPage",
+      "variant": "default",
+      "url_pattern": "/props/",
+      "route_files": [
+        "src/routes/_studio.props.index.tsx"
+      ],
+      "owner_file": "src/components/studio/AssetLibraryPages.tsx",
+      "family": "studio",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "populated/empty/search-empty",
+        "create/menu/delete confirmation"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C13.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C13.png",
+          "research/native-after/C13-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/props",
+          "result": "layout-passed",
+          "notes": "Prop collection and local fixture creation.",
+          "evidence": [
+            "research/native-after/C13.png",
+            "research/native-after/C13-390x844.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C14",
+      "name": "SceneDetailPage",
+      "variant": "studio-owned",
+      "url_pattern": "/scenes/$sceneId",
+      "route_files": [
+        "src/routes/_studio.scenes.$sceneId.tsx"
+      ],
+      "owner_file": "src/components/assets/SceneDetailPage.tsx",
+      "family": "studio",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "correct owner/populated/loading/missing",
+        "long fields/media slots",
+        "dirty/pending close/failure retained draft"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C14.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C14.png",
+          "research/native-after/C14-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/scenes/scn_e4559095-212e-40b3-ab44-587ef2c5d96d",
+          "result": "layout-passed",
+          "notes": "Studio-owned scene and explicit missing-ID page.",
+          "evidence": [
+            "research/native-after/C14.png",
+            "research/native-after/C14-390x844.png",
+            "research/native-after/C14-missing.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C15",
+      "name": "SceneLibraryPage",
+      "variant": "default",
+      "url_pattern": "/scenes/",
+      "route_files": [
+        "src/routes/_studio.scenes.index.tsx"
+      ],
+      "owner_file": "src/components/studio/AssetLibraryPages.tsx",
+      "family": "studio",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "populated/empty/search-empty",
+        "create/menu/delete confirmation"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C15.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C15.png",
+          "research/native-after/C15-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/scenes",
+          "result": "layout-passed",
+          "notes": "Scene collection and local fixture creation.",
+          "evidence": [
+            "research/native-after/C15.png",
+            "research/native-after/C15-390x844.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C16",
+      "name": "StyleDetailPage",
+      "variant": "studio-owned",
+      "url_pattern": "/styles/$styleId",
+      "route_files": [
+        "src/routes/_studio.styles.$styleId.tsx"
+      ],
+      "owner_file": "src/components/assets/StyleDetailPage.tsx",
+      "family": "studio",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "correct owner/populated/loading/missing",
+        "long fields/media slots",
+        "dirty/pending close/failure retained draft"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C16.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C16.png",
+          "research/native-after/C16-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/styles/sty_e5b86223-9f72-48d4-967b-2dd91d2b616c",
+          "result": "layout-passed",
+          "notes": "Studio-owned style and explicit missing-ID page.",
+          "evidence": [
+            "research/native-after/C16.png",
+            "research/native-after/C16-390x844.png",
+            "research/native-after/C16-missing.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C17",
+      "name": "StyleLibraryPage",
+      "variant": "default",
+      "url_pattern": "/styles/",
+      "route_files": [
+        "src/routes/_studio.styles.index.tsx"
+      ],
+      "owner_file": "src/components/studio/AssetLibraryPages.tsx",
+      "family": "studio",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "populated/empty/search-empty",
+        "create/menu/delete confirmation"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C17.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C17.png",
+          "research/native-after/C17-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/styles",
+          "result": "layout-passed",
+          "notes": "Style collection and local fixture creation.",
+          "evidence": [
+            "research/native-after/C17.png",
+            "research/native-after/C17-390x844.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C18",
+      "name": "CharacterDetailPage",
+      "variant": "project-owned",
+      "url_pattern": "/p/$projectId/assets/characters/$characterId",
+      "route_files": [
+        "src/routes/p.$projectId.assets.characters.$characterId.tsx"
+      ],
+      "owner_file": "src/components/assets/CharacterDetailPage.tsx",
+      "family": "project",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "correct owner/populated/loading/missing",
+        "long fields/media slots",
+        "dirty/pending close/failure retained draft"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C18.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C18.png",
+          "research/native-after/C18-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/assets/characters/chr_672de83c-95e5-4fcc-812f-66122cafd0c4",
+          "result": "layout-passed",
+          "notes": "Project-owned role; foreign role owner guard; missing project guard.",
+          "evidence": [
+            "research/native-after/C18.png",
+            "research/native-after/C18-390x844.png",
+            "research/native-after/project-foreign-owner.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C19",
+      "name": "PropDetailPage",
+      "variant": "project-owned",
+      "url_pattern": "/p/$projectId/assets/props/$propId",
+      "route_files": [
+        "src/routes/p.$projectId.assets.props.$propId.tsx"
+      ],
+      "owner_file": "src/components/assets/PropDetailPage.tsx",
+      "family": "project",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "correct owner/populated/loading/missing",
+        "long fields/media slots",
+        "dirty/pending close/failure retained draft"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C19.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C19.png",
+          "research/native-after/C19-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/p/prj_167f4af3-91fe-4063-8e6d-de57d033bbb2/assets/props/prp_a1a1d3bb-01d9-486f-90dd-f2a456b3f244",
+          "result": "layout-passed",
+          "notes": "Project-owned prop, owner-scoped loaded form.",
+          "evidence": [
+            "research/native-after/C19.png",
+            "research/native-after/C19-390x844.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C20",
+      "name": "SceneDetailPage",
+      "variant": "project-owned",
+      "url_pattern": "/p/$projectId/assets/scenes/$sceneId",
+      "route_files": [
+        "src/routes/p.$projectId.assets.scenes.$sceneId.tsx"
+      ],
+      "owner_file": "src/components/assets/SceneDetailPage.tsx",
+      "family": "project",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "correct owner/populated/loading/missing",
+        "long fields/media slots",
+        "dirty/pending close/failure retained draft"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C20.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C20.png",
+          "research/native-after/C20-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/assets/scenes/scn_9884eb4b-9db2-4929-a3df-90f1ef60bd65",
+          "result": "layout-passed",
+          "notes": "Project-owned scene, owner-scoped loaded form.",
+          "evidence": [
+            "research/native-after/C20.png",
+            "research/native-after/C20-390x844.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C21",
+      "name": "StyleDetailPage",
+      "variant": "project-owned",
+      "url_pattern": "/p/$projectId/assets/styles/$styleId",
+      "route_files": [
+        "src/routes/p.$projectId.assets.styles.$styleId.tsx"
+      ],
+      "owner_file": "src/components/assets/StyleDetailPage.tsx",
+      "family": "project",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "correct owner/populated/loading/missing",
+        "long fields/media slots",
+        "dirty/pending close/failure retained draft"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C21.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C21.png",
+          "research/native-after/C21-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/p/prj_167f4af3-91fe-4063-8e6d-de57d033bbb2/assets/styles/sty_c2a9a5cb-5ecc-4954-b6ac-11fdfa469653",
+          "result": "layout-passed",
+          "notes": "Project-owned style, owner-scoped loaded form.",
+          "evidence": [
+            "research/native-after/C21.png",
+            "research/native-after/C21-390x844.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C22",
+      "name": "StoryPage",
+      "variant": "film",
+      "url_pattern": "/p/$projectId/e/$episodeId/",
+      "route_files": [
+        "src/routes/p.$projectId.e.$episodeId.index.tsx",
+        "src/routes/p.$projectId.index.tsx"
+      ],
+      "owner_file": "src/components/story/StoryPage.tsx",
+      "family": "project",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "populated/empty/import review",
+        "long script/scene sidebar",
+        "draft/recovery/owner missing"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C22.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C22.png",
+          "research/native-after/C22-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/e/ep_b9822329-b73a-47b2-9a30-a257b9b0df8e",
+          "result": "layout-passed",
+          "notes": "Film story and scene layout, existing owner/draft boundaries.",
+          "evidence": [
+            "research/native-after/C22.png",
+            "research/native-after/C22-390x844.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C23",
+      "name": "StoryPage",
+      "variant": "series",
+      "url_pattern": "/p/$projectId/e/$episodeId/",
+      "route_files": [
+        "src/routes/p.$projectId.e.$episodeId.index.tsx"
+      ],
+      "owner_file": "src/components/story/StoryPage.tsx",
+      "family": "project",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "populated/empty/import review",
+        "long script/scene sidebar",
+        "draft/recovery/owner missing"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C23.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C23.png",
+          "research/native-after/C23-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/p/prj_167f4af3-91fe-4063-8e6d-de57d033bbb2/e/ep_394ed5e0-0f1a-485a-810c-2b899c6b35fa",
+          "result": "layout-passed",
+          "notes": "Series local long story (71 lines/1339 chars before added edit), narrow autogrowing document; saved feedback and actual guarded navigation across pending debounce.",
+          "evidence": [
+            "research/native-after/C23.png",
+            "research/native-after/C23-390x844.png",
+            "research/native-after/story-long-draft-390.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C24",
+      "name": "ProducePage",
+      "variant": "default",
+      "url_pattern": "/p/$projectId/e/$episodeId/produce",
+      "route_files": [
+        "src/routes/p.$projectId.e.$episodeId.produce.tsx"
+      ],
+      "owner_file": "src/components/produce/ProducePage.tsx",
+      "family": "project",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "loaded/loading/empty/readiness",
+        "export confirmation/failure",
+        "long status"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C24.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C24.png",
+          "research/native-after/C24-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/e/ep_b9822329-b73a-47b2-9a30-a257b9b0df8e/produce",
+          "result": "layout-passed",
+          "notes": "Loaded production/readiness and export controls inspected; no external publish/export mutation.",
+          "evidence": [
+            "research/native-after/C24.png",
+            "research/native-after/C24-390x844.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C25",
+      "name": "ShotEditorPage",
+      "variant": "default",
+      "url_pattern": "/p/$projectId/e/$episodeId/shots",
+      "route_files": [
+        "src/routes/p.$projectId.e.$episodeId.shots.tsx"
+      ],
+      "owner_file": "src/components/shots/ShotEditorPage.tsx",
+      "family": "project",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "table/media/deep-link/filter-empty",
+        "long/lazy rows/DnD",
+        "bulk/review/undo",
+        "keyboard shortcut gating/drafts"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C25.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C25.png",
+          "research/native-after/C25-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/e/ep_b9822329-b73a-47b2-9a30-a257b9b0df8e/shots",
+          "result": "layout-passed",
+          "notes": "Loaded shot table with media/deep links; intentionally wide internal canvas; filters/lazy/bulk/undo retain existing executable coverage.",
+          "evidence": [
+            "research/native-after/C25.png",
+            "research/native-after/C25-390x844.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C26",
+      "name": "StoryboardPrintPage",
+      "variant": "default",
+      "url_pattern": "/p/$projectId/e/$episodeId/storyboard",
+      "route_files": [
+        "src/routes/p.$projectId.e.$episodeId.storyboard.tsx"
+      ],
+      "owner_file": "src/components/produce/StoryboardPrintPage.tsx",
+      "family": "project",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "screen toolbar",
+        "loaded-data barrier",
+        "light A4 landscape/10mm/chrome hidden",
+        "long captions/media"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C26.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C26.png",
+          "research/native-after/C26-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/e/ep_b9822329-b73a-47b2-9a30-a257b9b0df8e/storyboard",
+          "result": "layout-passed",
+          "notes": "Loaded white storyboard; 5 local shots; print CSS and frame release inspected. User confirmed actual system print preview normal: white/A4 landscape/no navigation/complete pagination.",
+          "evidence": [
+            "research/native-after/C26.png",
+            "research/native-after/C26-390x844.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C27",
+      "name": "EpisodeListPage",
+      "variant": "video-series",
+      "url_pattern": "/p/$projectId/",
+      "route_files": [
+        "src/routes/p.$projectId.index.tsx"
+      ],
+      "owner_file": "src/components/workspace/EpisodeListPage.tsx",
+      "family": "project",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "populated/empty",
+        "add/rename/reorder/delete with undo",
+        "long project/episode titles"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C27.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C27.png",
+          "research/native-after/C27-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/p/prj_167f4af3-91fe-4063-8e6d-de57d033bbb2",
+          "result": "layout-passed",
+          "notes": "Series episode collection with local fixture episodes and shared header; episode commands keep existing tests.",
+          "evidence": [
+            "research/native-after/C27.png",
+            "research/native-after/C27-390x844.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C28",
+      "name": "AudioWorkspacePage",
+      "variant": "audio",
+      "url_pattern": "/p/$projectId/",
+      "route_files": [
+        "src/routes/p.$projectId.index.tsx"
+      ],
+      "owner_file": "src/components/audio/AudioWorkspacePage.tsx",
+      "family": "project",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "script/timeline modes/long manuscript",
+        "existing sample play/trim/transport",
+        "inspectors/assets/selection",
+        "batch prepare/review/failure-retry display",
+        "arrangement preview/conflict/CAS/undo",
+        "dirty draft/owner unavailable/resize"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C28.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C28.png",
+          "research/native-after/C28-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/p/prj_b2594f6c-5988-4acb-bdea-186e95766ab1",
+          "result": "layout-passed",
+          "notes": "Existing 3 audio clips (7.8s), selection/playback, precise trim second clip0 to0.1 then undo0; batch review short-window scrolling; arrangement preview/conflict count0, no paid confirmation.",
+          "evidence": [
+            "research/native-after/C28.png",
+            "research/native-after/C28-390x844.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C29",
+      "name": "MusicWorkspacePage",
+      "variant": "music",
+      "url_pattern": "/p/$projectId/",
+      "route_files": [
+        "src/routes/p.$projectId.index.tsx"
+      ],
+      "owner_file": "src/components/music/MusicWorkspacePage.tsx",
+      "family": "project",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "all creator modes/retained drafts",
+        "worklist/empty/details/version",
+        "existing sample player",
+        "prepare/review/failure/long parameters",
+        "resize/owner unavailable"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C29.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C29.png",
+          "research/native-after/C29-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/p/prj_329f24a9-8fa4-4590-a946-d9c95fdb7e95",
+          "result": "layout-passed",
+          "notes": "Existing local 58.624s music sample plays across390-to1024 resize; detail inline/Sheet; local Simple/Custom draft variants retained; shared mode/workspace Tabs arrow navigation and narrow layout after last fix.",
+          "evidence": [
+            "research/native-after/C29.png",
+            "research/native-after/C29-390x844.png",
+            "research/native-after/music-tabs-fixed-390.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C30",
+      "name": "ProjectMemoryPage",
+      "variant": "default",
+      "url_pattern": "/p/$projectId/memory",
+      "route_files": [
+        "src/routes/p.$projectId.memory.tsx"
+      ],
+      "owner_file": "src/components/memory/ProjectMemoryPage.tsx",
+      "family": "project",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "source/list/detail/empty/search-empty",
+        "versions/review/editor/dirty/pending",
+        "CAS/failure retained draft"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C30.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C30.png",
+          "research/native-after/C30-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/memory",
+          "result": "layout-passed",
+          "notes": "Memory empty/populated/source/version1; native select ArrowDown+Enter; dirty text retained on Continue then discarded.",
+          "evidence": [
+            "research/native-after/C30.png",
+            "research/native-after/C30-390x844.png",
+            "research/native-after/memory-dirty-retained.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C31",
+      "name": "AssetLibraryPage",
+      "variant": "default",
+      "url_pattern": "/p/$projectId/world",
+      "route_files": [
+        "src/routes/p.$projectId.world.tsx"
+      ],
+      "owner_file": "src/components/assets/AssetLibraryPage.tsx",
+      "family": "project",
+      "source_status": "source-reviewed-in-research; not a full-source certification",
+      "required_checks": [
+        "functional-title/header/toolbar",
+        "desktop-and-narrow-layout",
+        "scroll-owner/overflow",
+        "keyboard-focus/actions",
+        "long-content",
+        "applicable-loading/empty/missing/error",
+        "applicable-dialog/sheet-close-focus"
+      ],
+      "required_states": [
+        "all five world tabs",
+        "populated/empty/search-empty",
+        "copy-picker/create/editor"
+      ],
+      "before": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-before/C31.png",
+          "research/native-before/metrics.json"
+        ],
+        "revision": "ecf8dd0c",
+        "viewport": "1280x720"
+      },
+      "after": {
+        "status": "native-layout-reviewed",
+        "evidence": [
+          "research/native-after/C31.png",
+          "research/native-after/C31-390x844.png",
+          "research/native-after/final-desktop.json",
+          "research/native-after/final-narrow.json"
+        ],
+        "viewports": [
+          "1280x720",
+          "390x844"
+        ]
+      },
+      "keyboard_resize_status": "representative-interactions-reviewed; see explicit records and family evidence",
+      "preservation_reference": [
+        "research/ui-protection-contracts.md",
+        "research/routes-and-studio-audit.md",
+        "research/workspaces-and-theme-audit.md"
+      ],
+      "records": [
+        {
+          "method": "native-application",
+          "url_path": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/world",
+          "result": "layout-passed",
+          "notes": "All5 World categories; characters/scenes populated and props/styles empty; search empty; studio picker dialog; query-backed ArrowRight after latest shared Tabs fix.",
+          "evidence": [
+            "research/native-after/C31.png",
+            "research/native-after/C31-390x844.png",
+            "research/native-after/world-tabs-fixed-390.png"
+          ]
+        },
+        {
+          "method": "existing-executable-regression-and-source-review",
+          "result": "passed",
+          "notes": "Full Vitest suite and independent feature-owner review cover owner barriers, failed/pending writes, conflicts, draft retention, approvals and runtime safety. This row does not assert every fault state was recreated in the native browser.",
+          "evidence": [
+            "research/independent-check.md",
+            "research/final-acceptance.md"
+          ]
+        }
+      ]
+    }
+  ],
+  "native_acceptance": {
+    "environment": "Codex in-app browser; existing and local UI fixture data; application source at main ecf8dd0c before and current task after",
+    "before_contexts": 31,
+    "after_desktop_contexts": 31,
+    "after_narrow_contexts": 31,
+    "representative_viewport_checks": 60,
+    "navigation_boundary_checks": 4,
+    "native_redirect_checks": 8,
+    "last_delta": "Shared Tabs skin correction: Material 5 viewports plus Material/World/Music keyboard and narrow checks",
+    "status": "layout-and-representative-interaction-passed",
+    "state_method": "Actual states and native evidence are listed per context. Controlled query/mutation/concurrency/provider failures are covered by existing executable tests and independent source review; not claimed as fault-injected native browser checks. Native live generation and all provider failure branches were not rerun."
+  }
+}

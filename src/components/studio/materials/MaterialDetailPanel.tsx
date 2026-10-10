@@ -21,6 +21,7 @@ import {Textarea} from "@/components/ui/textarea";
 import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle} from "@/components/ui/sheet";
 import {
     AlertDialog,
+    AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
     AlertDialogFooter,
@@ -300,9 +301,9 @@ function MaterialEditor({material, requestedId, unavailable, onEditingChange, on
     </SheetContent></Sheet>{guard.dialog}<AlertDialog open={deleting} onOpenChange={(open) => {
         if (!pending) setDeleting(open);
     }}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>永久删除“{material.name}”？</AlertDialogTitle><AlertDialogDescription>删除所有版本和文件，操作不可撤销。保存前会再次检查引用。</AlertDialogDescription></AlertDialogHeader>{error &&
-        <p role="alert" className="material-error">{error}</p>}<AlertDialogFooter><Button variant="outline"
+        <p role="alert" className="material-error">{error}</p>}<AlertDialogFooter><AlertDialogCancel asChild onClick={event => event.preventDefault()}><Button variant="outline"
                                                                                           disabled={pending}
-                                                                                          onClick={() => setDeleting(false)}>取消</Button><Button
+                                                                                          onClick={() => setDeleting(false)}>取消</Button></AlertDialogCancel><Button
         variant="destructive" disabled={pending} onClick={() => void action(async () => {
         await deleteMaterial(material.id);
         setDeleting(false);
@@ -311,9 +312,9 @@ function MaterialEditor({material, requestedId, unavailable, onEditingChange, on
         <AlertDialog open={Boolean(releasing)} onOpenChange={(open) => {
             if (!pending && !open) setReleasing(null);
         }}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>移除这条项目引用？</AlertDialogTitle><AlertDialogDescription>删除该项目未被镜头、封面或任务历史使用的文件及使用记录，保留素材库原件。创作设定请先在项目编辑页删除，再解除引用。</AlertDialogDescription></AlertDialogHeader>{error &&
-            <p role="alert" className="material-error">{error}</p>}<AlertDialogFooter><Button variant="outline"
+            <p role="alert" className="material-error">{error}</p>}<AlertDialogFooter><AlertDialogCancel asChild onClick={event => event.preventDefault()}><Button variant="outline"
                                                                                               disabled={pending}
-                                                                                              onClick={() => setReleasing(null)}>取消</Button><Button
+                                                                                              onClick={() => setReleasing(null)}>取消</Button></AlertDialogCancel><Button
             variant="destructive" disabled={pending || !releasing} onClick={() => void action(async () => {
             await releaseMaterialUse(releasing!);
             setReleasing(null);

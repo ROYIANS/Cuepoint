@@ -18,6 +18,7 @@ import {
 import {deleteShots} from "@/db/shots";
 import {type Episode, normalizeEpisodeStory, type StoryBeat} from "@/domain/types";
 import {Button} from "@/components/ui/button";
+import {PageContent, PageHeader, PageState} from "@/components/layout/PageLayout";
 import {Checkbox} from "@/components/ui/checkbox";
 import {DraftStatus} from "@/components/ui/draft-status";
 import {Input} from "@/components/ui/input";
@@ -63,10 +64,10 @@ function StoryScope({projectId, episodeId}: { projectId: string; episodeId: stri
     const unavailable = !loadedProject || !loadedEpisode || beatText.retainedCount > 0;
     const textNavigationGuard = useManualDraftGuard(false, beatText.pending, () => undefined);
     if (episode === undefined || project === undefined) {
-        return <div className="text-muted-foreground p-8 text-sm">加载故事…</div>;
+        return <PageContent><PageState kind="loading" title="正在读取故事…"/></PageContent>;
     }
     if (project === null || episode === null || episode.projectId !== projectId) {
-        return <div className="text-muted-foreground p-8 text-sm">找不到这一集</div>;
+        return <PageContent><PageState kind="missing" title="找不到这一集"/></PageContent>;
     }
 
     return (
@@ -249,21 +250,15 @@ function StoryEditor({
     return (
         <div className="app-scroll h-full overflow-auto">
             {unavailable && <p role="alert" className="p-4">当前项目、故事或场次已不可用，未完成的文字仍保留。</p>}
-            <div
-                className="mx-auto grid max-w-6xl gap-8 px-4 py-6 sm:px-8 sm:py-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(20rem,0.8fr)]">
+            <PageContent mode="workbench">
+                <PageHeader title={film ? "故事" : "本集故事"}
+                            description={film ? "整理故事正文与场次，继续制作分镜。" : "整理本集故事正文与场次，继续制作分镜。"}
+                            actions={<DraftStatus status={status} error={error} onRetry={() => void retry()} onUseLatest={useLatestStory}/>}/>
+            <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.4fr)_minmax(20rem,0.8fr)]">
                 <section className="min-w-0">
-                    <div className="flex items-end justify-between gap-4">
-                        <div>
-                            <h1 className="text-[17px] font-semibold">{film ? "故事" : "本集故事"}</h1>
-                            <p className="text-muted-foreground mt-1 text-xs">
-                                {film ? "先写这部作品要讲什么。" : "先写这一集要讲什么。"}场次可以后补，分镜会从这里长出来。
-                            </p>
-                        </div>
-                        <DraftStatus status={status} error={error} onRetry={() => void retry()}
-                                     onUseLatest={useLatestStory}/>
-                    </div>
-                    <Label className="mt-6">{film ? "故事标题（可选）" : "集标题（可选）"}</Label>
+                    <Label htmlFor={`story-title-${episode.id}`}>{film ? "故事标题（可选）" : "集标题（可选）"}</Label>
                     <Input
+                        id={`story-title-${episode.id}`}
                         className="mt-2"
                         value={draft.title}
                         placeholder={film ? "可填写这一稿的标题" : "不填就显示第几集"}
@@ -272,8 +267,9 @@ function StoryEditor({
                             setDraft((current) => ({...current, title: value}));
                         }}
                     />
-                    <Label className="mt-6">{film ? "一句话故事" : "本集一句话"}</Label>
+                    <Label className="mt-6" htmlFor={`story-logline-${episode.id}`}>{film ? "一句话故事" : "本集一句话"}</Label>
                     <Input
+                        id={`story-logline-${episode.id}`}
                         className="mt-2"
                         value={draft.logline}
                         placeholder={film ? "这个故事，用一句话说完" : "这一集，用一句话说完"}
@@ -282,8 +278,8 @@ function StoryEditor({
                             setDraft((current) => ({...current, logline: value}));
                         }}
                     />
-                    <Label className="mt-6">剧本</Label>
-                    <p className="text-muted-foreground mt-1 text-[11px]">可拖入 .txt / .md，写入正文，不会自动拆场。</p>
+                    <Label className="mt-6" htmlFor={`story-script-${episode.id}`}>剧本</Label>
+                    <p className="text-muted-foreground mt-1 text-xs">可拖入 .txt / .md，写入正文，不会自动拆场。</p>
                     <div
                         className={cn("mt-2 rounded-xl", dragging && "ring-brand ring-2")}
                         onDragEnter={(event) => {
@@ -304,6 +300,7 @@ function StoryEditor({
                         }}
                     >
                         <Textarea
+                            id={`story-script-${episode.id}`}
                             ref={scriptRef}
                             className="min-h-[28rem] resize-y bg-card/60 text-[14px] leading-7"
                             value={draft.script}
@@ -326,9 +323,9 @@ function StoryEditor({
                     ) : null}
                 </section>
                 <aside className="min-w-0">
-                    <div className="flex items-center justify-between">
-                        <h2 className="text-sm font-medium">场次</h2>
-                        <div className="flex gap-2">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                        <h2 className="text-base leading-6 font-semibold">场次</h2>
+                        <div className="flex flex-wrap gap-2">
                             <Button size="sm" variant="outline" onClick={() => void addBeatFromSelection()}>
                                 从选中内容建场
                             </Button>
@@ -338,23 +335,21 @@ function StoryEditor({
                             </Button>
                         </div>
                     </div>
-                    <p className="text-muted-foreground mt-1 text-[11px] leading-5">
+                    <p className="text-muted-foreground mt-1 text-xs leading-5">
                         加一场，分镜里就会出现对应的空场。出场角色和地点从本戏世界选。
                     </p>
                     <ul className="mt-4 space-y-3">
                         {beats.length === 0 ? (
-                            <li className="text-muted-foreground rounded-2xl border border-dashed px-4 py-8 text-center text-xs">
-                                还没有场次
-                            </li>
+                            <li><PageState compact title="还没有场次"/></li>
                         ) : (
                             beats.map((beat, index) => (
-                                <li key={beat.id} className="bg-card rounded-2xl border p-3">
-                                    <div className="flex items-center gap-2">
+                                <li key={beat.id} className="border-t py-4">
+                                    <div className="flex flex-wrap items-center gap-2">
                                         <span className="text-muted-foreground w-6 text-xs">{index + 1}</span>
                                         <BeatTextField projectId={episode.projectId} episodeId={episode.id} beat={beat}
                                                        field="title"
                                                        onDraftStatus={onBeatDraftStatus} unavailable={unavailable}
-                                                       ariaLabel="场次标题" className="h-8"/>
+                                                       ariaLabel="场次标题" className="h-8" containerClassName="min-w-28 flex-1"/>
                                         <Button
                                             size="icon-sm"
                                             variant="ghost"
@@ -403,11 +398,11 @@ function StoryEditor({
                                                    onDraftStatus={onBeatDraftStatus} unavailable={unavailable} multiline
                                                    containerClassName="mt-2" className="min-h-20 resize-none"
                                                    placeholder="这场发生什么" ariaLabel="场次内容"/>
-                                    <Label className="mt-3 text-[11px]">出场角色</Label>
+                                    <Label className="mt-3 text-xs">出场角色</Label>
                                     <div
                                         className="mt-1 max-h-28 space-y-1 overflow-auto rounded-lg border px-2 py-1.5">
                                         {characters.length === 0 ? (
-                                            <p className="text-muted-foreground text-[11px]">世界里还没有角色</p>
+                                            <p className="text-muted-foreground text-xs">世界里还没有角色</p>
                                         ) : (
                                             characters.map((character) => (
                                                 <label key={character.id} className="flex items-center gap-2 text-xs">
@@ -427,14 +422,14 @@ function StoryEditor({
                                     </div>
                                     <div className="mt-3 grid grid-cols-2 gap-2">
                                         <div>
-                                            <Label className="text-[11px]">地点</Label>
+                                            <Label htmlFor={`beat-scene-${beat.id}`} className="text-xs">地点</Label>
                                             <Select
                                                 value={beat.sceneId ?? "none"}
                                                 onValueChange={(value) =>
                                                     updateBeat(beat.id, {sceneId: value === "none" ? undefined : value})
                                                 }
                                             >
-                                                <SelectTrigger className="mt-1 h-8 w-full">
+                                                <SelectTrigger id={`beat-scene-${beat.id}`} className="mt-1 h-8 w-full">
                                                     <SelectValue placeholder="未选择"/>
                                                 </SelectTrigger>
                                                 <SelectContent>
@@ -448,7 +443,7 @@ function StoryEditor({
                                             </Select>
                                         </div>
                                         <div>
-                                            <Label className="text-[11px]">时段</Label>
+                                            <Label className="text-xs">时段</Label>
                                             <BeatTextField projectId={episode.projectId} episodeId={episode.id}
                                                            beat={beat} field="timeOfDay"
                                                            onDraftStatus={onBeatDraftStatus} unavailable={unavailable}
@@ -462,6 +457,7 @@ function StoryEditor({
                     </ul>
                 </aside>
             </div>
+            </PageContent>
         </div>
     );
 }

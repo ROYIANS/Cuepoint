@@ -102,7 +102,7 @@ function AssetStill({
 }
 
 const FLUSH_SELECT_TRIGGER =
-    `${DESIGN_CELL_CHROME} w-full rounded-none border-0 bg-transparent shadow-none focus:ring-0 focus-visible:ring-0 data-[size=default]:h-full dark:bg-transparent dark:hover:bg-transparent`;
+    `${DESIGN_CELL_CHROME} w-full rounded-none border-0 bg-transparent shadow-none focus-visible:ring-2 focus-visible:ring-inset data-[size=default]:h-full dark:bg-transparent dark:hover:bg-transparent`;
 
 
 export function ShotRow({
@@ -202,7 +202,7 @@ export function ShotRow({
                     type="button"
                     variant="outline"
                     size="icon-sm"
-                    className="absolute top-0 left-3.5 z-10 size-6 -translate-y-1/2 rounded-full opacity-0 transition-opacity group-hover:opacity-100"
+                    className="absolute top-0 left-3.5 z-10 size-6 -translate-y-1/2 rounded-full opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 focus-visible:opacity-100"
                     onClick={() =>
                         void addShot(projectId, episodeId, {
                             atOrder: shot.order,
@@ -216,7 +216,7 @@ export function ShotRow({
                 <div
                     className={cn(
                         "grid h-[160px] items-stretch border-b",
-                        striped ? "bg-muted/40" : "bg-background",
+                        striped ? "bg-muted/30" : "bg-background",
                         active && "ring-2 ring-inset ring-brand",
                     )}
                     style={{gridTemplateColumns: gridColumns(workspaceView, visibleDefs)}}
@@ -244,7 +244,7 @@ export function ShotRow({
                                 </Button>
                                 <button
                                     type="button"
-                                    className="text-muted-foreground hover:text-foreground inline-flex size-6 cursor-grab items-center justify-center rounded-md active:cursor-grabbing"
+                                    className="text-muted-foreground hover:text-foreground inline-flex size-6 cursor-grab items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:cursor-grabbing"
                                     aria-label="拖拽调整镜头顺序"
                                     {...attributes}
                                     {...listeners}
@@ -277,7 +277,7 @@ export function ShotRow({
                         <ShotTextField shot={shot} field="shotNumber" onDraftStatus={onDraftStatus}
                                        unavailable={unavailable}
                                        ariaLabel="镜号"
-                                       className="h-8 w-10 border-0 bg-transparent text-center shadow-none focus-visible:ring-0"
+                                       className="h-8 w-10 border-0 bg-transparent text-center shadow-none focus-visible:ring-2 focus-visible:ring-inset"
                         />
                         <Button size="sm" variant="ghost" className="h-7 px-1 text-xs"
                                 aria-label={`镜头 ${shot.shotNumber} 道具与风格`}
@@ -291,7 +291,8 @@ export function ShotRow({
                             }
                         >
                             <SelectTrigger
-                                className="h-8 w-full border-0 bg-transparent shadow-none focus:ring-0 focus-visible:ring-0 dark:bg-transparent dark:hover:bg-transparent">
+                                aria-label={`镜头 ${shot.shotNumber} 状态`}
+                                className="h-8 w-full border-0 bg-transparent shadow-none focus-visible:ring-2 focus-visible:ring-inset dark:bg-transparent dark:hover:bg-transparent">
                                 <SelectValue/>
                             </SelectTrigger>
                             <SelectContent>
@@ -467,7 +468,7 @@ export function ShotRow({
                                         if (open) onActivate();
                                     }}
                                 >
-                                    <SelectTrigger className={FLUSH_SELECT_TRIGGER}>
+                                    <SelectTrigger aria-label={`镜头 ${shot.shotNumber} 场景`} className={FLUSH_SELECT_TRIGGER}>
                   <span className="flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5">
                     {selectedScene ? (
                         <>
@@ -520,7 +521,7 @@ export function ShotRow({
                         type="button"
                         variant="outline"
                         size="icon-sm"
-                        className="absolute bottom-0 left-3.5 z-10 size-6 translate-y-1/2 rounded-full opacity-0 transition-opacity group-hover:opacity-100"
+                        className="absolute bottom-0 left-3.5 z-10 size-6 translate-y-1/2 rounded-full opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 focus-visible:opacity-100"
                         onClick={() => void addShot(projectId, episodeId, {beatId})}
                         aria-label="在末尾添加镜头"
                     >

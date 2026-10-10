@@ -1,0 +1,7 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Frontend overview and package checklist"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Existing user visual preferences, primitive defaults, shells, Agent and accessibility constraints"}
+{"file": ".trellis/spec/frontend/directory-structure.md", "reason": "Thin routes, feature page owners and shared studio/project editors"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Meaningful verification and retained business contracts"}
+{"file": ".trellis/tasks/10-10-ui-consistency-desktop-prep/research/native-baseline.md", "reason": "Actual before screenshots and measured heading/layout differences"}
+{"file": ".trellis/tasks/10-10-ui-consistency-desktop-prep/research/ui-protection-contracts.md", "reason": "Compact non-truncated editor/Agent/audio/print protection summary with links to complete source audit"}
+{"file": ".trellis/tasks/10-10-ui-consistency-desktop-prep/research/audit-coverage.md", "reason": "Complete route/context coverage and explicit before/after/state/resize evidence requirements; no inferred native pass"}

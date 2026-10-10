@@ -1,0 +1,1436 @@
+[
+  {
+    "id": "C11",
+    "size": {
+      "width": 1440,
+      "height": 900
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "项目",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1440,
+      "scrollports": [
+        {
+          "client": 900,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 979
+        }
+      ],
+      "width": 1440
+    }
+  },
+  {
+    "id": "C05",
+    "size": {
+      "width": 1440,
+      "height": 900
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "素材库",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1440,
+      "scrollports": [],
+      "width": 1440
+    }
+  },
+  {
+    "id": "C22",
+    "size": {
+      "width": 1440,
+      "height": 900
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "故事",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1440,
+      "scrollports": [],
+      "width": 1440
+    }
+  },
+  {
+    "id": "C25",
+    "size": {
+      "width": 1440,
+      "height": 900
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "分镜",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1440,
+      "scrollports": [],
+      "width": 1440
+    }
+  },
+  {
+    "id": "C28",
+    "size": {
+      "width": 1440,
+      "height": 900
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "音频制作",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1440,
+      "scrollports": [
+        {
+          "client": 534,
+          "cls": "as-script-scroll",
+          "scroll": 1117
+        }
+      ],
+      "width": 1440
+    }
+  },
+  {
+    "id": "C29",
+    "size": {
+      "width": 1440,
+      "height": 900
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "音乐创作",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1440,
+      "scrollports": [],
+      "width": 1440
+    }
+  },
+  {
+    "id": "C04",
+    "size": {
+      "width": 1440,
+      "height": 900
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "任务",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1440,
+      "scrollports": [],
+      "width": 1440
+    }
+  },
+  {
+    "id": "C02",
+    "size": {
+      "width": 1440,
+      "height": 900
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "请现在创建一个名为“10-10 真实模型创建续作…",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1440,
+      "scrollports": [
+        {
+          "client": 900,
+          "cls": "agent-message-list",
+          "scroll": 1354
+        }
+      ],
+      "width": 1440
+    }
+  },
+  {
+    "id": "C09",
+    "size": {
+      "width": 1440,
+      "height": 900
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "UI 验收 · 创作身份",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1440,
+      "scrollports": [],
+      "width": 1440
+    }
+  },
+  {
+    "id": "C06",
+    "size": {
+      "width": 1440,
+      "height": 900
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "角色",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1440,
+      "scrollports": [
+        {
+          "client": 900,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 932
+        }
+      ],
+      "width": 1440
+    }
+  },
+  {
+    "id": "C30",
+    "size": {
+      "width": 1440,
+      "height": 900
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "项目记忆",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1440,
+      "scrollports": [],
+      "width": 1440
+    }
+  },
+  {
+    "id": "C08",
+    "size": {
+      "width": 1440,
+      "height": 900
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "连接与模型",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1440,
+      "scrollports": [],
+      "width": 1440
+    }
+  },
+  {
+    "id": "C11",
+    "size": {
+      "width": 1280,
+      "height": 720
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "项目",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [
+        {
+          "client": 720,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 1005
+        }
+      ],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C05",
+    "size": {
+      "width": 1280,
+      "height": 720
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "素材库",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [
+        {
+          "client": 720,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 745
+        }
+      ],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C22",
+    "size": {
+      "width": 1280,
+      "height": 720
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "故事",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [
+        {
+          "client": 676,
+          "cls": "app-scroll h-full overflow-auto",
+          "scroll": 768
+        }
+      ],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C25",
+    "size": {
+      "width": 1280,
+      "height": 720
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "分镜",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C28",
+    "size": {
+      "width": 1280,
+      "height": 720
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "音频制作",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [
+        {
+          "client": 354,
+          "cls": "as-script-scroll",
+          "scroll": 1117
+        }
+      ],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C29",
+    "size": {
+      "width": 1280,
+      "height": 720
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "音乐创作",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [
+        {
+          "client": 309,
+          "cls": "mw-compose-scroll",
+          "scroll": 429
+        }
+      ],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C04",
+    "size": {
+      "width": 1280,
+      "height": 720
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "任务",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C02",
+    "size": {
+      "width": 1280,
+      "height": 720
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "请现在创建一个名为“10-10 真实模型创建续作…",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C09",
+    "size": {
+      "width": 1280,
+      "height": 720
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "UI 验收 · 创作身份",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [
+        {
+          "client": 720,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 746
+        }
+      ],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C06",
+    "size": {
+      "width": 1280,
+      "height": 720
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "角色",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [
+        {
+          "client": 720,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 752
+        }
+      ],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C30",
+    "size": {
+      "width": 1280,
+      "height": 720
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "项目记忆",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C08",
+    "size": {
+      "width": 1280,
+      "height": 720
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "连接与模型",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C11",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "项目",
+          "weight": "600"
+        }
+      ],
+      "nav": 64,
+      "root": 1024,
+      "scrollports": [
+        {
+          "client": 640,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 1057
+        }
+      ],
+      "width": 1024
+    }
+  },
+  {
+    "id": "C05",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "素材库",
+          "weight": "600"
+        }
+      ],
+      "nav": 64,
+      "root": 1024,
+      "scrollports": [
+        {
+          "client": 640,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 745
+        }
+      ],
+      "width": 1024
+    }
+  },
+  {
+    "id": "C22",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "故事",
+          "weight": "600"
+        }
+      ],
+      "nav": 64,
+      "root": 1024,
+      "scrollports": [
+        {
+          "client": 596,
+          "cls": "app-scroll h-full overflow-auto",
+          "scroll": 1212
+        }
+      ],
+      "width": 1024
+    }
+  },
+  {
+    "id": "C25",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "分镜",
+          "weight": "600"
+        }
+      ],
+      "nav": 64,
+      "root": 1024,
+      "scrollports": [],
+      "width": 1024
+    }
+  },
+  {
+    "id": "C28",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "音频制作",
+          "weight": "600"
+        }
+      ],
+      "nav": 64,
+      "root": 1024,
+      "scrollports": [
+        {
+          "client": 274,
+          "cls": "as-script-scroll",
+          "scroll": 1117
+        }
+      ],
+      "width": 1024
+    }
+  },
+  {
+    "id": "C29",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "音乐创作",
+          "weight": "600"
+        }
+      ],
+      "nav": 64,
+      "root": 1024,
+      "scrollports": [
+        {
+          "client": 229,
+          "cls": "mw-compose-scroll",
+          "scroll": 429
+        }
+      ],
+      "width": 1024
+    }
+  },
+  {
+    "id": "C04",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "任务",
+          "weight": "600"
+        }
+      ],
+      "nav": 64,
+      "root": 1024,
+      "scrollports": [],
+      "width": 1024
+    }
+  },
+  {
+    "id": "C02",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "请现在创建一个名为“10-10 真实模型创建续作…",
+          "weight": "600"
+        }
+      ],
+      "nav": 64,
+      "root": 1024,
+      "scrollports": [
+        {
+          "client": 640,
+          "cls": "agent-message-list",
+          "scroll": 1376
+        }
+      ],
+      "width": 1024
+    }
+  },
+  {
+    "id": "C09",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "UI 验收 · 创作身份",
+          "weight": "600"
+        }
+      ],
+      "nav": 64,
+      "root": 1024,
+      "scrollports": [
+        {
+          "client": 640,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 746
+        }
+      ],
+      "width": 1024
+    }
+  },
+  {
+    "id": "C06",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "角色",
+          "weight": "600"
+        }
+      ],
+      "nav": 64,
+      "root": 1024,
+      "scrollports": [
+        {
+          "client": 640,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 704
+        }
+      ],
+      "width": 1024
+    }
+  },
+  {
+    "id": "C30",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "项目记忆",
+          "weight": "600"
+        }
+      ],
+      "nav": 64,
+      "root": 1024,
+      "scrollports": [],
+      "width": 1024
+    }
+  },
+  {
+    "id": "C08",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "连接与模型",
+          "weight": "600"
+        }
+      ],
+      "nav": 64,
+      "root": 1024,
+      "scrollports": [
+        {
+          "client": 640,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 682
+        }
+      ],
+      "width": 1024
+    }
+  },
+  {
+    "id": "C11",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "项目",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [
+        {
+          "client": 600,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 1005
+        }
+      ],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C05",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "素材库",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [
+        {
+          "client": 600,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 745
+        }
+      ],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C22",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "故事",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [
+        {
+          "client": 556,
+          "cls": "app-scroll h-full overflow-auto",
+          "scroll": 768
+        }
+      ],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C25",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "分镜",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C28",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "音频制作",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [
+        {
+          "client": 234,
+          "cls": "as-script-scroll",
+          "scroll": 1117
+        }
+      ],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C29",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "音乐创作",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [
+        {
+          "client": 189,
+          "cls": "mw-compose-scroll",
+          "scroll": 429
+        }
+      ],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C04",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "任务",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [
+        {
+          "client": 600,
+          "cls": "agent-task-board",
+          "scroll": 635
+        }
+      ],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C02",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "请现在创建一个名为“10-10 真实模型创建续作…",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [
+        {
+          "client": 600,
+          "cls": "agent-message-list",
+          "scroll": 1327
+        }
+      ],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C09",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "UI 验收 · 创作身份",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [
+        {
+          "client": 600,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 746
+        }
+      ],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C06",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "角色",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [
+        {
+          "client": 600,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 704
+        }
+      ],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C30",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "项目记忆",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C08",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "24px",
+          "text": "连接与模型",
+          "weight": "600"
+        }
+      ],
+      "nav": 176,
+      "root": 1280,
+      "scrollports": [
+        {
+          "client": 600,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 682
+        }
+      ],
+      "width": 1280
+    }
+  },
+  {
+    "id": "C11",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "项目",
+          "weight": "600"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "scrollports": [
+        {
+          "client": 796,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 1585
+        }
+      ],
+      "width": 390
+    }
+  },
+  {
+    "id": "C05",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "素材库",
+          "weight": "600"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "scrollports": [
+        {
+          "client": 796,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 812
+        }
+      ],
+      "width": 390
+    }
+  },
+  {
+    "id": "C22",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "故事",
+          "weight": "600"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "scrollports": [
+        {
+          "client": 719,
+          "cls": "app-scroll h-full overflow-auto",
+          "scroll": 1228
+        }
+      ],
+      "width": 390
+    }
+  },
+  {
+    "id": "C25",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "分镜",
+          "weight": "600"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "scrollports": [],
+      "width": 390
+    }
+  },
+  {
+    "id": "C28",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "音频制作",
+          "weight": "600"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "scrollports": [
+        {
+          "client": 447,
+          "cls": "as-script-scroll",
+          "scroll": 1175
+        }
+      ],
+      "width": 390
+    }
+  },
+  {
+    "id": "C29",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "音乐创作",
+          "weight": "600"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "scrollports": [
+        {
+          "client": 311,
+          "cls": "mw-compose-scroll",
+          "scroll": 425
+        }
+      ],
+      "width": 390
+    }
+  },
+  {
+    "id": "C04",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "任务",
+          "weight": "600"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "scrollports": [],
+      "width": 390
+    }
+  },
+  {
+    "id": "C02",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "请现在创建一个名为“10-10 真实模型创建续作…",
+          "weight": "600"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "scrollports": [
+        {
+          "client": 844,
+          "cls": "agent-message-list",
+          "scroll": 1672
+        }
+      ],
+      "width": 390
+    }
+  },
+  {
+    "id": "C09",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "UI 验收 · 创作身份",
+          "weight": "600"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "scrollports": [
+        {
+          "client": 796,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 1155
+        }
+      ],
+      "width": 390
+    }
+  },
+  {
+    "id": "C06",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "角色",
+          "weight": "600"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "scrollports": [
+        {
+          "client": 796,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 1238
+        }
+      ],
+      "width": 390
+    }
+  },
+  {
+    "id": "C30",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "项目记忆",
+          "weight": "600"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "scrollports": [],
+      "width": 390
+    }
+  },
+  {
+    "id": "C08",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "heading": [
+        {
+          "size": "20px",
+          "text": "连接与模型",
+          "weight": "600"
+        }
+      ],
+      "nav": 0,
+      "root": 390,
+      "scrollports": [
+        {
+          "client": 796,
+          "cls": "app-frame-content app-scroll relative overflow-auto",
+          "scroll": 1100
+        }
+      ],
+      "width": 390
+    }
+  }
+]

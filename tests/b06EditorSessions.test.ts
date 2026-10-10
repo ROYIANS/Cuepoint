@@ -60,11 +60,12 @@ import * as repoConnectors from "@/db/connectors";
 import * as connectors from "@/lib/ai/connectors";
 import {ConnectorsPage} from "@/components/studio/ConnectorsPage";
 import {StoryPage} from "@/components/story/StoryPage";
+import {PageHeader} from "@/components/layout/PageLayout";
 import {Dialog, DialogContent} from "@/components/ui/dialog";
 import {DraftStatus} from "@/components/ui/draft-status";
 import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
-import type {Episode} from "@/domain/types";
+import type {ConnectorConfig, Episode} from "@/domain/types";
 
 type Node = ReactElement<Record<string, unknown>>;
 const hosts: Host[] = [];
@@ -81,7 +82,13 @@ function replay(host: Host) {
 function nodes(tree: unknown): Node[] {
     if (Array.isArray(tree)) return tree.flatMap(nodes);
     if (!tree || typeof tree !== "object" || !("props" in tree)) return [];
-    const node = tree as Node; return [node, ...nodes(node.props.children)];
+    const node = tree as Node;
+    // Render the actual stateless header so controls in its actions/back slots
+    // remain visible to this shallow host, just as children already are.
+    const children = node.type === PageHeader
+        ? PageHeader(node.props as Parameters<typeof PageHeader>[0])
+        : node.props.children;
+    return [node, ...nodes(children)];
 }
 function draw(host: Host, run: () => unknown) {
     runtime.active = host; host.cursor = 0; host.queryIndex = 0;
@@ -99,8 +106,10 @@ function deferred<T>() {
     const promise = new Promise<T>((yes, no) => {resolve = yes; reject = no;}); return {promise, resolve, reject};
 }
 async function settle() {for (let i = 0; i < 8; i++) await Promise.resolve();}
-function connectorUI(configs: unknown[] = []) {
-    const host = mount([configs]); const render = () => draw(host, () => ConnectorsPage());
+function connectorUI(configs: ConnectorConfig[] = []) {
+    // Match the production live-query result, which also has loading/error
+    // states; a raw array would silently open installed connections as new.
+    const host = mount([{connectors: configs}]); const render = () => draw(host, () => ConnectorsPage());
     const cards = render().filter(node => text(node).trim() === "安装" || text(node) === "编辑");
     const open = (index = 0) => {click(cards[index]); return render();};
     const close = (tree = render()) => (tree.find(node => node.type === Dialog)!.props.onOpenChange as (open: boolean) => void)(false);

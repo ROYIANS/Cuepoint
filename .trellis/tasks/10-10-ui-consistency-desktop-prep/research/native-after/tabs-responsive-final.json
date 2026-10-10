@@ -1,0 +1,172 @@
+[
+  {
+    "size": {
+      "width": 1440,
+      "height": 900
+    },
+    "metrics": {
+      "root": 1440,
+      "tabs": [
+        {
+          "background": "rgb(32, 32, 32)",
+          "border": "0px",
+          "h": 32,
+          "selected": "true",
+          "shadow": "none",
+          "text": "媒体与资料",
+          "w": 116,
+          "x": 202,
+          "y": 84
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "h": 32,
+          "selected": "false",
+          "shadow": "none",
+          "text": "创作设定",
+          "w": 102,
+          "x": 322,
+          "y": 84
+        }
+      ],
+      "width": 1440
+    }
+  },
+  {
+    "size": {
+      "width": 1280,
+      "height": 720
+    },
+    "metrics": {
+      "root": 1280,
+      "tabs": [
+        {
+          "background": "rgb(32, 32, 32)",
+          "border": "0px",
+          "h": 32,
+          "selected": "true",
+          "shadow": "none",
+          "text": "媒体与资料",
+          "w": 116,
+          "x": 202,
+          "y": 84
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "h": 32,
+          "selected": "false",
+          "shadow": "none",
+          "text": "创作设定",
+          "w": 102,
+          "x": 322,
+          "y": 84
+        }
+      ],
+      "width": 1280
+    }
+  },
+  {
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "root": 1024,
+      "tabs": [
+        {
+          "background": "rgb(32, 32, 32)",
+          "border": "0px",
+          "h": 32,
+          "selected": "true",
+          "shadow": "none",
+          "text": "媒体与资料",
+          "w": 116,
+          "x": 90,
+          "y": 84
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "h": 32,
+          "selected": "false",
+          "shadow": "none",
+          "text": "创作设定",
+          "w": 102,
+          "x": 210,
+          "y": 84
+        }
+      ],
+      "width": 1024
+    }
+  },
+  {
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "root": 1280,
+      "tabs": [
+        {
+          "background": "rgb(32, 32, 32)",
+          "border": "0px",
+          "h": 32,
+          "selected": "true",
+          "shadow": "none",
+          "text": "媒体与资料",
+          "w": 116,
+          "x": 202,
+          "y": 84
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "h": 32,
+          "selected": "false",
+          "shadow": "none",
+          "text": "创作设定",
+          "w": 102,
+          "x": 322,
+          "y": 84
+        }
+      ],
+      "width": 1280
+    }
+  },
+  {
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "root": 390,
+      "tabs": [
+        {
+          "background": "rgb(32, 32, 32)",
+          "border": "0px",
+          "h": 32,
+          "selected": "true",
+          "shadow": "none",
+          "text": "媒体与资料",
+          "w": 116,
+          "x": 18,
+          "y": 120
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "0px",
+          "h": 32,
+          "selected": "false",
+          "shadow": "none",
+          "text": "创作设定",
+          "w": 102,
+          "x": 138,
+          "y": 120
+        }
+      ],
+      "width": 390
+    }
+  }
+]

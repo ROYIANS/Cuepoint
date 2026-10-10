@@ -358,6 +358,7 @@ export function FloatingComposer({
                     placeholder={blocked ? blockedReason ?? "重新打开任务后可继续对话" : projectRequired ? "先选择项目，再描述你想完成的事…" : surface === "home" && chatMode === "task" ? "描述你想完成的事，与助手一起明确需求…" : "提问、创建内容或启动任务"}
                     autoSize={expanded ? false : {minRows: large ? 3 : 2, maxRows: 10}}
                     className="agent-composer-input"
+                    aria-label="消息内容"
                     onChange={(event) => onChange(event.target.value)}
                     onCompositionStart={() => {
                         composing.current = true;
@@ -397,6 +398,7 @@ export function FloatingComposer({
                                           onLibrary={() => openReferenceAction("library")}/>
                         {detail ? <button type="button" className="agent-chip agent-control agent-control-icon"
                                           aria-label={expanded ? "退出全屏编辑" : "展开编辑器"}
+                                          aria-expanded={expanded}
                                           onClick={() => onExpandedChange?.(!expanded)}>
                             {expanded ? <Minimize2 size={17} aria-hidden/> : <Expand size={17} aria-hidden/>}
                         </button> : null}
@@ -424,6 +426,7 @@ export function FloatingComposer({
                         {detail ? <button type="button"
                                           className={`agent-chip agent-control agent-control-icon agent-voice-button${listening ? " is-active" : ""}`}
                                           aria-label={listening ? "停止语音输入" : "语音输入"}
+                                          aria-pressed={listening}
                                           onClick={toggleVoiceInput} disabled={sending}
                                           title={listening ? "停止语音输入" : "语音输入"}><Mic size={17} aria-hidden/>
                         </button> : null}

@@ -12,12 +12,12 @@
     align-items: center;
     gap: 12px;
     padding: 16px 0;
-    border-block: 1px solid #ffffff14;
+    border-block: 1px solid var(--border);
 }
 
 .agent-batch-strip > svg {
     flex-shrink: 0;
-    color: #a3a3a3;
+    color: var(--muted-foreground);
 }
 
 .agent-batch-strip-copy {
@@ -37,7 +37,7 @@
 }
 
 .agent-batch-strip-copy span, .agent-batch-state {
-    color: #999;
+    color: var(--muted-foreground);
     font-size: 12px;
 }
 
@@ -57,7 +57,7 @@
     align-items: center;
     min-height: 36px;
     gap: 4px;
-    color: #e5e5e5;
+    color: var(--foreground);
     font-size: 12px;
 }
 
@@ -77,14 +77,14 @@
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
-    width: min(960px, calc(100% - 48px));
-    max-height: min(880px, calc(100dvh - 64px));
+    width: min(960px, calc(100% - 32px));
+    max-height: min(880px, calc(100dvh - 32px));
     min-width: 0;
     overflow: hidden;
-    background: #161616;
-    color: #e5e5e5;
-    border: 1px solid #ffffff1c;
-    border-radius: 16px;
+    background: var(--surface-elevated);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     box-shadow: 0 24px 96px #0008;
     font-size: 14px;
     line-height: 1.5;
@@ -107,19 +107,19 @@
     display: block;
     margin-bottom: 8px;
     font-size: 12px;
-    color: #999;
+    color: var(--muted-foreground);
 }
 
 .agent-batch-header h2 {
     margin: 0 0 8px;
     font-size: 20px;
-    font-weight: 550;
+    font-weight: 600;
     overflow-wrap: anywhere;
 }
 
 .agent-batch-header p {
     font-size: 12px;
-    color: #999;
+    color: var(--muted-foreground);
 }
 
 .agent-batch-icon {
@@ -130,7 +130,7 @@
     width: 36px;
     height: 36px;
     border-radius: 6px;
-    color: #aaa;
+    color: var(--muted-foreground);
     cursor: pointer;
 }
 
@@ -148,7 +148,7 @@
 }
 
 .agent-batch-dialog button:focus-visible, .agent-batch-open:focus-visible, .agent-batch-dialog summary:focus-visible, .agent-batch-dialog input:focus-visible {
-    outline: 2px solid #d4d4d4;
+    outline: 2px solid var(--ring);
     outline-offset: 3px;
 }
 
@@ -167,17 +167,17 @@
     justify-content: space-between;
     gap: 12px;
     padding: 12px 0;
-    color: #999;
+    color: var(--muted-foreground);
     font-size: 12px;
 }
 
 .agent-batch-comparison-heading strong {
-    color: #e5e5e5;
+    color: var(--foreground);
     font-size: 14px;
 }
 
 .agent-batch-draft-row {
-    border-top: 1px solid #ffffff12;
+    border-top: 1px solid var(--border);
 }
 
 .agent-batch-draft-row[data-included="false"] .agent-batch-config-toggle {
@@ -201,7 +201,7 @@
 .agent-batch-include input {
     width: 16px;
     height: 16px;
-    accent-color: #e5e5e5;
+    accent-color: var(--foreground);
     cursor: pointer;
 }
 
@@ -227,21 +227,21 @@
 
 .agent-batch-config-toggle > span {
     font-size: 12px;
-    color: #888;
+    color: var(--muted-foreground);
     overflow-wrap: anywhere;
 }
 
 .agent-batch-letter {
     font-size: 12px;
     font-weight: 400;
-    color: #aaa;
+    color: var(--muted-foreground);
 }
 
 .agent-batch-row-actions {
     display: flex;
     align-items: center;
     gap: 4px;
-    color: #777;
+    color: var(--muted-foreground);
 }
 
 .agent-batch-chevron-open {
@@ -257,7 +257,7 @@
     align-items: center;
     gap: 4px;
     font-size: 12px;
-    color: #bbb;
+    color: var(--muted-foreground);
 }
 
 .agent-batch-target {
@@ -267,7 +267,7 @@
 .agent-batch-note {
     font-size: 12px;
     line-height: 1.65;
-    color: #999;
+    color: var(--muted-foreground);
     overflow-wrap: anywhere;
 }
 
@@ -308,20 +308,20 @@
     display: flex;
     flex-wrap: wrap;
     gap: 16px 24px;
-    border-block: 1px solid #ffffff12;
+    border-block: 1px solid var(--border);
     padding: 16px 0;
     margin-bottom: 16px;
 }
 
 .agent-batch-metrics span {
     font-size: 12px;
-    color: #999;
+    color: var(--muted-foreground);
 }
 
 .agent-batch-metrics strong {
     font-size: 20px;
     font-weight: 400;
-    color: #eee;
+    color: var(--foreground);
     margin-right: 4px;
     font-variant-numeric: tabular-nums;
 }
@@ -339,7 +339,7 @@
     gap: 12px;
     min-height: 36px;
     padding: 8px 12px;
-    color: #aaa;
+    color: var(--muted-foreground);
     border-radius: 6px;
     text-align: left;
     font-size: 12px;
@@ -349,11 +349,11 @@
 
 .agent-batch-targets button[aria-pressed="true"] {
     background: #ffffff0d;
-    color: #fff;
+    color: var(--foreground);
 }
 
 .agent-batch-targets button span {
-    color: #777;
+    color: var(--muted-foreground);
     flex-shrink: 0;
 }
 
@@ -374,7 +374,7 @@
 }
 
 .agent-batch-candidate[data-selected="true"] {
-    border-top-color: #ddd;
+    border-top-color: var(--foreground);
 }
 
 .agent-batch-candidate-heading {
@@ -393,7 +393,7 @@
 }
 
 .agent-batch-candidate-heading > span {
-    color: #999;
+    color: var(--muted-foreground);
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -438,18 +438,18 @@
     gap: 8px;
     padding: 20px 0;
     min-height: 80px;
-    color: #999;
+    color: var(--muted-foreground);
     font-size: 12px;
 }
 
 .agent-batch-candidate-model {
     font-size: 12px;
-    color: #ccc;
+    color: var(--foreground);
     overflow-wrap: anywhere;
 }
 
 .agent-batch-configuration {
-    color: #888;
+    color: var(--muted-foreground);
     font-size: 12px;
 }
 
@@ -492,9 +492,9 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    border-top: 1px solid #ffffff14;
+    border-top: 1px solid var(--border);
     padding: 20px 24px;
-    background: #191919;
+    background: var(--surface-panel);
 }
 
 .agent-batch-cost {
@@ -510,7 +510,7 @@
 
 .agent-batch-cost span {
     font-size: 12px;
-    color: #999;
+    color: var(--muted-foreground);
 }
 
 .agent-batch-footer-actions {
@@ -523,7 +523,7 @@
 
 .agent-batch-text-action {
     font-size: 12px;
-    color: #aaa;
+    color: var(--muted-foreground);
     padding: 8px;
 }
 
@@ -539,7 +539,7 @@
     align-items: center;
     justify-content: center;
     background: #0b0b0b;
-    color: #eee;
+    color: var(--foreground);
     border-radius: 8px;
     pointer-events: auto;
 }
@@ -655,7 +655,7 @@
 .agent-batch-references {
     margin-top: 12px;
     list-style: none;
-    color: #999;
+    color: var(--muted-foreground);
     font-size: 12px;
 }
 
@@ -667,7 +667,7 @@
 
 .agent-batch-references li span:first-child {
     flex-shrink: 0;
-    color: #bbb;
+    color: var(--muted-foreground);
 }
 
 .agent-batch-references li span:last-child {
@@ -678,7 +678,7 @@
 .agent-batch-config-summary {
     display: block;
     font-size: 12px;
-    color: #999;
+    color: var(--muted-foreground);
     overflow-wrap: anywhere;
     line-height: 1.65;
 }

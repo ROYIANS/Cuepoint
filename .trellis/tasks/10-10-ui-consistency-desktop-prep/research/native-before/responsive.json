@@ -1,0 +1,291 @@
+[
+  {
+    "id": "C11",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "bodyWidth": 1024,
+      "scrollWidth": 1024,
+      "width": 1024
+    }
+  },
+  {
+    "id": "C05",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "bodyWidth": 1024,
+      "scrollWidth": 1024,
+      "width": 1024
+    }
+  },
+  {
+    "id": "C22",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "bodyWidth": 1024,
+      "scrollWidth": 1024,
+      "width": 1024
+    }
+  },
+  {
+    "id": "C25",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "bodyWidth": 1024,
+      "scrollWidth": 1024,
+      "width": 1024
+    }
+  },
+  {
+    "id": "C28",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "bodyWidth": 1024,
+      "scrollWidth": 1024,
+      "width": 1024
+    }
+  },
+  {
+    "id": "C29",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "bodyWidth": 1024,
+      "scrollWidth": 1024,
+      "width": 1024
+    }
+  },
+  {
+    "id": "C04",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "bodyWidth": 1024,
+      "scrollWidth": 1024,
+      "width": 1024
+    }
+  },
+  {
+    "id": "C02",
+    "size": {
+      "width": 1024,
+      "height": 640
+    },
+    "metrics": {
+      "bodyWidth": 1024,
+      "scrollWidth": 1024,
+      "width": 1024
+    }
+  },
+  {
+    "id": "C11",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "bodyWidth": 1280,
+      "scrollWidth": 1280,
+      "width": 1280
+    }
+  },
+  {
+    "id": "C05",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "bodyWidth": 1280,
+      "scrollWidth": 1280,
+      "width": 1280
+    }
+  },
+  {
+    "id": "C22",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "bodyWidth": 1280,
+      "scrollWidth": 1280,
+      "width": 1280
+    }
+  },
+  {
+    "id": "C25",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "bodyWidth": 1280,
+      "scrollWidth": 1280,
+      "width": 1280
+    }
+  },
+  {
+    "id": "C28",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "bodyWidth": 1280,
+      "scrollWidth": 1280,
+      "width": 1280
+    }
+  },
+  {
+    "id": "C29",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "bodyWidth": 1280,
+      "scrollWidth": 1280,
+      "width": 1280
+    }
+  },
+  {
+    "id": "C04",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "bodyWidth": 1280,
+      "scrollWidth": 1280,
+      "width": 1280
+    }
+  },
+  {
+    "id": "C02",
+    "size": {
+      "width": 1280,
+      "height": 600
+    },
+    "metrics": {
+      "bodyWidth": 1280,
+      "scrollWidth": 1280,
+      "width": 1280
+    }
+  },
+  {
+    "id": "C11",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "bodyWidth": 390,
+      "scrollWidth": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C05",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "bodyWidth": 390,
+      "scrollWidth": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C22",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "bodyWidth": 390,
+      "scrollWidth": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C25",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "bodyWidth": 390,
+      "scrollWidth": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C28",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "bodyWidth": 390,
+      "scrollWidth": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C29",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "note": "Original narrow creator tab has no visible h1.",
+    "metrics": {
+      "bodyWidth": 390,
+      "scrollWidth": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C04",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "bodyWidth": 390,
+      "scrollWidth": 390,
+      "width": 390
+    }
+  },
+  {
+    "id": "C02",
+    "size": {
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "bodyWidth": 390,
+      "scrollWidth": 390,
+      "width": 390
+    }
+  }
+]

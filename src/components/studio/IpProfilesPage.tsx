@@ -5,7 +5,6 @@ import {
     Archive,
     ArrowLeft,
     ArrowUpRight,
-    Fingerprint,
     FolderOpen,
     Image,
     Layers3,
@@ -22,8 +21,10 @@ import {setIpArchived} from "@/db/ipProfiles";
 import type {IpProfile} from "@/domain/materials";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
+import {PageContent, PageHeader, PageState, PageToolbar} from "@/components/layout/PageLayout";
 import {
     AlertDialog,
+    AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
     AlertDialogFooter,
@@ -31,6 +32,7 @@ import {
     AlertDialogTitle
 } from "@/components/ui/alert-dialog";
 import {IP_TEXT_FIELDS, IpProfileEditor} from "./IpProfileEditor";
+import {PROJECT_KINDS} from "./projectKinds";
 import "./ipProfiles.css";
 
 function errorMessage(cause: unknown) {
@@ -61,12 +63,10 @@ export function IpProfilesPage() {
     const profiles = view?.profiles ?? [];
     const filtered = profiles.filter(profile => profile.archived === archived && `${profile.name} ${profile.positioning} ${profile.topics}`.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()));
     const projectIds = useMemo(() => new Set(view?.projects?.map(project => project.id) ?? []), [view?.projects]);
-    return <main className="ip-page">
-        <header className="ip-page-header">
-            <div><span className="ip-eyebrow">创作身份</span><h1>我的 IP</h1>
-                <p>把定位、表达与参考留在这里，让每一件作品都有来处。</p></div>
-            <Button onClick={() => setCreateOpen(true)}><Plus aria-hidden/>新建 IP</Button></header>
-        <div className="ip-library-toolbar">
+    return <PageContent role="main" mode="collection" className="ip-page">
+        <PageHeader title="IP" description="管理创作定位、表达偏好与关联项目。"
+                    actions={<Button onClick={() => setCreateOpen(true)}><Plus aria-hidden/>新建 IP</Button>}/>
+        <PageToolbar className="ip-library-toolbar">
             <div className="ip-filter-tabs" role="group" aria-label="IP 状态"><Button variant="ghost" type="button"
                                                                                       aria-pressed={!archived}
                                                                                       onClick={() => setArchived(false)}>使用中 <span>{profiles.filter(profile => !profile.archived).length}</span></Button><Button
@@ -78,14 +78,13 @@ export function IpProfilesPage() {
                                                                              value={search}
                                                                              onChange={event => setSearch(event.target.value)}/>
             </div>
-        </div>
-        {!view ? <p className="ip-loading" role="status">正在读取 IP 档案…</p> : view.error ?
-            <p className="ip-error" role="alert">{view.error}</p> : !filtered.length ?
-                <section className="ip-empty"><Fingerprint size={40} strokeWidth={1} aria-hidden/>
-                    <h2>{search ? "没有找到这个 IP" : archived ? "暂无归档的 IP" : "从你想表达的自己开始"}</h2>
-                    <p>{search ? "试试其他名称或主题词。" : archived ? "归档后的档案会保留原有关联，也可以随时恢复。" : "一个人设、一个品牌，或者一个持续讲述的故事。先写下名字，再慢慢完善。"}</p>{!search && !archived &&
-                        <Button variant="outline" onClick={() => setCreateOpen(true)}><Plus aria-hidden/>建立第一个
-                            IP</Button>}</section> : <div className="ip-profile-grid">{filtered.map(profile => {
+        </PageToolbar>
+        {!view ? <PageState kind="loading" title="正在读取 IP 档案…"/> : view.error ?
+            <PageState kind="error" title="暂时无法读取 IP" description={view.error}/> : !filtered.length ?
+                <PageState title={search.trim() ? "没有匹配的 IP" : archived ? "暂无归档的 IP" : "暂无 IP"}
+                           description={search.trim() ? "试试其他名称或主题词。" : archived ? "归档后的档案会保留原有关联，也可以随时恢复。" : "新建 IP，记录定位与创作偏好，再关联项目和素材。"}
+                           action={!search.trim() && !archived ? <Button variant="outline" onClick={() => setCreateOpen(true)}><Plus aria-hidden/>新建 IP</Button> : undefined}/>
+                : <div className="ip-profile-grid">{filtered.map(profile => {
                     const projectCount = view.links?.filter(link => link.ipId === profile.id && projectIds.has(link.projectId)).length ?? 0;
                     const materialCount = view.materials?.filter(material => material.scope.kind === "ip" && material.scope.id === profile.id && !material.archived).length ?? 0;
                     return <Link key={profile.id} to="/ips/$ipId" params={{ipId: profile.id}}
@@ -107,7 +106,7 @@ export function IpProfilesPage() {
             setCreateOpen(false);
             void navigate({to: "/ips/$ipId", params: {ipId: id}});
         }}/>}
-    </main>;
+    </PageContent>;
 }
 
 export function IpProfilePage({ipId}: { ipId: string }) {
@@ -124,34 +123,28 @@ export function IpProfilePage({ipId}: { ipId: string }) {
             return {ipId, error: errorMessage(cause)};
         }
     }, [ipId]);
-    if (!view || view.ipId !== ipId) return <main className="ip-page"><p className="ip-loading" role="status">正在读取
-        IP 档案…</p></main>;
-    if (view.error || !view.profile) return <main className="ip-page"><Link to="/ips" className="ip-back"><ArrowLeft
-        size={16} aria-hidden/>全部 IP</Link>
-        <section className="ip-empty"><h1>{view.error ? "暂时无法读取档案" : "找不到这个 IP"}</h1><p
-            role={view.error ? "alert" : undefined}>{view.error ?? "这个档案可能已不可用，请返回列表查看。"}</p></section>
-    </main>;
+    if (!view || view.ipId !== ipId) return <PageContent role="main" mode="detail" className="ip-page"><PageState kind="loading" title="正在读取 IP 档案…"/></PageContent>;
+    if (view.error || !view.profile) return <PageContent role="main" mode="detail" className="ip-page">
+        <PageHeader title="IP 档案" back={<Link to="/ips" className="ip-back"><ArrowLeft size={16} aria-hidden/>全部 IP</Link>}/>
+        <PageState kind={view.error ? "error" : "missing"} title={view.error ? "暂时无法读取档案" : "找不到这个 IP"}
+                   description={view.error ?? "这个档案可能已不可用，请返回列表查看。"}/>
+    </PageContent>;
     const {profile, projects, materials} = view;
-    return <main className="ip-page ip-detail-page">
-        <Link to="/ips" className="ip-back"><ArrowLeft size={16} aria-hidden/>全部 IP</Link>
-        <header className="ip-detail-header"><span className="ip-monogram ip-detail-monogram"
-                                                   aria-hidden>{initials(profile.name)}</span>
-            <div className="ip-detail-heading"><span
-                className="ip-eyebrow">{profile.archived ? "已归档的创作身份" : "IP 档案"}</span><h1>{profile.name}</h1>
-                <p>{profile.positioning || "还没有填写定位，先记录你希望被记住的方式。"}</p></div>
-            <div className="ip-detail-actions">{!profile.archived &&
+    return <PageContent role="main" mode="detail" className="ip-page ip-detail-page">
+        <PageHeader title={profile.name} description={<span className="whitespace-pre-wrap">{profile.positioning || "还没有填写定位，可在档案中补充。"}</span>}
+                    back={<Link to="/ips" className="ip-back"><ArrowLeft size={16} aria-hidden/>全部 IP</Link>}
+                    actions={<div className="ip-detail-actions">{!profile.archived &&
                 <Button variant="outline" onClick={() => setEditing(profile)}><Pencil
-                    aria-hidden/>编辑档案</Button>}<IpArchiveAction profile={profile}/></div>
-        </header>
+                    aria-hidden/>编辑档案</Button>}<IpArchiveAction profile={profile}/></div>}/>
         {profile.archived && <p className="ip-archive-note"><Archive size={15} aria-hidden/>档案已归档，原有项目和素材仍保留。恢复后可继续编辑和关联新项目。
         </p>}
-        <nav className="ip-detail-tabs" aria-label="IP 内容">{([{id: "profile", label: "档案"}, {
+        <PageToolbar className="ip-detail-tabs" role="group" aria-label="IP 内容">{([{id: "profile", label: "档案"}, {
             id: "projects",
             label: "关联项目",
             count: projects?.length ?? 0
         }, {id: "materials", label: "专属素材", count: materials?.length ?? 0}] as const).map(item => <Button
             variant="ghost" key={item.id} type="button" aria-pressed={tab === item.id}
-            onClick={() => setTab(item.id)}>{item.label}{"count" in item && <span>{item.count}</span>}</Button>)}</nav>
+            onClick={() => setTab(item.id)}>{item.label}{"count" in item && <span>{item.count}</span>}</Button>)}</PageToolbar>
         {tab === "profile" && <>
             <div className="ip-detail-fields">{IP_TEXT_FIELDS.map(field => <section key={field.key}>
                 <h2>{field.label}</h2><p
@@ -161,7 +154,7 @@ export function IpProfilePage({ipId}: { ipId: string }) {
                 档案的精简摘要，完整设定按需查阅。生成仍以你确认的提示词和参数为准。</p><DerivativeEntries/></>}
         {tab === "projects" && <section className="ip-related-section">
             <div className="ip-section-heading">
-                <div><h2>这个 IP 的作品</h2><p>项目保留各自的内容与素材，可以单独编辑。</p></div>
+                <div><h2>关联项目</h2><p>项目保留各自的内容与素材，可以单独编辑。</p></div>
                 <Button asChild variant="outline"><Link to="/projects">管理项目<ArrowUpRight
                     aria-hidden/></Link></Button></div>
             {projects?.length ?
@@ -169,15 +162,14 @@ export function IpProfilePage({ipId}: { ipId: string }) {
                                                                                 params={{projectId: project.id}}><FolderOpen
                     size={20} strokeWidth={1.5} aria-hidden/>
                     <div>
-                        <strong>{project.name}</strong><span>{project.archivedAt ? "已归档 · " : ""}{project.mode === "film" ? "单片项目" : "剧集项目"} · 更新于 {dateLabel(project.updatedAt)}</span>
+                        <strong>{project.name}</strong><span>{project.archivedAt ? "已归档 · " : ""}{PROJECT_KINDS.find(kind => kind.id === (project.kind ?? "video"))?.label ?? "未知类型"} · 更新于 {dateLabel(project.updatedAt)}</span>
                     </div>
                     <ArrowUpRight size={16} aria-hidden/></Link>)}</div> :
-                <div className="ip-inline-empty"><FolderOpen size={28} strokeWidth={1.25} aria-hidden/>
-                    <h3>还没有关联项目</h3><p>在项目列表中新建项目，或为已有项目选择“{profile.name}”。</p></div>}
+                <PageState compact title="还没有关联项目" description={`在项目列表中新建项目，或为已有项目选择“${profile.name}”。`}/>}
         </section>}
         {tab === "materials" && <section className="ip-related-section">
             <div className="ip-section-heading">
-                <div><h2>专属参考与设定</h2><p>集中整理属于这个 IP 的素材，使用时为项目创建独立副本。</p></div>
+                <div><h2>专属素材</h2><p>集中整理属于这个 IP 的素材，使用时为项目创建独立副本。</p></div>
                 <Button asChild variant="outline"><Link to="/assets" search={{ip: profile.id}}>打开素材库<ArrowUpRight
                     aria-hidden/></Link></Button></div>
             <div className="ip-material-entry-grid"><Link to="/assets" search={{ip: profile.id, view: "media"}}><Image
@@ -190,13 +182,13 @@ export function IpProfilePage({ipId}: { ipId: string }) {
         </section>}
         {editing && <IpProfileEditor key={editing.id} profile={editing} onClose={() => setEditing(null)}
                                      onSaved={() => setEditing(null)}/>}
-    </main>;
+    </PageContent>;
 }
 
 function DerivativeEntries() {
     return <section className="ip-derivatives">
         <div className="ip-section-heading">
-            <div><h2>让这个 IP 拥有更多表达</h2><p>衍生创作工作区正在准备中，当前可先整理参考与设定。</p></div>
+            <div><h2>衍生创作</h2><p>衍生创作工作区正在准备中，当前可先整理参考与设定。</p></div>
         </div>
         <div>{[{icon: Image, title: "IP 形象", text: "形象图与视觉延展"}, {
             icon: Smile,
@@ -235,9 +227,9 @@ function IpArchiveAction({profile}: { profile: IpProfile }) {
                                                                                             onOpenChange={open => {
                                                                                                 if (!pending) setConfirm(open);
                                                                                             }}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>{profile.archived ? "恢复这个 IP？" : "归档这个 IP？"}</AlertDialogTitle><AlertDialogDescription>{profile.archived ? "恢复后可以继续编辑档案，并关联新的创作项目。" : "归档后不再用于新的项目关联，已有项目、素材和档案内容全部保留。之后可以随时恢复。"}</AlertDialogDescription></AlertDialogHeader>{error &&
-        <p role="alert" className="text-destructive text-sm">{error}</p>}<AlertDialogFooter><Button variant="outline"
+        <p role="alert" className="text-destructive text-sm">{error}</p>}<AlertDialogFooter><AlertDialogCancel asChild onClick={event => event.preventDefault()}><Button variant="outline"
                                                                                                     disabled={pending}
-                                                                                                    onClick={() => setConfirm(false)}>取消</Button><Button
+                                                                                                    onClick={() => setConfirm(false)}>取消</Button></AlertDialogCancel><Button
         disabled={pending} onClick={() => void change()}>{pending &&
         <LoaderCircle className="animate-spin motion-reduce:animate-none"
                       aria-hidden/>}{pending ? "正在保存…" : profile.archived ? "恢复 IP" : "确认归档"}</Button></AlertDialogFooter></AlertDialogContent></AlertDialog></>;

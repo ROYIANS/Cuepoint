@@ -1,0 +1,51 @@
+[
+  {
+    "kind": "create-dialog-escape",
+    "focus": {
+      "tag": "BUTTON",
+      "text": "新建项目"
+    }
+  },
+  {
+    "kind": "mobile-nav-escape",
+    "focus": {
+      "label": "打开导航",
+      "tag": "BUTTON"
+    }
+  },
+  {
+    "kind": "alert-archive-cancel",
+    "initial": {
+      "tag": "BUTTON",
+      "text": "归档"
+    },
+    "focus": {
+      "tag": "BUTTON",
+      "text": "归档"
+    }
+  },
+  {
+    "kind": "agent-topic-escape",
+    "focus": {
+      "label": "话题列表",
+      "tag": "DIV"
+    }
+  },
+  {
+    "kind": "archive-safe-cancel-initial-focus",
+    "focus": {
+      "tag": "BUTTON",
+      "text": "取消"
+    }
+  },
+  {
+    "check": "Agent native button Space opens topics and Escape returns focus",
+    "label": null,
+    "tag": "DIV"
+  },
+  {
+    "check": "Native topic button Space and Escape after closing animation",
+    "label": "话题列表",
+    "tag": "BUTTON"
+  }
+]

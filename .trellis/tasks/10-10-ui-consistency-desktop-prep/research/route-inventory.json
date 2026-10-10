@@ -1,0 +1,906 @@
+{
+  "query": "Enumerate every route adapter and visible page owner for whole-app UI consistency audit",
+  "scope": "internal",
+  "date": "2026-10-10",
+  "authority": "Source inspection only; native observations must be added by the main session. No browser APIs, screenshots or user data inspected by this researcher.",
+  "counts": {
+    "route_files": 47,
+    "by_classification": {
+      "provider-layout": 1,
+      "page-adapter": 25,
+      "persistent-page-selector": 3,
+      "persistent-page-host": 1,
+      "outlet-layout": 7,
+      "redirect": 8,
+      "shell-layout": 2
+    },
+    "page_adapter_routes": 25,
+    "persistent_agent_view_selectors": 3,
+    "layout_provider_shell_routes": 10,
+    "redirect_routes": 8
+  },
+  "global_workspace_guards": [
+    {
+      "file": "src/components/workspace/WorkspaceChrome.tsx:114-120",
+      "behavior": "Audio/music child paths redirect to own project home except /memory; shared asset/episode URLs remain video-only."
+    },
+    {
+      "file": "src/lib/audio/workspaceRoute.ts:2-6",
+      "behavior": "Current helper allows exact project root or /memory (optional trailing slash); leaving routes are prefix-guarded."
+    }
+  ],
+  "routes": [
+    {
+      "file": "src/routes/__root.tsx",
+      "route_id": "__root",
+      "url_pattern": "(all routes)",
+      "classification": "provider-layout",
+      "route_adapter_component": "RootLayout",
+      "page_components": [],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {
+        "provider_components": [
+          "TooltipProvider",
+          "UndoProvider",
+          "Toaster"
+        ]
+      }
+    },
+    {
+      "file": "src/routes/_studio.about.tsx",
+      "route_id": "/_studio/about",
+      "url_pattern": "/about",
+      "classification": "page-adapter",
+      "route_adapter_component": "AboutPage",
+      "page_components": [
+        {
+          "name": "AboutPage",
+          "file": "src/components/studio/AboutPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {}
+    },
+    {
+      "file": "src/routes/_studio.agent.$threadId.tsx",
+      "route_id": "/_studio/agent/$threadId",
+      "url_pattern": "/agent/$threadId",
+      "classification": "persistent-page-selector",
+      "route_adapter_component": "AgentChatThreadRoute",
+      "page_components": [
+        {
+          "name": "AgentChatPage",
+          "file": "src/components/agent/AgentChatPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed (route selector only; Agent feature audit delegated separately)",
+      "native_status": "native-pending",
+      "notes": {
+        "render": "null",
+        "visible_ui_owner": "src/routes/_studio.agent.tsx",
+        "variant": "conversation"
+      }
+    },
+    {
+      "file": "src/routes/_studio.agent.index.tsx",
+      "route_id": "/_studio/agent/",
+      "url_pattern": "/agent/",
+      "classification": "persistent-page-selector",
+      "route_adapter_component": "AgentChatIndexRoute",
+      "page_components": [
+        {
+          "name": "AgentChatPage",
+          "file": "src/components/agent/AgentChatPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed (route selector only; Agent feature audit delegated separately)",
+      "native_status": "native-pending",
+      "notes": {
+        "render": "null",
+        "visible_ui_owner": "src/routes/_studio.agent.tsx",
+        "variant": "home"
+      }
+    },
+    {
+      "file": "src/routes/_studio.agent.tasks.tsx",
+      "route_id": "/_studio/agent/tasks",
+      "url_pattern": "/agent/tasks",
+      "classification": "persistent-page-selector",
+      "route_adapter_component": "inline null",
+      "page_components": [
+        {
+          "name": "AgentChatPage",
+          "file": "src/components/agent/AgentChatPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed (route selector only; Agent feature audit delegated separately)",
+      "native_status": "native-pending",
+      "notes": {
+        "render": "null",
+        "visible_ui_owner": "src/routes/_studio.agent.tsx",
+        "variant": "tasks"
+      }
+    },
+    {
+      "file": "src/routes/_studio.agent.tsx",
+      "route_id": "/_studio/agent",
+      "url_pattern": "/agent",
+      "classification": "persistent-page-host",
+      "route_adapter_component": "AgentChatLayout",
+      "page_components": [
+        {
+          "name": "AgentChatPage",
+          "file": "src/components/agent/AgentChatPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed (route host only; Agent feature audit delegated separately)",
+      "native_status": "native-pending",
+      "notes": {
+        "view_variants": [
+          "home: /agent",
+          "conversation: /agent/$threadId",
+          "task center: /agent/tasks"
+        ],
+        "preserve": "One AgentChatPage runtime remains mounted while route changes; LobeChatTheme scoped to this host"
+      }
+    },
+    {
+      "file": "src/routes/_studio.assets.tsx",
+      "route_id": "/_studio/assets",
+      "url_pattern": "/assets",
+      "classification": "page-adapter",
+      "route_adapter_component": "MaterialRoute",
+      "page_components": [
+        {
+          "name": "MaterialLibraryPage",
+          "file": "src/components/studio/MaterialLibraryPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {
+        "search_variants": [
+          "view media/settings",
+          "scope shared/global/all",
+          "ip owner",
+          "project owner",
+          "filter active/archived/all",
+          "detail Sheet",
+          "import Dialog"
+        ]
+      }
+    },
+    {
+      "file": "src/routes/_studio.characters.$characterId.tsx",
+      "route_id": "/_studio/characters/$characterId",
+      "url_pattern": "/characters/$characterId",
+      "classification": "page-adapter",
+      "route_adapter_component": "CharacterStudioRoute",
+      "page_components": [
+        {
+          "name": "CharacterDetailPage",
+          "file": "src/components/assets/CharacterDetailPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {
+        "shared_page_group": "CharacterDetailPage",
+        "ownership_context": "studio-owned; STUDIO_LIBRARY_ID only",
+        "back_context": "studio asset list"
+      }
+    },
+    {
+      "file": "src/routes/_studio.characters.index.tsx",
+      "route_id": "/_studio/characters/",
+      "url_pattern": "/characters/",
+      "classification": "page-adapter",
+      "route_adapter_component": "CharacterLibraryPage",
+      "page_components": [
+        {
+          "name": "CharacterLibraryPage",
+          "file": "src/components/studio/AssetLibraryPages.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {}
+    },
+    {
+      "file": "src/routes/_studio.characters.tsx",
+      "route_id": "/_studio/characters",
+      "url_pattern": "/characters",
+      "classification": "outlet-layout",
+      "route_adapter_component": "inline Outlet",
+      "page_components": [],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {}
+    },
+    {
+      "file": "src/routes/_studio.connectors.tsx",
+      "route_id": "/_studio/connectors",
+      "url_pattern": "/connectors",
+      "classification": "page-adapter",
+      "route_adapter_component": "ConnectorsPage",
+      "page_components": [
+        {
+          "name": "ConnectorsPage",
+          "file": "src/components/studio/ConnectorsPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {}
+    },
+    {
+      "file": "src/routes/_studio.index.tsx",
+      "route_id": "/_studio/",
+      "url_pattern": "/",
+      "classification": "redirect",
+      "route_adapter_component": null,
+      "page_components": [],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {
+        "redirect_targets": [
+          "/agent"
+        ]
+      }
+    },
+    {
+      "file": "src/routes/_studio.ips.$ipId.tsx",
+      "route_id": "/_studio/ips/$ipId",
+      "url_pattern": "/ips/$ipId",
+      "classification": "page-adapter",
+      "route_adapter_component": "IpDetailRoute",
+      "page_components": [
+        {
+          "name": "IpProfilesPage",
+          "file": "src/components/studio/IpProfilesPage.tsx"
+        },
+        {
+          "name": "IpProfilePage",
+          "file": "src/components/studio/IpProfilesPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {}
+    },
+    {
+      "file": "src/routes/_studio.ips.index.tsx",
+      "route_id": "/_studio/ips/",
+      "url_pattern": "/ips/",
+      "classification": "page-adapter",
+      "route_adapter_component": "IpProfilesPage",
+      "page_components": [
+        {
+          "name": "IpProfilesPage",
+          "file": "src/components/studio/IpProfilesPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {}
+    },
+    {
+      "file": "src/routes/_studio.ips.tsx",
+      "route_id": "/_studio/ips",
+      "url_pattern": "/ips",
+      "classification": "outlet-layout",
+      "route_adapter_component": "Outlet",
+      "page_components": [],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {}
+    },
+    {
+      "file": "src/routes/_studio.projects.tsx",
+      "route_id": "/_studio/projects",
+      "url_pattern": "/projects",
+      "classification": "page-adapter",
+      "route_adapter_component": "ProjectGalleryPage",
+      "page_components": [
+        {
+          "name": "ProjectGalleryPage",
+          "file": "src/components/studio/ProjectGalleryPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {}
+    },
+    {
+      "file": "src/routes/_studio.props.$propId.tsx",
+      "route_id": "/_studio/props/$propId",
+      "url_pattern": "/props/$propId",
+      "classification": "page-adapter",
+      "route_adapter_component": "PropStudioRoute",
+      "page_components": [
+        {
+          "name": "PropDetailPage",
+          "file": "src/components/assets/PropDetailPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {
+        "shared_page_group": "PropDetailPage",
+        "ownership_context": "studio-owned; STUDIO_LIBRARY_ID only",
+        "back_context": "studio asset list"
+      }
+    },
+    {
+      "file": "src/routes/_studio.props.index.tsx",
+      "route_id": "/_studio/props/",
+      "url_pattern": "/props/",
+      "classification": "page-adapter",
+      "route_adapter_component": "PropLibraryPage",
+      "page_components": [
+        {
+          "name": "PropLibraryPage",
+          "file": "src/components/studio/AssetLibraryPages.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {}
+    },
+    {
+      "file": "src/routes/_studio.props.tsx",
+      "route_id": "/_studio/props",
+      "url_pattern": "/props",
+      "classification": "outlet-layout",
+      "route_adapter_component": "inline Outlet",
+      "page_components": [],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {}
+    },
+    {
+      "file": "src/routes/_studio.scenes.$sceneId.tsx",
+      "route_id": "/_studio/scenes/$sceneId",
+      "url_pattern": "/scenes/$sceneId",
+      "classification": "page-adapter",
+      "route_adapter_component": "SceneStudioRoute",
+      "page_components": [
+        {
+          "name": "SceneDetailPage",
+          "file": "src/components/assets/SceneDetailPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {
+        "shared_page_group": "SceneDetailPage",
+        "ownership_context": "studio-owned; STUDIO_LIBRARY_ID only",
+        "back_context": "studio asset list"
+      }
+    },
+    {
+      "file": "src/routes/_studio.scenes.index.tsx",
+      "route_id": "/_studio/scenes/",
+      "url_pattern": "/scenes/",
+      "classification": "page-adapter",
+      "route_adapter_component": "SceneLibraryPage",
+      "page_components": [
+        {
+          "name": "SceneLibraryPage",
+          "file": "src/components/studio/AssetLibraryPages.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {}
+    },
+    {
+      "file": "src/routes/_studio.scenes.tsx",
+      "route_id": "/_studio/scenes",
+      "url_pattern": "/scenes",
+      "classification": "outlet-layout",
+      "route_adapter_component": "inline Outlet",
+      "page_components": [],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {}
+    },
+    {
+      "file": "src/routes/_studio.settings.tsx",
+      "route_id": "/_studio/settings",
+      "url_pattern": "/settings",
+      "classification": "redirect",
+      "route_adapter_component": null,
+      "page_components": [],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {
+        "redirect_targets": [
+          "/about"
+        ]
+      }
+    },
+    {
+      "file": "src/routes/_studio.styles.$styleId.tsx",
+      "route_id": "/_studio/styles/$styleId",
+      "url_pattern": "/styles/$styleId",
+      "classification": "page-adapter",
+      "route_adapter_component": "StyleStudioRoute",
+      "page_components": [
+        {
+          "name": "StyleDetailPage",
+          "file": "src/components/assets/StyleDetailPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {
+        "shared_page_group": "StyleDetailPage",
+        "ownership_context": "studio-owned; STUDIO_LIBRARY_ID only",
+        "back_context": "studio asset list"
+      }
+    },
+    {
+      "file": "src/routes/_studio.styles.index.tsx",
+      "route_id": "/_studio/styles/",
+      "url_pattern": "/styles/",
+      "classification": "page-adapter",
+      "route_adapter_component": "StyleLibraryPage",
+      "page_components": [
+        {
+          "name": "StyleLibraryPage",
+          "file": "src/components/studio/AssetLibraryPages.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {}
+    },
+    {
+      "file": "src/routes/_studio.styles.tsx",
+      "route_id": "/_studio/styles",
+      "url_pattern": "/styles",
+      "classification": "outlet-layout",
+      "route_adapter_component": "inline Outlet",
+      "page_components": [],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {}
+    },
+    {
+      "file": "src/routes/_studio.tsx",
+      "route_id": "/_studio",
+      "url_pattern": "(pathless studio layout)",
+      "classification": "shell-layout",
+      "route_adapter_component": "StudioLayout",
+      "page_components": [],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {
+        "shell_component": {
+          "name": "StudioShell",
+          "file": "src/components/studio/StudioShell.tsx"
+        }
+      }
+    },
+    {
+      "file": "src/routes/p.$projectId.assets.characters.$characterId.tsx",
+      "route_id": "/p/$projectId/assets/characters/$characterId",
+      "url_pattern": "/p/$projectId/assets/characters/$characterId",
+      "classification": "page-adapter",
+      "route_adapter_component": "CharacterRoute",
+      "page_components": [
+        {
+          "name": "CharacterDetailPage",
+          "file": "src/components/assets/CharacterDetailPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {
+        "shared_page_group": "CharacterDetailPage",
+        "ownership_context": "project-owned; route projectId must match loaded asset",
+        "back_context": "project world with matching asset tab"
+      }
+    },
+    {
+      "file": "src/routes/p.$projectId.assets.index.tsx",
+      "route_id": "/p/$projectId/assets/",
+      "url_pattern": "/p/$projectId/assets/",
+      "classification": "redirect",
+      "route_adapter_component": null,
+      "page_components": [],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {
+        "redirect_targets": [
+          "/p/$projectId/world"
+        ]
+      }
+    },
+    {
+      "file": "src/routes/p.$projectId.assets.props.$propId.tsx",
+      "route_id": "/p/$projectId/assets/props/$propId",
+      "url_pattern": "/p/$projectId/assets/props/$propId",
+      "classification": "page-adapter",
+      "route_adapter_component": "PropRoute",
+      "page_components": [
+        {
+          "name": "PropDetailPage",
+          "file": "src/components/assets/PropDetailPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {
+        "shared_page_group": "PropDetailPage",
+        "ownership_context": "project-owned; route projectId must match loaded asset",
+        "back_context": "project world with matching asset tab"
+      }
+    },
+    {
+      "file": "src/routes/p.$projectId.assets.scenes.$sceneId.tsx",
+      "route_id": "/p/$projectId/assets/scenes/$sceneId",
+      "url_pattern": "/p/$projectId/assets/scenes/$sceneId",
+      "classification": "page-adapter",
+      "route_adapter_component": "SceneRoute",
+      "page_components": [
+        {
+          "name": "SceneDetailPage",
+          "file": "src/components/assets/SceneDetailPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {
+        "shared_page_group": "SceneDetailPage",
+        "ownership_context": "project-owned; route projectId must match loaded asset",
+        "back_context": "project world with matching asset tab"
+      }
+    },
+    {
+      "file": "src/routes/p.$projectId.assets.styles.$styleId.tsx",
+      "route_id": "/p/$projectId/assets/styles/$styleId",
+      "url_pattern": "/p/$projectId/assets/styles/$styleId",
+      "classification": "page-adapter",
+      "route_adapter_component": "StyleRoute",
+      "page_components": [
+        {
+          "name": "StyleDetailPage",
+          "file": "src/components/assets/StyleDetailPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {
+        "shared_page_group": "StyleDetailPage",
+        "ownership_context": "project-owned; route projectId must match loaded asset",
+        "back_context": "project world with matching asset tab"
+      }
+    },
+    {
+      "file": "src/routes/p.$projectId.assets.tsx",
+      "route_id": "/p/$projectId/assets",
+      "url_pattern": "/p/$projectId/assets",
+      "classification": "outlet-layout",
+      "route_adapter_component": "inline Outlet",
+      "page_components": [],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {}
+    },
+    {
+      "file": "src/routes/p.$projectId.e.$episodeId.index.tsx",
+      "route_id": "/p/$projectId/e/$episodeId/",
+      "url_pattern": "/p/$projectId/e/$episodeId/",
+      "classification": "page-adapter",
+      "route_adapter_component": "EpisodeStoryRoute",
+      "page_components": [
+        {
+          "name": "StoryPage",
+          "file": "src/components/story/StoryPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "route-adapter-reviewed; feature audit delegated separately",
+      "native_status": "native-pending",
+      "notes": {}
+    },
+    {
+      "file": "src/routes/p.$projectId.e.$episodeId.produce.tsx",
+      "route_id": "/p/$projectId/e/$episodeId/produce",
+      "url_pattern": "/p/$projectId/e/$episodeId/produce",
+      "classification": "page-adapter",
+      "route_adapter_component": "EpisodeProduceRoute",
+      "page_components": [
+        {
+          "name": "ProducePage",
+          "file": "src/components/produce/ProducePage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "route-adapter-reviewed; feature audit delegated separately",
+      "native_status": "native-pending",
+      "notes": {}
+    },
+    {
+      "file": "src/routes/p.$projectId.e.$episodeId.shots.tsx",
+      "route_id": "/p/$projectId/e/$episodeId/shots",
+      "url_pattern": "/p/$projectId/e/$episodeId/shots",
+      "classification": "page-adapter",
+      "route_adapter_component": "EpisodeShotsRoute",
+      "page_components": [
+        {
+          "name": "ShotEditorPage",
+          "file": "src/components/shots/ShotEditorPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "route-adapter-reviewed; feature audit delegated separately",
+      "native_status": "native-pending",
+      "notes": {
+        "search_variants": [
+          "shot focus deep link"
+        ]
+      }
+    },
+    {
+      "file": "src/routes/p.$projectId.e.$episodeId.storyboard.tsx",
+      "route_id": "/p/$projectId/e/$episodeId/storyboard",
+      "url_pattern": "/p/$projectId/e/$episodeId/storyboard",
+      "classification": "page-adapter",
+      "route_adapter_component": "EpisodeStoryboardRoute",
+      "page_components": [
+        {
+          "name": "StoryboardPrintPage",
+          "file": "src/components/produce/StoryboardPrintPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "route-adapter-reviewed; feature audit delegated separately",
+      "native_status": "native-pending",
+      "notes": {}
+    },
+    {
+      "file": "src/routes/p.$projectId.e.$episodeId.tsx",
+      "route_id": "/p/$projectId/e/$episodeId",
+      "url_pattern": "/p/$projectId/e/$episodeId",
+      "classification": "outlet-layout",
+      "route_adapter_component": "EpisodeLayout",
+      "page_components": [],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {}
+    },
+    {
+      "file": "src/routes/p.$projectId.index.tsx",
+      "route_id": "/p/$projectId/",
+      "url_pattern": "/p/$projectId/",
+      "classification": "page-adapter",
+      "route_adapter_component": "ProjectHomeRoute",
+      "page_components": [
+        {
+          "name": "ProjectHomePage",
+          "file": "src/components/workspace/ProjectHomePage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed (dispatch only; workspace page audits delegated separately)",
+      "native_status": "native-pending",
+      "notes": {
+        "project_kind_dispatch": [
+          {
+            "kind": "audio",
+            "component": "AudioWorkspacePage",
+            "file": "src/components/audio/AudioWorkspacePage.tsx"
+          },
+          {
+            "kind": "music",
+            "component": "MusicWorkspacePage",
+            "file": "src/components/music/MusicWorkspacePage.tsx"
+          },
+          {
+            "kind": "video or legacy undefined; mode series",
+            "component": "EpisodeListPage",
+            "file": "src/components/workspace/EpisodeListPage.tsx"
+          },
+          {
+            "kind": "video or legacy undefined; mode film",
+            "redirect": "/p/$projectId/e/$episodeId",
+            "component": "StoryPage",
+            "file": "src/components/story/StoryPage.tsx",
+            "when": "first episode exists; otherwise guarded ensureFirstEpisode repair / retry state"
+          }
+        ],
+        "dispatch_source": "src/components/workspace/ProjectHomePage.tsx:46-78"
+      }
+    },
+    {
+      "file": "src/routes/p.$projectId.memory.tsx",
+      "route_id": "/p/$projectId/memory",
+      "url_pattern": "/p/$projectId/memory",
+      "classification": "page-adapter",
+      "route_adapter_component": "MemoryRoute",
+      "page_components": [
+        {
+          "name": "ProjectMemoryPage",
+          "file": "src/components/memory/ProjectMemoryPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "route-adapter-reviewed; feature audit delegated separately",
+      "native_status": "native-pending",
+      "notes": {
+        "search_variants": [
+          "memory initial deep link"
+        ]
+      }
+    },
+    {
+      "file": "src/routes/p.$projectId.plan.tsx",
+      "route_id": "/p/$projectId/plan",
+      "url_pattern": "/p/$projectId/plan",
+      "classification": "redirect",
+      "route_adapter_component": null,
+      "page_components": [],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {
+        "redirect_targets": [
+          "/p/$projectId",
+          "/p/$projectId/e/$episodeId/produce"
+        ],
+        "condition": "first episode of project; project home when no episode"
+      }
+    },
+    {
+      "file": "src/routes/p.$projectId.produce.tsx",
+      "route_id": "/p/$projectId/produce",
+      "url_pattern": "/p/$projectId/produce",
+      "classification": "redirect",
+      "route_adapter_component": null,
+      "page_components": [],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {
+        "redirect_targets": [
+          "/p/$projectId",
+          "/p/$projectId/e/$episodeId/produce"
+        ],
+        "condition": "first episode of project; project home when no episode"
+      }
+    },
+    {
+      "file": "src/routes/p.$projectId.report.tsx",
+      "route_id": "/p/$projectId/report",
+      "url_pattern": "/p/$projectId/report",
+      "classification": "redirect",
+      "route_adapter_component": null,
+      "page_components": [],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {
+        "redirect_targets": [
+          "/p/$projectId",
+          "/p/$projectId/e/$episodeId/produce"
+        ],
+        "condition": "first episode of project; project home when no episode"
+      }
+    },
+    {
+      "file": "src/routes/p.$projectId.shots.tsx",
+      "route_id": "/p/$projectId/shots",
+      "url_pattern": "/p/$projectId/shots",
+      "classification": "redirect",
+      "route_adapter_component": null,
+      "page_components": [],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {
+        "redirect_targets": [
+          "/p/$projectId",
+          "/p/$projectId/e/$episodeId/shots"
+        ],
+        "condition": "first episode of project; project home when no episode"
+      }
+    },
+    {
+      "file": "src/routes/p.$projectId.storyboard.tsx",
+      "route_id": "/p/$projectId/storyboard",
+      "url_pattern": "/p/$projectId/storyboard",
+      "classification": "redirect",
+      "route_adapter_component": null,
+      "page_components": [],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed",
+      "native_status": "native-pending",
+      "notes": {
+        "redirect_targets": [
+          "/p/$projectId"
+        ]
+      }
+    },
+    {
+      "file": "src/routes/p.$projectId.tsx",
+      "route_id": "/p/$projectId",
+      "url_pattern": "/p/$projectId",
+      "classification": "shell-layout",
+      "route_adapter_component": "WorkspaceRoute",
+      "page_components": [],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "source-reviewed (dispatch and shell boundary only; workspace audit delegated separately)",
+      "native_status": "native-pending",
+      "notes": {
+        "shell_component": {
+          "name": "WorkspaceChrome",
+          "file": "src/components/workspace/WorkspaceChrome.tsx"
+        }
+      }
+    },
+    {
+      "file": "src/routes/p.$projectId.world.tsx",
+      "route_id": "/p/$projectId/world",
+      "url_pattern": "/p/$projectId/world",
+      "classification": "page-adapter",
+      "route_adapter_component": "WorldRoute",
+      "page_components": [
+        {
+          "name": "AssetLibraryPage",
+          "file": "src/components/assets/AssetLibraryPage.tsx"
+        }
+      ],
+      "route_source_status": "source-reviewed",
+      "feature_source_status": "route-adapter-reviewed; feature audit delegated separately",
+      "native_status": "native-pending",
+      "notes": {
+        "search_variants": [
+          "setting",
+          "characters",
+          "scenes",
+          "props",
+          "styles (validated parseWorldTab)"
+        ]
+      }
+    }
+  ]
+}

@@ -87,8 +87,9 @@ export function AudioArrangementActions({projectId, chapterId, snapshot, history
         {notice && <p role="status" className="basis-full text-xs text-muted-foreground break-words">{notice}</p>}
         {!mode && error && <p role="alert" className="basis-full text-xs text-destructive break-words">{error}</p>}
         <Dialog open={Boolean(mode)} onOpenChange={value => {if (!value && !lock.current) {setMode(undefined);setProposal(undefined);}}}>
-            <DialogContent className="max-h-[85dvh] sm:max-w-2xl overflow-y-auto" onCloseAutoFocus={event => {event.preventDefault();trigger.current?.focus({preventScroll:true});}}>
-                <DialogHeader><DialogTitle>{mode === "selection" ? "批量选用配音版本" : "排列已选声音"}</DialogTitle><DialogDescription>{mode === "selection" ? "选择声音版本并预览，只改变选用，不放入时间线。" : "按真实时长追加未放置的声音；已有剪辑全部保留。"}此操作未核验试听效果，请自行试听。</DialogDescription></DialogHeader>
+            <DialogContent className="flex max-h-[calc(100dvh-32px)] flex-col overflow-hidden sm:max-w-2xl" onCloseAutoFocus={event => {event.preventDefault();trigger.current?.focus({preventScroll:true});}}>
+                <DialogHeader className="shrink-0"><DialogTitle>{mode === "selection" ? "批量选用配音版本" : "排列已选声音"}</DialogTitle><DialogDescription>{mode === "selection" ? "选择声音版本并预览，只改变选用，不放入时间线。" : "按真实时长追加未放置的声音；已有剪辑全部保留。"}此操作未核验试听效果，请自行试听。</DialogDescription></DialogHeader>
+                <div className="min-h-0 overflow-y-auto pr-1">
                 {!proposal ? <div className="grid min-w-0 gap-3">
                     {mode === "arrangement" && <div className="grid gap-3 sm:grid-cols-3">
                         <Field label="人声音轨"><WorkspaceSelect aria-label="排列目标人声音轨" disabled={busy} value={trackId} onValueChange={setTrackId}>{tracks.map(track => <SelectOption key={track.id} value={track.id}>{track.name}</SelectOption>)}</WorkspaceSelect></Field>
@@ -108,7 +109,8 @@ export function AudioArrangementActions({projectId, chapterId, snapshot, history
                     <details className="text-xs text-muted-foreground"><summary>预览身份与冲突规则</summary><p className="break-all">{proposal.id} · 版本 {proposal.revision}</p><p>章节、版本、选用、音轨或片段改变后必须重新预览；旧批准不会覆盖新内容。</p></details>
                 </div>}
                 {error && <p role="alert" className="text-sm text-destructive break-words">{error}</p>}
-                <DialogFooter className="gap-2">
+                </div>
+                <DialogFooter className="shrink-0 gap-2">
                     <Button variant="outline" disabled={busy} onClick={() => {if (proposal) {setProposal(undefined);setError("");setConflicted(false);} else setMode(undefined);}}>{proposal ? "重新预览" : "取消"}</Button>
                     <Button disabled={busy || !included.length || conflicted} onClick={() => void action(proposal ? apply : prepare)}>{busy ? "正在保存…" : proposal ? "确认应用" : "查看预览"}</Button>
                 </DialogFooter>

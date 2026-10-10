@@ -1,4 +1,5 @@
-import {ActionIcon, Avatar, Flexbox, Text} from "@lobehub/ui";
+import {Avatar, Flexbox, Text} from "@lobehub/ui";
+import {ActionIcon} from "@lobehub/ui/base-ui";
 import {useNavigate} from "@tanstack/react-router";
 import {
     ChevronDown,
@@ -57,9 +58,10 @@ export function TopicSidebar({
                 gap={8}
                 className="agent-topic-sidebar is-collapsed"
             >
-                <ActionIcon icon={PanelLeft} title="展开侧栏" onClick={onToggleCollapsed}/>
-                <ActionIcon icon={MessageSquarePlus} title="开启新话题" onClick={onNewTopic}/>
-                <ActionIcon icon={ListTodo} title="任务看板" onClick={onOpenTasks}/>
+                <ActionIcon icon={PanelLeft} title="展开侧栏" aria-label="展开话题侧栏"
+                            aria-expanded={false} onClick={onToggleCollapsed}/>
+                <ActionIcon icon={MessageSquarePlus} title="开启新话题" aria-label="开启新话题" onClick={onNewTopic}/>
+                <ActionIcon icon={ListTodo} title="任务看板" aria-label="任务看板" onClick={onOpenTasks}/>
             </Flexbox>
         );
     }
@@ -87,7 +89,8 @@ export function TopicSidebar({
                 >
                     {PRODUCT_NAME_ZH}
                 </Text>
-                <ActionIcon icon={PanelLeftClose} title="收起侧栏" onClick={onToggleCollapsed}/>
+                <ActionIcon icon={PanelLeftClose} title="收起侧栏" aria-label="收起话题侧栏"
+                            aria-expanded onClick={onToggleCollapsed}/>
             </Flexbox>
 
             <TopicListBody
@@ -103,6 +106,7 @@ export function TopicSidebar({
                         <ActionIcon
                             icon={Settings}
                             title="连接"
+                            aria-label="连接"
                             onClick={() => void navigate({to: "/connectors"})}
                         />
                     </Flexbox>
@@ -206,6 +210,7 @@ export function TopicListBody({
                 <button
                     type="button"
                     className="agent-sidebar-section"
+                    aria-expanded={topicsOpen}
                     onClick={() => setTopicsOpen((open) => !open)}
                 >
           <span>
@@ -232,6 +237,7 @@ export function TopicListBody({
                                 <button
                                     type="button"
                                     className="agent-sidebar-group"
+                                    aria-expanded={!closed}
                                     onClick={() =>
                                         setFolded((prev) => ({...prev, [group.label]: !prev[group.label]}))
                                     }

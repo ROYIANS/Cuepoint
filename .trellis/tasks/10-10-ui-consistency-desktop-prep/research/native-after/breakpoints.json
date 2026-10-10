@@ -1,0 +1,26 @@
+[
+  {
+    "mobileHeader": 0,
+    "nav": 64,
+    "root": 1199,
+    "width": 1199
+  },
+  {
+    "mobileHeader": 0,
+    "nav": 176,
+    "root": 1200,
+    "width": 1200
+  },
+  {
+    "mobileHeader": 48,
+    "nav": 0,
+    "root": 767,
+    "width": 767
+  },
+  {
+    "mobileHeader": 0,
+    "nav": 64,
+    "root": 768,
+    "width": 768
+  }
+]

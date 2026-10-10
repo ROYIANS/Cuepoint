@@ -1,0 +1,34 @@
+[
+  {
+    "input": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/plan",
+    "actual": "http://127.0.0.1:5173/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/e/ep_b9822329-b73a-47b2-9a30-a257b9b0df8e/produce"
+  },
+  {
+    "input": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/produce",
+    "actual": "http://127.0.0.1:5173/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/e/ep_b9822329-b73a-47b2-9a30-a257b9b0df8e/produce"
+  },
+  {
+    "input": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/report",
+    "actual": "http://127.0.0.1:5173/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/e/ep_b9822329-b73a-47b2-9a30-a257b9b0df8e/produce"
+  },
+  {
+    "input": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/shots",
+    "actual": "http://127.0.0.1:5173/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/e/ep_b9822329-b73a-47b2-9a30-a257b9b0df8e/shots"
+  },
+  {
+    "input": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/storyboard",
+    "actual": "http://127.0.0.1:5173/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c"
+  },
+  {
+    "input": "/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/assets",
+    "actual": "http://127.0.0.1:5173/p/prj_8cd00a6c-009a-4123-960a-5ff7c570277c/world"
+  },
+  {
+    "input": "/",
+    "actual": "http://127.0.0.1:5173/agent"
+  },
+  {
+    "input": "/settings",
+    "actual": "http://127.0.0.1:5173/about"
+  }
+]

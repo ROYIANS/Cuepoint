@@ -10,6 +10,7 @@ import {AlertTriangle, CheckCircle2, Download, Printer} from "lucide-react";
 import {normalizeProjectMode} from "@/domain/types";
 import {db} from "@/db/database";
 import {Button} from "@/components/ui/button";
+import {PageContent, PageHeader, PageState} from "@/components/layout/PageLayout";
 import {formatDuration} from "@/lib/format";
 import {deriveEpisodeDelivery, downloadEpisodeDeliveryCsv,} from "@/lib/episodeDelivery";
 
@@ -101,13 +102,13 @@ function ScopedProducePage({
         styles === undefined ||
         scenes === undefined
     ) {
-        return <div className="text-muted-foreground p-8 text-sm">加载制作信息…</div>;
+        return <PageContent><PageState kind="loading" title="正在读取制作信息…"/></PageContent>;
     }
     if (project === null) {
-        return <div className="text-muted-foreground p-8 text-sm">找不到这个项目</div>;
+        return <PageContent><PageState kind="missing" title="找不到这个项目"/></PageContent>;
     }
     if (episode === null || episode.projectId !== projectId) {
-        return <div className="text-muted-foreground p-8 text-sm">找不到当前故事</div>;
+        return <PageContent><PageState kind="missing" title="找不到当前故事"/></PageContent>;
     }
 
     const delivery = deriveEpisodeDelivery({
@@ -126,15 +127,9 @@ function ScopedProducePage({
 
     return (
         <div className="app-scroll h-full overflow-auto">
-            <div className="mx-auto max-w-6xl px-4 py-6 sm:px-8 sm:py-8">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                        <h1 className="text-[17px] font-semibold">制作与交付</h1>
-                        <p className="text-muted-foreground mt-1 max-w-xl text-xs leading-5">
-                            检查{scopeLabel}的分镜完整性，并导出按当前顺序整理的交付物。
-                        </p>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-2">
+            <PageContent mode="collection">
+                <PageHeader title="制作与交付" description={`检查${scopeLabel}的分镜完整性，并导出按当前顺序整理的交付物。`}
+                            actions={<div className="flex flex-wrap items-center gap-2">
                         <Button disabled={exportProgress !== undefined || delivery.rows.length === 0}
                                 onClick={() => void exportHandoff()}>
                             <Download/>{exportProgress !== undefined ? `正在整理 ${Math.round(exportProgress)}%` : "导出素材交付包"}
@@ -153,21 +148,20 @@ function ScopedProducePage({
                                 打印故事板
                             </Link>
                         </Button>
-                    </div>
-                </div>
+                    </div>}/>
 
                 <p className="text-muted-foreground mt-3 text-xs leading-5">素材交付包包含逐镜头清单与首帧、尾帧、成片原文件，可交给剪辑继续制作。需要恢复整个项目时，请使用顶部「备份项目」。</p>
                 {exportSummary ? <p className="mt-2 text-xs" role="status">{exportSummary}</p> : null}
                 {exportError ? <p className="text-destructive mt-2 text-sm"
                                   role="alert">导出失败：{exportError}。可以重新点击导出重试。</p> : null}
-                <dl className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4">
+                <dl className="mt-6 grid grid-cols-2 gap-4 border-y py-4 md:grid-cols-4">
                     <Stat label="镜头" value={String(delivery.rows.length)}/>
                     <Stat label="场次" value={String(delivery.beatCount)}/>
                     <Stat label="缺失项" value={String(missingCount)}/>
                     <Stat label="总时长" value={formatDuration(delivery.totalDurationSec)}/>
                 </dl>
 
-                <div className="mt-8 flex items-center gap-3 rounded-2xl border p-5">
+                <div className="mt-6 flex items-start gap-3 border-b pb-6">
                     {incompleteRows.length === 0 ? (
                         <CheckCircle2 className="text-brand size-5"/>
                     ) : (
@@ -188,7 +182,7 @@ function ScopedProducePage({
                 </div>
 
                 {incompleteRows.length > 0 ? (
-                    <div className="mt-8 overflow-hidden rounded-2xl border">
+                    <div className="mt-6 overflow-hidden rounded-lg border">
                         <div
                             className="bg-muted/60 grid grid-cols-[36px_minmax(0,1fr)_minmax(0,1fr)_auto] sm:grid-cols-[80px_1fr_1fr_auto] gap-3 px-4 py-3 text-xs">
                             <span>镜号</span>
@@ -225,9 +219,9 @@ function ScopedProducePage({
                         </ul>
                     </div>
                 ) : (
-                    <div
-                        className="text-muted-foreground mt-8 rounded-2xl border border-dashed px-5 py-8 text-center text-sm">
-                        {delivery.rows.length === 0 ? (
+                    <PageState title={delivery.rows.length === 0 ? "还没有镜头" : "没有发现缺失项"}
+                               description={delivery.rows.length === 0 ? "添加镜头后可检查素材与交付内容。" : "可以导出交付物。"}
+                               action={delivery.rows.length === 0 ? (
                             <Link
                                 to="/p/$projectId/e/$episodeId/shots"
                                 params={{projectId, episodeId}}
@@ -236,23 +230,20 @@ function ScopedProducePage({
                             >
                                 去分镜创建第一条镜头
                             </Link>
-                        ) : (
-                            "没有发现缺失项，可以导出交付物。"
-                        )}
-                    </div>
+                        ) : undefined}/>
                 )}
                 <ProductionProposalsPanel key={`${projectId}:${episodeId}`} projectId={projectId} episodeId={episodeId}
                                           shots={shots.filter((shot) => shot.projectId === projectId && shot.episodeId === episodeId)}/>
-            </div>
+            </PageContent>
         </div>
     );
 }
 
 function Stat({label, value}: { label: string; value: string }) {
     return (
-        <div className="bg-card rounded-2xl border px-4 py-4">
-            <dt className="text-muted-foreground text-[11px]">{label}</dt>
-            <dd className="mt-1 text-xl font-medium tracking-tight">{value}</dd>
+        <div className="px-4">
+            <dt className="text-muted-foreground text-xs leading-[18px]">{label}</dt>
+            <dd className="mt-1 text-xl leading-7 font-semibold tabular-nums">{value}</dd>
         </div>
     );
 }

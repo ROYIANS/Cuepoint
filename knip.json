@@ -8,7 +8,8 @@
     "tests/**/*.test.{ts,tsx}",
     "tests/typecheck/agentToolDefinition.ts",
     "tests/fixtures/*/index.html",
-    "tests/fixtures/*/harness.ts",
+    "tests/fixtures/*/harness.{ts,tsx}",
+    "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx",
     "scripts/e07-draft-rebase-browser.mjs"
   ],
   "project": [
