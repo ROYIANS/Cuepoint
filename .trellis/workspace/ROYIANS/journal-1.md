@@ -1238,3 +1238,53 @@ E 与总整改任务已由 task.py archive 归档到 `.trellis/tasks/archive/202
 ### Status
 
 [OK] **Completed**
+
+
+## Session 48: 全站 UI 统一与桌面化准备
+<!-- trellis-session: v=2 fp=a321819773c35738 -->
+
+**Date**: 2026-10-10
+**Task**: 全站 UI 统一与桌面化准备
+**Branch**: `codex/ui-consistency-desktop-prep`
+
+### Summary
+
+完成全站UI统一、原生与业务回归、素材库Tabs追加修正；按用户批准提交、归档并记录，无推送。
+
+### Main Changes
+
+## 交付与授权
+
+用户批准全站UI统一，目标为后续跨平台桌面化准备；最后根据素材库截图追加修正遗留Tabs皮肤。2026-10-10用户确认完整提交计划“按方案提交并归档”。工作分支codex/ui-consistency-desktop-prep，base main ecf8dd0c；工作提交100f0e936d637c7cccfa564ac6c9b36b88b33cc7。归档提交4f8296fa，不作为本session的work commit。
+
+## 实际变化
+
+- 共享AppFrame与PageHeader/Toolbar/Content/State；中性暗色、功能sans标题、176/64/窄窗Sheet导航；全站Studio/视频/音频/音乐/记忆/Agent迁移。
+- 时间线坐标、undo、草稿/CAS、owner guards、付费审批、Agent持久宿主/Stop/预算、打印loaded barrier保留。
+- 受控overlay焦点fallback，全部20确认框注册安全Cancel；Agent弃用DIV图标按钮改官方base-ui原生BUTTON；真实键盘复验。
+- 素材库旧下划线/直角/透明皮肤叠加共享active border造成方框。移除旧皮肤，所有Tabs使用36px底轨/32px按钮、panel/elevated选中面；静态border/ring/shadow去除，focus-visible保留。全部6消费者独立检查，素材/世界/音乐原生方向键与窄窗复验。
+- B01/B06浅层测试宿主更新真实展示插槽和连接查询结果fixture，原9/56行为断言保留；移除unused ogl，Knip仅纳入真实历史native fixture消费者，既有stylesheet证据hash刷新，无新debt豁免。
+- 桌面UI可执行规范已写入frontend/desktop-ui.md，并同步目录、组件指南、索引。
+
+## 验证
+
+31上下文改前桌面、改后桌面/390窄窗；12页族×5窗口共60检查；4导航断点、8重定向；矮窗overlay/footer、dirty继续编辑/放弃、长文稿保存、音频trim后undo、本地音乐58.624s播放跨resize、Agent同宿主草稿转换。用户手动确认系统打印预览正常。
+
+指定本机pnpm路径；tsc、181文件3228tests passed/1既有opt-in skipped、quality all PASS（0failures，13既有reviewed allowance/548可见warnings）、88quality自测、model-bank197files/85providers/1855models、Vite build均通过。生成routeTree格式噪声经TypeScript语法树与base完全相同核验后恢复；1046最终quality输入hash核对未漂移。
+
+原生截图与受控故障测试方法区分记录，未把单元测试当原生fault注入；本次无收费生成。Windows/Linux真机、OS窗口/菜单、安装包验收在后续桌面任务。
+
+## 收尾
+
+已按工作提交→任务归档→journal顺序执行，不amend、不推送。任务归档路径：.trellis/tasks/archive/2026-10/10-10-ui-consistency-desktop-prep；实际commit和completed状态在task.json。最终验收、独立报告、覆盖矩阵、质量hash、截图均随归档保留。
+
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `100f0e936d637c7cccfa564ac6c9b36b88b33cc7` | feat(ui): unify desktop-ready application pages |
+
+### Status
+
+[OK] **Completed**
