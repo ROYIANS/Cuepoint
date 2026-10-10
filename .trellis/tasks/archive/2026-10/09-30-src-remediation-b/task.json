@@ -1,0 +1,33 @@
+{
+  "id": "src-remediation-b",
+  "name": "src-remediation-b",
+  "title": "源码整改B：查询身份、编辑会话与异步边界",
+  "description": "按父台账顺序实现B01至B07的12项发现；逐项回归和独立复核，保护未保存草稿，批末执行整体关口与提交确认。",
+  "status": "completed",
+  "dev_type": "frontend",
+  "scope": "src quality remediation B01–B07",
+  "package": null,
+  "priority": "P2",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-09-30",
+  "completedAt": "2026-10-10",
+  "branch": "main",
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": "028e60070c14552025a3493e65f032350fdba8b5",
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    ".trellis/tasks/archive/2026-10/09-30-src-quality-remediation/remediation-ledger.json"
+  ],
+  "notes": "用户ok批准的四笔B提交全部执行。B完成保留未归档，父任务继续C01；无push。\n2026-10-10: User authorized backlog cleanup. Deliverable accepted; archive bookkeeping only. See closure/README.md for final status and historical path interpretation.",
+  "meta": {
+    "deliveryCompletedAt": "2026-09-30",
+    "archiveDate": "2026-10-10",
+    "completionRecord": "closure/README.md",
+    "archiveBranchException": "User-authorized local main/base main delivery, no dedicated task PR; archive --skip-branch-validation."
+  }
+}

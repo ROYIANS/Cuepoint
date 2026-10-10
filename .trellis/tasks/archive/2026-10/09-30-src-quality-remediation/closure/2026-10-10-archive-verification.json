@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-10",
+  "status": "PASS",
+  "scope": "Completed-task archival bookkeeping only; no product checks rerun",
+  "tasks": {
+    "09-30-src-remediation-a": {
+      "originalFiles": 55,
+      "unchangedEvidenceFiles": 54,
+      "originalTaskMetadataPreserved": true,
+      "archivedTo": ".trellis/tasks/archive/2026-10/09-30-src-remediation-a"
+    },
+    "09-30-src-remediation-b": {
+      "originalFiles": 183,
+      "unchangedEvidenceFiles": 182,
+      "originalTaskMetadataPreserved": true,
+      "archivedTo": ".trellis/tasks/archive/2026-10/09-30-src-remediation-b"
+    },
+    "09-30-src-quality-architecture-audit": {
+      "originalFiles": 98,
+      "unchangedEvidenceFiles": 97,
+      "originalTaskMetadataPreserved": true,
+      "archivedTo": ".trellis/tasks/archive/2026-10/09-30-src-quality-architecture-audit"
+    }
+  },
+  "checkedCurrentMarkdownLinks": 39,
+  "ledgerFindings": 51,
+  "verifiedUnits": 32,
+  "sourceProductChanges": 0
+}

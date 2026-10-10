@@ -1,0 +1,51 @@
+{
+  "id": "src-quality-architecture-audit",
+  "name": "src-quality-architecture-audit",
+  "title": "src 全量代码质量与架构审查",
+  "description": "审查 src 全部代码及目录职责，以工具扫描和逐文件阅读核验依赖边界、循环引用、类型与控制流、冗余重复、抽象和业务规则分散，交付覆盖清单、证据报告及分阶段整改方案；vendor 不纳入，tests 仅作为行为参考。",
+  "status": "completed",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-09-30",
+  "completedAt": "2026-10-10",
+  "branch": "main",
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [
+    "09-30-src-quality-remediation"
+  ],
+  "parent": null,
+  "relatedFiles": [
+    "audit-report.md",
+    "research/coverage.md",
+    "research/architecture.md",
+    "research/remediation-plan.md",
+    "research/check-final.md"
+  ],
+  "notes": "全量审查交付完成：392/392文件，389普通阅读+3生成验证，51模块发现（24确认/18债务/9风险），独立检查通过。产品源码哈希与基准一致，未修复、未提交/推送。整改建议见audit-report.md与research/remediation-plan.md。\n2026-10-10: User authorized backlog cleanup. Deliverable accepted; archive bookkeeping only. See closure/README.md for final status and historical path interpretation.",
+  "meta": {
+    "audit": {
+      "baseRevision": "2fc0e9523e62a5258a488cc3d0274d24c8967c6f",
+      "reviewDate": "2026-09-30",
+      "coveredFiles": 392,
+      "ordinaryReviewed": 389,
+      "generatedVerified": 3,
+      "moduleFindings": 51,
+      "independentCheck": "passed",
+      "sourceUnchanged": true,
+      "productFixesImplemented": false,
+      "committed": false
+    },
+    "deliveryCompletedAt": "2026-09-30",
+    "archiveDate": "2026-10-10",
+    "completionRecord": "closure/README.md",
+    "archiveBranchException": "User-authorized local main/base main delivery, no dedicated task PR; archive --skip-branch-validation."
+  }
+}

@@ -6,17 +6,17 @@
 
 | 单元 | 内容 | 关联发现 | 状态 | 独立复核 |
 |---|---|---|---|---|
-| A01 | 诊断脱敏与持久化状态 | PM-01 | 验证完成 | [A01复核](../09-30-src-remediation-a/reviews/A01-check.md) |
-| A02 | 原子批量撤销与失败重试 | PU-01, SS-05 | 验证完成 | [A02复核](../09-30-src-remediation-a/reviews/A02-check.md) |
-| A03 | 删除事务返回最新镜头快照 | PD-02 | 验证完成 | [A03复核](../09-30-src-remediation-a/reviews/A03-check.md) |
-| A04 | 槽位和单字段保存基线 | PU-02, PU-03, SS-02 | 验证完成 | [A04复核](../09-30-src-remediation-a/reviews/A04-check.md) |
-| B01 | 项目与资产查询身份隔离 | SS-01, PU-05 | 验证完成 | [B01复核](../09-30-src-remediation-b/reviews/B01-check.md) |
-| B02 | 记忆候选编辑会话 | AU-01 | 验证完成 | [B02复核](../09-30-src-remediation-b/reviews/B02-check.md) |
-| B03 | 设置局部补丁与角色集合意图 | AU-03, PU-04 | 验证完成 | [B03复核](../09-30-src-remediation-b/reviews/B03-check.md) |
-| B04 | 模型发现与探测协议 | PM-02 | 验证完成 | [B04复核](../09-30-src-remediation-b/reviews/B04-check.md) |
-| B05 | 音乐任务ID与取消恢复 | PM-03, PM-04, PM-06 | 验证完成 | [B05复核](../09-30-src-remediation-b/reviews/B05-check.md) |
-| B06 | 异步连接与文件导入会话 | SS-07, PU-07 | 验证完成 | [B06复核](../09-30-src-remediation-b/reviews/B06-check.md) |
-| B07 | 主题文本与附件草稿作用域 | AU-10 | 验证完成 | [B07复核](../09-30-src-remediation-b/reviews/B07-check.md) |
+| A01 | 诊断脱敏与持久化状态 | PM-01 | 验证完成 | [A01复核](../../../09-30-src-remediation-a/reviews/A01-check.md) |
+| A02 | 原子批量撤销与失败重试 | PU-01, SS-05 | 验证完成 | [A02复核](../../../09-30-src-remediation-a/reviews/A02-check.md) |
+| A03 | 删除事务返回最新镜头快照 | PD-02 | 验证完成 | [A03复核](../../../09-30-src-remediation-a/reviews/A03-check.md) |
+| A04 | 槽位和单字段保存基线 | PU-02, PU-03, SS-02 | 验证完成 | [A04复核](../../../09-30-src-remediation-a/reviews/A04-check.md) |
+| B01 | 项目与资产查询身份隔离 | SS-01, PU-05 | 验证完成 | [B01复核](../../../09-30-src-remediation-b/reviews/B01-check.md) |
+| B02 | 记忆候选编辑会话 | AU-01 | 验证完成 | [B02复核](../../../09-30-src-remediation-b/reviews/B02-check.md) |
+| B03 | 设置局部补丁与角色集合意图 | AU-03, PU-04 | 验证完成 | [B03复核](../../../09-30-src-remediation-b/reviews/B03-check.md) |
+| B04 | 模型发现与探测协议 | PM-02 | 验证完成 | [B04复核](../../../09-30-src-remediation-b/reviews/B04-check.md) |
+| B05 | 音乐任务ID与取消恢复 | PM-03, PM-04, PM-06 | 验证完成 | [B05复核](../../../09-30-src-remediation-b/reviews/B05-check.md) |
+| B06 | 异步连接与文件导入会话 | SS-07, PU-07 | 验证完成 | [B06复核](../../../09-30-src-remediation-b/reviews/B06-check.md) |
+| B07 | 主题文本与附件草稿作用域 | AU-10 | 验证完成 | [B07复核](../../../09-30-src-remediation-b/reviews/B07-check.md) |
 | C01 | 当前成果与调用账本区分 | AR-01, AR-02 | 验证完成 | [C01复核](../09-30-src-remediation-c/reviews/C01-check.md) |
 | C02 | 音乐草稿生成参数一致性 | AR-03 | 验证完成 | [C02复核](../09-30-src-remediation-c/reviews/C02-check.md) |
 | C03 | 父项目和现代包外键不变量 | PD-01, SS-04 | 验证完成 | [C03复核](../09-30-src-remediation-c/reviews/C03-check.md) |

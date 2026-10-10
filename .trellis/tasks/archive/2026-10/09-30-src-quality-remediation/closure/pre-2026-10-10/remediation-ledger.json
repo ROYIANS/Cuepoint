@@ -1,7 +1,7 @@
 {
   "date": "2026-09-30",
   "startRevision": "bbc8200e67ab828cf45201f5fa9208ac92e02e04",
-  "auditTask": ".trellis/tasks/archive/2026-10/09-30-src-quality-architecture-audit",
+  "auditTask": ".trellis/tasks/09-30-src-quality-architecture-audit",
   "approvedSequence": "A→B→C→D→E",
   "currentUnit": null,
   "units": [
@@ -23,7 +23,7 @@
         "pnpm lint (tsc -b): passed",
         "git diff --check: passed"
       ],
-      "review": ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A01-check.md"
+      "review": ".trellis/tasks/09-30-src-remediation-a/reviews/A01-check.md"
     },
     {
       "id": "A02",
@@ -48,7 +48,7 @@
         "isolated ESLint/SonarJS reviewed; new nested ternary removed",
         "git diff --check passed"
       ],
-      "review": ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A02-check.md"
+      "review": ".trellis/tasks/09-30-src-remediation-a/reviews/A02-check.md"
     },
     {
       "id": "A03",
@@ -69,7 +69,7 @@
         "pnpm lint passed at implementation",
         "git diff --check passed"
       ],
-      "review": ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A03-check.md"
+      "review": ".trellis/tasks/09-30-src-remediation-a/reviews/A03-check.md"
     },
     {
       "id": "A04",
@@ -106,7 +106,7 @@
         "final isolated ESLint/SonarJS reviewed: no new hook/type signals, existing UI complexity remains D03",
         "git diff --check passed"
       ],
-      "review": ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A04-check.md"
+      "review": ".trellis/tasks/09-30-src-remediation-a/reviews/A04-check.md"
     },
     {
       "id": "B01",
@@ -147,7 +147,7 @@
         "Independent15-file ESLint: no new non-complexity signatures; inherited naming/complexity signals retained",
         "Coordinator matched25 deliverable SHA256 values to final check snapshot"
       ],
-      "review": ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B01-check.md"
+      "review": ".trellis/tasks/09-30-src-remediation-b/reviews/B01-check.md"
     },
     {
       "id": "B02",
@@ -169,7 +169,7 @@
         "lint and diffcheck passed; threefileisolatedESLintexit0 nonew noncomplexitysignatures",
         "Coordinator verified14handoff evidence/sourcehashes; hookhost/DB limits explicit"
       ],
-      "review": ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B02-check.md"
+      "review": ".trellis/tasks/09-30-src-remediation-b/reviews/B02-check.md"
     },
     {
       "id": "B03",
@@ -193,7 +193,7 @@
         "lint/diffcheck passed; 5source/testhashes equalhandoff andunchanged",
         "Partialmerge andfullreplacement/reset semantics; selectedmembership andatomicvalidation; A02/A04/B01/B02 compatibility"
       ],
-      "review": ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B03-check.md"
+      "review": ".trellis/tasks/09-30-src-remediation-b/reviews/B03-check.md"
     },
     {
       "id": "B04",
@@ -215,7 +215,7 @@
         "lint/diffcheck passed; adapter isolatedESLint0errors0warnings",
         "Coordinator4hashesmatchesreview; protocolfailurebodyTypeError neverpaidfallback; specializedprovidersread-only"
       ],
-      "review": ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B04-check.md"
+      "review": ".trellis/tasks/09-30-src-remediation-b/reviews/B04-check.md"
     },
     {
       "id": "B05",
@@ -242,7 +242,7 @@
         "lint/diffcheck passed; isolatedESLint0errors12inheritedwarnings, no new noncomplexity signatures",
         "Coordinator7finalhashes matched; legacy unique checkpoint preserves evidence/results, recovery0POST"
       ],
-      "review": ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B05-check.md"
+      "review": ".trellis/tasks/09-30-src-remediation-b/reviews/B05-check.md"
     },
     {
       "id": "B06",
@@ -265,7 +265,7 @@
         "Coordinator3hashesmatched; prior risks concretely reproduced red2fail before implement",
         "FinalBfullscope earlyfailure-return removed introducedcognitive26;176focused +134files2099full +19/5browser, explicitfinalB06hashattribution"
       ],
-      "review": ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B06-check.md"
+      "review": ".trellis/tasks/09-30-src-remediation-b/reviews/B06-check.md"
     },
     {
       "id": "B07",
@@ -290,7 +290,7 @@
         "lint/diffcheck passed; isolatedESLint0errors13inheritedwarnings no new signatures",
         "Coordinator7afterhashes matched; actual browserhistory/WebLock/Dexie begin payload/POPabort and no externalrequests"
       ],
-      "review": ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B07-check.md"
+      "review": ".trellis/tasks/09-30-src-remediation-b/reviews/B07-check.md"
     },
     {
       "id": "C01",
@@ -2695,8 +2695,8 @@
       "unit": "A03",
       "resolution": "删除事务采集实际最新镜头及全部所需媒体Blob，提交成功后返回；UI只用该快照注册恢复，最新成果与共享媒体/排序/失败回滚回归通过。",
       "evidence": [
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A03-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A03-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-a/reviews/A03-check.md",
+        ".trellis/tasks/09-30-src-remediation-a/reviews/A03-implementation.md",
         "tests/shotDeleteUndo.test.ts",
         ".trellis/spec/frontend/state-management.md"
       ]
@@ -2845,9 +2845,9 @@
       "unit": "B02",
       "resolution": "Parent synchronous shared candidate lock/owner/epoch across latest/history; frozen input/source/excerpt editor session; stale callbacks/completions and retired saved sessions cannot rebind or resubmit. Explicit latest-revision reconciliation unchanged.",
       "evidence": [
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/research/B02-implementation.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B02-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B02-check-snapshot.json"
+        ".trellis/tasks/09-30-src-remediation-b/research/B02-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B02-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B02-check-snapshot.json"
       ]
     },
     {
@@ -2890,9 +2890,9 @@
       "unit": "B03",
       "resolution": "Changed-field context patches merge transaction-latest policy; resets/default copies explicitly replace including absent tokens. ShotRow submits selected boolean membership intent applied to latest shot with owner/reference checks and caught errors; bulk/full-array replacement unchanged.",
       "evidence": [
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/research/B03-implementation.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B03-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B03-check-snapshot.json"
+        ".trellis/tasks/09-30-src-remediation-b/research/B03-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B03-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B03-check-snapshot.json"
       ]
     },
     {
@@ -3059,9 +3059,9 @@
       "unit": "B07",
       "resolution": "One thread/project compose scope owns text revision, references/import resources. Capture synchronously; transfer captured home payload only, guarded nav restore/retrylocation, acknowledge only submitted scope/version afterbegin; newtopic failure retainsdraft. Actual callbacks and nativebrowser reproduced former risk.",
       "evidence": [
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/research/B07-implementation.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B07-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B07-check-coverage.json"
+        ".trellis/tasks/09-30-src-remediation-b/research/B07-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B07-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B07-check-coverage.json"
       ]
     },
     {
@@ -3081,8 +3081,8 @@
       "unit": "A02",
       "resolution": "写事务返回实际before/after，全部目标预检后原子恢复8字段；失败undo保留到原到期时间，展示错误且可重试，防止重复及旧异步清除新动作。",
       "evidence": [
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A02-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A02-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-a/reviews/A02-check.md",
+        ".trellis/tasks/09-30-src-remediation-a/reviews/A02-implementation.md",
         "tests/shotBulkUndo.test.ts",
         "tests/undo.test.ts",
         ".trellis/spec/frontend/state-management.md"
@@ -3105,9 +3105,9 @@
       "unit": "A04",
       "resolution": "手工槽/时长/项目字段传真实baseline并在事务内比较受影响内容；槽冻结target/owner/callback，失败保留草稿媒体；输出仅提交changedfields，pending/deferred live与authoritative ack回归通过。",
       "evidence": [
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A04-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A04-implementation.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A-integration.md",
+        ".trellis/tasks/09-30-src-remediation-a/reviews/A04-check.md",
+        ".trellis/tasks/09-30-src-remediation-a/reviews/A04-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-a/reviews/A-integration.md",
         "tests/manualDraftBaseline.test.ts",
         "tests/manualDraftWiring.test.ts",
         ".trellis/spec/frontend/state-management.md"
@@ -3129,9 +3129,9 @@
       "unit": "A04",
       "resolution": "手工槽/时长/项目字段传真实baseline并在事务内比较受影响内容；槽冻结target/owner/callback，失败保留草稿媒体；输出仅提交changedfields，pending/deferred live与authoritative ack回归通过。",
       "evidence": [
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A04-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A04-implementation.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A-integration.md",
+        ".trellis/tasks/09-30-src-remediation-a/reviews/A04-check.md",
+        ".trellis/tasks/09-30-src-remediation-a/reviews/A04-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-a/reviews/A-integration.md",
         "tests/manualDraftBaseline.test.ts",
         "tests/manualDraftWiring.test.ts",
         ".trellis/spec/frontend/state-management.md"
@@ -3152,9 +3152,9 @@
       "unit": "B03",
       "resolution": "Changed-field context patches merge transaction-latest policy; resets/default copies explicitly replace including absent tokens. ShotRow submits selected boolean membership intent applied to latest shot with owner/reference checks and caught errors; bulk/full-array replacement unchanged.",
       "evidence": [
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/research/B03-implementation.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B03-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B03-check-snapshot.json"
+        ".trellis/tasks/09-30-src-remediation-b/research/B03-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B03-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B03-check-snapshot.json"
       ]
     },
     {
@@ -3176,9 +3176,9 @@
       "unit": "B01",
       "resolution": "Tag query identity including null/empty, key target lifecycle before query/state hooks, protect manual dirty/pending navigation and parent-driven material selection; preserve same-target frozen baseline and readable unavailable sessions. Independent check fixed cleanup/unmount bookkeeping and passed final19browser/66test evidence.",
       "evidence": [
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/research/B01-implementation.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B01-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B01-check-snapshot.json"
+        ".trellis/tasks/09-30-src-remediation-b/research/B01-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B01-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B01-check-snapshot.json"
       ]
     },
     {
@@ -3215,11 +3215,11 @@
       "unit": "B06",
       "resolution": "Editor/operation ownership freezes credentials and guards success/error/nestedread/finally; synchronous writes block duplicate/dismissal/input/open. Script imports use latest request+editrevision; explicit conflict adoption/discard and useLatest retire old reads; actual callbacks confirm former risks.",
       "evidence": [
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/research/B06-implementation.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B06-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B06-check-snapshot.json",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B-final-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B-final-check-snapshot.json"
+        ".trellis/tasks/09-30-src-remediation-b/research/B06-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B06-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B06-check-snapshot.json",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B-final-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B-final-check-snapshot.json"
       ]
     },
     {
@@ -3302,8 +3302,8 @@
       "unit": "A01",
       "resolution": "未知供应商状态不进入finishReason；合法诊断保留，message完整脱敏后截断；真实run/message持久化回归通过。",
       "evidence": [
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A01-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A01-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-a/reviews/A01-check.md",
+        ".trellis/tasks/09-30-src-remediation-a/reviews/A01-implementation.md",
         ".trellis/spec/frontend/ai-connectors.md",
         "tests/responsesStream.test.ts"
       ]
@@ -3323,9 +3323,9 @@
       "unit": "B04",
       "resolution": "Shared strictunknown directorydecoder and validatedchatprobe; validempty preserved. Only404/405/GETfetchTypeError entersonesingleminimalPOST, body/protocolerrorsreturnfailurewithnoretry; redactionbeforetruncate.",
       "evidence": [
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/research/B04-implementation.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B04-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B04-check-snapshot.json"
+        ".trellis/tasks/09-30-src-remediation-b/research/B04-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B04-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B04-check-snapshot.json"
       ]
     },
     {
@@ -3344,9 +3344,9 @@
       "unit": "B05",
       "resolution": "Shared opaque encodable ID guard validates submit/query/store/package; valid duplicates canonicalize first-order and legacy CAS checkpoint precedes queries while preserving history/results. AbortError recognized during fetch/body; ambiguous paid outcome never auto-resubmits.",
       "evidence": [
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/research/B05-implementation.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B05-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B05-check-snapshot.json"
+        ".trellis/tasks/09-30-src-remediation-b/research/B05-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B05-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B05-check-snapshot.json"
       ]
     },
     {
@@ -3365,9 +3365,9 @@
       "unit": "B05",
       "resolution": "Shared opaque encodable ID guard validates submit/query/store/package; valid duplicates canonicalize first-order and legacy CAS checkpoint precedes queries while preserving history/results. AbortError recognized during fetch/body; ambiguous paid outcome never auto-resubmits.",
       "evidence": [
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/research/B05-implementation.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B05-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B05-check-snapshot.json"
+        ".trellis/tasks/09-30-src-remediation-b/research/B05-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B05-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B05-check-snapshot.json"
       ]
     },
     {
@@ -3407,9 +3407,9 @@
       "unit": "B05",
       "resolution": "Shared opaque encodable ID guard validates submit/query/store/package; valid duplicates canonicalize first-order and legacy CAS checkpoint precedes queries while preserving history/results. AbortError recognized during fetch/body; ambiguous paid outcome never auto-resubmits.",
       "evidence": [
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/research/B05-implementation.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B05-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B05-check-snapshot.json"
+        ".trellis/tasks/09-30-src-remediation-b/research/B05-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B05-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B05-check-snapshot.json"
       ]
     },
     {
@@ -3462,9 +3462,9 @@
       "unit": "B01",
       "resolution": "Tag query identity including null/empty, key target lifecycle before query/state hooks, protect manual dirty/pending navigation and parent-driven material selection; preserve same-target frozen baseline and readable unavailable sessions. Independent check fixed cleanup/unmount bookkeeping and passed final19browser/66test evidence.",
       "evidence": [
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/research/B01-implementation.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B01-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B01-check-snapshot.json"
+        ".trellis/tasks/09-30-src-remediation-b/research/B01-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B01-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B01-check-snapshot.json"
       ]
     },
     {
@@ -3485,9 +3485,9 @@
       "unit": "A04",
       "resolution": "手工槽/时长/项目字段传真实baseline并在事务内比较受影响内容；槽冻结target/owner/callback，失败保留草稿媒体；输出仅提交changedfields，pending/deferred live与authoritative ack回归通过。",
       "evidence": [
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A04-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A04-implementation.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A-integration.md",
+        ".trellis/tasks/09-30-src-remediation-a/reviews/A04-check.md",
+        ".trellis/tasks/09-30-src-remediation-a/reviews/A04-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-a/reviews/A-integration.md",
         "tests/manualDraftBaseline.test.ts",
         "tests/manualDraftWiring.test.ts",
         ".trellis/spec/frontend/state-management.md"
@@ -3548,8 +3548,8 @@
       "unit": "A02",
       "resolution": "写事务返回实际before/after，全部目标预检后原子恢复8字段；失败undo保留到原到期时间，展示错误且可重试，防止重复及旧异步清除新动作。",
       "evidence": [
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A02-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-a/reviews/A02-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-a/reviews/A02-check.md",
+        ".trellis/tasks/09-30-src-remediation-a/reviews/A02-implementation.md",
         "tests/shotBulkUndo.test.ts",
         "tests/undo.test.ts",
         ".trellis/spec/frontend/state-management.md"
@@ -3591,11 +3591,11 @@
       "unit": "B06",
       "resolution": "Editor/operation ownership freezes credentials and guards success/error/nestedread/finally; synchronous writes block duplicate/dismissal/input/open. Script imports use latest request+editrevision; explicit conflict adoption/discard and useLatest retire old reads; actual callbacks confirm former risks.",
       "evidence": [
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/research/B06-implementation.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B06-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B06-check-snapshot.json",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B-final-check.md",
-        ".trellis/tasks/archive/2026-10/09-30-src-remediation-b/reviews/B-final-check-snapshot.json"
+        ".trellis/tasks/09-30-src-remediation-b/research/B06-implementation.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B06-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B06-check-snapshot.json",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B-final-check.md",
+        ".trellis/tasks/09-30-src-remediation-b/reviews/B-final-check-snapshot.json"
       ]
     },
     {

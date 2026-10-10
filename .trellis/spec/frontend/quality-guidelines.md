@@ -138,7 +138,7 @@ Tool success, passing tests and long-file inspection alone do not establish full
 - An audit report is not a product fix. State whether tools/rules were merely run, permanently configured, or connected to CI; recommendations do not imply adoption.
 
 The 2026-09-30 source audit and proposed architecture/tool gates are recorded in
-`.trellis/tasks/09-30-src-quality-architecture-audit/`. The existing project quality
+`.trellis/tasks/archive/2026-10/09-30-src-quality-architecture-audit/`. The existing project quality
 commands above remain the installed gates until a subsequent implementation changes them.
 
 ## Durable original-source comparison fixtures (2026-10-08)
