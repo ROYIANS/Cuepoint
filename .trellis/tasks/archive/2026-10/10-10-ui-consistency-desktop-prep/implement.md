@@ -86,4 +86,4 @@ Focused tests按实际owner选择：materialLibrary/materialIntegration/draftCon
 - [x] 用户追加的素材库 Tabs：移除遗留下划线皮肤，共享 36/32px 中性页签；素材/世界/音乐原生鼠标、方向键、窄窗与独立检查通过。
 - [x] 最终质量门通过，产品输入hash核对未变化；完整原生/受控边界、独立报告与规范已记录。
 - [x] 用户于 2026-10-10 确认完整提交计划：“按方案提交并归档”。
-- [ ] 工作提交、归档和 journal；执行完成后以 task.json 与开发者 journal 的实际 commit 为准。
+- [x] 工作提交 `100f0e936d637c7cccfa564ac6c9b36b88b33cc7` 已完成。用户已批准归档与 journal，由 trellis-finish-work 顺序执行；最终收尾状态与记录见 task.json 和开发者 journal。

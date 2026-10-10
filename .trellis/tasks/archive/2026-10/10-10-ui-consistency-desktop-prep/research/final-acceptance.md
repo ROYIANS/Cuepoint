@@ -1,6 +1,6 @@
 # 全站 UI 统一 · 最终验收记录
 
-2026-10-10，工作分支 `codex/ui-consistency-desktop-prep`，基线 `main ecf8dd0c`。产品实施、独立检查和最终质量门已完成；用户已于 2026-10-10 确认“按方案提交并归档”。工作提交、归档和 journal 按已确认计划执行，实际收尾记录见 task.json 与开发者 journal。
+2026-10-10，工作分支 `codex/ui-consistency-desktop-prep`，基线 `main ecf8dd0c`。产品实施、独立检查和最终质量门已完成；用户已于 2026-10-10 确认“按方案提交并归档”。工作提交 `100f0e936d637c7cccfa564ac6c9b36b88b33cc7` 已完成；归档和 journal 按已确认计划执行，实际收尾记录见 task.json 与开发者 journal。
 
 ## 产品交付
 
