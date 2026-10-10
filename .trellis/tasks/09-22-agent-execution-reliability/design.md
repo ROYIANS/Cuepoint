@@ -1,5 +1,9 @@
 # Execution readiness and truthful stop presentation
 
+## Current closeout design — 2026-10-10
+
+The next deterministic implementation is defined in [closeout increments](research/2026-10-10-closeout-increments.md). It adds durable contextual owner resolution and typed effect/recovery facts. The user approved two bounded automatic checks on 2026-10-10; their shared contract is [final-reply review](../09-22-agent-result-evidence/research/2026-10-10-final-reply-review.md). Historical delivery designs below retain their original scope.
+
 User approved the initiative and starting Agent flow work on 2026-09-22. This child owns R1; R2 evidence validation and batch tools remain separate.
 
 ## Boundary

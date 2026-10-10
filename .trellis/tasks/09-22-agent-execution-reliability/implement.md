@@ -1,5 +1,12 @@
 # Implementation
 
+## Current remaining increment — 2026-10-10
+
+1. Implement the contextual-owner and typed-recovery contract in `research/2026-10-10-closeout-increments.md` without changing terminal model behavior.
+2. Run targeted scope/approval/rollback/recovery regressions and TypeScript.
+3. Independent review and integrated quality/full-test/build gates; update specs and actual acceptance evidence.
+4. Complete separately reviewed no-plan behavior and desktop/narrow/live-model acceptance before marking R1 complete.
+
 1. Review pending readiness work and existing lifecycle/permissions; preserve uncommitted changes.
 2. Add pure owned-ledger execution summary plus negative/legacy tests.
 3. Integrate in AgentRunDetails with compact summary and expandable diagnostics; keep recovery actions and lazy process mounting.

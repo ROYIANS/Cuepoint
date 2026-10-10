@@ -1185,3 +1185,33 @@ E 与总整改任务已由 task.py archive 归档到 `.trellis/tasks/archive/202
 ### Status
 
 [OK] **Completed**
+
+
+## Session 46: 归档已完成源码审查与A/B，启动存量任务完结
+<!-- trellis-session: v=2 fp=ee6c3e052b94c260 -->
+
+**Date**: 2026-10-10
+**Task**: 归档已完成源码审查与A/B，启动存量任务完结
+**Branch**: `codex/complete-trellis-backlog`
+
+### Summary
+
+用户要求逐项完成全部存量开发与验收后归档。先归档已完成A/B及只读审查，原333份证据文件哈希不变、39当前链接有效、51发现32单元完成状态不变；剩7任务继续。用户批准smart最多一次执行自检和一次只读声明检查，已开始R1/R2并行实现；R3/R4研究完成。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `8b8fcf46` | chore(task): archive completed source audit and remediation tasks |
+
+### Testing
+
+- [OK] 归档证据哈希、原始task元数据、39链接与台账验证PASS；本次归档未重跑产品测试。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 完成R1/R2代码与独立验收，规划实现R3/R4并补真实模型和设备验收；未完成项保持活跃。

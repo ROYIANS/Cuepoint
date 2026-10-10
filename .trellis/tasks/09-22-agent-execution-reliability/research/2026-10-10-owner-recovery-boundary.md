@@ -1,0 +1,7 @@
+# Contextual ownership and typed recovery implementation boundary
+
+The remaining deterministic gap is that a durably bound run still rejects omitted business owner IDs and sound editing project IDs before their existing scope guards. Resolve only the missing owner from the saved run/thread binding, after parsing, at preparation and execution boundaries. Supplied IDs retain their meaning and conflicts reject; episodes are never inferred. Original model arguments, preview approval policy and creation provenance remain unchanged.
+
+Business schemas/store/tools and projectScope own owner defaults and scoped target failures. Audio/music tools use a typed parsed-argument resolver in libraryToolHelpers; IP/material consumers retain their current paths. toolErrors owns bounded code/uncertainty/recovery envelopes, while the atomic repository preserves real causes without converting arbitrary error prose into categories. Runtime catches are integrated separately by the main session.
+
+No model termination policy, paid submission/replay, sound result-source evidence, UI redesign or task completion is implemented here. Targeted repository regressions must prove defaults, conflicts, projectless/studio behavior, episode rejection, stale approvals, rollback causes and unknown certainty without side effects. Changes must preserve D05 parser-to-callback typing and the atomic mutation/result transaction.

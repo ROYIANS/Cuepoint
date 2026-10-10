@@ -12,7 +12,7 @@
   "assignee": "ROYIANS",
   "createdAt": "2026-09-22",
   "completedAt": null,
-  "branch": null,
+  "branch": "codex/complete-trellis-backlog",
   "base_branch": "main",
   "worktree_path": null,
   "commit": "25ea68e",
