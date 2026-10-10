@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 48
-- **Last Active**: 2026-10-10
+- **Total Sessions**: 49
+- **Last Active**: 2026-10-11
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~1290 | Active |
+| `journal-1.md` | ~1334 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 49 | 2026-10-11 | Managed workspace and partial checkpoint foundations | `ac34f151be8930be083909f8d66753358d4ae736`, `a5d70da67dddd37c8b9cac3bada277cf801cad12`, `3095f87809e09da48d67cef6c0c9043acb1889be` | `codex/desktop-storage-sync` |
 | 48 | 2026-10-10 | 全站 UI 统一与桌面化准备 | `100f0e936d637c7cccfa564ac6c9b36b88b33cc7` | `codex/ui-consistency-desktop-prep` |
 | 47 | 2026-10-10 | 清空七条 Trellis 存量：Agent 执行核验与批量音频验收 | `b23172a7`, `a94e84be` | `codex/complete-trellis-backlog` |
 | 46 | 2026-10-10 | 归档已完成源码审查与A/B，启动存量任务完结 | `8b8fcf46` | `codex/complete-trellis-backlog` |

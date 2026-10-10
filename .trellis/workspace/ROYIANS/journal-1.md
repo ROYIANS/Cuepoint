@@ -1288,3 +1288,47 @@ E 与总整改任务已由 task.py archive 归档到 `.trellis/tasks/archive/202
 ### Status
 
 [OK] **Completed**
+
+
+## Session 49: Managed workspace and partial checkpoint foundations
+<!-- trellis-session: v=2 fp=9ed3035e5d9ba023 -->
+
+**Date**: 2026-10-11
+**Task**: Managed workspace and partial checkpoint foundations
+**Branch**: `codex/desktop-storage-sync`
+
+### Summary
+
+Implemented and independently accepted browser managed-copy and bounded partial checkpoint/provider foundations. Completed the user-approved local commit/archive batch; desktop-storage-sync remains in progress.
+
+### Main Changes
+
+- Managed workspace import: independent owned bytes, portable lexical references, incremental hashing and staged cancellation; accepted workspace sources remain preserved.
+- Partial cuepoint.protocol-fixture.v1: canonical immutable checkpoints, verified binary/reference closure, content-addressed objects, trusted provider registry, conditional head publication and distinct application receipts.
+- Archived only 10-10-storage-workspace-foundation and 10-10-storage-checkpoint-plugin-foundation under .trellis/tasks/archive/2026-10/. Restored the in-progress desktop-storage-sync parent as active.
+- User selected complete original tool-history retention after field-by-field review on 2026-10-11. Recorded follow-on requirements in parent documents; credentials, continuation tokens and execution authority remain excluded, and incoming history remains dormant.
+- Preserved failed probes and raw gate logs. Normalized one surplus checkpoint EOF newline after acceptance and recorded exact before/after hashes; no behavior changed. Excluded the reviewed external routeTree.gen.ts formatting and preserved the user dev server. No push.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `ac34f151be8930be083909f8d66753358d4ae736` | feat(storage): add managed workspace import foundation |
+| `a5d70da67dddd37c8b9cac3bada277cf801cad12` | feat(sync): add immutable checkpoint provider contracts |
+| `3095f87809e09da48d67cef6c0c9043acb1889be` | docs(storage): record sync design and verification |
+
+### Testing
+
+- [OK] Final accepted full Vitest: 188 files, 3,355 passing tests and one existing skip; 127 affected regressions, including 71 permanent protocol/provider cases.
+- [OK] Independent final review: 27 adversarial probes, affected regressions and strict app/test/probe TypeScript passed. Eight final owner gates passed: lint, strict tests, targeted/full tests, build, serial quality, 88 quality self-tests and model-bank verification (197 files / 85 providers / 1,855 models). No new quality allowance. Existing build/review warnings retained.
+- [OK] Before approved commits, rechecked 17 source/test hashes and runtime specification hashes; exact 140-file plan matched dirty paths, staged file lists matched every work commit. Authored source/document whitespace checks passed; raw evidence bytes retained.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Choose and pin a bounded native desktop prototype/runtime, then verify durable workspace identity, owned filesystem staging, SQLite/credential ports, backup/reopen and failure recovery with disposable data.
+- Review all 49 production table codecs and original tool-history fields, prove dormant imported execution, and complete binary/reference closure before real full-workspace synchronization.
+- Keep managed service accounts/quotas/billing, native production migration and user-facing handoff/history/restore as separately validated parent deliverables.
