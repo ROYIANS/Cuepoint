@@ -41,13 +41,13 @@ function reportCleanupFailure(session: DraftMediaSession) {
 }
 
 function GenerationSlotTile({
-                                       slot,
-                                       variant,
-                                       label,
-                                       ariaLabel,
-                                       onOpen,
-                                       size = "default",
-                                   }: {
+                                slot,
+                                variant,
+                                label,
+                                ariaLabel,
+                                onOpen,
+                                size = "default",
+                            }: {
     slot: GenerationSlot;
     variant: TileVariant;
     label?: string;
@@ -345,143 +345,148 @@ export function GenerationSlotEditor({
 
     return (
         <>
-        {navigationGuard}
-        <Dialog open={open} onOpenChange={(next) => !next && void close()}>
-            <DialogContent className="flex max-h-[90vh] max-w-2xl flex-col overflow-hidden sm:max-w-2xl">
-                <DialogHeader>
-                    <DialogTitle>{editSession.title}</DialogTitle>
-                    <DialogDescription>填写画面描述、添加参考，或上传、复用已有素材。保存后可用于分镜和交付。</DialogDescription>
-                </DialogHeader>
-                <div className="app-scroll space-y-5 overflow-auto pr-1">
-                    <div className="grid gap-2">
-                        <Label htmlFor={promptId}>画面描述 / 提示词</Label>
-                        <Textarea
-                            autoFocus
-                            id={promptId}
-                            disabled={pending !== null || cancelled}
-                            readOnly={targetChanged || unavailable || workspaceUnavailable}
-                            value={draft.prompt}
-                            onChange={(event) => setDraft({...draft, prompt: event.target.value})}
-                            placeholder="描述画面内容、动作、光线或镜头…"
-                            className="min-h-32"
-                        />
-                    </div>
-                    <div className="grid gap-2">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                            <div id={refImageId} className="text-sm font-medium">参考图</div>
-                            <Button type="button" variant="ghost" size="sm" disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
-                                    onClick={() => setPickerTarget(pickerTarget === "image" ? null : "image")}>
-                                <Library/> 选择已有参考图
-                            </Button>
-                        </div>
-                        <RefStrip
-                            disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
-                            labelledBy={refImageId}
-                            ids={draft.referenceImageIds}
-                            addLabel="添加图片"
-                            onAdd={() => void upload("image")}
-                            onRemove={(id) =>
-                                setDraft({
-                                    ...draft,
-                                    referenceImageIds: draft.referenceImageIds.filter((item) => item !== id),
-                                })
-                            }
-                        />
-                        {renderPicker("image")}
-                    </div>
-                    <div className="grid gap-2">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                            <div id={refVideoId} className="text-sm font-medium">参考视频</div>
-                            <Button type="button" variant="ghost" size="sm" disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
-                                    onClick={() => setPickerTarget(pickerTarget === "video" ? null : "video")}>
-                                <Library/> 选择已有参考视频
-                            </Button>
-                        </div>
-                        <RefStrip
-                            disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
-                            labelledBy={refVideoId}
-                            ids={draft.referenceVideoIds}
-                            addLabel="添加视频"
-                            onAdd={() => void upload("video")}
-                            onRemove={(id) =>
-                                setDraft({
-                                    ...draft,
-                                    referenceVideoIds: draft.referenceVideoIds.filter((item) => item !== id),
-                                })
-                            }
-                        />
-                        {renderPicker("video")}
-                    </div>
-                    <div className="bg-muted space-y-3 rounded-xl p-4">
-                        <div className="flex flex-wrap items-center justify-between gap-3">
-                            <div>
-                                <div className="text-sm font-medium">成片 / 画面素材</div>
-                                <div className="text-muted-foreground text-[11px]">
-                                    {editSession.resultKinds.length === 1 ? "支持图片素材，可复用已有画面" : "支持已有图片或视频，视频可直接播放检查"}
-                                </div>
-                            </div>
-                            <div className="flex flex-wrap gap-2">
-                                <Button type="button" size="sm" variant="outline"
-                                        disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
-                                        onClick={() => setPickerTarget(pickerTarget === "result" ? null : "result")}>
-                                    <Library/> 选择已有素材
-                                </Button>
-                                <Button size="sm" variant="outline" disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
-                                        onClick={() => void upload("result")}>
-                                    上传素材
-                                </Button>
-                                {draft.result ? (
-                                    <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
-                                        onClick={() => setDraft({...draft, result: undefined})}
-                                    >
-                                        清除
-                                    </Button>
-                                ) : null}
-                            </div>
-                        </div>
-                        <div className="bg-background h-64 overflow-hidden rounded-lg border">
-                            <MediaPreview
-                                mediaId={draft.result?.mediaId}
-                                className="h-full w-full"
-                                empty="尚未添加素材"
-                                inspect
+            {navigationGuard}
+            <Dialog open={open} onOpenChange={(next) => !next && void close()}>
+                <DialogContent className="flex max-h-[90vh] max-w-2xl flex-col overflow-hidden sm:max-w-2xl">
+                    <DialogHeader>
+                        <DialogTitle>{editSession.title}</DialogTitle>
+                        <DialogDescription>填写画面描述、添加参考，或上传、复用已有素材。保存后可用于分镜和交付。</DialogDescription>
+                    </DialogHeader>
+                    <div className="app-scroll space-y-5 overflow-auto pr-1">
+                        <div className="grid gap-2">
+                            <Label htmlFor={promptId}>画面描述 / 提示词</Label>
+                            <Textarea
+                                autoFocus
+                                id={promptId}
+                                disabled={pending !== null || cancelled}
+                                readOnly={targetChanged || unavailable || workspaceUnavailable}
+                                value={draft.prompt}
+                                onChange={(event) => setDraft({...draft, prompt: event.target.value})}
+                                placeholder="描述画面内容、动作、光线或镜头…"
+                                className="min-h-32"
                             />
                         </div>
-                        {renderPicker("result")}
+                        <div className="grid gap-2">
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                                <div id={refImageId} className="text-sm font-medium">参考图</div>
+                                <Button type="button" variant="ghost" size="sm"
+                                        disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
+                                        onClick={() => setPickerTarget(pickerTarget === "image" ? null : "image")}>
+                                    <Library/> 选择已有参考图
+                                </Button>
+                            </div>
+                            <RefStrip
+                                disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
+                                labelledBy={refImageId}
+                                ids={draft.referenceImageIds}
+                                addLabel="添加图片"
+                                onAdd={() => void upload("image")}
+                                onRemove={(id) =>
+                                    setDraft({
+                                        ...draft,
+                                        referenceImageIds: draft.referenceImageIds.filter((item) => item !== id),
+                                    })
+                                }
+                            />
+                            {renderPicker("image")}
+                        </div>
+                        <div className="grid gap-2">
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                                <div id={refVideoId} className="text-sm font-medium">参考视频</div>
+                                <Button type="button" variant="ghost" size="sm"
+                                        disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
+                                        onClick={() => setPickerTarget(pickerTarget === "video" ? null : "video")}>
+                                    <Library/> 选择已有参考视频
+                                </Button>
+                            </div>
+                            <RefStrip
+                                disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
+                                labelledBy={refVideoId}
+                                ids={draft.referenceVideoIds}
+                                addLabel="添加视频"
+                                onAdd={() => void upload("video")}
+                                onRemove={(id) =>
+                                    setDraft({
+                                        ...draft,
+                                        referenceVideoIds: draft.referenceVideoIds.filter((item) => item !== id),
+                                    })
+                                }
+                            />
+                            {renderPicker("video")}
+                        </div>
+                        <div className="bg-muted space-y-3 rounded-xl p-4">
+                            <div className="flex flex-wrap items-center justify-between gap-3">
+                                <div>
+                                    <div className="text-sm font-medium">成片 / 画面素材</div>
+                                    <div className="text-muted-foreground text-[11px]">
+                                        {editSession.resultKinds.length === 1 ? "支持图片素材，可复用已有画面" : "支持已有图片或视频，视频可直接播放检查"}
+                                    </div>
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                    <Button type="button" size="sm" variant="outline"
+                                            disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
+                                            onClick={() => setPickerTarget(pickerTarget === "result" ? null : "result")}>
+                                        <Library/> 选择已有素材
+                                    </Button>
+                                    <Button size="sm" variant="outline"
+                                            disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
+                                            onClick={() => void upload("result")}>
+                                        上传素材
+                                    </Button>
+                                    {draft.result ? (
+                                        <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
+                                            onClick={() => setDraft({...draft, result: undefined})}
+                                        >
+                                            清除
+                                        </Button>
+                                    ) : null}
+                                </div>
+                            </div>
+                            <div className="bg-background h-64 overflow-hidden rounded-lg border">
+                                <MediaPreview
+                                    mediaId={draft.result?.mediaId}
+                                    className="h-full w-full"
+                                    empty="尚未添加素材"
+                                    inspect
+                                />
+                            </div>
+                            {renderPicker("result")}
+                        </div>
                     </div>
-                </div>
-                {targetChanged ? <p role="alert" className="text-destructive text-sm">
-                    编辑目标已切换，当前仍是「{editSession.title}」的草稿。请关闭后重新打开目标槽位。
-                </p> : null}
-                {error ? (
-                    <div role="alert" className="text-destructive text-sm">
-                        <p>{error}。{cancelled ? "请再次取消以重试清理。" : "内容已保留，可重试或取消。"}</p>
-                        {failedUpload.current && !cancelled ? (
-                            <Button variant="outline" size="sm" disabled={pending !== null || unavailable || workspaceUnavailable} onClick={() => {
-                                const retry = failedUpload.current;
-                                if (retry) void upload(retry.kind, retry.file);
-                            }}>重试上传</Button>
-                        ) : null}
-                    </div>
-                ) : null}
-                <DialogFooter>
-                    <Button variant="outline" disabled={pending === "save" || pending === "close"}
-                            onClick={() => void close()}>
-                        {pending === "close" ? "正在清理…" : "取消"}
-                    </Button>
-                    <Button
-                        variant="brand"
-                        disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
-                        onClick={() => void save()}
-                    >
-                        {pending === "save" ? "保存中…" : pending === "upload" ? "上传中…" : error && !failedUpload.current ? "重试保存" : "保存"}
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                    {targetChanged ? <p role="alert" className="text-destructive text-sm">
+                        编辑目标已切换，当前仍是「{editSession.title}」的草稿。请关闭后重新打开目标槽位。
+                    </p> : null}
+                    {error ? (
+                        <div role="alert" className="text-destructive text-sm">
+                            <p>{error}。{cancelled ? "请再次取消以重试清理。" : "内容已保留，可重试或取消。"}</p>
+                            {failedUpload.current && !cancelled ? (
+                                <Button variant="outline" size="sm"
+                                        disabled={pending !== null || unavailable || workspaceUnavailable}
+                                        onClick={() => {
+                                            const retry = failedUpload.current;
+                                            if (retry) void upload(retry.kind, retry.file);
+                                        }}>重试上传</Button>
+                            ) : null}
+                        </div>
+                    ) : null}
+                    <DialogFooter>
+                        <Button variant="outline" disabled={pending === "save" || pending === "close"}
+                                onClick={() => void close()}>
+                            {pending === "close" ? "正在清理…" : "取消"}
+                        </Button>
+                        <Button
+                            variant="brand"
+                            disabled={pending !== null || cancelled || targetChanged || unavailable || workspaceUnavailable}
+                            onClick={() => void save()}
+                        >
+                            {pending === "save" ? "保存中…" : pending === "upload" ? "上传中…" : error && !failedUpload.current ? "重试保存" : "保存"}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </>
     );
 }

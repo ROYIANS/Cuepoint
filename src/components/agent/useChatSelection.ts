@@ -4,13 +4,18 @@ import type {ChatThread, ConnectorConfig, Id} from "@/domain/types";
 import type {AgentReasoningEffort} from "@/domain/agent";
 import type {AgentInteractionMode, ChatSurfaceMode} from "./composerTypes";
 import {getReasoningPolicy} from "@/lib/ai/reasoningPolicy";
-import {buildChatModelOptions, getChatModelPolicy, sameChatModelConnector, type ChatModelCatalog} from "@/lib/ai/chatModelPolicy";
+import {
+    buildChatModelOptions,
+    type ChatModelCatalog,
+    getChatModelPolicy,
+    sameChatModelConnector
+} from "@/lib/ai/chatModelPolicy";
 
-type ThreadEffortSelection = NonNullable<ChatThread["reasoningSelection"]> & {threadId?: Id};
+type ThreadEffortSelection = NonNullable<ChatThread["reasoningSelection"]> & { threadId?: Id };
 
 /** A thread-local choice is applicable only to the connector destination and model that offered it. */
 function reasoningEffortForSelection(threadId: Id | undefined, thread: ChatThread | undefined,
-    local: ThreadEffortSelection | undefined, connector: ConnectorConfig | undefined, model: string): AgentReasoningEffort | undefined {
+                                     local: ThreadEffortSelection | undefined, connector: ConnectorConfig | undefined, model: string): AgentReasoningEffort | undefined {
     const selection = local?.threadId === threadId ? local : thread?.reasoningSelection;
     if (!selection?.value) return undefined;
     if (selection.connectorId !== connector?.id || selection.baseUrl !== connector?.baseUrl || selection.model !== model) return undefined;
@@ -19,7 +24,11 @@ function reasoningEffortForSelection(threadId: Id | undefined, thread: ChatThrea
 }
 
 export function useChatSelection({loaded, activeThread, activeThreadId, connectorList, modelCatalog}: {
-    loaded: boolean; activeThread?: ChatThread; activeThreadId?: string; connectorList: ConnectorConfig[]; modelCatalog?: ChatModelCatalog;
+    loaded: boolean;
+    activeThread?: ChatThread;
+    activeThreadId?: string;
+    connectorList: ConnectorConfig[];
+    modelCatalog?: ChatModelCatalog;
 }) {
     const [sessionConnectorId, setSessionConnectorId] = useState<Id | undefined>();
     const [sessionModel, setSessionModel] = useState("");
@@ -93,23 +102,51 @@ export function useChatSelection({loaded, activeThread, activeThreadId, connecto
 
     async function handleReasoningEffortChange(value?: AgentReasoningEffort) {
         if (!selectedConnector) return;
-        const selection = {connectorId: selectedConnector.id, baseUrl: selectedConnector.baseUrl, model: modelValue, value};
+        const selection = {
+            connectorId: selectedConnector.id,
+            baseUrl: selectedConnector.baseUrl,
+            model: modelValue,
+            value
+        };
         selectionRevisionRef.current += 1;
         setEffortSelection({...selection, threadId: activeThreadId});
         if (activeThreadId) await updateChatThread(activeThreadId, {reasoningSelection: selection});
     }
+
     function handleChatModeChange(mode: ChatSurfaceMode) {
         selectionRevisionRef.current += 1;
         setChatMode(mode);
     }
+
     async function handleInteractionModeChange(mode: AgentInteractionMode) {
         selectionRevisionRef.current += 1;
         setInteractionSelection({threadId: activeThreadId, mode});
         if (activeThreadId) await updateChatThread(activeThreadId, {interactionMode: mode});
     }
-    const snapshot = {scope: activeThreadId ?? "home", revision: selectionRevisionRef.current, connector: selectedConnector,
-        model: modelValue, reasoningEffort, interactionMode, projectId, taskMode};
-    return {snapshot, selectedConnector, modelValue, projectId, taskMode, interactionMode, reasoningEffort, chatMode,
-        modelPolicy, catalogMatches, selectionRef, selectionRevisionRef, setComposerProjectId,
-        handleConnectorChange, handleModelChange, handleProjectChange, handleReasoningEffortChange, handleChatModeChange, handleInteractionModeChange};
+
+    const snapshot = {
+        scope: activeThreadId ?? "home", revision: selectionRevisionRef.current, connector: selectedConnector,
+        model: modelValue, reasoningEffort, interactionMode, projectId, taskMode
+    };
+    return {
+        snapshot,
+        selectedConnector,
+        modelValue,
+        projectId,
+        taskMode,
+        interactionMode,
+        reasoningEffort,
+        chatMode,
+        modelPolicy,
+        catalogMatches,
+        selectionRef,
+        selectionRevisionRef,
+        setComposerProjectId,
+        handleConnectorChange,
+        handleModelChange,
+        handleProjectChange,
+        handleReasoningEffortChange,
+        handleChatModeChange,
+        handleInteractionModeChange
+    };
 }

@@ -33,12 +33,7 @@ import {deleteProject, setProjectArchived} from "@/db/cascadeCommands";
 import {formatUpdatedAt} from "@/lib/format";
 import {filterAndSortLibrary, type LibrarySort} from "@/lib/library";
 import {downloadBlob, exportProjectZip,} from "@/lib/projectPackage";
-import {
-    ASPECT_PRESET_IDS,
-    ASPECT_PRESETS,
-    type AspectPresetId,
-    type ProjectMode,
-} from "@/domain/types";
+import {ASPECT_PRESET_IDS, ASPECT_PRESETS, type AspectPresetId, type ProjectMode,} from "@/domain/types";
 import {bindProjectIp} from "@/db/ipProfiles";
 import {ProjectIpPicker} from "./ProjectIpPicker";
 import {Plus} from "lucide-react";
@@ -51,7 +46,9 @@ export function ProjectGalleryPage() {
     const activeRef = useRef(true);
     useEffect(() => {
         activeRef.current = true;
-        return () => {activeRef.current = false;};
+        return () => {
+            activeRef.current = false;
+        };
     }, []);
     const projects = useLiveQuery(() => db.projects.toArray(), []);
     const profiles = useLiveQuery(() => db.ipProfiles.toArray(), []) ?? [];
@@ -409,7 +406,9 @@ export function ProjectGalleryPage() {
                             IP，也可以独立创作。</p>
                     </>}
                     <DialogFooter>
-                        <Button disabled={submitting} variant="outline" onClick={() => {if (!creatingRef.current) setCreating(false);}}>
+                        <Button disabled={submitting} variant="outline" onClick={() => {
+                            if (!creatingRef.current) setCreating(false);
+                        }}>
                             {selectedKind.available ? "取消" : "关闭"}
                         </Button>
                         <Button disabled={!selectedKind.available || !name.trim() || submitting} variant="brand"
@@ -430,8 +429,11 @@ export function ProjectGalleryPage() {
                                      disabled={bindingBusy}/>
                     {bindingError && <p role="alert" className="text-destructive text-sm">{bindingError}</p>}
                     <DialogFooter><Button variant="outline" disabled={bindingBusy}
-                                          onClick={() => {if (!bindingRef.current) setBinding(undefined);}}>取消</Button>
-                        <Button disabled={bindingBusy} onClick={() => void handleBinding()}>{bindingBusy ? "保存中…" : "保存"}</Button></DialogFooter>
+                                          onClick={() => {
+                                              if (!bindingRef.current) setBinding(undefined);
+                                          }}>取消</Button>
+                        <Button disabled={bindingBusy}
+                                onClick={() => void handleBinding()}>{bindingBusy ? "保存中…" : "保存"}</Button></DialogFooter>
                 </DialogContent>
             </Dialog>
 
@@ -450,7 +452,9 @@ export function ProjectGalleryPage() {
                     />
                     {renameError && <p role="alert" className="text-destructive text-sm">{renameError}</p>}
                     <DialogFooter>
-                        <Button disabled={renaming} variant="outline" onClick={() => {if (!renameRef.current) setRenameId(undefined);}}>
+                        <Button disabled={renaming} variant="outline" onClick={() => {
+                            if (!renameRef.current) setRenameId(undefined);
+                        }}>
                             取消
                         </Button>
                         <Button

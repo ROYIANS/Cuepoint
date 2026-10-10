@@ -304,14 +304,17 @@ function TopicRow({
 }) {
     return (
         <div className={active ? "agent-topic-row is-active" : "agent-topic-row"}>
-            <button type="button" className="agent-topic-row-title" onClick={onSelect} aria-current={active ? "true" : undefined}>
+            <button type="button" className="agent-topic-row-title" onClick={onSelect}
+                    aria-current={active ? "true" : undefined}>
                 {thread.title}
             </button>
             <span className="agent-topic-row-actions">
-                <button type="button" role="button" className="agent-topic-row-action" title="重命名" aria-label="重命名" onClick={onRename}>
+                <button type="button" role="button" className="agent-topic-row-action" title="重命名"
+                        aria-label="重命名" onClick={onRename}>
                     <Pencil size={16} aria-hidden/>
                 </button>
-                <button type="button" role="button" className="agent-topic-row-action" title="删除" aria-label="删除" onClick={onDelete}>
+                <button type="button" role="button" className="agent-topic-row-action" title="删除" aria-label="删除"
+                        onClick={onDelete}>
                     <Trash2 size={16} aria-hidden/>
                 </button>
             </span>

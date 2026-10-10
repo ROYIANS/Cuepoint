@@ -17,7 +17,7 @@ type DraftState = {
     attachments: ReferenceAttachment[];
     imports: ReferenceImportDraft[]
 };
-type SubmittedDraft = Pick<DraftState, "text" | "textRevision" | "attachments" | "imports"> & {scope: string};
+type SubmittedDraft = Pick<DraftState, "text" | "textRevision" | "attachments" | "imports"> & { scope: string };
 const EMPTY: DraftState = {text: "", textRevision: 0, attachments: [], imports: []};
 
 export function useReferenceDraft(scope: string, projectId?: string) {
@@ -54,7 +54,13 @@ export function useReferenceDraft(scope: string, projectId?: string) {
 
     function capture(): SubmittedDraft {
         const current = currentDrafts.current[scope] ?? EMPTY;
-        return {scope, text: current.text, textRevision: current.textRevision, attachments: [...current.attachments], imports: [...current.imports]};
+        return {
+            scope,
+            text: current.text,
+            textRevision: current.textRevision,
+            attachments: [...current.attachments],
+            imports: [...current.imports]
+        };
     }
 
     function attach(attachment: ReferenceAttachment) {
@@ -154,7 +160,12 @@ export function useReferenceDraft(scope: string, projectId?: string) {
             ...(source.textRevision === submitted.textRevision ? {text: "", textRevision: ++revision.current} : {}),
             attachments: withoutSent(source.attachments, submitted.attachments)
         };
-        const destination: DraftState = {...EMPTY, text: submitted.text, textRevision: ++revision.current, attachments: submitted.attachments};
+        const destination: DraftState = {
+            ...EMPTY,
+            text: submitted.text,
+            textRevision: ++revision.current,
+            attachments: submitted.attachments
+        };
         const moved = {...submitted, scope: key, textRevision: destination.textRevision};
         publish({...currentDrafts.current, [submitted.scope]: retained, [key]: destination});
         return {
@@ -167,10 +178,18 @@ export function useReferenceDraft(scope: string, projectId?: string) {
                 const origin = currentDrafts.current[submitted.scope] ?? EMPTY;
                 const target = currentDrafts.current[key] ?? EMPTY;
                 if (source.textRevision !== submitted.textRevision || origin.textRevision !== retained.textRevision || target.textRevision !== moved.textRevision) return false;
-                publish({...currentDrafts.current,
-                    [submitted.scope]: {...origin, text: submitted.text, textRevision: ++revision.current,
-                        attachments: [...origin.attachments.filter((item) => !submitted.attachments.some((sent) => sent.referenceId === item.referenceId)), ...submitted.attachments]},
-                    [key]: {...target, text: "", textRevision: ++revision.current, attachments: withoutSent(target.attachments, submitted.attachments)}
+                publish({
+                    ...currentDrafts.current,
+                    [submitted.scope]: {
+                        ...origin, text: submitted.text, textRevision: ++revision.current,
+                        attachments: [...origin.attachments.filter((item) => !submitted.attachments.some((sent) => sent.referenceId === item.referenceId)), ...submitted.attachments]
+                    },
+                    [key]: {
+                        ...target,
+                        text: "",
+                        textRevision: ++revision.current,
+                        attachments: withoutSent(target.attachments, submitted.attachments)
+                    }
                 });
                 return true;
             }

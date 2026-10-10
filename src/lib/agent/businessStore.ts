@@ -1,15 +1,21 @@
 import {db} from "@/db/database";
 import {PRODUCTION_TABLES} from "@/db/productionShared";
 import {
+    type Character,
     CHARACTER_SLOTS,
+    type Episode,
     type MediaRecord,
-    type Project, type Episode, type Shot, type StoryBeat,
-    type Character, type Scene, type Prop, type VisualStyle,
     normalizeEpisodeStory,
+    type Project,
+    type Prop,
     PROP_SLOTS,
+    type Scene,
     SCENE_SLOTS,
+    type Shot,
+    type StoryBeat,
     STUDIO_LIBRARY_ID,
-    STYLE_SLOTS
+    STYLE_SLOTS,
+    type VisualStyle
 } from "@/domain/types";
 import {targetRevision} from "@/lib/productionRevision";
 import {parseGenerationSlot, slotMediaIds} from "@/domain/slot";
@@ -19,11 +25,11 @@ type AssetKind = "character" | "scene" | "prop" | "style";
 export type BusinessRow = Record<string, unknown> & { id: string };
 type RowByKind = {
     project: Project; episode: Episode; shot: Shot;
-    beat: StoryBeat & {projectId: string; episodeId: string; order?: number};
+    beat: StoryBeat & { projectId: string; episodeId: string; order?: number };
     character: Character; scene: Scene; prop: Prop; style: VisualStyle;
     media: ReturnType<typeof metadata>;
 };
-export type OwnedBusinessRecord = {[K in BusinessKind]: {kind: K; row: RowByKind[K]}}[BusinessKind];
+export type OwnedBusinessRecord = { [K in BusinessKind]: { kind: K; row: RowByKind[K] } }[BusinessKind];
 
 export const BUSINESS_LABELS: Record<BusinessKind, string> = {
     project: "项目",
@@ -91,17 +97,23 @@ export async function readBusinessRecord(kind: BusinessKind, id: string, ownerId
         if (!beat) throw new Error("场次不存在或不属于当前分集");
         return {kind, row: {...beat, projectId: ownerId, episodeId}};
     }
-    const owned = <T extends {projectId: string}>(row: T | undefined): T => {
+    const owned = <T extends { projectId: string }>(row: T | undefined): T => {
         if (!row || row.projectId !== ownerId) throw new Error(`${BUSINESS_LABELS[kind]}不存在或归属不匹配`);
         return row;
     };
     switch (kind) {
-        case "episode": return {kind, row: owned(await db.episodes.get(id))};
-        case "character": return {kind, row: owned(await db.characters.get(id))};
-        case "scene": return {kind, row: owned(await db.scenes.get(id))};
-        case "prop": return {kind, row: owned(await db.props.get(id))};
-        case "style": return {kind, row: owned(await db.styles.get(id))};
-        case "media": return {kind, row: metadata(owned(await db.media.get(id)))};
+        case "episode":
+            return {kind, row: owned(await db.episodes.get(id))};
+        case "character":
+            return {kind, row: owned(await db.characters.get(id))};
+        case "scene":
+            return {kind, row: owned(await db.scenes.get(id))};
+        case "prop":
+            return {kind, row: owned(await db.props.get(id))};
+        case "style":
+            return {kind, row: owned(await db.styles.get(id))};
+        case "media":
+            return {kind, row: metadata(owned(await db.media.get(id)))};
         case "shot": {
             const row = owned(await db.shots.get(id));
             if (typeof row.episodeId !== "string") throw new Error("镜头缺少有效分集");
@@ -113,23 +125,42 @@ export async function readBusinessRecord(kind: BusinessKind, id: string, ownerId
 }
 
 export async function listBusinessRecords(kind: BusinessKind, ownerId?: string, episodeId?: string): Promise<OwnedBusinessRecord[]> {
-    if (kind === "project") return (await db.projects.toArray()).filter(row => row.id !== STUDIO_LIBRARY_ID).map(row => ({kind, row: {...row}}));
+    if (kind === "project") return (await db.projects.toArray()).filter(row => row.id !== STUDIO_LIBRARY_ID).map(row => ({
+        kind,
+        row: {...row}
+    }));
     if (!ownerId) throw new Error("必须明确提供 ownerId");
     await requireOwner(ownerId, !["episode", "shot", "beat"].includes(kind));
     if (kind === "beat") {
         if (!episodeId) throw new Error("场次需要分集标识");
         const episode = await requireEpisode(ownerId, episodeId);
-        return normalizeEpisodeStory(episode.story).beats.map((beat, order) => ({kind, row: {...beat, projectId: ownerId, episodeId, order}}));
+        return normalizeEpisodeStory(episode.story).beats.map((beat, order) => ({
+            kind,
+            row: {...beat, projectId: ownerId, episodeId, order}
+        }));
     }
     if (episodeId) await requireEpisode(ownerId, episodeId);
     switch (kind) {
-        case "episode": return (await db.episodes.where("projectId").equals(ownerId).toArray()).map(row => ({kind, row}));
-        case "character": return (await db.characters.where("projectId").equals(ownerId).toArray()).map(row => ({kind, row}));
-        case "scene": return (await db.scenes.where("projectId").equals(ownerId).toArray()).map(row => ({kind, row}));
-        case "prop": return (await db.props.where("projectId").equals(ownerId).toArray()).map(row => ({kind, row}));
-        case "style": return (await db.styles.where("projectId").equals(ownerId).toArray()).map(row => ({kind, row}));
-        case "media": return (await db.media.where("projectId").equals(ownerId).toArray()).map(row => ({kind, row: metadata(row)}));
-        case "shot": return (await db.shots.where("projectId").equals(ownerId).toArray()).filter(row => !episodeId || row.episodeId === episodeId).map(row => ({kind, row}));
+        case "episode":
+            return (await db.episodes.where("projectId").equals(ownerId).toArray()).map(row => ({kind, row}));
+        case "character":
+            return (await db.characters.where("projectId").equals(ownerId).toArray()).map(row => ({kind, row}));
+        case "scene":
+            return (await db.scenes.where("projectId").equals(ownerId).toArray()).map(row => ({kind, row}));
+        case "prop":
+            return (await db.props.where("projectId").equals(ownerId).toArray()).map(row => ({kind, row}));
+        case "style":
+            return (await db.styles.where("projectId").equals(ownerId).toArray()).map(row => ({kind, row}));
+        case "media":
+            return (await db.media.where("projectId").equals(ownerId).toArray()).map(row => ({
+                kind,
+                row: metadata(row)
+            }));
+        case "shot":
+            return (await db.shots.where("projectId").equals(ownerId).toArray()).filter(row => !episodeId || row.episodeId === episodeId).map(row => ({
+                kind,
+                row
+            }));
     }
 }
 
@@ -137,6 +168,7 @@ export async function listBusinessRecords(kind: BusinessKind, ownerId?: string, 
 export async function getRow(kind: BusinessKind, id: string, ownerId?: string, episodeId?: string): Promise<BusinessRow> {
     return {...(await readBusinessRecord(kind, id, ownerId, episodeId)).row};
 }
+
 export async function listRows(kind: BusinessKind, ownerId?: string, episodeId?: string): Promise<BusinessRow[]> {
     return (await listBusinessRecords(kind, ownerId, episodeId)).map(record => ({...record.row}));
 }

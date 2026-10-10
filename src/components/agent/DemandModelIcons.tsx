@@ -1,4 +1,4 @@
-import {lazy, memo, useMemo, type ComponentType, type CSSProperties} from "react";
+import {type ComponentType, type CSSProperties, lazy, memo, useMemo} from "react";
 import type {ModelIconProps} from "@lobehub/icons/es/features/ModelIcon";
 import type {ProviderIconProps} from "@lobehub/icons/es/features/ProviderIcon";
 import ModelDefaultAvatar from "@lobehub/icons/es/features/ModelIcon/DefaultAvatar";
@@ -7,11 +7,24 @@ import ProviderDefaultAvatar from "@lobehub/icons/es/features/ProviderIcon/Defau
 import ProviderDefaultIcon from "@lobehub/icons/es/features/ProviderIcon/DefaultIcon";
 import {brandLoaders, modelMappings, providerMappings} from "./ModelIconMapping.generated";
 
-type RenderProps = {size: number; shape?: "circle" | "square"; className?: string; style?: CSSProperties; type?: string};
+type RenderProps = {
+    size: number;
+    shape?: "circle" | "square";
+    className?: string;
+    style?: CSSProperties;
+    type?: string
+};
 type IconComponent = ComponentType<RenderProps>;
-type BrandIcon = IconComponent & {Avatar: IconComponent; Color?: IconComponent; Combine?: IconComponent; Brand?: IconComponent; BrandColor?: IconComponent; Text?: IconComponent};
+type BrandIcon = IconComponent & {
+    Avatar: IconComponent;
+    Color?: IconComponent;
+    Combine?: IconComponent;
+    Brand?: IconComponent;
+    BrandColor?: IconComponent;
+    Text?: IconComponent
+};
 type IconType = NonNullable<ModelIconProps["type"]>;
-type BrandProps = {renderType: IconType; props: RenderProps; lobeColor?: boolean};
+type BrandProps = { renderType: IconType; props: RenderProps; lobeColor?: boolean };
 type Brand = keyof typeof brandLoaders;
 const lazyBrands = new Map<Brand, ReturnType<typeof lazy<IconComponentForBrand>>>();
 type IconComponentForBrand = ComponentType<BrandProps>;
@@ -20,7 +33,8 @@ type IconComponentForBrand = ComponentType<BrandProps>;
 // variant only after loading that brand, retaining the original fallback order.
 function renderBrand(Icon: BrandIcon, {renderType, props, lobeColor}: BrandProps) {
     switch (renderType) {
-        case "avatar": return <Icon.Avatar {...props}/>;
+        case "avatar":
+            return <Icon.Avatar {...props}/>;
         case "mono": {
             const Render = lobeColor ? Icon.Color! : Icon;
             return <Render {...props}/>;
@@ -39,6 +53,7 @@ function renderBrand(Icon: BrandIcon, {renderType, props, lobeColor}: BrandProps
         }
     }
 }
+
 function brandComponent(brand: Brand) {
     let component = lazyBrands.get(brand);
     if (!component) {
@@ -64,12 +79,21 @@ export const ModelIcon = memo(function ModelIcon({model, size = 12, type = "avat
     return <Render renderType={type} props={type === "avatar" ? {shape, ...props} : props}/>;
 });
 
-export const ProviderIcon = memo(function ProviderIcon({provider, size = 12, type = "avatar", forceMono, shape, ...rest}: ProviderIconProps) {
+export const ProviderIcon = memo(function ProviderIcon({
+                                                           provider,
+                                                           size = 12,
+                                                           type = "avatar",
+                                                           forceMono,
+                                                           shape,
+                                                           ...rest
+                                                       }: ProviderIconProps) {
     const match = useMemo(() => provider ? providerMappings.find(item => item.keywords.some(keyword => keyword.toLowerCase() === provider.toLowerCase())) : undefined, [provider]);
     const props = {size, ...(match && "props" in match ? match.props : {}), ...rest};
     if (!match || !["avatar", "mono", "color", "combine", "combine-color"].includes(type)) {
-        return type === "avatar" ? <ProviderDefaultAvatar shape={shape} {...props}/> : <ProviderDefaultIcon {...props}/>;
+        return type === "avatar" ? <ProviderDefaultAvatar shape={shape} {...props}/> :
+            <ProviderDefaultIcon {...props}/>;
     }
     const Render = brandComponent(match.icon);
-    return <Render renderType={type} props={type === "avatar" ? {shape, ...props} : props} lobeColor={!forceMono && provider === "lobehub"}/>;
+    return <Render renderType={type} props={type === "avatar" ? {shape, ...props} : props}
+                   lobeColor={!forceMono && provider === "lobehub"}/>;
 });

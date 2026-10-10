@@ -69,13 +69,6 @@
 }
 
 
-
-
-
-
-
-
-
 .as-paragraphs {
     display: flex;
     flex-direction: column;
@@ -135,12 +128,6 @@
 }
 
 
-
-
-
-
-
-
 .as-script-input {
     min-height: 42px;
     padding: 4px;
@@ -149,8 +136,6 @@
     resize: none;
     overflow: hidden;
 }
-
-
 
 
 .as-document-footer {
@@ -459,9 +444,6 @@
     }
 
 
-
-
-
     .as-paragraph {
         grid-template-columns: 30px minmax(0, 1fr);
         gap: 6px;
@@ -475,9 +457,6 @@
         font-size: 15px;
         line-height: 1.9;
     }
-
-
-
 
 
     .as-document-footer {

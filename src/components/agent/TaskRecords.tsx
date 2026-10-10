@@ -7,7 +7,7 @@ import {
 import {ReferenceSourceLink} from "./ReferenceAttachments";
 import {toolReferenceAttachments} from "@/lib/agent/referenceEvidence";
 import {useEffect, useRef, useState} from "react";
-import {useManualDraftDeparture, type ManualDraftState, type ManualDraftDeparture} from "@/lib/useManualDraftGuard";
+import {type ManualDraftDeparture, type ManualDraftState, useManualDraftDeparture} from "@/lib/useManualDraftGuard";
 import {useLiveQuery} from "dexie-react-hooks";
 import {BookOpen, ChevronDown, History, Pencil, Plus, Search} from "lucide-react";
 import {toast} from "sonner";
@@ -43,7 +43,13 @@ const dateLabel = (value: string) => new Date(value).toLocaleString("zh-CN", {
 });
 const emptyRecord = (): TaskRecordInput => ({kind: "research", claim: "proposal", title: "", body: "", sources: []});
 
-type Props = { task: AgentTask; messages: ChatMessage[]; editable: boolean; onDraftStateChange?: (state: ManualDraftState) => void; requestDeparture?: ManualDraftDeparture };
+type Props = {
+    task: AgentTask;
+    messages: ChatMessage[];
+    editable: boolean;
+    onDraftStateChange?: (state: ManualDraftState) => void;
+    requestDeparture?: ManualDraftDeparture
+};
 
 export function TaskRecords({task, messages, editable, onDraftStateChange, requestDeparture}: Props) {
     const records = useLiveQuery(() => listTaskRecords(task.id), [task.id]);
@@ -55,11 +61,24 @@ export function TaskRecords({task, messages, editable, onDraftStateChange, reque
     const generationEvidence = useLiveQuery(() => listTaskGenerationSources(task), [task.id, task.threadId, task.projectId]);
     const [filter, setFilter] = useState<TaskRecordInput["kind"] | "all">("all");
     const [query, setQuery] = useState("");
-    type Session = { record?: AgentTaskRecord; input: TaskRecordInput; baseline: string; taskId: string; threadId: string; projectId: string };
+    type Session = {
+        record?: AgentTaskRecord;
+        input: TaskRecordInput;
+        baseline: string;
+        taskId: string;
+        threadId: string;
+        projectId: string
+    };
     const [editing, setEditing] = useState<Session>();
     const session = useRef<Session | undefined>(undefined);
     const mounted = useRef(false);
-    useEffect(() => {mounted.current = true; return () => {mounted.current = false; session.current = undefined;};}, []);
+    useEffect(() => {
+        mounted.current = true;
+        return () => {
+            mounted.current = false;
+            session.current = undefined;
+        };
+    }, []);
     const [historyId, setHistoryId] = useState<string>();
     const [pending, setPending] = useState(false);
     const [error, setError] = useState("");
@@ -88,19 +107,26 @@ export function TaskRecords({task, messages, editable, onDraftStateChange, reque
     const visible = [...(records ?? [])].reverse().filter((record) => (filter === "all" || record.kind === filter) && `${record.title} ${record.body}`.toLowerCase().includes(query.trim().toLowerCase()));
 
     function draftState(): ManualDraftState {
-        return {dirty: !!session.current && JSON.stringify(session.current.input) !== session.current.baseline, pending: saving.current};
+        return {
+            dirty: !!session.current && JSON.stringify(session.current.input) !== session.current.baseline,
+            pending: saving.current
+        };
     }
+
     function publish(next?: Session) {
         session.current = next;
         setEditing(next);
         onDraftStateChange?.(draftState());
     }
-    const departure = useManualDraftDeparture(draftState().dirty, pending, () => {}, {
+
+    const departure = useManualDraftDeparture(draftState().dirty, pending, () => {
+    }, {
         readState: draftState, route: !onDraftStateChange,
     });
 
     function requestLocalDeparture(leave: () => void) {
-        if (requestDeparture) requestDeparture(leave, () => {});
+        if (requestDeparture) requestDeparture(leave, () => {
+        });
         else departure.requestDeparture(leave);
     }
 
@@ -111,8 +137,10 @@ export function TaskRecords({task, messages, editable, onDraftStateChange, reque
                 kind: record.kind, claim: record.claim, title: record.title, body: record.body,
                 sources: structuredClone(record.sources), todoId: record.todoId,
             } : emptyRecord();
-            publish({record: record && structuredClone(record), input, baseline: JSON.stringify(input),
-                taskId: task.id, threadId: task.threadId, projectId: task.projectId});
+            publish({
+                record: record && structuredClone(record), input, baseline: JSON.stringify(input),
+                taskId: task.id, threadId: task.threadId, projectId: task.projectId
+            });
         });
     }
 
@@ -250,8 +278,9 @@ export function TaskRecords({task, messages, editable, onDraftStateChange, reque
                 {error && <p className="agent-task-record-error"
                              role="alert">{error}。草稿仍在，可以复制内容后重新打开最新版本。</p>}
                 <DialogFooter><Button type="button" variant="ghost" disabled={pending}
-                                      onClick={() => requestLocalDeparture(() => publish(undefined))}>取消</Button><Button type="submit"
-                                                                                                 disabled={pending || !editable || !editing.input.title.trim() || !editing.input.body.trim()}>{pending ? "保存中…" : "保存记录"}</Button></DialogFooter>
+                                      onClick={() => requestLocalDeparture(() => publish(undefined))}>取消</Button><Button
+                    type="submit"
+                    disabled={pending || !editable || !editing.input.title.trim() || !editing.input.body.trim()}>{pending ? "保存中…" : "保存记录"}</Button></DialogFooter>
             </form>}</DialogContent></Dialog>
         <Dialog open={!!historyId} onOpenChange={(open) => {
             if (!open) setHistoryId(undefined);

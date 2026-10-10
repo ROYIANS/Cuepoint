@@ -87,7 +87,7 @@ export function MaterialScopeSelect({value, onChange, filter = false, disabled =
 }
 
 export function useMaterialDraftGuard(dirty: boolean, pending: boolean) {
-    const [requested, setRequested] = useState<{close: () => void; cancel?: () => void} | null>(null);
+    const [requested, setRequested] = useState<{ close: () => void; cancel?: () => void } | null>(null);
     const blocker = useBlocker({
         shouldBlockFn: () => dirty || pending,
         withResolver: true,

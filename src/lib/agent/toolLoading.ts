@@ -8,7 +8,9 @@ import {toResponseInput} from "@/lib/ai/responsesStream";
 import {AGENT_SKILLS, SMART_EXECUTION_INSTRUCTIONS} from "./skills";
 import type {ProjectKind} from "@/domain/types";
 
-export {DISCOVERY_TOOL_NAME, MAX_LOADED_TOOLS, getOfferedToolNames, toolNamesForCall} from "@/domain/agentToolSelection";
+export {
+    DISCOVERY_TOOL_NAME, MAX_LOADED_TOOLS, getOfferedToolNames, toolNamesForCall
+} from "@/domain/agentToolSelection";
 
 const settled = (call: AgentToolCall) => ["completed", "failed", "rejected"].includes(call.status);
 const foundation = (name: string) => name === "workspace_overview" || name === "update_run_plan" || name.startsWith("task_");
@@ -49,7 +51,8 @@ const loadingSchema = z.object({
     groupIds: z.array(z.string().min(1).max(80)).max(2),
     query: z.string().trim().max(100).optional()
 }).strict();
-export const DISCOVERY_TOOLS = [defineTool({schema: loadingSchema, json: {
+export const DISCOVERY_TOOLS = [defineTool({
+    schema: loadingSchema, json: {
         type: "object",
         additionalProperties: false,
         required: ["groupIds"],
@@ -57,14 +60,15 @@ export const DISCOVERY_TOOLS = [defineTool({schema: loadingSchema, json: {
             groupIds: {type: "array", maxItems: 2, items: {type: "string", minLength: 1, maxLength: 80}},
             query: {type: "string", maxLength: 100}
         }
-    }}, {
-        name: DISCOVERY_TOOL_NAME,
-        title: "加载创作工具",
-        description: "按能力目录加载最多两组已授权工具，替换之前的业务组；同次执行的下一次模型请求获得完整定义，无需用户再次发送消息。groupIds=[] 时仅按 query 查询目录，不执行业务。",
-        effect: "bookkeeping",
-        atomic: true,
-        highRisk: () => false,
-        async execute(raw, context) {
+    }
+}, {
+    name: DISCOVERY_TOOL_NAME,
+    title: "加载创作工具",
+    description: "按能力目录加载最多两组已授权工具，替换之前的业务组；同次执行的下一次模型请求获得完整定义，无需用户再次发送消息。groupIds=[] 时仅按 query 查询目录，不执行业务。",
+    effect: "bookkeeping",
+    atomic: true,
+    highRisk: () => false,
+    async execute(raw, context) {
         const args = loadingSchema.parse(raw);
         return executeAtomicTool(context, async () => {
             const run = await db.agentRuns.get(context.runId);
@@ -107,9 +111,9 @@ export const DISCOVERY_TOOLS = [defineTool({schema: loadingSchema, json: {
             };
         });
     }
-        })];
+})];
 
-        /** Replace only the upcoming skill layer; preserve request history and paired tool envelopes. */
+/** Replace only the upcoming skill layer; preserve request history and paired tool envelopes. */
 export async function refreshRunToolLoading(runId: string): Promise<AgentRun> {
     return db.transaction("rw", [db.agentRuns, db.agentToolCalls], async () => {
         const run = await db.agentRuns.get(runId);
@@ -142,4 +146,4 @@ export async function refreshRunToolLoading(runId: string): Promise<AgentRun> {
         await db.agentRuns.put(next);
         return next;
     });
-        }
+}

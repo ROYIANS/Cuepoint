@@ -1,4 +1,4 @@
-import {requestOnce, readHttpJson} from "./requestBoundary";
+import {readHttpJson, requestOnce} from "./requestBoundary";
 import {isReadAbort} from "./boundedResponse";
 import {redactCredentials} from "./safeError";
 import {type ChatModelMetadata, parseModelMetadata} from "@/lib/ai/modelMetadata";
@@ -166,7 +166,10 @@ async function request(
         // Read as unknown even when HTTP is successful: provider errors also use HTTP 200.
         let body: unknown;
         try {
-            body = await readHttpJson(response, {success: {kind: "native-json"}, failure: {kind: "native-json"}}, options.signal);
+            body = await readHttpJson(response, {
+                success: {kind: "native-json"},
+                failure: {kind: "native-json"}
+            }, options.signal);
         } catch (error) {
             if (isReadAbort(error, options.signal)) throw error;
             if (response.ok) return protocol();

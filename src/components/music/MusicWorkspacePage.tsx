@@ -26,12 +26,7 @@ import {
     useProjectAudioJobs
 } from "@/components/audioMusic/shared";
 import {MusicCreation} from "./MusicCreation";
-import {
-    musicVariant,
-    type MusicVariant,
-    parseVariantLinks,
-    type VariantLinks
-} from "./draftVariants";
+import {musicVariant, type MusicVariant, parseVariantLinks, type VariantLinks} from "./draftVariants";
 import "./music-workspace.css";
 
 export function MusicWorkspacePage({projectId}: { projectId: string }) {

@@ -3,7 +3,7 @@ import type {Id} from "@/domain/types";
 
 /** Exact fallback-owner ranges share one readonly snapshot; cursor rows remain complete. */
 export async function readProjectCoverIds(projectIds: readonly Id[]): Promise<Map<Id, Id>> {
-    const candidates = new Map<Id, {order: number; mediaId: Id}>();
+    const candidates = new Map<Id, { order: number; mediaId: Id }>();
     const ids = [...new Set(projectIds)];
     if (ids.length) {
         await db.transaction("r", db.shots, () => Promise.all(ids.map(projectId => db.shots.where("projectId").equals(projectId).each(shot => {

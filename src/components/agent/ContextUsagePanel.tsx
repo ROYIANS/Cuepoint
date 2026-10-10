@@ -43,10 +43,21 @@ type ContextProps = {
 };
 
 function useContextUsage(props: ContextProps) {
-    const {threadId, projectId, interactionMode, draft, attachments = EMPTY_ATTACHMENTS, model, connector, modelMetadata} = props;
+    const {
+        threadId,
+        projectId,
+        interactionMode,
+        draft,
+        attachments = EMPTY_ATTACHMENTS,
+        model,
+        connector,
+        modelMetadata
+    } = props;
     const requestDraft = draft.trim() || (attachments.length ? "请结合附加的参考资料协助我。" : "");
-    const input = useMemo(() => ({threadId, projectId, interactionMode, draft: requestDraft, attachments,
-        model, providerId: connector?.definitionId, metadata: modelMetadata?.[model]}),
+    const input = useMemo(() => ({
+            threadId, projectId, interactionMode, draft: requestDraft, attachments,
+            model, providerId: connector?.definitionId, metadata: modelMetadata?.[model]
+        }),
         [threadId, projectId, interactionMode, requestDraft, attachments, model, connector?.definitionId, modelMetadata]);
     const identity = contextPreviewIdentity(input);
     const loaded = useLiveQuery(() => readAgentContextPreview(input), [input]);
@@ -55,7 +66,11 @@ function useContextUsage(props: ContextProps) {
         if (!snapshot || snapshot.status !== "ready") {
             let error: string | undefined;
             if (snapshot?.status === "error" || snapshot?.status === "unavailable") error = snapshot.message;
-            if (snapshot?.status === "missing") error = {agent: "助手配置不存在", thread: "对话不存在", project: "关联项目已不存在"}[snapshot.entity];
+            if (snapshot?.status === "missing") error = {
+                agent: "助手配置不存在",
+                thread: "对话不存在",
+                project: "关联项目已不存在"
+            }[snapshot.entity];
             return {identity, status: snapshot?.status ?? "loading", model, error} as const;
         }
         const {config, messages, records, taskContext, activeRun, previewPolicy} = snapshot.facts;
@@ -71,7 +86,10 @@ function useContextUsage(props: ContextProps) {
             )
             : undefined;
         const resolved =
-            activeRun ? (activeRun.context ?? {capacity: undefined, capacitySource: "unknown" as const}) : resolveContextCapacity(
+            activeRun ? (activeRun.context ?? {
+                capacity: undefined,
+                capacitySource: "unknown" as const
+            }) : resolveContextCapacity(
                 model,
                 modelMetadata?.[model],
                 connector?.definitionId,
@@ -169,13 +187,16 @@ export function ContextUsagePanel({snapshot, onClose, onMemoryOpen}: {
     onClose: () => void;
     onMemoryOpen?: () => void;
 }) {
-    if (snapshot.status !== "ready" || !("usage" in snapshot)) return <div className="agent-context-panel" role="region" aria-label="上下文明细">
+    if (snapshot.status !== "ready" || !("usage" in snapshot)) return <div className="agent-context-panel" role="region"
+                                                                           aria-label="上下文明细">
         <button type="button" aria-label="关闭上下文明细" onClick={onClose}><X size={16}/></button>
         <p role={snapshot.error ? "alert" : "status"}>{snapshot.error ?? "正在读取上下文…"}</p>
     </div>;
-    const {usage, capacity, percent, activeRun, source, policy, budget, selectedCount, lastRecord,
+    const {
+        usage, capacity, percent, activeRun, source, policy, budget, selectedCount, lastRecord,
         projectContext, memorySelection, selectedReferences, referencesLoading, toolCount, capabilityCount,
-        loadedCapabilities, error, model} = snapshot;
+        loadedCapabilities, error, model
+    } = snapshot;
     return (
         <div className="agent-context-panel" role="region" aria-label="上下文明细">
             <div className="agent-context-heading">

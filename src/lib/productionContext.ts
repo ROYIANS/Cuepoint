@@ -3,14 +3,14 @@ import {db} from "@/db/database";
 import type {SourceRevision} from "@/domain/production";
 import type {GenerationSlot, Id, MediaKind} from "@/domain/types";
 import {
-  CHARACTER_SLOTS,
-  normalizeEpisodeStory,
-  normalizeProjectMode,
-  normalizeSetting,
-  normalizeShotStatus,
-  PROP_SLOTS,
-  SCENE_SLOTS,
-  STYLE_SLOTS
+    CHARACTER_SLOTS,
+    normalizeEpisodeStory,
+    normalizeProjectMode,
+    normalizeSetting,
+    normalizeShotStatus,
+    PROP_SLOTS,
+    SCENE_SLOTS,
+    STYLE_SLOTS
 } from "@/domain/types";
 import {parseGenerationSlot, parseShotPictureSlots} from "@/domain/slot";
 import {targetRevision} from "@/lib/productionRevision";

@@ -63,13 +63,15 @@ function MemoryContextContent({
     const [attempt, setAttempt] = useState(0);
     const scopeKey = JSON.stringify([threadId, projectId]);
     const loaded = useLiveQuery(
-        async () => ({scopeKey, ...await readMemory(async () => {
-            if (!projectId) return {memories: [], exclusions: [], available: false};
-            const project = await db.projects.get(projectId);
-            if (!project) return {memories: [], exclusions: [], available: false};
-            const exclusions = threadId ? await getThreadMemoryExclusions(threadId, projectId) : [];
-            return {available: true, memories: await listProjectMemories(projectId), exclusions};
-        })}),
+        async () => ({
+            scopeKey, ...await readMemory(async () => {
+                if (!projectId) return {memories: [], exclusions: [], available: false};
+                const project = await db.projects.get(projectId);
+                if (!project) return {memories: [], exclusions: [], available: false};
+                const exclusions = threadId ? await getThreadMemoryExclusions(threadId, projectId) : [];
+                return {available: true, memories: await listProjectMemories(projectId), exclusions};
+            })
+        }),
         [scopeKey, projectId, threadId, attempt],
     );
     const state = loaded?.scopeKey === scopeKey ? loaded : undefined;
@@ -79,9 +81,14 @@ function MemoryContextContent({
         owner.current = {scopeKey, live: true, locked: false};
     }
     const session = owner.current;
-    useEffect(() => {session.live = true; return () => {session.live = false;};}, [session]);
-    const [pendingWrite, setPending] = useState<{scopeKey: string; id: string}>();
-    const [writeError, setError] = useState<{scopeKey: string; message: string}>();
+    useEffect(() => {
+        session.live = true;
+        return () => {
+            session.live = false;
+        };
+    }, [session]);
+    const [pendingWrite, setPending] = useState<{ scopeKey: string; id: string }>();
+    const [writeError, setError] = useState<{ scopeKey: string; message: string }>();
     const pending = pendingWrite?.scopeKey === scopeKey ? pendingWrite.id : undefined;
     const error = writeError?.scopeKey === scopeKey ? writeError.message : undefined;
     const mutable = !!threadId && !readOnly && state?.data?.available && !state.error;
@@ -94,8 +101,10 @@ function MemoryContextContent({
         try {
             await setThreadMemoryExcluded(threadId, projectId, id, excluded);
         } catch (failure) {
-            if (session.live && owner.current === session) setError({scopeKey,
-                message: failure instanceof Error ? failure.message : "保存排除设置失败，请重试"});
+            if (session.live && owner.current === session) setError({
+                scopeKey,
+                message: failure instanceof Error ? failure.message : "保存排除设置失败，请重试"
+            });
         } finally {
             session.locked = false;
             if (session.live && owner.current === session) setPending(undefined);

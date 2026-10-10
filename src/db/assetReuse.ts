@@ -2,16 +2,16 @@ import {db} from "./database";
 import {createId, nowIso} from "@/lib/ids";
 import {
     type Character,
-    type Scene,
-    type Prop,
-    type VisualStyle,
+    type GenerationSlot,
     type Id,
     isStudioLibrary,
-    type GenerationSlot
+    type Prop,
+    type Scene,
+    type VisualStyle
 } from "@/domain/types";
 import {slotMediaIds} from "@/domain/slot";
 import {PRODUCTION_TABLES, touch} from "./productionShared";
-import {deleteMediaIfOrphans, assertSlotMedia} from "./media";
+import {assertSlotMedia, deleteMediaIfOrphans} from "./media";
 
 /** Release only unused project copies. Failure rolls back both the binding and media. */
 export async function releaseMaterialUse(useId: string): Promise<void> {

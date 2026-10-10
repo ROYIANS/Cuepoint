@@ -9,7 +9,6 @@ function DropdownMenu({...props}: React.ComponentProps<typeof DropdownMenuPrimit
 }
 
 
-
 function DropdownMenuTrigger({
                                  ...props
                              }: React.ComponentProps<typeof DropdownMenuPrimitive.Trigger>) {
@@ -35,7 +34,6 @@ function DropdownMenuContent({
         </DropdownMenuPrimitive.Portal>
     );
 }
-
 
 
 function DropdownMenuItem({
@@ -86,9 +84,6 @@ function DropdownMenuCheckboxItem({
         </DropdownMenuPrimitive.CheckboxItem>
     );
 }
-
-
-
 
 
 function DropdownMenuLabel({

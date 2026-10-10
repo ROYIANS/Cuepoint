@@ -1,4 +1,4 @@
-import {deriveAudioSelection, type AudioSelectionIntent} from "./audioSelection";
+import {type AudioSelectionIntent, deriveAudioSelection} from "./audioSelection";
 import {useEffect, useRef, useState} from "react";
 import {toast} from "sonner";
 import {useLiveQuery} from "dexie-react-hooks";
@@ -109,9 +109,17 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
         if (result.seek) setSeekRequest({id: `${result.seek.clipId}:${Date.now()}`, position: result.seek.position});
     }
 
-    function selectSegment(row: AudioSegment) {applySelection({kind: "segment", row});}
-    function selectClip(id: string) {applySelection({kind: "clip", id});}
-    function selectTake(id: string) {applySelection({kind: "take", id});}
+    function selectSegment(row: AudioSegment) {
+        applySelection({kind: "segment", row});
+    }
+
+    function selectClip(id: string) {
+        applySelection({kind: "clip", id});
+    }
+
+    function selectTake(id: string) {
+        applySelection({kind: "take", id});
+    }
 
     function inspect(row?: AudioSegment) {
         if (row) selectSegment(row);

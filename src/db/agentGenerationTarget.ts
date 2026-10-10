@@ -6,18 +6,23 @@ import {targetRevision} from "@/lib/productionRevision";
 
 async function readTargetEntity(target: ProductionTarget) {
     switch (target.kind) {
-        case "shot": return db.shots.get(target.entityId);
-        case "character": return db.characters.get(target.entityId);
-        case "scene": return db.scenes.get(target.entityId);
-        case "prop": return db.props.get(target.entityId);
+        case "shot":
+            return db.shots.get(target.entityId);
+        case "character":
+            return db.characters.get(target.entityId);
+        case "scene":
+            return db.scenes.get(target.entityId);
+        case "prop":
+            return db.props.get(target.entityId);
         case "style":
-        default: return db.styles.get(target.entityId);
+        default:
+            return db.styles.get(target.entityId);
     }
 }
 
 type GenerationEntity = NonNullable<Awaited<ReturnType<typeof readTargetEntity>>>;
 
-async function assertShotEpisode(target: Extract<ProductionTarget, {kind: "shot"}>, entity: GenerationEntity) {
+async function assertShotEpisode(target: Extract<ProductionTarget, { kind: "shot" }>, entity: GenerationEntity) {
     const episode = await db.episodes.get(target.episodeId);
     if (!episode || episode.projectId !== target.projectId || !("episodeId" in entity) || entity.episodeId !== target.episodeId) throw new Error("生成目标不属于当前故事");
 }

@@ -69,7 +69,7 @@ export function object<const S extends Record<string, Spec<unknown>>>(shape: S) 
     // Object.entries preserves the same recipe keys; this is schema construction,
     // never an assertion of untrusted model arguments. Keep the actual object
     // schema public so existing pick/omit/shape consumers retain their contracts.
-    const fields = Object.fromEntries(Object.entries(shape).map(([key, value]) => [key, value.schema])) as {-readonly [K in keyof S]: S[K]["schema"]};
+    const fields = Object.fromEntries(Object.entries(shape).map(([key, value]) => [key, value.schema])) as { -readonly [K in keyof S]: S[K]["schema"] };
     return {
         schema: z.object(fields).strict(), json: {
             type: "object", additionalProperties: false,

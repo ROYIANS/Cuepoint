@@ -1,8 +1,15 @@
 import {requestOnce} from "./requestBoundary";
 import {normalizeBaseUrl} from "./baseUrl";
-import {appendedUtf8Bytes, assertResponseBytes, isReadAbort, readErrorText, readResponseJson, utf8Bytes} from "./boundedResponse";
+import {
+    appendedUtf8Bytes,
+    assertResponseBytes,
+    isReadAbort,
+    readErrorText,
+    readResponseJson,
+    utf8Bytes
+} from "./boundedResponse";
 import {readSseEvents} from "./boundedSse";
-import {MAX_JSON_BYTES, MAX_ERROR_BYTES} from "@/lib/resource/limits";
+import {MAX_ERROR_BYTES, MAX_JSON_BYTES} from "@/lib/resource/limits";
 import {redactCredentials} from "./safeError";
 import {materializeChatMessages} from "./referenceWire";
 import type {AgentVisionCapability} from "@/domain/referenceInput";
@@ -176,7 +183,8 @@ function streamErrorMessage(data: string): string {
             const error = record(value.error) ? value.error : value;
             if (typeof error.message === "string") return error.message;
         }
-    } catch { /* Providers may use plain-text error events. */ }
+    } catch { /* Providers may use plain-text error events. */
+    }
     return data || "模型服务返回错误";
 }
 
@@ -237,7 +245,11 @@ function decodeCompletion(data: unknown, stream: boolean): {
 function createToolAccumulator(tools?: AgentToolSchema[]) {
     const calls = new Map<number, { id: string; name: string; arguments: string }>();
     let retainedBytes = 0;
-    const callBytes = (call: {id: string; name: string; arguments: string}) => utf8Bytes(call.id) + utf8Bytes(call.name) + utf8Bytes(call.arguments);
+    const callBytes = (call: {
+        id: string;
+        name: string;
+        arguments: string
+    }) => utf8Bytes(call.id) + utf8Bytes(call.name) + utf8Bytes(call.arguments);
     return {
         push(fragments: unknown[] | undefined, streaming: boolean) {
             if (!fragments?.length) return;

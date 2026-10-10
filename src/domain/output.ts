@@ -1,10 +1,14 @@
 /** Verified APIMart standard-channel profiles, independent of connector credentials. */
 export const OUTPUT_PROFILE_VERSION = "2026-09-18";
 import {
-    defaultImageParameters, defaultVideoParameters,
-    getGenerationCapability, isApimartImageModel, validateGenerationParameters,
     type ApimartImageModel,
+    defaultImageParameters,
+    defaultVideoParameters,
+    getGenerationCapability,
+    isApimartImageModel,
+    validateGenerationParameters,
 } from "./generationCapabilities";
+
 export {
     IMAGE_RATIOS, IMAGE_EXT_RATIOS, VIDEO_RATIOS, IMAGE_RESOLUTIONS,
     IMAGE_QUALITIES, IMAGE_EXT_VERSIONS, VIDEO_RESOLUTIONS, APIMART_IMAGE_MODELS,
@@ -139,7 +143,10 @@ export function validateGenerationDefaults(raw: unknown): string[] {
         }
         // Unknown imported video profiles still receive the existing H3 scalar diagnostics.
         const profile = getGenerationCapability("apimart", "MiniMax-H3", "video");
-        if (profile) issues.push(...validateGenerationParameters(profile, video, {purpose: "project-defaults", mode: video.mode}).map(issue => issue.message));
+        if (profile) issues.push(...validateGenerationParameters(profile, video, {
+            purpose: "project-defaults",
+            mode: video.mode
+        }).map(issue => issue.message));
     }
     return issues;
 }

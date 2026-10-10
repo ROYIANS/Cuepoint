@@ -1,12 +1,20 @@
 import {useManualDraftGuard} from "@/lib/useManualDraftGuard";
 import {BeatTextField} from "./BeatTextField";
-import {useTextDraftRetention, type TextDraftStatusChange} from "@/lib/useTextDraftRetention";
+import {type TextDraftStatusChange, useTextDraftRetention} from "@/lib/useTextDraftRetention";
 import {changedDraftFields} from "@/lib/draftConflict";
 import {useLiveQuery} from "dexie-react-hooks";
 import {ArrowDown, ArrowUp, Copy, CopyPlus, Plus, Trash2} from "lucide-react";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {db} from "@/db/database";
-import {addStoryBeat, deleteStoryBeat, duplicateBeat, patchStoryBeat, reorderBeats, restoreStoryBeat, updateEpisodeDraft} from "@/db/episodes";
+import {
+    addStoryBeat,
+    deleteStoryBeat,
+    duplicateBeat,
+    patchStoryBeat,
+    reorderBeats,
+    restoreStoryBeat,
+    updateEpisodeDraft
+} from "@/db/episodes";
 import {deleteShots} from "@/db/shots";
 import {type Episode, normalizeEpisodeStory, type StoryBeat} from "@/domain/types";
 import {Button} from "@/components/ui/button";
@@ -26,11 +34,11 @@ function isScriptFile(file: File): boolean {
     return file.type === "text/plain" || file.type === "text/markdown" || file.type === "text/x-markdown";
 }
 
-export function StoryPage(props: {projectId: string; episodeId: string}) {
+export function StoryPage(props: { projectId: string; episodeId: string }) {
     return <StoryScope key={JSON.stringify([props.projectId, props.episodeId])} {...props}/>;
 }
 
-function StoryScope({projectId, episodeId}: {projectId: string; episodeId: string}) {
+function StoryScope({projectId, episodeId}: { projectId: string; episodeId: string }) {
     const loadedProject = useLiveQuery(async () => (await db.projects.get(projectId)) ?? null, [projectId]);
     const loadedEpisode = useLiveQuery(
         async () => (await db.episodes.get(episodeId)) ?? null,
@@ -63,23 +71,23 @@ function StoryScope({projectId, episodeId}: {projectId: string; episodeId: strin
 
     return (
         <>
-        {textNavigationGuard}
-        <StoryEditor
-            key={JSON.stringify([episode.projectId, episode.id])}
-            beats={beatText.rows}
-            onBeatDraftStatus={beatText.onStatusChange}
-            unavailable={unavailable}
-            episode={episode}
-            film={project.mode === "film"}
-            characters={characters}
-            scenes={scenes}
-        />
+            {textNavigationGuard}
+            <StoryEditor
+                key={JSON.stringify([episode.projectId, episode.id])}
+                beats={beatText.rows}
+                onBeatDraftStatus={beatText.onStatusChange}
+                unavailable={unavailable}
+                episode={episode}
+                film={project.mode === "film"}
+                characters={characters}
+                scenes={scenes}
+            />
         </>
     );
 }
 
-type ScriptImport = {request: number; name: string; text: string};
-type ScriptImportSession = {scope: string; request: number; revision: number; candidate?: ScriptImport};
+type ScriptImport = { request: number; name: string; text: string };
+type ScriptImportSession = { scope: string; request: number; revision: number; candidate?: ScriptImport };
 
 function StoryEditor({
                          episode,
@@ -118,7 +126,11 @@ function StoryEditor({
     }
 
     const mounted = useRef(true);
-    const importSession = useRef<ScriptImportSession>({scope: `${episode.projectId}:${episode.id}`, request: 0, revision: 0});
+    const importSession = useRef<ScriptImportSession>({
+        scope: `${episode.projectId}:${episode.id}`,
+        request: 0,
+        revision: 0
+    });
     if (importSession.current.scope !== `${episode.projectId}:${episode.id}`) {
         importSession.current = {scope: `${episode.projectId}:${episode.id}`, request: 0, revision: 0};
     }
@@ -303,10 +315,12 @@ function StoryEditor({
                     {candidate ? (
                         <div className="bg-muted/40 mt-3 rounded-lg border p-3">
                             <p className="text-sm">读取 {candidate.name} 期间正文已修改，当前正文已保留。</p>
-                            <pre className="mt-2 max-h-40 overflow-auto whitespace-pre-wrap text-xs">{candidate.text}</pre>
+                            <pre
+                                className="mt-2 max-h-40 overflow-auto whitespace-pre-wrap text-xs">{candidate.text}</pre>
                             <div className="mt-3 flex gap-2">
                                 <Button size="sm" onClick={() => decideImport(true)}>采用导入正文</Button>
-                                <Button size="sm" variant="outline" onClick={() => decideImport(false)}>放弃导入</Button>
+                                <Button size="sm" variant="outline"
+                                        onClick={() => decideImport(false)}>放弃导入</Button>
                             </div>
                         </div>
                     ) : null}
@@ -337,8 +351,10 @@ function StoryEditor({
                                 <li key={beat.id} className="bg-card rounded-2xl border p-3">
                                     <div className="flex items-center gap-2">
                                         <span className="text-muted-foreground w-6 text-xs">{index + 1}</span>
-                                        <BeatTextField projectId={episode.projectId} episodeId={episode.id} beat={beat} field="title"
-                                                       onDraftStatus={onBeatDraftStatus} unavailable={unavailable} ariaLabel="场次标题" className="h-8"/>
+                                        <BeatTextField projectId={episode.projectId} episodeId={episode.id} beat={beat}
+                                                       field="title"
+                                                       onDraftStatus={onBeatDraftStatus} unavailable={unavailable}
+                                                       ariaLabel="场次标题" className="h-8"/>
                                         <Button
                                             size="icon-sm"
                                             variant="ghost"
@@ -382,7 +398,8 @@ function StoryEditor({
                                             <Trash2/>
                                         </Button>
                                     </div>
-                                    <BeatTextField projectId={episode.projectId} episodeId={episode.id} beat={beat} field="content"
+                                    <BeatTextField projectId={episode.projectId} episodeId={episode.id} beat={beat}
+                                                   field="content"
                                                    onDraftStatus={onBeatDraftStatus} unavailable={unavailable} multiline
                                                    containerClassName="mt-2" className="min-h-20 resize-none"
                                                    placeholder="这场发生什么" ariaLabel="场次内容"/>
@@ -432,8 +449,10 @@ function StoryEditor({
                                         </div>
                                         <div>
                                             <Label className="text-[11px]">时段</Label>
-                                            <BeatTextField projectId={episode.projectId} episodeId={episode.id} beat={beat} field="timeOfDay"
-                                                           onDraftStatus={onBeatDraftStatus} unavailable={unavailable} className="h-8" containerClassName="mt-1"
+                                            <BeatTextField projectId={episode.projectId} episodeId={episode.id}
+                                                           beat={beat} field="timeOfDay"
+                                                           onDraftStatus={onBeatDraftStatus} unavailable={unavailable}
+                                                           className="h-8" containerClassName="mt-1"
                                                            placeholder="日 / 夜" ariaLabel="时段"/>
                                         </div>
                                     </div>

@@ -10,10 +10,10 @@ import type {AudioGenerationInput} from "@/domain/audioGeneration";
 import {requireBoundProjectScope} from "./projectScope";
 import {targetRevision} from "@/lib/productionRevision";
 import {
-  prepareAudioGeneration,
-  readAudioJobSummary,
-  refreshAudioGeneration,
-  submitAudioGeneration
+    prepareAudioGeneration,
+    readAudioJobSummary,
+    refreshAudioGeneration,
+    submitAudioGeneration
 } from "@/lib/audioGeneration/runtime";
 import {validateGenerationInput} from "@/lib/audioGeneration/input";
 import {SPEECH_VOICES} from "@/lib/ai/apimartAudio";
@@ -227,30 +227,30 @@ async function musicArgs(raw: unknown, context?: AgentToolContext): Promise<Subm
 
 export const AUDIO_GENERATION_TOOL_NAMES = ["audio_generation_capabilities", "audio_generate_speech", "music_generate", "audio_generation_check"] as const;
 export const musicGenerateTool = defineTool({schema: music.schema, json: music.json}, {
-        name: "music_generate",
-        title: "生成音乐",
-        description: "提交当前已保存音乐草稿的指定版本；先用音乐草稿工具准备参数。经用户确认后提交一次，后续只查询已有任务。",
-        effect: "network",
-        recovery: "repeatable",
-        requiresConfirmation: true,
-        highRisk: () => false,
-        prepare: async (raw, context) => {
-            const args = music.schema.parse(raw);
-            await scope(args.projectId, context);
-            return preview(await musicArgs(args), context);
-        },
-        async execute(raw, context) {
-            let args: Submission;
-            // Resolving local draft state has no network side effect. A stale draft
-            // is a known rejection, not an uncertain paid submission.
-            try {
-                args = await musicArgs(raw, context);
-            } catch (error) {
-                throw new AtomicToolRollbackError(error instanceof Error ? error.message : "音乐草稿准备失败");
-            }
-            return runSubmission(args, context);
+    name: "music_generate",
+    title: "生成音乐",
+    description: "提交当前已保存音乐草稿的指定版本；先用音乐草稿工具准备参数。经用户确认后提交一次，后续只查询已有任务。",
+    effect: "network",
+    recovery: "repeatable",
+    requiresConfirmation: true,
+    highRisk: () => false,
+    prepare: async (raw, context) => {
+        const args = music.schema.parse(raw);
+        await scope(args.projectId, context);
+        return preview(await musicArgs(args), context);
+    },
+    async execute(raw, context) {
+        let args: Submission;
+        // Resolving local draft state has no network side effect. A stale draft
+        // is a known rejection, not an uncertain paid submission.
+        try {
+            args = await musicArgs(raw, context);
+        } catch (error) {
+            throw new AtomicToolRollbackError(error instanceof Error ? error.message : "音乐草稿准备失败");
         }
-    });
+        return runSubmission(args, context);
+    }
+});
 
 export const AUDIO_GENERATION_TOOLS = [
     defineTool({schema: z.object({}).strict(), json: {type: "object", properties: {}, additionalProperties: false}}, {

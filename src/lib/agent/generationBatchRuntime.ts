@@ -41,7 +41,6 @@ export async function batchUserAction<T>(threadId: string, action: () => Promise
 }
 
 
-
 export async function startGenerationBatch(id: string, threadId: string, options: GenerationRuntimeOptions & {
     locks?: ThreadLockManager;
     signal?: AbortSignal

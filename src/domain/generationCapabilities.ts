@@ -111,6 +111,7 @@ export const GENERATION_CAPABILITIES = [
 
 export type GenerationCapability = typeof GENERATION_CAPABILITIES[number];
 type GenerationInputRole = "first-frame" | "last-frame" | "reference-image" | "reference-video";
+
 export interface CapabilityParameters {
     size?: string;
     resolution?: string;
@@ -120,9 +121,10 @@ export interface CapabilityParameters {
     quality?: string;
     version?: string;
 }
+
 export type ParameterContext =
-    | {purpose: "project-defaults"; mode?: string}
-    | {purpose: "request"; mode: string; inputRoles: readonly GenerationInputRole[]};
+    | { purpose: "project-defaults"; mode?: string }
+    | { purpose: "request"; mode: string; inputRoles: readonly GenerationInputRole[] };
 
 export function getGenerationCapability(provider: string, model: string, kind: "image" | "video"): GenerationCapability | undefined {
     return GENERATION_CAPABILITIES.find(profile => profile.provider === provider && profile.model === model && profile.kind === kind);
@@ -135,7 +137,10 @@ function includes(values: readonly string[], value: string): boolean {
     return values.includes(value);
 }
 
-export function defaultImageParameters(model: string, context: {purpose: "request"} | {purpose: "project-defaults"; targetAspect: string}) {
+export function defaultImageParameters(model: string, context: { purpose: "request" } | {
+    purpose: "project-defaults";
+    targetAspect: string
+}) {
     let size = "auto";
     if (context.purpose === "project-defaults") size = apimartImageSizes(model).includes(context.targetAspect) ? context.targetAspect : "16:9";
     return {
@@ -205,7 +210,10 @@ export function projectGenerationParameters(profile: GenerationCapability, raw: 
 }
 
 /** Only the existing explicit Veo resolution edit changes duration. */
-export function generationResolutionChange(profile: GenerationCapability, resolution: string): {resolution: string; duration?: number} {
+export function generationResolutionChange(profile: GenerationCapability, resolution: string): {
+    resolution: string;
+    duration?: number
+} {
     return {resolution, ...(profile.provider === "aihubmix" && profile.kind === "video" && resolution !== "720p" ? {duration: 8} : {})};
 }
 
@@ -223,18 +231,30 @@ function imageSizeMessage(profile: GenerationCapability): string {
 function imageExtraIssues(profile: GenerationCapability, raw: Readonly<CapabilityParameters>, request: boolean): ParameterIssue[] {
     const issues: ParameterIssue[] = [];
     if (profile.provider === "aihubmix") {
-        if (raw.quality && !includes(AIHUBMIX_IMAGE_QUALITIES, raw.quality)) issues.push({field: "quality", message: "AIHubMix GPT Image 2 画质仅支持 low、medium 或 high"});
+        if (raw.quality && !includes(AIHUBMIX_IMAGE_QUALITIES, raw.quality)) issues.push({
+            field: "quality",
+            message: "AIHubMix GPT Image 2 画质仅支持 low、medium 或 high"
+        });
         return issues;
     }
     if (isApimartImage25(profile.model)) {
-        if (raw.quality !== undefined && !includes(IMAGE_QUALITIES, raw.quality)) issues.push({field: "quality", message: "请选择 GPT Image 2.5 支持的画质"});
-        if (raw.version !== undefined) issues.push({field: "version", message: "标准 GPT Image 2.5 不使用 Ext 版本参数"});
+        if (raw.quality !== undefined && !includes(IMAGE_QUALITIES, raw.quality)) issues.push({
+            field: "quality",
+            message: "请选择 GPT Image 2.5 支持的画质"
+        });
+        if (raw.version !== undefined) issues.push({
+            field: "version",
+            message: "标准 GPT Image 2.5 不使用 Ext 版本参数"
+        });
         return issues;
     }
     if (isApimartImageExt(profile.model)) {
         if (raw.quality !== undefined) issues.push({field: "quality", message: "GPT Image 2.5 Ext 不支持画质参数"});
         // Strict submit schema owns the Ext enum at request entry; preserve direct-call behavior.
-        if (!request && raw.version !== undefined && !includes(IMAGE_EXT_VERSIONS, raw.version)) issues.push({field: "version", message: "请选择 Ext 版本 flare 或 sunburst"});
+        if (!request && raw.version !== undefined && !includes(IMAGE_EXT_VERSIONS, raw.version)) issues.push({
+            field: "version",
+            message: "请选择 Ext 版本 flare 或 sunburst"
+        });
         return issues;
     }
     if (raw.quality !== undefined) issues.push({field: "quality", message: "GPT Image 2 不支持画质参数"});
@@ -246,8 +266,14 @@ function imageParameterIssues(profile: GenerationCapability, raw: Readonly<Capab
     const issues: ParameterIssue[] = [];
     const controls = projectGenerationParameters(profile, raw, context);
     const request = context.purpose === "request";
-    if (!includes(controls.sizes, raw.size ?? (request ? "auto" : ""))) issues.push({field: "size", message: imageSizeMessage(profile)});
-    if (profile.provider === "apimart" && !includes(controls.resolutions, raw.resolution ?? (request ? "1k" : ""))) issues.push({field: "resolution", message: "图片清晰度须为 1k、2k 或 4k"});
+    if (!includes(controls.sizes, raw.size ?? (request ? "auto" : ""))) issues.push({
+        field: "size",
+        message: imageSizeMessage(profile)
+    });
+    if (profile.provider === "apimart" && !includes(controls.resolutions, raw.resolution ?? (request ? "1k" : ""))) issues.push({
+        field: "resolution",
+        message: "图片清晰度须为 1k、2k 或 4k"
+    });
     return [...issues, ...imageExtraIssues(profile, raw, request)];
 }
 
@@ -255,9 +281,15 @@ function videoAspectIssues(profile: GenerationCapability, raw: Readonly<Capabili
     const request = context.purpose === "request";
     if (profile.provider === "apimart" && context.mode === "frames") {
         if (raw.aspectRatio === "adaptive" || request && raw.aspectRatio === undefined) return [];
-        return [{field: "aspectRatio", message: request ? "首尾帧比例跟随输入图片" : "首尾帧生视频的比例由输入图片决定，请选择跟随输入图片"}];
+        return [{
+            field: "aspectRatio",
+            message: request ? "首尾帧比例跟随输入图片" : "首尾帧生视频的比例由输入图片决定，请选择跟随输入图片"
+        }];
     }
-    if (profile.provider === "apimart" && context.mode !== "text" && context.mode !== "reference") return [{field: "mode", message: "请选择文字、首尾帧或参考素材生视频方式"}];
+    if (profile.provider === "apimart" && context.mode !== "text" && context.mode !== "reference") return [{
+        field: "mode",
+        message: "请选择文字、首尾帧或参考素材生视频方式"
+    }];
     const defaults = defaultVideoParameters(profile.provider, context);
     const ratio = raw.aspectRatio ?? (request ? defaults.aspectRatio : undefined);
     if (includes(videoRatios(profile, context), ratio ?? "")) return [];
@@ -272,7 +304,10 @@ function veoConstraintIssues(raw: Readonly<CapabilityParameters>, context: Param
     const highResolution = resolution !== "720p" && duration !== 8;
     const referenceDuration = context.mode === "reference" && duration !== 8;
     const videoResolution = context.purpose === "request" && context.inputRoles.includes("reference-video") && resolution !== "720p";
-    if (highResolution || referenceDuration || videoResolution) return [{field: "constraint", message: "Veo 高分辨率/参考输入要求 8 秒，参考视频要求 720p"}];
+    if (highResolution || referenceDuration || videoResolution) return [{
+        field: "constraint",
+        message: "Veo 高分辨率/参考输入要求 8 秒，参考视频要求 720p"
+    }];
     return [];
 }
 
@@ -283,11 +318,17 @@ function videoScalarIssues(profile: GenerationCapability, raw: Readonly<Capabili
     const resolution = raw.resolution ?? (request ? defaults.resolution : "");
     const duration = raw.duration ?? (request ? defaults.duration : NaN);
     const resolutions = "resolutions" in profile ? profile.resolutions : [];
-    if (!includes(resolutions, resolution)) issues.push({field: "resolution", message: profile.provider === "apimart" ? "MiniMax H3 分辨率须为 768P 或 2K" : "Veo 3.1 Fast 时长、分辨率或比例无效"});
+    if (!includes(resolutions, resolution)) issues.push({
+        field: "resolution",
+        message: profile.provider === "apimart" ? "MiniMax H3 分辨率须为 768P 或 2K" : "Veo 3.1 Fast 时长、分辨率或比例无效"
+    });
     let validDuration: boolean;
     if (profile.provider === "apimart") validDuration = (request || Number.isInteger(duration)) && !(duration < 4 || duration > 15);
     else validDuration = "durations" in profile && (profile.durations as readonly number[]).includes(duration);
-    if (!validDuration) issues.push({field: "duration", message: profile.provider === "apimart" ? "MiniMax H3 时长须为 4–15 秒整数" : "Veo 3.1 Fast 时长、分辨率或比例无效"});
+    if (!validDuration) issues.push({
+        field: "duration",
+        message: profile.provider === "apimart" ? "MiniMax H3 时长须为 4–15 秒整数" : "Veo 3.1 Fast 时长、分辨率或比例无效"
+    });
     return issues;
 }
 

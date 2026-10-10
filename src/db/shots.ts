@@ -1,30 +1,30 @@
 import {
+    type GenerationSlot,
     type Id,
-    type StoryBeat,
-    type Shot,
+    type MediaRecord,
     normalizeEpisodeStory,
     normalizeShotSettings,
-    type ShotPictureField,
     normalizeShotStatus,
-    type MediaRecord,
-    type GenerationSlot
+    type Shot,
+    type ShotPictureField,
+    type StoryBeat
 } from "@/domain/types";
 import {db} from "./database";
-import {SHOT_PICTURE_FIELDS, sameSlotValue, slotMediaIds} from "@/domain/slot";
-import {sameDraftStructure, DraftConflictError} from "@/lib/draftConflict";
+import {sameSlotValue, SHOT_PICTURE_FIELDS, slotMediaIds} from "@/domain/slot";
+import {DraftConflictError, sameDraftStructure} from "@/lib/draftConflict";
 import {createId} from "@/lib/ids";
 import {
-    PRODUCTION_TABLES,
-    assertVideoProject,
     assertAssetReferences,
-    touchProject,
-    assertTextPatch,
-    pickPatch,
+    assertCompleteOrder,
     assertShotReferences,
-    assertCompleteOrder
+    assertTextPatch,
+    assertVideoProject,
+    pickPatch,
+    PRODUCTION_TABLES,
+    touchProject
 } from "./productionShared";
 import {emptyShot} from "./productionRecords";
-import {assertSlotMedia, recycleSlotMedia, deleteMediaIfOrphans} from "./media";
+import {assertSlotMedia, deleteMediaIfOrphans, recycleSlotMedia} from "./media";
 
 async function nextShotNumber(episodeId: Id): Promise<string> {
     const shots = await db.shots.where("episodeId").equals(episodeId).toArray();

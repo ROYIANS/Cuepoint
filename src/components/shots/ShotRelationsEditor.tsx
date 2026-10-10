@@ -1,6 +1,6 @@
 import {useRef, useState} from "react";
 import {patchShot} from "@/db/shots";
-import type {Project, Shot, Prop, VisualStyle} from "@/domain/types";
+import type {Project, Prop, Shot, VisualStyle} from "@/domain/types";
 import {shotRelations} from "@/lib/shotRelations";
 import {Button} from "@/components/ui/button";
 import {Checkbox} from "@/components/ui/checkbox";
@@ -73,7 +73,8 @@ export function ShotRelationsEditor({project, shot, props, styles, unavailable, 
                             {props.map((prop) => (
                                 <label key={prop.id}
                                        className="hover:bg-muted flex cursor-pointer items-center gap-3 rounded px-2 py-2 text-sm">
-                                    <Checkbox disabled={saving || unavailable} checked={(shot.propIds ?? []).includes(prop.id)}
+                                    <Checkbox disabled={saving || unavailable}
+                                              checked={(shot.propIds ?? []).includes(prop.id)}
                                               onCheckedChange={(checked) => {
                                                   const ids = new Set(shot.propIds ?? []);
                                                   if (checked) ids.add(prop.id); else ids.delete(prop.id);

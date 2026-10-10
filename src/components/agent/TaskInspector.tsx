@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from "react";
-import {useManualDraftDeparture, type ManualDraftState, type ManualDraftDeparture} from "@/lib/useManualDraftGuard";
+import {type ManualDraftDeparture, type ManualDraftState, useManualDraftDeparture} from "@/lib/useManualDraftGuard";
 import {
     Archive,
     ArrowLeft,
@@ -72,8 +72,14 @@ export function TaskInspector(props: InspectorProps) {
     latest.current = shown;
     const [state, setState] = useState<ManualDraftState>({dirty: false, pending: false});
     const stateRef = useRef(state);
-    const updateState = useCallback((next: ManualDraftState) => {stateRef.current = next; setState(next);}, []);
-    const departure = useManualDraftDeparture(state.dirty, state.pending, () => {updateState({dirty: false, pending: false}); setSession(value => value + 1);}, {readState: () => stateRef.current});
+    const updateState = useCallback((next: ManualDraftState) => {
+        stateRef.current = next;
+        setState(next);
+    }, []);
+    const departure = useManualDraftDeparture(state.dirty, state.pending, () => {
+        updateState({dirty: false, pending: false});
+        setSession(value => value + 1);
+    }, {readState: () => stateRef.current});
     const {requestDeparture} = departure;
     const requestedOwner = `${props.task.id}:${props.task.threadId}:${props.task.projectId}:${props.open}`;
     const attempted = useRef(requestedOwner);
@@ -83,7 +89,11 @@ export function TaskInspector(props: InspectorProps) {
         return () => onDepartureReady?.(undefined);
     }, [onDepartureReady, requestDeparture]);
     useEffect(() => {
-        if (sameOwner) {attempted.current = requestedOwner; setOwner(latest.current); return;}
+        if (sameOwner) {
+            attempted.current = requestedOwner;
+            setOwner(latest.current);
+            return;
+        }
         if (attempted.current === requestedOwner) return;
         attempted.current = requestedOwner;
         requestDeparture(() => {
@@ -91,7 +101,8 @@ export function TaskInspector(props: InspectorProps) {
             setOwner(props);
         });
     }, [sameOwner, props, requestedOwner, requestDeparture, updateState]);
-    return <>{departure.confirmation}<TaskInspectorContent key={`${shown.task.id}:${shown.task.threadId}:${shown.task.projectId}:${session}`}
+    return <>{departure.confirmation}<TaskInspectorContent
+        key={`${shown.task.id}:${shown.task.threadId}:${shown.task.projectId}:${session}`}
         {...shown} requestDeparture={requestDeparture} onDraftStateChange={updateState}/></>;
 }
 
@@ -107,7 +118,10 @@ function TaskInspectorContent({
                                   projectUnavailable,
                                   requestDeparture,
                                   onDraftStateChange,
-                              }: InspectorProps & {requestDeparture: ManualDraftDeparture; onDraftStateChange: (state: ManualDraftState) => void}) {
+                              }: InspectorProps & {
+    requestDeparture: ManualDraftDeparture;
+    onDraftStateChange: (state: ManualDraftState) => void
+}) {
     const [editor, setEditor] = useState<"goal" | "plan" | null>(null);
     const [tab, setTab] = useState<"overview" | "records" | "wrapup">("overview");
     const [reviewEditing, setReviewEditing] = useState(false);
@@ -120,20 +134,41 @@ function TaskInspectorContent({
     const [pending, setPending] = useState(false);
     const lock = useRef(false);
     const active = useRef(true);
-    useEffect(() => {active.current = true; return () => {active.current = false;};}, []);
+    useEffect(() => {
+        active.current = true;
+        return () => {
+            active.current = false;
+        };
+    }, []);
     const baseline = useRef("");
-    const childStates = useRef<{records: ManualDraftState; wrapup: ManualDraftState}>({records: {dirty: false, pending: false}, wrapup: {dirty: false, pending: false}});
+    const childStates = useRef<{ records: ManualDraftState; wrapup: ManualDraftState }>({
+        records: {
+            dirty: false,
+            pending: false
+        }, wrapup: {dirty: false, pending: false}
+    });
     const ownState = useRef<ManualDraftState>({dirty: false, pending: false});
-    ownState.current = {dirty: editor !== null && JSON.stringify(editor === "goal" ? [title, goal, criteria] : planText) !== baseline.current, pending: lock.current};
+    ownState.current = {
+        dirty: editor !== null && JSON.stringify(editor === "goal" ? [title, goal, criteria] : planText) !== baseline.current,
+        pending: lock.current
+    };
     const publishState = useCallback(() => {
         const children = childStates.current;
-        onDraftStateChange({dirty: ownState.current.dirty || children.records.dirty || children.wrapup.dirty,
+        onDraftStateChange({
+            dirty: ownState.current.dirty || children.records.dirty || children.wrapup.dirty,
             pending: ownState.current.pending || children.records.pending || children.wrapup.pending,
             routeDirty: ownState.current.dirty || (children.records.routeDirty ?? children.records.dirty) || (children.wrapup.routeDirty ?? children.wrapup.dirty),
-            routePending: ownState.current.pending || (children.records.routePending ?? children.records.pending) || (children.wrapup.routePending ?? children.wrapup.pending)});
+            routePending: ownState.current.pending || (children.records.routePending ?? children.records.pending) || (children.wrapup.routePending ?? children.wrapup.pending)
+        });
     }, [onDraftStateChange]);
-    const recordState = useCallback((state: ManualDraftState) => {childStates.current.records = state; publishState();}, [publishState]);
-    const wrapupState = useCallback((state: ManualDraftState) => {childStates.current.wrapup = state; publishState();}, [publishState]);
+    const recordState = useCallback((state: ManualDraftState) => {
+        childStates.current.records = state;
+        publishState();
+    }, [publishState]);
+    const wrapupState = useCallback((state: ManualDraftState) => {
+        childStates.current.wrapup = state;
+        publishState();
+    }, [publishState]);
     useEffect(publishState, [editor, title, goal, criteria, planText, pending, publishState]);
     const threadRuns = runs.filter((run) => run.threadId === task.threadId);
     const taskRuns = threadRuns.filter((run) => run.taskId === task.id);
@@ -163,7 +198,10 @@ function TaskInspectorContent({
         } finally {
             lock.current = false;
             ownState.current.pending = false;
-            if (active.current) {publishState(); setPending(false);}
+            if (active.current) {
+                publishState();
+                setPending(false);
+            }
         }
     }
 
@@ -200,11 +238,12 @@ function TaskInspectorContent({
         <SheetContent className="agent-task-inspector" showCloseButton={false}>
             <div className="agent-task-inspector-nav"><Button variant="ghost" size="sm"
                                                               disabled={pending || reviewPending}
-                                                              onClick={() => requestDeparture(onOpenBoard)}><ArrowLeft/>任务工作台</Button><Button variant="ghost"
-                                                                                                        size="icon"
-                                                                                                        aria-label="关闭任务详情"
-                                                                                                        disabled={pending || reviewPending}
-                                                                                                        onClick={() => requestDeparture(() => onOpenChange(false))}><X/></Button>
+                                                              onClick={() => requestDeparture(onOpenBoard)}><ArrowLeft/>任务工作台</Button><Button
+                variant="ghost"
+                size="icon"
+                aria-label="关闭任务详情"
+                disabled={pending || reviewPending}
+                onClick={() => requestDeparture(() => onOpenChange(false))}><X/></Button>
             </div>
             <div className="agent-task-inspector-scroll">
                 <SheetHeader className="agent-task-inspector-heading"><span
@@ -228,8 +267,12 @@ function TaskInspectorContent({
                 <div hidden={tab !== "wrapup"}><TaskWrapup task={task} modelSelection={summaryModel}
                                                            busy={Boolean(projectUnavailable) || busy || pending}
                                                            onEditingChange={setReviewEditing}
-                                                           onPendingChange={setReviewPending} onDraftStateChange={wrapupState} requestDeparture={requestDeparture}/></div>
-                <div hidden={tab !== "records"}><TaskRecords task={task} messages={messages} editable={editable} onDraftStateChange={recordState} requestDeparture={requestDeparture}/></div>
+                                                           onPendingChange={setReviewPending}
+                                                           onDraftStateChange={wrapupState}
+                                                           requestDeparture={requestDeparture}/></div>
+                <div hidden={tab !== "records"}><TaskRecords task={task} messages={messages} editable={editable}
+                                                             onDraftStateChange={recordState}
+                                                             requestDeparture={requestDeparture}/></div>
                 <div hidden={tab !== "overview"}>
                     <section className="agent-task-section">
                         <div className="agent-task-section-heading"><h3>任务目标</h3><Button variant="ghost"
@@ -331,7 +374,8 @@ function TaskInspectorContent({
                     onClick={() => void mutate(() => setAgentTaskLifecycle(task.id, "open"), "任务已重新打开")}><RotateCcw/>重新打开</Button></>}
             </footer>
             <Dialog open={editor !== null} onOpenChange={(next) => {
-                if (!next) requestDeparture(() => setEditor(null), () => {});
+                if (!next) requestDeparture(() => setEditor(null), () => {
+                });
             }}><DialogContent className="agent-task-dialog"
                               showCloseButton={!pending}><DialogHeader><DialogTitle>{editor === "goal" ? "编辑任务目标" : "编辑执行清单"}</DialogTitle><DialogDescription>{editor === "goal" ? "清晰的目标和完成标准，帮助每一次执行保持方向。" : "每行一个步骤，调整行的顺序即可排序。修改名称会将该步骤重置为待完成。"}</DialogDescription></DialogHeader>
                 <form onSubmit={(event) => {
@@ -345,20 +389,37 @@ function TaskInspectorContent({
                     {editor === "goal" ? <><label className="agent-task-field">任务名称<Input autoFocus value={title}
                                                                                               maxLength={120} required
                                                                                               disabled={pending}
-                                                                                              onChange={(event) => {ownState.current.dirty = JSON.stringify([event.target.value, goal, criteria]) !== baseline.current; publishState(); setTitle(event.target.value);}}/></label><label
+                                                                                              onChange={(event) => {
+                                                                                                  ownState.current.dirty = JSON.stringify([event.target.value, goal, criteria]) !== baseline.current;
+                                                                                                  publishState();
+                                                                                                  setTitle(event.target.value);
+                                                                                              }}/></label><label
                             className="agent-task-field">任务目标<Textarea value={goal} maxLength={20_000} required rows={6}
                                                                            disabled={pending}
-                                                                           onChange={(event) => {ownState.current.dirty = JSON.stringify([title, event.target.value, criteria]) !== baseline.current; publishState(); setGoal(event.target.value);}}/></label><label
+                                                                           onChange={(event) => {
+                                                                               ownState.current.dirty = JSON.stringify([title, event.target.value, criteria]) !== baseline.current;
+                                                                               publishState();
+                                                                               setGoal(event.target.value);
+                                                                           }}/></label><label
                             className="agent-task-field">完成标准<Textarea value={criteria} rows={4} disabled={pending}
-                                                                           onChange={(event) => {ownState.current.dirty = JSON.stringify([title, goal, event.target.value]) !== baseline.current; publishState(); setCriteria(event.target.value);}}
+                                                                           onChange={(event) => {
+                                                                               ownState.current.dirty = JSON.stringify([title, goal, event.target.value]) !== baseline.current;
+                                                                               publishState();
+                                                                               setCriteria(event.target.value);
+                                                                           }}
                                                                            placeholder="每行一项，写下如何判断任务已经完成"/></label></> :
                         <label className="agent-task-field">步骤<Textarea autoFocus value={planText} rows={9}
                                                                           disabled={pending}
-                                                                          onChange={(event) => {ownState.current.dirty = JSON.stringify(event.target.value) !== baseline.current; publishState(); setPlanText(event.target.value);}}
+                                                                          onChange={(event) => {
+                                                                              ownState.current.dirty = JSON.stringify(event.target.value) !== baseline.current;
+                                                                              publishState();
+                                                                              setPlanText(event.target.value);
+                                                                          }}
                                                                           placeholder={"明确故事主题\n完善人物关系\n确认最终设定"}/></label>}
                     <DialogFooter><Button type="button" variant="ghost" disabled={pending}
-                                          onClick={() => requestDeparture(() => setEditor(null), () => {})}>取消</Button><Button type="submit"
-                                                                                               disabled={!editable || (editor === "goal" && (!title.trim() || !goal.trim()))}>{pending ? "保存中…" : "保存"}</Button></DialogFooter>
+                                          onClick={() => requestDeparture(() => setEditor(null), () => {
+                                          })}>取消</Button><Button type="submit"
+                                                                   disabled={!editable || (editor === "goal" && (!title.trim() || !goal.trim()))}>{pending ? "保存中…" : "保存"}</Button></DialogFooter>
                 </form>
             </DialogContent></Dialog>
         </SheetContent>

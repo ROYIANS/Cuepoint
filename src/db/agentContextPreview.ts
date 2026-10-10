@@ -1,6 +1,6 @@
 import {db} from "./database";
 import {getMemorySelection} from "./memoryRetrieval";
-import {GENERAL_AGENT_ID, type AgentRun, type AgentInteractionMode} from "@/domain/agent";
+import {type AgentInteractionMode, type AgentRun, GENERAL_AGENT_ID} from "@/domain/agent";
 import type {ReferenceAttachment} from "@/domain/references";
 import type {ChatModelMetadata} from "@/lib/ai/modelMetadata";
 import {requireVision, resolveVisionCapability} from "@/lib/ai/visionCapability";
@@ -34,8 +34,8 @@ export function contextPreviewTables() {
         db.media, ...projectContextTables()])];
 }
 
-type Unavailable = {identity: string; status: "unavailable"; message: string};
-type Missing = {identity: string; status: "missing"; entity: "agent" | "thread" | "project"};
+type Unavailable = { identity: string; status: "unavailable"; message: string };
+type Missing = { identity: string; status: "missing"; entity: "agent" | "thread" | "project" };
 
 async function readScopedRows(threadId: string | undefined, projectId: string | undefined) {
     const [config, messages, runs, records, project, task] = await Promise.all([
@@ -58,11 +58,13 @@ function currentSavedRun(runs: Awaited<ReturnType<typeof readScopedRows>>["runs"
 }
 
 async function selectPreviewMaterials(input: ContextPreviewInput, rows: Awaited<ReturnType<typeof readScopedRows>>,
-    thread: import("@/domain/types").ChatThread | undefined, projectId: string | undefined,
-    vision: Awaited<ReturnType<typeof resolveVisionCapability>>, activeRun: AgentRun | undefined) {
+                                      thread: import("@/domain/types").ChatThread | undefined, projectId: string | undefined,
+                                      vision: Awaited<ReturnType<typeof resolveVisionCapability>>, activeRun: AgentRun | undefined) {
     // Optional saved fields remain absent, rather than acquiring new live selections.
-    if (activeRun) return {previewPolicy: normalizeContextPolicy(activeRun.context?.policy),
-        taskContext: undefined, memorySelection: undefined, selectedReferences: undefined};
+    if (activeRun) return {
+        previewPolicy: normalizeContextPolicy(activeRun.context?.policy),
+        taskContext: undefined, memorySelection: undefined, selectedReferences: undefined
+    };
     const previewPolicy = normalizeContextPolicy(thread ? thread.contextPolicy : rows.config?.contextPolicy);
     const taskContext = await getTaskContext(input.threadId, rows.config?.instructions ?? "",
         thread?.taskMode, input.interactionMode, projectId);
@@ -92,14 +94,20 @@ async function readFacts(input: ContextPreviewInput, identity: string, vision: A
         if (!activeRun && !rows.config) return {identity, status: "missing", entity: "agent"} satisfies Missing;
         if (!activeRun && !projectAvailable) return {identity, status: "missing", entity: "project"} satisfies Missing;
         const selected = await selectPreviewMaterials(input, rows, thread, projectId, vision, activeRun);
-        return {identity, status: "ready" as const, facts: {
-            config: rows.config, thread, projectId, available: projectAvailable && !!rows.config,
-            messages: rows.messages, records: rows.records, activeRun, ...selected,
-        }};
+        return {
+            identity, status: "ready" as const, facts: {
+                config: rows.config, thread, projectId, available: projectAvailable && !!rows.config,
+                messages: rows.messages, records: rows.records, activeRun, ...selected,
+            }
+        };
     });
 }
 
-export type ContextPreviewRead = Awaited<ReturnType<typeof readFacts>> | {identity: string; status: "error"; message: string};
+export type ContextPreviewRead = Awaited<ReturnType<typeof readFacts>> | {
+    identity: string;
+    status: "error";
+    message: string
+};
 
 /** External model-bank preparation finishes before the final coherent IndexedDB read. */
 export async function readAgentContextPreview(input: ContextPreviewInput): Promise<ContextPreviewRead> {

@@ -1,7 +1,13 @@
 import {db} from "@/db/database";
 import {addMusicDraft} from "@/db/music";
 import {flushPendingDrafts} from "@/lib/debouncedDraft";
-import {linkMusicVariants, musicVariant, newVariantSettings, type MusicVariant, type VariantLinks} from "./draftVariants";
+import {
+    linkMusicVariants,
+    musicVariant,
+    type MusicVariant,
+    newVariantSettings,
+    type VariantLinks
+} from "./draftVariants";
 
 export async function switchMusicVariant({projectId, draftId, target, links}: {
     projectId: string; draftId: string; target: MusicVariant; links: VariantLinks;

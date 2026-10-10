@@ -1,7 +1,10 @@
 import {assertResponseBytes, cancelBody, utf8Bytes} from "./boundedResponse";
 import {MAX_JSON_BYTES} from "@/lib/resource/limits";
 
-interface SseEvent { data: string; event: string }
+interface SseEvent {
+    data: string;
+    event: string
+}
 
 /** Per-event actual UTF-8 budget, independent of the lifetime of a usage-rich stream. */
 function createEventParser(limit: number) {
@@ -25,7 +28,7 @@ function createEventParser(limit: number) {
         if (field === "event") event = content;
     };
     return {
-        *push(text: string, eof = false): Generator<SseEvent> {
+        * push(text: string, eof = false): Generator<SseEvent> {
             // Defer a trailing CR until its possible LF arrives, including the LF
             // in the same event budget before dispatching its blank line.
             let start = 0;
@@ -74,7 +77,9 @@ export async function* readSseEvents(response: Response, signal?: AbortSignal, l
     const reader = response.body.getReader();
     const decoder = new TextDecoder("utf-8", {fatal: true});
     const parser = createEventParser(limit);
-    const abort = () => { void cancelBody(reader); };
+    const abort = () => {
+        void cancelBody(reader);
+    };
     signal?.addEventListener("abort", abort, {once: true});
     try {
         while (true) {

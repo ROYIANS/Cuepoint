@@ -1,6 +1,6 @@
 import {useChatSelection} from "./useChatSelection";
 import {useChatExecutionSession} from "./useChatExecutionSession";
-import {executeNewChatMessage, retryFrozenChatRun, resolveChatRunAction} from "./chatExecutionFlows";
+import {executeNewChatMessage, resolveChatRunAction, retryFrozenChatRun} from "./chatExecutionFlows";
 import {createChatThread, updateChatThread} from "@/db/chat";
 import {deleteChatThread} from "@/db/cascadeCommands";
 import {pauseThreadGeneration} from "@/lib/agent/generationBatchRuntime";
@@ -62,12 +62,16 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     const activeTask = tasks?.find((task) => task.threadId === threadId);
     const [taskInspectorOpen, setTaskInspectorOpen] = useState(false);
     const taskDeparture = useRef<ManualDraftDeparture | undefined>(undefined);
-    const registerTaskDeparture = useCallback((request: ManualDraftDeparture | undefined) => {taskDeparture.current = request;}, []);
+    const registerTaskDeparture = useCallback((request: ManualDraftDeparture | undefined) => {
+        taskDeparture.current = request;
+    }, []);
     const leaveTask = useCallback((leave: () => void) => {
         if (taskDeparture.current) taskDeparture.current(leave);
         else leave();
     }, []);
-    const openBoard = () => leaveTask(() => {void navigate({to: "/agent/tasks"});});
+    const openBoard = () => leaveTask(() => {
+        void navigate({to: "/agent/tasks"});
+    });
     const connectors = useLiveQuery(() => db.connectors.toArray(), []);
     const projects = useLiveQuery(() => db.projects.orderBy("updatedAt").reverse().filter((project) => project.id !== STUDIO_LIBRARY_ID).toArray(), []);
     const activeThreadId = threadId;
@@ -81,8 +85,20 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     const currentThread = useRef(threadId);
     currentThread.current = threadId;
     const mounted = useRef(true);
-    useEffect(() => {mounted.current = true; return () => {mounted.current = false;};}, []);
-    const {sending, abortRef, executionThreadRef, sendLockRef, acquire: acquireExecution, release: releaseExecution} = useChatExecutionSession(activeThreadId);
+    useEffect(() => {
+        mounted.current = true;
+        return () => {
+            mounted.current = false;
+        };
+    }, []);
+    const {
+        sending,
+        abortRef,
+        executionThreadRef,
+        sendLockRef,
+        acquire: acquireExecution,
+        release: releaseExecution
+    } = useChatExecutionSession(activeThreadId);
 
     useEffect(() => {
         if (!activeThreadId) return;
@@ -178,10 +194,19 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     }, [activeThreadId]);
 
     const selection = useChatSelection({loaded, activeThread, activeThreadId, connectorList, modelCatalog});
-    const {chatMode, selectionRef, selectionRevisionRef, modelPolicy, catalogMatches, setComposerProjectId,
+    const {
+        chatMode, selectionRef, selectionRevisionRef, modelPolicy, catalogMatches, setComposerProjectId,
         handleConnectorChange, handleModelChange, handleProjectChange, handleReasoningEffortChange,
-        handleChatModeChange, handleInteractionModeChange} = selection;
-    const {connector: selectedConnector, model: modelValue, projectId, taskMode, interactionMode, reasoningEffort} = selection.snapshot;
+        handleChatModeChange, handleInteractionModeChange
+    } = selection;
+    const {
+        connector: selectedConnector,
+        model: modelValue,
+        projectId,
+        taskMode,
+        interactionMode,
+        reasoningEffort
+    } = selection.snapshot;
     const references = useReferenceDraft(JSON.stringify([activeThreadId ?? "home", projectId]), projectId);
     const {text: draft, setText: setDraft} = references;
     const projectRequired = taskMode && !projectId;
@@ -196,7 +221,12 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     const discoveryApiKey = selectedConnector?.apiKey;
     useEffect(() => {
         if (discoveryDefinitionId === undefined || discoveryBaseUrl === undefined || discoveryApiKey === undefined) return;
-        const connector = {id: discoveryId, definitionId: discoveryDefinitionId, baseUrl: discoveryBaseUrl, apiKey: discoveryApiKey};
+        const connector = {
+            id: discoveryId,
+            definitionId: discoveryDefinitionId,
+            baseUrl: discoveryBaseUrl,
+            apiKey: discoveryApiKey
+        };
         let cancelled = false;
         const controller = new AbortController();
         setModelCatalog((previous) => ({
@@ -315,12 +345,30 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         if (!token) return;
         const {controller} = token;
         try {
-            const checked = await executeNewChatMessage({submitted, content, attachments, references, activeThread, activeThreadId,
-                connector, model, taskMode: chatMode === "task", projectId, interactionMode, reasoningEffort, catalogMatches, modelCatalog,
-                controller, navigate, bindThread: id => {executionThreadRef.current = id;},
+            const checked = await executeNewChatMessage({
+                submitted,
+                content,
+                attachments,
+                references,
+                activeThread,
+                activeThreadId,
+                connector,
+                model,
+                taskMode: chatMode === "task",
+                projectId,
+                interactionMode,
+                reasoningEffort,
+                catalogMatches,
+                modelCatalog,
+                controller,
+                navigate,
+                bindThread: id => {
+                    executionThreadRef.current = id;
+                },
                 isCurrent: () => selectionRevisionRef.current === selectionRevision &&
                     sameChatModelConnector(selectionRef.current.connector, connector) &&
-                    selectionRef.current.model === model && selectionRef.current.threadId === activeThreadId});
+                    selectionRef.current.model === model && selectionRef.current.threadId === activeThreadId
+            });
             if (checked && !checked.ok && !checked.aborted) toast.error(checked.message);
         } catch (error) {
             toast.error(error instanceof Error ? error.message : "发送失败，请重试");
@@ -335,8 +383,10 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         if (!token) return;
         const {controller} = token;
         try {
-            const checked = await retryFrozenChatRun({runId, activeThreadId, controller,
-                isThreadCurrent: id => selectionRef.current.threadId === id});
+            const checked = await retryFrozenChatRun({
+                runId, activeThreadId, controller,
+                isThreadCurrent: id => selectionRef.current.threadId === id
+            });
             if (checked && !checked.ok && !checked.aborted) toast.error(checked.message);
         } catch (error) {
             toast.error(error instanceof Error ? error.message : "重新生成失败");
@@ -351,8 +401,10 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         if (!token) return;
         const {controller} = token;
         try {
-            const checked = await resolveChatRunAction({runId, action, callId, activeThreadId, controller,
-                isThreadCurrent: id => selectionRef.current.threadId === id});
+            const checked = await resolveChatRunAction({
+                runId, action, callId, activeThreadId, controller,
+                isThreadCurrent: id => selectionRef.current.threadId === id
+            });
             if (checked && !checked.ok && !checked.aborted) toast.error(checked.message);
         } catch (error) {
             toast.error(error instanceof Error ? error.message : "处理执行失败");
@@ -495,7 +547,9 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                                            open={contextOpen} onOpenChange={setContextOpen}/>,
 
         reasoningEffort,
-        onReasoningEffortChange: value => {void handleReasoningEffortChange(value).catch(() => toast.error("推理设置保存失败，当前页面仍保留所选值"));},
+        onReasoningEffortChange: value => {
+            void handleReasoningEffortChange(value).catch(() => toast.error("推理设置保存失败，当前页面仍保留所选值"));
+        },
         value: draft,
         sending,
         connectors: connectorList,
@@ -515,10 +569,16 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         onChange: setDraft,
         onSend: () => void handleSend(),
         onStop: handleStop,
-        onConnectorChange: (id) => {void handleConnectorChange(id).catch(error => toast.error(error instanceof Error ? error.message : "连接设置保存失败"));},
-        onModelChange: (model) => {void handleModelChange(model).catch(error => toast.error(error instanceof Error ? error.message : "模型设置保存失败"));},
+        onConnectorChange: (id) => {
+            void handleConnectorChange(id).catch(error => toast.error(error instanceof Error ? error.message : "连接设置保存失败"));
+        },
+        onModelChange: (model) => {
+            void handleModelChange(model).catch(error => toast.error(error instanceof Error ? error.message : "模型设置保存失败"));
+        },
         onChatModeChange: handleChatModeChange,
-        onInteractionModeChange: mode => {void handleInteractionModeChange(mode).catch(() => toast.error("对话模式保存失败，请重试"));},
+        onInteractionModeChange: mode => {
+            void handleInteractionModeChange(mode).catch(() => toast.error("对话模式保存失败，请重试"));
+        },
     };
 
     return (
@@ -567,7 +627,8 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                                } : undefined} task={activeTask}
                                runs={(runs ?? []).filter((run) => run.threadId === activeThreadId)}
                                messages={(messages ?? []).filter((message) => message.threadId === activeThreadId)}
-                               open={taskInspectorOpen} onOpenChange={setTaskInspectorOpen} onOpenBoard={openBoard} onDepartureReady={registerTaskDeparture}/>}
+                               open={taskInspectorOpen} onOpenChange={setTaskInspectorOpen} onOpenBoard={openBoard}
+                               onDepartureReady={registerTaskDeparture}/>}
 
             <Dialog
                 open={Boolean(renameTarget)}
@@ -599,7 +660,9 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
 
             <AlertDialog
                 open={Boolean(deleteTarget)}
-                onOpenChange={(open) => {if (!open && !deleteLock.current) setDeleteTarget(undefined);}}
+                onOpenChange={(open) => {
+                    if (!open && !deleteLock.current) setDeleteTarget(undefined);
+                }}
             >
                 <AlertDialogContent>
                     <AlertDialogHeader>
@@ -613,7 +676,10 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                         <AlertDialogAction
                             className="bg-destructive hover:bg-destructive/90"
                             disabled={deleting}
-                            onClick={(event) => {event.preventDefault(); commitDelete();}}
+                            onClick={(event) => {
+                                event.preventDefault();
+                                commitDelete();
+                            }}
                         >
                             {deleting ? "删除中…" : "删除"}
                         </AlertDialogAction>

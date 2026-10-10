@@ -1,7 +1,7 @@
 import {AUDIO_TABLES} from "./audioShared";
 import {db} from "./database";
 import {nowIso} from "@/lib/ids";
-import {type Id, isStudioLibrary, type Shot, normalizeEpisodeStory, type Project, getProjectKind} from "@/domain/types";
+import {getProjectKind, type Id, isStudioLibrary, normalizeEpisodeStory, type Project, type Shot} from "@/domain/types";
 
 // Media recycling must hold the same lock as every committed slot/cover writer.
 export const PRODUCTION_TABLES = [

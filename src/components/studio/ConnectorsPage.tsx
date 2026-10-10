@@ -30,8 +30,8 @@ type EditorState = {
     existing?: ConnectorConfig;
 };
 
-type EditorSession = EditorState & {baseUrl: string; apiKey: string};
-type EditorOperation = {session: EditorSession; kind: "probe" | "test" | "save" | "disconnect"};
+type EditorSession = EditorState & { baseUrl: string; apiKey: string };
+type EditorOperation = { session: EditorSession; kind: "probe" | "test" | "save" | "disconnect" };
 
 export function ConnectorsPage() {
     const connectors = useLiveQuery(() => db.connectors.toArray(), []);
@@ -82,7 +82,12 @@ export function ConnectorsPage() {
 
     function openEditor(definition: ConnectorDefinition, existing?: ConnectorConfig) {
         if (!mounted.current || writeLocked()) return;
-        sessionRef.current = {definition, existing, baseUrl: existing?.baseUrl ?? definition.defaultBaseUrl, apiKey: ""};
+        sessionRef.current = {
+            definition,
+            existing,
+            baseUrl: existing?.baseUrl ?? definition.defaultBaseUrl,
+            apiKey: ""
+        };
         operationRef.current = undefined;
         setEditor({definition, existing});
         setBaseUrl(sessionRef.current.baseUrl);
@@ -305,8 +310,12 @@ export function ConnectorsPage() {
             <Dialog open={Boolean(editor)} onOpenChange={(open) => !open && closeEditor()}>
                 <DialogContent
                     showCloseButton={!saving}
-                    onEscapeKeyDown={(event) => {if (writeLocked()) event.preventDefault();}}
-                    onPointerDownOutside={(event) => {if (writeLocked()) event.preventDefault();}}
+                    onEscapeKeyDown={(event) => {
+                        if (writeLocked()) event.preventDefault();
+                    }}
+                    onPointerDownOutside={(event) => {
+                        if (writeLocked()) event.preventDefault();
+                    }}
                 >
                     <DialogHeader>
                         <DialogTitle>{editor?.existing ? "编辑连接" : "安装连接"}</DialogTitle>

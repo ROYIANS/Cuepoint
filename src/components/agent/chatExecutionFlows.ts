@@ -8,7 +8,7 @@ import type {useReferenceDraft} from "./useReferenceDraft";
 import {createChatThread, updateChatThread} from "@/db/chat";
 import {resolveConnector} from "@/db/connectors";
 import {db} from "@/db/database";
-import {beginAgentRun, assertRetryConnector} from "@/db/agentRuns";
+import {assertRetryConnector, beginAgentRun} from "@/db/agentRuns";
 import {cancelAgentRun, resolveAgentToolApproval} from "@/db/agentTools";
 import {executeChatRun, resumeChatRun} from "@/lib/agent/runChat";
 import {withThreadRunLock} from "@/lib/agent/runOwnership";
@@ -16,6 +16,7 @@ import {runWithCompatibleChatModel} from "@/lib/ai/connectors";
 import {deriveChatTitle} from "@/lib/chatTitle";
 
 type ReferenceDraft = ReturnType<typeof useReferenceDraft>;
+
 interface NewMessageFlow {
     submitted: ReturnType<ReferenceDraft["capture"]>;
     content: string;
@@ -37,7 +38,26 @@ interface NewMessageFlow {
     isCurrent: () => boolean;
 }
 
-export async function executeNewChatMessage({submitted, content, attachments, references, activeThread, activeThreadId, connector, model, taskMode, projectId, interactionMode, reasoningEffort, catalogMatches, modelCatalog, controller, bindThread, navigate, isCurrent}: NewMessageFlow) {
+export async function executeNewChatMessage({
+                                                submitted,
+                                                content,
+                                                attachments,
+                                                references,
+                                                activeThread,
+                                                activeThreadId,
+                                                connector,
+                                                model,
+                                                taskMode,
+                                                projectId,
+                                                interactionMode,
+                                                reasoningEffort,
+                                                catalogMatches,
+                                                modelCatalog,
+                                                controller,
+                                                bindThread,
+                                                navigate,
+                                                isCurrent
+                                            }: NewMessageFlow) {
     return runWithCompatibleChatModel(connector, model, async () => {
         let thread = activeThread;
         if (!thread) {
@@ -104,6 +124,7 @@ interface ExistingRunFlow {
     controller: AbortController;
     isThreadCurrent: (id: string) => boolean;
 }
+
 export async function retryFrozenChatRun({runId, activeThreadId, controller, isThreadCurrent}: ExistingRunFlow) {
     const previous = await db.agentRuns.get(runId);
     if (!previous || previous.threadId !== activeThreadId) throw new Error("执行不存在");
@@ -127,7 +148,14 @@ export async function retryFrozenChatRun({runId, activeThreadId, controller, isT
 
 }
 
-export async function resolveChatRunAction({runId, action, callId, activeThreadId, controller, isThreadCurrent}: ExistingRunFlow & {action: RunAction; callId?: string}) {
+export async function resolveChatRunAction({
+                                               runId,
+                                               action,
+                                               callId,
+                                               activeThreadId,
+                                               controller,
+                                               isThreadCurrent
+                                           }: ExistingRunFlow & { action: RunAction; callId?: string }) {
     const run = await db.agentRuns.get(runId);
     if (!run || run.threadId !== activeThreadId) throw new Error("执行不存在");
     if (action === "cancel") {

@@ -1,14 +1,21 @@
 import {AUDIO_TABLES} from "@/db/audioShared";
 import {insertAudioPackage, snapshotAudioPackage} from "./audioProjectPackage";
-import {getProjectKind, PACKAGE_FORMAT, type Id, type Project, type MediaRecord} from "@/domain/types";
+import {getProjectKind, type Id, type MediaRecord, PACKAGE_FORMAT, type Project} from "@/domain/types";
 import {remapReferencePackage} from "./references/package";
 import JSZip from "jszip";
 import {z} from "zod";
 import {db} from "@/db/database";
 import {collectMediaIds} from "@/db/media";
 import {createId, nowIso} from "./ids";
-import {asRecord, asArray, remapId, parseProjectPackageRows, remapProjectPackageRows} from "./packages/projectPackageCodec";
+import {
+    asArray,
+    asRecord,
+    parseProjectPackageRows,
+    remapId,
+    remapProjectPackageRows
+} from "./packages/projectPackageCodec";
 import {PackageError} from "./packages/packageError";
+
 export {PackageError} from "./packages/packageError";
 
 const manifestSchema = z.object({
@@ -212,11 +219,18 @@ export async function importProjectZip(file: Blob): Promise<Project> {
     };
 
     const parsed = parseProjectPackageRows({
-        project: await readJson("project.json", true), characters: await readJson("characters.json"),
-        scenes: await readJson("scenes.json"), props: await readJson("props.json"), styles: await readJson("styles.json"),
-        episodes: await readJson("episodes.json"), shots: await readJson("shots.json"), memories: await readJson("memories.json"),
-        memoryVersions: await readJson("memoryVersions.json"), references: await readJson("references.json"),
-        referenceChunks: await readJson("referenceChunks.json"), audioPackage: await readJson("audioProject.json"),
+        project: await readJson("project.json", true),
+        characters: await readJson("characters.json"),
+        scenes: await readJson("scenes.json"),
+        props: await readJson("props.json"),
+        styles: await readJson("styles.json"),
+        episodes: await readJson("episodes.json"),
+        shots: await readJson("shots.json"),
+        memories: await readJson("memories.json"),
+        memoryVersions: await readJson("memoryVersions.json"),
+        references: await readJson("references.json"),
+        referenceChunks: await readJson("referenceChunks.json"),
+        audioPackage: await readJson("audioProject.json"),
     });
     const {projectRaw, referencePackage} = parsed;
     const mediaMetadataRaw = await readJson("mediaMetadata.json");
@@ -269,7 +283,18 @@ export async function importProjectZip(file: Blob): Promise<Project> {
         chunks: referenceChunks
     } = await remapReferencePackage(referencePackage, projectId, mediaMap, mediaRecords);
 
-    const {project, characters, scenes, props, styles, episodes, shots, memories, memoryVersions, remappedAudioPackage} =
+    const {
+        project,
+        characters,
+        scenes,
+        props,
+        styles,
+        episodes,
+        shots,
+        memories,
+        memoryVersions,
+        remappedAudioPackage
+    } =
         remapProjectPackageRows(parsed, {projectId, at, mediaMap});
 
     try {

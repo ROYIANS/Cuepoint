@@ -10,9 +10,6 @@ function Sheet({...props}: React.ComponentProps<typeof SheetPrimitive.Root>) {
 }
 
 
-
-
-
 function SheetPortal({...props}: React.ComponentProps<typeof SheetPrimitive.Portal>) {
     return <SheetPrimitive.Portal data-slot="sheet-portal" {...props} />;
 }
@@ -94,7 +91,6 @@ function SheetHeader({className, ...props}: React.ComponentProps<"div">) {
         />
     );
 }
-
 
 
 function SheetTitle({className, ...props}: React.ComponentProps<typeof SheetPrimitive.Title>) {

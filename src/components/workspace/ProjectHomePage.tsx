@@ -9,7 +9,7 @@ import {db} from "@/db/database";
 import {ensureFirstEpisode} from "@/db/episodes";
 import {normalizeProjectMode} from "@/domain/types";
 
-export function ProjectHomePage({projectId}: {projectId: string}) {
+export function ProjectHomePage({projectId}: { projectId: string }) {
     const projectResult = useLiveQuery(
         async () => ({projectId, project: (await db.projects.get(projectId)) ?? null}),
         [projectId],
@@ -43,7 +43,8 @@ export function ProjectHomePage({projectId}: {projectId: string}) {
             .finally(() => setRepairing(false));
     }, [episode, project, projectId, repairError, repairing]);
 
-    if (project === undefined || episode === undefined) return <div className="text-muted-foreground p-8 text-sm">加载项目…</div>;
+    if (project === undefined || episode === undefined) return <div
+        className="text-muted-foreground p-8 text-sm">加载项目…</div>;
     if (project === null) return <div className="text-muted-foreground p-8 text-sm">找不到这个项目</div>;
 
     if (project?.kind === "audio") return <AudioWorkspacePage key={projectId} projectId={projectId}/>;

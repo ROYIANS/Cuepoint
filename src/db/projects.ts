@@ -1,28 +1,27 @@
 import {
-    type Project,
-    type ProjectMode,
     type AspectPresetId,
+    emptySetting,
     type Id,
     normalizeAspectPreset,
-    type ShotSettings,
-    normalizeShotSettings,
     normalizeSeriesStory,
-    type WorldSetting,
-    emptySetting,
-    type ShotColumnId
+    normalizeShotSettings,
+    type Project,
+    type ProjectMode,
+    type ShotColumnId,
+    type ShotSettings,
+    type WorldSetting
 } from "@/domain/types";
 import {db} from "./database";
 import {nowIso} from "@/lib/ids";
-import {sameDraftStructure, DraftConflictError, assertDraftBaseline} from "@/lib/draftConflict";
+import {assertDraftBaseline, DraftConflictError, sameDraftStructure} from "@/lib/draftConflict";
 import {validateGenerationDefaults} from "@/domain/output";
 import {emptySlot} from "@/domain/slot";
 import {AUDIO_TABLES, newAudioRow} from "./audioShared";
 import {type AudioChapter, type AudioTrack} from "@/domain/audio";
-import {type MusicDraft, defaultMusicSettings} from "@/domain/music";
-import {emptyProject, emptyEpisode} from "./productionRecords";
-import {touch, PRODUCTION_TABLES, assertVideoProject} from "./productionShared";
+import {defaultMusicSettings, type MusicDraft} from "@/domain/music";
+import {emptyEpisode, emptyProject} from "./productionRecords";
+import {assertVideoProject, PRODUCTION_TABLES, touch} from "./productionShared";
 import {assertSlotMedia, deleteMediaIfOrphan} from "./media";
-
 
 
 export async function createProject(

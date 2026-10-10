@@ -1,29 +1,29 @@
 import {
-    type Id,
     type Character,
     type CharacterImageSlot,
     type GenerationSlot,
+    type Id,
     normalizeEpisodeStory,
-    type Scene,
-    type SceneImageSlot,
     type Prop,
     type PropImageSlot,
-    type VisualStyle,
-    type StyleImageSlot
+    type Scene,
+    type SceneImageSlot,
+    type StyleImageSlot,
+    type VisualStyle
 } from "@/domain/types";
 import {db} from "./database";
 import {assertDraftBaseline, DraftConflictError} from "@/lib/draftConflict";
-import {sameSlotValue, collectSlotsMedia} from "@/domain/slot";
+import {collectSlotsMedia, sameSlotValue} from "@/domain/slot";
 import {
     assertProjectOwner,
-    touchProject,
     assertTextPatch,
     pickPatch,
+    PRODUCTION_TABLES,
     touch,
-    PRODUCTION_TABLES
+    touchProject
 } from "./productionShared";
-import {emptyCharacter, emptyScene, emptyProp, emptyStyle} from "./productionRecords";
-import {assertSlotMedia, recycleSlotMedia, deleteMediaIfOrphans} from "./media";
+import {emptyCharacter, emptyProp, emptyScene, emptyStyle} from "./productionRecords";
+import {assertSlotMedia, deleteMediaIfOrphans, recycleSlotMedia} from "./media";
 
 export async function addCharacter(projectId: Id): Promise<Character> {
     return db.transaction("rw", db.projects, db.characters, async () => {

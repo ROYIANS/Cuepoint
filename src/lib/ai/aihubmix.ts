@@ -1,7 +1,7 @@
-import {requestOnce, readHttpJson} from "./requestBoundary";
+import {readHttpJson, requestOnce} from "./requestBoundary";
 import {normalizeBaseUrl} from "./baseUrl";
 import {isReadAbort, readResponseBlob, ResponseLimitError} from "./boundedResponse";
-import {MAX_MEDIA_DOWNLOAD_BYTES, MAX_JSON_BYTES, MAX_ERROR_BYTES} from "@/lib/resource/limits";
+import {MAX_ERROR_BYTES, MAX_JSON_BYTES, MAX_MEDIA_DOWNLOAD_BYTES} from "@/lib/resource/limits";
 import {redactCredentials} from "./safeError";
 import {type ChatModelMetadata, parseModelMetadata} from "@/lib/ai/modelMetadata";
 
@@ -182,7 +182,10 @@ async function request(
     const {response} = result;
     let data: unknown;
     try {
-        data = await readHttpJson(response, {success: {kind: "native-json"}, failure: {kind: "native-json"}}, options.signal);
+        data = await readHttpJson(response, {
+            success: {kind: "native-json"},
+            failure: {kind: "native-json"}
+        }, options.signal);
     } catch (error) {
         if (isReadAbort(error, options.signal)) return aborted();
         return response.ok ? protocol() : responseFailure(response, undefined, credentials.apiKey);
@@ -385,7 +388,13 @@ export async function downloadAIHubMixResult(credentials: AIHubMixCredentials, t
         if (!result.response.ok || result.response.headers.get("Content-Type")?.includes("application/json")) {
             let body: unknown;
             try {
-                body = await readHttpJson(result.response, {success: {kind: "bounded-json", maxBytes: MAX_JSON_BYTES, fatalUtf8: true}, failure: {kind: "bounded-json", maxBytes: MAX_ERROR_BYTES, fatalUtf8: true}}, options.signal);
+                body = await readHttpJson(result.response, {
+                    success: {
+                        kind: "bounded-json",
+                        maxBytes: MAX_JSON_BYTES,
+                        fatalUtf8: true
+                    }, failure: {kind: "bounded-json", maxBytes: MAX_ERROR_BYTES, fatalUtf8: true}
+                }, options.signal);
             } catch (error) {
                 if (isReadAbort(error, options.signal)) return aborted();
             }

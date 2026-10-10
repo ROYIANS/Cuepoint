@@ -96,7 +96,6 @@ export async function addMusicWork(projectId: string, input: AudioInput<MusicWor
 export const patchMusicWork = (projectId: string, id: string, revision: number, patch: Partial<Pick<MusicWork, "title" | "notes" | "favorite">>) => patchAudioRow(db.musicWorks, projectId, id, revision, patch, ["title", "notes", "favorite"], validateLegacyMusicWork);
 
 
-
 export async function deleteMusicWork(projectId: string, id: string, revision: number) {
     return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => {
         await assertAudioProject(projectId, "music");

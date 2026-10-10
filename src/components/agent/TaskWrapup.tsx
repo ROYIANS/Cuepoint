@@ -4,7 +4,7 @@ import type {MemoryCandidate, MemorySourceRef, ProjectMemory} from "@/domain/pro
 import {listMemoryCandidates} from "@/db/projectMemories";
 import {MemoryPromotion} from "@/components/memory/MemoryPromotion";
 import {useCallback, useEffect, useRef, useState} from "react";
-import {useManualDraftDeparture, type ManualDraftState, type ManualDraftDeparture} from "@/lib/useManualDraftGuard";
+import {type ManualDraftDeparture, type ManualDraftState, useManualDraftDeparture} from "@/lib/useManualDraftGuard";
 import {useLiveQuery} from "dexie-react-hooks";
 import {Link} from "@tanstack/react-router";
 import {
@@ -127,7 +127,15 @@ function ReviewDocument({record, evidence, promotionPending, promotionDisabled, 
     </div>;
 }
 
-export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendingChange, onDraftStateChange, requestDeparture}: Props) {
+export function TaskWrapup({
+                               task,
+                               modelSelection,
+                               busy,
+                               onEditingChange,
+                               onPendingChange,
+                               onDraftStateChange,
+                               requestDeparture
+                           }: Props) {
     const [readAttempt, setReadAttempt] = useState(0);
     const [lastRead, setLastRead] = useState<{ taskId: string; data: TaskWrapupState }>();
     const read = useLiveQuery(async () => {
@@ -155,7 +163,7 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
         sources: WrapupEvidence[];
         record: AgentTaskWrapup;
         baseline: string;
-        owner: {taskId: string; threadId: string; projectId: string}
+        owner: { taskId: string; threadId: string; projectId: string }
     }>();
     const draftRef = useRef(draft);
     const lifetime = useRef({mounted: false, epoch: 0});
@@ -164,11 +172,14 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
     useEffect(() => {
         const session = lifetime.current;
         session.mounted = true;
-        return () => {session.mounted = false; session.epoch++;};
+        return () => {
+            session.mounted = false;
+            session.epoch++;
+        };
     }, []);
     const [candidate, setCandidate] = useState<{ epoch: number; projectId: string; value: MemoryCandidate }>();
     const [candidatePending, setCandidatePending] = useState(false);
-    const promotion = useRef<{mounted: boolean; epoch: number; phase: "idle" | "preparing" | "editing"}>({
+    const promotion = useRef<{ mounted: boolean; epoch: number; phase: "idle" | "preparing" | "editing" }>({
         mounted: false, epoch: 0, phase: "idle",
     });
     const promotionOwner = useRef({taskId: task.id, projectId: task.projectId});
@@ -227,6 +238,7 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
         setMemoryPending(false);
         return true;
     }
+
     const [savedMemory, setSavedMemory] = useState<ProjectMemory>();
     const [memoryPending, setMemoryPending] = useState(false);
     const [pending, setPending] = useState(false);
@@ -242,8 +254,12 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
         const dirty = !!draftRef.current && JSON.stringify(draftRef.current.content) !== draftRef.current.baseline;
         const pending = lock.current || !!preparing || promotion.current.phase === "preparing";
         // MemoryEditor owns its existing route blocker; local inspector departure still owns the candidate.
-        return {dirty: dirty || promotion.current.phase === "editing", pending: pending || memoryPending || candidatePending,
-            routeDirty: dirty, routePending: pending};
+        return {
+            dirty: dirty || promotion.current.phase === "editing",
+            pending: pending || memoryPending || candidatePending,
+            routeDirty: dirty,
+            routePending: pending
+        };
     }, [preparing, memoryPending, candidatePending]);
     useEffect(() => {
         void recoverTaskWrapups(task.threadId).catch((failure: unknown) => setError(failure instanceof Error ? failure.message : "无法读取整理状态"));
@@ -260,17 +276,21 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
         return () => onPendingChange(false);
     }, [pending, preparing, memoryPending, candidatePending, onPendingChange, onDraftStateChange, draftState]);
     useEffect(() => () => controller.current?.abort(), []);
+
     function publishDraft(next: typeof draft) {
         draftRef.current = next;
         setDraft(next);
         onDraftStateChange?.(draftState());
     }
-    const departure = useManualDraftDeparture(draftState().dirty, draftState().pending, () => {}, {
+
+    const departure = useManualDraftDeparture(draftState().dirty, draftState().pending, () => {
+    }, {
         readState: draftState, route: !onDraftStateChange,
     });
 
     function requestLocalDeparture(leave: () => void) {
-        if (requestDeparture) requestDeparture(leave, () => {});
+        if (requestDeparture) requestDeparture(leave, () => {
+        });
         else departure.requestDeparture(leave);
     }
 
@@ -488,16 +508,20 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
                                                                             publishDraft(undefined);
                                                                             setError("");
                                                                         })}>取消编辑</Button><Button type="submit"
-                                                                                                    disabled={!editable || !draft.content.overview.trim()}>{pending ? "保存中…" : "保存草稿"}</Button>
+                                                                                                     disabled={!editable || !draft.content.overview.trim()}>{pending ? "保存中…" : "保存草稿"}</Button>
                     </div>
                 </form> : <>
                     {latest.status === "draft" &&
-                        <ReviewDocument onPromote={source => void prepareMemory(source)} promotionPending={candidatePending} promotionDisabled={candidatePending || !!candidate} record={latest}
+                        <ReviewDocument onPromote={source => void prepareMemory(source)}
+                                        promotionPending={candidatePending}
+                                        promotionDisabled={candidatePending || !!candidate} record={latest}
                                         evidence={evidence}/>}
                     {state.confirmed && (latest.id !== state.confirmed.id || latest.revision !== state.confirmed.revision) &&
                         <details className="task-review-previous">
                             <summary>上次确认的总结 · {dateLabel(state.confirmed.confirmedAt!)}</summary>
-                            <ReviewDocument onPromote={source => void prepareMemory(source)} promotionPending={candidatePending} promotionDisabled={candidatePending || !!candidate}
+                            <ReviewDocument onPromote={source => void prepareMemory(source)}
+                                            promotionPending={candidatePending}
+                                            promotionDisabled={candidatePending || !!candidate}
                                             record={state.confirmed}
                                             evidence={currentSources(state.confirmed.snapshot.evidence)}/></details>}
                     {!preparing && task.lifecycle === "open" && <div className="task-review-actions">
@@ -529,7 +553,8 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
                                                                                      params={{projectId: task.projectId}}
                                                                                      search={{memory: savedMemory.id}}>查看“{savedMemory.title}”</Link>
         </p>}
-        {candidate && <MemoryEditor key={candidate.epoch} projectId={task.projectId} initial={candidate.value.input} source={candidate.value.ref}
+        {candidate && <MemoryEditor key={candidate.epoch} projectId={task.projectId} initial={candidate.value.input}
+                                    source={candidate.value.ref}
                                     sourceExcerpt={`${candidate.value.source.taskTitle} · 总结版本 ${candidate.value.ref.summaryRevision}\n${candidate.value.source.excerpt}`}
                                     onPendingChange={value => {
                                         if (promotion.current.mounted && promotion.current.epoch === candidate.epoch &&
@@ -545,7 +570,8 @@ export function TaskWrapup({task, modelSelection, busy, onEditingChange, onPendi
                 <summary>
                     <span>{version.confirmedAt ? "已确认" : version.status === "draft" ? "草稿" : version.status === "failed" ? "失败" : "中断"} · 版本 {version.revision}<small>{dateLabel(version.updatedAt)} · {version.author === "ai" ? "AI" : "人工"}</small></span>
                 </summary>
-                <ReviewDocument onPromote={source => void prepareMemory(source)} promotionPending={candidatePending} promotionDisabled={candidatePending || !!candidate} record={version}
+                <ReviewDocument onPromote={source => void prepareMemory(source)} promotionPending={candidatePending}
+                                promotionDisabled={candidatePending || !!candidate} record={version}
                                 evidence={currentSources(version.snapshot.evidence)}/></details>)}
         </DialogContent></Dialog>
     </div>;

@@ -43,7 +43,7 @@ export const audioMusicTarget = (projectId: string) => ({
 // Mapping preserves each tuple position and its actual schema output.
 export function audioMusicUnion<const T extends [Spec<unknown>, Spec<unknown>, ...Spec<unknown>[]]>(...specs: T): Spec<z.infer<T[number]["schema"]>> {
     return {
-        schema: z.union(specs.map((spec) => spec.schema) as {[K in keyof T]: T[K]["schema"]}),
+        schema: z.union(specs.map((spec) => spec.schema) as { [K in keyof T]: T[K]["schema"] }),
         json: {type: "object", anyOf: specs.map((spec) => spec.json)}
     };
 }

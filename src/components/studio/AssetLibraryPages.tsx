@@ -16,7 +16,16 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import {db} from "@/db/database";
-import {addCharacter, addProp, addScene, addStyle, deleteCharacter, deleteProp, deleteScene, deleteStyle} from "@/db/assets";
+import {
+    addCharacter,
+    addProp,
+    addScene,
+    addStyle,
+    deleteCharacter,
+    deleteProp,
+    deleteScene,
+    deleteStyle
+} from "@/db/assets";
 import {firstResultId} from "@/domain/slot";
 import {
     type Character,
@@ -52,7 +61,7 @@ function styleCover(style: VisualStyle) {
 type LibraryKind = "character" | "scene" | "prop" | "style";
 
 type LibraryAsset = Pick<Character, "id" | "name" | "projectId" | "createdAt" | "updatedAt">;
-type LibraryRow = LibraryAsset & {source: object; mediaId?: string};
+type LibraryRow = LibraryAsset & { source: object; mediaId?: string };
 
 async function readLibraryRows<T extends LibraryAsset>(table: Table<T, string>, cover: (asset: T) => string | undefined): Promise<LibraryRow[]> {
     const assets = await table.where("projectId").equals(STUDIO_LIBRARY_ID).toArray();
@@ -66,10 +75,14 @@ async function readLibraryRows<T extends LibraryAsset>(table: Table<T, string>, 
 
 function readStudioLibrary(kind: LibraryKind): Promise<LibraryRow[]> {
     switch (kind) {
-        case "character": return readLibraryRows(db.characters, characterCover);
-        case "scene": return readLibraryRows(db.scenes, sceneCover);
-        case "prop": return readLibraryRows(db.props, propCover);
-        case "style": return readLibraryRows(db.styles, styleCover);
+        case "character":
+            return readLibraryRows(db.characters, characterCover);
+        case "scene":
+            return readLibraryRows(db.scenes, sceneCover);
+        case "prop":
+            return readLibraryRows(db.props, propCover);
+        case "style":
+            return readLibraryRows(db.styles, styleCover);
     }
 }
 
@@ -124,7 +137,9 @@ function StudioLibrary({kind}: { kind: LibraryKind }) {
     const activeRef = useRef(true);
     useEffect(() => {
         activeRef.current = true;
-        return () => {activeRef.current = false;};
+        return () => {
+            activeRef.current = false;
+        };
     }, []);
     const creatingRef = useRef(false);
     const deletingRef = useRef(false);
@@ -216,7 +231,8 @@ function StudioLibrary({kind}: { kind: LibraryKind }) {
             <p className="text-muted-foreground mt-3 max-w-xl text-[13px] leading-6">{copy.hint}</p>
             <div className="mt-8">
                 <LibraryGrid>
-                    <CreateTile label={creating ? "创建中…" : copy.create} hint="留在工作室" onClick={() => void handleCreate()}/>
+                    <CreateTile label={creating ? "创建中…" : copy.create} hint="留在工作室"
+                                onClick={() => void handleCreate()}/>
                     {items.map((item) => (
                         <CoverCard
                             key={item.id}

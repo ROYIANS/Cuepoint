@@ -172,14 +172,20 @@ export type AudioPackage = z.infer<typeof schema>;
 const fingerprintPackageSchema = schema.extend({
     audioTakes: z.array(schemas.audioTakes.passthrough().extend({provenance: provenance.passthrough().optional()}))
 });
+
 export function parseAudioPackageData(raw: unknown): AudioPackage {
     const original = fingerprintPackageSchema.parse(raw);
     const snapshot = {
-        chapters: original.audioChapters, tracks: original.audioTracks, takes: original.audioTakes, clips: original.audioClips
+        chapters: original.audioChapters,
+        tracks: original.audioTracks,
+        takes: original.audioTakes,
+        clips: original.audioClips
     };
-    return schema.parse({...original, audioExports: original.audioExports.map(row => ({
-        ...row, fingerprint: preserveAudioExportFreshness(row, snapshot)
-    }))});
+    return schema.parse({
+        ...original, audioExports: original.audioExports.map(row => ({
+            ...row, fingerprint: preserveAudioExportFreshness(row, snapshot)
+        }))
+    });
 }
 
 export function parseAudioPackage(raw: unknown, projectId: unknown, kind: ProjectKind): AudioPackage | undefined {

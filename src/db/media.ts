@@ -1,7 +1,7 @@
-import {type Id, type GenerationSlot, type MediaRecord} from "@/domain/types";
+import {type GenerationSlot, type Id, type MediaRecord} from "@/domain/types";
 import {db} from "./database";
 import {collectSlotsMedia, SHOT_PICTURE_FIELDS, slotMediaIds} from "@/domain/slot";
-import {assertProjectOwner, touchProject, PRODUCTION_TABLES} from "./productionShared";
+import {assertProjectOwner, PRODUCTION_TABLES, touchProject} from "./productionShared";
 
 export async function collectMediaIds(projectId?: Id): Promise<Set<Id>> {
     const [projects, characters, scenes, props, styles, shots, references, materialUses, retainedMedia] = await Promise.all([

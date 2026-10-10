@@ -14,7 +14,8 @@ import {validateLegacyMusicDraft, validateLegacyMusicWork} from "@/db/music";
 import {validateGenerationInput} from "./audioGeneration/input";
 import {validateSpeechReference} from "./audioGeneration/reference";
 
-import {parseAudioPackageData, type AudioPackage} from "./packages/audioPackageCodec";
+import {type AudioPackage, parseAudioPackageData} from "./packages/audioPackageCodec";
+
 export {parseAudioPackage, remapAudioPackage} from "./packages/audioPackageCodec";
 export type {AudioPackage} from "./packages/audioPackageCodec";
 

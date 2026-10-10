@@ -15,15 +15,19 @@ export function StyleDetailPage(props: Parameters<typeof StyleDetailContent>[0])
 }
 
 function StyleDetailContent({
-                                    styleId,
-                                    back = {kind: "studio"},
-                                }: {
+                                styleId,
+                                back = {kind: "studio"},
+                            }: {
     styleId: string;
     back?: { kind: "studio" } | { kind: "project"; projectId: string };
 }) {
     const navigate = useNavigate();
     const ownerId = back.kind === "project" ? back.projectId : STUDIO_LIBRARY_ID;
-    const result = useLiveQuery(async () => ({ownerId, id: styleId, value: (await db.styles.get(styleId)) ?? null}), [ownerId, styleId]);
+    const result = useLiveQuery(async () => ({
+        ownerId,
+        id: styleId,
+        value: (await db.styles.get(styleId)) ?? null
+    }), [ownerId, styleId]);
 
     const loaded = result?.ownerId === ownerId && result.id === styleId ? result.value : undefined;
     const [openEditors, setOpenEditors] = useState(0);

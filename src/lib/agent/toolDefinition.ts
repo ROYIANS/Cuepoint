@@ -33,7 +33,7 @@ export function defineTool<Args, const Name extends string>(spec: Spec<Args>, bo
     return {...body, parameters: spec.json, parseArguments: raw => spec.schema.parse(raw)};
 }
 
-export function assertUniqueToolNames(definitions: readonly {name: string}[]): void {
+export function assertUniqueToolNames(definitions: readonly { name: string }[]): void {
     const names = new Set<string>();
     for (const definition of definitions) {
         if (names.has(definition.name)) throw new Error('工具名称重复');

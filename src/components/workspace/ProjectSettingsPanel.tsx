@@ -18,7 +18,13 @@ import {
     validateGenerationDefaults,
 } from "@/domain/output";
 import {getGenerationCapability, projectGenerationParameters} from "@/domain/generationCapabilities";
-import {acknowledgeOutputDraft, outputDraftPatch, projectOutputValue, rebaseOutputDraft, type ProjectOutputDraft} from "@/lib/projectOutputDraft";
+import {
+    acknowledgeOutputDraft,
+    outputDraftPatch,
+    type ProjectOutputDraft,
+    projectOutputValue,
+    rebaseOutputDraft
+} from "@/lib/projectOutputDraft";
 import {AssetTextField} from "@/components/assets/AssetTextField";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
@@ -114,7 +120,8 @@ export function ProjectSettingsPanel({project, onOutputState, unavailable = fals
                                onChange={(value) => void setStyle(value)}/>
                 {stylePending && <p role="status" className="text-muted-foreground text-xs">正在保存风格…</p>}
             </Section>
-            <ProjectOutputSettings key={project.id} project={project} unavailable={unavailable} onOutputState={onOutputState}/>
+            <ProjectOutputSettings key={project.id} project={project} unavailable={unavailable}
+                                   onOutputState={onOutputState}/>
         </>}
     </div>;
 }
@@ -136,8 +143,14 @@ function ProjectOutputSettings({project, onOutputState, unavailable = false}: {
         return {value, baseline: structuredClone(value), observed: value};
     });
     const {aspectPreset: ratio, generationDefaults: draft} = output.value;
-    const setRatio = (aspectPreset: AspectPresetId) => setOutput(current => ({...current, value: {...current.value, aspectPreset}}));
-    const setDraft = (generationDefaults: ProjectGenerationDefaults) => setOutput(current => ({...current, value: {...current.value, generationDefaults}}));
+    const setRatio = (aspectPreset: AspectPresetId) => setOutput(current => ({
+        ...current,
+        value: {...current.value, aspectPreset}
+    }));
+    const setDraft = (generationDefaults: ProjectGenerationDefaults) => setOutput(current => ({
+        ...current,
+        value: {...current.value, generationDefaults}
+    }));
     const [saving, setSaving] = useState(false);
     const saveBusy = useRef(false);
     const latestProject = useRef(project);
@@ -149,7 +162,10 @@ function ProjectOutputSettings({project, onOutputState, unavailable = false}: {
     const liveDefaults = project.generationDefaults;
     useEffect(() => {
         if (saving) return;
-        setOutput(current => rebaseOutputDraft(current, projectOutputValue({aspectPreset: liveRatio, generationDefaults: liveDefaults})));
+        setOutput(current => rebaseOutputDraft(current, projectOutputValue({
+            aspectPreset: liveRatio,
+            generationDefaults: liveDefaults
+        })));
     }, [liveRatio, liveDefaults, saving, ratioDirty, defaultsDirty]);
     const [saveError, setSaveError] = useState<string>();
     const errors = validateGenerationDefaults(draft);
@@ -170,7 +186,10 @@ function ProjectOutputSettings({project, onOutputState, unavailable = false}: {
     const imageProfile = getGenerationCapability("apimart", image?.model ?? "gpt-image-2", "image") ?? getGenerationCapability("apimart", "gpt-image-2", "image");
     const videoProfile = getGenerationCapability("apimart", "MiniMax-H3", "video");
     const imageControls = imageProfile && projectGenerationParameters(imageProfile, image ?? {}, {purpose: "project-defaults"});
-    const videoControls = videoProfile && projectGenerationParameters(videoProfile, video ?? {}, {purpose: "project-defaults", mode: video?.mode});
+    const videoControls = videoProfile && projectGenerationParameters(videoProfile, video ?? {}, {
+        purpose: "project-defaults",
+        mode: video?.mode
+    });
     const updateImage = (patch: Partial<NonNullable<ProjectGenerationDefaults["image"]>>) => {
         if (image) setDraft({...draft, image: {...image, ...patch}});
     };
@@ -201,7 +220,7 @@ function ProjectOutputSettings({project, onOutputState, unavailable = false}: {
     }
 
     return <>{navigationGuard}<Section title="画幅与生成默认值"
-                    description="画幅表达作品的目标。图片和视频可分别选择模型参数，也可以保持手动制作；保存配置不会发起生成。">
+                                       description="画幅表达作品的目标。图片和视频可分别选择模型参数，也可以保持手动制作；保存配置不会发起生成。">
         <fieldset disabled={saving || unavailable} className="min-w-0 space-y-5">
             <SettingSelect label="项目目标画幅" value={ratio} options={ASPECT_PRESET_IDS}
                            onChange={(value) => setRatio(value as AspectPresetId)}/>
@@ -225,11 +244,16 @@ function ProjectOutputSettings({project, onOutputState, unavailable = false}: {
                 {image && <>
                     <div className="grid gap-4 sm:grid-cols-2">
                         <SettingSelect label="图片比例" value={image.size}
-                                       options={(imageControls?.sizes ?? []).map(value => value === "auto" ? {value, label: "自动（默认 1:1）"} : value)} onChange={(size) => updateImage({size})}/>
-                        <SettingSelect label="图片清晰度" value={image.resolution} options={imageControls?.resolutions ?? []}
+                                       options={(imageControls?.sizes ?? []).map(value => value === "auto" ? {
+                                           value,
+                                           label: "自动（默认 1:1）"
+                                       } : value)} onChange={(size) => updateImage({size})}/>
+                        <SettingSelect label="图片清晰度" value={image.resolution}
+                                       options={imageControls?.resolutions ?? []}
                                        onChange={(resolution) => updateImage({resolution})}/>
                         {imageModel && isApimartImage25(imageModel) &&
-                            <SettingSelect label="画质" value={image.quality ?? "auto"} options={imageControls?.qualities ?? []}
+                            <SettingSelect label="画质" value={image.quality ?? "auto"}
+                                           options={imageControls?.qualities ?? []}
                                            onChange={(quality) => updateImage({quality})}/>}
                         {imageModel && isApimartImageExt(imageModel) &&
                             <SettingSelect label="版本" value={image.version ?? "flare"}
@@ -263,8 +287,13 @@ function ProjectOutputSettings({project, onOutputState, unavailable = false}: {
                                    }, {value: "reference", label: "参考素材生视频"}]}
                                    onChange={(mode) => updateVideo({mode})}/>
                     <div className="grid gap-4 sm:grid-cols-2">
-                        <SettingSelect label="视频比例" value={video.aspectRatio} options={(videoControls?.ratios ?? []).map(value => value === "adaptive" ? {value, label: video.mode === "frames" ? "跟随输入图片" : "跟随参考素材"} : value)} onChange={(aspectRatio) => updateVideo({aspectRatio})}/>
-                        <SettingSelect label="视频分辨率" value={video.resolution} options={videoControls?.resolutions ?? []}
+                        <SettingSelect label="视频比例" value={video.aspectRatio}
+                                       options={(videoControls?.ratios ?? []).map(value => value === "adaptive" ? {
+                                           value,
+                                           label: video.mode === "frames" ? "跟随输入图片" : "跟随参考素材"
+                                       } : value)} onChange={(aspectRatio) => updateVideo({aspectRatio})}/>
+                        <SettingSelect label="视频分辨率" value={video.resolution}
+                                       options={videoControls?.resolutions ?? []}
                                        onChange={(resolution) => updateVideo({resolution})}/>
                         <label className="grid gap-2 text-xs font-medium">默认生成时长（秒）
                             <Input type="number" min={4} max={15} step={1}

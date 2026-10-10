@@ -1,5 +1,5 @@
 import {db} from "@/db/database";
-import {bounded, businessRowText, type BusinessRow, getRow, projection, targetRevision} from "./businessStore";
+import {bounded, type BusinessRow, businessRowText, getRow, projection, targetRevision} from "./businessStore";
 import {createWriteReceipt, type WriteReceiptEntry} from "./writeReceipt";
 
 const kinds = ["project", "episode", "beat", "shot", "character", "scene", "prop", "style"] as const;

@@ -28,7 +28,8 @@ export function assertResponseBytes(bytes: number, limit: number): void {
 export async function cancelBody(body: ReadableStream<Uint8Array> | ReadableStreamDefaultReader<Uint8Array> | null): Promise<void> {
     try {
         await body?.cancel();
-    } catch { /* Best effort, including synchronous failures and already errored bodies. */ }
+    } catch { /* Best effort, including synchronous failures and already errored bodies. */
+    }
 }
 
 /** Read actual bytes before allocating text, JSON or a Blob. Headers only permit early rejection. */
@@ -40,7 +41,9 @@ export async function readResponseBytes(response: Response, limit: number, signa
     }
     if (!response.body) return new Uint8Array();
     const reader = response.body.getReader();
-    const abort = () => { void cancelBody(reader); };
+    const abort = () => {
+        void cancelBody(reader);
+    };
     signal?.addEventListener("abort", abort, {once: true});
     const chunks: Uint8Array[] = [];
     let size = 0;

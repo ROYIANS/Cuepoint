@@ -7,7 +7,16 @@ import {Library, Plus, Trash2} from "lucide-react";
 import {useState} from "react";
 import {toast} from "sonner";
 import {db} from "@/db/database";
-import {addCharacter, addProp, addScene, addStyle, deleteCharacter, deleteProp, deleteScene, deleteStyle} from "@/db/assets";
+import {
+    addCharacter,
+    addProp,
+    addScene,
+    addStyle,
+    deleteCharacter,
+    deleteProp,
+    deleteScene,
+    deleteStyle
+} from "@/db/assets";
 import {copyStudioCharacter, copyStudioProp, copyStudioScene, copyStudioStyle} from "@/db/assetReuse";
 import {firstResultId} from "@/domain/slot";
 import {

@@ -15,9 +15,9 @@ export function CharacterDetailPage(props: Parameters<typeof CharacterDetailCont
 }
 
 function CharacterDetailContent({
-                                        characterId,
-                                        back,
-                                    }: {
+                                    characterId,
+                                    back,
+                                }: {
     characterId: string;
     back: { kind: "studio" } | { kind: "project"; projectId: string };
 }) {

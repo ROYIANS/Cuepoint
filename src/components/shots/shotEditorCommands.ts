@@ -1,4 +1,11 @@
-import {deleteEpisodeShots, patchEpisodeShots, undoEpisodeShotBulkPatch, reorderShots, restoreShots, type EpisodeShotBulkPatch} from "@/db/shots";
+import {
+    deleteEpisodeShots,
+    type EpisodeShotBulkPatch,
+    patchEpisodeShots,
+    reorderShots,
+    restoreShots,
+    undoEpisodeShotBulkPatch
+} from "@/db/shots";
 import {reorderGroupInFullOrder, sameIdOrder} from "@/lib/reorderIds";
 import type {UndoAction} from "@/lib/undo";
 
@@ -14,7 +21,10 @@ export async function deleteShotSelectionCommand({episodeId, selectedIds}: {
 }): Promise<UndoAction | undefined> {
     const snapshot = await deleteEpisodeShots(episodeId, selectedIds);
     if (!snapshot?.shots.length) return undefined;
-    return {label: `已删除 ${snapshot.shots.length} 个镜头`, restore: () => restoreShots(snapshot.shots, snapshot.media)};
+    return {
+        label: `已删除 ${snapshot.shots.length} 个镜头`,
+        restore: () => restoreShots(snapshot.shots, snapshot.media)
+    };
 }
 
 export async function reorderShotGroupCommand({episodeId, fullOrder, groupIds, activeId, overId}: {

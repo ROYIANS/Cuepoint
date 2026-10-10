@@ -6,13 +6,13 @@ import {db} from "@/db/database";
 import {releaseMaterialUse} from "@/db/assetReuse";
 import {
     addFileMaterialVersion,
+    adoptMaterialInProject,
     deleteMaterial,
     promoteMaterial,
     refreshSettingMaterial,
     setMaterialArchived,
     updateMaterialMetadata,
-    updateMaterialUse,
-    adoptMaterialInProject
+    updateMaterialUse
 } from "@/db/materials";
 import type {LibraryMaterial} from "@/domain/materials";
 import {Button} from "@/components/ui/button";
@@ -47,7 +47,10 @@ export function MaterialDetailPanel({id, onClose, onSelect}: {
     // Parent selection changes are not router navigation. Keep the current
     // editor alive until its existing draft guard approves the switch.
     const [activeId, setActiveId] = useState(id);
-    const result = useLiveQuery(async () => ({id: activeId, material: await db.libraryMaterials.get(activeId) ?? null}), [activeId]);
+    const result = useLiveQuery(async () => ({
+        id: activeId,
+        material: await db.libraryMaterials.get(activeId) ?? null
+    }), [activeId]);
     const loadedMaterial = result?.id === activeId ? result.material : undefined;
     const lastMaterial = useRef<LibraryMaterial | undefined>(undefined);
     const [editing, setEditing] = useState(false);
@@ -61,7 +64,9 @@ export function MaterialDetailPanel({id, onClose, onSelect}: {
         // No manual session exists while the current material is missing/loading.
         if (!material) setActiveId(id);
     }, [id, material]);
-    return material ? <MaterialEditor key={material.id} material={material} requestedId={id} unavailable={!loadedMaterial} onEditingChange={setEditing} onClose={onClose} onSelect={select}/> :
+    return material ?
+        <MaterialEditor key={material.id} material={material} requestedId={id} unavailable={!loadedMaterial}
+                        onEditingChange={setEditing} onClose={onClose} onSelect={select}/> :
         <Sheet open onOpenChange={(open) => {
             if (!open) onClose();
         }}><SheetContent
@@ -89,7 +94,9 @@ function MaterialEditor({material, requestedId, unavailable, onEditingChange, on
     const [releasing, setReleasing] = useState<string | null>(null);
     const fileInput = useRef<HTMLInputElement>(null);
     const guard = useMaterialDraftGuard(Boolean(draft), pending);
-    useEffect(() => {onEditingChange(Boolean(draft) || pending);}, [draft, pending, onEditingChange]);
+    useEffect(() => {
+        onEditingChange(Boolean(draft) || pending);
+    }, [draft, pending, onEditingChange]);
     const {requestClose} = guard;
     const latestRequestedId = useRef(requestedId);
     latestRequestedId.current = requestedId;
@@ -182,15 +189,16 @@ function MaterialEditor({material, requestedId, unavailable, onEditingChange, on
                 <label className="material-field">标签<Input value={values.tags} disabled={pending || material.archived}
                                                              onChange={(event) => edit({tags: event.target.value})}
                                                              placeholder="用逗号分隔"/></label>
-                {draft && <div className="material-inline-actions"><Button disabled={unavailable || pending || !values.name.trim()}
-                                                                           onClick={() => void action(async () => {
-                                                                               await updateMaterialMetadata(material.id, {
-                                                                                   name: values.name,
-                                                                                   notes: values.notes,
-                                                                                   tags: values.tags.split(/[,，]/).map((tag) => tag.trim()).filter(Boolean)
-                                                                               }, values.revision);
-                                                                               setDraft(null);
-                                                                           }, "素材信息已保存，生成新的版本。")}>保存修改</Button><Button
+                {draft && <div className="material-inline-actions"><Button
+                    disabled={unavailable || pending || !values.name.trim()}
+                    onClick={() => void action(async () => {
+                        await updateMaterialMetadata(material.id, {
+                            name: values.name,
+                            notes: values.notes,
+                            tags: values.tags.split(/[,，]/).map((tag) => tag.trim()).filter(Boolean)
+                        }, values.revision);
+                        setDraft(null);
+                    }, "素材信息已保存，生成新的版本。")}>保存修改</Button><Button
                     variant="ghost" disabled={pending} onClick={() => setDraft(null)}>撤销修改</Button></div>}
             </section>
             <section className="material-detail-section"><h3>来源与版本</h3><p

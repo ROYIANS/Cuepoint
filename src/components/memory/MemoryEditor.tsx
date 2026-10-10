@@ -169,6 +169,7 @@ export function MemoryEditor({
                 .map((tag) => tag.trim())
                 .filter(Boolean),
         };
+
         function saved(value: ProjectMemory, message: string) {
             if (!mounted()) return;
             // Retire this session before a callback can synchronously close it
@@ -182,6 +183,7 @@ export function MemoryEditor({
             onSaved(value);
             if (mounted()) toast.success(message);
         }
+
         try {
             if (memory) {
                 const updated = await updateProjectMemory(

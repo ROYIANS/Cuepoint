@@ -1,8 +1,15 @@
 import {requestOnce} from "./requestBoundary";
 import {normalizeBaseUrl} from "./baseUrl";
-import {appendedUtf8Bytes, assertResponseBytes, isReadAbort, readErrorText, readResponseJson, utf8Bytes} from "./boundedResponse";
+import {
+    appendedUtf8Bytes,
+    assertResponseBytes,
+    isReadAbort,
+    readErrorText,
+    readResponseJson,
+    utf8Bytes
+} from "./boundedResponse";
 import {readSseEvents} from "./boundedSse";
-import {MAX_JSON_BYTES, MAX_ERROR_BYTES} from "@/lib/resource/limits";
+import {MAX_ERROR_BYTES, MAX_JSON_BYTES} from "@/lib/resource/limits";
 import {redactCredentials} from "./safeError";
 import {materializeResponseItems} from "./referenceWire";
 import type {AgentRequestMessage, AgentResponseItem, AgentTokenUsage, AgentWireToolCall} from "@/domain/agent";

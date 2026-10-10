@@ -1,9 +1,10 @@
-import {requestOnce, readHttpJson} from "./requestBoundary";
+import {readHttpJson, requestOnce} from "./requestBoundary";
 import {isReadAbort} from "./boundedResponse";
 import {normalizeBaseUrl} from "./baseUrl";
-export {normalizeBaseUrl} from "./baseUrl";
 import {redactCredentials} from "./safeError";
 import {type ChatModelMetadata, collectModelMetadata, parseModelMetadata} from "@/lib/ai/modelMetadata";
+
+export {normalizeBaseUrl} from "./baseUrl";
 
 export function authHeaders(apiKey: string): HeadersInit {
     return {
@@ -139,7 +140,7 @@ function failure(error: unknown, apiKey: string): { ok: false; message: string }
 export async function listModels(
     input: { baseUrl: string; apiKey: string },
     fetchImpl: typeof fetch = fetch,
-    options: {signal?: AbortSignal} = {},
+    options: { signal?: AbortSignal } = {},
 ): Promise<ListModelsResult> {
     const base = normalizeBaseUrl(input.baseUrl);
     const apiKey = input.apiKey.trim();
@@ -169,7 +170,7 @@ export async function listModels(
 export async function testConnection(
     input: TestConnectionInput,
     fetchImpl: typeof fetch = fetch,
-    options: {signal?: AbortSignal} = {},
+    options: { signal?: AbortSignal } = {},
 ): Promise<TestConnectionResult> {
     const base = normalizeBaseUrl(input.baseUrl);
     const apiKey = input.apiKey.trim();
@@ -179,7 +180,12 @@ export async function testConnection(
     const headers = authHeaders(apiKey);
     let modelsRes: Response | undefined;
     try {
-        modelsRes = await requestOnce(modelsUrl(base), {method: "GET", headers}, {fetchImpl, signal: options.signal, credentials: "same-origin", redirect: "follow"});
+        modelsRes = await requestOnce(modelsUrl(base), {method: "GET", headers}, {
+            fetchImpl,
+            signal: options.signal,
+            credentials: "same-origin",
+            redirect: "follow"
+        });
     } catch (error) {
         // Keep this gate limited to fetch: body/decoder failures must never send a POST.
         if (isReadAbort(error, options.signal)) return failure(error, apiKey);

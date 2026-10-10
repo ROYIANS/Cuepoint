@@ -1,8 +1,12 @@
 import {z} from "zod";
 import * as s from "./businessSchemas";
 import {
-    defaultImageParameters, defaultVideoParameters, getGenerationCapability,
-    isApimartImage25, isApimartImageExt, isApimartImageModel,
+    defaultImageParameters,
+    defaultVideoParameters,
+    getGenerationCapability,
+    isApimartImage25,
+    isApimartImageExt,
+    isApimartImageModel,
     validateGenerationParameters,
 } from "@/domain/generationCapabilities";
 import {validateProductionTarget} from "@/lib/productionRevision";
@@ -17,15 +21,27 @@ const targetSpec = s.object({
     episodeId: s.optional(idSpec), slot: {schema: z.string().min(1).max(30), json: {type: "string"}},
 });
 const parameterSpec = s.object({
-    size: s.optional({...boundedParameter(30), json: {type: "string", description: '图片尺寸：APIMart 使用比例，例如 9:16；AIHubMix 使用已支持的像素尺寸。'}}),
+    size: s.optional({
+        ...boundedParameter(30),
+        json: {type: "string", description: '图片尺寸：APIMart 使用比例，例如 9:16；AIHubMix 使用已支持的像素尺寸。'}
+    }),
     resolution: s.optional(boundedParameter(10)),
     duration: s.optional({schema: z.number().int(), json: {type: "integer"}}),
-    aspectRatio: s.optional({...boundedParameter(10), json: {type: "string", description: "仅视频使用；图片比例使用 size。"}}),
-    mode: s.optional({...s.choice(["text", "frames", "reference"]), json: {type: "string", enum: ["text", "frames", "reference"], description: "仅视频使用；图片不要传入。"}}),
+    aspectRatio: s.optional({
+        ...boundedParameter(10),
+        json: {type: "string", description: "仅视频使用；图片比例使用 size。"}
+    }),
+    mode: s.optional({
+        ...s.choice(["text", "frames", "reference"]),
+        json: {type: "string", enum: ["text", "frames", "reference"], description: "仅视频使用；图片不要传入。"}
+    }),
     quality: s.optional(s.choice(["low", "medium", "high", "xhigh", "max", "auto"])),
     version: s.optional(s.choice(["flare", "sunburst"])),
 });
-const inputSpec = s.object({mediaId: idSpec, role: s.choice(["first-frame", "last-frame", "reference-image", "reference-video"])});
+const inputSpec = s.object({
+    mediaId: idSpec,
+    role: s.choice(["first-frame", "last-frame", "reference-image", "reference-video"])
+});
 const submitSpec = s.object({
     connectorId: idSpec,
     model: modelSpec,
@@ -37,17 +53,39 @@ const submitSpec = s.object({
 const submitProperties = {
     connectorId: idSpec.json, model: modelSpec.json,
     prompt: promptSpec.json,
-    target: {type: "object", additionalProperties: false, required: ["kind", "projectId", "entityId", "slot"], properties: targetSpec.json.properties},
+    target: {
+        type: "object",
+        additionalProperties: false,
+        required: ["kind", "projectId", "entityId", "slot"],
+        properties: targetSpec.json.properties
+    },
     parameters: {type: "object", additionalProperties: false, properties: parameterSpec.json.properties},
-    inputs: {type: "array", maxItems: 16, items: {type: "object", additionalProperties: false, required: ["mediaId", "role"], properties: inputSpec.json.properties}},
+    inputs: {
+        type: "array",
+        maxItems: 16,
+        items: {
+            type: "object",
+            additionalProperties: false,
+            required: ["mediaId", "role"],
+            properties: inputSpec.json.properties
+        }
+    },
 };
-export const generationSubmitSpec = {...submitSpec, json: {
-    type: "object", additionalProperties: false, required: ["connectorId", "model", "target", "prompt"], properties: submitProperties,
-}};
+export const generationSubmitSpec = {
+    ...submitSpec, json: {
+        type: "object",
+        additionalProperties: false,
+        required: ["connectorId", "model", "target", "prompt"],
+        properties: submitProperties,
+    }
+};
 export const generationSubmitSchema = generationSubmitSpec.schema;
 export type GenerationSubmitArgs = z.output<typeof generationSubmitSchema>;
 const jobSpec = s.object({jobId: idSpec});
-export const generationJobSpec = {...jobSpec, json: {type: "object", additionalProperties: false, required: ["jobId"], properties: {jobId: idSpec.json}}};
+export const generationJobSpec = {
+    ...jobSpec,
+    json: {type: "object", additionalProperties: false, required: ["jobId"], properties: {jobId: idSpec.json}}
+};
 export const generationJobSchema = generationJobSpec.schema;
 
 export function profileRequest(args: GenerationSubmitArgs, provider: "apimart" | "aihubmix") {
@@ -61,7 +99,11 @@ export function profileRequest(args: GenerationSubmitArgs, provider: "apimart" |
     if (count("first-frame") > 1 || count("last-frame") > 1) throw new Error("首尾帧不能重复");
     const mode = p.mode ?? (inputs.length ? "reference" : "text");
     const profile = getGenerationCapability(provider, args.model, kind);
-    const parameterIssues = profile ? validateGenerationParameters(profile, p, {purpose: "request", mode, inputRoles: inputs.map(input => input.role)}) : [];
+    const parameterIssues = profile ? validateGenerationParameters(profile, p, {
+        purpose: "request",
+        mode,
+        inputRoles: inputs.map(input => input.role)
+    }) : [];
     const invalid = (...fields: Array<typeof parameterIssues[number]["field"]>) => parameterIssues.some(issue => fields.includes(issue.field));
     const parameters: Record<string, string | number | boolean> = {prompt: args.prompt};
     const disallow = (...keys: Array<keyof typeof p>) => {
@@ -117,7 +159,11 @@ export function profileRequest(args: GenerationSubmitArgs, provider: "apimart" |
             if (args.model !== "MiniMax-H3") throw new Error("APIMart 视频当前仅支持已验证的 MiniMax-H3");
             if (args.prompt.length > 7000 || count("reference-image") > 9) throw new Error("MiniMax H3 提示词或参考图片超出限制");
             if (count("reference-video")) throw new Error("APIMart 暂无本地视频上传适配，不能提交参考视频；请选择文字或图片输入");
-            const defaults = defaultVideoParameters(provider, {purpose: "request", mode, inputRoles: inputs.map(input => input.role)});
+            const defaults = defaultVideoParameters(provider, {
+                purpose: "request",
+                mode,
+                inputRoles: inputs.map(input => input.role)
+            });
             parameters.resolution = p.resolution ?? defaults.resolution;
             parameters.duration = p.duration ?? defaults.duration;
             if (invalid("resolution", "duration")) throw new Error("MiniMax H3 分辨率须为 768P/2K，时长为 4–15 秒整数");
@@ -129,7 +175,11 @@ export function profileRequest(args: GenerationSubmitArgs, provider: "apimart" |
             }
         } else {
             if (args.model !== "veo-3.1-fast-generate-preview") throw new Error("AIHubMix 视频当前仅支持已验证的 Veo 3.1 Fast");
-            const defaults = defaultVideoParameters(provider, {purpose: "request", mode, inputRoles: inputs.map(input => input.role)});
+            const defaults = defaultVideoParameters(provider, {
+                purpose: "request",
+                mode,
+                inputRoles: inputs.map(input => input.role)
+            });
             parameters.duration = p.duration ?? defaults.duration;
             parameters.resolution = p.resolution ?? defaults.resolution;
             parameters.aspect_ratio = p.aspectRatio ?? defaults.aspectRatio ?? "16:9";

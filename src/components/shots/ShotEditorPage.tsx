@@ -1,5 +1,5 @@
 import {BeatTextField} from "@/components/story/BeatTextField";
-import {useTextDraftRetention, type TextDraftStatusChange} from "@/lib/useTextDraftRetention";
+import {type TextDraftStatusChange, useTextDraftRetention} from "@/lib/useTextDraftRetention";
 import {gridColumns} from "./shotColumnFields";
 import {ShotRow} from "./ShotRow";
 import {ShotRelationsEditor} from "./ShotRelationsEditor";
@@ -30,8 +30,8 @@ import {useLiveQuery} from "dexie-react-hooks";
 import {
     CheckSquare,
     ChevronDown,
-    CopyPlus,
     Columns3,
+    CopyPlus,
     Filter,
     GripVertical,
     Hash,
@@ -46,16 +46,16 @@ import {
 } from "lucide-react";
 import {
     type CSSProperties,
-    useCallback,
     type Dispatch,
     type SetStateAction,
+    useCallback,
     useEffect,
     useMemo,
     useRef,
     useState,
 } from "react";
 import {db} from "@/db/database";
-import {addShot, addShots, deleteShots, duplicateShot, type EpisodeShotBulkPatch, } from "@/db/shots";
+import {addShot, addShots, deleteShots, duplicateShot, type EpisodeShotBulkPatch,} from "@/db/shots";
 import {addStoryBeat, deleteStoryBeat, reorderBeats, restoreStoryBeat, updateEpisodeShotFilters} from "@/db/episodes";
 import {setVisibleColumns, updateShotSettings} from "@/db/projects";
 import {type ColumnDef, normalizeVisibleColumns, SHOT_COLUMNS} from "@/domain/columns";
@@ -63,8 +63,8 @@ import {
     type Character,
     getEpisodeShotFilters,
     normalizeEpisodeStory,
-    normalizeShotStatus,
     normalizeShotSettings,
+    normalizeShotStatus,
     type Scene,
     type Shot,
     SHOT_STATUS_LABELS,
@@ -317,7 +317,13 @@ function ShotEditorPageContent({
     }, [activeShotId]);
 
     async function commitShotReorder(groupIds: string[], activeId: string, overId: string) {
-        const action = await reorderShotGroupCommand({episodeId, fullOrder: shots.map(shot => shot.id), groupIds, activeId, overId});
+        const action = await reorderShotGroupCommand({
+            episodeId,
+            fullOrder: shots.map(shot => shot.id),
+            groupIds,
+            activeId,
+            overId
+        });
         if (action) registerUndo(action);
     }
 
@@ -329,14 +335,23 @@ function ShotEditorPageContent({
 
     useShotEditorKeyboard({
         unavailable, visibleShotIds, activeShotId, hasSelection: selected.size > 0,
-        onSelectAll: () => {setSelecting(true); setSelected(new Set(visibleShotIds));},
+        onSelectAll: () => {
+            setSelecting(true);
+            setSelected(new Set(visibleShotIds));
+        },
         onActivate: setActiveShotId,
         onToggleSelected: (id) => {
             setSelecting(true);
-            setSelected(current => {const next = new Set(current); if (next.has(id)) next.delete(id); else next.add(id); return next;});
+            setSelected(current => {
+                const next = new Set(current);
+                if (next.has(id)) next.delete(id); else next.add(id);
+                return next;
+            });
         },
         onReorder: moveShotByOffset,
-        onAdd: () => {void addShot(projectId, episodeId, {beatId: shots.find(shot => shot.id === activeShotId)?.beatId});},
+        onAdd: () => {
+            void addShot(projectId, episodeId, {beatId: shots.find(shot => shot.id === activeShotId)?.beatId});
+        },
         onDelete: () => setConfirmDelete(true),
     });
 
@@ -484,633 +499,635 @@ function ShotEditorPageContent({
 
     return (
         <>
-        {relationNavigationGuard}
-        <div className="flex h-full flex-col">
-            {unavailable && <p role="alert" className="p-4">当前项目、故事或镜头已不可用，未完成的修改仍保留。</p>}
-            <div className="flex min-h-14 shrink-0 flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-5">
-                <div className="flex items-center gap-3">
-                    <h1 className="text-[17px] font-semibold">制作分镜</h1>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button size="sm" variant="brand">
-                                <Plus/>
-                                新建
-                                <ChevronDown/>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="start" className="w-48">
-                            <DropdownMenuItem onClick={() => void addShot(projectId, episodeId)}>
-                                <Plus/>
-                                创建分镜
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => void addShots(projectId, episodeId, 5)}>
-                                <CopyPlus/>
-                                创建5个分镜
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => void addShots(projectId, episodeId, 10)}>
-                                <CopyPlus/>
-                                创建10个分镜
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator/>
-                            <DropdownMenuItem onClick={() => void addStoryBeat(episodeId)}>
-                                <SquareStack/>
-                                创建场
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
-                <div className="flex flex-wrap items-center gap-1">
-                    <Button size="sm" variant="outline" disabled={visibleShots.length === 0}
-                            onClick={() => setRelationShotId(visibleShots.find((shot) => shot.id === activeShotId)?.id ?? visibleShots[0]?.id)}>
-                        <Settings2/>道具与风格
-                    </Button>
-                    <div
-                        className="bg-muted flex rounded-md p-0.5"
-                        role="group"
-                        aria-label="分镜视图"
-                    >
-                        <Button
-                            size="sm"
-                            variant={workspaceView === "design" ? "secondary" : "ghost"}
-                            aria-pressed={workspaceView === "design"}
-                            onClick={() => void setWorkspaceView("design")}
-                        >
-                            <LayoutList/>
-                            设计
-                        </Button>
-                        <Button
-                            size="sm"
-                            variant={workspaceView === "media" ? "secondary" : "ghost"}
-                            aria-pressed={workspaceView === "media"}
-                            onClick={() => void setWorkspaceView("media")}
-                        >
-                            <Images/>
-                            素材
-                        </Button>
+            {relationNavigationGuard}
+            <div className="flex h-full flex-col">
+                {unavailable && <p role="alert" className="p-4">当前项目、故事或镜头已不可用，未完成的修改仍保留。</p>}
+                <div className="flex min-h-14 shrink-0 flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-5">
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-[17px] font-semibold">制作分镜</h1>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button size="sm" variant="brand">
+                                    <Plus/>
+                                    新建
+                                    <ChevronDown/>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start" className="w-48">
+                                <DropdownMenuItem onClick={() => void addShot(projectId, episodeId)}>
+                                    <Plus/>
+                                    创建分镜
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => void addShots(projectId, episodeId, 5)}>
+                                    <CopyPlus/>
+                                    创建5个分镜
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => void addShots(projectId, episodeId, 10)}>
+                                    <CopyPlus/>
+                                    创建10个分镜
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator/>
+                                <DropdownMenuItem onClick={() => void addStoryBeat(episodeId)}>
+                                    <SquareStack/>
+                                    创建场
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button size="sm" variant={filtersOn ? "secondary" : "ghost"}>
-                                <Filter/>
-                                筛选
-                                {filtersOn ? (
-                                    <span className="text-muted-foreground text-xs">
+                    <div className="flex flex-wrap items-center gap-1">
+                        <Button size="sm" variant="outline" disabled={visibleShots.length === 0}
+                                onClick={() => setRelationShotId(visibleShots.find((shot) => shot.id === activeShotId)?.id ?? visibleShots[0]?.id)}>
+                            <Settings2/>道具与风格
+                        </Button>
+                        <div
+                            className="bg-muted flex rounded-md p-0.5"
+                            role="group"
+                            aria-label="分镜视图"
+                        >
+                            <Button
+                                size="sm"
+                                variant={workspaceView === "design" ? "secondary" : "ghost"}
+                                aria-pressed={workspaceView === "design"}
+                                onClick={() => void setWorkspaceView("design")}
+                            >
+                                <LayoutList/>
+                                设计
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant={workspaceView === "media" ? "secondary" : "ghost"}
+                                aria-pressed={workspaceView === "media"}
+                                onClick={() => void setWorkspaceView("media")}
+                            >
+                                <Images/>
+                                素材
+                            </Button>
+                        </div>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button size="sm" variant={filtersOn ? "secondary" : "ghost"}>
+                                    <Filter/>
+                                    筛选
+                                    {filtersOn ? (
+                                        <span className="text-muted-foreground text-xs">
                     {visibleShots.length}/{shots.length}
                   </span>
+                                    ) : null}
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-56">
+                                <DropdownMenuLabel className="flex items-center justify-between">
+                                    状态
+                                    {filters.statuses.length > 0 ? (
+                                        <button
+                                            type="button"
+                                            className="text-muted-foreground hover:text-foreground text-xs font-normal"
+                                            onClick={() => void persistFilters({...filters, statuses: []})}
+                                        >
+                                            清除
+                                        </button>
+                                    ) : null}
+                                </DropdownMenuLabel>
+                                {SHOT_STATUSES.map((status) => (
+                                    <DropdownMenuCheckboxItem
+                                        key={status}
+                                        checked={filters.statuses.includes(status)}
+                                        onCheckedChange={() => toggleFilterStatus(status)}
+                                    >
+                                        {SHOT_STATUS_LABELS[status]}
+                                    </DropdownMenuCheckboxItem>
+                                ))}
+                                <DropdownMenuSeparator/>
+                                <DropdownMenuLabel className="flex items-center justify-between">
+                                    场次
+                                    {filters.beatIds.length > 0 ? (
+                                        <button
+                                            type="button"
+                                            className="text-muted-foreground hover:text-foreground text-xs font-normal"
+                                            onClick={() => void persistFilters({...filters, beatIds: []})}
+                                        >
+                                            清除
+                                        </button>
+                                    ) : null}
+                                </DropdownMenuLabel>
+                                <DropdownMenuCheckboxItem
+                                    checked={filters.beatIds.includes(SHOT_UNASSIGNED_BEAT)}
+                                    onCheckedChange={() => toggleFilterBeat(SHOT_UNASSIGNED_BEAT)}
+                                >
+                                    未分场
+                                </DropdownMenuCheckboxItem>
+                                {beats.map((beat) => (
+                                    <DropdownMenuCheckboxItem
+                                        key={beat.id}
+                                        checked={filters.beatIds.includes(beat.id)}
+                                        onCheckedChange={() => toggleFilterBeat(beat.id)}
+                                    >
+                                        {beat.title || "未命名场"}
+                                    </DropdownMenuCheckboxItem>
+                                ))}
+                                <DropdownMenuSeparator/>
+                                <DropdownMenuLabel className="flex items-center justify-between">
+                                    缺口
+                                    {filters.gaps.length > 0 ? (
+                                        <button
+                                            type="button"
+                                            className="text-muted-foreground hover:text-foreground text-xs font-normal"
+                                            onClick={() => void persistFilters({...filters, gaps: []})}
+                                        >
+                                            清除
+                                        </button>
+                                    ) : null}
+                                </DropdownMenuLabel>
+                                <DropdownMenuCheckboxItem
+                                    checked={filters.gaps.includes("missingFirstFrame")}
+                                    onCheckedChange={() => toggleFilterGap("missingFirstFrame")}
+                                >
+                                    缺首帧
+                                </DropdownMenuCheckboxItem>
+                                <DropdownMenuCheckboxItem
+                                    checked={filters.gaps.includes("missingClip")}
+                                    onCheckedChange={() => toggleFilterGap("missingClip")}
+                                >
+                                    缺成片
+                                </DropdownMenuCheckboxItem>
+                                {filtersOn ? (
+                                    <>
+                                        <DropdownMenuSeparator/>
+                                        <DropdownMenuItem
+                                            onClick={() =>
+                                                void persistFilters({statuses: [], beatIds: [], gaps: []})
+                                            }
+                                        >
+                                            清除全部筛选
+                                        </DropdownMenuItem>
+                                    </>
                                 ) : null}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                        <Button
+                            size="sm"
+                            variant={selecting ? "secondary" : "ghost"}
+                            aria-pressed={selecting}
+                            onClick={() => {
+                                setSelecting((value) => !value);
+                                setSelected(new Set());
+                            }}
+                        >
+                            <CheckSquare/>
+                            选择
+                        </Button>
+                        {selecting ? (
+                            <Button
+                                size="sm"
+                                variant="destructive"
+                                disabled={selected.size === 0}
+                                onClick={() => setConfirmDelete(true)}
+                            >
+                                删除所选
                             </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-56">
-                            <DropdownMenuLabel className="flex items-center justify-between">
-                                状态
-                                {filters.statuses.length > 0 ? (
+                        ) : null}
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button size="sm" variant="ghost">
+                                    <Settings2/>
+                                    分镜设置
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent align="end" className="w-72 space-y-3">
+                                <div className="flex items-center justify-between gap-3">
+                                    <Label>默认时长（秒）</Label>
+                                    <Input
+                                        type="number"
+                                        min={0}
+                                        className="h-8 w-20"
+                                        value={shotSettings.defaultDurationSec}
+                                        onChange={(event) =>
+                                            void updateShotSettings(projectId, {
+                                                defaultDurationSec: Math.max(0, Number(event.target.value) || 0),
+                                            })
+                                        }
+                                    />
+                                </div>
+                                <div className="flex items-center justify-between gap-3">
+                                    <Label htmlFor="auto-shot-number">镜号自动递增</Label>
+                                    <Checkbox
+                                        id="auto-shot-number"
+                                        checked={shotSettings.autoIncrementShotNumber}
+                                        onCheckedChange={(checked) =>
+                                            void updateShotSettings(projectId, {
+                                                autoIncrementShotNumber: checked === true,
+                                            })
+                                        }
+                                    />
+                                </div>
+                            </PopoverContent>
+                        </Popover>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button size="sm" variant="outline">
+                                    <Columns3/>
+                                    列设置
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-56">
+                                <DropdownMenuLabel className="flex items-center justify-between">
+                                    列设置
                                     <button
                                         type="button"
                                         className="text-muted-foreground hover:text-foreground text-xs font-normal"
-                                        onClick={() => void persistFilters({...filters, statuses: []})}
+                                        onClick={() =>
+                                            void setVisibleColumns(
+                                                projectId,
+                                                SHOT_COLUMNS.map((column) => column.id),
+                                            )
+                                        }
                                     >
-                                        清除
+                                        全部显示
                                     </button>
-                                ) : null}
-                            </DropdownMenuLabel>
-                            {SHOT_STATUSES.map((status) => (
-                                <DropdownMenuCheckboxItem
-                                    key={status}
-                                    checked={filters.statuses.includes(status)}
-                                    onCheckedChange={() => toggleFilterStatus(status)}
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator/>
+                                {SHOT_COLUMNS.map((column) => {
+                                    const Icon =
+                                        column.kind === "number" ? Hash : column.kind === "select" ? Users : Type;
+                                    return (
+                                        <DropdownMenuCheckboxItem
+                                            key={column.id}
+                                            checked={visible.includes(column.id)}
+                                            onCheckedChange={(checked) => void toggleColumn(column.id, checked)}
+                                        >
+                                            <Icon className="text-muted-foreground"/>
+                                            {column.label}
+                                        </DropdownMenuCheckboxItem>
+                                    );
+                                })}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                </div>
+
+                {selecting ? (
+                    <div className="bg-muted/60 flex min-h-12 shrink-0 flex-wrap items-center gap-3 border-y px-5 py-2">
+                        <span className="text-sm font-medium">已选 {selected.size} 个镜头</span>
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            disabled={visibleShotIds.length === 0}
+                            onClick={selectAllVisible}
+                        >
+                            全选可见
+                        </Button>
+                        <Select
+                            disabled={selected.size === 0}
+                            value={bulkStatus}
+                            onValueChange={(value) => {
+                                setBulkStatus(value);
+                                void assignSelectedStatus(normalizeShotStatus(value));
+                            }}
+                        >
+                            <SelectTrigger className="h-8 w-32 bg-background">
+                                <SelectValue placeholder="批量状态"/>
+                            </SelectTrigger>
+                            <SelectContent>
+                                {SHOT_STATUSES.map((status) => (
+                                    <SelectItem key={status} value={status}>
+                                        {SHOT_STATUS_LABELS[status]}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <Select
+                            disabled={selected.size === 0}
+                            value={bulkBeatValue}
+                            onValueChange={(value) => {
+                                setBulkBeatValue(value);
+                                void assignSelectedBeat(value === "none" ? undefined : value);
+                            }}
+                        >
+                            <SelectTrigger className="h-8 w-40 bg-background">
+                                <SelectValue placeholder="批量调整场次"/>
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="none">未分场</SelectItem>
+                                {beats.map((beat) => (
+                                    <SelectItem key={beat.id} value={beat.id}>
+                                        {beat.title || "未命名场"}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <Select
+                            disabled={selected.size === 0}
+                            value={bulkSceneValue}
+                            onValueChange={(value) => {
+                                setBulkSceneValue(value);
+                                void assignSelectedScene(value === "none" ? undefined : value);
+                            }}
+                        >
+                            <SelectTrigger className="h-8 w-40 bg-background">
+                                <SelectValue placeholder="批量场景"/>
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="none">未选择</SelectItem>
+                                {scenes.map((scene) => (
+                                    <SelectItem key={scene.id} value={scene.id}>
+                                        {scene.name || "未命名场景"}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button size="sm" variant="outline" disabled={selected.size === 0}>
+                                    <Users/>
+                                    批量角色
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent align="start" className="w-64 space-y-3">
+                                <p className="text-sm font-medium">替换所选镜头的角色</p>
+                                <div className="flex max-h-48 flex-col gap-1 overflow-auto">
+                                    {characters.length === 0 ? (
+                                        <p className="text-muted-foreground text-xs">项目里还没有角色</p>
+                                    ) : (
+                                        characters.map((character) => (
+                                            <label key={character.id} className="flex items-center gap-2 text-sm">
+                                                <Checkbox
+                                                    checked={bulkCharacterIds.includes(character.id)}
+                                                    onCheckedChange={(checked) => {
+                                                        setBulkCharacterIds((current) =>
+                                                            checked
+                                                                ? [...current, character.id]
+                                                                : current.filter((id) => id !== character.id),
+                                                        );
+                                                    }}
+                                                />
+                                                {character.name || "未命名角色"}
+                                            </label>
+                                        ))
+                                    )}
+                                </div>
+                                <Button
+                                    size="sm"
+                                    className="w-full"
+                                    disabled={selected.size === 0}
+                                    onClick={() => void assignSelectedCharacters()}
                                 >
-                                    {SHOT_STATUS_LABELS[status]}
-                                </DropdownMenuCheckboxItem>
-                            ))}
-                            <DropdownMenuSeparator/>
-                            <DropdownMenuLabel className="flex items-center justify-between">
-                                场次
-                                {filters.beatIds.length > 0 ? (
-                                    <button
-                                        type="button"
-                                        className="text-muted-foreground hover:text-foreground text-xs font-normal"
-                                        onClick={() => void persistFilters({...filters, beatIds: []})}
-                                    >
-                                        清除
-                                    </button>
-                                ) : null}
-                            </DropdownMenuLabel>
-                            <DropdownMenuCheckboxItem
-                                checked={filters.beatIds.includes(SHOT_UNASSIGNED_BEAT)}
-                                onCheckedChange={() => toggleFilterBeat(SHOT_UNASSIGNED_BEAT)}
+                                    应用角色
+                                </Button>
+                            </PopoverContent>
+                        </Popover>
+                        <Input
+                            type="number"
+                            min={0}
+                            aria-label="批量设置时长（秒）"
+                            className="h-8 w-28 bg-background"
+                            value={bulkDuration}
+                            placeholder="时长（秒）"
+                            disabled={selected.size === 0}
+                            onChange={(event) => setBulkDuration(event.target.value)}
+                            onKeyDown={(event) => {
+                                if (event.key === "Enter" && bulkDuration !== "") void setSelectedDuration();
+                            }}
+                        />
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            disabled={selected.size === 0 || bulkDuration === ""}
+                            onClick={() => void setSelectedDuration()}
+                        >
+                            应用时长
+                        </Button>
+                        <Input
+                            aria-label="批量设置备注"
+                            className="h-8 w-40 bg-background"
+                            value={bulkNotes}
+                            placeholder="备注"
+                            disabled={selected.size === 0}
+                            onChange={(event) => setBulkNotes(event.target.value)}
+                            onKeyDown={(event) => {
+                                if (event.key === "Enter") void assignSelectedNotes();
+                            }}
+                        />
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            disabled={selected.size === 0}
+                            onClick={() => void assignSelectedNotes()}
+                        >
+                            应用备注
+                        </Button>
+                    </div>
+                ) : null}
+
+                <div className="relative min-h-0 flex-1">
+                    <ShotScrollViewport>
+                        <div
+                            className={cn(
+                                "pb-16",
+                                // Media rows use 1fr columns and must fill the scrollport; design keeps min-w-max for many cols.
+                                workspaceView === "media" ? "w-full min-w-0" : "min-w-max",
+                            )}
+                        >
+                            <div
+                                className="bg-muted text-muted-foreground grid items-stretch border-y text-xs"
+                                style={{
+                                    gridTemplateColumns: gridColumns(workspaceView, visibleDefs),
+                                }}
                             >
-                                未分场
-                            </DropdownMenuCheckboxItem>
-                            {beats.map((beat) => (
-                                <DropdownMenuCheckboxItem
-                                    key={beat.id}
-                                    checked={filters.beatIds.includes(beat.id)}
-                                    onCheckedChange={() => toggleFilterBeat(beat.id)}
-                                >
-                                    {beat.title || "未命名场"}
-                                </DropdownMenuCheckboxItem>
-                            ))}
-                            <DropdownMenuSeparator/>
-                            <DropdownMenuLabel className="flex items-center justify-between">
-                                缺口
-                                {filters.gaps.length > 0 ? (
-                                    <button
-                                        type="button"
-                                        className="text-muted-foreground hover:text-foreground text-xs font-normal"
-                                        onClick={() => void persistFilters({...filters, gaps: []})}
-                                    >
-                                        清除
-                                    </button>
-                                ) : null}
-                            </DropdownMenuLabel>
-                            <DropdownMenuCheckboxItem
-                                checked={filters.gaps.includes("missingFirstFrame")}
-                                onCheckedChange={() => toggleFilterGap("missingFirstFrame")}
-                            >
-                                缺首帧
-                            </DropdownMenuCheckboxItem>
-                            <DropdownMenuCheckboxItem
-                                checked={filters.gaps.includes("missingClip")}
-                                onCheckedChange={() => toggleFilterGap("missingClip")}
-                            >
-                                缺成片
-                            </DropdownMenuCheckboxItem>
-                            {filtersOn ? (
-                                <>
-                                    <DropdownMenuSeparator/>
-                                    <DropdownMenuItem
+                                {(workspaceView === "media"
+                                        ? ["顺序", "镜号", "状态", "首帧", "尾帧", "成片", "内容"]
+                                        : ["顺序", "镜号", "状态", ...visibleDefs.map((column) => column.label)]
+                                ).map(
+                                    (label) => (
+                                        <div key={label} className="px-3 py-2.5">
+                                            {label}
+                                        </div>
+                                    ),
+                                )}
+                            </div>
+
+                            {empty ? (
+                                <div
+                                    className="text-muted-foreground flex h-52 flex-col items-center justify-center text-sm">
+                                    还没有镜头，点击「新建」添加第一条
+                                </div>
+                            ) : null}
+
+                            {filterEmpty ? (
+                                <div
+                                    className="text-muted-foreground flex h-52 flex-col items-center justify-center gap-3 text-sm">
+                                    没有符合当前筛选的镜头
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
                                         onClick={() =>
                                             void persistFilters({statuses: [], beatIds: [], gaps: []})
                                         }
                                     >
-                                        清除全部筛选
-                                    </DropdownMenuItem>
-                                </>
+                                        清除筛选
+                                    </Button>
+                                </div>
                             ) : null}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                    <Button
-                        size="sm"
-                        variant={selecting ? "secondary" : "ghost"}
-                        aria-pressed={selecting}
-                        onClick={() => {
-                            setSelecting((value) => !value);
-                            setSelected(new Set());
-                        }}
-                    >
-                        <CheckSquare/>
-                        选择
-                    </Button>
-                    {selecting ? (
-                        <Button
-                            size="sm"
-                            variant="destructive"
-                            disabled={selected.size === 0}
-                            onClick={() => setConfirmDelete(true)}
-                        >
-                            删除所选
-                        </Button>
-                    ) : null}
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button size="sm" variant="ghost">
-                                <Settings2/>
-                                分镜设置
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent align="end" className="w-72 space-y-3">
-                            <div className="flex items-center justify-between gap-3">
-                                <Label>默认时长（秒）</Label>
-                                <Input
-                                    type="number"
-                                    min={0}
-                                    className="h-8 w-20"
-                                    value={shotSettings.defaultDurationSec}
-                                    onChange={(event) =>
-                                        void updateShotSettings(projectId, {
-                                            defaultDurationSec: Math.max(0, Number(event.target.value) || 0),
-                                        })
-                                    }
-                                />
-                            </div>
-                            <div className="flex items-center justify-between gap-3">
-                                <Label htmlFor="auto-shot-number">镜号自动递增</Label>
-                                <Checkbox
-                                    id="auto-shot-number"
-                                    checked={shotSettings.autoIncrementShotNumber}
-                                    onCheckedChange={(checked) =>
-                                        void updateShotSettings(projectId, {
-                                            autoIncrementShotNumber: checked === true,
-                                        })
-                                    }
-                                />
-                            </div>
-                        </PopoverContent>
-                    </Popover>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button size="sm" variant="outline">
-                                <Columns3/>
-                                列设置
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-56">
-                            <DropdownMenuLabel className="flex items-center justify-between">
-                                列设置
-                                <button
-                                    type="button"
-                                    className="text-muted-foreground hover:text-foreground text-xs font-normal"
-                                    onClick={() =>
-                                        void setVisibleColumns(
-                                            projectId,
-                                            SHOT_COLUMNS.map((column) => column.id),
-                                        )
-                                    }
-                                >
-                                    全部显示
-                                </button>
-                            </DropdownMenuLabel>
-                            <DropdownMenuSeparator/>
-                            {SHOT_COLUMNS.map((column) => {
-                                const Icon =
-                                    column.kind === "number" ? Hash : column.kind === "select" ? Users : Type;
-                                return (
-                                    <DropdownMenuCheckboxItem
-                                        key={column.id}
-                                        checked={visible.includes(column.id)}
-                                        onCheckedChange={(checked) => void toggleColumn(column.id, checked)}
-                                    >
-                                        <Icon className="text-muted-foreground"/>
-                                        {column.label}
-                                    </DropdownMenuCheckboxItem>
-                                );
-                            })}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
-            </div>
 
-            {selecting ? (
-                <div className="bg-muted/60 flex min-h-12 shrink-0 flex-wrap items-center gap-3 border-y px-5 py-2">
-                    <span className="text-sm font-medium">已选 {selected.size} 个镜头</span>
-                    <Button
-                        size="sm"
-                        variant="outline"
-                        disabled={visibleShotIds.length === 0}
-                        onClick={selectAllVisible}
-                    >
-                        全选可见
-                    </Button>
-                    <Select
-                        disabled={selected.size === 0}
-                        value={bulkStatus}
-                        onValueChange={(value) => {
-                            setBulkStatus(value);
-                            void assignSelectedStatus(normalizeShotStatus(value));
-                        }}
-                    >
-                        <SelectTrigger className="h-8 w-32 bg-background">
-                            <SelectValue placeholder="批量状态"/>
-                        </SelectTrigger>
-                        <SelectContent>
-                            {SHOT_STATUSES.map((status) => (
-                                <SelectItem key={status} value={status}>
-                                    {SHOT_STATUS_LABELS[status]}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <Select
-                        disabled={selected.size === 0}
-                        value={bulkBeatValue}
-                        onValueChange={(value) => {
-                            setBulkBeatValue(value);
-                            void assignSelectedBeat(value === "none" ? undefined : value);
-                        }}
-                    >
-                        <SelectTrigger className="h-8 w-40 bg-background">
-                            <SelectValue placeholder="批量调整场次"/>
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="none">未分场</SelectItem>
-                            {beats.map((beat) => (
-                                <SelectItem key={beat.id} value={beat.id}>
-                                    {beat.title || "未命名场"}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <Select
-                        disabled={selected.size === 0}
-                        value={bulkSceneValue}
-                        onValueChange={(value) => {
-                            setBulkSceneValue(value);
-                            void assignSelectedScene(value === "none" ? undefined : value);
-                        }}
-                    >
-                        <SelectTrigger className="h-8 w-40 bg-background">
-                            <SelectValue placeholder="批量场景"/>
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="none">未选择</SelectItem>
-                            {scenes.map((scene) => (
-                                <SelectItem key={scene.id} value={scene.id}>
-                                    {scene.name || "未命名场景"}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button size="sm" variant="outline" disabled={selected.size === 0}>
-                                <Users/>
-                                批量角色
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent align="start" className="w-64 space-y-3">
-                            <p className="text-sm font-medium">替换所选镜头的角色</p>
-                            <div className="flex max-h-48 flex-col gap-1 overflow-auto">
-                                {characters.length === 0 ? (
-                                    <p className="text-muted-foreground text-xs">项目里还没有角色</p>
-                                ) : (
-                                    characters.map((character) => (
-                                        <label key={character.id} className="flex items-center gap-2 text-sm">
-                                            <Checkbox
-                                                checked={bulkCharacterIds.includes(character.id)}
-                                                onCheckedChange={(checked) => {
-                                                    setBulkCharacterIds((current) =>
-                                                        checked
-                                                            ? [...current, character.id]
-                                                            : current.filter((id) => id !== character.id),
-                                                    );
-                                                }}
-                                            />
-                                            {character.name || "未命名角色"}
-                                        </label>
-                                    ))
-                                )}
-                            </div>
-                            <Button
-                                size="sm"
-                                className="w-full"
-                                disabled={selected.size === 0}
-                                onClick={() => void assignSelectedCharacters()}
-                            >
-                                应用角色
-                            </Button>
-                        </PopoverContent>
-                    </Popover>
-                    <Input
-                        type="number"
-                        min={0}
-                        aria-label="批量设置时长（秒）"
-                        className="h-8 w-28 bg-background"
-                        value={bulkDuration}
-                        placeholder="时长（秒）"
-                        disabled={selected.size === 0}
-                        onChange={(event) => setBulkDuration(event.target.value)}
-                        onKeyDown={(event) => {
-                            if (event.key === "Enter" && bulkDuration !== "") void setSelectedDuration();
-                        }}
-                    />
-                    <Button
-                        size="sm"
-                        variant="outline"
-                        disabled={selected.size === 0 || bulkDuration === ""}
-                        onClick={() => void setSelectedDuration()}
-                    >
-                        应用时长
-                    </Button>
-                    <Input
-                        aria-label="批量设置备注"
-                        className="h-8 w-40 bg-background"
-                        value={bulkNotes}
-                        placeholder="备注"
-                        disabled={selected.size === 0}
-                        onChange={(event) => setBulkNotes(event.target.value)}
-                        onKeyDown={(event) => {
-                            if (event.key === "Enter") void assignSelectedNotes();
-                        }}
-                    />
-                    <Button
-                        size="sm"
-                        variant="outline"
-                        disabled={selected.size === 0}
-                        onClick={() => void assignSelectedNotes()}
-                    >
-                        应用备注
-                    </Button>
-                </div>
-            ) : null}
-
-            <div className="relative min-h-0 flex-1">
-                <ShotScrollViewport>
-                    <div
-                        className={cn(
-                            "pb-16",
-                            // Media rows use 1fr columns and must fill the scrollport; design keeps min-w-max for many cols.
-                            workspaceView === "media" ? "w-full min-w-0" : "min-w-max",
-                        )}
-                    >
-                        <div
-                            className="bg-muted text-muted-foreground grid items-stretch border-y text-xs"
-                            style={{
-                                gridTemplateColumns: gridColumns(workspaceView, visibleDefs),
-                            }}
-                        >
-                            {(workspaceView === "media"
-                                    ? ["顺序", "镜号", "状态", "首帧", "尾帧", "成片", "内容"]
-                                    : ["顺序", "镜号", "状态", ...visibleDefs.map((column) => column.label)]
-                            ).map(
-                                (label) => (
-                                    <div key={label} className="px-3 py-2.5">
-                                        {label}
-                                    </div>
-                                ),
-                            )}
-                        </div>
-
-                        {empty ? (
-                            <div
-                                className="text-muted-foreground flex h-52 flex-col items-center justify-center text-sm">
-                                还没有镜头，点击「新建」添加第一条
-                            </div>
-                        ) : null}
-
-                        {filterEmpty ? (
-                            <div
-                                className="text-muted-foreground flex h-52 flex-col items-center justify-center gap-3 text-sm">
-                                没有符合当前筛选的镜头
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={() =>
-                                        void persistFilters({statuses: [], beatIds: [], gaps: []})
-                                    }
-                                >
-                                    清除筛选
-                                </Button>
-                            </div>
-                        ) : null}
-
-                        <DndContext
-                            sensors={sensors}
-                            collisionDetection={closestCenter}
-                            onDragEnd={(event) => void onBeatDragEnd(event)}
-                        >
-                            <SortableContext
-                                items={visibleGrouped.map(({beat}) => beat.id)}
-                                strategy={verticalListSortingStrategy}
-                            >
-                                {visibleGrouped.map(({beat, shots: beatShots}) => (
-                                    <BeatBlock
-                                        key={beat.id}
-                                        beat={beat}
-                                        shots={beatShots}
-                                        projectId={projectId}
-                                        episodeId={episodeId}
-                                        selecting={selecting}
-                                        selected={selected}
-                                        setSelected={setSelected}
-                                        activeShotId={activeShotId}
-                                        setActiveShotId={setActiveShotId}
-                                        workspaceView={workspaceView}
-                                        visibleDefs={visibleDefs}
-                                        characters={characters}
-                                        scenes={scenes}
-                                        highlightedShotId={highlightedShotId}
-                                        sortable
-                                        sensors={sensors}
-                                        onDeleteBeat={() => setPendingBeatId(beat.id)}
-                                        onReorderShots={commitShotReorder}
-                                        unavailable={unavailable}
-                                        onShotDraftStatus={shotText.onStatusChange}
-                                        onBeatDraftStatus={beatText.onStatusChange}
-                                        pendingShotIds={shots.filter(shot => shotText.isPending(shot.id)).map(shot => shot.id)}
-                                        onSlotOpenChange={onSlotOpenChange}
-                                        onEditRelations={setRelationShotId}
-                                        onDuplicateShot={(shotId) => void copyShot(shotId)}
-                                    />
-                                ))}
-                            </SortableContext>
-                        </DndContext>
-
-                        {!filterEmpty && ungrouped.length > 0 ? (
-                            <BeatBlock
-                                beat={{id: "", title: "未分场", content: "", characterIds: [], timeOfDay: ""}}
-                                shots={ungrouped}
-                                projectId={projectId}
-                                episodeId={episodeId}
-                                selecting={selecting}
-                                selected={selected}
-                                setSelected={setSelected}
-                                activeShotId={activeShotId}
-                                setActiveShotId={setActiveShotId}
-                                workspaceView={workspaceView}
-                                visibleDefs={visibleDefs}
-                                characters={characters}
-                                scenes={scenes}
-                                highlightedShotId={highlightedShotId}
-                                loose
-                                hideHeader={beats.length === 0}
+                            <DndContext
                                 sensors={sensors}
-                                onReorderShots={commitShotReorder}
-                                unavailable={unavailable}
-                                        onShotDraftStatus={shotText.onStatusChange}
-                                        onBeatDraftStatus={beatText.onStatusChange}
-                                        pendingShotIds={shots.filter(shot => shotText.isPending(shot.id)).map(shot => shot.id)}
-                                        onSlotOpenChange={onSlotOpenChange}
-                                        onEditRelations={setRelationShotId}
-                                onDuplicateShot={(shotId) => void copyShot(shotId)}
-                            />
-                        ) : null}
+                                collisionDetection={closestCenter}
+                                onDragEnd={(event) => void onBeatDragEnd(event)}
+                            >
+                                <SortableContext
+                                    items={visibleGrouped.map(({beat}) => beat.id)}
+                                    strategy={verticalListSortingStrategy}
+                                >
+                                    {visibleGrouped.map(({beat, shots: beatShots}) => (
+                                        <BeatBlock
+                                            key={beat.id}
+                                            beat={beat}
+                                            shots={beatShots}
+                                            projectId={projectId}
+                                            episodeId={episodeId}
+                                            selecting={selecting}
+                                            selected={selected}
+                                            setSelected={setSelected}
+                                            activeShotId={activeShotId}
+                                            setActiveShotId={setActiveShotId}
+                                            workspaceView={workspaceView}
+                                            visibleDefs={visibleDefs}
+                                            characters={characters}
+                                            scenes={scenes}
+                                            highlightedShotId={highlightedShotId}
+                                            sortable
+                                            sensors={sensors}
+                                            onDeleteBeat={() => setPendingBeatId(beat.id)}
+                                            onReorderShots={commitShotReorder}
+                                            unavailable={unavailable}
+                                            onShotDraftStatus={shotText.onStatusChange}
+                                            onBeatDraftStatus={beatText.onStatusChange}
+                                            pendingShotIds={shots.filter(shot => shotText.isPending(shot.id)).map(shot => shot.id)}
+                                            onSlotOpenChange={onSlotOpenChange}
+                                            onEditRelations={setRelationShotId}
+                                            onDuplicateShot={(shotId) => void copyShot(shotId)}
+                                        />
+                                    ))}
+                                </SortableContext>
+                            </DndContext>
+
+                            {!filterEmpty && ungrouped.length > 0 ? (
+                                <BeatBlock
+                                    beat={{id: "", title: "未分场", content: "", characterIds: [], timeOfDay: ""}}
+                                    shots={ungrouped}
+                                    projectId={projectId}
+                                    episodeId={episodeId}
+                                    selecting={selecting}
+                                    selected={selected}
+                                    setSelected={setSelected}
+                                    activeShotId={activeShotId}
+                                    setActiveShotId={setActiveShotId}
+                                    workspaceView={workspaceView}
+                                    visibleDefs={visibleDefs}
+                                    characters={characters}
+                                    scenes={scenes}
+                                    highlightedShotId={highlightedShotId}
+                                    loose
+                                    hideHeader={beats.length === 0}
+                                    sensors={sensors}
+                                    onReorderShots={commitShotReorder}
+                                    unavailable={unavailable}
+                                    onShotDraftStatus={shotText.onStatusChange}
+                                    onBeatDraftStatus={beatText.onStatusChange}
+                                    pendingShotIds={shots.filter(shot => shotText.isPending(shot.id)).map(shot => shot.id)}
+                                    onSlotOpenChange={onSlotOpenChange}
+                                    onEditRelations={setRelationShotId}
+                                    onDuplicateShot={(shotId) => void copyShot(shotId)}
+                                />
+                            ) : null}
+                        </div>
+                    </ShotScrollViewport>
+
+                    <div className="text-muted-foreground pointer-events-none absolute bottom-3 left-4 text-xs">
+                        镜头总数 {filtersOn ? `${visibleShots.length}/${shots.length}` : shots.length}
+                        <span className="mx-3">总时长 {formatDuration(totalDuration)}</span>
                     </div>
-                </ShotScrollViewport>
-
-                <div className="text-muted-foreground pointer-events-none absolute bottom-3 left-4 text-xs">
-                    镜头总数 {filtersOn ? `${visibleShots.length}/${shots.length}` : shots.length}
-                    <span className="mx-3">总时长 {formatDuration(totalDuration)}</span>
                 </div>
+
+                <Dialog open={Boolean(relationShotId)} onOpenChange={(open) => {
+                    if (open) return;
+                    if (relationStatus !== "saved") {
+                        toast.error(relationStatus === "saving" ? "正在保存，请稍候" : "保存未成功，请先重试或放弃未保存的选择");
+                        return;
+                    }
+                    setRelationShotId(undefined);
+                }}>
+                    <DialogContent className="max-h-[85dvh] overflow-y-auto">
+                        <DialogHeader>
+                            <DialogTitle>镜头道具与风格</DialogTitle>
+                            <DialogDescription>选择自动保存。风格可跟随项目，也可为这条镜头单独指定。</DialogDescription>
+                        </DialogHeader>
+                        <Select value={relationShotId} onValueChange={setRelationShotId}
+                                disabled={relationStatus !== "saved"}>
+                            <SelectTrigger aria-label="选择要编辑的镜头"
+                                           className="w-full"><SelectValue/></SelectTrigger>
+                            <SelectContent>
+                                {shots.map((shot) => <SelectItem key={shot.id}
+                                                                 value={shot.id}>镜 {shot.shotNumber || shot.order + 1} · {shot.content.slice(0, 36) || "未写内容"}</SelectItem>)}
+                            </SelectContent>
+                        </Select>
+                        {shots.find((shot) => shot.id === relationShotId) ? (
+                            <ShotRelationsEditor key={relationShotId} project={project}
+                                                 shot={shots.find((shot) => shot.id === relationShotId)!} props={props}
+                                                 styles={styles} unavailable={unavailable}
+                                                 onStatusChange={setRelationStatus}/>
+                        ) : <div className="space-y-2">
+                            <p className="text-muted-foreground text-sm">这个镜头已不存在，请选择其他镜头。</p>
+                            {relationStatus === "error" && <Button variant="ghost"
+                                                                   onClick={() => setRelationStatus("saved")}>放弃未保存的选择</Button>}
+                        </div>}
+                    </DialogContent>
+                </Dialog>
+
+                <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>删除镜头</AlertDialogTitle>
+                            <AlertDialogDescription>将删除 {selected.size} 个镜头。</AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>取消</AlertDialogCancel>
+                            <AlertDialogAction
+                                className="bg-destructive hover:bg-destructive/90"
+                                onClick={() => {
+                                    void removeSelectedShots();
+                                }}
+                            >
+                                删除
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+                <AlertDialog
+                    open={Boolean(pendingBeatId)}
+                    onOpenChange={(open) => !open && setPendingBeatId(undefined)}
+                >
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>删除这场</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                场会去掉，镜头还在，变成未分场。
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>取消</AlertDialogCancel>
+                            <AlertDialogAction
+                                className="bg-destructive hover:bg-destructive/90"
+                                onClick={() => {
+                                    if (!pendingBeatId) return;
+                                    void removeBeat(pendingBeatId);
+                                }}
+                            >
+                                删除场
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
-
-            <Dialog open={Boolean(relationShotId)} onOpenChange={(open) => {
-                if (open) return;
-                if (relationStatus !== "saved") {
-                    toast.error(relationStatus === "saving" ? "正在保存，请稍候" : "保存未成功，请先重试或放弃未保存的选择");
-                    return;
-                }
-                setRelationShotId(undefined);
-            }}>
-                <DialogContent className="max-h-[85dvh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle>镜头道具与风格</DialogTitle>
-                        <DialogDescription>选择自动保存。风格可跟随项目，也可为这条镜头单独指定。</DialogDescription>
-                    </DialogHeader>
-                    <Select value={relationShotId} onValueChange={setRelationShotId}
-                            disabled={relationStatus !== "saved"}>
-                        <SelectTrigger aria-label="选择要编辑的镜头" className="w-full"><SelectValue/></SelectTrigger>
-                        <SelectContent>
-                            {shots.map((shot) => <SelectItem key={shot.id}
-                                                             value={shot.id}>镜 {shot.shotNumber || shot.order + 1} · {shot.content.slice(0, 36) || "未写内容"}</SelectItem>)}
-                        </SelectContent>
-                    </Select>
-                    {shots.find((shot) => shot.id === relationShotId) ? (
-                        <ShotRelationsEditor key={relationShotId} project={project}
-                                             shot={shots.find((shot) => shot.id === relationShotId)!} props={props}
-                                             styles={styles} unavailable={unavailable} onStatusChange={setRelationStatus}/>
-                    ) : <div className="space-y-2">
-                        <p className="text-muted-foreground text-sm">这个镜头已不存在，请选择其他镜头。</p>
-                        {relationStatus === "error" && <Button variant="ghost"
-                                                               onClick={() => setRelationStatus("saved")}>放弃未保存的选择</Button>}
-                    </div>}
-                </DialogContent>
-            </Dialog>
-
-            <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>删除镜头</AlertDialogTitle>
-                        <AlertDialogDescription>将删除 {selected.size} 个镜头。</AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>取消</AlertDialogCancel>
-                        <AlertDialogAction
-                            className="bg-destructive hover:bg-destructive/90"
-                            onClick={() => {
-                                void removeSelectedShots();
-                            }}
-                        >
-                            删除
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
-            <AlertDialog
-                open={Boolean(pendingBeatId)}
-                onOpenChange={(open) => !open && setPendingBeatId(undefined)}
-            >
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>删除这场</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            场会去掉，镜头还在，变成未分场。
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>取消</AlertDialogCancel>
-                        <AlertDialogAction
-                            className="bg-destructive hover:bg-destructive/90"
-                            onClick={() => {
-                                if (!pendingBeatId) return;
-                                void removeBeat(pendingBeatId);
-                            }}
-                        >
-                            删除场
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
-        </div>
         </>
     );
 }

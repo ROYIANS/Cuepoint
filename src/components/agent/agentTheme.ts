@@ -9,17 +9,12 @@ export const SURFACE_ELEVATED = "#1a1a1a";
 export const SURFACE_HOVER = "rgba(255,255,255,0.06)";
 
 
-
 export const TEXT = "#ffffff";
 
 export const TEXT_TERTIARY = "#6f6f6f";
 
 
 /** 4px spacing scale from LobeHub DESIGN.md — round off-scale values here. */
-
-
-
-
 
 
 /** LobeHub Conversation chrome — ChatHeader is `position: absolute; height: 52px`. */

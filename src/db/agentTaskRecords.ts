@@ -1,4 +1,10 @@
-import {inspectTaskGenerationOutput, ownedTaskGenerationJob, PICTURE_GENERATION_TOOLS, provesCompletedGeneration, taskGenerationToolSource} from "./taskGenerationEvidence";
+import {
+    inspectTaskGenerationOutput,
+    ownedTaskGenerationJob,
+    PICTURE_GENERATION_TOOLS,
+    provesCompletedGeneration,
+    taskGenerationToolSource
+} from "./taskGenerationEvidence";
 import {db} from "./database";
 import {editableAgentTask} from "./agentTaskGuards";
 import type {AgentTaskRecord, TaskRecordInput, TaskRecordSource} from "@/domain/agentTaskRecords";

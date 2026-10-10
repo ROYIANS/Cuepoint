@@ -20,9 +20,9 @@ export async function requestOnce(url: string, init: RequestWire, options: Reque
 }
 
 type JsonReadPolicy =
-    | {kind: "native-json"}
-    | {kind: "bounded-json"; maxBytes: number; fatalUtf8: boolean};
-export type HttpJsonReadPolicy = {success: JsonReadPolicy; failure: JsonReadPolicy};
+    | { kind: "native-json" }
+    | { kind: "bounded-json"; maxBytes: number; fatalUtf8: boolean };
+export type HttpJsonReadPolicy = { success: JsonReadPolicy; failure: JsonReadPolicy };
 
 /** Only unreadable optional HTTP diagnostics may be discarded. */
 export async function readHttpJson(response: Response, policy: HttpJsonReadPolicy, signal?: AbortSignal): Promise<unknown> {

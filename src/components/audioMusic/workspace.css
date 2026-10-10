@@ -11,8 +11,6 @@
 }
 
 
-
-
 .aw-muted {
     color: var(--aw-muted);
     font-size: 12px
@@ -24,16 +22,6 @@
     gap: 8px;
     flex-wrap: wrap
 }
-
-
-
-
-
-
-
-
-
-
 
 
 .aw-field {
@@ -94,10 +82,6 @@
 }
 
 
-
-
-
-
 .aw-saved-field {
     display: flex;
     flex-direction: column;
@@ -114,9 +98,6 @@
 .aw-saved-field > [role=status] {
     align-self: flex-end
 }
-
-
-
 
 
 .aw-player {
@@ -188,24 +169,10 @@
 }
 
 
-
 .aw-time {
     font: 12px monospace;
     font-variant-numeric: tabular-nums
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 .aw-recorder {
@@ -227,14 +194,6 @@
     background: #9ac6ad;
     transition: width .08s
 }
-
-
-
-
-
-
-
-
 
 
 .aw-lyrics {
@@ -290,8 +249,6 @@
 @media (max-width: 1150px) {
 
 
-
-
     .aw-player-title {
         min-width: 100px
     }
@@ -303,13 +260,6 @@
         height: auto;
         min-height: 100%
     }
-
-
-
-
-
-
-
 
 
     .aw-player {
@@ -327,9 +277,6 @@
     }
 
 
-
-
-
 }
 
 /* Keep standard shadcn control styling; only adapt workspace layout. */
@@ -344,12 +291,6 @@
     overflow: hidden;
     text-overflow: ellipsis
 }
-
-
-
-
-
-
 
 
 .aw-root .aw-player {
@@ -383,7 +324,6 @@
 }
 
 
-
 .aw-slider {
     margin: 8px 6px;
     min-height: 20px;
@@ -397,10 +337,6 @@
 .aw-recorder .aw-custom-player {
     margin: 18px 0
 }
-
-
-
-
 
 
 @media (max-width: 800px) {

@@ -1,5 +1,5 @@
 import {useEffect, useRef} from "react";
-import {useDebouncedDraft, type DraftSaveStatus} from "@/lib/debouncedDraft";
+import {type DraftSaveStatus, useDebouncedDraft} from "@/lib/debouncedDraft";
 import {DraftStatus} from "@/components/ui/draft-status";
 import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
@@ -24,13 +24,17 @@ export function TextDraftField(props: Props) {
     return <TextDraftControl key={JSON.stringify([props.projectId, props.draftKey])} {...props}/>;
 }
 
-function TextDraftControl({projectId, draftKey, value, persist, onStatusChange, multiline, rows,
-                              placeholder, ariaLabel, className, containerClassName, unavailable}: Props) {
+function TextDraftControl({
+                              projectId, draftKey, value, persist, onStatusChange, multiline, rows,
+                              placeholder, ariaLabel, className, containerClassName, unavailable
+                          }: Props) {
     const save = useRef(persist).current;
     const {draft, setDraft, status, error, retry, useLatest} = useDebouncedDraft({
         initialValue: value, persist: save, scope: projectId, draftKey,
     });
-    useEffect(() => {onStatusChange?.(status);}, [onStatusChange, status]);
+    useEffect(() => {
+        onStatusChange?.(status);
+    }, [onStatusChange, status]);
     const Control = multiline ? Textarea : Input;
     return <div className={containerClassName} data-text-draft={draftKey}>
         <Control value={draft} rows={multiline ? rows : undefined} readOnly={unavailable}

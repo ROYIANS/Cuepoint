@@ -35,12 +35,14 @@ export function EpisodeListPage({projectId}: { projectId: string }) {
     return <EpisodeList key={projectId} projectId={projectId}/>;
 }
 
-function EpisodeList({projectId}: {projectId: string}) {
+function EpisodeList({projectId}: { projectId: string }) {
     const navigate = useNavigate();
     const activeRef = useRef(true);
     useEffect(() => {
         activeRef.current = true;
-        return () => {activeRef.current = false;};
+        return () => {
+            activeRef.current = false;
+        };
     }, []);
     const writingRef = useRef(false);
     const [pending, setPending] = useState<"add" | "move" | "delete">();

@@ -115,8 +115,8 @@ type GrainientUniforms = Record<
     "iTime" | "uTimeSpeed" | "uColorBalance" | "uWarpStrength" | "uWarpFrequency" | "uWarpSpeed" |
     "uWarpAmplitude" | "uBlendAngle" | "uBlendSoftness" | "uRotationAmount" | "uNoiseScale" |
     "uGrainAmount" | "uGrainScale" | "uGrainAnimated" | "uContrast" | "uGamma" | "uSaturation" | "uZoom" | "uLightMode",
-    {value: number}
-> & Record<"iResolution" | "uCenterOffset" | "uColor1" | "uColor2" | "uColor3", {value: Float32Array}>;
+    { value: number }
+> & Record<"iResolution" | "uCenterOffset" | "uColor1" | "uColor2" | "uColor3", { value: Float32Array }>;
 type GrainientContext = { renderer: Renderer; uniforms: GrainientUniforms; mesh: Mesh };
 const ctxMap = new WeakMap<HTMLDivElement, GrainientContext>();
 

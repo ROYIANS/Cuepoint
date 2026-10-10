@@ -1,18 +1,15 @@
 import {
-    type ChatThread,
-    type Id,
-    STUDIO_LIBRARY_ID,
     type ChatMessage,
     type ChatMessageRole,
-    type ChatMessageStatus
+    type ChatMessageStatus,
+    type ChatThread,
+    type Id,
+    STUDIO_LIBRARY_ID
 } from "@/domain/types";
 import {db} from "./database";
-import {nowIso, createId} from "@/lib/ids";
+import {createId, nowIso} from "@/lib/ids";
 import {normalizeContextPolicy} from "@/lib/agent/contextPolicy";
 import {getGeneralAgentConfig} from "./agentSettings";
-
-
-
 
 
 export async function createChatThread(options?: {
@@ -70,7 +67,6 @@ export async function updateChatThread(
 }
 
 
-
 export async function appendChatMessage(input: {
     threadId: Id;
     role: ChatMessageRole;
@@ -94,7 +90,6 @@ export async function appendChatMessage(input: {
     });
     return message;
 }
-
 
 
 /** Bind once before any conversation execution; changing projects starts a new thread. */

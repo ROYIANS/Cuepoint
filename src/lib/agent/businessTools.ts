@@ -4,47 +4,47 @@ import {defineTool} from './toolDefinition';
 import {assertProjectToolScope, frozenProjectScope} from "./projectScope";
 import {assertAgentProjectCreation, bindCreatedAgentProject} from "@/db/agentProjectCreation";
 import {
-  createProject,
-  createAudioMusicProject,
-  patchProjectDetails,
-  updateSeriesLogline,
-  updateWorldSetting,
-  patchProjectOutput,
-  updateShotSettings
+    createAudioMusicProject,
+    createProject,
+    patchProjectDetails,
+    patchProjectOutput,
+    updateSeriesLogline,
+    updateShotSettings,
+    updateWorldSetting
 } from "@/db/projects";
 import {
-  firstEpisode,
-  addEpisode,
-  updateEpisodeDraft,
-  deleteEpisode,
-  addStoryBeat,
-  patchStoryBeat,
-  deleteStoryBeat,
-  duplicateBeat,
-  reorderEpisodes,
-  reorderBeats
+    addEpisode,
+    addStoryBeat,
+    deleteEpisode,
+    deleteStoryBeat,
+    duplicateBeat,
+    firstEpisode,
+    patchStoryBeat,
+    reorderBeats,
+    reorderEpisodes,
+    updateEpisodeDraft
 } from "@/db/episodes";
 import {deleteProject} from "@/db/cascadeCommands";
-import {addShots, patchShot, deleteEpisodeShots, duplicateShot, reorderShots, setShotSlot} from "@/db/shots";
+import {addShots, deleteEpisodeShots, duplicateShot, patchShot, reorderShots, setShotSlot} from "@/db/shots";
 import {
-  addCharacter,
-  patchCharacter,
-  deleteCharacter,
-  addScene,
-  patchScene,
-  deleteScene,
-  addProp,
-  patchProp,
-  deleteProp,
-  addStyle,
-  patchStyle,
-  deleteStyle,
-  setCharacterSlot,
-  setSceneSlot,
-  setPropSlot,
-  setStyleSlot
+    addCharacter,
+    addProp,
+    addScene,
+    addStyle,
+    deleteCharacter,
+    deleteProp,
+    deleteScene,
+    deleteStyle,
+    patchCharacter,
+    patchProp,
+    patchScene,
+    patchStyle,
+    setCharacterSlot,
+    setPropSlot,
+    setSceneSlot,
+    setStyleSlot
 } from "@/db/assets";
-import {copyStudioCharacter, copyStudioScene, copyStudioProp, copyStudioStyle} from "@/db/assetReuse";
+import {copyStudioCharacter, copyStudioProp, copyStudioScene, copyStudioStyle} from "@/db/assetReuse";
 import {deleteMediaIfOrphan} from "@/db/media";
 import {db} from "@/db/database";
 import {AtomicToolRollbackError, executeAtomicTool} from "@/db/agentTools";
@@ -52,49 +52,49 @@ import {flushPendingDrafts} from "@/lib/debouncedDraft";
 import {validateGenerationDefaults} from "@/domain/output";
 import {emptySlot, parseGenerationSlot} from "@/domain/slot";
 import {
-  CHARACTER_SLOTS,
-  type CharacterImageSlot,
-  normalizeEpisodeStory,
-  PROP_SLOTS,
-  type PropImageSlot,
-  SCENE_SLOTS,
-  type SceneImageSlot,
-  type Shot,
-  SHOT_STATUS_LABELS,
-  type ShotPictureField,
-  type StoryBeat,
-  STUDIO_LIBRARY_ID,
-  STYLE_SLOTS,
-  type StyleImageSlot
+    CHARACTER_SLOTS,
+    type CharacterImageSlot,
+    normalizeEpisodeStory,
+    PROP_SLOTS,
+    type PropImageSlot,
+    SCENE_SLOTS,
+    type SceneImageSlot,
+    type Shot,
+    SHOT_STATUS_LABELS,
+    type ShotPictureField,
+    type StoryBeat,
+    STUDIO_LIBRARY_ID,
+    STYLE_SLOTS,
+    type StyleImageSlot
 } from "@/domain/types";
 import type {AgentToolContext} from "./tools";
 import type {AgentToolPreview} from "@/domain/agent";
 import * as s from "./businessSchemas";
 import {captureBusinessDeletion, withBusinessWriteReceipt} from "./businessWriteReceipt";
 import {
-  assetMediaDependencies,
-  bounded,
-  businessRowText,
-  BUSINESS_LABELS,
-  type BusinessKind,
-  type BusinessRow,
-  getRow,
-  readBusinessRecord,
-  listBusinessRecords,
-  isReadableBusinessFieldPath,
-  listRows,
-  mediaRetention,
-  mediaUsage,
-  navigation,
-  ownerSnapshot,
-  projection,
-  readTables,
-  relationsAt,
-  requireEpisode,
-  requireOwner,
-  summarize,
-  targetRevision,
-  textAt
+    assetMediaDependencies,
+    bounded,
+    BUSINESS_LABELS,
+    type BusinessKind,
+    type BusinessRow,
+    businessRowText,
+    getRow,
+    isReadableBusinessFieldPath,
+    listBusinessRecords,
+    listRows,
+    mediaRetention,
+    mediaUsage,
+    navigation,
+    ownerSnapshot,
+    projection,
+    readBusinessRecord,
+    readTables,
+    relationsAt,
+    requireEpisode,
+    requireOwner,
+    summarize,
+    targetRevision,
+    textAt
 } from "./businessStore";
 
 type PreviewState = { state: unknown; target?: AgentToolPreview["target"]; changes: string[] };
@@ -210,11 +210,11 @@ function readTool<T, const Name extends string>(name: Name, title: string, descr
 type WriteHooks<Args> = {
     beforePreview?: (args: Args, context: AgentToolContext) => Promise<void>;
     beforeWrite?: (args: Args, context: AgentToolContext) => Promise<void>;
-    completedReplay?: (args: Args, context: AgentToolContext) => Promise<{value: unknown} | undefined>;
+    completedReplay?: (args: Args, context: AgentToolContext) => Promise<{ value: unknown } | undefined>;
 };
 
 function writeTool<T, const Name extends string>(name: Name, title: string, description: string, spec: s.Spec<T>,
-                      scope: (args: NoInfer<T>) => string[], prepare: (args: NoInfer<T>) => Promise<PreviewState>, execute: (args: NoInfer<T>, context: AgentToolContext) => Promise<unknown>, highRisk = false, hooks: WriteHooks<NoInfer<T>> = {}): TypedToolDefinition<T, Name> {
+                                                 scope: (args: NoInfer<T>) => string[], prepare: (args: NoInfer<T>) => Promise<PreviewState>, execute: (args: NoInfer<T>, context: AgentToolContext) => Promise<unknown>, highRisk = false, hooks: WriteHooks<NoInfer<T>> = {}): TypedToolDefinition<T, Name> {
     async function preview(args: T): Promise<AgentToolPreview> {
         const info = await prepare(args);
         return {
@@ -462,6 +462,7 @@ const projectCreate = {
     }),
 };
 const projectUpdate = s.object({id: s.id, patch: s.nonempty(s.object(s.projectFields))});
+
 function createdProjectResultId(raw: string | undefined): string | undefined {
     const result: unknown = raw ? JSON.parse(raw) : undefined;
     if (!result || typeof result !== "object" || Array.isArray(result) || !("id" in result) || typeof result.id !== "string") return;
@@ -498,25 +499,29 @@ const projectTools = [
         };
         return {...result, firstEpisodeId: (await firstEpisode(project.id))!.id};
     }, false, {
-        beforePreview: async (args, context) => {await assertAgentProjectCreation(context, args.continueInProject !== false);},
-        beforeWrite: async (args, context) => {await assertAgentProjectCreation(context, args.continueInProject !== false, true);},
+        beforePreview: async (args, context) => {
+            await assertAgentProjectCreation(context, args.continueInProject !== false);
+        },
+        beforeWrite: async (args, context) => {
+            await assertAgentProjectCreation(context, args.continueInProject !== false, true);
+        },
         completedReplay: async (args, context) => {
             return db.transaction("rw", db.tables, async () => {
-                        const call = await db.agentToolCalls.get(context.callId);
-                        if (call?.status !== "completed") return undefined;
-                        if (call.name !== "project_create" || targetRevision(projectCreate.schema.parse(JSON.parse(call.arguments))) !== targetRevision(args)) throw new Error("创建项目的重放参数与原调用不匹配");
-                        const resultId = createdProjectResultId(call.result);
-                        const run = await db.agentRuns.get(context.runId);
-                        const continued = args.continueInProject !== false;
-                        if (!resultId || !await db.projects.get(resultId) || (context.projectId !== undefined && context.projectId !== resultId) ||
-                            (continued && (run?.createdProjectBinding?.callId !== call.id || run.createdProjectBinding.projectId !== resultId || run.projectId !== resultId)) ||
-                            (!continued && run?.projectId)) throw new Error("已创建项目不存在或来源不匹配，不能重放");
-                        return {
-                            value: await executeAtomicTool(context, () => {
-                                throw new Error("创建项目重放状态已变化");
-                            })
-                        };
-                    });
+                const call = await db.agentToolCalls.get(context.callId);
+                if (call?.status !== "completed") return undefined;
+                if (call.name !== "project_create" || targetRevision(projectCreate.schema.parse(JSON.parse(call.arguments))) !== targetRevision(args)) throw new Error("创建项目的重放参数与原调用不匹配");
+                const resultId = createdProjectResultId(call.result);
+                const run = await db.agentRuns.get(context.runId);
+                const continued = args.continueInProject !== false;
+                if (!resultId || !await db.projects.get(resultId) || (context.projectId !== undefined && context.projectId !== resultId) ||
+                    (continued && (run?.createdProjectBinding?.callId !== call.id || run.createdProjectBinding.projectId !== resultId || run.projectId !== resultId)) ||
+                    (!continued && run?.projectId)) throw new Error("已创建项目不存在或来源不匹配，不能重放");
+                return {
+                    value: await executeAtomicTool(context, () => {
+                        throw new Error("创建项目重放状态已变化");
+                    })
+                };
+            });
         },
     }),
     writeTool("project_update", "修改项目资料", "修改明确项目的创作信息、梗概、世界设定、默认风格和经过验证的生成默认参数；不修改已有镜头。null 清除默认风格/封面/生成配置。", projectUpdate, (args) => [args.id], async (args) => {
@@ -601,7 +606,11 @@ function beatPatch(patch: z.output<typeof beatFieldsSpec.schema>): Partial<Story
 function shotPatch(patch: z.output<typeof shotFieldsSpec.schema>): Partial<Shot> {
     if (patch.inheritStyle && Object.hasOwn(patch, "styleId")) throw new Error("继承项目风格与显式风格不能同时设置");
     const {inheritStyle, ...rest} = patch;
-    const nativePatch: Partial<Shot> = {...rest, sceneId: patch.sceneId ?? undefined, beatId: patch.beatId ?? undefined};
+    const nativePatch: Partial<Shot> = {
+        ...rest,
+        sceneId: patch.sceneId ?? undefined,
+        beatId: patch.beatId ?? undefined
+    };
     if (!Object.hasOwn(patch, "sceneId")) delete nativePatch.sceneId;
     if (!Object.hasOwn(patch, "beatId")) delete nativePatch.beatId;
     if (inheritStyle) nativePatch.styleId = undefined;
@@ -681,85 +690,85 @@ const assetApi = {
 };
 const assetTools = [
 
-        writeTool("character_create", `创建角色`, `在明确项目或 studio 工作室中创建角色；只接受此类资产的创作字段。`, s.object({
-            ...s.owner,
-            fields: s.optional(s.object(s.assetFields.character))
-        }), (args) => [args.ownerId], (args) => createPreview(args.ownerId, "character", args.fields ?? {}), async (args) => {
-            const row = await addCharacter(args.ownerId);
-            if (args.fields) await patchCharacter(row.id, args.fields);
-            return rowResult("character", await getRow("character", row.id, args.ownerId));
-        }),
-        writeTool("character_update", `修改角色`, `修改明确归属的角色创作字段；不可修改归属、来源、ID 或素材槽位。素材使用 slot_update。`, s.object({
-            ...s.target,
-            patch: s.nonempty(s.object(s.assetFields.character))
-        }), (args) => [args.ownerId], (args) => targetPreview("character", args, args.patch), async (args) => {
-            await patchCharacter(args.id, args.patch);
-            return rowResult("character", await getRow("character", args.id, args.ownerId));
-        }),
-        writeTool("character_delete", `删除角色`, `删除角色并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。`, s.object(s.target), (args) => [args.ownerId], (args) => deletePreview("character", args), async (args) => {
-            await deleteCharacter(args.id);
-            return {deletedId: args.id};
-        }, true),
+    writeTool("character_create", `创建角色`, `在明确项目或 studio 工作室中创建角色；只接受此类资产的创作字段。`, s.object({
+        ...s.owner,
+        fields: s.optional(s.object(s.assetFields.character))
+    }), (args) => [args.ownerId], (args) => createPreview(args.ownerId, "character", args.fields ?? {}), async (args) => {
+        const row = await addCharacter(args.ownerId);
+        if (args.fields) await patchCharacter(row.id, args.fields);
+        return rowResult("character", await getRow("character", row.id, args.ownerId));
+    }),
+    writeTool("character_update", `修改角色`, `修改明确归属的角色创作字段；不可修改归属、来源、ID 或素材槽位。素材使用 slot_update。`, s.object({
+        ...s.target,
+        patch: s.nonempty(s.object(s.assetFields.character))
+    }), (args) => [args.ownerId], (args) => targetPreview("character", args, args.patch), async (args) => {
+        await patchCharacter(args.id, args.patch);
+        return rowResult("character", await getRow("character", args.id, args.ownerId));
+    }),
+    writeTool("character_delete", `删除角色`, `删除角色并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。`, s.object(s.target), (args) => [args.ownerId], (args) => deletePreview("character", args), async (args) => {
+        await deleteCharacter(args.id);
+        return {deletedId: args.id};
+    }, true),
 
-        writeTool("scene_create", `创建场景`, `在明确项目或 studio 工作室中创建场景；只接受此类资产的创作字段。`, s.object({
-            ...s.owner,
-            fields: s.optional(s.object(s.assetFields.scene))
-        }), (args) => [args.ownerId], (args) => createPreview(args.ownerId, "scene", args.fields ?? {}), async (args) => {
-            const row = await addScene(args.ownerId);
-            if (args.fields) await patchScene(row.id, args.fields);
-            return rowResult("scene", await getRow("scene", row.id, args.ownerId));
-        }),
-        writeTool("scene_update", `修改场景`, `修改明确归属的场景创作字段；不可修改归属、来源、ID 或素材槽位。素材使用 slot_update。`, s.object({
-            ...s.target,
-            patch: s.nonempty(s.object(s.assetFields.scene))
-        }), (args) => [args.ownerId], (args) => targetPreview("scene", args, args.patch), async (args) => {
-            await patchScene(args.id, args.patch);
-            return rowResult("scene", await getRow("scene", args.id, args.ownerId));
-        }),
-        writeTool("scene_delete", `删除场景`, `删除场景并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。`, s.object(s.target), (args) => [args.ownerId], (args) => deletePreview("scene", args), async (args) => {
-            await deleteScene(args.id);
-            return {deletedId: args.id};
-        }, true),
+    writeTool("scene_create", `创建场景`, `在明确项目或 studio 工作室中创建场景；只接受此类资产的创作字段。`, s.object({
+        ...s.owner,
+        fields: s.optional(s.object(s.assetFields.scene))
+    }), (args) => [args.ownerId], (args) => createPreview(args.ownerId, "scene", args.fields ?? {}), async (args) => {
+        const row = await addScene(args.ownerId);
+        if (args.fields) await patchScene(row.id, args.fields);
+        return rowResult("scene", await getRow("scene", row.id, args.ownerId));
+    }),
+    writeTool("scene_update", `修改场景`, `修改明确归属的场景创作字段；不可修改归属、来源、ID 或素材槽位。素材使用 slot_update。`, s.object({
+        ...s.target,
+        patch: s.nonempty(s.object(s.assetFields.scene))
+    }), (args) => [args.ownerId], (args) => targetPreview("scene", args, args.patch), async (args) => {
+        await patchScene(args.id, args.patch);
+        return rowResult("scene", await getRow("scene", args.id, args.ownerId));
+    }),
+    writeTool("scene_delete", `删除场景`, `删除场景并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。`, s.object(s.target), (args) => [args.ownerId], (args) => deletePreview("scene", args), async (args) => {
+        await deleteScene(args.id);
+        return {deletedId: args.id};
+    }, true),
 
-        writeTool("prop_create", `创建道具`, `在明确项目或 studio 工作室中创建道具；只接受此类资产的创作字段。`, s.object({
-            ...s.owner,
-            fields: s.optional(s.object(s.assetFields.prop))
-        }), (args) => [args.ownerId], (args) => createPreview(args.ownerId, "prop", args.fields ?? {}), async (args) => {
-            const row = await addProp(args.ownerId);
-            if (args.fields) await patchProp(row.id, args.fields);
-            return rowResult("prop", await getRow("prop", row.id, args.ownerId));
-        }),
-        writeTool("prop_update", `修改道具`, `修改明确归属的道具创作字段；不可修改归属、来源、ID 或素材槽位。素材使用 slot_update。`, s.object({
-            ...s.target,
-            patch: s.nonempty(s.object(s.assetFields.prop))
-        }), (args) => [args.ownerId], (args) => targetPreview("prop", args, args.patch), async (args) => {
-            await patchProp(args.id, args.patch);
-            return rowResult("prop", await getRow("prop", args.id, args.ownerId));
-        }),
-        writeTool("prop_delete", `删除道具`, `删除道具并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。`, s.object(s.target), (args) => [args.ownerId], (args) => deletePreview("prop", args), async (args) => {
-            await deleteProp(args.id);
-            return {deletedId: args.id};
-        }, true),
+    writeTool("prop_create", `创建道具`, `在明确项目或 studio 工作室中创建道具；只接受此类资产的创作字段。`, s.object({
+        ...s.owner,
+        fields: s.optional(s.object(s.assetFields.prop))
+    }), (args) => [args.ownerId], (args) => createPreview(args.ownerId, "prop", args.fields ?? {}), async (args) => {
+        const row = await addProp(args.ownerId);
+        if (args.fields) await patchProp(row.id, args.fields);
+        return rowResult("prop", await getRow("prop", row.id, args.ownerId));
+    }),
+    writeTool("prop_update", `修改道具`, `修改明确归属的道具创作字段；不可修改归属、来源、ID 或素材槽位。素材使用 slot_update。`, s.object({
+        ...s.target,
+        patch: s.nonempty(s.object(s.assetFields.prop))
+    }), (args) => [args.ownerId], (args) => targetPreview("prop", args, args.patch), async (args) => {
+        await patchProp(args.id, args.patch);
+        return rowResult("prop", await getRow("prop", args.id, args.ownerId));
+    }),
+    writeTool("prop_delete", `删除道具`, `删除道具并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。`, s.object(s.target), (args) => [args.ownerId], (args) => deletePreview("prop", args), async (args) => {
+        await deleteProp(args.id);
+        return {deletedId: args.id};
+    }, true),
 
-        writeTool("style_create", `创建风格`, `在明确项目或 studio 工作室中创建风格；只接受此类资产的创作字段。`, s.object({
-            ...s.owner,
-            fields: s.optional(s.object(s.assetFields.style))
-        }), (args) => [args.ownerId], (args) => createPreview(args.ownerId, "style", args.fields ?? {}), async (args) => {
-            const row = await addStyle(args.ownerId);
-            if (args.fields) await patchStyle(row.id, args.fields);
-            return rowResult("style", await getRow("style", row.id, args.ownerId));
-        }),
-        writeTool("style_update", `修改风格`, `修改明确归属的风格创作字段；不可修改归属、来源、ID 或素材槽位。素材使用 slot_update。`, s.object({
-            ...s.target,
-            patch: s.nonempty(s.object(s.assetFields.style))
-        }), (args) => [args.ownerId], (args) => targetPreview("style", args, args.patch), async (args) => {
-            await patchStyle(args.id, args.patch);
-            return rowResult("style", await getRow("style", args.id, args.ownerId));
-        }),
-        writeTool("style_delete", `删除风格`, `删除风格并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。`, s.object(s.target), (args) => [args.ownerId], (args) => deletePreview("style", args), async (args) => {
-            await deleteStyle(args.id);
-            return {deletedId: args.id};
-        }, true),
+    writeTool("style_create", `创建风格`, `在明确项目或 studio 工作室中创建风格；只接受此类资产的创作字段。`, s.object({
+        ...s.owner,
+        fields: s.optional(s.object(s.assetFields.style))
+    }), (args) => [args.ownerId], (args) => createPreview(args.ownerId, "style", args.fields ?? {}), async (args) => {
+        const row = await addStyle(args.ownerId);
+        if (args.fields) await patchStyle(row.id, args.fields);
+        return rowResult("style", await getRow("style", row.id, args.ownerId));
+    }),
+    writeTool("style_update", `修改风格`, `修改明确归属的风格创作字段；不可修改归属、来源、ID 或素材槽位。素材使用 slot_update。`, s.object({
+        ...s.target,
+        patch: s.nonempty(s.object(s.assetFields.style))
+    }), (args) => [args.ownerId], (args) => targetPreview("style", args, args.patch), async (args) => {
+        await patchStyle(args.id, args.patch);
+        return rowResult("style", await getRow("style", args.id, args.ownerId));
+    }),
+    writeTool("style_delete", `删除风格`, `删除风格并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。`, s.object(s.target), (args) => [args.ownerId], (args) => deletePreview("style", args), async (args) => {
+        await deleteStyle(args.id);
+        return {deletedId: args.id};
+    }, true),
 ];
 
 const reuseTools = [
@@ -829,14 +838,29 @@ const reuseTools = [
     }),
 ];
 
-function catalogSlot<Slot extends string>(catalog: readonly {id: Slot}[], value: string): value is Slot {
+function catalogSlot<Slot extends string>(catalog: readonly { id: Slot }[], value: string): value is Slot {
     return catalog.some(slot => slot.id === value);
 }
-export function isCharacterSlot(value: string): value is CharacterImageSlot {return catalogSlot(CHARACTER_SLOTS, value);}
-function isSceneSlot(value: string): value is SceneImageSlot {return catalogSlot(SCENE_SLOTS, value);}
-function isPropSlot(value: string): value is PropImageSlot {return catalogSlot(PROP_SLOTS, value);}
-function isStyleSlot(value: string): value is StyleImageSlot {return catalogSlot(STYLE_SLOTS, value);}
-function isShotSlot(value: string): value is ShotPictureField {return value === "firstFrame" || value === "lastFrame" || value === "clip";}
+
+export function isCharacterSlot(value: string): value is CharacterImageSlot {
+    return catalogSlot(CHARACTER_SLOTS, value);
+}
+
+function isSceneSlot(value: string): value is SceneImageSlot {
+    return catalogSlot(SCENE_SLOTS, value);
+}
+
+function isPropSlot(value: string): value is PropImageSlot {
+    return catalogSlot(PROP_SLOTS, value);
+}
+
+function isStyleSlot(value: string): value is StyleImageSlot {
+    return catalogSlot(STYLE_SLOTS, value);
+}
+
+function isShotSlot(value: string): value is ShotPictureField {
+    return value === "firstFrame" || value === "lastFrame" || value === "clip";
+}
 
 const slotSpec = s.object({
     kind: s.choice(["character", "scene", "prop", "style", "shot"]), ...s.target,
@@ -869,29 +893,43 @@ const mediaTools = [
         const {result, ...patch} = args.patch;
         if (result?.mediaId && (await db.agentGenerationJobs.where("projectId").equals(args.ownerId).toArray()).some(job => job.batchId && job.result?.mediaId === result.mediaId)) throw new Error("批量候选必须由用户在批量面板选择并写入");
         const merge = (previous: unknown) => ({...emptySlot(), ...parseGenerationSlot(previous), ...patch, ...(Object.hasOwn(args.patch, "result") ? {result: result ?? undefined} : {})});
-        const invalid = () => {throw new Error("素材槽位不属于此实体类型");};
+        const invalid = () => {
+            throw new Error("素材槽位不属于此实体类型");
+        };
         let slot;
         switch (record.kind) {
             case "character":
                 if (!isCharacterSlot(args.slot)) return invalid();
-                slot = merge(record.row.slots?.[args.slot]); await setCharacterSlot(args.id, args.slot, slot); break;
+                slot = merge(record.row.slots?.[args.slot]);
+                await setCharacterSlot(args.id, args.slot, slot);
+                break;
             case "scene":
                 if (!isSceneSlot(args.slot)) return invalid();
-                slot = merge(record.row.slots?.[args.slot]); await setSceneSlot(args.id, args.slot, slot); break;
+                slot = merge(record.row.slots?.[args.slot]);
+                await setSceneSlot(args.id, args.slot, slot);
+                break;
             case "prop":
                 if (!isPropSlot(args.slot)) return invalid();
-                slot = merge(record.row.slots?.[args.slot]); await setPropSlot(args.id, args.slot, slot); break;
+                slot = merge(record.row.slots?.[args.slot]);
+                await setPropSlot(args.id, args.slot, slot);
+                break;
             case "style":
                 if (!isStyleSlot(args.slot)) return invalid();
-                slot = merge(record.row.slots?.[args.slot]); await setStyleSlot(args.id, args.slot, slot); break;
+                slot = merge(record.row.slots?.[args.slot]);
+                await setStyleSlot(args.id, args.slot, slot);
+                break;
             case "shot":
                 if (!isShotSlot(args.slot)) return invalid();
-                slot = merge(record.row[args.slot]); await setShotSlot(args.id, args.slot, slot); break;
+                slot = merge(record.row[args.slot]);
+                await setShotSlot(args.id, args.slot, slot);
+                break;
             case "project":
             case "episode":
             case "beat":
-            case "media": return invalid();
-            default: return invalid();
+            case "media":
+                return invalid();
+            default:
+                return invalid();
         }
         return {
             ...rowResult(args.kind, await getRow(args.kind, args.id, args.ownerId, args.episodeId)),

@@ -1,4 +1,5 @@
-import {defineTool} from './toolDefinition';
+import type {AgentToolDefinition} from './toolDefinition';
+import {assertUniqueToolNames, defineTool} from './toolDefinition';
 import {IP_TOOLS} from "./ipTools";
 import {AUDIO_TOOLS} from "./audioTools";
 import {MUSIC_TOOLS} from "./musicTools";
@@ -16,15 +17,9 @@ import {z} from "zod";
 import {toolArgumentError, ToolValidationError} from "./toolErrors";
 import {db} from "@/db/database";
 import {updateRunPlanAndComplete} from "@/db/agentTools";
-import type {
-    AgentPermissionMode,
-    AgentToolCall,
-    AgentToolSchema
-} from "@/domain/agent";
+import type {AgentPermissionMode, AgentToolCall, AgentToolSchema} from "@/domain/agent";
 
 export type {AgentToolContext, AgentToolDefinition, TypedToolDefinition} from './toolDefinition';
-import type {AgentToolDefinition} from './toolDefinition';
-import {assertUniqueToolNames} from './toolDefinition';
 
 export function requiresToolApproval(mode: AgentPermissionMode, tool: Pick<AgentToolDefinition, "effect" | "highRisk" | "requiresConfirmation">, args: unknown): boolean {
     if (!["ask", "assist", "full"].includes(mode)) throw new Error("未知授权模式");
@@ -80,7 +75,8 @@ const definitions = [
             }));
         }
     }),
-    defineTool({schema: planSchema, json: {
+    defineTool({
+        schema: planSchema, json: {
             type: "object",
             additionalProperties: false,
             required: ["steps"],
@@ -101,7 +97,8 @@ const definitions = [
                     }
                 }
             }
-        }}, {
+        }
+    }, {
         name: "update_run_plan",
         title: "更新执行计划",
         description: "维护当前执行及其关联任务的共享计划（最多 30 项），每项有唯一 id、title 和 pending/in_progress/completed 状态。不会修改项目或素材。",

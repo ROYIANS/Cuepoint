@@ -1,6 +1,6 @@
-import {requestOnce, readHttpJson} from "./requestBoundary";
+import {readHttpJson, requestOnce} from "./requestBoundary";
 import {isReadAbort, readResponseBlob, ResponseLimitError} from "./boundedResponse";
-import {MAX_AUDIO_BYTES, MAX_JSON_BYTES, MAX_ERROR_BYTES} from "@/lib/resource/limits";
+import {MAX_AUDIO_BYTES, MAX_ERROR_BYTES, MAX_JSON_BYTES} from "@/lib/resource/limits";
 import {canonicalizeAudioTaskIds, isAudioTaskId} from "@/lib/audioGeneration/taskIds";
 import {z} from "zod";
 import {MUSIC_DURATION_LIMITS} from "@/domain/music";
@@ -110,7 +110,13 @@ async function audioRequest(credentials: ApimartCredentials, path: string, input
         if (!response.ok) {
             let body: unknown;
             try {
-                body = await readHttpJson(response, {success: {kind: "bounded-json", maxBytes: MAX_JSON_BYTES, fatalUtf8: true}, failure: {kind: "bounded-json", maxBytes: MAX_ERROR_BYTES, fatalUtf8: true}}, options.signal);
+                body = await readHttpJson(response, {
+                    success: {
+                        kind: "bounded-json",
+                        maxBytes: MAX_JSON_BYTES,
+                        fatalUtf8: true
+                    }, failure: {kind: "bounded-json", maxBytes: MAX_ERROR_BYTES, fatalUtf8: true}
+                }, options.signal);
             } catch (error) {
                 if (isReadAbort(error, options.signal)) return failure("aborted", "请求已停止；远端生成不会因此取消");
                 /* HTTP status remains authoritative for other body failures. */
@@ -137,7 +143,13 @@ async function jsonEnvelope(credentials: ApimartCredentials, path: string, input
     if (!result.ok) return result;
     let body: unknown;
     try {
-        body = await readHttpJson(result.response, {success: {kind: "bounded-json", maxBytes: MAX_JSON_BYTES, fatalUtf8: true}, failure: {kind: "bounded-json", maxBytes: MAX_ERROR_BYTES, fatalUtf8: true}}, options.signal);
+        body = await readHttpJson(result.response, {
+            success: {
+                kind: "bounded-json",
+                maxBytes: MAX_JSON_BYTES,
+                fatalUtf8: true
+            }, failure: {kind: "bounded-json", maxBytes: MAX_ERROR_BYTES, fatalUtf8: true}
+        }, options.signal);
     } catch (error) {
         if (isReadAbort(error, options.signal)) return failure("aborted", "请求已停止；远端生成不会因此取消");
         return error instanceof ResponseLimitError ? failure("protocol", error.message) : protocol();
@@ -248,7 +260,12 @@ export async function downloadApimartAudio(url: string, options: ApimartRequestO
 }>> {
     if (!safeUrl(url)) return failure("validation", "音频下载地址无效");
     try {
-        const response = await requestOnce(url, {}, {fetchImpl: options.fetchImpl, signal: options.signal, credentials: "omit", redirect: "error"});
+        const response = await requestOnce(url, {}, {
+            fetchImpl: options.fetchImpl,
+            signal: options.signal,
+            credentials: "omit",
+            redirect: "error"
+        });
         if (!response.ok) {
             await response.body?.cancel().catch(() => undefined);
             return failure("http", `音频下载失败（${response.status}），可以重试下载`);

@@ -1,6 +1,6 @@
 import {requestOnce} from "./requestBoundary";
 import {isReadAbort, readErrorText, readResponseText, ResponseLimitError} from "./boundedResponse";
-import {MAX_AUDIO_BYTES, MAX_JSON_BYTES, MAX_ERROR_BYTES, MAX_SPEECH_ENVELOPE_BYTES} from "@/lib/resource/limits";
+import {MAX_AUDIO_BYTES, MAX_ERROR_BYTES, MAX_JSON_BYTES, MAX_SPEECH_ENVELOPE_BYTES} from "@/lib/resource/limits";
 import type {MimoSpeechSettings} from "@/domain/audio";
 import {detectAudioMime} from "@/lib/audio/mime";
 import {collectModelMetadata, parseModelMetadata} from "./modelMetadata";
@@ -38,7 +38,10 @@ function connection(credentials: MimoCredentials): { base: string; key: string }
 }
 
 /** Classify the bounded body without losing observed HTTP failures or reader aborts. */
-async function readMimoResponse(response: Response, limit: number, key: string, signal?: AbortSignal): Promise<{ok: true; data: unknown} | MimoFailure> {
+async function readMimoResponse(response: Response, limit: number, key: string, signal?: AbortSignal): Promise<{
+    ok: true;
+    data: unknown
+} | MimoFailure> {
     let text: string;
     try {
         text = response.ok

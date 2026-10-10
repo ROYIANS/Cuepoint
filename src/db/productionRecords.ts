@@ -1,23 +1,23 @@
 import {
-    type ProjectMode,
     type AspectPresetId,
-    type Project,
-    normalizeAspectPreset,
-    DEFAULT_VISIBLE_COLUMNS,
+    type Character,
     DEFAULT_SHOT_SETTINGS,
+    DEFAULT_VISIBLE_COLUMNS,
+    emptyEpisodeStory,
     emptySeriesStory,
     emptySetting,
-    type Id,
-    type Character,
-    type Scene,
-    type Prop,
-    type VisualStyle,
     type Episode,
-    emptyEpisodeStory,
+    type Id,
+    normalizeAspectPreset,
     normalizeShotFilters,
-    type Shot
+    type Project,
+    type ProjectMode,
+    type Prop,
+    type Scene,
+    type Shot,
+    type VisualStyle
 } from "@/domain/types";
-import {nowIso, createId} from "@/lib/ids";
+import {createId, nowIso} from "@/lib/ids";
 import {emptySlot} from "@/domain/slot";
 
 export function emptyProject(

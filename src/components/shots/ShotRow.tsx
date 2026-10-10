@@ -1,20 +1,38 @@
 import {ShotTextField} from "./ShotTextField";
 import type {TextDraftStatusChange} from "@/lib/useTextDraftRetention";
 import {toast} from "sonner";
-import {useCallback, type CSSProperties} from "react";
+import {type CSSProperties, useCallback} from "react";
 import {useSortable} from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
 import {ArrowDown, ArrowUp, ChevronDown, CopyPlus, GripVertical, Plus} from "lucide-react";
 import {addShot, patchShot, setShotCharacterSelected, setShotSlot} from "@/db/shots";
-import {SHOT_COLUMNS, type ColumnDef} from "@/domain/columns";
+import {type ColumnDef, SHOT_COLUMNS} from "@/domain/columns";
 import {emptySlot} from "@/domain/slot";
-import {normalizeShotStatus, SHOT_STATUS_LABELS, SHOT_STATUSES, type Character, type Scene, type Shot, type ShotColumnId, type ShotWorkspaceView, type GenerationSlot, type Id} from "@/domain/types";
+import {
+    type Character,
+    type GenerationSlot,
+    type Id,
+    normalizeShotStatus,
+    type Scene,
+    type Shot,
+    SHOT_STATUS_LABELS,
+    SHOT_STATUSES,
+    type ShotColumnId,
+    type ShotWorkspaceView
+} from "@/domain/types";
 import {cn} from "@/lib/utils";
 import {EditableGenerationSlot} from "@/components/slots/GenerationSlotCard";
 import {Still} from "@/components/studio/Still";
 import {Button} from "@/components/ui/button";
 import {Checkbox} from "@/components/ui/checkbox";
-import {DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
+import {
+    DropdownMenu,
+    DropdownMenuCheckboxItem,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {DurationInput} from "./DurationInput";
 import {useShotRowViewport} from "./ShotRowViewport";
@@ -88,32 +106,32 @@ const FLUSH_SELECT_TRIGGER =
 
 
 export function ShotRow({
-                     textPending,
-                     onDraftStatus,
-                     shot,
-                     striped,
-                     initiallyVisible,
-                     projectId,
-                     episodeId,
-                     selecting,
-                     selected,
-                     onSelectedChange,
-                     active,
-                     onActivate,
-                     workspaceView,
-                     visibleDefs,
-                     characters,
-                     scenes,
-                     beatId,
-                     showBelow,
-                     canMoveUp,
-                     canMoveDown,
-                     onMove,
-                     onDuplicate,
-                     onEditRelations,
-                     onSlotOpenChange,
-                     unavailable,
-                 }: {
+                            textPending,
+                            onDraftStatus,
+                            shot,
+                            striped,
+                            initiallyVisible,
+                            projectId,
+                            episodeId,
+                            selecting,
+                            selected,
+                            onSelectedChange,
+                            active,
+                            onActivate,
+                            workspaceView,
+                            visibleDefs,
+                            characters,
+                            scenes,
+                            beatId,
+                            showBelow,
+                            canMoveUp,
+                            canMoveDown,
+                            onMove,
+                            onDuplicate,
+                            onEditRelations,
+                            onSlotOpenChange,
+                            unavailable,
+                        }: {
     textPending?: boolean;
     onDraftStatus?: TextDraftStatusChange;
     shot: Shot;
@@ -256,9 +274,10 @@ export function ShotRow({
                         )}
                     </div>
                     <div className={cn(DESIGN_CELL_CHROME, "flex-col gap-2")}>
-                        <ShotTextField shot={shot} field="shotNumber" onDraftStatus={onDraftStatus} unavailable={unavailable}
-                            ariaLabel="镜号"
-                            className="h-8 w-10 border-0 bg-transparent text-center shadow-none focus-visible:ring-0"
+                        <ShotTextField shot={shot} field="shotNumber" onDraftStatus={onDraftStatus}
+                                       unavailable={unavailable}
+                                       ariaLabel="镜号"
+                                       className="h-8 w-10 border-0 bg-transparent text-center shadow-none focus-visible:ring-0"
                         />
                         <Button size="sm" variant="ghost" className="h-7 px-1 text-xs"
                                 aria-label={`镜头 ${shot.shotNumber} 道具与风格`}
@@ -326,10 +345,11 @@ export function ShotRow({
                                 />
                             </div>
                             <div className="flex h-full min-w-0 border-l">
-                                <ShotTextField shot={shot} field="content" onDraftStatus={onDraftStatus} unavailable={unavailable}
-                                    multiline rows={4} placeholder="镜头内容" ariaLabel="镜头内容"
-                                    containerClassName="flex h-full w-full min-w-0 flex-col px-2 py-3"
-                                    className="h-full w-full min-w-0 resize-none border-0 bg-transparent shadow-none field-sizing-fixed"/>
+                                <ShotTextField shot={shot} field="content" onDraftStatus={onDraftStatus}
+                                               unavailable={unavailable}
+                                               multiline rows={4} placeholder="镜头内容" ariaLabel="镜头内容"
+                                               containerClassName="flex h-full w-full min-w-0 flex-col px-2 py-3"
+                                               className="h-full w-full min-w-0 resize-none border-0 bg-transparent shadow-none field-sizing-fixed"/>
                             </div>
                         </>
                     ) : visibleDefs.map(({id}) => (
@@ -485,10 +505,12 @@ export function ShotRow({
                                     </SelectContent>
                                 </Select>
                             ) : (
-                                <ShotTextField shot={shot} field={TEXT_SHOT_FIELDS[id]} onDraftStatus={onDraftStatus} unavailable={unavailable}
-                                    multiline rows={4} placeholder={columnPlaceholder(id)} ariaLabel={columnPlaceholder(id)}
-                                    containerClassName="flex h-full w-full min-w-0 flex-col px-2 py-3"
-                                    className="h-full w-full min-w-0 resize-none border-0 bg-transparent shadow-none field-sizing-fixed"/>
+                                <ShotTextField shot={shot} field={TEXT_SHOT_FIELDS[id]} onDraftStatus={onDraftStatus}
+                                               unavailable={unavailable}
+                                               multiline rows={4} placeholder={columnPlaceholder(id)}
+                                               ariaLabel={columnPlaceholder(id)}
+                                               containerClassName="flex h-full w-full min-w-0 flex-col px-2 py-3"
+                                               className="h-full w-full min-w-0 resize-none border-0 bg-transparent shadow-none field-sizing-fixed"/>
                             )}
                         </div>
                     ))}

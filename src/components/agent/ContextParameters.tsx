@@ -12,7 +12,11 @@ import "./contextParameters.css";
 
 async function readPolicySource(threadId: string | undefined, scopeKey: string) {
     try {
-        return {scopeKey, source: (threadId ? await db.chatThreads.get(threadId) : await db.agents.get(GENERAL_AGENT_ID)) ?? null, error: undefined};
+        return {
+            scopeKey,
+            source: (threadId ? await db.chatThreads.get(threadId) : await db.agents.get(GENERAL_AGENT_ID)) ?? null,
+            error: undefined
+        };
     } catch (error) {
         return {scopeKey, source: null, error: error instanceof Error ? error.message : "参数暂时无法读取"};
     }
@@ -39,7 +43,9 @@ export function ContextParameters({threadId, onBack}: { threadId?: string; onBac
     const session = owner.current;
     useEffect(() => {
         session.live = true;
-        return () => {session.live = false;};
+        return () => {
+            session.live = false;
+        };
     }, [session]);
     const save = async (action: () => Promise<void>, message?: string) => {
         if (!session.live || owner.current !== session || session.locked || !state?.source || state.error) return;

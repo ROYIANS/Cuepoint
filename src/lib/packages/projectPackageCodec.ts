@@ -748,9 +748,18 @@ function remapMemoryPackage(
 }
 
 export interface ProjectPackageJson {
-    project: unknown; characters?: unknown; scenes?: unknown; props?: unknown; styles?: unknown;
-    episodes?: unknown; shots?: unknown; memories?: unknown; memoryVersions?: unknown;
-    references?: unknown; referenceChunks?: unknown; audioPackage?: unknown;
+    project: unknown;
+    characters?: unknown;
+    scenes?: unknown;
+    props?: unknown;
+    styles?: unknown;
+    episodes?: unknown;
+    shots?: unknown;
+    memories?: unknown;
+    memoryVersions?: unknown;
+    references?: unknown;
+    referenceChunks?: unknown;
+    audioPackage?: unknown;
 }
 
 export function parseProjectPackageRows(raw: ProjectPackageJson) {
@@ -781,14 +790,27 @@ export function parseProjectPackageRows(raw: ProjectPackageJson) {
     const project = parseProject(projectRaw, "导入的项目");
     const audioPackage = parseAudioPackage(raw.audioPackage, projectRaw.id, getProjectKind(project));
     if (getProjectKind(project) !== "video" && (episodesRaw.length || shotsRaw.length || charactersRaw.length || scenesRaw.length || propsRaw.length || stylesRaw.length)) throw new PackageError("音频或音乐项目不能包含视频记录");
-    return {projectRaw, charactersRaw, scenesRaw, propsRaw, stylesRaw, episodesRaw, shotsRaw,
-        memoryPackage, referencePackage, hasEpisodes, project, audioPackage};
+    return {
+        projectRaw, charactersRaw, scenesRaw, propsRaw, stylesRaw, episodesRaw, shotsRaw,
+        memoryPackage, referencePackage, hasEpisodes, project, audioPackage
+    };
 }
 
 export function remapProjectPackageRows(parsed: ReturnType<typeof parseProjectPackageRows>, {projectId, at, mediaMap}: {
     projectId: string; at: string; mediaMap: Map<string, string>;
 }) {
-    const {projectRaw, charactersRaw, scenesRaw, propsRaw, stylesRaw, episodesRaw, shotsRaw, memoryPackage, hasEpisodes, audioPackage} = parsed;
+    const {
+        projectRaw,
+        charactersRaw,
+        scenesRaw,
+        propsRaw,
+        stylesRaw,
+        episodesRaw,
+        shotsRaw,
+        memoryPackage,
+        hasEpisodes,
+        audioPackage
+    } = parsed;
     const project = structuredClone(parsed.project);
     project.id = projectId;
     project.createdAt = at;
@@ -939,5 +961,16 @@ export function remapProjectPackageRows(parsed: ReturnType<typeof parseProjectPa
         return shot;
     });
 
-    return {project, characters, scenes, props, styles, episodes, shots, memories, memoryVersions, remappedAudioPackage};
+    return {
+        project,
+        characters,
+        scenes,
+        props,
+        styles,
+        episodes,
+        shots,
+        memories,
+        memoryVersions,
+        remappedAudioPackage
+    };
 }

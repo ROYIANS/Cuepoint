@@ -7,7 +7,11 @@ import {toast} from "sonner";
 import {db} from "@/db/database";
 import {getGenerationPreferenceState, saveGenerationPreference} from "@/db/generationPreferences";
 import type {AgentToolCall} from "@/domain/agent";
-import {getGenerationCapability, generationResolutionChange, projectGenerationParameters} from "@/domain/generationCapabilities";
+import {
+    generationResolutionChange,
+    getGenerationCapability,
+    projectGenerationParameters
+} from "@/domain/generationCapabilities";
 import {Button} from "@/components/ui/button";
 import {Checkbox} from "@/components/ui/checkbox";
 import {
@@ -265,15 +269,24 @@ export function GenerationConfigurationFields({draft, onChange, disabled}: {
         </div>
         <div className="agent-generation-fields agent-generation-parameters">
             {kind === "image" ? <>
-                <Choice label={provider === "aihubmix" ? "图片尺寸" : "图片比例"} value={p.size ?? controls?.defaultSize ?? "auto"}
+                <Choice label={provider === "aihubmix" ? "图片尺寸" : "图片比例"}
+                        value={p.size ?? controls?.defaultSize ?? "auto"}
                         disabled={disabled}
                         options={options(!profile && provider !== "aihubmix" ? ["auto", ...(controls?.sizes ?? []).filter(size => size !== "auto")] : controls?.sizes ?? [])}
                         onChange={(size) => patch({size})}/>
                 {provider === "aihubmix" ? <Choice label="画质" value={p.quality ?? "default"} disabled={disabled}
-                                                   options={[{value: "default", label: "模型默认"}, ...(controls?.qualities ?? []).map(value => ({value, label: value === "low" ? "低" : value === "medium" ? "中" : "高"}))]}
+                                                   options={[{
+                                                       value: "default",
+                                                       label: "模型默认"
+                                                   }, ...(controls?.qualities ?? []).map(value => ({
+                                                       value,
+                                                       label: value === "low" ? "低" : value === "medium" ? "中" : "高"
+                                                   }))]}
                                                    onChange={(quality) => patch({quality: quality === "default" ? undefined : quality as "low" | "medium" | "high"})}/>
-                    : <Choice label="分辨率" value={p.resolution ?? controls?.defaultResolution ?? "1k"} disabled={disabled}
-                              options={options(controls?.resolutions ?? [])} onChange={(resolution) => patch({resolution})}/>}
+                    : <Choice label="分辨率" value={p.resolution ?? controls?.defaultResolution ?? "1k"}
+                              disabled={disabled}
+                              options={options(controls?.resolutions ?? [])}
+                              onChange={(resolution) => patch({resolution})}/>}
                 {profile && "qualities" in profile &&
                     <Choice label="画质" value={p.quality ?? controls?.defaultQuality ?? "auto"} disabled={disabled}
                             options={options(controls?.qualities ?? [])}
@@ -292,10 +305,10 @@ export function GenerationConfigurationFields({draft, onChange, disabled}: {
                         options={options(controls?.durations ?? [])}
                         onChange={(duration) => patch({duration: Number(duration)})}/>
                 {controls?.showAspectRatio && <Choice label="视频比例"
-                                                                value={p.aspectRatio ?? controls?.defaultRatio ?? "16:9"}
-                                                                disabled={disabled}
-                                                                options={options(controls?.ratios ?? [])}
-                                                                onChange={(aspectRatio) => patch({aspectRatio})}/>}
+                                                      value={p.aspectRatio ?? controls?.defaultRatio ?? "16:9"}
+                                                      disabled={disabled}
+                                                      options={options(controls?.ratios ?? [])}
+                                                      onChange={(aspectRatio) => patch({aspectRatio})}/>}
             </>}
         </div>
         {profile && "qualities" in profile &&

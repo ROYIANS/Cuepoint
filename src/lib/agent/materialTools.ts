@@ -1,12 +1,12 @@
 import {defineTool} from './toolDefinition';
 import {db} from '@/db/database';
 import {
+    adoptMaterialInProject,
     promoteLegacyMaterial,
     promoteMaterial,
     setMaterialArchived,
     updateMaterialMetadata,
-    updateMaterialUse,
-    adoptMaterialInProject
+    updateMaterialUse
 } from '@/db/materials';
 import {releaseMaterialUse} from "@/db/assetReuse";
 import type {

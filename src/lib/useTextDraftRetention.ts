@@ -4,7 +4,7 @@ import type {DraftSaveStatus} from "./debouncedDraft";
 export type TextDraftStatusChange = (id: string, field: string, status: DraftSaveStatus) => void;
 
 /** Readable row retention only; persistence and retry belong to debouncedDraft. */
-export function useTextDraftRetention<T extends {id: string}>(loadedRows: T[] | undefined) {
+export function useTextDraftRetention<T extends { id: string }>(loadedRows: T[] | undefined) {
     const statuses = useRef(new Map<string, Map<string, DraftSaveStatus>>());
     // The render snapshot drives memo invalidation; the ref above protects the
     // same input event before React commits this state. Neither owns persistence.
@@ -26,6 +26,8 @@ export function useTextDraftRetention<T extends {id: string}>(loadedRows: T[] | 
         lastRows.current = rows;
         return {rows, retainedCount: retained.length};
     }, [loadedRows, pendingIds]);
-    return {rows, retainedCount, pending: statuses.current.size > 0,
-        isPending: (id: string) => statuses.current.has(id), onStatusChange};
+    return {
+        rows, retainedCount, pending: statuses.current.size > 0,
+        isPending: (id: string) => statuses.current.has(id), onStatusChange
+    };
 }

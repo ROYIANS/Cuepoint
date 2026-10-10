@@ -7,11 +7,17 @@ interface ShotKeyboardInput {
     visibleShotIds: string[];
     activeShotId: string | undefined;
     hasSelection: boolean;
+
     onSelectAll(): void;
+
     onActivate(id: string | undefined): void;
+
     onToggleSelected(id: string): void;
+
     onReorder(id: string, offset: -1 | 1): void;
+
     onAdd(): void;
+
     onDelete(): void;
 }
 

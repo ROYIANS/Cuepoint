@@ -32,7 +32,11 @@ export function rebaseOutputDraft(state: ProjectOutputDraft, latest: ProjectOutp
         ...(!("generationDefaults" in dirty) && !sameDraftStructure(latest.generationDefaults, state.observed.generationDefaults) ? {generationDefaults: latest.generationDefaults} : {}),
     };
     // Dirty fields keep their last applied live value, so becoming clean can consume a deferred update.
-    return {value: {...state.value, ...clean}, baseline: {...state.baseline, ...clean}, observed: {...state.observed, ...clean}};
+    return {
+        value: {...state.value, ...clean},
+        baseline: {...state.baseline, ...clean},
+        observed: {...state.observed, ...clean}
+    };
 }
 
 /** Confirm saved fields from storage; props alone cannot distinguish a later revert from stale data. */

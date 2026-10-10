@@ -9,9 +9,9 @@ import {db} from "@/db/database";
 import {generationJobSummary} from "@/db/agentGeneration";
 import {
     GENERATION_PROFILES,
-    generationSubmitSpec,
     generationJobSpec,
-    generationSubmitSchema
+    generationSubmitSchema,
+    generationSubmitSpec
 } from "./generationProfiles";
 import {
     applyAgentGeneration,
@@ -33,7 +33,8 @@ const batchSchema = z.object({
     }
 });
 export const GENERATION_TOOLS = [
-    defineTool({schema: batchSchema, json: {
+    defineTool({
+        schema: batchSchema, json: {
             type: "object",
             additionalProperties: false,
             required: ["title", "candidates"],
@@ -41,7 +42,8 @@ export const GENERATION_TOOLS = [
                 title: {type: "string", minLength: 1, maxLength: 160},
                 candidates: {type: "array", minItems: 1, maxItems: 20, items: generationSubmitSpec.json}
             }
-        }}, {
+        }
+    }, {
         name: "prepare_generation_batch",
         title: "准备批量生成",
         description: "准备多个目标槽位的图片/视频候选草稿，每个槽位默认1份、最多4份，每批最多20份。每份独立配置。只保存草稿，不上传或付费提交；用户在批量面板编辑并一次确认。结果必须由用户比较选用，禁止自动写入。",
@@ -53,7 +55,10 @@ export const GENERATION_TOOLS = [
             return prepareGenerationBatch(parsed.title, parsed.candidates, context);
         }
     }),
-    defineTool({schema: z.object({batchId: z.string().trim().min(1).max(160)}).strict(), json: {type: "object", additionalProperties: false, required: ["batchId"], properties: {batchId: id}}}, {
+    defineTool({
+        schema: z.object({batchId: z.string().trim().min(1).max(160)}).strict(),
+        json: {type: "object", additionalProperties: false, required: ["batchId"], properties: {batchId: id}}
+    }, {
         name: "read_generation_batch",
         title: "读取批量结果",
         description: "读取当前对话指定批次的候选状态和当前选用结果，不发送网络请求。draft不是生成成功，queued是未发送，unknown不可重试。",
@@ -88,7 +93,10 @@ export const GENERATION_TOOLS = [
             };
         }
     }),
-    defineTool({schema: z.object({projectId: z.string().trim().min(1).max(160).optional()}).strict(), json: {type: "object", properties: {projectId: id}, additionalProperties: false}}, {
+    defineTool({
+        schema: z.object({projectId: z.string().trim().min(1).max(160).optional()}).strict(),
+        json: {type: "object", properties: {projectId: id}, additionalProperties: false}
+    }, {
         name: "generation_capabilities",
         title: "查看生成能力",
         description: "列出已配置供应商、代码已验证的模型参数，以及项目/全局生成推荐。传 projectId 获取项目默认；用户明确选择优先于项目、全局和自动建议。有问题的推荐不得静默降级。能力列表不是账户授权或余额保证。",

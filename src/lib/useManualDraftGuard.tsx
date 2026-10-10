@@ -1,21 +1,25 @@
 import {useBlocker} from "@tanstack/react-router";
 import {useCallback, useRef, useState} from "react";
 import {
-    AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
-    AlertDialogHeader, AlertDialogTitle,
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import {Button} from "@/components/ui/button";
 
-export type ManualDraftState = {dirty: boolean; pending: boolean; routeDirty?: boolean; routePending?: boolean};
+export type ManualDraftState = { dirty: boolean; pending: boolean; routeDirty?: boolean; routePending?: boolean };
 export type ManualDraftDeparture = (leave: () => void, discard?: () => void | Promise<void>) => void;
 
 /** Local owners read synchronous state before closing or replacing a keyed editor. */
 export function useManualDraftDeparture(
     dirty: boolean, pending: boolean, onDiscard: () => void | Promise<void>,
-    options?: {readState?: () => ManualDraftState; route?: boolean},
+    options?: { readState?: () => ManualDraftState; route?: boolean },
 ) {
-    const [localLeave, setLocalLeave] = useState<{run: () => void; discard?: () => void | Promise<void>}>();
-    const localRequest = useRef<{run: () => void; discard?: () => void | Promise<void>} | undefined>(undefined);
+    const [localLeave, setLocalLeave] = useState<{ run: () => void; discard?: () => void | Promise<void> }>();
+    const localRequest = useRef<{ run: () => void; discard?: () => void | Promise<void> } | undefined>(undefined);
     const [discarding, setDiscarding] = useState(false);
     const [error, setError] = useState<string>();
     const current = useRef({dirty, pending, onDiscard, readState: options?.readState});
@@ -24,12 +28,12 @@ export function useManualDraftDeparture(
     const position = useRef<{
         element: HTMLElement | null;
         selection?: [number | null, number | null];
-        scroll: Array<{element: HTMLElement; top: number; left: number}>;
+        scroll: Array<{ element: HTMLElement; top: number; left: number }>;
     } | undefined>(undefined);
     const readState = useCallback((): ManualDraftState => current.current.readState?.() ?? current.current, []);
     const capturePosition = useCallback(() => {
         const element = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-        const scroll: Array<{element: HTMLElement; top: number; left: number}> = [];
+        const scroll: Array<{ element: HTMLElement; top: number; left: number }> = [];
         for (let ancestor = element; ancestor; ancestor = ancestor.parentElement) {
             scroll.push({element: ancestor, top: ancestor.scrollTop, left: ancestor.scrollLeft});
         }
@@ -41,7 +45,7 @@ export function useManualDraftDeparture(
         position.current = {
             element, scroll,
             ...((element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) &&
-                typeof element.selectionStart === "number" && typeof element.selectionEnd === "number"
+            typeof element.selectionStart === "number" && typeof element.selectionEnd === "number"
                 ? {selection: [element.selectionStart, element.selectionEnd] as [number | null, number | null]} : {}),
         };
     }, []);
@@ -70,7 +74,10 @@ export function useManualDraftDeparture(
             }
             return;
         }
-        if (!state.dirty && !state.pending) {leave(); return;}
+        if (!state.dirty && !state.pending) {
+            leave();
+            return;
+        }
         capturePosition();
         setError(undefined);
         const request = {run: leave, discard: onLocalDiscard};
@@ -92,8 +99,7 @@ export function useManualDraftDeparture(
                 // Preserve the initiating local request if another route was attempted under its confirmation.
                 if (blocker.status === "blocked") blocker.reset();
                 localLeave.run();
-            }
-            else if (blocker.status === "blocked") blocker.proceed();
+            } else if (blocker.status === "blocked") blocker.proceed();
         } catch (reason) {
             setError(reason instanceof Error ? reason.message : "无法放弃修改，请重试");
         } finally {
@@ -121,7 +127,10 @@ export function useManualDraftDeparture(
                     element.setSelectionRange(...saved.selection);
             }
             for (const item of saved.scroll) {
-                if (item.element.isConnected) {item.element.scrollTop = item.top; item.element.scrollLeft = item.left;}
+                if (item.element.isConnected) {
+                    item.element.scrollTop = item.top;
+                    item.element.scrollLeft = item.left;
+                }
             }
             position.current = undefined;
         }}>

@@ -15,15 +15,19 @@ export function PropDetailPage(props: Parameters<typeof PropDetailContent>[0]) {
 }
 
 function PropDetailContent({
-                                   propId,
-                                   back = {kind: "studio"},
-                               }: {
+                               propId,
+                               back = {kind: "studio"},
+                           }: {
     propId: string;
     back?: { kind: "studio" } | { kind: "project"; projectId: string };
 }) {
     const navigate = useNavigate();
     const ownerId = back.kind === "project" ? back.projectId : STUDIO_LIBRARY_ID;
-    const result = useLiveQuery(async () => ({ownerId, id: propId, value: (await db.props.get(propId)) ?? null}), [ownerId, propId]);
+    const result = useLiveQuery(async () => ({
+        ownerId,
+        id: propId,
+        value: (await db.props.get(propId)) ?? null
+    }), [ownerId, propId]);
 
     const loaded = result?.ownerId === ownerId && result.id === propId ? result.value : undefined;
     const [openEditors, setOpenEditors] = useState(0);

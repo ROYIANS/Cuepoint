@@ -3,8 +3,13 @@ import type {AgentGenerationJob} from "@/domain/agentGeneration";
 import type {ProductionTarget} from "@/domain/production";
 import {parseGenerationSlot} from "@/domain/slot";
 import {
-    CHARACTER_SLOTS, PROP_SLOTS, SCENE_SLOTS, STUDIO_LIBRARY_ID, STYLE_SLOTS,
-    type GenerationResult, type MediaRecord
+    CHARACTER_SLOTS,
+    type GenerationResult,
+    type MediaRecord,
+    PROP_SLOTS,
+    SCENE_SLOTS,
+    STUDIO_LIBRARY_ID,
+    STYLE_SLOTS
 } from "@/domain/types";
 import {db} from "./database";
 
@@ -64,7 +69,7 @@ function hasAvailableGenerationMedia(job: AgentGenerationJob, media: MediaRecord
     return media.mimeType.startsWith(prefix) && media.mimeType.length > prefix.length;
 }
 
-async function readCurrentShotSlot(job: AgentGenerationJob, target: Extract<ProductionTarget, {kind: "shot"}>) {
+async function readCurrentShotSlot(job: AgentGenerationJob, target: Extract<ProductionTarget, { kind: "shot" }>) {
     if (!target.slot || !["firstFrame", "lastFrame", "clip"].includes(target.slot)) return undefined;
     const expectedKind = target.slot === "clip" ? "video" : "image";
     if (job.kind !== expectedKind) return undefined;
@@ -75,7 +80,10 @@ async function readCurrentShotSlot(job: AgentGenerationJob, target: Extract<Prod
     return shot[target.slot];
 }
 
-function currentAssetSlot(job: AgentGenerationJob, entity: {projectId: string; slots?: unknown} | undefined, slots: readonly {id: string}[]): unknown {
+function currentAssetSlot(job: AgentGenerationJob, entity: {
+    projectId: string;
+    slots?: unknown
+} | undefined, slots: readonly { id: string }[]): unknown {
     if (job.kind !== "image" || !slots.some(slot => slot.id === job.target.slot)) return undefined;
     if (!entity || entity.projectId !== job.target.projectId) return undefined;
     if (!entity.slots || typeof entity.slots !== "object") return undefined;

@@ -1,6 +1,6 @@
 import {z} from "zod";
 import type {AudioExport} from "@/domain/audio";
-import {buildAudioSchedule, type AudioSchedule, type AudioScheduleInput} from "@/lib/audio/schedule";
+import {type AudioSchedule, type AudioScheduleInput, buildAudioSchedule} from "@/lib/audio/schedule";
 
 const id = z.string().min(1);
 const seconds = z.number().finite().nonnegative();

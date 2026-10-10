@@ -15,15 +15,19 @@ export function SceneDetailPage(props: Parameters<typeof SceneDetailContent>[0])
 }
 
 function SceneDetailContent({
-                                    sceneId,
-                                    back,
-                                }: {
+                                sceneId,
+                                back,
+                            }: {
     sceneId: string;
     back: { kind: "studio" } | { kind: "project"; projectId: string };
 }) {
     const navigate = useNavigate();
     const ownerId = back.kind === "project" ? back.projectId : STUDIO_LIBRARY_ID;
-    const result = useLiveQuery(async () => ({ownerId, id: sceneId, value: (await db.scenes.get(sceneId)) ?? null}), [ownerId, sceneId]);
+    const result = useLiveQuery(async () => ({
+        ownerId,
+        id: sceneId,
+        value: (await db.scenes.get(sceneId)) ?? null
+    }), [ownerId, sceneId]);
 
     const loaded = result?.ownerId === ownerId && result.id === sceneId ? result.value : undefined;
     const [openEditors, setOpenEditors] = useState(0);

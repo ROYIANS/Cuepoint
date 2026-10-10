@@ -11,7 +11,10 @@ export function useChatExecutionSession(threadId?: string) {
         mounted.current = true;
         // Effect replay can abort an in-flight request; its final flush still owns the lock.
         setSending(sendLockRef.current);
-        return () => {mounted.current = false; abortRef.current?.abort();};
+        return () => {
+            mounted.current = false;
+            abortRef.current?.abort();
+        };
     }, []);
     useEffect(() => {
         if (executionThreadRef.current !== threadId) abortRef.current?.abort();
@@ -26,7 +29,7 @@ export function useChatExecutionSession(threadId?: string) {
         setSending(true);
         return token;
     }, [threadId]);
-    const release = useCallback((token: {controller: AbortController; epoch: number}) => {
+    const release = useCallback((token: { controller: AbortController; epoch: number }) => {
         if (epoch.current !== token.epoch || abortRef.current !== token.controller) return;
         sendLockRef.current = false;
         abortRef.current = null;

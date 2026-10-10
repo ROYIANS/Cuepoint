@@ -1,17 +1,22 @@
 import {collectReferenceEvidence, historicalToolSummary, toolReferenceAttachments} from "./referenceEvidence";
 import {provesCompletedEffect} from "@/db/agentTaskRecords";
 import {
-  ownedTaskAudioGenerationJob,
-  SOUND_GENERATION_TOOLS,
-  taskAudioGenerationSource,
-  taskAudioToolSource
+    ownedTaskAudioGenerationJob,
+    SOUND_GENERATION_TOOLS,
+    taskAudioGenerationSource,
+    taskAudioToolSource
 } from "@/db/taskAudioGenerationEvidence";
 import {db} from "@/db/database";
 import type {AgentTask} from "@/domain/agent";
 import type {WrapupEvidence, WrapupSnapshot} from "@/domain/agentTaskWrapup";
 import {targetRevision} from "@/lib/productionRevision";
 import {type BusinessKind, getRow, navigation, projection} from "./businessStore";
-import {inspectTaskGenerationOutput, ownedTaskGenerationJob, PICTURE_GENERATION_TOOLS, taskGenerationToolSource} from "@/db/taskGenerationEvidence";
+import {
+    inspectTaskGenerationOutput,
+    ownedTaskGenerationJob,
+    PICTURE_GENERATION_TOOLS,
+    taskGenerationToolSource
+} from "@/db/taskGenerationEvidence";
 
 const kinds = ["project", "episode", "beat", "shot", "character", "scene", "prop", "style", "media"];
 
@@ -101,7 +106,11 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
             const body = `${source.body}\n当前输出状态：${source.outcome}；原工具返回只记录当时事实。`;
             source.body = body.slice(0, 1800);
             source.truncated ||= body.length > 1800;
-            fingerprints.push([source.id, {jobId: current?.jobId, available: source.available, applied: current?.applied}]);
+            fingerprints.push([source.id, {
+                jobId: current?.jobId,
+                available: source.available,
+                applied: current?.applied
+            }]);
         }
         if ((SOUND_GENERATION_TOOLS as readonly string[]).includes(call.name)) {
             const current = call.status === "completed" ? await Promise.resolve(taskAudioToolSource(task, call)) : undefined;

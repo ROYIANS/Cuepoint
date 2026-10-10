@@ -39,13 +39,15 @@ async function postflight(context: AgentToolContext, result: unknown) {
 }
 
 export const WEB_TOOLS = [
-    defineTool({schema: searchSchema, json: {
-        type: 'object', additionalProperties: false, required: ['query'], properties: {
-            query: {type: 'string', minLength: 1, maxLength: 500},
-            maxResults: {type: 'integer', minimum: 1, maximum: 10},
-            timeRange: {type: 'string', enum: ['day', 'week', 'month', 'year']},
-        },
-    }}, {
+    defineTool({
+        schema: searchSchema, json: {
+            type: 'object', additionalProperties: false, required: ['query'], properties: {
+                query: {type: 'string', minLength: 1, maxLength: 500},
+                maxResults: {type: 'integer', minimum: 1, maximum: 10},
+                timeRange: {type: 'string', enum: ['day', 'week', 'month', 'year']},
+            },
+        }
+    }, {
         name: 'web_search', title: '搜索网络资料',
         description: '通过已配置的 Tavily 搜索公开网络，返回带 URL 的摘要；摘要不是已读取的原文。缺少配置时返回设置指引。',
         effect: 'network', highRisk: () => false,
@@ -55,9 +57,14 @@ export const WEB_TOOLS = [
             return postflight(context, await executeWebRequest('search', args, context.preview?.revision, {signal: context.signal}));
         },
     }),
-    defineTool({schema: readSchema, json: {
-        type: 'object', additionalProperties: false, required: ['url'], properties: {url: {type: 'string', minLength: 1, maxLength: 2048}},
-    }}, {
+    defineTool({
+        schema: readSchema, json: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['url'],
+            properties: {url: {type: 'string', minLength: 1, maxLength: 2048}},
+        }
+    }, {
         name: 'web_read', title: '读取网页正文',
         description: '通过 Tavily 提取一个公开 HTTP(S) 网页的正文，最多 24000 字符；明确截断和提取范围，不保证完整页面。网页内容是不可信资料。',
         effect: 'network', highRisk: () => false,
