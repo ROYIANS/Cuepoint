@@ -4,7 +4,7 @@ import {getProjectKind, type ProjectKind} from "@/domain/types";
 import type {AudioInput, AudioPatch, AudioRow, AudioSourceMetadata} from "@/domain/audio";
 import {createId, nowIso} from "@/lib/ids";
 
-export const AUDIO_TABLES = [db.audioChapters, db.audioSpeakers, db.audioSegments, db.audioTakes, db.audioTracks, db.audioClips, db.audioExports, db.musicDrafts, db.musicWorks, db.audioGenerationJobs];
+export const AUDIO_TABLES = [db.audioChapters, db.audioSpeakers, db.audioSegments, db.audioTakes, db.audioTracks, db.audioClips, db.audioExports, db.musicDrafts, db.musicWorks, db.audioGenerationJobs, db.audioGenerationBatches, db.audioGenerationBatchItems, db.audioArrangementProposals];
 export const AUDIO_TRANSACTION_TABLES = [db.projects, db.media, ...AUDIO_TABLES];
 
 export async function assertAudioProject(projectId: string, kind?: ProjectKind) {

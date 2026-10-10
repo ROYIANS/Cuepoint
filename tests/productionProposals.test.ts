@@ -27,7 +27,8 @@ describe("reviewed production proposals", () => {
     const {project,episode,shot} = await fixture();
     await media(project.id,"legacy-media");
     const storedMedia = await db.media.get("legacy-media");
-    const stores = Object.fromEntries(db.tables.filter((table) => table.name !== "productionProposals")
+    const newlyAdded = new Set(["productionProposals", "audioGenerationBatches", "audioGenerationBatchItems", "audioArrangementProposals"]);
+    const stores = Object.fromEntries(db.tables.filter((table) => !newlyAdded.has(table.name))
       .map((table) => [table.name,[table.schema.primKey.src,...table.schema.indexes.map((index) => index.src)].join(", ")]));
     await db.delete();
     const legacy = new Dexie(db.name);
@@ -39,7 +40,10 @@ describe("reviewed production proposals", () => {
     await legacy.table("media").add(storedMedia);
     legacy.close();
     await db.open();
-    expect(db.verno).toBe(23);
+    expect(db.verno).toBe(24);
+    expect(await db.audioGenerationBatches.count()).toBe(0);
+    expect(await db.audioGenerationBatchItems.count()).toBe(0);
+    expect(await db.audioArrangementProposals.count()).toBe(0);
     expect(await db.searchConnections.count()).toBe(0);
     expect(await db.agentGenerationBatches.count()).toBe(0);
     expect(await db.agentGenerationBatchItems.count()).toBe(0);
@@ -53,7 +57,11 @@ describe("reviewed production proposals", () => {
     expect(await db.productionProposals.count()).toBe(0);
     expect(await db.projects.get(project.id)).toEqual(project);
     expect(await db.shots.get(shot.id)).toEqual(shot);
-    expect((await db.media.get("legacy-media"))?.blob.size).toBe(storedMedia?.blob.size);
+    const restoredMedia = await db.media.get("legacy-media");
+    expect(restoredMedia?.blob.size).toBe(storedMedia?.blob.size);
+    expect(restoredMedia?.blob.type).toBe(storedMedia?.blob.type);
+    expect(restoredMedia && {...restoredMedia, blob: undefined}).toEqual(storedMedia && {...storedMedia, blob: undefined});
+    expect(restoredMedia && Array.from(new Uint8Array(await restoredMedia.blob.arrayBuffer()))).toEqual(storedMedia && Array.from(new Uint8Array(await storedMedia.blob.arrayBuffer())));
   });
   it("persists preview, applies once and restores affected text only", async () => {
     const {project,shot,target} = await fixture();

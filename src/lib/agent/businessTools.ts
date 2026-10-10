@@ -1,7 +1,8 @@
 import type {z} from "zod";
 import type {TypedToolDefinition} from './toolDefinition';
 import {defineTool} from './toolDefinition';
-import {assertProjectToolScope, frozenProjectScope} from "./projectScope";
+import {assertProjectToolScope, frozenProjectScope, resolveBusinessOwner} from "./projectScope";
+import {ToolRecoveryError} from "./toolErrors";
 import {assertAgentProjectCreation, bindCreatedAgentProject} from "@/db/agentProjectCreation";
 import {
     createAudioMusicProject,
@@ -54,6 +55,7 @@ import {emptySlot, parseGenerationSlot} from "@/domain/slot";
 import {
     CHARACTER_SLOTS,
     type CharacterImageSlot,
+    type EpisodeStory,
     normalizeEpisodeStory,
     PROP_SLOTS,
     type PropImageSlot,
@@ -189,7 +191,27 @@ function rowResult(kind: BusinessKind, row: BusinessRow) {
     return {...summarize(kind, row), target: navigation(kind, row), revision: targetRevision(row)};
 }
 
-function readTool<T, const Name extends string>(name: Name, title: string, description: string, spec: s.Spec<T>, execute: (args: NoInfer<T>, context?: AgentToolContext) => Promise<unknown>): TypedToolDefinition<T, Name> {
+/** Historical normalization effects; no semantic comparison or shot mutation. */
+function scriptImpact(ownerId: string, episodeId: string, before: EpisodeStory, after: EpisodeStory, shots: Shot[]) {
+    // Script-only normalization preserves beat order, including explicit legacy
+    // duplicate IDs. Compare each association so a sibling ID cannot mask a loss.
+    const invalidatedBeatRangeIds = before.beats.filter((beat, index) => beat.scriptRange && !after.beats[index]?.scriptRange).map(beat => beat.id);
+    const retainedShotIds = shots.filter(shot => shot.projectId === ownerId && shot.episodeId === episodeId).map(shot => shot.id).sort();
+    return {
+        version: 1,
+        ownerId,
+        episodeId,
+        invalidatedBeatRangeIds: invalidatedBeatRangeIds.slice(0, 40),
+        invalidatedBeatRangeCount: invalidatedBeatRangeIds.length,
+        omittedBeatRangeIds: Math.max(0, invalidatedBeatRangeIds.length - 40),
+        retainedShotIds: retainedShotIds.slice(0, 40),
+        retainedShotCount: retainedShotIds.length,
+        omittedShotIds: Math.max(0, retainedShotIds.length - 40),
+        semanticSynchronization: "not_performed",
+    };
+}
+
+function readTool<T extends { ownerId?: string }, const Name extends string>(name: Name, title: string, description: string, spec: s.Spec<T>, execute: (args: NoInfer<T>, context?: AgentToolContext) => Promise<unknown>): TypedToolDefinition<T, Name> {
     return defineTool(spec, {
         name,
         title,
@@ -199,12 +221,21 @@ function readTool<T, const Name extends string>(name: Name, title: string, descr
         async execute(raw, context) {
             context.signal.throwIfAborted();
             return db.transaction("r", [...readTables(), db.agentRuns, db.chatThreads], async () => {
-                const args = spec.schema.parse(raw);
+                const args = await resolveBusinessOwner(spec.schema.parse(raw), context);
                 await assertProjectToolScope(context, name, args, false);
                 return execute(args, context);
             });
         }
     });
+}
+
+type ResolvedBusinessArgs<T> = T & ("ownerId" extends keyof T ? {ownerId: string} : object);
+
+/** The schema recipe declares whether ownership is part of this tool's parsed arguments. */
+function assertResolvedBusinessArgs<T extends object>(args: T, hasOwner: boolean): asserts args is ResolvedBusinessArgs<T> {
+    if (hasOwner && (!("ownerId" in args) || typeof args.ownerId !== "string" || !args.ownerId)) {
+        throw new ToolRecoveryError("PROJECT_REQUIRED", "必须明确提供 ownerId；工作室资产使用 studio，已绑定对话可省略 ownerId");
+    }
 }
 
 type WriteHooks<Args> = {
@@ -213,9 +244,22 @@ type WriteHooks<Args> = {
     completedReplay?: (args: Args, context: AgentToolContext) => Promise<{ value: unknown } | undefined>;
 };
 
-function writeTool<T, const Name extends string>(name: Name, title: string, description: string, spec: s.Spec<T>,
-                                                 scope: (args: NoInfer<T>) => string[], prepare: (args: NoInfer<T>) => Promise<PreviewState>, execute: (args: NoInfer<T>, context: AgentToolContext) => Promise<unknown>, highRisk = false, hooks: WriteHooks<NoInfer<T>> = {}): TypedToolDefinition<T, Name> {
-    async function preview(args: T): Promise<AgentToolPreview> {
+function writeTool<T extends object, const Name extends string>(name: Name, title: string, description: string, spec: s.Spec<T>,
+                                                 scope: (args: NoInfer<ResolvedBusinessArgs<T>>) => string[], prepare: (args: NoInfer<ResolvedBusinessArgs<T>>) => Promise<PreviewState>, execute: (args: NoInfer<ResolvedBusinessArgs<T>>, context: AgentToolContext) => Promise<unknown>, highRisk = false, hooks: WriteHooks<NoInfer<ResolvedBusinessArgs<T>>> = {}): TypedToolDefinition<T, Name> {
+    const properties = spec.json.properties;
+    const hasOwner = properties !== null && typeof properties === "object" && Object.hasOwn(properties, "ownerId");
+    async function resolve(args: T, context: AgentToolContext): Promise<ResolvedBusinessArgs<T>> {
+        if (!hasOwner) {
+            assertResolvedBusinessArgs(args, false);
+            return args;
+        }
+        const ownerId = "ownerId" in args ? args.ownerId : undefined;
+        const resolved = await resolveBusinessOwner({...args, ownerId: typeof ownerId === "string" ? ownerId : undefined}, context);
+        const result: T = resolved;
+        assertResolvedBusinessArgs(result, true);
+        return result;
+    }
+    async function preview(args: ResolvedBusinessArgs<T>): Promise<AgentToolPreview> {
         const info = await prepare(args);
         return {
             summary: title,
@@ -225,7 +269,7 @@ function writeTool<T, const Name extends string>(name: Name, title: string, desc
         };
     }
 
-    async function flush(args: T, context: AgentToolContext) {
+    async function flush(args: ResolvedBusinessArgs<T>, context: AgentToolContext) {
         context.signal.throwIfAborted();
         for (const ownerId of new Set(scope(args))) await flushPendingDrafts(ownerId);
         context.signal.throwIfAborted();
@@ -234,33 +278,37 @@ function writeTool<T, const Name extends string>(name: Name, title: string, desc
     return defineTool(spec, {
         name,
         title,
-        description,
+        description: description + (hasOwner ? " 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。" : ""),
         effect: "write",
         atomic: true,
         highRisk: () => highRisk,
         async prepare(raw, context) {
-            const args = spec.schema.parse(raw);
+            const args = await resolve(spec.schema.parse(raw), context);
             await assertProjectToolScope(context, name, args, true);
             await flush(args, context);
-            return db.transaction("r", name === "project_create" ? db.tables : readTables(), async () => {
+            return db.transaction("r", name === "project_create" ? db.tables : [...readTables(), db.agentRuns, db.chatThreads], async () => {
+                await assertProjectToolScope(context, name, args, true);
                 await hooks.beforePreview?.(args, context);
                 return preview(args);
             });
         },
         async execute(raw, context) {
-            const args = spec.schema.parse(raw);
+            const parsed = spec.schema.parse(raw);
+            let args: ResolvedBusinessArgs<T>;
             try {
+                args = await resolve(parsed, context);
                 const replay = await hooks.completedReplay?.(args, context);
                 if (replay) return replay.value;
                 await assertProjectToolScope(context, name, args, true);
                 await flush(args, context);
             } catch (error) {
-                throw new AtomicToolRollbackError(error instanceof Error ? error.message : "草稿保存失败，业务操作尚未开始");
+                throw new AtomicToolRollbackError(error instanceof Error ? error.message : "草稿保存失败，业务操作尚未开始", {cause: error});
             }
             return executeAtomicTool(context, async () => {
                 context.signal.throwIfAborted();
+                args = await resolve(parsed, context);
                 await assertProjectToolScope(context, name, args, true);
-                if (!context.preview?.revision || context.preview.revision !== (await preview(args)).revision) throw new Error("目标或影响范围已变化，请重新读取并提出操作，原批准不能覆盖新的内容");
+                if (!context.preview?.revision || context.preview.revision !== (await preview(args)).revision) throw new ToolRecoveryError("STALE_TOOL_PREVIEW", "目标或影响范围已变化，请重新读取并提出操作，原批准不能覆盖新的内容");
                 await hooks.beforeWrite?.(args, context);
                 const deleted = await captureBusinessDeletion(name, args);
                 const result = await execute(args, context);
@@ -377,7 +425,7 @@ const readTextSpec = {
     }),
 };
 const reads = [
-    readTool("business_search", "查询创作资料", "按类型、明确归属和关键词查询项目、分集、场次、镜头、角色、场景、道具、风格或素材。除项目列表外必须提供 ownerId，工作室资产用 studio。结果仅候选，不根据同名结果自动操作；offset/limit 分页，最多50项。", searchSpec, async (args, context) => {
+    readTool("business_search", "查询创作资料", "按类型、归属和关键词查询项目、分集、场次、镜头、角色、场景、道具、风格或素材。已绑定对话可省略 ownerId，使用保存的项目；未绑定对话除项目列表外必须提供 ownerId，工作室资产用 studio。结果仅候选，不根据同名结果自动操作；offset/limit 分页，最多50项。", searchSpec, async (args, context) => {
         const query = args.query?.trim().toLocaleLowerCase();
         const projectId = context ? await frozenProjectScope(context) : undefined;
         const rows = (await listRows(args.kind, args.ownerId, args.episodeId)).filter((row) => (!projectId || args.kind !== "project" || row.id === projectId) && (!query || JSON.stringify(projection(args.kind, row)).toLocaleLowerCase().includes(query)));
@@ -398,7 +446,7 @@ const reads = [
             nextOffset: offset + items.length < rows.length ? offset + items.length : null
         };
     }),
-    readTool("business_detail", "查看创作详情", "按稳定 ID 查看允许的创作字段、关系和版本，除项目外必须提供 ownerId，场次还需 episodeId。不返回扩展袋或文件内容。长内容显式截断，可用 business_read_text 分段读。", detailSpec, async (args) => {
+    readTool("business_detail", "查看创作详情", "按稳定 ID 查看允许的创作字段、关系和版本。已绑定对话可省略 ownerId；未绑定对话除项目外必须提供 ownerId。场次还需明确 episodeId。不返回扩展袋或文件内容。长内容显式截断，可用 business_read_text 分段读。", detailSpec, async (args) => {
         const row = await getRow(args.kind, args.id, args.ownerId, args.episodeId);
         const usage = args.kind === "media" ? await mediaUsage(args.ownerId!, args.id) : undefined;
         const retention = args.kind === "media" ? await mediaRetention(args.ownerId!, args.id) : undefined;
@@ -584,9 +632,18 @@ const episodeTools = [
     writeTool("episode_update", "修改分集故事", "修改标题、梗概或剧本；保留现有场次并清理不再匹配的原文范围。", s.object({
         ...s.target,
         patch: s.nonempty(s.object(s.episodeFields))
-    }), (args) => [args.ownerId], (args) => targetPreview("episode", args, args.patch), async (args) => {
+    }), (args) => [args.ownerId], async (args) => {
+        const info = await targetPreview("episode", args, args.patch);
+        if (args.patch.script !== undefined) info.changes.push("修改剧本会清理不再匹配的原文范围；保留现有场次和镜头，不自动同步它们的内容或顺序。");
+        return info;
+    }, async (args) => {
+        const before = args.patch.script === undefined ? undefined : normalizeEpisodeStory((await requireEpisode(args.ownerId, args.id)).story);
         await updateEpisodeDraft(args.id, args.patch);
-        return rowResult("episode", await getRow("episode", args.id, args.ownerId));
+        const episode = await getRow("episode", args.id, args.ownerId);
+        const result = rowResult("episode", episode);
+        if (!before) return result;
+        const shots = await db.shots.where("episodeId").equals(args.id).toArray();
+        return {...result, scriptImpact: scriptImpact(args.ownerId, args.id, before, normalizeEpisodeStory(episode.story), shots)};
     }),
     writeTool("episode_delete", "删除分集", "删除分集、场次及其镜头，保护项目最后一集。", s.object(s.target), (args) => [args.ownerId], (args) => deletePreview("episode", args), async (args) => {
         await deleteEpisode(args.id);
@@ -819,7 +876,7 @@ const reuseTools = [
         orderedIds: s.ids
     }), (args) => [args.ownerId], async (args) => {
         await requireOwner(args.ownerId, false);
-        if (args.kind !== "episode" && !args.episodeId) throw new Error("场次/镜头排序需要 episodeId");
+        if (args.kind !== "episode" && !args.episodeId) throw new ToolRecoveryError("EPISODE_REQUIRED", "场次/镜头排序需要 episodeId");
         const rows = await listRows(args.kind, args.ownerId, args.episodeId);
         if (rows.length !== args.orderedIds.length || rows.some((row) => !args.orderedIds.includes(row.id))) throw new Error("排序必须包含当前范围的全部标识且不能重复");
         const order = new Map(rows.map((row) => [row.id, row]));
@@ -879,7 +936,7 @@ const mediaTools = [
             shot: ["firstFrame", "lastFrame", "clip"]
         };
         if (!(slots[args.kind] as readonly string[]).includes(args.slot)) throw new Error("素材槽位不属于此实体类型");
-        if (args.kind === "shot" && !args.episodeId) throw new Error("镜头素材需要明确分集标识");
+        if (args.kind === "shot" && !args.episodeId) throw new ToolRecoveryError("EPISODE_REQUIRED", "镜头素材需要明确分集标识");
         if (args.patch.result?.kind === "video" && !(args.kind === "shot" && args.slot === "clip")) throw new Error("此槽位结果仅支持图片");
         const mediaIds = [...(args.patch.referenceImageIds ?? []), ...(args.patch.referenceVideoIds ?? []), ...(args.patch.result ? [args.patch.result.mediaId] : [])];
         const media = await Promise.all(mediaIds.map((id) => getRow("media", id, args.ownerId)));

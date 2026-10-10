@@ -4,6 +4,8 @@ import {IP_TOOLS} from "./ipTools";
 import {AUDIO_TOOLS} from "./audioTools";
 import {MUSIC_TOOLS} from "./musicTools";
 import {AUDIO_GENERATION_TOOLS} from "./audioGenerationTools";
+import {AUDIO_BATCH_TOOLS} from "./audioBatchTools";
+import {AUDIO_ARRANGEMENT_TOOLS} from "./audioArrangementTools";
 import {MATERIAL_TOOLS} from "./materialTools";
 import {DISCOVERY_TOOLS} from "./toolLoading";
 import {WEB_TOOLS} from "./webTools";
@@ -115,6 +117,8 @@ const definitions = [
     ...AUDIO_TOOLS,
     ...MUSIC_TOOLS,
     ...AUDIO_GENERATION_TOOLS,
+    ...AUDIO_BATCH_TOOLS,
+    ...AUDIO_ARRANGEMENT_TOOLS,
     ...MATERIAL_TOOLS,
     ...DISCOVERY_TOOLS,
     ...TASK_TOOLS,

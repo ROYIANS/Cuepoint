@@ -118,13 +118,19 @@ export async function commandWork(name: CommandName, size: number) {
     const history = scans.filter(s => (s.method === "query" || s.method === "cursor") && ["productionProposals", "agentGenerationJobs", "agentGenerationBatches", "agentGenerationBatchItems"].includes(s.table) && s.index === "projectId");
     check(history.length === 4, `${name}: one history set for one owner`);
     const current = scans.filter(s => (s.method === "query" || s.method === "cursor") && s.index == null && s.rangeType === 3 && retentionSources.some(source => !source.history && source.table === s.table));
-    // release has one earlier materialUses conflict read; all other mutation reads are indexed.
-    const expected = name === "releaseMaterialUse" ? 15 : 14;
+    const batchReferences = current.filter(s => s.table === "audioGenerationBatchItems");
+    check(batchReferences.length === 1, `${name}: one additive v24 batch reference scan regardless of candidate count`);
+    const audioJobs = current.filter(s => s.table === "audioGenerationJobs");
+    const dormantHistoryPasses = name === "deleteChatThread" ? 1 : 0;
+    check(audioJobs.length === 1 + dormantHistoryPasses, `${name}: one current job-reference pass plus explicit chat-history dormancy scan`);
+    // Preserve the E04 14-pass control (+release conflict read), and enumerate
+    // only the two concrete v24 additions rather than increasing a loose bound.
+    const expected = (name === "releaseMaterialUse" ? 15 : 14) + 1 + dormantHistoryPasses;
     check(current.length === expected, `${name}: expected ${expected} current passes, got ${current.length}`);
     check((await db.media.bulkGet(prepared.ids)).every(row => row === undefined), `${name}: no orphan escaped`);
     const stores = [...new Set(scans.flatMap(s => s.stores))].sort();
     check(PRODUCTION_TABLES.every(t => stores.includes(t.name)), `${name}: original scope`);
-    return {name, size, currentPasses: current.length, historyPasses: history.length, scans, stores};
+    return {name, size, currentPasses: current.length, batchReferencePasses: batchReferences.length, dormantHistoryPasses, historyPasses: history.length, scans, stores};
 }
 export async function releaseEventRollback() {
     const prepared = await prepareCommand("releaseMaterialUse"), before = await snapshot();

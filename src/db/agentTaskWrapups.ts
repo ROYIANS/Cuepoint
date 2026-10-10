@@ -6,6 +6,7 @@ import type {AgentTask} from "@/domain/agent";
 import type {AgentTaskWrapup, TaskWrapupState, WrapupContent} from "@/domain/agentTaskWrapup";
 import {createId, nowIso} from "@/lib/ids";
 import {ownedTaskAudioGenerationJob} from "./taskAudioGenerationEvidence";
+import {readAudioGenerationBatch} from "./audioGenerationBatches";
 
 async function owned(taskId: string) {
     const task = await db.agentTasks.get(taskId);
@@ -65,6 +66,14 @@ async function completionBlockers(task: AgentTask, confirmed: AgentTaskWrapup | 
         if (["submitting", "uncertain", "submitted", "running", "remote-completed", "downloading"].includes(job.status) && await Promise.resolve(ownedTaskAudioGenerationJob(task, job))) {
             reasons.push("声音生成仍有进行中或待核实结果");
             break;
+        }
+    }
+    const audioBatches = await db.audioGenerationBatches.where("owner.threadId").equals(task.threadId).toArray();
+    for (const batch of audioBatches) {
+        if (batch.owner.kind !== "agent" || batch.owner.taskId !== task.id || batch.projectId !== task.projectId || batch.dormant) continue;
+        const view = await readAudioGenerationBatch(batch.projectId, batch.id);
+        if (batch.status === "draft" || view.rows.some(row => ["queued", "submitting", "pending", "uncertain", "recovery"].includes(row.state))) {
+            reasons.push("批量配音还有未确认草稿、排队或待核实结果"); break;
         }
     }
     const ownedBatches = await db.agentGenerationBatches.where('taskId').equals(task.id).toArray();

@@ -1,0 +1,134 @@
+{
+  "audio_generate_speech": {
+    "old": "生成配音或音色试音；默认 MiMo，connectorId/voice/speed 可省略。speakerId 或段落绑定角色可继承已保存的音色；提供段落时需 segmentRevision。明确的 APIMart 参数仍可使用；MiMo 克隆用项目内参考 mediaId，设计默认不改写文本。必须确认后才生成。",
+    "next": "生成配音或音色试音；默认 MiMo，projectId/connectorId/voice/speed 可省略。projectId 只使用当前对话保存的项目绑定，显式冲突仍拒绝。speakerId 或段落绑定角色可继承已保存的音色；提供段落时需 segmentRevision。明确的 APIMart 参数仍可使用；MiMo 克隆用项目内参考 mediaId，设计默认不改写文本。必须确认后才生成。"
+  },
+  "music_generate": {
+    "old": "提交当前已保存音乐草稿的指定版本；先用音乐草稿工具准备参数。经用户确认后提交一次，后续只查询已有任务。",
+    "next": "提交当前已保存音乐草稿的指定版本；先用音乐草稿工具准备参数。projectId 可省略，使用当前对话保存的项目绑定，显式冲突仍拒绝。经用户确认后提交一次，后续只查询已有任务。"
+  },
+  "audio_generation_check": {
+    "old": "对当前项目已存在的任务查询一次并保存可用结果；不会重新生成。pending/running 不等于成品，不要密集循环查询。",
+    "next": "对当前项目已存在的任务查询一次并保存可用结果；projectId 可省略，使用当前对话保存的项目绑定，显式冲突仍拒绝。不会重新生成。pending/running 不等于成品，不要密集循环查询。"
+  },
+  "task_read": {
+    "old": "读取当前任务、记录索引及真实用户消息和工具结果的来源 ID。未建任务时读取需求对话。offset/limit 翻页列表；传 source 和 contentOffset/contentLimit 分段读取来源全文，每次最多6000字，不访问其他任务。",
+    "next": "读取当前任务、记录索引及真实用户消息和工具结果的来源 ID。generation 来源可含声音结果的稳定 resultKey，只证明该结果；省略键读取整批。未建任务时读取需求对话。offset/limit 翻页列表；传 source 和 contentOffset/contentLimit 分段读取来源全文，每次最多6000字，不访问其他任务。"
+  },
+  "task_record_write": {
+    "old": "保存调研、方案、进展、验证或待解决问题。proposal 是建议；decision 必须有用户消息来源；observation 引用真实读取结果；result 必须引用完成的业务操作或当前任务真实可用的 generation 成果。声音草稿、远端完成或历史保存消息不能证明当前音频可用。来源不代表主观目标已通过验收。更新需 id 和 expectedRevision。",
+    "next": "保存调研、方案、进展、验证或待解决问题。proposal 是建议；decision 必须有用户消息来源；observation 引用真实读取结果；result 必须引用完成的业务操作或当前任务真实可用的 generation 成果。声音来源带 resultKey 仅证明该单个保存结果，不能证明整批完成；省略键保留整批保守资格。声音草稿、远端完成或历史保存消息不能证明当前音频可用。来源不代表主观目标已通过验收。更新需 id 和 expectedRevision。"
+  },
+  "business_search": {
+    "old": "按类型、明确归属和关键词查询项目、分集、场次、镜头、角色、场景、道具、风格或素材。除项目列表外必须提供 ownerId，工作室资产用 studio。结果仅候选，不根据同名结果自动操作；offset/limit 分页，最多50项。",
+    "next": "按类型、归属和关键词查询项目、分集、场次、镜头、角色、场景、道具、风格或素材。已绑定对话可省略 ownerId，使用保存的项目；未绑定对话除项目列表外必须提供 ownerId，工作室资产用 studio。结果仅候选，不根据同名结果自动操作；offset/limit 分页，最多50项。"
+  },
+  "business_detail": {
+    "old": "按稳定 ID 查看允许的创作字段、关系和版本，除项目外必须提供 ownerId，场次还需 episodeId。不返回扩展袋或文件内容。长内容显式截断，可用 business_read_text 分段读。",
+    "next": "按稳定 ID 查看允许的创作字段、关系和版本。已绑定对话可省略 ownerId；未绑定对话除项目外必须提供 ownerId。场次还需明确 episodeId。不返回扩展袋或文件内容。长内容显式截断，可用 business_read_text 分段读。"
+  },
+  "episode_create": {
+    "old": "在明确项目内创建分集，可填写标题、梗概和剧本。",
+    "next": "在明确项目内创建分集，可填写标题、梗概和剧本。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "episode_update": {
+    "old": "修改标题、梗概或剧本；保留现有场次并清理不再匹配的原文范围。",
+    "next": "修改标题、梗概或剧本；保留现有场次并清理不再匹配的原文范围。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "episode_delete": {
+    "old": "删除分集、场次及其镜头，保护项目最后一集。",
+    "next": "删除分集、场次及其镜头，保护项目最后一集。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "beat_create": {
+    "old": "在明确项目分集中创建场次，可设置人物与场景；后续创建镜头会复制此时的角色和场景。",
+    "next": "在明确项目分集中创建场次，可设置人物与场景；后续创建镜头会复制此时的角色和场景。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "beat_update": {
+    "old": "修改场次文本或角色、场景关联；不覆盖已有镜头。sceneId:null 解除场景。",
+    "next": "修改场次文本或角色、场景关联；不覆盖已有镜头。sceneId:null 解除场景。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "beat_delete": {
+    "old": "删除场次，保留其镜头并解除场次关联。",
+    "next": "删除场次，保留其镜头并解除场次关联。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "shot_create": {
+    "old": "在明确项目分集中创建1–20个镜头，可归属场次并复制其角色/场景；fields 应用于每个新镜头，后续可分别编辑。",
+    "next": "在明确项目分集中创建1–20个镜头，可归属场次并复制其角色/场景；fields 应用于每个新镜头，后续可分别编辑。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "shot_update": {
+    "old": "修改镜头文字、时长、手动状态或同项目资产关联。sceneId/beatId:null 清除关联；styleId:null 不用风格；inheritStyle:true 恢复继承，不能同时传 styleId。",
+    "next": "修改镜头文字、时长、手动状态或同项目资产关联。sceneId/beatId:null 清除关联；styleId:null 不用风格；inheritStyle:true 恢复继承，不能同时传 styleId。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "shot_delete": {
+    "old": "删除指定镜头，重排当前分集；清理仅此镜头使用的素材并保护共享引用。",
+    "next": "删除指定镜头，重排当前分集；清理仅此镜头使用的素材并保护共享引用。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "character_create": {
+    "old": "在明确项目或 studio 工作室中创建角色；只接受此类资产的创作字段。",
+    "next": "在明确项目或 studio 工作室中创建角色；只接受此类资产的创作字段。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "character_update": {
+    "old": "修改明确归属的角色创作字段；不可修改归属、来源、ID 或素材槽位。素材使用 slot_update。",
+    "next": "修改明确归属的角色创作字段；不可修改归属、来源、ID 或素材槽位。素材使用 slot_update。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "character_delete": {
+    "old": "删除角色并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。",
+    "next": "删除角色并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "scene_create": {
+    "old": "在明确项目或 studio 工作室中创建场景；只接受此类资产的创作字段。",
+    "next": "在明确项目或 studio 工作室中创建场景；只接受此类资产的创作字段。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "scene_update": {
+    "old": "修改明确归属的场景创作字段；不可修改归属、来源、ID 或素材槽位。素材使用 slot_update。",
+    "next": "修改明确归属的场景创作字段；不可修改归属、来源、ID 或素材槽位。素材使用 slot_update。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "scene_delete": {
+    "old": "删除场景并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。",
+    "next": "删除场景并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "prop_create": {
+    "old": "在明确项目或 studio 工作室中创建道具；只接受此类资产的创作字段。",
+    "next": "在明确项目或 studio 工作室中创建道具；只接受此类资产的创作字段。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "prop_update": {
+    "old": "修改明确归属的道具创作字段；不可修改归属、来源、ID 或素材槽位。素材使用 slot_update。",
+    "next": "修改明确归属的道具创作字段；不可修改归属、来源、ID 或素材槽位。素材使用 slot_update。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "prop_delete": {
+    "old": "删除道具并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。",
+    "next": "删除道具并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "style_create": {
+    "old": "在明确项目或 studio 工作室中创建风格；只接受此类资产的创作字段。",
+    "next": "在明确项目或 studio 工作室中创建风格；只接受此类资产的创作字段。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "style_update": {
+    "old": "修改明确归属的风格创作字段；不可修改归属、来源、ID 或素材槽位。素材使用 slot_update。",
+    "next": "修改明确归属的风格创作字段；不可修改归属、来源、ID 或素材槽位。素材使用 slot_update。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "style_delete": {
+    "old": "删除风格并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。",
+    "next": "删除风格并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "asset_copy_from_studio": {
+    "old": "将工作室角色/场景/道具/风格复制为项目内独立快照，连同媒体复制到项目归属；禁止重复添加同一来源。",
+    "next": "将工作室角色/场景/道具/风格复制为项目内独立快照，连同媒体复制到项目归属；禁止重复添加同一来源。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "creative_duplicate": {
+    "old": "复制当前分集的指定场次或镜头。场次可显式 includeShots:true 一起复制最多20个关联镜头；不覆盖原项，共享本项目素材。",
+    "next": "复制当前分集的指定场次或镜头。场次可显式 includeShots:true 一起复制最多20个关联镜头；不覆盖原项，共享本项目素材。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "creative_reorder": {
+    "old": "提交当前范围完整且无重复的 orderedIds，最多100项。episode 在项目内排序；beat/shot 需 episodeId。场次顺序同时移动其镜头组，不改变关系。",
+    "next": "提交当前范围完整且无重复的 orderedIds，最多100项。episode 在项目内排序；beat/shot 需 episodeId。场次顺序同时移动其镜头组，不改变关系。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "slot_update": {
+    "old": "修改资产/镜头槽位描述、图片参考、视频参考或已有结果。只允许同归属真实媒体 ID；result:null 清除结果。角色 front/side/back/expression/costume；场景 wide/medium/detail；道具 hero/detail/worn；风格 look/light/lens；镜头 firstFrame/lastFrame/clip。只有 clip 结果允许视频。",
+    "next": "修改资产/镜头槽位描述、图片参考、视频参考或已有结果。只允许同归属真实媒体 ID；result:null 清除结果。角色 front/side/back/expression/costume；场景 wide/medium/detail；道具 hero/detail/worn；风格 look/light/lens；镜头 firstFrame/lastFrame/clip。只有 clip 结果允许视频。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  },
+  "media_delete_orphan": {
+    "old": "仅删除未被项目封面、资产、镜头、参考资料、生成任务或历史提案引用的真实媒体。使用中的文件不会删除；不支持任意文件或 Blob 写入。",
+    "next": "仅删除未被项目封面、资产、镜头、参考资料、生成任务或历史提案引用的真实媒体。使用中的文件不会删除；不支持任意文件或 Blob 写入。 已绑定对话可省略 ownerId，使用已保存的项目绑定；显式归属冲突仍拒绝，episodeId 不会自动选择。"
+  }
+}

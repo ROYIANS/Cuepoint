@@ -1,3 +1,4 @@
+import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import {createAudioMusicProject, createProject} from "@/db/projects";
@@ -44,20 +45,22 @@ async function begin(kind: "audio" | "music", protocol: AgentRun["protocol"] = "
 afterEach(() => vi.unstubAllGlobals());
 
 describe("bound sound project execution readiness", () => {
-  it.each(["chat-completions", "responses"] as const)("distinguishes a promise-only %s reply from actual execution without issuing hidden retries", async protocol => {
+  it.each(["chat-completions", "responses"] as const)("distinguishes a promise-only %s reply from actual execution with two bounded checks and no automatic business replay", async protocol => {
     const { project, run } = await begin("audio", protocol);
     const text = "我会先读取项目，再写入脚本。请再发送一次开始。";
     const fetcher = vi.fn<typeof fetch>(async () => protocol === "responses"
       ? Response.json({ id: "promise", status: "completed", output: [{ type: "message", role: "assistant", content: [{ type: "output_text", text, annotations: [] }] }] })
       : Response.json({ choices: [{ message: { content: text }, finish_reason: "stop" }] }));
-    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
     const saved = (await db.agentRuns.get(run.id))!;
     const calls = await db.agentToolCalls.where("runId").equals(run.id).toArray();
-    expect(describeRunExecution(saved, calls)).toMatchObject({ kind: "reply", label: "仅回复，未调用工具", modelSteps: 1, counts: { total: 0 } });
-    expect(describeRunExecution(saved, calls).offeredTools).toBeGreaterThan(0);
+    expect(describeRunExecution(saved, calls)).toMatchObject({ kind: "reply", label: "仅回复，未调用工具", modelSteps: 3, counts: { total: 0 } });
+    expect(describeRunExecution(saved, calls).offeredTools).toBe(0);
+    expect(saved.offeredTools?.[0].names.length).toBeGreaterThan(0);
+    expect(saved.finalReview?.status).toBe("checked");
     expect((await db.chatMessages.get(saved.assistantMessageId))?.content).toBe(text);
     expect(await db.audioSegments.where("projectId").equals(project.id).count()).toBe(0);
-    expect(fetcher).toHaveBeenCalledOnce();
+    expect(fetcher).toHaveBeenCalledTimes(2);
   });
 
   it.each(["chat-completions", "responses"] as const)("does not count tool loading on %s as creative work", async protocol => {
@@ -66,12 +69,12 @@ describe("bound sound project execution readiness", () => {
     const fetcher = vi.fn<typeof fetch>(async () => reply(protocol, ++requests === 1
       ? [call("load_tool_groups", { groupIds: ["audio-production"] }, "load-only")]
       : []));
-    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
     const saved = (await db.agentRuns.get(run.id))!;
     const calls = await db.agentToolCalls.where("runId").equals(run.id).toArray();
-    expect(describeRunExecution(saved, calls)).toMatchObject({ kind: "preparation", label: "仅准备，未执行业务", modelSteps: 2 });
+    expect(describeRunExecution(saved, calls)).toMatchObject({ kind: "preparation", label: "仅准备，未执行业务", modelSteps: 4 });
     expect(await db.audioSegments.where("projectId").equals(project.id).count()).toBe(0);
-    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(fetcher).toHaveBeenCalledTimes(3);
   });
 
   it.each(["chat-completions", "responses"] as const)("keeps failed reads visible when the %s model finishes afterwards", async protocol => {
@@ -80,7 +83,7 @@ describe("bound sound project execution readiness", () => {
     const fetcher = vi.fn<typeof fetch>(async () => reply(protocol, ++requests === 1
       ? [call("audio_read", { kind: "segments", id: "missing-segment" }, "failed-read")]
       : []));
-    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
     const saved = (await db.agentRuns.get(run.id))!;
     const calls = await db.agentToolCalls.where("runId").equals(run.id).toArray();
     expect(saved.status).toBe("completed");
@@ -147,9 +150,9 @@ describe("bound sound project execution readiness", () => {
       expect(toolResult(body, protocol, "write-script")).toMatchObject({ projectId: project.id, text: "大家午安，欢迎来到今天的电台。", writeReceipt: { version: 1, entries: [{ kind: "audio_segment", operation: "created", ownerId: project.id }] } });
       return reply(protocol);
     });
-    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher);
-    expect(fetcher).toHaveBeenCalledTimes(3);
-    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "completed", modelStep: 3 });
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
+    expect(fetcher).toHaveBeenCalledTimes(4);
+    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "completed", modelStep: 5, finalReview: {status: "checked"} });
     expect(await db.audioSegments.where("projectId").equals(project.id).toArray()).toMatchObject([{ text: "大家午安，欢迎来到今天的电台。", order: 0 }]);
     const calls = await db.agentToolCalls.where("runId").equals(run.id).toArray();
     expect(calls.sort((a, b) => a.step - b.step).map(row => row.name)).toEqual(["audio_read", "audio_create"]);
@@ -163,7 +166,7 @@ describe("bound sound project execution readiness", () => {
     const paidFetch = vi.fn<typeof fetch>(); vi.stubGlobal("fetch", paidFetch);
     const fetcher = vi.fn<typeof fetch>(async () => reply(protocol, [call("audio_generate_speech", { projectId: project.id, text: "午安，欢迎收听。" }, "paid-speech")]));
     expect(getOfferedToolNames(run)).toContain("audio_generate_speech");
-    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
     expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "waiting_approval" });
     expect((await db.agentToolCalls.where("runId").equals(run.id).toArray())[0]).toMatchObject({ status: "awaiting_approval", requiresConfirmation: true });
     expect(await db.audioGenerationJobs.count()).toBe(0);
@@ -181,7 +184,7 @@ describe("bound sound project execution readiness", () => {
     expect(run.toolLoading).toBeUndefined();
     expect(getOfferedToolNames(run)).toEqual([]);
     const fetcher = vi.fn<typeof fetch>(async (_url, init) => { expect(JSON.parse(String(init?.body)).tools).toBeUndefined(); return reply(run.protocol); });
-    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
     expect(await db.agentToolCalls.count()).toBe(0);
     expect(await db.audioSegments.count()).toBe(0);
   });
@@ -190,7 +193,7 @@ describe("bound sound project execution readiness", () => {
     const { run } = await begin("audio");
     const abort = new AbortController(); abort.abort();
     const fetcher = vi.fn<typeof fetch>();
-    await executeChatRun(run, connector.apiKey, abort, fetcher);
+    await executeChatRun(run, connector.apiKey, abort, withFinalReviewFixture(fetcher));
     expect(fetcher).not.toHaveBeenCalled();
     expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "cancelled" });
     expect(await db.audioSegments.count()).toBe(0);

@@ -62,14 +62,17 @@ export async function workCount(size: number, original = false, ownerCount = 3) 
     });
     const scans = observed.scans.filter(scan => scan.method === "query" || scan.method === "cursor");
     const actualOwners = new Set(ids.map((_, i) => owners[i % owners.length])).size;
-    const expectedPasses = original ? 18 * size * 2 : 14 + 4 * actualOwners;
+    const batchReferenceScans = scans.filter(scan => scan.table === "audioGenerationBatchItems");
+    check(batchReferenceScans.length === (original ? 0 : 1), "one additive v24 batch reference scan, independent of candidates/owners");
+    if (!original) check(batchReferenceScans[0].index == null && batchReferenceScans[0].rangeType === 3, "batch references scanned once globally like existing current references");
+    const expectedPasses = original ? 18 * size * 2 : 14 + 1 + 4 * actualOwners;
     check(scans.length === expectedPasses, `work passes: expected ${expectedPasses}, actual ${scans.length}`);
     const mediaReads = observed.scans.filter(scan => scan.table === "media" && ["getMany", "get"].includes(scan.method));
     if (!original) check(mediaReads.length === 1 && mediaReads[0].keys === size + 1, "one deduplicated bulk read including missing id");
     const stores = [...new Set(observed.scans.flatMap(scan => scan.stores))].sort();
-    check(JSON.stringify(stores) === JSON.stringify(PRODUCTION_TABLES.map(t => t.name).sort()), "complete 25-table production scope");
+    check(JSON.stringify(stores) === JSON.stringify(PRODUCTION_TABLES.map(t => t.name).sort()), "complete current production scope");
     check(scans.filter(s => s.table.startsWith("agentGeneration") || s.table === "productionProposals").every(s => s.rows === 0), "unrelated history rows excluded");
-    return {size, actualOwners, original, passes: scans.length, rows: scans.reduce((n, s) => n + s.rows, 0), mediaReads, scans, stores, limitation: "Request/cursor work counts; elapsed latency is not inferred"};
+    return {size, actualOwners, original, passes: scans.length, batchReferencePasses: batchReferenceScans.length, rows: scans.reduce((n, s) => n + s.rows, 0), mediaReads, scans, stores, limitation: "Request/cursor work counts; elapsed latency is not inferred"};
 }
 export async function nativeScheduling() {
     const ids = Array.from({length: 24}, (_, i) => `schedule-${i}`);

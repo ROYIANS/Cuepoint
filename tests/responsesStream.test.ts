@@ -1,3 +1,4 @@
+import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import { updateGeneralAgentConfig } from "@/db/agentSettings";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { streamResponses, toResponseInput } from "@/lib/ai/responsesStream";
@@ -196,17 +197,24 @@ describe("durable Responses tool loop", () => {
     const tool: AgentToolDefinition = { ...BUILTIN_TOOLS[0], execute: vi.fn(async () => ({ ok: true })) };
     await db.agentRuns.update(run.id, { modelStep: 31 });
     const firstFetch = vi.fn(async () => Response.json(response([reasoning, call])));
-    await executeChatRun(run, connector.apiKey, new AbortController(), firstFetch, [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(firstFetch), [tool, BUILTIN_TOOLS[1]]);
     expect(firstFetch).toHaveBeenCalledTimes(1);
     expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "interrupted", pauseReason: "model_step_limit", modelStep: 32 });
     db.close(); await db.open();
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), vi.fn(async (_url, init) => {
+    let resumedRequests = 0;
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async (_url, init) => {
       const body = JSON.parse(String(init?.body));
-      expect(body.input.slice(-3)).toEqual([reasoning, call, { type: "function_call_output", call_id: "call-1", output: '{"ok":true}' }]);
+      if (++resumedRequests === 1) expect(body.input.slice(-3)).toEqual([reasoning, call, { type: "function_call_output", call_id: "call-1", output: '{"ok":true}' }]);
+      else {
+        expect(body.input).toContainEqual(reasoning);
+        expect(body.input).toContainEqual(call);
+        expect(body.input.filter((item: {type: string}) => item.type === "function_call_output")).toHaveLength(1);
+      }
       return Response.json(response());
-    }), [tool, BUILTIN_TOOLS[1]]);
+    })), [tool, BUILTIN_TOOLS[1]]);
     expect(tool.execute).toHaveBeenCalledTimes(1);
-    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "completed", modelStep: 33, modelStepSegmentStart: 32 });
+    expect(resumedRequests).toBe(2);
+    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "completed", modelStep: 35, modelStepSegmentStart: 32, finalReview: {status: "checked"} });
   });
   it("selects before request, migrates legacy text retries but freezes explicit protocols", async () => {
     expect(selectAgentProtocol(connector, "gpt-5.6-luna", undefined, true)).toBe("responses");
@@ -231,7 +239,7 @@ describe("durable Responses tool loop", () => {
     const tool: AgentToolDefinition = { ...BUILTIN_TOOLS[0], effect: "write", execute: vi.fn(async () => ({ changed: true })) };
     const bodies: Array<{input: unknown[]}> = [];
     const fetcher = vi.fn(async (url, init) => { expect(String(url)).toContain("/responses"); bodies.push(JSON.parse(String(init?.body))); return Response.json(response(bodies.length === 1 ? [reasoning, call] : [message])); });
-    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher, [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher), [tool, BUILTIN_TOOLS[1]]);
     expect(tool.execute).not.toHaveBeenCalled();
     const saved = (await db.agentRuns.get(run.id))!;
     expect(saved.status).toBe("waiting_approval");
@@ -239,24 +247,25 @@ describe("durable Responses tool loop", () => {
     expect((await db.chatMessages.get(run.assistantMessageId))?.reasoning).not.toContain("opaque");
     const ledger = (await db.agentToolCalls.toArray())[0];
     await resolveAgentToolApproval(run.id, ledger.id, "approve");
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), fetcher, [tool, BUILTIN_TOOLS[1]]);
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher, {inputTokens: 5, outputTokens: 3, totalTokens: 8}), [tool, BUILTIN_TOOLS[1]]);
     expect(tool.execute).toHaveBeenCalledTimes(1);
     expect(bodies[1].input.slice(-3)).toEqual([reasoning, call, { type: "function_call_output", call_id: "call-1", output: '{"changed":true}' }]);
-    expect((await db.agentRuns.get(run.id))?.usage?.totalTokens).toBe(16);
-    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect((await db.agentRuns.get(run.id))?.usage?.totalTokens).toBe(32);
+    expect((await db.agentRuns.get(run.id))?.modelMetrics?.map(metric => metric.purpose ?? "execution")).toEqual(["execution", "execution", "execution", "final_review"]);
+    expect(fetcher).toHaveBeenCalledTimes(3);
   });
   it("does not replay a completed tool if the next response failed, and refuses missing envelopes", async () => {
     const thread = await createChatThread();
     const run = await beginAgentRun({ threadId: thread.id, connector, model: input.model, content: "hi" });
     const tool: AgentToolDefinition = { ...BUILTIN_TOOLS[0], execute: vi.fn(async () => ({ ok: true })) };
     let count = 0;
-    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => ++count === 1 ? Response.json(response([reasoning, call])) : new Response("offline", { status: 500 })), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => ++count === 1 ? Response.json(response([reasoning, call])) : new Response("offline", { status: 500 }))), [tool, BUILTIN_TOOLS[1]]);
     expect((await db.agentRuns.get(run.id))?.status).toBe("failed");
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), vi.fn(async (_url, init) => {
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async (_url, init) => {
       const request = JSON.parse(String(init?.body));
       expect(request.input.filter((item: {type:string}) => item.type === "function_call_output")).toHaveLength(1);
       return Response.json(response());
-    }), [tool, BUILTIN_TOOLS[1]]);
+    })), [tool, BUILTIN_TOOLS[1]]);
     expect(tool.execute).toHaveBeenCalledTimes(1);
     await db.agentRuns.update(run.id, { status: "running", responseItems: undefined });
     await expect(appendToolResults(run.id)).rejects.toThrow("信封");
@@ -265,17 +274,17 @@ describe("durable Responses tool loop", () => {
     const thread = await createChatThread();
     const run = await beginAgentRun({ threadId: thread.id, connector, model: input.model, content: "hi" });
     const tool: AgentToolDefinition = { ...BUILTIN_TOOLS[0], effect: "write", execute: vi.fn() };
-    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => Response.json(response([reasoning, call]))), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => Response.json(response([reasoning, call])))), [tool, BUILTIN_TOOLS[1]]);
     const ledger = (await db.agentToolCalls.where("runId").equals(run.id).toArray())[0];
     await resolveAgentToolApproval(run.id, ledger.id, "reject");
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), vi.fn(async (_url, init) => {
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async (_url, init) => {
       const body = JSON.parse(String(init?.body));
       const outputs = body.input.filter((item: {type:string}) => item.type === "function_call_output");
       expect(outputs).toHaveLength(1);
       expect(outputs[0]).toMatchObject({ call_id: "call-1" });
       expect(outputs[0].output).toContain("用户拒绝");
       return Response.json(response());
-    }), [tool, BUILTIN_TOOLS[1]]);
+    })), [tool, BUILTIN_TOOLS[1]]);
     expect(tool.execute).not.toHaveBeenCalled();
     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
   });
@@ -283,12 +292,12 @@ describe("durable Responses tool loop", () => {
     const thread = await createChatThread();
     const run = await beginAgentRun({ threadId: thread.id, connector, model: input.model, content: "hi" });
     const tool: AgentToolDefinition = { ...BUILTIN_TOOLS[0], effect: "write", execute: vi.fn() };
-    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => Response.json(response([reasoning, call]))), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => Response.json(response([reasoning, call])))), [tool, BUILTIN_TOOLS[1]]);
     const ledger = (await db.agentToolCalls.where("runId").equals(run.id).toArray())[0];
     await resolveAgentToolApproval(run.id, ledger.id, "approve");
     await db.agentRuns.update(run.id, { responseItems: undefined });
     const fetcher = vi.fn();
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), fetcher, [tool, BUILTIN_TOOLS[1]]);
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher), [tool, BUILTIN_TOOLS[1]]);
     expect(tool.execute).not.toHaveBeenCalled();
     expect(fetcher).not.toHaveBeenCalled();
     expect((await db.agentRuns.get(run.id))?.error).toContain("信封");

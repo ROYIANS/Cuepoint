@@ -4,6 +4,7 @@ import type {ProjectContextSnapshot} from "./projectContext";
 import type {GenerationPreferences} from "./generationPreferences";
 import type {ContextPolicy, ContextSnapshot} from "./context";
 import type {ConnectorConfig, Id} from "@/domain/types";
+import type {AgentFinalReview} from "./agentFinalReview";
 
 export interface AgentConfig {
     generationPreferences?: GenerationPreferences;
@@ -137,6 +138,7 @@ export interface AgentTokenUsage {
 }
 
 export interface AgentModelMetrics {
+    purpose?: "final_review";
     step: number;
     startedAt: number;
     firstTokenAt?: number;
@@ -179,8 +181,10 @@ export interface AgentRun {
     projectContext?: ProjectContextSnapshot;
     /** Code-owned one-time creation origin; original request/history remain immutable. */
     createdProjectBinding?: { projectId: Id; callId: Id };
-    /** One bounded unfinished-plan check per run, preserved across explicit resumes. */
-    finishingCheck?: { step: number; createdAt: string };
+    /** One bounded finishing check per run, preserved across explicit resumes. */
+    finishingCheck?: { step: number; createdAt: string; reason?: "unfinished_plan" | "terminal_reply" };
+    /** Separate read-only observations. Never replaces or certifies original prose. */
+    finalReview?: AgentFinalReview;
     /** Frozen task-intake eligibility; never inferred from model arguments. */
     taskMode?: boolean;
     context?: ContextSnapshot;
@@ -196,6 +200,8 @@ export interface AgentRun {
     reasoningEffort?: AgentReasoningEffort;
     protocol?: AgentProtocol;
     responseItems?: AgentResponseItem[];
+    /** Idempotent successful final Responses envelope checkpoint, independent of the once-only review. */
+    finalResponseStep?: number;
     modelMetrics?: AgentModelMetrics[];
     activitySteps?: AgentActivityStep[];
     usage?: AgentTokenUsage;

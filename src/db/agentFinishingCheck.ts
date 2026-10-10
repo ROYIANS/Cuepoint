@@ -56,19 +56,21 @@ export async function saveAgentFinishingCheck(
         const siblings = await db.agentRuns.where("threadId").equals(thread.id).toArray();
         const history = await db.chatMessages.where("threadId").equals(thread.id).toArray();
         if (siblings.some(row => row.id !== runId && row.createdAt >= run.createdAt) || history.some(row => row.role === "user" && row.createdAt > run.createdAt)) return false;
-        const plan = parsePlan(run.plan);
-        if (!plan?.some(item => item.status !== "completed")) return false;
+        const plan = run.plan === undefined ? undefined : parsePlan(run.plan);
+        if (run.plan !== undefined && !plan) return false;
         const calls = (await db.agentToolCalls.where("runId").equals(runId).toArray()).sort((a, b) => a.step - b.step || a.order - b.order);
-        if (!calls.length || calls.some(call => call.threadId !== run.threadId || call.status !== "completed" || call.step >= expectedStep)) return false;
+        if (calls.some(call => call.threadId !== run.threadId || call.status !== "completed" || call.step >= expectedStep)) return false;
         const saved = calls.filter(call => call.name === "update_run_plan").at(-1);
-        if (!saved?.atomic || saved.effect !== "bookkeeping" || !saved.result || saved.result.length > 65536 ||
-            !toolNamesForCall(run, saved.step).includes("update_run_plan")) return false;
-        try {
-            const written = planFromEnvelope(saved.result, "plan");
-            const requested = planFromEnvelope(saved.arguments, "steps");
-            if (!written || !requested || targetRevision(written) !== targetRevision(plan) || targetRevision(requested) !== targetRevision(plan)) return false;
-        } catch {
-            return false;
+        if (saved) {
+            if (!saved.atomic || saved.effect !== "bookkeeping" || !saved.result || saved.result.length > 65536 ||
+                !toolNamesForCall(run, saved.step).includes("update_run_plan")) return false;
+            try {
+                const written = planFromEnvelope(saved.result, "plan");
+                const requested = planFromEnvelope(saved.arguments, "steps");
+                if (!written || !requested || !plan || targetRevision(written) !== targetRevision(plan) || targetRevision(requested) !== targetRevision(plan)) return false;
+            } catch {
+                return false;
+            }
         }
         if (typeof output.content !== "string" || output.content.length > 4_194_304 || typeof (output.reasoning ?? "") !== "string" || (output.reasoning?.length ?? 0) > 4_194_304 ||
             output.reasoningDurationMs !== undefined && (!Number.isFinite(output.reasoningDurationMs) || output.reasoningDurationMs < 0)) throw new Error("收尾回复内容无效或超出限制");
@@ -85,7 +87,7 @@ export async function saveAgentFinishingCheck(
         const at = nowIso();
         signal?.throwIfAborted();
         await db.agentRuns.update(run.id, {
-            finishingCheck: {step: expectedStep, createdAt: at},
+            finishingCheck: {step: expectedStep, createdAt: at, reason: saved && plan?.some(item => item.status !== "completed") ? "unfinished_plan" : "terminal_reply"},
             activitySteps: [...(run.activitySteps ?? []), {
                 step: expectedStep,
                 content: output.content,

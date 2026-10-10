@@ -6,7 +6,7 @@ import {formatTaskRequirements} from "./taskState";
 import {db} from "@/db/database";
 import {taskFields} from "@/db/agentTasks";
 import {
-    listTaskGenerationSources,
+    listTaskGenerationSourceInventory,
     listTaskRecords,
     listTaskRecordVersions,
     taskGenerationSource,
@@ -36,7 +36,11 @@ async function currentTaskToolContent(call: AgentToolCall, task?: AgentTask) {
 }
 
 const id = text(120, 1);
-const source = object({type: choice(["message", "tool", "generation"]), id});
+const sourceFields = object({type: choice(["message", "tool", "generation"]), id, resultKey: optional(text(512, 1))});
+const source = {
+    ...sourceFields,
+    schema: sourceFields.schema.refine(value => value.resultKey === undefined || value.type === "generation", "结果键只能用于声音生成来源")
+};
 const sources = array(source, 12);
 const steps = array(object({
     id: text(80, 1),
@@ -95,20 +99,21 @@ function tool<T, const Name extends string>(name: Name, title: string, descripti
 }
 
 export const TASK_TOOLS = [
-    tool("task_read", "读取任务工作区", "读取当前任务、记录索引及真实用户消息和工具结果的来源 ID。未建任务时读取需求对话。offset/limit 翻页列表；传 source 和 contentOffset/contentLimit 分段读取来源全文，每次最多6000字，不访问其他任务。", object({
+    tool("task_read", "读取任务工作区", "读取当前任务、记录索引及真实用户消息和工具结果的来源 ID。generation 来源可含声音结果的稳定 resultKey，只证明该结果；省略键读取整批。未建任务时读取需求对话。offset/limit 翻页列表；传 source 和 contentOffset/contentLimit 分段读取来源全文，每次最多6000字，不访问其他任务。", object({
         offset: optional(number(0, 100000, true)),
         limit: optional(number(1, 10, true)),
         source: optional(source),
         contentOffset: optional(number(0, 10000000, true)),
         contentLimit: optional(number(1, 6000, true))
     }), async (args, _context, {task, thread}) => {
+        if (args.source?.resultKey !== undefined && args.source.type !== "generation") throw new Error("结果键只能用于声音生成来源");
         const offset = args.offset ?? 0, limit = args.limit ?? 5;
         const messages = (await db.chatMessages.where("threadId").equals(thread.id).sortBy("createdAt")).filter((m) => m.role === "user" && !!m.content.trim()).reverse();
         const taskRunIds = new Set(task ? (await db.agentRuns.where("taskId").equals(task.id).toArray()).map((run) => run.id) : []);
         const calls = (await db.agentToolCalls.where("threadId").equals(thread.id).toArray()).filter((c) => c.status === "completed" && c.effect !== "bookkeeping" && !!c.result && taskRunIds.has(c.runId)).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
         if (args.source?.type === "generation") {
             if (!task) throw new Error("当前任务不存在");
-            const item = await taskGenerationSource(task, args.source.id), contentOffset = args.contentOffset ?? 0,
+            const item = await taskGenerationSource(task, args.source.id, args.source.resultKey), contentOffset = args.contentOffset ?? 0,
                 contentLimit = args.contentLimit ?? 6000;
             return {
                 source: args.source,
@@ -130,7 +135,8 @@ export const TASK_TOOLS = [
             };
         }
         const records = task ? await listTaskRecords(task.id) : [];
-        const generations = task ? await listTaskGenerationSources(task) : [];
+        const inventory = task ? await listTaskGenerationSourceInventory(task, {offset, limit}) : undefined;
+        const generations = inventory?.sources ?? [];
         const tools = [];
         for (const call of calls.slice(offset, offset + limit)) {
             const content = await Promise.resolve(currentTaskToolContent(call, task));
@@ -168,8 +174,9 @@ export const TASK_TOOLS = [
                 truncated: m.content.length > 800
             })),
             messageCount: messages.length,
-            generations: generations.slice(offset, offset + limit).map(item => ({
+            generations: generations.map(item => ({
                 id: item.id,
+                resultKey: item.resultKey,
                 label: item.label,
                 available: item.available,
                 applied: item.applied,
@@ -180,7 +187,8 @@ export const TASK_TOOLS = [
                 } : {}),
                 sourceType: "generation"
             })),
-            generationCount: generations.length,
+            generationCount: inventory?.coverage.total ?? 0,
+            generationCoverage: inventory?.coverage ?? {total: 0, included: 0, omitted: 0, offset, nextOffset: null},
             tools,
             toolCount: calls.length
         };
@@ -243,7 +251,7 @@ export const TASK_TOOLS = [
         await db.agentTasks.put(updated);
         return {task: taskResult(updated)};
     }),
-    tool("task_record_write", "保存任务工作记录", "保存调研、方案、进展、验证或待解决问题。proposal 是建议；decision 必须有用户消息来源；observation 引用真实读取结果；result 必须引用完成的业务操作或当前任务真实可用的 generation 成果。声音草稿、远端完成或历史保存消息不能证明当前音频可用。来源不代表主观目标已通过验收。更新需 id 和 expectedRevision。", object({
+    tool("task_record_write", "保存任务工作记录", "保存调研、方案、进展、验证或待解决问题。proposal 是建议；decision 必须有用户消息来源；observation 引用真实读取结果；result 必须引用完成的业务操作或当前任务真实可用的 generation 成果。声音来源带 resultKey 仅证明该单个保存结果，不能证明整批完成；省略键保留整批保守资格。声音草稿、远端完成或历史保存消息不能证明当前音频可用。来源不代表主观目标已通过验收。更新需 id 和 expectedRevision。", object({
         ...recordFields,
         id: optional(id),
         expectedRevision: optional(number(1, 1000000, true))

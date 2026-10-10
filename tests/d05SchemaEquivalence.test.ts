@@ -3,6 +3,7 @@ import {BUILTIN_TOOLS} from '@/lib/agent/tools';
 import {BUILTIN_TOOLS as ORIGINAL_TOOLS} from './fixtures/sourceSnapshots/d05/src/lib/agent/tools';
 import {generationSubmitSchema} from '@/lib/agent/generationProfiles';
 import {generationSubmitSchema as originalGenerationSchema} from './fixtures/sourceSnapshots/d05/src/lib/agent/generationProfiles';
+import {contextualField} from './helpers/d05BacklogCompatibility';
 
 function minimal(schema: Record<string, unknown>, index = 0): unknown {
     const choice = schema.anyOf ?? schema.oneOf;
@@ -22,13 +23,20 @@ function outcome(parse: (raw: unknown) => unknown, raw: unknown) {
         return {error: error instanceof Error ? error.message : String(error)};
     }
 }
-it('preserves all 89 parser outputs and diagnostics on schema-owned valid/minimal and rejected envelopes', () => {
-    expect(ORIGINAL_TOOLS.map(tool => tool.name)).toEqual(BUILTIN_TOOLS.map(tool => tool.name));
-    for (let index = 0; index < BUILTIN_TOOLS.length; index++) {
-        const current = BUILTIN_TOOLS[index], original = ORIGINAL_TOOLS[index];
+it('preserves original 89 parser outputs/diagnostics apart from exactly omitted contextual owner fields', () => {
+    expect(BUILTIN_TOOLS.filter(tool => ORIGINAL_TOOLS.some(original => original.name === tool.name)).map(tool => tool.name)).toEqual(ORIGINAL_TOOLS.map(tool => tool.name));
+    for (const original of ORIGINAL_TOOLS) {
+        const current = BUILTIN_TOOLS.find(tool => tool.name === original.name)!;
         const valid = minimal(original.parameters);
         for (const raw of [valid, {}, null, [], {unexpected: true}, typeof valid === 'object' && valid !== null ? {...valid, unexpected: true} : valid]) {
-            expect(outcome(current.parseArguments, raw), current.name).toEqual(outcome(original.parseArguments, raw));
+            const field = contextualField(original.name);
+            const omitted = field && raw !== null && typeof raw === 'object' && !Array.isArray(raw) && !Object.hasOwn(raw, field);
+            const expected = outcome(value => {
+                const parsed = original.parseArguments(value);
+                if (omitted && parsed && typeof parsed === 'object' && !Array.isArray(parsed)) delete (parsed as Record<string, unknown>)[field];
+                return parsed;
+            }, omitted ? {...raw, [field]: 'd05-explicit-owner'} : raw);
+            expect(outcome(current.parseArguments, raw), current.name).toEqual(expected);
         }
     }
 });

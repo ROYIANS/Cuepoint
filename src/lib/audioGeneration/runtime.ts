@@ -30,6 +30,7 @@ import {musicWireInput, speechWireInput, validateGenerationInput} from "./input"
 import {observeAudioTask, validateAudioTaskObservations} from "./observations";
 import {canonicalizeAudioTaskIds} from "./taskIds";
 import {inspectAudioGenerationOutputs} from "./outputEvidence";
+import {assertAudioBatchDispatch} from "@/db/audioGenerationBatches";
 
 export interface AudioGenerationOptions extends ApimartRequestOptions {
     /** Test seam; production always validates through a real audio decoder. */
@@ -101,6 +102,10 @@ async function persistResult(job: AudioGenerationJob, result: AudioGenerationRes
     return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => {
         const latest = await readJob(job.projectId, job.id);
         await assertAudioProject(job.projectId);
+        if (latest.source.kind === "batch") {
+            const batch = await db.audioGenerationBatches.get(latest.source.batchId);
+            if (!batch || batch.projectId !== job.projectId || !await db.audioChapters.get(batch.chapterId)) throw new Error("批次章节已删除，不能保存迟到结果");
+        }
         const prior = latest.results.find(row => row.key === result.key);
         if (prior?.deleted || prior?.takeId || prior?.workId) return latest;
         const mediaId = createId("med");
@@ -175,13 +180,14 @@ export async function submitAudioGeneration(projectId: string, jobId: string, op
     return locked(jobId, async () => {
         let job = await readJob(projectId, jobId);
         if (job.status !== "prepared" || job.dormant) return job;
-        if (job.source.kind === "agent" && !options.beforeSubmit) throw new Error("助手生成需要通过已确认的工具调用提交");
+        if (job.source.kind !== "manual" && !options.beforeSubmit) throw new Error("助手或批次生成需要通过已确认的请求提交");
         validateGenerationInput(job.input);
         await validateTarget(projectId, job.input);
         let reference = job.input.kind === "speech" ? await validateSpeechReference(projectId, job.input) : undefined;
         if (job.referenceFingerprint && reference?.fingerprint !== job.referenceFingerprint) throw new Error("克隆参考音频已变化，请重新准备生成");
         const credentials = await connection(job);
         options.signal?.throwIfAborted();
+        if (job.source.kind === "batch") await assertAudioBatchDispatch(projectId, job.id);
         await options.beforeSubmit?.();
         job = await claimAudioGenerationJob(projectId, job.id, job.revision, createId("submit"));
         try {
@@ -189,11 +195,12 @@ export async function submitAudioGeneration(projectId: string, jobId: string, op
             const current = await connection(job);
             if (current.apiKey !== credentials.apiKey) throw new Error("连接密钥已变化，请重新准备生成");
             await options.beforeSubmit?.();
+            if (job.source.kind === "batch") await assertAudioBatchDispatch(projectId, job.id);
             reference = job.input.kind === "speech" ? await validateSpeechReference(projectId, job.input) : undefined;
             if (job.referenceFingerprint && reference?.fingerprint !== job.referenceFingerprint) throw new Error("克隆参考音频已变化，请重新准备生成");
             options.signal?.throwIfAborted();
         } catch (error) {
-            return change(job, {status: "failed", error: error instanceof Error ? error.message : "提交前检查失败"});
+            return change(job, {status: "failed", failureStage: "preflight", error: error instanceof Error ? error.message : "提交前检查失败"});
         }
         if (job.input.kind === "speech") {
             const response = job.input.mimo
@@ -206,6 +213,7 @@ export async function submitAudioGeneration(projectId: string, jobId: string, op
                 : await generateApimartSpeech(credentials, speechWireInput(job.input), options);
             if (!response.ok) return change(job, {
                 status: ["network", "aborted", "protocol"].includes(response.kind) ? "uncertain" : "failed",
+                failureStage: response.kind === "http" && response.httpStatus !== undefined && [400, 401, 403, 404, 405, 413, 415, 422, 429].includes(response.httpStatus) ? "provider" : undefined,
                 error: response.message
             });
             const result: AudioGenerationResult = {
@@ -221,6 +229,10 @@ export async function submitAudioGeneration(projectId: string, jobId: string, op
             // Persist returned bytes before decoding, so interrupted local processing can recover without another paid request.
             job = await db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => {
                 await assertAudioProject(projectId);
+                if (job.source.kind === "batch") {
+                    const batch = await db.audioGenerationBatches.get(job.source.batchId);
+                    if (!batch || batch.projectId !== projectId || !await db.audioChapters.get(batch.chapterId)) throw new Error("批次章节已删除，迟到响应不会创建新的成果");
+                }
                 const rawId = createId("med");
                 await db.media.add({
                     id: rawId,
@@ -236,6 +248,7 @@ export async function submitAudioGeneration(projectId: string, jobId: string, op
         const response = await submitApimartMusic(credentials, musicWireInput(job.input.settings), options);
         if (!response.ok) return change(job, {
             status: ["network", "aborted", "protocol"].includes(response.kind) ? "uncertain" : "failed",
+            failureStage: response.kind === "http" && response.httpStatus !== undefined && [400, 401, 403, 404, 405, 413, 415, 422, 429].includes(response.httpStatus) ? "provider" : undefined,
             error: response.message
         });
         return change(job, {status: "submitted", taskIds: response.taskIds, error: undefined});

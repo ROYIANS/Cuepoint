@@ -1,3 +1,4 @@
+import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import { writeFileSync } from "node:fs";
 import { expect, it } from "vitest";
 import { db } from "@/db/database";
@@ -41,9 +42,11 @@ it("measures startup, loaded groups and complete deterministic IP-search request
     const args = step === 1 ? { groupIds: ["ip-management"] } : { query: "INFP" };
     return Response.json({ choices: [{ message: step < 3 ? { content: "", tool_calls: [{ id: `call-${step}`, type: "function", function: { name, arguments: JSON.stringify(args) } }] } : { content: "找到你的 INFP 美食博主 IP。" }, finish_reason: step < 3 ? "tool_calls" : "stop" }] });
   };
-  await executeChatRun(run, connector.apiKey, new AbortController(), fetcher);
+  await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
   expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
-  expect(requests).toHaveLength(3);
-  const report = { estimator: "local character heuristic; not provider billing", originalBaseline: { tools: 50, schemaTokens: 11865, instructionTokens: 1951, combinedTokens: 13816 }, snapshots, ipSearch: { requests, totalEstimatedInputTokens: requests.reduce((sum, request) => sum + request.combinedInputTokens, 0), discoveryExtraModelRounds: 1, firstDiscoveryRequestInputTokens: requests[0].combinedInputTokens, note: "3 requests: load IP group -> ip_search -> answer. Includes actual loader and search results in subsequent inputs. Does not include provider output/reasoning/cache and is not a no-discovery A/B billing comparison." } };
+  expect(requests).toHaveLength(4);
+  expect((await db.agentRuns.get(run.id))?.modelStep).toBe(5);
+  expect((await db.agentRuns.get(run.id))?.finalReview?.status).toBe("checked");
+  const report = { estimator: "local character heuristic; not provider billing", originalBaseline: { tools: 50, schemaTokens: 11865, instructionTokens: 1951, combinedTokens: 13816 }, snapshots, ipSearch: { requests, totalEstimatedInputTokens: requests.reduce((sum, request) => sum + request.combinedInputTokens, 0), discoveryExtraModelRounds: 1, firstDiscoveryRequestInputTokens: requests[0].combinedInputTokens, note: "4 ordinary requests: load IP group -> ip_search -> candidate answer -> once-only finishing answer. The separate zero-tool final review is validated by the fixture but excluded from this discovery measurement. Includes actual loader and search results in subsequent inputs. Does not include provider output/reasoning/cache and is not a no-discovery A/B billing comparison." } };
   if (process.env.TOOL_LOADING_MEASURE_OUTPUT) writeFileSync(process.env.TOOL_LOADING_MEASURE_OUTPUT, JSON.stringify(report, null, 2) + "\n");
 });

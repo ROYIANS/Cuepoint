@@ -281,7 +281,7 @@ export async function updateRunPlanAndComplete(runId: string, callId: string, pl
         await db.agentToolCalls.update(callId, {status: "completed", result, updatedAt: nowIso()});
         return result;
     }).catch((error: unknown) => {
-        throw new AtomicToolRollbackError(error instanceof Error ? error.message : "计划更新已回滚");
+        throw new AtomicToolRollbackError(error instanceof Error ? error.message : "计划更新已回滚", {cause: error});
     });
 }
 
@@ -364,7 +364,7 @@ export async function executeAtomicTool(
             return value;
         });
     } catch (error) {
-        throw new AtomicToolRollbackError(error instanceof Error ? error.message : "本地操作已回滚");
+        throw new AtomicToolRollbackError(error instanceof Error ? error.message : "本地操作已回滚", {cause: error});
     }
 }
 

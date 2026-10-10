@@ -1,20 +1,23 @@
 import {soundWriteReceipt} from "./soundWriteReceipt";
 import {db} from "@/db/database";
 import {addMusicDraft, patchMusicDraft, patchMusicWork, validateMusicSettings} from "@/db/music";
-import {assertAudioRevision, ownedAudioRow} from "@/db/audioShared";
 import {libraryReadTool, libraryWriteTool} from "./libraryToolHelpers";
 import {
     assertAudioMusicToolScope,
     audioMusicRevision,
     audioMusicTarget,
     audioMusicUnion,
-    boundedAudioText
+    boundedAudioText,
+    resolveAudioMusicArgs,
+    ownedAudioToolRow,
+    assertAudioToolRevision
 } from "./audioTools";
 import type {AgentToolContext} from "./tools";
 import * as s from "./businessSchemas";
 import {MUSIC_DURATION_LIMITS} from "@/domain/music";
+import {ToolRecoveryError} from "./toolErrors";
 
-const base = {projectId: s.id};
+const base = {projectId: s.optional(s.id)};
 const identity = {...base, id: s.id, revision: audioMusicRevision};
 const scope = async (args: { projectId: string }, context: AgentToolContext) => {
     await assertAudioMusicToolScope(args.projectId, context, "music");
@@ -65,7 +68,7 @@ export const MUSIC_TOOLS = [
             const projectId = await assertAudioMusicToolScope(args.projectId, context, "music");
             const data = await state(projectId);
             const rows = data[args.kind].filter((row) => !args.id || row.id === args.id);
-            if (args.id && !rows.length) throw new Error("找不到当前项目中的音乐内容");
+            if (args.id && !rows.length) throw new ToolRecoveryError("TARGET_NOT_FOUND", "找不到当前项目中的音乐内容");
             const offset = args.offset ?? 0, limit = args.limit ?? 20;
             if (args.field) {
                 if (!args.id || args.kind !== "works") throw new Error("文本分页需要指定作品 ID");
@@ -120,12 +123,12 @@ export const MUSIC_TOOLS = [
         receipt: (args, result) => soundWriteReceipt("music_draft", args.id ? "updated" : "created", args, result),
         title: "保存音乐创作草稿",
         description: "保存完整引擎参数；新建省略 id/revision，更新须同时给当前 id/revision。只保存草稿、不计费；生成需另行确认。切换引擎替换全部参数，不混入另一引擎字段。",
-        scope,
+        scope, resolve: (args, context) => resolveAudioMusicArgs(args, context, "music"),
         owners: (args) => [args.projectId],
         spec: s.object({...base, id: s.optional(s.id), revision: s.optional(audioMusicRevision), settings}),
         async prepare(args) {
             if (Boolean(args.id) !== (args.revision !== undefined)) throw new Error("更新草稿必须同时提供 id 和 revision");
-            if (args.id) assertAudioRevision(await ownedAudioRow(db.musicDrafts, args.projectId, args.id), args.revision!);
+            if (args.id) assertAudioToolRevision(await ownedAudioToolRow(db.musicDrafts, args.projectId, args.id), args.revision!);
             return {
                 state: await state(args.projectId),
                 target: audioMusicTarget(args.projectId),
@@ -139,7 +142,7 @@ export const MUSIC_TOOLS = [
         receipt: (args, result) => soundWriteReceipt("music_work", "updated", args, result),
         title: "整理音乐作品",
         description: "按 revision 修改已存在作品的名称、备注或收藏，不改变音乐源文件与原始生成参数。",
-        scope,
+        scope, resolve: (args, context) => resolveAudioMusicArgs(args, context, "music"),
         owners: (args) => [args.projectId],
         spec: s.object({
             ...identity,
@@ -150,8 +153,8 @@ export const MUSIC_TOOLS = [
             }))
         }),
         async prepare(args) {
-            const row = await ownedAudioRow(db.musicWorks, args.projectId, args.id);
-            assertAudioRevision(row, args.revision);
+            const row = await ownedAudioToolRow(db.musicWorks, args.projectId, args.id);
+            assertAudioToolRevision(row, args.revision);
             return {
                 state: row,
                 target: audioMusicTarget(args.projectId),
@@ -165,12 +168,12 @@ export const MUSIC_TOOLS = [
         receipt: (args, result) => soundWriteReceipt("music_draft", "created", args, result),
         title: "复用音乐参数",
         description: "将指定作品的实际生成参数另存为新草稿，保留原作品；后续可编辑和经确认生成。没有参数的上传音频不能复用生成设置。",
-        scope,
+        scope, resolve: (args, context) => resolveAudioMusicArgs(args, context, "music"),
         owners: (args) => [args.projectId],
         spec: s.object(identity),
         async prepare(args) {
-            const work = await ownedAudioRow(db.musicWorks, args.projectId, args.id);
-            assertAudioRevision(work, args.revision);
+            const work = await ownedAudioToolRow(db.musicWorks, args.projectId, args.id);
+            assertAudioToolRevision(work, args.revision);
             if (!work.settings) throw new Error("此作品没有可复用的生成参数");
             validateMusicSettings(work.settings);
             return {
@@ -180,8 +183,8 @@ export const MUSIC_TOOLS = [
             };
         },
         async execute(args) {
-            const work = await ownedAudioRow(db.musicWorks, args.projectId, args.id);
-            assertAudioRevision(work, args.revision);
+            const work = await ownedAudioToolRow(db.musicWorks, args.projectId, args.id);
+            assertAudioToolRevision(work, args.revision);
             if (!work.settings) throw new Error("此作品没有生成参数");
             return addMusicDraft(args.projectId, {settings: work.settings});
         }

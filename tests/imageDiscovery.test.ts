@@ -1,3 +1,4 @@
+import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import {registeredTools} from "./helpers/registeredTools";
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { db } from '@/db/database';
@@ -199,8 +200,9 @@ describe('natural-language discovery to actual current-model pixels', () => {
       if (protocol === 'responses') return Response.json({ status: 'completed', output: call ? [{ type: 'reasoning', summary: [], encrypted_content: 'opaque-kept' }, { type: 'function_call', call_id: call.id, name: call.function.name, arguments: call.function.arguments }] : [{ type: 'message', role: 'assistant', content: [{ type: 'output_text', text: '看到了画面', annotations: [] }] }] });
       return Response.json({ choices: [{ message: call ? { content: '', tool_calls: [call] } : { content: '看到了画面' }, finish_reason: call ? 'tool_calls' : 'stop' }] });
     });
-    await executeChatRun((await db.agentRuns.get(run.id))!, connector.apiKey, new AbortController(), model);
-    expect(model).toHaveBeenCalledTimes(4);
+    await executeChatRun((await db.agentRuns.get(run.id))!, connector.apiKey, new AbortController(), withFinalReviewFixture(model));
+    expect(model).toHaveBeenCalledTimes(5);
+    expect((await db.agentRuns.get(run.id))?.finalReview?.status).toBe("checked");
     expect(bodies[0]).not.toContain('data:image'); expect(bodies[1]).not.toContain('data:image');
     expect(bodies[2]).not.toContain('data:image');
     expect(bodies[3]).toContain('data:image/png;base64,Y29ycmVjdC1pbWFnZS1waXhlbHM=');

@@ -20,7 +20,9 @@ export type MimoRequestOptions = { fetchImpl?: typeof fetch; signal?: AbortSigna
 export type MimoFailure = {
     ok: false;
     kind: "validation" | "http" | "provider" | "protocol" | "network" | "aborted";
-    message: string
+    message: string;
+    /** Structured response evidence for paid retry; the human message is not a classifier. */
+    httpStatus?: number
 };
 const fail = (kind: MimoFailure["kind"], message: string): MimoFailure => ({ok: false, kind, message});
 const record = (value: unknown): value is Record<string, unknown> => !!value && typeof value === "object" && !Array.isArray(value);
@@ -58,7 +60,7 @@ async function readMimoResponse(response: Response, limit: number, key: string, 
     }
     if (!response.ok || (record(data) && data.error != null)) {
         const detail = record(data) && record(data.error) && typeof data.error.message === "string" ? data.error.message : text;
-        return fail(response.ok ? "provider" : "http", `MiMo 请求失败${response.ok ? "" : `（${response.status}）`}：${redactCredentials(detail, key).slice(0, 300) || "请检查连接权限、余额和参数"}`);
+        return {...fail(response.ok ? "provider" : "http", `MiMo 请求失败${response.ok ? "" : `（${response.status}）`}：${redactCredentials(detail, key).slice(0, 300) || "请检查连接权限、余额和参数"}`), ...(!response.ok ? {httpStatus: response.status} : {})};
     }
     return {ok: true, data};
 }

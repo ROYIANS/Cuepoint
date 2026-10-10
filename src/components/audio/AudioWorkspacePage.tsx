@@ -1,5 +1,5 @@
 import {type AudioSelectionIntent, deriveAudioSelection} from "./audioSelection";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {toast} from "sonner";
 import {useLiveQuery} from "dexie-react-hooks";
 import {
@@ -35,6 +35,10 @@ import {ScriptDocument} from "./ScriptDocument";
 import {VoiceLibrary} from "./VoiceLibrary";
 import {flushPendingDrafts} from "@/lib/debouncedDraft";
 import {AudioTimeline} from "./AudioTimeline";
+import {AudioBatchActions, AudioChapterBatches} from "./AudioGenerationBatches";
+import {pauseAudioGenerationBatches} from "@/lib/audioGeneration/batchRuntime";
+import {AudioArrangementActions} from "./AudioArrangementActions";
+import {AudioClipHistory} from "@/lib/audio/commands";
 import "./story-workspace.css";
 
 function useInspectorSheet() {
@@ -51,6 +55,11 @@ function useInspectorSheet() {
 
 export function AudioWorkspacePage({projectId}: { projectId: string }) {
     useProjectAudioJobs(projectId);
+    useEffect(() => {
+        const pause = () => pauseAudioGenerationBatches({projectId});
+        window.addEventListener("pagehide", pause);
+        return () => {window.removeEventListener("pagehide", pause); pause();};
+    }, [projectId]);
     const data = useLiveQuery(async () => {
         const project = await db.projects.get(projectId) ?? null;
         return {
@@ -75,6 +84,9 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
     const [busy, setBusy] = useState(false);
     const pending = useRef(false);
     const sheet = useInspectorSheet();
+    const [, updateHistory] = useState(0);
+    const historyChapterId = data?.snapshot?.chapters.find(row => row.id === chapterId)?.id ?? data?.snapshot?.chapters[0]?.id;
+    const clipHistory = useMemo(() => historyChapterId ? new AudioClipHistory(projectId, historyChapterId, () => updateHistory(value => value + 1)) : undefined, [projectId, historyChapterId]);
 
     async function action(fn: () => Promise<unknown>) {
         if (pending.current) return;
@@ -210,7 +222,7 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
                                                 onClick={() => {
                                                     const target = segment ?? snapshot.segments.find(row => row.chapterId === chapter.id);
                                                     if (target) inspect(target);
-                                                }}><Sparkles size={15}/>配音</Button><AudioSources
+                                                }}><Sparkles size={15}/>配音</Button><AudioBatchActions projectId={projectId} chapterId={chapter.id} snapshot={snapshot}/><AudioArrangementActions projectId={projectId} chapterId={chapter.id} snapshot={snapshot} history={clipHistory}/><AudioSources
                 request={sourceRequest} compact projectId={projectId} segmentId={segment?.id} onSaved={saved}/><Button
                 variant="ghost" size="sm" aria-label={inspectorOpen ? "收起声音面板" : "打开声音面板"} onClick={() => {
                 if (!segment) setInspectorTab("sources");
@@ -227,6 +239,7 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
                                                                selectedId={segment?.id ?? ""} busy={busy}
                                                                action={action} onSelect={selectSegment}
                                                                onInspect={(row) => inspect(row)} onVoices={openVoices}/>
+                <div className="px-4 pb-4"><AudioChapterBatches projectId={projectId} chapterId={chapter.id}/></div>
             </main>
             {!sheet && inspectorOpen && <aside className="as-inspector">
                 <div className="as-inspector-top"><span><Headphones size={14}/>声音工作区</span><Button variant="ghost"
@@ -246,7 +259,7 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
                           setInspectorTab("voice");
                           setInspectorOpen(true);
                       } : undefined}/>
-        <AudioTimeline projectId={projectId} projectName={project.name} chapterId={chapter.id} snapshot={snapshot}
+        <AudioTimeline projectId={projectId} projectName={project.name} chapterId={chapter.id} snapshot={snapshot} clipHistory={clipHistory}
                        selectedId={clipId} onSelect={selectClip} mobileMode={mode} seekRequest={seekRequest}
                        onOpenSources={() => inspect()}/>
         {sheet && <Sheet open={inspectorOpen} onOpenChange={setInspectorOpen}><SheetContent

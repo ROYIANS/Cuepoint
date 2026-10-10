@@ -14,7 +14,7 @@ const file = () => new File(['retained fixture audio'], 'intro.mp3', { type: 'au
 describe('IP and material integration with legacy projects', () => {
   it('upgrades v21 with no IP/material tables without changing existing projects', async () => {
     const project = await createProject('legacy v21');
-    const added = new Set(['ipProfiles', 'projectIpLinks', 'libraryMaterials', 'materialVersions', 'materialUses', 'materialEvents']);
+    const added = new Set(['ipProfiles', 'projectIpLinks', 'libraryMaterials', 'materialVersions', 'materialUses', 'materialEvents', 'audioGenerationBatches', 'audioGenerationBatchItems', 'audioArrangementProposals']);
     const stores = Object.fromEntries(db.tables.filter((table) => !added.has(table.name))
       .map((table) => [table.name, [table.schema.primKey.src, ...table.schema.indexes.map((index) => index.src)].join(',')]));
     await db.delete();
@@ -24,7 +24,7 @@ describe('IP and material integration with legacy projects', () => {
     await legacy.table('projects').add(project);
     legacy.close();
     await db.open();
-    expect(db.verno).toBe(23);
+    expect(db.verno).toBe(24);
     expect(await db.projects.get(project.id)).toEqual(project);
     for (const name of added) expect(await db.table(name).count()).toBe(0);
   });

@@ -228,7 +228,9 @@ export async function finishAgentRun(runId: string, status: Exclude<AgentRunStat
             interrupted: "interrupted"
         } as const;
         await db.chatMessages.update(message.id, {...output, status: messageStatus[status], error});
-        await db.agentRuns.update(run.id, {status, error, finishReason, updatedAt: at, endedAt: at});
+        await db.agentRuns.update(run.id, {status, error, finishReason, updatedAt: at, endedAt: at,
+            ...(run.finalReview?.status === "pending" ? {finalReview: {...run.finalReview, status: "unverified" as const,
+                reason: status === "cancelled" ? "stopped" as const : "interrupted" as const, endedAt: at}} : {})});
     });
 }
 

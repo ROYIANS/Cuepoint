@@ -73,6 +73,7 @@ export interface AudioTimelineProps {
     seekRequest?: { id: string; position: number };
     onPositionChange?: (seconds: number) => void;
     onOpenSources?: () => void;
+    clipHistory?: AudioClipHistory;
 }
 
 export function AudioTimeline({
@@ -85,14 +86,16 @@ export function AudioTimeline({
                                   mobileMode = "script",
                                   seekRequest,
                                   onPositionChange,
-                                  onOpenSources
+                                  onOpenSources,
+                                  clipHistory
                               }: AudioTimelineProps) {
     const player = useRef<AudioPreviewPlayer | null>(null);
     const scroll = useRef<HTMLDivElement>(null);
     const root = useRef<HTMLElement>(null);
     const onPosition = useRef(onPositionChange);
     onPosition.current = onPositionChange;
-    const history = useMemo(() => new AudioClipHistory(projectId, chapterId), [projectId, chapterId]);
+    const localHistory = useMemo(() => new AudioClipHistory(projectId, chapterId), [projectId, chapterId]);
+    const history = clipHistory ?? localHistory;
     const [, redraw] = useState(0);
     const [position, setPosition] = useState(0);
     const positionRef = useRef(0);

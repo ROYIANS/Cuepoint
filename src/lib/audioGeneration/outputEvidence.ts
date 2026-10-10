@@ -2,7 +2,8 @@ import Dexie from "dexie";
 import {db} from "@/db/database";
 import {validateAudioClip} from "@/db/audio";
 import {validateAudioMetadata} from "@/db/audioShared";
-import type {AudioGenerationJob} from "@/domain/audioGeneration";
+import type {AudioGenerationJob, AudioGenerationResult} from "@/domain/audioGeneration";
+import type {AudioProvenance} from "@/domain/audio";
 import {getProjectKind} from "@/domain/types";
 import {targetRevision} from "@/lib/productionRevision";
 
@@ -20,6 +21,21 @@ interface AudioOutputEvidenceItem {
     timelineClipIds: string[];
     timelineClipCount: number;
     placementRevision?: string;
+    outputFingerprint?: string;
+}
+
+function outputProvenance(provenance: AudioProvenance) {
+    return {
+        provider: provenance.provider, model: provenance.model, jobId: provenance.jobId,
+        taskId: provenance.taskId, clipId: provenance.clipId, audioIndex: provenance.audioIndex
+    };
+}
+
+function matchesResultProvenance(job: AudioGenerationJob, result: AudioGenerationResult, actual?: AudioProvenance): boolean {
+    const expected = result.provenance;
+    return !!actual && expected.jobId === job.id && expected.provider === job.connector.provider &&
+        !!expected.model && (!expected.taskId || job.taskIds.includes(expected.taskId)) &&
+        targetRevision(outputProvenance(actual)) === targetRevision(outputProvenance(expected));
 }
 
 export interface AudioOutputEvidence {
@@ -35,11 +51,18 @@ export interface AudioOutputEvidence {
 }
 
 /** Local evidence only. Callers supply a current job inside a consistent read transaction. */
-export async function inspectAudioGenerationOutputs(job: AudioGenerationJob): Promise<AudioOutputEvidence> {
+export async function inspectAudioGenerationOutputs(job: AudioGenerationJob, options: {
+    resultKey?: string; offset?: number; limit?: number
+} = {}): Promise<AudioOutputEvidence> {
     const project = await db.projects.get(job.projectId);
     const projectMatches = !!project && getProjectKind(project) === (job.input.kind === "speech" ? "audio" : "music");
     const results: AudioOutputEvidenceItem[] = [];
-    for (const result of job.results.slice(0, 100)) {
+    const keyCounts = new Map<string, number>();
+    for (const result of job.results) keyCounts.set(result.key, (keyCounts.get(result.key) ?? 0) + 1);
+    const offset = Math.max(0, options.offset ?? 0), limit = Math.min(100, Math.max(1, options.limit ?? 100));
+    const inspected = options.resultKey === undefined ? job.results.slice(offset, offset + limit)
+        : job.results.filter(result => result.key === options.resultKey).slice(0, 100);
+    for (const result of inspected) {
         const item: AudioOutputEvidenceItem = {
             key: result.key, title: result.title.slice(0, 240), takeId: result.takeId,
             workId: result.workId, mediaId: result.mediaId, availability: "unverified", available: false,
@@ -50,7 +73,8 @@ export async function inspectAudioGenerationOutputs(job: AudioGenerationJob): Pr
             item.availability = "deleted";
             continue;
         }
-        if (!projectMatches) continue;
+        if (!projectMatches || keyCounts.get(result.key) !== 1 || !result.key.trim()) continue;
+        if (job.input.kind === "speech" ? !!result.workId : !!result.takeId) continue;
         const output = job.input.kind === "speech"
             ? result.takeId ? await db.audioTakes.get(result.takeId) : undefined
             : result.workId ? await db.musicWorks.get(result.workId) : undefined;
@@ -59,7 +83,9 @@ export async function inspectAudioGenerationOutputs(job: AudioGenerationJob): Pr
             continue;
         }
         // A raw provider response or an unrelated reusable media row is not a saved work.
-        if (output.projectId !== job.projectId || output.mediaId !== result.mediaId || output.provenance?.jobId !== job.id) continue;
+        item.outputFingerprint = targetRevision(output);
+        if (output.projectId !== job.projectId || output.mediaId !== result.mediaId || !matchesResultProvenance(job, result, output.provenance)) continue;
+        if ("source" in output && output.source !== "tts") continue;
         item.outputRevision = output.revision;
         const media = await db.media.get(output.mediaId);
         if (!media) {

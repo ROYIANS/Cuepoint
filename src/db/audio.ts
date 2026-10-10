@@ -30,6 +30,7 @@ import {
 import {validateSpeechReference} from "@/lib/audioGeneration/reference";
 import {validateMimoSpeech} from "@/lib/audioGeneration/input";
 import {nowIso} from "@/lib/ids";
+import {targetRevision} from "@/lib/productionRevision";
 
 export async function validateAudioChapter(row: AudioChapter) {
     await assertAudioProject(row.projectId, "audio");
@@ -183,6 +184,9 @@ export const deleteAudioChapter = (projectId: string, id: string, revision: numb
     await db.audioSegments.where("chapterId").equals(id).delete();
     await db.audioClips.where("chapterId").equals(id).delete();
     await db.audioTracks.where("chapterId").equals(id).delete();
+    await db.audioGenerationBatches.where("chapterId").equals(id).delete();
+    await db.audioGenerationBatchItems.where("chapterId").equals(id).delete();
+    await db.audioArrangementProposals.where("chapterId").equals(id).delete();
     await db.audioExports.where("projectId").equals(projectId).filter((row) => row.chapterId === id).modify((row) => {
         row.scope = "chapter";
         row.chapterTitle = chapter.title;
@@ -208,13 +212,46 @@ export async function getAudioProjectSnapshot(projectId: string): Promise<AudioP
 
 
 /** Replace one chapter's clip document with a CAS guard; undo never copies Blobs. */
+export async function assertAudioClipDocument(projectId: string, chapterId: string, expected: AudioClip[]): Promise<AudioClip[]> {
+    const current = await db.audioClips.where("chapterId").equals(chapterId).toArray();
+    if (new Set(expected.map(row => row.id)).size !== expected.length || expected.length !== current.length || expected.some(row => row.projectId !== projectId || row.chapterId !== chapterId || !current.some(saved => saved.id === row.id && saved.revision === row.revision))) throw new Error("时间线已被其他操作修改，请刷新后重试");
+    return current;
+}
+
+/** Insert/remove only, preserving every retained row byte-for-byte, including revision. */
+export async function changeAudioClipMembership(projectId: string, chapterId: string, expected: AudioClip[], next: AudioClip[]): Promise<AudioClip[]> {
+    return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => {
+        await assertAudioProject(projectId, "audio");
+        await ownedAudioRow(db.audioChapters, projectId, chapterId);
+        const current = await assertAudioClipDocument(projectId, chapterId, expected);
+        if (new Set(next.map(row => row.id)).size !== next.length) throw new Error("片段 ID 重复");
+        const added: AudioClip[] = [];
+        for (const row of next) {
+            const saved = current.find(item => item.id === row.id);
+            if (saved) {
+                if (targetRevision(saved) !== targetRevision(row)) throw new Error("批量排列不能修改已有片段");
+            } else {
+                if (await db.audioClips.get(row.id)) throw new Error("片段 ID 已被占用");
+                if (row.projectId !== projectId || row.chapterId !== chapterId || !row.id || !Number.isSafeInteger(row.revision) || row.revision < 1) throw new Error("片段标识或归属无效");
+                await assertOwnedAudioMedia(projectId, (await ownedAudioRow(db.audioTakes, projectId, row.takeId)).mediaId);
+                await validateAudioClip(row);
+                added.push(row);
+            }
+        }
+        const retained = new Set(next.map(row => row.id));
+        await db.audioClips.bulkDelete(current.filter(row => !retained.has(row.id)).map(row => row.id));
+        await db.audioClips.bulkAdd(added);
+        if (added.length || next.length !== current.length) await touchAudioProject(projectId);
+        return next;
+    });
+}
+
 export async function replaceAudioClips(projectId: string, chapterId: string, expected: AudioClip[], next: AudioClip[]): Promise<AudioClip[]> {
     return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => {
         await assertAudioProject(projectId, "audio");
         await ownedAudioRow(db.audioChapters, projectId, chapterId);
-        const current = await db.audioClips.where("chapterId").equals(chapterId).toArray();
         if (new Set(expected.map((r) => r.id)).size !== expected.length || new Set(next.map((r) => r.id)).size !== next.length) throw new Error("片段 ID 重复");
-        if (expected.length !== current.length || expected.some((row) => row.projectId !== projectId || row.chapterId !== chapterId || !current.some((c) => c.id === row.id && c.revision === row.revision))) throw new Error("时间线已被其他操作修改，请刷新后重试");
+        const current = await assertAudioClipDocument(projectId, chapterId, expected);
         const rows: AudioClip[] = [];
         for (const row of next) {
             if (!row.id || !Number.isSafeInteger(row.revision) || row.revision < 1) throw new Error("片段标识或版本无效");

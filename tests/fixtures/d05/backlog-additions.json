@@ -1,0 +1,282 @@
+[
+  {
+    "name": "prepare_audio_generation_batch",
+    "title": "准备批量配音",
+    "description": "为同一章节1–20个真实段落准备批量配音草稿，继承各段落已保存角色音色。只写本地草稿，不发付费请求；用户在面板核对并确认整批后才发送，模型不能代为确认。projectId 可省略使用当前项目。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "chapterId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "segmentIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "minItems": 1,
+          "maxItems": 20
+        },
+        "connectorId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "title": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 160
+        }
+      },
+      "required": [
+        "chapterId",
+        "segmentIds"
+      ]
+    },
+    "effect": "write",
+    "atomic": true
+  },
+  {
+    "name": "audio_read_generation_batch",
+    "title": "读取批量配音进度",
+    "description": "读取当前项目已保存批次的各项真实状态、失败和已保存/选用/入轨区别。只读本地记录，不发送、查询供应商或试听。准备完成不代表付费提交，未知项不得重发。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "batchId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        }
+      },
+      "required": [
+        "batchId"
+      ]
+    },
+    "effect": "read"
+  },
+  {
+    "name": "audio_read_arrangement",
+    "title": "读取选用与排列记录",
+    "description": "读取当前项目的真实预览/历史和最新 revision、当前仍存在的新增片段。历史 applied 不代表当前仍放置；导入记录是休眠历史。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "proposalId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        }
+      },
+      "required": [
+        "proposalId"
+      ]
+    },
+    "effect": "read"
+  },
+  {
+    "name": "audio_select_takes",
+    "title": "批量选用配音版本",
+    "description": "按真实读取到的 segment/take ID 与 revision 选用 1–20 段声音；必须逐项明确版本。整组预览确认后原子保存，不放入时间线，不生成或听取声音。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "chapterId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "choices": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "segmentId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              },
+              "segmentRevision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 1000000000000
+              },
+              "takeId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              },
+              "takeRevision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 1000000000000
+              }
+            },
+            "required": [
+              "segmentId",
+              "segmentRevision",
+              "takeId",
+              "takeRevision"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 20
+        }
+      },
+      "required": [
+        "chapterId",
+        "choices"
+      ]
+    },
+    "effect": "write",
+    "atomic": true,
+    "requiresConfirmation": true
+  },
+  {
+    "name": "audio_arrange_selected",
+    "title": "排列已选声音",
+    "description": "预览并确认后，按稿件顺序和真实裁剪时长，将 1–20 段已选声音追加到明确的人声音轨。已有任意版本剪辑均保留并跳过；不移动手动剪辑，不改变选用，不生成或听取声音。可用 proposalId 明确撤销本次新增。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "chapterId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "segmentIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "minItems": 1,
+          "maxItems": 20
+        },
+        "trackId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "gapSec": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 300
+        },
+        "startSec": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 86400
+        },
+        "trims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "segmentId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              },
+              "startSec": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 86400
+              },
+              "endSec": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 86400
+              }
+            },
+            "required": [
+              "segmentId",
+              "startSec",
+              "endSec"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 20
+        }
+      },
+      "required": [
+        "chapterId",
+        "segmentIds",
+        "trackId"
+      ]
+    },
+    "effect": "write",
+    "atomic": true,
+    "requiresConfirmation": true
+  },
+  {
+    "name": "audio_revert_arrangement",
+    "title": "撤销一次声音排列",
+    "description": "明确撤销该 proposalId 的新增片段，保留选用、源音频及所有原有手动剪辑。时间线任何后续改动都会拒绝撤销，需先重新检查。导入历史不能应用或撤销。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "proposalId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000000
+        }
+      },
+      "required": [
+        "proposalId",
+        "revision"
+      ]
+    },
+    "effect": "write",
+    "atomic": true,
+    "requiresConfirmation": true
+  }
+]

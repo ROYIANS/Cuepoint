@@ -94,6 +94,14 @@ export async function deleteChatThread(id: Id): Promise<void> {
         await db.agentGenerationBatches.where("threadId").equals(id).delete();
         await db.agentGenerationBatchItems.where("threadId").equals(id).delete();
         await db.agentGenerationJobs.where("threadId").equals(id).delete();
+        // Audio sources survive chat deletion as dormant project history, without live approval or dispatch.
+        const audioBatches = await db.audioGenerationBatches.where("owner.threadId").equals(id).toArray();
+        const audioBatchIds = new Set(audioBatches.map(batch => batch.id));
+        for (const batch of audioBatches) {
+            await db.audioGenerationBatches.update(batch.id, {dormant: true, status: "cancelled", confirmedAt: undefined, confirmedItemIds: [], sourceCallId: undefined, revision: batch.revision + 1, updatedAt: nowIso()});
+            await db.audioGenerationBatchItems.where("batchId").equals(batch.id).filter(item => !item.jobId).modify({state: "cancelled"});
+        }
+        await db.audioGenerationJobs.filter(job => job.source.kind === "batch" && audioBatchIds.has(job.source.batchId)).modify({dormant: true});
         await db.contextCompactions.where("threadId").equals(id).delete();
         for (const task of await db.agentTasks.where("threadId").equals(id).toArray()) {
             await db.agentTaskWrapups.where("taskId").equals(task.id).delete();

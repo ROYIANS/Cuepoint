@@ -22,6 +22,9 @@ function permitsEntry(name: string, entry: WriteReceiptEntry): boolean {
     if (name === "audio_place_take") return entry.kind === "audio_clip" && entry.operation === "created";
     if (name === "audio_edit_clip") return entry.kind === "audio_clip" && entry.operation === "updated";
     if (name === "audio_remove_clip") return entry.kind === "audio_clip" && entry.operation === "deleted";
+    if (name === "audio_select_takes") return entry.kind === "audio_segment" && entry.operation === "updated";
+    if (name === "audio_arrange_selected") return entry.kind === "audio_clip" && entry.operation === "created";
+    if (name === "audio_revert_arrangement") return entry.kind === "audio_clip" && entry.operation === "deleted";
     if (name === "music_save_draft") return entry.kind === "music_draft" && entry.operation !== "deleted";
     if (name === "music_reuse_work") return entry.kind === "music_draft" && entry.operation === "created";
     return name === "music_update_work" && entry.kind === "music_work" && entry.operation === "updated";

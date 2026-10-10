@@ -1,3 +1,4 @@
+import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import { prepareRunContext } from "@/lib/agent/contextCompaction";
 import { buildContextMessages } from "@/lib/agent/contextPlanner";
 import { toResponseInput } from "@/lib/ai/responsesStream";
@@ -67,7 +68,7 @@ describe("progressive tool loading", () => {
       if (bodies.length === 2) return reply(protocol, [load(["asset-edit"], "load-2")]);
       return reply(protocol);
     });
-    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
     expect(names(bodies[0])).toEqual(["workspace_overview", "update_run_plan", DISCOVERY_TOOL_NAME]);
     expect(names(bodies[1])).toContain("project_create");
@@ -76,12 +77,13 @@ describe("progressive tool loading", () => {
     expect(JSON.stringify(bodies[2])).not.toContain("删除按用户明确目标执行");
     expect(JSON.stringify(bodies[2])).toContain("工作室 ownerId 使用 studio");
     const saved = (await db.agentRuns.get(run.id))!;
-    expect(saved.offeredTools?.map((step) => step.names)).toEqual(bodies.map(names));
+    expect(saved.offeredTools?.map((step) => step.names)).toEqual([...bodies.map(names), []]);
+    expect(saved.finalReview?.status).toBe("checked");
     expect(saved.requestMessages[0].content).not.toContain("删除按用户明确目标执行");
   });
   it("rejects same-step load plus never-offered call before executing either", async () => {
     const run = await begin();
-    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => reply(run.protocol, [load(["story-edit"]), call("project_create", {}, "sneak")])));
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => reply(run.protocol, [load(["story-edit"]), call("project_create", {}, "sneak")]))));
     expect((await db.agentRuns.get(run.id))?.status).toBe("failed");
     expect(await db.agentToolCalls.count()).toBe(0);
     expect(await db.projects.count()).toBe(0);
@@ -90,7 +92,7 @@ describe("progressive tool loading", () => {
   it("rejects disabled groups atomically without broadening authority", async () => {
     const run = await begin();
     let round = 0;
-    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => reply(run.protocol, ++round === 1 ? [load(["web-research"])] : [])));
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => reply(run.protocol, ++round === 1 ? [load(["web-research"])] : []))));
     const calls = await db.agentToolCalls.where("runId").equals(run.id).toArray();
     expect(calls[0]).toMatchObject({ status: "failed", error: expect.stringContaining("未启用") });
     expect((await db.agentRuns.get(run.id))?.toolLoading?.loadedGroupIds).toEqual([]);
@@ -107,12 +109,12 @@ describe("progressive tool loading", () => {
     const tool: AgentToolDefinition = { name: "project_create", title: "创建", description: "fixture", parameters: { type: "object", properties: {} }, parseArguments: () => ({}), effect: "write", highRisk: () => false, execute: effect };
     const registry = BUILTIN_TOOLS.map((item) => item.name === tool.name ? tool : item);
     let round = 0;
-    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => reply(run.protocol, ++round === 1 ? [load(["story-edit"])] : [call(tool.name, {}, "write")])), registry);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => reply(run.protocol, ++round === 1 ? [load(["story-edit"])] : [call(tool.name, {}, "write")]))), registry);
     expect((await db.agentRuns.get(run.id))?.status).toBe("waiting_approval");
     const pending = await db.agentToolCalls.where("runId").equals(run.id).filter((item) => item.status === "awaiting_approval").first();
     await updateGeneralAgentConfig({ enabledSkillIds: [] });
     await resolveAgentToolApproval(run.id, pending!.id, "approve");
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), vi.fn(async () => reply(run.protocol)), registry);
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => reply(run.protocol))), registry);
     expect(effect).toHaveBeenCalledTimes(1);
     const saved = (await db.agentRuns.get(run.id))!;
     expect(saved.status).toBe("completed");
@@ -125,16 +127,16 @@ describe("progressive tool loading", () => {
     const tool: AgentToolDefinition = { name: "project_create", title: "创建", description: "fixture", parameters: { type: "object", properties: {} }, parseArguments: () => ({}), effect: "write", highRisk: () => false, execute: effect };
     const registry = BUILTIN_TOOLS.map((item) => item.name === tool.name ? tool : item);
     let round = 0;
-    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => reply(run.protocol, ++round === 1 ? [load(["story-edit"])] : [load(["asset-edit"], "switch"), call(tool.name, {}, "write")])), registry);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => reply(run.protocol, ++round === 1 ? [load(["story-edit"])] : [load(["asset-edit"], "switch"), call(tool.name, {}, "write")]))), registry);
     const pending = await db.agentToolCalls.where("runId").equals(run.id).filter((item) => item.status === "awaiting_approval").first();
     expect((await db.agentRuns.get(run.id))?.toolLoading?.loadedGroupIds).toEqual(["story-edit"]);
     await resolveAgentToolApproval(run.id, pending!.id, "approve");
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), vi.fn(async (_url, init) => {
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async (_url, init) => {
       const body = JSON.parse(String(init?.body));
       expect(names(body)).toContain("project_create");
       expect(names(body)).toContain("character_create");
       return reply(run.protocol);
-    }), registry);
+    })), registry);
     expect(effect).toHaveBeenCalledTimes(1);
     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
   });

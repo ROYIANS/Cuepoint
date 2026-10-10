@@ -4,6 +4,7 @@ import {executeNewChatMessage, resolveChatRunAction, retryFrozenChatRun} from ".
 import {createChatThread, updateChatThread} from "@/db/chat";
 import {deleteChatThread} from "@/db/cascadeCommands";
 import {pauseThreadGeneration} from "@/lib/agent/generationBatchRuntime";
+import {pauseAudioGenerationBatches} from "@/lib/audioGeneration/batchRuntime";
 import {useReferenceDraft} from "./useReferenceDraft";
 import {TaskBoard} from "./TaskBoard";
 import {TaskInspector} from "./TaskInspector";
@@ -102,7 +103,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
 
     useEffect(() => {
         if (!activeThreadId) return;
-        const pause = () => pauseThreadGeneration(activeThreadId);
+        const pause = () => {pauseThreadGeneration(activeThreadId); pauseAudioGenerationBatches({threadId: activeThreadId});};
         window.addEventListener('pagehide', pause);
         return () => {
             window.removeEventListener('pagehide', pause);
@@ -317,7 +318,8 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
 
     const handleStop = useCallback(() => {
         abortRef.current?.abort();
-    }, [abortRef]);
+        if (activeThreadId) pauseAudioGenerationBatches({threadId: activeThreadId});
+    }, [abortRef, activeThreadId]);
 
     const handleSend = useCallback(async () => {
         const submitted = references.capture();

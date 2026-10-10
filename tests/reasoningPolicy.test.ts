@@ -1,3 +1,4 @@
+import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import { updateGeneralAgentConfig } from "@/db/agentSettings";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
@@ -97,11 +98,11 @@ describe("durable reasoning configuration", () => {
       }
       return answer();
     });
-    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher, registry);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher), registry);
     expect((await db.agentRuns.get(run.id))?.status).toBe("waiting_approval");
     const call = (await db.agentToolCalls.toArray()).find((item) => item.status === "awaiting_approval")!;
     await resolveAgentToolApproval(run.id, call.id, "approve");
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), fetcher, registry);
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher), registry);
     expect(bodies).toHaveLength(4);
     expect(bodies.map((body) => body.reasoning_effort)).toEqual(["high", "high", "high", "high"]);
     expect(controlled.execute).toHaveBeenCalledTimes(1);

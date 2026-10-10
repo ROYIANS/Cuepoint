@@ -1,3 +1,4 @@
+import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import {registeredTools} from "./helpers/registeredTools";
 import { preloadFixtureGroups } from "./helpers/toolDispatch";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -31,7 +32,7 @@ async function pending(mode:AgentPermissionMode="full",protocol:"chat-completion
   const original=JSON.stringify(args);
   const functionCall={type:"function_call",id:"fc1",call_id:"call1",name:"submit_generation",arguments:original,status:"completed"};
   const fetcher=vi.fn<typeof fetch>(async()=>Response.json(protocol==="responses"?{id:"r1",status:"completed",output:[{type:"reasoning",id:"reason1",summary:[],encrypted_content:"sealed-state"},functionCall]}:{choices:[{message:{content:"",tool_calls:[{id:"call1",type:"function",function:{name:"submit_generation",arguments:original}}]},finish_reason:"tool_calls"}]}));
-  await executeChatRun(run,connector.apiKey,new AbortController(),fetcher);
+  await executeChatRun(run,connector.apiKey,new AbortController(),withFinalReviewFixture(fetcher));
   const call=(await db.agentToolCalls.where("runId").equals(run.id).first())!;
   expect(call.status).toBe("awaiting_approval");expect(call.requiresConfirmation).toBe(true);
   const edited={...args,connectorId:"hub",prompt:"用户修改的提示",parameters:{size:"1536x1024",quality:"high" as const}};
@@ -68,12 +69,13 @@ describe("reviewed generation submission",()=>{
       }
       return answer(protocol==="responses");
     });
-    await resumeChatRun(f.run.id,connector.apiKey,new AbortController(),next);
+    await resumeChatRun(f.run.id,connector.apiKey,new AbortController(),withFinalReviewFixture(next));
     expect(await db.agentRuns.get(f.run.id)).toMatchObject({status:"completed",error:undefined});
-    expect(paid).toHaveBeenCalledTimes(1);expect(next).toHaveBeenCalledTimes(1);
+    expect(paid).toHaveBeenCalledTimes(1);expect(next).toHaveBeenCalledTimes(2);
+    expect((await db.agentRuns.get(f.run.id))?.finalReview?.status).toBe("checked");
     expect(JSON.parse(String(paid.mock.calls[0][1]?.body))).toMatchObject({prompt:f.edited.prompt,size:"1536x1024",extra:{quality:"high"}});
     expect((await db.agentToolCalls.get(f.call.id))?.arguments).toBe(f.original);
-    await expect(resumeChatRun(f.run.id,connector.apiKey,new AbortController(),next)).rejects.toThrow();expect(paid).toHaveBeenCalledTimes(1);
+    await expect(resumeChatRun(f.run.id,connector.apiKey,new AbortController(),withFinalReviewFixture(next))).rejects.toThrow();expect(paid).toHaveBeenCalledTimes(1);
   });
   it("allows video provider/model changes with validated native parameters",async()=>{
     const f=await pending("full","chat-completions",true);
@@ -84,7 +86,7 @@ describe("reviewed generation submission",()=>{
       expect(String(url)).toBe("https://hub.test/ai/v1/videos/video1/content");
       return new Response(new Uint8Array([0,0,0,20,102,116,121,112,105,115,111,109,0,0,0,0,105,115,111,109]),{headers:{"content-type":"video/mp4"}});
     });vi.stubGlobal("fetch",paid);
-    await resumeChatRun(f.run.id,connector.apiKey,new AbortController(),vi.fn(async()=>answer()));
+    await resumeChatRun(f.run.id,connector.apiKey,new AbortController(),withFinalReviewFixture(vi.fn(async()=>answer())));
     expect(await db.agentRuns.get(f.run.id)).toMatchObject({status:"completed"});
     expect(paid.mock.calls.filter(([,init])=>init?.method==="POST")).toHaveLength(1);
     expect(JSON.parse((await db.agentToolCalls.get(f.call.id))!.result!)).toMatchObject({provider:"aihubmix",model:edited.model,parameters:{duration:8,resolution:"1080p",aspect_ratio:"9:16"},result:{kind:"video"}});
@@ -104,7 +106,7 @@ describe("reviewed generation submission",()=>{
   it("checks the reviewed fingerprint again immediately before submission",async()=>{
     const paid=paidFixture();vi.stubGlobal("fetch",paid);const f=await pending();
     await reviewAndApproveGeneration(f.run.id,f.call.id,f.edited,f.expected);await patchShot(f.shot.id,{notes:"确认后改动"});
-    await resumeChatRun(f.run.id,connector.apiKey,new AbortController(),vi.fn(async()=>answer()));
+    await resumeChatRun(f.run.id,connector.apiKey,new AbortController(),withFinalReviewFixture(vi.fn(async()=>answer())));
     expect(paid).not.toHaveBeenCalled();expect(await db.agentGenerationJobs.count()).toBe(0);
     expect((await db.agentToolCalls.get(f.call.id))?.status).toBe("failed");
   });
@@ -147,7 +149,7 @@ describe("reviewed generation submission",()=>{
     await expect(reviewAndApproveGeneration(f.run.id,f.call.id,f.edited,f.expected)).rejects.toThrow();
     await resolveAgentToolApproval(f.run.id,f.call.id,"approve");
     const execute=vi.fn();const registry=GENERATION_TOOLS.map((tool)=>tool.name==="submit_generation"?{...tool,execute}:tool);
-    await resumeChatRun(f.run.id,connector.apiKey,new AbortController(),vi.fn(async()=>answer()),registry);
+    await resumeChatRun(f.run.id,connector.apiKey,new AbortController(),withFinalReviewFixture(vi.fn(async()=>answer())),registry);
     expect(execute).not.toHaveBeenCalled();expect((await db.agentRuns.get(f.run.id))?.error).toContain("定义已变化");
   });
 });

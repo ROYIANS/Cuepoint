@@ -94,7 +94,7 @@ const NEXT: Record<AudioGenerationStatus, readonly AudioGenerationStatus[]> = {
     "target-conflict": ["submitted", "running", "remote-completed", "failed", "saved", "downloading"],
 };
 
-export async function patchAudioGenerationJob(projectId: string, id: string, revision: number, patch: Partial<Pick<AudioGenerationJob, "status" | "taskIds" | "taskObservations" | "results" | "error">>): Promise<AudioGenerationJob> {
+export async function patchAudioGenerationJob(projectId: string, id: string, revision: number, patch: Partial<Pick<AudioGenerationJob, "status" | "taskIds" | "taskObservations" | "results" | "error" | "failureStage">>): Promise<AudioGenerationJob> {
     return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => {
         await assertAudioProject(projectId);
         const row = await ownedAudioRow(db.audioGenerationJobs, projectId, id);

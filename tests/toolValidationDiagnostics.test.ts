@@ -1,3 +1,4 @@
+import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import { preloadFixtureGroups } from "./helpers/toolDispatch";
 import { describe, expect, it, vi } from "vitest";
 import { z } from "zod";
@@ -97,7 +98,7 @@ describe("tool argument diagnostics", () => {
       if (protocol === "responses") return Response.json({ id: `response-${requests}`, status: "completed", output: requests < 3 ? [{ type: "function_call", call_id: `call-${requests}`, name, arguments: raw, status: "completed" }] : [{ type: "message", role: "assistant", status: "completed", content: [{ type: "output_text", text: "已修正后读取", annotations: [] }] }] });
       return Response.json({ choices: [{ message: requests < 3 ? { content: "", tool_calls: [{ id: `call-${requests}`, type: "function", function: { name, arguments: raw } }] } : { content: "已修正后读取" }, finish_reason: requests < 3 ? "tool_calls" : "stop" }] });
     };
-    await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl, BUILTIN_TOOLS.map((item) => item.name === name ? { ...tool, execute } : item));
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetchImpl), BUILTIN_TOOLS.map((item) => item.name === name ? { ...tool, execute } : item));
     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
     expect(requests).toBe(3);
     expect(execute).toHaveBeenCalledTimes(1);

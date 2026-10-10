@@ -5,6 +5,8 @@ import {IP_TOOLS} from '@/lib/agent/ipTools';
 import {AUDIO_TOOLS} from '@/lib/agent/audioTools';
 import {MUSIC_TOOLS} from '@/lib/agent/musicTools';
 import {AUDIO_GENERATION_TOOLS} from '@/lib/agent/audioGenerationTools';
+import {AUDIO_BATCH_TOOLS} from '@/lib/agent/audioBatchTools';
+import {AUDIO_ARRANGEMENT_TOOLS} from '@/lib/agent/audioArrangementTools';
 import {MATERIAL_TOOLS} from '@/lib/agent/materialTools';
 import {DISCOVERY_TOOLS, toolNamesForCall, getOfferedToolNames} from '@/lib/agent/toolLoading';
 import {TASK_TOOLS} from '@/lib/agent/taskTools';
@@ -17,25 +19,31 @@ import {TASK_TOOL_NAMES} from "@/lib/agent/taskContext";
 import {defineTool, assertUniqueToolNames} from '@/lib/agent/toolDefinition';
 import * as s from '@/lib/agent/businessSchemas';
 import {AGENT_SKILLS} from '@/lib/agent/skills';
+import {BACKLOG_TOOL_ADDITIONS, expectedBacklogAdvertisement} from './helpers/d05BacklogCompatibility';
 
 const families = {
     foundation: BUILTIN_TOOLS.slice(0, 2), ip: IP_TOOLS, audio: AUDIO_TOOLS, music: MUSIC_TOOLS,
-    soundGeneration: AUDIO_GENERATION_TOOLS, material: MATERIAL_TOOLS, discovery: DISCOVERY_TOOLS,
+    soundGeneration: AUDIO_GENERATION_TOOLS, audioBatch: AUDIO_BATCH_TOOLS, audioArrangement: AUDIO_ARRANGEMENT_TOOLS,
+    material: MATERIAL_TOOLS, discovery: DISCOVERY_TOOLS,
     task: TASK_TOOLS, business: BUSINESS_TOOLS, generation: GENERATION_TOOLS, memory: MEMORY_TOOLS,
     reference: REFERENCE_TOOLS, web: WEB_TOOLS,
 };
 const advertised = () => BUILTIN_TOOLS.map(tool => ({name: tool.name, title: tool.title, description: tool.description, parameters: tool.parameters, effect: tool.effect, atomic: tool.atomic, recovery: tool.recovery, requiresConfirmation: tool.requiresConfirmation}));
 
 describe('schema-linked complete tool inventory', () => {
-    it('retains every original advertised byte and metadata field', () => {
-        expect(JSON.stringify(advertised(), null, 2) + '\n').toBe(readFileSync('tests/fixtures/d05/catalog.json', 'utf8'));
+    it('retains all original metadata except explicit approved owner/source deltas, and checks six exact additions', () => {
+        const original = JSON.parse(readFileSync('tests/fixtures/d05/catalog.json', 'utf8'));
+        const additions = new Set(BACKLOG_TOOL_ADDITIONS.map(tool => tool.name));
+        expect(JSON.stringify(advertised().filter(tool => !additions.has(tool.name)), null, 2) + '\n')
+            .toBe(JSON.stringify(original.map(expectedBacklogAdvertisement), null, 2) + '\n');
+        expect(JSON.parse(JSON.stringify(advertised().filter(tool => additions.has(tool.name))))).toEqual(BACKLOG_TOOL_ADDITIONS);
     });
-    it('covers the real 13 families, 89 unique registrations and deduplicated skill catalog', () => {
+    it('covers the real 15 families, original 89 plus six unique registrations and deduplicated skill catalog', () => {
         const counts = Object.fromEntries(Object.entries(families).map(([name, definitions]) => [name, definitions.length]));
-        expect(counts).toEqual({foundation: 2, ip: 6, audio: 7, music: 4, soundGeneration: 4, material: 10, discovery: 1, task: 5, business: 33, generation: 7, memory: 4, reference: 4, web: 2});
+        expect(counts).toEqual({foundation: 2, ip: 6, audio: 7, music: 4, soundGeneration: 4, audioBatch: 2, audioArrangement: 4, material: 10, discovery: 1, task: 5, business: 33, generation: 7, memory: 4, reference: 4, web: 2});
         const names = BUILTIN_TOOLS.map(tool => tool.name);
         expect(Object.values(families).flat().map(tool => tool.name)).toEqual(names);
-        expect(new Set(names).size).toBe(89);
+        expect(new Set(names).size).toBe(95);
         const catalog = [...new Set(AGENT_SKILLS.flatMap(skill => skill.toolNames).concat([...TASK_TOOL_NAMES, ...DISCOVERY_TOOLS.map(tool => tool.name)]))];
         expect(names.filter(name => !catalog.includes(name))).toEqual([]);
         expect(catalog.filter(name => !names.includes(name))).toEqual([]);

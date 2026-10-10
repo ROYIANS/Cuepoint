@@ -1,6 +1,7 @@
 import type {AudioProvenance, AudioRow, MimoSpeechSettings} from "./audio";
 import type {MusicSettings} from "./music";
 import type {Id} from "./types";
+import type {AudioBatchOwner} from "./audioGenerationBatch";
 
 export type AudioGenerationInput =
     | {
@@ -53,12 +54,15 @@ export interface AudioGenerationJob extends AudioRow {
     intentId: string;
     input: AudioGenerationInput;
     connector: { id: Id; provider: "apimart" | "mimo"; baseUrl: string };
-    source: { kind: "manual" } | { kind: "agent"; callId: Id; runId: Id };
+    source: { kind: "manual" } | { kind: "agent"; callId: Id; runId: Id }
+        | {kind: "batch"; batchId: Id; itemId: Id; owner: AudioBatchOwner};
     status: AudioGenerationStatus;
     taskIds: string[];
     taskObservations?: AudioTaskObservation[];
     results: AudioGenerationResult[];
     error?: string;
+    /** Explicit failure evidence; never infer paid retry eligibility from an error string. */
+    failureStage?: "preflight" | "provider";
     referenceFingerprint?: string;
     claim?: { owner: string; claimedAt: string };
     /** Imported jobs are historical and never auto-submit or auto-poll. */

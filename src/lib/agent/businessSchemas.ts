@@ -92,7 +92,7 @@ export const ids = {
     ...array(id, 100),
     schema: array(id, 100).schema.refine((items) => new Set(items).size === items.length, "标识不能重复")
 };
-export const owner = {ownerId: id};
+export const owner = {ownerId: optional(id)};
 export const target = {...owner, id};
 export const episodeTarget = {...owner, episodeId: id};
 export const beatTarget = {...episodeTarget, id};

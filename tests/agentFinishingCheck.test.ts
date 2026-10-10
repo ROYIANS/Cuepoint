@@ -62,12 +62,14 @@ describe("bounded unfinished-plan finishing checkpoint", () => {
         if (protocol === "responses") expect(request).toContain("opaque-provider-reasoning");
         return reply(protocol, "现在创建", [wire("project_create", { name: "真实项目", continueInProject: false })]);
       }
+      if (count === 5) return reply(protocol, '{"claims":[]}');
       return reply(protocol, "项目已创建；其他计划事项尚未继续。");
     });
     await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
     const saved = (await db.agentRuns.get(run.id))!;
     expect(saved.status, saved.error).toBe("completed");
-    expect(fetchImpl).toHaveBeenCalledTimes(4);
+    expect(fetchImpl).toHaveBeenCalledTimes(5);
+    expect(saved.finalReview?.status).toBe("checked");
     expect(saved.finishingCheck).toMatchObject({ step: 2 });
     expect(saved.plan).toEqual(plan);
     expect(saved.requestMessages).toEqual(initial);
@@ -85,20 +87,22 @@ describe("bounded unfinished-plan finishing checkpoint", () => {
   it.each(["chat-completions", "responses"] as const)("allows a second plain answer to finish an advice plan under %s", async protocol => {
     const run = await begin(protocol);
     let count = 0;
-    const fetchImpl = vi.fn<typeof fetch>(async () => ++count === 1 ? reply(protocol, "", [wire("update_run_plan", { steps: plan })]) : reply(protocol, "用户只需要建议，不进行写入。"));
+    const fetchImpl = vi.fn<typeof fetch>(async () => ++count === 1 ? reply(protocol, "", [wire("update_run_plan", { steps: plan })]) : count === 4 ? reply(protocol, '{"claims":[]}') : reply(protocol, "用户只需要建议，不进行写入。"));
     await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
-    expect(fetchImpl).toHaveBeenCalledTimes(3);
+    expect(fetchImpl).toHaveBeenCalledTimes(4);
     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
     expect(await db.projects.count()).toBe(0);
     expect(await db.agentToolCalls.where("runId").equals(run.id).count()).toBe(1);
   });
 
-  it.each(["no plan", "inherited plan", "conversation", "empty tools"])("does not nudge %s text-only responses", async kind => {
+  it.each(["no plan", "inherited plan", "conversation", "empty tools"])("checks eligible smart %s text-only replies while keeping conversation/empty capability unverified", async kind => {
     const run = await begin("chat-completions", { ...(kind === "inherited plan" ? { plan } : {}), ...(kind === "conversation" ? { interactionMode: "conversation", plan } : {}), ...(kind === "empty tools" ? { enabledToolNames: [], plan } : {}) });
-    const fetchImpl = vi.fn<typeof fetch>(async () => reply(run.protocol, "下一步将开始，先说明建议。"));
+    let count = 0;
+    const fetchImpl = vi.fn<typeof fetch>(async () => reply(run.protocol, ++count === 3 ? '{"claims":[]}' : "下一步将开始，先说明建议。"));
     await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
-    expect(fetchImpl).toHaveBeenCalledOnce();
-    expect((await db.agentRuns.get(run.id))?.finishingCheck).toBeUndefined();
+    const eligible = kind === "no plan" || kind === "inherited plan";
+    expect(fetchImpl).toHaveBeenCalledTimes(eligible ? 3 : 1);
+    expect(Boolean((await db.agentRuns.get(run.id))?.finishingCheck)).toBe(eligible);
     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
   });
 
@@ -133,11 +137,13 @@ describe("bounded unfinished-plan finishing checkpoint", () => {
     expect(stopped.finishingCheck?.step).toBe(3); expect(stopped.status).toBe("interrupted");
     expect(fetchImpl).toHaveBeenCalledOnce();
     db.close(); await db.open();
-    const resumeFetch = vi.fn<typeof fetch>(async () => reply(protocol, "需要你补充具体内容。"));
+    let resumedRequests = 0;
+    const resumeFetch = vi.fn<typeof fetch>(async () => reply(protocol, ++resumedRequests === 2 ? '{"claims":[]}' : "需要你补充具体内容。"));
     await resumeChatRun(f.run.id, connector.apiKey, new AbortController(), resumeFetch);
     const saved = (await db.agentRuns.get(f.run.id))!;
     expect(saved.finishingCheck).toEqual(stopped.finishingCheck);
-    expect(saved.status).toBe("completed"); expect(resumeFetch).toHaveBeenCalledOnce();
+    expect(saved.status).toBe("completed"); expect(resumeFetch).toHaveBeenCalledTimes(2);
+    expect(saved.finalReview?.status).toBe("checked");
     expect(saved.activitySteps?.filter(step => step.step === 3)).toHaveLength(1);
   });
 
@@ -183,9 +189,8 @@ describe("bounded unfinished-plan finishing checkpoint", () => {
     expect((await db.agentRuns.get(run.id))?.finishingCheck).toBeUndefined();
   });
 
-  it.each(["missing", "foreign", "non-atomic", "wrong-effect", "wrong-result", "wrong-args", "manual-edit", "completed-plan", "future-step", "not-offered"])("requires matching current-run plan provenance: %s", async kind => {
+  it.each(["foreign", "non-atomic", "wrong-effect", "wrong-result", "wrong-args", "manual-edit", "completed-plan", "future-step", "not-offered"])("requires matching current-run plan provenance when a saved plan call exists: %s", async kind => {
     const { run, call } = await eligible();
-    if (kind === "missing") await db.agentToolCalls.delete(call.id);
     if (kind === "foreign") await db.agentToolCalls.update(call.id, { threadId: "other" });
     if (kind === "non-atomic") await db.agentToolCalls.update(call.id, { atomic: false });
     if (kind === "wrong-effect") await db.agentToolCalls.update(call.id, { effect: "read" });
@@ -196,6 +201,13 @@ describe("bounded unfinished-plan finishing checkpoint", () => {
     if (kind === "future-step") await db.agentToolCalls.update(call.id, { step: 2 });
     if (kind === "not-offered") await db.agentRuns.update(run.id, { enabledToolNames: ["workspace_overview"] });
     expect(await saveAgentFinishingCheck(run.id, 2, candidate)).toBe(false);
+  });
+
+  it("checks an inherited unfinished plan without pretending it was saved in this run", async () => {
+    const {run, call} = await eligible();
+    await db.agentToolCalls.delete(call.id);
+    expect(await saveAgentFinishingCheck(run.id, 2, candidate)).toBe(true);
+    expect((await db.agentRuns.get(run.id))?.finishingCheck).toMatchObject({reason: "terminal_reply"});
   });
 
   it("rejects Stop and rolls back marker if persistence fails", async () => {

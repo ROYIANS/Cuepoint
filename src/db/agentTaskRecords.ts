@@ -11,6 +11,7 @@ import type {AgentTaskRecord, TaskRecordInput, TaskRecordSource} from "@/domain/
 import {TASK_RECORD_CLAIMS, TASK_RECORD_KINDS} from "@/domain/agentTaskRecords";
 import type {AgentTask, AgentToolCall} from "@/domain/agent";
 import {createId, nowIso} from "@/lib/ids";
+import {targetRevision} from "@/lib/productionRevision";
 import {
     ownedTaskAudioGenerationJob,
     SOUND_GENERATION_TOOLS,
@@ -49,6 +50,7 @@ export async function validateTaskSources(task: Pick<AgentTask, "id" | "threadId
     let userEvidence = false, completedEffect = false;
     for (const source of sources) {
         if (!source.id || source.id.length > 120) throw new Error("来源标识无效");
+        if (source.resultKey !== undefined && (source.type !== "generation" || typeof source.resultKey !== "string" || !source.resultKey.trim() || source.resultKey.length > 512)) throw new Error("结果键只能用于声音生成来源，且最多 512 字");
         if (source.type === "message") {
             const message = await db.chatMessages.get(source.id);
             if (!message || message.threadId !== task.threadId || message.role !== "user" || (!message.content.trim() && !message.attachments?.length)) throw new Error("只能引用当前对话真实的用户消息");
@@ -58,14 +60,14 @@ export async function validateTaskSources(task: Pick<AgentTask, "id" | "threadId
             const run = call && await db.agentRuns.get(call.runId);
             if (!call || !run || call.threadId !== task.threadId || run.threadId !== task.threadId || run.taskId !== task.id || call.status !== "completed" || !call.result || call.effect === "bookkeeping") throw new Error("来源不是当前任务已完成的业务工具结果");
             if ((SOUND_GENERATION_TOOLS as readonly string[]).includes(call.name)) {
-                const evidence = await taskAudioToolSource(task, call);
+                const evidence = await Promise.resolve(taskAudioToolSource(task, call));
                 completedEffect ||= evidence?.supportsResult === true;
             } else if ((PICTURE_GENERATION_TOOLS as readonly string[]).includes(call.name)) {
                 const evidence = await Promise.resolve(taskGenerationToolSource(task, call));
                 completedEffect ||= evidence?.supportsResult === true;
             } else completedEffect ||= provesCompletedEffect(call);
         } else if (source.type === "generation") {
-            const evidence = await taskGenerationSource(task, source.id);
+            const evidence = await Promise.resolve(taskGenerationSource(task, source.id, source.resultKey));
             completedEffect ||= evidence.supportsResult;
         } else throw new Error("来源类型无效");
     }
@@ -85,7 +87,7 @@ export async function writeTaskRecord(task: AgentTask, input: TaskRecordInput, o
     if (task.lifecycle !== "open") throw new Error("请先重新打开任务");
     if (!TASK_RECORD_KINDS.includes(input.kind) || !TASK_RECORD_CLAIMS.includes(input.claim) || !input.title.trim() || input.title.length > 120 || !input.body.trim() || input.body.length > (options.requirementSnapshot ? 100_000 : 12_000)) throw new Error("记录类型或内容无效：标题最多 120 字，正文最多 12,000 字");
     if (input.todoId && !task.plan.some((item) => item.id === input.todoId)) throw new Error("关联 Todo 不存在");
-    await validateTaskSources(task, input.sources, input.claim, options.author);
+    await Promise.resolve(validateTaskSources(task, input.sources, input.claim, options.author));
     const existing = options.id ? await db.agentTaskRecords.get(options.id) : undefined;
     if (options.id && (!existing || existing.taskId !== task.id)) throw new Error("记录不属于当前任务");
     if (existing && options.expectedRevision !== existing.revision) throw new Error("记录已更新，请重新读取后修改");
@@ -128,14 +130,16 @@ export async function saveTaskRecord(taskId: string, input: TaskRecordInput, opt
 }
 
 /** Genuine generation evidence is owned by the task and reflects current local media/slot state. */
-export async function taskGenerationSource(task: Pick<AgentTask, "id" | "threadId">, jobId: string) {
+export async function taskGenerationSource(task: Pick<AgentTask, "id" | "threadId">, jobId: string, resultKey?: string) {
     const soundJob = await db.audioGenerationJobs.get(jobId);
-    if (soundJob) return taskAudioGenerationSource(task, soundJob);
+    if (soundJob) return taskAudioGenerationSource(task, soundJob, resultKey);
+    if (resultKey !== undefined) throw new Error("结果键只能用于声音生成来源");
     const job = await db.agentGenerationJobs.get(jobId);
     if (!job || !job.batchId || !await Promise.resolve(ownedTaskGenerationJob(task, job))) throw new Error("生成结果不属于当前任务批次");
     const {available, applied} = await Promise.resolve(inspectTaskGenerationOutput(job));
     return {
         id: job.id,
+        resultKey: undefined,
         batchId: job.batchId,
         status: job.status,
         result: job.result,
@@ -156,20 +160,42 @@ export async function taskGenerationSource(task: Pick<AgentTask, "id" | "threadI
     };
 }
 
+/** Keep legacy aggregate catalog IDs; hash exact result keys to fit the existing source-ID bound. */
+export function taskGenerationEvidenceId(jobId: string, resultKey?: string): string {
+    return resultKey === undefined ? `generation:${jobId}` : `generation:${jobId}:result:${targetRevision(resultKey)}`;
+}
+
 /** Shared source inventory; no remote refresh and no attribution to reading runs. */
-export async function listTaskGenerationSources(task: AgentTask) {
+export async function listTaskGenerationSourceInventory(task: AgentTask, options: {offset?: number; limit?: number} = {}) {
     return db.transaction("r", db.tables, async () => {
-        const sources: Awaited<ReturnType<typeof taskGenerationSource>>[] = [];
+        const identities: Array<{id: string; resultKey?: string}> = [];
         const runs = await db.agentRuns.where("taskId").equals(task.id).toArray();
         const runIds = new Set(runs.filter(run => run.threadId === task.threadId).map(run => run.id));
         const jobs = await db.agentGenerationJobs.where("threadId").equals(task.threadId).toArray();
         for (const job of jobs.filter(job => job.batchId && runIds.has(job.runId))) {
-            if (await Promise.resolve(ownedTaskGenerationJob(task, job))) sources.push(await Promise.resolve(taskGenerationSource(task, job.id)));
+            if (await Promise.resolve(ownedTaskGenerationJob(task, job))) identities.push({id: job.id});
         }
         const soundJobs = await db.audioGenerationJobs.where("projectId").equals(task.projectId).toArray();
         for (const job of soundJobs) {
-            if (await Promise.resolve(ownedTaskAudioGenerationJob(task, job))) sources.push(await Promise.resolve(taskAudioGenerationSource(task, job)));
+            if (!await Promise.resolve(ownedTaskAudioGenerationJob(task, job))) continue;
+            identities.push({id: job.id});
+            const counts = new Map<string, number>();
+            for (const result of job.results) counts.set(result.key, (counts.get(result.key) ?? 0) + 1);
+            for (const result of job.results) {
+                if (counts.get(result.key) === 1 && result.key.trim() && result.key.length <= 512) identities.push({id: job.id, resultKey: result.key});
+            }
         }
-        return sources;
+        const offset = Math.max(0, options.offset ?? 0), limit = Math.min(100, Math.max(1, options.limit ?? 100));
+        const sources: Awaited<ReturnType<typeof taskGenerationSource>>[] = [];
+        for (const identity of identities.slice(offset, offset + limit)) sources.push(await Promise.resolve(taskGenerationSource(task, identity.id, identity.resultKey)));
+        return {sources, coverage: {
+            total: identities.length, included: sources.length, omitted: identities.length - sources.length,
+            offset, nextOffset: offset + sources.length < identities.length ? offset + sources.length : null
+        }};
     });
+}
+
+/** Compatibility array view. New consumers use the explicit coverage-bearing inventory. */
+export async function listTaskGenerationSources(task: AgentTask) {
+    return (await listTaskGenerationSourceInventory(task)).sources;
 }

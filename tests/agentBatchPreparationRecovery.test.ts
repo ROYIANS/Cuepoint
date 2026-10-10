@@ -1,3 +1,4 @@
+import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
@@ -47,7 +48,7 @@ describe("local batch preparation recovery", () => {
         expect(await db.agentGenerationBatches.count()).toBe(0);
         return response(f.candidate, "corrected");
       }).mockImplementationOnce(async () => answer());
-    await executeChatRun(f.run, chat.apiKey, new AbortController(), fetcher);
+    await executeChatRun(f.run, chat.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
     const calls = await db.agentToolCalls.where("runId").equals(f.run.id).sortBy("step");
     expect(calls.map(call => call.status)).toEqual(["failed", "completed"]);
     expect(calls[0].arguments).toContain('"aspectRatio":"9:16"');
@@ -77,7 +78,7 @@ describe("local batch preparation recovery", () => {
     expect(recovered.arguments).toBe(call.arguments);
     expect(JSON.parse(recovered.result!)).toMatchObject({ code: "BATCH_PREPARATION_NOT_COMMITTED", submitted: false });
     const fetcher = vi.fn<typeof fetch>().mockResolvedValueOnce(response(f.candidate, "fixed")).mockImplementationOnce(async () => answer());
-    await resumeChatRun(f.run.id, chat.apiKey, new AbortController(), fetcher);
+    await resumeChatRun(f.run.id, chat.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
     expect((await db.agentRuns.get(f.run.id))?.status).toBe("completed");
     expect(await db.chatThreads.count()).toBe(1);
     expect(await db.agentGenerationBatches.count()).toBe(1);
@@ -110,7 +111,7 @@ describe("local batch preparation recovery", () => {
     expect(JSON.parse(recovered.result!).batchId).toBe(result.batchId);
     await recoverAbandonedRuns(locks);
     expect(await db.agentToolCalls.get(call.id)).toEqual(recovered);
-    await resumeChatRun(f.run.id, chat.apiKey, new AbortController(), vi.fn(async () => answer()));
+    await resumeChatRun(f.run.id, chat.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => answer())));
     expect(await db.agentGenerationBatches.count()).toBe(1);
     expect(await db.agentGenerationBatchItems.count()).toBe(1);
     expect(await db.agentGenerationJobs.count()).toBe(0);

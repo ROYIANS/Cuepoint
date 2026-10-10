@@ -1,9 +1,10 @@
 import {collectReferenceEvidence, historicalToolSummary, toolReferenceAttachments} from "./referenceEvidence";
-import {provesCompletedEffect} from "@/db/agentTaskRecords";
+import {provesCompletedEffect, taskGenerationEvidenceId} from "@/db/agentTaskRecords";
 import {
     ownedTaskAudioGenerationJob,
     SOUND_GENERATION_TOOLS,
     taskAudioGenerationSource,
+    taskAudioGenerationOutputSources,
     taskAudioToolSource
 } from "@/db/taskAudioGenerationEvidence";
 import {db} from "@/db/database";
@@ -39,6 +40,8 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
     const jobs = (await db.agentGenerationJobs.where("threadId").equals(task.threadId).toArray()).filter(j => runIds.has(j.runId));
     const batches = (await db.agentGenerationBatches.where("threadId").equals(task.threadId).toArray()).filter(batch => runIds.has(batch.runId));
     const batchItems = (await db.agentGenerationBatchItems.where("threadId").equals(task.threadId).toArray()).filter(item => batches.some(batch => batch.id === item.batchId));
+    const audioBatches = (await db.audioGenerationBatches.where("owner.threadId").equals(task.threadId).toArray()).filter(batch => batch.owner.kind === "agent" && batch.owner.taskId === task.id && runIds.has(batch.owner.runId) && batch.projectId === task.projectId);
+    const audioBatchItems = (await db.audioGenerationBatchItems.where("projectId").equals(task.projectId).toArray()).filter(item => audioBatches.some(batch => batch.id === item.batchId));
     const evidence: WrapupEvidence[] = [], fingerprints: unknown[] = [];
     const add = (item: WrapupEvidence, raw: unknown) => {
         fingerprints.push([item.id, targetRevision(raw)]);
@@ -213,7 +216,13 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
             outcome: source.supportsResult ? source.applied ? "applied" : "downloaded" : "unresolved",
             available: source.available, supportsResult: source.supportsResult,
             href: source.available ? `/p/${encodeURIComponent(job.projectId)}` : undefined
-        }, {jobRevision: job.revision, source: source.body});
+        }, {jobRevision: job.revision, jobFingerprint: targetRevision(job), source: source.body});
+        for (const output of await Promise.resolve(taskAudioGenerationOutputSources(task, job))) add({
+            id: taskGenerationEvidenceId(job.id, output.resultKey), kind: "generation", label: output.label, body: output.body,
+            outcome: output.supportsResult ? output.applied ? "applied" : "downloaded" : "unresolved",
+            available: output.available, supportsResult: output.supportsResult,
+            href: output.available ? `/p/${encodeURIComponent(job.projectId)}` : undefined
+        }, {jobRevision: job.revision, source: output.body});
     }
     for (const record of records) add({
         id: `record:${record.id}`,
@@ -268,6 +277,7 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
                 artifacts: task.artifacts
             },
             runs: runs.map(r => ({id: r.id, status: r.status, updatedAt: r.updatedAt})),
+            audioBatches, audioBatchItems,
             sources: fingerprints.sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)))
         }),
         taskRevision: task.revision ?? 1,

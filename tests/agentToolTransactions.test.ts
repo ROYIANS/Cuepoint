@@ -1,3 +1,4 @@
+import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import { describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 import { db } from "@/db/database";
@@ -118,11 +119,11 @@ describe("atomic business tool transactions", () => {
 describe("prepared approvals and known rollback continuation", () => {
   it("refuses an approved call if the registry's atomic contract changed", async () => {
     const run = await begin("ask"); const tool = fixtureTool();
-    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => responseWithTool()), [tool]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => responseWithTool())), [tool]);
     const call = (await db.agentToolCalls.where("runId").equals(run.id).toArray())[0];
     await resolveAgentToolApproval(run.id, call.id, "approve");
     const fetcher = vi.fn(async () => answer());
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), fetcher, [{ ...tool, atomic: false }]);
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher), [{ ...tool, atomic: false }]);
     expect(tool.execute).not.toHaveBeenCalled();
     expect(fetcher).not.toHaveBeenCalled();
     expect((await db.agentRuns.get(run.id))?.error).toContain("定义已变化");
@@ -133,7 +134,7 @@ describe("prepared approvals and known rollback continuation", () => {
     const run = await begin(mode); const tool = fixtureTool();
     let call;
     if (mode === "ask") {
-      await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => responseWithTool()), [tool]);
+      await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => responseWithTool())), [tool]);
       call = (await db.agentToolCalls.where("runId").equals(run.id).toArray())[0];
       await resolveAgentToolApproval(run.id, call.id, "approve");
       await resumeAgentRun(run.id);
@@ -149,7 +150,7 @@ describe("prepared approvals and known rollback continuation", () => {
     expect(await db.agentToolCalls.get(call.id)).toMatchObject({ status: mode === "ask" ? "approved" : "pending", preview });
     expect((await db.agentRuns.get(run.id))?.status).toBe("interrupted");
     expect(await db.projects.count()).toBe(0);
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), vi.fn(async () => answer()), [tool]);
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => answer())), [tool]);
     expect(tool.prepare).toHaveBeenCalledTimes(mode === "ask" ? 1 : 0);
     expect(tool.execute).toHaveBeenCalledTimes(1);
     expect(await db.projects.count()).toBe(1);
@@ -178,7 +179,7 @@ describe("prepared approvals and known rollback continuation", () => {
     const tool = fixtureTool({ prepare: vi.fn(async () => source) });
     const run = await begin("ask");
     const request = vi.fn(async () => responseWithTool());
-    await executeChatRun(run, connector.apiKey, new AbortController(), request, [tool]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(request), [tool]);
     const call = (await db.agentToolCalls.where("runId").equals(run.id).toArray())[0];
     expect(call).toMatchObject({ status: "awaiting_approval", preview });
     expect(tool.execute).not.toHaveBeenCalled();
@@ -189,7 +190,7 @@ describe("prepared approvals and known rollback continuation", () => {
     await expect(saveToolPreview(other.id, call.id, source)).rejects.toThrow();
     db.close(); await db.open();
     await resolveAgentToolApproval(run.id, call.id, "approve");
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), vi.fn(async () => answer()), [tool]);
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => answer())), [tool]);
     expect(tool.prepare).toHaveBeenCalledTimes(1);
     expect(tool.execute).toHaveBeenCalledExactlyOnceWith({}, expect.objectContaining({ preview }));
     expect((await db.agentToolCalls.get(call.id))?.preview).toEqual(preview);
@@ -208,7 +209,7 @@ describe("prepared approvals and known rollback continuation", () => {
     const tool = fixtureTool({ prepare: vi.fn(async () => { throw new Error("目标已改变"); }) });
     const run = await begin("ask"); let requests = 0;
     const fetcher = vi.fn(async () => ++requests === 1 ? responseWithTool() : answer());
-    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher, [tool]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher), [tool]);
     expect(tool.execute).not.toHaveBeenCalled();
     expect((await db.agentToolCalls.where("runId").equals(run.id).toArray())[0]).toMatchObject({ status: "failed", error: "目标已改变", result: JSON.stringify({ error: "目标已改变" }) });
     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
@@ -221,7 +222,7 @@ describe("prepared approvals and known rollback continuation", () => {
       await createProject("必须回滚"); throw new Error("stale revision");
     })) });
     const run = await begin(); let requests = 0;
-    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => ++requests === 1 ? responseWithTool() : answer()), [tool]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => ++requests === 1 ? responseWithTool() : answer())), [tool]);
     const call = (await db.agentToolCalls.where("runId").equals(run.id).toArray())[0];
     expect(call).toMatchObject({ status: "failed", error: "stale revision", result: JSON.stringify({ error: "stale revision" }) });
     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");

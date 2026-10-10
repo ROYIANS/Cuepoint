@@ -1,8 +1,9 @@
 import type {AudioClip, AudioPatch} from "@/domain/audio";
-import {getAudioProjectSnapshot, replaceAudioClips} from "@/db/audio";
+import {changeAudioClipMembership, getAudioProjectSnapshot, replaceAudioClips} from "@/db/audio";
+import type {AudioArrangementReceipt} from "@/domain/audioArrangement";
 import {createId} from "@/lib/ids";
 
-type ClipHistoryEntry = { before: AudioClip[]; after: AudioClip[] };
+type ClipHistoryEntry = { before: AudioClip[]; after: AudioClip[]; membershipOnly?: boolean };
 
 function sameRevision(left: AudioClip[], right: AudioClip[]) {
     const revisions = new Map(left.map((clip) => [clip.id, clip.revision]));
@@ -64,11 +65,26 @@ export class AudioClipHistory {
         return this.execute(clip, (rows) => rows.filter((row) => row.id !== clip.id));
     }
 
+    /** Apply and record one reviewed insertion group using its actual repository receipt. */
+    async applyArrangement(operation: () => Promise<AudioArrangementReceipt>) {
+        return this.exclusive(async () => {
+            const receipt = await operation();
+            if (receipt.projectId !== this.projectId || receipt.kind !== "arrangement" || receipt.after.some(row => row.chapterId !== this.chapterId)) throw new Error("排列不属于当前章节");
+            if (receipt.replayed || !receipt.added.length) return receipt;
+            if (this.expected && !sameRevision(this.expected, receipt.before)) this.undoStack = [];
+            this.undoStack.push({before: receipt.before, after: receipt.after, membershipOnly: true});
+            if (this.undoStack.length > 50) this.undoStack.shift();
+            this.redoStack = [];
+            this.expected = receipt.after;
+            return receipt;
+        });
+    }
+
     async undo() {
         return this.exclusive(async () => {
             const entry = this.undoStack.at(-1);
             if (!entry || !this.expected) return false;
-            const restored = await replaceAudioClips(this.projectId, this.chapterId, this.expected, entry.before);
+            const restored = await this.restore(entry, entry.before);
             this.undoStack.pop();
             this.redoStack.push(entry);
             this.expected = restored;
@@ -80,7 +96,7 @@ export class AudioClipHistory {
         return this.exclusive(async () => {
             const entry = this.redoStack.at(-1);
             if (!entry || !this.expected) return false;
-            const restored = await replaceAudioClips(this.projectId, this.chapterId, this.expected, entry.after);
+            const restored = await this.restore(entry, entry.after);
             this.redoStack.pop();
             this.undoStack.push(entry);
             this.expected = restored;
@@ -98,6 +114,14 @@ export class AudioClipHistory {
             this.busy = false;
             this.onChange?.();
         }
+    }
+
+    private restore(entry: ClipHistoryEntry, desired: AudioClip[]) {
+        const expected = this.expected!;
+        if (!entry.membershipOnly) return replaceAudioClips(this.projectId, this.chapterId, expected, desired);
+        // Prior manual-command undo may advance revisions; retained rows stay exactly current.
+        const next = desired.map(row => expected.find(current => current.id === row.id) ?? row);
+        return changeAudioClipMembership(this.projectId, this.chapterId, expected, next);
     }
 
     private async execute(clip: AudioClip, transform: (current: AudioClip[]) => AudioClip[]) {

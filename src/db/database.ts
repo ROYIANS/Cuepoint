@@ -10,6 +10,8 @@ import type {
 } from "@/domain/audio";
 import type {MusicDraft, MusicWork} from "@/domain/music";
 import type {AudioGenerationJob} from "@/domain/audioGeneration";
+import type {AudioGenerationBatch, AudioGenerationBatchItem} from "@/domain/audioGenerationBatch";
+import type {AudioArrangementProposal} from "@/domain/audioArrangement";
 import type {
     IpProfile,
     LibraryMaterial,
@@ -62,6 +64,9 @@ class AifenjingDB extends Dexie {
     musicDrafts!: Table<MusicDraft, string>;
     musicWorks!: Table<MusicWork, string>;
     audioGenerationJobs!: Table<AudioGenerationJob, string>;
+    audioGenerationBatches!: Table<AudioGenerationBatch, string>;
+    audioGenerationBatchItems!: Table<AudioGenerationBatchItem, string>;
+    audioArrangementProposals!: Table<AudioArrangementProposal, string>;
     ipProfiles!: Table<IpProfile, string>;
     projectIpLinks!: Table<ProjectIpLink, string>;
     libraryMaterials!: Table<LibraryMaterial, string>;
@@ -301,6 +306,11 @@ class AifenjingDB extends Dexie {
             musicDrafts: "id, projectId",
             musicWorks: "id, projectId, mediaId",
             audioGenerationJobs: "id, projectId, &intentId, status, updatedAt",
+        });
+        this.version(24).stores({
+            audioGenerationBatches: "id, projectId, chapterId, &sourceCallId, owner.threadId, owner.runId, status, updatedAt",
+            audioGenerationBatchItems: "id, projectId, chapterId, batchId, segmentId, &intentId, jobId",
+            audioArrangementProposals: "id, projectId, chapterId, kind, state, updatedAt",
         });
     }
 }

@@ -22,10 +22,11 @@ import {mimoSpeechSpec} from "./mimoSpeechSpec";
 import {defaultMimoConnector, speakerSpeechProfile} from "@/lib/audioGeneration/defaults";
 import {validateSpeechReference} from "@/lib/audioGeneration/reference";
 import * as s from "./businessSchemas";
+import {ToolRecoveryError} from "./toolErrors";
 
-const base = {projectId: s.id, connectorId: s.id};
+const base = {projectId: s.optional(s.id), connectorId: s.id};
 const speech = s.object({
-    projectId: s.id,
+    projectId: s.optional(s.id),
     connectorId: s.optional(s.id),
     text: s.text(8192),
     voice: s.optional(s.choice([...SPEECH_VOICES, ...MIMO_VOICES])),
@@ -37,7 +38,7 @@ const speech = s.object({
     segmentRevision: s.optional(s.number(1, 1e9, true))
 });
 const music = s.object({...base, draftId: s.id, draftRevision: s.number(1, 1e9, true)});
-const jobSpec = s.object({projectId: s.id, jobId: s.id});
+const jobSpec = s.object({projectId: s.optional(s.id), jobId: s.id});
 type Submission = {
     projectId: string;
     connectorId: string;
@@ -46,10 +47,11 @@ type Submission = {
     speakerRevision?: number
 };
 
-async function scope(projectId: string, context: AgentToolContext) {
+async function scope(projectId: string | undefined, context: AgentToolContext) {
     context.signal.throwIfAborted();
-    await requireBoundProjectScope(context, projectId);
-    await assertAudioProject(projectId);
+    const bound = await requireBoundProjectScope(context, projectId);
+    await assertAudioProject(bound);
+    return bound;
 }
 
 async function inputState(args: Submission, context: AgentToolContext) {
@@ -129,7 +131,10 @@ async function runSubmission(args: Submission, context: AgentToolContext, resolv
     const validate = async () => {
         const call = await db.agentToolCalls.get(context.callId), run = await db.agentRuns.get(context.runId);
         if (!call || call.runId !== context.runId || call.threadId !== context.threadId || call.status !== "running" || call.decision !== "approve" || !call.requiresConfirmation || run?.status !== "running") throw new AtomicToolRollbackError("生成请求尚未得到有效确认或执行已停止");
-        if (!context.preview?.revision || context.preview.revision !== (await inputState(resolveCurrent ? await resolveCurrent() : args, context)).revision) throw new AtomicToolRollbackError("生成目标、参数或连接已变化，请重新准备并确认");
+        if (!context.preview?.revision || context.preview.revision !== (await inputState(resolveCurrent ? await resolveCurrent() : args, context)).revision) {
+            const cause = new ToolRecoveryError("STALE_TOOL_PREVIEW", "生成目标、参数或连接已变化，请重新准备并确认");
+            throw new AtomicToolRollbackError(cause.message, {cause});
+        }
     };
     try {
         await scope(args.projectId, context);
@@ -158,13 +163,13 @@ async function runSubmission(args: Submission, context: AgentToolContext, resolv
             ...await readAudioJobSummary(args.projectId, job.id),
             error: job.error ?? (error instanceof Error ? error.message : "生成未完成")
         };
-        throw new AtomicToolRollbackError(error instanceof Error ? error.message : "生成准备失败");
+        throw new AtomicToolRollbackError(error instanceof Error ? error.message : "生成准备失败", {cause: error});
     }
 }
 
 async function speechArgs(raw: unknown, context: AgentToolContext, recover = false): Promise<Submission> {
-    const args = speech.schema.parse(raw);
-    await scope(args.projectId, context);
+    const parsed = speech.schema.parse(raw);
+    const args = {...parsed, projectId: await scope(parsed.projectId, context)};
     if (recover) {
         const existing = await db.audioGenerationJobs.where("intentId").equals(`agent-audio:${context.callId}`).first();
         if (existing && existing.status !== "prepared" && existing.projectId === args.projectId && existing.source.kind === "agent" && existing.source.callId === context.callId && existing.source.runId === context.runId) {
@@ -207,10 +212,10 @@ async function speechArgs(raw: unknown, context: AgentToolContext, recover = fal
     };
 }
 
-async function musicArgs(raw: unknown, context?: AgentToolContext): Promise<Submission> {
-    const args = music.schema.parse(raw);
-    if (context) {
-        await scope(args.projectId, context);
+async function musicArgs(raw: unknown, context: AgentToolContext, recover = false): Promise<Submission> {
+    const parsed = music.schema.parse(raw);
+    const args = {...parsed, projectId: await scope(parsed.projectId, context)};
+    if (recover) {
         const existing = await db.audioGenerationJobs.where("intentId").equals(`agent-audio:${context.callId}`).first();
         if (existing && existing.status !== "prepared" && existing.projectId === args.projectId && existing.source.kind === "agent" && existing.source.callId === context.callId && existing.source.runId === context.runId) {
             return {projectId: args.projectId, connectorId: args.connectorId, input: existing.input};
@@ -229,24 +234,22 @@ export const AUDIO_GENERATION_TOOL_NAMES = ["audio_generation_capabilities", "au
 export const musicGenerateTool = defineTool({schema: music.schema, json: music.json}, {
     name: "music_generate",
     title: "生成音乐",
-    description: "提交当前已保存音乐草稿的指定版本；先用音乐草稿工具准备参数。经用户确认后提交一次，后续只查询已有任务。",
+    description: "提交当前已保存音乐草稿的指定版本；先用音乐草稿工具准备参数。projectId 可省略，使用当前对话保存的项目绑定，显式冲突仍拒绝。经用户确认后提交一次，后续只查询已有任务。",
     effect: "network",
     recovery: "repeatable",
     requiresConfirmation: true,
     highRisk: () => false,
     prepare: async (raw, context) => {
-        const args = music.schema.parse(raw);
-        await scope(args.projectId, context);
-        return preview(await musicArgs(args), context);
+        return preview(await musicArgs(raw, context), context);
     },
     async execute(raw, context) {
         let args: Submission;
         // Resolving local draft state has no network side effect. A stale draft
         // is a known rejection, not an uncertain paid submission.
         try {
-            args = await musicArgs(raw, context);
+            args = await musicArgs(raw, context, true);
         } catch (error) {
-            throw new AtomicToolRollbackError(error instanceof Error ? error.message : "音乐草稿准备失败");
+            throw new AtomicToolRollbackError(error instanceof Error ? error.message : "音乐草稿准备失败", {cause: error});
         }
         return runSubmission(args, context);
     }
@@ -302,31 +305,41 @@ export const AUDIO_GENERATION_TOOLS = [
     defineTool({schema: speech.schema, json: speech.json}, {
         name: "audio_generate_speech",
         title: "生成配音",
-        description: "生成配音或音色试音；默认 MiMo，connectorId/voice/speed 可省略。speakerId 或段落绑定角色可继承已保存的音色；提供段落时需 segmentRevision。明确的 APIMart 参数仍可使用；MiMo 克隆用项目内参考 mediaId，设计默认不改写文本。必须确认后才生成。",
+        description: "生成配音或音色试音；默认 MiMo，projectId/connectorId/voice/speed 可省略。projectId 只使用当前对话保存的项目绑定，显式冲突仍拒绝。speakerId 或段落绑定角色可继承已保存的音色；提供段落时需 segmentRevision。明确的 APIMart 参数仍可使用；MiMo 克隆用项目内参考 mediaId，设计默认不改写文本。必须确认后才生成。",
         effect: "network",
         recovery: "repeatable",
         requiresConfirmation: true,
         highRisk: () => false,
         prepare: async (raw, context) => preview(await speechArgs(raw, context), context),
         execute: async (raw, context) => {
+            let args: Submission;
             try {
-                return await runSubmission(await speechArgs(raw, context, true), context, () => speechArgs(raw, context));
+                args = await speechArgs(raw, context, true);
             } catch (error) {
-                throw new AtomicToolRollbackError(error instanceof Error ? error.message : "配音准备失败");
+                throw new AtomicToolRollbackError(error instanceof Error ? error.message : "配音准备失败", {cause: error});
             }
+            // Only local argument preparation is proven not to have submitted.
+            // Summary/recovery storage failures after a POST retain unknown effect.
+            return runSubmission(args, context, () => speechArgs(raw, context));
         }
     }),
     musicGenerateTool,
     defineTool({schema: jobSpec.schema, json: jobSpec.json}, {
         name: "audio_generation_check",
         title: "查询声音生成结果",
-        description: "对当前项目已存在的任务查询一次并保存可用结果；不会重新生成。pending/running 不等于成品，不要密集循环查询。",
+        description: "对当前项目已存在的任务查询一次并保存可用结果；projectId 可省略，使用当前对话保存的项目绑定，显式冲突仍拒绝。不会重新生成。pending/running 不等于成品，不要密集循环查询。",
         effect: "network",
         recovery: "repeatable",
         highRisk: () => false,
         async execute(raw, context) {
-            const args = jobSpec.schema.parse(raw);
-            await scope(args.projectId, context);
+            const parsed = jobSpec.schema.parse(raw);
+            let projectId: string;
+            try {
+                projectId = await scope(parsed.projectId, context);
+            } catch (cause) {
+                throw new AtomicToolRollbackError(cause instanceof Error ? cause.message : "任务查询尚未开始", {cause});
+            }
+            const args = {...parsed, projectId};
             await refreshAudioGeneration(args.projectId, args.jobId, {signal: context.signal});
             return readAudioJobSummary(args.projectId, args.jobId);
         }

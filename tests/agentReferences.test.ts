@@ -1,3 +1,4 @@
+import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import {registeredTools} from "./helpers/registeredTools";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
@@ -77,8 +78,8 @@ describe("bounded project references and native same-model vision", () => {
       expect(wire).toContain(protocol === "responses" ? '"input_image"' : '"image_url"');
       return protocol === "responses" ? responseAnswer() : chatAnswer();
     });
-    await executeChatRun((await db.agentRuns.get(run.id))!, connector.apiKey, new AbortController(), fetcher);
-    expect(fetcher).toHaveBeenCalledTimes(1); expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
+    await executeChatRun((await db.agentRuns.get(run.id))!, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
+    expect(fetcher).toHaveBeenCalledTimes(2); expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
     const stored = JSON.stringify([await db.agentRuns.toArray(), await db.chatMessages.toArray(), await db.agentToolCalls.toArray()]);
     expect(stored).not.toContain("data:image"); expect(stored).not.toContain("test-secret");
     expect((await db.agentRuns.get(run.id))?.referenceAudit?.[0].inputs[0].references).toEqual([image, text]);
@@ -100,8 +101,8 @@ describe("bounded project references and native same-model vision", () => {
       if (bodies.length === 2) return protocol === "responses" ? Response.json({ status: "completed", output: [{ type: "reasoning", summary: [], encrypted_content: "keep-opaque" }, { type: "function_call", call_id: call.id, name: call.function.name, arguments: call.function.arguments }] }) : Response.json({ choices: [{ message: { content: "", tool_calls: [call] }, finish_reason: "tool_calls" }] });
       return protocol === "responses" ? responseAnswer() : chatAnswer();
     });
-    await executeChatRun((await db.agentRuns.get(run.id))!, connector.apiKey, new AbortController(), fetcher);
-    expect(fetcher).toHaveBeenCalledTimes(3); expect(bodies.every((body) => body.model === run.model)).toBe(true);
+    await executeChatRun((await db.agentRuns.get(run.id))!, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
+    expect(fetcher).toHaveBeenCalledTimes(4); expect(bodies.every((body) => body.model === run.model)).toBe(true);
     expect(JSON.stringify(bodies[0])).not.toContain("data:image");
     expect(JSON.stringify(bodies[2])).toContain("data:image/png;base64,YWN0dWFsLXBpeGVscw==");
     if (protocol === "responses") {
@@ -124,7 +125,7 @@ describe("bounded project references and native same-model vision", () => {
     expect(retry.context?.selectedReferences).toEqual(run.context?.selectedReferences);
     await removeProjectReference(p.id, ref.referenceId);
     const fetcher = vi.fn(async () => chatAnswer());
-    await executeChatRun(retry, connector.apiKey, new AbortController(), fetcher);
+    await executeChatRun(retry, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
     expect(fetcher).not.toHaveBeenCalled(); expect((await db.agentRuns.get(retry.id))?.status).toBe("failed");
   });
   it("retains source coverage through summaries without replaying historic pixels, estimates live pixels separately", async () => {
@@ -152,7 +153,7 @@ describe("bounded project references and native same-model vision", () => {
       return bytes;
     });
     const fetcher = vi.fn(async () => chatAnswer());
-    try { await executeChatRun(run, connector.apiKey, new AbortController(), fetcher); }
+    try { await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher)); }
     finally { spy.mockRestore(); }
     expect(fetcher).not.toHaveBeenCalled();
     expect((await db.agentRuns.get(run.id))?.status).toBe("failed");

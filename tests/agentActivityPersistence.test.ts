@@ -1,3 +1,4 @@
+import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
@@ -41,17 +42,20 @@ describe("public tool-round activity persistence", () => {
       ] });
       return Response.json({ choices: [{ message: { content, reasoning_content: reasoning, ...(isToolRound ? { tool_calls: [{ id: `call-${requestCount}`, type: "function", function: { name: "workspace_overview", arguments: "{}" } }] } : {}) }, finish_reason: isToolRound ? "tool_calls" : "stop" }] });
     };
-    await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetchImpl));
     const saved = (await db.agentRuns.get(run.id))!;
     expect(saved.status).toBe("completed");
+    expect(saved.modelStep).toBe(5);
+    expect(saved.finalReview?.status).toBe("checked");
     expect(saved.activitySteps).toMatchObject([
       { step: 1, content: "过程 1", reasoning: "公开思考 1" },
       { step: 2, content: "过程 2", reasoning: "公开思考 2" },
+      { step: 3, content: "最终答复", reasoning: "最终思考" },
     ]);
     expect(await db.chatMessages.get(run.assistantMessageId)).toMatchObject({ content: "最终答复", reasoning: "最终思考" });
     const activity = buildRunActivity(saved, await db.agentToolCalls.where("runId").equals(run.id).toArray());
-    expect(activity.map((item) => item.kind)).toEqual(["reasoning", "text", "tools", "reasoning", "text", "tools"]);
-    expect(JSON.stringify(activity)).not.toMatch(/最终答复|最终思考|provider-opaque-secret/);
+    expect(activity.map((item) => item.kind)).toEqual(["reasoning", "text", "tools", "reasoning", "text", "tools", "reasoning", "text"]);
+    expect(JSON.stringify(activity)).not.toMatch(/provider-opaque-secret|claims/);
     if (protocol === "responses") expect(JSON.stringify(saved.responseItems)).toContain("provider-opaque-secret");
   });
 });

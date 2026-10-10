@@ -16,7 +16,9 @@ import {
     patchAudioTrack,
     replaceAudioClips
 } from "@/db/audio";
-import {assertAudioProject, assertAudioRevision, ownedAudioRow} from "@/db/audioShared";
+import type {Table} from "dexie";
+import type {AudioRow} from "@/domain/audio";
+import {getProjectKind} from "@/domain/types";
 import {splitAudioClip} from "@/lib/audio/commands";
 import type {AgentToolContext} from "./tools";
 import type {Spec} from "./businessSchemas";
@@ -27,11 +29,33 @@ import {SPEECH_VOICES} from "@/lib/ai/apimartAudio";
 import {MIMO_VOICES} from "@/lib/ai/mimoSpeech";
 import {mimoSpeechSpec} from "./mimoSpeechSpec";
 import {speakerSpeechProfile} from "@/lib/audioGeneration/defaults";
+import {ToolRecoveryError} from "./toolErrors";
 
 export async function assertAudioMusicToolScope(projectId: string | undefined, context: AgentToolContext, kind: "audio" | "music") {
     const bound = await requireBoundProjectScope(context, projectId);
-    await assertAudioProject(bound, kind);
+    const project = await db.projects.get(bound);
+    if (!project) throw new ToolRecoveryError("PROJECT_NOT_FOUND", "项目不存在或已删除");
+    if (getProjectKind(project) !== kind) throw new ToolRecoveryError("PROJECT_SCOPE_MISMATCH", "项目类型不匹配");
     return bound;
+}
+
+export async function resolveAudioMusicArgs<T extends {projectId?: string}>(args: T, context: AgentToolContext, kind: "audio" | "music"): Promise<T & {projectId: string}> {
+    return {...args, projectId: await assertAudioMusicToolScope(args.projectId, context, kind)};
+}
+
+function assertAudioToolTarget<T extends {projectId: string}>(row: T | undefined, projectId: string): asserts row is T {
+    if (!row) throw new ToolRecoveryError("TARGET_NOT_FOUND", "找不到当前项目中的内容");
+    if (row.projectId !== projectId) throw new ToolRecoveryError("TARGET_SCOPE_MISMATCH", "找不到当前项目中的内容");
+}
+
+export async function ownedAudioToolRow<T extends {projectId: string}>(table: Table<T, string>, projectId: string, id: string): Promise<T> {
+    const row = await table.get(id);
+    assertAudioToolTarget(row, projectId);
+    return row;
+}
+
+export function assertAudioToolRevision(row: AudioRow, revision: number) {
+    if (row.revision !== revision) throw new ToolRecoveryError("STALE_TOOL_PREVIEW", "内容已被其他操作修改，请刷新后重试");
 }
 
 export const audioMusicRevision = s.number(1, 1e12, true);
@@ -52,7 +76,7 @@ export function boundedAudioText(value: string, limit = 1600) {
     return {text: value.slice(0, limit), totalLength: value.length, truncated: value.length > limit};
 }
 
-const base = {projectId: s.id};
+const base = {projectId: s.optional(s.id)};
 const identity = {...base, id: s.id, revision: audioMusicRevision};
 const sec = s.number(0, 86400);
 const scope = async (args: { projectId: string }, context: AgentToolContext) => {
@@ -140,8 +164,8 @@ async function editable(args: {
         track: db.audioTracks
     }[args.kind];
     const row = await table.get(args.id);
-    if (!row || row.projectId !== args.projectId) throw new Error("找不到当前项目中的内容");
-    assertAudioRevision(row, args.revision);
+    assertAudioToolTarget(row, args.projectId);
+    assertAudioToolRevision(row, args.revision);
     return row;
 }
 
@@ -150,8 +174,8 @@ async function previewState(args: { projectId: string }, changes: string[]) {
 }
 
 async function clipState(args: { projectId: string; id: string; revision: number }, changes: string[]) {
-    const clip = await ownedAudioRow(db.audioClips, args.projectId, args.id);
-    assertAudioRevision(clip, args.revision);
+    const clip = await ownedAudioToolRow(db.audioClips, args.projectId, args.id);
+    assertAudioToolRevision(clip, args.revision);
     return previewState(args, changes);
 }
 
@@ -172,7 +196,7 @@ export const AUDIO_TOOLS = [
             const projectId = await assertAudioMusicToolScope(args.projectId, context, "audio");
             const snapshot = await getAudioProjectSnapshot(projectId);
             const all = snapshot[args.kind].filter((row) => (!args.id || row.id === args.id) && (!args.chapterId || ("chapterId" in row && row.chapterId === args.chapterId)));
-            if (args.id && !all.length) throw new Error("找不到当前项目中的内容");
+            if (args.id && !all.length) throw new ToolRecoveryError("TARGET_NOT_FOUND", "找不到当前项目中的内容");
             const offset = args.offset ?? 0, limit = args.limit ?? 20;
             if (args.field === "instruction") {
                 if (!args.id || args.kind !== "speakers") throw new Error("演绎指导分页需要指定说话人 ID");
@@ -247,7 +271,7 @@ export const AUDIO_TOOLS = [
         title: "组织配音项目",
         description: "创建章节、角色音色、脚本段落或轨道。kind=speaker 可命名并保存 MiMo 预置/设计/克隆音色，省略音色配置时默认 MiMo；显式 APIMart voice 保留兼容。此工具只保存音色配置，试音使用 audio_generate_speech 经确认生成。",
         spec: createSpec,
-        scope,
+        scope, resolve: (args, context) => resolveAudioMusicArgs(args, context, "audio"),
         owners: (args) => [args.projectId],
         prepare: (args) => previewState(args, [`创建${args.kind}：${JSON.stringify(args).slice(0, 1800)}`]),
         async execute(args) {
@@ -299,7 +323,7 @@ export const AUDIO_TOOLS = [
         title: "修改配音内容",
         description: "按读取到的 revision 修改章节、说话人、脚本或轨道。段落 selectedTakeId 只选择版本，不替换时间线声音；null 清除选用/说话人。修改脚本不会自动重新生成。",
         spec: updateSpec,
-        scope,
+        scope, resolve: (args, context) => resolveAudioMusicArgs(args, context, "audio"),
         owners: (args) => [args.projectId],
         async prepare(args) {
             await editable(args);
@@ -327,7 +351,7 @@ export const AUDIO_TOOLS = [
         receipt: (args, result) => soundWriteReceipt("audio_clip", "created", args, result),
         title: "将配音放入时间线",
         description: "把已存在的真实 takeId 明确放入当前章节轨道；不会改变已放置片段。startSec 是时间线位置，trim 为原始声音秒数。",
-        scope,
+        scope, resolve: (args, context) => resolveAudioMusicArgs(args, context, "audio"),
         owners: (args) => [args.projectId],
         spec: s.object({
             ...base,
@@ -356,7 +380,7 @@ export const AUDIO_TOOLS = [
         receipt: (args, result) => soundWriteReceipt("audio_clip", "updated", args, result),
         title: "编辑声音片段",
         description: "按 revision 调整位置、原始裁剪边界、音量或淡入淡出；不修改原始媒体，不替换 take。",
-        scope,
+        scope, resolve: (args, context) => resolveAudioMusicArgs(args, context, "audio"),
         owners: (args) => [args.projectId],
         spec: s.object({
             ...identity,
@@ -376,13 +400,13 @@ export const AUDIO_TOOLS = [
         name: "audio_split_clip",
         title: "分割声音片段",
         description: "按时间线绝对秒数分割片段，保留来源且不移动后续声音；分割点必须在片段内部及淡入淡出区外。",
-        scope,
+        scope, resolve: (args, context) => resolveAudioMusicArgs(args, context, "audio"),
         owners: (args) => [args.projectId],
         spec: s.object({...identity, timeSec: sec}),
         prepare: (args) => clipState(args, [`在 ${args.timeSec} 秒分割片段，原始音频完整保留。`]),
         async execute(args) {
-            const clip = await ownedAudioRow(db.audioClips, args.projectId, args.id);
-            assertAudioRevision(clip, args.revision);
+            const clip = await ownedAudioToolRow(db.audioClips, args.projectId, args.id);
+            assertAudioToolRevision(clip, args.revision);
             const snapshot = await getAudioProjectSnapshot(args.projectId);
             const current = snapshot.clips.filter((row) => row.chapterId === clip.chapterId);
             const parts = splitAudioClip(clip, args.timeSec);
@@ -396,7 +420,7 @@ export const AUDIO_TOOLS = [
         title: "移除时间线片段",
         description: "明确移除一个时间线片段，保留原始配音版本和媒体；不会删除脚本。",
         highRisk: true,
-        scope,
+        scope, resolve: (args, context) => resolveAudioMusicArgs(args, context, "audio"),
         owners: (args) => [args.projectId],
         spec: s.object(identity),
         prepare: (args) => clipState(args, [`移除片段 ${args.id}，保留声音来源。`]),

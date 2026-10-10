@@ -1,3 +1,4 @@
+import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import {createProject as createBoundTestProject} from "@/db/projects";
 import {createChatThread} from "@/db/chat";
 import {deleteChatThread} from "@/db/cascadeCommands";
@@ -86,7 +87,7 @@ describe("durable context compaction", () => {
       const body = JSON.parse(String(init?.body)); requests.push(body);
       return json(requests.length === 1 ? "目标：继续创作。已确认关键约束，下一步完成计划。" : "这是最终回复");
     });
-    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
     expect(fetcher).toHaveBeenCalledTimes(2);
     expect(requests[0].tools).toBeUndefined();
     expect(requests[0].max_tokens).toBeGreaterThan(0);
@@ -147,7 +148,7 @@ describe("durable context compaction", () => {
     const retry = await beginAgentRun({ threadId: run.threadId, connector, model: run.model, retryOfRunId: run.id });
     expect(retry.context?.summaryId).toBe(record.id);
     const fetcher = vi.fn(async () => json("final"));
-    await executeChatRun(retry, connector.apiKey, new AbortController(), fetcher);
+    await executeChatRun(retry, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
   it("keeps Responses reasoning and tool pairs byte-for-byte when compacting base history", async () => {
@@ -176,14 +177,16 @@ describe("durable context compaction", () => {
       if (bodies.length === 1) return Response.json({ choices: [{ message: { content: "", tool_calls: [{ id: "call", type: "function", function: { name: "workspace_overview", arguments: "{}" } }] }, finish_reason: "tool_calls" }] });
       return json("最终回复");
     });
-    await executeChatRun((await db.agentRuns.get(run.id))!, connector.apiKey, new AbortController(), fetcher, [tool]);
+    await executeChatRun((await db.agentRuns.get(run.id))!, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher), [tool]);
     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
     expect(tool.execute).toHaveBeenCalledTimes(1);
-    expect(bodies).toHaveLength(3);
+    expect(bodies).toHaveLength(5);
+    expect(bodies.filter(body => !body.tools)).toHaveLength(2);
+    expect((await db.agentRuns.get(run.id))?.finalReview?.status).toBe("checked");
     expect(bodies[1].tools).toBeUndefined();
     expect(bodies[2].messages.slice(-2).map((m) => m.role)).toEqual(["assistant", "tool"]);
     expect((await db.contextCompactions.toArray())[0]?.status).toBe("completed");
-    expect((await db.agentRuns.get(run.id))?.modelStep).toBe(2);
+    expect((await db.agentRuns.get(run.id))?.modelStep).toBe(4);
   });
   it("incrementally summarizes a long history using bounded requests", async () => {
     const { run } = await begin(20, 900);

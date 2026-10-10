@@ -1,5 +1,6 @@
 import {CreatedEntityLinks} from "./CreatedEntityLinks";
 import {AgentWriteOutcomes} from "./AgentWriteOutcomes";
+import {AgentFinalReviewStatus} from "./AgentFinalReviewStatus";
 import {WebResearchSources} from "./WebResearchSources";
 import {ProjectImageSources} from "./ProjectImageSources";
 import {GenerationReview} from "./GenerationReview";
@@ -15,7 +16,7 @@ import {MODEL_STEPS_PER_SEGMENT} from "@/domain/agent";
 import {Button} from "@/components/ui/button";
 import type {ChatMessage} from "@/domain/types";
 import {buildRunActivity, formatRunElapsed, getRunElapsedMs, isPersistedToolRound} from "@/lib/agent/runPresentation";
-import {readToolValidationFailure, type ToolValidationFailure} from "@/lib/agent/toolErrors";
+import {readToolRecoveryFailure, readToolValidationFailure, type ToolRecoveryFailure, type ToolValidationFailure} from "@/lib/agent/toolErrors";
 import {describeRunExecution} from "@/lib/agent/executionSummary";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {ThinkingPanel} from "./ThinkingPanel";
@@ -68,6 +69,14 @@ function ValidationFailureNotice({failure, legacy}: { failure: ToolValidationFai
     </div>;
 }
 
+function RecoveryFailureNotice({failure}: {failure: ToolRecoveryFailure}) {
+    return <div className="agent-tool-validation-error" role="alert">
+        <strong>{failure.effectCertainty === "rolled_back" ? "操作已回滚" : failure.effectCertainty === "not_started" ? "操作未开始" : "操作结果待核实"}</strong>
+        <p>{failure.error}</p>
+        <p className="agent-tool-validation-recovery">{failure.recovery}</p>
+    </div>;
+}
+
 function ToolCallRow({run, call, busy, readOnly, unknown, executing, onAction}: {
     run: AgentRun; call: AgentToolCall; busy: boolean; readOnly?: boolean;
     unknown: boolean; executing: boolean;
@@ -86,6 +95,7 @@ function ToolCallRow({run, call, busy, readOnly, unknown, executing, onAction}: 
     const preview = call.generationOverride?.preview ?? call.preview;
     const [legacyValidation, setLegacyValidation] = useState<ToolValidationFailure | undefined>();
     const structuredValidation = useMemo(() => call.status === "failed" ? readToolValidationFailure(call.result) : undefined, [call.status, call.result]);
+    const recovery = useMemo(() => call.status === "failed" ? readToolRecoveryFailure(call.result) : undefined, [call.status, call.result]);
     useEffect(() => {
         let cancelled = false;
         if (!structuredValidation && call.status === "failed" && call.error?.includes("参数无效")) {
@@ -107,8 +117,9 @@ function ToolCallRow({run, call, busy, readOnly, unknown, executing, onAction}: 
         </button>
         <div id={panelId} hidden={!open}>
             <div className="agent-step-payload">
-                <p>{EFFECT[call.effect]}{validation ? " · 未执行" : call.highRisk ? " · 高风险操作" : ""}</p>
+                <p>{EFFECT[call.effect]}{recovery?.effectCertainty === "rolled_back" ? " · 已回滚" : validation || recovery?.effectCertainty === "not_started" ? " · 未执行" : call.highRisk ? " · 高风险操作" : ""}</p>
                 {validation && <ValidationFailureNotice failure={validation} legacy={isLegacyValidation}/>}
+                {recovery && <RecoveryFailureNotice failure={recovery}/>}
                 {musicReview ? <MusicGenerationReview key={call.id} call={call} busy={busy} active={activeMusicReview}
                                                       onAction={onAction}/> : reviewGeneration ?
                     <GenerationReview call={call} busy={busy} onAction={onAction}/> : preview &&
@@ -134,7 +145,7 @@ function ToolCallRow({run, call, busy, readOnly, unknown, executing, onAction}: 
                         <pre>{call.result}</pre>
                     </>}
                 </details>
-                {call.error && !validation && <p className="text-destructive">{call.error}</p>}
+                {call.error && !validation && !recovery && <p className="text-destructive">{call.error}</p>}
             </div>
             {call.name !== "project_create" && <CreatedEntityLinks call={call}/>}
             {!readOnly && !reviewGeneration && !musicReview && call.status === "awaiting_approval" && recoverable && !unknown && !executing &&
@@ -247,6 +258,7 @@ export function AgentRunDetails({run, message, calls, busy, readOnly, onAction}:
             {failedCount > 0 && <small className="agent-execution-failure-summary">含 {failedCount} 项失败</small>}
         </Button>
         <AgentWriteOutcomes run={run} calls={ownedCalls}/>
+        <AgentFinalReviewStatus run={run}/>
         <div id={panelId} className="agent-execution-timeline" hidden={!expanded}>
             {(expanded || hasExpanded) && <>
                 <div className="agent-execution-explanation">

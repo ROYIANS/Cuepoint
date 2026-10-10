@@ -101,11 +101,11 @@
       "evidence": [
         {
           "file": "src/db/audio.ts",
-          "sha256": "2593aa6402414d316835cc0e03a64f28a04a4dc9399e5e43d37038e20badd116"
+          "sha256": "72808d100983aa94c74cb2916360efc74365e6b9c933748311c20cdefb4906c7"
         },
         {
           "file": ".trellis/spec/frontend/audio-music.md",
-          "sha256": "84c25cff00c0f0dd8eae4420e422ed20c2f729b6495c953801a81fdec568135f"
+          "sha256": "ea8be073462c392309dcc290dcd09b3c245f7c5de2f1962eb8b13fdde0413f67"
         }
       ]
     },
@@ -119,11 +119,11 @@
       "evidence": [
         {
           "file": "src/db/audio.ts",
-          "sha256": "2593aa6402414d316835cc0e03a64f28a04a4dc9399e5e43d37038e20badd116"
+          "sha256": "72808d100983aa94c74cb2916360efc74365e6b9c933748311c20cdefb4906c7"
         },
         {
           "file": ".trellis/spec/frontend/audio-music.md",
-          "sha256": "84c25cff00c0f0dd8eae4420e422ed20c2f729b6495c953801a81fdec568135f"
+          "sha256": "ea8be073462c392309dcc290dcd09b3c245f7c5de2f1962eb8b13fdde0413f67"
         }
       ]
     }

@@ -1,3 +1,4 @@
+import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import {registeredTools} from "./helpers/registeredTools";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
@@ -70,10 +71,11 @@ describe("one-time Agent project creation continuity", () => {
         }
         return response(protocol);
       });
-      await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
+      await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetchImpl));
       const saved = (await db.agentRuns.get(run.id))!;
       expect(saved.status, saved.error).toBe("completed");
-      expect(fetchImpl).toHaveBeenCalledTimes(4);
+      expect(fetchImpl).toHaveBeenCalledTimes(5);
+      expect(saved.finalReview?.status).toBe("checked");
       expect(saved.requestMessages).toEqual(original);
       expect(saved.enabledToolNames).toEqual(run.enabledToolNames);
       expect(saved.offeredTools?.[0].names).toEqual(getOfferedToolNames(run));
@@ -200,11 +202,11 @@ describe("one-time Agent project creation continuity", () => {
     const foreign = await createProject("其他项目"), run = await begin("chat-completions", "ask");
     let step = 0;
     const fetchImpl: typeof fetch = async () => ++step === 1 ? response(run.protocol, [wire("project_create", { name: "当前项目", kind: "audio" }, "first"), wire("project_update", { id: foreign.id, patch: { brief: "越界" } }, "foreign"), wire("project_create", { name: "不应创建" }, "second")]) : response(run.protocol);
-    await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetchImpl));
     const pending = await db.agentToolCalls.where("runId").equals(run.id).sortBy("order");
     expect(pending.every(call => call.status === "awaiting_approval")).toBe(true);
     for (const call of pending) await resolveAgentToolApproval(run.id, call.id, "approve");
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), fetchImpl);
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(fetchImpl));
     const calls = await db.agentToolCalls.where("runId").equals(run.id).sortBy("order");
     expect(calls.map(call => call.status)).toEqual(["completed", "failed", "failed"]);
     expect((await db.projects.get(foreign.id))?.brief).not.toBe("越界");
@@ -222,7 +224,7 @@ describe("one-time Agent project creation continuity", () => {
     const real = create.execute;
     const registry = BUILTIN_TOOLS.map(tool => tool.name === "project_create" ? { ...tool, execute: async (...args: Parameters<typeof real>) => { const result = await real(...args); controller.abort(); return result; } } : tool);
     const fetchImpl = vi.fn<typeof fetch>(async () => response(run.protocol, [wire("project_create", { name: "停止后保留", kind: "audio" })]));
-    await executeChatRun(run, connector.apiKey, controller, fetchImpl, registry);
+    await executeChatRun(run, connector.apiKey, controller, withFinalReviewFixture(fetchImpl), registry);
     const saved = (await db.agentRuns.get(run.id))!;
     expect(saved.status).toBe("interrupted"); expect(saved.createdProjectBinding?.projectId).toBe(saved.projectId);
     expect(await db.agentRuns.get(old.id)).toEqual(oldSnapshot);

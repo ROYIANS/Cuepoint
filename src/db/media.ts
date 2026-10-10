@@ -27,6 +27,8 @@ export async function collectMediaIds(projectId?: Id): Promise<Set<Id>> {
     }
     const speakers = await (projectId === undefined ? db.audioSpeakers : db.audioSpeakers.where("projectId").equals(projectId)).toArray();
     for (const speaker of speakers) if (speaker.mimo?.referenceMediaId) ids.add(speaker.mimo.referenceMediaId);
+    const audioItems = await (projectId === undefined ? db.audioGenerationBatchItems : db.audioGenerationBatchItems.where("projectId").equals(projectId)).toArray();
+    for (const item of audioItems) if (item.snapshot.input.mimo?.referenceMediaId) ids.add(item.snapshot.input.mimo.referenceMediaId);
     for (const use of materialUses) for (const mediaId of use.mediaIds) ids.add(mediaId);
     for (const media of retainedMedia) ids.add(media.id);
     for (const reference of references) if (reference.status !== "unavailable") ids.add(reference.mediaId);

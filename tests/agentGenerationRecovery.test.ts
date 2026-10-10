@@ -1,3 +1,4 @@
+import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import { describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 import { db } from "@/db/database";
@@ -106,7 +107,7 @@ describe("parked generation tool runtime", () => {
     });
     const definition = tool(execute);
     const initialFetch = vi.fn(async () => callResponse());
-    await executeChatRun(run, connector.apiKey, new AbortController(), initialFetch, [definition]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(initialFetch), [definition]);
     const call = (await db.agentToolCalls.where("runId").equals(run.id).toArray())[0];
     expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "interrupted", modelStep: 1, error: "任务仍在生成，请稍后继续" });
     expect(call.status).toBe("pending");
@@ -114,23 +115,23 @@ describe("parked generation tool runtime", () => {
     expect(initialFetch).toHaveBeenCalledTimes(1);
     db.close(); await db.open();
     const finalFetch = vi.fn(async () => answer());
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), finalFetch, [definition]);
-    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "completed", modelStep: 2 });
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(finalFetch), [definition]);
+    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "completed", modelStep: 4, finalReview: {status: "checked"} });
     expect((await db.agentToolCalls.get(call.id))?.status).toBe("completed");
     expect(await db.agentToolCalls.where("runId").equals(run.id).count()).toBe(1);
     expect(execute).toHaveBeenCalledTimes(2);
     expect(submissionCount).toBe(1);
-    expect(finalFetch).toHaveBeenCalledTimes(1);
+    expect(finalFetch).toHaveBeenCalledTimes(2);
   });
 
   it("does not trust ToolPendingError alone as proof that a submission can be resumed", async () => {
     const run = await begin();
     const execute = vi.fn(async () => { throw new ToolPendingError("未收到任务标识"); });
     const definition = tool(execute);
-    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => callResponse()), [definition]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => callResponse())), [definition]);
     expect((await db.agentRuns.get(run.id))?.status).toBe("interrupted");
     expect((await db.agentToolCalls.where("runId").equals(run.id).toArray())[0].status).toBe("unknown");
-    await expect(resumeChatRun(run.id, connector.apiKey, new AbortController(), vi.fn(async () => answer()), [definition])).rejects.toThrow("不确定");
+    await expect(resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => answer())), [definition])).rejects.toThrow("不确定");
     expect(execute).toHaveBeenCalledTimes(1);
   });
 });

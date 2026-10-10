@@ -14,6 +14,7 @@ import { AUDIO_GENERATION_TOOLS as AUDIO_GENERATION_TOOLS_DEFINITIONS, AUDIO_GEN
 import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
 import { getProjectContext, refreshRunProjectContext } from "@/lib/agent/projectContext";
 import { encodePcm16Wav } from "@/lib/audio/wav";
+import * as audioRuntime from "@/lib/audioGeneration/runtime";
 const AUDIO_GENERATION_TOOLS = registeredTools(AUDIO_GENERATION_TOOLS_DEFINITIONS);
 
 
@@ -167,6 +168,39 @@ describe("paid audio/music Agent approval and recovery", () => {
     expect((await db.audioGenerationJobs.toArray())[0].status).toBe("saved");
     await resumeChatRun(f.run.id, chatConnector.apiKey, new AbortController(), vi.fn(async () => answer()), AUDIO_GENERATION_TOOLS);
     expect(paidFetch).toHaveBeenCalledOnce(); expect(await db.audioTakes.count()).toBe(1);
+  });
+
+  it.each(["audio", "music"] as const)("keeps %s paid effects unknown when current-result reads fail after submission", async kind => {
+    const f = await fixture(kind);
+    const source = encodePcm16Wav({length: 48, sampleRate: 48000, numberOfChannels: 1, getChannelData: () => new Float32Array(48)}).blob;
+    vi.stubGlobal("OfflineAudioContext", class {async decodeAudioData() {return {length: 48, duration: .001, numberOfChannels: 2, sampleRate: 48000};}});
+    const paidFetch = vi.fn<typeof fetch>(async (_url, init) => init?.method === "GET"
+      ? Response.json({code: 200, data: {id: "remote-task", status: "running", progress: 20}})
+      : kind === "audio" ? new Response(source, {headers: {"Content-Type": "audio/wav"}})
+      : Response.json({code: 200, data: [{task_id: "remote-task"}]}));
+    vi.stubGlobal("fetch", paidFetch);
+    const call = await awaiting(f.run, f.name, f.args);
+    await resolveAgentToolApproval(f.run.id, call.id, "approve");
+    const summary = vi.spyOn(audioRuntime, "readAudioJobSummary").mockRejectedValue(new Error("summary storage read failed"));
+    const model = vi.fn<typeof fetch>();
+    try {
+      await resumeChatRun(f.run.id, chatConnector.apiKey, new AbortController(), model, AUDIO_GENERATION_TOOLS);
+      expect((await db.agentToolCalls.get(call.id))?.status).toBe("unknown");
+      expect((await db.agentToolCalls.get(call.id))?.result).toBeUndefined();
+      expect((await db.agentRuns.get(f.run.id))?.status).toBe("failed");
+      expect(model).not.toHaveBeenCalled();
+      expect(paidFetch).toHaveBeenCalledOnce();
+      expect((await db.audioGenerationJobs.toArray())[0]).toMatchObject({status: kind === "audio" ? "saved" : "submitted",
+        source: {kind: "agent", runId: f.run.id, callId: call.id}});
+      expect(await db.audioTakes.count()).toBe(kind === "audio" ? 1 : 0);
+    } finally {summary.mockRestore();}
+    // Unknown ledger effects block even explicit continuation; reload grants no retry.
+    db.close(); await db.open();
+    for (let attempt = 0; attempt < 2; attempt++) await expect(resumeChatRun(f.run.id, chatConnector.apiKey, new AbortController(), model, AUDIO_GENERATION_TOOLS)).rejects.toThrow("不确定");
+    expect(paidFetch.mock.calls.filter(([,init]) => init?.method === "POST")).toHaveLength(1);
+    expect(await db.audioGenerationJobs.count()).toBe(1);
+    expect((await db.agentToolCalls.get(call.id))?.status).toBe("unknown");
+    expect(model).not.toHaveBeenCalled();
   });
 
   it("reviews MiMo clone reference bytes and rejects a changed sample before POST", async () => {

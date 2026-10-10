@@ -19,6 +19,7 @@ import {
 } from "@/domain/types";
 import {targetRevision} from "@/lib/productionRevision";
 import {parseGenerationSlot, slotMediaIds} from "@/domain/slot";
+import {ToolRecoveryError} from "./toolErrors";
 
 export type BusinessKind = "project" | "episode" | "beat" | "shot" | "character" | "scene" | "prop" | "style" | "media";
 type AssetKind = "character" | "scene" | "prop" | "style";
@@ -66,39 +67,41 @@ function metadata(record: MediaRecord) {
 
 export async function requireOwner(ownerId: string, allowStudio = true): Promise<void> {
     if (ownerId === STUDIO_LIBRARY_ID) {
-        if (!allowStudio) throw new Error("工作室不是项目，不能执行此操作");
+        if (!allowStudio) throw new ToolRecoveryError("PROJECT_SCOPE_MISMATCH", "工作室不是项目，不能执行此操作");
         return;
     }
-    if (!(await db.projects.get(ownerId))) throw new Error("项目不存在，请先查询并确认项目标识");
+    if (!(await db.projects.get(ownerId))) throw new ToolRecoveryError("PROJECT_NOT_FOUND", "项目不存在，请先查询并确认项目标识");
 }
 
 export async function requireEpisode(ownerId: string, episodeId: string) {
     await requireOwner(ownerId, false);
     const episode = await db.episodes.get(episodeId);
-    if (!episode || episode.projectId !== ownerId) throw new Error("分集不存在或不属于当前项目");
+    if (!episode) throw new ToolRecoveryError("TARGET_NOT_FOUND", "分集不存在或不属于当前项目");
+    if (episode.projectId !== ownerId) throw new ToolRecoveryError("EPISODE_SCOPE_MISMATCH", "分集不存在或不属于当前项目");
     return episode;
 }
 
 /** Owned typed records are used by commands; dynamic views remain presentation only. */
 export async function readBusinessRecord(kind: BusinessKind, id: string, ownerId?: string, episodeId?: string): Promise<OwnedBusinessRecord> {
     if (kind === "project") {
-        if (id === STUDIO_LIBRARY_ID) throw new Error("工作室不是项目");
+        if (id === STUDIO_LIBRARY_ID) throw new ToolRecoveryError("PROJECT_SCOPE_MISMATCH", "工作室不是项目");
         const project = await db.projects.get(id);
-        if (!project) throw new Error("项目不存在");
-        if (ownerId !== undefined && ownerId !== id) throw new Error("项目归属不匹配");
+        if (!project) throw new ToolRecoveryError("PROJECT_NOT_FOUND", "项目不存在");
+        if (ownerId !== undefined && ownerId !== id) throw new ToolRecoveryError("PROJECT_SCOPE_MISMATCH", "项目归属不匹配");
         return {kind, row: {...project}};
     }
-    if (!ownerId) throw new Error("必须明确提供 ownerId；工作室资产使用 studio");
+    if (!ownerId) throw new ToolRecoveryError("PROJECT_REQUIRED", "必须明确提供 ownerId；工作室资产使用 studio");
     await requireOwner(ownerId, !["episode", "shot", "beat"].includes(kind));
     if (kind === "beat") {
-        if (!episodeId) throw new Error("场次需要分集标识");
+        if (!episodeId) throw new ToolRecoveryError("EPISODE_REQUIRED", "场次需要分集标识");
         const episode = await requireEpisode(ownerId, episodeId);
         const beat = normalizeEpisodeStory(episode.story).beats.find(item => item.id === id);
-        if (!beat) throw new Error("场次不存在或不属于当前分集");
+        if (!beat) throw new ToolRecoveryError("TARGET_NOT_FOUND", "场次不存在或不属于当前分集");
         return {kind, row: {...beat, projectId: ownerId, episodeId}};
     }
     const owned = <T extends { projectId: string }>(row: T | undefined): T => {
-        if (!row || row.projectId !== ownerId) throw new Error(`${BUSINESS_LABELS[kind]}不存在或归属不匹配`);
+        if (!row) throw new ToolRecoveryError("TARGET_NOT_FOUND", `${BUSINESS_LABELS[kind]}不存在或归属不匹配`);
+        if (row.projectId !== ownerId) throw new ToolRecoveryError("TARGET_SCOPE_MISMATCH", `${BUSINESS_LABELS[kind]}不存在或归属不匹配`);
         return row;
     };
     switch (kind) {
@@ -116,9 +119,9 @@ export async function readBusinessRecord(kind: BusinessKind, id: string, ownerId
             return {kind, row: metadata(owned(await db.media.get(id)))};
         case "shot": {
             const row = owned(await db.shots.get(id));
-            if (typeof row.episodeId !== "string") throw new Error("镜头缺少有效分集");
+            if (typeof row.episodeId !== "string") throw new ToolRecoveryError("EPISODE_REQUIRED", "镜头缺少有效分集");
             await requireEpisode(ownerId, row.episodeId);
-            if (episodeId !== undefined && row.episodeId !== episodeId) throw new Error("镜头不属于当前分集");
+            if (episodeId !== undefined && row.episodeId !== episodeId) throw new ToolRecoveryError("EPISODE_SCOPE_MISMATCH", "镜头不属于当前分集");
             return {kind, row};
         }
     }
@@ -129,10 +132,10 @@ export async function listBusinessRecords(kind: BusinessKind, ownerId?: string, 
         kind,
         row: {...row}
     }));
-    if (!ownerId) throw new Error("必须明确提供 ownerId");
+    if (!ownerId) throw new ToolRecoveryError("PROJECT_REQUIRED", "必须明确提供 ownerId");
     await requireOwner(ownerId, !["episode", "shot", "beat"].includes(kind));
     if (kind === "beat") {
-        if (!episodeId) throw new Error("场次需要分集标识");
+        if (!episodeId) throw new ToolRecoveryError("EPISODE_REQUIRED", "场次需要分集标识");
         const episode = await requireEpisode(ownerId, episodeId);
         return normalizeEpisodeStory(episode.story).beats.map((beat, order) => ({
             kind,

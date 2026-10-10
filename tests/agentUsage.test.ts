@@ -1,3 +1,4 @@
+import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import { describe, expect, it, vi } from "vitest";
 import { streamChatCompletions } from "@/lib/ai/chatStream";
 import { beginAgentRun, recordAgentModelMetrics } from "@/db/agentRuns";
@@ -45,8 +46,9 @@ describe("provider usage and timestamps", () => {
   });
   it("saves actual JSON usage through the runtime", async () => {
     const run = await begin();
-    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => Response.json({ ...answer, usage: { prompt_tokens: 20, completion_tokens: 3, total_tokens: 23 } })));
-    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "completed", usage: { inputTokens: 20, outputTokens: 3, totalTokens: 23 } });
+    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => Response.json({ ...answer, usage: { prompt_tokens: 20, completion_tokens: 3, total_tokens: 23 } })), {inputTokens: 20, outputTokens: 3, totalTokens: 23}));
+    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "completed", modelStep: 3, usage: { inputTokens: 60, outputTokens: 9, totalTokens: 69 }, finalReview: {status: "checked"} });
+    expect((await db.agentRuns.get(run.id))?.modelMetrics?.map(metric => metric.purpose ?? "execution")).toEqual(["execution", "execution", "final_review"]);
     expect((await db.agentRuns.get(run.id))?.outputTokensPerSecond).toBeUndefined();
   });
 });

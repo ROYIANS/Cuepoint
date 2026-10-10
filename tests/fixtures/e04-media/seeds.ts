@@ -70,4 +70,14 @@ export const currentSources: RetentionSource[] = [
     source("speech job sample", db.audioGenerationJobs, (id, owner) => ({...row(id, owner), intentId: "old", connector: {id: "missing", provider: "mimo" as const, baseUrl: "https://fixture.invalid"}, input: {kind: "speech" as const, text: "", voice: "", speed: 1, mimo: sample(id)}, source: {kind: "manual" as const}, status: "failed" as const, taskIds: [], dormant: true, results: []})),
     source("unused speaker sample", db.audioSpeakers, (id, owner) => ({...row(id, owner), name: "unused", mimo: sample(id)})),
 ];
-export const retentionSources = [...currentSources, ...historySources];
+// Additive v24 reference owner. Keep the original current/history lists intact
+// so historical scalar parity and their scan counts remain explicit controls.
+const audioBatchSources: RetentionSource[] = [
+    source("audio batch clone sample", db.audioGenerationBatchItems, (id, owner) => ({
+        ...row(id, owner), batchId: "cancelled-audio-batch", chapterId: "deleted-chapter", segmentId: "deleted-segment",
+        order: 0, included: false, state: "cancelled" as const, intentId: `batch-intent-${id}`,
+        snapshot: {input: {kind: "speech" as const, text: "historical", voice: "mimo_default", speed: 1, mimo: sample(id)},
+            connector: {id: "missing", provider: "mimo" as const, baseUrl: "https://fixture.invalid"}, fingerprint: "historical"}
+    })),
+];
+export const retentionSources = [...currentSources, ...historySources, ...audioBatchSources];

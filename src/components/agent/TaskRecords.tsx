@@ -1,5 +1,5 @@
 import {
-    listTaskGenerationSources,
+    listTaskGenerationSourceInventory,
     listTaskRecords,
     listTaskRecordVersions,
     saveTaskRecord
@@ -17,6 +17,7 @@ import {
     type AgentTaskRecord,
     TASK_RECORD_CLAIMS,
     TASK_RECORD_KINDS,
+    taskRecordSourceIdentity,
     type TaskRecordInput
 } from "@/domain/agentTaskRecords";
 import {db} from "@/db/database";
@@ -58,7 +59,10 @@ export function TaskRecords({task, messages, editable, onDraftStateChange, reque
         const owned = new Set(runs.filter((run) => run.threadId === task.threadId).map((run) => run.id));
         return (await db.agentToolCalls.where("threadId").equals(task.threadId).toArray()).filter((call) => owned.has(call.runId));
     }, [task.id, task.threadId]);
-    const generationEvidence = useLiveQuery(() => listTaskGenerationSources(task), [task.id, task.threadId, task.projectId]);
+    const [generationPage, setGenerationPage] = useState({taskId: task.id, offset: 0});
+    const generationOffset = generationPage.taskId === task.id ? generationPage.offset : 0;
+    const setGenerationOffset = (offset: number) => setGenerationPage({taskId: task.id, offset});
+    const generationEvidence = useLiveQuery(() => listTaskGenerationSourceInventory(task, {offset: generationOffset}), [task.id, task.threadId, task.projectId, generationOffset]);
     const [filter, setFilter] = useState<TaskRecordInput["kind"] | "all">("all");
     const [query, setQuery] = useState("");
     type Session = {
@@ -85,9 +89,10 @@ export function TaskRecords({task, messages, editable, onDraftStateChange, reque
     const saving = useRef(false);
     const history = useLiveQuery(() => historyId ? listTaskRecordVersions(task.id, historyId) : [], [task.id, historyId]);
     const evidence = [
-        ...(generationEvidence ?? []).map(item => ({
+        ...(generationEvidence?.sources ?? []).map(item => ({
             type: "generation" as const,
             id: item.id,
+            resultKey: item.resultKey,
             label: item.label,
             body: item.body
         })),
@@ -210,9 +215,10 @@ export function TaskRecords({task, messages, editable, onDraftStateChange, reque
                     <p className="agent-task-record-body">{record.body}</p>
                     {record.sources.length > 0 &&
                         <div className="agent-task-record-sources"><h4>记录依据</h4>{record.sources.map((source) => {
-                            const item = evidence.find((entry) => entry.id === source.id && entry.type === source.type);
-                            return <details key={`${source.type}:${source.id}`}>
-                                <summary>{item?.label ?? "来源已不可用"}</summary>
+                            const identity = taskRecordSourceIdentity(source);
+                            const item = evidence.find((entry) => taskRecordSourceIdentity(entry) === identity);
+                            return <details key={identity}>
+                                <summary>{item?.label ?? (source.type === "generation" && generationEvidence?.coverage.omitted ? "生成来源未在当前页列出" : "来源已不可用")}</summary>
                                 {source.type === "tool" ? <>{calls?.filter((call) => call.id === source.id).map((call) =>
                                     <div key={call.id}><CreatedEntityLinks call={call}
                                                                            includePreview/>{toolReferenceAttachments(call.result, task.projectId).map(attachment =>
@@ -224,7 +230,7 @@ export function TaskRecords({task, messages, editable, onDraftStateChange, reque
                                         <pre>{item?.body ?? "原始记录不存在，无法重新核实。"}</pre>
                                     </details>
                                 </> : <>
-                                    <pre>{item?.body ?? "原始记录不存在，无法重新核实。"}</pre>
+                                    <pre>{item?.body ?? (source.type === "generation" && generationEvidence?.coverage.omitted ? "当前页未提供此生成来源详情。已保存的来源标识仍保留，可在关联依据分页中查找。" : "原始记录不存在，无法重新核实。")}</pre>
                                     {messages.find(message => message.id === source.id)?.attachments?.map(attachment =>
                                         <ReferenceSourceLink key={`${attachment.referenceId}:${attachment.revision}`}
                                                              projectId={task.projectId} attachment={attachment}/>)}</>}
@@ -264,16 +270,23 @@ export function TaskRecords({task, messages, editable, onDraftStateChange, reque
                 {evidence.length > 0 && <details className="agent-task-evidence-picker">
                     <summary>关联依据 <span>{editing.input.sources.length} / 12</span></summary>
                     <div>{evidence.map((item) => {
-                        const selected = editing.input.sources.some((source) => source.id === item.id && source.type === item.type);
-                        return <label key={`${item.type}:${item.id}`}><input type="checkbox" checked={selected}
+                        const identity = taskRecordSourceIdentity(item);
+                        const selected = editing.input.sources.some((source) => taskRecordSourceIdentity(source) === identity);
+                        return <label key={identity}><input type="checkbox" checked={selected}
                                                                              disabled={pending || (!selected && editing.input.sources.length >= 12)}
                                                                              onChange={() => change({
-                                                                                 sources: selected ? editing.input.sources.filter((source) => source.id !== item.id || source.type !== item.type) : [...editing.input.sources, {
+                                                                                 sources: selected ? editing.input.sources.filter((source) => taskRecordSourceIdentity(source) !== identity) : [...editing.input.sources, {
                                                                                      type: item.type,
-                                                                                     id: item.id
+                                                                                     id: item.id,
+                                                                                     ...("resultKey" in item && item.resultKey !== undefined ? {resultKey: item.resultKey} : {})
                                                                                  }]
                                                                              })}/><span>{item.label}</span></label>;
                     })}</div>
+                    {!!generationEvidence?.coverage.omitted && <p className="agent-task-muted">生成依据共 {generationEvidence.coverage.total} 项，本页列出 {generationEvidence.coverage.included} 项，其余 {generationEvidence.coverage.omitted} 项未列出。选中的其他页来源仍会保留。</p>}
+                    {(generationOffset > 0 || generationEvidence?.coverage.nextOffset !== null && generationEvidence?.coverage.nextOffset !== undefined) && <div>
+                        <Button type="button" variant="ghost" size="sm" disabled={pending || generationOffset === 0} onClick={() => setGenerationOffset(Math.max(0, generationOffset - 100))}>上一页生成依据</Button>
+                        <Button type="button" variant="ghost" size="sm" disabled={pending || generationEvidence?.coverage.nextOffset == null} onClick={() => setGenerationOffset(generationEvidence!.coverage.nextOffset!)}>下一页生成依据</Button>
+                    </div>}
                 </details>}
                 {error && <p className="agent-task-record-error"
                              role="alert">{error}。草稿仍在，可以复制内容后重新打开最新版本。</p>}

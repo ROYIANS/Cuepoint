@@ -1,6 +1,15 @@
 export const TASK_RECORD_KINDS = ["research", "approach", "progress", "verification", "question"] as const;
 export const TASK_RECORD_CLAIMS = ["observation", "proposal", "decision", "result"] as const;
-export type TaskRecordSource = { type: "message" | "tool" | "generation"; id: string };
+export type TaskRecordSource = {
+    type: "message" | "tool" | "generation";
+    id: string;
+    /** Exact durable sound result key; only valid for a sound generation source. */
+    resultKey?: string;
+};
+
+export function taskRecordSourceIdentity(source: TaskRecordSource): string {
+    return JSON.stringify([source.type, source.id, source.resultKey ?? null]);
+}
 
 export interface TaskRecordInput {
     kind: typeof TASK_RECORD_KINDS[number];

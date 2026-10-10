@@ -2,1587 +2,1587 @@
 // Matching order and mapped props are preserved; renderers do not read Combine/combineMultiple.
 // Run the generator and E06 catalog/native parity checks when upgrading the publisher.
 export const modelMappings = [
-    {
-        "icon": "OpenAI",
-        "keywords": [
-            "gpt-3"
-        ],
-        "props": {
-            "type": "gpt3"
-        }
-    },
-    {
-        "icon": "OpenAI",
-        "keywords": [
-            "gpt-4"
-        ],
-        "props": {
-            "type": "gpt4"
-        }
-    },
-    {
-        "icon": "OpenAI",
-        "keywords": [
-            "gpt-5"
-        ],
-        "props": {
-            "type": "gpt5"
-        }
-    },
-    {
-        "icon": "Sora",
-        "keywords": [
-            "sora"
-        ]
-    },
-    {
-        "icon": "OpenAI",
-        "keywords": [
-            "gpt-oss"
-        ],
-        "props": {
-            "type": "oss"
-        }
-    },
-    {
-        "icon": "OpenAI",
-        "keywords": [
-            "o1-",
-            "^o1",
-            "/o1",
-            "o3-",
-            "^o3",
-            "/o3",
-            "o4-",
-            "^o4",
-            "/o4"
-        ],
-        "props": {
-            "type": "o1"
-        }
-    },
-    {
-        "icon": "Dalle",
-        "keywords": [
-            "dalle",
-            "dall-e"
-        ]
-    },
-    {
-        "icon": "OpenAI",
-        "keywords": [
-            "text-embedding-",
-            "tts-",
-            "whisper-",
-            "codex",
-            "davinci",
-            "babbage",
-            "omni-moderation",
-            "text-moderation",
-            "text-adb",
-            "text-ada",
-            "computer-use"
-        ],
-        "props": {
-            "type": "platform"
-        }
-    },
-    {
-        "icon": "OpenAI",
-        "keywords": [
-            "^gpt-",
-            "/gpt-",
-            "openai"
-        ]
-    },
-    {
-        "icon": "GLMV",
-        "keywords": [
-            "^glm-(.*)v",
-            "/glm-(.*)v",
-            "-glm-(.*)v"
-        ]
-    },
-    {
-        "icon": "ZAI",
-        "keywords": [
-            "^glm-5",
-            "/glm-5",
-            "/glm5",
-            "-glm-4",
-            "^glm-4",
-            "/glm-4",
-            "/glm4",
-            "-glm-5"
-        ]
-    },
-    {
-        "icon": "ChatGLM",
-        "keywords": [
-            "^glm-",
-            "/glm-",
-            "chatglm",
-            "-glm-"
-        ]
-    },
-    {
-        "icon": "CodeGeeX",
-        "keywords": [
-            "^codegeex",
-            "/codegeex"
-        ]
-    },
-    {
-        "icon": "Claude",
-        "keywords": [
-            "claude"
-        ]
-    },
-    {
-        "icon": "Anthropic",
-        "keywords": [
-            "anthropic"
-        ]
-    },
-    {
-        "icon": "Aws",
-        "keywords": [
-            "titan"
-        ]
-    },
-    {
-        "icon": "Fireworks",
-        "keywords": [
-            "accounts/fireworks/models/fire"
-        ]
-    },
-    {
-        "icon": "InternLM",
-        "keywords": [
-            "internlm",
-            "internvl"
-        ]
-    },
-    {
-        "icon": "NousResearch",
-        "keywords": [
-            "deephermes",
-            "hermes",
-            "genstruct",
-            "minos"
-        ]
-    },
-    {
-        "icon": "Nvidia",
-        "keywords": [
-            "nemotron",
-            "openreasoning",
-            "nemoretriever",
-            "neva-",
-            "nv-"
-        ]
-    },
-    {
-        "icon": "Meta",
-        "keywords": [
-            "llama",
-            "/l3"
-        ]
-    },
-    {
-        "icon": "LLaVA",
-        "keywords": [
-            "llava"
-        ]
-    },
-    {
-        "icon": "NanoBanana",
-        "keywords": [
-            "gemini-3.1-flash-image-preview",
-            "gemini-3-pro-image-preview",
-            "gemini-\\d+(?:\\.\\d+)?-(?:flash(?:-lite)?|pro)-image(?:-preview)?(?::|$)",
-            "nanobanana",
-            "nano-banana"
-        ]
-    },
-    {
-        "icon": "Gemini",
-        "keywords": [
-            "gemini"
-        ]
-    },
-    {
-        "icon": "DeepMind",
-        "keywords": [
-            "^imagen-",
-            "/imagen-",
-            "^imagen\\d/",
-            "/imagen\\d"
-        ]
-    },
-    {
-        "icon": "Gemma",
-        "keywords": [
-            "gemma"
-        ]
-    },
-    {
-        "icon": "Moonshot",
-        "keywords": [
-            "kimi",
-            "moonshot"
-        ]
-    },
-    {
-        "icon": "Qiniu",
-        "keywords": [
-            "qiniu"
-        ]
-    },
-    {
-        "icon": "Qwen",
-        "keywords": [
-            "qwen",
-            "qwq",
-            "qvq",
-            "wanx",
-            "wan\\d/",
-            "wan\\d\\.\\d-",
-            "tongyi",
-            "gte-rerank"
-        ]
-    },
-    {
-        "icon": "Minimax",
-        "keywords": [
-            "minimax",
-            "abab",
-            "^image-"
-        ]
-    },
-    {
-        "icon": "Mistral",
-        "keywords": [
-            "mistral",
-            "mixtral",
-            "codestral",
-            "mathstral",
-            "/mn-",
-            "pixtral",
-            "ministral",
-            "magistral",
-            "devstral",
-            "voxtral"
-        ]
-    },
-    {
-        "icon": "Perplexity",
-        "keywords": [
-            "pplx",
-            "sonar"
-        ]
-    },
-    {
-        "icon": "Yi",
-        "keywords": [
-            "^yi-",
-            "/yi-",
-            "-yi-"
-        ]
-    },
-    {
-        "icon": "OpenRouter",
-        "keywords": [
-            "^openrouter"
-        ]
-    },
-    {
-        "icon": "Relace",
-        "keywords": [
-            "^relace-",
-            "/relace-"
-        ]
-    },
-    {
-        "icon": "Arcee",
-        "keywords": [
-            "^trinity-",
-            "/trinity-",
-            "afm-4.5b",
-            "caller-large",
-            "spotlight",
-            "maestro-reasoning",
-            "virtuoso-medium-v2",
-            "virtuoso-large",
-            "coder-large",
-            "arcee-blitz"
-        ]
-    },
-    {
-        "icon": "EssentialAI",
-        "keywords": [
-            "^rnj-",
-            "/rnj-"
-        ]
-    },
-    {
-        "icon": "DeepCogito",
-        "keywords": [
-            "^deepcogito-",
-            "/deepcogito-",
-            "^cogito-",
-            "/cogito-"
-        ]
-    },
-    {
-        "icon": "Morph",
-        "keywords": [
-            "^morph-",
-            "/morph-"
-        ]
-    },
-    {
-        "icon": "Ai2",
-        "keywords": [
-            "^olmo-",
-            "/olmo-"
-        ]
-    },
-    {
-        "icon": "Inception",
-        "keywords": [
-            "^mercury",
-            "/mercury"
-        ]
-    },
-    {
-        "icon": "OpenChat",
-        "keywords": [
-            "^openchat"
-        ]
-    },
-    {
-        "icon": "Aya",
-        "keywords": [
-            "aya"
-        ]
-    },
-    {
-        "icon": "Cohere",
-        "keywords": [
-            "command"
-        ]
-    },
-    {
-        "icon": "Dbrx",
-        "keywords": [
-            "dbrx"
-        ]
-    },
-    {
-        "icon": "Stepfun",
-        "keywords": [
-            "step"
-        ]
-    },
-    {
-        "icon": "AiMass",
-        "keywords": [
-            "taichu"
-        ]
-    },
-    {
-        "icon": "Ai360",
-        "keywords": [
-            "360gpt",
-            "360zhinao"
-        ]
-    },
-    {
-        "icon": "Baichuan",
-        "keywords": [
-            "baichuan"
-        ]
-    },
-    {
-        "icon": "Rwkv",
-        "keywords": [
-            "rwkv",
-            "/eagle-"
-        ]
-    },
-    {
-        "icon": "Wenxin",
-        "keywords": [
-            "ernie",
-            "irag"
-        ]
-    },
-    {
-        "icon": "Jina",
-        "keywords": [
-            "^jina",
-            "/jina"
-        ]
-    },
-    {
-        "icon": "Jimeng",
-        "keywords": [
-            "^jimeng-",
-            "/jimeng-",
-            "seedream",
-            "seededit",
-            "seedance-"
-        ]
-    },
-    {
-        "icon": "Doubao",
-        "keywords": [
-            "^ep-",
-            "doubao-"
-        ]
-    },
-    {
-        "icon": "Kling",
-        "keywords": [
-            "^kling",
-            "kling-",
-            "klingai"
-        ]
-    },
-    {
-        "icon": "Hunyuan",
-        "keywords": [
-            "hunyuan",
-            "hy3"
-        ]
-    },
-    {
-        "icon": "FishAudio",
-        "keywords": [
-            "^d_",
-            "^g_",
-            "^wd_"
-        ]
-    },
-    {
-        "icon": "ByteDance",
-        "keywords": [
-            "skylark",
-            "seed-",
-            "bytedance"
-        ]
-    },
-    {
-        "icon": "BurnCloud",
-        "keywords": [
-            "burncloud"
-        ]
-    },
-    {
-        "icon": "Stability",
-        "keywords": [
-            "stable-diffusion",
-            "stable-video",
-            "stable-cascade",
-            "sdxl",
-            "stablelm",
-            "^stable-",
-            "^sd3",
-            "^sd2",
-            "^sd1"
-        ]
-    },
-    {
-        "icon": "Flux",
-        "keywords": [
-            "flux"
-        ]
-    },
-    {
-        "icon": "Suno",
-        "keywords": [
-            "suno"
-        ]
-    },
-    {
-        "icon": "Microsoft",
-        "keywords": [
-            "wizardlm",
-            "/phi-",
-            "^phi-",
-            "-phi-",
-            "mai-",
-            "microsoft"
-        ]
-    },
-    {
-        "icon": "Adobe",
-        "keywords": [
-            "firefly"
-        ]
-    },
-    {
-        "icon": "Ai21",
-        "keywords": [
-            "jamba",
-            "^j2-",
-            "ai21"
-        ]
-    },
-    {
-        "icon": "Upstage",
-        "keywords": [
-            "^solar-",
-            "/solar"
-        ]
-    },
-    {
-        "icon": "PaLM",
-        "keywords": [
-            "palm"
-        ]
-    },
-    {
-        "icon": "SenseNova",
-        "keywords": [
-            "SenseChat",
-            "SenseNova"
-        ]
-    },
-    {
-        "icon": "Grok",
-        "keywords": [
-            "^grok-",
-            "/grok-"
-        ]
-    },
-    {
-        "icon": "Ideogram",
-        "keywords": [
-            "ideogram",
-            "^v_1",
-            "^v_2",
-            "^v3$",
-            "^upscale$",
-            "^describe$"
-        ]
-    },
-    {
-        "icon": "Meta",
-        "keywords": [
-            "(^|/)muse-spark($|-)"
-        ]
-    },
-    {
-        "icon": "Spark",
-        "keywords": [
-            "spark",
-            "general$",
-            "generalv3$",
-            "generalv3.5$",
-            "4.0ultra$",
-            "pro-128k$",
-            "^max-32k$",
-            "^lite$",
-            "^x1$"
-        ]
-    },
-    {
-        "icon": "Udio",
-        "keywords": [
-            "udio"
-        ]
-    },
-    {
-        "icon": "DeepSeek",
-        "keywords": [
-            "deepseek"
-        ]
-    },
-    {
-        "icon": "Voyage",
-        "keywords": [
-            "voyage"
-        ]
-    },
-    {
-        "icon": "AssemblyAI",
-        "keywords": [
-            "assemblyai"
-        ]
-    },
-    {
-        "icon": "Liquid",
-        "keywords": [
-            "liquid",
-            "lfm"
-        ]
-    },
-    {
-        "icon": "Inflection",
-        "keywords": [
-            "inflection-"
-        ]
-    },
-    {
-        "icon": "AionLabs",
-        "keywords": [
-            "aion-"
-        ]
-    },
-    {
-        "icon": "AiHubMix",
-        "keywords": [
-            "aihubmix"
-        ]
-    },
-    {
-        "icon": "V0",
-        "keywords": [
-            "^v0-"
-        ]
-    },
-    {
-        "icon": "VertexAI",
-        "keywords": [
-            "^veo-",
-            "/veo-",
-            "^veo3"
-        ]
-    },
-    {
-        "icon": "Google",
-        "keywords": [
-            "google",
-            "learnlm",
-            "nano-banana"
-        ]
-    },
-    {
-        "icon": "CogView",
-        "keywords": [
-            "cogview"
-        ]
-    },
-    {
-        "icon": "Kolors",
-        "keywords": [
-            "kolors"
-        ]
-    },
-    {
-        "icon": "BaiduCloud",
-        "keywords": [
-            "baidu",
-            "qianfan"
-        ]
-    },
-    {
-        "icon": "Phind",
-        "keywords": [
-            "phind"
-        ]
-    },
-    {
-        "icon": "Dolphin",
-        "keywords": [
-            "dolphin"
-        ]
-    },
-    {
-        "icon": "IBM",
-        "keywords": [
-            "ibm",
-            "granite"
-        ]
-    },
-    {
-        "icon": "Skywork",
-        "keywords": [
-            "skywork"
-        ]
-    },
-    {
-        "icon": "BilibiliIndex",
-        "keywords": [
-            "bilibili-index",
-            "index-tts"
-        ]
-    },
-    {
-        "icon": "Bilibili",
-        "keywords": [
-            "bilibili"
-        ]
-    },
-    {
-        "icon": "LG",
-        "keywords": [
-            "kmmlu",
-            "exaone",
-            "lgai"
-        ]
-    },
-    {
-        "icon": "TII",
-        "keywords": [
-            "falcon"
-        ]
-    },
-    {
-        "icon": "Menlo",
-        "keywords": [
-            "menlo",
-            "lucy",
-            "jan-nano"
-        ]
-    },
-    {
-        "icon": "LongCat",
-        "keywords": [
-            "longcat"
-        ]
-    },
-    {
-        "icon": "Kwaipilot",
-        "keywords": [
-            "kat-"
-        ]
-    },
-    {
-        "icon": "Nova",
-        "keywords": [
-            "^nova-",
-            "/nova-"
-        ]
-    },
-    {
-        "icon": "XiaomiMiMo",
-        "keywords": [
-            "^mimo-",
-            "/mimo-"
-        ]
-    },
-    {
-        "icon": "BAAI",
-        "keywords": [
-            "^baai",
-            "^bge-",
-            "/beg-",
-            "touchd",
-            "robobrain"
-        ]
-    },
-    {
-        "icon": "Ace",
-        "keywords": [
-            "ace-step"
-        ]
+  {
+    "icon": "OpenAI",
+    "keywords": [
+      "gpt-3"
+    ],
+    "props": {
+      "type": "gpt3"
     }
+  },
+  {
+    "icon": "OpenAI",
+    "keywords": [
+      "gpt-4"
+    ],
+    "props": {
+      "type": "gpt4"
+    }
+  },
+  {
+    "icon": "OpenAI",
+    "keywords": [
+      "gpt-5"
+    ],
+    "props": {
+      "type": "gpt5"
+    }
+  },
+  {
+    "icon": "Sora",
+    "keywords": [
+      "sora"
+    ]
+  },
+  {
+    "icon": "OpenAI",
+    "keywords": [
+      "gpt-oss"
+    ],
+    "props": {
+      "type": "oss"
+    }
+  },
+  {
+    "icon": "OpenAI",
+    "keywords": [
+      "o1-",
+      "^o1",
+      "/o1",
+      "o3-",
+      "^o3",
+      "/o3",
+      "o4-",
+      "^o4",
+      "/o4"
+    ],
+    "props": {
+      "type": "o1"
+    }
+  },
+  {
+    "icon": "Dalle",
+    "keywords": [
+      "dalle",
+      "dall-e"
+    ]
+  },
+  {
+    "icon": "OpenAI",
+    "keywords": [
+      "text-embedding-",
+      "tts-",
+      "whisper-",
+      "codex",
+      "davinci",
+      "babbage",
+      "omni-moderation",
+      "text-moderation",
+      "text-adb",
+      "text-ada",
+      "computer-use"
+    ],
+    "props": {
+      "type": "platform"
+    }
+  },
+  {
+    "icon": "OpenAI",
+    "keywords": [
+      "^gpt-",
+      "/gpt-",
+      "openai"
+    ]
+  },
+  {
+    "icon": "GLMV",
+    "keywords": [
+      "^glm-(.*)v",
+      "/glm-(.*)v",
+      "-glm-(.*)v"
+    ]
+  },
+  {
+    "icon": "ZAI",
+    "keywords": [
+      "^glm-5",
+      "/glm-5",
+      "/glm5",
+      "-glm-4",
+      "^glm-4",
+      "/glm-4",
+      "/glm4",
+      "-glm-5"
+    ]
+  },
+  {
+    "icon": "ChatGLM",
+    "keywords": [
+      "^glm-",
+      "/glm-",
+      "chatglm",
+      "-glm-"
+    ]
+  },
+  {
+    "icon": "CodeGeeX",
+    "keywords": [
+      "^codegeex",
+      "/codegeex"
+    ]
+  },
+  {
+    "icon": "Claude",
+    "keywords": [
+      "claude"
+    ]
+  },
+  {
+    "icon": "Anthropic",
+    "keywords": [
+      "anthropic"
+    ]
+  },
+  {
+    "icon": "Aws",
+    "keywords": [
+      "titan"
+    ]
+  },
+  {
+    "icon": "Fireworks",
+    "keywords": [
+      "accounts/fireworks/models/fire"
+    ]
+  },
+  {
+    "icon": "InternLM",
+    "keywords": [
+      "internlm",
+      "internvl"
+    ]
+  },
+  {
+    "icon": "NousResearch",
+    "keywords": [
+      "deephermes",
+      "hermes",
+      "genstruct",
+      "minos"
+    ]
+  },
+  {
+    "icon": "Nvidia",
+    "keywords": [
+      "nemotron",
+      "openreasoning",
+      "nemoretriever",
+      "neva-",
+      "nv-"
+    ]
+  },
+  {
+    "icon": "Meta",
+    "keywords": [
+      "llama",
+      "/l3"
+    ]
+  },
+  {
+    "icon": "LLaVA",
+    "keywords": [
+      "llava"
+    ]
+  },
+  {
+    "icon": "NanoBanana",
+    "keywords": [
+      "gemini-3.1-flash-image-preview",
+      "gemini-3-pro-image-preview",
+      "gemini-\\d+(?:\\.\\d+)?-(?:flash(?:-lite)?|pro)-image(?:-preview)?(?::|$)",
+      "nanobanana",
+      "nano-banana"
+    ]
+  },
+  {
+    "icon": "Gemini",
+    "keywords": [
+      "gemini"
+    ]
+  },
+  {
+    "icon": "DeepMind",
+    "keywords": [
+      "^imagen-",
+      "/imagen-",
+      "^imagen\\d/",
+      "/imagen\\d"
+    ]
+  },
+  {
+    "icon": "Gemma",
+    "keywords": [
+      "gemma"
+    ]
+  },
+  {
+    "icon": "Moonshot",
+    "keywords": [
+      "kimi",
+      "moonshot"
+    ]
+  },
+  {
+    "icon": "Qiniu",
+    "keywords": [
+      "qiniu"
+    ]
+  },
+  {
+    "icon": "Qwen",
+    "keywords": [
+      "qwen",
+      "qwq",
+      "qvq",
+      "wanx",
+      "wan\\d/",
+      "wan\\d\\.\\d-",
+      "tongyi",
+      "gte-rerank"
+    ]
+  },
+  {
+    "icon": "Minimax",
+    "keywords": [
+      "minimax",
+      "abab",
+      "^image-"
+    ]
+  },
+  {
+    "icon": "Mistral",
+    "keywords": [
+      "mistral",
+      "mixtral",
+      "codestral",
+      "mathstral",
+      "/mn-",
+      "pixtral",
+      "ministral",
+      "magistral",
+      "devstral",
+      "voxtral"
+    ]
+  },
+  {
+    "icon": "Perplexity",
+    "keywords": [
+      "pplx",
+      "sonar"
+    ]
+  },
+  {
+    "icon": "Yi",
+    "keywords": [
+      "^yi-",
+      "/yi-",
+      "-yi-"
+    ]
+  },
+  {
+    "icon": "OpenRouter",
+    "keywords": [
+      "^openrouter"
+    ]
+  },
+  {
+    "icon": "Relace",
+    "keywords": [
+      "^relace-",
+      "/relace-"
+    ]
+  },
+  {
+    "icon": "Arcee",
+    "keywords": [
+      "^trinity-",
+      "/trinity-",
+      "afm-4.5b",
+      "caller-large",
+      "spotlight",
+      "maestro-reasoning",
+      "virtuoso-medium-v2",
+      "virtuoso-large",
+      "coder-large",
+      "arcee-blitz"
+    ]
+  },
+  {
+    "icon": "EssentialAI",
+    "keywords": [
+      "^rnj-",
+      "/rnj-"
+    ]
+  },
+  {
+    "icon": "DeepCogito",
+    "keywords": [
+      "^deepcogito-",
+      "/deepcogito-",
+      "^cogito-",
+      "/cogito-"
+    ]
+  },
+  {
+    "icon": "Morph",
+    "keywords": [
+      "^morph-",
+      "/morph-"
+    ]
+  },
+  {
+    "icon": "Ai2",
+    "keywords": [
+      "^olmo-",
+      "/olmo-"
+    ]
+  },
+  {
+    "icon": "Inception",
+    "keywords": [
+      "^mercury",
+      "/mercury"
+    ]
+  },
+  {
+    "icon": "OpenChat",
+    "keywords": [
+      "^openchat"
+    ]
+  },
+  {
+    "icon": "Aya",
+    "keywords": [
+      "aya"
+    ]
+  },
+  {
+    "icon": "Cohere",
+    "keywords": [
+      "command"
+    ]
+  },
+  {
+    "icon": "Dbrx",
+    "keywords": [
+      "dbrx"
+    ]
+  },
+  {
+    "icon": "Stepfun",
+    "keywords": [
+      "step"
+    ]
+  },
+  {
+    "icon": "AiMass",
+    "keywords": [
+      "taichu"
+    ]
+  },
+  {
+    "icon": "Ai360",
+    "keywords": [
+      "360gpt",
+      "360zhinao"
+    ]
+  },
+  {
+    "icon": "Baichuan",
+    "keywords": [
+      "baichuan"
+    ]
+  },
+  {
+    "icon": "Rwkv",
+    "keywords": [
+      "rwkv",
+      "/eagle-"
+    ]
+  },
+  {
+    "icon": "Wenxin",
+    "keywords": [
+      "ernie",
+      "irag"
+    ]
+  },
+  {
+    "icon": "Jina",
+    "keywords": [
+      "^jina",
+      "/jina"
+    ]
+  },
+  {
+    "icon": "Jimeng",
+    "keywords": [
+      "^jimeng-",
+      "/jimeng-",
+      "seedream",
+      "seededit",
+      "seedance-"
+    ]
+  },
+  {
+    "icon": "Doubao",
+    "keywords": [
+      "^ep-",
+      "doubao-"
+    ]
+  },
+  {
+    "icon": "Kling",
+    "keywords": [
+      "^kling",
+      "kling-",
+      "klingai"
+    ]
+  },
+  {
+    "icon": "Hunyuan",
+    "keywords": [
+      "hunyuan",
+      "hy3"
+    ]
+  },
+  {
+    "icon": "FishAudio",
+    "keywords": [
+      "^d_",
+      "^g_",
+      "^wd_"
+    ]
+  },
+  {
+    "icon": "ByteDance",
+    "keywords": [
+      "skylark",
+      "seed-",
+      "bytedance"
+    ]
+  },
+  {
+    "icon": "BurnCloud",
+    "keywords": [
+      "burncloud"
+    ]
+  },
+  {
+    "icon": "Stability",
+    "keywords": [
+      "stable-diffusion",
+      "stable-video",
+      "stable-cascade",
+      "sdxl",
+      "stablelm",
+      "^stable-",
+      "^sd3",
+      "^sd2",
+      "^sd1"
+    ]
+  },
+  {
+    "icon": "Flux",
+    "keywords": [
+      "flux"
+    ]
+  },
+  {
+    "icon": "Suno",
+    "keywords": [
+      "suno"
+    ]
+  },
+  {
+    "icon": "Microsoft",
+    "keywords": [
+      "wizardlm",
+      "/phi-",
+      "^phi-",
+      "-phi-",
+      "mai-",
+      "microsoft"
+    ]
+  },
+  {
+    "icon": "Adobe",
+    "keywords": [
+      "firefly"
+    ]
+  },
+  {
+    "icon": "Ai21",
+    "keywords": [
+      "jamba",
+      "^j2-",
+      "ai21"
+    ]
+  },
+  {
+    "icon": "Upstage",
+    "keywords": [
+      "^solar-",
+      "/solar"
+    ]
+  },
+  {
+    "icon": "PaLM",
+    "keywords": [
+      "palm"
+    ]
+  },
+  {
+    "icon": "SenseNova",
+    "keywords": [
+      "SenseChat",
+      "SenseNova"
+    ]
+  },
+  {
+    "icon": "Grok",
+    "keywords": [
+      "^grok-",
+      "/grok-"
+    ]
+  },
+  {
+    "icon": "Ideogram",
+    "keywords": [
+      "ideogram",
+      "^v_1",
+      "^v_2",
+      "^v3$",
+      "^upscale$",
+      "^describe$"
+    ]
+  },
+  {
+    "icon": "Meta",
+    "keywords": [
+      "(^|/)muse-spark($|-)"
+    ]
+  },
+  {
+    "icon": "Spark",
+    "keywords": [
+      "spark",
+      "general$",
+      "generalv3$",
+      "generalv3.5$",
+      "4.0ultra$",
+      "pro-128k$",
+      "^max-32k$",
+      "^lite$",
+      "^x1$"
+    ]
+  },
+  {
+    "icon": "Udio",
+    "keywords": [
+      "udio"
+    ]
+  },
+  {
+    "icon": "DeepSeek",
+    "keywords": [
+      "deepseek"
+    ]
+  },
+  {
+    "icon": "Voyage",
+    "keywords": [
+      "voyage"
+    ]
+  },
+  {
+    "icon": "AssemblyAI",
+    "keywords": [
+      "assemblyai"
+    ]
+  },
+  {
+    "icon": "Liquid",
+    "keywords": [
+      "liquid",
+      "lfm"
+    ]
+  },
+  {
+    "icon": "Inflection",
+    "keywords": [
+      "inflection-"
+    ]
+  },
+  {
+    "icon": "AionLabs",
+    "keywords": [
+      "aion-"
+    ]
+  },
+  {
+    "icon": "AiHubMix",
+    "keywords": [
+      "aihubmix"
+    ]
+  },
+  {
+    "icon": "V0",
+    "keywords": [
+      "^v0-"
+    ]
+  },
+  {
+    "icon": "VertexAI",
+    "keywords": [
+      "^veo-",
+      "/veo-",
+      "^veo3"
+    ]
+  },
+  {
+    "icon": "Google",
+    "keywords": [
+      "google",
+      "learnlm",
+      "nano-banana"
+    ]
+  },
+  {
+    "icon": "CogView",
+    "keywords": [
+      "cogview"
+    ]
+  },
+  {
+    "icon": "Kolors",
+    "keywords": [
+      "kolors"
+    ]
+  },
+  {
+    "icon": "BaiduCloud",
+    "keywords": [
+      "baidu",
+      "qianfan"
+    ]
+  },
+  {
+    "icon": "Phind",
+    "keywords": [
+      "phind"
+    ]
+  },
+  {
+    "icon": "Dolphin",
+    "keywords": [
+      "dolphin"
+    ]
+  },
+  {
+    "icon": "IBM",
+    "keywords": [
+      "ibm",
+      "granite"
+    ]
+  },
+  {
+    "icon": "Skywork",
+    "keywords": [
+      "skywork"
+    ]
+  },
+  {
+    "icon": "BilibiliIndex",
+    "keywords": [
+      "bilibili-index",
+      "index-tts"
+    ]
+  },
+  {
+    "icon": "Bilibili",
+    "keywords": [
+      "bilibili"
+    ]
+  },
+  {
+    "icon": "LG",
+    "keywords": [
+      "kmmlu",
+      "exaone",
+      "lgai"
+    ]
+  },
+  {
+    "icon": "TII",
+    "keywords": [
+      "falcon"
+    ]
+  },
+  {
+    "icon": "Menlo",
+    "keywords": [
+      "menlo",
+      "lucy",
+      "jan-nano"
+    ]
+  },
+  {
+    "icon": "LongCat",
+    "keywords": [
+      "longcat"
+    ]
+  },
+  {
+    "icon": "Kwaipilot",
+    "keywords": [
+      "kat-"
+    ]
+  },
+  {
+    "icon": "Nova",
+    "keywords": [
+      "^nova-",
+      "/nova-"
+    ]
+  },
+  {
+    "icon": "XiaomiMiMo",
+    "keywords": [
+      "^mimo-",
+      "/mimo-"
+    ]
+  },
+  {
+    "icon": "BAAI",
+    "keywords": [
+      "^baai",
+      "^bge-",
+      "/beg-",
+      "touchd",
+      "robobrain"
+    ]
+  },
+  {
+    "icon": "Ace",
+    "keywords": [
+      "ace-step"
+    ]
+  }
 ] as const;
 export const providerMappings = [
-    {
-        "icon": "Alibaba",
-        "keywords": [
-            "alibaba"
-        ]
-    },
-    {
-        "icon": "AlephAlpha",
-        "keywords": [
-            "alephalpha"
-        ]
-    },
-    {
-        "icon": "AntGroup",
-        "keywords": [
-            "antgroup"
-        ]
-    },
-    {
-        "icon": "Anyscale",
-        "keywords": [
-            "anyscale"
-        ]
-    },
-    {
-        "icon": "Apple",
-        "keywords": [
-            "apple"
-        ]
-    },
-    {
-        "icon": "Baidu",
-        "keywords": [
-            "baidu"
-        ]
-    },
-    {
-        "icon": "Bailian",
-        "keywords": [
-            "bailian",
-            "bailiancodingplan"
-        ]
-    },
-    {
-        "icon": "Baseten",
-        "keywords": [
-            "baseten"
-        ]
-    },
-    {
-        "icon": "Bilibili",
-        "keywords": [
-            "bilibili"
-        ]
-    },
-    {
-        "icon": "ByteDance",
-        "keywords": [
-            "bytedance"
-        ]
-    },
-    {
-        "icon": "CentML",
-        "keywords": [
-            "centml"
-        ]
-    },
-    {
-        "icon": "Civitai",
-        "keywords": [
-            "civitai"
-        ]
-    },
-    {
-        "icon": "Crusoe",
-        "keywords": [
-            "crusoe"
-        ]
-    },
-    {
-        "icon": "DeepInfra",
-        "keywords": [
-            "deepinfra"
-        ]
-    },
-    {
-        "icon": "DeepMind",
-        "keywords": [
-            "deepmind"
-        ]
-    },
-    {
-        "icon": "Exa",
-        "keywords": [
-            "exa"
-        ]
-    },
-    {
-        "icon": "Featherless",
-        "keywords": [
-            "featherless"
-        ]
-    },
-    {
-        "icon": "Friendli",
-        "keywords": [
-            "friendli"
-        ]
-    },
-    {
-        "icon": "GoogleCloud",
-        "keywords": [
-            "googlecloud"
-        ]
-    },
-    {
-        "icon": "Huawei",
-        "keywords": [
-            "huawei"
-        ]
-    },
-    {
-        "icon": "HuaweiCloud",
-        "keywords": [
-            "huaweicloud"
-        ]
-    },
-    {
-        "icon": "Hyperbolic",
-        "keywords": [
-            "hyperbolic"
-        ]
-    },
-    {
-        "icon": "IBM",
-        "keywords": [
-            "ibm"
-        ]
-    },
-    {
-        "icon": "IFlyTekCloud",
-        "keywords": [
-            "iflytekcloud"
-        ]
-    },
-    {
-        "icon": "Inference",
-        "keywords": [
-            "inference"
-        ]
-    },
-    {
-        "icon": "Infermatic",
-        "keywords": [
-            "infermatic"
-        ]
-    },
-    {
-        "icon": "Kluster",
-        "keywords": [
-            "kluster"
-        ]
-    },
-    {
-        "icon": "Lambda",
-        "keywords": [
-            "lambda"
-        ]
-    },
-    {
-        "icon": "LeptonAI",
-        "keywords": [
-            "leptonai"
-        ]
-    },
-    {
-        "icon": "LlmApi",
-        "keywords": [
-            "llmapi"
-        ]
-    },
-    {
-        "icon": "LG",
-        "keywords": [
-            "lg"
-        ]
-    },
-    {
-        "icon": "Menlo",
-        "keywords": [
-            "menlo"
-        ]
-    },
-    {
-        "icon": "MetaAI",
-        "keywords": [
-            "meta"
-        ]
-    },
-    {
-        "icon": "Microsoft",
-        "keywords": [
-            "microsoft"
-        ]
-    },
-    {
-        "icon": "NPLCloud",
-        "keywords": [
-            "nplcloud"
-        ]
-    },
-    {
-        "icon": "NousResearch",
-        "keywords": [
-            "nousresearch"
-        ]
-    },
-    {
-        "icon": "Parasail",
-        "keywords": [
-            "parasail"
-        ]
-    },
-    {
-        "icon": "SearchApi",
-        "keywords": [
-            "searchapi"
-        ]
-    },
-    {
-        "icon": "Snowflake",
-        "keywords": [
-            "snowflake"
-        ]
-    },
-    {
-        "icon": "Stability",
-        "keywords": [
-            "stability"
-        ]
-    },
-    {
-        "icon": "StateCloud",
-        "keywords": [
-            "statecloud"
-        ]
-    },
-    {
-        "icon": "StreamLake",
-        "keywords": [
-            "streamlake"
-        ]
-    },
-    {
-        "icon": "SubModel",
-        "keywords": [
-            "submodel"
-        ]
-    },
-    {
-        "icon": "Targon",
-        "keywords": [
-            "targon"
-        ]
-    },
-    {
-        "icon": "Tencent",
-        "keywords": [
-            "tencent"
-        ]
-    },
-    {
-        "icon": "TII",
-        "keywords": [
-            "tii"
-        ]
-    },
-    {
-        "icon": "Yandex",
-        "keywords": [
-            "yandex"
-        ]
-    },
-    {
-        "icon": "AiMass",
-        "keywords": [
-            "aimass"
-        ]
-    },
-    {
-        "icon": "AiStudio",
-        "keywords": [
-            "aistudio"
-        ]
-    },
-    {
-        "icon": "LobeHub",
-        "keywords": [
-            "lobehub"
-        ]
-    },
-    {
-        "icon": "Zhipu",
-        "keywords": [
-            "zhipu",
-            "glmcodingplan"
-        ]
-    },
-    {
-        "icon": "Bedrock",
-        "keywords": [
-            "bedrock"
-        ]
-    },
-    {
-        "icon": "DeepSeek",
-        "keywords": [
-            "deepseek"
-        ]
-    },
-    {
-        "icon": "Google",
-        "keywords": [
-            "google"
-        ]
-    },
-    {
-        "icon": "Azure",
-        "keywords": [
-            "azure"
-        ]
-    },
-    {
-        "icon": "Moonshot",
-        "keywords": [
-            "moonshot",
-            "kimicodingplan"
-        ]
-    },
-    {
-        "icon": "Novita",
-        "keywords": [
-            "novita"
-        ]
-    },
-    {
-        "icon": "OpenAI",
-        "keywords": [
-            "chatgpt",
-            "openai"
-        ]
-    },
-    {
-        "icon": "OpenCode",
-        "keywords": [
-            "opencode",
-            "opencodecodingplan",
-            "opencodego",
-            "opencodezen"
-        ]
-    },
-    {
-        "icon": "Ollama",
-        "keywords": [
-            "ollama"
-        ]
-    },
-    {
-        "icon": "Perplexity",
-        "keywords": [
-            "perplexity"
-        ]
-    },
-    {
-        "icon": "Minimax",
-        "keywords": [
-            "minimax",
-            "minimaxcodingplan"
-        ]
-    },
-    {
-        "icon": "Mistral",
-        "keywords": [
-            "mistral"
-        ]
-    },
-    {
-        "icon": "Anthropic",
-        "keywords": [
-            "anthropic"
-        ]
-    },
-    {
-        "icon": "Groq",
-        "keywords": [
-            "groq"
-        ]
-    },
-    {
-        "icon": "OpenRouter",
-        "keywords": [
-            "openrouter"
-        ]
-    },
-    {
-        "icon": "ZeroOne",
-        "keywords": [
-            "zeroone"
-        ]
-    },
-    {
-        "icon": "Together",
-        "keywords": [
-            "togetherai"
-        ]
-    },
-    {
-        "icon": "Qiniu",
-        "keywords": [
-            "qiniu"
-        ]
-    },
-    {
-        "icon": "AlibabaCloud",
-        "keywords": [
-            "qwen"
-        ]
-    },
-    {
-        "icon": "Stepfun",
-        "keywords": [
-            "stepfun",
-            "stepfuncodingplan"
-        ]
-    },
-    {
-        "icon": "Spark",
-        "keywords": [
-            "spark"
-        ]
-    },
-    {
-        "icon": "Fireworks",
-        "keywords": [
-            "fireworksai"
-        ]
-    },
-    {
-        "icon": "Baichuan",
-        "keywords": [
-            "baichuan"
-        ]
-    },
-    {
-        "icon": "BurnCloud",
-        "keywords": [
-            "burncloud"
-        ]
-    },
-    {
-        "icon": "AiMass",
-        "keywords": [
-            "taichu"
-        ]
-    },
-    {
-        "icon": "Ai360",
-        "keywords": [
-            "ai360"
-        ]
-    },
-    {
-        "icon": "SiliconCloud",
-        "keywords": [
-            "siliconcloud"
-        ]
-    },
-    {
-        "icon": "Upstage",
-        "keywords": [
-            "upstage"
-        ]
-    },
-    {
-        "icon": "Ai21",
-        "keywords": [
-            "ai21"
-        ]
-    },
-    {
-        "icon": "Player2",
-        "keywords": [
-            "player2"
-        ]
-    },
-    {
-        "icon": "Github",
-        "keywords": [
-            "github"
-        ]
-    },
-    {
-        "icon": "GithubCopilot",
-        "keywords": [
-            "githubcopilot",
-            "github-copilot"
-        ]
-    },
-    {
-        "icon": "Copilot",
-        "keywords": [
-            "copilot"
-        ]
-    },
-    {
-        "icon": "Doubao",
-        "keywords": [
-            "doubao"
-        ]
-    },
-    {
-        "icon": "Hunyuan",
-        "keywords": [
-            "hunyuan"
-        ]
-    },
-    {
-        "icon": "Nvidia",
-        "keywords": [
-            "nvidia"
-        ]
-    },
-    {
-        "icon": "TencentCloud",
-        "keywords": [
-            "tencentcloud"
-        ]
-    },
-    {
-        "icon": "Wenxin",
-        "keywords": [
-            "wenxin"
-        ]
-    },
-    {
-        "icon": "SenseNova",
-        "keywords": [
-            "sensenova"
-        ]
-    },
-    {
-        "icon": "HuggingFace",
-        "keywords": [
-            "huggingface"
-        ]
-    },
-    {
-        "icon": "LmStudio",
-        "keywords": [
-            "lmstudio"
-        ]
-    },
-    {
-        "icon": "XAI",
-        "keywords": [
-            "xai"
-        ]
-    },
-    {
-        "icon": "Grok",
-        "keywords": [
-            "supergrok"
-        ]
-    },
-    {
-        "icon": "Cloudflare",
-        "keywords": [
-            "cloudflare"
-        ]
-    },
-    {
-        "icon": "InternLM",
-        "keywords": [
-            "internlm"
-        ]
-    },
-    {
-        "icon": "Higress",
-        "keywords": [
-            "higress"
-        ]
-    },
-    {
-        "icon": "Vllm",
-        "keywords": [
-            "vllm"
-        ]
-    },
-    {
-        "icon": "GiteeAI",
-        "keywords": [
-            "giteeai"
-        ]
-    },
-    {
-        "icon": "ModelScope",
-        "keywords": [
-            "modelscope"
-        ]
-    },
-    {
-        "icon": "VertexAI",
-        "keywords": [
-            "vertexai"
-        ]
-    },
-    {
-        "icon": "PPIO",
-        "keywords": [
-            "ppio"
-        ]
-    },
-    {
-        "icon": "Jina",
-        "keywords": [
-            "jina"
-        ]
-    },
-    {
-        "icon": "AzureAI",
-        "keywords": [
-            "azureai"
-        ]
-    },
-    {
-        "icon": "Volcengine",
-        "keywords": [
-            "volcengine",
-            "volcenginecodingplan"
-        ]
-    },
-    {
-        "icon": "SambaNova",
-        "keywords": [
-            "sambanova"
-        ]
-    },
-    {
-        "icon": "Cohere",
-        "keywords": [
-            "cohere"
-        ]
-    },
-    {
-        "icon": "ComfyUI",
-        "keywords": [
-            "comfyui"
-        ]
-    },
-    {
-        "icon": "Search1API",
-        "keywords": [
-            "search1api"
-        ]
-    },
-    {
-        "icon": "Infinigence",
-        "keywords": [
-            "infiniai"
-        ]
-    },
-    {
-        "icon": "Xinference",
-        "keywords": [
-            "xinference"
-        ]
-    },
-    {
-        "icon": "Xpay",
-        "keywords": [
-            "xpay"
-        ]
-    },
-    {
-        "icon": "Fal",
-        "keywords": [
-            "fal"
-        ]
-    },
-    {
-        "icon": "Ai302",
-        "keywords": [
-            "ai302"
-        ]
-    },
-    {
-        "icon": "AiHubMix",
-        "keywords": [
-            "aihubmix"
-        ]
-    },
-    {
-        "icon": "CometAPI",
-        "keywords": [
-            "cometapi"
-        ]
-    },
-    {
-        "icon": "Vercel",
-        "keywords": [
-            "v0"
-        ]
-    },
-    {
-        "icon": "Vercel",
-        "keywords": [
-            "vercel",
-            "vercelaigateway"
-        ]
-    },
-    {
-        "icon": "Bfl",
-        "keywords": [
-            "bfl"
-        ]
-    },
-    {
-        "icon": "Replicate",
-        "keywords": [
-            "replicate"
-        ]
-    },
-    {
-        "icon": "Nebius",
-        "keywords": [
-            "nebius"
-        ]
-    },
-    {
-        "icon": "NewAPI",
-        "keywords": [
-            "newapi"
-        ]
-    },
-    {
-        "icon": "AkashChat",
-        "keywords": [
-            "akashchat"
-        ]
-    },
-    {
-        "icon": "AtlasCloud",
-        "keywords": [
-            "atlascloud"
-        ]
-    },
-    {
-        "icon": "SophNet",
-        "keywords": [
-            "sophnet"
-        ]
-    },
-    {
-        "icon": "Ollama",
-        "keywords": [
-            "ollamacloud"
-        ]
-    },
-    {
-        "icon": "LongCat",
-        "keywords": [
-            "longcat"
-        ]
-    },
-    {
-        "icon": "Cerebras",
-        "keywords": [
-            "cerebras"
-        ]
-    },
-    {
-        "icon": "Straico",
-        "keywords": [
-            "straico"
-        ]
-    },
-    {
-        "icon": "ZenMux",
-        "keywords": [
-            "zenmux"
-        ],
-        "props": {
-            "inverse": true
-        }
-    },
-    {
-        "icon": "XiaomiMiMo",
-        "keywords": [
-            "xiaomimimo"
-        ]
+  {
+    "icon": "Alibaba",
+    "keywords": [
+      "alibaba"
+    ]
+  },
+  {
+    "icon": "AlephAlpha",
+    "keywords": [
+      "alephalpha"
+    ]
+  },
+  {
+    "icon": "AntGroup",
+    "keywords": [
+      "antgroup"
+    ]
+  },
+  {
+    "icon": "Anyscale",
+    "keywords": [
+      "anyscale"
+    ]
+  },
+  {
+    "icon": "Apple",
+    "keywords": [
+      "apple"
+    ]
+  },
+  {
+    "icon": "Baidu",
+    "keywords": [
+      "baidu"
+    ]
+  },
+  {
+    "icon": "Bailian",
+    "keywords": [
+      "bailian",
+      "bailiancodingplan"
+    ]
+  },
+  {
+    "icon": "Baseten",
+    "keywords": [
+      "baseten"
+    ]
+  },
+  {
+    "icon": "Bilibili",
+    "keywords": [
+      "bilibili"
+    ]
+  },
+  {
+    "icon": "ByteDance",
+    "keywords": [
+      "bytedance"
+    ]
+  },
+  {
+    "icon": "CentML",
+    "keywords": [
+      "centml"
+    ]
+  },
+  {
+    "icon": "Civitai",
+    "keywords": [
+      "civitai"
+    ]
+  },
+  {
+    "icon": "Crusoe",
+    "keywords": [
+      "crusoe"
+    ]
+  },
+  {
+    "icon": "DeepInfra",
+    "keywords": [
+      "deepinfra"
+    ]
+  },
+  {
+    "icon": "DeepMind",
+    "keywords": [
+      "deepmind"
+    ]
+  },
+  {
+    "icon": "Exa",
+    "keywords": [
+      "exa"
+    ]
+  },
+  {
+    "icon": "Featherless",
+    "keywords": [
+      "featherless"
+    ]
+  },
+  {
+    "icon": "Friendli",
+    "keywords": [
+      "friendli"
+    ]
+  },
+  {
+    "icon": "GoogleCloud",
+    "keywords": [
+      "googlecloud"
+    ]
+  },
+  {
+    "icon": "Huawei",
+    "keywords": [
+      "huawei"
+    ]
+  },
+  {
+    "icon": "HuaweiCloud",
+    "keywords": [
+      "huaweicloud"
+    ]
+  },
+  {
+    "icon": "Hyperbolic",
+    "keywords": [
+      "hyperbolic"
+    ]
+  },
+  {
+    "icon": "IBM",
+    "keywords": [
+      "ibm"
+    ]
+  },
+  {
+    "icon": "IFlyTekCloud",
+    "keywords": [
+      "iflytekcloud"
+    ]
+  },
+  {
+    "icon": "Inference",
+    "keywords": [
+      "inference"
+    ]
+  },
+  {
+    "icon": "Infermatic",
+    "keywords": [
+      "infermatic"
+    ]
+  },
+  {
+    "icon": "Kluster",
+    "keywords": [
+      "kluster"
+    ]
+  },
+  {
+    "icon": "Lambda",
+    "keywords": [
+      "lambda"
+    ]
+  },
+  {
+    "icon": "LeptonAI",
+    "keywords": [
+      "leptonai"
+    ]
+  },
+  {
+    "icon": "LlmApi",
+    "keywords": [
+      "llmapi"
+    ]
+  },
+  {
+    "icon": "LG",
+    "keywords": [
+      "lg"
+    ]
+  },
+  {
+    "icon": "Menlo",
+    "keywords": [
+      "menlo"
+    ]
+  },
+  {
+    "icon": "MetaAI",
+    "keywords": [
+      "meta"
+    ]
+  },
+  {
+    "icon": "Microsoft",
+    "keywords": [
+      "microsoft"
+    ]
+  },
+  {
+    "icon": "NPLCloud",
+    "keywords": [
+      "nplcloud"
+    ]
+  },
+  {
+    "icon": "NousResearch",
+    "keywords": [
+      "nousresearch"
+    ]
+  },
+  {
+    "icon": "Parasail",
+    "keywords": [
+      "parasail"
+    ]
+  },
+  {
+    "icon": "SearchApi",
+    "keywords": [
+      "searchapi"
+    ]
+  },
+  {
+    "icon": "Snowflake",
+    "keywords": [
+      "snowflake"
+    ]
+  },
+  {
+    "icon": "Stability",
+    "keywords": [
+      "stability"
+    ]
+  },
+  {
+    "icon": "StateCloud",
+    "keywords": [
+      "statecloud"
+    ]
+  },
+  {
+    "icon": "StreamLake",
+    "keywords": [
+      "streamlake"
+    ]
+  },
+  {
+    "icon": "SubModel",
+    "keywords": [
+      "submodel"
+    ]
+  },
+  {
+    "icon": "Targon",
+    "keywords": [
+      "targon"
+    ]
+  },
+  {
+    "icon": "Tencent",
+    "keywords": [
+      "tencent"
+    ]
+  },
+  {
+    "icon": "TII",
+    "keywords": [
+      "tii"
+    ]
+  },
+  {
+    "icon": "Yandex",
+    "keywords": [
+      "yandex"
+    ]
+  },
+  {
+    "icon": "AiMass",
+    "keywords": [
+      "aimass"
+    ]
+  },
+  {
+    "icon": "AiStudio",
+    "keywords": [
+      "aistudio"
+    ]
+  },
+  {
+    "icon": "LobeHub",
+    "keywords": [
+      "lobehub"
+    ]
+  },
+  {
+    "icon": "Zhipu",
+    "keywords": [
+      "zhipu",
+      "glmcodingplan"
+    ]
+  },
+  {
+    "icon": "Bedrock",
+    "keywords": [
+      "bedrock"
+    ]
+  },
+  {
+    "icon": "DeepSeek",
+    "keywords": [
+      "deepseek"
+    ]
+  },
+  {
+    "icon": "Google",
+    "keywords": [
+      "google"
+    ]
+  },
+  {
+    "icon": "Azure",
+    "keywords": [
+      "azure"
+    ]
+  },
+  {
+    "icon": "Moonshot",
+    "keywords": [
+      "moonshot",
+      "kimicodingplan"
+    ]
+  },
+  {
+    "icon": "Novita",
+    "keywords": [
+      "novita"
+    ]
+  },
+  {
+    "icon": "OpenAI",
+    "keywords": [
+      "chatgpt",
+      "openai"
+    ]
+  },
+  {
+    "icon": "OpenCode",
+    "keywords": [
+      "opencode",
+      "opencodecodingplan",
+      "opencodego",
+      "opencodezen"
+    ]
+  },
+  {
+    "icon": "Ollama",
+    "keywords": [
+      "ollama"
+    ]
+  },
+  {
+    "icon": "Perplexity",
+    "keywords": [
+      "perplexity"
+    ]
+  },
+  {
+    "icon": "Minimax",
+    "keywords": [
+      "minimax",
+      "minimaxcodingplan"
+    ]
+  },
+  {
+    "icon": "Mistral",
+    "keywords": [
+      "mistral"
+    ]
+  },
+  {
+    "icon": "Anthropic",
+    "keywords": [
+      "anthropic"
+    ]
+  },
+  {
+    "icon": "Groq",
+    "keywords": [
+      "groq"
+    ]
+  },
+  {
+    "icon": "OpenRouter",
+    "keywords": [
+      "openrouter"
+    ]
+  },
+  {
+    "icon": "ZeroOne",
+    "keywords": [
+      "zeroone"
+    ]
+  },
+  {
+    "icon": "Together",
+    "keywords": [
+      "togetherai"
+    ]
+  },
+  {
+    "icon": "Qiniu",
+    "keywords": [
+      "qiniu"
+    ]
+  },
+  {
+    "icon": "AlibabaCloud",
+    "keywords": [
+      "qwen"
+    ]
+  },
+  {
+    "icon": "Stepfun",
+    "keywords": [
+      "stepfun",
+      "stepfuncodingplan"
+    ]
+  },
+  {
+    "icon": "Spark",
+    "keywords": [
+      "spark"
+    ]
+  },
+  {
+    "icon": "Fireworks",
+    "keywords": [
+      "fireworksai"
+    ]
+  },
+  {
+    "icon": "Baichuan",
+    "keywords": [
+      "baichuan"
+    ]
+  },
+  {
+    "icon": "BurnCloud",
+    "keywords": [
+      "burncloud"
+    ]
+  },
+  {
+    "icon": "AiMass",
+    "keywords": [
+      "taichu"
+    ]
+  },
+  {
+    "icon": "Ai360",
+    "keywords": [
+      "ai360"
+    ]
+  },
+  {
+    "icon": "SiliconCloud",
+    "keywords": [
+      "siliconcloud"
+    ]
+  },
+  {
+    "icon": "Upstage",
+    "keywords": [
+      "upstage"
+    ]
+  },
+  {
+    "icon": "Ai21",
+    "keywords": [
+      "ai21"
+    ]
+  },
+  {
+    "icon": "Player2",
+    "keywords": [
+      "player2"
+    ]
+  },
+  {
+    "icon": "Github",
+    "keywords": [
+      "github"
+    ]
+  },
+  {
+    "icon": "GithubCopilot",
+    "keywords": [
+      "githubcopilot",
+      "github-copilot"
+    ]
+  },
+  {
+    "icon": "Copilot",
+    "keywords": [
+      "copilot"
+    ]
+  },
+  {
+    "icon": "Doubao",
+    "keywords": [
+      "doubao"
+    ]
+  },
+  {
+    "icon": "Hunyuan",
+    "keywords": [
+      "hunyuan"
+    ]
+  },
+  {
+    "icon": "Nvidia",
+    "keywords": [
+      "nvidia"
+    ]
+  },
+  {
+    "icon": "TencentCloud",
+    "keywords": [
+      "tencentcloud"
+    ]
+  },
+  {
+    "icon": "Wenxin",
+    "keywords": [
+      "wenxin"
+    ]
+  },
+  {
+    "icon": "SenseNova",
+    "keywords": [
+      "sensenova"
+    ]
+  },
+  {
+    "icon": "HuggingFace",
+    "keywords": [
+      "huggingface"
+    ]
+  },
+  {
+    "icon": "LmStudio",
+    "keywords": [
+      "lmstudio"
+    ]
+  },
+  {
+    "icon": "XAI",
+    "keywords": [
+      "xai"
+    ]
+  },
+  {
+    "icon": "Grok",
+    "keywords": [
+      "supergrok"
+    ]
+  },
+  {
+    "icon": "Cloudflare",
+    "keywords": [
+      "cloudflare"
+    ]
+  },
+  {
+    "icon": "InternLM",
+    "keywords": [
+      "internlm"
+    ]
+  },
+  {
+    "icon": "Higress",
+    "keywords": [
+      "higress"
+    ]
+  },
+  {
+    "icon": "Vllm",
+    "keywords": [
+      "vllm"
+    ]
+  },
+  {
+    "icon": "GiteeAI",
+    "keywords": [
+      "giteeai"
+    ]
+  },
+  {
+    "icon": "ModelScope",
+    "keywords": [
+      "modelscope"
+    ]
+  },
+  {
+    "icon": "VertexAI",
+    "keywords": [
+      "vertexai"
+    ]
+  },
+  {
+    "icon": "PPIO",
+    "keywords": [
+      "ppio"
+    ]
+  },
+  {
+    "icon": "Jina",
+    "keywords": [
+      "jina"
+    ]
+  },
+  {
+    "icon": "AzureAI",
+    "keywords": [
+      "azureai"
+    ]
+  },
+  {
+    "icon": "Volcengine",
+    "keywords": [
+      "volcengine",
+      "volcenginecodingplan"
+    ]
+  },
+  {
+    "icon": "SambaNova",
+    "keywords": [
+      "sambanova"
+    ]
+  },
+  {
+    "icon": "Cohere",
+    "keywords": [
+      "cohere"
+    ]
+  },
+  {
+    "icon": "ComfyUI",
+    "keywords": [
+      "comfyui"
+    ]
+  },
+  {
+    "icon": "Search1API",
+    "keywords": [
+      "search1api"
+    ]
+  },
+  {
+    "icon": "Infinigence",
+    "keywords": [
+      "infiniai"
+    ]
+  },
+  {
+    "icon": "Xinference",
+    "keywords": [
+      "xinference"
+    ]
+  },
+  {
+    "icon": "Xpay",
+    "keywords": [
+      "xpay"
+    ]
+  },
+  {
+    "icon": "Fal",
+    "keywords": [
+      "fal"
+    ]
+  },
+  {
+    "icon": "Ai302",
+    "keywords": [
+      "ai302"
+    ]
+  },
+  {
+    "icon": "AiHubMix",
+    "keywords": [
+      "aihubmix"
+    ]
+  },
+  {
+    "icon": "CometAPI",
+    "keywords": [
+      "cometapi"
+    ]
+  },
+  {
+    "icon": "Vercel",
+    "keywords": [
+      "v0"
+    ]
+  },
+  {
+    "icon": "Vercel",
+    "keywords": [
+      "vercel",
+      "vercelaigateway"
+    ]
+  },
+  {
+    "icon": "Bfl",
+    "keywords": [
+      "bfl"
+    ]
+  },
+  {
+    "icon": "Replicate",
+    "keywords": [
+      "replicate"
+    ]
+  },
+  {
+    "icon": "Nebius",
+    "keywords": [
+      "nebius"
+    ]
+  },
+  {
+    "icon": "NewAPI",
+    "keywords": [
+      "newapi"
+    ]
+  },
+  {
+    "icon": "AkashChat",
+    "keywords": [
+      "akashchat"
+    ]
+  },
+  {
+    "icon": "AtlasCloud",
+    "keywords": [
+      "atlascloud"
+    ]
+  },
+  {
+    "icon": "SophNet",
+    "keywords": [
+      "sophnet"
+    ]
+  },
+  {
+    "icon": "Ollama",
+    "keywords": [
+      "ollamacloud"
+    ]
+  },
+  {
+    "icon": "LongCat",
+    "keywords": [
+      "longcat"
+    ]
+  },
+  {
+    "icon": "Cerebras",
+    "keywords": [
+      "cerebras"
+    ]
+  },
+  {
+    "icon": "Straico",
+    "keywords": [
+      "straico"
+    ]
+  },
+  {
+    "icon": "ZenMux",
+    "keywords": [
+      "zenmux"
+    ],
+    "props": {
+      "inverse": true
     }
+  },
+  {
+    "icon": "XiaomiMiMo",
+    "keywords": [
+      "xiaomimimo"
+    ]
+  }
 ] as const;
 export const brandLoaders = {
     Ace: () => import("@lobehub/icons/es/Ace"),

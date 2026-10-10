@@ -1,13 +1,14 @@
 import {toolMetadataMatches} from './toolDefinition';
 import {getOfferedToolNames, refreshRunToolLoading, toolNamesForCall} from "./toolLoading";
 import {saveAgentFinishingCheck} from "@/db/agentFinishingCheck";
+import {reviewFinalReply} from "./runFinalReview";
 import {upgradeLegacyPlanCalls} from "@/db/agentToolRecovery";
 import {budgetContext} from "./contextPlanner";
 import {continuationExtraTokens, prepareRunContext} from "./contextCompaction";
 import {refreshRunMemoryContext} from "./memoryContext";
 import {refreshRunProjectContext} from "./projectContext";
 import {frozenProjectScope} from "./projectScope";
-import {ToolPendingError, ToolValidationError} from "./toolErrors";
+import {ToolPendingError, toolFailureResult} from "./toolErrors";
 import {type ResponsesResult, streamResponses} from "@/lib/ai/responsesStream";
 import {db} from "@/db/database";
 import {
@@ -120,7 +121,7 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
             const message = error instanceof Error ? error.message : "工具参数无效";
             await transitionToolCall(run.id, call.id, ["pending", "approved"], "failed", {
                 error: message,
-                result: JSON.stringify(error instanceof ToolValidationError ? error.failure : {error: message})
+                result: JSON.stringify(toolFailureResult(error, "not_started") ?? {error: message})
             });
             continue;
         }
@@ -142,7 +143,7 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
                 const message = error instanceof Error ? error.message : "无法准备操作预览";
                 await transitionToolCall(run.id, call.id, ["pending", "approved"], "failed", {
                     error: message,
-                    result: JSON.stringify({error: message})
+                    result: JSON.stringify(toolFailureResult(error, "not_started") ?? {error: message})
                 });
                 continue;
             }
@@ -195,7 +196,11 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
             // Exceptions from side effects cannot certify that nothing happened.
             const ambiguous = !(cause instanceof AtomicToolRollbackError) && (tool.effect === "write" || tool.effect === "network" || tool.effect === "bookkeeping");
             const error = ambiguous ? "操作结果尚不确定，请先核实，不能自动重跑。" : cause instanceof Error ? cause.message : "工具执行失败。";
-            await transitionToolCall(run.id, call.id, ["running"], ambiguous ? "unknown" : "failed", {error, ...(!ambiguous ? {result: JSON.stringify({error})} : {})});
+            const certainty = cause instanceof AtomicToolRollbackError ? "rolled_back" : tool.effect === "read" ? "not_started" : "unknown";
+            await transitionToolCall(run.id, call.id, ["running"], ambiguous ? "unknown" : "failed", {
+                error,
+                ...(!ambiguous ? {result: JSON.stringify(toolFailureResult(cause, certainty) ?? {error})} : {})
+            });
             if (ambiguous) throw new Error(error);
         }
         controller.signal.throwIfAborted();
@@ -289,6 +294,8 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
             }
             if (!result.toolCalls?.length) {
                 if (await saveAgentFinishingCheck(run.id, run.modelStep!, output(), result.responseOutput, controller.signal)) continue;
+                await reviewFinalReply(run.id, run.modelStep!, output(), apiKey, controller.signal, fetchImpl, result.responseOutput);
+                controller.signal.throwIfAborted();
                 await finishAgentRun(run.id, "completed", output(), undefined, result.finishReason);
                 return;
             }

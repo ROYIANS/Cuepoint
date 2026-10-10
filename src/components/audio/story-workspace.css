@@ -25,6 +25,11 @@
     min-width: 0;
 }
 
+.as-toolbar-actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
 .as-chapter-selector > button {
     max-width: 190px;
 }
@@ -437,6 +442,8 @@
 
     .as-toolbar-actions {
         gap: 2px;
+        width: 100%;
+        justify-content: flex-start;
     }
 
     .as-document {

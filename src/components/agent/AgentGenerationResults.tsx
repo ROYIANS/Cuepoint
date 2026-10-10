@@ -1,5 +1,6 @@
 import {generationTargetDestination} from "@/lib/generationTargetDestination";
 import {AgentGenerationBatches} from "./AgentGenerationBatches";
+import {AgentAudioBatches} from "@/components/audio/AudioGenerationBatches";
 import {Link} from "@tanstack/react-router";
 import {useLiveQuery} from "dexie-react-hooks";
 import {Check, CircleAlert, Image, LoaderCircle, Video} from "lucide-react";
@@ -18,7 +19,7 @@ const TARGETS = {character: "角色", scene: "场景", prop: "道具", style: "�
 export function AgentGenerationResults({runId}: { runId: string }) {
     const jobs = useLiveQuery(() => db.agentGenerationJobs.where("runId").equals(runId).filter(job => !job.batchId).sortBy("createdAt"), [runId]);
     // Keep the batch subtree stable when a single job appears or disappears: it owns review drafts.
-    return <><AgentGenerationBatches runId={runId}/>{Boolean(jobs?.length) &&
+    return <><AgentGenerationBatches runId={runId}/><AgentAudioBatches runId={runId}/>{Boolean(jobs?.length) &&
         <div className="agent-generation-results" aria-label="生成素材">
             {jobs?.map((job) => {
                 const Icon = job.kind === "image" ? Image : Video;

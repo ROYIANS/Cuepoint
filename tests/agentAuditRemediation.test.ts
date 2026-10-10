@@ -1,3 +1,4 @@
+import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import {registeredTools} from "./helpers/registeredTools";
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { BUSINESS_TOOLS as BUSINESS_TOOLS_DEFINITIONS } from "@/lib/agent/businessTools";
@@ -102,8 +103,10 @@ describe('Agent audit boundary regressions', () => {
       if (requests.length === 1) return Response.json({ choices: [{ message: { content: '', tool_calls: [{ id: 'task-read', type: 'function', function: { name: 'task_read', arguments: args } }] }, finish_reason: 'tool_calls' }] });
       return Response.json({ choices: [{ message: { content: 'done' }, finish_reason: 'stop' }] });
     });
-    await executeChatRun(next, chat.apiKey, new AbortController(), fetchImpl);
-    expect(requests).toHaveLength(2);
+    await executeChatRun(next, chat.apiKey, new AbortController(), withFinalReviewFixture(fetchImpl));
+    expect(requests).toHaveLength(3);
+    expect(requests.every(request => !request.includes(marker))).toBe(true);
+    expect((await db.agentRuns.get(next.id))?.finalReview?.status).toBe("checked");
     expect(requests[0]).not.toContain(marker);
     expect(requests[1].includes(marker)).toBe(false);
     expect(requests[1]).toContain('authored statement preserved');
@@ -163,7 +166,7 @@ it.each(["pending", "running", "unknown", "completed"] as const)("legacy plan %s
   expect(await db.agentToolCalls.get(call.id)).toMatchObject({status:status === "completed" ? "completed" : "pending"});
   const completed = BUILTIN_TOOLS.find(tool=>tool.name === "update_run_plan")!;
   const execute = vi.fn(completed.execute);
-  await resumeChatRun(run.id,chat.apiKey,new AbortController(),vi.fn(async()=>Response.json({choices:[{message:{content:"done"},finish_reason:"stop"}]})),BUILTIN_TOOLS.map(tool=>tool.name === completed.name ? {...tool,execute} : tool));
+  await resumeChatRun(run.id,chat.apiKey,new AbortController(),withFinalReviewFixture(vi.fn(async()=>Response.json({choices:[{message:{content:"done"},finish_reason:"stop"}]}))),BUILTIN_TOOLS.map(tool=>tool.name === completed.name ? {...tool,execute} : tool));
   expect(execute).toHaveBeenCalledTimes(status === "completed" ? 0 : 1);
   expect(await db.agentTasks.get(task.id)).toMatchObject({plan:planArgs.steps});
   expect(await db.agentTaskRecords.where("taskId").equals(task.id).filter(record=>record.title === "Todo 更新").count()).toBe(1);
@@ -189,7 +192,7 @@ it("legacy repair cannot make unknown external effects repeatable", async () => 
   await finishAgentRun(run.id,"interrupted");
   await interruptThreadRuns(thread.id);
   expect(await db.agentToolCalls.get(call.id)).toMatchObject({status:"unknown"});
-  await expect(resumeChatRun(run.id,chat.apiKey,new AbortController(),vi.fn())).rejects.toThrow("不确定");
+  await expect(resumeChatRun(run.id,chat.apiKey,new AbortController(),withFinalReviewFixture(vi.fn()))).rejects.toThrow("不确定");
 });
 
 it.each([listModels,testConnection])("connector diagnostics redact raw, bearer and boundary secrets before truncation (%#)", async probe=>{
