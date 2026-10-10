@@ -1,0 +1,29 @@
+{
+  "id": "desktop-storage-sync",
+  "name": "desktop-storage-sync",
+  "title": "桌面端存储与同步",
+  "description": "Implement the approved local-first workspace, immutable checkpoints and provider contract in verified children; managed service and native migration retain concrete later gates.",
+  "status": "in_progress",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-10-10",
+  "completedAt": null,
+  "branch": "codex/desktop-storage-sync",
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [
+    "10-10-storage-workspace-foundation",
+    "10-10-storage-checkpoint-plugin-foundation"
+  ],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "Two bounded foundations independently accepted; commit/archive sequence approved on 2026-10-11. Parent remains in progress for native persistence, production codecs and real sync. User selected complete original tool-history retention with field-by-field review; credentials, continuation tokens and executable authority remain excluded.",
+  "meta": {}
+}

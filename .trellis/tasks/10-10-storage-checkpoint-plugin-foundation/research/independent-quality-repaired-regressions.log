@@ -1,0 +1,17 @@
+
+> cuepoint@0.1.0 test /Users/xiaomengdao/WebstormProjects/aifenjing
+> vitest run tests/checkpointProtocol.test.ts tests/syncProvider.test.ts tests/workspace.test.ts tests/workspaceChunkCopy.test.ts tests/workspaceHashCompatibility.test.ts tests/workspaceBinaryFixture.test.ts tests/workspaceArrangementFixture.test.ts
+
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+
+ Test Files  7 passed (7)
+      Tests  127 passed (127)
+   Start at  21:44:35
+   Duration  1.74s (tests 47%, transform 37%, setup 14%, import 2%)
+
+  Transform  transforming modules took 3.40s · 37% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

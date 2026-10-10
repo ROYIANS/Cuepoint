@@ -1,0 +1,11 @@
+{"file": ".trellis/tasks/10-10-desktop-storage-sync/prd.md", "reason": "Parent requirements and confirmed managed-container, delivery and credential boundaries"}
+{"file": ".trellis/tasks/10-10-desktop-storage-sync/design.md", "reason": "Parent architecture and migration invariants"}
+{"file": ".trellis/tasks/10-10-desktop-storage-sync/implement.md", "reason": "Parent phase dependencies and validation gates"}
+{"file": ".trellis/tasks/10-10-storage-workspace-foundation/prd.md", "reason": "Child acceptance criteria and explicit out-of-scope boundaries"}
+{"file": ".trellis/tasks/10-10-storage-workspace-foundation/design.md", "reason": "Workspace-relative and staged managed-copy contracts"}
+{"file": ".trellis/tasks/10-10-storage-workspace-foundation/implement.md", "reason": "Ordered child execution plan and rollback evidence"}
+{"file": ".trellis/tasks/10-10-storage-workspace-foundation/research/retained-owner-contracts.md", "reason": "Complete compact applicable Studio/C03/D02/E04 owner contracts; source spec remains authoritative without native-injection truncation"}
+{"file": ".trellis/spec/frontend/asset-output-foundation.md", "reason": "Existing media/output and attachment conventions"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Required TypeScript, tests and quality checks"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Domain type and normalizer conventions"}
+{"file": ".trellis/spec/frontend/workspace-storage.md", "reason": "Implemented managed-copy staging, lowercase-hex paths, incremental byte hashing and exact browser/native boundaries"}

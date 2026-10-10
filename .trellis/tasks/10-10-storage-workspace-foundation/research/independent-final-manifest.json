@@ -1,0 +1,98 @@
+{
+  "baseRevision": "8b8b709e85b390e2c4f68cc8e931487703ab9144",
+  "capturedAt": "2026-10-10",
+  "scope": "workspace-foundation authored sources/tests/comparator and coordinator-added contract; generated route final cleanup belongs to coordinator",
+  "files": [
+    {
+      "path": "src/lib/workspace.ts",
+      "status": "reviewed",
+      "sha256": "bef1650cee404e8cf50460edf3fd90315dbeb64ffb5125c0be621734d0f69df9",
+      "note": "Entire module reviewed; staged bounded copy, path encoding/containment, cancellation and commit boundary verified.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/sha256.ts",
+      "status": "reviewed",
+      "sha256": "639e86426c7ba06930e5820c9fa13fc1d565f15b16dde58783a011139f7b5dc4",
+      "note": "Entire incremental update/compression/digest and synchronous wrapper reviewed; Node vectors and original revision equivalence pass.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/media.ts",
+      "status": "reviewed",
+      "sha256": "813f5987bd6c022f3fcb901e54d3f6b4da05b4c7d9ff70b283150cfd74efe087",
+      "note": "Importer integration reviewed with current callers and unchanged putMedia owner transaction; no UI behavior rewrite.",
+      "findings": []
+    },
+    {
+      "path": "src/lib/productionRevision.ts",
+      "status": "reviewed",
+      "sha256": "777fe681fa83c5eec071ee07cc0cb4d0ffcb6d2e8cfea5b9b7cfa32a2a3567d9",
+      "note": "Full module reviewed; canonical and validation logic retained; hash output checked against immutable original.",
+      "findings": []
+    },
+    {
+      "path": "tests/helpers/workspaceBinaryFixture.ts",
+      "status": "reviewed",
+      "sha256": "fb70bbb3897757b34a3f3a96fb56371c9e5b29f10b408f791b73364465127f66",
+      "note": "Entire projection/resolution/read pass reviewed against current binary owners and actual audio-arrangement producers.",
+      "findings": []
+    },
+    {
+      "path": "tests/workspace.test.ts",
+      "status": "reviewed",
+      "sha256": "c1ea231584f660f87779f4e50f5a1241d72c0e5447566b065190afc559d7b9ed",
+      "note": "Entire path/owner/copy/failure/commit/rollback suite reviewed.",
+      "findings": []
+    },
+    {
+      "path": "tests/workspaceHashCompatibility.test.ts",
+      "status": "reviewed",
+      "sha256": "dcfe755cb28fce27a7326588e25df83eb35521b8939fcff5e0b9c83a17920dbe",
+      "note": "Entire provenance, standard/incremental hash, original revision and absent-WebCrypto tests reviewed.",
+      "findings": []
+    },
+    {
+      "path": "tests/workspaceBinaryFixture.test.ts",
+      "status": "reviewed",
+      "sha256": "c4dd259b1bd0b1c740b580ac38d13955ebaa57866f36131f53944a9234b7d799",
+      "note": "Entire live/nested/history/reference projection suite reviewed; raw fixtures limited to selected projection behavior.",
+      "findings": []
+    },
+    {
+      "path": "tests/workspaceChunkCopy.test.ts",
+      "status": "reviewed",
+      "sha256": "da3ea8d3fc6a4a99919bb24702e4a3760f593413b38a5c79837164869fbf2295",
+      "note": "Entire chunked-copy proof reviewed; real timers run before next slice; later failure/cancel preserve source and no-ready-row.",
+      "findings": []
+    },
+    {
+      "path": "tests/workspaceArrangementFixture.test.ts",
+      "status": "reviewed",
+      "sha256": "036c629e4fc31d67bf1f35088057a3474cc1f4ba61a4dfa2171677cfe178f578",
+      "note": "Entire actual preview/save/apply fixture reviewed; historical identity, missing/foreign media and unreadable binary proof.",
+      "findings": []
+    },
+    {
+      "path": "tests/fixtures/workspace/originalProductionRevision.ts",
+      "status": "reviewed",
+      "sha256": "1ee25abc919f5366adc71a3af1b43fb934d12da78acf2e00364ca4423636827e",
+      "note": "Entire original source reviewed; exact bytes match git 8b8b709e and known checksum; imported alias dependencies unchanged.",
+      "findings": []
+    },
+    {
+      "path": ".trellis/spec/frontend/workspace-storage.md",
+      "status": "reviewed",
+      "sha256": "325e849a62a09890d7d9b9371d96ad5a52ebb17e9aaa29b9a9e7905f2ec40c63",
+      "note": "Entire coordinator-authored spec reviewed against actual browser boundary and native/sync exclusions.",
+      "findings": []
+    },
+    {
+      "path": ".trellis/spec/frontend/index.md",
+      "status": "reviewed",
+      "sha256": "03b11a75d5cb4cf9fc645aabc8810819637cc936a4961dba8ecb5798efea408b",
+      "note": "Managed Workspace entry points to the new authoritative browser contract; no unrelated index contracts modified.",
+      "findings": []
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+
+> cuepoint@0.1.0 test /Users/xiaomengdao/WebstormProjects/aifenjing
+> vitest run tests/checkpointProtocol.test.ts tests/syncProvider.test.ts tests/workspace.test.ts tests/workspaceChunkCopy.test.ts tests/workspaceHashCompatibility.test.ts tests/workspaceBinaryFixture.test.ts tests/workspaceArrangementFixture.test.ts
+
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+
+ Test Files  7 passed (7)
+      Tests  127 passed (127)
+   Start at  21:38:19
+   Duration  893ms (tests 49%, transform 32%, setup 15%, import 4%)
+

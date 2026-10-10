@@ -1,0 +1,8 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Frontend contract map"}
+{"file": ".trellis/spec/frontend/workspace-storage.md", "reason": "Accepted workspace identity, lexical paths, bounded byte hash and browser/native boundaries"}
+{"file": ".trellis/spec/frontend/checkpoint-protocol.md", "reason": "Current partial protocol contract, mutation isolation, canonical wire format and provider outcome boundaries"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Strict boundary validation and type conventions"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Repository quality gates and regression checks"}
+{"file": ".trellis/tasks/10-10-storage-workspace-foundation/research/retained-owner-contracts.md", "reason": "Complete applicable owner and dormant execution contracts without large spec injection truncation"}
+{"file": ".trellis/tasks/10-10-desktop-storage-sync/design.md", "reason": "Approved product architecture, provider authority, credentials and checkpoint policies"}
+{"file": ".trellis/tasks/10-10-desktop-storage-sync/research/checkpoint-contract-research.md", "reason": "Verified identity-preserving owner and sanitization gaps; current child intentionally narrower than future production codec candidates"}

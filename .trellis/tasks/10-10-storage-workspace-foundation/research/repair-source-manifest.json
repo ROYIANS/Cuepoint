@@ -1,0 +1,13 @@
+{
+  "src/lib/workspace.ts": "bef1650cee404e8cf50460edf3fd90315dbeb64ffb5125c0be621734d0f69df9",
+  "src/lib/sha256.ts": "639e86426c7ba06930e5820c9fa13fc1d565f15b16dde58783a011139f7b5dc4",
+  "src/lib/media.ts": "813f5987bd6c022f3fcb901e54d3f6b4da05b4c7d9ff70b283150cfd74efe087",
+  "src/lib/productionRevision.ts": "777fe681fa83c5eec071ee07cc0cb4d0ffcb6d2e8cfea5b9b7cfa32a2a3567d9",
+  "tests/helpers/workspaceBinaryFixture.ts": "fb70bbb3897757b34a3f3a96fb56371c9e5b29f10b408f791b73364465127f66",
+  "tests/workspace.test.ts": "c1ea231584f660f87779f4e50f5a1241d72c0e5447566b065190afc559d7b9ed",
+  "tests/workspaceChunkCopy.test.ts": "da3ea8d3fc6a4a99919bb24702e4a3760f593413b38a5c79837164869fbf2295",
+  "tests/workspaceHashCompatibility.test.ts": "dcfe755cb28fce27a7326588e25df83eb35521b8939fcff5e0b9c83a17920dbe",
+  "tests/workspaceBinaryFixture.test.ts": "c4dd259b1bd0b1c740b580ac38d13955ebaa57866f36131f53944a9234b7d799",
+  "tests/workspaceArrangementFixture.test.ts": "036c629e4fc31d67bf1f35088057a3474cc1f4ba61a4dfa2171677cfe178f578",
+  "tests/fixtures/workspace/originalProductionRevision.ts": "1ee25abc919f5366adc71a3af1b43fb934d12da78acf2e00364ca4423636827e"
+}

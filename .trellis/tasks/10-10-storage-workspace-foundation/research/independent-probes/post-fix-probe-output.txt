@@ -1,0 +1,23 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+stdout | tests/workspaceReviewProbe.test.ts > independent workspace review probes > observes integrated import cost against the original direct Blob boundary
+{"mode":"original","mib":32,"elapsedMs":1.4358339999999998,"longestGapMs":2.2263749999999902,"arrayBuffersBefore":33579687,"arrayBuffersAfter":33579687,"rssBefore":169328640,"rssAfter":169345024}
+
+stdout | tests/workspaceReviewProbe.test.ts > independent workspace review probes > observes integrated import cost against the original direct Blob boundary
+{"mode":"managed","mib":32,"elapsedMs":581.988375,"longestGapMs":6.79412499999998,"arrayBuffersBefore":33579732,"arrayBuffersAfter":71066748,"rssBefore":169426944,"rssAfter":208338944}
+
+stdout | tests/workspaceReviewProbe.test.ts > independent workspace review probes > observes integrated import cost against the original direct Blob boundary
+{"mode":"original","mib":128,"elapsedMs":0.36954199999991033,"longestGapMs":1.4415840000000344,"arrayBuffersBefore":335569575,"arrayBuffersAfter":335569575,"rssBefore":477003776,"rssAfter":477020160}
+
+stdout | tests/workspaceReviewProbe.test.ts > independent workspace review probes > observes integrated import cost against the original direct Blob boundary
+{"mode":"managed","mib":128,"elapsedMs":2280.0285000000003,"longestGapMs":9.849333999999999,"arrayBuffersBefore":335577812,"arrayBuffersAfter":335569575,"rssBefore":477069312,"rssAfter":610664448}
+
+ ✓ tests/workspaceReviewProbe.test.ts > independent workspace review probes > observes integrated import cost against the original direct Blob boundary 2936ms
+ ✓ tests/workspaceReviewProbe.test.ts > independent workspace review probes > verifies case-insensitive separation and complete arrangement projections 8ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  20:35:10
+   Duration  3.09s (tests 97%, transform 2%, setup 1%)
+

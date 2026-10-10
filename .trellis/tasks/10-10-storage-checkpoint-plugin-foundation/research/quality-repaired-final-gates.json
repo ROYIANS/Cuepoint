@@ -1,0 +1,98 @@
+{
+  "results": [
+    {
+      "name": "lint",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "lint"
+      ],
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/research/quality-repaired-final-lint.log",
+      "elapsedSeconds": 6.789
+    },
+    {
+      "name": "strict-test-types",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "exec",
+        "tsc",
+        "-p",
+        "tests/typecheck/tsconfig.checkpoint.json",
+        "--pretty",
+        "false"
+      ],
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/research/quality-repaired-final-strict-test-types.log",
+      "elapsedSeconds": 0.735
+    },
+    {
+      "name": "targeted-tests",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "tests/checkpointProtocol.test.ts",
+        "tests/syncProvider.test.ts",
+        "tests/workspace.test.ts",
+        "tests/workspaceChunkCopy.test.ts",
+        "tests/workspaceHashCompatibility.test.ts",
+        "tests/workspaceBinaryFixture.test.ts",
+        "tests/workspaceArrangementFixture.test.ts"
+      ],
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/research/quality-repaired-final-targeted-tests.log",
+      "elapsedSeconds": 0.992
+    },
+    {
+      "name": "full-tests",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "test"
+      ],
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/research/quality-repaired-final-full-tests.log",
+      "elapsedSeconds": 24.652
+    },
+    {
+      "name": "build",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "build"
+      ],
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/research/quality-repaired-final-build.log",
+      "elapsedSeconds": 17.719
+    },
+    {
+      "name": "quality",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "quality"
+      ],
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/research/quality-repaired-final-quality.log",
+      "elapsedSeconds": 16.251
+    },
+    {
+      "name": "quality-self-test",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "quality:self-test"
+      ],
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/research/quality-repaired-final-quality-self-test.log",
+      "elapsedSeconds": 68.014
+    },
+    {
+      "name": "model-bank",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "model-bank:verify"
+      ],
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/research/quality-repaired-final-model-bank.log",
+      "elapsedSeconds": 0.708
+    }
+  ]
+}

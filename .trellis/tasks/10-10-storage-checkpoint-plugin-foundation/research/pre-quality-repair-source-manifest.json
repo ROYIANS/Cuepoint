@@ -1,0 +1,30 @@
+{
+  "freeze": "final-corrected-source-2026-10-10",
+  "baseRevision": "8b8b709e85b390e2c4f68cc8e931487703ab9144",
+  "files": [
+    {
+      "path": "src/lib/checkpoint.ts",
+      "sha256": "954b9497c5d4bc7feb28d6ee42080cc5faaa408017c08caf022e6eef8fc1eae7"
+    },
+    {
+      "path": "src/lib/syncProvider.ts",
+      "sha256": "03f566efdcba32c8e17c18b04d1215eeb5cdd9aba29528c4bac4be4ce9cf5910"
+    },
+    {
+      "path": "tests/checkpointProtocol.test.ts",
+      "sha256": "763fcbbf2e3efcb31dc4d4e1bdc14a3868e68f24ececdddddf234cfb9b1198e6"
+    },
+    {
+      "path": "tests/syncProvider.test.ts",
+      "sha256": "e82c565efea6caa38788490f40d2be6599698095ad97807a659243fb9a7198a8"
+    },
+    {
+      "path": "tests/helpers/checkpointProtocolFixture.ts",
+      "sha256": "c65bef55e6fa6c7f1468045aef01772f32d1135b14aab0c3769b9aca32875adb"
+    },
+    {
+      "path": "tests/typecheck/tsconfig.checkpoint.json",
+      "sha256": "32b890164a8ce89f79d530b2d9a6114a120c2656cb38fdcc515b364a5d166f7e"
+    }
+  ]
+}

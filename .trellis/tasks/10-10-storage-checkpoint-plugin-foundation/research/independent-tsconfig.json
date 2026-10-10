@@ -1,0 +1,14 @@
+{
+  "extends": "../../../../tsconfig.app.json",
+  "compilerOptions": {
+    "types": ["node", "vitest"]
+  },
+  "include": [
+    "../../../../src",
+    "../../../../tests/checkpointProtocol.test.ts",
+    "../../../../tests/syncProvider.test.ts",
+    "../../../../tests/helpers/checkpointProtocolFixture.ts",
+    "./independent-probes.test.ts",
+    "./independent-vitest.config.ts"
+  ]
+}

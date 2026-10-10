@@ -1,0 +1,42 @@
+{
+  "sourceFreeze": "quality-repaired-final-source-2026-10-10",
+  "files": [
+    {
+      "path": "src/lib/checkpoint.ts",
+      "sha256": "afc98bfca19cbc3994421c506f3a65e61127d58bd9489c8380348fda679e1eb9",
+      "postGateSha256": "afc98bfca19cbc3994421c506f3a65e61127d58bd9489c8380348fda679e1eb9",
+      "matches": true
+    },
+    {
+      "path": "src/lib/syncProvider.ts",
+      "sha256": "d2b9d745a20d6aacd3f915621230125756a221a821d020a845615fb0b7d045dd",
+      "postGateSha256": "d2b9d745a20d6aacd3f915621230125756a221a821d020a845615fb0b7d045dd",
+      "matches": true
+    },
+    {
+      "path": "tests/checkpointProtocol.test.ts",
+      "sha256": "763fcbbf2e3efcb31dc4d4e1bdc14a3868e68f24ececdddddf234cfb9b1198e6",
+      "postGateSha256": "763fcbbf2e3efcb31dc4d4e1bdc14a3868e68f24ececdddddf234cfb9b1198e6",
+      "matches": true
+    },
+    {
+      "path": "tests/syncProvider.test.ts",
+      "sha256": "e82c565efea6caa38788490f40d2be6599698095ad97807a659243fb9a7198a8",
+      "postGateSha256": "e82c565efea6caa38788490f40d2be6599698095ad97807a659243fb9a7198a8",
+      "matches": true
+    },
+    {
+      "path": "tests/helpers/checkpointProtocolFixture.ts",
+      "sha256": "7b41fedc0f39d5a8460b38444201a1923d769f4c1edb9edf3e66b52f87ee142e",
+      "postGateSha256": "7b41fedc0f39d5a8460b38444201a1923d769f4c1edb9edf3e66b52f87ee142e",
+      "matches": true
+    },
+    {
+      "path": "tests/typecheck/tsconfig.checkpoint.json",
+      "sha256": "32b890164a8ce89f79d530b2d9a6114a120c2656cb38fdcc515b364a5d166f7e",
+      "postGateSha256": "32b890164a8ce89f79d530b2d9a6114a120c2656cb38fdcc515b364a5d166f7e",
+      "matches": true
+    }
+  ],
+  "allMatch": true
+}

@@ -1,0 +1,100 @@
+{
+  "stage": "final-independent-after",
+  "files": [
+    {
+      "path": "src/lib/checkpoint.ts",
+      "sha256": "954b9497c5d4bc7feb28d6ee42080cc5faaa408017c08caf022e6eef8fc1eae7",
+      "unchanged": true
+    },
+    {
+      "path": "src/lib/syncProvider.ts",
+      "sha256": "03f566efdcba32c8e17c18b04d1215eeb5cdd9aba29528c4bac4be4ce9cf5910",
+      "unchanged": true
+    },
+    {
+      "path": "tests/checkpointProtocol.test.ts",
+      "sha256": "763fcbbf2e3efcb31dc4d4e1bdc14a3868e68f24ececdddddf234cfb9b1198e6",
+      "unchanged": true
+    },
+    {
+      "path": "tests/syncProvider.test.ts",
+      "sha256": "e82c565efea6caa38788490f40d2be6599698095ad97807a659243fb9a7198a8",
+      "unchanged": true
+    },
+    {
+      "path": "tests/helpers/checkpointProtocolFixture.ts",
+      "sha256": "c65bef55e6fa6c7f1468045aef01772f32d1135b14aab0c3769b9aca32875adb",
+      "unchanged": true
+    },
+    {
+      "path": "tests/typecheck/tsconfig.checkpoint.json",
+      "sha256": "32b890164a8ce89f79d530b2d9a6114a120c2656cb38fdcc515b364a5d166f7e",
+      "unchanged": true
+    },
+    {
+      "path": "src/lib/workspace.ts",
+      "sha256": "bef1650cee404e8cf50460edf3fd90315dbeb64ffb5125c0be621734d0f69df9",
+      "unchanged": true
+    },
+    {
+      "path": "src/lib/sha256.ts",
+      "sha256": "639e86426c7ba06930e5820c9fa13fc1d565f15b16dde58783a011139f7b5dc4",
+      "unchanged": true
+    },
+    {
+      "path": "src/domain/types.ts",
+      "sha256": "2fd6270b0a2a97ed725148046ef67d2875fee04d7107ef22d8f212cdd9cce78f",
+      "unchanged": true
+    },
+    {
+      "path": ".trellis/spec/frontend/checkpoint-protocol.md",
+      "sha256": "13f65b9c1ca9e055175a6f92a5e036c4b97f29d0a53cebdaf5e17fe590b388aa",
+      "unchanged": true
+    },
+    {
+      "path": ".trellis/spec/frontend/workspace-storage.md",
+      "sha256": "325e849a62a09890d7d9b9371d96ad5a52ebb17e9aaa29b9a9e7905f2ec40c63",
+      "unchanged": true
+    },
+    {
+      "path": ".trellis/spec/frontend/index.md",
+      "sha256": "539124ff7e0b9b78c7e8d7f40c9cde97f4bfa9dd31c769e78d3863cd70274d73",
+      "unchanged": true
+    },
+    {
+      "path": ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/prd.md",
+      "sha256": "119ebc0e5f975948cffc669cdd3b8d041f256da85556250ca2d32597b813f09e",
+      "unchanged": true
+    },
+    {
+      "path": ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/design.md",
+      "sha256": "6e69cf4ebac7098d8b93a1df9c4417030a1273060e039ddf90ef6e158db52859",
+      "unchanged": true
+    },
+    {
+      "path": ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/implement.md",
+      "sha256": "860fb4c0245fba8ca4e09bb83881ccfaa469c01cc80323ee2e35fc0318a50913",
+      "unchanged": true
+    },
+    {
+      "path": ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/research/review-plan.md",
+      "sha256": "9b7749be7ff84a5a5e932e99fd286fe7eb7873b9095cdc03a30d8aa2502a684f",
+      "unchanged": true
+    },
+    {
+      "path": ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/research/independent-probes.test.ts",
+      "sha256": "b2e554f93318c604a335ba9581beb69a057639572fcb4109975f32be22001334",
+      "unchanged": true
+    },
+    {
+      "path": ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/research/independent-vitest.config.ts",
+      "sha256": "f10f074e748e43cfedc93c287cd8408bcb2ab56b632d1a722bee65d7c07322e2",
+      "unchanged": true
+    },
+    {
+      "path": ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/research/independent-tsconfig.json",
+      "sha256": "d2755c6b14793ee38eb0b6bd3300809f34a1fc61ef34c6c7ad188c2159b70308",
+      "unchanged": true
+    }
+  ]
+}

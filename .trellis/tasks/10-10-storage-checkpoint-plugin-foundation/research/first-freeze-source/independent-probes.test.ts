@@ -1,0 +1,334 @@
+import {describe, expect, it} from "vitest";
+import {
+  CHECKPOINT_CHUNK_SIZE,
+  encodeCheckpointManifest,
+  prepareCheckpoint,
+  validateCheckpointManifest,
+  verifyCheckpointDelivery,
+} from "@/lib/checkpoint";
+import type {BinarySource, CheckpointApplicationPort, CheckpointManifest} from "@/lib/checkpoint";
+import {mediaWorkspaceRef, workspaceId} from "@/lib/workspace";
+import type {WorkspaceId} from "@/lib/workspace";
+import {deliverCheckpoint, publishCheckpoint} from "@/lib/syncProvider";
+import type {CheckpointTransport} from "@/lib/syncProvider";
+import {CheckpointDeviceFixture, CheckpointTransportFixture, checkpointFixtureInput, fixtureWorkspaceId} from "../../../../tests/helpers/checkpointProtocolFixture";
+
+const ws = workspaceId("independent-disposable-workspace");
+const projectId = "independent-project";
+
+function input(bytes: BinarySource = new Uint8Array([1, 2, 3])) {
+  return {
+    workspaceId: ws,
+    projectId,
+    records: [
+      {kind: "project" as const, id: projectId, title: "Before"},
+      {kind: "media" as const, id: "media-é", projectId, mediaWorkspaceRef: mediaWorkspaceRef(ws, projectId, "media-é"), binaryId: "object-é"},
+    ],
+    binaries: [{binaryId: "object-é", mediaId: "media-é", projectId, mimeType: "application/octet-stream", bytes}],
+  };
+}
+
+describe("independent frozen-source boundary", () => {
+  it("snapshots all portable metadata before the first asynchronous binary read", async () => {
+    const source = input();
+    const pending = prepareCheckpoint(source);
+    source.records[0]!.title = "After";
+    const prepared = await pending;
+    expect(prepared.manifest.records.find(record => record.kind === "project")?.title).toBe("Before");
+  });
+
+  it("owns ArrayBuffer bytes before yielding between bounded chunks", async () => {
+    const buffer = new ArrayBuffer(CHECKPOINT_CHUNK_SIZE + 32);
+    const original = new Uint8Array(buffer);
+    original.fill(1);
+    const pending = prepareCheckpoint(input(buffer));
+    original.fill(9, CHECKPOINT_CHUNK_SIZE);
+    const prepared = await pending;
+    expect([...prepared.binaries[0]!.bytes.slice(CHECKPOINT_CHUNK_SIZE)]).toEqual(Array.from({length: 32}, () => 1));
+  });
+
+  it("encodes equivalent unordered record arrays to identical canonical wire JSON", async () => {
+    const prepared = await prepareCheckpoint(input());
+    const reordered = {...prepared.manifest, records: [...prepared.manifest.records].reverse()};
+    expect(encodeCheckpointManifest(reordered)).toBe(encodeCheckpointManifest(prepared.manifest));
+  });
+
+  it("honors cancellation before the prepared result is returned, including a one-chunk input", async () => {
+    const controller = new AbortController();
+    const pending = prepareCheckpoint(input(), controller.signal);
+    controller.abort();
+    await expect(pending).rejects.toMatchObject({name: "AbortError"});
+  });
+});
+
+class IndependentTransport implements CheckpointTransport {
+  readonly providerId = "independent-fixture";
+  readonly capabilities = Object.freeze({publication: true, bidirectionalSync: true, backup: true, listing: true, conditionalHead: true, cancellation: true, progress: true, authentication: "none" as const, maxBinaryByteLength: null});
+  lifecycle: "open" | "closed" = "open";
+  readonly manifests = new Map<string, string>();
+  readonly objects = new Map<string, Uint8Array>();
+  readonly heads = new Map<string, string>();
+  writes = 0;
+  commitAbort?: AbortController;
+
+  async putBinary(workspace: WorkspaceId, key: string, bytes: Uint8Array): Promise<void> {
+    const scoped = `${workspace}\0${key}`;
+    const existing = this.objects.get(scoped);
+    if (existing && (existing.length !== bytes.length || existing.some((value, index) => value !== bytes[index]))) {
+      throw new Error("immutable object collision");
+    }
+    this.objects.set(scoped, new Uint8Array(bytes));
+    this.writes += 1;
+  }
+  async putManifest(workspace: WorkspaceId, manifest: CheckpointManifest): Promise<void> {
+    const key = `${workspace}\0${manifest.revisionId}`;
+    const wire = encodeCheckpointManifest(manifest);
+    const existing = this.manifests.get(key);
+    if (existing && existing !== wire) throw new Error("immutable manifest collision");
+    this.manifests.set(key, wire);
+    this.writes += 1;
+  }
+  async readManifest(workspace: WorkspaceId, revision: string): Promise<unknown> {
+    const wire = this.manifests.get(`${workspace}\0${revision}`);
+    if (!wire) throw new Error("missing manifest");
+    return JSON.parse(wire) as unknown;
+  }
+  async readBinary(workspace: WorkspaceId, key: string): Promise<BinarySource> {
+    const bytes = this.objects.get(`${workspace}\0${key}`);
+    if (!bytes) throw new Error("missing object");
+    return new Uint8Array(bytes);
+  }
+  async readHead(workspace: WorkspaceId): Promise<string | null> {
+    return this.heads.get(workspace) ?? null;
+  }
+  async compareAndSwapHead(workspace: WorkspaceId, expected: string | null, revision: string): Promise<{updated: boolean; currentHead: string | null}> {
+    const current = this.heads.get(workspace) ?? null;
+    if (current !== expected) return {updated: false, currentHead: current};
+    this.heads.set(workspace, revision);
+    this.commitAbort?.abort();
+    return {updated: true, currentHead: revision};
+  }
+}
+
+function application(counter: {calls: number}, controller?: AbortController): CheckpointApplicationPort {
+  return {apply: async checkpoint => {
+    counter.calls += 1;
+    controller?.abort();
+    return {kind: "application-receipt", workspaceId: checkpoint.manifest.workspaceId, revisionId: checkpoint.manifest.revisionId, applied: true, alreadyApplied: false};
+  }};
+}
+
+describe("independent strict receive and publication boundaries", () => {
+  it.each(["apiKey", "runtimeOwner", "approval"])('rejects extra record field %s before any application', async key => {
+    const prepared = await prepareCheckpoint(input());
+    const raw = structuredClone(prepared.manifest);
+    Object.assign(raw.records[0]!, {[key]: "forbidden"});
+    expect(() => validateCheckpointManifest(raw)).toThrow(/unsupported field/);
+  });
+
+  it("rejects a safe-looking foreign owned path rather than relying on lexical containment", async () => {
+    const prepared = await prepareCheckpoint(input());
+    const raw = structuredClone(prepared.manifest);
+    Object.assign(raw.binaries[0]!.mediaWorkspaceRef, {relativePath: mediaWorkspaceRef(ws, projectId, "wrong-media").relativePath});
+    expect(() => validateCheckpointManifest(raw)).toThrow(/not canonical/);
+  });
+
+  it("rejects missing and truncated bytes at actual verification", async () => {
+    const prepared = await prepareCheckpoint(input());
+    await expect(verifyCheckpointDelivery(prepared.manifest, new Map())).rejects.toThrow(/missing/);
+    await expect(verifyCheckpointDelivery(prepared.manifest, new Map([["object-é", new Uint8Array([1, 2])]]))).rejects.toThrow(/size|truncated/);
+  });
+
+  it("rejects same-length corruption and unexpected objects", async () => {
+    const prepared = await prepareCheckpoint(input());
+    await expect(verifyCheckpointDelivery(prepared.manifest, new Map([["object-é", new Uint8Array([1, 2, 9])]]))).rejects.toThrow(/hash/);
+    await expect(verifyCheckpointDelivery(prepared.manifest, new Map([["object-é", new Uint8Array([1, 2, 3])], ["unreferenced", new Uint8Array([4])]]))).rejects.toThrow(/unexpected/);
+  });
+
+  it("rejects a self-consistent checkpoint other than the requested revision before application", async () => {
+    const first = await prepareCheckpoint(input());
+    const second = await prepareCheckpoint({...input(), records: input().records.map(record => record.kind === "project" ? {...record, title: "Other"} : record)});
+    const transport = new IndependentTransport();
+    transport.readManifest = async () => second.manifest;
+    const counter = {calls: 0};
+    await expect(deliverCheckpoint(transport, ws, first.manifest.revisionId, application(counter))).rejects.toThrow(/foreign/);
+    expect(counter.calls).toBe(0);
+  });
+
+  it("rejects structurally forged complete-size publication before transport writes", async () => {
+    const prepared = await prepareCheckpoint(input());
+    const forged = {...prepared, binaries: [{entry: prepared.binaries[0]!.entry, bytes: new Uint8Array([9, 9, 9])}]};
+    const transport = new IndependentTransport();
+    await expect(publishCheckpoint(transport, forged, {expectedHead: null})).rejects.toThrow();
+    expect(transport.writes).toBe(0);
+    expect(await transport.readHead(ws)).toBeNull();
+  });
+
+  it("rejects an incomplete prepared bundle before any partial upload", async () => {
+    const prepared = await prepareCheckpoint(input());
+    const transport = new IndependentTransport();
+    await expect(publishCheckpoint(transport, {...prepared, binaries: []}, {expectedHead: null})).rejects.toThrow();
+    expect(transport.writes).toBe(0);
+  });
+
+  it("keeps actual CAS commit authoritative if cancellation arrives at that commit", async () => {
+    const prepared = await prepareCheckpoint(input());
+    const controller = new AbortController();
+    const transport = new IndependentTransport();
+    transport.commitAbort = controller;
+    const result = await publishCheckpoint(transport, prepared, {expectedHead: null, signal: controller.signal});
+    expect(controller.signal.aborted).toBe(true);
+    expect(result.kind).toBe("publication-acknowledgement");
+    expect(await transport.readHead(ws)).toBe(prepared.manifest.revisionId);
+  });
+
+  it("keeps actual application commit authoritative if cancellation arrives within trusted atomic apply", async () => {
+    const prepared = await prepareCheckpoint(input());
+    const transport = new IndependentTransport();
+    await publishCheckpoint(transport, prepared, {expectedHead: null});
+    const counter = {calls: 0};
+    const controller = new AbortController();
+    const result = await deliverCheckpoint(transport, ws, prepared.manifest.revisionId, application(counter, controller), {signal: controller.signal});
+    expect(counter.calls).toBe(1);
+    expect(controller.signal.aborted).toBe(true);
+    expect(result.receipt.applied).toBe(true);
+  });
+
+  it("rejects contradictory successful CAS outcome rather than certifying a different head", async () => {
+    const prepared = await prepareCheckpoint(input());
+    const transport = new IndependentTransport();
+    transport.compareAndSwapHead = async () => ({updated: true, currentHead: `sha256-v1:${"0".repeat(64)}`});
+    await expect(publishCheckpoint(transport, prepared, {expectedHead: null})).rejects.toThrow();
+  });
+
+  it("rejects an application receipt for a different workspace or revision", async () => {
+    const prepared = await prepareCheckpoint(input());
+    const transport = new IndependentTransport();
+    await publishCheckpoint(transport, prepared, {expectedHead: null});
+    const app: CheckpointApplicationPort = {apply: async () => ({kind: "application-receipt", workspaceId: workspaceId("another-workspace"), revisionId: `sha256-v1:${"0".repeat(64)}`, applied: true, alreadyApplied: false})};
+    await expect(deliverCheckpoint(transport, ws, prepared.manifest.revisionId, app)).rejects.toThrow();
+  });
+
+  it("gates a closed provider before any writes or application", async () => {
+    const prepared = await prepareCheckpoint(input());
+    const transport = new IndependentTransport();
+    transport.lifecycle = "closed";
+    await expect(publishCheckpoint(transport, prepared, {expectedHead: null})).rejects.toThrow();
+    expect(transport.writes).toBe(0);
+    const counter = {calls: 0};
+    await expect(deliverCheckpoint(transport, ws, prepared.manifest.revisionId, application(counter))).rejects.toThrow();
+    expect(counter.calls).toBe(0);
+  });
+
+  it("gates a provider without conditional head support before writes", async () => {
+    const prepared = await prepareCheckpoint(input());
+    const transport = new IndependentTransport();
+    Object.defineProperty(transport, "capabilities", {value: Object.freeze({...transport.capabilities, conditionalHead: false})});
+    await expect(publishCheckpoint(transport, prepared, {expectedHead: null})).rejects.toThrow();
+    expect(transport.writes).toBe(0);
+  });
+
+  it("gates a read-only provider and declared binary limit before writes", async () => {
+    const prepared = await prepareCheckpoint(input());
+    for (const overrides of [{publication: false}, {maxBinaryByteLength: 2}]) {
+      const transport = new IndependentTransport();
+      Object.defineProperty(transport, "capabilities", {value: Object.freeze({...transport.capabilities, ...overrides})});
+      await expect(publishCheckpoint(transport, prepared, {expectedHead: null})).rejects.toThrow();
+      expect(transport.writes).toBe(0);
+    }
+  });
+
+  it("retains both immutable byte versions for concurrent descendant publications sharing stable media ID", async () => {
+    const transport = new IndependentTransport();
+    const initial = await prepareCheckpoint(input());
+    await publishCheckpoint(transport, initial, {expectedHead: null});
+    const parentRevisionIds = [initial.manifest.revisionId];
+    const left = await prepareCheckpoint({...input(new Uint8Array([4, 5, 6])), parentRevisionIds});
+    const right = await prepareCheckpoint({...input(new Uint8Array([7, 8, 9])), parentRevisionIds});
+    const outcomes = await Promise.all([
+      publishCheckpoint(transport, left, {expectedHead: initial.manifest.revisionId}),
+      publishCheckpoint(transport, right, {expectedHead: initial.manifest.revisionId}),
+    ]);
+    expect(outcomes.map(outcome => outcome.kind).sort()).toEqual(["publication-acknowledgement", "publication-conflict"]);
+    expect(transport.manifests.size).toBe(3);
+    const observed: number[][] = [];
+    const app: CheckpointApplicationPort = {apply: async checkpoint => {
+      observed.push([...checkpoint.binaries[0]!.bytes]);
+      return {kind: "application-receipt", workspaceId: ws, revisionId: checkpoint.manifest.revisionId, applied: true, alreadyApplied: false};
+    }};
+    await deliverCheckpoint(transport, ws, left.manifest.revisionId, app);
+    await deliverCheckpoint(transport, ws, right.manifest.revisionId, app);
+    expect(observed).toEqual([[4, 5, 6], [7, 8, 9]]);
+  });
+
+  it("retains the validated candidate even when the expected head was stale before publication began", async () => {
+    const transport = new IndependentTransport();
+    const initial = await prepareCheckpoint(input());
+    await publishCheckpoint(transport, initial, {expectedHead: null});
+    const parentRevisionIds = [initial.manifest.revisionId];
+    const winner = await prepareCheckpoint({...input(new Uint8Array([4, 5, 6])), parentRevisionIds});
+    const stale = await prepareCheckpoint({...input(new Uint8Array([7, 8, 9])), parentRevisionIds});
+    await publishCheckpoint(transport, winner, {expectedHead: initial.manifest.revisionId});
+    const outcome = await publishCheckpoint(transport, stale, {expectedHead: initial.manifest.revisionId});
+    expect(outcome).toMatchObject({kind: "publication-conflict", currentHead: winner.manifest.revisionId});
+    expect(await transport.readHead(ws)).toBe(winner.manifest.revisionId);
+    expect(transport.manifests.size).toBe(3);
+    const retained = validateCheckpointManifest(await transport.readManifest(ws, stale.manifest.revisionId));
+    expect(retained.revisionId).toBe(stale.manifest.revisionId);
+    expect(encodeCheckpointManifest(retained)).toBe(encodeCheckpointManifest(stale.manifest));
+  });
+
+  it("binds the CAS expectation to the same ancestry-checked expected head despite caller option mutation", async () => {
+    const transport = new IndependentTransport();
+    const base = await prepareCheckpoint(input());
+    await publishCheckpoint(transport, base, {expectedHead: null});
+    const parentRevisionIds = [base.manifest.revisionId];
+    const winner = await prepareCheckpoint({...input(new Uint8Array([4, 5, 6])), parentRevisionIds});
+    await publishCheckpoint(transport, winner, {expectedHead: base.manifest.revisionId});
+    const candidate = await prepareCheckpoint({...input(new Uint8Array([7, 8, 9])), parentRevisionIds});
+    const options = {expectedHead: base.manifest.revisionId};
+    const pending = publishCheckpoint(transport, candidate, options);
+    options.expectedHead = winner.manifest.revisionId;
+    const outcome = await pending;
+    expect(outcome).toMatchObject({kind: "publication-conflict", expectedHead: base.manifest.revisionId, currentHead: winner.manifest.revisionId});
+    expect(await transport.readHead(ws)).toBe(winner.manifest.revisionId);
+  });
+
+  it("rechecks closed lifecycle after the final progress callback and before head CAS", async () => {
+    const transport = new IndependentTransport();
+    const prepared = await prepareCheckpoint(input());
+    const pending = publishCheckpoint(transport, prepared, {expectedHead: null, onProgress: progress => {
+      if (progress.phase === "manifest") transport.lifecycle = "closed";
+    }});
+    await expect(pending).rejects.toThrow(/closed/);
+    expect(await transport.readHead(ws)).toBeNull();
+  });
+});
+
+describe("independent fixture commit boundaries", () => {
+  it("aborts while awaiting before-commit work without changing prior fixture state or ledger", async () => {
+    const transport = new CheckpointTransportFixture();
+    const prepared = await prepareCheckpoint(checkpointFixtureInput());
+    await publishCheckpoint(transport, prepared, {expectedHead: null});
+    const state = new CheckpointDeviceFixture("/independent-disposable-device/root");
+    const controller = new AbortController();
+    state.onBeforeCommit = async () => { await Promise.resolve(); controller.abort(); };
+    await expect(deliverCheckpoint(transport, fixtureWorkspaceId, prepared.manifest.revisionId, state, {signal: controller.signal})).rejects.toMatchObject({name: "AbortError"});
+    expect(state.state.records.size).toBe(0);
+    expect(state.state.files.size).toBe(0);
+    expect(state.state.appliedRevisions.size).toBe(0);
+    expect(state.state.commitCount).toBe(0);
+  });
+
+  it("reports success after actual fixture commit if cancellation arrives in after-commit work", async () => {
+    const transport = new CheckpointTransportFixture();
+    const prepared = await prepareCheckpoint(checkpointFixtureInput());
+    await publishCheckpoint(transport, prepared, {expectedHead: null});
+    const state = new CheckpointDeviceFixture("/independent-disposable-device/root");
+    const controller = new AbortController();
+    state.onAfterCommit = () => controller.abort();
+    const result = await deliverCheckpoint(transport, fixtureWorkspaceId, prepared.manifest.revisionId, state, {signal: controller.signal});
+    expect(result.receipt.applied).toBe(true);
+    expect(state.state.commitCount).toBe(1);
+  });
+});

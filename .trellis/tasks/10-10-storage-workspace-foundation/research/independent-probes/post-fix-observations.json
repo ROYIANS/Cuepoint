@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-10",
+  "runtime": "Node v24.11.0, macOS, Vitest 5.0.1, fake-indexeddb",
+  "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/workspaceReviewProbe.test.ts --reporter=verbose --silent=false",
+  "testResult": "2 repaired behavior/measurement probes passed",
+  "sourceSha256": {
+    "src/lib/workspace.ts": "bef1650cee404e8cf50460edf3fd90315dbeb64ffb5125c0be621734d0f69df9",
+    "src/lib/sha256.ts": "639e86426c7ba06930e5820c9fa13fc1d565f15b16dde58783a011139f7b5dc4",
+    "tests/helpers/workspaceBinaryFixture.ts": "fb70bbb3897757b34a3f3a96fb56371c9e5b29f10b408f791b73364465127f66",
+    "probe": "08ae8f967115014bd0ee73fc3ac9dc5f909facf7d02f2f4e3033d62a3cdac020"
+  },
+  "importCost": [
+    {
+      "mode": "original",
+      "mib": 32,
+      "elapsedMs": 1.4358339999999998,
+      "longestGapMs": 2.2263749999999902,
+      "arrayBuffersBefore": 33579687,
+      "arrayBuffersAfter": 33579687,
+      "rssBefore": 169328640,
+      "rssAfter": 169345024
+    },
+    {
+      "mode": "managed",
+      "mib": 32,
+      "elapsedMs": 581.988375,
+      "longestGapMs": 6.79412499999998,
+      "arrayBuffersBefore": 33579732,
+      "arrayBuffersAfter": 71066748,
+      "rssBefore": 169426944,
+      "rssAfter": 208338944
+    },
+    {
+      "mode": "original",
+      "mib": 128,
+      "elapsedMs": 0.36954199999991033,
+      "longestGapMs": 1.4415840000000344,
+      "arrayBuffersBefore": 335569575,
+      "arrayBuffersAfter": 335569575,
+      "rssBefore": 477003776,
+      "rssAfter": 477020160
+    },
+    {
+      "mode": "managed",
+      "mib": 128,
+      "elapsedMs": 2280.0285000000003,
+      "longestGapMs": 9.849333999999999,
+      "arrayBuffersBefore": 335577812,
+      "arrayBuffersAfter": 335569575,
+      "rssBefore": 477069312,
+      "rssAfter": 610664448
+    }
+  ],
+  "pathObservation": "Case-folded locations for Project/Media vs project/media are distinct",
+  "fixtureObservation": "Same arrangement missing-reference seed returns 11 references, one resolved embedded take identity, 10 missing-reference issues; missing project owner also explicit",
+  "limits": [
+    "Same importer and original putMedia owner are exercised; fake IndexedDB does not model real browser disk cost",
+    "Event-loop delay measures actual synchronous JavaScript blocking on this runtime, not a browser rendering benchmark",
+    "Memory samples are before/after process observations, not exclusive allocations, peak memory or a guaranteed browser RSS bound",
+    "Zero-filled Files exercise byte-count/hash cost, not media decoding or provider quality"
+  ]
+}

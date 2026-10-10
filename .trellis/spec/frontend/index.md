@@ -39,6 +39,8 @@
 | [Audio / Music Workspaces](./audio-music.md) | Project kinds, audio records, CAS editing, generation recovery/approval, MIME and ZIP | Filled |
 | [Voice Batches / Arrangement](./audio-batch-arrangement.md) | v24 batches, exact confirmation, bounded retry, take selection and retained-clip placement | Filled |
 | [State Management](./state-management.md) | IndexedDB owner id, episodes, STUDIO_LIBRARY_ID | Filled |
+| [Managed Workspace](./workspace-storage.md) | Browser copy staging, cross-platform owned paths, incremental hashing and native boundaries | Filled |
+| [Checkpoint / Sync Provider](./checkpoint-protocol.md) | Partial immutable fixture checkpoints, verified binary closure, conditional publication and application receipts | Filled |
 | [IP / Material Library](./ip-material-library.md) | Multi-IP profiles, owned immutable snapshots, explicit adoption and retention | Filled |
 | [Asset / Output Foundation](./asset-output-foundation.md) | Optional metadata, prop/style relationships, media reuse and APIMart output profiles | Filled |
 | [Production Contracts](./production-contracts.md) | Handoff ZIP, scoped context, reviewed proposals and Dexie v7 | Filled |
