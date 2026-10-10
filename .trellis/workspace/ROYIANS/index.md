@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 46
+- **Total Sessions**: 47
 - **Last Active**: 2026-10-10
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~1217 | Active |
+| `journal-1.md` | ~1240 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 47 | 2026-10-10 | 清空七条 Trellis 存量：Agent 执行核验与批量音频验收 | `b23172a7`, `a94e84be` | `codex/complete-trellis-backlog` |
 | 46 | 2026-10-10 | 归档已完成源码审查与A/B，启动存量任务完结 | `8b8fcf46` | `codex/complete-trellis-backlog` |
 | 45 | 2026-10-09 | 源码整改E提交及A到E总任务归档 | `578bbbef4cc1660bca34f5d7eb4dff304924f589`, `202c662126b5e128e0e3da7d44a00471e18f9915`, `a66c40908eeb34227686592c79d2d2dee3081d48` | `main` |
 | 44 | 2026-10-08 | 源码整改D提交归档并暂停 | `d4384975e414b070065d757387df4b3f170ca8d5`, `502b8ae1dced383d9c97e435f7d4dce045c877f2`, `ec68cb004f4e92a742bf2a7bc6b4813557b238cb`, `79f05d5a4c08fa4424a20db8570343a88fbef9f9` | `main` |

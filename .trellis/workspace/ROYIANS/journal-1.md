@@ -1215,3 +1215,26 @@ E 与总整改任务已由 task.py archive 归档到 `.trellis/tasks/archive/202
 ### Next Steps
 
 - 完成R1/R2代码与独立验收，规划实现R3/R4并补真实模型和设备验收；未完成项保持活跃。
+
+
+## Session 47: 清空七条 Trellis 存量：Agent 执行核验与批量音频验收
+<!-- trellis-session: v=2 fp=9d175d951ccf3938 -->
+
+**Date**: 2026-10-10
+**Task**: 清空七条 Trellis 存量：Agent 执行核验与批量音频验收
+**Branch**: `codex/complete-trellis-backlog`
+
+### Summary
+
+完成七条存量的开发、独立检查、真实模型/供应商/麦克风和原生 UI 验收后全部归档；活跃任务 0，180 文件/3221 测试通过及 1 跳过，全量 quality/typecheck/build/model-bank 通过。未来范围明确保留，私密录音仅本机。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `b23172a7` | feat: 完善 Agent 执行核验与批量音频制作 |
+| `a94e84be` | docs: 完成存量任务验收并同步开发契约 |
+
+### Status
+
+[OK] **Completed**
