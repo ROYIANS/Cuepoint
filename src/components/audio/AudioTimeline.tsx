@@ -32,6 +32,7 @@ import {buildAudioSchedule} from "@/lib/audio/schedule";
 import {createWaveformPeaks} from "@/lib/audio/waveform";
 import {formatTimelineTick, snapTimelinePosition, timelineClipLabel, timelineGeometry} from "@/lib/audio/timeline";
 import {downloadBlob} from "@/lib/projectPackage";
+import {isPublishedSaveError, type SaveResult} from "@/lib/runtimeSave";
 import {isFormFieldTarget} from "@/lib/formFieldFocus";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
@@ -242,8 +243,19 @@ export function AudioTimeline({
 
     async function exportMix() {
         const result = await exportAudioMix({projectId, projectName, chapterId, scope: exportScope});
-        downloadBlob(result.blob, result.filename);
-        setNotice(result.attenuation < 1 ? `已导出 WAV；为避免削波，整体降低 ${Math.abs(result.attenuationDb).toFixed(1)} dB。` : "WAV 已保存到项目并开始下载。");
+        let outcome: SaveResult;
+        try {
+            outcome = await downloadBlob(result.blob, result.filename);
+        } catch (error) {
+            if (!isPublishedSaveError(error)) throw error;
+            setNotice(error.message);
+            return;
+        }
+        if (outcome === "canceled") {
+            setNotice("WAV 已保存到项目，已取消另存文件。");
+            return;
+        }
+        setNotice(result.attenuation < 1 ? `已导出 WAV；为避免削波，整体降低 ${Math.abs(result.attenuationDb).toFixed(1)} dB。` : "WAV 已保存到项目并导出。");
     }
 
     async function removeClip(clip: AudioClip) {
@@ -702,7 +714,7 @@ function ClipInspector({clip, tracks, title, busy, save, remove}: {
         <div className="at-inspector-grid">{(Object.keys(fields) as Array<keyof typeof fields>).map((key) => <Field
             key={key} label={`${fields[key]}${key === "gain" ? "" : "（秒）"}`}><Input type="number" min={0}
                                                                                      max={key === "gain" ? 4 : undefined}
-                                                                                     step={.01} required
+                                                                                     step="any" required
                                                                                      value={values[key]}
                                                                                      onChange={(event) => setValues({
                                                                                          ...values,

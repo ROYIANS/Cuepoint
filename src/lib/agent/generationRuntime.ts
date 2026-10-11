@@ -40,6 +40,7 @@ import {ToolPendingError} from "./toolErrors";
 import type {GenerationSubmitArgs} from "./generationProfiles";
 import {loadGenerationInputs, prepareGenerationSnapshot, resolveGenerationConnector} from "./generationPreparation";
 import {readGenerationTarget} from "@/db/agentGenerationTarget";
+import {runtimeResultFetch} from "@/lib/runtimeFetch";
 
 export interface GenerationRuntimeOptions {
     fetchImpl?: typeof fetch;
@@ -404,7 +405,7 @@ export async function checkAgentGeneration(jobId: string, context: Pick<AgentToo
             error: undefined
         });
         // Public signed CDN result: never attach connector credentials or cookies.
-        const download = await (options.fetchImpl ?? fetch)(url.href, {
+        const download = await (options.fetchImpl ?? runtimeResultFetch)(url.href, {
             signal: context.signal,
             credentials: "omit",
             redirect: "error"

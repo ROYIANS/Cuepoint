@@ -16,7 +16,7 @@ required-features = ["test-hooks"]
 [features]
 default = []
 test-hooks = []
-desktop = ["dep:tauri", "dep:tauri-build", "dep:tauri-plugin-dialog"]
+desktop = ["dep:tauri", "dep:tauri-build", "dep:tauri-plugin-dialog", "dep:tauri-plugin-http", "dep:tauri-plugin-opener", "dep:objc2", "dep:objc2-foundation", "dep:objc2-app-kit", "dep:objc2-web-kit"]
 acceptance = ["desktop"]
 
 [[bin]]
@@ -32,6 +32,18 @@ sha2 = "=0.11.0"
 uuid = { version = "=1.28.0", features = ["v4"] }
 tauri = { version = "=2.12.2", optional = true , features = [] }
 tauri-plugin-dialog = { version = "=2.8.1", optional = true }
+tauri-plugin-http = { version = "=2.8.2", optional = true, default-features = false, features = ["rustls-tls", "http2", "charset", "system-proxy"] }
+tauri-plugin-opener = { version = "=2.5.4", optional = true, default-features = false }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = { version = "=0.6.5", optional = true }
+objc2-foundation = { version = "=0.3.2", optional = true, default-features = false, features = ["std", "NSObject", "NSGeometry"] }
+objc2-app-kit = { version = "=0.3.2", optional = true, default-features = false, features = ["std", "NSPrintInfo", "NSPrintOperation", "NSResponder", "NSWindow"] }
+objc2-web-kit = { version = "=0.3.2", optional = true, default-features = false, features = ["std", "WKWebView", "objc2-app-kit"] }
 
 [build-dependencies]
 tauri-build = { version = "=2.7.1", optional = true , features = [] }
+
+[patch.crates-io]
+# Official HTTP 2.8.2; pending-body cancellation patch and upstream provenance are kept in vendor/.
+tauri-plugin-http = { path = "vendor/tauri-plugin-http" }

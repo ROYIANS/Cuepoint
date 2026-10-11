@@ -4,8 +4,10 @@ import {createRouter, RouterProvider} from "@tanstack/react-router";
 import {routeTree} from "./routeTree.gen";
 import {initUmami} from "@/lib/umami";
 import {createProductRouterHistory} from "@/lib/productRouterHistory";
+import {installNativeExternalLinks} from "@/lib/runtimeExternalLinks";
 
 initUmami();
+installNativeExternalLinks();
 
 const router = createRouter({routeTree, history: createProductRouterHistory()});
 

@@ -31,6 +31,7 @@ import {Input} from "@/components/ui/input";
 import {formatUpdatedAt} from "@/lib/format";
 import {filterAndSortLibrary, type LibrarySort} from "@/lib/library";
 import {downloadBlob, exportProjectZip,} from "@/lib/projectPackage";
+import {isPublishedSaveError} from "@/lib/runtimeSave";
 import {ASPECT_PRESET_IDS, ASPECT_PRESETS, type AspectPresetId, type ProjectMode,} from "@/domain/types";
 import {ProjectIpPicker} from "./ProjectIpPicker";
 import {Plus} from "lucide-react";
@@ -41,7 +42,7 @@ import {PageContent, PageState, PageToolbar} from "@/components/layout/PageLayou
 export function ProjectGalleryPage() {
     const repository = useVideoWorkspaceRepository();
     const readStatus = useVideoWorkspaceReadStatus();
-    const native = repository.runtime === "native";
+    const sqlite = repository.storage === "sqlite";
     const navigate = useNavigate();
     const activeRef = useRef(true);
     useEffect(() => {
@@ -69,7 +70,7 @@ export function ProjectGalleryPage() {
     const [submitting, setSubmitting] = useState(false);
     const creatingRef = useRef(false);
     const selectedKind = PROJECT_KINDS.find((kind) => kind.id === createKind)!;
-    const creationAvailable = selectedKind.available && (!native || createKind === "video");
+    const creationAvailable = selectedKind.available && (!sqlite || createKind === "video");
     let createLabel = creationAvailable ? "创建项目" : "即将推出";
     if (submitting) createLabel = "创建中…";
     const filteredKind = PROJECT_KINDS.find((kind) => kind.id === kindFilter);
@@ -213,7 +214,7 @@ export function ProjectGalleryPage() {
                                    onClick={() => setKindFilter(kind.id)}
                                    className={cn("flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-ring", kindFilter === kind.id ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50")}>
                         <Icon className="size-4" aria-hidden/>{kind.label}
-                        {(!kind.available || native && kind.id !== "video") && <span className="text-muted-foreground text-[10px]">即将推出</span>}
+                        {(!kind.available || sqlite && kind.id !== "video") && <span className="text-muted-foreground text-[10px]">即将推出</span>}
                     </button>;
                 })}
             </div>
@@ -259,7 +260,7 @@ export function ProjectGalleryPage() {
                                         label: "项目素材",
                                         onSelect: () => void navigate({to: "/assets", search: {project: project.id}}),
                                     },
-                                    ...(!native ? [{
+                                    ...(!sqlite ? [{
                                         label: "所属 IP",
                                         onSelect: () => {
                                             if (bindingRef.current) return;
@@ -286,15 +287,19 @@ export function ProjectGalleryPage() {
                                             setRenameValue(project.name);
                                         },
                                     },
-                                    ...(!native ? [{
+                                    ...(!sqlite ? [{
                                         label: "备份项目（zip）",
                                         onSelect: () => {
                                             void flushPendingDrafts(project.id)
                                                 .then(() => exportProjectZip(project.id))
                                                 .then((blob) => downloadBlob(blob, `${project.name}.zip`))
-                                                .catch((error: unknown) => toast.error(
-                                                    error instanceof Error ? `备份失败：${error.message}` : "备份失败，请重试",
-                                                ));
+                                                .then((outcome) => {
+                                                    if (outcome === "canceled") toast.info("已取消保存项目备份");
+                                                })
+                                                .catch((error: unknown) => {
+                                                    if (isPublishedSaveError(error)) toast.warning(error.message);
+                                                    else toast.error(error instanceof Error ? `备份失败：${error.message}` : "备份失败，请重试");
+                                                });
                                         },
                                     }] : []),
                                     {
@@ -331,7 +336,7 @@ export function ProjectGalleryPage() {
                                                onClick={() => setCreateKind(kind.id)}
                                                className={cn("flex min-h-24 flex-col items-center justify-center gap-2 rounded-xl border px-2 py-3 text-sm focus-visible:outline-2 focus-visible:outline-ring", createKind === kind.id ? "border-brand bg-brand/5" : "text-muted-foreground hover:bg-muted/50")}>
                                     <Icon className="size-5" aria-hidden/><span>{kind.label}</span>
-                                    <span className="text-[10px]">{kind.available && (!native || kind.id === "video") ? "已开放" : "即将推出"}</span>
+                                    <span className="text-[10px]">{kind.available && (!sqlite || kind.id === "video") ? "已开放" : "即将推出"}</span>
                                 </button>;
                             })}
                         </div>
@@ -400,7 +405,7 @@ export function ProjectGalleryPage() {
                                 </p>
                             </fieldset>
                         </>}
-                        {!native && <div className="space-y-2"><span className="text-sm font-medium">所属 IP</span><ProjectIpPicker
+                        {!sqlite && <div className="space-y-2"><span className="text-sm font-medium">所属 IP</span><ProjectIpPicker
                             value={createIpId} onChange={setCreateIpId} disabled={submitting}/></div>}
                         <p className="text-muted-foreground text-xs leading-5">项目类型创建后固定。可选择所属
                             IP，也可以独立创作。</p>
@@ -425,7 +430,7 @@ export function ProjectGalleryPage() {
             }}>
                 <DialogContent><DialogHeader><DialogTitle>项目所属 IP</DialogTitle><DialogDescription>{binding?.name} ·
                     关联仅整理项目归属，不会改写已有内容。</DialogDescription></DialogHeader>
-                    {!native && <ProjectIpPicker value={binding?.ipId ?? null}
+                    {!sqlite && <ProjectIpPicker value={binding?.ipId ?? null}
                                      onChange={(ipId) => setBinding((value) => value ? {...value, ipId} : value)}
                                      disabled={bindingBusy}/>}
                     {bindingError && <p role="alert" className="text-destructive text-sm">{bindingError}</p>}
@@ -475,7 +480,7 @@ export function ProjectGalleryPage() {
                     <AlertDialogHeader>
                         <AlertDialogTitle>删除项目</AlertDialogTitle>
                         <AlertDialogDescription>
-                            {native ? "删除后，项目记录及素材关联无法恢复。已复制到工作区的文件副本会暂时保留，此操作不会释放它们占用的磁盘空间。" : "删除后无法恢复（除非你已经备份过项目）。"}
+                            {sqlite ? "删除后，项目记录及素材关联无法恢复。已复制到工作区的文件副本会暂时保留，此操作不会释放它们占用的磁盘空间。" : "删除后无法恢复（除非你已经备份过项目）。"}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     {deleteError && <p role="alert" className="text-destructive text-sm">{deleteError}</p>}

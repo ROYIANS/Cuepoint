@@ -1,6 +1,7 @@
 import {switchMusicVariant} from "./switchMusicVariant";
 import {Disclosure, DisclosureTitle, SelectOption, WorkspaceSelect} from "@/components/audioMusic/controls";
 import {useEffect, useRef, useState} from "react";
+import {toast} from "sonner";
 import {useLiveQuery} from "dexie-react-hooks";
 import {Copy, Download, Heart, Library, Pause, Play, Plus, Search, X} from "lucide-react";
 import {db} from "@/db/database";
@@ -11,6 +12,7 @@ import {defaultMusicSettings, type MusicSettings, type MusicWork} from "@/domain
 import {flushPendingDrafts} from "@/lib/debouncedDraft";
 import {DraftConflictError} from "@/lib/draftConflict";
 import {downloadBlob} from "@/lib/projectPackage";
+import {isPublishedSaveError} from "@/lib/runtimeSave";
 import {Button} from "@/components/ui/button";
 import {PageHeader, PageState, PageToolbar} from "@/components/layout/PageLayout";
 import {Input} from "@/components/ui/input";
@@ -242,7 +244,12 @@ function MusicDetails({work, busy, action, reuse}: {
                                                                                                        onClick={() => void action(async () => {
                                                                                                            const media = await db.media.get(work.mediaId);
                                                                                                            if (!media) throw new Error("原始音频不可用");
-                                                                                                           downloadBlob(media.blob, media.filename);
+                                                                                                           try {
+                                                                                                               await downloadBlob(media.blob, media.filename);
+                                                                                                           } catch (error) {
+                                                                                                               if (isPublishedSaveError(error)) toast.warning(error.message);
+                                                                                                               else throw error;
+                                                                                                           }
                                                                                                        })}><Download/>下载</Button>
         </div>
         <section><h3>歌词</h3><p className="aw-lyrics">{work.lyrics || "这首作品没有返回歌词。"}</p></section>

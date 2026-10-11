@@ -354,7 +354,7 @@ export async function streamChatCompletions(
     if (!model) return {ok: false, message: "请选择模型"};
     if (input.messages.length === 0) return {ok: false, message: "消息不能为空"};
 
-    const fetchImpl = handlers.fetchImpl ?? fetch;
+    const fetchImpl = handlers.fetchImpl;
     const signal = handlers.signal;
     const startedAt = Date.now();
     let firstTokenAt: number | undefined;

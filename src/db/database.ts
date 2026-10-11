@@ -1,3 +1,4 @@
+import {getProductStorage} from "@/lib/productStorage";
 import {recoverLegacyText} from "@/domain/legacyScalar";
 import type {
     AudioChapter,
@@ -109,7 +110,7 @@ class AifenjingDB extends Dexie {
     chatMessages!: Table<ChatMessage, string>;
 
     constructor() {
-        super("aifenjing");
+        super(getProductStorage().databaseName);
         this.version(1).stores({
             projects: "id, updatedAt",
             characters: "id, projectId, updatedAt",

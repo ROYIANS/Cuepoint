@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { isTauriRuntime } from "@/lib/runtimeIdentity";
 import { DraftConflictError } from "@/lib/draftConflict";
 import type { Shot, StoryBeat, ShotFilters } from "@/domain/types";
 
@@ -195,10 +196,7 @@ declare global {
 }
 
 export function isNativeWorkspaceRuntime(): boolean {
-  return (
-    typeof window !== "undefined" &&
-    typeof window.__TAURI_INTERNALS__?.invoke === "function"
-  );
+  return isTauriRuntime();
 }
 
 function assertActionResult(action: NativeAction, result: NativeResult): void {

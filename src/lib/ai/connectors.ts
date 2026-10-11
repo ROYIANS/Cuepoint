@@ -6,6 +6,7 @@ import {listAIHubMixModels, testAIHubMixConnection} from "@/lib/ai/aihubmix";
 import {getConnectorDefinition} from "@/lib/ai/catalog";
 import {type ChatModelConnector, chatModelIssue, requiresChatModelVerification} from "@/lib/ai/chatModelPolicy";
 import {listModels, type ListModelsResult, testConnection, type TestConnectionResult,} from "@/lib/ai/openaiCompatible";
+import {connectorProbeFetch} from "@/lib/runtimeFetch";
 
 type ConnectorAccess = Pick<ConnectorConfig, "definitionId" | "baseUrl" | "apiKey">;
 
@@ -18,6 +19,7 @@ export async function discoverConnectorChatModels(
     connector: ConnectorAccess,
     options: { fetchImpl?: typeof fetch; signal?: AbortSignal } = {},
 ): Promise<ChatModelDiscoveryResult> {
+    options = {...options, fetchImpl: connectorProbeFetch(connector.baseUrl, options.fetchImpl)};
     if (connector.definitionId === "mimo") {
         const result = await listMimoModels(connector, options);
         return result.ok ? {
@@ -102,8 +104,9 @@ export async function runWithCompatibleChatModel<T>(
 export async function listConnectorModels(
     connector: ConnectorAccess,
     usage: "all" | "chat" = "all",
-    fetchImpl: typeof fetch = fetch,
+    fetchImpl?: typeof fetch,
 ): Promise<ListModelsResult> {
+    fetchImpl = connectorProbeFetch(connector.baseUrl, fetchImpl);
     if (connector.definitionId === "mimo" && usage === "all") return listMimoModels(connector, {fetchImpl});
     if (usage === "chat") {
         const result = await discoverConnectorChatModels(connector, {fetchImpl});
@@ -131,8 +134,9 @@ export type ConnectorTestResult = TestConnectionResult | { ok: true; via: "authe
 /** Dedicated media providers never fall back to a paid POST for connection testing. */
 export async function testConnectorConnection(
     connector: ConnectorAccess,
-    fetchImpl: typeof fetch = fetch,
+    fetchImpl?: typeof fetch,
 ): Promise<ConnectorTestResult> {
+    fetchImpl = connectorProbeFetch(connector.baseUrl, fetchImpl);
     if (connector.definitionId === "mimo") {
         const result = await listMimoModels(connector, {fetchImpl});
         return result.ok ? {ok: true, via: "models", modelCount: result.models.length} : result;

@@ -50,7 +50,7 @@ export function ProjectHomePage({projectId}: { projectId: string }) {
         className="text-muted-foreground p-8 text-sm">加载项目…</div>;
     if (project === null) return <div className="text-muted-foreground p-8 text-sm">找不到这个项目</div>;
 
-    if (repository.runtime === "native" && project.kind !== undefined && project.kind !== "video") {
+    if (repository.storage === "sqlite" && project.kind !== undefined && project.kind !== "video") {
         return <WorkspaceCapabilityState title="此项目类型尚未接入原生工作区"/>;
     }
     if (project?.kind === "audio") return <AudioWorkspacePage key={projectId} projectId={projectId}/>;

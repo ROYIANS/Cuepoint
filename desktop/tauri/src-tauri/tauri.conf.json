@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "identifier": "dev.cuepoint.prototype.offline",
   "build": {"frontendDist": "../dist/normal"},
+  "plugins": {"http": {"scopeRedirects": true}},
   "app": {
     "withGlobalTauri": false,
     "windows": [{"label": "main", "create": false, "title": "小光点 · 原生工作区原型", "width": 1120, "height": 780, "minWidth": 760, "minHeight": 520}],

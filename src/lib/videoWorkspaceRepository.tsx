@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, type DependencyList } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/database";
+import { usesSqliteProductStorage, type ProductStorageOwner } from "@/lib/productStorage";
 import * as episodeCommands from "@/db/episodes";
 import * as projectCommands from "@/db/projects";
 import * as shotCommands from "@/db/shots";
@@ -13,7 +14,6 @@ import { emptyProject } from "@/db/productionRecords";
 import { emptySlot } from "@/domain/slot";
 import {
   nativeWorkspace,
-  isNativeWorkspaceRuntime,
   type NativeBeat,
   type NativeEpisode,
   type NativeShot,
@@ -27,7 +27,7 @@ import type {
   VideoWorkspaceUndoAction,
 } from "@/domain/videoWorkspace";
 
-const NATIVE_CAPABILITIES: VideoWorkspaceCapability[] = [
+const SQLITE_CAPABILITIES: VideoWorkspaceCapability[] = [
   {
     id: "world",
     status: "unavailable",
@@ -50,8 +50,8 @@ const NATIVE_CAPABILITIES: VideoWorkspaceCapability[] = [
   },
   { id: "sync", status: "unavailable", reason: "同步插件尚未配置" },
 ];
-const BROWSER_CAPABILITIES: VideoWorkspaceCapability[] =
-  NATIVE_CAPABILITIES.map((item) => ({
+const INDEXEDDB_CAPABILITIES: VideoWorkspaceCapability[] =
+  SQLITE_CAPABILITIES.map((item) => ({
     ...item,
     status: "available",
     reason: undefined,
@@ -156,17 +156,17 @@ function shotFromNative(shot: NativeShot): Shot {
 }
 
 class VideoRepository {
-  constructor(readonly runtime: "browser" | "native") {}
+  constructor(readonly storage: ProductStorageOwner) {}
   capabilities() {
-    return this.runtime === "browser"
-      ? BROWSER_CAPABILITIES
-      : NATIVE_CAPABILITIES;
+    return this.storage === "indexeddb"
+      ? INDEXEDDB_CAPABILITIES
+      : SQLITE_CAPABILITIES;
   }
   capability(id: VideoWorkspaceCapability["id"]) {
     return this.capabilities().find((item) => item.id === id)!;
   }
   async projects(): Promise<Project[]> {
-    if (this.runtime === "browser") return db.projects.toArray();
+    if (this.storage === "indexeddb") return db.projects.toArray();
     const state = await nativeWorkspace.ensure();
     return Promise.all(
       state.projects.map(async (row) =>
@@ -175,13 +175,13 @@ class VideoRepository {
     );
   }
   async project(id: string): Promise<Project | null> {
-    if (this.runtime === "browser") return (await db.projects.get(id)) ?? null;
+    if (this.storage === "indexeddb") return (await db.projects.get(id)) ?? null;
     const state = await nativeWorkspace.ensure();
     if (!state.projects.some((row) => row.id === id)) return null;
     return projectFromNative(await nativeWorkspace.videoState(id));
   }
   async episodes(projectId: string): Promise<Episode[]> {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return episodeCommands.listEpisodes(projectId);
     const state = await nativeWorkspace.videoState(projectId);
     return state.episodes
@@ -189,7 +189,7 @@ class VideoRepository {
       .sort((a, b) => a.order - b.order);
   }
   async episode(id: string): Promise<Episode | null> {
-    if (this.runtime === "browser") return (await db.episodes.get(id)) ?? null;
+    if (this.storage === "indexeddb") return (await db.episodes.get(id)) ?? null;
     const state = await nativeWorkspace.state();
     const row = state.episodes.find((item) => item.id === id);
     return row ? episodeFromNative(row, state.beats) : null;
@@ -205,7 +205,7 @@ class VideoRepository {
     );
   }
   async shots(episodeId: string): Promise<Shot[]> {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return db.shots.where("episodeId").equals(episodeId).sortBy("order");
     const state = await nativeWorkspace.state();
     return state.shots
@@ -214,40 +214,40 @@ class VideoRepository {
       .map(shotFromNative);
   }
   async projectShots(projectId: string): Promise<Shot[]> {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return db.shots.where("projectId").equals(projectId).toArray();
     return (await nativeWorkspace.videoState(projectId)).shots.map(
       shotFromNative,
     );
   }
   async characters(projectId: string) {
-    return this.runtime === "browser"
+    return this.storage === "indexeddb"
       ? db.characters.where("projectId").equals(projectId).toArray()
       : [];
   }
   async scenes(projectId: string) {
-    return this.runtime === "browser"
+    return this.storage === "indexeddb"
       ? db.scenes.where("projectId").equals(projectId).toArray()
       : [];
   }
   async props(projectId: string) {
-    return this.runtime === "browser"
+    return this.storage === "indexeddb"
       ? db.props.where("projectId").equals(projectId).toArray()
       : [];
   }
   async styles(projectId: string) {
-    return this.runtime === "browser"
+    return this.storage === "indexeddb"
       ? db.styles.where("projectId").equals(projectId).toArray()
       : [];
   }
   async ipProfiles() {
-    return this.runtime === "browser" ? db.ipProfiles.toArray() : [];
+    return this.storage === "indexeddb" ? db.ipProfiles.toArray() : [];
   }
   async projectIpLinks() {
-    return this.runtime === "browser" ? db.projectIpLinks.toArray() : [];
+    return this.storage === "indexeddb" ? db.projectIpLinks.toArray() : [];
   }
   async projectCoverIds(ids: string[]) {
-    return this.runtime === "browser"
+    return this.storage === "indexeddb"
       ? readProjectCoverIds(ids)
       : new Map<string, string>();
   }
@@ -268,7 +268,7 @@ class VideoRepository {
   async createProject(
     ...args: Parameters<typeof projectCommands.createProject>
   ): Promise<Project> {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return projectCommands.createProject(...args);
     const [name, mode = "film", aspectPreset = "16:9", ipId] = args;
     if (ipId) unsupported();
@@ -308,14 +308,14 @@ class VideoRepository {
   async createAudioMusicProject(
     ...args: Parameters<typeof projectCommands.createAudioMusicProject>
   ) {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return projectCommands.createAudioMusicProject(...args);
     unsupported();
   }
   async renameProject(
     ...args: Parameters<typeof projectCommands.renameProject>
   ) {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return projectCommands.renameProject(...args);
     await nativeWorkspace.request({
       type: "project",
@@ -326,7 +326,7 @@ class VideoRepository {
   async deleteProject(
     ...args: Parameters<typeof cascadeCommands.deleteProject>
   ) {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return cascadeCommands.deleteProject(...args);
     await nativeWorkspace.command({
       type: "deleteProject",
@@ -337,7 +337,7 @@ class VideoRepository {
   async setProjectArchived(
     ...args: Parameters<typeof cascadeCommands.setProjectArchived>
   ) {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return cascadeCommands.setProjectArchived(...args);
     await nativeWorkspace.command({
       type: "patchVideoProject",
@@ -347,13 +347,13 @@ class VideoRepository {
     notify();
   }
   async bindProjectIp(...args: Parameters<typeof bindProjectIp>) {
-    if (this.runtime === "browser") return bindProjectIp(...args);
+    if (this.storage === "indexeddb") return bindProjectIp(...args);
     unsupported();
   }
   async patchProjectDetails(
     ...args: Parameters<typeof projectCommands.patchProjectDetails>
   ) {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return projectCommands.patchProjectDetails(...args);
     const [id, patch, baseline] = args;
     if (
@@ -413,7 +413,7 @@ class VideoRepository {
   async patchProjectOutput(
     ...args: Parameters<typeof projectCommands.patchProjectOutput>
   ) {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return projectCommands.patchProjectOutput(...args);
     if ("coverMediaId" in args[1]) unsupported();
     await this.patchProjectDetails(args[0], args[1]);
@@ -421,7 +421,7 @@ class VideoRepository {
   async updateSeriesLogline(
     ...args: Parameters<typeof projectCommands.updateSeriesLogline>
   ) {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return projectCommands.updateSeriesLogline(...args);
     await nativeWorkspace.command({
       type: "patchVideoProject",
@@ -437,7 +437,7 @@ class VideoRepository {
   async updateShotSettings(
     ...args: Parameters<typeof projectCommands.updateShotSettings>
   ) {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return projectCommands.updateShotSettings(...args);
     await this.withOwnerMutation(`project-settings:${args[0]}`, async () => {
       const state = await nativeWorkspace.videoState(args[0]);
@@ -452,7 +452,7 @@ class VideoRepository {
   async setVisibleColumns(
     ...args: Parameters<typeof projectCommands.setVisibleColumns>
   ) {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return projectCommands.setVisibleColumns(...args);
     await nativeWorkspace.command({
       type: "patchVideoProject",
@@ -462,12 +462,12 @@ class VideoRepository {
     notify();
   }
   async ensureFirstEpisode(projectId: string): Promise<Episode> {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return episodeCommands.ensureFirstEpisode(projectId);
     return (await this.episodes(projectId))[0] ?? this.addEpisode(projectId);
   }
   async addEpisode(projectId: string): Promise<Episode> {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return episodeCommands.addEpisode(projectId);
     const row = await nativeWorkspace.createEpisode(projectId);
     notify();
@@ -476,7 +476,7 @@ class VideoRepository {
   async updateEpisodeDraft(
     ...args: Parameters<typeof episodeCommands.updateEpisodeDraft>
   ) {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return episodeCommands.updateEpisodeDraft(...args);
     await nativeWorkspace.command({
       type: "patchEpisode",
@@ -489,7 +489,7 @@ class VideoRepository {
   async deleteEpisode(
     ...args: Parameters<typeof episodeCommands.deleteEpisode>
   ): Promise<episodeCommands.DeletedEpisodeSnapshot | undefined> {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return episodeCommands.deleteEpisode(...args);
     const episode = await this.episode(args[0]);
     if (!episode) return;
@@ -504,7 +504,7 @@ class VideoRepository {
     return snapshot;
   }
   async restoreEpisode(snapshot: episodeCommands.DeletedEpisodeSnapshot) {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return episodeCommands.restoreEpisode(snapshot);
     await this.restoreReceipt(snapshot);
     notify();
@@ -512,7 +512,7 @@ class VideoRepository {
   async reorderEpisodes(
     ...args: Parameters<typeof episodeCommands.reorderEpisodes>
   ): Promise<VideoWorkspaceUndoAction | void> {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return episodeCommands.reorderEpisodes(...args);
     const receipt = await nativeWorkspace.command({
       type: "reorderEpisodes",
@@ -525,7 +525,7 @@ class VideoRepository {
   async addStoryBeat(
     ...args: Parameters<typeof episodeCommands.addStoryBeat>
   ): Promise<StoryBeat> {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return episodeCommands.addStoryBeat(...args);
     const episode = await this.episode(args[0]);
     if (!episode) throw new Error("集不存在");
@@ -555,7 +555,7 @@ class VideoRepository {
   async patchStoryBeat(
     ...args: Parameters<typeof episodeCommands.patchStoryBeat>
   ) {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return episodeCommands.patchStoryBeat(...args);
     await nativeWorkspace.command({
       type: "patchBeat",
@@ -569,7 +569,7 @@ class VideoRepository {
   async deleteStoryBeat(
     ...args: Parameters<typeof episodeCommands.deleteStoryBeat>
   ): Promise<VideoWorkspaceUndoAction | void> {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return episodeCommands.deleteStoryBeat(...args);
     const receipt = await nativeWorkspace.command({
       type: "deleteBeat",
@@ -582,7 +582,7 @@ class VideoRepository {
   async restoreStoryBeat(
     ...args: Parameters<typeof episodeCommands.restoreStoryBeat>
   ) {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return episodeCommands.restoreStoryBeat(...args);
     throw new Error("请使用已提交操作的撤销凭据恢复场次");
   }
@@ -593,7 +593,7 @@ class VideoRepository {
     shots: Shot[];
     undo?: VideoWorkspaceUndoAction;
   }> {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return episodeCommands.duplicateBeat(...args);
     const result = await nativeWorkspace.command({
       type: "duplicateBeat",
@@ -613,7 +613,7 @@ class VideoRepository {
   async reorderBeats(
     ...args: Parameters<typeof episodeCommands.reorderBeats>
   ): Promise<VideoWorkspaceUndoAction | void> {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return episodeCommands.reorderBeats(...args);
     const receipt = await nativeWorkspace.command({
       type: "reorderBeats",
@@ -626,7 +626,7 @@ class VideoRepository {
   async updateEpisodeShotFilters(
     ...args: Parameters<typeof episodeCommands.updateEpisodeShotFilters>
   ) {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return episodeCommands.updateEpisodeShotFilters(...args);
     await this.withOwnerMutation(`episode-filters:${args[0]}`, async () => {
       const episode = await this.episode(args[0]);
@@ -642,13 +642,13 @@ class VideoRepository {
   async addShot(
     ...args: Parameters<typeof shotCommands.addShot>
   ): Promise<Shot> {
-    if (this.runtime === "browser") return shotCommands.addShot(...args);
+    if (this.storage === "indexeddb") return shotCommands.addShot(...args);
     return (await this.addShots(args[0], args[1], 1, args[2]))[0];
   }
   async addShots(
     ...args: Parameters<typeof shotCommands.addShots>
   ): Promise<Shot[]> {
-    if (this.runtime === "browser") return shotCommands.addShots(...args);
+    if (this.storage === "indexeddb") return shotCommands.addShots(...args);
     const [projectId, episodeId, count, options] = args;
     const result = await nativeWorkspace.command({
       type: "addShots",
@@ -664,7 +664,7 @@ class VideoRepository {
     throw new Error("创建镜头未返回镜头列表");
   }
   async patchShot(...args: Parameters<typeof shotCommands.patchShot>) {
-    if (this.runtime === "browser") return shotCommands.patchShot(...args);
+    if (this.storage === "indexeddb") return shotCommands.patchShot(...args);
     await nativeWorkspace.command({
       type: "patchShot",
       shotId: args[0],
@@ -676,18 +676,18 @@ class VideoRepository {
   async setShotCharacterSelected(
     ...args: Parameters<typeof shotCommands.setShotCharacterSelected>
   ) {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return shotCommands.setShotCharacterSelected(...args);
     unsupported();
   }
   async setShotSlot(...args: Parameters<typeof shotCommands.setShotSlot>) {
-    if (this.runtime === "browser") return shotCommands.setShotSlot(...args);
+    if (this.storage === "indexeddb") return shotCommands.setShotSlot(...args);
     unsupported();
   }
   async duplicateShot(
     ...args: Parameters<typeof shotCommands.duplicateShot>
   ): Promise<Shot & { undo?: VideoWorkspaceUndoAction }> {
-    if (this.runtime === "browser") return shotCommands.duplicateShot(...args);
+    if (this.storage === "indexeddb") return shotCommands.duplicateShot(...args);
     const row = (await nativeWorkspace.state()).shots.find(
       (item) => item.id === args[0],
     );
@@ -706,7 +706,7 @@ class VideoRepository {
     throw new Error("复制镜头未返回镜头");
   }
   async deleteShots(ids: Id[]) {
-    if (this.runtime === "browser") return shotCommands.deleteShots(ids);
+    if (this.storage === "indexeddb") return shotCommands.deleteShots(ids);
     if (!ids.length) return;
     const state = await nativeWorkspace.state();
     const first = state.shots.find((row) => row.id === ids[0]);
@@ -721,7 +721,7 @@ class VideoRepository {
   async deleteEpisodeShots(
     ...args: Parameters<typeof shotCommands.deleteEpisodeShots>
   ): Promise<shotCommands.DeletedShotsSnapshot | undefined> {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return shotCommands.deleteEpisodeShots(...args);
     const [episodeId, ids] = args;
     const episode = await this.episode(episodeId);
@@ -739,7 +739,7 @@ class VideoRepository {
     return { projectId: episode.projectId, episodeId, shots, media: [] };
   }
   async restoreShots(...args: Parameters<typeof shotCommands.restoreShots>) {
-    if (this.runtime === "browser") return shotCommands.restoreShots(...args);
+    if (this.storage === "indexeddb") return shotCommands.restoreShots(...args);
     if (!args[0].length) return;
     await this.restoreReceipt(args[0]);
     notify();
@@ -747,7 +747,7 @@ class VideoRepository {
   async patchEpisodeShots(
     ...args: Parameters<typeof shotCommands.patchEpisodeShots>
   ): Promise<shotCommands.EpisodeShotBulkUndo | undefined> {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return shotCommands.patchEpisodeShots(...args);
     const episode = await this.episode(args[0]);
     if (!episode) throw new Error("集不存在");
@@ -767,7 +767,7 @@ class VideoRepository {
     return undo;
   }
   async undoEpisodeShotBulkPatch(undo: shotCommands.EpisodeShotBulkUndo) {
-    if (this.runtime === "browser")
+    if (this.storage === "indexeddb")
       return shotCommands.undoEpisodeShotBulkPatch(undo);
     await this.restoreReceipt(undo);
     notify();
@@ -775,7 +775,7 @@ class VideoRepository {
   async reorderShots(
     ...args: Parameters<typeof shotCommands.reorderShots>
   ): Promise<VideoWorkspaceUndoAction | void> {
-    if (this.runtime === "browser") return shotCommands.reorderShots(...args);
+    if (this.storage === "indexeddb") return shotCommands.reorderShots(...args);
     const receipt = await nativeWorkspace.command({
       type: "reorderShots",
       episodeId: args[0],
@@ -838,35 +838,35 @@ class VideoRepository {
   }
 }
 export type VideoWorkspaceRepository = VideoRepository;
-const browserVideoWorkspace = new VideoRepository("browser");
-const nativeVideoWorkspace = new VideoRepository("native");
+const indexedDbVideoWorkspace = new VideoRepository("indexeddb");
+const sqliteVideoWorkspace = new VideoRepository("sqlite");
 export function getVideoWorkspaceRepository(): VideoRepository {
-  return isNativeWorkspaceRuntime()
-    ? nativeVideoWorkspace
-    : browserVideoWorkspace;
+  return usesSqliteProductStorage()
+    ? sqliteVideoWorkspace
+    : indexedDbVideoWorkspace;
 }
 export function useVideoWorkspaceRepository(): VideoRepository {
   return getVideoWorkspaceRepository();
 }
-/** Browser preserves Dexie live-query owner; native refreshes only via native events. */
+/** IndexedDB keeps live queries in both runtimes; the explicit SQLite lane uses native events. */
 export function useVideoWorkspaceQuery<T>(
   query: () => T | Promise<T>,
   dependencies: DependencyList,
 ): T | undefined {
-  const native = isNativeWorkspaceRuntime();
+  const sqlite = usesSqliteProductStorage();
   const token = useRef(Symbol("native-read")).current;
   const queryRef = useRef(query);
   const key = JSON.stringify(dependencies);
-  const browser = useLiveQuery(native ? () => undefined : query, [
+  const indexedDb = useLiveQuery(sqlite ? () => undefined : query, [
     ...dependencies,
-    native,
+    sqlite,
   ]);
   const [state, setState] = useState<{ key: string; value: T }>();
   useEffect(() => {
     queryRef.current = query;
   });
   useEffect(() => {
-    if (!native) return;
+    if (!sqlite) return;
     let active = true;
     let revision = 0;
     const refresh = () => {
@@ -894,8 +894,8 @@ export function useVideoWorkspaceQuery<T>(
       setReadError(token, undefined);
       window.removeEventListener(CHANGED, refresh);
     };
-  }, [key, native, token]);
-  return native ? (state?.key === key ? state.value : undefined) : browser;
+  }, [key, sqlite, token]);
+  return sqlite ? (state?.key === key ? state.value : undefined) : indexedDb;
 }
 
 export function useVideoWorkspaceReadStatus(): {

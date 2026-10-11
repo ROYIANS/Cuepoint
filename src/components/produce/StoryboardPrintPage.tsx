@@ -2,6 +2,7 @@ import {useShotMedia} from "@/lib/useShotMedia";
 import {Link} from "@tanstack/react-router";
 import {useLiveQuery} from "dexie-react-hooks";
 import {ArrowLeft, Printer} from "lucide-react";
+import {toast} from "sonner";
 import {MediaPreview} from "@/components/media/MediaThumb";
 import {Button} from "@/components/ui/button";
 import {PageState} from "@/components/layout/PageLayout";
@@ -9,6 +10,7 @@ import {db} from "@/db/database";
 import {episodeLabel, normalizeProjectMode} from "@/domain/types";
 import {deriveEpisodeDelivery} from "@/lib/episodeDelivery";
 import {formatDuration} from "@/lib/format";
+import {printStoryboard} from "@/lib/runtimePrint";
 
 export function StoryboardPrintPage(props: Parameters<typeof StoryboardPrintPageContent>[0]) {
     return <StoryboardPrintPageContent key={JSON.stringify([props.projectId, props.episodeId])} {...props}/>;
@@ -98,7 +100,9 @@ function StoryboardPrintPageContent({
                         返回制作
                     </Link>
                 </Button>
-                <Button size="sm" onClick={() => window.print()}>
+                <Button size="sm" onClick={() => {
+                    void printStoryboard().catch(() => toast.error("无法打开打印窗口，请重试。"));
+                }}>
                     <Printer/>
                     打印
                 </Button>

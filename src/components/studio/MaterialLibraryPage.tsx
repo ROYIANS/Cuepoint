@@ -14,7 +14,7 @@ import {LegacyMaterialSources} from "./materials/LegacyMaterialSources";
 import {KIND_LABELS, MaterialScopeSelect, MaterialSelect, SETTINGS_KINDS} from "./materials/MaterialControls";
 import {PageContent, PageHeader, PageState, PageToolbar} from "@/components/layout/PageLayout";
 import "./materials/materialLibrary.css";
-import {isNativeWorkspaceRuntime} from "@/lib/nativeWorkspace";
+import {usesSqliteProductStorage} from "@/lib/productStorage";
 import {NativeAssetLibraryPage} from "./NativeAssetLibraryPage";
 
 export type MaterialLibrarySearch = {
@@ -25,11 +25,11 @@ export type MaterialLibrarySearch = {
 };
 
 export function MaterialLibraryPage({search: routeSearch}: { search: MaterialLibrarySearch }) {
-    if (isNativeWorkspaceRuntime()) return NativeAssetLibraryPage({search: routeSearch});
-    return BrowserMaterialLibraryPage({routeSearch});
+    if (usesSqliteProductStorage()) return NativeAssetLibraryPage({search: routeSearch});
+    return IndexedDbMaterialLibraryPage({routeSearch});
 }
 
-function BrowserMaterialLibraryPage({routeSearch}: {routeSearch: MaterialLibrarySearch}) {
+function IndexedDbMaterialLibraryPage({routeSearch}: {routeSearch: MaterialLibrarySearch}) {
     const navigate = useNavigate();
     const [view, setView] = useState<"media" | "settings">(routeSearch.view ?? "media");
     const scope = routeSearch.project ? `project:${routeSearch.project}` : routeSearch.ip ? `ip:${routeSearch.ip}` : routeSearch.scope ?? "shared";
@@ -117,7 +117,7 @@ function BrowserMaterialLibraryPage({routeSearch}: {routeSearch: MaterialLibrary
                     action={view === "media" ? <Button variant="outline" onClick={() => setImporting(true)}>导入素材</Button> : undefined}/>}
             {status !== "archived" &&
                 <LegacyMaterialSources view={view} scope={scope} search={search} kind={kind} onCreated={setSelected}/>}
-        </TabsContent></Tabs><p className="material-storage-note">素材库与 IP 档案保存在当前浏览器本地。项目 ZIP
+        </TabsContent></Tabs><p className="material-storage-note">素材库与 IP 档案保存在当前设备本地。项目 ZIP
         包含已加入项目的素材副本，不包含整个素材库或 IP 档案。</p>
         {selected && <MaterialDetailPanel id={selected} onClose={() => setSelected(null)} onSelect={setSelected}/>}
         {importing && <MaterialImportDialog initialScope={initialScope} onClose={() => setImporting(false)}

@@ -219,8 +219,13 @@ export async function listAIHubMixModels(credentials: AIHubMixCredentials, optio
         const types = tokens(row.types), endpoints = tokens(row.endpoints), input = tokens(row.input_modalities),
             output = tokens(row.output_modalities), features = tokens(row.features);
         const invalid = [types, endpoints, input, output, features].some((value) => value === undefined) || (row.schema_checked != null && typeof row.schema_checked !== "boolean");
+        const explicitMetadata = parseModelMetadata(row);
+        // The public directory declares image input separately from capabilities.
+        // An explicit boolean (including false) remains authoritative.
+        const metadata = explicitMetadata?.vision === undefined && input?.includes("image")
+            ? {...explicitMetadata, source: "provider" as const, vision: true} : explicitMetadata;
         models.push({
-            ...(parseModelMetadata(row) ? {metadata: parseModelMetadata(row)} : {}),
+            ...(metadata ? {metadata} : {}),
             id: row.model_id.trim(),
             types: [...new Set((types ?? []).map((type) => Object.hasOwn(TYPE_ALIASES, type) ? TYPE_ALIASES[type] : type))],
             endpoints: endpoints ?? [],

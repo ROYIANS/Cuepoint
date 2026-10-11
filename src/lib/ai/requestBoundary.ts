@@ -1,4 +1,6 @@
 import {isReadAbort, readResponseJson} from "./boundedResponse";
+import {runtimeFetchFor} from "@/lib/runtimeFetch";
+import type {RuntimeHttpPurpose} from "@/lib/runtimeHttpPolicy";
 
 type RequestWire = Omit<RequestInit, "signal" | "credentials" | "redirect">;
 export type RequestBoundaryOptions = {
@@ -6,12 +8,13 @@ export type RequestBoundaryOptions = {
     signal?: AbortSignal;
     credentials: RequestCredentials;
     redirect: RequestRedirect;
+    runtimePurpose?: RuntimeHttpPurpose;
 };
 
 /** One application fetch invocation; caller owns URL, auth, timeout and decoding. */
 export async function requestOnce(url: string, init: RequestWire, options: RequestBoundaryOptions): Promise<Response> {
     options.signal?.throwIfAborted();
-    return (options.fetchImpl ?? fetch)(url, {
+    return (options.fetchImpl ?? runtimeFetchFor(options.runtimePurpose))(url, {
         ...init,
         signal: options.signal,
         credentials: options.credentials,

@@ -1,14 +1,37 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {FileText, Music2, PackageOpen} from "lucide-react";
+import {toast} from "sonner";
 import type {MaterialPayload} from "@/domain/materials";
+import {Button} from "@/components/ui/button";
+import {isTauriRuntime} from "@/lib/runtimeIdentity";
+import {downloadBlob, isPublishedSaveError} from "@/lib/runtimeSave";
 import {MaterialDocumentPreview} from "./MaterialDocumentPreview";
 
 export function MaterialPreview({payload, inspect = false}: { payload?: MaterialPayload; inspect?: boolean }) {
+    const native = isTauriRuntime();
     const file = payload?.type === "file" ? payload : payload?.media.find((item) => item.mimeType.startsWith("image/"));
     const blob = file?.blob;
     const mime = file?.mimeType ?? "";
     const [url, setUrl] = useState<string>();
     const [text, setText] = useState("");
+    const saving = useRef(false);
+    const [savingFile, setSavingFile] = useState(false);
+    async function saveOriginal() {
+        if (saving.current || payload?.type !== "file") return;
+        saving.current = true;
+        setSavingFile(true);
+        try {
+            const outcome = await downloadBlob(payload.blob, payload.filename);
+            if (outcome === "saved") toast.success("原文件已保存");
+            else toast.info("已取消保存原文件");
+        } catch (error) {
+            if (isPublishedSaveError(error)) toast.warning(error.message);
+            else toast.error(error instanceof Error ? `保存原文件失败：${error.message}` : "保存原文件失败，请重试");
+        } finally {
+            saving.current = false;
+            setSavingFile(false);
+        }
+    }
     useEffect(() => {
         if (!blob) {
             setUrl(undefined);
@@ -47,8 +70,10 @@ export function MaterialPreview({payload, inspect = false}: { payload?: Material
                                 : <><FileText aria-hidden/><span>{payload.filename}</span>{inspect &&
                                     <p>文档以文件形式保存，可提取文字预览或下载查看完整内容。</p>}{inspect && blob && ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"].includes(mime) &&
                                     <MaterialDocumentPreview key={url} blob={blob} mime={mime}/>}</>}
-            {inspect && payload.type === "file" && url &&
-                <a href={url} download={payload.filename} className="material-download">下载原文件</a>}
+            {inspect && payload.type === "file" && (native ?
+                <Button variant="outline" size="sm" disabled={savingFile} onClick={() => void saveOriginal()}>
+                    {savingFile ? "正在保存原文件…" : "下载原文件"}
+                </Button> : url && <a href={url} download={payload.filename} className="material-download">下载原文件</a>)}
         </div>
         {inspect && payload.type === "setting" &&
             <dl className="material-setting-preview">{Object.entries(payload.entity).filter(([key, value]) => ["name", "bio", "appearance", "personality", "motivation", "voice", "location", "timeOfDay", "atmosphere", "geography", "lighting", "notes", "kind", "material", "size", "usage", "continuity", "palette", "lens", "composition", "negativePrompt"].includes(key) && typeof value === "string" && value.trim()).map(([key, value]) =>

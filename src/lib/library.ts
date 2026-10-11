@@ -20,6 +20,7 @@ export function pickZipFile(): Promise<File | undefined> {
         input.type = "file";
         input.accept = ".zip,application/zip";
         input.onchange = () => resolve(input.files?.[0] ?? undefined);
+        input.oncancel = () => resolve(undefined);
         input.click();
     });
 }

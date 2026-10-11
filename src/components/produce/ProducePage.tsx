@@ -13,6 +13,8 @@ import {Button} from "@/components/ui/button";
 import {PageContent, PageHeader, PageState} from "@/components/layout/PageLayout";
 import {formatDuration} from "@/lib/format";
 import {deriveEpisodeDelivery, downloadEpisodeDeliveryCsv,} from "@/lib/episodeDelivery";
+import {isTauriRuntime} from "@/lib/runtimeIdentity";
+import {isPublishedSaveError} from "@/lib/runtimeSave";
 
 const MISSING_LABELS = {
     content: "内容",
@@ -44,6 +46,7 @@ function ScopedProducePage({
     const [exportProgress, setExportProgress] = useState<number>();
     const [exportError, setExportError] = useState("");
     const [exportSummary, setExportSummary] = useState("");
+    const [savingCsv, setSavingCsv] = useState(false);
 
     async function exportHandoff() {
         setExportProgress(0);
@@ -51,13 +54,33 @@ function ScopedProducePage({
         setExportSummary("");
         try {
             const result = await exportProductionHandoff(projectId, episodeId, setExportProgress);
-            downloadBlob(result.blob, result.filename);
+            const outcome = await downloadBlob(result.blob, result.filename);
+            if (outcome === "canceled") {
+                setExportSummary("已取消保存素材交付包。");
+                return;
+            }
             setExportSummary(`已整理 ${result.shotCount} 个镜头，${result.missingCount} 个镜头有待确认项，详见包内 missing.md。`);
             toast.success("素材交付包已生成");
         } catch (error) {
-            setExportError(error instanceof Error ? error.message : "导出失败，请重试");
+            if (isPublishedSaveError(error)) setExportSummary(error.message);
+            else setExportError(error instanceof Error ? error.message : "导出失败，请重试");
         } finally {
             setExportProgress(undefined);
+        }
+    }
+
+    async function exportCsv(delivery: Parameters<typeof downloadEpisodeDeliveryCsv>[0]) {
+        setSavingCsv(true);
+        setExportError("");
+        setExportSummary("");
+        try {
+            const outcome = await downloadEpisodeDeliveryCsv(delivery);
+            if (outcome === "canceled") setExportSummary("已取消保存 CSV。");
+        } catch (error) {
+            if (isPublishedSaveError(error)) setExportSummary(error.message);
+            else setExportError(error instanceof Error ? error.message : "保存 CSV 失败，请重试");
+        } finally {
+            setSavingCsv(false);
         }
     }
 
@@ -130,19 +153,20 @@ function ScopedProducePage({
             <PageContent mode="collection">
                 <PageHeader title="制作与交付" description={`检查${scopeLabel}的分镜完整性，并导出按当前顺序整理的交付物。`}
                             actions={<div className="flex flex-wrap items-center gap-2">
-                        <Button disabled={exportProgress !== undefined || delivery.rows.length === 0}
+                        <Button disabled={savingCsv || exportProgress !== undefined || delivery.rows.length === 0}
                                 onClick={() => void exportHandoff()}>
                             <Download/>{exportProgress !== undefined ? `正在整理 ${Math.round(exportProgress)}%` : "导出素材交付包"}
                         </Button>
-                        <Button variant="outline" onClick={() => downloadEpisodeDeliveryCsv(delivery)}>
+                        <Button variant="outline" disabled={savingCsv || exportProgress !== undefined}
+                                onClick={() => void exportCsv(delivery)}>
                             <Download/>
-                            导出 CSV
+                            {savingCsv ? "正在保存 CSV…" : "导出 CSV"}
                         </Button>
                         <Button variant="outline" asChild>
                             <Link
                                 to="/p/$projectId/e/$episodeId/storyboard"
                                 params={{projectId, episodeId}}
-                                target="_blank"
+                                target={isTauriRuntime() ? undefined : "_blank"}
                             >
                                 <Printer/>
                                 打印故事板

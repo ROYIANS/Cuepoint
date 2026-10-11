@@ -9,7 +9,7 @@ describe("shared video repository browser commands", () => {
     it("keeps ordered owner reads and complete-order rejection in the existing database", async () => {
         const native = vi.spyOn(nativeWorkspace, "request");
         const repository = getVideoWorkspaceRepository();
-        expect(repository.runtime).toBe("browser");
+        expect(repository.storage).toBe("indexeddb");
         const project = await repository.createProject("Browser series", "series", "9:16");
         const [first] = await repository.episodes(project.id);
         const second = await repository.addEpisode(project.id);

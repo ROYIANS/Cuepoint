@@ -36,6 +36,8 @@
     "@radix-ui/react-tabs": "^1.1.21",
     "@radix-ui/react-tooltip": "^1.2.16",
     "@tanstack/react-router": "^1.131.50",
+    "@tauri-apps/api": "2.12.2",
+    "@tauri-apps/plugin-http": "2.8.2",
     "antd": "^6.6.4",
     "boring-avatars": "^2.0.4",
     "class-variance-authority": "^0.7.1",

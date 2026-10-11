@@ -1,4 +1,5 @@
 import {shotRelations} from "@/lib/shotRelations";
+import {downloadBlob, type SaveResult} from "@/lib/runtimeSave";
 import {type ShotMediaIndex, validShotMediaId} from "@/lib/shotMedia";
 import {normalizeVisibleColumns, SHOT_COLUMNS} from "@/domain/columns";
 import type {
@@ -189,14 +190,9 @@ export function episodeDeliveryFilename(delivery: EpisodeDelivery): string {
     return `${safe || "分镜交付"}-分镜.csv`;
 }
 
-export function downloadEpisodeDeliveryCsv(delivery: EpisodeDelivery): void {
+export function downloadEpisodeDeliveryCsv(delivery: EpisodeDelivery): Promise<SaveResult> {
     const blob = new Blob([episodeDeliveryCsv(delivery)], {
         type: "text/csv;charset=utf-8",
     });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = episodeDeliveryFilename(delivery);
-    anchor.click();
-    URL.revokeObjectURL(url);
+    return downloadBlob(blob, episodeDeliveryFilename(delivery));
 }

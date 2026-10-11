@@ -3,6 +3,7 @@ import {isReadAbort} from "./boundedResponse";
 import {normalizeBaseUrl} from "./baseUrl";
 import {redactCredentials} from "./safeError";
 import {type ChatModelMetadata, collectModelMetadata, parseModelMetadata} from "@/lib/ai/modelMetadata";
+import {connectorProbeFetch} from "@/lib/runtimeFetch";
 
 export {normalizeBaseUrl} from "./baseUrl";
 
@@ -139,7 +140,7 @@ function failure(error: unknown, apiKey: string): { ok: false; message: string }
  */
 export async function listModels(
     input: { baseUrl: string; apiKey: string },
-    fetchImpl: typeof fetch = fetch,
+    fetchImpl?: typeof fetch,
     options: { signal?: AbortSignal } = {},
 ): Promise<ListModelsResult> {
     const base = normalizeBaseUrl(input.baseUrl);
@@ -148,6 +149,7 @@ export async function listModels(
     if (!apiKey) return {ok: false, message: "请填写 API Key"};
 
     try {
+        fetchImpl = connectorProbeFetch(input.baseUrl, fetchImpl);
         const res = await requestOnce(modelsUrl(base), {
             method: "GET",
             headers: authHeaders(apiKey),
@@ -169,7 +171,7 @@ export async function listModels(
  */
 export async function testConnection(
     input: TestConnectionInput,
-    fetchImpl: typeof fetch = fetch,
+    fetchImpl?: typeof fetch,
     options: { signal?: AbortSignal } = {},
 ): Promise<TestConnectionResult> {
     const base = normalizeBaseUrl(input.baseUrl);
@@ -180,6 +182,7 @@ export async function testConnection(
     const headers = authHeaders(apiKey);
     let modelsRes: Response | undefined;
     try {
+        fetchImpl = connectorProbeFetch(input.baseUrl, fetchImpl);
         modelsRes = await requestOnce(modelsUrl(base), {method: "GET", headers}, {
             fetchImpl,
             signal: options.signal,

@@ -264,7 +264,8 @@ export async function downloadApimartAudio(url: string, options: ApimartRequestO
             fetchImpl: options.fetchImpl,
             signal: options.signal,
             credentials: "omit",
-            redirect: "error"
+            redirect: "error",
+            runtimePurpose: "result-download"
         });
         if (!response.ok) {
             await response.body?.cancel().catch(() => undefined);

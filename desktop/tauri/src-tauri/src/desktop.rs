@@ -332,7 +332,7 @@ fn packaged_url(url: &tauri::Url) -> bool {
 fn packaged(window: &WebviewWindow) -> bool {
     window.label() == "main" && window.url().is_ok_and(|u| packaged_url(&u))
 }
-fn trusted(window: &WebviewWindow) -> Result<()> {
+pub(crate) fn trusted(window: &WebviewWindow) -> Result<()> {
     if packaged(window) {
         Ok(())
     } else {
@@ -1312,15 +1312,35 @@ async fn workspace_cancel(
 mod acceptance;
 
 pub fn run() {
+    use crate::runtime_services::*;
+    let services = Arc::new(RuntimeServices::default());
     let builder = tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_http::init())
+        // External opening is only reachable through our HTTP(S)-validated command.
+        .plugin(
+            tauri_plugin_opener::Builder::new()
+                .open_js_links_on_click(false)
+                .build(),
+        )
         .manage(Arc::new(Bridge::default()))
+        .manage(services.clone())
         .setup(|app| {
+            let (script, store) = profile(&app.config().identifier, cfg!(feature = "acceptance"))?;
+            let weak = Arc::downgrade(app.state::<Arc<RuntimeServices>>().inner());
+            std::thread::spawn(move || {
+                loop {
+                    std::thread::sleep(std::time::Duration::from_secs(2));
+                    let Some(state) = weak.upgrade() else {
+                        break;
+                    };
+                    state.saves.reap();
+                }
+            });
             let builder =
                 tauri::WebviewWindowBuilder::from_config(app, &app.config().app.windows[0])?
-                    .data_store_identifier([
-                        92, 140, 77, 219, 6, 49, 71, 50, 168, 139, 178, 126, 143, 17, 10, 57,
-                    ]);
+                    .data_store_identifier(store)
+                    .initialization_script(script);
             builder
                 .on_navigation(|url| {
                     url.scheme() == "tauri"
@@ -1331,6 +1351,18 @@ pub fn run() {
                 })
                 .build()?;
             Ok(())
+        })
+        .on_window_event(|window, event| {
+            if window.label() == "main" && matches!(event, tauri::WindowEvent::Destroyed) {
+                window.state::<Arc<RuntimeServices>>().saves.close();
+            }
+        })
+        .on_page_load(|webview, payload| {
+            if webview.label() == "main"
+                && matches!(payload.event(), tauri::webview::PageLoadEvent::Started)
+            {
+                webview.state::<Arc<RuntimeServices>>().saves.close();
+            }
         })
         .on_permission_request(|window, kind| {
             let trusted = window.label() == "main" && window.url().is_ok_and(|u| packaged_url(&u));
@@ -1344,12 +1376,26 @@ pub fn run() {
     let builder = builder.invoke_handler(tauri::generate_handler![
         workspace_request,
         workspace_cancel,
+        authorize_http_origin,
+        product_save_begin,
+        product_save_chunk,
+        product_save_finish,
+        product_save_cancel,
+        product_print_storyboard,
+        product_open_external,
         acceptance::acceptance_request
     ]);
     #[cfg(not(feature = "acceptance"))]
     let builder = builder.invoke_handler(tauri::generate_handler![
         workspace_request,
-        workspace_cancel
+        workspace_cancel,
+        authorize_http_origin,
+        product_save_begin,
+        product_save_chunk,
+        product_save_finish,
+        product_save_cancel,
+        product_print_storyboard,
+        product_open_external
     ]);
     builder
         .run(tauri::generate_context!())

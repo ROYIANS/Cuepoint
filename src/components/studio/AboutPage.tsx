@@ -1,4 +1,6 @@
 import {ExternalLink, Heart, QrCode} from "lucide-react";
+import {useRef, useState} from "react";
+import {toast} from "sonner";
 import {Button} from "@/components/ui/button";
 import {PageContent, PageHeader} from "@/components/layout/PageLayout";
 import {
@@ -10,8 +12,37 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import {GITHUB_URL, LOGO_LOCKUP_SRC, PRODUCT_NAME_EN, PRODUCT_NAME_ZH, PRODUCT_TAGLINE,} from "@/lib/brand";
+import {isTauriRuntime} from "@/lib/runtimeIdentity";
+import {downloadBlob, isPublishedSaveError} from "@/lib/runtimeSave";
+
+const SPONSOR_IMAGE_SRC = "/brand/sponsor-wechat.jpg";
+const SPONSOR_IMAGE_NAME = "小光点-微信赞赏码.jpg";
 
 export function AboutPage() {
+    const native = isTauriRuntime();
+    const saving = useRef(false);
+    const [savingSponsor, setSavingSponsor] = useState(false);
+    async function saveSponsor() {
+        if (saving.current) return;
+        saving.current = true;
+        setSavingSponsor(true);
+        try {
+            // The bundled image belongs to the packaged WebView's own origin.
+            const response = await fetch(SPONSOR_IMAGE_SRC);
+            if (!response.ok) throw new Error("赞赏码图片加载失败，请重试");
+            const blob = await response.blob();
+            if (!blob.size || !blob.type.startsWith("image/")) throw new Error("赞赏码图片加载失败，请重试");
+            const outcome = await downloadBlob(blob, SPONSOR_IMAGE_NAME);
+            if (outcome === "saved") toast.success("赞赏码已保存");
+            else toast.info("已取消保存赞赏码");
+        } catch (error) {
+            if (isPublishedSaveError(error)) toast.warning(error.message);
+            else toast.error(error instanceof Error ? `保存赞赏码失败：${error.message}` : "保存赞赏码失败，请重试");
+        } finally {
+            saving.current = false;
+            setSavingSponsor(false);
+        }
+    }
     return (
         <PageContent mode="document">
             <PageHeader title={`关于${PRODUCT_NAME_ZH}`}/>
@@ -58,16 +89,18 @@ export function AboutPage() {
                             </DialogHeader>
                             <div className="min-h-0 overflow-y-auto">
                                 <img
-                                    src="/brand/sponsor-wechat.jpg"
+                                    src={SPONSOR_IMAGE_SRC}
                                     alt="不完美小孩的微信赞赏码"
                                     width={1152}
                                     height={1152}
                                     className="h-auto w-full rounded-md"
                                 />
                             </div>
-                            <Button asChild variant="outline">
-                                <a href="/brand/sponsor-wechat.jpg" download="小光点-微信赞赏码.jpg">保存赞赏码</a>
-                            </Button>
+                            {native ? <Button variant="outline" disabled={savingSponsor} onClick={() => void saveSponsor()}>
+                                {savingSponsor ? "正在保存赞赏码…" : "保存赞赏码"}
+                            </Button> : <Button asChild variant="outline">
+                                <a href={SPONSOR_IMAGE_SRC} download={SPONSOR_IMAGE_NAME}>保存赞赏码</a>
+                            </Button>}
                         </DialogContent>
                     </Dialog>
                 </div>
@@ -76,7 +109,7 @@ export function AboutPage() {
             <section className="mt-8 space-y-3">
                 <h2 className="text-base leading-6 font-semibold">数据与隐私</h2>
                 <ul className="text-muted-foreground list-disc space-y-2 pl-5 text-sm leading-6">
-                    <li>项目、分镜与资产默认保存在本机浏览器（IndexedDB），不依赖云端用户库。</li>
+                    <li>项目、分镜与素材默认保存在当前设备的应用或浏览器中，不依赖云端用户库。</li>
                     <li>AI 连接密钥（BYOK）只存在本机，不会写入项目备份 ZIP。</li>
                     <li>导出 / 导入由你主动触发；把备份交给谁，由你自己决定。</li>
                     <li>当前产品说明是普通语言告知，不是法律意见书；正式隐私政策可后续替换。</li>

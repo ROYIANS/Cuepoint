@@ -17,6 +17,7 @@ import {
 import {PackageError} from "./packages/packageError";
 
 export {PackageError} from "./packages/packageError";
+export {downloadBlob} from "./runtimeSave";
 
 const manifestSchema = z.object({
     format: z.literal(PACKAGE_FORMAT),
@@ -339,13 +340,4 @@ export async function importProjectZip(file: Blob): Promise<Project> {
     }
 
     return project;
-}
-
-export function downloadBlob(blob: Blob, filename: string) {
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = filename;
-    anchor.click();
-    URL.revokeObjectURL(url);
 }

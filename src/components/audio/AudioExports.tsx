@@ -1,9 +1,11 @@
 import {useState} from "react";
+import {toast} from "sonner";
 import {Download, Play} from "lucide-react";
 import {db} from "@/db/database";
 import type {AudioProjectSnapshot} from "@/domain/audio";
 import {getAudioExportFreshness} from "@/lib/audio/fingerprint";
 import {downloadBlob} from "@/lib/projectPackage";
+import {isPublishedSaveError} from "@/lib/runtimeSave";
 import {Button} from "@/components/ui/button";
 import {Disclosure, DisclosureTitle, SourcePlayer} from "@/components/audioMusic/controls";
 import {errorText, timeLabel} from "@/components/audioMusic/shared";
@@ -30,8 +32,11 @@ export function AudioExports({snapshot}: { snapshot: AudioProjectSnapshot }) {
                     setError("");
                     void db.media.get(item.mediaId).then((record) => {
                         if (!record) throw new Error("成品音频文件已不存在");
-                        downloadBlob(record.blob, record.filename);
-                    }).catch((reason: unknown) => setError(errorText(reason)));
+                        return downloadBlob(record.blob, record.filename);
+                    }).catch((reason: unknown) => {
+                        if (isPublishedSaveError(reason)) toast.warning(reason.message);
+                        else setError(errorText(reason));
+                    });
                 }}><Download/>下载</Button></div>
             </div>;
         })}</div>

@@ -11,6 +11,7 @@ import {useLiveQuery} from "dexie-react-hooks";
 import {db} from "@/db/database";
 import {useMedia} from "@/lib/media";
 import {downloadBlob} from "@/lib/projectPackage";
+import {isPublishedSaveError} from "@/lib/runtimeSave";
 import {refreshAudioGeneration} from "@/lib/audioGeneration/runtime";
 import {describeAudioGeneration} from "@/lib/audioGeneration/presentation";
 import {Button} from "@/components/ui/button";
@@ -20,6 +21,7 @@ import {DraftStatus} from "@/components/ui/draft-status";
 import {PageState} from "@/components/layout/PageLayout";
 import {useDebouncedDraft} from "@/lib/debouncedDraft";
 import {Download, LoaderCircle, RefreshCw, Volume2} from "lucide-react";
+import {toast} from "sonner";
 import "./workspace.css";
 
 export function errorText(error: unknown) {
@@ -105,8 +107,11 @@ export function AudioPlayer({mediaId, title, compact = false, autoplay = false, 
             <span className="aw-muted">{mediaId ? "音频加载中或已不可用" : "尚未选择音频"}</span>}
         {mediaId && !compact && <Button variant="ghost" size="icon" aria-label="下载原始音频"
                                         onClick={() => void db.media.get(mediaId).then((record) => {
-                                            if (record)
-                                                downloadBlob(record.blob, record.filename);
+                                            if (!record) throw new Error("原始音频不可用");
+                                            return downloadBlob(record.blob, record.filename);
+                                        }).catch((error: unknown) => {
+                                            if (isPublishedSaveError(error)) toast.warning(error.message);
+                                            else toast.error(errorText(error));
                                         })}><Download size={16}/></Button>}
     </div>;
 }

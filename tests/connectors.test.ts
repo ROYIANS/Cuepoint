@@ -212,7 +212,7 @@ describe("AIHubMix catalog compatibility and read-only probe", () => {
     ];
     const fetchImpl = vi.fn<typeof fetch>(async () => Response.json({ success: true, data: rows }));
     const result = await discoverConnectorChatModels(aihubmix, { fetchImpl });
-    expect(result).toEqual({ ok: true, models: ["legacy-chat", "unannotated-endpoints", "vision-chat"], incompatibleModels: ["image", "video", "embedding", "rerank", "responses-only", "mixed-output", "conflict"] });
+    expect(result).toEqual({ ok: true, models: ["legacy-chat", "unannotated-endpoints", "vision-chat"], incompatibleModels: ["image", "video", "embedding", "rerank", "responses-only", "mixed-output", "conflict"], metadata: {"vision-chat": {source: "provider", vision: true}} });
     expect(fetchImpl.mock.calls[0][0]).toBe("https://aihubmix.com/api/v1/models");
     expect(new Headers(fetchImpl.mock.calls[0][1]?.headers).has("Authorization")).toBe(false);
     const all = await listConnectorModels(aihubmix, "all", fetchImpl);

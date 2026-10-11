@@ -1,5 +1,5 @@
 import {useLiveQuery} from "dexie-react-hooks";
-import {isNativeWorkspaceRuntime} from "@/lib/nativeWorkspace";
+import {usesSqliteProductStorage} from "@/lib/productStorage";
 import {db} from "@/db/database";
 import type {Shot} from "@/domain/types";
 import type {ShotMediaIndex} from "@/lib/shotMedia";
@@ -11,7 +11,7 @@ export function useShotMedia(shots: Shot[] | undefined): ShotMediaIndex | undefi
             .flatMap((slot) => slot.result ? [slot.result.mediaId] : []),
     ))].sort());
     const result = useLiveQuery(async () => {
-        if (isNativeWorkspaceRuntime()) return {idsKey, media: new Map()};
+        if (usesSqliteProductStorage()) return {idsKey, media: new Map()};
         const rows = await db.media.bulkGet(JSON.parse(idsKey) as string[]);
         return {idsKey, media: new Map(rows.flatMap((row) => row ? [[row.id, row] as const] : []))};
     }, [idsKey]);

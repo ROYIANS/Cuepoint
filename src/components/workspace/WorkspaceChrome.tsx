@@ -23,6 +23,7 @@ import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle,} from "@
 import {episodeLabel, normalizeProjectMode,} from "@/domain/types";
 import {IMAGE_ACCEPT, pickMediaFile, uploadMediaFile} from "@/lib/media";
 import {downloadBlob, exportProjectZip} from "@/lib/projectPackage";
+import {isPublishedSaveError} from "@/lib/runtimeSave";
 import {cn} from "@/lib/utils";
 import {shouldRedirectAudioMusicChild} from "@/lib/audio/workspaceRoute";
 import {AppFrame} from "@/components/layout/AppFrame";
@@ -118,7 +119,7 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
     const kind = project.kind ?? "video";
     if (!["video", "audio", "music"].includes(kind)) return <AppFrame><PageState kind="error" title="不支持的项目类型"/></AppFrame>;
     const mode = normalizeProjectMode(project.mode);
-    const native = repository.runtime === "native";
+    const sqlite = repository.storage === "sqlite";
     const corePath = pathname === `/p/${projectId}` || pathname === `/p/${projectId}/` || Boolean(episodeId && (pathname === `/p/${projectId}/e/${episodeId}` || pathname === `/p/${projectId}/e/${episodeId}/` || pathname === `/p/${projectId}/e/${episodeId}/shots`));
     const projectHome = pathname === `/p/${projectId}` || pathname === `/p/${projectId}/`;
 
@@ -168,7 +169,7 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
 
     return (
         <WorkspaceUnavailableContext value={unavailable}>
-            <AppFrame contentScroll="hidden" onImport={native ? undefined : () => {
+            <AppFrame contentScroll="hidden" onImport={sqlite ? undefined : () => {
                 void (async () => {
                     const file = await pickZipFile();
                     if (!file) return;
@@ -315,21 +316,23 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                         <Button
                             variant="outline"
                             size="sm"
-                            disabled={backingUp || native}
-                            title={native ? "原生工作区备份将在后续接入" : undefined}
+                            disabled={backingUp || sqlite}
+                            title={sqlite ? "原生工作区备份将在后续接入" : undefined}
                             aria-label={backingUp ? "正在保存并备份…" : "备份项目"}
                             className="px-2"
                             onClick={() => {
                                 setBackingUp(true);
                                 void flushPendingDrafts(projectId)
                                     .then(() => exportProjectZip(projectId))
-                                    .then((blob) => {
-                                        downloadBlob(blob, `${project.name}.zip`);
-                                        toast.success("项目备份已下载");
+                                    .then(async (blob) => {
+                                        const outcome = await downloadBlob(blob, `${project.name}.zip`);
+                                        if (outcome === "saved") toast.success("项目备份已导出");
+                                        else toast.info("已取消保存项目备份");
                                     })
-                                    .catch((error: unknown) => toast.error(
-                                        error instanceof Error ? `备份失败：${error.message}` : "备份失败，请重试",
-                                    ))
+                                    .catch((error: unknown) => {
+                                        if (isPublishedSaveError(error)) toast.warning(error.message);
+                                        else toast.error(error instanceof Error ? `备份失败：${error.message}` : "备份失败，请重试");
+                                    })
                                     .finally(() => setBackingUp(false));
                             }}
                         >
@@ -339,7 +342,7 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                     </div>
                 </header>
                 <div className={cn("app-scroll min-h-0 min-w-0 flex-1", kind === "video" ? "overflow-auto" : "overflow-hidden")} inert={unavailable}>
-                    {native && !corePath ? <WorkspaceCapabilityState projectId={projectId} title="此工作区能力尚未接入"/> : <Outlet/>}
+                    {sqlite && !corePath ? <WorkspaceCapabilityState projectId={projectId} title="此工作区能力尚未接入"/> : <Outlet/>}
                 </div>
 
                 <Dialog open={settingsOpen && (!unavailable || outputProtected)} onOpenChange={changeSettingsOpen}>
@@ -358,7 +361,7 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                                     <Still mediaId={project.coverMediaId} title={project.name}/>
                                 </div>
                                 <div className="flex flex-col gap-2">
-                                    <Button variant="outline" size="sm" disabled={unavailable || native}
+                                    <Button variant="outline" size="sm" disabled={unavailable || sqlite}
                                     onClick={() => void uploadCover()}>
                                         {project.coverMediaId ? "更换封面" : "上传封面"}
                                     </Button>

@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
+import * as productStorage from "@/lib/productStorage";
 import { getVideoWorkspaceRepository } from "@/lib/videoWorkspaceRepository";
 import { DraftConflictError } from "@/lib/draftConflict";
 import { nativeProductReplySchema } from "@/lib/nativeWorkspaceContract";
@@ -90,6 +91,7 @@ function reply(kind: string, value: unknown) {
   };
 }
 function native(invoke: ReturnType<typeof vi.fn>) {
+  vi.spyOn(productStorage, "usesSqliteProductStorage").mockReturnValue(true);
   vi.stubGlobal("window", {
     __TAURI_INTERNALS__: { invoke },
     dispatchEvent: vi.fn(),
@@ -186,7 +188,7 @@ describe("shared video repository runtime boundary", () => {
 
   it("preserves browser commands and field conflicts without invoking Tauri", async () => {
     const repository = getVideoWorkspaceRepository();
-    expect(repository.runtime).toBe("browser");
+    expect(repository.storage).toBe("indexeddb");
     const created = await repository.createProject(
       "Browser parity",
       "series",

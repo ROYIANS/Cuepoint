@@ -1,7 +1,7 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "main",
-  "description": "Only the bundled main window may call the closed workspace domain bridge and print its own document.",
+  "description": "Only the bundled main window may call closed native services and print. HTTP origins are individually granted at runtime.",
   "windows": ["main"],
-  "permissions": ["allow-workspace-request", "allow-workspace-cancel", "core:webview:allow-print"]
+  "permissions": ["allow-workspace-request", "allow-workspace-cancel", "allow-authorize-http-origin", "allow-product-save-begin", "allow-product-save-chunk", "allow-product-save-finish", "allow-product-save-cancel", "allow-product-print-storyboard", "allow-product-open-external", "core:webview:allow-print"]
 }

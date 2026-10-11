@@ -11,10 +11,27 @@ fn main() {
         let commands: &'static [&'static str] = &[
             "workspace_request",
             "workspace_cancel",
+            "authorize_http_origin",
+            "product_save_begin",
+            "product_save_chunk",
+            "product_save_finish",
+            "product_save_cancel",
+            "product_print_storyboard",
+            "product_open_external",
             "acceptance_request",
         ];
         #[cfg(not(feature = "acceptance"))]
-        let commands: &'static [&'static str] = &["workspace_request", "workspace_cancel"];
+        let commands: &'static [&'static str] = &[
+            "workspace_request",
+            "workspace_cancel",
+            "authorize_http_origin",
+            "product_save_begin",
+            "product_save_chunk",
+            "product_save_finish",
+            "product_save_cancel",
+            "product_print_storyboard",
+            "product_open_external",
+        ];
         tauri_build::try_build(
             tauri_build::Attributes::new()
                 .app_manifest(tauri_build::AppManifest::new().commands(commands)),
