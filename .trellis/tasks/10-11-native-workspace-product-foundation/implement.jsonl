@@ -1,0 +1,9 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Frontend package boundaries and quality checklist for real product route integration"}
+{"file": ".trellis/spec/frontend/native-workspace.md", "reason": "Typed Tauri bridge, SQLite prototype contracts and packaged acceptance limits"}
+{"file": ".trellis/spec/frontend/workspace-storage.md", "reason": "Managed workspace ownership, relative paths and verified file copies"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "Current product domain owners and browser runtime boundaries"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Strict DTO and cross-language boundary rules"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Root and desktop quality gates"}
+{"file": ".trellis/spec/guides/development-change-policy.md", "reason": "Explicit fresh-development rule; no default historical migration"}
+{"file": ".trellis/tasks/10-10-desktop-storage-sync/design.md", "reason": "Parent architecture and fresh-development decision update"}
+{"file": ".trellis/tasks/10-10-desktop-storage-sync/implement.md", "reason": "Parent execution order and native/sync boundaries"}

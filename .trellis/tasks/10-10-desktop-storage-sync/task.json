@@ -21,10 +21,11 @@
   "children": [
     "10-10-storage-workspace-foundation",
     "10-10-storage-checkpoint-plugin-foundation",
-    "10-11-native-workspace-sqlite-prototype"
+    "10-11-native-workspace-sqlite-prototype",
+    "10-11-native-workspace-product-foundation"
   ],
   "parent": null,
   "relatedFiles": [],
-  "notes": "Two bounded foundations independently accepted; commit/archive sequence approved on 2026-10-11. Parent remains in progress for native persistence, production codecs and real sync. User selected complete original tool-history retention with field-by-field review; credentials, continuation tokens and executable authority remain excluded. Native prototype child returned to planning and user selected Tauri 2 for lightweight feasibility; final runtime adoption remains pending observed native/storage/WebView results.",
+  "notes": "Two bounded foundations and the isolated Tauri prototype were accepted and archived on 2026-10-11. Parent remains in progress for the real desktop product workspace, complete current-product domain coverage and real sync. Fresh-development policy is explicit: do not implement old IndexedDB migration or historical compatibility unless a later task requests it. User selected complete original tool-history retention with field-by-field review; credentials, continuation tokens and executable authority remain excluded.",
   "meta": {}
 }
